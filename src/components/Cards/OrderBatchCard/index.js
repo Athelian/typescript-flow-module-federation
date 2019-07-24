@@ -3,6 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
+import { isForbidden } from 'utils/data';
 import { encodeId } from 'utils/id';
 import { getByPath } from 'utils/fp';
 import { updateBatchCardQuantity, getBatchLatestQuantity } from 'utils/batch';
@@ -14,6 +15,7 @@ import {
   DateInputFactory,
 } from 'components/Form';
 import TaskRing from 'components/TaskRing';
+import RelateEntity from 'components/RelateEntity';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { FormField } from 'modules/form';
 import RemoveDialog from 'components/Dialog/RemoveDialog';
@@ -33,9 +35,7 @@ import {
   TotalPriceWrapperStyle,
   VolumeWrapperStyle,
   ShipmentWrapperStyle,
-  ShipmentIconStyle,
   ContainerWrapperStyle,
-  ContainerIconStyle,
   WarehouseArrivalWrapperStyle,
   WarehouseArrivalIconStyle,
   ApprovalIconStyle,
@@ -334,7 +334,6 @@ const OrderBatchCard = ({
 
         <div className={ShipmentWrapperStyle}>
           <div
-            className={ShipmentIconStyle(!!shipment)}
             onClick={evt => {
               if (shipment) {
                 evt.stopPropagation();
@@ -343,14 +342,16 @@ const OrderBatchCard = ({
             }}
             role="presentation"
           >
-            <Icon icon="SHIPMENT" />
+            <RelateEntity
+              blackout={isForbidden(shipment)}
+              entity="SHIPMENT"
+              value={shipment && shipment.no}
+            />
           </div>
-          <Display align="left">{getByPath('no', shipment)}</Display>
         </div>
 
         <div className={ContainerWrapperStyle}>
           <div
-            className={ContainerIconStyle(!!container)}
             onClick={evt => {
               if (container) {
                 evt.stopPropagation();
@@ -359,9 +360,12 @@ const OrderBatchCard = ({
             }}
             role="presentation"
           >
-            <Icon icon="CONTAINER" />
+            <RelateEntity
+              blackout={isForbidden(container)}
+              entity="CONTAINER"
+              value={container && container.no}
+            />
           </div>
-          <Display align="left">{getByPath('no', container)}</Display>
         </div>
 
         {hasContainers ? (

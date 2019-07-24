@@ -2,10 +2,19 @@
 import * as React from 'react';
 import Icon from 'components/Icon';
 import { Display } from 'components/Form';
-import { WrapperStyle, IconColorStyle, TextStyle } from './style';
+import { WrapperStyle, IconColorStyle } from './style';
 
 type Props = {|
-  entity: 'ORDER' | 'BATCH' | 'SHIPMENT' | 'CONTAINER' | 'ORDER_ITEM',
+  entity: | 'ORDER'
+    | 'BATCH'
+    | 'SHIPMENT'
+    | 'CONTAINER'
+    | 'ORDER_ITEM'
+    | 'PRODUCT'
+    | 'PRODUCT_PROVIDER'
+    | 'PROJECT'
+    | 'MILESTONE'
+    | 'WAREHOUSE',
   value: React$Node,
   blackout: boolean,
 |};
@@ -22,9 +31,11 @@ export default function RelateEntity({ entity, value, blackout }: Props) {
         <Icon icon={entity} />
       </div>
       {blackout ? (
-        <Display height="25px" blackout={blackout} align="left" />
+        <Display height="20px" blackout={blackout} align="left" />
       ) : (
-        <div className={TextStyle}>{value}</div>
+        <Display height="20px" align="left">
+          {value}
+        </Display>
       )}
     </div>
   );

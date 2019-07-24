@@ -263,7 +263,7 @@ BatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(BatchCard, 'batch', {
   width: '195px',
-  height: '420px',
+  height: '406px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });
