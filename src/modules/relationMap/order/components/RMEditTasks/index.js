@@ -116,6 +116,7 @@ const RMEditTasks = (props: Props) => {
                   sortFields={sortFields}
                   filtersAndSort={filterAndSort}
                   onChange={onChangeFilter}
+                  canSearch
                 />
                 {rmEditTasksContainer.isDirty() && (
                   <>

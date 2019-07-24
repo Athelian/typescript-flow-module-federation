@@ -82,6 +82,7 @@ const SelectPartners = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSe
                     sortFields={sortFields}
                     filtersAndSort={filterAndSort}
                     onChange={onChangeFilter}
+                    canSearch
                   />
                   <h3>
                     {values.length}/{MAX_SELECTIONS}

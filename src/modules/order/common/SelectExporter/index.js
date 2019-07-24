@@ -129,6 +129,7 @@ const SelectExporter = ({
                     sortFields={sortFields}
                     filtersAndSort={filterAndSort}
                     onChange={onChangeFilter}
+                    canSearch
                   />
                   <CancelButton onClick={onCancel} />
                   <SaveButton

@@ -47,20 +47,6 @@ export const TaskParentWrapperStyle: string = css`
   align-items: center;
 `;
 
-export const TaskParentIconStyle: string = css`
-  ${presets.BUTTON};
-  ${borderRadiuses.MAIN};
-  width: 20px;
-  height: 20px;
-  background-color: ${colors.TEAL};
-  color: ${colors.WHITE};
-  font-size: 11px;
-  &:hover,
-  :focus {
-    background-color: ${colors.TEAL_DARK};
-  }
-`;
-
 export const TaskNameWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 20px 160px;
@@ -123,38 +109,12 @@ export const ProjectInfoStyle: string = css`
   align-items: center;
 `;
 
-export const ProjectIconStyle = (has: boolean = false): string => css`
-  ${presets.BUTTON};
-  ${borderRadiuses.MAIN};
-  width: 20px;
-  height: 20px;
-  background-color: ${has ? colors.TEAL : colors.GRAY_VERY_LIGHT};
-  color: ${colors.WHITE};
-  font-size: 11px;
-  ${has &&
-    `
-      &:hover, :focus {
-        background-color: ${colors.TEAL_DARK};
-      }
-    `};
-`;
-
 export const MilestoneInfoStyle: string = css`
   display: grid;
   grid-template-columns: 20px 155px;
   width: 100%;
   padding: 0 0 0 10px;
   align-items: center;
-`;
-
-export const MilestoneIconStyle = (has: boolean = false): string => css`
-  ${presets.BUTTON};
-  ${borderRadiuses.MAIN};
-  width: 20px;
-  height: 20px;
-  background-color: ${has ? colors.TEAL : colors.GRAY_VERY_LIGHT};
-  color: ${colors.WHITE};
-  font-size: 11px;
 `;
 
 export const TaskStatusWrapperStyle: string = css`

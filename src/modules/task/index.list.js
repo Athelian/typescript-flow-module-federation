@@ -52,6 +52,7 @@ const TaskModule = (props: Props) => {
           sortFields={sortFields}
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
+          canSearch
         />
         <ExportButton
           type="Tasks"

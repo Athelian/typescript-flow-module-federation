@@ -7,14 +7,12 @@ import {
   transitions,
   fontSizes,
   scrollbars,
-  shadows,
   borderRadiuses,
 } from 'styles/common';
 
 export const WrapperStyle = (focused: boolean, disabled: boolean, editable: boolean): string => css`
   ${layout.HORIZONTAL};
   ${transitions.MAIN};
-  background: ${colors.WHITE};
   min-height: 30px;
   ${disabled && `background: ${colors.GRAY_SUPER_LIGHT}`};
   ${!editable &&
@@ -29,9 +27,6 @@ export const SelectionWrapperStyle: string = css`
   flex-wrap: wrap;
   align-items: center;
   width: 100%;
-  & > *:not(:last-child) {
-    margin: 6px 10px 6px 0;
-  }
   grid-gap: 10px;
 `;
 
@@ -41,41 +36,23 @@ export const RemoveStyle: string = css`
   ${fontSizes.MEDIUM};
 `;
 
-export const ExpandButtonStyle: string = css`
-  ${presets.BUTTON};
-  ${fontSizes.MEDIUM};
-  color: ${colors.GRAY};
-  cursor: pointer;
-  width: 40px;
-  &:hover:not([disabled]) {
-    color: ${colors.TEAL_DARK};
-  }
-  &:focus:not([disabled]) {
-    color: ${colors.TEAL};
-  }
-  &[disabled] {
-    cursor: default;
-  }
-`;
-
-export const ArrowDownStyle = (isOpen: boolean): string => css`
-  ${transitions.EXPAND};
-  transform: rotate(${isOpen ? '180' : '0'}deg);
-`;
-
-export const InputStyle = (isHover: boolean): string => css`
-  ${layout.HORIZONTAL};
+export const InputStyle = (width: string): string => css`
   position: relative;
   ${borderRadiuses.MAIN};
-  ${isHover && shadows.DROPDOWN};
   ${transitions.MAIN};
+  width: ${width};
+  white-space: nowrap;
+  overflow-x: auto;
+  ${scrollbars.SMALL};
+  & > div {
+    margin-right: 4px;
+  }
   input {
-    flex: 1;
     color: ${colors.BLACK};
     ${fontSizes.MAIN};
     border: none;
     font-weight: bold;
-    padding: 5px 0 5px 8px;
+    padding: 5px 0 5px 0;
     background-color: transparent;
     width: 80px;
     &:focus {

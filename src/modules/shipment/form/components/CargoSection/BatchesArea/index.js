@@ -1,11 +1,15 @@
 // @flow
 import * as React from 'react';
-import type { Batch } from 'generated/graphql';
-import { FormattedMessage } from 'react-intl';
-import { intersection } from 'lodash';
+import type { BatchPayload } from 'generated/graphql';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import type { IntlShape } from 'react-intl';
+import { maxBy, intersection } from 'lodash';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { getByPath } from 'utils/fp';
+import { getByPath, getByPathWithDefault, isEquals } from 'utils/fp';
+import useSortAndFilter from 'hooks/useSortAndFilter';
+import messages from 'modules/batch/messages';
+import FilterToolBar from 'components/common/FilterToolBar';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
@@ -52,6 +56,7 @@ import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesInPool, getBatchesByContainerId } from 'modules/shipment/helpers';
 import SelectShipmentBatches from 'components/SelectShipmentBatches';
 import { HIDE, NAVIGABLE } from 'modules/batch/constants';
+import sortBy from './helper';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -67,19 +72,32 @@ import {
   BatchesFooterWrapperStyle,
 } from './style';
 
-type OptionalProps = {
+type Props = {
   exporterId: string,
-};
-
-type Props = OptionalProps & {
+  intl: IntlShape,
   isFocusedBatchesPool: boolean,
   isSelectBatchesMode: boolean,
   onChangeSelectMode: Function,
   focusedContainerIndex: number,
-  selectedBatches: Array<Object>,
+  selectedBatches: Array<BatchPayload>,
   onSelectBatch: Function,
   shipmentIsArchived: boolean,
   importerId: string,
+};
+
+const getInitFilter = () => {
+  const state = {
+    filter: {
+      query: '',
+    },
+    sort: {
+      field: 'sort',
+      direction: 'ASCENDING',
+    },
+    perPage: 10,
+    page: 1,
+  };
+  return state;
 };
 
 function BatchesArea({
@@ -92,9 +110,30 @@ function BatchesArea({
   shipmentIsArchived,
   exporterId,
   importerId,
+  intl,
 }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const sortFields = [
+    { title: intl.formatMessage(messages.sort), value: 'sort' },
+    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
+    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
+    { title: intl.formatMessage(messages.batchNo), value: 'no' },
+    { title: intl.formatMessage(messages.poNo), value: 'poNo' },
+    { title: intl.formatMessage(messages.productName), value: 'productName' },
+    { title: intl.formatMessage(messages.productSerial), value: 'productSerial' },
+    { title: intl.formatMessage(messages.deliveredAt), value: 'deliveredAt' },
+    { title: intl.formatMessage(messages.expiredAt), value: 'expiredAt' },
+    { title: intl.formatMessage(messages.producedAt), value: 'producedAt' },
+  ];
+  const { filterAndSort, onChangeFilter } = useSortAndFilter(getInitFilter());
+  const lastFilterAndSort = React.useRef({
+    ...filterAndSort.sort,
+    ...filterAndSort.filter,
+  });
+  const lastBatchIds = React.useRef([]);
+  const lastBatchInputIds = React.useRef([]);
+  const lastFocusedContainerIndex = React.useRef(focusedContainerIndex);
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {(
@@ -112,13 +151,51 @@ function BatchesArea({
         const containerId = isFocusedContainer
           ? getByPath(`${focusedContainerIndex}.id`, containers)
           : null;
-        const currentBatches = isFocusedBatchesPool
+        const batchesSelector = isFocusedBatchesPool
           ? getBatchesInPool(batches)
           : getBatchesByContainerId(batches, containerId);
 
+        const currentBatches = [];
+
+        if (
+          !isEquals(lastFilterAndSort.current, {
+            ...filterAndSort.sort,
+            ...filterAndSort.filter,
+          }) ||
+          (batchesSelector.length > 0 &&
+            lastBatchIds.current &&
+            lastBatchIds.current.length === 0) ||
+          lastFocusedContainerIndex.current !== focusedContainerIndex
+        ) {
+          lastFocusedContainerIndex.current = focusedContainerIndex;
+          lastFilterAndSort.current = {
+            ...filterAndSort.sort,
+            ...filterAndSort.filter,
+          };
+          const filterBatches = sortBy(batchesSelector, {
+            ...filterAndSort.sort,
+            ...filterAndSort.filter,
+          });
+          lastBatchIds.current = filterBatches.map(item => getByPath('id', item));
+          lastBatchInputIds.current = batchesSelector.map(item => getByPath('id', item));
+          currentBatches.push(...filterBatches);
+        } else {
+          lastBatchIds.current.forEach(batchId => {
+            const findBatch = batchesSelector.find(item => getByPath('id', item) === batchId);
+            if (findBatch) {
+              currentBatches.push(findBatch);
+            }
+          });
+          batchesSelector.forEach(batch => {
+            if (!lastBatchInputIds.current.includes(getByPath('id', batch))) {
+              currentBatches.push(batch);
+            }
+          });
+        }
+
         const selectedBatchIds = intersection(
-          currentBatches.map(item => item.id),
-          selectedBatches.map(item => item.id)
+          currentBatches.map(item => getByPath('id', item)),
+          selectedBatches.map(item => getByPath('id', item))
         );
 
         if (selectedBatches.length !== 0 && selectedBatchIds.length === 0) {
@@ -128,14 +205,6 @@ function BatchesArea({
         if (isFocusedContainer) {
           const container = containers[focusedContainerIndex];
           representativeBatchId = getByPath(`representativeBatch.id`, container);
-
-          // FIXME: Try to fix the representativeBatch without set state on rendering UI
-          if (currentBatches.length > 0 && !representativeBatchId) {
-            setDeepFieldValue(
-              `containers.${focusedContainerIndex}.representativeBatch`,
-              currentBatches[0]
-            );
-          }
         }
 
         const allowMoveBatches =
@@ -161,7 +230,15 @@ function BatchesArea({
 
         return (
           <div className={BatchesWrapperStyle}>
-            <div className={BatchesNavbarWrapperStyle} />
+            <div className={BatchesNavbarWrapperStyle}>
+              <FilterToolBar
+                canSort
+                canSearch
+                sortFields={sortFields}
+                filtersAndSort={filterAndSort}
+                onChange={onChangeFilter}
+              />
+            </div>
             <div className={BatchesBodyWrapperStyle}>
               {currentBatches.length === 0 ? (
                 <div className={EmptyMessageStyle}>
@@ -246,7 +323,7 @@ function BatchesArea({
                           hasPermission([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH]);
 
                       return (
-                        <React.Fragment key={batch.id}>
+                        <React.Fragment key={getByPath('id', batch)}>
                           {isSelectBatchesMode ? (
                             <ShipmentBatchCard
                               batch={batch}
@@ -254,10 +331,10 @@ function BatchesArea({
                                 isFocusedBatchesPool ||
                                 (!isFocusedBatchesPool && !isFocusedContainer)
                                   ? null
-                                  : batch.id === representativeBatchId
+                                  : getByPath('id', batch) === representativeBatchId
                               }
                               selectable
-                              selected={selectedBatchIds.includes(batch.id)}
+                              selected={selectedBatchIds.includes(getByPath('id', batch))}
                               onSelect={() => (allowMoveBatches ? onSelectBatch(batch) : () => {})}
                               viewable={{
                                 price: hasPermission(ORDER_ITEMS_GET_PRICE),
@@ -282,13 +359,15 @@ function BatchesArea({
                                           setFieldArrayValue(indexOfAllBatches, value);
                                           if (batch.container) {
                                             const indexOfContainer = containers.findIndex(
-                                              container => container.id === batch.container.id
+                                              container =>
+                                                container.id === getByPath('container.id', batch)
                                             );
                                             if (indexOfContainer >= 0) {
                                               const indexOfBatch = containers[
                                                 indexOfContainer
                                               ].batches.findIndex(
-                                                containersBatch => containersBatch.id === batch.id
+                                                containersBatch =>
+                                                  containersBatch.id === getByPath('id', batch)
                                               );
                                               if (indexOfBatch >= 0) {
                                                 setDeepFieldValue(
@@ -341,20 +420,22 @@ function BatchesArea({
                                       isFocusedBatchesPool ||
                                       (!isFocusedBatchesPool && !isFocusedContainer)
                                         ? null
-                                        : batch.id === representativeBatchId
+                                        : getByPath('id', batch) === representativeBatchId
                                     }
                                     saveOnBlur={updatedBatch => {
                                       const indexOfAllBatches = batches.indexOf(batch);
                                       setFieldArrayValue(indexOfAllBatches, updatedBatch);
                                       if (batch.container) {
                                         const indexOfContainer = containers.findIndex(
-                                          container => container.id === batch.container.id
+                                          container =>
+                                            container.id === getByPath('container.id', batch)
                                         );
                                         if (indexOfContainer >= 0) {
                                           const indexOfBatch = containers[
                                             indexOfContainer
                                           ].batches.findIndex(
-                                            containersBatch => containersBatch.id === batch.id
+                                            containersBatch =>
+                                              containersBatch.id === getByPath('id', batch)
                                           );
                                           if (indexOfBatch >= 0) {
                                             setDeepFieldValue(
@@ -491,13 +572,22 @@ function BatchesArea({
                                 }}
                                 selectedBatches={batches}
                                 onSelect={selected => {
-                                  const newSelectBatches = selected.map(selectedBatch => ({
-                                    ...selectedBatch,
-                                    ...(isFocusedContainer
-                                      ? { container: containers[focusedContainerIndex] }
-                                      : {}),
-                                    packageQuantity: calculatePackageQuantity(selectedBatch),
-                                  }));
+                                  const maxSort =
+                                    getByPathWithDefault(
+                                      0,
+                                      'shipmentSort',
+                                      maxBy(batches, 'shipmentSort')
+                                    ) + 1;
+                                  const newSelectBatches = selected.map(
+                                    (selectedBatch, counter) => ({
+                                      shipmentSort: maxSort + counter,
+                                      ...selectedBatch,
+                                      ...(isFocusedContainer
+                                        ? { container: containers[focusedContainerIndex] }
+                                        : {}),
+                                      packageQuantity: calculatePackageQuantity(selectedBatch),
+                                    })
+                                  );
                                   if (isFocusedContainer) {
                                     setDeepFieldValue(
                                       `containers.${focusedContainerIndex}.batches`,
@@ -574,9 +664,16 @@ function BatchesArea({
                                   ...(exporterId ? { exporterId } : {}),
                                 }}
                                 onSelect={selectedOrderItems => {
-                                  const createdBatches: Array<Batch> = selectedOrderItems.map(
+                                  const maxSort =
+                                    getByPathWithDefault(
+                                      0,
+                                      'shipmentSort',
+                                      maxBy(batches, 'shipmentSort')
+                                    ) + 1;
+                                  const createdBatches: Array<BatchPayload> = selectedOrderItems.map(
                                     (orderItem, index) => ({
                                       ...generateBatchByOrderItem(orderItem),
+                                      shipmentSort: maxSort + index,
                                       no: `batch no ${batches.length + index + 1}`,
                                       ...(isFocusedContainer
                                         ? { container: containers[focusedContainerIndex] }
@@ -617,4 +714,4 @@ function BatchesArea({
   );
 }
 
-export default React.memo<Props>(BatchesArea);
+export default injectIntl(React.memo<Props>(BatchesArea));

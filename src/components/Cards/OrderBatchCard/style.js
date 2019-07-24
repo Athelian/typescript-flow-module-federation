@@ -57,44 +57,12 @@ export const ShipmentWrapperStyle: string = css`
   align-items: center;
 `;
 
-export const ShipmentIconStyle = (hasShipment: boolean): string => css`
-  ${presets.BUTTON};
-  ${borderRadiuses.MAIN};
-  width: 20px;
-  height: 20px;
-  background-color: ${hasShipment ? colors.TEAL : colors.GRAY_VERY_LIGHT};
-  color: ${colors.WHITE};
-  font-size: 11px;
-  ${hasShipment &&
-    `
-      &:hover, :focus {
-        background-color: ${colors.TEAL_DARK};
-      }
-    `};
-`;
-
 export const ContainerWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 20px 155px;
   width: 100%;
   padding: 0 10px;
   align-items: center;
-`;
-
-export const ContainerIconStyle = (hasContainer: boolean): string => css`
-  ${presets.BUTTON};
-  ${borderRadiuses.MAIN};
-  width: 20px;
-  height: 20px;
-  background-color: ${hasContainer ? colors.TEAL : colors.GRAY_VERY_LIGHT};
-  color: ${colors.WHITE};
-  font-size: 11px;
-  ${hasContainer &&
-    `
-      &:hover, :focus {
-        background-color: ${colors.TEAL_DARK};
-      }
-    `};
 `;
 
 export const WarehouseArrivalWrapperStyle: string = css`

@@ -69,6 +69,7 @@ const SelectWareHouse = ({ intl, cacheKey, selected, onCancel, onSelect }: Props
                     sortFields={sortFields}
                     filtersAndSort={filterAndSort}
                     onChange={onChangeFilter}
+                    canSearch
                   />
                   <CancelButton onClick={onCancel} />
                   <SaveButton

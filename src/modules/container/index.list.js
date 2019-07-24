@@ -59,6 +59,8 @@ function OrderModule(props: Props) {
           sortFields={sortFields}
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
+          canArchive
+          canSearch
         />
         <ExportButton
           type="Containers"

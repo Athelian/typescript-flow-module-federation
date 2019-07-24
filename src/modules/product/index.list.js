@@ -72,6 +72,8 @@ const ProductListModule = (props: Props) => {
               sortFields={sortFields}
               filtersAndSort={filterAndSort}
               onChange={onChangeFilter}
+              canArchive
+              canSearch
             />
             {hasPermission(PRODUCT_CREATE) && (
               <Link to="new">

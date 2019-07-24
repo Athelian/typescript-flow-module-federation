@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { TagsInput } from 'components/Form';
-import { useTagInput } from 'modules/form/hooks';
+import { useTagsInput } from 'modules/form/hooks';
 import emitter from 'utils/emitter';
 
 type OptionalProps = {
@@ -19,22 +19,32 @@ type Props = OptionalProps & {
 };
 
 export default function InlineTagInput({ name, tagType, values, id, editable }: Props) {
-  const { onChange } = useTagInput(values);
+  const { tags, onChange } = useTagsInput(values);
   return (
     <TagsInput
       id={`input-${id}`}
       name={name}
       editable={editable}
       tagType={tagType}
-      values={values}
-      onChange={(field, value) => {
+      values={tags}
+      onChange={value => {
         onChange(value);
+      }}
+      onClickRemove={value => {
         emitter.emit('INLINE_CHANGE', {
           name,
           hasError: false,
-          value,
+          value: tags.filter(tag => tag.id !== value.id),
         });
       }}
+      onBlur={() => {
+        emitter.emit('INLINE_CHANGE', {
+          name,
+          hasError: false,
+          value: tags,
+        });
+      }}
+      width="200px"
     />
   );
 }

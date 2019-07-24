@@ -187,6 +187,10 @@ export default defineMessages({
     id: 'components.BatchItem.updatedAt',
     defaultMessage: 'Last Modified',
   },
+  sort: {
+    id: 'components.BatchItem.sort',
+    defaultMessage: 'Date Added',
+  },
   createdAt: {
     id: 'components.BatchItem.createdAt',
     defaultMessage: 'Date Created',

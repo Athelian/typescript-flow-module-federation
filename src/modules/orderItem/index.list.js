@@ -50,6 +50,8 @@ function OrderItemModule(props: Props) {
           sortFields={sortFields}
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
+          canArchive
+          canSearch
         />
       </NavBar>
       <OrderItemList {...queryVariables} />

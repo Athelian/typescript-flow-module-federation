@@ -12,6 +12,7 @@ import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import RelateEntity from 'components/RelateEntity';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import FormattedNumber from 'components/FormattedNumber';
@@ -40,7 +41,6 @@ import {
   TaskCardWrapperStyle,
   TaskInTemplateIconStyle,
   TaskParentWrapperStyle,
-  TaskParentIconStyle,
   TaskNameWrapperStyle,
   TaskPositionWrapperStyle,
   DragButtonWrapperStyle,
@@ -48,9 +48,7 @@ import {
   AutoDateSyncIconStyle,
   DividerStyle,
   ProjectInfoStyle,
-  ProjectIconStyle,
   MilestoneInfoStyle,
-  MilestoneIconStyle,
   TaskStatusWrapperStyle,
   TaskStatusPlaceholderStyle,
   TaskTagsWrapperStyle,
@@ -113,8 +111,16 @@ const getParentInfo = (
   parent: Object
 ): {
   parentType: string,
-  parentIcon: string,
-  parentData: mixed,
+  parentIcon: | 'ORDER'
+    | 'BATCH'
+    | 'SHIPMENT'
+    | 'CONTAINER'
+    | 'ORDER_ITEM'
+    | 'PRODUCT'
+    | 'PRODUCT_PROVIDER'
+    | 'PROJECT'
+    | 'MILESTONE',
+  parentData: React$Node,
   link: string,
 } => {
   const { __typename } = parent;
@@ -311,20 +317,16 @@ const TaskCard = ({
               <div className={TaskParentWrapperStyle}>
                 {viewPermissions[parentType] ? (
                   <Link
-                    className={TaskParentIconStyle}
                     to={link}
                     onClick={evt => {
                       evt.stopPropagation();
                     }}
                   >
-                    <Icon icon={parentIcon} />
+                    <RelateEntity entity={parentIcon} value={parentData} />
                   </Link>
                 ) : (
-                  <div className={TaskParentIconStyle}>
-                    <Icon icon={parentIcon} />
-                  </div>
+                  <RelateEntity entity={parentIcon} value={parentData} />
                 )}
-                <Display align="left">{parentData}</Display>
               </div>
             )}
 
@@ -490,7 +492,6 @@ const TaskCard = ({
                 <div className={ProjectInfoStyle}>
                   {getByPath('project', milestone) ? (
                     <Link
-                      className={ProjectIconStyle(true)}
                       to={
                         navigable.project
                           ? `/project/${encodeId(getByPath('project.id', milestone))}`
@@ -500,22 +501,22 @@ const TaskCard = ({
                         evt.stopPropagation();
                       }}
                     >
-                      <Icon icon="PROJECT" />
+                      <RelateEntity
+                        entity="PROJECT"
+                        value={getByPathWithDefault('', 'project.name', milestone)}
+                      />
                     </Link>
                   ) : (
-                    <div className={ProjectIconStyle(false)}>
-                      <Icon icon="PROJECT" />
-                    </div>
+                    <RelateEntity
+                      entity="PROJECT"
+                      value={getByPathWithDefault('', 'project.name', milestone)}
+                    />
                   )}
-                  <Display align="left" blackout={isForbidden(getByPath('project', milestone))}>
-                    {getByPathWithDefault('', 'project.name', milestone)}
-                  </Display>
                 </div>
 
                 <div className={MilestoneInfoStyle}>
                   {milestone ? (
                     <Link
-                      className={MilestoneIconStyle(true)}
                       to={
                         navigable.project
                           ? `/project/${encodeId(getByPath('project.id', milestone))}`
@@ -525,17 +526,17 @@ const TaskCard = ({
                         evt.stopPropagation();
                       }}
                     >
-                      <Icon icon="MILESTONE" />
+                      <RelateEntity
+                        entity="MILESTONE"
+                        value={getByPathWithDefault('', 'name', milestone)}
+                      />
                     </Link>
                   ) : (
-                    <div className={MilestoneIconStyle(false)}>
-                      <Icon icon="MILESTONE" />
-                    </div>
+                    <RelateEntity
+                      entity="MILESTONE"
+                      value={getByPathWithDefault('', 'name', milestone)}
+                    />
                   )}
-
-                  <Display align="left" blackout={isForbidden(milestone)}>
-                    {getByPathWithDefault('', 'name', milestone)}
-                  </Display>
                 </div>
               </>
             )}

@@ -225,6 +225,7 @@
   "components.BatchItem.expiredAt": "到期日",
   "components.BatchItem.producedAt": "生产日期",
   "components.BatchItem.updatedAt": "最后修改日期",
+  "components.BatchItem.sort": "Date Added",
   "components.BatchItem.createdAt": "创作日期",
   "components.BatchItem.adjustmentType": "类别",
   "components.BatchItem.exporter": "出口商",

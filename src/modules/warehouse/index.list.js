@@ -39,6 +39,7 @@ const WarehouseModule = (props: Props) => {
           sortFields={sortFields}
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
+          canSearch
         />
         {allowCreate && (
           <Link to="new">

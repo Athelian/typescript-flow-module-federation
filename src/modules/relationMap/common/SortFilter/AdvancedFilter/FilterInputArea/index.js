@@ -120,7 +120,8 @@ const getFilterInputArea = ({
             <Tags
               values={selectedItems}
               tagType="Order"
-              onChange={(name, tags) => onToggleSelect(tags)}
+              onChange={tags => onToggleSelect(tags)}
+              onClickRemove={tag => onToggleSelect(selectedItems.filter(({ id }) => id !== tag.id))}
             />
           );
         case 'createdAt':
@@ -165,7 +166,8 @@ const getFilterInputArea = ({
             <Tags
               values={selectedItems}
               tagType="Product"
-              onChange={(name, tags) => onToggleSelect(tags)}
+              onChange={tags => onToggleSelect(tags)}
+              onClickRemove={tag => onToggleSelect(selectedItems.filter(({ id }) => id !== tag.id))}
             />
           );
         case 'exporter':
@@ -276,7 +278,8 @@ const getFilterInputArea = ({
             <Tags
               values={selectedItems}
               tagType="Batch"
-              onChange={(name, tags) => onToggleSelect(tags)}
+              onChange={tags => onToggleSelect(tags)}
+              onClickRemove={tag => onToggleSelect(selectedItems.filter(({ id }) => id !== tag.id))}
             />
           );
         case 'createdAt':
@@ -414,7 +417,8 @@ const getFilterInputArea = ({
             <Tags
               values={selectedItems}
               tagType="Shipment"
-              onChange={(name, tags) => onToggleSelect(tags)}
+              onChange={tags => onToggleSelect(tags)}
+              onClickRemove={tag => onToggleSelect(selectedItems.filter(({ id }) => id !== tag.id))}
             />
           );
         case 'createdAt':

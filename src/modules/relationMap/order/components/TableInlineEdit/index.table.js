@@ -18,7 +18,7 @@ import SlideView from 'components/SlideView';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import {
   SaveButton,
-  CancelButton,
+  ResetButton,
   SelectTemplateButton,
   ExportGenericButton,
 } from 'components/Buttons';
@@ -49,8 +49,7 @@ import { keyMap, handlers } from './keyMap';
 import { Table } from './components';
 import { findColumnsForCustomFields, findColumns, totalColumn } from './tableRenders';
 
-type Props = {
-  onCancel: () => void,
+type Props = {|
   allId: {
     orderIds: Array<string>,
     orderItemIds: Array<string>,
@@ -76,7 +75,7 @@ type Props = {
     containers: Object,
   },
   intl: IntlShape,
-};
+|};
 
 const isModifyPort = (field: string) => {
   const ports = [
@@ -88,7 +87,7 @@ const isModifyPort = (field: string) => {
   return ports.some(port => field.includes(port));
 };
 
-const TableInlineEdit = ({ allId, targetIds, onCancel, intl, entities, ...dataSource }: Props) => {
+const TableInlineEdit = ({ allId, targetIds, intl, entities, ...dataSource }: Props) => {
   const initShowAll = window.localStorage.getItem('filterRMEditViewShowAll');
   const initTemplateColumn = window.localStorage.getItem('rmTemplateFilterColumns');
   const [errors, setErrors] = useState({});
@@ -488,75 +487,90 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, entities, ...dataSo
               <SlideViewLayout>
                 <SlideViewNavBar>
                   <EntityIcon icon="EDIT_TABLE" color="RELATION_MAP" />
-                  <CancelButton onClick={onCancel} />
-                  <SaveButton
-                    isLoading={loading}
-                    onClick={async () => {
-                      const changedData = diff(entities, editData);
-                      setLoading(true);
-                      try {
-                        const result: {
-                          data: ?{
-                            entitiesUpdateMany: {
-                              orders: {
-                                violations?: Array<{ message: string }>,
+                  {!isEqual(entities, editData) && (
+                    <>
+                      <ResetButton
+                        onClick={() => {
+                          setEditData(entities);
+                        }}
+                      />
+                      <SaveButton
+                        isLoading={loading}
+                        onClick={async () => {
+                          const changedData = diff(entities, editData);
+                          setLoading(true);
+                          try {
+                            const result: {
+                              data: ?{
+                                entitiesUpdateMany: {
+                                  orders: {
+                                    violations?: Array<{ message: string }>,
+                                  },
+                                  shipments: {
+                                    violations?: Array<{ message: string }>,
+                                  },
+                                  batches: {
+                                    violations?: Array<{ message: string }>,
+                                  },
+                                },
                               },
-                              shipments: {
-                                violations?: Array<{ message: string }>,
-                              },
-                              batches: {
-                                violations?: Array<{ message: string }>,
-                              },
-                            },
-                          },
-                          errors?: Array<Object>,
-                        } = await client.mutate({
-                          mutation: entitiesUpdateManyMutation,
-                          variables: parseChangedData({ changedData, editData, mappingObjects }),
-                        });
-                        setLoading(false);
-                        logger.warn({ result });
-                        if (result && result.data && result.data.entitiesUpdateMany) {
-                          if (
-                            result.data.entitiesUpdateMany.orders.violations &&
-                            result.data.entitiesUpdateMany.orders.violations.length
-                          ) {
-                            const errorMessages = result.data.entitiesUpdateMany.orders.violations.filter(
-                              item => !!item
-                            );
-                            if (errorMessages.length) setErrorMessage(errorMessages[0][0].message);
+                              errors?: Array<Object>,
+                            } = await client.mutate({
+                              mutation: entitiesUpdateManyMutation,
+                              variables: parseChangedData({
+                                changedData,
+                                editData,
+                                mappingObjects,
+                              }),
+                            });
+                            setLoading(false);
+                            logger.warn({ result });
+                            if (result && result.data && result.data.entitiesUpdateMany) {
+                              if (
+                                result.data.entitiesUpdateMany.orders.violations &&
+                                result.data.entitiesUpdateMany.orders.violations.length
+                              ) {
+                                const errorMessages = result.data.entitiesUpdateMany.orders.violations.filter(
+                                  item => !!item
+                                );
+                                if (errorMessages.length)
+                                  setErrorMessage(errorMessages[0][0].message);
+                              }
+                              if (
+                                result.data.entitiesUpdateMany.shipments.violations &&
+                                result.data.entitiesUpdateMany.shipments.violations.length
+                              ) {
+                                const errorMessages = result.data.entitiesUpdateMany.shipments.violations.filter(
+                                  item => !!item
+                                );
+                                if (errorMessages.length)
+                                  setErrorMessage(errorMessages[0][0].message);
+                              }
+                              if (
+                                result.data.entitiesUpdateMany.batches.violations &&
+                                result.data.entitiesUpdateMany.batches.violations.length
+                              ) {
+                                const errorMessages = result.data.entitiesUpdateMany.batches.violations.filter(
+                                  item => !!item
+                                );
+                                if (errorMessages.length)
+                                  setErrorMessage(errorMessages[0][0].message);
+                              }
+                              setIsChangeData(true);
+                            } else if (result.errors) {
+                              trackingError(result.errors);
+                              toast.error('There was an error. Please try again later');
+                            }
+                          } catch (error) {
+                            toast.error('There was an error. Please try again later');
+                            setLoading(false);
+                            trackingError(error);
                           }
-                          if (
-                            result.data.entitiesUpdateMany.shipments.violations &&
-                            result.data.entitiesUpdateMany.shipments.violations.length
-                          ) {
-                            const errorMessages = result.data.entitiesUpdateMany.shipments.violations.filter(
-                              item => !!item
-                            );
-                            if (errorMessages.length) setErrorMessage(errorMessages[0][0].message);
-                          }
-                          if (
-                            result.data.entitiesUpdateMany.batches.violations &&
-                            result.data.entitiesUpdateMany.batches.violations.length
-                          ) {
-                            const errorMessages = result.data.entitiesUpdateMany.batches.violations.filter(
-                              item => !!item
-                            );
-                            if (errorMessages.length) setErrorMessage(errorMessages[0][0].message);
-                          }
-                          setIsChangeData(true);
-                        } else if (result.errors) {
-                          trackingError(result.errors);
-                          toast.error('There was an error. Please try again later');
-                        }
-                      } catch (error) {
-                        toast.error('There was an error. Please try again later');
-                        setLoading(false);
-                        trackingError(error);
-                      }
-                    }}
-                    disabled={isEqual(entities, editData) || Object.keys(errors).length > 0}
-                  />
+                        }}
+                        disabled={isEqual(entities, editData) || Object.keys(errors).length > 0}
+                      />
+                    </>
+                  )}
                   <ExportGenericButton
                     columns={() => getExportColumns(intl, allColumns)}
                     rows={() =>

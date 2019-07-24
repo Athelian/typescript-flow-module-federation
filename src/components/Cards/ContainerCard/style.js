@@ -114,22 +114,6 @@ export const IconInputStyle: string = css`
   align-items: center;
 `;
 
-export const WarehouseIconStyle = (hasWarehouse: boolean): string => css`
-  ${presets.BUTTON};
-  ${borderRadiuses.MAIN};
-  width: 20px;
-  height: 20px;
-  background-color: ${hasWarehouse ? colors.TEAL : colors.GRAY_VERY_LIGHT};
-  color: ${colors.WHITE};
-  font-size: 11px;
-  ${hasWarehouse &&
-    `
-    &:hover, :focus {
-      background-color: ${colors.TEAL_DARK};
-    }
-  `};
-`;
-
 export const LabelStyle: string = css`
   width: 100%;
   padding: 0 5px;

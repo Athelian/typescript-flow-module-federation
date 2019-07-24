@@ -11,6 +11,7 @@ import Tag from 'components/Tag';
 import TaskRing from 'components/TaskRing';
 import FormattedNumber from 'components/FormattedNumber';
 import withForbiddenCard from 'hoc/withForbiddenCard';
+import RelateEntity from 'components/RelateEntity';
 import { getByPathWithDefault } from 'utils/fp';
 import {
   FieldItem,
@@ -41,9 +42,7 @@ import {
   TotalPriceWrapperStyle,
   VolumeWrapperStyle,
   OrderWrapperStyle,
-  OrderIconStyle,
   ShipmentWrapperStyle,
-  ShipmentIconStyle,
   OrderInChargeWrapperStyle,
   InChargeWrapperStyle,
   TagsAndTaskWrapperStyle,
@@ -409,40 +408,34 @@ const ContainerBatchCard = ({
           <div className={OrderWrapperStyle}>
             {mergedNavigable.order ? (
               <Link
-                className={OrderIconStyle}
                 to={`/order/${encodeId(order.id)}`}
                 onClick={evt => {
                   evt.stopPropagation();
                 }}
               >
-                <Icon icon="ORDER" />
+                <RelateEntity entity="ORDER" value={order.poNo} />
               </Link>
             ) : (
-              <div className={OrderIconStyle}>
-                <Icon icon="ORDER" />
-              </div>
+              <RelateEntity entity="ORDER" value={order.poNo} />
             )}
-
-            <Display align="left">{order.poNo}</Display>
           </div>
 
           <div className={ShipmentWrapperStyle}>
             {mergedNavigable.shipment ? (
               <Link
-                className={ShipmentIconStyle}
                 to={`/shipment/${shipment ? encodeId(shipment.id) : ''}`}
                 onClick={evt => {
                   evt.stopPropagation();
                 }}
               >
-                <Icon icon="SHIPMENT" />
+                <RelateEntity
+                  entity="SHIPMENT"
+                  value={getByPathWithDefault(null, 'no', shipment)}
+                />
               </Link>
             ) : (
-              <div className={ShipmentIconStyle}>
-                <Icon icon="SHIPMENT" />
-              </div>
+              <RelateEntity entity="SHIPMENT" value={getByPathWithDefault(null, 'no', shipment)} />
             )}
-            <Display align="left">{getByPathWithDefault(null, 'no', shipment)}</Display>
           </div>
 
           <div className={OrderInChargeWrapperStyle}>

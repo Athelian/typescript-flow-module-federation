@@ -1,19 +1,15 @@
 // @flow
 import * as React from 'react';
-import matchSorter from 'match-sorter';
 import EnumProvider from 'providers/enum';
 import { FieldItem, SearchSelectInput, DefaultSearchSelect, DefaultOptions } from 'components/Form';
 import emitter from 'utils/emitter';
 import { useTextInput } from 'modules/form/hooks';
-import { parseEnumValue, parseEnumDescriptionOrValue } from 'components/Form/Factories/helpers';
+import {
+  parseEnumValue,
+  parseEnumDescriptionOrValue,
+  filterItems,
+} from 'components/Form/Factories/helpers';
 import logger from 'utils/logger';
-
-const filterItems = (query: string, items: Array<any>) => {
-  if (!query) return items;
-  return matchSorter(items, query, {
-    keys: ['name', 'description'],
-  });
-};
 
 type OptionalProps = {
   isRequired: boolean,

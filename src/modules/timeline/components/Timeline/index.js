@@ -13,13 +13,13 @@ import DateSeparator from '../DateSeparator';
 import { CommentInputWrapperStyle, ListWrapperStyle, TimelineWrapperStyle } from './style';
 import { decorateEntries, normalizeEntries } from './helper';
 
-type Props = {
+type Props = {|
   query: DocumentNode,
   queryField: string,
   variables: Object,
   entity: Object,
   formatters: { [key: string]: LogFormatter },
-};
+|};
 
 const defaultProps = {
   variables: {},
@@ -34,46 +34,52 @@ const Timeline = ({
   formatters: customFormatters,
 }: Props) => {
   const ref = React.useRef(null);
-  const [didLoad, setDidLoad] = React.useState(false);
-  const [didScroll, setDidScroll] = React.useState(false);
-
-  React.useEffect(() => {
-    if (ref && ref.current && didLoad && !didScroll) {
-      ref.current.scrollTop = ref.current.scrollHeight;
-      setDidScroll(true);
-    }
-  }, [ref, didLoad, didScroll]);
-
+  const [isReady, setIsReady] = React.useState(false);
+  const ROW_HEIGHT = 60;
   const variables = {
     ...baseVariables,
     page: 1,
-    perPage: 20,
+    perPage: Math.ceil((window.innerHeight - 90) / ROW_HEIGHT),
   };
   const formatters = { ...DefaultFormatters, ...customFormatters };
 
+  React.useLayoutEffect(() => {
+    setTimeout(() => {
+      if (isReady && ref.current) {
+        ref.current.scrollTop = ref.current.scrollHeight;
+      }
+    }, 400);
+  }, [isReady]);
+
   return (
-    <Query
-      query={query}
-      variables={variables}
-      fetchPolicy="network-only"
-      onCompleted={() => setDidLoad(true)}
-    >
-      {({ data, loading, fetchMore, error }) => {
-        if (error) {
-          return error.message;
-        }
+    <div className={TimelineWrapperStyle}>
+      <Query
+        query={query}
+        variables={variables}
+        fetchPolicy="network-only"
+        onCompleted={() => {
+          setIsReady(true);
+        }}
+      >
+        {({ data, loading, fetchMore, error }) => {
+          if (error) {
+            return error.message;
+          }
 
-        const page = getByPathWithDefault(1, `${queryField}.timeline.entries.page`, data);
-        const totalPage = getByPathWithDefault(1, `${queryField}.timeline.entries.totalPage`, data);
-        const items = decorateEntries(
-          normalizeEntries(
-            getByPathWithDefault([], `${queryField}.timeline.entries.nodes`, data)
-          ).reverse()
-        );
-        const hasMore = page < totalPage;
+          const page = getByPathWithDefault(1, `${queryField}.timeline.entries.page`, data);
+          const totalPage = getByPathWithDefault(
+            1,
+            `${queryField}.timeline.entries.totalPage`,
+            data
+          );
+          const items = decorateEntries(
+            normalizeEntries(
+              getByPathWithDefault([], `${queryField}.timeline.entries.nodes`, data)
+            ).reverse()
+          );
+          const hasMore = page < totalPage;
 
-        return (
-          <div className={TimelineWrapperStyle}>
+          return (
             <div ref={ref} className={ListWrapperStyle}>
               <GridView
                 onLoadMore={() =>
@@ -84,19 +90,25 @@ const Timeline = ({
                 itemWidth="100%"
                 isEmpty={items.length === 0}
                 isReverse
+                threshold={50}
                 rowGap="10px"
                 padding="30px 100px"
                 emptyMessage="No logs"
               >
                 {items.map((item: any) => {
-                  // eslint-disable-next-line no-underscore-dangle
-                  switch (item.__typename) {
+                  switch (getByPathWithDefault('', '__typename', item)) {
                     case 'Log':
-                      return <Log key={item.id} formatters={formatters} log={item} />;
+                      return (
+                        <Log
+                          key={getByPathWithDefault('', 'id', item)}
+                          formatters={formatters}
+                          log={item}
+                        />
+                      );
                     case 'Comment':
                       return (
                         <Comment
-                          key={item.id}
+                          key={getByPathWithDefault('', 'id', item)}
                           comment={item}
                           query={query}
                           queryField={queryField}
@@ -104,32 +116,32 @@ const Timeline = ({
                         />
                       );
                     case 'DateSeparator':
-                      return <DateSeparator key={item.id} date={item} />;
+                      return (
+                        <DateSeparator key={getByPathWithDefault('', 'id', item)} date={item} />
+                      );
                     default:
                       return null;
                   }
                 })}
               </GridView>
             </div>
-            {!loading && (
-              <div className={CommentInputWrapperStyle}>
-                <CommentInput
-                  entity={entity}
-                  query={query}
-                  queryField={queryField}
-                  variables={variables}
-                  onCompleted={() => {
-                    if (ref && ref.current) {
-                      ref.current.scrollTop = ref.current.scrollHeight;
-                    }
-                  }}
-                />
-              </div>
-            )}
-          </div>
-        );
-      }}
-    </Query>
+          );
+        }}
+      </Query>
+      <div className={CommentInputWrapperStyle}>
+        <CommentInput
+          entity={entity}
+          query={query}
+          queryField={queryField}
+          variables={variables}
+          onCompleted={() => {
+            if (ref.current) {
+              ref.current.scrollTop = ref.current.scrollHeight;
+            }
+          }}
+        />
+      </div>
+    </div>
   );
 };
 

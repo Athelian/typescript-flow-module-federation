@@ -22,6 +22,7 @@ type Props = OptionalProps & {
   emptyMessage: any,
   itemWidth: string,
   children: React$Node,
+  threshold: number,
 };
 
 const defaultProps = {
@@ -30,6 +31,7 @@ const defaultProps = {
   rowGap: '30px',
   isReverse: false,
   padding: '50px 20px',
+  threshold: 500,
 };
 
 function GridView(props: Props) {
@@ -47,6 +49,7 @@ function GridView(props: Props) {
     rowGap,
     children,
     loader,
+    threshold,
   } = props;
 
   if (isLoading) {
@@ -73,7 +76,7 @@ function GridView(props: Props) {
       hasMore={hasMore}
       loader={loader}
       isReverse={isReverse}
-      threshold={500}
+      threshold={threshold}
       useWindow={false}
     >
       {children}

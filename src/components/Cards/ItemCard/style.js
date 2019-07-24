@@ -165,20 +165,6 @@ export const OrderWrapperStyle: string = css`
   grid-gap: 5px;
 `;
 
-export const OrderIconStyle: string = css`
-  ${presets.BUTTON};
-  ${borderRadiuses.MAIN};
-  width: 20px;
-  height: 20px;
-  background-color: ${colors.TEAL};
-  color: ${colors.WHITE};
-  font-size: 11px;
-  &:hover,
-  :focus {
-    background-color: ${colors.TEAL_DARK};
-  }
-`;
-
 export const ImporterWrapperStyle: string = css`
   width: 100%;
   padding: 0 5px;
