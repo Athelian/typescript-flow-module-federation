@@ -109,6 +109,7 @@ export const DividerStyle: string = css`
 export const IconInputStyle: string = css`
   display: grid;
   grid-template-columns: 20px 155px;
+  grid-gap: 5px;
   width: 100%;
   padding: 0 0 0 10px;
   align-items: center;
@@ -116,18 +117,14 @@ export const IconInputStyle: string = css`
 
 export const WarehouseIconStyle = (hasWarehouse: boolean): string => css`
   ${presets.BUTTON};
-  ${borderRadiuses.MAIN};
   width: 20px;
   height: 20px;
-  background-color: ${hasWarehouse ? colors.TEAL : colors.GRAY_VERY_LIGHT};
+  background-color: ${hasWarehouse ? colors.WAREHOUSE : colors.GRAY_VERY_LIGHT};
   color: ${colors.WHITE};
   font-size: 11px;
-  ${hasWarehouse &&
-    `
-    &:hover, :focus {
-      background-color: ${colors.TEAL_DARK};
-    }
-  `};
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  ${layout.CENTER_CENTER};
 `;
 
 export const LabelStyle: string = css`
