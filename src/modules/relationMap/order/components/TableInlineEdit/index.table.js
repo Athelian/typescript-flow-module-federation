@@ -81,7 +81,22 @@ type Props = {|
 // react-hotkeys ignore key binding on input tags however, we need that for RM edit
 configure({
   logLevel: 'warn',
-  ignoreTags: [],
+  ignoreEventsCondition: event => {
+    const { target } = event;
+    // Id will be have `input-{ROW}-${COLUMN}`
+    if (target && target.id) {
+      return !target.id.includes('input-');
+    }
+    return true;
+  },
+  enableHardSequences: false,
+  ignoreKeymapAndHandlerChangesByDefault: true,
+  ignoreRepeatedEventsWhenKeyHeldDown: true,
+  simulateMissingKeyPressEvents: true,
+  stopEventPropagationAfterHandling: true,
+  stopEventPropagationAfterIgnoring: true,
+  allowCombinationSubmatches: false,
+  customKeyCodes: {},
 });
 
 const isModifyPort = (field: string) => {

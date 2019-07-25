@@ -134,6 +134,7 @@ export default function Table({
       const [rowIndex, columnIndex] = calculatePosition(position, type);
       const isValidNavigate =
         columnIndex >= 0 && columnIndex < columnCount && rowIndex >= 0 && rowIndex < rowCount;
+      const allowTags = ['input', 'button'];
       if (isValidNavigate && gridRef.current) {
         gridRef.current.scrollToItem({
           columnIndex,
@@ -142,13 +143,15 @@ export default function Table({
         requestAnimationFrame(() => {
           const cell = document.getElementById(`input-${rowIndex}-${columnIndex}`);
           if (cell) {
-            if (cell.hasAttribute('disabled')) {
-              emitter.emit('NAVIGATE', calculatePosition([rowIndex, columnIndex], type), type);
+            const tagName = cell.tagName.toLowerCase();
+            if (cell.hasAttribute('disabled') || !allowTags.includes(tagName)) {
+              emitter.emit('NAVIGATE', [rowIndex, columnIndex], type);
             } else {
+              console.warn('focus', cell);
               cell.focus();
             }
           } else {
-            emitter.emit('NAVIGATE', calculatePosition([rowIndex, columnIndex], type), type);
+            emitter.emit('NAVIGATE', [rowIndex, columnIndex], type);
           }
         });
       }
@@ -156,7 +159,7 @@ export default function Table({
     return () => {
       listener.remove();
     };
-  }, [columnCount, gridRef, renderOptions, rowCount]);
+  }, [columnCount, gridRef, rowCount]);
   return (
     <>
       <StickyHeader
