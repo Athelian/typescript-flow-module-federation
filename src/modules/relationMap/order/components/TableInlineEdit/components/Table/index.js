@@ -4,6 +4,7 @@ import memoize from 'memoize-one';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeGrid as Grid } from 'react-window';
 import { getByPath } from 'utils/fp';
+import logger from 'utils/logger';
 import emitter from 'utils/emitter';
 import {
   generateEmptyShipmentsData,
@@ -130,6 +131,7 @@ export default function Table({
   const gridRef = React.createRef();
   React.useEffect(() => {
     const listener = emitter.addListener('NAVIGATE', (position: mixed, type: mixed) => {
+      logger.warn('NAVIGATE', position, type);
       // $FlowIgnore position is the tuples
       const [rowIndex, columnIndex] = calculatePosition(position, type);
       const isValidNavigate =
@@ -145,12 +147,27 @@ export default function Table({
           if (cell) {
             const tagName = cell.tagName.toLowerCase();
             if (cell.hasAttribute('disabled') || !allowTags.includes(tagName)) {
+              logger.warn('NAVIGATE to next cell', [rowIndex, columnIndex], type);
               emitter.emit('NAVIGATE', [rowIndex, columnIndex], type);
             } else {
-              console.warn('focus', cell);
+              logger.warn('focus', cell);
               cell.focus();
+              // Due to the duplicate cell and on the edge case, we got null on text field from API
+              // then on blur, it will make a change and all duplicate cell will be re-render and we lost the focus on input
+              if (cell && tagName === 'input' && !getByPath('value', cell)) {
+                logger.warn('retry to focus on empty value', cell);
+                setTimeout(() => {
+                  const retryCell = document.getElementById(`input-${rowIndex}-${columnIndex}`);
+                  if (retryCell) retryCell.focus();
+                }, 0);
+              }
             }
           } else {
+            logger.warn(
+              'NAVIGATE to next cell because cell is not exist',
+              [rowIndex, columnIndex],
+              type
+            );
             emitter.emit('NAVIGATE', [rowIndex, columnIndex], type);
           }
         });
