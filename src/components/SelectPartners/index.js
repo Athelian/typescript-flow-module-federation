@@ -101,7 +101,7 @@ const SelectPartners = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSe
                     onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, partnerPath)}
                     items={items}
                     renderItem={item => {
-                      const isSelected = values.map(({ id }) => id).includes(item.id);
+                      const isSelected = values.some(({ id }) => id === item.id);
                       return (
                         <PartnerCard
                           key={item.id}

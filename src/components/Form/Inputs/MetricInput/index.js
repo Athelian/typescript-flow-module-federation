@@ -2,7 +2,7 @@
 import * as React from 'react';
 import FormattedNumber from 'components/FormattedNumber';
 import { NumberInput, SelectInput, DefaultOptions, Display } from 'components/Form';
-import { toFloat } from 'utils/number';
+import { toFloat, toFloatNullable } from 'utils/number';
 import { type NumberInputProps, defaultNumberInputProps } from 'components/Form/Inputs/NumberInput';
 import MetricSelect from './MetricSelect';
 
@@ -35,11 +35,30 @@ export default class MetricInput extends React.Component<Props> {
     } = this.props;
 
     if (onChange) {
-      const newValue = {
+      if (evt.target.value < 0) {
+        return;
+      }
+      onChange({
         ...evt,
-        target: { value: { value: toFloat(evt.target.value), metric } },
-      };
-      onChange(newValue);
+        target: { value: { value: toFloatNullable(evt.target.value), metric } },
+      });
+    }
+  };
+
+  handleBlurInput = (evt: any) => {
+    const {
+      onBlur,
+      value: { metric },
+    } = this.props;
+
+    if (onBlur) {
+      onBlur({
+        ...evt,
+        target: {
+          ...evt.target,
+          value: { value: toFloat(evt.target.value), metric },
+        },
+      });
     }
   };
 
@@ -68,6 +87,7 @@ export default class MetricInput extends React.Component<Props> {
       metrics,
       convert,
       onChange,
+      onBlur,
       metricSelectWidth,
       metricSelectHeight,
       metricOptionWidth,
@@ -86,6 +106,7 @@ export default class MetricInput extends React.Component<Props> {
           nullable={nullable}
           value={value}
           onChange={this.handleChangeInput}
+          onBlur={this.handleBlurInput}
           align={align}
         />
         <SelectInput

@@ -91,6 +91,7 @@ function SplitPanel({ intl, onSplit, max }: Props) {
                     max={max}
                     value={quantity}
                     onChange={evt => setQuantity(evt.target.value)}
+                    onBlur={evt => setQuantity(evt.target.value)}
                   />
                 </DefaultStyle>
               }
@@ -143,6 +144,7 @@ function SplitPanel({ intl, onSplit, max }: Props) {
                     max={max}
                     value={quantity}
                     onChange={evt => setQuantity(evt.target.value)}
+                    onBlur={evt => setQuantity(evt.target.value)}
                   />
                 </DefaultStyle>
               }

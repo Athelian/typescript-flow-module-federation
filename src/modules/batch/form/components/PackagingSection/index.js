@@ -143,7 +143,7 @@ const PackagingSection = () => {
                       {...inputHandlers}
                       onBlur={evt => {
                         onBlur(evt);
-                        setFieldValue('packageCapacity', inputHandlers.value);
+                        setFieldValue('packageCapacity', evt.target.value);
                         calculatePackageQuantity();
                       }}
                       originalValue={originalValues[name]}
