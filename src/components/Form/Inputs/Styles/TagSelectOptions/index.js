@@ -60,7 +60,7 @@ function TagSelectOptions({
             const item = items[index];
             if (!item) return null;
 
-            const isSelected = selectedItems && selectedItems.map(t => t.id).includes(item.id);
+            const isSelected = selectedItems && selectedItems.some(({ id }) => id === item.id);
 
             return (
               <div

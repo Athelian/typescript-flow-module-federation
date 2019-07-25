@@ -153,9 +153,7 @@ function SelectShipmentBatches({
           <Content>
             <BatchGridView
               items={batches.filter(item => !ignoreBatches.includes(item.id))}
-              loader={null}
               onLoadMore={() => {
-                setIsLoading(true);
                 client
                   .query({
                     query: selectBatchListQuery,
@@ -174,7 +172,6 @@ function SelectShipmentBatches({
                     const totalPage = getByPathWithDefault(1, 'data.batches.totalPage', result);
                     setHasMore(nextPage <= totalPage);
                     setPage(nextPage);
-                    setIsLoading(false);
                   })
                   .catch(err => {
                     trackingError(err);
@@ -184,13 +181,12 @@ function SelectShipmentBatches({
                         defaultMessage: 'There was an error. Please try again later.',
                       })
                     );
-                    setIsLoading(false);
                   });
               }}
               hasMore={hasMore}
               isLoading={isLoading}
               renderItem={item => {
-                const isSelected = selected.map(({ id }) => id).includes(item.id);
+                const isSelected = selected.some(({ id }) => id === item.id);
                 return (
                   <ShipmentBatchCard
                     key={item.id}
