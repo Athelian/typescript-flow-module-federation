@@ -11,7 +11,6 @@ import messages from 'components/Form/Inputs/messages';
 type OptionalProps = {
   nullable: boolean,
   readOnlySuffix: ?(string | React.Node),
-  readOnlySuffix: null,
 };
 
 type Props = OptionalProps &
@@ -24,6 +23,7 @@ export type NumberInputProps = Props;
 const defaultProps = {
   ...defaultInputProps,
   nullable: false,
+  readOnlySuffix: null,
 };
 
 export const defaultNumberInputProps = defaultProps;
