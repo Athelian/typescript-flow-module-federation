@@ -2,12 +2,16 @@
 import * as React from 'react';
 import { injectIntl, type IntlShape } from 'react-intl';
 import { type InputProps, defaultInputProps } from 'components/Form/Inputs/type';
+import FormattedNumber from 'components/FormattedNumber';
+import { Display } from 'components/Form';
 import { toFloatNullable } from 'utils/number';
 import { isNullOrUndefined } from 'utils/fp';
 import messages from 'components/Form/Inputs/messages';
 
 type OptionalProps = {
   nullable: boolean,
+  readOnlySuffix: ?(string | React.Node),
+  readOnlySuffix: null,
 };
 
 type Props = OptionalProps &
@@ -69,9 +73,27 @@ class NumberInput extends React.Component<Props> {
   };
 
   render() {
-    const { intl, value, align, placeholder, nullable, onChange, onBlur, ...rest } = this.props;
+    const {
+      intl,
+      value,
+      align,
+      readOnly,
+      readOnlyWidth,
+      readOnlyHeight,
+      readOnlySuffix,
+      placeholder,
+      nullable,
+      onChange,
+      onBlur,
+      ...rest
+    } = this.props;
 
-    return (
+    return readOnly ? (
+      <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
+        <FormattedNumber value={value} />
+        {readOnlySuffix}
+      </Display>
+    ) : (
       <input
         value={value}
         style={{ textAlign: align }}
