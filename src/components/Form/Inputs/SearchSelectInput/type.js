@@ -47,7 +47,7 @@ export const defaultSearchSelectInputProps = {
   value: '',
   inputValue: '',
   readOnly: false,
-  align: 'right',
+  align: 'left',
   onChange: null,
   onSearch: () => {},
   afterClearSelection: () => {},
