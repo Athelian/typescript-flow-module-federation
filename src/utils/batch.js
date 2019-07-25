@@ -16,7 +16,13 @@ import {
 } from 'modules/permission/constants/batch';
 import { times, divide } from './number';
 import { uuid } from './id';
-import { defaultVolumeMetric, convertVolume, convertWeight } from './metric';
+import {
+  defaultDistanceMetric,
+  defaultVolumeMetric,
+  defaultWeightMetric,
+  convertVolume,
+  convertWeight,
+} from './metric';
 import { getByPathWithDefault } from './fp';
 
 export const findWeight = (batch: BatchPayload) => {
@@ -149,23 +155,46 @@ export const findTotalAutoFillBatches = ({
 export const generateBatchByOrderItem = (orderItem: OrderItemPayload): Batch => {
   const packageName = getByPathWithDefault('', 'productProvider.defaultPackage.name', orderItem);
   const packageCapacity = getByPathWithDefault(
-    '',
+    0,
     'productProvider.defaultPackage.capacity',
     orderItem
   );
   const packageGrossWeight = getByPathWithDefault(
-    '',
+    {
+      metric: defaultWeightMetric,
+      value: 0,
+    },
     'productProvider.defaultPackage.grossWeight',
     orderItem
   );
   const packageVolume = getByPathWithDefault(
-    '',
+    {
+      metric: defaultVolumeMetric,
+      value: 0,
+    },
     'productProvider.defaultPackage.volume',
     orderItem
   );
-  const packageSize = getByPathWithDefault('', 'productProvider.defaultPackage.size', orderItem);
+  const packageSize = getByPathWithDefault(
+    {
+      width: {
+        metric: defaultDistanceMetric,
+        value: 0,
+      },
+      height: {
+        metric: defaultDistanceMetric,
+        value: 0,
+      },
+      length: {
+        metric: defaultDistanceMetric,
+        value: 0,
+      },
+    },
+    'productProvider.defaultPackage.size',
+    orderItem
+  );
   const autoCalculatePackageVolume = getByPathWithDefault(
-    '',
+    true,
     'productProvider.defaultPackage.autoCalculateVolume',
     orderItem
   );
