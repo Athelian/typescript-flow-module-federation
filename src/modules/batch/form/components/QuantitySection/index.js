@@ -71,7 +71,7 @@ const QuantitySection = () => {
                           {...inputHandlers}
                           onBlur={evt => {
                             inputHandlers.onBlur(evt);
-                            setFieldArrayValue('quantity', inputHandlers.value);
+                            setFieldArrayValue('quantity', evt.target.value);
                             calculatePackageQuantity(setFieldTouched);
                           }}
                           required
@@ -116,7 +116,7 @@ const QuantitySection = () => {
                                       {...inputHandlers}
                                       onBlur={evt => {
                                         inputHandlers.onBlur(evt);
-                                        setFieldArrayValue(name, inputHandlers.value);
+                                        setFieldArrayValue(name, evt.target.value);
                                         calculatePackageQuantity(setFieldTouched);
                                       }}
                                       originalValue={item.quantity}

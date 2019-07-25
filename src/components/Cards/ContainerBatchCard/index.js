@@ -294,7 +294,7 @@ const ContainerBatchCard = ({
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
-                      const newBatch = updateBatchCardQuantity(batch, inputHandlers.value);
+                      const newBatch = updateBatchCardQuantity(batch, evt.target.value);
                       saveOnBlur(newBatch);
                     },
                   }}

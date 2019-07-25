@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { isNullOrUndefined } from 'utils/fp';
+import { isNullOrUndefined, getByPath } from 'utils/fp';
 import withCache from 'hoc/withCache';
 import FormContainer from './container';
 
@@ -94,14 +94,27 @@ class BaseFormField extends React.Component<Props, State> {
   /**
    * Send the value to container/context when finish editing
    */
-  onBlur = (event: ?SyntheticFocusEvent<*>) => {
+  onBlur = (event: any) => {
     if (event && event.persist) {
       event.persist();
     }
 
-    const { setFieldValue } = this.props;
-    const { value } = this.state;
-    const { name, validationOnBlur, onValidate, setFieldTouched, setActiveField } = this.props;
+    let { value } = this.state;
+    if (getByPath('currentTarget.type', event) === 'number') {
+      value = getByPath('target.value', event);
+      this.setState({
+        value,
+      });
+    }
+
+    const {
+      name,
+      validationOnBlur,
+      onValidate,
+      setFieldTouched,
+      setActiveField,
+      setFieldValue,
+    } = this.props;
     if (validationOnBlur && onValidate) {
       onValidate({ [name]: value });
     }
