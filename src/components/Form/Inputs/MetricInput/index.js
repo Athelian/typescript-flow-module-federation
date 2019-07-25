@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import { NumberInput, SelectInput, DefaultOptions } from 'components/Form';
+import FormattedNumber from 'components/FormattedNumber';
+import { NumberInput, SelectInput, DefaultOptions, Display } from 'components/Form';
 import { toFloat, toFloatNullable } from 'utils/number';
 import { type NumberInputProps, defaultNumberInputProps } from 'components/Form/Inputs/NumberInput';
 import MetricSelect from './MetricSelect';
@@ -80,6 +81,9 @@ export default class MetricInput extends React.Component<Props> {
     const {
       value: { value, metric },
       align,
+      readOnly,
+      readOnlyWidth,
+      readOnlyHeight,
       metrics,
       convert,
       onChange,
@@ -91,7 +95,11 @@ export default class MetricInput extends React.Component<Props> {
       ...rest
     } = this.props;
 
-    return (
+    return readOnly ? (
+      <Display style={{ textAlign: align }} width={readOnlyWidth} height={readOnlyHeight}>
+        <FormattedNumber value={value} suffix={metric} />
+      </Display>
+    ) : (
       <>
         <NumberInput
           {...rest}
