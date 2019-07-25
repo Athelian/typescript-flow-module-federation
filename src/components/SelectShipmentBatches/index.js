@@ -12,7 +12,6 @@ import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { BATCH_TASK_LIST } from 'modules/permission/constants/batch';
 import { Content, SlideViewLayout } from 'components/Layout';
 import BatchGridView from 'modules/batch/list/BatchGridView';
-import LoadingIcon from 'components/LoadingIcon';
 import { ShipmentBatchCard } from 'components/Cards';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -152,7 +151,6 @@ function SelectShipmentBatches({
           </SlideViewNavBar>
 
           <Content>
-            {isLoading && batches.length > 0 && <LoadingIcon />}
             <BatchGridView
               items={batches.filter(item => !ignoreBatches.includes(item.id))}
               loader={null}
@@ -190,7 +188,7 @@ function SelectShipmentBatches({
                   });
               }}
               hasMore={hasMore}
-              isLoading={isLoading && batches.length === 0}
+              isLoading={isLoading}
               renderItem={item => {
                 const isSelected = selected.map(({ id }) => id).includes(item.id);
                 return (
