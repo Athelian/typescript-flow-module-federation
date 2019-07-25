@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import OutsideClickHandler from 'components/OutsideClickHandler';
-import { PRODUCT_PROVIDER_GET } from 'modules/permission/constants/product';
 import {
   BATCH_UPDATE,
   BATCH_SET_PACKAGE_NAME,
@@ -27,6 +26,7 @@ import {
   NumberInputFactory,
   MetricInputFactory,
 } from 'components/Form';
+import { isForbidden } from 'utils/data';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import PackageSelection from './components/PackageSelection';
 import { PackagingSectionWrapperStyle } from './style';
@@ -37,16 +37,15 @@ const PackagingSection = () => {
   const allowUpdate = hasPermission(BATCH_UPDATE);
 
   const allowSyncPackage =
-    hasPermission(PRODUCT_PROVIDER_GET) &&
-    (allowUpdate ||
-      [
-        BATCH_SET_PACKAGE_NAME,
-        BATCH_SET_PACKAGE_CAPACITY,
-        BATCH_SET_PACKAGE_QUANTITY,
-        BATCH_SET_PACKAGE_WEIGHT,
-        BATCH_SET_PACKAGE_VOLUME,
-        BATCH_SET_PACKAGE_SIZE,
-      ].every(hasPermission));
+    allowUpdate ||
+    [
+      BATCH_SET_PACKAGE_NAME,
+      BATCH_SET_PACKAGE_CAPACITY,
+      BATCH_SET_PACKAGE_QUANTITY,
+      BATCH_SET_PACKAGE_WEIGHT,
+      BATCH_SET_PACKAGE_VOLUME,
+      BATCH_SET_PACKAGE_SIZE,
+    ].every(hasPermission);
 
   const allowAutoCalculatePackageVolume = allowUpdate || hasPermission(BATCH_SET_PACKAGE_VOLUME);
   return (
@@ -55,15 +54,16 @@ const PackagingSection = () => {
         icon="PACKAGING"
         title={<FormattedMessage id="modules.Batches.packaging" defaultMessage="PACKAGING" />}
       >
-        {allowSyncPackage && (
-          <BooleanValue>
-            {({ value: syncIsShow, set: syncToggle }) =>
-              !syncIsShow ? (
-                <SyncButton onClick={() => syncToggle(true)} />
-              ) : (
-                <Subscribe to={[BatchInfoContainer]}>
-                  {({ state: { orderItem }, syncPackaging }) => {
-                    return (
+        <Subscribe to={[BatchInfoContainer]}>
+          {({ state: { orderItem }, syncPackaging }) => {
+            return (
+              allowSyncPackage &&
+              !isForbidden(getByPath('productProvider.defaultPackage', orderItem)) && (
+                <BooleanValue>
+                  {({ value: syncIsShow, set: syncToggle }) =>
+                    !syncIsShow ? (
+                      <SyncButton onClick={() => syncToggle(true)} />
+                    ) : (
                       <OutsideClickHandler
                         onOutsideClick={() => syncToggle(false)}
                         ignoreClick={false}
@@ -85,13 +85,13 @@ const PackagingSection = () => {
                           }}
                         />
                       </OutsideClickHandler>
-                    );
-                  }}
-                </Subscribe>
+                    )
+                  }
+                </BooleanValue>
               )
-            }
-          </BooleanValue>
-        )}
+            );
+          }}
+        </Subscribe>
       </SectionHeader>
 
       <div className={PackagingSectionWrapperStyle}>
