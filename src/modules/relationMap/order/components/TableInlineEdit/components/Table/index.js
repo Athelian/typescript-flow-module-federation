@@ -86,20 +86,22 @@ const createItemData = memoize((itemData: Object) => {
 });
 
 const calculatePosition = (position: [number, number], type: mixed): [number, number] => {
-  const [row, column] = position;
+  const [baseRow = -1, baseColumn = -1] = position;
+  const row = Number(baseRow);
+  const column = Number(baseColumn);
   switch (type) {
-    default:
-      return position;
     case 'TAB':
     case 'RIGHT':
-      return [Number(row), Number(column) + 1];
+      return [row, column + 1];
     case 'REVERSE_TAB':
     case 'LEFT':
-      return [Number(row), Number(column) - 1];
+      return [row, column - 1];
     case 'UP':
-      return [Number(row) - 1, column];
+      return [row - 1, column];
     case 'DOWN':
-      return [Number(row) + 1, column];
+      return [row + 1, column];
+    default:
+      return [row, column];
   }
 };
 
@@ -131,17 +133,14 @@ export default function Table({
       // $FlowIgnore position is the tuples
       const [rowIndex, columnIndex] = calculatePosition(position, type);
       const isValidNavigate =
-        Number(columnIndex) >= 0 &&
-        Number(columnIndex) < columnCount &&
-        Number(rowIndex) >= 0 &&
-        Number(rowIndex) < rowCount;
+        columnIndex >= 0 && columnIndex < columnCount && rowIndex >= 0 && rowIndex < rowCount;
       if (isValidNavigate && gridRef.current) {
         gridRef.current.scrollToItem({
           columnIndex,
           rowIndex,
         });
         requestAnimationFrame(() => {
-          const cell = document.getElementById(`input-${Number(rowIndex)}-${Number(columnIndex)}`);
+          const cell = document.getElementById(`input-${rowIndex}-${columnIndex}`);
           if (cell) {
             if (cell.hasAttribute('disabled')) {
               emitter.emit('NAVIGATE', calculatePosition([rowIndex, columnIndex], type), type);
