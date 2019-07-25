@@ -9,7 +9,6 @@ import { spreadOrderItem } from 'utils/item';
 import { trackingError } from 'utils/trackingError';
 import { getByPathWithDefault } from 'utils/fp';
 import { removeTypename } from 'utils/data';
-import LoadingIcon from 'components/LoadingIcon';
 import GridView from 'components/GridView';
 import IncrementInput from 'components/IncrementInput';
 import { Content, SlideViewLayout } from 'components/Layout';
@@ -136,7 +135,6 @@ function SelectOrderItems({ intl, cacheKey, onCancel, onSelect, filter }: Props)
           <Content>
             <GridView
               onLoadMore={() => {
-                setIsLoading(true);
                 client
                   .query({
                     query: orderItemsQuery,
@@ -155,7 +153,6 @@ function SelectOrderItems({ intl, cacheKey, onCancel, onSelect, filter }: Props)
                     const totalPage = getByPathWithDefault(1, 'data.orderItems.totalPage', result);
                     setHasMore(nextPage <= totalPage);
                     setPage(nextPage);
-                    setIsLoading(false);
                   })
                   .catch(err => {
                     trackingError(err);
@@ -165,12 +162,10 @@ function SelectOrderItems({ intl, cacheKey, onCancel, onSelect, filter }: Props)
                         defaultMessage: 'There was an error. Please try again later.',
                       })
                     );
-                    setIsLoading(false);
                   });
               }}
-              loader={null}
               hasMore={hasMore}
-              isLoading={isLoading && orderItems.length === 0}
+              isLoading={isLoading}
               itemWidth="195px"
               isEmpty={orderItems.length === 0}
               emptyMessage={
@@ -224,7 +219,6 @@ function SelectOrderItems({ intl, cacheKey, onCancel, onSelect, filter }: Props)
                 );
               })}
             </GridView>
-            {isLoading && orderItems.length > 0 && <LoadingIcon />}
           </Content>
         </SlideViewLayout>
       )}

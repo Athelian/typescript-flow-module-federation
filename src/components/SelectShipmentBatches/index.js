@@ -12,7 +12,6 @@ import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { BATCH_TASK_LIST } from 'modules/permission/constants/batch';
 import { Content, SlideViewLayout } from 'components/Layout';
 import BatchGridView from 'modules/batch/list/BatchGridView';
-import LoadingIcon from 'components/LoadingIcon';
 import { ShipmentBatchCard } from 'components/Cards';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -152,12 +151,9 @@ function SelectShipmentBatches({
           </SlideViewNavBar>
 
           <Content>
-            {isLoading && batches.length > 0 && <LoadingIcon />}
             <BatchGridView
               items={batches.filter(item => !ignoreBatches.includes(item.id))}
-              loader={null}
               onLoadMore={() => {
-                setIsLoading(true);
                 client
                   .query({
                     query: selectBatchListQuery,
@@ -176,7 +172,6 @@ function SelectShipmentBatches({
                     const totalPage = getByPathWithDefault(1, 'data.batches.totalPage', result);
                     setHasMore(nextPage <= totalPage);
                     setPage(nextPage);
-                    setIsLoading(false);
                   })
                   .catch(err => {
                     trackingError(err);
@@ -186,13 +181,12 @@ function SelectShipmentBatches({
                         defaultMessage: 'There was an error. Please try again later.',
                       })
                     );
-                    setIsLoading(false);
                   });
               }}
               hasMore={hasMore}
-              isLoading={isLoading && batches.length === 0}
+              isLoading={isLoading}
               renderItem={item => {
-                const isSelected = selected.map(({ id }) => id).includes(item.id);
+                const isSelected = selected.some(({ id }) => id === item.id);
                 return (
                   <ShipmentBatchCard
                     key={item.id}

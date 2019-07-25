@@ -94,7 +94,7 @@ function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
                     hasMore={hasMore}
                     isLoading={loading}
                     renderItem={(item, position) => {
-                      const isSelected = selected.map(({ id }) => id).includes(item.id);
+                      const isSelected = selected.some(({ id }) => id === item.id);
                       return (
                         <TaskCard
                           entity={{
