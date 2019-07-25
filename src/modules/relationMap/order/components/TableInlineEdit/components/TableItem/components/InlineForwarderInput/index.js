@@ -24,7 +24,7 @@ const defaultProps = {
 export default function InlineForwarderInput({ name, values, id, disabled }: Props) {
   const [entityType, shipmentId, ...fields] = name.split('.');
   const editField = fields.join('.');
-
+  const [isFocused, setIsFocused] = React.useState(false);
   return (
     <BooleanValue>
       {({ value: opened, set: slideToggle }) =>
@@ -36,8 +36,14 @@ export default function InlineForwarderInput({ name, values, id, disabled }: Pro
           </DefaultStyle>
         ) : (
           <>
-            <button id={`input-${id}`} type="button" onClick={() => slideToggle(true)}>
-              <DefaultStyle width="200px" type="button">
+            <button
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              id={`input-${id}`}
+              type="button"
+              onClick={() => slideToggle(true)}
+            >
+              <DefaultStyle isFocused={isFocused} width="200px" type="button">
                 <Display align="left">{getByPathWithDefault('', editField, values)}</Display>
               </DefaultStyle>
             </button>
