@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import FormattedNumber from 'components/FormattedNumber';
 import {
   FieldItem,
   Label,
@@ -7,6 +8,7 @@ import {
   DefaultStyle,
   MetricInput,
   Blackout,
+  Display,
 } from 'components/Form';
 import type {
   LabelProps,
@@ -173,7 +175,9 @@ const MetricInputFactory = ({
             {showCalculator && <CalculatorButton onClick={onCalculate} />}
           </>
         ) : (
-          <MetricInput {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
+          <Display style={{ textAlign: inputAlign }} width={inputWidth} height={inputHeight}>
+            <FormattedNumber value={value && value.value} suffix={value && value.metric} />
+          </Display>
         )}
         {showExtraToggleButton && (
           <ExtraToggleButton

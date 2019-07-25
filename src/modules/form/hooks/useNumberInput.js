@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { number } from 'yup';
+import { toFloatNullable, toFloat } from 'utils/number';
 import type { ValidationObject } from './type.js.flow';
 
 function useNumberInput(initialValue: number, schema: ValidationObject) {
@@ -14,14 +15,18 @@ function useNumberInput(initialValue: number, schema: ValidationObject) {
     : false;
   const onChange = useCallback((event: Object) => {
     if (event && event.currentTarget) {
-      const newValue = Number(event.currentTarget.value);
-      setValue(newValue > 0 ? newValue : 0);
+      const newValue = toFloatNullable(event.currentTarget.value);
+      setValue(newValue);
     }
   }, []);
   const onFocus = useCallback(() => {
     setFocus(true);
   }, []);
-  const onBlur = useCallback(() => {
+  const onBlur = useCallback((event: Object) => {
+    if (event && event.currentTarget) {
+      const newValue = toFloat(event.currentTarget.value);
+      setValue(newValue);
+    }
     setFocus(false);
   }, []);
 

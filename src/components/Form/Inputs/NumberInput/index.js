@@ -1,17 +1,13 @@
 // @flow
 import * as React from 'react';
 import { injectIntl, type IntlShape } from 'react-intl';
-import FormattedNumber from 'components/FormattedNumber';
-import { Display } from 'components/Form';
 import { type InputProps, defaultInputProps } from 'components/Form/Inputs/type';
-import { toFloat, toFloatNullable } from 'utils/number';
+import { toFloatNullable } from 'utils/number';
 import { isNullOrUndefined } from 'utils/fp';
 import messages from 'components/Form/Inputs/messages';
 
 type OptionalProps = {
   nullable: boolean,
-  nonNegative: boolean,
-  readOnlySuffix: ?(string | React.Node),
 };
 
 type Props = OptionalProps &
@@ -24,8 +20,6 @@ export type NumberInputProps = Props;
 const defaultProps = {
   ...defaultInputProps,
   nullable: false,
-  nonNegative: true,
-  readOnlySuffix: null,
 };
 
 export const defaultNumberInputProps = defaultProps;
@@ -34,39 +28,50 @@ class NumberInput extends React.Component<Props> {
   static defaultProps = defaultProps;
 
   handleChange = (evt: any) => {
-    const { onChange, nullable, nonNegative } = this.props;
-    const value = nullable ? toFloatNullable(evt.target.value) : toFloat(evt.target.value);
+    const { onChange } = this.props;
+
     if (onChange) {
-      const newValue = {
+      if (evt.target.value < 0) {
+        return;
+      }
+      onChange({
         ...evt,
-        target: { value: nonNegative && !Number.isNaN(value) && value < 0 ? 0 : value },
-      };
-      onChange(newValue);
+        target: {
+          ...evt.target,
+          value: toFloatNullable(evt.target.value),
+        },
+      });
+    }
+  };
+
+  handleBlur = (evt: any) => {
+    const { onBlur, nullable } = this.props;
+
+    if (onBlur) {
+      if (!nullable && evt.target.value === '') {
+        onBlur({
+          ...evt,
+          target: {
+            ...evt.target,
+            value: 0,
+          },
+        });
+      } else {
+        onBlur({
+          ...evt,
+          target: {
+            ...evt.target,
+            value: toFloatNullable(evt.target.value),
+          },
+        });
+      }
     }
   };
 
   render() {
-    const {
-      intl,
-      value,
-      align,
-      readOnly,
-      readOnlyWidth,
-      readOnlyHeight,
-      placeholder,
-      nullable,
-      onChange,
-      nonNegative,
-      readOnlySuffix,
-      ...rest
-    } = this.props;
+    const { intl, value, align, placeholder, nullable, onChange, onBlur, ...rest } = this.props;
 
-    return readOnly ? (
-      <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
-        <FormattedNumber value={value} />
-        {readOnlySuffix}
-      </Display>
-    ) : (
+    return (
       <input
         value={value}
         style={{ textAlign: align }}
@@ -77,6 +82,7 @@ class NumberInput extends React.Component<Props> {
         }
         {...rest}
         onChange={this.handleChange}
+        onBlur={this.handleBlur}
         type="number"
         spellCheck={false}
       />

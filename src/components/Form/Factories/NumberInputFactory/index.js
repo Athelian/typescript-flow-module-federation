@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import FormattedNumber from 'components/FormattedNumber';
 import {
   FieldItem,
   Label,
@@ -7,6 +8,7 @@ import {
   DefaultStyle,
   NumberInput,
   Blackout,
+  Display,
 } from 'components/Form';
 import type {
   LabelProps,
@@ -132,7 +134,6 @@ const NumberInputFactory = ({
     onBlur,
     onFocus,
     align: inputAlign,
-    readOnly: !editable,
     nullable,
   };
 
@@ -157,12 +158,10 @@ const NumberInputFactory = ({
             )}
           </>
         ) : (
-          <NumberInput
-            {...inputConfig}
-            readOnlyWidth={inputWidth}
-            readOnlyHeight={inputHeight}
-            readOnlySuffix={suffix}
-          />
+          <Display align={inputAlign} width={inputWidth} height={inputHeight}>
+            <FormattedNumber value={value} />
+            {suffix}
+          </Display>
         )}
 
         {showExtraToggleButton && (
