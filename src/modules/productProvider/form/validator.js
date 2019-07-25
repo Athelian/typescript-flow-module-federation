@@ -11,4 +11,10 @@ export default (Yup.object().shape({
       })
     ),
   }),
+  inspectionFee: Yup.object().shape({
+    currency: Yup.string().required(),
+  }),
+  unitPrice: Yup.object().shape({
+    currency: Yup.string().required(),
+  }),
 }): Object);

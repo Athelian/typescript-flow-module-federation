@@ -303,6 +303,8 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                 name="productionLeadTime"
                 initValue={values.productionLeadTime}
                 setFieldValue={setFieldValue}
+                values={values}
+                validator={validator}
               >
                 {({ name, ...inputHandlers }) => (
                   <DayInputFactory
@@ -328,6 +330,8 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                 name="inspectionFee.amount"
                 initValue={getByPath('inspectionFee.amount', values)}
                 setFieldValue={setFieldValue}
+                values={values}
+                validator={validator}
               >
                 {({ name, ...inputHandlers }) => (
                   <NumberInputFactory
@@ -353,17 +357,20 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                 name="inspectionFee.currency"
                 initValue={getByPath('inspectionFee.currency', values)}
                 setFieldValue={setFieldValue}
+                values={values}
+                validator={validator}
               >
                 {({ name, ...inputHandlers }) => (
                   <EnumSearchSelectInputFactory
                     name={name}
+                    required
                     {...inputHandlers}
                     isNew={isNew}
                     originalValue={getByPath('inspectionFee.currency', originalValues)}
                     label={
                       <FormattedMessage
                         id="modules.ProductProviders.inspectionFeeCurrency"
-                        defaultMessage="INSPECTION FEE CURRENCY"
+                        defaultMessage="INSPECTION FEE CCY"
                       />
                     }
                     editable={hasPermission([

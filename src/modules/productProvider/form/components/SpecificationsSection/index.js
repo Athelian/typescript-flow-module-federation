@@ -22,6 +22,7 @@ import {
   PRODUCT_PROVIDER_SET_UNIT_VOLUME,
   PRODUCT_PROVIDER_SET_UNIT_SIZE,
 } from 'modules/permission/constants/product';
+import validator from 'modules/productProvider/form/validator';
 import { getByPath } from 'utils/fp';
 import { SpecificationsSectionWrapperStyle } from './style';
 
@@ -48,7 +49,13 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
 
           return (
             <GridColumn>
-              <FormField name="unitType" initValue={values.unitType} setFieldValue={setFieldValue}>
+              <FormField
+                name="unitType"
+                initValue={values.unitType}
+                setFieldValue={setFieldValue}
+                values={values}
+                validator={validator}
+              >
                 {({ name, ...inputHandlers }) => (
                   <TextInputFactory
                     name={name}
@@ -74,6 +81,8 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                 name="unitPrice.amount"
                 initValue={getByPath('unitPrice.amount', values)}
                 setFieldValue={setFieldValue}
+                values={values}
+                validator={validator}
               >
                 {({ name, ...inputHandlers }) => (
                   <NumberInputFactory
@@ -100,10 +109,13 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                 name="unitPrice.currency"
                 initValue={getByPath('unitPrice.currency', values)}
                 setFieldValue={setFieldValue}
+                validator={validator}
+                values={values}
               >
                 {({ name, ...inputHandlers }) => (
                   <EnumSearchSelectInputFactory
                     name={name}
+                    required
                     {...inputHandlers}
                     isNew={isNew}
                     originalValue={getByPath('unitPrice.currency', originalValues)}
@@ -128,6 +140,8 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                 name="unitWeight"
                 initValue={getByPath('unitWeight', values)}
                 setFieldValue={(field, value) => setFieldArrayValue('unitWeight', value)}
+                values={values}
+                validator={validator}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
@@ -155,6 +169,7 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                 initValue={getByPath('unitVolume', values)}
                 setFieldValue={(field, value) => setFieldArrayValue('unitVolume', value)}
                 values={values}
+                validator={validator}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
@@ -225,6 +240,8 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                     calculateUnitVolume();
                   }
                 }}
+                values={values}
+                validator={validator}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
@@ -259,6 +276,8 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                     calculateUnitVolume();
                   }
                 }}
+                values={values}
+                validator={validator}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
@@ -293,6 +312,8 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                     calculateUnitVolume();
                   }
                 }}
+                values={values}
+                validator={validator}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
