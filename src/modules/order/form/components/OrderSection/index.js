@@ -430,7 +430,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                           editable={hasPermission([ORDER_UPDATE, ORDER_SET_MEMO])}
                           vertical
                           inputWidth="400px"
-                          inputHeight="115px"
+                          inputHeight="120px"
                         />
                       )}
                     </FormField>

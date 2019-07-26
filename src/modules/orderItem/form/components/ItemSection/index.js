@@ -190,7 +190,7 @@ const ItemSection = ({ isSlideView }: Props) => {
                         editable={hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_MEMO])}
                         vertical
                         inputWidth="400px"
-                        inputHeight="65px"
+                        inputHeight="120px"
                       />
                     )}
                   </FormField>

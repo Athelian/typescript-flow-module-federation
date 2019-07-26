@@ -57,7 +57,6 @@ import {
   DeleteImageButtonStyle,
   SwapImageButtonStyle,
   ScrollFixStyle,
-  TagsInputStyle,
   DividerStyle,
 } from './style';
 
@@ -328,40 +327,39 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                       mask: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_CUSTOM_FIELDS_MASK]),
                     }}
                   />
-                  <div className={TagsInputStyle}>
-                    <Subscribe to={[ProductTagsContainer]}>
-                      {({ state: { tags }, setFieldValue: changeTags }) => (
-                        <FieldItem
-                          vertical
-                          label={
-                            <Label height="30px">
-                              <FormattedMessage id="modules.Products.tags" defaultMessage="TAGS" />
-                            </Label>
-                          }
-                          input={
-                            <TagsInput
-                              id="tags"
-                              name="tags"
-                              tagType="Product"
-                              values={tags}
-                              onChange={value => {
-                                changeTags('tags', value);
-                              }}
-                              onClickRemove={value => {
-                                changeTags('tags', tags.filter(({ id }) => id !== value.id));
-                              }}
-                              editable={{
-                                set:
-                                  hasPermission(TAG_LIST) &&
-                                  hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
-                                remove: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
-                              }}
-                            />
-                          }
-                        />
-                      )}
-                    </Subscribe>
-                  </div>
+
+                  <Subscribe to={[ProductTagsContainer]}>
+                    {({ state: { tags }, setFieldValue: changeTags }) => (
+                      <FieldItem
+                        vertical
+                        label={
+                          <Label height="30px">
+                            <FormattedMessage id="modules.Products.tags" defaultMessage="TAGS" />
+                          </Label>
+                        }
+                        input={
+                          <TagsInput
+                            id="tags"
+                            name="tags"
+                            tagType="Product"
+                            values={tags}
+                            onChange={value => {
+                              changeTags('tags', value);
+                            }}
+                            onClickRemove={value => {
+                              changeTags('tags', tags.filter(({ id }) => id !== value.id));
+                            }}
+                            editable={{
+                              set:
+                                hasPermission(TAG_LIST) &&
+                                hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
+                              remove: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
+                            }}
+                          />
+                        }
+                      />
+                    )}
+                  </Subscribe>
 
                   <FormField
                     name="memo"
