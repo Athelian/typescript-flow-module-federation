@@ -20,7 +20,6 @@ const defaultRenderItem = (item: Object) => (
   <PartnerPermissionsWrapper key={item.id} data={item}>
     {permissions => (
       <TaskCard
-        position={item.sort + 1}
         entity={item.entity}
         task={item}
         navigable={{ project: permissions.includes(PROJECT_FORM) }}

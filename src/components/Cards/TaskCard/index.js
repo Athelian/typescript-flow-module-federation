@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { BooleanValue, ObjectValue } from 'react-values';
+import { ObjectValue } from 'react-values';
 import { Link } from '@reach/router';
 import { isBefore } from 'date-fns';
 import emitter from 'utils/emitter';
@@ -15,7 +15,6 @@ import Tag from 'components/Tag';
 import RelateEntity from 'components/RelateEntity';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import withForbiddenCard from 'hoc/withForbiddenCard';
-import FormattedNumber from 'components/FormattedNumber';
 import { Tooltip } from 'components/Tooltip';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -42,8 +41,6 @@ import {
   TaskInTemplateIconStyle,
   TaskParentWrapperStyle,
   TaskNameWrapperStyle,
-  TaskPositionWrapperStyle,
-  DragButtonWrapperStyle,
   DateInputWrapperStyle,
   AutoDateSyncIconStyle,
   DividerStyle,
@@ -63,7 +60,6 @@ import {
 type OptionalProps = {
   entity: Object,
   task: Object,
-  position: number,
   hideParentInfo: boolean,
   hideProjectInfo: boolean,
   onClick: Function,
@@ -97,7 +93,6 @@ const defaultNavigable = {
 };
 
 const defaultProps = {
-  position: 0,
   hideParentInfo: false,
   hideProjectInfo: false,
   onClick: null,
@@ -111,7 +106,8 @@ const getParentInfo = (
   parent: Object
 ): {
   parentType: string,
-  parentIcon: | 'ORDER'
+  // prettier-ignore
+  parentIcon: 'ORDER'
     | 'BATCH'
     | 'SHIPMENT'
     | 'CONTAINER'
@@ -191,7 +187,6 @@ const tooltipMessage = (approvedBy: ?Object, rejectedBy: ?Object) => {
 const TaskCard = ({
   entity: parent,
   task,
-  position,
   hideParentInfo,
   hideProjectInfo,
   onClick,
@@ -264,15 +259,13 @@ const TaskCard = ({
 
   const isFromTemplate = !!taskTemplate;
 
-  let nameWidth = '160px';
-  if (isFromTemplate || isInTemplate) nameWidth = '120px';
-  else if (hideParentInfo) nameWidth = '140px';
+  let nameWidth = '185px';
+  if (isFromTemplate || isInTemplate) nameWidth = '145px';
+  else if (hideParentInfo) nameWidth = '165px';
 
   cardHeight = 265;
   if (hideParentInfo || isInTemplate) cardHeight -= 25;
   if (hideProjectInfo) cardHeight -= 56;
-
-  const IS_DND_DEVELOPED = false;
 
   const taskEl = React.useRef(null);
   const isUnapproved = !((approvedBy && approvedBy.id) || (rejectedBy && rejectedBy.id));
@@ -289,441 +282,410 @@ const TaskCard = ({
       onSelect={onSelect}
       {...rest}
     >
-      <BooleanValue>
-        {({ value: isHovered, set: changeHoverState }) => (
-          <div
-            ref={taskEl}
-            className={TaskCardWrapperStyle(`${cardHeight}px`)}
-            onClick={onClick}
-            onMouseEnter={() => {
-              if (isEditable) {
-                changeHoverState(true);
-              }
-            }}
-            onMouseLeave={() => {
-              if (isEditable) {
-                changeHoverState(false);
-              }
-            }}
-            role="presentation"
-          >
-            {(isFromTemplate || isInTemplate) && (
-              <div className={TaskInTemplateIconStyle}>
-                <Icon icon="TASK" />
-              </div>
-            )}
+      <div
+        ref={taskEl}
+        className={TaskCardWrapperStyle(`${cardHeight}px`)}
+        onClick={onClick}
+        role="presentation"
+      >
+        {(isFromTemplate || isInTemplate) && (
+          <div className={TaskInTemplateIconStyle}>
+            <Icon icon="TASK" />
+          </div>
+        )}
 
-            {!(hideParentInfo || isInTemplate) && (
-              <div className={TaskParentWrapperStyle}>
-                {viewPermissions[parentType] ? (
-                  <Link
-                    to={link}
-                    onClick={evt => {
-                      evt.stopPropagation();
-                    }}
-                  >
-                    <RelateEntity entity={parentIcon} value={parentData} />
-                  </Link>
-                ) : (
-                  <RelateEntity entity={parentIcon} value={parentData} />
-                )}
-              </div>
-            )}
-
-            <div
-              className={TaskNameWrapperStyle}
-              onClick={evt => {
-                if (isEditable) {
+        {!(hideParentInfo || isInTemplate) && (
+          <div className={TaskParentWrapperStyle}>
+            {viewPermissions[parentType] ? (
+              <Link
+                to={link}
+                onClick={evt => {
                   evt.stopPropagation();
-                }
-              }}
-              role="presentation"
-            >
-              {isEditable && isHovered && IS_DND_DEVELOPED ? (
-                <button className={DragButtonWrapperStyle} type="button">
-                  <Icon icon="DRAG_HANDLE" />
-                </button>
-              ) : (
-                <div className={TaskPositionWrapperStyle}>
-                  <FormattedNumber value={position} />
-                </div>
-              )}
-
-              <FormField
-                name={`task.${id}.name`}
-                initValue={name}
-                validator={validation}
-                values={values}
+                }}
               >
-                {({ name: fieldName, ...inputHandlers }) => (
-                  <TextInputFactory
-                    {...inputHandlers}
-                    onBlur={evt => {
-                      inputHandlers.onBlur(evt);
-                      saveOnBlur({ ...task, name: inputHandlers.value });
-                    }}
-                    editable={editable.name}
-                    inputWidth={nameWidth}
-                    inputHeight="20px"
-                    inputAlign="left"
-                    name={fieldName}
-                    isNew={false}
-                    hideTooltip
-                  />
-                )}
-              </FormField>
-            </div>
-
-            <div
-              className={DateInputWrapperStyle(isEditable && !isInTemplate && !dueDateBinding)}
-              onClick={evt => {
-                if (isEditable) {
-                  evt.stopPropagation();
-                }
-              }}
-              role="presentation"
-            >
-              <Label>
-                <FormattedMessage id="components.cards.dueDate" defaultMessage="DUE" />
-              </Label>
-
-              {isInTemplate ? (
-                <Display color="GRAY_LIGHT">
-                  <FormattedMessage
-                    id="components.cards.datePlaceholder"
-                    defaultMessage="yyyy/mm/dd"
-                  />
-                </Display>
-              ) : (
-                <FormField name={`task.${id}.dueDate`} values={values} initValue={dueDate}>
-                  {({ name: fieldName, ...inputHandlers }) => (
-                    <DateInputFactory
-                      {...inputHandlers}
-                      onBlur={evt => {
-                        inputHandlers.onBlur(evt);
-                        saveOnBlur({
-                          ...task,
-                          dueDate: inputHandlers.value || null,
-                        });
-                        setTimeout(() => {
-                          emitter.emit('AUTO_DATE');
-                        }, 200);
-                      }}
-                      editable={editable.dueDate && !dueDateBinding}
-                      inputWidth="120px"
-                      inputHeight="20px"
-                      name={fieldName}
-                      isNew={false}
-                      hideTooltip
-                      inputColor={
-                        dueDate && isBefore(new Date(dueDate), new Date()) && !completedBy
-                          ? 'RED'
-                          : 'BLACK'
-                      }
-                    />
-                  )}
-                </FormField>
-              )}
-
-              {dueDateBinding && (
-                <div className={AutoDateSyncIconStyle}>
-                  <Icon icon="SYNC" />
-                </div>
-              )}
-            </div>
-
-            <div
-              className={DateInputWrapperStyle(isEditable && !isInTemplate && !startDateBinding)}
-              onClick={evt => {
-                if (isEditable) {
-                  evt.stopPropagation();
-                }
-              }}
-              role="presentation"
-            >
-              <Label>
-                <FormattedMessage id="components.cards.startDate" defaultMessage="START" />
-              </Label>
-
-              {isInTemplate ? (
-                <Display color="GRAY_LIGHT">
-                  <FormattedMessage
-                    id="components.cards.datePlaceholder"
-                    defaultMessage="yyyy/mm/dd"
-                  />
-                </Display>
-              ) : (
-                <FormField name={`task.${id}.startDate`} initValue={startDate} values={values}>
-                  {({ name: fieldName, ...inputHandlers }) => (
-                    <DateInputFactory
-                      {...inputHandlers}
-                      onBlur={evt => {
-                        inputHandlers.onBlur(evt);
-                        saveOnBlur({
-                          ...task,
-                          startDate: inputHandlers.value ? inputHandlers.value : null,
-                        });
-                        setTimeout(() => {
-                          emitter.emit('AUTO_DATE');
-                        }, 200);
-                      }}
-                      editable={editable.startDate && !startDateBinding}
-                      inputWidth="120px"
-                      inputHeight="20px"
-                      name={fieldName}
-                      isNew={false}
-                      hideTooltip
-                    />
-                  )}
-                </FormField>
-              )}
-
-              {startDateBinding && (
-                <div className={AutoDateSyncIconStyle}>
-                  <Icon icon="SYNC" />
-                </div>
-              )}
-            </div>
-
-            {!(hideProjectInfo || isInTemplate) && (
-              <>
-                <div className={DividerStyle} />
-
-                <div className={ProjectInfoStyle}>
-                  {getByPath('project', milestone) ? (
-                    <Link
-                      to={
-                        navigable.project
-                          ? `/project/${encodeId(getByPath('project.id', milestone))}`
-                          : ''
-                      }
-                      onClick={evt => {
-                        evt.stopPropagation();
-                      }}
-                    >
-                      <RelateEntity
-                        entity="PROJECT"
-                        value={getByPathWithDefault('', 'project.name', milestone)}
-                      />
-                    </Link>
-                  ) : (
-                    <RelateEntity
-                      entity="PROJECT"
-                      value={getByPathWithDefault('', 'project.name', milestone)}
-                    />
-                  )}
-                </div>
-
-                <div className={MilestoneInfoStyle}>
-                  {milestone ? (
-                    <Link
-                      to={
-                        navigable.project
-                          ? `/project/${encodeId(getByPath('project.id', milestone))}`
-                          : ''
-                      }
-                      onClick={evt => {
-                        evt.stopPropagation();
-                      }}
-                    >
-                      <RelateEntity
-                        entity="MILESTONE"
-                        value={getByPathWithDefault('', 'name', milestone)}
-                      />
-                    </Link>
-                  ) : (
-                    <RelateEntity
-                      entity="MILESTONE"
-                      value={getByPathWithDefault('', 'name', milestone)}
-                    />
-                  )}
-                </div>
-              </>
+                <RelateEntity entity={parentIcon} value={parentData} />
+              </Link>
+            ) : (
+              <RelateEntity entity={parentIcon} value={parentData} />
             )}
+          </div>
+        )}
 
+        <div
+          className={TaskNameWrapperStyle}
+          onClick={evt => {
+            if (isEditable) {
+              evt.stopPropagation();
+            }
+          }}
+          role="presentation"
+        >
+          <FormField
+            name={`task.${id}.name`}
+            initValue={name}
+            validator={validation}
+            values={values}
+          >
+            {({ name: fieldName, ...inputHandlers }) => (
+              <TextInputFactory
+                {...inputHandlers}
+                {...{
+                  ...inputHandlers,
+                  onBlur: evt => {
+                    inputHandlers.onBlur(evt);
+                    saveOnBlur({ ...task, name: inputHandlers.value });
+                  },
+                }}
+                editable={editable.name}
+                inputWidth={nameWidth}
+                inputHeight="20px"
+                inputAlign="left"
+                name={fieldName}
+                isNew={false}
+                hideTooltip
+              />
+            )}
+          </FormField>
+        </div>
+
+        <div
+          className={DateInputWrapperStyle(isEditable && !isInTemplate && !dueDateBinding)}
+          onClick={evt => {
+            if (isEditable) {
+              evt.stopPropagation();
+            }
+          }}
+          role="presentation"
+        >
+          <Label>
+            <FormattedMessage id="components.cards.dueDate" defaultMessage="DUE" />
+          </Label>
+
+          {isInTemplate ? (
+            <Display color="GRAY_LIGHT">
+              <FormattedMessage id="components.cards.datePlaceholder" defaultMessage="yyyy/mm/dd" />
+            </Display>
+          ) : (
+            <FormField name={`task.${id}.dueDate`} values={values} initValue={dueDate}>
+              {({ name: fieldName, ...inputHandlers }) => (
+                <DateInputFactory
+                  {...inputHandlers}
+                  onBlur={evt => {
+                    inputHandlers.onBlur(evt);
+                    saveOnBlur({
+                      ...task,
+                      dueDate: inputHandlers.value || null,
+                    });
+                    setTimeout(() => {
+                      emitter.emit('AUTO_DATE');
+                    }, 200);
+                  }}
+                  editable={editable.dueDate && !dueDateBinding}
+                  inputWidth="120px"
+                  inputHeight="20px"
+                  name={fieldName}
+                  isNew={false}
+                  hideTooltip
+                  inputColor={
+                    dueDate && isBefore(new Date(dueDate), new Date()) && !completedBy
+                      ? 'RED'
+                      : 'BLACK'
+                  }
+                />
+              )}
+            </FormField>
+          )}
+
+          {dueDateBinding && (
+            <div className={AutoDateSyncIconStyle}>
+              <Icon icon="SYNC" />
+            </div>
+          )}
+        </div>
+
+        <div
+          className={DateInputWrapperStyle(isEditable && !isInTemplate && !startDateBinding)}
+          onClick={evt => {
+            if (isEditable) {
+              evt.stopPropagation();
+            }
+          }}
+          role="presentation"
+        >
+          <Label>
+            <FormattedMessage id="components.cards.startDate" defaultMessage="START" />
+          </Label>
+
+          {isInTemplate ? (
+            <Display color="GRAY_LIGHT">
+              <FormattedMessage id="components.cards.datePlaceholder" defaultMessage="yyyy/mm/dd" />
+            </Display>
+          ) : (
+            <FormField name={`task.${id}.startDate`} initValue={startDate} values={values}>
+              {({ name: fieldName, ...inputHandlers }) => (
+                <DateInputFactory
+                  {...inputHandlers}
+                  onBlur={evt => {
+                    inputHandlers.onBlur(evt);
+                    saveOnBlur({
+                      ...task,
+                      startDate: inputHandlers.value ? inputHandlers.value : null,
+                    });
+                    setTimeout(() => {
+                      emitter.emit('AUTO_DATE');
+                    }, 200);
+                  }}
+                  editable={editable.startDate && !startDateBinding}
+                  inputWidth="120px"
+                  inputHeight="20px"
+                  name={fieldName}
+                  isNew={false}
+                  hideTooltip
+                />
+              )}
+            </FormField>
+          )}
+
+          {startDateBinding && (
+            <div className={AutoDateSyncIconStyle}>
+              <Icon icon="SYNC" />
+            </div>
+          )}
+        </div>
+
+        {!(hideProjectInfo || isInTemplate) && (
+          <>
             <div className={DividerStyle} />
 
-            <div className={TaskStatusWrapperStyle}>
-              {isInTemplate ? (
-                <div className={TaskStatusPlaceholderStyle}>
-                  <FormattedMessage
-                    id="modules.Tasks.statusDisabled"
-                    defaultMessage="Status will be displayed here"
+            <div className={ProjectInfoStyle}>
+              {getByPath('project', milestone) ? (
+                <Link
+                  to={
+                    navigable.project
+                      ? `/project/${encodeId(getByPath('project.id', milestone))}`
+                      : ''
+                  }
+                  onClick={evt => {
+                    evt.stopPropagation();
+                  }}
+                >
+                  <RelateEntity
+                    entity="PROJECT"
+                    value={getByPathWithDefault('', 'project.name', milestone)}
                   />
-                </div>
+                </Link>
               ) : (
-                <TaskStatusInput
-                  task={task}
-                  update={newTask => saveOnBlur(newTask)}
-                  editable={editable}
-                  width="175px"
-                  showDate
+                <RelateEntity
+                  entity="PROJECT"
+                  value={getByPathWithDefault('', 'project.name', milestone)}
                 />
               )}
             </div>
 
-            <div className={TaskTagsWrapperStyle}>
-              {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
-            </div>
-
-            {approvable && (
-              <div className={ApprovalWrapperStyle}>
-                <ObjectValue
-                  defaultValue={{
-                    isExpand: false,
-                    isSlideViewOpen: false,
-                    showApproveRejectMenu: false,
+            <div className={MilestoneInfoStyle}>
+              {milestone ? (
+                <Link
+                  to={
+                    navigable.project
+                      ? `/project/${encodeId(getByPath('project.id', milestone))}`
+                      : ''
+                  }
+                  onClick={evt => {
+                    evt.stopPropagation();
                   }}
                 >
-                  {({
-                    value: { isExpanded, isSlideViewOpen, showApproveRejectMenu },
-                    set,
-                    assign,
-                  }) => (
-                    <>
-                      <div className={ApprovalPanelWrapperStyle(isExpanded ? '104px' : '0px')}>
-                        <OutsideClickHandler
-                          onOutsideClick={() =>
-                            assign({
-                              isExpanded: false,
-                              isSlideViewOpen: false,
-                              showApproveRejectMenu: false,
-                              selectUser: null,
-                            })
-                          }
-                          ignoreClick={!isExpanded || isSlideViewOpen}
-                          ignoreElements={[taskEl && taskEl.current].filter(Boolean)}
-                        >
-                          <UserConsumer>
-                            {({ user }) => (
-                              <div className={ApprovalInputWrapperStyle}>
-                                {isInTemplate ? (
-                                  <div className={ApprovalStatusPlaceholderStyle}>
-                                    <FormattedMessage
-                                      id="modules.Tasks.approvalDisabled"
-                                      defaultMessage="Approval will be displayed here"
-                                    />
-                                  </div>
-                                ) : (
+                  <RelateEntity
+                    entity="MILESTONE"
+                    value={getByPathWithDefault('', 'name', milestone)}
+                  />
+                </Link>
+              ) : (
+                <RelateEntity
+                  entity="MILESTONE"
+                  value={getByPathWithDefault('', 'name', milestone)}
+                />
+              )}
+            </div>
+          </>
+        )}
+
+        <div className={DividerStyle} />
+
+        <div className={TaskStatusWrapperStyle}>
+          {isInTemplate ? (
+            <div className={TaskStatusPlaceholderStyle}>
+              <FormattedMessage
+                id="modules.Tasks.statusDisabled"
+                defaultMessage="Status will be displayed here"
+              />
+            </div>
+          ) : (
+            <TaskStatusInput
+              task={task}
+              update={newTask => saveOnBlur(newTask)}
+              editable={editable}
+              width="175px"
+              showDate
+            />
+          )}
+        </div>
+
+        <div className={TaskTagsWrapperStyle}>
+          {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+        </div>
+
+        {approvable && (
+          <div className={ApprovalWrapperStyle}>
+            <ObjectValue
+              defaultValue={{
+                isExpand: false,
+                isSlideViewOpen: false,
+                showApproveRejectMenu: false,
+              }}
+            >
+              {({ value: { isExpanded, isSlideViewOpen, showApproveRejectMenu }, set, assign }) => (
+                <>
+                  <div className={ApprovalPanelWrapperStyle(isExpanded ? '104px' : '0px')}>
+                    <OutsideClickHandler
+                      onOutsideClick={() =>
+                        assign({
+                          isExpanded: false,
+                          isSlideViewOpen: false,
+                          showApproveRejectMenu: false,
+                          selectUser: null,
+                        })
+                      }
+                      ignoreClick={!isExpanded || isSlideViewOpen}
+                      ignoreElements={[taskEl && taskEl.current].filter(Boolean)}
+                    >
+                      <UserConsumer>
+                        {({ user }) => (
+                          <div className={ApprovalInputWrapperStyle}>
+                            {isInTemplate ? (
+                              <div className={ApprovalStatusPlaceholderStyle}>
+                                <FormattedMessage
+                                  id="modules.Tasks.approvalDisabled"
+                                  defaultMessage="Approval will be displayed here"
+                                />
+                              </div>
+                            ) : (
+                              <>
+                                {isUnapproved ? (
                                   <>
-                                    {isUnapproved ? (
-                                      <>
-                                        {showApproveRejectMenu ? (
-                                          <ApproveRejectMenu
-                                            width="175px"
-                                            onApprove={() =>
-                                              saveOnBlur({
-                                                ...task,
-                                                approvedBy: user,
-                                                approvedAt: formatToGraphql(startOfToday()),
-                                                rejectedBy: null,
-                                                rejectedAt: null,
-                                              })
-                                            }
-                                            onReject={() =>
-                                              saveOnBlur({
-                                                ...task,
-                                                approvedBy: null,
-                                                approvedAt: null,
-                                                rejectedBy: user,
-                                                rejectedAt: formatToGraphql(startOfToday()),
-                                              })
-                                            }
-                                          />
-                                        ) : (
-                                          <button
-                                            type="button"
-                                            onClick={evt => {
-                                              if (editable.approved && editable.rejected) {
-                                                evt.stopPropagation();
-                                                set('showApproveRejectMenu', true);
-                                              }
-                                            }}
-                                            className={UnapprovedButtonStyle(
-                                              editable.approved && editable.rejected
-                                            )}
-                                          >
-                                            <FormattedMessage
-                                              id="modules.Tasks.unapproved"
-                                              defaultMessage="UNAPPROVED"
-                                            />
-                                          </button>
-                                        )}
-                                      </>
-                                    ) : (
-                                      <TaskApprovalStatusInput
-                                        showUser
-                                        showDate
+                                    {showApproveRejectMenu ? (
+                                      <ApproveRejectMenu
                                         width="175px"
-                                        editable={editable.approved && editable.rejected}
-                                        onClickUser={() => {
+                                        onApprove={() =>
+                                          saveOnBlur({
+                                            ...task,
+                                            approvedBy: user,
+                                            approvedAt: formatToGraphql(startOfToday()),
+                                            rejectedBy: null,
+                                            rejectedAt: null,
+                                          })
+                                        }
+                                        onReject={() =>
                                           saveOnBlur({
                                             ...task,
                                             approvedBy: null,
                                             approvedAt: null,
-                                            rejectedBy: null,
-                                            rejectedAt: null,
-                                          });
-                                          set('showApproveRejectMenu', false);
-                                        }}
-                                        approval={
-                                          approvedBy && approvedBy.id
-                                            ? {
-                                                approvedAt,
-                                                approvedBy,
-                                              }
-                                            : null
-                                        }
-                                        rejection={
-                                          rejectedBy && rejectedBy.id
-                                            ? {
-                                                rejectedBy,
-                                                rejectedAt,
-                                              }
-                                            : null
+                                            rejectedBy: user,
+                                            rejectedAt: formatToGraphql(startOfToday()),
+                                          })
                                         }
                                       />
+                                    ) : (
+                                      <button
+                                        type="button"
+                                        onClick={evt => {
+                                          if (editable.approved && editable.rejected) {
+                                            evt.stopPropagation();
+                                            set('showApproveRejectMenu', true);
+                                          }
+                                        }}
+                                        className={UnapprovedButtonStyle(
+                                          editable.approved && editable.rejected
+                                        )}
+                                      >
+                                        <FormattedMessage
+                                          id="modules.Tasks.unapproved"
+                                          defaultMessage="UNAPPROVED"
+                                        />
+                                      </button>
                                     )}
                                   </>
+                                ) : (
+                                  <TaskApprovalStatusInput
+                                    showUser
+                                    showDate
+                                    width="175px"
+                                    editable={editable.approved && editable.rejected}
+                                    onClickUser={() => {
+                                      saveOnBlur({
+                                        ...task,
+                                        approvedBy: null,
+                                        approvedAt: null,
+                                        rejectedBy: null,
+                                        rejectedAt: null,
+                                      });
+                                      set('showApproveRejectMenu', false);
+                                    }}
+                                    approval={
+                                      approvedBy && approvedBy.id
+                                        ? {
+                                            approvedAt,
+                                            approvedBy,
+                                          }
+                                        : null
+                                    }
+                                    rejection={
+                                      rejectedBy && rejectedBy.id
+                                        ? {
+                                            rejectedBy,
+                                            rejectedAt,
+                                          }
+                                        : null
+                                    }
+                                  />
                                 )}
-                              </div>
+                              </>
                             )}
-                          </UserConsumer>
-                        </OutsideClickHandler>
-                      </div>
+                          </div>
+                        )}
+                      </UserConsumer>
+                    </OutsideClickHandler>
+                  </div>
 
-                      <Tooltip message={tooltipMessage(approvedBy, rejectedBy)}>
-                        <button
-                          className={ApprovalButtonStyle({ approvedBy, rejectedBy }, isExpanded)}
-                          type="button"
-                          onClick={evt => {
-                            evt.stopPropagation();
-                            if (isExpanded) {
-                              assign({
-                                isExpanded: false,
-                                isSlideViewOpen: false,
-                                selectUser: null,
-                              });
-                            } else {
-                              set('isExpanded', true);
-                            }
-                          }}
-                        >
-                          {isExpanded ? (
-                            <Icon icon="CHEVRON_DOWN" />
-                          ) : (
-                            <Icon icon={rejectedBy ? 'CLEAR' : 'CONFIRM'} />
-                          )}
-                        </button>
-                      </Tooltip>
-                    </>
-                  )}
-                </ObjectValue>
-              </div>
-            )}
+                  <Tooltip message={tooltipMessage(approvedBy, rejectedBy)}>
+                    <button
+                      className={ApprovalButtonStyle({ approvedBy, rejectedBy }, isExpanded)}
+                      type="button"
+                      onClick={evt => {
+                        evt.stopPropagation();
+                        if (isExpanded) {
+                          assign({
+                            isExpanded: false,
+                            isSlideViewOpen: false,
+                            selectUser: null,
+                          });
+                        } else {
+                          set('isExpanded', true);
+                        }
+                      }}
+                    >
+                      {isExpanded ? (
+                        <Icon icon="CHEVRON_DOWN" />
+                      ) : (
+                        <Icon icon={rejectedBy ? 'CLEAR' : 'CONFIRM'} />
+                      )}
+                    </button>
+                  </Tooltip>
+                </>
+              )}
+            </ObjectValue>
           </div>
         )}
-      </BooleanValue>
+      </div>
     </BaseCard>
   );
 };

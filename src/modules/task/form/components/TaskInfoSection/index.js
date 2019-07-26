@@ -55,7 +55,6 @@ import {
 import Divider from 'components/Divider';
 import Icon from 'components/Icon';
 import GridColumn from 'components/GridColumn';
-import FormattedNumber from 'components/FormattedNumber';
 import { FormField, FormContainer } from 'modules/form';
 import TaskContainer from 'modules/task/form/container';
 import validator, { circleValidator } from 'modules/task/form/validator';
@@ -401,19 +400,6 @@ const TaskInfoSection = ({
 
                 <div className={MainFieldsWrapperStyle}>
                   <GridColumn>
-                    <FieldItem
-                      label={
-                        <Label height="30px">
-                          <FormattedMessage id="modules.Tasks.taskNo" defaultMessage="TASK No." />
-                        </Label>
-                      }
-                      input={
-                        <Display height="30px">
-                          <FormattedNumber value={task.sort + 1} />
-                        </Display>
-                      }
-                    />
-
                     <FormField
                       name="name"
                       initValue={values.name}

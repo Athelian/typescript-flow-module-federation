@@ -48,9 +48,7 @@ export const TaskParentWrapperStyle: string = css`
 `;
 
 export const TaskNameWrapperStyle: string = css`
-  display: grid;
-  grid-template-columns: 20px 160px;
-  padding: 0 5px 0 10px;
+  padding: 0 5px 0 5px;
 `;
 
 export const TaskPositionWrapperStyle: string = css`

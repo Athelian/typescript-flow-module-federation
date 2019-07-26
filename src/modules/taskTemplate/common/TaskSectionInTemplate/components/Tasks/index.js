@@ -14,13 +14,24 @@ type Props = {
   onSwap: Function,
   onRemove: Function,
   onSave: Function,
-  editable: boolean,
+  editable: Object,
+  sortable: boolean,
   removable: boolean,
   viewForm: boolean,
   type: string,
 };
 
-const Tasks = ({ tasks, onSwap, onRemove, onSave, editable, viewForm, removable, type }: Props) => {
+const Tasks = ({
+  tasks,
+  onSwap,
+  onRemove,
+  onSave,
+  editable,
+  sortable,
+  removable,
+  viewForm,
+  type,
+}: Props) => {
   if (tasks.length === 0) {
     return (
       <div className={EmptyMessageStyle}>
@@ -42,19 +53,18 @@ const Tasks = ({ tasks, onSwap, onRemove, onSave, editable, viewForm, removable,
                 __typename: type,
               }}
               task={task}
-              position={index + 1}
               hideParentInfo
               saveOnBlur={newValue => onSave(index, newValue)}
               onClick={viewForm ? () => selectTaskSlideToggle(true) : () => {}}
               actions={[
-                editable && index - 1 > -1 && (
+                sortable && index - 1 > -1 && (
                   <CardAction
                     icon="CHEVRON_DOUBLE_LEFT"
                     hoverColor="BLUE"
                     onClick={() => onSwap(index, 'left')}
                   />
                 ),
-                editable && index + 1 < tasks.length && (
+                sortable && index + 1 < tasks.length && (
                   <CardAction
                     icon="CHEVRON_DOUBLE_RIGHT"
                     hoverColor="BLUE"

@@ -46,7 +46,6 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
                     groupIds={parseGroupIds(task)}
                     entity={task[lowerFirst(getByPath('entity.__typename', task))]}
                     task={task}
-                    position={index + 1}
                     editable={checkEditableFromEntity(
                       getByPath('entity.__typename', task),
                       (checkPermission: string | Array<string>) => {
