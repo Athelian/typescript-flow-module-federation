@@ -23,7 +23,7 @@ export const defaultInputProps = {
   onChange: null,
   onBlur: null,
   onFocus: null,
-  align: 'right',
+  align: 'left',
   readOnly: false,
   readOnlyWidth: '200px',
   readOnlyHeight: '30px',

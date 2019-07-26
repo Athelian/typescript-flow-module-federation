@@ -17,7 +17,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  align: 'right',
+  align: 'left',
   width: '100%',
   height: '20px',
   color: 'BLACK',
