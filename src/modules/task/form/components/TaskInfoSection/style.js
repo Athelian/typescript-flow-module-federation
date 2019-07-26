@@ -22,10 +22,6 @@ export const MainFieldsWrapperStyle: string = css`
   padding: 0 90px;
 `;
 
-export const MemoWrapperStyle: string = css`
-  margin: 0 90px;
-`;
-
 export const TaskStatusWrapperStyle: string = css`
   ${borderRadiuses.MAIN};
   background-color: ${colors.GRAY_SUPER_LIGHT};

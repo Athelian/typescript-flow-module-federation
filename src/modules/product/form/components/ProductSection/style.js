@@ -133,10 +133,6 @@ export const ScrollFixStyle: string = css`
   width: 1px;
 `;
 
-export const TagsInputStyle: string = css`
-  margin-top: 20px;
-`;
-
 export const DividerStyle: string = css`
   margin: 40px 0;
   height: 1px;

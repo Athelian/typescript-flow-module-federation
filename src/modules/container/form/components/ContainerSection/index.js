@@ -597,8 +597,8 @@ const ContainerSection = () => {
                     originalValue={originalValues[name]}
                     label={<FormattedMessage id="modules.container.memo" defaultMessage="MEMO" />}
                     vertical
-                    inputWidth="680px"
-                    inputHeight="65px"
+                    inputWidth="400px"
+                    inputHeight="120px"
                     editable={allowUpdate || hasPermission(CONTAINER_SET_MEMO)}
                   />
                 )}
