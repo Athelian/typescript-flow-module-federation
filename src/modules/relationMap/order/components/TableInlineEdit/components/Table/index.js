@@ -16,7 +16,7 @@ import { Lines } from './Lines';
 import TableDisableCell from '../TableDisableCell';
 import Cell from './Cell';
 
-type Props = {
+type Props = {|
   columnCount: number,
   columnWidth: number,
   rowHeight: number,
@@ -26,7 +26,7 @@ type Props = {
   onToggle: Function,
   lines: Object,
   itemData: Object,
-};
+|};
 
 const innerElementType = React.forwardRef(
   ({ style, children, ...rest }: { style: Object, children: React.Node }, ref) => (
@@ -152,10 +152,9 @@ export default function Table({
             } else {
               logger.warn('focus', cell);
               cell.focus();
-              // Due to the duplicate cell and on the edge case, we got null on text field from API
-              // then on blur, it will make a change and all duplicate cell will be re-render and we lost the focus on input
-              if (cell && tagName === 'input' && !getByPath('value', cell)) {
-                logger.warn('retry to focus on empty value', cell);
+              // Due to the duplicate cell, if we focus and do the on blur, it will make a change and all duplicate cell will be re-render and we lost the focus on input
+              if (['UP', 'DOWN'].includes(type) && cell.tagName === 'INPUT') {
+                logger.warn('retry to focus on input value', cell);
                 setTimeout(() => {
                   const retryCell = document.getElementById(`input-${rowIndex}-${columnIndex}`);
                   if (retryCell) retryCell.focus();
