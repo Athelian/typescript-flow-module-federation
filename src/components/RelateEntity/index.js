@@ -31,9 +31,22 @@ export default function RelateEntity({ entity, value, blackout }: Props) {
         <Icon icon={entity} />
       </div>
       {blackout ? (
-        <Display height="20px" blackout={blackout} align="left" />
+        <Display
+          onClick={evt => {
+            evt.preventDefault();
+          }}
+          height="20px"
+          blackout={blackout}
+          align="left"
+        />
       ) : (
-        <Display height="20px" align="left">
+        <Display
+          onClick={evt => {
+            evt.preventDefault();
+          }}
+          height="20px"
+          align="left"
+        >
           {value}
         </Display>
       )}
