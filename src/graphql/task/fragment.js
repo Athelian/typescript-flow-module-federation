@@ -6,7 +6,6 @@ export const taskCardFragment = gql`
     id
     name
     approvable
-    sort
     entity {
       ... on Model {
         id
@@ -106,7 +105,6 @@ export const taskFormInTemplateFragment = gql`
     updatedBy {
       ...userAvatarFragment
     }
-    sort
     name
     startDateInterval {
       months
@@ -140,7 +138,6 @@ export const taskFormInTemplateFragment = gql`
 
 export const taskWithoutParentInfoFragment = gql`
   fragment taskWithoutParentInfoFragment on Task {
-    sort
     id
     approvable
     updatedAt
@@ -216,7 +213,6 @@ export const taskWithoutParentInfoFragment = gql`
 
 export const taskWithParentInfoFragment = gql`
   fragment taskWithParentInfoFragment on Task {
-    sort
     id
     updatedAt
     updatedBy {
