@@ -259,9 +259,9 @@ const TaskCard = ({
 
   const isFromTemplate = !!taskTemplate;
 
-  let nameWidth = '160px';
-  if (isFromTemplate || isInTemplate) nameWidth = '120px';
-  else if (hideParentInfo) nameWidth = '140px';
+  let nameWidth = '185px';
+  if (isFromTemplate || isInTemplate) nameWidth = '145px';
+  else if (hideParentInfo) nameWidth = '145px';
 
   cardHeight = 265;
   if (hideParentInfo || isInTemplate) cardHeight -= 25;
@@ -329,9 +329,12 @@ const TaskCard = ({
             {({ name: fieldName, ...inputHandlers }) => (
               <TextInputFactory
                 {...inputHandlers}
-                onBlur={evt => {
-                  inputHandlers.onBlur(evt);
-                  saveOnBlur({ ...task, name: inputHandlers.value });
+                {...{
+                  ...inputHandlers,
+                  onBlur: evt => {
+                    inputHandlers.onBlur(evt);
+                    saveOnBlur({ ...task, name: inputHandlers.value });
+                  },
                 }}
                 editable={editable.name}
                 inputWidth={nameWidth}

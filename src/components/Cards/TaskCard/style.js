@@ -48,7 +48,7 @@ export const TaskParentWrapperStyle: string = css`
 `;
 
 export const TaskNameWrapperStyle: string = css`
-  padding: 0 5px 0 10px;
+  padding: 0 5px 0 5px;
 `;
 
 export const TaskPositionWrapperStyle: string = css`

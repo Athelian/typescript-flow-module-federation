@@ -74,15 +74,11 @@ export const generateOrderRelation = (order: Object, option: Object = {}): Array
       }
       batches.forEach((batch, batchIndex) => {
         const batchNo = batchIndex + 1;
-        // if (resultId.batchIds.some(bId => bId === batch.id)) {
-        //   return;
-        // }
         const relatedBatchIds = getRelatedIds(batches, batchIndex, resultId.batchIds);
 
         if (result.batch[batch.id]) {
           const newBatches = result.batch[batch.id];
           newBatches.forEach(newBatchId => {
-            // const newBatchNo = newBatchIndex + 1;
             if (batchNo > 1) {
               orderRelations.push({ type: '' });
               orderRelations.push({
