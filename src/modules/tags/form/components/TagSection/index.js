@@ -129,7 +129,6 @@ const TagSection = ({ isNew, tag }: Props) => {
                         }
                         inputHeight="100px"
                         inputWidth="200px"
-                        inputAlign="right"
                         editable={allowCreateOrUpdate}
                         vertical={false}
                       />

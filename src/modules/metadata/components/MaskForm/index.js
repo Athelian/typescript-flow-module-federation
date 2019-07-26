@@ -116,7 +116,6 @@ class MaskForm extends React.Component<Props> {
                               {...inputHandlers}
                               inputHeight="100px"
                               inputWidth="200px"
-                              inputAlign="right"
                               editable={allowUpdate}
                               vertical={false}
                             />

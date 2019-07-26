@@ -74,7 +74,6 @@ const TableTemplateSection = ({ isNew }: Props) => {
                       vertical={false}
                       inputWidth="200px"
                       inputHeight="100px"
-                      inputAlign="right"
                     />
                   )}
                 </FormField>

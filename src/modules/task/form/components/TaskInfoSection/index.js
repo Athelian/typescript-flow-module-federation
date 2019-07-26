@@ -985,7 +985,6 @@ const TaskInfoSection = ({
                           }
                           inputHeight="100px"
                           inputWidth="200px"
-                          inputAlign="right"
                           vertical={false}
                           editable={editable.description}
                         />

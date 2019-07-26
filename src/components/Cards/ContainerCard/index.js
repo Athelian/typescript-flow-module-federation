@@ -105,7 +105,7 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
             <Label>
               <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
             </Label>
-            <Display align="right">
+            <Display>
               {totalVolume && (
                 <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
               )}
@@ -116,7 +116,7 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
             <Label>
               <FormattedMessage id="components.cards.batches" defaultMessage="BATCHES" />
             </Label>
-            <Display align="right">
+            <Display>
               <FormattedNumber value={batches.length} />
             </Display>
           </div>
