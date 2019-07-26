@@ -261,7 +261,7 @@ const TaskCard = ({
 
   let nameWidth = '185px';
   if (isFromTemplate || isInTemplate) nameWidth = '145px';
-  else if (hideParentInfo) nameWidth = '145px';
+  else if (hideParentInfo) nameWidth = '165px';
 
   cardHeight = 265;
   if (hideParentInfo || isInTemplate) cardHeight -= 25;
