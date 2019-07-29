@@ -1,11 +1,11 @@
 // @flow
+import type { FilePayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import { isEquals } from 'utils/fp';
 import { cloneDeep, set } from 'lodash';
-import type { Document } from 'components/Form/DocumentsInput/type.js.flow';
 
 type FormState = {|
-  files: Array<Document>,
+  files: Array<FilePayload>,
   hasCalledFilesApiYet: boolean,
 |};
 
@@ -30,7 +30,7 @@ export default class ShipmentFilesContainer extends Container<FormState> {
     this.setState((prevState: FormState): FormState => set(cloneDeep(prevState), path, value));
   };
 
-  initDetailValues = (files: Array<Document>, hasCalledFilesApiYet: boolean = false) => {
+  initDetailValues = (files: Array<FilePayload>, hasCalledFilesApiYet: boolean = false) => {
     this.setState({ files, hasCalledFilesApiYet });
     this.originalValues = { files, hasCalledFilesApiYet };
   };
