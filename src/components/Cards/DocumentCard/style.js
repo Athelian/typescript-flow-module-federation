@@ -29,7 +29,6 @@ export const MemoPanelStyle = (height: string) => css`
   ${borderRadiuses.MAIN};
   height: ${height};
   width: 100%;
-  overflow: hidden;
   ${transitions.EXPAND};
 `;
 

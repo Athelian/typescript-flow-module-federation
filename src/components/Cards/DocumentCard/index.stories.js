@@ -19,6 +19,7 @@ storiesOf('Card/DocumentCard', module)
   ))
   .add('with file and non-editable', () => (
     <DocumentCard
+      onChange={console.warn}
       editable={{
         status: false,
         type: false,
@@ -43,6 +44,7 @@ storiesOf('Card/DocumentCard', module)
   ))
   .add('with file editable', () => (
     <DocumentCard
+      onChange={console.warn}
       editable={{
         status: true,
         type: true,
@@ -67,6 +69,7 @@ storiesOf('Card/DocumentCard', module)
   ))
   .add('with hide parent info', () => (
     <DocumentCard
+      onChange={console.warn}
       editable={{
         status: true,
         type: true,
@@ -92,6 +95,7 @@ storiesOf('Card/DocumentCard', module)
   ))
   .add('with hide parent info and non-editable', () => (
     <DocumentCard
+      onChange={console.warn}
       editable={{
         status: false,
         type: false,

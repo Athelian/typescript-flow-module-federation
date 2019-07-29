@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import type { FilePayload } from 'generated/graphql';
+import type { FileType, FileStatus, EntityPayload } from 'generated/graphql';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Link } from '@reach/router';
@@ -42,7 +42,15 @@ import {
 
 type Props = {|
   intl: IntlShape,
-  file: FilePayload,
+  file: {
+    id: string,
+    name: string,
+    type: FileType,
+    status: FileStatus,
+    entity: EntityPayload,
+    memo: string,
+    path: string,
+  },
   editable: {
     status: boolean,
     type: boolean,
@@ -51,9 +59,10 @@ type Props = {|
   actions?: Array<React$Node>,
   hideParentInfo?: boolean,
   downloadable?: boolean,
+  onChange?: (field: string, value: mixed) => void,
 |};
 
-const getFileTypesByEntity = (
+export const getFileTypesByEntity = (
   entity: 'Order' | 'OrderItem' | 'Shipment' | 'ProductProvider',
   intl: IntlShape
 ) => {
@@ -138,7 +147,15 @@ const getFileTypesByEntity = (
   }
 };
 
-function DocumentCard({ file, editable, hideParentInfo, actions, downloadable, intl }: Props) {
+function DocumentCard({
+  file,
+  editable,
+  hideParentInfo,
+  actions,
+  downloadable,
+  intl,
+  onChange,
+}: Props) {
   const cardHeight = hideParentInfo ? '185px' : '210px';
   const memoHeight = hideParentInfo ? '145px' : '170px';
   const { parentType, parentIcon, parentData, link } = getParentInfo(
@@ -156,6 +173,7 @@ function DocumentCard({ file, editable, hideParentInfo, actions, downloadable, i
     product: hasPermission(PRODUCT_FORM),
   };
   const name = getByPathWithDefault('', 'name', file);
+  const id = getByPathWithDefault(Date.now(), 'id', file);
   const fileExtension = getFileExtension(name);
   const fileName = getFileName(name);
   const fileIcon = computeIcon(fileExtension);
@@ -186,14 +204,10 @@ function DocumentCard({ file, editable, hideParentInfo, actions, downloadable, i
           </div>
         )}
         <FormField
-          name="type"
+          name={`${id}.type`}
+          setFieldValue={(field, value) => onChange && onChange('type', value)}
           initValue={getByPathWithDefault('', 'type', file)}
-          setFieldValue={console.warn}
-          values={{
-            file,
-            cardHeight,
-            memoHeight,
-          }}
+          saveOnChange
         >
           {({ ...inputHandlers }) => (
             <SelectInputFactory
@@ -233,14 +247,9 @@ function DocumentCard({ file, editable, hideParentInfo, actions, downloadable, i
                   <Icon icon="CLEAR" />
                 </div>
                 <FormField
-                  name="memo"
+                  name={`${id}.memo`}
+                  setFieldValue={(field, value) => onChange && onChange('memo', value)}
                   initValue={getByPathWithDefault('', 'memo', file)}
-                  setFieldValue={console.warn}
-                  values={{
-                    file,
-                    cardHeight,
-                    memoHeight,
-                  }}
                 >
                   {({ ...inputHandlers }) => (
                     <TextAreaInputFactory
@@ -266,14 +275,10 @@ function DocumentCard({ file, editable, hideParentInfo, actions, downloadable, i
             {!showMemo && (
               <>
                 <FormField
-                  name="status"
+                  name={`${id}.status`}
+                  setFieldValue={(field, value) => onChange && onChange('status', value)}
                   initValue={getByPathWithDefault('', 'status', file)}
-                  setFieldValue={console.warn}
-                  values={{
-                    file,
-                    cardHeight,
-                    memoHeight,
-                  }}
+                  saveOnChange
                 >
                   {({ ...inputHandlers }) => (
                     <span
