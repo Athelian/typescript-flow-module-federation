@@ -4,6 +4,8 @@ import memoize from 'memoize-one';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeGrid as Grid } from 'react-window';
 import { getByPath } from 'utils/fp';
+import logger from 'utils/logger';
+import emitter from 'utils/emitter';
 import {
   generateEmptyShipmentsData,
   generateOrdersData,
@@ -14,7 +16,7 @@ import { Lines } from './Lines';
 import TableDisableCell from '../TableDisableCell';
 import Cell from './Cell';
 
-type Props = {
+type Props = {|
   columnCount: number,
   columnWidth: number,
   rowHeight: number,
@@ -24,7 +26,7 @@ type Props = {
   onToggle: Function,
   lines: Object,
   itemData: Object,
-};
+|};
 
 const innerElementType = React.forwardRef(
   ({ style, children, ...rest }: { style: Object, children: React.Node }, ref) => (
@@ -84,6 +86,26 @@ const createItemData = memoize((itemData: Object) => {
   return data;
 });
 
+const calculatePosition = (position: [number, number], type: mixed): [number, number] => {
+  const [baseRow = -1, baseColumn = -1] = position;
+  const row = Number(baseRow);
+  const column = Number(baseColumn);
+  switch (type) {
+    case 'TAB':
+    case 'RIGHT':
+      return [row, column + 1];
+    case 'REVERSE_TAB':
+    case 'LEFT':
+      return [row, column - 1];
+    case 'UP':
+      return [row - 1, column];
+    case 'DOWN':
+      return [row + 1, column];
+    default:
+      return [row, column];
+  }
+};
+
 export default function Table({
   customColumns,
   showAllColumn,
@@ -104,6 +126,56 @@ export default function Table({
     }
   };
   const data = createItemData(itemData);
+  const rowCount = data.length;
+  const { columnCount } = renderOptions;
+  const gridRef = React.createRef();
+  React.useEffect(() => {
+    const listener = emitter.addListener('NAVIGATE', (position: mixed, type: mixed) => {
+      logger.warn('NAVIGATE', position, type);
+      // $FlowIgnore position is the tuples
+      const [rowIndex, columnIndex] = calculatePosition(position, type);
+      const isValidNavigate =
+        columnIndex >= 0 && columnIndex < columnCount && rowIndex >= 0 && rowIndex < rowCount;
+      const allowTags = ['input', 'button'];
+      if (isValidNavigate && gridRef.current) {
+        gridRef.current.scrollToItem({
+          columnIndex,
+          rowIndex,
+        });
+        requestAnimationFrame(() => {
+          const cell = document.getElementById(`input-${rowIndex}-${columnIndex}`);
+          if (cell) {
+            const tagName = cell.tagName.toLowerCase();
+            if (cell.hasAttribute('disabled') || !allowTags.includes(tagName)) {
+              logger.warn('NAVIGATE to next cell', [rowIndex, columnIndex], type);
+              emitter.emit('NAVIGATE', [rowIndex, columnIndex], type);
+            } else {
+              logger.warn('focus', cell);
+              cell.focus();
+              // Due to the duplicate cell, if we focus and do the on blur, it will make a change and all duplicate cell will be re-render and we lost the focus on input
+              if (['UP', 'DOWN'].includes(type) && cell.tagName === 'INPUT') {
+                logger.warn('retry to focus on input value', cell);
+                setTimeout(() => {
+                  const retryCell = document.getElementById(`input-${rowIndex}-${columnIndex}`);
+                  if (retryCell) retryCell.focus();
+                }, 0);
+              }
+            }
+          } else {
+            logger.warn(
+              'NAVIGATE to next cell because cell is not exist',
+              [rowIndex, columnIndex],
+              type
+            );
+            emitter.emit('NAVIGATE', [rowIndex, columnIndex], type);
+          }
+        });
+      }
+    });
+    return () => {
+      listener.remove();
+    };
+  }, [columnCount, gridRef, rowCount]);
   return (
     <>
       <StickyHeader
@@ -120,6 +192,8 @@ export default function Table({
         {({ width, height }) => (
           <Grid
             {...renderOptions}
+            // $FlowIgnore this is the error when sending the new ref to legacy ref type
+            ref={gridRef}
             itemData={data}
             rowCount={data.length}
             innerRef={bodyRef}

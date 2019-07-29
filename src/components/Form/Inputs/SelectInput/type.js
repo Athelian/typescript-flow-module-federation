@@ -41,7 +41,7 @@ export type SelectInputProps = OptionalProps & {
 export const defaultSelectInputProps = {
   value: '',
   readOnly: false,
-  align: 'right',
+  align: 'left',
   onChange: () => {},
   onBlur: () => {},
   onFocus: () => {},

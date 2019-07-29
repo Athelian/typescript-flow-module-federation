@@ -28,7 +28,7 @@ export const DefaultStyleWrapperStyle = ({
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid ${hasError ? colors.RED : 'transparent'};
+  border: 1px solid ${hasError ? colors.RED : 'rgba(0, 0, 0, 0.1)'};
   ${isFocused && `border-color: ${hasError ? colors.RED : colors.TEAL}`};
   ${borderRadiuses.MAIN};
   background-color: ${transparent ? colors.TRANSPARENT : colors.WHITE};

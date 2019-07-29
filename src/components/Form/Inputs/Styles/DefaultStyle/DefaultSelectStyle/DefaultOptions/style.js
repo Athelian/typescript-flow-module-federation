@@ -13,7 +13,6 @@ export const OptionWrapperStyle = ({
   width,
   height,
   dropDirection,
-  align,
 }: OptionWrapperType): string => css`
   & > div {
     list-style-type: none;
@@ -25,7 +24,7 @@ export const OptionWrapperStyle = ({
       : `
       bottom: calc(100% + 5px)
     `};
-    ${align === 'left' ? 'left: 0' : 'right: 0'};
+    right: 0;
     margin: 0;
     padding: 0;
     overflow: hidden;

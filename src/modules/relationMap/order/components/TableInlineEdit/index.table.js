@@ -5,7 +5,7 @@ import { ApolloConsumer } from 'react-apollo';
 import type { IntlShape } from 'react-intl';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { diff } from 'deep-object-diff';
-import { HotKeys } from 'react-hotkeys';
+import { HotKeys, configure } from 'react-hotkeys';
 import { set, isEqual, cloneDeep } from 'lodash';
 import usePrevious from 'hooks/usePrevious';
 import { UserConsumer } from 'modules/user';
@@ -76,6 +76,28 @@ type Props = {|
   },
   intl: IntlShape,
 |};
+
+// More detail on https://github.com/greena13/react-hotkeys#configuration
+// react-hotkeys ignore key binding on input tags however, we need that for RM edit
+configure({
+  logLevel: 'warn',
+  ignoreEventsCondition: event => {
+    const { target } = event;
+    // Id will be have `input-{ROW}-${COLUMN}`
+    if (target && target.id) {
+      return !target.id.includes('input-');
+    }
+    return true;
+  },
+  enableHardSequences: false,
+  ignoreKeymapAndHandlerChangesByDefault: true,
+  ignoreRepeatedEventsWhenKeyHeldDown: true,
+  simulateMissingKeyPressEvents: true,
+  stopEventPropagationAfterHandling: true,
+  stopEventPropagationAfterIgnoring: true,
+  allowCombinationSubmatches: false,
+  customKeyCodes: {},
+});
 
 const isModifyPort = (field: string) => {
   const ports = [

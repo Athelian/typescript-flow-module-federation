@@ -50,7 +50,7 @@ function DefaultOptions({
   const numItemsInAPage = Math.ceil(rawHeight / 30);
 
   return (
-    <div className={OptionWrapperStyle({ width, height, dropDirection, align })}>
+    <div className={OptionWrapperStyle({ width, height, dropDirection })}>
       {items.length > 0 ? (
         <VirtualList
           height={items.length < numItemsInAPage ? items.length * 30 : rawHeight}

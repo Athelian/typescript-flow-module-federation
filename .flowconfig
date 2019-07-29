@@ -39,4 +39,7 @@ module.name_mapper='^providers\(.*\)$' -> '<PROJECT_ROOT>/src/providers/\1'
 module.name_mapper='^styles\(.*\)$' -> '<PROJECT_ROOT>/src/styles/\1'
 module.name_mapper='^types\(.*\)$' -> '<PROJECT_ROOT>/src/types/\1'
 module.name_mapper='^utils\(.*\)$' -> '<PROJECT_ROOT>/src/utils/\1'
+suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe
+suppress_comment=\\(.\\|\n\\)*\\$FlowIssue
+suppress_comment=\\(.\\|\n\\)*\\$FlowIgnore
 [strict]

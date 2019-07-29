@@ -13,12 +13,19 @@ type Props = {
 };
 
 export default function InlineWarehouse({ name, value, id }: Props) {
+  const [isFocused, setIsFocused] = React.useState(false);
   return (
     <BooleanValue>
       {({ value: opened, set: slideToggle }) => (
         <>
-          <button id={`input-${id}`} type="button" onClick={() => slideToggle(true)}>
-            <DefaultStyle width="200px" type="button">
+          <button
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            id={`input-${id}`}
+            type="button"
+            onClick={() => slideToggle(true)}
+          >
+            <DefaultStyle isFocused={isFocused} width="200px" type="button">
               <Display align="left">{value && value.name}</Display>
             </DefaultStyle>
           </button>

@@ -71,7 +71,6 @@ const Tasks = ({
                 __typename: type,
               }}
               task={task}
-              position={index + 1}
               hideParentInfo
               saveOnBlur={newValue => onSave(index, newValue)}
               onClick={viewForm ? () => selectTaskSlideToggle(true) : () => {}}
@@ -105,7 +104,7 @@ const Tasks = ({
                   }}
                   parentEntity={type}
                   inParentEntityForm
-                  task={{ ...omit(task, ['entity']), sort: index }}
+                  task={{ ...omit(task, ['entity']) }}
                   onSave={value => {
                     selectTaskSlideToggle(false);
                     onSave(index, value);

@@ -707,7 +707,7 @@
   "modules.ProductProviders.countryOfOrigin": "COUNTRY OF ORIGIN",
   "modules.ProductProviders.productionLeadTime": "PRODUCTION LEAD TIME",
   "modules.ProductProviders.inspectionFee": "INSPECTION FEE",
-  "modules.ProductProviders.inspectionFeeCurrency": "INSPECTION FEE CURRENCY",
+  "modules.ProductProviders.inspectionFeeCurrency": "INSPECTION FEE CCY",
   "modules.ProductProviders.memo": "MEMO",
   "modules.ProductProviders.unitType": "UNIT TYPE",
   "modules.ProductProviders.unitPrice": "UNIT PRICE",

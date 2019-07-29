@@ -36,7 +36,7 @@ const defaultProps = {
   forceHoverStyle: false,
   width: '100%',
   height: '30px',
-  align: 'right',
+  align: 'left',
   hideDropdownArrow: false,
   hideClearIcon: false,
   placeholder: null,

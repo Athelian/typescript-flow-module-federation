@@ -1,82 +1,60 @@
 // @flow
+import emitter from 'utils/emitter';
+import logger from 'utils/logger';
 
 export const keyMap = {
-  firstRight: ['command+right', 'ctrl+right'],
-  firstLeft: ['command+left', 'ctrl+left'],
-  firstTop: ['command+up', 'ctrl+up', 'shift+enter'],
-  firstBottom: ['command+down', 'ctrl+down', 'enter'],
-  tab: ['tab'],
-  reverseTab: ['shift+tab'],
-};
-
-const calculatePosition = (position: [string | number, string | number], type: string) => {
-  const [row, column] = position;
-  switch (type) {
-    default:
-      return position;
-    case 'tab':
-    case 'right':
-      return [Number(row), Number(column) + 1];
-    case 'reverseTab':
-    case 'left':
-      return [Number(row), Number(column) - 1];
-    case 'top':
-      return [Number(row) - 1, column];
-    case 'bottom':
-      return [Number(row) + 1, column];
-    case 'newLine':
-      return [Number(row) + 1, 1];
-    case 'previousLine':
-      return [Number(row) - 1, 1];
-  }
-};
-
-const focusCell = (position: [string | number, string | number], type: string) => {
-  const [row, column] = calculatePosition(position, type);
-  const cell = document.getElementById(`input-${row}-${column}`);
-  if (cell && cell.hasAttribute('disabled')) {
-    focusCell([row, column], type);
-  } else if (cell && !cell.hasAttribute('disabled')) {
-    cell.focus();
-  } else if (!cell && type === 'tab') {
-    focusCell([row, column], 'newLine');
-  } else if (!cell && type === 'reverseTab') {
-    focusCell([row, column], 'previousLine');
-  }
+  NAVIGATE_RIGHT: ['command+RIGHT', 'ctrl+RIGHT'],
+  NAVIGATE_LEFT: ['command+LEFT', 'ctrl+LEFT'],
+  NAVIGATE_UP: ['command+up', 'ctrl+up', 'shift+enter'],
+  NAVIGATE_DOWN: ['command+down', 'ctrl+down', 'enter'],
+  TAB: ['TAB'],
+  REVERSE_TAB: ['shift+TAB'],
 };
 
 // Id will be have `input-{ROW}-${COLUMN}`
 const getCellById = (id: string) => id && id.match(/\d+/g);
 
 export const handlers = {
-  tab: (e: SyntheticInputEvent<EventTarget>) => {
+  TAB: (e: SyntheticInputEvent<EventTarget>) => {
     e.preventDefault();
     const [row, column] = getCellById(e.target.id) || [];
-    focusCell([row, column], 'tab');
+    logger.warn('trigger navigate', [row, column], 'TAB');
+    emitter.emit('NAVIGATE', [row, column], 'TAB');
   },
-  reverseTab: (e: SyntheticInputEvent<EventTarget>) => {
+  REVERSE_TAB: (e: SyntheticInputEvent<EventTarget>) => {
     e.preventDefault();
     const [row, column] = getCellById(e.target.id) || [];
-    focusCell([row, column], 'reverseTab');
+    logger.warn('trigger navigate', [row, column], 'REVERSE_TAB');
+    if (Number(column) > 0) {
+      emitter.emit('NAVIGATE', [row, column], 'REVERSE_TAB');
+    }
   },
-  firstRight: (e: SyntheticInputEvent<EventTarget>) => {
+  NAVIGATE_RIGHT: (e: SyntheticInputEvent<EventTarget>) => {
     e.preventDefault();
     const [row, column] = getCellById(e.target.id) || [];
-    focusCell([row, column], 'right');
+    logger.warn('trigger navigate', [row, column], 'RIGHT');
+    emitter.emit('NAVIGATE', [row, column], 'RIGHT');
   },
-  firstLeft: (e: SyntheticInputEvent<EventTarget>) => {
+  NAVIGATE_LEFT: (e: SyntheticInputEvent<EventTarget>) => {
     e.preventDefault();
     const [row, column] = getCellById(e.target.id) || [];
-    focusCell([row, column], 'left');
+    logger.warn('trigger navigate', [row, column], 'LEFT');
+    if (Number(column) > 0) {
+      emitter.emit('NAVIGATE', [row, column], 'LEFT');
+    }
   },
-  firstTop: (e: SyntheticInputEvent<EventTarget>) => {
+  NAVIGATE_UP: (e: SyntheticInputEvent<EventTarget>) => {
     e.preventDefault();
     const [row, column] = getCellById(e.target.id) || [];
-    focusCell([row, column], 'top');
+    logger.warn('trigger navigate', [row, column], 'UP');
+    if (Number(row) > 0) {
+      emitter.emit('NAVIGATE', [row, column], 'UP');
+    }
   },
-  firstBottom: (e: SyntheticInputEvent<EventTarget>) => {
+  NAVIGATE_DOWN: (e: SyntheticInputEvent<EventTarget>) => {
     e.preventDefault();
     const [row, column] = getCellById(e.target.id) || [];
-    focusCell([row, column], 'bottom');
+    logger.warn('trigger navigate', [row, column], 'DOWN');
+    emitter.emit('NAVIGATE', [row, column], 'DOWN');
   },
 };

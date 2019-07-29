@@ -242,6 +242,54 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
                         mask: hasPermission([BATCH_UPDATE, BATCH_SET_CUSTOM_FIELDS_MASK]),
                       }}
                     />
+                    <FieldItem
+                      vertical
+                      label={
+                        <Label height="30px">
+                          <FormattedMessage {...messages.tags} />
+                        </Label>
+                      }
+                      input={
+                        <TagsInput
+                          id="tags"
+                          name="tags"
+                          tagType="Batch"
+                          values={values.tags}
+                          onChange={value => {
+                            setFieldValue('tags', value);
+                          }}
+                          onClickRemove={value => {
+                            setFieldValue('tags', values.tags.filter(({ id }) => id !== value.id));
+                          }}
+                          editable={{
+                            set:
+                              hasPermission(TAG_LIST) &&
+                              hasPermission([BATCH_UPDATE, BATCH_SET_TAGS]),
+                            remove: hasPermission([BATCH_UPDATE, BATCH_SET_TAGS]),
+                          }}
+                        />
+                      }
+                    />
+                    <FormField
+                      name="memo"
+                      initValue={values.memo}
+                      values={values}
+                      validator={validator}
+                      setFieldValue={setFieldValue}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <TextAreaInputFactory
+                          name={name}
+                          {...inputHandlers}
+                          originalValue={originalValues[name]}
+                          label={<FormattedMessage {...messages.memo} />}
+                          editable={hasPermission([BATCH_UPDATE, BATCH_SET_MEMO])}
+                          vertical
+                          inputWidth="400px"
+                          inputHeight="120px"
+                        />
+                      )}
+                    </FormField>
                   </GridColumn>
                   {itemConfig !== HIDE && (
                     <div className={ItemSectionStyle}>
@@ -267,54 +315,6 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
                     </div>
                   )}
                 </div>
-                <FieldItem
-                  vertical
-                  label={
-                    <Label height="30px">
-                      <FormattedMessage {...messages.tags} />
-                    </Label>
-                  }
-                  input={
-                    <TagsInput
-                      id="tags"
-                      name="tags"
-                      tagType="Batch"
-                      values={values.tags}
-                      onChange={value => {
-                        setFieldValue('tags', value);
-                      }}
-                      onClickRemove={value => {
-                        setFieldValue('tags', values.tags.filter(({ id }) => id !== value.id));
-                      }}
-                      editable={{
-                        set:
-                          hasPermission(TAG_LIST) && hasPermission([BATCH_UPDATE, BATCH_SET_TAGS]),
-                        remove: hasPermission([BATCH_UPDATE, BATCH_SET_TAGS]),
-                      }}
-                    />
-                  }
-                />
-
-                <FormField
-                  name="memo"
-                  initValue={values.memo}
-                  values={values}
-                  validator={validator}
-                  setFieldValue={setFieldValue}
-                >
-                  {({ name, ...inputHandlers }) => (
-                    <TextAreaInputFactory
-                      name={name}
-                      {...inputHandlers}
-                      originalValue={originalValues[name]}
-                      label={<FormattedMessage {...messages.memo} />}
-                      editable={hasPermission([BATCH_UPDATE, BATCH_SET_MEMO])}
-                      vertical
-                      inputWidth="680px"
-                      inputHeight="65px"
-                    />
-                  )}
-                </FormField>
 
                 <div className={DividerStyle} />
               </>

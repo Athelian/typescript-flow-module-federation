@@ -248,7 +248,7 @@ const ShipmentContainerCard = ({
                 <Label>
                   <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
                 </Label>
-                <Display align="right">
+                <Display>
                   {totalVolume && (
                     <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
                   )}
@@ -259,9 +259,7 @@ const ShipmentContainerCard = ({
                 <Label>
                   <FormattedMessage id="components.cards.batches" defaultMessage="BATCHES" />
                 </Label>
-                <Display align="right">
-                  {batches && <FormattedNumber value={batches.length} />}
-                </Display>
+                <Display>{batches && <FormattedNumber value={batches.length} />}</Display>
               </div>
 
               <div className={DividerStyle} />

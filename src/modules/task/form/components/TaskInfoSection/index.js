@@ -55,7 +55,6 @@ import {
 import Divider from 'components/Divider';
 import Icon from 'components/Icon';
 import GridColumn from 'components/GridColumn';
-import FormattedNumber from 'components/FormattedNumber';
 import { FormField, FormContainer } from 'modules/form';
 import TaskContainer from 'modules/task/form/container';
 import validator, { circleValidator } from 'modules/task/form/validator';
@@ -73,7 +72,6 @@ import {
   TaskFormWrapperStyle,
   TaskSectionWrapperStyle,
   MainFieldsWrapperStyle,
-  MemoWrapperStyle,
   TaskStatusWrapperStyle,
   AssignedToStyle,
   ApprovalToggleWrapperStyle,
@@ -401,19 +399,6 @@ const TaskInfoSection = ({
 
                 <div className={MainFieldsWrapperStyle}>
                   <GridColumn>
-                    <FieldItem
-                      label={
-                        <Label height="30px">
-                          <FormattedMessage id="modules.Tasks.taskNo" defaultMessage="TASK No." />
-                        </Label>
-                      }
-                      input={
-                        <Display height="30px">
-                          <FormattedNumber value={task.sort + 1} />
-                        </Display>
-                      }
-                    />
-
                     <FormField
                       name="name"
                       initValue={values.name}
@@ -985,7 +970,6 @@ const TaskInfoSection = ({
                           }
                           inputHeight="100px"
                           inputWidth="200px"
-                          inputAlign="right"
                           vertical={false}
                           editable={editable.description}
                         />
@@ -1018,6 +1002,48 @@ const TaskInfoSection = ({
                         />
                       }
                     />
+
+                    {isInTemplate ? (
+                      <FieldItem
+                        vertical
+                        label={
+                          <Label>
+                            <FormattedMessage id="modules.Tasks.memo" defaultMessage="MEMO" />
+                          </Label>
+                        }
+                        input={
+                          <Display color="GRAY_LIGHT">
+                            <FormattedMessage
+                              id="modules.Tasks.memoPlaceholder"
+                              defaultMessage="Value will be entered here"
+                            />
+                          </Display>
+                        }
+                      />
+                    ) : (
+                      <FormField
+                        name="memo"
+                        initValue={values.memo}
+                        values={values}
+                        validator={validator}
+                        setFieldValue={setFieldValue}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <TextAreaInputFactory
+                            name={name}
+                            {...inputHandlers}
+                            originalValue={originalValues[name]}
+                            label={
+                              <FormattedMessage id="modules.Tasks.memo" defaultMessage="MEMO" />
+                            }
+                            vertical
+                            inputWidth="400px"
+                            inputHeight="120px"
+                            editable={editable.memo}
+                          />
+                        )}
+                      </FormField>
+                    )}
                   </GridColumn>
 
                   <GridColumn>
@@ -1268,48 +1294,6 @@ const TaskInfoSection = ({
                       </div>
                     )}
                   </GridColumn>
-                </div>
-
-                <div className={MemoWrapperStyle}>
-                  {isInTemplate ? (
-                    <FieldItem
-                      vertical
-                      label={
-                        <Label>
-                          <FormattedMessage id="modules.Tasks.memo" defaultMessage="MEMO" />
-                        </Label>
-                      }
-                      input={
-                        <Display color="GRAY_LIGHT">
-                          <FormattedMessage
-                            id="modules.Tasks.memoPlaceholder"
-                            defaultMessage="Value will be entered here"
-                          />
-                        </Display>
-                      }
-                    />
-                  ) : (
-                    <FormField
-                      name="memo"
-                      initValue={values.memo}
-                      values={values}
-                      validator={validator}
-                      setFieldValue={setFieldValue}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <TextAreaInputFactory
-                          name={name}
-                          {...inputHandlers}
-                          originalValue={originalValues[name]}
-                          label={<FormattedMessage id="modules.Tasks.memo" defaultMessage="MEMO" />}
-                          vertical
-                          inputWidth="680px"
-                          inputHeight="65px"
-                          editable={editable.memo}
-                        />
-                      )}
-                    </FormField>
-                  )}
                 </div>
 
                 <div className={TaskStatusWrapperStyle}>
