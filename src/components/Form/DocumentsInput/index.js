@@ -64,7 +64,7 @@ type State = {
   prevFiles: Array<UploadFileState>,
 };
 
-const SELECTED_FIELDS = ['id', 'type', 'name', 'path', 'status', 'memo', 'entity'];
+const SELECTED_FIELDS = ['id', 'type', 'name', 'path', 'status', 'memo', 'entity', '__typename'];
 class DocumentsInput extends React.Component<Props, State> {
   state = {
     filesState: [],

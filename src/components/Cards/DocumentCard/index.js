@@ -4,6 +4,7 @@ import type { FileType, FileStatus, EntityPayload } from 'generated/graphql';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Link } from '@reach/router';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import { getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
 import { Tooltip } from 'components/Tooltip';
@@ -143,7 +144,9 @@ export const getFileTypesByEntity = (
   }
 };
 
-function DocumentCard({
+let cardHeight = '210px';
+
+const DocumentCard = ({
   file,
   editable,
   hideParentInfo,
@@ -151,8 +154,8 @@ function DocumentCard({
   downloadable,
   intl,
   onChange,
-}: Props) {
-  const cardHeight = hideParentInfo ? '185px' : '210px';
+}: Props) => {
+  cardHeight = hideParentInfo ? '185px' : '210px';
   const memoHeight = hideParentInfo ? '145px' : '170px';
   const { parentType, parentIcon, parentData, link } = getParentInfo(
     getByPathWithDefault({}, 'entity', file)
@@ -328,6 +331,11 @@ function DocumentCard({
       </div>
     </BaseCard>
   );
-}
+};
 
-export default injectIntl(DocumentCard);
+export default withForbiddenCard(injectIntl(DocumentCard), 'file', {
+  width: '195px',
+  height: cardHeight,
+  entityIcon: 'DOCUMENT',
+  entityColor: 'DOCUMENT',
+});

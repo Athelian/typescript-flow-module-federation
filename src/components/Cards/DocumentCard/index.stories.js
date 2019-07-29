@@ -119,4 +119,19 @@ storiesOf('Card/DocumentCard', module)
         __typename: 'File',
       }}
     />
+  ))
+  .add('with hide parent info and forbidden data', () => (
+    <DocumentCard
+      onChange={console.warn}
+      editable={{
+        status: false,
+        type: false,
+        memo: false,
+      }}
+      downloadable
+      hideParentInfo
+      file={{
+        __typename: 'Forbidden',
+      }}
+    />
   ));

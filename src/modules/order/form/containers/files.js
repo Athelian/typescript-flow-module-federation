@@ -2,13 +2,14 @@
 import type { FilePayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import { isEquals } from 'utils/fp';
+import { extractForbiddenId } from 'utils/data';
 import { cloneDeep, set } from 'lodash';
 
-type FormState = {
-  files?: Array<FilePayload>,
-};
+type FormState = {|
+  files: Array<FilePayload>,
+|};
 
-const initValues = {
+const initValues: FormState = {
   files: [],
 };
 
@@ -29,7 +30,8 @@ export default class OrderFilesContainer extends Container<FormState> {
   };
 
   initDetailValues = (files: Array<FilePayload>) => {
-    this.setState({ files });
-    this.originalValues = { files };
+    const parsedFiles = [...files.map(file => extractForbiddenId(file))];
+    this.setState({ files: parsedFiles });
+    this.originalValues = { files: parsedFiles };
   };
 }

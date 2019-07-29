@@ -1,6 +1,7 @@
 // @flow
 import type { FilePayload } from 'generated/graphql';
 import { Container } from 'unstated';
+import { extractForbiddenId } from 'utils/data';
 import { isEquals } from 'utils/fp';
 import { cloneDeep, set } from 'lodash';
 
@@ -31,7 +32,8 @@ export default class ShipmentFilesContainer extends Container<FormState> {
   };
 
   initDetailValues = (files: Array<FilePayload>, hasCalledFilesApiYet: boolean = false) => {
-    this.setState({ files, hasCalledFilesApiYet });
-    this.originalValues = { files, hasCalledFilesApiYet };
+    const parsedFiles = [...files.map(file => extractForbiddenId(file))];
+    this.setState({ files: parsedFiles, hasCalledFilesApiYet });
+    this.originalValues = { files: parsedFiles, hasCalledFilesApiYet };
   };
 }

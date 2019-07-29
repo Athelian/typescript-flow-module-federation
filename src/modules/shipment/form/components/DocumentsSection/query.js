@@ -1,6 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-import { documentFragment } from 'graphql';
+import { documentFragment, forbiddenFragment } from 'graphql';
 
 export const shipmentFormFilesQuery = gql`
   query shipmentFormFilesQuery($id: ID!) {
@@ -9,12 +9,14 @@ export const shipmentFormFilesQuery = gql`
         id
         files {
           ...documentFragment
+          ...forbiddenFragment
         }
       }
     }
   }
 
   ${documentFragment}
+  ${forbiddenFragment}
 `;
 
 export default shipmentFormFilesQuery;

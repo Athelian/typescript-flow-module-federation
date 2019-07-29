@@ -6,7 +6,7 @@ import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { showToastError } from 'utils/errors';
 import { decodeId } from 'utils/id';
-import { removeTypename } from 'utils/data';
+import { removeTypename, isForbidden } from 'utils/data';
 import { getByPath } from 'utils/fp';
 import { Content, SlideViewLayout } from 'components/Layout';
 import { NavBar, SlideViewNavBar, EntityIcon, LogsButton } from 'components/NavBar';
@@ -110,16 +110,13 @@ class OrderItemFormModule extends React.Component<Props> {
       originalValues: removeTypename(originalValues),
       newValues: removeTypename(formData),
     });
-    const result = await updateOrderItem({ variables: { id: decodeId(orderItemId), input } });
-    if (result && result.data) {
-      const { data } = result;
-      const violations = getByPath('orderItemUpdate.violations', data);
-      if (violations && violations.length) {
-        onErrors(violations);
-      } else {
-        onSuccess(getByPath('orderItemUpdate', data));
-      }
-    }
+    const { data } = await updateOrderItem({ variables: { id: decodeId(orderItemId), input } });
+    if (!data) return;
+    const violations = getByPath('orderItemUpdate.violations', data);
+    if (violations && violations.length) {
+      onErrors(violations);
+    } else if (!isForbidden(getByPath('orderItemUpdate', data)))
+      onSuccess(getByPath('orderItemUpdate', data));
   };
 
   onMutationCompleted = (result: Object) => {
@@ -129,7 +126,6 @@ class OrderItemFormModule extends React.Component<Props> {
 
   render() {
     const { orderItemId, isSlideView } = this.props;
-    // TODO: header
     const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
     const CurrentLayout = isSlideView ? SlideViewLayout : React.Fragment;
 
