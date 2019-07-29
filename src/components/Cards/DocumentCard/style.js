@@ -17,7 +17,6 @@ export const DocumentBottomWrapperStyle = (showMemo: boolean) => css`
   width: 100%;
   bottom: 0;
   right: 0;
-  z-index: 2;
   background-color: ${colors.WHITE};
   padding: ${showMemo ? '0px 0px 0px 5px;' : '10px'};
 `;

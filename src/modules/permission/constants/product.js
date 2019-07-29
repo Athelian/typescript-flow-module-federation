@@ -41,6 +41,12 @@ export const PRODUCT_PROVIDER_SET_TASK_TEMPLATE = 'product.productProviders.setT
 export const PRODUCT_PROVIDER_SET_MILESTONE = 'product.productProviders.setMilestone';
 export const PRODUCT_PROVIDER_SET_DOCUMENTS = 'product.productProviders.setDocuments';
 export const PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS = 'product.productProviders.downloadDocuments';
+export const PRODUCT_PROVIDER_DOCUMENT_DELETE = 'product.productProviderFiles.delete';
+export const PRODUCT_PROVIDER_DOCUMENT_SET_NAME = 'product.productProviderFiles.setName';
+export const PRODUCT_PROVIDER_DOCUMENT_SET_STATUS = 'product.productProviderFiles.setStatus';
+export const PRODUCT_PROVIDER_DOCUMENT_SET_TYPE = 'product.productProviderFiles.setType';
+export const PRODUCT_PROVIDER_DOCUMENT_SET_ENTITY = 'product.productProviderFiles.setEntity';
+export const PRODUCT_PROVIDER_DOCUMENT_SET_MEMO = 'product.productProviderFiles.setMemo';
 export const PRODUCT_PROVIDER_SET_CUSTOM_FIELDS = 'product.productProviders.setCustomFields';
 export const PRODUCT_PROVIDER_SET_CUSTOM_FIELDS_MASK =
   'product.productProviders.setCustomFieldsMask';
