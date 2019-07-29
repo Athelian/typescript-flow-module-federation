@@ -146,7 +146,7 @@ const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
                     });
                     orderItemInfoContainer.initDetailValues(rest);
                     orderItemBatchesContainer.initDetailValues({ batches });
-                    orderItemFilesContainer.initDetailValues({ files });
+                    orderItemFilesContainer.initDetailValues(files);
                     orderItemTasksContainer.initDetailValues(todo);
                     orderItemShipmentsContainer.initDetailValues({ shipments });
                   }}

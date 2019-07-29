@@ -93,7 +93,7 @@ class OrderItemFormModule extends React.Component<Props> {
     const { batches, files, todo, shipments, ...rest } = orderItem;
     orderItemInfoContainer.initDetailValues(rest);
     orderItemBatchesContainer.initDetailValues({ batches });
-    orderItemFilesContainer.initDetailValues({ files });
+    orderItemFilesContainer.initDetailValues(files);
     orderItemTasksContainer.initDetailValues(todo);
     orderItemShipmentsContainer.initDetailValues({ shipments });
   };
