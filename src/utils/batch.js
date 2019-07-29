@@ -145,8 +145,7 @@ export const findTotalAutoFillBatches = ({
   quantity: number,
 }): Object => {
   const totalBatchQuantity = batches.reduce(
-    (total, batch) =>
-      total + (getByPathWithDefault(0, 'latestQuantity', batch) || getBatchLatestQuantity(batch)),
+    (total, batch) => total + getBatchLatestQuantity(batch),
     0
   );
   return quantity - totalBatchQuantity;
