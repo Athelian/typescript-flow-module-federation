@@ -8,7 +8,6 @@ import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import { DefaultStyle } from 'components/Form';
 import type { Tag as TagType } from 'components/Tag/type.js.flow';
-import { HoverStyle } from 'components/common/HoverWrapper/style';
 import TagSelectOptions from 'components/Form/Inputs/Styles/TagSelectOptions';
 import { isForbidden } from 'utils/data';
 import { WrapperStyle, SelectionWrapperStyle, InputStyle, RemoveStyle } from './style';
@@ -157,116 +156,138 @@ export default class TagsInput extends React.Component<Props, State> {
     const { editable, width, tagType, disabled, values, name, id, onClickRemove } = this.props;
     const { focused } = this.state;
 
-    return (
-      <div className={HoverStyle}>
-        <Downshift
-          itemToString={i => (i ? i.id : '')}
-          selectedItem={null}
-          onChange={this.handleDownshiftChange}
-          onStateChange={this.handleStateChange}
-          stateReducer={this.stateReducer}
-          labelId={`${name}TagInputs`}
-          onOuterClick={this.handleInputBlur}
-        >
-          {({
-            getInputProps,
-            getItemProps,
-            openMenu,
-            isOpen,
-            inputValue,
-            highlightedIndex,
-            clearSelection,
-            reset,
-          }) => (
-            <div className={WrapperStyle(focused, !!disabled, !!editable)}>
-              <DefaultStyle isFocused={focused} width={width}>
-                <div className={SelectionWrapperStyle}>
-                  <div
-                    ref={this.inputWrapperRef}
-                    role="presentation"
-                    className={InputStyle(width)}
-                    onClick={() => {
-                      this.handleInputFocus();
-                      openMenu();
-                    }}
-                  >
-                    {values &&
-                      (values || [])
-                        .filter(item => !isForbidden(item))
-                        .map(tag => (
-                          <Tag
-                            key={tag.id}
-                            tag={tag}
-                            suffix={
-                              editable.remove && (
-                                <button
-                                  type="button"
-                                  className={RemoveStyle}
-                                  onClick={event => {
-                                    event.stopPropagation();
-                                    onClickRemove(tag);
-                                  }}
-                                >
-                                  <Icon icon="CLEAR" />
-                                </button>
-                              )
+    return editable.set ? (
+      <Downshift
+        itemToString={i => (i ? i.id : '')}
+        selectedItem={null}
+        onChange={this.handleDownshiftChange}
+        onStateChange={this.handleStateChange}
+        stateReducer={this.stateReducer}
+        labelId={`${name}TagInputs`}
+        onOuterClick={this.handleInputBlur}
+      >
+        {({
+          getInputProps,
+          getItemProps,
+          openMenu,
+          isOpen,
+          inputValue,
+          highlightedIndex,
+          clearSelection,
+          reset,
+        }) => (
+          <div className={WrapperStyle(focused, !!disabled, !!editable)}>
+            <DefaultStyle isFocused={focused} width={width}>
+              <div className={SelectionWrapperStyle}>
+                <div
+                  ref={this.inputWrapperRef}
+                  role="presentation"
+                  className={InputStyle(width)}
+                  onClick={() => {
+                    this.handleInputFocus();
+                    openMenu();
+                  }}
+                >
+                  {values &&
+                    (values || [])
+                      .filter(item => !isForbidden(item))
+                      .map(tag => (
+                        <Tag
+                          key={tag.id}
+                          tag={tag}
+                          suffix={
+                            editable.remove && (
+                              <button
+                                type="button"
+                                className={RemoveStyle}
+                                onClick={event => {
+                                  event.stopPropagation();
+                                  onClickRemove(tag);
+                                }}
+                              >
+                                <Icon icon="CLEAR" />
+                              </button>
+                            )
+                          }
+                        />
+                      ))}
+                  <input
+                    ref={this.inputRef}
+                    type="text"
+                    {...getInputProps({
+                      spellCheck: false,
+                      disabled,
+                      onKeyDown: e => {
+                        switch (e.key) {
+                          case 'Backspace':
+                            if (!inputValue && values && values.length > 0 && !e.repeat) {
+                              this.handleRemove(values[values.length - 1]);
                             }
-                          />
-                        ))}
-                    {editable.set && (
-                      <>
-                        <input
-                          ref={this.inputRef}
-                          type="text"
-                          {...getInputProps({
-                            spellCheck: false,
-                            disabled,
-                            onKeyDown: e => {
-                              switch (e.key) {
-                                case 'Backspace':
-                                  if (!inputValue && values && values.length > 0 && !e.repeat) {
-                                    this.handleRemove(values[values.length - 1]);
-                                  }
-                                  break;
-                                default:
-                              }
-                            },
-                            onFocus: () => {
-                              this.handleInputFocus();
-                              openMenu();
-                            },
-                            onBlur: () => {
-                              this.handleInputBlur();
-                              reset();
-                              clearSelection();
-                            },
-                            ...(id ? { id } : {}),
-                          })}
-                        />
-                      </>
-                    )}
-                  </div>
-                  {isOpen && (
-                    <TagListProvider tagType={tagType}>
-                      {({ data: tags }) => (
-                        <TagSelectOptions
-                          getItemProps={getItemProps}
-                          items={this.computeFilteredTags(tags, inputValue)}
-                          selectedItems={values}
-                          highlightedIndex={highlightedIndex}
-                          itemToString={item => (item ? item.description || item.name : '')}
-                          itemToValue={item => (item ? item.description : '')}
-                          width={width}
-                          align="left"
-                        />
-                      )}
-                    </TagListProvider>
-                  )}
+                            break;
+                          default:
+                        }
+                      },
+                      onFocus: () => {
+                        this.handleInputFocus();
+                        openMenu();
+                      },
+                      onBlur: () => {
+                        this.handleInputBlur();
+                        reset();
+                        clearSelection();
+                      },
+                      ...(id ? { id } : {}),
+                    })}
+                  />
                 </div>
-              </DefaultStyle>
-            </div>
-          )}
-        </Downshift>
+                {isOpen && (
+                  <TagListProvider tagType={tagType}>
+                    {({ data: tags }) => (
+                      <TagSelectOptions
+                        getItemProps={getItemProps}
+                        items={this.computeFilteredTags(tags, inputValue)}
+                        selectedItems={values}
+                        highlightedIndex={highlightedIndex}
+                        itemToString={item => (item ? item.description || item.name : '')}
+                        itemToValue={item => (item ? item.description : '')}
+                        width={width}
+                        align="left"
+                      />
+                    )}
+                  </TagListProvider>
+                )}
+              </div>
+            </DefaultStyle>
+          </div>
+        )}
+      </Downshift>
+    ) : (
+      <div className={SelectionWrapperStyle}>
+        <div className={InputStyle(width)}>
+          {values &&
+            (values || [])
+              .filter(item => !isForbidden(item))
+              .map(tag => (
+                <Tag
+                  key={tag.id}
+                  tag={tag}
+                  suffix={
+                    editable.remove && (
+                      <button
+                        type="button"
+                        className={RemoveStyle}
+                        onClick={event => {
+                          event.stopPropagation();
+                          onClickRemove(tag);
+                        }}
+                      >
+                        <Icon icon="CLEAR" />
+                      </button>
+                    )
+                  }
+                />
+              ))}
+        </div>
       </div>
     );
   }
