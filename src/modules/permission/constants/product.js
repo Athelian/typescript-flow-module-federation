@@ -42,6 +42,7 @@ export const PRODUCT_PROVIDER_SET_MILESTONE = 'product.productProviders.setMiles
 export const PRODUCT_PROVIDER_SET_DOCUMENTS = 'product.productProviders.setDocuments';
 export const PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS = 'product.productProviders.downloadDocuments';
 export const PRODUCT_PROVIDER_DOCUMENT_DELETE = 'product.productProviderFiles.delete';
+export const PRODUCT_PROVIDER_DOCUMENT_CREATE = 'product.productProviderFiles.create';
 export const PRODUCT_PROVIDER_DOCUMENT_SET_NAME = 'product.productProviderFiles.setName';
 export const PRODUCT_PROVIDER_DOCUMENT_SET_STATUS = 'product.productProviderFiles.setStatus';
 export const PRODUCT_PROVIDER_DOCUMENT_SET_TYPE = 'product.productProviderFiles.setType';

@@ -12,11 +12,13 @@ import {
   ORDER_SET_DOCUMENTS,
   ORDER_DOWNLOAD_DOCUMENTS,
   ORDER_DOCUMENT_DELETE,
+  ORDER_DOCUMENT_CREATE,
   ORDER_DOCUMENT_SET_MEMO,
   ORDER_DOCUMENT_SET_STATUS,
   ORDER_DOCUMENT_SET_TYPE,
 } from 'modules/permission/constants/order';
 import {
+  DOCUMENT_CREATE,
   DOCUMENT_DELETE,
   DOCUMENT_SET_MEMO,
   DOCUMENT_SET_STATUS,
@@ -61,6 +63,7 @@ function DocumentsSection({ isLoading, entityId }: Props) {
                 />
                 <DocumentsInput
                   removable={hasPermission([ORDER_DOCUMENT_DELETE, DOCUMENT_DELETE])}
+                  uploadable={hasPermission([ORDER_DOCUMENT_CREATE, DOCUMENT_CREATE])}
                   editable={{
                     status: hasPermission([
                       DOCUMENT_SET_STATUS,

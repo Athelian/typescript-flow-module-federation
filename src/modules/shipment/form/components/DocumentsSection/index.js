@@ -9,11 +9,13 @@ import {
   SHIPMENT_SET_DOCUMENTS,
   SHIPMENT_DOWNLOAD_DOCUMENTS,
   SHIPMENT_DOCUMENT_DELETE,
+  SHIPMENT_DOCUMENT_CREATE,
   SHIPMENT_DOCUMENT_SET_MEMO,
   SHIPMENT_DOCUMENT_SET_STATUS,
   SHIPMENT_DOCUMENT_SET_TYPE,
 } from 'modules/permission/constants/shipment';
 import {
+  DOCUMENT_CREATE,
   DOCUMENT_DELETE,
   DOCUMENT_SET_MEMO,
   DOCUMENT_SET_STATUS,
@@ -60,6 +62,7 @@ function DocumentsSection({ entityId, isLoading }: Props) {
                   }
                 />
                 <DocumentsInput
+                  uploadable={hasPermission([SHIPMENT_DOCUMENT_CREATE, DOCUMENT_CREATE])}
                   removable={hasPermission([SHIPMENT_DOCUMENT_DELETE, DOCUMENT_DELETE])}
                   editable={{
                     status: hasPermission([

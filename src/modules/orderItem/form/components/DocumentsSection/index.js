@@ -8,11 +8,13 @@ import {
   ORDER_ITEMS_SET_DOCUMENTS,
   ORDER_ITEMS_DOWNLOAD_DOCUMENTS,
   ORDER_ITEMS_DOCUMENT_DELETE,
+  ORDER_ITEMS_DOCUMENT_CREATE,
   ORDER_ITEMS_DOCUMENT_SET_MEMO,
   ORDER_ITEMS_DOCUMENT_SET_STATUS,
   ORDER_ITEMS_DOCUMENT_SET_TYPE,
 } from 'modules/permission/constants/orderItem';
 import {
+  DOCUMENT_CREATE,
   DOCUMENT_DELETE,
   DOCUMENT_SET_MEMO,
   DOCUMENT_SET_STATUS,
@@ -43,6 +45,7 @@ function DocumentsSection() {
             />
             <DocumentsInput
               removable={hasPermission([ORDER_ITEMS_DOCUMENT_DELETE, DOCUMENT_DELETE])}
+              uploadable={hasPermission([ORDER_ITEMS_DOCUMENT_CREATE, DOCUMENT_CREATE])}
               editable={{
                 status: hasPermission([
                   DOCUMENT_SET_STATUS,

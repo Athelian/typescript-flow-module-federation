@@ -5,6 +5,7 @@ export const ORDER_CREATE = 'order.orders.create';
 export const ORDER_UPDATE = 'order.orders.update';
 export const ORDER_DOWNLOAD_DOCUMENTS = 'order.orders.downloadDocuments';
 export const ORDER_DOCUMENT_DELETE = 'order.files.delete';
+export const ORDER_DOCUMENT_CREATE = 'order.files.create';
 export const ORDER_DOCUMENT_SET_NAME = 'order.files.setName';
 export const ORDER_DOCUMENT_SET_STATUS = 'order.files.setStatus';
 export const ORDER_DOCUMENT_SET_TYPE = 'order.files.setType';

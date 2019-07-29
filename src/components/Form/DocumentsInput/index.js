@@ -42,6 +42,7 @@ type Props = {|
     memo: boolean,
   },
   downloadable: boolean,
+  uploadable: boolean,
   removable: boolean,
 |};
 
@@ -169,15 +170,16 @@ class DocumentsInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { files, editable, removable, downloadable, onSave } = this.props;
+    const { files, editable, uploadable, removable, downloadable, onSave } = this.props;
     const { filesState } = this.state;
 
     const fileInputValue = '';
 
+    const isEditable = Object.keys(editable).some(key => editable[key]);
     return (
       <div className={DocumentsSectionWrapperStyle}>
         <SectionNavBar>
-          {editable && (
+          {uploadable && (
             <>
               <label className={AddDocumentButtonWrapperStyle}>
                 <div className={AddDocumentButtonLabelStyle}>
@@ -199,7 +201,7 @@ class DocumentsInput extends React.Component<Props, State> {
           )}
         </SectionNavBar>
 
-        {editable ? (
+        {isEditable ? (
           <Dropzone onDrop={this.handleChange}>
             {({ getRootProps, isDragActive }) => (
               <div {...getRootProps()} className={DocumentsDragAndDropBodyWrapperStyle}>
