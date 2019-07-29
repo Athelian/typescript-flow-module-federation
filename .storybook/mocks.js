@@ -10,6 +10,7 @@ const baseUserMock = (): User => {
     lastName: faker.name.lastName(),
     email: faker.internet.email(),
     role: 'default',
+    superAdmin: false,
     tags: [],
     createdAt: faker.date.future(),
     updatedAt: faker.date.future(),

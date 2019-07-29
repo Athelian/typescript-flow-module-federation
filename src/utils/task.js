@@ -2,6 +2,7 @@
 import type { User, Task } from 'generated/graphql';
 import { sumBy } from 'lodash';
 import { isBefore } from 'date-fns';
+import { encodeId } from 'utils/id';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
 import {
@@ -574,6 +575,76 @@ export const setToComplete = (
       inProgressAt: completedAt,
     };
   return task;
+};
+
+// TODO: remove parent info from TaskCard
+export const getParentInfo = (
+  parent: Object
+): {
+  parentType: string,
+  parentIcon: | 'ORDER'
+    | 'BATCH'
+    | 'SHIPMENT'
+    | 'CONTAINER'
+    | 'ORDER_ITEM'
+    | 'PRODUCT'
+    | 'PRODUCT_PROVIDER'
+    | 'PROJECT'
+    | 'MILESTONE',
+  parentData: React$Node,
+  link: string,
+} => {
+  const { __typename } = parent;
+
+  if (__typename === 'Order') {
+    return {
+      parentType: 'order',
+      parentIcon: 'ORDER',
+      parentData: parent.poNo,
+      link: `/order/${encodeId(parent.id)}`,
+    };
+  }
+  if (__typename === 'OrderItem') {
+    return {
+      parentType: 'orderItem',
+      parentIcon: 'ORDER_ITEM',
+      parentData: parent.no,
+      link: `/order-item/${encodeId(parent.id)}`,
+    };
+  }
+  if (__typename === 'Batch') {
+    return {
+      parentType: 'batch',
+      parentIcon: 'BATCH',
+      parentData: parent.no,
+      link: `/batch/${encodeId(parent.id)}`,
+    };
+  }
+  if (__typename === 'Shipment') {
+    return {
+      parentType: 'shipment',
+      parentIcon: 'SHIPMENT',
+      parentData: parent.no,
+      link: `/shipment/${encodeId(parent.id)}`,
+    };
+  }
+  if (__typename === 'Product') {
+    return {
+      parentType: 'product',
+      parentIcon: 'PRODUCT',
+      parentData: parent.name,
+      link: `/product/${encodeId(parent.id)}`,
+    };
+  }
+  if (__typename === 'ProductProvider') {
+    return {
+      parentType: 'product',
+      parentIcon: 'PRODUCT_PROVIDER',
+      parentData: parent.name,
+      link: `/product/${encodeId(getByPath('product.id', parent))}`,
+    };
+  }
+  return {};
 };
 
 export default parseGroupIds;
