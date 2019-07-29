@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Jul 19 2019 14:56:05 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Jul 26 2019 11:09:02 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28584,6 +28584,16 @@ type File implements Model & Owned & Memorizable {
   memo: String
 }
 
+input FileFilterInput {
+  query: String
+  excludeIds: [ID!]
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  type: FileType
+  status: FileStatus
+  mimetype: String
+}
+
 input FileInput {
   id: ID!
   name: String
@@ -28593,6 +28603,24 @@ input FileInput {
 }
 
 union FilePayload = File | BadRequest | Forbidden | NotFound
+
+type FilePayloadPagination {
+  nodes: [FilePayload!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input FileSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  name: SortOrder
+  type: SortOrder
+  status: SortOrder
+  size: SortOrder
+}
 
 enum FileStatus {
   """Draft"""
@@ -30952,6 +30980,9 @@ type Query {
   integrationConfigurations(page: Int! = 1, perPage: Int! = 10, filterBy: IntegrationConfigurationFilterInput, sortBy: IntegrationConfigurationSortInput): IntegrationConfigurationPayloadPagination!
   integrationLink(id: ID!): IntegrationLinkPayload!
   integrationLinks(page: Int! = 1, perPage: Int! = 10, filterBy: IntegrationLinkFilterInput, sortBy: IntegrationLinkSortInput): IntegrationLinkPayloadPagination!
+  file(id: ID!): FilePayload!
+  files(page: Int! = 1, perPage: Int! = 10, filterBy: FileFilterInput, sortBy: FileSortInput): FilePayloadPagination!
+  filesByIDs(ids: [ID!]!): [FilePayload!]!
   exportTemplates(filterBy: ExportTemplateFilterInput): [ExportTemplatePayload!]!
   exportExtensions: [ExportExtensionPayload!]!
   genericExport(extension: String!, columns: [String!]!, rows: [[String]!]!): ExportPayload!
@@ -87379,7 +87410,8 @@ scalar Upload
 type User implements Model & Tagged & Memorizable {
   email: String!
   group: GroupPayload
-  role: String!
+  superAdmin: Boolean!
+  role: String! @deprecated(reason: "Shouldn't be used anymore")
   roles: [RolePayload!]!
   disabled: Boolean!
   firstName: String!
@@ -87446,7 +87478,7 @@ input UserUpdateInput {
   lastName2: String
   email: String
   password: String
-  role: String
+  superAdmin: Boolean
   roleIds: [ID!]
   disabled: Boolean
   language: Language
