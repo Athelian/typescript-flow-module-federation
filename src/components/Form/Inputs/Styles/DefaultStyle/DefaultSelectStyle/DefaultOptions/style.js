@@ -6,7 +6,6 @@ type OptionWrapperType = {
   width: string,
   height: string,
   dropDirection: 'down' | 'up',
-  align: 'left' | 'right' | 'center',
 };
 
 export const OptionWrapperStyle = ({
