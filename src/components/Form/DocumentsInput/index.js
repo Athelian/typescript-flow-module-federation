@@ -61,11 +61,7 @@ type State = {
     uploading: boolean,
     progress: number,
   }>,
-  prevFiles: Array<{
-    ...UploadFileState,
-    uploading: boolean,
-    progress: number,
-  }>,
+  prevFiles: Array<UploadFileState>,
 };
 
 const SELECTED_FIELDS = ['id', 'type', 'name', 'path', 'status', 'memo', 'entity'];

@@ -8,11 +8,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
-import {
-  computeIcon,
-  getFileExtension,
-  getFileName,
-} from 'components/Form/DocumentsInput/components/DocumentItem/helpers';
+import { computeIcon, getFileExtension, getFileName } from 'components/Form/DocumentsInput/helpers';
 import { SelectInputFactory, TextAreaInputFactory, EnumSelectInputFactory } from 'components/Form';
 import RelateEntity from 'components/RelateEntity';
 import usePartnerPermission from 'hooks/usePartnerPermission';
