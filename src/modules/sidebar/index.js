@@ -18,6 +18,7 @@ import { TEMPLATE_LIST } from 'modules/permission/constants/template';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { STAFF_LIST } from 'modules/permission/constants/staff';
 import { PROJECT_LIST } from 'modules/permission/constants/project';
+import { DOCUMENT_LIST } from 'modules/permission/constants/file';
 import { TASK_LIST, TASK_TEMPLATE_LIST } from 'modules/permission/constants/task';
 import usePermission from 'hooks/usePermission';
 import { FormattedMessage } from 'react-intl';
@@ -42,31 +43,16 @@ import {
   PATH_TASK_TEMPLATE,
   PATH_TAG,
   PATH_PROJECT,
+  PATH_DOCUMENT,
 } from './constants';
 
 const SideBar = () => {
   const { hasPermission } = usePermission();
-
-  const hasOrdersMenu = hasPermission([ORDER_LIST, BATCH_LIST, ORDER_ITEMS_LIST]);
-
-  const hasShipmentsMenu = hasPermission([SHIPMENT_LIST, CONTAINER_LIST]);
-
-  const hasProjectsMenu = hasPermission([PROJECT_LIST, TASK_LIST]);
-
-  const hasNetworkMenu = hasPermission([WAREHOUSE_LIST, PARTNER_LIST, STAFF_LIST]);
-
-  const hasTemplatesMenu = hasPermission([
-    CUSTOM_FIELD_DEFINITIONS_LIST,
-    TEMPLATE_LIST,
-    TASK_TEMPLATE_LIST,
-  ]);
-
   return (
     <Location>
       {({ location }) => {
         if (location.pathname !== '/login') {
           const pathnameSplit = location.pathname.split('/');
-
           return (
             <UIConsumer>
               {uiState => (
@@ -82,8 +68,7 @@ const SideBar = () => {
                         label={<FormattedMessage {...messages.relationMap} />}
                       />
                     )}
-
-                    {hasOrdersMenu && (
+                    {hasPermission([ORDER_LIST, BATCH_LIST, ORDER_ITEMS_LIST]) && (
                       <SubMenu
                         hasActiveChild={[PATH_ORDER, PATH_ORDER_ITEM, PATH_BATCH].includes(
                           pathnameSplit[1]
@@ -117,8 +102,7 @@ const SideBar = () => {
                         )}
                       </SubMenu>
                     )}
-
-                    {hasShipmentsMenu && (
+                    {hasPermission([SHIPMENT_LIST, CONTAINER_LIST]) && (
                       <SubMenu
                         hasActiveChild={
                           pathnameSplit[1] === PATH_SHIPMENT || pathnameSplit[1] === PATH_CONTAINER
@@ -144,7 +128,6 @@ const SideBar = () => {
                         )}
                       </SubMenu>
                     )}
-
                     {hasPermission(PRODUCT_LIST) && (
                       <MenuItem
                         path={`/${PATH_PRODUCT}`}
@@ -153,8 +136,7 @@ const SideBar = () => {
                         label={<FormattedMessage {...messages.product} />}
                       />
                     )}
-
-                    {hasProjectsMenu && (
+                    {hasPermission([PROJECT_LIST, TASK_LIST]) && (
                       <SubMenu
                         hasActiveChild={
                           pathnameSplit[1] === PATH_PROJECT || pathnameSplit[1] === PATH_TASK
@@ -180,8 +162,15 @@ const SideBar = () => {
                         )}
                       </SubMenu>
                     )}
-
-                    {hasNetworkMenu && (
+                    {hasPermission(DOCUMENT_LIST) && (
+                      <MenuItem
+                        path={`/${PATH_DOCUMENT}`}
+                        isActive={pathnameSplit[1] === PATH_DOCUMENT}
+                        icon="DOCUMENT"
+                        label={<FormattedMessage {...messages.document} />}
+                      />
+                    )}
+                    {hasPermission([WAREHOUSE_LIST, PARTNER_LIST, STAFF_LIST]) && (
                       <SubMenu
                         hasActiveChild={
                           pathnameSplit[1] === PATH_WAREHOUSE ||
@@ -217,8 +206,11 @@ const SideBar = () => {
                         )}
                       </SubMenu>
                     )}
-
-                    {hasTemplatesMenu && (
+                    {hasPermission([
+                      CUSTOM_FIELD_DEFINITIONS_LIST,
+                      TEMPLATE_LIST,
+                      TASK_TEMPLATE_LIST,
+                    ]) && (
                       <SubMenu
                         hasActiveChild={
                           pathnameSplit[2] === PATH_METADATA ||
@@ -236,7 +228,6 @@ const SideBar = () => {
                             label={<FormattedMessage {...messages.metadata} />}
                           />
                         )}
-
                         {hasPermission(TEMPLATE_LIST) && (
                           <MenuItem
                             path={`/templates/${PATH_TABLE_TEMPLATE}`}
@@ -245,7 +236,6 @@ const SideBar = () => {
                             label={<FormattedMessage {...messages.template} />}
                           />
                         )}
-
                         {hasPermission(TASK_TEMPLATE_LIST) && (
                           <MenuItem
                             path={`/templates/${PATH_TASK_TEMPLATE}`}
@@ -258,7 +248,6 @@ const SideBar = () => {
                         )}
                       </SubMenu>
                     )}
-
                     {hasPermission(TAG_LIST) && (
                       <MenuItem
                         path={`/${PATH_TAG}`}
@@ -273,11 +262,9 @@ const SideBar = () => {
             </UIConsumer>
           );
         }
-
         return null;
       }}
     </Location>
   );
 };
-
 export default SideBar;

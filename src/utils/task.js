@@ -577,7 +577,6 @@ export const setToComplete = (
   return task;
 };
 
-// TODO: remove parent info from TaskCard
 export const getParentInfo = (
   parent: Object
 ): {

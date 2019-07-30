@@ -16,3 +16,4 @@ export const PATH_METADATA = 'metadata';
 export const PATH_TABLE_TEMPLATE = 'table-template';
 export const PATH_TASK_TEMPLATE = 'task-template';
 export const PATH_TAG = 'tags';
+export const PATH_DOCUMENT = 'document';
