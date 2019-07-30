@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Provider } from 'unstated';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Content } from 'components/Layout';
@@ -40,18 +41,20 @@ function DocumentModule(props: Props) {
   );
 
   return (
-    <Content>
-      <NavBar>
-        <FilterToolBar
-          icon="DOCUMENT"
-          sortFields={sortFields}
-          filtersAndSort={filterAndSort}
-          onChange={onChangeFilter}
-          canSearch
-        />
-      </NavBar>
-      <DocumentList {...queryVariables} />
-    </Content>
+    <Provider>
+      <Content>
+        <NavBar>
+          <FilterToolBar
+            icon="DOCUMENT"
+            sortFields={sortFields}
+            filtersAndSort={filterAndSort}
+            onChange={onChangeFilter}
+            canSearch
+          />
+        </NavBar>
+        <DocumentList {...queryVariables} />
+      </Content>
+    </Provider>
   );
 }
 

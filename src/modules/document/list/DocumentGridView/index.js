@@ -47,7 +47,7 @@ const defaultRenderItem = (file: FilePayload): React$Node => (
 
       return (
         <DocumentCard
-          files={file}
+          file={file}
           navigable={viewPermissions[parentType]}
           editable={{
             status: false,
