@@ -18,7 +18,7 @@ const PartnerPermissionsWrapper = ({ data, children }: Props) => {
   const { permissions } = React.useContext(PermissionContext);
 
   if (!data) {
-    return children(getByPathWithDefault([], 'viewer.permissionsFromPartner', []), false);
+    return children([], false);
   }
 
   const partnerId = getByPath('ownedBy.partner.id', data);

@@ -208,44 +208,29 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
           />
 
           <div className={OrderWrapperStyle}>
-            <Link
-              to={`/order/${encodeId(order.id)}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <RelateEntity entity="ORDER" value={order && order.poNo} />
-            </Link>
+            <RelateEntity
+              link={`/order/${encodeId(order.id)}`}
+              entity="ORDER"
+              value={order && order.poNo}
+            />
           </div>
 
           <div className={ShipmentWrapperStyle}>
-            <Link
-              to={shipment && shipment.id ? `/shipment/${encodeId(shipment.id)}` : '.'}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <RelateEntity
-                blackout={isForbidden(shipment)}
-                entity="SHIPMENT"
-                value={shipment && shipment.no}
-              />
-            </Link>
+            <RelateEntity
+              link={shipment && shipment.id ? `/shipment/${encodeId(shipment.id)}` : ''}
+              blackout={isForbidden(shipment)}
+              entity="SHIPMENT"
+              value={shipment && shipment.no}
+            />
           </div>
 
           <div className={ContainerWrapperStyle}>
-            <Link
-              to={container && container.id ? `/container/${encodeId(container.id)}` : '.'}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <RelateEntity
-                blackout={isForbidden(container)}
-                entity="CONTAINER"
-                value={container && container.no}
-              />
-            </Link>
+            <RelateEntity
+              link={container && container.id ? `/container/${encodeId(container.id)}` : ''}
+              blackout={isForbidden(container)}
+              entity="CONTAINER"
+              value={container && container.no}
+            />
           </div>
           <div className={TagsAndTaskWrapperStyle}>
             <div className={BatchTagsWrapperStyle}>

@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { ObjectValue } from 'react-values';
-import { Link } from '@reach/router';
 import { isBefore } from 'date-fns';
 import emitter from 'utils/emitter';
 import { encodeId } from 'utils/id';
@@ -227,18 +226,11 @@ const TaskCard = ({
 
         {!(hideParentInfo || isInTemplate) && (
           <div className={TaskParentWrapperStyle}>
-            {viewPermissions[parentType] ? (
-              <Link
-                to={link}
-                onClick={evt => {
-                  evt.stopPropagation();
-                }}
-              >
-                <RelateEntity entity={parentIcon} value={parentData} />
-              </Link>
-            ) : (
-              <RelateEntity entity={parentIcon} value={parentData} />
-            )}
+            <RelateEntity
+              link={viewPermissions[parentType] ? link : ''}
+              entity={parentIcon}
+              value={parentData}
+            />
           </div>
         )}
 
@@ -389,53 +381,27 @@ const TaskCard = ({
             <div className={DividerStyle} />
 
             <div className={ProjectInfoStyle}>
-              {getByPath('project', milestone) ? (
-                <Link
-                  to={
-                    navigable.project
-                      ? `/project/${encodeId(getByPath('project.id', milestone))}`
-                      : ''
-                  }
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <RelateEntity
-                    entity="PROJECT"
-                    value={getByPathWithDefault('', 'project.name', milestone)}
-                  />
-                </Link>
-              ) : (
-                <RelateEntity
-                  entity="PROJECT"
-                  value={getByPathWithDefault('', 'project.name', milestone)}
-                />
-              )}
+              <RelateEntity
+                link={
+                  getByPath('project', milestone) && navigable.project
+                    ? `/project/${encodeId(getByPath('project.id', milestone))}`
+                    : ''
+                }
+                entity="PROJECT"
+                value={getByPathWithDefault('', 'project.name', milestone)}
+              />
             </div>
 
             <div className={MilestoneInfoStyle}>
-              {milestone ? (
-                <Link
-                  to={
-                    navigable.project
-                      ? `/project/${encodeId(getByPath('project.id', milestone))}`
-                      : ''
-                  }
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <RelateEntity
-                    entity="MILESTONE"
-                    value={getByPathWithDefault('', 'name', milestone)}
-                  />
-                </Link>
-              ) : (
-                <RelateEntity
-                  entity="MILESTONE"
-                  value={getByPathWithDefault('', 'name', milestone)}
-                />
-              )}
+              <RelateEntity
+                link={
+                  navigable.project && milestone
+                    ? `/project/${encodeId(getByPath('project.id', milestone))}`
+                    : ''
+                }
+                entity="MILESTONE"
+                value={getByPathWithDefault('', 'name', milestone)}
+              />
             </div>
           </>
         )}

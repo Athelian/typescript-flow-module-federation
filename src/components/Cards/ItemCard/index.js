@@ -402,18 +402,11 @@ const ItemCard = ({
           {!mergedConfig.hideOrder && (
             <>
               <div className={OrderWrapperStyle}>
-                {mergedNavigable.order ? (
-                  <Link
-                    to={`/order/${encodeId(orderId)}`}
-                    onClick={evt => {
-                      evt.stopPropagation();
-                    }}
-                  >
-                    <RelateEntity entity="ORDER" value={poNo} />
-                  </Link>
-                ) : (
-                  <RelateEntity entity="ORDER" value={poNo} />
-                )}
+                <RelateEntity
+                  link={mergedNavigable.order ? `/order/${encodeId(orderId)}` : ''}
+                  entity="ORDER"
+                  value={poNo}
+                />
               </div>
               <div className={ImporterWrapperStyle}>
                 <Icon icon="IMPORTER" />

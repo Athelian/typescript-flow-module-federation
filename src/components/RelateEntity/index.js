@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Link } from '@reach/router';
 import Icon from 'components/Icon';
 import { Display } from 'components/Form';
 import { WrapperStyle, IconColorStyle } from './style';
@@ -16,42 +17,32 @@ type Props = {|
     | 'MILESTONE'
     | 'WAREHOUSE',
   value: React$Node,
-  blackout: boolean,
+  blackout?: boolean,
+  link?: string,
 |};
 
-const defaultProps = {
-  blackout: false,
-};
-
-export default function RelateEntity({ entity, value, blackout }: Props) {
+export default function RelateEntity({ entity, value, blackout, link }: Props) {
   const isNotAvailable = blackout || !value;
   return (
     <div className={WrapperStyle}>
-      <div className={IconColorStyle(entity, isNotAvailable)}>
-        <Icon icon={entity} />
-      </div>
-      {blackout ? (
-        <Display
+      {link && !isNotAvailable ? (
+        <Link
+          className={IconColorStyle(entity, isNotAvailable)}
+          to={link}
           onClick={evt => {
-            evt.preventDefault();
+            evt.stopPropagation();
           }}
-          height="20px"
-          blackout={blackout}
-          align="left"
-        />
-      ) : (
-        <Display
-          onClick={evt => {
-            evt.preventDefault();
-          }}
-          height="20px"
-          align="left"
         >
-          {value}
-        </Display>
+          <Icon icon={entity} />
+        </Link>
+      ) : (
+        <div className={IconColorStyle(entity, isNotAvailable)}>
+          <Icon icon={entity} />
+        </div>
       )}
+      <Display height="20px" align="left" blackout={blackout}>
+        {value}
+      </Display>
     </div>
   );
 }
-
-RelateEntity.defaultProps = defaultProps;

@@ -432,39 +432,25 @@ const ShipmentBatchCard = ({
           </div>
 
           <div className={OrderWrapperStyle}>
-            {mergedNavigable.order ? (
-              <Link
-                to={`/order/${encodeId(order.id)}`}
-                onClick={evt => {
-                  evt.stopPropagation();
-                }}
-              >
-                <RelateEntity entity="ORDER" value={order.poNo} />
-              </Link>
-            ) : (
-              <RelateEntity entity="ORDER" value={order.poNo} />
-            )}
+            <RelateEntity
+              link={
+                mergedNavigable.order && order && order.id ? `/order/${encodeId(order.id)}` : ''
+              }
+              entity="ORDER"
+              value={order.poNo}
+            />
           </div>
 
           <div className={ContainerWrapperStyle}>
-            {mergedNavigable.container && container ? (
-              <Link
-                to={`/container/${encodeId(container.id)}`}
-                onClick={evt => {
-                  evt.stopPropagation();
-                }}
-              >
-                <RelateEntity
-                  entity="CONTAINER"
-                  value={getByPathWithDefault(null, 'no', container)}
-                />
-              </Link>
-            ) : (
-              <RelateEntity
-                entity="CONTAINER"
-                value={getByPathWithDefault(null, 'no', container)}
-              />
-            )}
+            <RelateEntity
+              link={
+                mergedNavigable.container && container && container.id
+                  ? `/container/${encodeId(container.id)}`
+                  : ''
+              }
+              entity="CONTAINER"
+              value={getByPathWithDefault(null, 'no', container)}
+            />
           </div>
 
           <div className={OrderInChargeWrapperStyle}>

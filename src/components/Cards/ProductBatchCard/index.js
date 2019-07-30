@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -71,43 +70,27 @@ const ProductBatchCard = ({ batch, onClick, ...rest }: Props) => {
           <div className={DividerStyle} />
 
           <div className={OrderWrapperStyle}>
-            {order ? (
-              <Link
-                to={`/order/${encodeId(order.id)}`}
-                onClick={evt => {
-                  evt.stopPropagation();
-                }}
-              >
-                <RelateEntity entity="ORDER" value={order.poNo} />
-              </Link>
-            ) : (
-              <RelateEntity blackout entity="ORDER" value="" />
-            )}
+            <RelateEntity
+              link={order && order.id ? `/order/${encodeId(order.id)}` : ''}
+              entity="ORDER"
+              value={order && order.poNo}
+            />
           </div>
 
           <div className={ShipmentWrapperStyle}>
-            <Link
-              to={shipment ? `/shipment/${encodeId(shipment.id)}` : '.'}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <RelateEntity entity="SHIPMENT" value={shipment && shipment.no} />
-            </Link>
+            <RelateEntity
+              link={shipment ? `/shipment/${encodeId(shipment.id)}` : '.'}
+              entity="SHIPMENT"
+              value={shipment && shipment.no}
+            />
           </div>
 
           <div className={ContainerWrapperStyle}>
-            <Link
-              to={container ? `/container/${encodeId(container.id)}` : '.'}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <RelateEntity
-                entity="CONTAINER"
-                value={getByPathWithDefault(null, 'no', container)}
-              />
-            </Link>
+            <RelateEntity
+              link={container && container.id ? `/container/${encodeId(container.id)}` : '.'}
+              entity="CONTAINER"
+              value={getByPathWithDefault(null, 'no', container)}
+            />
           </div>
 
           {hasContainers ? (

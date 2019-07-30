@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
 import { isForbidden } from 'utils/data';
 import { encodeId } from 'utils/id';
@@ -333,39 +332,21 @@ const OrderBatchCard = ({
         </div>
 
         <div className={ShipmentWrapperStyle}>
-          <div
-            onClick={evt => {
-              if (shipment) {
-                evt.stopPropagation();
-                navigate(`/shipment/${encodeId(shipment.id)}`);
-              }
-            }}
-            role="presentation"
-          >
-            <RelateEntity
-              blackout={isForbidden(shipment)}
-              entity="SHIPMENT"
-              value={shipment && shipment.no}
-            />
-          </div>
+          <RelateEntity
+            link={shipment && shipment.id ? `/shipment/${encodeId(shipment.id)}` : ''}
+            blackout={isForbidden(shipment)}
+            entity="SHIPMENT"
+            value={shipment && shipment.no}
+          />
         </div>
 
         <div className={ContainerWrapperStyle}>
-          <div
-            onClick={evt => {
-              if (container) {
-                evt.stopPropagation();
-                navigate(`/container/${encodeId(container.id)}`);
-              }
-            }}
-            role="presentation"
-          >
-            <RelateEntity
-              blackout={isForbidden(container)}
-              entity="CONTAINER"
-              value={container && container.no}
-            />
-          </div>
+          <RelateEntity
+            link={container && container.id ? `/container/${encodeId(container.id)}` : ''}
+            blackout={isForbidden(container)}
+            entity="CONTAINER"
+            value={container && container.no}
+          />
         </div>
 
         {hasContainers ? (

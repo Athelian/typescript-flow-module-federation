@@ -3,7 +3,6 @@ import * as React from 'react';
 import type { FileType, FileStatus, EntityPayload } from 'generated/graphql';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import { Link } from '@reach/router';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
@@ -171,18 +170,7 @@ const DocumentCard = ({
       <div className={DocumentCardWrapperStyle(cardHeight)} role="presentation">
         {!hideParentInfo && (
           <div className={DocumentParentWrapperStyle}>
-            {navigable ? (
-              <Link
-                to={link}
-                onClick={evt => {
-                  evt.stopPropagation();
-                }}
-              >
-                <RelateEntity entity={parentIcon} value={parentData} />
-              </Link>
-            ) : (
-              <RelateEntity entity={parentIcon} value={parentData} />
-            )}
+            <RelateEntity link={navigable ? link : ''} entity={parentIcon} value={parentData} />
           </div>
         )}
         <FormField

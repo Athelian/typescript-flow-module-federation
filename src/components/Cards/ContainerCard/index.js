@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { getSelectLabel, isForbidden } from 'utils/data';
 import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
@@ -124,26 +123,20 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
           <div className={DividerStyle} />
 
           <div className={IconInputStyle}>
-            {isNullOrUndefined(warehouse) || isForbidden(warehouse) ? (
-              <RelateEntity blackout={isForbidden(warehouse)} entity="WAREHOUSE" value="" />
-            ) : (
-              <PartnerPermissionsWrapper data={warehouse}>
-                {permissions => (
-                  <Link
-                    to={
-                      permissions.includes(WAREHOUSE_FORM)
-                        ? `/warehouse/${encodeId(warehouse.id)}`
-                        : ''
-                    }
-                    onClick={evt => {
-                      evt.stopPropagation();
-                    }}
-                  >
-                    <RelateEntity entity="WAREHOUSE" value={warehouse.name} />
-                  </Link>
-                )}
-              </PartnerPermissionsWrapper>
-            )}
+            <PartnerPermissionsWrapper data={warehouse}>
+              {permissions => (
+                <RelateEntity
+                  blackout={isNullOrUndefined(warehouse) || isForbidden(warehouse)}
+                  link={
+                    permissions.includes(WAREHOUSE_FORM)
+                      ? `/warehouse/${encodeId(warehouse.id)}`
+                      : ''
+                  }
+                  entity="WAREHOUSE"
+                  value={warehouse && warehouse.name}
+                />
+              )}
+            </PartnerPermissionsWrapper>
           </div>
 
           <div className={LabelStyle}>
@@ -199,24 +192,12 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
           <div className={DividerStyle} />
 
           <div className={IconInputStyle}>
-            {isNullOrUndefined(shipment) ? (
-              <RelateEntity entity="SHIPMENT" value="" />
-            ) : (
-              <>
-                <Link
-                  to={`/shipment/${encodeId(shipment.id)}`}
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <RelateEntity
-                    blackout={isForbidden(shipment)}
-                    entity="SHIPMENT"
-                    value={shipment && shipment.no}
-                  />
-                </Link>
-              </>
-            )}
+            <RelateEntity
+              link={shipment && shipment.id ? `/shipment/${encodeId(shipment.id)}` : ''}
+              blackout={isForbidden(shipment)}
+              entity="SHIPMENT"
+              value={shipment && shipment.no}
+            />
           </div>
 
           <div className={ContainerImporterWrapperStyle}>
