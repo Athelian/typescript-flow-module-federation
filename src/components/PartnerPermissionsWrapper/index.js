@@ -15,9 +15,14 @@ type Props = {
 
 const PartnerPermissionsWrapper = ({ data, children }: Props) => {
   const { isOwnerBy } = useUser();
+  const { permissions } = React.useContext(PermissionContext);
+
+  if (!data) {
+    return children(getByPathWithDefault([], 'viewer.permissionsFromPartner', []), false);
+  }
+
   const partnerId = getByPath('ownedBy.partner.id', data);
   const isOwner = isOwnerBy(partnerId);
-  const { permissions } = React.useContext(PermissionContext);
 
   if (isOwner) {
     return children(permissions, isOwner);
