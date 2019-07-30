@@ -6,11 +6,17 @@ import { FormattedMessage } from 'react-intl';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import GridView from 'components/GridView';
 import DocumentCard from 'components/Cards/DocumentCard';
-import { BATCH_FORM } from 'modules/permission/constants/batch';
-import { ORDER_FORM } from 'modules/permission/constants/order';
-import { ORDER_ITEMS_FORM } from 'modules/permission/constants/orderItem';
-import { PRODUCT_FORM } from 'modules/permission/constants/product';
-import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
+import { ORDER_FORM, ORDER_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/order';
+import {
+  ORDER_ITEMS_FORM,
+  ORDER_ITEMS_DOWNLOAD_DOCUMENTS,
+} from 'modules/permission/constants/orderItem';
+import {
+  PRODUCT_FORM,
+  PRODUCT_DOWNLOAD_DOCUMENTS,
+  PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS,
+} from 'modules/permission/constants/product';
+import { SHIPMENT_FORM, SHIPMENT_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/shipment';
 import { getParentInfo } from 'utils/task';
 import { getByPathWithDefault } from 'utils/fp';
 
@@ -40,15 +46,23 @@ const defaultRenderItem = (file: FilePayload): React$Node => (
       const viewPermissions = {
         order: hasPermission(ORDER_FORM),
         orderItem: hasPermission(ORDER_ITEMS_FORM),
-        batch: hasPermission(BATCH_FORM),
         shipment: hasPermission(SHIPMENT_FORM),
         product: hasPermission(PRODUCT_FORM),
+        productProvider: hasPermission(PRODUCT_FORM),
+      };
+      const downloadPermissions = {
+        order: hasPermission(ORDER_DOWNLOAD_DOCUMENTS),
+        orderItem: hasPermission(ORDER_ITEMS_DOWNLOAD_DOCUMENTS),
+        shipment: hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS),
+        product: hasPermission(PRODUCT_DOWNLOAD_DOCUMENTS),
+        productProvider: hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS),
       };
 
       return (
         <DocumentCard
           file={file}
           navigable={viewPermissions[parentType]}
+          downloadable={downloadPermissions[parentType]}
           editable={{
             status: false,
             type: false,
