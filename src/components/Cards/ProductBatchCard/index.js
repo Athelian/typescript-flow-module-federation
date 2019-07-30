@@ -79,7 +79,7 @@ const ProductBatchCard = ({ batch, onClick, ...rest }: Props) => {
 
           <div className={ShipmentWrapperStyle}>
             <RelateEntity
-              link={shipment ? `/shipment/${encodeId(shipment.id)}` : '.'}
+              link={shipment ? `/shipment/${encodeId(shipment.id)}` : ''}
               entity="SHIPMENT"
               value={shipment && shipment.no}
             />
@@ -87,7 +87,7 @@ const ProductBatchCard = ({ batch, onClick, ...rest }: Props) => {
 
           <div className={ContainerWrapperStyle}>
             <RelateEntity
-              link={container && container.id ? `/container/${encodeId(container.id)}` : '.'}
+              link={container && container.id ? `/container/${encodeId(container.id)}` : ''}
               entity="CONTAINER"
               value={getByPathWithDefault(null, 'no', container)}
             />
