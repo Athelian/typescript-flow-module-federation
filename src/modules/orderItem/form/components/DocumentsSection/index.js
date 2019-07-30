@@ -5,7 +5,6 @@ import { FormattedMessage } from 'react-intl';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import {
-  ORDER_ITEMS_FORM,
   ORDER_ITEMS_SET_DOCUMENTS,
   ORDER_ITEMS_DOWNLOAD_DOCUMENTS,
   ORDER_ITEMS_DOCUMENT_DELETE,
@@ -45,7 +44,6 @@ function DocumentsSection() {
               }
             />
             <DocumentsInput
-              navigable={hasPermission(ORDER_ITEMS_FORM)}
               removable={hasPermission([ORDER_ITEMS_DOCUMENT_DELETE, DOCUMENT_DELETE])}
               uploadable={hasPermission([ORDER_ITEMS_DOCUMENT_CREATE, DOCUMENT_CREATE])}
               editable={{

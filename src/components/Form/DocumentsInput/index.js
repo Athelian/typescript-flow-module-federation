@@ -44,7 +44,6 @@ type Props = {|
   downloadable: boolean,
   uploadable: boolean,
   removable: boolean,
-  navigable: boolean,
 |};
 
 type UploadFileState = {
@@ -171,7 +170,7 @@ class DocumentsInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { files, editable, uploadable, removable, navigable, downloadable, onSave } = this.props;
+    const { files, editable, uploadable, removable, downloadable, onSave } = this.props;
     const { filesState } = this.state;
 
     const fileInputValue = '';
@@ -247,7 +246,6 @@ class DocumentsInput extends React.Component<Props, State> {
                               ].filter(Boolean)}
                               editable={editable}
                               downloadable={downloadable}
-                              navigable={navigable}
                             />
                           </UploadPlaceholder>
                         );
@@ -286,7 +284,6 @@ class DocumentsInput extends React.Component<Props, State> {
                     file={pick(SELECTED_FIELDS, file)}
                     editable={editable}
                     downloadable={downloadable}
-                    navigable={navigable}
                   />
                 ))}
               </div>
