@@ -12,15 +12,8 @@ import Icon from 'components/Icon';
 import { computeIcon, getFileExtension, getFileName } from 'components/Form/DocumentsInput/helpers';
 import { SelectInputFactory, TextAreaInputFactory, EnumSelectInputFactory } from 'components/Form';
 import RelateEntity from 'components/RelateEntity';
-import usePartnerPermission from 'hooks/usePartnerPermission';
-import usePermission from 'hooks/usePermission';
-import { BATCH_FORM } from 'modules/permission/constants/batch';
-import { ORDER_FORM } from 'modules/permission/constants/order';
 import orderMessages from 'modules/order/messages';
 import shipmentMessages from 'modules/shipment/messages';
-import { ORDER_ITEMS_FORM } from 'modules/permission/constants/orderItem';
-import { PRODUCT_FORM } from 'modules/permission/constants/product';
-import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
 import { getParentInfo } from 'utils/task';
 import BaseCard from '../BaseCard';
 import {
@@ -56,6 +49,7 @@ type Props = {|
   actions?: Array<React$Node>,
   hideParentInfo?: boolean,
   downloadable?: boolean,
+  navigable?: boolean,
   onChange?: (field: string, value: mixed) => void,
 |};
 
@@ -152,25 +146,14 @@ const DocumentCard = ({
   hideParentInfo,
   actions,
   downloadable,
+  navigable,
   intl,
   onChange,
 }: Props) => {
   cardHeight = hideParentInfo ? '185px' : '210px';
   const memoHeight = hideParentInfo ? '145px' : '170px';
-  const { parentType, parentIcon, parentData, link } = getParentInfo(
-    getByPathWithDefault({}, 'entity', file)
-  );
+  const { parentIcon, parentData, link } = getParentInfo(getByPathWithDefault({}, 'entity', file));
 
-  const { isOwner } = usePartnerPermission();
-  const { hasPermission } = usePermission(isOwner);
-
-  const viewPermissions = {
-    order: hasPermission(ORDER_FORM),
-    orderItem: hasPermission(ORDER_ITEMS_FORM),
-    batch: hasPermission(BATCH_FORM),
-    shipment: hasPermission(SHIPMENT_FORM),
-    product: hasPermission(PRODUCT_FORM),
-  };
   const name = getByPathWithDefault('', 'name', file);
   const id = getByPathWithDefault(Date.now(), 'id', file);
   const fileExtension = getFileExtension(name);
@@ -188,7 +171,7 @@ const DocumentCard = ({
       <div className={DocumentCardWrapperStyle(cardHeight)} role="presentation">
         {!hideParentInfo && (
           <div className={DocumentParentWrapperStyle}>
-            {viewPermissions[parentType] ? (
+            {navigable ? (
               <Link
                 to={link}
                 onClick={evt => {

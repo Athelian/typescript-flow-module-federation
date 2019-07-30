@@ -9,6 +9,7 @@ import { OrderFilesContainer } from 'modules/order/form/containers';
 import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
 import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
 import {
+  ORDER_FORM,
   ORDER_SET_DOCUMENTS,
   ORDER_DOWNLOAD_DOCUMENTS,
   ORDER_DOCUMENT_DELETE,
@@ -62,6 +63,7 @@ function DocumentsSection({ isLoading, entityId }: Props) {
                   }
                 />
                 <DocumentsInput
+                  navigable={hasPermission(ORDER_FORM)}
                   removable={hasPermission([ORDER_DOCUMENT_DELETE, DOCUMENT_DELETE])}
                   uploadable={hasPermission([ORDER_DOCUMENT_CREATE, DOCUMENT_CREATE])}
                   editable={{

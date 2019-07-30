@@ -5,6 +5,7 @@ import { DocumentsInput } from 'components/Form';
 import { ProductProviderInfoContainer } from 'modules/productProvider/form/containers';
 import usePermission from 'hooks/usePermission';
 import {
+  PRODUCT_FORM,
   PRODUCT_PROVIDER_SET_DOCUMENTS,
   PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS,
   PRODUCT_PROVIDER_DOCUMENT_DELETE,
@@ -33,6 +34,7 @@ function DocumentsSection({ isOwner }: Props) {
     <Subscribe to={[ProductProviderInfoContainer]}>
       {({ state: { files }, setFieldValue }) => (
         <DocumentsInput
+          navigable={hasPermission(PRODUCT_FORM)}
           uploadable={hasPermission([PRODUCT_PROVIDER_DOCUMENT_CREATE, DOCUMENT_CREATE])}
           removable={hasPermission([PRODUCT_PROVIDER_DOCUMENT_DELETE, DOCUMENT_DELETE])}
           editable={{

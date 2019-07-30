@@ -6,6 +6,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import {
+  SHIPMENT_FORM,
   SHIPMENT_SET_DOCUMENTS,
   SHIPMENT_DOWNLOAD_DOCUMENTS,
   SHIPMENT_DOCUMENT_DELETE,
@@ -62,6 +63,7 @@ function DocumentsSection({ entityId, isLoading }: Props) {
                   }
                 />
                 <DocumentsInput
+                  navigable={hasPermission(SHIPMENT_FORM)}
                   uploadable={hasPermission([SHIPMENT_DOCUMENT_CREATE, DOCUMENT_CREATE])}
                   removable={hasPermission([SHIPMENT_DOCUMENT_DELETE, DOCUMENT_DELETE])}
                   editable={{

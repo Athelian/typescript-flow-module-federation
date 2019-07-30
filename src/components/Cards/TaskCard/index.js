@@ -6,6 +6,7 @@ import { Link } from '@reach/router';
 import { isBefore } from 'date-fns';
 import emitter from 'utils/emitter';
 import { encodeId } from 'utils/id';
+import { getParentInfo } from 'utils/task';
 import { formatToGraphql, startOfToday } from 'utils/date';
 import { isNotFound, isForbidden } from 'utils/data';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
@@ -100,76 +101,6 @@ const defaultProps = {
   saveOnBlur: () => {},
   actions: [],
   isInTemplate: false,
-};
-
-const getParentInfo = (
-  parent: Object
-): {
-  parentType: string,
-  // prettier-ignore
-  parentIcon: 'ORDER'
-    | 'BATCH'
-    | 'SHIPMENT'
-    | 'CONTAINER'
-    | 'ORDER_ITEM'
-    | 'PRODUCT'
-    | 'PRODUCT_PROVIDER'
-    | 'PROJECT'
-    | 'MILESTONE',
-  parentData: React$Node,
-  link: string,
-} => {
-  const { __typename } = parent;
-
-  if (__typename === 'Order') {
-    return {
-      parentType: 'order',
-      parentIcon: 'ORDER',
-      parentData: parent.poNo,
-      link: `/order/${encodeId(parent.id)}`,
-    };
-  }
-  if (__typename === 'OrderItem') {
-    return {
-      parentType: 'orderItem',
-      parentIcon: 'ORDER_ITEM',
-      parentData: parent.no,
-      link: `/order-item/${encodeId(parent.id)}`,
-    };
-  }
-  if (__typename === 'Batch') {
-    return {
-      parentType: 'batch',
-      parentIcon: 'BATCH',
-      parentData: parent.no,
-      link: `/batch/${encodeId(parent.id)}`,
-    };
-  }
-  if (__typename === 'Shipment') {
-    return {
-      parentType: 'shipment',
-      parentIcon: 'SHIPMENT',
-      parentData: parent.no,
-      link: `/shipment/${encodeId(parent.id)}`,
-    };
-  }
-  if (__typename === 'Product') {
-    return {
-      parentType: 'product',
-      parentIcon: 'PRODUCT',
-      parentData: parent.name,
-      link: `/product/${encodeId(parent.id)}`,
-    };
-  }
-  if (__typename === 'ProductProvider') {
-    return {
-      parentType: 'product',
-      parentIcon: 'PRODUCT_PROVIDER',
-      parentData: parent.name,
-      link: `/product/${encodeId(getByPath('product.id', parent))}`,
-    };
-  }
-  return {};
 };
 
 let cardHeight = 265;
