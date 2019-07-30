@@ -167,7 +167,7 @@ const SideBar = () => {
                         path={`/${PATH_DOCUMENT}`}
                         isActive={pathnameSplit[1] === PATH_DOCUMENT}
                         icon="DOCUMENT"
-                        label={<FormattedMessage {...messages.document} />}
+                        label={<FormattedMessage {...messages.documents} />}
                       />
                     )}
                     {hasPermission([WAREHOUSE_LIST, PARTNER_LIST, STAFF_LIST]) && (
