@@ -321,6 +321,7 @@
   "modules.container.createdAt": "作成日",
   "modules.container.updatedAt": "最終更新",
   "modules.container.noContainerFound": "コンテナ情報がありません",
+  "modules.container.status": "STATUS",
   "modules.Documents.noDocumentFound": "ファイルが見つかりません",
   "modules.Documents.createdAt": "作成日",
   "modules.Documents.updatedAt": "最終更新",

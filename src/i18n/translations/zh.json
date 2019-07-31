@@ -321,6 +321,7 @@
   "modules.container.createdAt": "创作日期",
   "modules.container.updatedAt": "最后修改日期",
   "modules.container.noContainerFound": "没找到集装箱",
+  "modules.container.status": "STATUS",
   "modules.Documents.noDocumentFound": "没找到文件",
   "modules.Documents.createdAt": "创作日期",
   "modules.Documents.updatedAt": "最后修改日期",
