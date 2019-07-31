@@ -861,7 +861,7 @@ export const batchColumnFields = [
       const orderId = getByPathWithDefault('', `${orderItemId}.order`, orderItems);
       return (
         getByPathWithDefault(false, `${orderId}.archived`, orders) &&
-        getByPathWithDefault(false, `${shipmentId}.archived`, shipments)
+        getByPathWithDefault(true, `${shipmentId}.archived`, shipments)
       );
     },
     getExportValue: (values: Object, editData: Object) => {
@@ -870,7 +870,7 @@ export const batchColumnFields = [
       const orderId = getByPathWithDefault('', `${orderItemId}.order`, orderItems);
       return (
         getByPathWithDefault(false, `${orderId}.archived`, orders) &&
-        getByPathWithDefault(false, `${shipmentId}.archived`, shipments)
+        getByPathWithDefault(true, `${shipmentId}.archived`, shipments)
       );
     },
   },
