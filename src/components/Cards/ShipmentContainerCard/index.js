@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { ContainerPayload } from 'generated/graphql';
 import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
@@ -9,6 +10,7 @@ import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import ProductImage from 'components/ProductImage';
 import FormattedNumber from 'components/FormattedNumber';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import {
@@ -21,7 +23,6 @@ import {
   EnumSelectInputFactory,
 } from 'components/Form';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
-import { getProductImage } from 'components/Cards/utils';
 import { UserConsumer } from 'modules/user';
 import { calculateContainerTotalVolume, calculateDueDate } from 'modules/container/utils';
 import validator from './validator';
@@ -49,17 +50,17 @@ import {
 
 type OptionalProps = {
   onSelectWarehouse: Function,
-  onClick: (container: Object) => void,
-  onRemove: (container: Object) => void,
+  onClick: (container: mixed) => void,
+  onRemove: (container: mixed) => void,
   selectable: boolean,
   editable: Object,
-  actions: Array<React.Node>,
+  actions: Array<React$Node>,
 };
 
 type Props = OptionalProps & {
   intl: IntlShape,
   field: string,
-  container: Object,
+  container: ContainerPayload,
   update: Function,
 };
 
@@ -93,31 +94,42 @@ const ShipmentContainerCard = ({
   editable,
   ...rest
 }: Props) => {
-  const {
-    representativeBatch,
-    id,
-    archived,
-    no,
-    containerType,
-    containerOption,
-    batches,
-    warehouse,
-    warehouseArrivalAgreedDate,
-    warehouseArrivalAgreedDateApprovedBy,
-    warehouseArrivalActualDate,
-    warehouseArrivalActualDateApprovedBy,
-    freeTimeStartDate,
-    freeTimeDuration,
-    tags,
-  } = container;
-  const totalVolume = calculateContainerTotalVolume(container);
-
+  const id = getByPathWithDefault(false, 'id', container);
+  const archived = getByPathWithDefault(false, 'archived', container);
+  const containerType = getByPathWithDefault('', 'containerType', container);
+  const containerOption = getByPathWithDefault('', 'containerOption', container);
+  const no = getByPathWithDefault('', 'no', container);
+  const warehouseArrivalAgreedDate = getByPathWithDefault(
+    '',
+    'warehouseArrivalAgreedDate',
+    container
+  );
+  const warehouseArrivalActualDate = getByPathWithDefault(
+    '',
+    'warehouseArrivalActualDate',
+    container
+  );
+  const tags = getByPathWithDefault([], 'tags', container);
+  const batches = getByPathWithDefault([], 'batches', container);
+  const warehouseArrivalAgreedDateApprovedBy = getByPathWithDefault(
+    null,
+    'warehouseArrivalAgreedDateApprovedBy',
+    container
+  );
+  const warehouseArrivalActualDateApprovedBy = getByPathWithDefault(
+    null,
+    'warehouseArrivalActualDateApprovedBy',
+    container
+  );
+  const freeTimeDuration = getByPathWithDefault(null, 'freeTimeDuration', container);
+  const freeTimeStartDate = getByPathWithDefault(null, 'freeTimeStartDate', container);
+  const warehouse = getByPathWithDefault(null, 'warehouse', container);
   const product = getByPathWithDefault(
     {},
-    'orderItem.productProvider.product',
-    representativeBatch
+    'representativeBatch.orderItem.productProvider.product',
+    container
   );
-  const productImage = getProductImage(product);
+  const totalVolume = calculateContainerTotalVolume(container);
 
   const validation = validator({
     no: `container.${id}.no`,
@@ -141,7 +153,10 @@ const ShipmentContainerCard = ({
           <div className={CardWrapperStyle} role="presentation">
             <div className={ImagePartWrapperStyle} role="presentation">
               <div className={ImageWrapperStyle}>
-                <img className={ImageStyle} src={productImage} alt="product_image" />
+                <ProductImage
+                  className={ImageStyle}
+                  file={getByPathWithDefault(null, 'files.0', product)}
+                />
               </div>
               <div className={InfoInsideImageWrapperStyle}>
                 <div className={NameStyle}>{product.name}</div>

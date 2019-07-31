@@ -1,14 +1,17 @@
 // @flow
 import * as React from 'react';
+import type { BatchPayload } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { getByPathWithDefault } from 'utils/fp';
+import { defaultVolumeMetric } from 'utils/metric';
 import { isForbidden } from 'utils/data';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import ProductImage from 'components/ProductImage';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
-import { getProductImage } from 'components/Cards/utils';
 import RelateEntity from 'components/RelateEntity';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { FieldItem, Label, Display } from 'components/Form';
@@ -35,47 +38,51 @@ import {
   ImporterWrapperStyle,
 } from './style';
 
-type OptionalProps = {
-  onClick: Function,
-};
-
-type Props = OptionalProps & {
-  batch: Object,
-};
+type Props = {|
+  batch: BatchPayload,
+  onClick?: Function,
+|};
 
 const defaultProps = {
   onClick: () => {},
 };
 
 const BatchCard = ({ batch, onClick, ...rest }: Props) => {
-  const {
-    archived,
-    no,
-    latestQuantity,
-    deliveredAt,
-    desiredAt,
-    packageVolume,
-    packageQuantity,
-    orderItem,
-    shipment,
-    container,
-    todo,
-  } = batch;
-  const {
-    productProvider: { product, name: productProviderName },
-    order,
-    price,
-  } = orderItem;
+  const archived = getByPathWithDefault(false, 'archived', batch);
+  const no = getByPathWithDefault('', 'no', batch);
+  const latestQuantity = getByPathWithDefault(0, 'latestQuantity', batch);
+  const deliveredAt = getByPathWithDefault('', 'deliveredAt', batch);
+  const desiredAt = getByPathWithDefault('', 'desiredAt', batch);
+  const packageQuantity = getByPathWithDefault(0, 'packageQuantity', batch);
+  const packageVolume = getByPathWithDefault(
+    {
+      metric: defaultVolumeMetric,
+      value: 0,
+    },
+    'desiredAt',
+    batch
+  );
 
-  const { importer, exporter } = order;
-
-  const productImage = getProductImage(product);
+  const tags = getByPathWithDefault([], 'tags', batch);
+  const order = getByPathWithDefault({}, 'orderItem.order', batch);
+  const price = getByPathWithDefault(null, 'orderItem.price', batch);
+  const currency = getByPathWithDefault(null, 'orderItem.currency', batch);
+  const product = getByPathWithDefault(null, 'orderItem.productProvider.product', batch);
+  const productProviderName = getByPathWithDefault('', 'orderItem.productProvider.name', batch);
+  const shipment = getByPathWithDefault(null, 'shipment', batch);
+  const container = getByPathWithDefault(null, 'container', batch);
+  const importer = getByPathWithDefault(null, 'importer', order);
+  const exporter = getByPathWithDefault(null, 'exporter', order);
+  const todo = getByPathWithDefault(null, 'todo', batch);
 
   return (
     <BaseCard icon="BATCH" color="BATCH" isArchived={archived} {...rest}>
       <div className={BatchCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={ProductWrapperStyle}>
-          <img className={ProductImageStyle} src={productImage} alt="product_image" />
+          <ProductImage
+            className={ProductImageStyle}
+            file={getByPathWithDefault(null, 'files.0', product)}
+          />
 
           <div className={ProductInfoWrapperStyle}>
             {product && product.id && (
@@ -166,8 +173,8 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
             input={
               <Display>
                 <FormattedNumber
-                  value={orderItem.price && orderItem.price.amount ? orderItem.price.amount : 0}
-                  suffix={order.currency || (orderItem.price && orderItem.currency)}
+                  value={price && price.amount ? price.amount : 0}
+                  suffix={order.currency || currency}
                 />
               </Display>
             }
@@ -183,7 +190,7 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
               <Display>
                 <FormattedNumber
                   value={(price && price.amount ? price.amount : 0) * latestQuantity}
-                  suffix={order.currency || (orderItem.price && orderItem.currency)}
+                  suffix={order.currency || currency}
                 />
               </Display>
             }
@@ -209,7 +216,7 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
 
           <div className={OrderWrapperStyle}>
             <RelateEntity
-              link={`/order/${encodeId(order.id)}`}
+              link={order && order.id ? `/order/${encodeId(order.id)}` : ''}
               entity="ORDER"
               value={order && order.poNo}
             />
@@ -234,7 +241,7 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
           </div>
           <div className={TagsAndTaskWrapperStyle}>
             <div className={BatchTagsWrapperStyle}>
-              {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+              {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
             <TaskRing {...todo} />
           </div>

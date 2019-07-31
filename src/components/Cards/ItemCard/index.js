@@ -1,5 +1,12 @@
 // @flow
 import * as React from 'react';
+import type {
+  OrderPayload,
+  OrderItemPayload,
+  BatchPayload,
+  ProductProviderPayload,
+  ProductPayload,
+} from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
@@ -8,11 +15,11 @@ import { getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import ProductImage from 'components/ProductImage';
 import TaskRing from 'components/TaskRing';
 import QuantityChart from 'components/QuantityChart';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label, Display, FieldItem, NumberInputFactory, TextInputFactory } from 'components/Form';
-import { getProductImage } from 'components/Cards/utils';
 import { getItemQuantityChartData } from 'utils/item';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import RelateEntity from 'components/RelateEntity';
@@ -43,24 +50,12 @@ import {
 } from './style';
 import validator from './validator';
 
-type OptionalProps = {
-  order: {
-    id: string,
-    poNo: string,
-    currency?: string,
-    importer?: Object,
-    exporter?: Object,
-  },
-  batches: Array<{
-    quantity: number,
-    batchQuantityRevisions: Array<{
-      quantity: number,
-    }>,
-    shipment: ?Object,
-  }>,
+type Props = {
+  order: OrderPayload,
+  batches: Array<BatchPayload>,
   index: number,
-  actions: Array<React.Node>,
-  setFieldValue: (path: string, value: any) => void,
+  actions: Array<React$Node>,
+  setFieldValue: (path: string, value: mixed) => void,
   onClick: Function,
   editable: {
     quantity: boolean,
@@ -80,49 +75,9 @@ type OptionalProps = {
   selected: boolean,
   onSelect: Function,
   readOnly: boolean,
-};
-
-type Props = OptionalProps & {
-  orderItem: {
-    id: string,
-    archived: boolean,
-    no: string,
-    quantity: number,
-    price: {
-      amount: number,
-      currency: string,
-    },
-    tags: ?Array<{
-      id: string,
-      name: string,
-      color: string,
-    }>,
-    todo: {},
-    totalBatched?: number,
-    totalShipped?: number,
-    batchCount?: number,
-    batchShippedCount?: number,
-  },
-  productProvider: {
-    name: string,
-    unitPrice?: ?{
-      amount: number,
-      currency: string,
-    },
-  },
-  product: {
-    id: string,
-    name: string,
-    serial: string,
-    tags: ?Array<{
-      id: string,
-      name: string,
-      color: string,
-    }>,
-    files: ?Array<{
-      pathMedium: string,
-    }>,
-  },
+  orderItem: OrderItemPayload,
+  productProvider: ProductProviderPayload,
+  product: ProductPayload,
 };
 
 const defaultProps = {
@@ -177,9 +132,18 @@ const ItemCard = ({
   config,
   ...rest
 }: Props) => {
-  const { archived, no, quantity, price, tags, todo } = orderItem;
+  const archived = getByPathWithDefault(false, 'archived', orderItem);
+  const no = getByPathWithDefault('', 'no', orderItem);
+  const quantity = getByPathWithDefault(0, 'quantity', orderItem);
+  const price = getByPathWithDefault(null, 'price', orderItem);
+  const tags = getByPathWithDefault([], 'tags', orderItem);
+  const todo = getByPathWithDefault(null, 'todo', orderItem);
 
-  const { id: orderId, poNo, currency: orderCurrency, importer, exporter } = order;
+  const orderId = getByPathWithDefault('', 'id', orderItem);
+  const poNo = getByPathWithDefault('', 'poNo', orderItem);
+  const orderCurrency = getByPathWithDefault('', 'currency', orderItem);
+  const importer = getByPathWithDefault(null, 'importer', orderItem);
+  const exporter = getByPathWithDefault(null, 'exporter', orderItem);
 
   const validation = validator({
     no: `orderItems.${index}.no`,
@@ -194,11 +158,13 @@ const ItemCard = ({
     orderCurrency,
   };
 
-  const { name: productProviderName } = productProvider;
+  const productProviderName = getByPathWithDefault('', 'name', productProvider);
   const productUnitPrice = getByPathWithDefault(null, 'unitPrice', productProvider);
 
-  const { id: productId, name: productName, serial: productSerial, tags: productTags } = product;
-  const productImage = getProductImage(product);
+  const productId = getByPathWithDefault('', 'id', product);
+  const productName = getByPathWithDefault('', 'name', product);
+  const productSerial = getByPathWithDefault('', 'serial', product);
+  const productTags = getByPathWithDefault([], 'tags', product);
 
   const quantityChartData = getItemQuantityChartData({ orderItem, batches });
 
@@ -219,7 +185,10 @@ const ItemCard = ({
     >
       <div className={OrderItemCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={ProductWrapperStyle}>
-          <img className={ProductImageStyle} src={productImage} alt="product_image" />
+          <ProductImage
+            className={ProductImageStyle}
+            file={getByPathWithDefault(null, 'files.0', product)}
+          />
           <div className={ProductInfoWrapperStyle}>
             {productId && (
               <>

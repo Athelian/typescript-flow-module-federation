@@ -1,8 +1,10 @@
 // @flow
 import * as React from 'react';
+import type { ProductPayload } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import FormattedNumber from 'components/FormattedNumber';
-import { getProductImage } from 'components/Cards/utils';
+import ProductImage from 'components/ProductImage';
+import { getByPath } from 'utils/fp';
 import BaseCard from '../BaseCard';
 import {
   BatchesPoolCardWrapperStyle,
@@ -17,7 +19,7 @@ import {
 
 type Props = {
   totalBatches: number,
-  product: ?Object,
+  product: ProductPayload,
 };
 
 const defaultProps = {
@@ -25,12 +27,10 @@ const defaultProps = {
 };
 
 const BatchesPoolCard = ({ totalBatches, product }: Props) => {
-  const productImage = getProductImage(product);
-
   return (
     <BaseCard icon="BATCH" color="BATCH">
       <div className={BatchesPoolCardWrapperStyle} role="presentation">
-        <img className={ProductImageStyle} src={productImage} alt="product_image" />
+        <ProductImage className={ProductImageStyle} file={getByPath('files.0', product)} />
 
         <div className={InfoWrapperStyle}>
           <div className={TitleStyle}>

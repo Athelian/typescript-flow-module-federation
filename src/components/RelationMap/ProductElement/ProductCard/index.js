@@ -4,8 +4,8 @@ import { getBatchLatestQuantity } from 'utils/batch';
 import BaseCard from 'components/Cards';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import ProductImage from 'components/ProductImage';
 import QuantityChart from 'components/ProductFocusedChart';
-import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import * as style from './style';
 
 type Props = {
@@ -49,18 +49,14 @@ function getQuantitySummary(item: Object) {
 }
 
 const ProductCard = ({ item }: Props) => {
-  const { name, serial, productProviders = [], tags, files } = item;
+  const { name, serial, productProviders = [], tags, files = [] } = item;
   const { supplier = {} } = productProviders[0] || [];
   const chartDetail = getQuantitySummary(item);
   return (
     <BaseCard icon="PRODUCT" color="PRODUCT">
       <div className={style.OrderItemCardWrapperStyle}>
         <div className={style.ProductWrapperStyle}>
-          <img
-            className={style.ProductImageStyle}
-            src={(files && files.length && files[0].path) || FALLBACK_IMAGE}
-            alt="product_image"
-          />
+          <ProductImage className={style.ProductImageStyle} path="path" file={files[0]} />
           <div className={style.ProductInfoWrapperStyle}>
             <div className={style.ProductNameStyle}>{name}</div>
             <div className={style.ProductSerialStyle}>{serial}</div>
