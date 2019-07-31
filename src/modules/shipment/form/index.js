@@ -35,7 +35,10 @@ class ShipmentForm extends React.Component<Props> {
     const { anchor } = this.props;
 
     if (anchor) {
-      // wait for the element is rendering on DOM
+      // scroll to the timeline and cargo section
+      scrollIntoView({ targetId: 'shipmentAnchorPoint' });
+
+      // then wait for the element is rendering on DOM
       const targetId = 'timelineInfoSection';
       const retryFindElement = () => {
         const foundElement = document.querySelector(`#${targetId}`);
@@ -69,6 +72,7 @@ class ShipmentForm extends React.Component<Props> {
           />
         </SectionWrapper>
 
+        <div id="shipmentAnchorPoint" />
         <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer]}>
           {(taskContainer, infoContainer) => (
             <TimelineAndCargoSections
