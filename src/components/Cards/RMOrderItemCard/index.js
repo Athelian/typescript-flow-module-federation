@@ -54,7 +54,12 @@ const RMOrderItemCard = ({ orderItem }: Props) => {
   return (
     <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" isArchived={archived}>
       <div className={RMOrderItemCardWrapperStyle}>
-        <ProductImage className={ProductImageStyle} path="pathSmall" file={files[0]} />
+        <ProductImage
+          height="40px"
+          className={ProductImageStyle}
+          path="pathSmall"
+          file={files[0]}
+        />
 
         <div className={InfoWrapperStyle}>
           <div className={NameWrapperStyle}>

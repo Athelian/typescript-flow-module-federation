@@ -187,6 +187,7 @@ const ItemCard = ({
         <div className={ProductWrapperStyle}>
           <ProductImage
             className={ProductImageStyle}
+            height="95px"
             file={getByPathWithDefault(null, 'files.0', product)}
           />
           <div className={ProductInfoWrapperStyle}>

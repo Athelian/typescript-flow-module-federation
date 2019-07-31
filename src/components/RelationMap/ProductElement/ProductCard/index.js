@@ -56,7 +56,12 @@ const ProductCard = ({ item }: Props) => {
     <BaseCard icon="PRODUCT" color="PRODUCT">
       <div className={style.OrderItemCardWrapperStyle}>
         <div className={style.ProductWrapperStyle}>
-          <ProductImage className={style.ProductImageStyle} path="path" file={files[0]} />
+          <ProductImage
+            className={style.ProductImageStyle}
+            height="80px"
+            path="path"
+            file={files[0]}
+          />
           <div className={style.ProductInfoWrapperStyle}>
             <div className={style.ProductNameStyle}>{name}</div>
             <div className={style.ProductSerialStyle}>{serial}</div>

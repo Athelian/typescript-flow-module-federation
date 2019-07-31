@@ -82,6 +82,7 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
           <ProductImage
             className={ProductImageStyle}
             file={getByPathWithDefault(null, 'files.0', product)}
+            height="70px"
           />
 
           <div className={ProductInfoWrapperStyle}>

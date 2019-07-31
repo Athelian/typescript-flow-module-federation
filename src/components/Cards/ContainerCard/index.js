@@ -102,6 +102,7 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
           <div className={ImageWrapperStyle}>
             <ProductImage
               className={ImageStyle}
+              height="75px"
               file={getByPathWithDefault(null, 'files.0', product)}
             />
           </div>

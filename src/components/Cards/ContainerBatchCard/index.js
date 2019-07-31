@@ -203,6 +203,7 @@ const ContainerBatchCard = ({
           <ProductImage
             className={ProductImageStyle}
             file={getByPathWithDefault(null, 'files.0', product)}
+            height="70px"
           />
 
           <div className={ProductInfoWrapperStyle}>

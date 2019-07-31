@@ -30,7 +30,11 @@ const BatchesPoolCard = ({ totalBatches, product }: Props) => {
   return (
     <BaseCard icon="BATCH" color="BATCH">
       <div className={BatchesPoolCardWrapperStyle} role="presentation">
-        <ProductImage className={ProductImageStyle} file={getByPath('files.0', product)} />
+        <ProductImage
+          className={ProductImageStyle}
+          height="80px"
+          file={getByPath('files.0', product)}
+        />
 
         <div className={InfoWrapperStyle}>
           <div className={TitleStyle}>

@@ -205,6 +205,7 @@ const ShipmentBatchCard = ({
           role="presentation"
         >
           <ProductImage
+            height="70px"
             className={ProductImageStyle}
             file={getByPathWithDefault(null, 'files.0', product)}
           />

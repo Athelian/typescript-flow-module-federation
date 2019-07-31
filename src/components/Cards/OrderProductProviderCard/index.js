@@ -108,7 +108,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
       >
         <div className={ProductProviderCardWrapperStyle} onClick={onClick} role="presentation">
           <div className={ProductImageWrapperStyle}>
-            <ProductImage className={ProductImageStyle} file={files[activeImage]} />
+            <ProductImage height="75px" className={ProductImageStyle} file={files[activeImage]} />
             {files && activeImage > 0 && (
               <button
                 className={ProductImageChevronButtonStyle('left')}

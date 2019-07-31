@@ -156,6 +156,7 @@ const ShipmentContainerCard = ({
                 <ProductImage
                   className={ImageStyle}
                   file={getByPathWithDefault(null, 'files.0', product)}
+                  height="80px"
                 />
               </div>
               <div className={InfoInsideImageWrapperStyle}>
