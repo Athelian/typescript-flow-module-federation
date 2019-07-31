@@ -2,7 +2,7 @@ import * as React from 'react';
 /* eslint-disable import/no-extraneous-dependencies */
 import { storiesOf } from '@storybook/react';
 
-import Table from './index';
+import Table from './Table';
 
 // const order = {
 //   id: 1,
@@ -47,20 +47,71 @@ const data = [
     { key: 'order.name', value: 'order1' },
     { key: 'orderItem.name', value: 'orderItem1' },
     { key: 'batch.name', value: 'batch1' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
   ],
   [
     { key: 'order.name', value: null },
     { key: 'orderItem.name', value: null },
     { key: 'batch.name', value: 'batch2' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
   ],
   [
     { key: 'order.name', value: null },
     { key: 'orderItem.name', value: 'orderItem2' },
     { key: 'batch.name', value: 'batch3' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
+    { key: 'any', value: 'any' },
   ],
 ];
-const keys = ['order.name', 'orderItem.name', 'batch.name'];
+const keys = [
+  'order.name',
+  'orderItem.name',
+  'batch.name',
+  'any',
+  'any',
+  'any',
+  'any',
+  'any',
+  'any',
+  'any',
+  'any',
+  'any',
+  'any',
+  'any',
+  'any',
+];
 
-storiesOf('Modules/GlobalView', module).add('starter', () => (
-  <Table keys={keys} data={[...data, ...data, ...data, ...data]} />
+storiesOf('Modules/GlobalView', module).add('virtual list', () => (
+  <div
+    style={{
+      height: '50vh',
+      width: '50vw',
+    }}
+  >
+    <Table keys={keys} data={[...data, ...data, ...data, ...data, ...data, ...data]} />
+  </div>
 ));

@@ -1,10 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const TableHeaderStyle = css`
-  th {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-  }
+export const ColumnStyle = css`
+  display: inline-block;
+  width: 200px;
+  overflow: hidden;
+`;
+
+export const HeaderStyle = css`
+  overflow: hidden;
 `;
