@@ -173,8 +173,6 @@ class DocumentsInput extends React.Component<Props, State> {
     const { files, editable, uploadable, removable, downloadable, onSave } = this.props;
     const { filesState } = this.state;
 
-    const fileInputValue = '';
-
     const isEditable = Object.keys(editable).some(key => editable[key]);
     return (
       <div className={DocumentsSectionWrapperStyle}>
@@ -193,7 +191,7 @@ class DocumentsInput extends React.Component<Props, State> {
                   accept="*"
                   hidden
                   multiple
-                  value={fileInputValue}
+                  value=""
                   onChange={this.handleChange}
                 />
               </label>

@@ -222,10 +222,8 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                                 PRODUCT_SET_DOCUMENTS,
                               ]) && (
                                 <ImagesUploadInput
-                                  id="files"
-                                  name="files"
-                                  values={files}
-                                  onChange={changeFiles}
+                                  files={files}
+                                  onSave={updateFiles => changeFiles('files', updateFiles)}
                                   height="180px"
                                   width={files.length > 0 ? '120px' : '180px'}
                                 />
