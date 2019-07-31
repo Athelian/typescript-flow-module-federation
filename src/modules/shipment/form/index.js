@@ -106,16 +106,12 @@ class ShipmentForm extends React.Component<Props> {
           </Subscribe>
         </SectionWrapper>
 
-        <SectionWrapper id="shipment_orderSection">
-          <Subscribe to={[ShipmentBatchesContainer]}>
-            {({ state: { batches, hasCalledBatchesApiYet } }) => (
-              <OrdersSection
-                isReady={hasCalledBatchesApiYet || isNew || isClone}
-                batches={batches}
-              />
-            )}
-          </Subscribe>
-        </SectionWrapper>
+        <Subscribe to={[ShipmentBatchesContainer]}>
+          {({ state: { batches, hasCalledBatchesApiYet } }) => (
+            <OrdersSection isReady={hasCalledBatchesApiYet || isNew || isClone} batches={batches} />
+          )}
+        </Subscribe>
+
         <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer, ShipmentTimelineContainer]}>
           {(
             {
