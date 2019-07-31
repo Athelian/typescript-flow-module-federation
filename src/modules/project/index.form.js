@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { omit } from 'lodash';
 import { Provider, Subscribe } from 'unstated';
 import { injectIntl, type IntlShape } from 'react-intl';
 import { Mutation } from 'react-apollo';
@@ -153,7 +154,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
       ],
       ...info
     } = project;
-    projectInfoState.initDetailValues(info);
+    projectInfoState.initDetailValues(omit(info, ['ignoreTaskIds']));
     if (tags && Array.isArray(tags) && tags.length) {
       projectTagsState.initDetailValues(tags);
     }
