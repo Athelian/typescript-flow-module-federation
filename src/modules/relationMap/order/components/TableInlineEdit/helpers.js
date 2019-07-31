@@ -351,6 +351,9 @@ export const parseChangedData = ({
           case 'productProvider':
             changedOrderItem.productProviderId = updateValue.id;
             break;
+          case 'tags':
+            changedOrderItem.tagIds = updateValue.map(({ id: tagId }) => tagId);
+            break;
           case 'price':
             changedOrderItem[key] = removeTypename(updateValue);
             break;

@@ -85,6 +85,7 @@ export const orderItemColumns = [
       'orderItem.unitPrice',
       'orderItem.unitPriceCurrency',
       'orderItem.quantity',
+      'orderItem.tags',
       'orderItem.totalPrice',
     ],
     columns: [
@@ -112,6 +113,7 @@ export const orderItemColumns = [
         defaultMessage="UNIT PRICE CURRENCY"
       />,
       <FormattedMessage id="global.quantity" defaultMessage="QUANTITY" />,
+      <FormattedMessage id="modules.OrderItems.tags" defaultMessage="TAGS" />,
       <FormattedMessage {...orderMessages.totalPrice} />,
     ],
   },
@@ -673,6 +675,17 @@ export const orderItemColumnFields = [
     meta: {
       isRequired: true,
     },
+  },
+  {
+    messageId: 'modules.OrderItems.tags',
+    name: 'tags',
+    columnName: 'orderItem.tags',
+    type: 'tags',
+    meta: {
+      tagType: 'OrderItem',
+    },
+    getExportValue: ({ tags }: { tags: Array<Object> } = {}) =>
+      tags && tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
   },
   {
     messageId: orderMessages.totalPrice.id,

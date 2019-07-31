@@ -54,6 +54,9 @@ export const orderItemEntityFragment = gql`
     customFields {
       ...customFieldsFragment
     }
+    tags {
+      ...tagFragment
+    }
     productProvider {
       ... on ProductProvider {
         id
