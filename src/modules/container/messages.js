@@ -78,4 +78,8 @@ export default defineMessages({
     id: 'modules.container.totalPrice',
     defaultMessage: 'Total Price'.toUpperCase(),
   },
+  status: {
+    id: 'modules.container.status',
+    defaultMessage: 'STATUS',
+  },
 });

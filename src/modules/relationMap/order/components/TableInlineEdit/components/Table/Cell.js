@@ -35,6 +35,7 @@ import {
 } from 'modules/relationMap/order/components/TableInlineEdit/components/TableItem/components';
 import TableDisableCell from '../TableDisableCell';
 import CustomFieldCell from './CustomFieldCell';
+import InlineStatusButton from '../TableItem/components/InlineStatusButton';
 
 type Props = {
   inputId: string,
@@ -99,6 +100,9 @@ function renderItem({
 
     case 'toggle':
       return <InlineToggleButton name={name} toggled={value} id={id} />;
+
+    case 'status':
+      return <InlineStatusButton {...meta} name={name} toggled={value} id={id} />;
 
     case 'numberAdjustment': {
       const position = Number(name.substr(-1, 1));

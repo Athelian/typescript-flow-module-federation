@@ -19,6 +19,7 @@ import {
 export const orderEntityFragment = gql`
   fragment orderEntityFragment on Order {
     id
+    archived
     poNo
     piNo
     issuedAt
@@ -47,6 +48,7 @@ export const orderEntityFragment = gql`
 export const orderItemEntityFragment = gql`
   fragment orderItemEntityFragment on OrderItem {
     id
+    archived
     quantity
     price {
       ...priceFragment
@@ -77,6 +79,7 @@ export const orderItemEntityFragment = gql`
 export const productEntityFragment = gql`
   fragment productEntityFragment on Product {
     id
+    archived
     name
     serial
     janCode
@@ -94,6 +97,7 @@ export const productEntityFragment = gql`
 export const batchEntityFragment = gql`
   fragment batchEntityFragment on Batch {
     id
+    archived
     no
     quantity
     deliveredAt
@@ -133,6 +137,7 @@ export const batchEntityFragment = gql`
 export const shipmentEntityFragment = gql`
   fragment shipmentEntityFragment on Shipment {
     id
+    archived
     no
     blNo
     blDate
@@ -209,6 +214,7 @@ export const shipmentEntityFragment = gql`
 export const containerEntityFragment = gql`
   fragment containerEntityFragment on Container {
     id
+    archived
     no
     warehouse {
       ... on Warehouse {
@@ -266,6 +272,9 @@ export const orderShipmentTableQuery = gql`
           ... on OrderItem {
             id
           }
+        }
+        container {
+          ...containerEntityFragment
         }
         mainShipment: shipment {
           ... on Shipment {

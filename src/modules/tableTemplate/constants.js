@@ -37,6 +37,7 @@ export const orderColumns = [
     id: 0,
     group: <FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />,
     availableColumns: [
+      'order.archived',
       'order.PO',
       'order.PI',
       'order.date',
@@ -53,6 +54,7 @@ export const orderColumns = [
       'order.totalVolume',
     ],
     columns: [
+      <FormattedMessage {...orderMessages.status} />,
       <FormattedMessage {...orderMessages.PO} />,
       <FormattedMessage {...orderMessages.PI} />,
       <FormattedMessage {...orderMessages.date} />,
@@ -76,6 +78,7 @@ export const orderItemColumns = [
     id: 0,
     group: <FormattedMessage id="modules.Items.item" defaultMessage="ITEM" />,
     availableColumns: [
+      'orderItem.archived',
       'orderItem.name',
       'orderItem.serial',
       'orderItem.exporterName',
@@ -89,6 +92,7 @@ export const orderItemColumns = [
       'orderItem.totalPrice',
     ],
     columns: [
+      <FormattedMessage id="modules.Products.status" defaultMessage="Status" />,
       <FormattedMessage id="modules.Products.name" defaultMessage="Name" />,
       <FormattedMessage id="modules.Products.serial" defaultMessage="Serial" />,
       <FormattedMessage
@@ -124,6 +128,7 @@ export const productColumns = [
     id: 0,
     group: <FormattedMessage id="modules.Products.product" defaultMessage="PRODUCT" />,
     availableColumns: [
+      'product.archived',
       'product.name',
       'product.serial',
       'product.janCode',
@@ -132,6 +137,7 @@ export const productColumns = [
       'product.tags',
     ],
     columns: [
+      <FormattedMessage id="modules.Products.status" defaultMessage="Status" />,
       <FormattedMessage id="modules.Products.name" defaultMessage="Name" />,
       <FormattedMessage id="modules.Products.serial" defaultMessage="Serial" />,
       <FormattedMessage id="modules.Products.janCode" defaultMessage="JAN CODE" />,
@@ -147,6 +153,7 @@ export const containerColumns = [
     id: 0,
     group: <FormattedMessage id="modules.container.container" defaultMessage="CONTAINER" />,
     availableColumns: [
+      'container.archived',
       'container.containerNo',
       'container.containerType',
       'container.containerOption',
@@ -164,6 +171,7 @@ export const containerColumns = [
       'container.totalPrice',
     ],
     columns: [
+      <FormattedMessage {...containerMessages.status} />,
       <FormattedMessage {...containerMessages.containerNo} />,
       <FormattedMessage {...containerMessages.containerType} />,
       <FormattedMessage {...containerMessages.containerOption} />,
@@ -188,6 +196,7 @@ export const batchColumns = [
     id: 0,
     group: <FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />,
     availableColumns: [
+      'batch.archived',
       'batch.batchNo',
       'batch.quantity',
       'batch.newQuantity1',
@@ -203,6 +212,7 @@ export const batchColumns = [
       'batch.totalPrice',
     ],
     columns: [
+      <FormattedMessage {...batchMessages.status} />,
       <FormattedMessage {...batchMessages.batchNo} />,
       <FormattedMessage {...batchMessages.initialQuantity} />,
       <FormattedMessage {...batchMessages.newQuantity1} />,
@@ -251,6 +261,7 @@ export const shipmentColumns = [
     id: 0,
     group: <FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />,
     availableColumns: [
+      'shipment.archived',
       'shipment.shipmentId',
       'shipment.blNo',
       'shipment.blDate',
@@ -277,6 +288,7 @@ export const shipmentColumns = [
       'shipment.totalPrice',
     ],
     columns: [
+      <FormattedMessage {...shipmentMessages.status} />,
       <FormattedMessage {...shipmentMessages.shipmentId} />,
       <FormattedMessage {...shipmentMessages.blNo} />,
       <FormattedMessage {...shipmentMessages.blDate} />,
@@ -374,6 +386,16 @@ export const shipmentColumns = [
 ];
 
 export const orderColumnFields = [
+  {
+    messageId: orderMessages.status.id,
+    name: 'archived',
+    columnName: 'order.archived',
+    type: 'status',
+    meta: {
+      editable: true,
+      entity: 'Order',
+    },
+  },
   {
     messageId: orderMessages.PO.id,
     name: 'poNo',
@@ -568,6 +590,26 @@ export const orderColumnFields = [
 
 export const orderItemColumnFields = [
   {
+    messageId: 'modules.Products.status',
+    name: 'archived',
+    columnName: 'orderItem.archived',
+    type: 'status',
+    meta: {
+      editable: false,
+      entity: 'OrderItem',
+    },
+    getFieldValue: (values: Object, editData: Object) => {
+      const { order: orderId } = values;
+      const { orders } = editData;
+      return getByPathWithDefault(false, `${orderId}.archived`, orders);
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const { order: orderId } = values;
+      const { orders } = editData;
+      return getByPathWithDefault(false, `${orderId}.archived`, orders);
+    },
+  },
+  {
     messageId: 'modules.Products.name',
     name: 'productProvider',
     columnName: 'orderItem.name',
@@ -711,6 +753,16 @@ export const orderItemColumnFields = [
 
 export const productColumnFields = [
   {
+    messageId: 'modules.Products.status',
+    name: 'archived',
+    columnName: 'product.archived',
+    type: 'status',
+    meta: {
+      editable: true,
+      entity: 'Product',
+    },
+  },
+  {
     messageId: 'modules.Products.name',
     name: 'name',
     columnName: 'product.name',
@@ -794,6 +846,34 @@ export const productColumnFields = [
 ];
 
 export const batchColumnFields = [
+  {
+    messageId: batchMessages.status.id,
+    name: 'archived',
+    columnName: 'batch.archived',
+    type: 'status',
+    meta: {
+      editable: false,
+      entity: 'Batch',
+    },
+    getFieldValue: (values: Object, editData: Object) => {
+      const { orderItem: orderItemId, mainShipment: shipmentId } = values;
+      const { orders, orderItems, shipments } = editData;
+      const orderId = getByPathWithDefault('', `${orderItemId}.order`, orderItems);
+      return (
+        getByPathWithDefault(false, `${orderId}.archived`, orders) &&
+        getByPathWithDefault(false, `${shipmentId}.archived`, shipments)
+      );
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const { orderItem: orderItemId, mainShipment: shipmentId } = values;
+      const { orders, orderItems, shipments } = editData;
+      const orderId = getByPathWithDefault('', `${orderItemId}.order`, orderItems);
+      return (
+        getByPathWithDefault(false, `${orderId}.archived`, orders) &&
+        getByPathWithDefault(false, `${shipmentId}.archived`, shipments)
+      );
+    },
+  },
   {
     messageId: batchMessages.batchNo.id,
     name: 'no',
@@ -1034,6 +1114,26 @@ export const batchColumnFields = [
 ];
 
 export const containerColumnFields = [
+  {
+    messageId: containerMessages.status.id,
+    name: 'archived',
+    columnName: 'container.archived',
+    type: 'status',
+    meta: {
+      editable: false,
+      entity: 'Container',
+    },
+    getFieldValue: (values: Object, editData: Object) => {
+      const { shipment: shipmentId } = values;
+      const { shipments } = editData;
+      return getByPathWithDefault(false, `${shipmentId}.archived`, shipments);
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const { shipment: shipmentId } = values;
+      const { shipments } = editData;
+      return getByPathWithDefault(false, `${shipmentId}.archived`, shipments);
+    },
+  },
   {
     messageId: containerMessages.containerNo.id,
     name: 'no',
@@ -1368,6 +1468,16 @@ export const containerColumnFields = [
 ];
 
 export const shipmentColumnFields = [
+  {
+    messageId: shipmentMessages.status.id,
+    name: 'archived',
+    columnName: 'shipment.archived',
+    type: 'status',
+    meta: {
+      editable: true,
+      entity: 'Shipment',
+    },
+  },
   {
     messageId: shipmentMessages.shipmentId.id,
     name: 'no',
