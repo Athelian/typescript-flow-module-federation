@@ -6,3 +6,7 @@ export const ColumnStyle = css`
   width: 200px;
   overflow: hidden;
 `;
+
+export const HeaderStyle = css`
+  overflow: hidden;
+`;

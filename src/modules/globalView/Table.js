@@ -3,7 +3,19 @@ import React from 'react';
 import { FixedSizeGrid as Grid } from 'react-window';
 import { getByPath } from 'utils/fp';
 import InlineTextInput from './components/InlineTextInput';
-import { ColumnStyle } from './style';
+import { HeaderStyle, ColumnStyle } from './style';
+
+const HeaderItem = ({
+  data,
+  columnIndex,
+  style,
+}: {
+  data: any,
+  columnIndex: number,
+  style: React.ref<any>,
+}) => {
+  return <div style={style}>{data[columnIndex]}</div>;
+};
 
 const Cell = ({
   data,
@@ -16,32 +28,47 @@ const Cell = ({
   rowIndex: number,
   style: Object,
 }) => {
-  const contentType = getByPath(`${rowIndex}.${columnIndex}.type`, data);
-  const contentKey = getByPath(`${rowIndex}.${columnIndex}.key`, data);
   const contentValue = getByPath(`${rowIndex}.${columnIndex}.value`, data);
 
-  return contentType === 'header' ? (
+  return (
     <div style={style} className={ColumnStyle}>
-      {contentValue}
-    </div>
-  ) : (
-    <div style={style} className={ColumnStyle}>
-      {contentValue && <InlineTextInput name={contentKey} value={contentValue} />}
+      {contentValue && <InlineTextInput value={contentValue} />}
     </div>
   );
 };
 
 const Table = ({ keys, data }: { keys: Array<string>, data: any }) => {
+  const staticGrid = React.useRef(null);
+  const handleScroll = React.useCallback(({ scrollLeft, scrollUpdateWasRequested }) => {
+    if (!scrollUpdateWasRequested) {
+      staticGrid.current.scrollTo({ scrollTo: 0, scrollLeft });
+    }
+  });
+
   return (
     <div>
       <Grid
-        itemData={[keys.map(item => ({ type: 'header', key: 'any', value: item })), ...data]}
+        className={HeaderStyle}
+        ref={staticGrid}
+        itemData={keys}
+        columnCount={keys.length}
+        columnWidth={200}
+        width={800}
+        height={35}
+        rowCount={1}
+        rowHeight={35}
+      >
+        {HeaderItem}
+      </Grid>
+      <Grid
+        itemData={data}
         columnCount={keys.length}
         columnWidth={200}
         width={800}
         height={150}
-        rowCount={data.length + 1}
+        rowCount={data.length}
         rowHeight={35}
+        onScroll={handleScroll}
       >
         {Cell}
       </Grid>
