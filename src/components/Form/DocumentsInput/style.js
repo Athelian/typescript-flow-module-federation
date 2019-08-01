@@ -95,9 +95,9 @@ export const DocumentsDragAndDropLabelStyle: string = css`
 
 export const DocumentsListStyle: string = css`
   display: grid;
-  grid-template-columns: repeat(auto-fit, 185px);
+  grid-template-columns: repeat(auto-fit, 195px);
   grid-auto-rows: min-content;
-  grid-gap: 30px;
+  grid-gap: 30px 20px;
   width: 100%;
 `;
 
