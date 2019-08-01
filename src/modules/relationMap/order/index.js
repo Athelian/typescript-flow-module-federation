@@ -30,7 +30,7 @@ import {
   AllShipmentsIconStyle,
 } from '../style';
 import EntityHeader from '../common/EntityHeader';
-import { orderListQuery, orderDetailQuery, shipmentDetailQuery } from './query';
+import { orderFocusedListQuery, orderDetailQuery, shipmentDetailQuery } from './query';
 import {
   OrderListWrapperStyle,
   OrderListBodyStyle,
@@ -125,7 +125,11 @@ const Order = ({ intl }: Props) => {
 
   return (
     <DispatchProvider value={{ dispatch, state }}>
-      <Query query={orderListQuery} variables={queryOrderVariables} fetchPolicy="network-only">
+      <Query
+        query={orderFocusedListQuery}
+        variables={queryOrderVariables}
+        fetchPolicy="network-only"
+      >
         {({ loading, data, refetch, fetchMore, error, client, updateQuery }) => {
           if (error) {
             return error.message;

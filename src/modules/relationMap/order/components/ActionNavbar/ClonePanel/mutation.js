@@ -18,6 +18,7 @@ import {
   taskCountFragment,
 } from 'graphql';
 import {
+  productProviderRMFragment,
   orderCardRMFragment,
   batchCardRMFragment,
   shipmentCardRMFragment,
@@ -133,6 +134,7 @@ export const cloneOrderMutation = gql`
   ${partnerNameFragment}
   ${batchCardRMFragment}
   ${orderCardRMFragment}
+  ${productProviderRMFragment}
   ${timelineDateMinimalFragment}
   ${tagFragment}
   ${portFragment}

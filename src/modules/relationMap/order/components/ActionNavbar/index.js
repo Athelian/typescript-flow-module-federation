@@ -799,6 +799,10 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           moveOrderItems.push({
                             ...defaultInput,
                             ...orderItem,
+                            productProvider: {
+                              ...orderItem.productProvider,
+                              exporter: exporters[orderItem.productProvider.exporter],
+                            },
                             ...(needToResetPrice
                               ? {
                                   price: {
@@ -813,6 +817,10 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           moveOrderItems.push({
                             ...defaultInput,
                             ...orderItem,
+                            productProvider: {
+                              ...orderItem.productProvider,
+                              exporter: exporters[orderItem.productProvider.exporter],
+                            },
                             ...(needToResetPrice
                               ? {
                                   price: {
@@ -854,6 +862,10 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           moveOrderItems.push({
                             ...defaultInput,
                             ...orderItem,
+                            productProvider: {
+                              ...orderItem.productProvider,
+                              exporter: exporters[orderItem.productProvider.exporter],
+                            },
                             ...(needToResetPrice
                               ? {
                                   price: {

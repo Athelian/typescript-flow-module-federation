@@ -15,6 +15,44 @@ import {
   taskCountFragment,
 } from 'graphql';
 
+export const productProviderRMFragment = gql`
+  fragment productProviderRMFragment on ProductProvider {
+    id
+    name
+    product {
+      ... on Product {
+        id
+        name
+        serial
+        files {
+          ... on File {
+            id
+            pathSmall: path(preset: Small)
+          }
+        }
+        importer {
+          ... on Group {
+            id
+            name
+          }
+        }
+      }
+    }
+    exporter {
+      ... on Group {
+        id
+        name
+      }
+    }
+    supplier {
+      ... on Group {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const batchCardRMFragment = gql`
   fragment batchCardRMFragment on Batch {
     id
@@ -106,28 +144,7 @@ export const orderCardRMFragment = gql`
           ...priceFragment
         }
         productProvider {
-          ... on ProductProvider {
-            id
-            product {
-              ... on Product {
-                id
-                name
-                serial
-                files {
-                  ... on File {
-                    id
-                    pathSmall: path(preset: Small)
-                  }
-                }
-              }
-            }
-            exporter {
-              ... on Group {
-                id
-                name
-              }
-            }
-          }
+          ...productProviderRMFragment
         }
         batches {
           ...batchCardRMFragment
@@ -154,15 +171,7 @@ export const orderCardRMFragment = gql`
                   }
                 }
                 productProvider {
-                  ... on ProductProvider {
-                    id
-                    exporter {
-                      ... on Group {
-                        id
-                        name
-                      }
-                    }
-                  }
+                  ...productProviderRMFragment
                 }
               }
             }
@@ -279,15 +288,7 @@ export const shipmentCardRMFragment = gql`
               }
             }
             productProvider {
-              ... on ProductProvider {
-                id
-                exporter {
-                  ... on Group {
-                    id
-                    name
-                  }
-                }
-              }
+              ...productProviderRMFragment
             }
           }
         }
@@ -319,6 +320,7 @@ export const orderDetailQuery = gql`
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${taskCountFragment}
+  ${productProviderRMFragment}
 `;
 
 export const shipmentDetailQuery = gql`
@@ -336,10 +338,11 @@ export const shipmentDetailQuery = gql`
   ${timelineDateMinimalFragment}
   ${portFragment}
   ${taskCountFragment}
+  ${productProviderRMFragment}
 `;
 
-export const orderListQuery = gql`
-  query orderListQuery(
+export const orderFocusedListQuery = gql`
+  query orderFocusedListQuery(
     $page: Int!
     $perPage: Int!
     $filterBy: OrderFilterInput
@@ -370,6 +373,7 @@ export const orderListQuery = gql`
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${taskCountFragment}
+  ${productProviderRMFragment}
 `;
 
 export const shipmentListQuery = gql`
@@ -400,15 +404,7 @@ export const shipmentListQuery = gql`
                     }
                   }
                   productProvider {
-                    ... on ProductProvider {
-                      id
-                      exporter {
-                        ... on Group {
-                          id
-                          name
-                        }
-                      }
-                    }
+                    ...productProviderRMFragment
                   }
                 }
               }
@@ -430,4 +426,5 @@ export const shipmentListQuery = gql`
   ${userAvatarFragment}
   ${metricFragment}
   ${taskCountFragment}
+  ${productProviderRMFragment}
 `;
