@@ -9,7 +9,12 @@ import { FormField } from 'modules/form';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
 import { computeIcon, getFileExtension, getFileName } from 'components/Form/DocumentsInput/helpers';
-import { SelectInputFactory, TextAreaInputFactory, EnumSelectInputFactory } from 'components/Form';
+import {
+  SelectInputFactory,
+  TextAreaInputFactory,
+  EnumSelectInputFactory,
+  Label,
+} from 'components/Form';
 import RelateEntity from 'components/RelateEntity';
 import orderMessages from 'modules/order/messages';
 import shipmentMessages from 'modules/shipment/messages';
@@ -17,16 +22,19 @@ import { getParentInfo } from 'utils/task';
 import BaseCard from '../BaseCard';
 import {
   DocumentCardWrapperStyle,
-  DocumentBottomWrapperStyle,
   DocumentParentWrapperStyle,
+  DocumentTypeStyle,
   FileExtensionIconStyle,
   FileNameWrapperStyle,
   FileNameStyle,
-  DownloadButtonStyle,
+  StatusAndButtonsWrapperStyle,
+  MemoButtonStyle,
   FileStatusColoringWrapper,
+  DownloadButtonStyle,
   MemoWrapperStyle,
+  MemoTitleStyle,
   CloseButtonStyle,
-  MemoPanelStyle,
+  MemoInputWrapperStyle,
 } from './style';
 
 type Props = {|
@@ -150,7 +158,7 @@ const DocumentCard = ({
   onChange,
 }: Props) => {
   cardHeight = hideParentInfo ? '185px' : '210px';
-  const memoHeight = hideParentInfo ? '145px' : '170px';
+  const memoHeight = hideParentInfo ? '150px' : '175px';
   const { parentIcon, parentData, link } = getParentInfo(getByPathWithDefault({}, 'entity', file));
 
   const name = getByPathWithDefault('', 'name', file);
@@ -159,6 +167,7 @@ const DocumentCard = ({
   const fileName = getFileName(name);
   const fileIcon = computeIcon(fileExtension);
   const [showMemo, setShowMemo] = React.useState(false);
+
   return (
     <BaseCard
       actions={actions}
@@ -173,31 +182,35 @@ const DocumentCard = ({
             <RelateEntity link={navigable ? link : ''} entity={parentIcon} value={parentData} />
           </div>
         )}
-        <FormField
-          name={`${id}.type`}
-          setFieldValue={(field, value) => onChange && onChange('type', value)}
-          initValue={getByPathWithDefault('', 'type', file)}
-          saveOnChange
-        >
-          {({ ...inputHandlers }) => (
-            <SelectInputFactory
-              {...inputHandlers}
-              items={getFileTypesByEntity(
-                getByPathWithDefault('', 'entity.__typename', file),
-                intl
-              )}
-              editable={editable.type}
-              inputWidth={hideParentInfo ? '160px' : '185px'}
-              inputHeight="30px"
-              hideTooltip
-              inputAlign="left"
-              required
-            />
-          )}
-        </FormField>
+
+        <div className={DocumentTypeStyle}>
+          <FormField
+            name={`${id}.type`}
+            setFieldValue={(field, value) => onChange && onChange('type', value)}
+            initValue={getByPathWithDefault('', 'type', file)}
+            saveOnChange
+          >
+            {({ ...inputHandlers }) => (
+              <SelectInputFactory
+                {...inputHandlers}
+                items={getFileTypesByEntity(
+                  getByPathWithDefault('', 'entity.__typename', file),
+                  intl
+                )}
+                editable={editable.type}
+                inputWidth={hideParentInfo ? '165px' : '185px'}
+                inputHeight="30px"
+                hideTooltip
+                required
+              />
+            )}
+          </FormField>
+        </div>
+
         <div className={FileExtensionIconStyle(fileIcon.color)}>
           <Icon {...fileIcon} />
         </div>
+
         <Tooltip message={`${fileName}.${fileExtension}`}>
           <div className={FileNameWrapperStyle}>
             <div className={FileNameStyle}>{fileName}</div>
@@ -205,98 +218,96 @@ const DocumentCard = ({
           </div>
         </Tooltip>
 
-        <div className={DocumentBottomWrapperStyle(showMemo)}>
-          <div className={MemoPanelStyle(showMemo ? cardHeight : '30px')}>
-            {showMemo ? (
-              <>
-                <div
-                  className={CloseButtonStyle}
-                  onClick={() => setShowMemo(false)}
-                  role="presentation"
-                >
-                  <Icon icon="CLEAR" />
-                </div>
-                <FormField
-                  name={`${id}.memo`}
-                  setFieldValue={(field, value) => onChange && onChange('memo', value)}
-                  initValue={getByPathWithDefault('', 'memo', file)}
-                >
-                  {({ ...inputHandlers }) => (
-                    <TextAreaInputFactory
-                      {...inputHandlers}
-                      isNew
-                      editable={editable.memo}
-                      label={<FormattedMessage {...orderMessages.memo} />}
-                      inputWidth="185px"
-                      inputHeight={memoHeight}
-                    />
-                  )}
-                </FormField>
-              </>
-            ) : (
-              <button
-                className={MemoWrapperStyle(!!getByPathWithDefault('', 'memo', file))}
-                type="button"
-                onClick={() => setShowMemo(true)}
-              >
-                <Icon icon="MEMO" />
-              </button>
-            )}
-            {!showMemo && (
-              <>
-                <FormField
-                  name={`${id}.status`}
-                  setFieldValue={(field, value) => onChange && onChange('status', value)}
-                  initValue={getByPathWithDefault('', 'status', file)}
-                  saveOnChange
-                >
-                  {({ ...inputHandlers }) => (
-                    <span
-                      className={FileStatusColoringWrapper(
-                        getByPathWithDefault('', 'status', file),
-                        editable.status
-                      )}
-                    >
-                      <EnumSelectInputFactory
-                        {...inputHandlers}
-                        enumType="FileStatus"
-                        editable={editable.status}
-                        inputWidth="115px"
-                        inputHeight="30px"
-                        hideTooltip
-                        inputAlign="center"
-                        dropDirection="up"
-                        required
-                      />
-                    </span>
-                  )}
-                </FormField>
-                {downloadable ? (
-                  <button
-                    type="button"
-                    className={DownloadButtonStyle(false)}
-                    onClick={() => {
-                      window.open(getByPathWithDefault('', 'path', file), '_blank');
-                    }}
-                  >
-                    <Icon icon="DOWNLOAD" />
-                  </button>
-                ) : (
-                  <Tooltip
-                    message={
-                      <FormattedMessage
-                        id="components.documentInput.cantDownload"
-                        defaultMessage="You do not have the rights to download this document"
-                      />
-                    }
-                  >
-                    <div className={DownloadButtonStyle(true)}>
-                      <Icon icon="DOWNLOAD" />
-                    </div>
-                  </Tooltip>
+        <div className={StatusAndButtonsWrapperStyle}>
+          <button
+            className={MemoButtonStyle(!!getByPathWithDefault('', 'memo', file))}
+            onClick={() => setShowMemo(true)}
+            type="button"
+          >
+            <Icon icon="MEMO" />
+          </button>
+
+          <FormField
+            name={`${id}.status`}
+            setFieldValue={(field, value) => onChange && onChange('status', value)}
+            initValue={getByPathWithDefault('', 'status', file)}
+            saveOnChange
+          >
+            {({ ...inputHandlers }) => (
+              <span
+                className={FileStatusColoringWrapper(
+                  getByPathWithDefault('', 'status', file),
+                  editable.status
                 )}
-              </>
+              >
+                <EnumSelectInputFactory
+                  {...inputHandlers}
+                  enumType="FileStatus"
+                  editable={editable.status}
+                  inputWidth="105px"
+                  inputHeight="30px"
+                  hideTooltip
+                  inputAlign="center"
+                  dropDirection="up"
+                  required
+                />
+              </span>
             )}
+          </FormField>
+
+          {downloadable ? (
+            <button
+              className={DownloadButtonStyle(false)}
+              onClick={() => {
+                window.open(getByPathWithDefault('', 'path', file), '_blank');
+              }}
+              type="button"
+            >
+              <Icon icon="DOWNLOAD" />
+            </button>
+          ) : (
+            <Tooltip
+              message={
+                <FormattedMessage
+                  id="components.documentInput.cantDownload"
+                  defaultMessage="You do not have the rights to download this document"
+                />
+              }
+            >
+              <div className={DownloadButtonStyle(true)}>
+                <Icon icon="DOWNLOAD" />
+              </div>
+            </Tooltip>
+          )}
+        </div>
+
+        <div className={MemoWrapperStyle(showMemo ? cardHeight : '0px')}>
+          <div className={MemoTitleStyle}>
+            <Label height="30px">
+              <FormattedMessage {...orderMessages.memo} />
+            </Label>
+
+            <button className={CloseButtonStyle} onClick={() => setShowMemo(false)} type="button">
+              <Icon icon="CHEVRON_DOWN" />
+            </button>
+          </div>
+
+          <div className={MemoInputWrapperStyle}>
+            <FormField
+              name={`${id}.memo`}
+              setFieldValue={(field, value) => onChange && onChange('memo', value)}
+              initValue={getByPathWithDefault('', 'memo', file)}
+            >
+              {({ ...inputHandlers }) => (
+                <TextAreaInputFactory
+                  {...inputHandlers}
+                  isNew
+                  editable={editable.memo}
+                  inputWidth="185px"
+                  inputHeight={memoHeight}
+                />
+              )}
+            </FormField>
           </div>
         </div>
       </div>

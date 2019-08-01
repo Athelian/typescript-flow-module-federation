@@ -9,75 +9,25 @@ export const DocumentCardWrapperStyle = (cardHeight: string): string => css`
   grid-gap: 5px;
   width: 195px;
   height: ${cardHeight};
-  padding: 5px 0 5px 0;
-`;
-
-export const DocumentBottomWrapperStyle = (showMemo: boolean) => css`
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  right: 0;
-  background-color: ${colors.WHITE};
-  padding: ${showMemo ? '0px 0px 0px 5px;' : '10px'};
-`;
-
-export const MemoPanelStyle = (height: string) => css`
-  display: flex;
-  position: relative;
-  background-color: ${colors.WHITE};
-  ${borderRadiuses.MAIN};
-  height: ${height};
-  width: 100%;
-  ${transitions.EXPAND};
-`;
-
-export const CloseButtonStyle: string = css`
-  ${presets.BUTTON};
-  ${fontSizes.MAIN};
-  color: ${colors.GRAY_LIGHT};
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 30px;
-  height: 30px;
-  z-index: 3;
-  background: #fff;
-  &:hover,
-  :focus {
-    color: ${colors.RED};
-  }
+  padding: 10px 0;
 `;
 
 export const DocumentParentWrapperStyle: string = css`
-  display: grid;
-  grid-template-columns: 20px 140px;
-  padding: 0 10px;
-  align-items: center;
-`;
-
-export const DocumentStatusWrapperStyle: string = css`
-  height: 65px;
-  width: 195px;
+  display: flex;
   padding: 0 10px;
 `;
 
-export const DocumentStatusPlaceholderStyle: string = css`
-  ${fontSizes.MAIN};
-  font-weight: bold;
-  color: ${colors.GRAY_LIGHT};
-  ${presets.ELLIPSIS};
+export const DocumentTypeStyle: string = css`
+  padding: 0 5px;
 `;
 
 export const FileExtensionIconStyle = (color: string): string => css`
-  font-size: 40px;
-  text-align: center;
-  color: ${colors[color]};
-`;
-
-export const BottomWrapperStyle: string = css`
   display: flex;
-  justify-content: space-between;
-  width: 130px;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  font-size: 36px;
+  color: ${colors[color]};
 `;
 
 export const FileNameWrapperStyle: string = css`
@@ -88,11 +38,42 @@ export const FileNameWrapperStyle: string = css`
   justify-content: center;
   align-items: center;
   flex: 1;
-  padding: 0 0 0 5px;
+  padding: 0 10px;
+  height: 30px;
+  line-height: 30px;
 `;
 
 export const FileNameStyle: string = css`
   ${presets.ELLIPSIS};
+`;
+
+export const StatusAndButtonsWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 5px;
+  justify-content: center;
+`;
+
+export const MemoButtonStyle = (hasMemo: boolean): string => css`
+  ${presets.BUTTON};
+  width: 30px;
+  height: 30px;
+  ${fontSizes.MAIN};
+  ${borderRadiuses.CIRCLE};
+  ${hasMemo
+    ? `
+    color: ${colors.BLUE};
+    &:hover, :focus {
+      color: ${colors.BLUE_DARK};
+      background-color: ${colors.GRAY_SUPER_LIGHT};
+    }
+  `
+    : `
+    color: ${colors.GRAY_LIGHT};
+    &:hover, :focus {
+      color: ${colors.GRAY};
+      background-color: ${colors.GRAY_SUPER_LIGHT};
+    }
+  `};
 `;
 
 const getFileStatusColor = (status: string): { textColor: string, backgroundColor: string } => {
@@ -138,16 +119,13 @@ export const FileStatusColoringWrapper = (status: string, editable: boolean) => 
   `;
 };
 
-export const DownloadButtonStyle = (downloadDisabled: boolean): string => css`
+export const DownloadButtonStyle = (isDisabled: boolean): string => css`
   ${presets.BUTTON};
-  ${borderRadiuses.CIRCLE};
-  background-color: ${colors.WHITE};
-  border: 2px solid transparent;
   width: 30px;
   height: 30px;
-  line-height: 14px;
   ${fontSizes.MAIN};
-  ${downloadDisabled
+  ${borderRadiuses.CIRCLE};
+  ${isDisabled
     ? `
     color: ${colors.GRAY_SUPER_LIGHT};
     cursor: default;
@@ -155,25 +133,44 @@ export const DownloadButtonStyle = (downloadDisabled: boolean): string => css`
     : `
     color: ${colors.GRAY_LIGHT};
     &:hover {
-      background-color: ${colors.GRAY_SUPER_LIGHT};
       color: ${colors.TEAL};
-    }
-    &:focus {
-      border-color: ${colors.TEAL};
+      background-color: ${colors.GRAY_SUPER_LIGHT};
     }
   `};
 `;
 
-export const MemoWrapperStyle = (hasMemo: boolean): string => css`
+export const MemoWrapperStyle = (height: string) => css`
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: ${colors.WHITE};
+  ${borderRadiuses.MAIN};
+  height: ${height};
+  width: 195px;
+  ${transitions.EXPAND};
+  overflow: hidden;
+  z-index: 3;
+  padding: 0 5px;
+`;
+
+export const MemoTitleStyle: string = css`
+  display: flex;
+`;
+
+export const CloseButtonStyle: string = css`
   ${presets.BUTTON};
+  ${fontSizes.MAIN};
+  color: ${colors.GRAY_LIGHT};
   width: 30px;
   height: 30px;
-  line-height: 14px;
-  ${fontSizes.MAIN};
-  color: ${hasMemo ? colors.BLUE : colors.GRAY_LIGHT};
-  &:hover {
-    ${borderRadiuses.CIRCLE};
-    background-color: ${colors.GRAY_SUPER_LIGHT};
-    cursor: pointer;
+  &:hover,
+  :focus {
+    color: ${colors.GRAY};
   }
+`;
+
+export const MemoInputWrapperStyle: string = css`
+  padding: 0 0 5px 0;
 `;
