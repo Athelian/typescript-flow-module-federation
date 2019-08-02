@@ -66,6 +66,8 @@ export const SlideViewStyle = ({
   width,
   minWidth,
 }: SlideViewStyleProps): string => css`
+  display: flex;
+  flex-direction: column;
   position: absolute;
   top: 0;
   right: 0;

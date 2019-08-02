@@ -148,7 +148,7 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
             <PartnerPermissionsWrapper data={warehouse}>
               {permissions => (
                 <RelateEntity
-                  blackout={isNullOrUndefined(warehouse) || isForbidden(warehouse)}
+                  blackout={isForbidden(warehouse)}
                   link={
                     permissions.includes(WAREHOUSE_FORM)
                       ? `/warehouse/${encodeId(warehouse.id)}`

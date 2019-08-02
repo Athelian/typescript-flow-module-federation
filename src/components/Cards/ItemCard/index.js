@@ -139,11 +139,11 @@ const ItemCard = ({
   const tags = getByPathWithDefault([], 'tags', orderItem);
   const todo = getByPathWithDefault(null, 'todo', orderItem);
 
-  const orderId = getByPathWithDefault('', 'id', orderItem);
-  const poNo = getByPathWithDefault('', 'poNo', orderItem);
-  const orderCurrency = getByPathWithDefault('', 'currency', orderItem);
-  const importer = getByPathWithDefault(null, 'importer', orderItem);
-  const exporter = getByPathWithDefault(null, 'exporter', orderItem);
+  const orderId = getByPathWithDefault('', 'id', order);
+  const poNo = getByPathWithDefault('', 'poNo', order);
+  const orderCurrency = getByPathWithDefault('', 'currency', order);
+  const importer = getByPathWithDefault(null, 'importer', order);
+  const exporter = getByPathWithDefault(null, 'exporter', order);
 
   const validation = validator({
     no: `orderItems.${index}.no`,

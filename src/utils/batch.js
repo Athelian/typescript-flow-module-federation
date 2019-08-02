@@ -22,6 +22,7 @@ import {
   defaultWeightMetric,
   convertVolume,
   convertWeight,
+  convertDistance,
 } from './metric';
 import { getByPathWithDefault } from './fp';
 
@@ -76,16 +77,17 @@ export const calculateVolume = (volume: MetricValue, size: Size): Object => {
   ) {
     return volume;
   }
-  const heightValue =
-    size.height.metric === 'cm' ? size.height.value : times(size.height.value, 100);
-  const widthValue = size.width.metric === 'cm' ? size.width.value : times(size.width.value, 100);
-  const lengthValue =
-    size.length.metric === 'cm' ? size.length.value : times(size.length.value, 100);
-  const volumeValue = times(heightValue, widthValue, lengthValue);
+
+  const metricToConvert = volume.metric === 'cm³' ? 'cm' : 'm';
+  const convertedHeight = convertDistance(size.height.value, size.height.metric, metricToConvert);
+  const convertedWidth = convertDistance(size.width.value, size.width.metric, metricToConvert);
+  const convertedDepth = convertDistance(size.length.value, size.length.metric, metricToConvert);
+
+  const calculatedVolume = times(convertedHeight, convertedWidth, convertedDepth);
 
   return {
     metric: volume.metric,
-    value: volume.metric === 'cm³' ? volumeValue : divide(volumeValue, 1000000),
+    value: calculatedVolume,
   };
 };
 
@@ -131,11 +133,7 @@ export const generateCloneBatch = (
 export const totalVolume = (total: number, packageQuantity: number, volume: MetricValue) =>
   !volume || !packageQuantity
     ? total
-    : total +
-      times(
-        packageQuantity,
-        volume.metric !== 'cm³' ? volume.value : divide(volume.value, 1000000)
-      );
+    : total + times(packageQuantity, convertVolume(volume.value, volume.metric, 'm³'));
 
 export const findTotalAutoFillBatches = ({
   batches,
