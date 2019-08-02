@@ -31,10 +31,9 @@ export const DocumentsSectionBodyStyle: string = css`
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   background-color: ${colors.GRAY_SUPER_LIGHT};
-  max-height: 615px;
-  min-height: 225px;
+  height: 500px;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: overlay;
   ${scrollbars.SMALL};
   padding: 30px 20px;
 `;
