@@ -41,7 +41,7 @@ function DocumentsSection({ entityId, isLoading }: Props) {
     <Subscribe to={[ShipmentFilesContainer]}>
       {({ state: { files }, initDetailValues, setFieldValue }) => (
         <QueryPlaceHolder
-          PlaceHolder={ListCardPlaceHolder}
+          PlaceHolder={() => <ListCardPlaceHolder height={540} />}
           query={shipmentFormFilesQuery}
           entityId={entityId}
           isLoading={isLoading}

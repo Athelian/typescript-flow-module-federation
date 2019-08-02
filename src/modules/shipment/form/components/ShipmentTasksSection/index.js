@@ -17,7 +17,7 @@ type Props = {|
 export default function ShipmentTasksSection({ isLoading, entityId, groupIds, initValues }: Props) {
   return (
     <QueryPlaceHolder
-      PlaceHolder={ListCardPlaceHolder}
+      PlaceHolder={() => <ListCardPlaceHolder height={613} />}
       query={shipmentFormTasksQuery}
       entityId={entityId}
       isLoading={isLoading}

@@ -82,7 +82,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
   const { hasPermission } = usePermission(isOwner);
   const { updatedAt, updatedBy, archived } = order;
   return (
-    <MainSectionPlaceholder height={866} isLoading={isLoading}>
+    <MainSectionPlaceholder height={961} isLoading={isLoading}>
       <SectionHeader
         icon="ORDER"
         title={<FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />}
