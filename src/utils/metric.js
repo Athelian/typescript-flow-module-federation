@@ -1,21 +1,29 @@
 // @flow
 import { times, divide } from 'number-precision';
 
-export const distanceMetrics = ['cm', 'm'];
+export const distanceMetrics = ['mm', 'cm', 'm'];
 export const areaMetrics = ['cm²', 'm²'];
 export const volumeMetrics = ['cm³', 'm³'];
 export const weightMetrics = ['g', 'kg', 'ton'];
 export const durationMetrics = ['days', 'weeks', 'months'];
 
-export const defaultDistanceMetric = distanceMetrics[0]; // cm
+export const defaultDistanceMetric = distanceMetrics[1]; // cm
 export const defaultAreaMetric = areaMetrics[1]; // m²
 export const defaultVolumeMetric = volumeMetrics[1]; // m³
 export const defaultWeightMetric = weightMetrics[1]; // kg
 export const defaultDurationMetric = durationMetrics[0]; // days
 
-export const convertDistance = (value: number, metric: 'cm' | 'm', newMetric: 'cm' | 'm') => {
+export const convertDistance = (
+  value: number,
+  metric: 'mm' | 'cm' | 'm',
+  newMetric: 'mm' | 'cm' | 'm'
+) => {
   if (metric === 'm' && newMetric === 'cm') return times(value, 100);
+  if (metric === 'm' && newMetric === 'mm') return times(value, 1000);
   if (metric === 'cm' && newMetric === 'm') return divide(value, 100);
+  if (metric === 'cm' && newMetric === 'mm') return times(value, 10);
+  if (metric === 'mm' && newMetric === 'cm') return divide(value, 10);
+  if (metric === 'mm' && newMetric === 'm') return divide(value, 1000);
   return value;
 };
 

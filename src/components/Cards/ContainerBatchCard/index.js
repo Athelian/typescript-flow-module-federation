@@ -158,7 +158,7 @@ const ContainerBatchCard = ({
       metric: defaultVolumeMetric,
       value: 0,
     },
-    'desiredAt',
+    'packageVolume',
     batch
   );
 

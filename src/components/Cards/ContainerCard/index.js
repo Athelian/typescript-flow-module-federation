@@ -60,7 +60,7 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
       metric: defaultVolumeMetric,
       value: 0,
     },
-    'desiredAt',
+    'totalVolume',
     container
   );
   const no = getByPathWithDefault('', 'no', container);
@@ -95,6 +95,7 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
     'representativeBatch.orderItem.productProvider.product',
     container
   );
+
   return (
     <BaseCard icon="CONTAINER" color="CONTAINER" isArchived={archived} {...rest}>
       <div className={CardWrapperStyle} onClick={onClick} role="presentation">
@@ -148,7 +149,7 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
             <PartnerPermissionsWrapper data={warehouse}>
               {permissions => (
                 <RelateEntity
-                  blackout={isNullOrUndefined(warehouse) || isForbidden(warehouse)}
+                  blackout={isForbidden(warehouse)}
                   link={
                     permissions.includes(WAREHOUSE_FORM)
                       ? `/warehouse/${encodeId(warehouse.id)}`
