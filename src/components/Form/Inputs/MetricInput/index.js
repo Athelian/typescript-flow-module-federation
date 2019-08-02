@@ -77,6 +77,21 @@ export default class MetricInput extends React.Component<Props> {
     }
   };
 
+  handleBlurMetric = (newMetric: string) => {
+    const {
+      onBlur,
+      value: { value, metric },
+      convert,
+    } = this.props;
+
+    if (onBlur) {
+      const newValue = {
+        target: { value: { value: convert(value, metric, newMetric), metric: newMetric } },
+      };
+      onBlur(newValue);
+    }
+  };
+
   render() {
     const {
       value: { value, metric },
@@ -112,7 +127,8 @@ export default class MetricInput extends React.Component<Props> {
         <SelectInput
           {...rest}
           value={metric}
-          onChange={newMetric => this.handleChangeMetric(newMetric)}
+          onChange={this.handleChangeMetric}
+          onBlur={this.handleBlurMetric}
           items={metrics}
           itemToValue={v => v || null}
           itemToString={v => v || ''}
