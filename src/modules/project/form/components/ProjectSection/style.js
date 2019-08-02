@@ -40,10 +40,19 @@ export const ProjectInfoWrapperStyle: string = css`
 `;
 
 export const DescriptionTagsWrapperStyle: string = css`
-  display: grid;
-  grid-template-columns: 420px 1fr;
-  grid-gap: 20px;
+  display: flex;
   width: 100%;
+`;
+
+export const DescriptionWrapperStyle: string = css`
+  width: 420px;
+`;
+
+export const TagsWrapperStyle: string = css`
+  ${layout.GRID_VERTICAL};
+  grid-gap: 5px;
+  padding: 0 0 0 20px;
+  flex: 1;
 `;
 
 export const MilestonesTimelineWrapperStyle: string = css`
