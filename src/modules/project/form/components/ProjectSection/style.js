@@ -52,7 +52,7 @@ export const TagsWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
   padding: 0 0 0 20px;
-  flex: 1;
+  grid-template-columns: calc(100vw - 1080px);
 `;
 
 export const MilestonesTimelineWrapperStyle: string = css`

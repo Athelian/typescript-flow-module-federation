@@ -28,7 +28,6 @@ export const SelectionWrapperStyle: string = css`
   align-items: center;
   width: 100%;
   grid-gap: 10px;
-  padding: 0 0 0 5px;
 `;
 
 export const RemoveStyle: string = css`
@@ -47,6 +46,7 @@ export const InputStyle = (width: string): string => css`
   white-space: nowrap;
   overflow-x: auto;
   ${scrollbars.SMALL};
+  padding: 0 0 0 5px;
   & > div {
     margin-right: 5px;
   }
