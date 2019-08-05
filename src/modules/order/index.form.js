@@ -496,8 +496,8 @@ class OrderFormModule extends React.PureComponent<Props> {
                 {this.isNew() || !orderId ? (
                   <UserConsumer>
                     {({ user }) => {
-                      const { group } = user;
-                      const { types = [] } = group;
+                      const { organization } = user;
+                      const { types = [] } = organization;
                       const isImporter = types.includes('Importer');
                       return (
                         <>
@@ -535,7 +535,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                     fieldValues: [],
                                   },
                                   tags: [],
-                                  importer: isImporter ? group : {},
+                                  importer: isImporter ? organization : {},
                                   todo: {
                                     tasks: [],
                                   },

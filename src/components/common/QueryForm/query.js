@@ -2,9 +2,9 @@
 import gql from 'graphql-tag';
 
 export const partnerPermissionQuery = gql`
-  query partnerPermissionQuery($partnerId: ID!) {
+  query partnerPermissionQuery($organizationId: ID!) {
     viewer {
-      permissionsFromPartner(partnerId: $partnerId)
+      permissionsForOrganization(organizationId: $organizationId)
     }
   }
 `;

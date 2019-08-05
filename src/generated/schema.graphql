@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Jul 26 2019 11:09:02 GMT+0900 (Japan Standard Time)
+# timestamp: Mon Aug 05 2019 15:30:14 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26655,7 +26655,7 @@ type Batch implements Model & Owned & Package & Tagged & Customizable & Memoriza
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   packageName: String
   packageGrossWeight: MetricValue
   packageVolume: MetricValue
@@ -26747,7 +26747,7 @@ type BatchQuantityRevision implements Model & Owned & Sortable & Memorizable {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   sort: Int!
   memo: String
 }
@@ -26852,7 +26852,7 @@ type Comment implements Model & Owned {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
 }
 
 input CommentCreateInput {
@@ -26906,7 +26906,7 @@ type Container implements Model & Owned & Tagged & Sortable & Memorizable {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   tags: [TagPayload!]!
   sort: Int!
   memo: String
@@ -26990,7 +26990,7 @@ type ContainerGroup implements Model & Owned & Sortable {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   sort: Int!
 }
 
@@ -28409,7 +28409,7 @@ input EntityInput {
   taskId: ID
 }
 
-union EntityPayload = Product | ProductProvider | Order | OrderItem | Batch | BatchQuantityRevision | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Group | Partnership | Role | File | Task | TaskTemplate | Project | Milestone | BadRequest | Forbidden | NotFound
+union EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | BatchQuantityRevision | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | Milestone | BadRequest | Forbidden | NotFound
 
 type EntityValue {
   entity: EntityPayload
@@ -28436,7 +28436,7 @@ type Event implements Model & Owned {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
 }
 
 type Export {
@@ -28458,7 +28458,7 @@ type ExportTemplate implements Model {
   builder: String!
   fetcher: String!
   normalizers: [String!]!
-  ownedBy: GroupPayload
+  ownedBy: OrganizationPayload
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -28529,7 +28529,7 @@ type FieldDefinition implements Model & Owned & Sortable {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   sort: Int!
 }
 
@@ -28580,7 +28580,7 @@ type File implements Model & Owned & Memorizable {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   memo: String
 }
 
@@ -28686,13 +28686,15 @@ type Forbidden {
   reason: String
 }
 
-type Group implements Model {
-  types: [GroupType!]!
+interface Group {
+  types: [OrganizationType!]!
   name: String!
   name2: String
   tel: String
-  address: String
-  zipCode: String
+  street: String
+  locality: String
+  region: String
+  postalCode: String
   country: String
   avatar: FilePayload
   disabled: Boolean!
@@ -28709,38 +28711,6 @@ type Group implements Model {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-}
-
-union GroupPayload = Group | BadRequest | Forbidden | NotFound
-
-enum GroupType {
-  """Importer"""
-  Importer
-
-  """Exporter"""
-  Exporter
-
-  """Forwarder"""
-  Forwarder
-
-  """Supplier"""
-  Supplier
-
-  """Warehouser"""
-  Warehouser
-}
-
-input GroupUpdateInput {
-  name: String
-  name2: String
-  types: [GroupType!]
-  disabled: Boolean
-  tel: String
-  address: String
-  zipCode: String
-  country: Country
-  avatar: FileInput
-  dummy: Boolean
 }
 
 type Import {
@@ -28811,7 +28781,7 @@ type Integration implements Model & Owned {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
 }
 
 type IntegrationConfiguration implements Model & Owned {
@@ -28827,7 +28797,7 @@ type IntegrationConfiguration implements Model & Owned {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
 }
 
 input IntegrationConfigurationCreateInput {
@@ -28842,7 +28812,7 @@ input IntegrationConfigurationFilterInput {
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
-  groupId: ID
+  organizationId: ID
   integrationId: ID
 }
 
@@ -28874,7 +28844,7 @@ input IntegrationFilterInput {
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
-  groupId: ID
+  organizationId: ID
 }
 
 type IntegrationLink implements Model & Owned {
@@ -28894,7 +28864,7 @@ type IntegrationLink implements Model & Owned {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
 }
 
 input IntegrationLinkCreateInput {
@@ -29585,7 +29555,7 @@ type Mask implements Model & Owned & Memorizable {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   memo: String
 }
 
@@ -29607,7 +29577,7 @@ type MaskEdit implements Model & Owned & Memorizable {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   memo: String
 }
 
@@ -29743,7 +29713,7 @@ type Milestone implements Model & Owned & Sortable {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   sort: Int!
 }
 
@@ -29827,7 +29797,6 @@ type Mutation {
   userUpdate(id: ID!, input: UserUpdateInput!): UserPayload!
   userAddRole(id: ID!, input: UserRoleInput!): UserRolesPayload!
   userRemoveRole(id: ID!, input: UserRoleInput!): UserRolesPayload!
-  groupUpdate(id: ID!, input: GroupUpdateInput!): GroupPayload!
   productCreate(input: ProductCreateInput!): ProductPayload!
   productUpdate(id: ID!, input: ProductUpdateInput!): ProductPayload!
   productUpdateMany(products: [ProductUpdateWrapperInput!]!): [ProductPayload]!
@@ -30103,8 +30072,8 @@ enum NotificationType {
 
 type Order implements Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable {
   archived: Boolean!
-  importer: GroupPayload!
-  exporter: GroupPayload!
+  importer: OrganizationPayload!
+  exporter: OrganizationPayload!
   poNo: String!
   currency: Currency!
   issuedAt: DateTime
@@ -30132,7 +30101,7 @@ type Order implements Model & Owned & Tagged & Supervised & Documented & Customi
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   tags: [TagPayload!]!
   inCharges: [UserPayload!]!
   files: [FilePayload!]!
@@ -30228,7 +30197,7 @@ type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Custo
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   sort: Int!
   tags: [TagPayload!]!
   files: [FilePayload!]!
@@ -30432,8 +30401,54 @@ input OrderUpdateWrapperInput {
   input: OrderUpdateInput!
 }
 
+type Organization implements Group & Model {
+  types: [OrganizationType!]!
+  name: String!
+  name2: String
+  tel: String
+  street: String
+  locality: String
+  region: String
+  postalCode: String
+  country: String
+  avatar: FilePayload
+  disabled: Boolean!
+  dummy: Boolean!
+  users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPagination!
+
+  """Resolving the current partnership of this group from user's group"""
+  partner: PartnerPayload
+  partners(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnerPayloadPagination!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+}
+
+union OrganizationPayload = Organization | BadRequest | Forbidden | NotFound
+
+enum OrganizationType {
+  """Importer"""
+  Importer
+
+  """Exporter"""
+  Exporter
+
+  """Forwarder"""
+  Forwarder
+
+  """Supplier"""
+  Supplier
+
+  """Warehouser"""
+  Warehouser
+}
+
 interface Owned {
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
 }
 
 interface Package {
@@ -30451,8 +30466,9 @@ type Parameter {
 }
 
 type Partner implements Model {
-  group: GroupPayload!
-  types: [GroupType!]!
+  group: OrganizationPayload! @deprecated(reason: "Use `organization` instead")
+  organization: OrganizationPayload!
+  types: [OrganizationType!]!
   name: String
   code: String
   confirmed: Boolean!
@@ -30472,7 +30488,7 @@ input PartnerFilterInput {
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
-  types: [GroupType!]
+  types: [OrganizationType!]
   confirmed: Boolean
 }
 
@@ -30489,14 +30505,16 @@ type PartnerPayloadPagination {
 
 type Partnership implements Model {
   confirmed: Boolean!
-  leftGroup: GroupPayload!
-  leftTypes: [GroupType!]!
+  leftGroup: OrganizationPayload! @deprecated(reason: "Use `leftOrganization` instead")
+  leftOrganization: OrganizationPayload!
+  leftTypes: [OrganizationType!]!
   leftName: String
   leftCode: String
   leftConfirmedAt: DateTime
   leftRoles: [RolePayload!]!
-  rightGroup: GroupPayload!
-  rightTypes: [GroupType!]!
+  rightGroup: OrganizationPayload! @deprecated(reason: "Use `rightOrganization` instead")
+  rightOrganization: OrganizationPayload!
+  rightTypes: [OrganizationType!]!
   rightName: String
   rightCode: String
   rightConfirmedAt: DateTime
@@ -30558,7 +30576,7 @@ input PriceRangeInput {
 
 type Product implements Model & Owned & Tagged & Documented & Memorizable & Customizable {
   archived: Boolean!
-  importer: GroupPayload!
+  importer: OrganizationPayload!
   name: String!
   serial: String!
   hsCode: String
@@ -30579,7 +30597,7 @@ type Product implements Model & Owned & Tagged & Documented & Memorizable & Cust
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   tags: [TagPayload!]!
   files: [FilePayload!]!
   memo: String
@@ -30634,8 +30652,8 @@ type ProductProvider implements Model & Owned & Sortable & Documented & Customiz
   referenced: Boolean!
   name: String!
   product: ProductPayload!
-  exporter: GroupPayload!
-  supplier: GroupPayload
+  exporter: OrganizationPayload!
+  supplier: OrganizationPayload
   unitType: String
   unitVolume: MetricValue
   autoCalculateUnitVolume: Boolean!
@@ -30663,7 +30681,7 @@ type ProductProvider implements Model & Owned & Sortable & Documented & Customiz
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   sort: Int!
   files: [FilePayload!]!
   customFields: CustomFields!
@@ -30722,7 +30740,7 @@ type ProductProviderPackage implements Model & Owned & Sortable {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   sort: Int!
 }
 
@@ -30835,7 +30853,7 @@ type Project implements Model & Owned & Tagged {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   tags: [TagPayload!]!
 }
 
@@ -31027,7 +31045,7 @@ type Role implements Model & Memorizable {
   permissions: [String!]!
   flattenPermissions: [String!]!
   partnership: PartnershipPayload
-  ownedBy: GroupPayload
+  ownedBy: OrganizationPayload
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -86596,8 +86614,8 @@ enum Seaport {
 
 type Shipment implements Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable {
   archived: Boolean!
-  importer: GroupPayload!
-  exporter: GroupPayload
+  importer: OrganizationPayload!
+  exporter: OrganizationPayload
   no: String!
   blNo: String
   blDate: DateTime
@@ -86613,7 +86631,7 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   cargoReady: TimelineDatePayload!
   voyages: [VoyagePayload!]!
   containerGroups: [ContainerGroupPayload!]!
-  forwarders: [GroupPayload!]!
+  forwarders: [OrganizationPayload!]!
   totalVolume: MetricValue!
   totalPackageQuantity: Float!
   orderCount: Int!
@@ -86634,7 +86652,7 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   tags: [TagPayload!]!
   inCharges: [UserPayload!]!
   files: [FilePayload!]!
@@ -86893,7 +86911,7 @@ type Tag implements Model & Owned {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
 }
 
 input TagCreateInput {
@@ -87002,7 +87020,7 @@ type Task implements Model & Owned & Sortable & Memorizable & Tagged {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   sort: Int!
   memo: String
   tags: [TagPayload!]!
@@ -87120,7 +87138,7 @@ type TaskTemplate implements Model & Owned {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
 }
 
 input TaskTemplateCreateInput {
@@ -87292,7 +87310,7 @@ type TimelineDate implements Model & Owned & Memorizable {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   memo: String
 }
 
@@ -87317,7 +87335,7 @@ type TimelineDateRevision implements Model & Owned & Sortable & Memorizable {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   sort: Int!
   memo: String
 }
@@ -87409,7 +87427,8 @@ scalar Upload
 
 type User implements Model & Tagged & Memorizable {
   email: String!
-  group: GroupPayload
+  group: OrganizationPayload @deprecated(reason: "Use `organization` instead")
+  organization: OrganizationPayload
   superAdmin: Boolean!
   role: String! @deprecated(reason: "Shouldn't be used anymore")
   roles: [RolePayload!]!
@@ -87440,6 +87459,8 @@ input UserFilterInput {
   role: String
   groupId: ID
   groupIds: [ID!]
+  organizationId: ID
+  organizationIds: [ID!]
 }
 
 union UserPayload = User | BadRequest | Forbidden | NotFound
@@ -87484,7 +87505,7 @@ input UserUpdateInput {
   language: Language
   timezone: String
   avatar: FileInput
-  groupId: ID
+  organizationId: ID
   memo: String
   tagIds: [ID!]
 }
@@ -87505,7 +87526,7 @@ type Values {
 type Viewer {
   user: UserPayload!
   permissions: [String!]!
-  permissionsFromPartner(partnerId: ID!): [String!]!
+  permissionsForOrganization(organizationId: ID!): [String!]!
   notifications(page: Int! = 1, perPage: Int! = 10): NotificationPayloadPagination!
   notificationUnread: Int!
   notificationUnseen: Int!
@@ -87540,7 +87561,7 @@ type Voyage implements Model & Owned & Sortable {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   sort: Int!
 }
 
@@ -87566,7 +87587,8 @@ type Warehouse implements Model & Owned & Supervised & Customizable {
   region: String
   postalCode: String
   country: Country
-  groups: [GroupPayload!]!
+  groups: [OrganizationPayload!]! @deprecated(reason: "Use `organizations` instead")
+  organizations: [OrganizationPayload!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -87574,7 +87596,7 @@ type Warehouse implements Model & Owned & Supervised & Customizable {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
-  ownedBy: GroupPayload!
+  ownedBy: OrganizationPayload!
   inCharges: [UserPayload!]!
   customFields: CustomFields!
 }
@@ -87591,6 +87613,7 @@ input WarehouseCreateInput {
   customFields: CustomFieldsInput
   inChargeIds: [ID!]
   groupIds: [ID!]
+  organizationIds: [ID!]
 }
 
 input WarehouseFilterInput {
@@ -87630,6 +87653,7 @@ input WarehouseUpdateInput {
   customFields: CustomFieldsInput
   inChargeIds: [ID!]
   groupIds: [ID!]
+  organizationIds: [ID!]
 }
 
 input WarehouseUpdateWrapperInput {

@@ -84,7 +84,7 @@ const getInitFilter = {
   perPage: 10,
 };
 
-const partnerPath = 'viewer.user.group.partners';
+const partnerPath = 'viewer.user.organization.partners';
 
 const SelectExporter = ({
   cacheKey,
@@ -113,7 +113,7 @@ const SelectExporter = ({
           return error.message;
         }
         const items = getByPathWithDefault([], `${partnerPath}.nodes`, data).map(item => ({
-          ...item.group,
+          ...item.organization,
           code: item.code,
         }));
         const nextPage = getByPathWithDefault(1, `${partnerPath}.page`, data) + 1;

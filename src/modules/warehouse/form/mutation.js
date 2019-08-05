@@ -2,15 +2,15 @@
 import gql from 'graphql-tag';
 import { badRequestFragment } from 'graphql';
 
-export const prepareInput = ({ inCharges, groups, ...rest }: Object) => ({
+export const prepareInput = ({ inCharges, organizations, ...rest }: Object) => ({
   ...(Array.isArray(inCharges)
     ? {
         inChargeIds: inCharges.map(({ id }) => id),
       }
     : {}),
-  ...(Array.isArray(groups)
+  ...(Array.isArray(organizations)
     ? {
-        groupIds: groups.map(({ id }) => id),
+        organizationIds: organizations.map(({ id }) => id),
       }
     : {}),
   ...rest,

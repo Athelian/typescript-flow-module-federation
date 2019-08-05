@@ -94,7 +94,7 @@ export const cloneOrderItemMutation = gql`
               }
             }
             exporter {
-              ... on Group {
+              ... on Organization {
                 id
                 name
               }

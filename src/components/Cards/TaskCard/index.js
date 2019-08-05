@@ -73,9 +73,7 @@ type OptionalProps = {
   isInTemplate: boolean,
 };
 
-type Props = OptionalProps & {
-  groupIds: Array<string>,
-};
+type Props = OptionalProps;
 
 const defaultEditable = {
   name: false,
@@ -126,7 +124,6 @@ const TaskCard = ({
   navigable: originalNavigable,
   isInTemplate,
   actions,
-  groupIds,
   ...rest
 }: Props) => {
   const {

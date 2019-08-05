@@ -605,8 +605,8 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                   {this.isNew() || !shipmentId ? (
                     <UserConsumer>
                       {({ user }) => {
-                        const { group } = user;
-                        const { types = [] } = group;
+                        const { organization } = user;
+                        const { types = [] } = organization;
                         const isImporter = types.includes('Importer');
                         const isExporter = types.includes('Exporter');
                         const isForwarder = types.includes('Forwarder');
@@ -653,9 +653,9 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                                   },
                                   {
                                     id: uuid(),
-                                    importer: isImporter ? group : null,
-                                    exporter: isExporter ? group : null,
-                                    forwarders: isForwarder ? [group] : [],
+                                    importer: isImporter ? organization : null,
+                                    exporter: isExporter ? organization : null,
+                                    forwarders: isForwarder ? [organization] : [],
                                     inCharges: [],
                                     booked: false,
                                     customFields: {

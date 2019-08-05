@@ -140,9 +140,9 @@ function renderItem({
       return <InlineEnumInput name={name} value={value} {...meta} id={id} />;
 
     case 'inCharges': {
-      const ownId = user.group.id;
-      const importerPartnerId = getByPath('importer.partner.group.id', values);
-      const exporterPartnerId = getByPath('exporter.partner.group.id', values);
+      const ownId = user.organization.id;
+      const importerPartnerId = getByPath('importer.partner.organization.id', values);
+      const exporterPartnerId = getByPath('exporter.partner.organization.id', values);
 
       const groupIds = [ownId, importerPartnerId, exporterPartnerId].filter(
         item => !isNullOrUndefined(item)
@@ -154,14 +154,14 @@ function renderItem({
     }
 
     case 'assignTo': {
-      const ownId = user.group.id;
+      const ownId = user.organization.id;
       const shipmentId = getByPath('shipment.id', values);
       const importerPartnerId = getByPath(
-        `shipments.${shipmentId}.importer.partner.group.id`,
+        `shipments.${shipmentId}.importer.partner.organization.id`,
         editData
       );
       const exporterPartnerId = getByPath(
-        `shipments.${shipmentId}.exporter.partner.group.id`,
+        `shipments.${shipmentId}.exporter.partner.organization.id`,
         values
       );
 

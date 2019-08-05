@@ -81,7 +81,7 @@ export default function InlineInChargeInput({ name, values, max, id: inputId, gr
                       });
                     }}
                     filterBy={{
-                      groupIds,
+                      organizationIds: groupIds,
                     }}
                     onCancel={() => slideToggle(false)}
                   />

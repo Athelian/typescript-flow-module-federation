@@ -2,13 +2,13 @@
 import gql from 'graphql-tag';
 
 export const partnerFormFragment = gql`
-  fragment partnerFormFragment on Group {
+  fragment partnerFormFragment on Organization {
     id
   }
 `;
 
 export const partnerCardFragment = gql`
-  fragment partnerCardFragment on Group {
+  fragment partnerCardFragment on Organization {
     id
     name
     types
@@ -16,8 +16,8 @@ export const partnerCardFragment = gql`
       ... on Partner {
         id
         code
-        group {
-          ... on Group {
+        organization {
+          ... on Organization {
             id
             name
           }

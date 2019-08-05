@@ -46,7 +46,7 @@ const User = ({ user }: Props) => {
             <span className={NameStyle}>
               <FormattedName firstName={user.firstName} lastName={user.lastName} />
             </span>
-            <span className={GroupStyle}>{user.group.name}</span>
+            <span className={GroupStyle}>{user.organization.name}</span>
             <span className={EmailStyle}>{user.email}</span>
             <div className={RolesStyle}>
               <Icon icon={userRoleIcon} />

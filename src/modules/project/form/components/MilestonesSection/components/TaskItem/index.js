@@ -40,7 +40,6 @@ function TaskItem({ task, isDragging, provided, onChange, onRemove }: Props) {
               <>
                 <TaskCard
                   hideProjectInfo
-                  groupIds={parseGroupIds(task)}
                   entity={{
                     ...task.entity,
                     ...getByPath('order', task),

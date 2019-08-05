@@ -49,7 +49,7 @@ type Props = {
 const WarehouseSection = ({ isNew }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const { group } = useUser();
+  const { organization } = useUser();
   const allowUpdate = hasPermission(WAREHOUSE_UPDATE);
 
   return (
@@ -272,7 +272,7 @@ const WarehouseSection = ({ isNew }: Props) => {
                         <FormattedMessage id="modules.Warehouses.owner" defaultMessage="OWNER" />
                       </Label>
                     }
-                    input={<PartnerCard partner={values.ownedBy || group} readOnly />}
+                    input={<PartnerCard partner={values.ownedBy || organization} readOnly />}
                   />
 
                   <FieldItem
@@ -284,7 +284,7 @@ const WarehouseSection = ({ isNew }: Props) => {
                           defaultMessage="AllOWED TO USE"
                         />
                         {' ('}
-                        <FormattedNumber value={values.groups.length} />
+                        <FormattedNumber value={values.organizations.length} />
                         {')'}
                       </Label>
                     }
@@ -310,18 +310,18 @@ const WarehouseSection = ({ isNew }: Props) => {
                               }
                               role="presentation"
                             >
-                              {renderPartners(values.groups, allowUpdate)}
+                              {renderPartners(values.organizations, allowUpdate)}
                             </div>
                             <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                               {opened && (
                                 <SelectPartners
                                   cacheKey="WarehouseSelectPartners"
                                   partnerTypes={[]}
-                                  selected={values.groups}
+                                  selected={values.organizations}
                                   onCancel={() => slideToggle(false)}
                                   onSelect={selected => {
                                     slideToggle(false);
-                                    setFieldValue('groups', selected);
+                                    setFieldValue('organizations', selected);
                                   }}
                                 />
                               )}

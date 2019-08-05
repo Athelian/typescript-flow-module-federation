@@ -31,7 +31,7 @@ type Props = OptionalProps & {|
   onCancel: Function,
 |};
 
-const partnerPath = 'viewer.user.group.partners';
+const partnerPath = 'viewer.user.organization.partners';
 
 const SelectPartner = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSelect }: Props) => {
   const initialQueryVariables = {
@@ -62,7 +62,7 @@ const SelectPartner = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSel
           return error.message;
         }
         const items = getByPathWithDefault([], `${partnerPath}.nodes`, data).map(item => ({
-          ...item.group,
+          ...item.organization,
           code: item.code,
         }));
         const nextPage = getByPathWithDefault(1, `${partnerPath}.page`, data) + 1;

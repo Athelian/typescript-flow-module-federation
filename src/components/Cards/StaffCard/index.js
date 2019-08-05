@@ -32,20 +32,9 @@ const defaultProps = {
 };
 
 const StaffCard = ({ staff, onClick, actions, ...rest }: Props) => {
-  const { firstName, lastName, role: deprecatedRole, roles, email, tags, group } = staff;
+  const { firstName, lastName, roles, email, tags, organization } = staff;
 
-  let userRoleIcon = 'USER';
-
-  // TODO remove deprecated role field
-  if (roles && roles.length > 0) {
-    if (roles.some(role => role.name === 'admin')) {
-      userRoleIcon = 'MANAGER';
-    } else if (deprecatedRole === 'manager') {
-      userRoleIcon = 'MANAGER';
-    }
-  } else if (deprecatedRole === 'manager') {
-    userRoleIcon = 'MANAGER';
-  }
+  const userRoleIcon = roles.some(role => role.name === 'admin') ? 'MANAGER' : 'USER';
 
   return (
     <BaseCard icon="STAFF" color="STAFF" actions={actions} {...rest}>
@@ -72,7 +61,7 @@ const StaffCard = ({ staff, onClick, actions, ...rest }: Props) => {
         </div>
         <div className={CompanyStyle}>
           <Icon icon="STAFF" />
-          {group && group.name}
+          {organization && organization.name}
         </div>
         <div className={StaffTagsWrapperStyle}>
           {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}

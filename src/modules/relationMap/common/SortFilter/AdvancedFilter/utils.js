@@ -27,7 +27,7 @@ const getFilterValue = (name: string, data: any) => {
   switch (name) {
     case 'exporter':
     case 'forwarder':
-      return data.map(d => d.group && d.group.id);
+      return data.map(d => d.organization && d.organization.id);
     case 'ids':
     case 'tags':
     case 'inCharge':

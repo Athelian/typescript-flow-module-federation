@@ -42,14 +42,14 @@ const removeOldImporterStaff = ({
     [field]: {
       ...entity,
       assignedTo: getByPathWithDefault([], 'assignedTo', entity).filter(
-        user => getByPath('group.id', user) !== getByPath('id', partner)
+        user => getByPath('organization.id', user) !== getByPath('id', partner)
       ),
       approvedAt:
-        getByPath('approvedBy.group.id', entity) === getByPath('id', partner)
+        getByPath('approvedBy.organization.id', entity) === getByPath('id', partner)
           ? null
           : getByPath('approvedAt', entity),
       approvedBy:
-        getByPath('approvedBy.group.id', entity) === getByPath('id', partner)
+        getByPath('approvedBy.organization.id', entity) === getByPath('id', partner)
           ? null
           : getByPath('approvedBy', entity),
     },

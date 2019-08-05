@@ -31,7 +31,7 @@ export const productProviderRMFragment = gql`
           }
         }
         importer {
-          ... on Group {
+          ... on Organization {
             id
             name
           }
@@ -39,13 +39,13 @@ export const productProviderRMFragment = gql`
       }
     }
     exporter {
-      ... on Group {
+      ... on Organization {
         id
         name
       }
     }
     supplier {
-      ... on Group {
+      ... on Organization {
         id
         name
       }
@@ -109,13 +109,13 @@ export const orderCardRMFragment = gql`
       }
     }
     exporter {
-      ... on Group {
+      ... on Organization {
         id
         name
       }
     }
     importer {
-      ... on Group {
+      ... on Organization {
         id
         name
       }

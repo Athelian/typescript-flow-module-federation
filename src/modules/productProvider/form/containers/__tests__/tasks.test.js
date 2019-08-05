@@ -9,7 +9,7 @@ describe('task end product container', () => {
 
   it('should reset status and remove staff when change exporter ', async () => {
     const container = new Task();
-    const group = {
+    const organization = {
       id: faker.random.uuid(),
       name: faker.name.findName(),
     };
@@ -18,7 +18,7 @@ describe('task end product container', () => {
       id: faker.random.uuid(),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
-      group,
+      organization,
     };
 
     const remainUsers = [
@@ -26,7 +26,7 @@ describe('task end product container', () => {
         id: faker.random.uuid(),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
-        group: {
+        organization: {
           id: faker.random.uuid(),
           name: faker.name.findName(),
         },
@@ -35,7 +35,7 @@ describe('task end product container', () => {
         id: faker.random.uuid(),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
-        group: {
+        organization: {
           id: faker.random.uuid(),
           name: faker.name.findName(),
         },
@@ -53,14 +53,14 @@ describe('task end product container', () => {
       assignedTo: [
         {
           ...staff,
-          group,
+          organization,
         },
         ...remainUsers,
       ],
       approvers: [
         {
           ...staff,
-          group,
+          organization,
         },
         ...remainUsers,
       ],
@@ -76,12 +76,12 @@ describe('task end product container', () => {
           inProgressAt: faker.date.future(),
           inProgressBy: {
             ...staff,
-            group,
+            organization,
           },
           completedAt: faker.date.future(),
           completedBy: {
             ...staff,
-            group,
+            organization,
           },
         },
       ],
@@ -92,7 +92,7 @@ describe('task end product container', () => {
     expect(container.originalValues.todo).toEqual(initTodo);
     expect(container.state.todo).toEqual(initTodo);
 
-    await container.onChangeExporter(group);
+    await container.onChangeExporter(organization);
 
     expect(container.state.todo.tasks).toEqual([
       {

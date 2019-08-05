@@ -85,7 +85,7 @@ export default class OrderInfoContainer extends Container<FormState> {
       const { inCharges } = state;
       return {
         inCharges: inCharges.filter(
-          user => getByPath('group.id', user) !== getByPath('id', prevExporter)
+          user => getByPath('organization.id', user) !== getByPath('id', prevExporter)
         ),
       };
     });

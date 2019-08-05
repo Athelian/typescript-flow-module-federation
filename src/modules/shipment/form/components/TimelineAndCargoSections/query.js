@@ -74,7 +74,7 @@ export const shipmentFormTimelineAndCargoQuery = gql`
                 id
                 name
                 ownedBy {
-                  ... on Group {
+                  ... on Organization {
                     id
                     name
                   }
