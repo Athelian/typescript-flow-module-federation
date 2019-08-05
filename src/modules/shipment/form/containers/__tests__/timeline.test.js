@@ -9,19 +9,19 @@ describe('shipment timeline container', () => {
 
   it('should not change the data if timeline is empty', async () => {
     const container = new Timeline();
-    const group = {
+    const organization = {
       id: faker.random.uuid(),
       name: faker.name.findName(),
     };
 
-    await container.onChangePartner(group);
+    await container.onChangePartner(organization);
 
     expect(container.state).toEqual(initValues);
   });
 
   it('should reset cargo ready when change importer', async () => {
     const container = new Timeline();
-    const group = {
+    const organization = {
       id: faker.random.uuid(),
       name: faker.name.findName(),
     };
@@ -30,7 +30,7 @@ describe('shipment timeline container', () => {
       id: faker.random.uuid(),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
-      group,
+      organization,
     };
 
     const remainUsers = [
@@ -38,7 +38,7 @@ describe('shipment timeline container', () => {
         id: faker.random.uuid(),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
-        group: {
+        organization: {
           id: faker.random.uuid(),
           name: faker.name.findName(),
         },
@@ -47,7 +47,7 @@ describe('shipment timeline container', () => {
         id: faker.random.uuid(),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
-        group: {
+        organization: {
           id: faker.random.uuid(),
           name: faker.name.findName(),
         },
@@ -88,7 +88,7 @@ describe('shipment timeline container', () => {
       voyages: [voyage],
     });
 
-    await container.onChangePartner(group);
+    await container.onChangePartner(organization);
 
     expect(container.state).toEqual({
       cargoReady: {
@@ -105,7 +105,7 @@ describe('shipment timeline container', () => {
 
   it('should reset status and remove staff when change importer ', async () => {
     const container = new Timeline();
-    const group = {
+    const organization = {
       id: faker.random.uuid(),
       name: faker.name.findName(),
     };
@@ -114,7 +114,7 @@ describe('shipment timeline container', () => {
       id: faker.random.uuid(),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
-      group,
+      organization,
     };
 
     const remainUsers = [
@@ -122,7 +122,7 @@ describe('shipment timeline container', () => {
         id: faker.random.uuid(),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
-        group: {
+        organization: {
           id: faker.random.uuid(),
           name: faker.name.findName(),
         },
@@ -131,7 +131,7 @@ describe('shipment timeline container', () => {
         id: faker.random.uuid(),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
-        group: {
+        organization: {
           id: faker.random.uuid(),
           name: faker.name.findName(),
         },
@@ -218,7 +218,7 @@ describe('shipment timeline container', () => {
       true
     );
 
-    await container.onChangePartner(group);
+    await container.onChangePartner(organization);
 
     expect(container.state).toEqual({
       hasCalledTimelineApiYet: true,

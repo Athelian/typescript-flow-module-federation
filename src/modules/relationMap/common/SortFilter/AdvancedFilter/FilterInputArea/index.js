@@ -69,7 +69,7 @@ const getFilterInputArea = ({
         case 'exporter':
           return () =>
             MiniSelector({
-              entityType: 'viewer.user.group.partners',
+              entityType: 'viewer.user.organization.partners',
               query: partnersQuery,
               filterBy: {
                 query: '',
@@ -82,7 +82,7 @@ const getFilterInputArea = ({
                   selected={selectedItems.map(selectItem => selectItem.id).includes(item.id)}
                   key={item.id}
                 >
-                  <Display align="left">{item.group.name}</Display>
+                  <Display align="left">{item.organization.name}</Display>
                 </MiniSelectorItem>
               ),
               hideToggles: true,
@@ -173,7 +173,7 @@ const getFilterInputArea = ({
         case 'exporter':
           return () =>
             MiniSelector({
-              entityType: 'viewer.user.group.partners',
+              entityType: 'viewer.user.organization.partners',
               query: partnersQuery,
               filterBy: {
                 query: '',
@@ -186,7 +186,7 @@ const getFilterInputArea = ({
                   selected={selectedItems.includes(item)}
                   key={item.id}
                 >
-                  <Display align="left">{item.group.name}</Display>
+                  <Display align="left">{item.organization.name}</Display>
                 </MiniSelectorItem>
               ),
               hideToggles: true,
@@ -194,7 +194,7 @@ const getFilterInputArea = ({
         case 'supplier':
           return () =>
             MiniSelector({
-              entityType: 'viewer.user.group.partners',
+              entityType: 'viewer.user.organization.partners',
               query: partnersQuery,
               filterBy: {
                 query: '',
@@ -207,7 +207,7 @@ const getFilterInputArea = ({
                   selected={selectedItems.includes(item)}
                   key={item.id}
                 >
-                  <Display align="left">{item.group.name}</Display>
+                  <Display align="left">{item.organization.name}</Display>
                 </MiniSelectorItem>
               ),
               hideToggles: true,
@@ -300,7 +300,7 @@ const getFilterInputArea = ({
         case 'forwarder':
           return () =>
             MiniSelector({
-              entityType: 'viewer.user.group.partners',
+              entityType: 'viewer.user.organization.partners',
               query: partnersQuery,
               filterBy: {
                 query: '',
@@ -313,7 +313,7 @@ const getFilterInputArea = ({
                   selected={selectedItems.map(selectItem => selectItem.id).includes(item.id)}
                   key={item.id}
                 >
-                  <Display align="left">{item.group.name}</Display>
+                  <Display align="left">{item.organization.name}</Display>
                 </MiniSelectorItem>
               ),
               hideToggles: true,

@@ -14,7 +14,7 @@ type Props = {
   perPage: number,
 };
 
-const partnerPath = 'viewer.user.group.partners';
+const partnerPath = 'viewer.user.organization.partners';
 
 export default function PartnerList({ ...filtersAndSort }: Props) {
   return (
@@ -31,7 +31,7 @@ export default function PartnerList({ ...filtersAndSort }: Props) {
           return error.message;
         }
         const parsedData = getByPathWithDefault([], `${partnerPath}.nodes`, data).map(item => ({
-          ...item.group,
+          ...item.organization,
           code: item.code,
         }));
         const nextPage = getByPathWithDefault(1, `${partnerPath}.page`, data) + 1;

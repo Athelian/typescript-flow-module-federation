@@ -140,7 +140,7 @@ export const shipmentFormFragment = gql`
             id
             name
             ownedBy {
-              ... on Group {
+              ... on Organization {
                 id
                 name
               }
@@ -269,7 +269,7 @@ export const shipmentCardFragment = gql`
               ... on ProductProvider {
                 id
                 exporter {
-                  ... on Group {
+                  ... on Organization {
                     id
                     name
                   }

@@ -16,8 +16,8 @@ export const commentFragment = gql`
             path(preset: Small)
           }
         }
-        group {
-          ... on Group {
+        organization {
+          ... on Organization {
             id
             name
           }
@@ -111,8 +111,8 @@ export const eventFragment = gql`
             path(preset: Small)
           }
         }
-        group {
-          ... on Group {
+        organization {
+          ... on Organization {
             id
             name
           }

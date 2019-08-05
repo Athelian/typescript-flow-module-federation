@@ -83,7 +83,7 @@ const getFilterMenu = ({
               : [
                   {
                     name: 'exporter',
-                    field: 'group.name',
+                    field: 'organization.name',
                     label: <FormattedMessage {...messages.exporter} />,
                     data: getSelectData(selectedItems, 'exporter'),
                   },
@@ -247,7 +247,7 @@ const getFilterMenu = ({
           filters: [
             {
               name: 'forwarder',
-              field: 'group.name',
+              field: 'organization.name',
               label: <FormattedMessage {...messages.forwarder} />,
               data: getSelectData(selectedItems, 'forwarder'),
             },

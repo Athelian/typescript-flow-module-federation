@@ -126,7 +126,7 @@ export const containerCardFragment = gql`
         id
         no
         importer {
-          ... on Group {
+          ... on Organization {
             id
             name
           }

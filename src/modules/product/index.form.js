@@ -463,8 +463,8 @@ class ProductFormModule extends React.Component<Props> {
               {!productId ? (
                 <UserConsumer>
                   {({ user }) => {
-                    const { group } = user;
-                    const { types = [] } = group;
+                    const { organization } = user;
+                    const { types = [] } = organization;
                     const isImporter = types.includes('Importer');
                     return (
                       <>
@@ -495,7 +495,7 @@ class ProductFormModule extends React.Component<Props> {
                               },
                               {
                                 id: uuid(),
-                                importer: isImporter ? group : {},
+                                importer: isImporter ? organization : {},
                                 tags: [],
                                 todo: {
                                   tasks: [],

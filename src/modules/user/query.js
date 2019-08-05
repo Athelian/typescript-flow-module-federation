@@ -13,8 +13,8 @@ export const userDetailQuery = gql`
           language
           timezone
           role
-          group {
-            ... on Group {
+          organization {
+            ... on Organization {
               id
               types
               name

@@ -21,7 +21,7 @@ const PartnerPermissionsWrapper = ({ data, children }: Props) => {
     return children([], false);
   }
 
-  const partnerId = getByPath('ownedBy.partner.id', data);
+  const partnerId = getByPath('ownedBy.id', data);
   const isOwner = isOwnerBy(partnerId);
 
   if (isOwner) {
@@ -31,7 +31,7 @@ const PartnerPermissionsWrapper = ({ data, children }: Props) => {
   return (
     <Query
       query={partnerPermissionQuery}
-      variables={{ partnerId: getByPath('ownedBy.partner.id', data) }}
+      variables={{ organizationId: getByPath('ownedBy.id', data) }}
       fetchPolicy="cache-first"
     >
       {({ loading, data: permissionsData, error: permissionError }) => {

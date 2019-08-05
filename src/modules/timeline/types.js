@@ -8,7 +8,7 @@ export type UserInfo = {
   avatar: ?{
     path: string,
   },
-  group: {
+  organization: {
     id: string,
     name: string,
   },

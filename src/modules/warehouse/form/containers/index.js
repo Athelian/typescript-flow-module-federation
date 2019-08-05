@@ -1,6 +1,6 @@
 // @flow
 import { Container } from 'unstated';
-import { set, cloneDeep } from 'lodash';
+import { cloneDeep, set } from 'lodash';
 import { cleanFalsyAndTypeName, cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
 import { defaultAreaMetric } from 'utils/metric';
@@ -20,7 +20,7 @@ export type FormState = {
   surface: Metric,
   customFields: Object,
   inCharges: Array<{ id: string, firstName: string, lastName: string }>,
-  groups: Array<Object>,
+  organizations: Array<Object>,
 };
 
 const initValues = {
@@ -39,7 +39,7 @@ const initValues = {
     fieldValues: [],
   },
   inCharges: [],
-  groups: [],
+  organizations: [],
 };
 
 export default class WarehouseContainer extends Container<FormState> {
@@ -54,10 +54,7 @@ export default class WarehouseContainer extends Container<FormState> {
   };
 
   setFieldArrayValue = (path: string, value: any) => {
-    this.setState(prevState => {
-      const newState = set(cloneDeep(prevState), path, value);
-      return newState;
-    });
+    this.setState(prevState => set(cloneDeep(prevState), path, value));
   };
 
   isDirty = () =>
