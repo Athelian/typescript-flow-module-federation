@@ -17,6 +17,7 @@ export const TagStyle = (color: string): string => css`
   height: min-content;
   width: min-content;
   user-select: none;
+  flex-shrink: 0;
 `;
 
 export const PrefixStyle = (color: string): string => css`

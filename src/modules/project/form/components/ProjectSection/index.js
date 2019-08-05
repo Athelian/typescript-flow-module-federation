@@ -39,6 +39,8 @@ import {
   MainSectionWrapperStyle,
   ProjectInfoWrapperStyle,
   DescriptionTagsWrapperStyle,
+  DescriptionWrapperStyle,
+  TagsWrapperStyle,
   MilestonesTimelineWrapperStyle,
   TasksInfoWrapperStyle,
   BindedAndRelatedWrapperStyle,
@@ -136,58 +138,57 @@ const ProjectSection = ({ isNew }: Props) => {
                     </GridRow>
 
                     <div className={DescriptionTagsWrapperStyle}>
-                      <FormField
-                        name="description"
-                        initValue={values.description}
-                        values={values}
-                        validator={validator}
-                        setFieldValue={setFieldValue}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <TextAreaInputFactory
-                            name={name}
-                            {...inputHandlers}
-                            isNew={isNew}
-                            originalValue={initialValues[name]}
-                            label={<FormattedMessage {...messages.description} />}
-                            editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_DESCRIPTION])}
-                            vertical
-                            inputWidth="420px"
-                            inputHeight="80px"
-                          />
-                        )}
-                      </FormField>
+                      <div className={DescriptionWrapperStyle}>
+                        <FormField
+                          name="description"
+                          initValue={values.description}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={setFieldValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <TextAreaInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              isNew={isNew}
+                              originalValue={initialValues[name]}
+                              label={<FormattedMessage {...messages.description} />}
+                              editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_DESCRIPTION])}
+                              vertical
+                              inputWidth="420px"
+                              inputHeight="80px"
+                            />
+                          )}
+                        </FormField>
+                      </div>
 
                       <Subscribe to={[ProjectTagsContainer]}>
                         {({ state: { tags }, setFieldValue: changeTags }) => (
-                          <FieldItem
-                            vertical
-                            label={
-                              <Label height="30px">
-                                <FormattedMessage {...messages.tags} />
-                              </Label>
-                            }
-                            input={
-                              <TagsInput
-                                id="tags"
-                                name="tags"
-                                tagType="Project"
-                                values={tags}
-                                onChange={value => {
-                                  changeTags('tags', value);
-                                }}
-                                onClickRemove={value => {
-                                  changeTags('tags', tags.filter(({ id }) => id !== value.id));
-                                }}
-                                editable={{
-                                  set:
-                                    hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]) &&
-                                    hasPermission(TAG_LIST),
-                                  remove: hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]),
-                                }}
-                              />
-                            }
-                          />
+                          <div className={TagsWrapperStyle}>
+                            <Label height="30px">
+                              <FormattedMessage {...messages.tags} />
+                            </Label>
+
+                            <TagsInput
+                              id="tags"
+                              name="tags"
+                              tagType="Project"
+                              values={tags}
+                              onChange={value => {
+                                changeTags('tags', value);
+                              }}
+                              onClickRemove={value => {
+                                changeTags('tags', tags.filter(({ id }) => id !== value.id));
+                              }}
+                              editable={{
+                                set:
+                                  hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]) &&
+                                  hasPermission(TAG_LIST),
+                                remove: hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]),
+                              }}
+                              width="100%"
+                            />
+                          </div>
                         )}
                       </Subscribe>
                     </div>
