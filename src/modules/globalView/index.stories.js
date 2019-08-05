@@ -105,13 +105,19 @@ const keys = [
   'any',
 ];
 
+const columnWidths = keys.map(() => 200);
+
 storiesOf('Modules/GlobalView', module).add('virtual list', () => (
   <div
     style={{
       height: '50vh',
-      width: '50vw',
+      width: '900px',
     }}
   >
-    <Table keys={keys} data={[...data, ...data, ...data, ...data, ...data, ...data]} />
+    <Table
+      columnWidths={columnWidths}
+      keys={keys}
+      data={[...data, ...data, ...data, ...data, ...data, ...data]}
+    />
   </div>
 ));

@@ -23,4 +23,19 @@ export const HeaderStyle = css`
 
 export const HeaderItemStyle = ({ width }: { width: number }) => css`
   ${width && `width: ${width}px;`}
+  position: sticky;
+  top: 0;
+  text-align: left;
+  position: relative;
+`;
+
+export const DragHandleIconStyle = css`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: black;
+  // opacity: 0;
+  width: 3px;
+  cursor: col-resize;
 `;

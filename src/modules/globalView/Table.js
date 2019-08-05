@@ -1,15 +1,38 @@
 // @flow
 import * as React from 'react';
-import { FixedSizeGrid as Grid } from 'react-window';
+import { VariableSizeGrid } from 'react-window';
+import Draggable from 'react-draggable';
 import { getByPath } from 'utils/fp';
 import InlineTextInput from './components/InlineTextInput';
-import { HeaderStyle, HeaderItemStyle, ColumnStyle } from './style';
+import { HeaderStyle, HeaderItemStyle, ColumnStyle, DragHandleIconStyle } from './style';
 
-const Header = ({ innerRef, items }: { innerRef: React.Ref<any>, items: string[] }) => {
+const Header = ({
+  innerRef,
+  columnWidths,
+  items,
+  resizeColumnWidth,
+  myGridRef,
+}: {
+  innerRef: React.Ref<any>,
+  columnWidths: Array<number>,
+  items: Array<string>,
+  resizeColumnWidth: Function,
+  myGridRef: React.Ref<any>,
+}) => {
   return (
     <div ref={innerRef} className={HeaderStyle}>
-      {items.map(item => (
-        <div className={HeaderItemStyle({ width: 200 })}>{item}</div>
+      {items.map((item, index) => (
+        <div className={HeaderItemStyle({ width: columnWidths[index] })}>
+          {item}
+          <Draggable
+            axis="x"
+            onDrag={(event, { deltaX }) => {
+              resizeColumnWidth({ index, deltaX, myGridRef });
+            }}
+          >
+            <span className={DragHandleIconStyle} />
+          </Draggable>
+        </div>
       ))}
     </div>
   );
@@ -36,9 +59,47 @@ const Cell = ({
   );
 };
 
-const Table = ({ keys, data }: { keys: Array<string>, data: any }) => {
+const Grid = React.forwardRef(
+  (
+    props: {
+      bodyRef: React.Ref<any>,
+      data: any,
+      keys: Array<string>,
+      widths: Array<number>,
+      handleScroll: Function,
+    },
+    ref
+  ) => (
+    <VariableSizeGrid
+      ref={ref}
+      innerRef={props.bodyRef}
+      itemData={props.data}
+      columnCount={props.keys.length}
+      columnWidth={index => props.widths[index]}
+      width={800}
+      height={150}
+      rowCount={props.data.length}
+      rowHeight={() => 35}
+      onScroll={props.handleScroll}
+    >
+      {Cell}
+    </VariableSizeGrid>
+  )
+);
+
+const Table = ({
+  columnWidths,
+  keys,
+  data,
+}: {
+  columnWidths: Array<number>,
+  keys: Array<string>,
+  data: any,
+}) => {
   const headerRef = React.useRef();
   const bodyRef = React.createRef();
+  const gridRef = React.createRef();
+  const [widths, setWidths] = React.useState(columnWidths);
 
   const handleScroll = ({ scrollLeft }: Object) => {
     if (bodyRef.current) {
@@ -50,20 +111,32 @@ const Table = ({ keys, data }: { keys: Array<string>, data: any }) => {
 
   return (
     <div>
-      <Header innerRef={headerRef} items={keys} />
+      <Header
+        columnWidths={widths}
+        innerRef={headerRef}
+        items={keys}
+        myGridRef={gridRef}
+        resizeColumnWidth={({ index, deltaX, myGridRef }) => {
+          setWidths(prevWidths => {
+            const newWidths = [...prevWidths];
+            newWidths[index] = prevWidths[index] + parseInt(deltaX, 10);
+
+            return newWidths;
+          });
+          console.warn(myGridRef);
+          if (myGridRef.current) {
+            myGridRef.current.resetAfterColumnIndex(index);
+          }
+        }}
+      />
       <Grid
-        innerRef={bodyRef}
-        itemData={data}
-        columnCount={keys.length}
-        columnWidth={200}
-        width={800}
-        height={150}
-        rowCount={data.length}
-        rowHeight={35}
-        onScroll={handleScroll}
-      >
-        {Cell}
-      </Grid>
+        ref={gridRef}
+        bodyRef={bodyRef}
+        data={data}
+        keys={keys}
+        widths={widths}
+        handleScroll={handleScroll}
+      />
     </div>
   );
 };
