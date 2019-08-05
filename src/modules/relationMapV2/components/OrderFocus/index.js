@@ -70,6 +70,36 @@ const ShipmentCard = styled.div`
   height: 55px;
 `;
 
+function orderCell({
+  itemPosition,
+  batchPosition,
+  order,
+  totalItems,
+}: {
+  itemPosition: number,
+  batchPosition: number,
+  order: mixed,
+  totalItems: number,
+}) {
+  if (!itemPosition && !batchPosition)
+    return {
+      type: 'order',
+      data: order,
+      afterConnector: 1,
+    };
+
+  const isTheLastItemWithFirstBatch = itemPosition === totalItems - 1 && batchPosition === 0;
+  const isNotTheLastItem = itemPosition < totalItems - 1 && totalItems > 1;
+
+  if (isTheLastItemWithFirstBatch || isNotTheLastItem)
+    return {
+      type: 'duplicateOrder',
+      data: null,
+      afterConnector: 2,
+    };
+  return null;
+}
+
 function containerCell(batch: BatchPayload): ?CellRender {
   if (getByPathWithDefault(null, 'container', batch)) {
     return {
@@ -100,10 +130,7 @@ function containerCell(batch: BatchPayload): ?CellRender {
  * @param boolean isExpand
  * @param OrderPayload order
  */
-const orderCoordinates = (
-  isExpand: boolean,
-  order: { ...OrderPayload, containerCount: number }
-): Array<?CellRender> => {
+const orderCoordinates = (isExpand: boolean, order: mixed): Array<?CellRender> => {
   const orderItems = getByPathWithDefault([], 'orderItems', order);
   if (!isExpand) {
     return orderItems.length
@@ -184,17 +211,12 @@ const orderCoordinates = (
         batches.forEach((batch, position) => {
           result.push(
             ...[
-              !index && !position
-                ? {
-                    type: 'order',
-                    data: order,
-                    afterConnector: 1,
-                  }
-                : {
-                    type: 'duplicateOrder',
-                    data: order,
-                    afterConnector: 2,
-                  },
+              orderCell({
+                order,
+                itemPosition: index,
+                batchPosition: position,
+                totalItems: orderItems.length,
+              }),
               !position
                 ? {
                     beforeConnector: 1,
