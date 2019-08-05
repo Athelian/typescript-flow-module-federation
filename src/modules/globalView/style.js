@@ -21,7 +21,7 @@ export const HeaderStyle = css`
   overflow: hidden;
 `;
 
-export const HeaderItemStyle = ({ width }: { width: number }) => css`
+export const HeaderItemStyle = (width: number) => css`
   ${width && `width: ${width}px;`}
   position: sticky;
   top: 0;

@@ -11,23 +11,22 @@ const Header = ({
   columnWidths,
   items,
   resizeColumnWidth,
-  myGridRef,
 }: {
   innerRef: React.Ref<any>,
   columnWidths: Array<number>,
   items: Array<string>,
   resizeColumnWidth: Function,
-  myGridRef: React.Ref<any>,
 }) => {
   return (
     <div ref={innerRef} className={HeaderStyle}>
       {items.map((item, index) => (
-        <div className={HeaderItemStyle({ width: columnWidths[index] })}>
+        <div className={HeaderItemStyle(columnWidths[index])}>
           {item}
           <Draggable
             axis="x"
-            onDrag={(event, { deltaX }) => {
-              resizeColumnWidth({ index, deltaX, myGridRef });
+            position={{ x: 0, y: 0 }}
+            onStop={(event, data) => {
+              resizeColumnWidth(index, columnWidths[index] + data.lastX);
             }}
           >
             <span className={DragHandleIconStyle} />
@@ -96,16 +95,14 @@ const Table = ({
   keys: Array<string>,
   data: any,
 }) => {
-  const headerRef = React.useRef();
-  const bodyRef = React.createRef();
-  const gridRef = React.createRef();
+  const headerRef = React.useRef(null);
+  const bodyRef = React.useRef(null);
+  const gridRef = React.useRef(null);
   const [widths, setWidths] = React.useState(columnWidths);
 
   const handleScroll = ({ scrollLeft }: Object) => {
-    if (bodyRef.current) {
-      if (headerRef.current) {
-        headerRef.current.scrollLeft = scrollLeft;
-      }
+    if (bodyRef.current && headerRef.current) {
+      headerRef.current.scrollLeft = scrollLeft;
     }
   };
 
@@ -115,17 +112,15 @@ const Table = ({
         columnWidths={widths}
         innerRef={headerRef}
         items={keys}
-        myGridRef={gridRef}
-        resizeColumnWidth={({ index, deltaX, myGridRef }) => {
+        resizeColumnWidth={(index, width) => {
           setWidths(prevWidths => {
             const newWidths = [...prevWidths];
-            newWidths[index] = prevWidths[index] + parseInt(deltaX, 10);
+            newWidths[index] = width;
 
             return newWidths;
           });
-          console.warn(myGridRef);
-          if (myGridRef.current) {
-            myGridRef.current.resetAfterColumnIndex(index);
+          if (gridRef.current) {
+            gridRef.current.resetAfterColumnIndex(index);
           }
         }}
       />
