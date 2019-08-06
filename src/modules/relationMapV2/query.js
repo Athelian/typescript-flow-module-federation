@@ -201,6 +201,70 @@ export const orderCardOptimiseFragment = gql`
   }
 `;
 
+export const orderCardWithOptimiseFragment = gql`
+  fragment orderCardWithOptimiseFragment on Order {
+    id
+    orderItems {
+      ... on OrderItem {
+        id
+        archived
+        no
+        quantity
+        todo {
+          taskCount {
+            ...taskCountFragment
+          }
+        }
+        tags {
+          ...tagFragment
+        }
+        batches {
+          ... on Batch {
+            id
+            archived
+            no
+            shipment {
+              ... on Shipment {
+                id
+                blNo
+              }
+            }
+            container {
+              ... on Container {
+                id
+                no
+                tags {
+                  ...tagFragment
+                }
+                todo {
+                  taskCount {
+                    ...taskCountFragment
+                  }
+                }
+              }
+            }
+            todo {
+              taskCount {
+                ...taskCountFragment
+              }
+            }
+          }
+        }
+      }
+    }
+    shipments {
+      ... on Shipment {
+        id
+        archived
+        blNo
+        tags {
+          ...tagFragment
+        }
+      }
+    }
+  }
+`;
+
 export const shipmentCardNewRMFragment = gql`
   fragment shipmentCardNewRMFragment on Shipment {
     id
@@ -255,7 +319,7 @@ export const shipmentCardNewRMFragment = gql`
       }
     }
     containerGroups {
-      ... on ContainerOrganization {
+      ... on ContainerGroup {
         id
         customClearance {
           ...timelineDateMinimalFragment
@@ -332,6 +396,18 @@ export const orderFocusedListQuery = gql`
   }
 
   ${orderCardOptimiseFragment}
+  ${tagFragment}
+  ${taskCountFragment}
+`;
+
+export const orderFocusDetailQuery = gql`
+  query orderFocusDetailQuery($id: ID!) {
+    order(id: $id) {
+      ...orderCardWithOptimiseFragment
+    }
+  }
+
+  ${orderCardWithOptimiseFragment}
   ${tagFragment}
   ${taskCountFragment}
 `;

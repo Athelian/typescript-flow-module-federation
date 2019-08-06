@@ -2,9 +2,11 @@
 import * as React from 'react';
 import type { OrderPayload, BatchPayload } from 'generated/graphql';
 import InfiniteScroll from 'react-infinite-scroller';
+import update from 'immutability-helper';
 import { Query } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import styled from 'react-emotion';
+import apolloClient from 'apollo';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { uuid } from 'utils/id';
@@ -12,7 +14,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import LoadingIcon from 'components/LoadingIcon';
 import { Display } from 'components/Form';
 import BaseCard from 'components/Cards';
-import { orderFocusedListQuery } from 'modules/relationMapV2/query';
+import { orderFocusedListQuery, orderFocusDetailQuery } from 'modules/relationMapV2/query';
 import RelationLine from '../RelationLine';
 import { WrapperStyle, HeadingStyle, ContentStyle, ScrollWrapperStyle } from './style';
 
@@ -36,6 +38,7 @@ type CellRender = {
   entity?: Entity,
   beforeConnector?: ?number,
   afterConnector?: ?number,
+  isLoadedData?: boolean,
 };
 
 const OrderCard = styled.div`
@@ -166,12 +169,15 @@ function containerCell(batch: BatchPayload): ?CellRender {
   return null;
 }
 
-/**
- *  Generate the data for x/y with position
- * @param boolean isExpand
- * @param OrderPayload order
- */
-const orderCoordinates = (isExpand: boolean, order: mixed): Array<?CellRender> => {
+const orderCoordinates = ({
+  isExpand,
+  isLoadedData,
+  order,
+}: {
+  isExpand: boolean,
+  order: mixed,
+  isLoadedData?: boolean,
+}): Array<?CellRender> => {
   const orderItems = getByPathWithDefault([], 'orderItems', order);
   const orderItemCount = getByPathWithDefault(0, 'orderItemCount', order);
   if (!isExpand) {
@@ -218,34 +224,67 @@ const orderCoordinates = (isExpand: boolean, order: mixed): Array<?CellRender> =
         ];
   }
 
-  const result =
-    orderItemCount > 0
-      ? [
-          null,
-          {
-            type: 'itemSummary',
-            data: order,
-            afterConnector: 1,
-          },
-          {
-            beforeConnector: 1,
-            type: 'batchSummary',
-            data: order,
-            afterConnector: 1,
-          },
-          {
-            beforeConnector: 1,
-            type: 'containerSummary',
-            data: order,
-            afterConnector: 1,
-          },
-          {
-            beforeConnector: 1,
-            type: 'shipmentSummary',
-            data: order,
-          },
-        ]
-      : [null, null, null, null, null];
+  const result = [
+    null,
+    {
+      type: 'itemSummary',
+      data: order,
+      afterConnector: 1,
+    },
+    {
+      beforeConnector: 1,
+      type: 'batchSummary',
+      data: order,
+      afterConnector: 1,
+    },
+    {
+      beforeConnector: 1,
+      type: 'containerSummary',
+      data: order,
+      afterConnector: 1,
+    },
+    {
+      beforeConnector: 1,
+      type: 'shipmentSummary',
+      data: order,
+    },
+  ];
+  if (!isLoadedData) {
+    result.push(
+      ...[
+        {
+          type: 'order',
+          data: order,
+          afterConnector: 1,
+        },
+        {
+          beforeConnector: 1,
+          type: 'placeholder',
+          entity: 'orderItem',
+          afterConnector: 1,
+        },
+        {
+          beforeConnector: 1,
+          type: 'placeholder',
+          entity: 'batch',
+          afterConnector: 1,
+        },
+        {
+          beforeConnector: 1,
+          type: 'placeholder',
+          entity: 'container',
+          afterConnector: 1,
+        },
+        {
+          beforeConnector: 1,
+          type: 'placeholder',
+          entity: 'shipment',
+          afterConnector: 1,
+        },
+      ]
+    );
+    return result;
+  }
 
   if (orderItemCount > 0) {
     orderItems.forEach((item, index) => {
@@ -423,7 +462,7 @@ const cellRenderer = (
             color="ORDER_ITEM"
             isArchived={getByPathWithDefault(false, 'archived', data)}
           >
-            <ItemCard>{getByPathWithDefault('', 'productProvider.product.name', data)}</ItemCard>
+            <ItemCard>{getByPathWithDefault('', 'no', data)}</ItemCard>
           </BaseCard>
         </div>
       );
@@ -451,7 +490,7 @@ const cellRenderer = (
             color="SHIPMENT"
             isArchived={getByPathWithDefault(false, 'archived', data)}
           >
-            <ShipmentCard>{getByPathWithDefault('', 'no', data)}</ShipmentCard>
+            <ShipmentCard>{getByPathWithDefault('', 'blNo', data)}</ShipmentCard>
           </BaseCard>
         </div>
       );
@@ -656,21 +695,26 @@ function Row({
   order,
   isExpand,
   onExpand,
+  fetchOrder,
 }: {
   order: { ...OrderPayload, containerCount: number },
   isExpand: boolean,
   onExpand: Function,
+  fetchOrder: (orderId: string) => void,
 }) {
+  const isLoadedData =
+    getByPathWithDefault([], 'orderItems', order).length ===
+    getByPathWithDefault(0, 'orderItemCount', order);
   const onClick = React.useCallback(() => {
     if (!isExpand) {
       onExpand(expandIds => [...expandIds, order.id]);
+      if (!isLoadedData && order.id) fetchOrder(order.id);
     } else {
       onExpand(expandIds => expandIds.filter(id => id !== order.id));
     }
-  }, [isExpand, onExpand, order.id]);
+  }, [fetchOrder, isExpand, isLoadedData, onExpand, order.id]);
 
-  const cells = orderCoordinates(isExpand, order);
-
+  const cells = orderCoordinates({ isExpand, order, isLoadedData });
   return cells.map(cell => cellRenderer(cell, { onClick, isExpand }));
 }
 
@@ -680,8 +724,51 @@ const hasMoreItems = (data: Object, model: string = 'orders') => {
   return nextPage <= totalPage;
 };
 
+const initialState = {
+  order: {},
+};
+
+function reducer(
+  state,
+  action: {
+    type: 'FETCH_ORDER',
+    payload: mixed,
+  }
+) {
+  switch (action.type) {
+    case 'FETCH_ORDER':
+      return update(state, {
+        order: {
+          $merge: action.payload,
+        },
+      });
+    default:
+      return state;
+  }
+}
+
 export default function OrderFocus() {
   const [expandRows, setExpandRows] = React.useState([]);
+  const [state, dispatch] = React.useReducer(reducer, initialState);
+
+  const queryOrderDetail = React.useCallback((orderId: string) => {
+    apolloClient
+      .query({
+        query: orderFocusDetailQuery,
+        variables: {
+          id: orderId,
+        },
+      })
+      .then(result => {
+        dispatch({
+          type: 'FETCH_ORDER',
+          payload: {
+            [orderId]: result.data.order,
+          },
+        });
+      });
+  }, []);
+
   const { queryVariables: queryOrderVariables } = useFilter(
     {
       page: 1,
@@ -697,7 +784,6 @@ export default function OrderFocus() {
     },
     'orderFocusedFilter'
   );
-
   const scrollParentRef = React.createRef();
 
   return (
@@ -729,10 +815,11 @@ export default function OrderFocus() {
               <Header />
               {orders.map(order => (
                 <Row
-                  order={order}
+                  order={state.order[order.id] ? { ...order, ...state.order[order.id] } : order}
                   key={order.id}
                   isExpand={expandRows.includes(order.id)}
                   onExpand={setExpandRows}
+                  fetchOrder={queryOrderDetail}
                 />
               ))}
               {orders.length === 0 && (
