@@ -64,6 +64,7 @@ export const cloneShipmentMutation = gql`
   }
 
   ${shipmentCardRMFragment}
+  ${productProviderRMFragment}
   ${partnerNameFragment}
   ${userAvatarFragment}
   ${metricFragment}
