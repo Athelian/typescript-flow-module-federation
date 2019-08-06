@@ -45,7 +45,7 @@ const PartnerPermissionsWrapper = ({ data, children }: Props) => {
           return permissionError.message;
         }
         return children(
-          getByPathWithDefault([], 'viewer.permissionsFromPartner', permissionsData),
+          getByPathWithDefault([], 'viewer.permissionsForOrganization', permissionsData),
           isOwner
         );
       }}

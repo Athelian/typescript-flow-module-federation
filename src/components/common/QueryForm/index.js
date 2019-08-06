@@ -50,7 +50,7 @@ export default function QueryForm({ query, entityId, entityType, render, onCompl
           return null;
         }
 
-        const partnerId = getByPath(`${entityType}.ownedBy.partner.id`, data);
+        const partnerId = getByPath(`${entityType}.ownedBy.id`, data);
         const isOwner = isOwnerBy(partnerId);
         if (!isOwner) {
           // query permission for partner
@@ -75,7 +75,7 @@ export default function QueryForm({ query, entityId, entityType, render, onCompl
                       isOwner: false,
                       permissions: getByPathWithDefault(
                         [],
-                        'viewer.permissionsFromPartner',
+                        'viewer.permissionsForOrganization',
                         permissionData
                       ),
                     }}
