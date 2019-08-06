@@ -111,7 +111,7 @@ const Table = ({
                 return newWidths;
               });
               if (gridRef.current) {
-                gridRef.current.resetAfterColumnIndex(index === 0 ? 0 : index - 1);
+                gridRef.current.resetAfterColumnIndex(index);
               }
             }}
           />
