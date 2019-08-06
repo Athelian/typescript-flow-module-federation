@@ -2,26 +2,24 @@
 import * as React from 'react';
 import { VariableSizeGrid as Grid } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { DraggableCore } from 'react-draggable';
+import Draggable from 'react-draggable';
 import { getByPath } from 'utils/fp';
 import InlineTextInput from './components/InlineTextInput';
 import { HeaderStyle, HeaderItemStyle, ColumnStyle, DragHandleIconStyle } from './style';
 
-const HeaderItem = ({ index, item, minWidth = 100, width, handleDrag }: Object) => {
+const HeaderItem = ({ index, item, width, handleDrag }: Object) => {
   return (
     <div className={HeaderItemStyle(width)}>
       {item}
-      <DraggableCore
+      <Draggable
         axis="x"
-        onDrag={event => {
-          const newWidth = width + event.movementX;
-          if (newWidth >= minWidth) {
-            handleDrag(index, newWidth);
-          }
+        position={{ x: 0, y: 0 }}
+        onStop={(event, { lastX }) => {
+          handleDrag(index, width + lastX);
         }}
       >
         <span className={DragHandleIconStyle} />
-      </DraggableCore>
+      </Draggable>
     </div>
   );
 };
@@ -43,7 +41,8 @@ const Header = ({
     <div ref={innerRef} className={HeaderStyle(width)}>
       {items.map((item, index) => (
         <HeaderItem
-          key={item}
+          // eslint-disable-next-line react/no-array-index-key
+          key={index}
           index={index}
           item={item}
           width={columnWidths[index]}

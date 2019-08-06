@@ -26,12 +26,6 @@ export const HeaderItemStyle = (width: number) => css`
   top: 0;
   text-align: left;
   position: relative;
-
-  &:hover {
-    & > span {
-      opacity: 0.5;
-    }
-  }
 `;
 
 export const DragHandleIconStyle = css`
@@ -43,4 +37,9 @@ export const DragHandleIconStyle = css`
   opacity: 0;
   width: 3px;
   cursor: col-resize;
+  z-index: 2;
+  &:hover {
+    opacity: 0.5;
+    z-index: 2;
+  }
 `;
