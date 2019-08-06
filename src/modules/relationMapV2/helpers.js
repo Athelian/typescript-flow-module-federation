@@ -1,7 +1,7 @@
 // @flow
 import type {
   UserPayload,
-  GroupPayload,
+  OrganizationPayload,
   TaskCount,
   Todo,
   CustomFields,
@@ -68,7 +68,7 @@ const timelineGenerator = (): Timeline => {
   };
 };
 
-const groupGenerator = (): GroupPayload => {
+const groupGenerator = (): OrganizationPayload => {
   return {
     id: faker.random.uuid(),
     name: faker.name.firstName(),
@@ -95,7 +95,7 @@ const groupGenerator = (): GroupPayload => {
       count: 0,
       totalCount: 0,
     },
-    __typename: 'Group',
+    __typename: 'Organization',
   };
 };
 

@@ -1,18 +1,22 @@
 // @flow
 import * as React from 'react';
 import type { OrderPayload, BatchPayload } from 'generated/graphql';
-import { range, random } from 'lodash';
+import InfiniteScroll from 'react-infinite-scroller';
+import { Query } from 'react-apollo';
+import { FormattedMessage } from 'react-intl';
 import styled from 'react-emotion';
+import useFilter from 'hooks/useFilter';
+import loadMore from 'utils/loadMore';
+import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
+import LoadingIcon from 'components/LoadingIcon';
+import { Display } from 'components/Form';
 import BaseCard from 'components/Cards';
-import {
-  orderGenerator,
-  orderItemGenerator,
-  batchGenerator,
-  containerGenerator,
-  shipmentGenerator,
-} from 'modules/relationMapV2/helpers';
+import { orderFocusedListQuery } from 'modules/relationMapV2/query';
 import RelationLine from '../RelationLine';
+import { WrapperStyle, HeadingStyle, ContentStyle, ScrollWrapperStyle } from './style';
+
+type Entity = 'order' | 'batch' | 'orderItem' | 'container' | 'shipment';
 
 type CellRender = {
   type: | 'order'
@@ -26,28 +30,13 @@ type CellRender = {
     | 'itemSummary'
     | 'batchSummary'
     | 'containerSummary'
-    | 'shipmentSummary',
-  data: mixed,
+    | 'shipmentSummary'
+    | 'placeholder',
+  data?: mixed,
+  entity?: Entity,
   beforeConnector?: ?number,
   afterConnector?: ?number,
 };
-
-const Wrapper = styled.div`
-  display: grid;
-  width: 100%;
-  overflow: auto;
-  grid-template-columns: repeat(15, min-content);
-  grid-template-rows: auto;
-`;
-const Heading = styled.div`
-  padding: 20px;
-  color: #fff;
-`;
-
-const Content = styled.div`
-  margin: 10px 0;
-  min-width: 10px;
-`;
 
 const OrderCard = styled.div`
   width: 285px;
@@ -69,6 +58,58 @@ const ShipmentCard = styled.div`
   width: 515px;
   height: 55px;
 `;
+
+function Header() {
+  return (
+    <>
+      <div
+        className={HeadingStyle}
+        style={{
+          gridColumn: 'span 3',
+          backgroundColor: '#ED5724',
+        }}
+      >
+        Orders
+      </div>
+      <div
+        className={HeadingStyle}
+        style={{
+          gridColumn: 'span 3',
+          backgroundColor: '#FBAA1D',
+        }}
+      >
+        Items
+      </div>
+      <div
+        className={HeadingStyle}
+        style={{
+          gridColumn: 'span 3',
+          backgroundColor: '#12B937',
+        }}
+      >
+        Batches
+      </div>
+      <div
+        className={HeadingStyle}
+        style={{
+          gridColumn: 'span 3',
+          backgroundColor: '#30A8E4',
+        }}
+      >
+        Containers
+      </div>
+      <div
+        className={HeadingStyle}
+        style={{
+          gridColumn: 'span 3',
+          backgroundColor: '#0756AF',
+        }}
+      >
+        Shipments
+      </div>
+    </>
+  );
+}
 
 function orderCell({
   itemPosition,
@@ -132,8 +173,9 @@ function containerCell(batch: BatchPayload): ?CellRender {
  */
 const orderCoordinates = (isExpand: boolean, order: mixed): Array<?CellRender> => {
   const orderItems = getByPathWithDefault([], 'orderItems', order);
+  const orderItemCount = getByPathWithDefault(0, 'orderItemCount', order);
   if (!isExpand) {
-    return orderItems.length
+    return orderItemCount > 0
       ? [
           {
             type: 'order',
@@ -176,35 +218,36 @@ const orderCoordinates = (isExpand: boolean, order: mixed): Array<?CellRender> =
         ];
   }
 
-  const result = orderItems.length
-    ? [
-        null,
-        {
-          type: 'itemSummary',
-          data: order,
-          afterConnector: 1,
-        },
-        {
-          beforeConnector: 1,
-          type: 'batchSummary',
-          data: order,
-          afterConnector: 1,
-        },
-        {
-          beforeConnector: 1,
-          type: 'containerSummary',
-          data: order,
-          afterConnector: 1,
-        },
-        {
-          beforeConnector: 1,
-          type: 'shipmentSummary',
-          data: order,
-        },
-      ]
-    : [null, null, null, null, null];
+  const result =
+    orderItemCount > 0
+      ? [
+          null,
+          {
+            type: 'itemSummary',
+            data: order,
+            afterConnector: 1,
+          },
+          {
+            beforeConnector: 1,
+            type: 'batchSummary',
+            data: order,
+            afterConnector: 1,
+          },
+          {
+            beforeConnector: 1,
+            type: 'containerSummary',
+            data: order,
+            afterConnector: 1,
+          },
+          {
+            beforeConnector: 1,
+            type: 'shipmentSummary',
+            data: order,
+          },
+        ]
+      : [null, null, null, null, null];
 
-  if (orderItems.length) {
+  if (orderItemCount > 0) {
     orderItems.forEach((item, index) => {
       const batches = getByPathWithDefault([], 'batches', item);
       if (batches.length) {
@@ -286,6 +329,42 @@ const orderCoordinates = (isExpand: boolean, order: mixed): Array<?CellRender> =
   return result;
 };
 
+const getColorByEntity = (entity: ?Entity) => {
+  switch (entity) {
+    case 'orderItem':
+      return 'ORDER_ITEM';
+
+    default:
+      return entity && entity.toUpperCase();
+  }
+};
+const getIconByEntity = (entity: ?Entity) => {
+  switch (entity) {
+    case 'orderItem':
+      return 'ORDER_ITEM';
+
+    default:
+      return entity && entity.toUpperCase();
+  }
+};
+const getCardByEntity = (entity: ?Entity) => {
+  switch (entity) {
+    case 'order':
+      return OrderCard;
+    case 'orderItem':
+      return ItemCard;
+    case 'batch':
+      return BatchCard;
+    case 'container':
+      return ContainerCard;
+    case 'shipment':
+      return ShipmentCard;
+
+    default:
+      return React.Fragment;
+  }
+};
+
 const cellRenderer = (
   cell: ?CellRender,
   {
@@ -298,19 +377,34 @@ const cellRenderer = (
 ) => {
   if (!cell)
     return (
-      <>
-        <Content />
-        <Content />
-        <Content />
-      </>
+      <React.Fragment key={uuid()}>
+        <div className={ContentStyle} />
+        <div className={ContentStyle} />
+        <div className={ContentStyle} />
+      </React.Fragment>
     );
 
-  const { beforeConnector, type, data, afterConnector } = cell;
-  let content = <Content />;
+  const { beforeConnector, type, data, entity, afterConnector } = cell;
+  let content = <div className={ContentStyle} />;
   switch (type) {
+    case 'placeholder': {
+      const color = getColorByEntity(entity);
+      const icon = getIconByEntity(entity);
+      const PlaceHolder = getCardByEntity(entity);
+      content = (
+        <div className={ContentStyle}>
+          <BaseCard icon={icon} color={color}>
+            <PlaceHolder>
+              <LoadingIcon />
+            </PlaceHolder>
+          </BaseCard>
+        </div>
+      );
+      break;
+    }
     case 'order':
       content = (
-        <Content>
+        <div className={ContentStyle}>
           <BaseCard
             icon="ORDER"
             color="ORDER"
@@ -318,12 +412,12 @@ const cellRenderer = (
           >
             <OrderCard>{getByPathWithDefault('', 'poNo', data)}</OrderCard>
           </BaseCard>
-        </Content>
+        </div>
       );
       break;
     case 'orderItem':
       content = (
-        <Content>
+        <div className={ContentStyle}>
           <BaseCard
             icon="ORDER_ITEM"
             color="ORDER_ITEM"
@@ -331,13 +425,13 @@ const cellRenderer = (
           >
             <ItemCard>{getByPathWithDefault('', 'productProvider.product.name', data)}</ItemCard>
           </BaseCard>
-        </Content>
+        </div>
       );
       break;
 
     case 'batch':
       content = (
-        <Content>
+        <div className={ContentStyle}>
           <BaseCard
             icon="BATCH"
             color="BATCH"
@@ -345,13 +439,13 @@ const cellRenderer = (
           >
             <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
           </BaseCard>
-        </Content>
+        </div>
       );
       break;
 
     case 'shipment':
       content = (
-        <Content>
+        <div className={ContentStyle}>
           <BaseCard
             icon="SHIPMENT"
             color="SHIPMENT"
@@ -359,21 +453,21 @@ const cellRenderer = (
           >
             <ShipmentCard>{getByPathWithDefault('', 'no', data)}</ShipmentCard>
           </BaseCard>
-        </Content>
+        </div>
       );
       break;
 
     case 'shipmentWithoutContainer':
       content = (
-        <Content>
+        <div className={ContentStyle}>
           <RelationLine type={1} />
-        </Content>
+        </div>
       );
       break;
 
     case 'container':
       content = (
-        <Content>
+        <div className={ContentStyle}>
           <BaseCard
             icon="CONTAINER"
             color="CONTAINER"
@@ -381,13 +475,13 @@ const cellRenderer = (
           >
             <ContainerCard>{getByPathWithDefault('', 'no', data)}</ContainerCard>
           </BaseCard>
-        </Content>
+        </div>
       );
       break;
 
     case 'itemSummary':
       content = (
-        <Content onClick={onClick}>
+        <div className={ContentStyle} onClick={onClick} role="presentation">
           <BaseCard
             icon={isExpand ? 'CHEVRON_DOUBLE_UP' : 'CHEVRON_DOWN'}
             color={isExpand ? 'GRAY_QUITE_LIGHT' : 'BLACK'}
@@ -401,13 +495,13 @@ const cellRenderer = (
           >
             <ItemCard>Total: {getByPathWithDefault(0, 'orderItemCount', data)} </ItemCard>
           </BaseCard>
-        </Content>
+        </div>
       );
       break;
 
     case 'batchSummary':
       content = (
-        <Content onClick={onClick}>
+        <div className={ContentStyle} onClick={onClick} role="presentation">
           <BaseCard
             icon={isExpand ? 'CHEVRON_DOUBLE_UP' : 'CHEVRON_DOWN'}
             color={isExpand ? 'GRAY_QUITE_LIGHT' : 'BLACK'}
@@ -421,13 +515,13 @@ const cellRenderer = (
           >
             <BatchCard>Total: {getByPathWithDefault(0, 'batchCount', data)}</BatchCard>
           </BaseCard>
-        </Content>
+        </div>
       );
       break;
 
     case 'containerSummary':
       content = (
-        <Content onClick={onClick}>
+        <div className={ContentStyle} onClick={onClick} role="presentation">
           <BaseCard
             icon={isExpand ? 'CHEVRON_DOUBLE_UP' : 'CHEVRON_DOWN'}
             color={isExpand ? 'GRAY_QUITE_LIGHT' : 'BLACK'}
@@ -441,13 +535,13 @@ const cellRenderer = (
           >
             <ContainerCard>Total: {getByPathWithDefault(0, 'containerCount', data)}</ContainerCard>
           </BaseCard>
-        </Content>
+        </div>
       );
       break;
 
     case 'shipmentSummary':
       content = (
-        <Content onClick={onClick}>
+        <div className={ContentStyle} onClick={onClick} role="presentation">
           <BaseCard
             icon={isExpand ? 'CHEVRON_DOUBLE_UP' : 'CHEVRON_DOWN'}
             color={isExpand ? 'GRAY_QUITE_LIGHT' : 'BLACK'}
@@ -461,22 +555,102 @@ const cellRenderer = (
           >
             <ShipmentCard>Total {getByPathWithDefault(0, 'shipmentCount', data)}</ShipmentCard>
           </BaseCard>
-        </Content>
+        </div>
       );
       break;
 
     default:
-      content = <Content />;
+      content = <div className={ContentStyle} />;
   }
 
   return (
-    <>
-      <Content>{beforeConnector && <RelationLine type={beforeConnector} />}</Content>
+    <React.Fragment key={getByPathWithDefault(uuid(), 'id', cell)}>
+      <div className={ContentStyle}>
+        {beforeConnector && <RelationLine type={beforeConnector} />}
+      </div>
       {content}
-      <Content>{afterConnector && <RelationLine type={afterConnector} />}</Content>
-    </>
+      <div className={ContentStyle}>{afterConnector && <RelationLine type={afterConnector} />}</div>
+    </React.Fragment>
   );
 };
+
+function LoadingPlaceHolder({ showHeader }: { showHeader: boolean }) {
+  return showHeader ? (
+    <div className={WrapperStyle}>
+      <Header />
+      {[
+        {
+          type: 'placeholder',
+          entity: 'order',
+        },
+        {
+          type: 'placeholder',
+          entity: 'orderItem',
+        },
+        {
+          type: 'placeholder',
+          entity: 'batch',
+        },
+        {
+          type: 'placeholder',
+          entity: 'container',
+        },
+        {
+          type: 'placeholder',
+          entity: 'shipment',
+        },
+      ].map(cell =>
+        cellRenderer(cell, {
+          onClick: () => {},
+          isExpand: false,
+        })
+      )}
+    </div>
+  ) : (
+    [
+      {
+        type: 'placeholder',
+        entity: 'order',
+        data: {
+          id: uuid(),
+        },
+      },
+      {
+        type: 'placeholder',
+        entity: 'orderItem',
+        data: {
+          id: uuid(),
+        },
+      },
+      {
+        type: 'placeholder',
+        entity: 'batch',
+        data: {
+          id: uuid(),
+        },
+      },
+      {
+        type: 'placeholder',
+        entity: 'container',
+        data: {
+          id: uuid(),
+        },
+      },
+      {
+        type: 'placeholder',
+        entity: 'shipment',
+        data: {
+          id: uuid(),
+        },
+      },
+    ].map(cell =>
+      cellRenderer(cell, {
+        onClick: () => {},
+        isExpand: false,
+      })
+    )
+  );
+}
 
 function Row({
   order,
@@ -500,90 +674,79 @@ function Row({
   return cells.map(cell => cellRenderer(cell, { onClick, isExpand }));
 }
 
-const dummyData = (): Array<{ ...OrderPayload, containerCount: number }> => {
-  return range(20).map(() => {
-    const order = orderGenerator();
-    const shipment = shipmentGenerator();
-    // $FlowIgnore simulate test data
-    return {
-      ...order,
-      // $FlowIgnore simulate test data
-      orderItems: range(0, random(3)).map(() => ({
-        ...orderItemGenerator(),
-        batches: range(0, random(5)).map(() => {
-          const hasContainer = random(1);
-          return {
-            ...batchGenerator(),
-            container: hasContainer
-              ? {
-                  ...containerGenerator(),
-                  shipment,
-                }
-              : null,
-            shipment: hasContainer || random(1) ? shipment : null,
-          };
-        }),
-      })),
-      shipments: [shipment],
-    };
-  });
+const hasMoreItems = (data: Object, model: string = 'orders') => {
+  const nextPage = getByPathWithDefault(1, `${model}.page`, data) + 1;
+  const totalPage = getByPathWithDefault(1, `${model}.totalPage`, data);
+  return nextPage <= totalPage;
 };
 
-const orders = dummyData();
 export default function OrderFocus() {
   const [expandRows, setExpandRows] = React.useState([]);
+  const { queryVariables: queryOrderVariables } = useFilter(
+    {
+      page: 1,
+      perPage: 10,
+      filter: {
+        query: '',
+        archived: false,
+      },
+      sort: {
+        field: 'updatedAt',
+        direction: 'DESCENDING',
+      },
+    },
+    'orderFocusedFilter'
+  );
+
+  const scrollParentRef = React.createRef();
 
   return (
-    <Wrapper>
-      <Heading
-        style={{
-          gridColumn: 'span 3',
-          backgroundColor: '#ED5724',
-        }}
+    <div className={ScrollWrapperStyle} ref={scrollParentRef}>
+      <Query
+        query={orderFocusedListQuery}
+        variables={queryOrderVariables}
+        fetchPolicy="network-only"
       >
-        Orders
-      </Heading>
-      <Heading
-        style={{
-          gridColumn: 'span 3',
-          backgroundColor: '#FBAA1D',
+        {({ loading, data, error, fetchMore }) => {
+          if (error) {
+            return error.message;
+          }
+
+          if (loading) {
+            return <LoadingPlaceHolder showHeader />;
+          }
+
+          const orders = getByPathWithDefault([], 'orders.nodes', data);
+          return (
+            <InfiniteScroll
+              className={WrapperStyle}
+              loadMore={() => loadMore({ fetchMore, data }, queryOrderVariables, 'orders')}
+              hasMore={hasMoreItems(data, 'orders')}
+              loader={<LoadingPlaceHolder key="loading" showHeader={false} />}
+              useWindow={false}
+              getScrollParent={() => scrollParentRef.current}
+            >
+              <Header />
+              {orders.map(order => (
+                <Row
+                  order={order}
+                  key={order.id}
+                  isExpand={expandRows.includes(order.id)}
+                  onExpand={setExpandRows}
+                />
+              ))}
+              {orders.length === 0 && (
+                <Display>
+                  <FormattedMessage
+                    id="modules.Orders.noOrderFound"
+                    defaultMessage="No orders found"
+                  />
+                </Display>
+              )}
+            </InfiniteScroll>
+          );
         }}
-      >
-        Items
-      </Heading>
-      <Heading
-        style={{
-          gridColumn: 'span 3',
-          backgroundColor: '#12B937',
-        }}
-      >
-        Batches
-      </Heading>
-      <Heading
-        style={{
-          gridColumn: 'span 3',
-          backgroundColor: '#30A8E4',
-        }}
-      >
-        Containers
-      </Heading>
-      <Heading
-        style={{
-          gridColumn: 'span 3',
-          backgroundColor: '#0756AF',
-        }}
-      >
-        Shipments
-      </Heading>
-      {orders.map(order => (
-        <Row
-          // $FlowIgnore simulate test data
-          order={order}
-          key={order.id}
-          isExpand={expandRows.includes(order.id)}
-          onExpand={setExpandRows}
-        />
-      ))}
-    </Wrapper>
+      </Query>
+    </div>
   );
 }
