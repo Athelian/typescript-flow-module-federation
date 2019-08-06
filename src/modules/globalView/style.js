@@ -10,17 +10,36 @@ export const ColumnStyle = css`
 
 export const HeaderWrapperStyle = css``;
 
-export const HeaderStyle = css`
+export const HeaderStyle = (width: number) => css`
   position: sticky !important;
   position: -webkit-sticky !important;
   z-index: 2;
   ${layout.GRID_HORIZONTAL};
   height: 35px;
-  width: calc(100% - 30px);
-
+  width: ${width}px;
   overflow: hidden;
 `;
 
-export const HeaderItemStyle = ({ width }: { width: number }) => css`
+export const HeaderItemStyle = (width: number) => css`
   ${width && `width: ${width}px;`}
+  position: sticky;
+  top: 0;
+  text-align: left;
+  position: relative;
+`;
+
+export const DragHandleIconStyle = css`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: black;
+  opacity: 0;
+  width: 3px;
+  cursor: col-resize;
+  z-index: 2;
+  &:hover {
+    opacity: 0.5;
+    z-index: 2;
+  }
 `;

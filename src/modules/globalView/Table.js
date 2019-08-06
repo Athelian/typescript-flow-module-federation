@@ -1,15 +1,53 @@
 // @flow
 import * as React from 'react';
-import { FixedSizeGrid as Grid } from 'react-window';
+import { VariableSizeGrid as Grid } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import Draggable from 'react-draggable';
 import { getByPath } from 'utils/fp';
 import InlineTextInput from './components/InlineTextInput';
-import { HeaderStyle, HeaderItemStyle, ColumnStyle } from './style';
+import { HeaderStyle, HeaderItemStyle, ColumnStyle, DragHandleIconStyle } from './style';
 
-const Header = ({ innerRef, items }: { innerRef: React.Ref<any>, items: string[] }) => {
+const HeaderItem = ({ index, item, width, handleDrag }: Object) => {
   return (
-    <div ref={innerRef} className={HeaderStyle}>
-      {items.map(item => (
-        <div className={HeaderItemStyle({ width: 200 })}>{item}</div>
+    <div className={HeaderItemStyle(width)}>
+      {item}
+      <Draggable
+        axis="x"
+        position={{ x: 0, y: 0 }}
+        onStop={(event, { lastX }) => {
+          handleDrag(index, width + lastX);
+        }}
+      >
+        <span className={DragHandleIconStyle} />
+      </Draggable>
+    </div>
+  );
+};
+
+const Header = ({
+  innerRef,
+  width,
+  columnWidths,
+  items,
+  resizeColumnWidth,
+}: {
+  innerRef: React.Ref<any>,
+  width: number,
+  columnWidths: Array<number>,
+  items: Array<string>,
+  resizeColumnWidth: Function,
+}) => {
+  return (
+    <div ref={innerRef} className={HeaderStyle(width)}>
+      {items.map((item, index) => (
+        <HeaderItem
+          // eslint-disable-next-line react/no-array-index-key
+          key={index}
+          index={index}
+          item={item}
+          width={columnWidths[index]}
+          handleDrag={resizeColumnWidth}
+        />
       ))}
     </div>
   );
@@ -36,35 +74,64 @@ const Cell = ({
   );
 };
 
-const Table = ({ keys, data }: { keys: Array<string>, data: any }) => {
-  const headerRef = React.useRef();
-  const bodyRef = React.createRef();
+const Table = ({
+  columnWidths,
+  keys,
+  data,
+}: {
+  columnWidths: Array<number>,
+  keys: Array<string>,
+  data: any,
+}) => {
+  const headerRef = React.useRef(null);
+  const bodyRef = React.useRef(null);
+  const gridRef = React.useRef(null);
+  const [widths, setWidths] = React.useState(columnWidths);
 
   const handleScroll = ({ scrollLeft }: Object) => {
-    if (bodyRef.current) {
-      if (headerRef.current) {
-        headerRef.current.scrollLeft = scrollLeft;
-      }
+    if (bodyRef.current && headerRef.current) {
+      headerRef.current.scrollLeft = scrollLeft;
     }
   };
 
   return (
-    <div>
-      <Header innerRef={headerRef} items={keys} />
-      <Grid
-        innerRef={bodyRef}
-        itemData={data}
-        columnCount={keys.length}
-        columnWidth={200}
-        width={800}
-        height={150}
-        rowCount={data.length}
-        rowHeight={35}
-        onScroll={handleScroll}
-      >
-        {Cell}
-      </Grid>
-    </div>
+    <AutoSizer>
+      {({ height, width }) => (
+        <>
+          <Header
+            columnWidths={widths}
+            innerRef={headerRef}
+            items={keys}
+            width={width}
+            resizeColumnWidth={(index, newWidth) => {
+              setWidths(prevWidths => {
+                const newWidths = [...prevWidths];
+                newWidths[index] = newWidth;
+                return newWidths;
+              });
+              if (gridRef.current) {
+                gridRef.current.resetAfterColumnIndex(index);
+              }
+            }}
+          />
+          <Grid
+            // $FlowFixMe: expected object, but exist function, because we use hooks. it should be supported by library.
+            ref={gridRef}
+            innerRef={bodyRef}
+            itemData={data}
+            columnCount={keys.length}
+            columnWidth={index => widths[index]}
+            width={width}
+            height={height}
+            rowCount={data.length}
+            rowHeight={() => 35}
+            onScroll={handleScroll}
+          >
+            {Cell}
+          </Grid>
+        </>
+      )}
+    </AutoSizer>
   );
 };
 
