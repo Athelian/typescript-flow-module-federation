@@ -62,7 +62,6 @@ const Tasks = ({
         {({ value: opened, set: selectTaskSlideToggle }) => (
           <>
             <TaskCard
-              groupIds={groupIds}
               isInTemplate={isInTemplate}
               editable={editable}
               navigable={navigable}

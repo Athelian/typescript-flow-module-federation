@@ -1,9 +1,11 @@
 // @flow
 import * as React from 'react';
+import type { ProductPayload } from 'generated/graphql';
+import { getByPathWithDefault } from 'utils/fp';
 import BaseCard from 'components/Cards';
 import TaskRing from 'components/TaskRing';
+import ProductImage from 'components/ProductImage';
 import { Display } from 'components/Form';
-import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import QuantityChartMini from 'components/QuantityChartMini';
 import {
   RMOrderItemCardWrapperStyle,
@@ -18,15 +20,7 @@ import {
 type Props = {
   orderItem: {
     archived: boolean,
-    productProvider: {
-      product: {
-        name: string,
-        serial: string,
-        files: Array<{
-          pathSmall: string,
-        }>,
-      },
-    },
+    productProvider: ProductPayload,
     orderedQuantity: number,
     batchedQuantity: number,
     shippedQuantity: number,
@@ -43,28 +37,29 @@ type Props = {
   },
 };
 
-const RMOrderItemCard = ({
-  orderItem: {
+const RMOrderItemCard = ({ orderItem }: Props) => {
+  const {
     archived,
-    productProvider,
     orderedQuantity,
     batchedQuantity,
     shippedQuantity,
     batched,
     shipped,
     todo,
-  },
-}: Props) => {
-  const { product } = productProvider || {};
-
-  const { name, serial, files } = product || {};
-
-  const productImage = files && files.length > 0 ? files[0].pathSmall : FALLBACK_IMAGE;
+  } = orderItem;
+  const name = getByPathWithDefault('', 'productProvider.product.name', orderItem);
+  const serial = getByPathWithDefault('', 'productProvider.product.serial', orderItem);
+  const files = getByPathWithDefault([], 'productProvider.product.files', orderItem);
 
   return (
     <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" isArchived={archived}>
       <div className={RMOrderItemCardWrapperStyle}>
-        <img className={ProductImageStyle} src={productImage} alt="product_image" />
+        <ProductImage
+          height="40px"
+          className={ProductImageStyle}
+          path="pathSmall"
+          file={files[0]}
+        />
 
         <div className={InfoWrapperStyle}>
           <div className={NameWrapperStyle}>

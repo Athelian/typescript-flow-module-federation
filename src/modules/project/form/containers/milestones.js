@@ -1,5 +1,5 @@
 // @flow
-import { flatten } from 'lodash';
+import { omit, flatten } from 'lodash';
 import { Container } from 'unstated';
 import update from 'immutability-helper';
 import pluralize from 'pluralize';
@@ -237,7 +237,7 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
           [index]: {
             tasks: {
               [taskIndex]: {
-                $merge: task,
+                $merge: omit(task, ['milestone']),
               },
             },
           },

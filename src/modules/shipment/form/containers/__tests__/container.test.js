@@ -9,7 +9,7 @@ describe('shipment task container', () => {
 
   it('should reset status and remove staff when change importer ', async () => {
     const container = new Container();
-    const group = {
+    const organization = {
       id: faker.random.uuid(),
       name: faker.name.findName(),
     };
@@ -18,7 +18,7 @@ describe('shipment task container', () => {
       id: faker.random.uuid(),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
-      group,
+      organization,
     };
 
     const remainUsers = [
@@ -26,7 +26,7 @@ describe('shipment task container', () => {
         id: faker.random.uuid(),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
-        group: {
+        organization: {
           id: faker.random.uuid(),
           name: faker.name.findName(),
         },
@@ -35,7 +35,7 @@ describe('shipment task container', () => {
         id: faker.random.uuid(),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
-        group: {
+        organization: {
           id: faker.random.uuid(),
           name: faker.name.findName(),
         },
@@ -76,7 +76,7 @@ describe('shipment task container', () => {
     expect(container.originalValues.containers).toEqual(containers);
     expect(container.state.containers).toEqual(containers);
 
-    await container.onChangePartner(group);
+    await container.onChangePartner(organization);
 
     expect(container.state.containers).toEqual([
       {

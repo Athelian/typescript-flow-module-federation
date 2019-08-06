@@ -119,6 +119,7 @@ export const itemFormFragment = gql`
     }
     files {
       ...documentFragment
+      ...forbiddenFragment
     }
     shipments {
       ...shipmentCardFragment

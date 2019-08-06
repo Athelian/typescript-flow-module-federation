@@ -65,7 +65,7 @@ const UserAssignmentInput = ({ cacheKey, users, name, groupIds, onChange, editab
               {isOpen && (
                 <AssignUsers
                   cacheKey={cacheKey}
-                  filterBy={{ groupIds }}
+                  filterBy={{ organizationIds: groupIds }}
                   selected={users}
                   onSelect={selected => {
                     slideToggle(false);

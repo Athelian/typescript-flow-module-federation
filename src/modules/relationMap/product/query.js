@@ -22,13 +22,13 @@ export const productListQuery = gql`
             ... on ProductProvider {
               id
               exporter {
-                ... on Group {
+                ... on Organization {
                   id
                   name
                 }
               }
               supplier {
-                ... on Group {
+                ... on Organization {
                   id
                   name
                 }

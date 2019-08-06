@@ -13,7 +13,7 @@ import query from './query';
 type ContextProps = {
   user: {
     id: string,
-    group: Object,
+    organization: Object,
     firstName: string,
     lastName: string,
   },
@@ -23,7 +23,7 @@ type ContextProps = {
 export const UserContext: React.Context<ContextProps> = React.createContext({
   user: {
     id: '-1',
-    group: {
+    organization: {
       id: '-1',
     },
     firstName: '',
@@ -60,7 +60,7 @@ const UserProvider = ({ children }: Props) => (
           const {
             user = {
               id: '-1',
-              group: {
+              organization: {
                 id: '-1',
                 types: [],
               },

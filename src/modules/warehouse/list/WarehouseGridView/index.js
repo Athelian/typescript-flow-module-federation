@@ -60,7 +60,7 @@ const WarehouseGridView = ({
   renderItem = defaultRenderItem,
 }: Props) => {
   const { hasPermission } = usePermission();
-  const { group } = useUser();
+  const { organization } = useUser();
   const allowViewForm = hasPermission(WAREHOUSE_FORM);
   const allowCreate = hasPermission(WAREHOUSE_CREATE);
 
@@ -76,7 +76,7 @@ const WarehouseGridView = ({
       }
     >
       {items.map(item =>
-        renderItem({ item, allowViewForm, allowCreate, currentUserGroupId: group.id })
+        renderItem({ item, allowViewForm, allowCreate, currentUserGroupId: organization.id })
       )}
     </GridView>
   );

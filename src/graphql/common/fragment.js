@@ -56,6 +56,36 @@ export const documentFragment = gql`
     type
     status
     memo
+    # TODO: move to common fragment for entity
+    entity {
+      ... on Model {
+        id
+      }
+      ... on Order {
+        poNo
+      }
+      ... on OrderItem {
+        no
+      }
+      ... on Shipment {
+        no
+      }
+      ... on Batch {
+        no
+      }
+      ... on Product {
+        name
+      }
+      ... on ProductProvider {
+        name
+        product {
+          ... on Product {
+            id
+            name
+          }
+        }
+      }
+    }
   }
 `;
 
@@ -64,8 +94,8 @@ export const userAvatarFragment = gql`
     id
     firstName
     lastName
-    group {
-      ... on Group {
+    organization {
+      ... on Organization {
         id
         name
       }
@@ -74,7 +104,7 @@ export const userAvatarFragment = gql`
 `;
 
 export const partnerNameFragment = gql`
-  fragment partnerNameFragment on Group {
+  fragment partnerNameFragment on Organization {
     id
     name
   }
@@ -182,13 +212,8 @@ export const fieldDefinitionFragment = gql`
 `;
 
 export const ownedByFragment = gql`
-  fragment ownedByFragment on Group {
+  fragment ownedByFragment on Organization {
     id
-    partner {
-      ... on Partner {
-        id
-      }
-    }
     name
   }
 `;

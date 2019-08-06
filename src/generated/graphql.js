@@ -17805,7 +17805,7 @@ export type Batch = Model & Owned & Package & Tagged & Customizable & Memorizabl
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   packageName?: ?$ElementType<Scalars, 'String'>,
   packageGrossWeight?: ?MetricValue,
   packageVolume?: ?MetricValue,
@@ -17900,7 +17900,7 @@ export type BatchQuantityRevision = Model & Owned & Sortable & Memorizable & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   sort: $ElementType<Scalars, 'Int'>,
   memo?: ?$ElementType<Scalars, 'String'>,
 };
@@ -18005,7 +18005,7 @@ export type Comment = Model & Owned & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
 };
 
 export type CommentCreateInput = {
@@ -18060,7 +18060,7 @@ export type Container = Model & Owned & Tagged & Sortable & Memorizable & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   tags: Array<TagPayload>,
   sort: $ElementType<Scalars, 'Int'>,
   memo?: ?$ElementType<Scalars, 'String'>,
@@ -18145,7 +18145,7 @@ export type ContainerGroup = Model & Owned & Sortable & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   sort: $ElementType<Scalars, 'Int'>,
 };
 
@@ -19163,7 +19163,7 @@ export type EntityInput = {
   taskId?: ?$ElementType<Scalars, 'ID'>,
 };
 
-export type EntityPayload = Product | ProductProvider | Order | OrderItem | Batch | BatchQuantityRevision | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Group | Partnership | Role | File | Task | TaskTemplate | Project | Milestone | BadRequest | Forbidden | NotFound;
+export type EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | BatchQuantityRevision | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | Milestone | BadRequest | Forbidden | NotFound;
 
 export type EntityValue = {
   __typename?: 'EntityValue',
@@ -19193,7 +19193,7 @@ export type Event = Model & Owned & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
 };
 
 export type Export = {
@@ -19218,7 +19218,7 @@ export type ExportTemplate = Model & {
   builder: $ElementType<Scalars, 'String'>,
   fetcher: $ElementType<Scalars, 'String'>,
   normalizers: Array<$ElementType<Scalars, 'String'>>,
-  ownedBy?: ?GroupPayload,
+  ownedBy?: ?OrganizationPayload,
   id: $ElementType<Scalars, 'ID'>,
   createdAt: $ElementType<Scalars, 'DateTime'>,
   updatedAt: $ElementType<Scalars, 'DateTime'>,
@@ -19280,7 +19280,7 @@ export type FieldDefinition = Model & Owned & Sortable & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   sort: $ElementType<Scalars, 'Int'>,
 };
 
@@ -19334,7 +19334,7 @@ export type File = Model & Owned & Memorizable & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   memo?: ?$ElementType<Scalars, 'String'>,
 };
 
@@ -19343,6 +19343,16 @@ export type FilePathArgs = {
   preset?: ?ResizePreset,
   width?: ?$ElementType<Scalars, 'Int'>,
   height?: ?$ElementType<Scalars, 'Int'>
+};
+
+export type FileFilterInput = {
+  query?: ?$ElementType<Scalars, 'String'>,
+  excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  createdAt?: ?DateRangeInput,
+  updatedAt?: ?DateRangeInput,
+  type?: ?FileType,
+  status?: ?FileStatus,
+  mimetype?: ?$ElementType<Scalars, 'String'>,
 };
 
 export type FileInput = {
@@ -19354,6 +19364,25 @@ export type FileInput = {
 };
 
 export type FilePayload = File | BadRequest | Forbidden | NotFound;
+
+export type FilePayloadPagination = {
+  __typename?: 'FilePayloadPagination',
+  nodes: Array<FilePayload>,
+  page: $ElementType<Scalars, 'Int'>,
+  perPage: $ElementType<Scalars, 'Int'>,
+  totalPage: $ElementType<Scalars, 'Int'>,
+  count: $ElementType<Scalars, 'Int'>,
+  totalCount: $ElementType<Scalars, 'Int'>,
+};
+
+export type FileSortInput = {
+  createdAt?: ?SortOrder,
+  updatedAt?: ?SortOrder,
+  name?: ?SortOrder,
+  type?: ?SortOrder,
+  status?: ?SortOrder,
+  size?: ?SortOrder,
+};
 
 export const FileStatusValues = Object.freeze({
   /** Draft */
@@ -19410,78 +19439,6 @@ export type Forbidden = {
   __typename?: 'Forbidden',
   reference?: ?Reference,
   reason?: ?$ElementType<Scalars, 'String'>,
-};
-
-export type Group = Model & {
-  __typename?: 'Group',
-  types: Array<GroupType>,
-  name: $ElementType<Scalars, 'String'>,
-  name2?: ?$ElementType<Scalars, 'String'>,
-  tel?: ?$ElementType<Scalars, 'String'>,
-  address?: ?$ElementType<Scalars, 'String'>,
-  zipCode?: ?$ElementType<Scalars, 'String'>,
-  country?: ?$ElementType<Scalars, 'String'>,
-  avatar?: ?FilePayload,
-  disabled: $ElementType<Scalars, 'Boolean'>,
-  dummy: $ElementType<Scalars, 'Boolean'>,
-  users: UserPayloadPagination,
-  /** Resolving the current partnership of this group from user's group */
-  partner?: ?PartnerPayload,
-  partners: PartnerPayloadPagination,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-};
-
-
-export type GroupUsersArgs = {
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  filterBy?: ?UserFilterInput,
-  sortBy?: ?UserSortInput
-};
-
-
-export type GroupPartnersArgs = {
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  filterBy?: ?PartnerFilterInput,
-  sortBy?: ?PartnerSortInput
-};
-
-export type GroupPayload = Group | BadRequest | Forbidden | NotFound;
-
-export const GroupTypeValues = Object.freeze({
-  /** Importer */
-  Importer: 'Importer',
-  /** Exporter */
-  Exporter: 'Exporter',
-  /** Forwarder */
-  Forwarder: 'Forwarder',
-  /** Supplier */
-  Supplier: 'Supplier',
-  /** Warehouser */
-  Warehouser: 'Warehouser'
-});
-
-
-export type GroupType = $Values<typeof GroupTypeValues>;
-
-export type GroupUpdateInput = {
-  name?: ?$ElementType<Scalars, 'String'>,
-  name2?: ?$ElementType<Scalars, 'String'>,
-  types?: ?Array<GroupType>,
-  disabled?: ?$ElementType<Scalars, 'Boolean'>,
-  tel?: ?$ElementType<Scalars, 'String'>,
-  address?: ?$ElementType<Scalars, 'String'>,
-  zipCode?: ?$ElementType<Scalars, 'String'>,
-  country?: ?Country,
-  avatar?: ?FileInput,
-  dummy?: ?$ElementType<Scalars, 'Boolean'>,
 };
 
 export type Import = {
@@ -19553,7 +19510,7 @@ export type Integration = Model & Owned & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
 };
 
 export type IntegrationConfiguration = Model & Owned & {
@@ -19570,7 +19527,7 @@ export type IntegrationConfiguration = Model & Owned & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
 };
 
 
@@ -19591,7 +19548,7 @@ export type IntegrationConfigurationFilterInput = {
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
-  groupId?: ?$ElementType<Scalars, 'ID'>,
+  organizationId?: ?$ElementType<Scalars, 'ID'>,
   integrationId?: ?$ElementType<Scalars, 'ID'>,
 };
 
@@ -19624,7 +19581,7 @@ export type IntegrationFilterInput = {
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
-  groupId?: ?$ElementType<Scalars, 'ID'>,
+  organizationId?: ?$ElementType<Scalars, 'ID'>,
 };
 
 export type IntegrationLink = Model & Owned & {
@@ -19645,7 +19602,7 @@ export type IntegrationLink = Model & Owned & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
 };
 
 export type IntegrationLinkCreateInput = {
@@ -20159,7 +20116,7 @@ export type Mask = Model & Owned & Memorizable & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   memo?: ?$ElementType<Scalars, 'String'>,
 };
 
@@ -20182,7 +20139,7 @@ export type MaskEdit = Model & Owned & Memorizable & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   memo?: ?$ElementType<Scalars, 'String'>,
 };
 
@@ -20326,7 +20283,7 @@ export type Milestone = Model & Owned & Sortable & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   sort: $ElementType<Scalars, 'Int'>,
 };
 
@@ -20524,7 +20481,6 @@ export type Mutation = {
   userUpdate: UserPayload,
   userAddRole: UserRolesPayload,
   userRemoveRole: UserRolesPayload,
-  groupUpdate: GroupPayload,
   productCreate: ProductPayload,
   productUpdate: ProductPayload,
   productUpdateMany: Array<?ProductPayload>,
@@ -20643,12 +20599,6 @@ export type MutationUserAddRoleArgs = {
 export type MutationUserRemoveRoleArgs = {
   id: $ElementType<Scalars, 'ID'>,
   input: UserRoleInput
-};
-
-
-export type MutationGroupUpdateArgs = {
-  id: $ElementType<Scalars, 'ID'>,
-  input: GroupUpdateInput
 };
 
 
@@ -21218,8 +21168,8 @@ export type NotificationType = $Values<typeof NotificationTypeValues>;
 export type Order = Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable & {
   __typename?: 'Order',
   archived: $ElementType<Scalars, 'Boolean'>,
-  importer: GroupPayload,
-  exporter: GroupPayload,
+  importer: OrganizationPayload,
+  exporter: OrganizationPayload,
   poNo: $ElementType<Scalars, 'String'>,
   currency: Currency,
   issuedAt?: ?$ElementType<Scalars, 'DateTime'>,
@@ -21247,7 +21197,7 @@ export type Order = Model & Owned & Tagged & Supervised & Documented & Customiza
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   tags: Array<TagPayload>,
   inCharges: Array<UserPayload>,
   files: Array<FilePayload>,
@@ -21344,7 +21294,7 @@ export type OrderItem = Model & Owned & Sortable & Tagged & Documented & Customi
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   sort: $ElementType<Scalars, 'Int'>,
   tags: Array<TagPayload>,
   files: Array<FilePayload>,
@@ -21550,8 +21500,69 @@ export type OrderUpdateWrapperInput = {
   input: OrderUpdateInput,
 };
 
+export type Organization = Model & {
+  __typename?: 'Organization',
+  types: Array<OrganizationType>,
+  name: $ElementType<Scalars, 'String'>,
+  name2?: ?$ElementType<Scalars, 'String'>,
+  tel?: ?$ElementType<Scalars, 'String'>,
+  street?: ?$ElementType<Scalars, 'String'>,
+  locality?: ?$ElementType<Scalars, 'String'>,
+  region?: ?$ElementType<Scalars, 'String'>,
+  postalCode?: ?$ElementType<Scalars, 'String'>,
+  country?: ?$ElementType<Scalars, 'String'>,
+  avatar?: ?FilePayload,
+  disabled: $ElementType<Scalars, 'Boolean'>,
+  dummy: $ElementType<Scalars, 'Boolean'>,
+  users: UserPayloadPagination,
+  /** Resolving the current partnership of this organization from user's organization */
+  partner?: ?PartnerPayload,
+  partners: PartnerPayloadPagination,
+  id: $ElementType<Scalars, 'ID'>,
+  createdAt: $ElementType<Scalars, 'DateTime'>,
+  updatedAt: $ElementType<Scalars, 'DateTime'>,
+  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+  createdBy?: ?UserPayload,
+  updatedBy?: ?UserPayload,
+  deletedBy?: ?UserPayload,
+};
+
+
+export type OrganizationUsersArgs = {
+  page: $ElementType<Scalars, 'Int'>,
+  perPage: $ElementType<Scalars, 'Int'>,
+  filterBy?: ?UserFilterInput,
+  sortBy?: ?UserSortInput
+};
+
+
+export type OrganizationPartnersArgs = {
+  page: $ElementType<Scalars, 'Int'>,
+  perPage: $ElementType<Scalars, 'Int'>,
+  filterBy?: ?PartnerFilterInput,
+  sortBy?: ?PartnerSortInput
+};
+
+export type OrganizationPayload = Organization | BadRequest | Forbidden | NotFound;
+
+export const OrganizationTypeValues = Object.freeze({
+  /** Importer */
+  Importer: 'Importer',
+  /** Exporter */
+  Exporter: 'Exporter',
+  /** Forwarder */
+  Forwarder: 'Forwarder',
+  /** Supplier */
+  Supplier: 'Supplier',
+  /** Warehouser */
+  Warehouser: 'Warehouser'
+});
+
+
+export type OrganizationType = $Values<typeof OrganizationTypeValues>;
+
 export type Owned = {
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
 };
 
 export type Package = {
@@ -21571,8 +21582,8 @@ export type Parameter = {
 
 export type Partner = Model & {
   __typename?: 'Partner',
-  group: GroupPayload,
-  types: Array<GroupType>,
+  organization: OrganizationPayload,
+  types: Array<OrganizationType>,
   name?: ?$ElementType<Scalars, 'String'>,
   code?: ?$ElementType<Scalars, 'String'>,
   confirmed: $ElementType<Scalars, 'Boolean'>,
@@ -21592,7 +21603,7 @@ export type PartnerFilterInput = {
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
-  types?: ?Array<GroupType>,
+  types?: ?Array<OrganizationType>,
   confirmed?: ?$ElementType<Scalars, 'Boolean'>,
 };
 
@@ -21611,14 +21622,14 @@ export type PartnerPayloadPagination = {
 export type Partnership = Model & {
   __typename?: 'Partnership',
   confirmed: $ElementType<Scalars, 'Boolean'>,
-  leftGroup: GroupPayload,
-  leftTypes: Array<GroupType>,
+  leftOrganization: OrganizationPayload,
+  leftTypes: Array<OrganizationType>,
   leftName?: ?$ElementType<Scalars, 'String'>,
   leftCode?: ?$ElementType<Scalars, 'String'>,
   leftConfirmedAt?: ?$ElementType<Scalars, 'DateTime'>,
   leftRoles: Array<RolePayload>,
-  rightGroup: GroupPayload,
-  rightTypes: Array<GroupType>,
+  rightOrganization: OrganizationPayload,
+  rightTypes: Array<OrganizationType>,
   rightName?: ?$ElementType<Scalars, 'String'>,
   rightCode?: ?$ElementType<Scalars, 'String'>,
   rightConfirmedAt?: ?$ElementType<Scalars, 'DateTime'>,
@@ -21684,7 +21695,7 @@ export type PriceRangeInput = {
 export type Product = Model & Owned & Tagged & Documented & Memorizable & Customizable & {
   __typename?: 'Product',
   archived: $ElementType<Scalars, 'Boolean'>,
-  importer: GroupPayload,
+  importer: OrganizationPayload,
   name: $ElementType<Scalars, 'String'>,
   serial: $ElementType<Scalars, 'String'>,
   hsCode?: ?$ElementType<Scalars, 'String'>,
@@ -21705,7 +21716,7 @@ export type Product = Model & Owned & Tagged & Documented & Memorizable & Custom
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   tags: Array<TagPayload>,
   files: Array<FilePayload>,
   memo?: ?$ElementType<Scalars, 'String'>,
@@ -21799,8 +21810,8 @@ export type ProductProvider = Model & Owned & Sortable & Documented & Customizab
   referenced: $ElementType<Scalars, 'Boolean'>,
   name: $ElementType<Scalars, 'String'>,
   product: ProductPayload,
-  exporter: GroupPayload,
-  supplier?: ?GroupPayload,
+  exporter: OrganizationPayload,
+  supplier?: ?OrganizationPayload,
   unitType?: ?$ElementType<Scalars, 'String'>,
   unitVolume?: ?MetricValue,
   autoCalculateUnitVolume: $ElementType<Scalars, 'Boolean'>,
@@ -21828,7 +21839,7 @@ export type ProductProvider = Model & Owned & Sortable & Documented & Customizab
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   sort: $ElementType<Scalars, 'Int'>,
   files: Array<FilePayload>,
   customFields: CustomFields,
@@ -21896,7 +21907,7 @@ export type ProductProviderPackage = Model & Owned & Sortable & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   sort: $ElementType<Scalars, 'Int'>,
 };
 
@@ -22011,7 +22022,7 @@ export type Project = Model & Owned & Tagged & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   tags: Array<TagPayload>,
 };
 
@@ -22158,6 +22169,9 @@ export type Query = {
   integrationConfigurations: IntegrationConfigurationPayloadPagination,
   integrationLink: IntegrationLinkPayload,
   integrationLinks: IntegrationLinkPayloadPagination,
+  file: FilePayload,
+  files: FilePayloadPagination,
+  filesByIDs: Array<FilePayload>,
   exportTemplates: Array<ExportTemplatePayload>,
   exportExtensions: Array<ExportExtensionPayload>,
   genericExport: ExportPayload,
@@ -22638,6 +22652,24 @@ export type QueryIntegrationLinksArgs = {
 };
 
 
+export type QueryFileArgs = {
+  id: $ElementType<Scalars, 'ID'>
+};
+
+
+export type QueryFilesArgs = {
+  page: $ElementType<Scalars, 'Int'>,
+  perPage: $ElementType<Scalars, 'Int'>,
+  filterBy?: ?FileFilterInput,
+  sortBy?: ?FileSortInput
+};
+
+
+export type QueryFilesByIDsArgs = {
+  ids: Array<$ElementType<Scalars, 'ID'>>
+};
+
+
 export type QueryExportTemplatesArgs = {
   filterBy?: ?ExportTemplateFilterInput
 };
@@ -22702,7 +22734,7 @@ export type Role = Model & Memorizable & {
   permissions: Array<$ElementType<Scalars, 'String'>>,
   flattenPermissions: Array<$ElementType<Scalars, 'String'>>,
   partnership?: ?PartnershipPayload,
-  ownedBy?: ?GroupPayload,
+  ownedBy?: ?OrganizationPayload,
   id: $ElementType<Scalars, 'ID'>,
   createdAt: $ElementType<Scalars, 'DateTime'>,
   updatedAt: $ElementType<Scalars, 'DateTime'>,
@@ -59768,8 +59800,8 @@ export type Seaport = $Values<typeof SeaportValues>;
 export type Shipment = Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable & {
   __typename?: 'Shipment',
   archived: $ElementType<Scalars, 'Boolean'>,
-  importer: GroupPayload,
-  exporter?: ?GroupPayload,
+  importer: OrganizationPayload,
+  exporter?: ?OrganizationPayload,
   no: $ElementType<Scalars, 'String'>,
   blNo?: ?$ElementType<Scalars, 'String'>,
   blDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -59785,7 +59817,7 @@ export type Shipment = Model & Owned & Tagged & Supervised & Documented & Custom
   cargoReady: TimelineDatePayload,
   voyages: Array<VoyagePayload>,
   containerGroups: Array<ContainerGroupPayload>,
-  forwarders: Array<GroupPayload>,
+  forwarders: Array<OrganizationPayload>,
   totalVolume: MetricValue,
   totalPackageQuantity: $ElementType<Scalars, 'Float'>,
   orderCount: $ElementType<Scalars, 'Int'>,
@@ -59806,7 +59838,7 @@ export type Shipment = Model & Owned & Tagged & Supervised & Documented & Custom
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   tags: Array<TagPayload>,
   inCharges: Array<UserPayload>,
   files: Array<FilePayload>,
@@ -60084,7 +60116,7 @@ export type Tag = Model & Owned & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
 };
 
 export type TagCreateInput = {
@@ -60190,7 +60222,7 @@ export type Task = Model & Owned & Sortable & Memorizable & Tagged & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   sort: $ElementType<Scalars, 'Int'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tags: Array<TagPayload>,
@@ -60314,7 +60346,7 @@ export type TaskTemplate = Model & Owned & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
 };
 
 export type TaskTemplateCreateInput = {
@@ -60492,7 +60524,7 @@ export type TimelineDate = Model & Owned & Memorizable & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   memo?: ?$ElementType<Scalars, 'String'>,
 };
 
@@ -60518,7 +60550,7 @@ export type TimelineDateRevision = Model & Owned & Sortable & Memorizable & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   sort: $ElementType<Scalars, 'Int'>,
   memo?: ?$ElementType<Scalars, 'String'>,
 };
@@ -60611,7 +60643,8 @@ export type TransportType = $Values<typeof TransportTypeValues>;
 export type User = Model & Tagged & Memorizable & {
   __typename?: 'User',
   email: $ElementType<Scalars, 'String'>,
-  group?: ?GroupPayload,
+  organization?: ?OrganizationPayload,
+  superAdmin: $ElementType<Scalars, 'Boolean'>,
   role: $ElementType<Scalars, 'String'>,
   roles: Array<RolePayload>,
   disabled: $ElementType<Scalars, 'Boolean'>,
@@ -60639,8 +60672,8 @@ export type UserFilterInput = {
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   role?: ?$ElementType<Scalars, 'String'>,
-  groupId?: ?$ElementType<Scalars, 'ID'>,
-  groupIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  organizationId?: ?$ElementType<Scalars, 'ID'>,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 };
 
 export type UserPayload = User | BadRequest | Forbidden | NotFound;
@@ -60681,13 +60714,13 @@ export type UserUpdateInput = {
   lastName2?: ?$ElementType<Scalars, 'String'>,
   email?: ?$ElementType<Scalars, 'String'>,
   password?: ?$ElementType<Scalars, 'String'>,
-  role?: ?$ElementType<Scalars, 'String'>,
+  superAdmin?: ?$ElementType<Scalars, 'Boolean'>,
   roleIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   disabled?: ?$ElementType<Scalars, 'Boolean'>,
   language?: ?Language,
   timezone?: ?$ElementType<Scalars, 'String'>,
   avatar?: ?FileInput,
-  groupId?: ?$ElementType<Scalars, 'ID'>,
+  organizationId?: ?$ElementType<Scalars, 'ID'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 };
@@ -60710,7 +60743,7 @@ export type Viewer = {
   __typename?: 'Viewer',
   user: UserPayload,
   permissions: Array<$ElementType<Scalars, 'String'>>,
-  permissionsFromPartner: Array<$ElementType<Scalars, 'String'>>,
+  permissionsForOrganization: Array<$ElementType<Scalars, 'String'>>,
   notifications: NotificationPayloadPagination,
   notificationUnread: $ElementType<Scalars, 'Int'>,
   notificationUnseen: $ElementType<Scalars, 'Int'>,
@@ -60718,8 +60751,8 @@ export type Viewer = {
 };
 
 
-export type ViewerPermissionsFromPartnerArgs = {
-  partnerId: $ElementType<Scalars, 'ID'>
+export type ViewerPermissionsForOrganizationArgs = {
+  organizationId: $ElementType<Scalars, 'ID'>
 };
 
 
@@ -60759,7 +60792,7 @@ export type Voyage = Model & Owned & Sortable & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   sort: $ElementType<Scalars, 'Int'>,
 };
 
@@ -60786,7 +60819,7 @@ export type Warehouse = Model & Owned & Supervised & Customizable & {
   region?: ?$ElementType<Scalars, 'String'>,
   postalCode?: ?$ElementType<Scalars, 'String'>,
   country?: ?Country,
-  groups: Array<GroupPayload>,
+  organizations: Array<OrganizationPayload>,
   id: $ElementType<Scalars, 'ID'>,
   createdAt: $ElementType<Scalars, 'DateTime'>,
   updatedAt: $ElementType<Scalars, 'DateTime'>,
@@ -60794,7 +60827,7 @@ export type Warehouse = Model & Owned & Supervised & Customizable & {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-  ownedBy: GroupPayload,
+  ownedBy: OrganizationPayload,
   inCharges: Array<UserPayload>,
   customFields: CustomFields,
 };
@@ -60810,7 +60843,7 @@ export type WarehouseCreateInput = {
   country?: ?Country,
   customFields?: ?CustomFieldsInput,
   inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  groupIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 };
 
 export type WarehouseFilterInput = {
@@ -60850,7 +60883,7 @@ export type WarehouseUpdateInput = {
   country?: ?Country,
   customFields?: ?CustomFieldsInput,
   inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  groupIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 };
 
 export type WarehouseUpdateWrapperInput = {
@@ -60859,7 +60892,7 @@ export type WarehouseUpdateWrapperInput = {
 };
 type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
 
-export type BatchFormFragmentFragment = ({ __typename?: 'Batch' } & $Pick<Batch, { id: *, archived: *, autoCalculatePackageQuantity: *, autoCalculatePackageVolume: *, updatedAt: *, memo: *, no: *, quantity: *, latestQuantity: *, producedAt: *, deliveredAt: *, desiredAt: *, expiredAt: *, packageName: *, packageCapacity: *, packageQuantity: * }> & { updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, batchQuantityRevisions: Array<({ __typename?: 'BatchQuantityRevision' } & $Pick<BatchQuantityRevision, { id: *, sort: *, updatedAt: *, quantity: *, type: *, memo: * }> & { updatedBy: ?UserAvatarFragmentFragment })>, totalVolume: ({ __typename?: 'MetricValue' } & MetricFragmentFragment), todo: ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ProjectCardFragmentFragment } & MilestoneCardFragmentFragment), taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment), tasks: Array<TaskWithoutParentInfoFragmentFragment>, taskTemplate: ?TaskTemplateCardFragmentFragment }), customFields: ({ __typename?: 'CustomFields' } & CustomFieldsFragmentFragment), packageGrossWeight: ?({ __typename?: 'MetricValue' } & MetricFragmentFragment), packageVolume: ?({ __typename?: 'MetricValue' } & MetricFragmentFragment), packageSize: ?({ __typename?: 'Size' } & SizeFragmentFragment), tags: Array<TagFragmentFragment>, orderItem: ItemInBatchFormFragmentFragment, shipment: ?ShipmentCardFragmentFragment, container: ?({ __typename?: 'Container' } & $Pick<Container, { id: *, no: *, warehouseArrivalAgreedDate: *, warehouseArrivalActualDate: * }> & { representativeBatch: ?({ __typename?: 'Batch' } & $Pick<Batch, { id: * }> & { orderItem: ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { id: * }> & { productProvider: ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { id: * }> & { product: ({ __typename?: 'Product' } & $Pick<Product, { id: *, name: *, serial: * }> & { files: Array<ImageFragmentFragment> }) }) }) }), totalVolume: ({ __typename?: 'MetricValue' } & $Pick<MetricValue, { value: *, metric: * }>), batches: Array<({ __typename?: 'Batch' } & $Pick<Batch, { id: * }>)>, warehouse: ?({ __typename?: 'Warehouse' } & $Pick<Warehouse, { id: *, name: * }>), warehouseArrivalAgreedDateApprovedBy: ?({ __typename?: 'User' } & $Pick<User, { id: * }>), warehouseArrivalActualDateApprovedBy: ?({ __typename?: 'User' } & $Pick<User, { id: * }>), shipment: ({ __typename?: 'Shipment' } & $Pick<Shipment, { id: *, no: * }>), tags: Array<TagFragmentFragment> }) });
+export type BatchFormFragmentFragment = ({ __typename?: 'Batch' } & $Pick<Batch, { id: *, sort: *, shipmentSort: *, archived: *, autoCalculatePackageQuantity: *, autoCalculatePackageVolume: *, updatedAt: *, memo: *, no: *, quantity: *, latestQuantity: *, producedAt: *, deliveredAt: *, desiredAt: *, expiredAt: *, packageName: *, packageCapacity: *, packageQuantity: * }> & { updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, batchQuantityRevisions: Array<({ __typename?: 'BatchQuantityRevision' } & $Pick<BatchQuantityRevision, { id: *, sort: *, updatedAt: *, quantity: *, type: *, memo: * }> & { updatedBy: ?UserAvatarFragmentFragment })>, totalVolume: ({ __typename?: 'MetricValue' } & MetricFragmentFragment), todo: ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ProjectCardFragmentFragment } & MilestoneCardFragmentFragment), taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment), tasks: Array<TaskWithoutParentInfoFragmentFragment>, taskTemplate: ?TaskTemplateCardFragmentFragment }), customFields: ({ __typename?: 'CustomFields' } & CustomFieldsFragmentFragment), packageGrossWeight: ?({ __typename?: 'MetricValue' } & MetricFragmentFragment), packageVolume: ?({ __typename?: 'MetricValue' } & MetricFragmentFragment), packageSize: ?({ __typename?: 'Size' } & SizeFragmentFragment), tags: Array<TagFragmentFragment>, orderItem: ItemInBatchFormFragmentFragment, shipment: ?ShipmentCardFragmentFragment, container: ?({ __typename?: 'Container' } & $Pick<Container, { id: *, no: *, warehouseArrivalAgreedDate: *, warehouseArrivalActualDate: * }> & { representativeBatch: ?({ __typename?: 'Batch' } & $Pick<Batch, { id: * }> & { orderItem: ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { id: * }> & { productProvider: ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { id: * }> & { product: ({ __typename?: 'Product' } & $Pick<Product, { id: *, name: *, serial: * }> & { files: Array<ImageFragmentFragment> }) }) }) }), totalVolume: ({ __typename?: 'MetricValue' } & $Pick<MetricValue, { value: *, metric: * }>), batches: Array<({ __typename?: 'Batch' } & $Pick<Batch, { id: * }>)>, warehouse: ?({ __typename?: 'Warehouse' } & $Pick<Warehouse, { id: *, name: * }>), warehouseArrivalAgreedDateApprovedBy: ?({ __typename?: 'User' } & $Pick<User, { id: * }>), warehouseArrivalActualDateApprovedBy: ?({ __typename?: 'User' } & $Pick<User, { id: * }>), shipment: ({ __typename?: 'Shipment' } & $Pick<Shipment, { id: *, no: * }>), tags: Array<TagFragmentFragment> }) });
 
 export type BatchCardFragmentFragment = ({ __typename?: 'Batch' } & $Pick<Batch, { id: *, no: *, archived: *, latestQuantity: *, deliveredAt: *, desiredAt: *, packageQuantity: * }> & { todo: ({ __typename?: 'Todo' } & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment) }), packageVolume: ?({ __typename?: 'MetricValue' } & MetricFragmentFragment), tags: Array<TagFragmentFragment>, shipment: ?({ __typename?: 'Shipment' } & $Pick<Shipment, { id: *, no: * }>), container: ?({ __typename?: 'Container' } & $Pick<Container, { id: *, no: * }>), orderItem: ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { id: * }> & { price: ({ __typename?: 'Price' } & PriceFragmentFragment), order: ({ __typename?: 'Order' } & $Pick<Order, { id: *, poNo: *, currency: * }> & { importer: PartnerNameFragmentFragment, exporter: PartnerNameFragmentFragment }), productProvider: ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { id: *, name: * }> & { product: ({ __typename?: 'Product' } & $Pick<Product, { id: *, name: *, serial: * }> & { files: Array<ImageFragmentFragment> }) }) }) });
 
@@ -60875,11 +60908,11 @@ export type TagFragmentFragment = ({ __typename?: 'Tag' } & $Pick<Tag, { id: *, 
 
 export type ImageFragmentFragment = ({ __typename?: 'File' } & $Pick<File, { id: *, path: * }> & { pathSmall: $ElementType<File, 'path'>, pathMedium: $ElementType<File, 'path'>, pathLarge: $ElementType<File, 'path'> });
 
-export type DocumentFragmentFragment = ({ __typename?: 'File' } & $Pick<File, { id: *, name: *, path: *, type: *, status: *, memo: * }>);
+export type DocumentFragmentFragment = ({ __typename?: 'File' } & $Pick<File, { id: *, name: *, path: *, type: *, status: *, memo: * }> & { entity: ?(({ __typename?: 'User' | 'Tag' | 'Organization' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & (({ __typename?: 'Order' } & $Pick<Order, { poNo: * }>) | ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { no: * }>) | ({ __typename?: 'Shipment' } & $Pick<Shipment, { no: * }>) | ({ __typename?: 'Batch' } & $Pick<Batch, { no: * }>) | ({ __typename?: 'Product' } & $Pick<Product, { name: * }>) | ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { name: * }> & { product: ({ __typename?: 'Product' } & $Pick<Product, { id: *, name: * }>) }))) });
 
-export type UserAvatarFragmentFragment = ({ __typename?: 'User' } & $Pick<User, { id: *, firstName: *, lastName: * }> & { group: ?({ __typename?: 'Group' } & $Pick<Group, { id: *, name: * }>) });
+export type UserAvatarFragmentFragment = ({ __typename?: 'User' } & $Pick<User, { id: *, firstName: *, lastName: * }> & { organization: ?({ __typename?: 'Organization' } & $Pick<Organization, { id: *, name: * }>) });
 
-export type PartnerNameFragmentFragment = ({ __typename?: 'Group' } & $Pick<Group, { id: *, name: * }>);
+export type PartnerNameFragmentFragment = ({ __typename?: 'Organization' } & $Pick<Organization, { id: *, name: * }>);
 
 export type TimelineDateFullFragmentFragment = ({ __typename?: 'TimelineDate' } & $Pick<TimelineDate, { id: *, date: *, approvedAt: * }> & { assignedTo: Array<UserAvatarFragmentFragment>, approvedBy: ?UserAvatarFragmentFragment, timelineDateRevisions: Array<({ __typename?: 'TimelineDateRevision' } & $Pick<TimelineDateRevision, { id: *, date: *, type: *, memo: *, updatedAt: * }> & { updatedBy: ?UserAvatarFragmentFragment })> });
 
@@ -60895,11 +60928,11 @@ export type FieldValuesFragmentFragment = ({ __typename?: 'FieldValue' } & { val
 
 export type FieldDefinitionFragmentFragment = ({ __typename?: 'FieldDefinition' } & $Pick<FieldDefinition, { id: *, name: *, entityType: *, sort: * }>);
 
-export type OwnedByFragmentFragment = ({ __typename?: 'Group' } & $Pick<Group, { id: *, name: * }> & { partner: ?({ __typename?: 'Partner' } & $Pick<Partner, { id: * }>) });
+export type OwnedByFragmentFragment = ({ __typename?: 'Organization' } & $Pick<Organization, { id: *, name: * }>);
 
 export type ContainerFormFragmentFragment = ({ __typename?: 'Container' } & $Pick<Container, { id: *, archived: *, updatedAt: *, no: *, containerType: *, containerOption: *, memo: *, warehouseArrivalAgreedDate: *, warehouseArrivalActualDate: *, warehouseArrivalAgreedDateApprovedAt: *, warehouseArrivalActualDateApprovedAt: *, freeTimeStartDate: *, freeTimeDuration: *, autoCalculatedFreeTimeStartDate: *, yardName: *, departureDate: *, departureDateApprovedAt: * }> & { ownedBy: OwnedByFragmentFragment, updatedBy: ?UserAvatarFragmentFragment, warehouse: ?WarehouseCardFragmentFragment, warehouseArrivalAgreedDateApprovedBy: ?UserAvatarFragmentFragment, warehouseArrivalActualDateApprovedBy: ?UserAvatarFragmentFragment, warehouseArrivalAgreedDateAssignedTo: Array<UserAvatarFragmentFragment>, warehouseArrivalActualDateAssignedTo: Array<UserAvatarFragmentFragment>, departureDateAssignedTo: Array<UserAvatarFragmentFragment>, departureDateApprovedBy: ?UserAvatarFragmentFragment, tags: Array<TagFragmentFragment>, shipment: ShipmentCardFragmentFragment, batches: Array<BatchFormFragmentFragment>, representativeBatch: ?BatchFormFragmentFragment });
 
-export type ContainerCardFragmentFragment = ({ __typename?: 'Container' } & $Pick<Container, { id: *, archived: *, no: *, containerType: *, containerOption: *, warehouseArrivalAgreedDate: *, warehouseArrivalActualDate: *, freeTimeStartDate: *, freeTimeDuration: * }> & { representativeBatch: ?({ __typename?: 'Batch' } & $Pick<Batch, { id: * }> & { orderItem: ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { id: * }> & { productProvider: ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { id: * }> & { product: ({ __typename?: 'Product' } & $Pick<Product, { id: *, name: *, serial: * }> & { files: Array<ImageFragmentFragment> }) }) }) }), totalVolume: ({ __typename?: 'MetricValue' } & MetricFragmentFragment), batches: Array<({ __typename?: 'Batch' } & $Pick<Batch, { id: * }>)>, warehouse: ?({ __typename?: 'Warehouse' } & $Pick<Warehouse, { id: *, name: * }>), warehouseArrivalAgreedDateApprovedBy: ?({ __typename?: 'User' } & $Pick<User, { id: * }>), warehouseArrivalActualDateApprovedBy: ?({ __typename?: 'User' } & $Pick<User, { id: * }>), shipment: ({ __typename?: 'Shipment' } & $Pick<Shipment, { id: *, no: * }> & { importer: ({ __typename?: 'Group' } & $Pick<Group, { id: *, name: * }>) }), tags: Array<TagFragmentFragment> });
+export type ContainerCardFragmentFragment = ({ __typename?: 'Container' } & $Pick<Container, { id: *, archived: *, no: *, containerType: *, containerOption: *, warehouseArrivalAgreedDate: *, warehouseArrivalActualDate: *, freeTimeStartDate: *, freeTimeDuration: * }> & { representativeBatch: ?({ __typename?: 'Batch' } & $Pick<Batch, { id: * }> & { orderItem: ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { id: * }> & { productProvider: ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { id: * }> & { product: ({ __typename?: 'Product' } & $Pick<Product, { id: *, name: *, serial: * }> & { files: Array<ImageFragmentFragment> }) }) }) }), totalVolume: ({ __typename?: 'MetricValue' } & MetricFragmentFragment), batches: Array<({ __typename?: 'Batch' } & $Pick<Batch, { id: * }>)>, warehouse: ?({ __typename?: 'Warehouse' } & $Pick<Warehouse, { id: *, name: * }>), warehouseArrivalAgreedDateApprovedBy: ?({ __typename?: 'User' } & $Pick<User, { id: * }>), warehouseArrivalActualDateApprovedBy: ?({ __typename?: 'User' } & $Pick<User, { id: * }>), shipment: ({ __typename?: 'Shipment' } & $Pick<Shipment, { id: *, no: * }> & { importer: ({ __typename?: 'Organization' } & $Pick<Organization, { id: *, name: * }>) }), tags: Array<TagFragmentFragment> });
 
 export type ContainerCardWithOwnedFragmentFragment = ({ __typename?: 'Container' } & { ownedBy: OwnedByFragmentFragment, warehouse: ?({ __typename?: 'Warehouse' } & $Pick<Warehouse, { id: *, name: * }> & { ownedBy: OwnedByFragmentFragment }) } & ContainerCardFragmentFragment);
 
@@ -60913,13 +60946,13 @@ export type ItemCardFragmentFragment = ({ __typename?: 'OrderItem' } & $Pick<Ord
 
 export type ItemCardWithOwnedFragmentFragment = ({ __typename?: 'OrderItem' } & { ownedBy: OwnedByFragmentFragment } & ItemCardFragmentFragment);
 
-export type ItemFormFragmentFragment = ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { id: *, archived: *, updatedAt: *, no: *, quantity: *, memo: * }> & { updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, price: ({ __typename?: 'Price' } & PriceFragmentFragment), customFields: ({ __typename?: 'CustomFields' } & CustomFieldsFragmentFragment), tags: Array<TagFragmentFragment>, todo: ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ProjectCardFragmentFragment } & MilestoneCardFragmentFragment), taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment), tasks: Array<TaskWithoutParentInfoFragmentFragment>, taskTemplate: ?TaskTemplateCardFragmentFragment }), order: OrderCardFragmentFragment, productProvider: ProductProviderCardFragmentFragment, batches: Array<BatchFormFragmentFragment>, files: Array<DocumentFragmentFragment>, shipments: Array<ShipmentCardFragmentFragment> });
+export type ItemFormFragmentFragment = ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { id: *, archived: *, updatedAt: *, no: *, quantity: *, memo: * }> & { updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, price: ({ __typename?: 'Price' } & PriceFragmentFragment), customFields: ({ __typename?: 'CustomFields' } & CustomFieldsFragmentFragment), tags: Array<TagFragmentFragment>, todo: ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ProjectCardFragmentFragment } & MilestoneCardFragmentFragment), taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment), tasks: Array<TaskWithoutParentInfoFragmentFragment>, taskTemplate: ?TaskTemplateCardFragmentFragment }), order: OrderCardFragmentFragment, productProvider: ProductProviderCardFragmentFragment, batches: Array<BatchFormFragmentFragment>, files: Array<(DocumentFragmentFragment | ForbiddenFragmentFragment)>, shipments: Array<ShipmentCardFragmentFragment> });
 
 export type ItemInSelectorFragmentFragment = ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { id: *, archived: *, no: *, quantity: *, totalBatched: *, totalShipped: *, batchCount: *, batchShippedCount: * }> & { price: ({ __typename?: 'Price' } & PriceFragmentFragment), tags: Array<TagFragmentFragment>, todo: ({ __typename?: 'Todo' } & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment) }), order: OrderCardFragmentFragment, productProvider: ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { id: *, name: * }> & { exporter: PartnerCardFragmentFragment, defaultPackage: ?ProductProviderPackagingFragmentFragment, packages: Array<ProductProviderPackagingFragmentFragment>, product: ({ __typename?: 'Product' } & $Pick<Product, { id: *, name: *, serial: * }> & { tags: Array<TagFragmentFragment>, files: Array<ImageFragmentFragment> }) }) });
 
 export type ItemInOrderFormFragmentFragment = ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { id: *, archived: *, no: *, quantity: *, memo: * }> & { price: ({ __typename?: 'Price' } & PriceFragmentFragment), customFields: ({ __typename?: 'CustomFields' } & CustomFieldsFragmentFragment), tags: Array<TagFragmentFragment>, todo: ({ __typename?: 'Todo' } & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment), tasks: Array<TaskWithoutParentInfoFragmentFragment>, taskTemplate: ?TaskTemplateCardFragmentFragment }), productProvider: ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { id: *, name: * }> & { exporter: PartnerNameFragmentFragment, supplier: ?PartnerNameFragmentFragment, defaultPackage: ?ProductProviderPackagingFragmentFragment, packages: Array<ProductProviderPackagingFragmentFragment>, unitPrice: ?({ __typename?: 'Price' } & PriceFragmentFragment), product: ({ __typename?: 'Product' } & $Pick<Product, { id: *, name: *, serial: * }> & { tags: Array<TagFragmentFragment>, files: Array<ImageFragmentFragment> }) }), batches: Array<BatchFormFragmentFragment>, files: Array<DocumentFragmentFragment> });
 
-export type ItemInBatchFormFragmentFragment = ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { id: *, archived: *, no: *, quantity: *, totalBatched: *, totalShipped: *, batchCount: *, batchShippedCount: * }> & { price: ({ __typename?: 'Price' } & PriceFragmentFragment), tags: Array<TagFragmentFragment>, todo: ({ __typename?: 'Todo' } & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment) }), order: OrderCardFragmentFragment, productProvider: ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { id: *, name: * }> & { exporter: PartnerCardFragmentFragment, defaultPackage: ?ProductProviderPackagingFragmentFragment, packages: Array<ProductProviderPackagingFragmentFragment>, product: ({ __typename?: 'Product' } & $Pick<Product, { id: *, name: *, serial: * }> & { tags: Array<TagFragmentFragment>, files: Array<ImageFragmentFragment> }) }) });
+export type ItemInBatchFormFragmentFragment = ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { id: *, archived: *, no: *, quantity: *, totalBatched: *, totalShipped: *, batchCount: *, batchShippedCount: * }> & { price: ({ __typename?: 'Price' } & PriceFragmentFragment), tags: Array<TagFragmentFragment>, todo: ({ __typename?: 'Todo' } & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment) }), order: OrderCardFragmentFragment, productProvider: ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { id: *, name: * }> & { exporter: PartnerCardFragmentFragment, supplier: ?PartnerCardFragmentFragment, defaultPackage: ?ProductProviderPackagingFragmentFragment, packages: Array<ProductProviderPackagingFragmentFragment>, product: ({ __typename?: 'Product' } & $Pick<Product, { id: *, name: *, serial: * }> & { tags: Array<TagFragmentFragment>, files: Array<ImageFragmentFragment> }) }) });
 
 export type OrderFormQueryFragmentFragment = ({ __typename?: 'Order' } & $Pick<Order, { id: *, archived: *, updatedAt: *, memo: *, poNo: *, currency: *, totalOrdered: *, totalBatched: *, totalShipped: *, orderItemCount: *, batchCount: *, batchShippedCount: *, shipmentCount: *, issuedAt: *, deliveryDate: *, piNo: *, incoterm: *, deliveryPlace: * }> & { updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, totalPrice: ({ __typename?: 'Price' } & PriceFragmentFragment), customFields: ({ __typename?: 'CustomFields' } & CustomFieldsFragmentFragment), importer: PartnerCardFragmentFragment, exporter: PartnerCardFragmentFragment, inCharges: Array<UserAvatarFragmentFragment>, tags: Array<TagFragmentFragment> });
 
@@ -60929,9 +60962,9 @@ export type OrderCardFragmentFragment = ({ __typename?: 'Order' } & $Pick<Order,
 
 export type OrderCardWithOwnedFragmentFragment = ({ __typename?: 'Order' } & { ownedBy: OwnedByFragmentFragment } & OrderCardFragmentFragment);
 
-export type PartnerFormFragmentFragment = ({ __typename?: 'Group' } & $Pick<Group, { id: * }>);
+export type PartnerFormFragmentFragment = ({ __typename?: 'Organization' } & $Pick<Organization, { id: * }>);
 
-export type PartnerCardFragmentFragment = ({ __typename?: 'Group' } & $Pick<Group, { id: *, name: *, types: * }> & { partner: ?({ __typename?: 'Partner' } & $Pick<Partner, { id: *, code: * }> & { group: ({ __typename?: 'Group' } & $Pick<Group, { id: *, name: * }>) }) });
+export type PartnerCardFragmentFragment = ({ __typename?: 'Organization' } & $Pick<Organization, { id: *, name: *, types: * }> & { partner: ?({ __typename?: 'Partner' } & $Pick<Partner, { id: *, code: * }> & { organization: ({ __typename?: 'Organization' } & $Pick<Organization, { id: *, name: * }>) }) });
 
 export type PartnersQueryQueryVariables = {
   page: $ElementType<Scalars, 'Int'>,
@@ -60941,9 +60974,9 @@ export type PartnersQueryQueryVariables = {
 };
 
 
-export type PartnersQueryQuery = ({ __typename?: 'Query' } & { viewer: ({ __typename?: 'Viewer' } & { user: ({ __typename?: 'User' } & $Pick<User, { id: * }> & { group: ?({ __typename?: 'Group' } & $Pick<Group, { id: * }> & { partners: ({ __typename?: 'PartnerPayloadPagination' } & $Pick<PartnerPayloadPagination, { page: *, totalPage: * }> & { nodes: Array<({ __typename?: 'Partner' } & $Pick<Partner, { id: *, code: * }> & { group: ({ __typename?: 'Group' } & $Pick<Group, { id: *, name: *, types: * }> & { partner: ?({ __typename?: 'Partner' } & $Pick<Partner, { id: *, code: * }>) }) })> }) }) }) }) });
+export type PartnersQueryQuery = ({ __typename?: 'Query' } & { viewer: ({ __typename?: 'Viewer' } & { user: ({ __typename?: 'User' } & $Pick<User, { id: * }> & { organization: ?({ __typename?: 'Organization' } & $Pick<Organization, { id: * }> & { partners: ({ __typename?: 'PartnerPayloadPagination' } & $Pick<PartnerPayloadPagination, { page: *, totalPage: * }> & { nodes: Array<({ __typename?: 'Partner' } & $Pick<Partner, { id: *, code: * }> & { organization: ({ __typename?: 'Organization' } & $Pick<Organization, { id: *, name: *, types: * }> & { partner: ?({ __typename?: 'Partner' } & $Pick<Partner, { id: *, code: * }>) }) })> }) }) }) }) });
 
-export type ProductFormFragmentFragment = ({ __typename?: 'Product' } & $Pick<Product, { id: *, archived: *, updatedAt: *, name: *, serial: *, hsCode: *, janCode: *, material: *, memo: * }> & { importer: PartnerCardFragmentFragment, updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, todo: ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ProjectCardFragmentFragment } & MilestoneCardFragmentFragment), tasks: Array<TaskWithoutParentInfoFragmentFragment>, taskTemplate: ?TaskTemplateCardFragmentFragment }), customFields: ({ __typename?: 'CustomFields' } & CustomFieldsFragmentFragment), tags: Array<TagFragmentFragment>, files: Array<ImageFragmentFragment>, productProviders: Array<(ProductProviderFormFragmentFragment | ForbiddenFragmentFragment)> });
+export type ProductFormFragmentFragment = ({ __typename?: 'Product' } & $Pick<Product, { id: *, archived: *, updatedAt: *, name: *, serial: *, hsCode: *, janCode: *, material: *, memo: * }> & { importer: PartnerCardFragmentFragment, updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, todo: ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ProjectCardFragmentFragment } & MilestoneCardFragmentFragment), tasks: Array<TaskWithoutParentInfoFragmentFragment>, taskTemplate: ?TaskTemplateCardFragmentFragment }), customFields: ({ __typename?: 'CustomFields' } & CustomFieldsFragmentFragment), tags: Array<TagFragmentFragment>, files: Array<(ImageFragmentFragment | ForbiddenFragmentFragment)>, productProviders: Array<(ProductProviderFormFragmentFragment | ForbiddenFragmentFragment)> });
 
 export type ProductCardFragmentFragment = ({ __typename?: 'Product' } & $Pick<Product, { id: *, archived: *, name: *, serial: * }> & { ownedBy: OwnedByFragmentFragment, importer: PartnerNameFragmentFragment, productProviders: Array<({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { id: * }> & { exporter: PartnerNameFragmentFragment, supplier: ?PartnerNameFragmentFragment })>, tags: Array<TagFragmentFragment>, todo: ({ __typename?: 'Todo' } & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment) }), files: Array<ImageFragmentFragment> });
 
@@ -60951,7 +60984,7 @@ export type ProductCardWithOwnedFragmentFragment = ({ __typename?: 'Product' } &
 
 export type ProductProviderPackagingFragmentFragment = ({ __typename?: 'ProductProviderPackage' } & $Pick<ProductProviderPackage, { id: *, name: *, capacity: *, autoCalculateVolume: * }> & { grossWeight: ?({ __typename?: 'MetricValue' } & MetricFragmentFragment), volume: ?({ __typename?: 'MetricValue' } & MetricFragmentFragment), size: ?({ __typename?: 'Size' } & SizeFragmentFragment) });
 
-export type ProductProviderFormFragmentFragment = ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { id: *, name: *, archived: *, updatedAt: *, referenced: *, origin: *, productionLeadTime: *, unitType: *, autoCalculateUnitVolume: *, memo: * }> & { updatedBy: ?UserAvatarFragmentFragment, exporter: PartnerCardFragmentFragment, supplier: ?PartnerCardFragmentFragment, inspectionFee: ?({ __typename?: 'Price' } & PriceFragmentFragment), unitPrice: ?({ __typename?: 'Price' } & PriceFragmentFragment), unitWeight: ?({ __typename?: 'MetricValue' } & MetricFragmentFragment), unitVolume: ?({ __typename?: 'MetricValue' } & MetricFragmentFragment), unitSize: ?({ __typename?: 'Size' } & SizeFragmentFragment), defaultPackage: ?ProductProviderPackagingFragmentFragment, packages: Array<ProductProviderPackagingFragmentFragment>, customFields: ({ __typename?: 'CustomFields' } & CustomFieldsFragmentFragment), files: Array<DocumentFragmentFragment>, todo: ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ProjectCardFragmentFragment } & MilestoneCardFragmentFragment), tasks: Array<TaskWithoutParentInfoFragmentFragment>, taskTemplate: ?TaskTemplateCardFragmentFragment }) });
+export type ProductProviderFormFragmentFragment = ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { id: *, name: *, archived: *, updatedAt: *, referenced: *, origin: *, productionLeadTime: *, unitType: *, autoCalculateUnitVolume: *, memo: * }> & { updatedBy: ?UserAvatarFragmentFragment, exporter: PartnerCardFragmentFragment, supplier: ?PartnerCardFragmentFragment, inspectionFee: ?({ __typename?: 'Price' } & PriceFragmentFragment), unitPrice: ?({ __typename?: 'Price' } & PriceFragmentFragment), unitWeight: ?({ __typename?: 'MetricValue' } & MetricFragmentFragment), unitVolume: ?({ __typename?: 'MetricValue' } & MetricFragmentFragment), unitSize: ?({ __typename?: 'Size' } & SizeFragmentFragment), defaultPackage: ?ProductProviderPackagingFragmentFragment, packages: Array<ProductProviderPackagingFragmentFragment>, customFields: ({ __typename?: 'CustomFields' } & CustomFieldsFragmentFragment), files: Array<(DocumentFragmentFragment | ForbiddenFragmentFragment)>, todo: ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ProjectCardFragmentFragment } & MilestoneCardFragmentFragment), tasks: Array<TaskWithoutParentInfoFragmentFragment>, taskTemplate: ?TaskTemplateCardFragmentFragment }) });
 
 export type ProductProviderCardFragmentFragment = ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { id: *, archived: *, name: * }> & { exporter: PartnerNameFragmentFragment, supplier: ?PartnerNameFragmentFragment, product: ({ __typename?: 'Product' } & $Pick<Product, { id: *, name: *, serial: * }> & { importer: PartnerNameFragmentFragment, tags: Array<TagFragmentFragment>, files: Array<ImageFragmentFragment> }), defaultPackage: ?ProductProviderPackagingFragmentFragment, packages: Array<ProductProviderPackagingFragmentFragment>, todo: ({ __typename?: 'Todo' } & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment) }) });
 
@@ -60965,15 +60998,15 @@ export type ProjectFormFragmentFragment = ({ __typename?: 'Project' } & $Pick<Pr
 
 export type ShipmentFormQueryFragmentFragment = ({ __typename?: 'Shipment' } & $Pick<Shipment, { id: *, archived: *, updatedAt: *, memo: *, no: *, blNo: *, blDate: *, booked: *, bookingNo: *, bookingDate: *, invoiceNo: *, contractNo: *, incoterm: *, loadType: *, transportType: *, carrier: * }> & { updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, customFields: ({ __typename?: 'CustomFields' } & CustomFieldsFragmentFragment), forwarders: Array<PartnerCardFragmentFragment>, importer: PartnerCardFragmentFragment, exporter: ?PartnerCardFragmentFragment, inCharges: Array<UserAvatarFragmentFragment>, tags: Array<TagFragmentFragment>, totalVolume: ({ __typename?: 'MetricValue' } & MetricFragmentFragment) });
 
-export type ShipmentFormFragmentFragment = ({ __typename?: 'Shipment' } & $Pick<Shipment, { id: *, archived: *, updatedAt: *, memo: *, no: *, blNo: *, blDate: *, booked: *, bookingNo: *, bookingDate: *, invoiceNo: *, contractNo: *, incoterm: *, loadType: *, transportType: *, carrier: * }> & { updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, todo: ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ProjectCardFragmentFragment } & MilestoneCardFragmentFragment), tasks: Array<TaskWithoutParentInfoFragmentFragment>, taskTemplate: ?TaskTemplateCardFragmentFragment }), customFields: ({ __typename?: 'CustomFields' } & CustomFieldsFragmentFragment), forwarders: Array<PartnerCardFragmentFragment>, importer: PartnerCardFragmentFragment, exporter: ?PartnerCardFragmentFragment, inCharges: Array<UserAvatarFragmentFragment>, tags: Array<TagFragmentFragment>, files: Array<DocumentFragmentFragment>, cargoReady: TimelineDateFullFragmentFragment, voyages: Array<({ __typename?: 'Voyage' } & $Pick<Voyage, { id: *, vesselName: *, vesselCode: * }> & { departurePort: ?({ __typename?: 'Port' } & PortFragmentFragment), arrivalPort: ?({ __typename?: 'Port' } & PortFragmentFragment), departure: TimelineDateFullFragmentFragment, arrival: TimelineDateFullFragmentFragment })>, containerGroups: Array<({ __typename?: 'ContainerGroup' } & $Pick<ContainerGroup, { id: * }> & { warehouse: ?({ __typename?: 'Warehouse' } & $Pick<Warehouse, { id: *, name: * }> & { ownedBy: ({ __typename?: 'Group' } & $Pick<Group, { id: *, name: * }>) }), customClearance: TimelineDateFullFragmentFragment, warehouseArrival: TimelineDateFullFragmentFragment, deliveryReady: TimelineDateFullFragmentFragment })>, containers: Array<ContainerFormFragmentFragment>, totalVolume: ({ __typename?: 'MetricValue' } & MetricFragmentFragment), batches: Array<BatchFormFragmentFragment> });
+export type ShipmentFormFragmentFragment = ({ __typename?: 'Shipment' } & $Pick<Shipment, { id: *, archived: *, updatedAt: *, memo: *, no: *, blNo: *, blDate: *, booked: *, bookingNo: *, bookingDate: *, invoiceNo: *, contractNo: *, incoterm: *, loadType: *, transportType: *, carrier: * }> & { updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, todo: ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ProjectCardFragmentFragment } & MilestoneCardFragmentFragment), tasks: Array<TaskWithoutParentInfoFragmentFragment>, taskTemplate: ?TaskTemplateCardFragmentFragment }), customFields: ({ __typename?: 'CustomFields' } & CustomFieldsFragmentFragment), forwarders: Array<PartnerCardFragmentFragment>, importer: PartnerCardFragmentFragment, exporter: ?PartnerCardFragmentFragment, inCharges: Array<UserAvatarFragmentFragment>, tags: Array<TagFragmentFragment>, files: Array<DocumentFragmentFragment>, cargoReady: TimelineDateFullFragmentFragment, voyages: Array<({ __typename?: 'Voyage' } & $Pick<Voyage, { id: *, vesselName: *, vesselCode: * }> & { departurePort: ?({ __typename?: 'Port' } & PortFragmentFragment), arrivalPort: ?({ __typename?: 'Port' } & PortFragmentFragment), departure: TimelineDateFullFragmentFragment, arrival: TimelineDateFullFragmentFragment })>, containerGroups: Array<({ __typename?: 'ContainerGroup' } & $Pick<ContainerGroup, { id: * }> & { warehouse: ?({ __typename?: 'Warehouse' } & $Pick<Warehouse, { id: *, name: * }> & { ownedBy: ({ __typename?: 'Organization' } & $Pick<Organization, { id: *, name: * }>) }), customClearance: TimelineDateFullFragmentFragment, warehouseArrival: TimelineDateFullFragmentFragment, deliveryReady: TimelineDateFullFragmentFragment })>, containers: Array<ContainerFormFragmentFragment>, totalVolume: ({ __typename?: 'MetricValue' } & MetricFragmentFragment), batches: Array<BatchFormFragmentFragment> });
 
-export type ShipmentCardFragmentFragment = ({ __typename?: 'Shipment' } & $Pick<Shipment, { id: *, archived: *, no: *, blNo: *, booked: *, transportType: *, batchCount: *, totalPackageQuantity: *, orderItemCount: * }> & { totalVolume: ({ __typename?: 'MetricValue' } & MetricFragmentFragment), containerTypeCounts: Array<({ __typename?: 'ContainerTypeCount' } & $Pick<ContainerTypeCount, { containerType: *, count: * }>)>, importer: PartnerNameFragmentFragment, exporter: ?PartnerNameFragmentFragment, cargoReady: TimelineDateMinimalFragmentFragment, tags: Array<TagFragmentFragment>, todo: ({ __typename?: 'Todo' } & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment) }), voyages: Array<({ __typename?: 'Voyage' } & $Pick<Voyage, { id: *, vesselName: * }> & { departurePort: ?({ __typename?: 'Port' } & PortFragmentFragment), arrivalPort: ?({ __typename?: 'Port' } & PortFragmentFragment), departure: TimelineDateMinimalFragmentFragment, arrival: TimelineDateMinimalFragmentFragment })>, containerGroups: Array<({ __typename?: 'ContainerGroup' } & $Pick<ContainerGroup, { id: * }> & { customClearance: TimelineDateMinimalFragmentFragment, warehouseArrival: TimelineDateMinimalFragmentFragment, deliveryReady: TimelineDateMinimalFragmentFragment, warehouse: ?({ __typename?: 'Warehouse' } & $Pick<Warehouse, { id: *, name: * }>) })>, containers: Array<({ __typename?: 'Container' } & $Pick<Container, { id: *, no: *, warehouseArrivalAgreedDate: *, warehouseArrivalAgreedDateApprovedAt: *, warehouseArrivalActualDate: *, warehouseArrivalActualDateApprovedAt: * }> & { warehouse: ?({ __typename?: 'Warehouse' } & $Pick<Warehouse, { id: *, name: * }>) })>, batches: Array<({ __typename?: 'Batch' } & $Pick<Batch, { id: * }> & { orderItem: ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { id: * }> & { productProvider: ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { id: * }> & { exporter: ({ __typename?: 'Group' } & $Pick<Group, { id: *, name: * }>) }) }) })> });
+export type ShipmentCardFragmentFragment = ({ __typename?: 'Shipment' } & $Pick<Shipment, { id: *, archived: *, no: *, blNo: *, booked: *, transportType: *, batchCount: *, totalPackageQuantity: *, orderItemCount: * }> & { totalVolume: ({ __typename?: 'MetricValue' } & MetricFragmentFragment), containerTypeCounts: Array<({ __typename?: 'ContainerTypeCount' } & $Pick<ContainerTypeCount, { containerType: *, count: * }>)>, importer: PartnerNameFragmentFragment, exporter: ?PartnerNameFragmentFragment, cargoReady: TimelineDateMinimalFragmentFragment, tags: Array<TagFragmentFragment>, todo: ({ __typename?: 'Todo' } & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment) }), voyages: Array<({ __typename?: 'Voyage' } & $Pick<Voyage, { id: *, vesselName: * }> & { departurePort: ?({ __typename?: 'Port' } & PortFragmentFragment), arrivalPort: ?({ __typename?: 'Port' } & PortFragmentFragment), departure: TimelineDateMinimalFragmentFragment, arrival: TimelineDateMinimalFragmentFragment })>, containerGroups: Array<({ __typename?: 'ContainerGroup' } & $Pick<ContainerGroup, { id: * }> & { customClearance: TimelineDateMinimalFragmentFragment, warehouseArrival: TimelineDateMinimalFragmentFragment, deliveryReady: TimelineDateMinimalFragmentFragment, warehouse: ?({ __typename?: 'Warehouse' } & $Pick<Warehouse, { id: *, name: * }>) })>, containers: Array<({ __typename?: 'Container' } & $Pick<Container, { id: *, no: *, warehouseArrivalAgreedDate: *, warehouseArrivalAgreedDateApprovedAt: *, warehouseArrivalActualDate: *, warehouseArrivalActualDateApprovedAt: * }> & { warehouse: ?({ __typename?: 'Warehouse' } & $Pick<Warehouse, { id: *, name: * }>) })>, batches: Array<({ __typename?: 'Batch' } & $Pick<Batch, { id: * }> & { orderItem: ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { id: * }> & { productProvider: ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { id: * }> & { exporter: ({ __typename?: 'Organization' } & $Pick<Organization, { id: *, name: * }>) }) }) })> });
 
 export type ShipmentCardWithOwnedFragmentFragment = ({ __typename?: 'Shipment' } & { ownedBy: OwnedByFragmentFragment } & ShipmentCardFragmentFragment);
 
 export type StaffFormFragmentFragment = ({ __typename?: 'User' } & $Pick<User, { id: * }>);
 
-export type StaffCardFragmentFragment = ({ __typename?: 'User' } & $Pick<User, { id: *, email: *, role: *, firstName: *, lastName: * }> & { roles: Array<({ __typename?: 'Role' } & $Pick<Role, { id: *, name: * }>)>, tags: Array<TagFragmentFragment>, group: ?({ __typename?: 'Group' } & $Pick<Group, { id: *, name: * }>) });
+export type StaffCardFragmentFragment = ({ __typename?: 'User' } & $Pick<User, { id: *, email: *, role: *, firstName: *, lastName: * }> & { roles: Array<({ __typename?: 'Role' } & $Pick<Role, { id: *, name: * }>)>, tags: Array<TagFragmentFragment>, organization: ?({ __typename?: 'Organization' } & $Pick<Organization, { id: *, name: * }>) });
 
 export type UsersQueryQueryVariables = {
   page: $ElementType<Scalars, 'Int'>,
@@ -60991,23 +61024,23 @@ export type TagFormFragmentFragment = ({ __typename?: 'Tag' } & $Pick<Tag, { id:
 
 export type TagCardFragmentFragment = ({ __typename?: 'Tag' } & $Pick<Tag, { id: *, name: *, description: *, color: *, entityTypes: * }>);
 
-export type TaskCardFragmentFragment = ({ __typename?: 'Task' } & $Pick<Task, { id: *, name: *, approvable: *, sort: *, startDate: *, dueDate: *, inProgressAt: *, skippedAt: *, completedAt: *, rejectedAt: *, approvedAt: * }> & { entity: ?(({ __typename?: 'User' | 'Tag' | 'Group' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & (({ __typename?: 'Order' } & $Pick<Order, { poNo: * }>) | ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { no: * }>) | ({ __typename?: 'Shipment' } & $Pick<Shipment, { no: * }>) | ({ __typename?: 'Batch' } & $Pick<Batch, { no: * }>) | ({ __typename?: 'Product' } & $Pick<Product, { name: * }>) | ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { name: * }> & { product: ({ __typename?: 'Product' } & $Pick<Product, { id: *, name: * }>) }))), assignedTo: Array<UserAvatarFragmentFragment>, approvers: Array<UserAvatarFragmentFragment>, inProgressBy: ?UserAvatarFragmentFragment, skippedBy: ?UserAvatarFragmentFragment, completedBy: ?UserAvatarFragmentFragment, rejectedBy: ?UserAvatarFragmentFragment, approvedBy: ?UserAvatarFragmentFragment, tags: Array<TagFragmentFragment>, milestone: ?({ __typename?: 'Milestone' } & $Pick<Milestone, { id: *, name: * }> & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: *, name: * }>) }) });
+export type TaskCardFragmentFragment = ({ __typename?: 'Task' } & $Pick<Task, { id: *, name: *, approvable: *, startDate: *, dueDate: *, inProgressAt: *, skippedAt: *, completedAt: *, rejectedAt: *, approvedAt: * }> & { entity: ?(({ __typename?: 'User' | 'Tag' | 'Organization' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & (({ __typename?: 'Order' } & $Pick<Order, { poNo: * }>) | ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { no: * }>) | ({ __typename?: 'Shipment' } & $Pick<Shipment, { no: * }>) | ({ __typename?: 'Batch' } & $Pick<Batch, { no: * }>) | ({ __typename?: 'Product' } & $Pick<Product, { name: * }>) | ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { name: * }> & { product: ({ __typename?: 'Product' } & $Pick<Product, { id: *, name: * }>) }))), assignedTo: Array<UserAvatarFragmentFragment>, approvers: Array<UserAvatarFragmentFragment>, inProgressBy: ?UserAvatarFragmentFragment, skippedBy: ?UserAvatarFragmentFragment, completedBy: ?UserAvatarFragmentFragment, rejectedBy: ?UserAvatarFragmentFragment, approvedBy: ?UserAvatarFragmentFragment, tags: Array<TagFragmentFragment>, milestone: ?({ __typename?: 'Milestone' } & $Pick<Milestone, { id: *, name: * }> & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: *, name: * }>) }) });
 
 export type TaskTemplateCardFragmentFragment = ({ __typename?: 'TaskTemplate' } & $Pick<TaskTemplate, { id: *, updatedAt: *, name: *, description: *, entityType: * }> & { updatedBy: ?UserAvatarFragmentFragment, tasks: Array<TaskFormInTemplateFragmentFragment> });
 
-export type TaskFormInTemplateFragmentFragment = ({ __typename?: 'Task' } & $Pick<Task, { id: *, approvable: *, updatedAt: *, sort: *, name: *, startDateBinding: *, dueDateBinding: *, description: * }> & { updatedBy: ?UserAvatarFragmentFragment, startDateInterval: ?({ __typename?: 'Interval' } & $Pick<Interval, { months: *, weeks: *, days: * }>), dueDateInterval: ?({ __typename?: 'Interval' } & $Pick<Interval, { months: *, weeks: *, days: * }>), tags: Array<TagFragmentFragment>, assignedTo: Array<UserAvatarFragmentFragment>, approvers: Array<UserAvatarFragmentFragment>, taskTemplate: ?({ __typename?: 'TaskTemplate' } & $Pick<TaskTemplate, { id: * }>) });
+export type TaskFormInTemplateFragmentFragment = ({ __typename?: 'Task' } & $Pick<Task, { id: *, approvable: *, updatedAt: *, name: *, startDateBinding: *, dueDateBinding: *, description: * }> & { updatedBy: ?UserAvatarFragmentFragment, startDateInterval: ?({ __typename?: 'Interval' } & $Pick<Interval, { months: *, weeks: *, days: * }>), dueDateInterval: ?({ __typename?: 'Interval' } & $Pick<Interval, { months: *, weeks: *, days: * }>), tags: Array<TagFragmentFragment>, assignedTo: Array<UserAvatarFragmentFragment>, approvers: Array<UserAvatarFragmentFragment>, taskTemplate: ?({ __typename?: 'TaskTemplate' } & $Pick<TaskTemplate, { id: * }>) });
 
-export type TaskWithoutParentInfoFragmentFragment = ({ __typename?: 'Task' } & $Pick<Task, { sort: *, id: *, approvable: *, updatedAt: *, name: *, startDate: *, startDateBinding: *, dueDate: *, dueDateBinding: *, description: *, inProgressAt: *, completedAt: *, skippedAt: *, rejectedAt: *, approvedAt: *, memo: * }> & { updatedBy: ?UserAvatarFragmentFragment, entity: ?({ __typename?: 'User' | 'Tag' | 'Group' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>), startDateInterval: ?({ __typename?: 'Interval' } & $Pick<Interval, { months: *, weeks: *, days: * }>), dueDateInterval: ?({ __typename?: 'Interval' } & $Pick<Interval, { months: *, weeks: *, days: * }>), inProgressBy: ?UserAvatarFragmentFragment, completedBy: ?UserAvatarFragmentFragment, skippedBy: ?UserAvatarFragmentFragment, rejectedBy: ?UserAvatarFragmentFragment, approvedBy: ?UserAvatarFragmentFragment, assignedTo: Array<UserAvatarFragmentFragment>, milestone: ?({ __typename?: 'Milestone' } & { project: ProjectCardFragmentFragment } & MilestoneCardFragmentFragment), approvers: Array<UserAvatarFragmentFragment>, tags: Array<TagFragmentFragment>, taskTemplate: ?({ __typename?: 'TaskTemplate' } & $Pick<TaskTemplate, { id: * }>) });
+export type TaskWithoutParentInfoFragmentFragment = ({ __typename?: 'Task' } & $Pick<Task, { id: *, approvable: *, updatedAt: *, name: *, startDate: *, startDateBinding: *, dueDate: *, dueDateBinding: *, description: *, inProgressAt: *, completedAt: *, skippedAt: *, rejectedAt: *, approvedAt: *, memo: * }> & { updatedBy: ?UserAvatarFragmentFragment, entity: ?({ __typename?: 'User' | 'Tag' | 'Organization' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>), startDateInterval: ?({ __typename?: 'Interval' } & $Pick<Interval, { months: *, weeks: *, days: * }>), dueDateInterval: ?({ __typename?: 'Interval' } & $Pick<Interval, { months: *, weeks: *, days: * }>), inProgressBy: ?UserAvatarFragmentFragment, completedBy: ?UserAvatarFragmentFragment, skippedBy: ?UserAvatarFragmentFragment, rejectedBy: ?UserAvatarFragmentFragment, approvedBy: ?UserAvatarFragmentFragment, assignedTo: Array<UserAvatarFragmentFragment>, milestone: ?({ __typename?: 'Milestone' } & { project: ProjectCardFragmentFragment } & MilestoneCardFragmentFragment), approvers: Array<UserAvatarFragmentFragment>, tags: Array<TagFragmentFragment>, taskTemplate: ?({ __typename?: 'TaskTemplate' } & $Pick<TaskTemplate, { id: * }>) });
 
-export type TaskWithParentInfoFragmentFragment = ({ __typename?: 'Task' } & $Pick<Task, { sort: *, id: *, updatedAt: *, name: *, approvable: *, startDate: *, startDateBinding: *, dueDate: *, dueDateBinding: *, description: *, inProgressAt: *, skippedAt: *, completedAt: *, rejectedAt: *, approvedAt: *, memo: * }> & { updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, startDateInterval: ?({ __typename?: 'Interval' } & $Pick<Interval, { months: *, weeks: *, days: * }>), dueDateInterval: ?({ __typename?: 'Interval' } & $Pick<Interval, { months: *, weeks: *, days: * }>), inProgressBy: ?UserAvatarFragmentFragment, skippedBy: ?UserAvatarFragmentFragment, completedBy: ?UserAvatarFragmentFragment, rejectedBy: ?UserAvatarFragmentFragment, approvedBy: ?UserAvatarFragmentFragment, assignedTo: Array<UserAvatarFragmentFragment>, approvers: Array<UserAvatarFragmentFragment>, tags: Array<TagFragmentFragment>, entity: ?({ __typename?: 'User' | 'Tag' | 'Group' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>), order: ?(({ __typename?: 'User' | 'Tag' | 'Group' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & ({ __typename?: 'Order' } & OrderCardFragmentFragment)), orderItem: ?(({ __typename?: 'User' | 'Tag' | 'Group' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & ({ __typename?: 'OrderItem' } & ItemCardFragmentFragment)), batch: ?(({ __typename?: 'User' | 'Tag' | 'Group' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & ({ __typename?: 'Batch' } & BatchCardFragmentFragment)), product: ?(({ __typename?: 'User' | 'Tag' | 'Group' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & ({ __typename?: 'Product' } & ProductCardFragmentFragment)), productProvider: ?(({ __typename?: 'User' | 'Tag' | 'Group' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & ({ __typename?: 'ProductProvider' } & ProductProviderCardFragmentFragment)), shipment: ?(({ __typename?: 'User' | 'Tag' | 'Group' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & ({ __typename?: 'Shipment' } & ShipmentCardFragmentFragment)), milestone: ?({ __typename?: 'Milestone' } & { project: ProjectCardFragmentFragment } & MilestoneCardFragmentFragment) });
+export type TaskWithParentInfoFragmentFragment = ({ __typename?: 'Task' } & $Pick<Task, { id: *, updatedAt: *, name: *, approvable: *, startDate: *, startDateBinding: *, dueDate: *, dueDateBinding: *, description: *, inProgressAt: *, skippedAt: *, completedAt: *, rejectedAt: *, approvedAt: *, memo: * }> & { updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, startDateInterval: ?({ __typename?: 'Interval' } & $Pick<Interval, { months: *, weeks: *, days: * }>), dueDateInterval: ?({ __typename?: 'Interval' } & $Pick<Interval, { months: *, weeks: *, days: * }>), inProgressBy: ?UserAvatarFragmentFragment, skippedBy: ?UserAvatarFragmentFragment, completedBy: ?UserAvatarFragmentFragment, rejectedBy: ?UserAvatarFragmentFragment, approvedBy: ?UserAvatarFragmentFragment, assignedTo: Array<UserAvatarFragmentFragment>, approvers: Array<UserAvatarFragmentFragment>, tags: Array<TagFragmentFragment>, entity: ?({ __typename?: 'User' | 'Tag' | 'Organization' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>), order: ?(({ __typename?: 'User' | 'Tag' | 'Organization' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & ({ __typename?: 'Order' } & OrderCardFragmentFragment)), orderItem: ?(({ __typename?: 'User' | 'Tag' | 'Organization' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & ({ __typename?: 'OrderItem' } & ItemCardFragmentFragment)), batch: ?(({ __typename?: 'User' | 'Tag' | 'Organization' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & ({ __typename?: 'Batch' } & BatchCardFragmentFragment)), product: ?(({ __typename?: 'User' | 'Tag' | 'Organization' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & ({ __typename?: 'Product' } & ProductCardFragmentFragment)), productProvider: ?(({ __typename?: 'User' | 'Tag' | 'Organization' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & ({ __typename?: 'ProductProvider' } & ProductProviderCardFragmentFragment)), shipment: ?(({ __typename?: 'User' | 'Tag' | 'Organization' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'ProductProviderPackage' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & ({ __typename?: 'Shipment' } & ShipmentCardFragmentFragment)), milestone: ?({ __typename?: 'Milestone' } & { project: ProjectCardFragmentFragment } & MilestoneCardFragmentFragment) });
 
 export type TaskTemplateFormFragmentFragment = ({ __typename?: 'TaskTemplate' } & $Pick<TaskTemplate, { id: *, updatedAt: *, name: *, description: *, entityType: * }> & { updatedBy: ?UserAvatarFragmentFragment, tasks: Array<TaskFormInTemplateFragmentFragment> });
 
 export type TaskCountFragmentFragment = ({ __typename?: 'TaskCount' } & $Pick<TaskCount, { count: *, remain: *, inProgress: *, completed: *, rejected: *, approved: *, skipped: *, delayed: * }>);
 
-export type WarehouseFormFragmentFragment = ({ __typename?: 'Warehouse' } & $Pick<Warehouse, { id: *, archived: *, updatedAt: *, name: *, street: *, locality: *, region: *, postalCode: *, country: * }> & { updatedBy: ?UserAvatarFragmentFragment, ownedBy: (OwnedByFragmentFragment & ({ __typename?: 'Group' } & PartnerCardFragmentFragment)), inCharges: Array<UserAvatarFragmentFragment>, groups: Array<PartnerCardFragmentFragment>, surface: ?({ __typename?: 'MetricValue' } & MetricFragmentFragment), customFields: ({ __typename?: 'CustomFields' } & CustomFieldsFragmentFragment) });
+export type WarehouseFormFragmentFragment = ({ __typename?: 'Warehouse' } & $Pick<Warehouse, { id: *, archived: *, updatedAt: *, name: *, street: *, locality: *, region: *, postalCode: *, country: * }> & { updatedBy: ?UserAvatarFragmentFragment, ownedBy: (OwnedByFragmentFragment & ({ __typename?: 'Organization' } & PartnerCardFragmentFragment)), inCharges: Array<UserAvatarFragmentFragment>, organizations: Array<PartnerCardFragmentFragment>, surface: ?({ __typename?: 'MetricValue' } & MetricFragmentFragment), customFields: ({ __typename?: 'CustomFields' } & CustomFieldsFragmentFragment) });
 
-export type WarehouseCardFragmentFragment = ({ __typename?: 'Warehouse' } & $Pick<Warehouse, { id: *, name: * }> & { ownedBy: ({ __typename?: 'Group' } & $Pick<Group, { id: *, name: * }>) });
+export type WarehouseCardFragmentFragment = ({ __typename?: 'Warehouse' } & $Pick<Warehouse, { id: *, name: * }> & { ownedBy: ({ __typename?: 'Organization' } & $Pick<Organization, { id: *, name: * }>) });
 
       export default {
   "__schema": {
@@ -61041,7 +61074,7 @@ export type WarehouseCardFragmentFragment = ({ __typename?: 'Warehouse' } & $Pic
             "name": "Tag"
           },
           {
-            "name": "Group"
+            "name": "Organization"
           },
           {
             "name": "File"
@@ -61281,10 +61314,10 @@ export type WarehouseCardFragmentFragment = ({ __typename?: 'Warehouse' } & $Pic
       },
       {
         "kind": "UNION",
-        "name": "GroupPayload",
+        "name": "OrganizationPayload",
         "possibleTypes": [
           {
-            "name": "Group"
+            "name": "Organization"
           },
           {
             "name": "BadRequest"
@@ -61380,6 +61413,9 @@ export type WarehouseCardFragmentFragment = ({ __typename?: 'Warehouse' } & $Pic
             "name": "ProductProvider"
           },
           {
+            "name": "ProductProviderPackage"
+          },
+          {
             "name": "Order"
           },
           {
@@ -61419,7 +61455,7 @@ export type WarehouseCardFragmentFragment = ({ __typename?: 'Warehouse' } & $Pic
             "name": "User"
           },
           {
-            "name": "Group"
+            "name": "Organization"
           },
           {
             "name": "Partnership"

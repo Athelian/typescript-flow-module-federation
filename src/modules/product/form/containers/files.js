@@ -1,11 +1,12 @@
 // @flow
+import type { FilePayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import { isEquals } from 'utils/fp';
+import { extractForbiddenId } from 'utils/data';
 import { cloneDeep, set } from 'lodash';
-import type { Document } from 'components/Form/DocumentsInput/type.js.flow';
 
 type FormState = {
-  files?: Array<Document>,
+  files?: Array<FilePayload>,
 };
 
 const initValues = {
@@ -28,9 +29,9 @@ export default class ProductFilesContainer extends Container<FormState> {
     this.setState((prevState: FormState): FormState => set(cloneDeep(prevState), path, value));
   };
 
-  initDetailValues = (files: Array<Document>) => {
-    const parsedValues: Array<Document> = [...files];
-    this.setState({ files: parsedValues });
-    this.originalValues = { files: parsedValues };
+  initDetailValues = (files: Array<FilePayload>) => {
+    const parsedFiles = [...files.map(file => extractForbiddenId(file))];
+    this.setState({ files: parsedFiles });
+    this.originalValues = { files: parsedFiles };
   };
 }

@@ -1,46 +1,37 @@
 // @flow
+import type { FilePayload } from 'generated/graphql';
 import { Container } from 'unstated';
-import { set, cloneDeep } from 'lodash';
+import { extractForbiddenId } from 'utils/data';
 import { isEquals } from 'utils/fp';
-import { cleanFalsyAndTypeName } from 'utils/data';
+import { cloneDeep, set } from 'lodash';
 
-export type State = {
-  files?: Array<Document>,
-};
+type FormState = {|
+  files: Array<FilePayload>,
+|};
 
-export const initValues = {
+const initValues: FormState = {
   files: [],
 };
 
-export default class OrderItemFilesContainer extends Container<State> {
+export default class OrderItemFilesContainer extends Container<FormState> {
   state = initValues;
 
   originalValues = initValues;
 
-  isDirty = () =>
-    !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
+  isDirty = () => !isEquals(this.state, this.originalValues);
 
   onSuccess = () => {
-    this.originalValues = this.state;
+    this.originalValues = { ...this.state };
     this.setState(this.originalValues);
   };
 
-  initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...values };
-    this.setState(parsedValues);
-    this.originalValues = { ...parsedValues };
+  setFieldValue = (path: string, value: mixed) => {
+    this.setState((prevState: FormState): FormState => set(cloneDeep(prevState), path, value));
   };
 
-  setFieldValue = (name: string, value: mixed) => {
-    this.setState({
-      [name]: value,
-    });
-  };
-
-  setDeepFieldValue = (path: string, value: any) => {
-    this.setState(prevState => {
-      const newState = set(cloneDeep(prevState), path, value);
-      return newState;
-    });
+  initDetailValues = (files: Array<FilePayload>) => {
+    const parsedFiles = [...files.map(file => extractForbiddenId(file))];
+    this.setState({ files: parsedFiles });
+    this.originalValues = { files: parsedFiles };
   };
 }

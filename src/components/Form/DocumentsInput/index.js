@@ -1,16 +1,21 @@
 // @flow
 import * as React from 'react';
+import type { FilePayload } from 'generated/graphql';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import type { IntlShape } from 'react-intl';
+import { pick } from 'lodash/fp';
 import Dropzone from 'react-dropzone';
-import { FormattedMessage } from 'react-intl';
+import update from 'immutability-helper';
 import Icon from 'components/Icon';
 import { uuid } from 'utils/id';
 import { upload } from 'utils/fs';
-import { isEquals } from 'utils/fp';
+import { isEquals, getByPath } from 'utils/fp';
 import logger from 'utils/logger';
 import SectionNavBar from 'components/NavBar/SectionNavBar';
+import UploadPlaceholder from 'components/UploadPlaceholder';
+import { CardAction } from 'components/Cards';
+import DocumentCard, { getFileTypesByEntity } from 'components/Cards/DocumentCard';
 import { Tooltip } from 'components/Tooltip';
-import DocumentItem from './components/DocumentItem';
-import type { Document, FileType } from './type.js.flow';
 import {
   DocumentsSectionWrapperStyle,
   DocumentsDragAndDropBodyWrapperStyle,
@@ -26,93 +31,67 @@ import {
 } from './style';
 import messages from './messages';
 
-type OptionalProps = {
-  values: Array<Document>,
-  name: string,
-  onChange: (string, any) => void,
-  onBlur: (string, boolean) => void,
-  types: Array<FileType>,
-  editable: boolean,
+type Props = {|
+  intl: IntlShape,
+  files: Array<FilePayload>,
+  onSave: (Array<FilePayload>) => void,
+  entity: 'Order' | 'OrderItem' | 'Shipment' | 'ProductProvider',
+  editable: {
+    status: boolean,
+    type: boolean,
+    memo: boolean,
+  },
   downloadable: boolean,
-};
+  uploadable: boolean,
+  removable: boolean,
+|};
 
-type Props = OptionalProps;
+type UploadFileState = {
+  id: string,
+  name: string,
+  path: string,
+  type: string,
+  status: string,
+  memo: string,
+  entity: Object,
+};
 
 type State = {
   filesState: Array<{
+    ...UploadFileState,
     uploading: boolean,
     progress: number,
-    id: string,
-    name: string,
-    path: string,
-    type: string,
-    status: string,
-    memo: ?string,
   }>,
-  prevFiles: Array<{
-    id: string,
-    name: string,
-    path: string,
-    type: string,
-    status: string,
-    memo: ?string,
-  }>,
+  prevFiles: Array<UploadFileState>,
 };
 
-const defaultProps = {
-  values: [],
-  name: '',
-  onChange: () => {},
-  onBlur: () => {},
-  types: [],
-  editable: true,
-  downloadable: true,
-};
-
+const SELECTED_FIELDS = ['id', 'type', 'name', 'path', 'status', 'memo', 'entity', '__typename'];
 class DocumentsInput extends React.Component<Props, State> {
-  static defaultProps = defaultProps;
-
   state = {
     filesState: [],
     prevFiles: [],
   };
 
   static getDerivedStateFromProps(props: Props, state: State) {
+    const editableFields = ['id', 'type', 'name', 'path', 'status', 'memo'];
     if (
-      !isEquals(
-        props.values.map(({ id, type, name, path, status, memo }) => ({
-          id,
-          type,
-          name,
-          path,
-          status,
-          memo,
-        })),
-        state.prevFiles
-      )
+      !isEquals(props.files.map(pick(editableFields)), state.prevFiles.map(pick(editableFields)))
     ) {
       return {
-        prevFiles: (props.values.map(({ id, type, name, path, status, memo }) => ({
-          id,
-          type,
-          name,
-          path,
-          status,
-          memo,
-        })): Array<any>),
-        filesState: (props.values.map(item => ({
+        prevFiles: props.files.map(pick(SELECTED_FIELDS)),
+        filesState: props.files.map(pick(SELECTED_FIELDS)).map(item => ({
           ...item,
           progress: 100,
           uploading: false,
-        })): Array<any>),
+        })),
       };
     }
     return null;
   }
 
   handleUpload = (newFiles: Array<Object>) => {
-    const { name, values, onChange } = this.props;
-    onChange(name, [...values, ...newFiles]);
+    const { files, onSave } = this.props;
+    onSave([...files, ...newFiles]);
   };
 
   handleChange = (event: SyntheticInputEvent<HTMLInputElement> | Array<File>) => {
@@ -123,7 +102,6 @@ class DocumentsInput extends React.Component<Props, State> {
       event.preventDefault();
       newFiles = Array.from(event.target.files);
     }
-    const { types } = this.props;
     const { filesState } = this.state;
 
     const basePosition = filesState.length;
@@ -157,6 +135,8 @@ class DocumentsInput extends React.Component<Props, State> {
           )
         )
           .then(uploadResult => {
+            const { entity, intl } = this.props;
+            const types = getFileTypesByEntity(entity, intl);
             this.handleUpload(
               uploadResult.map(({ id, name, path }) => ({
                 id,
@@ -164,29 +144,25 @@ class DocumentsInput extends React.Component<Props, State> {
                 path,
                 type: types[0].value,
                 status: 'Draft',
-                memo: null,
+                memo: '',
                 uploading: false,
                 progress: 100,
+                entity: {
+                  __typename: entity,
+                },
               }))
             );
           })
           .catch(error => {
             logger.error(error);
-            const { values } = this.props;
+            const { files } = this.props;
             this.setState({
-              prevFiles: (values.map(({ id, type, name, path, status, memo }) => ({
-                id,
-                type,
-                name,
-                path,
-                status,
-                memo,
-              })): Array<any>),
-              filesState: (values.map(item => ({
+              prevFiles: files.map(pick(SELECTED_FIELDS)),
+              filesState: files.map(pick(SELECTED_FIELDS)).map(item => ({
                 ...item,
                 progress: 100,
                 uploading: false,
-              })): Array<any>),
+              })),
             });
           });
       }
@@ -194,15 +170,14 @@ class DocumentsInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { name, values, onChange, onBlur, types, editable, downloadable } = this.props;
+    const { files, editable, uploadable, removable, downloadable, onSave } = this.props;
     const { filesState } = this.state;
 
-    const fileInputValue = '';
-
+    const isEditable = Object.keys(editable).some(key => editable[key]);
     return (
       <div className={DocumentsSectionWrapperStyle}>
         <SectionNavBar>
-          {editable && (
+          {uploadable && (
             <>
               <label className={AddDocumentButtonWrapperStyle}>
                 <div className={AddDocumentButtonLabelStyle}>
@@ -216,7 +191,7 @@ class DocumentsInput extends React.Component<Props, State> {
                   accept="*"
                   hidden
                   multiple
-                  value={fileInputValue}
+                  value=""
                   onChange={this.handleChange}
                 />
               </label>
@@ -224,32 +199,53 @@ class DocumentsInput extends React.Component<Props, State> {
           )}
         </SectionNavBar>
 
-        {editable ? (
+        {isEditable ? (
           <Dropzone onDrop={this.handleChange}>
             {({ getRootProps, isDragActive }) => (
               <div {...getRootProps()} className={DocumentsDragAndDropBodyWrapperStyle}>
                 <div className={DocumentsSectionBodyStyle}>
                   {filesState && filesState.length > 0 ? (
                     <div className={DocumentsListStyle}>
-                      {filesState.map((document, index) => {
-                        const documentName = `${name}[${index}]`;
-
+                      {filesState.map((file, index) => {
                         return (
-                          <DocumentItem
-                            name={documentName}
-                            key={document.id}
-                            value={document}
-                            types={types}
-                            onChange={onChange}
-                            onBlur={onBlur}
-                            onRemove={() => {
-                              onChange(name, values.filter(d => d.id !== document.id));
-                            }}
-                            editable
-                            downloadable={downloadable}
+                          <UploadPlaceholder
                             uploading={filesState.length > 0 ? filesState[index].uploading : false}
                             progress={filesState.length > 0 ? filesState[index].progress : 0}
-                          />
+                            key={getByPath('id', file)}
+                          >
+                            <DocumentCard
+                              hideParentInfo
+                              file={pick(SELECTED_FIELDS, file)}
+                              onChange={(field, value) => {
+                                onSave(
+                                  update(files, {
+                                    [index]: {
+                                      [field]: {
+                                        $set: value,
+                                      },
+                                    },
+                                  })
+                                );
+                              }}
+                              actions={[
+                                removable && (
+                                  <CardAction
+                                    icon="REMOVE"
+                                    hoverColor="RED"
+                                    onClick={() => {
+                                      onSave(
+                                        files.filter(
+                                          item => getByPath('id', item) !== getByPath('id', file)
+                                        )
+                                      );
+                                    }}
+                                  />
+                                ),
+                              ].filter(Boolean)}
+                              editable={editable}
+                              downloadable={downloadable}
+                            />
+                          </UploadPlaceholder>
                         );
                       })}
                     </div>
@@ -277,17 +273,15 @@ class DocumentsInput extends React.Component<Props, State> {
           </Dropzone>
         ) : (
           <div className={DocumentsSectionBodyStyle}>
-            {values && values.length > 0 ? (
+            {files && files.length > 0 ? (
               <div className={DocumentsListStyle}>
-                {values.map(document => (
-                  <DocumentItem
-                    name={document.id}
-                    key={document.id}
-                    value={document}
-                    types={types}
-                    editable={false}
+                {files.map(file => (
+                  <DocumentCard
+                    hideParentInfo
+                    key={getByPath('id', file)}
+                    file={pick(SELECTED_FIELDS, file)}
+                    editable={editable}
                     downloadable={downloadable}
-                    uploading={false}
                   />
                 ))}
               </div>
@@ -303,4 +297,4 @@ class DocumentsInput extends React.Component<Props, State> {
   }
 }
 
-export default DocumentsInput;
+export default injectIntl(DocumentsInput);

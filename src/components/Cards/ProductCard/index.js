@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
-import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import TaskRing from 'components/TaskRing';
+import ProductImage from 'components/ProductImage';
 import FormattedNumber from 'components/FormattedNumber';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
@@ -65,15 +65,13 @@ class ProductCard extends React.PureComponent<Props, State> {
   render() {
     const { product, actions, onClick, ...rest } = this.props;
     const { activeImage } = this.state;
-    const { archived, name, serial, tags, files, productProviders, todo, importer } = product;
-
-    const productImage = files && files.length > 0 ? files[activeImage].pathMedium : FALLBACK_IMAGE;
+    const { archived, name, serial, tags, files = [], productProviders, todo, importer } = product;
 
     return (
       <BaseCard icon="PRODUCT" color="PRODUCT" actions={actions} isArchived={archived} {...rest}>
         <div className={ProductCardWrapperStyle} onClick={onClick} role="presentation">
           <div className={ProductImageWrapperStyle}>
-            <img className={ProductImageStyle} src={productImage} alt="product_image" />
+            <ProductImage height="75px" className={ProductImageStyle} file={files[activeImage]} />
             {files && files.length > 1 && (
               <>
                 <button

@@ -15,9 +15,14 @@ type Props = {
 
 const PartnerPermissionsWrapper = ({ data, children }: Props) => {
   const { isOwnerBy } = useUser();
-  const partnerId = getByPath('ownedBy.partner.id', data);
-  const isOwner = isOwnerBy(partnerId);
   const { permissions } = React.useContext(PermissionContext);
+
+  if (!data) {
+    return children([], false);
+  }
+
+  const partnerId = getByPath('ownedBy.id', data);
+  const isOwner = isOwnerBy(partnerId);
 
   if (isOwner) {
     return children(permissions, isOwner);
@@ -26,7 +31,7 @@ const PartnerPermissionsWrapper = ({ data, children }: Props) => {
   return (
     <Query
       query={partnerPermissionQuery}
-      variables={{ partnerId: getByPath('ownedBy.partner.id', data) }}
+      variables={{ organizationId: getByPath('ownedBy.id', data) }}
       fetchPolicy="cache-first"
     >
       {({ loading, data: permissionsData, error: permissionError }) => {
@@ -40,7 +45,7 @@ const PartnerPermissionsWrapper = ({ data, children }: Props) => {
           return permissionError.message;
         }
         return children(
-          getByPathWithDefault([], 'viewer.permissionsFromPartner', permissionsData),
+          getByPathWithDefault([], 'viewer.permissionsForOrganization', permissionsData),
           isOwner
         );
       }}

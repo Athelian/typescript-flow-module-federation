@@ -86,4 +86,8 @@ export default defineMessages({
     id: 'modules.SideBar.template',
     defaultMessage: 'RELATIONAL TABLE',
   },
+  documents: {
+    id: 'modules.SideBar.documents',
+    defaultMessage: 'DOCUMENTS',
+  },
 });

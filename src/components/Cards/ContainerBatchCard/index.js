@@ -1,14 +1,17 @@
 // @flow
 import React from 'react';
+import type { Batch } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { defaultVolumeMetric } from 'utils/metric';
 import { updateBatchCardQuantity, getBatchLatestQuantity } from 'utils/batch';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import TaskRing from 'components/TaskRing';
+import ProductImage from 'components/ProductImage';
 import FormattedNumber from 'components/FormattedNumber';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import RelateEntity from 'components/RelateEntity';
@@ -21,7 +24,6 @@ import {
   NumberInputFactory,
   DateInputFactory,
 } from 'components/Form';
-import { getProductImage } from 'components/Cards/utils';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -51,9 +53,9 @@ import {
 } from './style';
 
 type OptionalProps = {
-  onClick: (batch: Object) => void,
-  onClone: (batch: Object) => void,
-  onClear: (batch: Object) => void,
+  onClick: (batch: mixed) => void,
+  onClone: (batch: mixed) => void,
+  onClear: (batch: mixed) => void,
   onClickRepresentative: () => void,
   selectable: boolean,
   editable: {
@@ -78,7 +80,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  batch: Object,
+  batch: Batch,
   currency: string,
   saveOnBlur: Function,
 };
@@ -143,27 +145,30 @@ const ContainerBatchCard = ({
         ) : null,
       ].filter(Boolean);
 
-  const {
-    id,
-    no,
-    archived,
-    quantity = 0,
-    batchQuantityRevisions,
-    deliveredAt,
-    desiredAt,
-    packageVolume,
-    packageQuantity,
-    tags,
-    shipment,
-    orderItem: {
-      price,
-      productProvider: { name: productProviderName, product },
-      order,
+  const archived = getByPathWithDefault(false, 'archived', batch);
+  const id = getByPathWithDefault('', 'id', batch);
+  const no = getByPathWithDefault('', 'no', batch);
+  const quantity = getByPathWithDefault(0, 'quantity', batch);
+  const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', batch);
+  const deliveredAt = getByPathWithDefault('', 'deliveredAt', batch);
+  const desiredAt = getByPathWithDefault('', 'desiredAt', batch);
+  const packageQuantity = getByPathWithDefault(0, 'packageQuantity', batch);
+  const packageVolume = getByPathWithDefault(
+    {
+      metric: defaultVolumeMetric,
+      value: 0,
     },
-    todo,
-  } = batch;
-  const productImage = getProductImage(product);
+    'packageVolume',
+    batch
+  );
 
+  const tags = getByPathWithDefault([], 'tags', batch);
+  const order = getByPathWithDefault({}, 'orderItem.order', batch);
+  const price = getByPathWithDefault(null, 'orderItem.price', batch);
+  const product = getByPathWithDefault(null, 'orderItem.productProvider.product', batch);
+  const productProviderName = getByPathWithDefault('', 'orderItem.productProvider.name', batch);
+  const shipment = getByPathWithDefault(null, 'shipment', batch);
+  const todo = getByPathWithDefault(null, 'todo', batch);
   const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
 
   const quantityName = `batches.${id}.quantity`;
@@ -195,7 +200,11 @@ const ContainerBatchCard = ({
           onClick={() => onClick({ ...batch, no, quantity, deliveredAt, desiredAt })}
           role="presentation"
         >
-          <img className={ProductImageStyle} src={productImage} alt="product_image" />
+          <ProductImage
+            className={ProductImageStyle}
+            file={getByPathWithDefault(null, 'files.0', product)}
+            height="70px"
+          />
 
           <div className={ProductInfoWrapperStyle}>
             <div className={ProductNameWrapperStyle}>
@@ -406,36 +415,21 @@ const ContainerBatchCard = ({
           </div>
 
           <div className={OrderWrapperStyle}>
-            {mergedNavigable.order ? (
-              <Link
-                to={`/order/${encodeId(order.id)}`}
-                onClick={evt => {
-                  evt.stopPropagation();
-                }}
-              >
-                <RelateEntity entity="ORDER" value={order.poNo} />
-              </Link>
-            ) : (
-              <RelateEntity entity="ORDER" value={order.poNo} />
-            )}
+            <RelateEntity
+              link={mergedNavigable.order ? `/order/${encodeId(order.id)}` : ''}
+              entity="ORDER"
+              value={order.poNo}
+            />
           </div>
 
           <div className={ShipmentWrapperStyle}>
-            {mergedNavigable.shipment ? (
-              <Link
-                to={`/shipment/${shipment ? encodeId(shipment.id) : ''}`}
-                onClick={evt => {
-                  evt.stopPropagation();
-                }}
-              >
-                <RelateEntity
-                  entity="SHIPMENT"
-                  value={getByPathWithDefault(null, 'no', shipment)}
-                />
-              </Link>
-            ) : (
-              <RelateEntity entity="SHIPMENT" value={getByPathWithDefault(null, 'no', shipment)} />
-            )}
+            <RelateEntity
+              link={
+                mergedNavigable.shipment ? `/shipment/${shipment ? encodeId(shipment.id) : ''}` : ''
+              }
+              entity="SHIPMENT"
+              value={getByPathWithDefault(null, 'no', shipment)}
+            />
           </div>
 
           <div className={OrderInChargeWrapperStyle}>

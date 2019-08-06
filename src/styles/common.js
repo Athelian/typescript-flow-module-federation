@@ -60,6 +60,7 @@ export const colors = {
   METADATA: '#CCCCCC',
   TEMPLATE: '#CCCCCC',
   EDIT: '#CCCCCC',
+  DOCUMENT: '#8FBEB3',
 
   URGENT: '#F12C2C',
 

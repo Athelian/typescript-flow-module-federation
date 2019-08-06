@@ -45,6 +45,7 @@ export const productFormFragment = gql`
     memo
     files {
       ...imageFragment
+      ...forbiddenFragment
     }
     productProviders {
       ...productProviderFormFragment

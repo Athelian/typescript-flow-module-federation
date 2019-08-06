@@ -37,6 +37,8 @@ export const RemoveStyle: string = css`
 `;
 
 export const InputStyle = (width: string): string => css`
+  display: flex;
+  align-items: center;
   position: relative;
   ${borderRadiuses.MAIN};
   ${transitions.MAIN};
@@ -44,8 +46,9 @@ export const InputStyle = (width: string): string => css`
   white-space: nowrap;
   overflow-x: auto;
   ${scrollbars.SMALL};
+  padding: 0 0 0 5px;
   & > div {
-    margin-right: 4px;
+    margin-right: 5px;
   }
   input {
     color: ${colors.BLACK};
@@ -54,7 +57,8 @@ export const InputStyle = (width: string): string => css`
     font-weight: bold;
     padding: 5px 0 5px 0;
     background-color: transparent;
-    width: 80px;
+    min-width: 80px;
+    flex: 1;
     &:focus {
       outline: none;
     }

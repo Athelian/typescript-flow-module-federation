@@ -2,10 +2,10 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { ObjectValue } from 'react-values';
-import { Link } from '@reach/router';
 import { isBefore } from 'date-fns';
 import emitter from 'utils/emitter';
 import { encodeId } from 'utils/id';
+import { getParentInfo } from 'utils/task';
 import { formatToGraphql, startOfToday } from 'utils/date';
 import { isNotFound, isForbidden } from 'utils/data';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
@@ -73,9 +73,7 @@ type OptionalProps = {
   isInTemplate: boolean,
 };
 
-type Props = OptionalProps & {
-  groupIds: Array<string>,
-};
+type Props = OptionalProps;
 
 const defaultEditable = {
   name: false,
@@ -102,76 +100,6 @@ const defaultProps = {
   isInTemplate: false,
 };
 
-const getParentInfo = (
-  parent: Object
-): {
-  parentType: string,
-  // prettier-ignore
-  parentIcon: 'ORDER'
-    | 'BATCH'
-    | 'SHIPMENT'
-    | 'CONTAINER'
-    | 'ORDER_ITEM'
-    | 'PRODUCT'
-    | 'PRODUCT_PROVIDER'
-    | 'PROJECT'
-    | 'MILESTONE',
-  parentData: React$Node,
-  link: string,
-} => {
-  const { __typename } = parent;
-
-  if (__typename === 'Order') {
-    return {
-      parentType: 'order',
-      parentIcon: 'ORDER',
-      parentData: parent.poNo,
-      link: `/order/${encodeId(parent.id)}`,
-    };
-  }
-  if (__typename === 'OrderItem') {
-    return {
-      parentType: 'orderItem',
-      parentIcon: 'ORDER_ITEM',
-      parentData: parent.no,
-      link: `/order-item/${encodeId(parent.id)}`,
-    };
-  }
-  if (__typename === 'Batch') {
-    return {
-      parentType: 'batch',
-      parentIcon: 'BATCH',
-      parentData: parent.no,
-      link: `/batch/${encodeId(parent.id)}`,
-    };
-  }
-  if (__typename === 'Shipment') {
-    return {
-      parentType: 'shipment',
-      parentIcon: 'SHIPMENT',
-      parentData: parent.no,
-      link: `/shipment/${encodeId(parent.id)}`,
-    };
-  }
-  if (__typename === 'Product') {
-    return {
-      parentType: 'product',
-      parentIcon: 'PRODUCT',
-      parentData: parent.name,
-      link: `/product/${encodeId(parent.id)}`,
-    };
-  }
-  if (__typename === 'ProductProvider') {
-    return {
-      parentType: 'product',
-      parentIcon: 'PRODUCT_PROVIDER',
-      parentData: parent.name,
-      link: `/product/${encodeId(getByPath('product.id', parent))}`,
-    };
-  }
-  return {};
-};
-
 let cardHeight = 265;
 
 const tooltipMessage = (approvedBy: ?Object, rejectedBy: ?Object) => {
@@ -196,7 +124,6 @@ const TaskCard = ({
   navigable: originalNavigable,
   isInTemplate,
   actions,
-  groupIds,
   ...rest
 }: Props) => {
   const {
@@ -296,18 +223,11 @@ const TaskCard = ({
 
         {!(hideParentInfo || isInTemplate) && (
           <div className={TaskParentWrapperStyle}>
-            {viewPermissions[parentType] ? (
-              <Link
-                to={link}
-                onClick={evt => {
-                  evt.stopPropagation();
-                }}
-              >
-                <RelateEntity entity={parentIcon} value={parentData} />
-              </Link>
-            ) : (
-              <RelateEntity entity={parentIcon} value={parentData} />
-            )}
+            <RelateEntity
+              link={viewPermissions[parentType] ? link : ''}
+              entity={parentIcon}
+              value={parentData}
+            />
           </div>
         )}
 
@@ -458,53 +378,27 @@ const TaskCard = ({
             <div className={DividerStyle} />
 
             <div className={ProjectInfoStyle}>
-              {getByPath('project', milestone) ? (
-                <Link
-                  to={
-                    navigable.project
-                      ? `/project/${encodeId(getByPath('project.id', milestone))}`
-                      : ''
-                  }
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <RelateEntity
-                    entity="PROJECT"
-                    value={getByPathWithDefault('', 'project.name', milestone)}
-                  />
-                </Link>
-              ) : (
-                <RelateEntity
-                  entity="PROJECT"
-                  value={getByPathWithDefault('', 'project.name', milestone)}
-                />
-              )}
+              <RelateEntity
+                link={
+                  getByPath('project', milestone) && navigable.project
+                    ? `/project/${encodeId(getByPath('project.id', milestone))}`
+                    : ''
+                }
+                entity="PROJECT"
+                value={getByPathWithDefault('', 'project.name', milestone)}
+              />
             </div>
 
             <div className={MilestoneInfoStyle}>
-              {milestone ? (
-                <Link
-                  to={
-                    navigable.project
-                      ? `/project/${encodeId(getByPath('project.id', milestone))}`
-                      : ''
-                  }
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <RelateEntity
-                    entity="MILESTONE"
-                    value={getByPathWithDefault('', 'name', milestone)}
-                  />
-                </Link>
-              ) : (
-                <RelateEntity
-                  entity="MILESTONE"
-                  value={getByPathWithDefault('', 'name', milestone)}
-                />
-              )}
+              <RelateEntity
+                link={
+                  navigable.project && milestone
+                    ? `/project/${encodeId(getByPath('project.id', milestone))}`
+                    : ''
+                }
+                entity="MILESTONE"
+                value={getByPathWithDefault('', 'name', milestone)}
+              />
             </div>
           </>
         )}

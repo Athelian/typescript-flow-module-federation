@@ -239,29 +239,6 @@ exports[`Cards render ProjectCard 1`] = `
   text-transform: uppercase;
 }
 
-.emotion-4 {
-  position: relative;
-  font-size: 14px;
-  min-height: 20px;
-  line-height: 20px;
-  font-weight: bold;
-  color: #555555;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  border-radius: 5px;
-  text-align: right;
-  min-width: 0;
-  width: 100%;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  max-width: 100%;
-  padding: 0 5px;
-  height: 20px;
-  line-height: 20px;
-}
-
 .emotion-9 {
   height: 1px;
   background-color: #ddd;
@@ -504,7 +481,7 @@ exports[`Cards render ProjectCard 1`] = `
           </span>
         </div>
         <div
-          class="emotion-4"
+          class="emotion-1"
         >
           <span>
             6/30/2019
@@ -522,7 +499,7 @@ exports[`Cards render ProjectCard 1`] = `
           </span>
         </div>
         <div
-          class="emotion-4"
+          class="emotion-1"
         >
           
           <span>
@@ -545,7 +522,7 @@ exports[`Cards render ProjectCard 1`] = `
           </span>
         </div>
         <div
-          class="emotion-4"
+          class="emotion-1"
         >
           
           <span>
@@ -565,7 +542,7 @@ exports[`Cards render ProjectCard 1`] = `
           </span>
         </div>
         <div
-          class="emotion-4"
+          class="emotion-1"
         >
           
           <span>
@@ -938,29 +915,6 @@ exports[`Cards render ProjectCard 2`] = `
   text-transform: uppercase;
 }
 
-.emotion-4 {
-  position: relative;
-  font-size: 14px;
-  min-height: 20px;
-  line-height: 20px;
-  font-weight: bold;
-  color: #555555;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  border-radius: 5px;
-  text-align: right;
-  min-width: 0;
-  width: 100%;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  max-width: 100%;
-  padding: 0 5px;
-  height: 20px;
-  line-height: 20px;
-}
-
 .emotion-9 {
   height: 1px;
   background-color: #ddd;
@@ -1203,7 +1157,7 @@ exports[`Cards render ProjectCard 2`] = `
             </span>
           </div>
           <div
-            class="emotion-4"
+            class="emotion-1"
           >
             <span>
               6/30/2019
@@ -1221,7 +1175,7 @@ exports[`Cards render ProjectCard 2`] = `
             </span>
           </div>
           <div
-            class="emotion-4"
+            class="emotion-1"
           >
             <span>
               0
@@ -1242,7 +1196,7 @@ exports[`Cards render ProjectCard 2`] = `
             </span>
           </div>
           <div
-            class="emotion-4"
+            class="emotion-1"
           >
             <span>
               20
@@ -1260,7 +1214,7 @@ exports[`Cards render ProjectCard 2`] = `
             </span>
           </div>
           <div
-            class="emotion-4"
+            class="emotion-1"
           >
             <span>
               2

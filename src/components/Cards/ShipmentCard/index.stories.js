@@ -28,12 +28,12 @@ const shipment = {
   importer: {
     id: faker.random.uuid(),
     name: faker.name.findName(),
-    __typename: 'Group',
+    __typename: 'Organization',
   },
   exporter: {
     id: faker.random.uuid(),
     name: faker.name.findName(),
-    __typename: 'Group',
+    __typename: 'Organization',
   },
   cargoReady: {
     id: faker.random.uuid(),
@@ -93,10 +93,10 @@ const shipment = {
       id: faker.random.uuid(),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
-      group: {
+      organization: {
         id: faker.random.uuid(),
         name: faker.name.findName(),
-        __typename: 'Group',
+        __typename: 'Organization',
       },
       __typename: 'User',
     },
@@ -104,10 +104,10 @@ const shipment = {
       id: faker.random.uuid(),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
-      group: {
+      organization: {
         id: faker.random.uuid(),
         name: faker.name.findName(),
-        __typename: 'Group',
+        __typename: 'Organization',
       },
       __typename: 'User',
     },
@@ -115,10 +115,10 @@ const shipment = {
       id: faker.random.uuid(),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
-      group: {
+      organization: {
         id: faker.random.uuid(),
         name: faker.name.findName(),
-        __typename: 'Group',
+        __typename: 'Organization',
       },
       __typename: 'User',
     },
@@ -126,10 +126,10 @@ const shipment = {
       id: faker.random.uuid(),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
-      group: {
+      organization: {
         id: faker.random.uuid(),
         name: faker.name.findName(),
-        __typename: 'Group',
+        __typename: 'Organization',
       },
       __typename: 'User',
     },
@@ -137,10 +137,10 @@ const shipment = {
       id: faker.random.uuid(),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
-      group: {
+      organization: {
         id: faker.random.uuid(),
         name: faker.name.findName(),
-        __typename: 'Group',
+        __typename: 'Organization',
       },
       __typename: 'User',
     },
@@ -263,7 +263,7 @@ const shipment = {
     id: faker.random.uuid(),
     partner: null,
     name: faker.name.findName(),
-    __typename: 'Group',
+    __typename: 'Organization',
   },
 };
 

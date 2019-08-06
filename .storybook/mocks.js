@@ -1,7 +1,14 @@
 // @flow
 import { range } from 'lodash';
 import faker from 'faker';
-import type { Project, User, Group, TaskCount, Milestone, Timeline } from 'generated/graphql';
+import type {
+  Project,
+  User,
+  Organization,
+  TaskCount,
+  Milestone,
+  Timeline,
+} from 'generated/graphql';
 
 const baseUserMock = (): User => {
   return {
@@ -10,6 +17,7 @@ const baseUserMock = (): User => {
     lastName: faker.name.lastName(),
     email: faker.internet.email(),
     role: 'default',
+    superAdmin: false,
     tags: [],
     createdAt: faker.date.future(),
     updatedAt: faker.date.future(),
@@ -21,7 +29,7 @@ const baseUserMock = (): User => {
   };
 };
 
-const baseGroupMock = (): Group => {
+const baseGroupMock = (): Organization => {
   return {
     id: faker.random.uuid(),
     name: faker.name.firstName(),
@@ -48,7 +56,7 @@ const baseGroupMock = (): Group => {
       count: 0,
       totalCount: 0,
     },
-    __typename: 'Group',
+    __typename: 'Organization',
   };
 };
 
@@ -279,7 +287,7 @@ export const mocks = {
   User: () => {
     return baseUserMock();
   },
-  Group: () => {
+  Organization: () => {
     return baseGroupMock();
   },
   Project: () => {

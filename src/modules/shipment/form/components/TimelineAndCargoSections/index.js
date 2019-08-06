@@ -30,10 +30,10 @@ const CustomPlaceHolder = () => {
   return (
     <>
       <SectionWrapper id="shipment_timelineSection">
-        <ListCardPlaceHolder />
+        <ListCardPlaceHolder height={690} />
       </SectionWrapper>
       <SectionWrapper id="shipment_cargoSection">
-        <ListCardPlaceHolder />
+        <ListCardPlaceHolder height={700} />
       </SectionWrapper>
     </>
   );

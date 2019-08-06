@@ -1,5 +1,5 @@
 // @flow
-import type { Todo, GroupPayload } from 'generated/graphql';
+import type { Todo, OrganizationPayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import { cloneDeep, set } from 'lodash';
 import { isEquals, getByPath, getByPathWithDefault } from 'utils/fp';
@@ -89,7 +89,7 @@ export default class ShipmentTasksContainer extends Container<FormState> {
     }
   };
 
-  waitForTasksSectionReadyThenChangePartner = (partner: GroupPayload) => {
+  waitForTasksSectionReadyThenChangePartner = (partner: OrganizationPayload) => {
     let retry;
     if (this.state.hasCalledTasksApiYet) {
       this.onChangePartner(partner);
@@ -106,7 +106,7 @@ export default class ShipmentTasksContainer extends Container<FormState> {
     }
   };
 
-  onChangePartner(partner: GroupPayload) {
+  onChangePartner(partner: OrganizationPayload) {
     const { todo } = this.state;
     this.setState({
       todo: {
@@ -114,41 +114,41 @@ export default class ShipmentTasksContainer extends Container<FormState> {
         tasks: todo.tasks.map(task => ({
           ...task,
           assignedTo: getByPathWithDefault([], 'assignedTo', task).filter(
-            user => getByPath('group.id', user) !== getByPath('id', partner)
+            user => getByPath('organization.id', user) !== getByPath('id', partner)
           ),
           approvers: getByPathWithDefault([], 'approvers', task).filter(
-            user => getByPath('group.id', user) !== getByPath('id', partner)
+            user => getByPath('organization.id', user) !== getByPath('id', partner)
           ),
           inProgressAt:
-            getByPath('inProgressBy.group.id', task) === getByPath('id', partner)
+            getByPath('inProgressBy.organization.id', task) === getByPath('id', partner)
               ? null
               : getByPath('inProgressAt', task),
           inProgressBy:
-            getByPath('inProgressBy.group.id', task) === getByPath('id', partner)
+            getByPath('inProgressBy.organization.id', task) === getByPath('id', partner)
               ? null
               : getByPath('inProgressBy', task),
           completedAt:
-            getByPath('completedBy.group.id', task) === getByPath('id', partner)
+            getByPath('completedBy.organization.id', task) === getByPath('id', partner)
               ? null
               : getByPath('completedAt', task),
           completedBy:
-            getByPath('completedBy.group.id', task) === getByPath('id', partner)
+            getByPath('completedBy.organization.id', task) === getByPath('id', partner)
               ? null
               : getByPath('completedBy', task),
           rejectedAt:
-            getByPath('rejectedBy.group.id', task) === getByPath('id', partner)
+            getByPath('rejectedBy.organization.id', task) === getByPath('id', partner)
               ? null
               : getByPath('rejectedAt', task),
           rejectedBy:
-            getByPath('rejectedBy.group.id', task) === getByPath('id', partner)
+            getByPath('rejectedBy.organization.id', task) === getByPath('id', partner)
               ? null
               : getByPath('rejectedBy', task),
           approvedAt:
-            getByPath('approvedBy.group.id', task) === getByPath('id', partner)
+            getByPath('approvedBy.organization.id', task) === getByPath('id', partner)
               ? null
               : getByPath('approvedAt', task),
           approvedBy:
-            getByPath('approvedBy.group.id', task) === getByPath('id', partner)
+            getByPath('approvedBy.organization.id', task) === getByPath('id', partner)
               ? null
               : getByPath('approvedBy', task),
         })),

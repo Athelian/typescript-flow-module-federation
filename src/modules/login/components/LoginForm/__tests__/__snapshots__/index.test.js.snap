@@ -176,7 +176,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  border: 1px solid transparent;
+  border: 1px solid rgba(0,0,0,0.1);
   border-radius: 5px;
   background-color: #ffffff;
   height: 30px;
@@ -386,7 +386,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
             </div>
           </div>
           <div
-            class="css-bnsvj3"
+            class="css-tos0r5"
           >
             <input
               data-testid="email"
@@ -414,7 +414,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
             </div>
           </div>
           <div
-            class="css-bnsvj3"
+            class="css-tos0r5"
           >
             <input
               data-testid="password"
@@ -649,7 +649,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  border: 1px solid transparent;
+  border: 1px solid rgba(0,0,0,0.1);
   border-radius: 5px;
   background-color: #ffffff;
   height: 30px;

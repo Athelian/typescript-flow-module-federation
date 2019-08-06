@@ -1,75 +1,88 @@
 // @flow
 import * as React from 'react';
+import type { FilePayload } from 'generated/graphql';
+import { pick } from 'lodash/fp';
 import Icon from 'components/Icon';
 import { uuid } from 'utils/id';
 import { upload } from 'utils/fs';
 import { isEquals } from 'utils/fp';
 import logger from 'utils/logger';
-import type { Image } from './type.js.flow';
 import { AddImageStyle, ProgressStyle, UploadWrapperStyle } from './style';
 
-type OptionalProps = {
-  width: string,
-  height: string,
+type UploadFileState = {
+  id: string,
+  path: string,
 };
 
-type Props = OptionalProps & {
-  name: string,
-  values: Array<Image>,
-  onChange: (string, any) => void,
+type Props = {
+  width: string,
+  height: string,
+  files: Array<FilePayload>,
+  onSave: (Array<FilePayload>) => void,
 };
 
 type State = {
   filesState: Array<{
+    ...UploadFileState,
     uploading: boolean,
     progress: number,
-    id: string,
-    path: string,
   }>,
-  prevFiles: Array<string>,
+  prevFiles: Array<UploadFileState>,
 };
 
+const SELECTED_FIELDS = ['id', 'name', 'path', 'pathMedium', '__typename'];
 class ImagesUploadInput extends React.Component<Props, State> {
-  static defaultProps = {
-    values: [],
-    onChange: () => {},
-  };
-
   state = {
     filesState: [],
     prevFiles: [],
   };
 
   static getDerivedStateFromProps(props: Props, state: State) {
-    if (!isEquals(props.values.map(item => item.id), state.prevFiles)) {
+    const editableFields = ['id', 'name', 'path', 'pathMedium'];
+    if (
+      !isEquals(props.files.map(pick(editableFields)), state.prevFiles.map(pick(editableFields)))
+    ) {
       return {
-        prevFiles: (props.values.map(item => item.id): Array<string>),
-        filesState: (props.values.map(item => ({
+        prevFiles: (props.files.map(pick(SELECTED_FIELDS)): Array<UploadFileState>),
+        filesState: (props.files.map(pick(SELECTED_FIELDS)).map(item => ({
           ...item,
           progress: 100,
           uploading: false,
-        })): Array<any>),
+        })): Array<{
+          ...UploadFileState,
+          uploading: boolean,
+          progress: number,
+        }>),
       };
     }
     return null;
   }
 
-  handleChange = (
-    event: SyntheticInputEvent<HTMLInputElement>,
-    onUpload: (Array<Object>) => any
-  ) => {
-    event.preventDefault();
+  handleUpload = (newFiles: Array<Object>) => {
+    const { files, onSave } = this.props;
+    onSave([...files, ...newFiles]);
+  };
+
+  handleChange = (event: SyntheticInputEvent<HTMLInputElement> | Array<File>) => {
+    let newFiles = [];
+    if (Array.isArray(event)) {
+      newFiles = event;
+    } else {
+      event.preventDefault();
+      newFiles = Array.from(event.target.files);
+    }
     const { filesState } = this.state;
 
-    const newFiles = Array.from(event.target.files);
     const basePosition = filesState.length;
     this.setState(
       prevState => ({
         filesState: [
           ...prevState.filesState,
-          ...newFiles.map(() => ({
+          ...newFiles.map(({ name }) => ({
+            name,
             id: uuid(),
             path: '',
+            pathMedium: '',
             uploading: true,
             progress: 0,
           })),
@@ -89,12 +102,12 @@ class ImagesUploadInput extends React.Component<Props, State> {
           )
         )
           .then(uploadResult => {
-            onUpload(
+            this.handleUpload(
               uploadResult.map(({ id, name, path }) => ({
                 id,
                 name,
                 path,
-                memo: null,
+                pathMedium: path,
                 uploading: false,
                 progress: 100,
               }))
@@ -102,14 +115,14 @@ class ImagesUploadInput extends React.Component<Props, State> {
           })
           .catch(error => {
             logger.error(error);
-            const { values } = this.props;
+            const { files } = this.props;
             this.setState({
-              prevFiles: (values.map(item => item.id): Array<string>),
-              filesState: (values.map(item => ({
+              prevFiles: files.map(pick(SELECTED_FIELDS)),
+              filesState: files.map(pick(SELECTED_FIELDS)).map(item => ({
                 ...item,
                 progress: 100,
                 uploading: false,
-              })): Array<any>),
+              })),
             });
           });
       }
@@ -117,7 +130,7 @@ class ImagesUploadInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { name, values, onChange, width, height } = this.props;
+    const { width, height } = this.props;
     const { filesState } = this.state;
     return (
       <div className={UploadWrapperStyle}>
@@ -129,17 +142,7 @@ class ImagesUploadInput extends React.Component<Props, State> {
         <label className={AddImageStyle({ width, height })}>
           <Icon icon="PHOTO" />
           <Icon icon="ADD" />
-          <input
-            type="file"
-            accept="*"
-            hidden
-            multiple
-            onChange={e => {
-              this.handleChange(e, newFiles => {
-                onChange(name, [...values, ...newFiles]);
-              });
-            }}
-          />
+          <input value="" type="file" accept="*" hidden multiple onChange={this.handleChange} />
         </label>
       </div>
     );

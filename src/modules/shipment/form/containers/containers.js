@@ -1,9 +1,9 @@
 // @flow
-import type { ContainerPayload, GroupPayload, PartnerPayload } from 'generated/graphql';
+import type { ContainerPayload, OrganizationPayload, PartnerPayload } from 'generated/graphql';
 import { Container } from 'unstated';
-import { set, cloneDeep } from 'lodash';
+import { cloneDeep, set } from 'lodash';
 import { cleanFalsyAndTypeName } from 'utils/data';
-import { isEquals, getByPath, getByPathWithDefault } from 'utils/fp';
+import { getByPath, getByPathWithDefault, isEquals } from 'utils/fp';
 
 type ContainersState = {|
   containers: Array<ContainerPayload>,
@@ -27,10 +27,7 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
   };
 
   setDeepFieldValue = (path: string, value: any) => {
-    this.setState(prevState => {
-      const newState = set(cloneDeep(prevState), path, value);
-      return newState;
-    });
+    this.setState(prevState => set(cloneDeep(prevState), path, value));
   };
 
   isDirty = () =>
@@ -49,7 +46,7 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     this.originalValues = { containers, hasCalledContainerApiYet };
   };
 
-  changeMainExporter = (exporter: ?GroupPayload) => {
+  changeMainExporter = (exporter: ?OrganizationPayload) => {
     if (exporter) {
       this.setState(prevState => {
         return {
@@ -91,7 +88,7 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     }
   };
 
-  waitForContainerSectionReadyThenChangeMainExporter = (exporter: ?GroupPayload) => {
+  waitForContainerSectionReadyThenChangeMainExporter = (exporter: ?OrganizationPayload) => {
     let retry;
     if (this.state.hasCalledContainerApiYet) {
       this.changeMainExporter(exporter);
@@ -113,40 +110,42 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
       containers: prevState.containers.map(container => ({
         ...container,
         warehouseArrivalActualDateAssignedTo: container.warehouseArrivalActualDateAssignedTo.filter(
-          user => getByPath('group.id', user) !== getByPath('id', partner)
+          user => getByPath('organization.id', user) !== getByPath('id', partner)
         ),
         warehouseArrivalAgreedDateAssignedTo: container.warehouseArrivalAgreedDateAssignedTo.filter(
-          user => getByPath('group.id', user) !== getByPath('id', partner)
+          user => getByPath('organization.id', user) !== getByPath('id', partner)
         ),
         departureDateAssignedTo: container.warehouseArrivalAgreedDateAssignedTo.filter(
-          user => getByPath('group.id', user) !== getByPath('id', partner)
+          user => getByPath('organization.id', user) !== getByPath('id', partner)
         ),
         warehouseArrivalActualDateApprovedAt:
-          getByPath('warehouseArrivalActualDateApprovedBy.group.id', container) ===
+          getByPath('warehouseArrivalActualDateApprovedBy.organization.id', container) ===
           getByPath('id', partner)
             ? null
             : container.warehouseArrivalActualDateApprovedAt,
         warehouseArrivalActualDateApprovedBy:
-          getByPath('warehouseArrivalActualDateApprovedBy.group.id', container) ===
+          getByPath('warehouseArrivalActualDateApprovedBy.organization.id', container) ===
           getByPath('id', partner)
             ? null
             : container.warehouseArrivalActualDateApprovedBy,
         warehouseArrivalAgreedDateApprovedAt:
-          getByPath('warehouseArrivalAgreedDateApprovedBy.group.id', container) ===
+          getByPath('warehouseArrivalAgreedDateApprovedBy.organization.id', container) ===
           getByPath('id', partner)
             ? null
             : container.warehouseArrivalAgreedDateApprovedAt,
         warehouseArrivalAgreedDateApprovedBy:
-          getByPath('warehouseArrivalAgreedDateApprovedBy.group.id', container) ===
+          getByPath('warehouseArrivalAgreedDateApprovedBy.organization.id', container) ===
           getByPath('id', partner)
             ? null
             : container.warehouseArrivalAgreedDateApprovedBy,
         departureDateApprovedAt:
-          getByPath('departureDateApprovedBy.group.id', container) === getByPath('id', partner)
+          getByPath('departureDateApprovedBy.organization.id', container) ===
+          getByPath('id', partner)
             ? null
             : container.departureDateApprovedAt,
         departureDateApprovedBy:
-          getByPath('departureDateApprovedBy.group.id', container) === getByPath('id', partner)
+          getByPath('departureDateApprovedBy.organization.id', container) ===
+          getByPath('id', partner)
             ? null
             : container.departureDateApprovedBy,
       })),

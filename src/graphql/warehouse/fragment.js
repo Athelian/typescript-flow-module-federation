@@ -11,14 +11,14 @@ export const warehouseFormFragment = gql`
     }
     ownedBy {
       ...ownedByFragment
-      ... on Group {
+      ... on Organization {
         ...partnerCardFragment
       }
     }
     inCharges {
       ...userAvatarFragment
     }
-    groups {
+    organizations {
       ...partnerCardFragment
     }
     name
@@ -41,7 +41,7 @@ export const warehouseCardFragment = gql`
     id
     name
     ownedBy {
-      ... on Group {
+      ... on Organization {
         id
         name
       }

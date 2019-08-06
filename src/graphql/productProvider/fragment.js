@@ -66,6 +66,7 @@ export const productProviderFormFragment = gql`
     memo
     files {
       ...documentFragment
+      ...forbiddenFragment
     }
     todo {
       milestone {

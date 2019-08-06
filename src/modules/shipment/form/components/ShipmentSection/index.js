@@ -664,8 +664,10 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                                             'inCharges',
                                                             values.inCharges.filter(
                                                               user =>
-                                                                getByPath('group.id', user) !==
-                                                                getByPath('id', importer)
+                                                                getByPath(
+                                                                  'organization.id',
+                                                                  user
+                                                                ) !== getByPath('id', importer)
                                                             )
                                                           );
                                                           setFieldValue(
@@ -822,7 +824,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                               'inCharges',
                                               values.inCharges.filter(
                                                 user =>
-                                                  getByPath('group.id', user) !==
+                                                  getByPath('organization.id', user) !==
                                                   getByPath('id', exporter)
                                               )
                                             );

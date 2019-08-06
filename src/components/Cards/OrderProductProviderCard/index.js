@@ -3,11 +3,11 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label, Display, FormTooltip } from 'components/Form';
-import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import TaskRing from 'components/TaskRing';
+import ProductImage from 'components/ProductImage';
 import BaseCard from '../BaseCard';
 import {
   ProductProviderCardWrapperStyle,
@@ -96,8 +96,6 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
       );
     }
 
-    const productImage = files && files.length > 0 ? files[activeImage].pathMedium : FALLBACK_IMAGE;
-
     return (
       <BaseCard
         icon="PRODUCT_PROVIDER"
@@ -110,7 +108,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
       >
         <div className={ProductProviderCardWrapperStyle} onClick={onClick} role="presentation">
           <div className={ProductImageWrapperStyle}>
-            <img className={ProductImageStyle} src={productImage} alt="product_image" />
+            <ProductImage height="75px" className={ProductImageStyle} file={files[activeImage]} />
             {files && activeImage > 0 && (
               <button
                 className={ProductImageChevronButtonStyle('left')}

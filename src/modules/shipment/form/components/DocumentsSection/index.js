@@ -1,42 +1,47 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import type { IntlShape } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { getByPathWithDefault } from 'utils/fp';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import {
-  SHIPMENT_UPDATE,
-  SHIPMENT_DOWNLOAD_DOCUMENTS,
   SHIPMENT_SET_DOCUMENTS,
+  SHIPMENT_DOWNLOAD_DOCUMENTS,
+  SHIPMENT_DOCUMENT_DELETE,
+  SHIPMENT_DOCUMENT_CREATE,
+  SHIPMENT_DOCUMENT_SET_MEMO,
+  SHIPMENT_DOCUMENT_SET_STATUS,
+  SHIPMENT_DOCUMENT_SET_TYPE,
 } from 'modules/permission/constants/shipment';
+import {
+  DOCUMENT_CREATE,
+  DOCUMENT_DELETE,
+  DOCUMENT_SET_MEMO,
+  DOCUMENT_SET_STATUS,
+  DOCUMENT_SET_TYPE,
+  DOCUMENT_UPDATE,
+} from 'modules/permission/constants/file';
 import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
 import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
 import { DocumentsInput, SectionHeader } from 'components/Form';
 import { ShipmentFilesContainer } from 'modules/shipment/form/containers';
-import messages from 'modules/shipment/messages';
 import { shipmentFormFilesQuery } from './query';
 
 type Props = {|
-  intl: IntlShape,
   entityId: string,
   isLoading: boolean,
 |};
 
-function DocumentsSection({ intl, entityId, isLoading }: Props) {
+function DocumentsSection({ entityId, isLoading }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
-  const allowUpdate = hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_DOCUMENTS);
-
-  const allowDownload = hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS);
-
   return (
     <Subscribe to={[ShipmentFilesContainer]}>
-      {({ state: { files }, initDetailValues, setFieldValue: changeFiles }) => (
+      {({ state: { files }, initDetailValues, setFieldValue }) => (
         <QueryPlaceHolder
-          PlaceHolder={ListCardPlaceHolder}
+          PlaceHolder={() => <ListCardPlaceHolder height={540} />}
           query={shipmentFormFilesQuery}
           entityId={entityId}
           isLoading={isLoading}
@@ -57,40 +62,32 @@ function DocumentsSection({ intl, entityId, isLoading }: Props) {
                   }
                 />
                 <DocumentsInput
-                  id="files"
-                  name="files"
-                  editable={allowUpdate}
-                  downloadable={allowDownload}
-                  values={files}
-                  onChange={(field, value) => {
-                    changeFiles(field, value);
+                  uploadable={hasPermission([SHIPMENT_DOCUMENT_CREATE, DOCUMENT_CREATE])}
+                  removable={hasPermission([SHIPMENT_DOCUMENT_DELETE, DOCUMENT_DELETE])}
+                  editable={{
+                    status: hasPermission([
+                      DOCUMENT_SET_STATUS,
+                      SHIPMENT_DOCUMENT_SET_STATUS,
+                      DOCUMENT_UPDATE,
+                      SHIPMENT_SET_DOCUMENTS,
+                    ]),
+                    type: hasPermission([
+                      DOCUMENT_SET_TYPE,
+                      SHIPMENT_DOCUMENT_SET_TYPE,
+                      DOCUMENT_UPDATE,
+                      SHIPMENT_SET_DOCUMENTS,
+                    ]),
+                    memo: hasPermission([
+                      DOCUMENT_SET_MEMO,
+                      SHIPMENT_DOCUMENT_SET_MEMO,
+                      DOCUMENT_UPDATE,
+                      SHIPMENT_SET_DOCUMENTS,
+                    ]),
                   }}
-                  types={[
-                    {
-                      value: 'ShipmentBl',
-                      label: intl.formatMessage(messages.bl),
-                    },
-                    {
-                      value: 'ShipmentInvoice',
-                      label: intl.formatMessage(messages.invoice),
-                    },
-                    {
-                      value: 'ShipmentPackingList',
-                      label: intl.formatMessage(messages.packingList),
-                    },
-                    {
-                      value: 'ShipmentImportDeclaration',
-                      label: intl.formatMessage(messages.importDeclaration),
-                    },
-                    {
-                      value: 'ShipmentInspectionApplication',
-                      label: intl.formatMessage(messages.inspectionApplication),
-                    },
-                    {
-                      value: 'Document',
-                      label: intl.formatMessage(messages.document),
-                    },
-                  ]}
+                  downloadable={hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS)}
+                  files={files}
+                  onSave={updateFiles => setFieldValue('files', updateFiles)}
+                  entity="Shipment"
                 />
               </>
             );
@@ -101,4 +98,4 @@ function DocumentsSection({ intl, entityId, isLoading }: Props) {
   );
 }
 
-export default injectIntl(DocumentsSection);
+export default DocumentsSection;

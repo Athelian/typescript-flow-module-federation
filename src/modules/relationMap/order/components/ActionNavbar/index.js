@@ -789,6 +789,24 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       },
                       files: [],
                     };
+                    const generateOrderItem = orderItem => ({
+                      ...orderItem,
+                      batches: orderItem.batches
+                        ? orderItem.batches.map(batchId => ({ id: batchId }))
+                        : [],
+                      productProvider: {
+                        ...orderItem.productProvider,
+                        exporter: exporters[orderItem.productProvider.exporter],
+                      },
+                      ...(needToResetPrice
+                        ? {
+                            price: {
+                              currency: currencies.length > 0 ? currencies[0] : 'USD',
+                              amount: 0,
+                            },
+                          }
+                        : {}),
+                    });
                     orderItemIds.forEach(orderItemId => {
                       const orderItem = orderItems[orderItemId];
                       if (orderItem) {
@@ -798,29 +816,13 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         ) {
                           moveOrderItems.push({
                             ...defaultInput,
-                            ...orderItem,
-                            ...(needToResetPrice
-                              ? {
-                                  price: {
-                                    currency: currencies.length > 0 ? currencies[0] : 'USD',
-                                    amount: 0,
-                                  },
-                                }
-                              : {}),
+                            ...generateOrderItem(orderItem),
                             batches: [],
                           });
                         } else {
                           moveOrderItems.push({
                             ...defaultInput,
-                            ...orderItem,
-                            ...(needToResetPrice
-                              ? {
-                                  price: {
-                                    currency: currencies.length > 0 ? currencies[0] : 'USD',
-                                    amount: 0,
-                                  },
-                                }
-                              : {}),
+                            ...generateOrderItem(orderItem),
                             batches: orderItem.batches
                               .filter(batchId => batchIds.includes(batchId))
                               .map(batchId => {
@@ -828,6 +830,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 return {
                                   ...defaultInput,
                                   ...inputBatchFields,
+                                  orderItem: generateOrderItem(orderItem),
                                   quantity: inputBatchFields.latestQuantity || 0,
                                   batchQuantityRevisions: [],
                                   shipment: inputBatchFields.shipment
@@ -853,19 +856,12 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           );
                           moveOrderItems.push({
                             ...defaultInput,
-                            ...orderItem,
-                            ...(needToResetPrice
-                              ? {
-                                  price: {
-                                    currency: currencies.length > 0 ? currencies[0] : 'USD',
-                                    amount: 0,
-                                  },
-                                }
-                              : {}),
+                            ...generateOrderItem(orderItem),
                             batches: [
                               {
                                 ...defaultInput,
                                 ...batch,
+                                orderItem: generateOrderItem(orderItem),
                                 shipment: batch.shipment ? shipments[batch.shipment.id] : null,
                                 quantity: batch.latestQuantity || 0,
                                 batchQuantityRevisions: [],

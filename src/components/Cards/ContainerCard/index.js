@@ -1,18 +1,19 @@
 // @flow
 import * as React from 'react';
+import type { ContainerPayload } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
-import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { defaultVolumeMetric } from 'utils/metric';
 import { getSelectLabel, isForbidden } from 'utils/data';
 import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import ProductImage from 'components/ProductImage';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import RelateEntity from 'components/RelateEntity';
 import { Label, Display } from 'components/Form';
-import { getProductImage } from 'components/Cards/utils';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { calculateDueDate } from 'modules/container/utils';
 import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
@@ -41,49 +42,70 @@ import {
   TagsWrapperStyle,
 } from './style';
 
-type OptionalProps = {
-  onClick: Function,
-};
-
-type Props = OptionalProps & {
-  container: Object,
-};
+type Props = {|
+  container: ContainerPayload,
+  onClick?: Function,
+|};
 
 const defaultProps = {
   onClick: () => {},
 };
 
 const ContainerCard = ({ container, onClick, ...rest }: Props) => {
-  const {
-    representativeBatch,
-    shipment,
-    archived,
-    no,
-    containerType,
-    containerOption,
-    totalVolume,
-    batches,
-    warehouse,
-    warehouseArrivalAgreedDate,
-    warehouseArrivalAgreedDateApprovedBy,
-    warehouseArrivalActualDate,
-    warehouseArrivalActualDateApprovedBy,
-    freeTimeStartDate,
-    freeTimeDuration,
-    tags,
-  } = container;
+  const archived = getByPathWithDefault(false, 'archived', container);
+  const containerType = getByPathWithDefault('', 'containerType', container);
+  const containerOption = getByPathWithDefault('', 'containerOption', container);
+  const totalVolume = getByPathWithDefault(
+    {
+      metric: defaultVolumeMetric,
+      value: 0,
+    },
+    'totalVolume',
+    container
+  );
+  const no = getByPathWithDefault('', 'no', container);
+  const warehouseArrivalAgreedDate = getByPathWithDefault(
+    '',
+    'warehouseArrivalAgreedDate',
+    container
+  );
+  const warehouseArrivalActualDate = getByPathWithDefault(
+    '',
+    'warehouseArrivalActualDate',
+    container
+  );
+  const tags = getByPathWithDefault([], 'tags', container);
+  const batches = getByPathWithDefault([], 'batches', container);
+  const warehouseArrivalAgreedDateApprovedBy = getByPathWithDefault(
+    null,
+    'warehouseArrivalAgreedDateApprovedBy',
+    container
+  );
+  const warehouseArrivalActualDateApprovedBy = getByPathWithDefault(
+    null,
+    'warehouseArrivalActualDateApprovedBy',
+    container
+  );
+  const freeTimeDuration = getByPathWithDefault(null, 'freeTimeDuration', container);
+  const freeTimeStartDate = getByPathWithDefault(null, 'freeTimeStartDate', container);
+  const shipment = getByPathWithDefault(null, 'shipment', container);
+  const warehouse = getByPathWithDefault(null, 'warehouse', container);
   const product = getByPathWithDefault(
     {},
-    'orderItem.productProvider.product',
-    representativeBatch
+    'representativeBatch.orderItem.productProvider.product',
+    container
   );
-  const productImage = getProductImage(product);
+
   return (
     <BaseCard icon="CONTAINER" color="CONTAINER" isArchived={archived} {...rest}>
       <div className={CardWrapperStyle} onClick={onClick} role="presentation">
         <div className={ImagePartWrapperStyle}>
           <div className={ImageWrapperStyle}>
-            <img className={ImageStyle} src={productImage} alt="product_image" />
+            <ProductImage
+              className={ImageStyle}
+              height="75px"
+              file={getByPathWithDefault(null, 'files.0', product)}
+            />
           </div>
           <div className={InfoInsideImageWrapperStyle}>
             <div className={NameStyle}>{product.name}</div>
@@ -124,26 +146,20 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
           <div className={DividerStyle} />
 
           <div className={IconInputStyle}>
-            {isNullOrUndefined(warehouse) || isForbidden(warehouse) ? (
-              <RelateEntity blackout={isForbidden(warehouse)} entity="WAREHOUSE" value="" />
-            ) : (
-              <PartnerPermissionsWrapper data={warehouse}>
-                {permissions => (
-                  <Link
-                    to={
-                      permissions.includes(WAREHOUSE_FORM)
-                        ? `/warehouse/${encodeId(warehouse.id)}`
-                        : ''
-                    }
-                    onClick={evt => {
-                      evt.stopPropagation();
-                    }}
-                  >
-                    <RelateEntity entity="WAREHOUSE" value={warehouse.name} />
-                  </Link>
-                )}
-              </PartnerPermissionsWrapper>
-            )}
+            <PartnerPermissionsWrapper data={warehouse}>
+              {permissions => (
+                <RelateEntity
+                  blackout={isForbidden(warehouse)}
+                  link={
+                    permissions.includes(WAREHOUSE_FORM)
+                      ? `/warehouse/${encodeId(warehouse.id)}`
+                      : ''
+                  }
+                  entity="WAREHOUSE"
+                  value={warehouse && warehouse.name}
+                />
+              )}
+            </PartnerPermissionsWrapper>
           </div>
 
           <div className={LabelStyle}>
@@ -199,24 +215,12 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
           <div className={DividerStyle} />
 
           <div className={IconInputStyle}>
-            {isNullOrUndefined(shipment) ? (
-              <RelateEntity entity="SHIPMENT" value="" />
-            ) : (
-              <>
-                <Link
-                  to={`/shipment/${encodeId(shipment.id)}`}
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <RelateEntity
-                    blackout={isForbidden(shipment)}
-                    entity="SHIPMENT"
-                    value={shipment && shipment.no}
-                  />
-                </Link>
-              </>
-            )}
+            <RelateEntity
+              link={shipment && shipment.id ? `/shipment/${encodeId(shipment.id)}` : ''}
+              blackout={isForbidden(shipment)}
+              entity="SHIPMENT"
+              value={shipment && shipment.no}
+            />
           </div>
 
           <div className={ContainerImporterWrapperStyle}>

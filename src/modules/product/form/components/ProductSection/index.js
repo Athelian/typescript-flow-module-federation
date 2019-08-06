@@ -1,12 +1,16 @@
 // @flow
 import * as React from 'react';
+import type { ProductPayload } from 'generated/graphql';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue, ObjectValue } from 'react-values';
 import { encodeId } from 'utils/id';
+import { getByPath } from 'utils/fp';
+import { isForbidden } from 'utils/data';
 import usePermission from 'hooks/usePermission';
 import { ProductActivateDialog, ProductArchiveDialog } from 'modules/product/common/Dialog';
+import ProductImage from 'components/ProductImage';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
 import { FormField } from 'modules/form';
@@ -19,6 +23,7 @@ import {
 import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
 import { TAG_LIST } from 'modules/permission/constants/tag';
+import { DOCUMENT_CREATE, DOCUMENT_DELETE } from 'modules/permission/constants/file';
 import {
   PRODUCT_CREATE,
   PRODUCT_UPDATE,
@@ -28,11 +33,13 @@ import {
   PRODUCT_SET_JAN_CODE,
   PRODUCT_SET_HS_CODE,
   PRODUCT_SET_MATERIAL,
-  PRODUCT_SET_DOCUMENTS,
   PRODUCT_SET_CUSTOM_FIELDS,
   PRODUCT_SET_CUSTOM_FIELDS_MASK,
   PRODUCT_SET_TAGS,
   PRODUCT_SET_MEMO,
+  PRODUCT_SET_DOCUMENTS,
+  PRODUCT_DOCUMENT_CREATE,
+  PRODUCT_DOCUMENT_DELETE,
 } from 'modules/permission/constants/product';
 import {
   SectionHeader,
@@ -63,7 +70,7 @@ import {
 type Props = {
   isNew: boolean,
   isOwner: boolean,
-  product: Object,
+  product: ProductPayload,
 };
 
 const swapItems = (items: Array<Object>, from: number, to: number) => {
@@ -77,7 +84,9 @@ const swapItems = (items: Array<Object>, from: number, to: number) => {
 
 const ProductSection = ({ isNew, isOwner, product }: Props) => {
   const { hasPermission } = usePermission(isOwner);
-  const { updatedAt, updatedBy, archived } = product;
+  const updatedAt = getByPath('updatedAt', product);
+  const updatedBy = getByPath('updatedBy', product);
+  const archived = getByPath('archived', product);
   return (
     <>
       <SectionHeader
@@ -111,7 +120,9 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
               )}
             </BooleanValue>
             {hasPermission(PRODUCT_CREATE) && (
-              <CloneButton onClick={() => navigate(`/product/clone/${encodeId(product.id)}`)} />
+              <CloneButton
+                onClick={() => navigate(`/product/clone/${encodeId(getByPath('id', product))}`)}
+              />
             )}
           </>
         )}
@@ -130,39 +141,55 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                         <BooleanValue>
                           {({ value: isOpen, set: dialogToggle }) => (
                             <>
-                              {files.map(({ path, pathMedium, name, id }, index) => (
-                                <div className={ProductImageWrapperStyle} key={id}>
-                                  <img
+                              {files.map((file, index) => (
+                                <div
+                                  className={ProductImageWrapperStyle}
+                                  key={getByPath('id', file)}
+                                >
+                                  <ProductImage
+                                    file={file}
                                     className={ProductImageStyle}
-                                    src={pathMedium || path}
-                                    alt={name}
+                                    height="180px"
                                   />
-                                  <button
-                                    className={ViewImageButtonStyle}
-                                    type="button"
-                                    onClick={() => {
-                                      changeSelectedImage(files[index]);
-                                      dialogToggle(true);
-                                    }}
-                                  >
-                                    <Icon icon="EXPAND" />
-                                  </button>
+                                  {!isForbidden(file) && (
+                                    <button
+                                      className={ViewImageButtonStyle}
+                                      type="button"
+                                      onClick={() => {
+                                        changeSelectedImage(files[index]);
+                                        dialogToggle(true);
+                                      }}
+                                    >
+                                      <Icon icon="EXPAND" />
+                                    </button>
+                                  )}
                                   <ImagePreviewDialog
                                     isOpen={isOpen}
                                     onRequestClose={() => dialogToggle(false)}
                                     image={selectedImage}
                                   />
-                                  {hasPermission([PRODUCT_UPDATE, PRODUCT_SET_DOCUMENTS]) && (
+                                  {hasPermission([
+                                    PRODUCT_DOCUMENT_DELETE,
+                                    DOCUMENT_DELETE,
+                                    PRODUCT_SET_DOCUMENTS,
+                                  ]) && (
                                     <>
-                                      <button
-                                        className={DeleteImageButtonStyle}
-                                        type="button"
-                                        onClick={() =>
-                                          changeFiles('files', files.filter(item => item.id !== id))
-                                        }
-                                      >
-                                        <Icon icon="REMOVE" />
-                                      </button>
+                                      {!isForbidden(file) && (
+                                        <button
+                                          className={DeleteImageButtonStyle}
+                                          type="button"
+                                          onClick={() =>
+                                            changeFiles(
+                                              'files',
+                                              files.filter(
+                                                item => item.id !== getByPath('id', file)
+                                              )
+                                            )
+                                          }
+                                        >
+                                          <Icon icon="REMOVE" />
+                                        </button>
+                                      )}
                                       {index !== 0 && (
                                         <button
                                           className={SwapImageButtonStyle('left')}
@@ -189,12 +216,14 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                                   )}
                                 </div>
                               ))}
-                              {hasPermission([PRODUCT_UPDATE, PRODUCT_SET_DOCUMENTS]) && (
+                              {hasPermission([
+                                PRODUCT_DOCUMENT_CREATE,
+                                DOCUMENT_CREATE,
+                                PRODUCT_SET_DOCUMENTS,
+                              ]) && (
                                 <ImagesUploadInput
-                                  id="files"
-                                  name="files"
-                                  values={files}
-                                  onChange={changeFiles}
+                                  files={files}
+                                  onSave={updateFiles => changeFiles('files', updateFiles)}
                                   height="180px"
                                   width={files.length > 0 ? '120px' : '180px'}
                                 />

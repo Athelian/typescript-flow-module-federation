@@ -18,6 +18,7 @@ import {
   taskCountFragment,
 } from 'graphql';
 import {
+  productProviderRMFragment,
   orderCardRMFragment,
   batchCardRMFragment,
   shipmentCardRMFragment,
@@ -63,6 +64,7 @@ export const cloneShipmentMutation = gql`
   }
 
   ${shipmentCardRMFragment}
+  ${productProviderRMFragment}
   ${partnerNameFragment}
   ${userAvatarFragment}
   ${metricFragment}
@@ -93,7 +95,7 @@ export const cloneOrderItemMutation = gql`
               }
             }
             exporter {
-              ... on Group {
+              ... on Organization {
                 id
                 name
               }
@@ -133,6 +135,7 @@ export const cloneOrderMutation = gql`
   ${partnerNameFragment}
   ${batchCardRMFragment}
   ${orderCardRMFragment}
+  ${productProviderRMFragment}
   ${timelineDateMinimalFragment}
   ${tagFragment}
   ${portFragment}

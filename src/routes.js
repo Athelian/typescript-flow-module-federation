@@ -1,5 +1,4 @@
 // @flow
-
 import React, { lazy, Suspense } from 'react';
 import type { ComponentType, StatelessFunctionalComponent } from 'react';
 import { hot } from 'react-hot-loader';
@@ -15,46 +14,28 @@ import SideBar from './modules/sidebar';
 import Authorized from './components/Authorized';
 
 const AsyncLogin = lazy(() => import('./modules/login'));
-
 const AsyncForgotPassword = lazy(() => import('./modules/forgotPassword'));
-
 const AsyncResetPassword = lazy(() => import('./modules/resetPassword'));
-
 const AsyncOrder = lazy(() => import('./modules/order'));
-
 const AsyncOrderItem = lazy(() => import('./modules/orderItem'));
-
 const AsyncTags = lazy(() => import('./modules/tags'));
-
 const AsyncStaff = lazy(() => import('./modules/staff'));
-
 const AsyncPartner = lazy(() => import('./modules/partner'));
-
 const AsyncWarehouse = lazy(() => import('./modules/warehouse'));
-
 const AsyncShipment = lazy(() => import('./modules/shipment'));
-
 const AsyncContainer = lazy(() => import('./modules/container'));
-
 const AsyncProduct = lazy(() => import('./modules/product'));
-
 const AsyncBatch = lazy(() => import('./modules/batch'));
-
 const AsyncRelationMap = lazy(() => import('./modules/relationMap'));
-
+const AsyncRelationMapV2 = lazy(() => import('./modules/relationMapV2'));
 const AsyncNotifications = lazy(() => import('./modules/notifications'));
-
 const AsyncMetadata = lazy(() => import('./modules/metadata'));
-
 const AsyncTableTemplate = lazy(() => import('./modules/tableTemplate'));
-
 const AsyncTask = lazy(() => import('./modules/task'));
-
 const AsyncProject = lazy(() => import('./modules/project'));
-
 const AsyncTaskTemplate = lazy(() => import('./modules/taskTemplate'));
-
 const AsyncProfile = lazy(() => import('./modules/profile'));
+const AsyncDocument = lazy(() => import('./modules/document'));
 
 const Routes: StatelessFunctionalComponent<{}> = () => (
   <UIConsumer>
@@ -86,12 +67,14 @@ const Routes: StatelessFunctionalComponent<{}> = () => (
                 <AsyncProject path="project/*" />
                 <AsyncTask path="task/*" />
                 <AsyncRelationMap path="relation-map/*" />
+                <AsyncRelationMapV2 path="relation-map-beta/*" />
                 <AsyncNotifications path="notifications/*" />
                 <AsyncTags path="tags/*" />
                 <AsyncMetadata path="templates/metadata/*" />
                 <AsyncTableTemplate path="templates/table-template/*" />
                 <AsyncTaskTemplate path="templates/task-template/*" />
                 <AsyncProfile path="profile/*" />
+                <AsyncDocument path="document/*" />
                 <PageNotFound default />
               </Layout>
             </Authorized>
@@ -106,6 +89,5 @@ const Routes: StatelessFunctionalComponent<{}> = () => (
     )}
   </UIConsumer>
 );
-
 const HotReloadRoutes: ComponentType<any> = hot(module)(Routes);
 export default HotReloadRoutes;
