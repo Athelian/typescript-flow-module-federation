@@ -79,8 +79,11 @@ export const calculateVolume = (volume: MetricValue, size: Size): Object => {
   }
 
   const metricToConvert = volume.metric === 'cm³' ? 'cm' : 'm';
+  // $FlowIgnore ignore this error due to compare String vs literal string value
   const convertedHeight = convertDistance(size.height.value, size.height.metric, metricToConvert);
+  // $FlowIgnore ignore this error due to compare String vs literal string value
   const convertedWidth = convertDistance(size.width.value, size.width.metric, metricToConvert);
+  // $FlowIgnore ignore this error due to compare String vs literal string value
   const convertedDepth = convertDistance(size.length.value, size.length.metric, metricToConvert);
 
   const calculatedVolume = times(convertedHeight, convertedWidth, convertedDepth);
@@ -133,7 +136,8 @@ export const generateCloneBatch = (
 export const totalVolume = (total: number, packageQuantity: number, volume: MetricValue) =>
   !volume || !packageQuantity
     ? total
-    : total + times(packageQuantity, convertVolume(volume.value, volume.metric, 'm³'));
+    : // $FlowIgnore ignore this error due to compare String vs literal string value
+      total + times(packageQuantity, convertVolume(volume.value, volume.metric, 'm³'));
 
 export const findTotalAutoFillBatches = ({
   batches,
