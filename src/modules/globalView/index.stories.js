@@ -42,82 +42,20 @@ import Table from './Table';
 // };
 // const data = [order, order, order, order, order, order, order, order, order, order];
 
-const data = [
-  [
-    { key: 'order.name', value: 'order1' },
-    { key: 'orderItem.name', value: 'orderItem1' },
-    { key: 'batch.name', value: 'batch1' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-  ],
-  [
-    { key: 'order.name', value: null },
-    { key: 'orderItem.name', value: null },
-    { key: 'batch.name', value: 'batch2' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-  ],
-  [
-    { key: 'order.name', value: null },
-    { key: 'orderItem.name', value: 'orderItem2' },
-    { key: 'batch.name', value: 'batch3' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-    { key: 'any', value: 'any' },
-  ],
-];
-const keys = [
-  'order.name',
-  'orderItem.name',
-  'batch.name',
-  'any',
-  'any',
-  'any',
-  'any',
-  'any',
-  'any',
-  'any',
-  'any',
-  'any',
-  'any',
-  'any',
-  'any',
-];
+const mockObject = { key: 'any', value: 'any' };
+const mockHeaderItems = Array(1000).fill('header');
+const mockRow = Array(1000).fill(mockObject);
+const mockData = Array(1000).fill(mockRow);
 
-const columnWidths = keys.map(() => 200);
+const columnWidths = mockHeaderItems.map(() => 200);
 
 storiesOf('Modules/GlobalView', module).add('virtual list', () => (
   <div
     style={{
-      height: '50vh',
-      width: '900px',
+      height: '80vh',
+      width: '80vw',
     }}
   >
-    <Table
-      columnWidths={columnWidths}
-      keys={keys}
-      data={[...data, ...data, ...data, ...data, ...data, ...data]}
-    />
+    <Table columnWidths={columnWidths} keys={mockHeaderItems} data={mockData} />
   </div>
 ));

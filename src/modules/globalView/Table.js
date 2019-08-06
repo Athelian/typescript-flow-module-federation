@@ -1,37 +1,54 @@
 // @flow
 import * as React from 'react';
-import { VariableSizeGrid } from 'react-window';
-import Draggable from 'react-draggable';
+import { VariableSizeGrid as Grid } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { DraggableCore } from 'react-draggable';
 import { getByPath } from 'utils/fp';
 import InlineTextInput from './components/InlineTextInput';
 import { HeaderStyle, HeaderItemStyle, ColumnStyle, DragHandleIconStyle } from './style';
 
+const HeaderItem = ({ index, item, minWidth = 100, width, handleDrag }: Object) => {
+  return (
+    <div className={HeaderItemStyle(width)}>
+      {item}
+      <DraggableCore
+        axis="x"
+        onDrag={event => {
+          const newWidth = width + event.movementX;
+          if (newWidth >= minWidth) {
+            handleDrag(index, newWidth);
+          }
+        }}
+      >
+        <span className={DragHandleIconStyle} />
+      </DraggableCore>
+    </div>
+  );
+};
+
 const Header = ({
   innerRef,
+  width,
   columnWidths,
   items,
   resizeColumnWidth,
 }: {
   innerRef: React.Ref<any>,
+  width: number,
   columnWidths: Array<number>,
   items: Array<string>,
   resizeColumnWidth: Function,
 }) => {
   return (
-    <div ref={innerRef} className={HeaderStyle}>
+    <div ref={innerRef} className={HeaderStyle(width)}>
       {items.map((item, index) => (
-        <div className={HeaderItemStyle(columnWidths[index])}>
-          {item}
-          <Draggable
-            axis="x"
-            position={{ x: 0, y: 0 }}
-            onStop={(event, data) => {
-              resizeColumnWidth(index, columnWidths[index] + data.lastX);
-            }}
-          >
-            <span className={DragHandleIconStyle} />
-          </Draggable>
-        </div>
+        <HeaderItem
+          key={item}
+          index={index}
+          item={item}
+          width={columnWidths[index]}
+          handleDrag={resizeColumnWidth}
+        />
       ))}
     </div>
   );
@@ -58,34 +75,6 @@ const Cell = ({
   );
 };
 
-const Grid = React.forwardRef(
-  (
-    props: {
-      bodyRef: React.Ref<any>,
-      data: any,
-      keys: Array<string>,
-      widths: Array<number>,
-      handleScroll: Function,
-    },
-    ref
-  ) => (
-    <VariableSizeGrid
-      ref={ref}
-      innerRef={props.bodyRef}
-      itemData={props.data}
-      columnCount={props.keys.length}
-      columnWidth={index => props.widths[index]}
-      width={800}
-      height={150}
-      rowCount={props.data.length}
-      rowHeight={() => 35}
-      onScroll={props.handleScroll}
-    >
-      {Cell}
-    </VariableSizeGrid>
-  )
-);
-
 const Table = ({
   columnWidths,
   keys,
@@ -107,32 +96,43 @@ const Table = ({
   };
 
   return (
-    <div>
-      <Header
-        columnWidths={widths}
-        innerRef={headerRef}
-        items={keys}
-        resizeColumnWidth={(index, width) => {
-          setWidths(prevWidths => {
-            const newWidths = [...prevWidths];
-            newWidths[index] = width;
-
-            return newWidths;
-          });
-          if (gridRef.current) {
-            gridRef.current.resetAfterColumnIndex(index);
-          }
-        }}
-      />
-      <Grid
-        ref={gridRef}
-        bodyRef={bodyRef}
-        data={data}
-        keys={keys}
-        widths={widths}
-        handleScroll={handleScroll}
-      />
-    </div>
+    <AutoSizer>
+      {({ height, width }) => (
+        <>
+          <Header
+            columnWidths={widths}
+            innerRef={headerRef}
+            items={keys}
+            width={width}
+            resizeColumnWidth={(index, newWidth) => {
+              setWidths(prevWidths => {
+                const newWidths = [...prevWidths];
+                newWidths[index] = newWidth;
+                return newWidths;
+              });
+              if (gridRef.current) {
+                gridRef.current.resetAfterColumnIndex(index === 0 ? 0 : index - 1);
+              }
+            }}
+          />
+          <Grid
+            // $FlowFixMe: expected object, but exist function, because we use hooks. it should be supported by library.
+            ref={gridRef}
+            innerRef={bodyRef}
+            itemData={data}
+            columnCount={keys.length}
+            columnWidth={index => widths[index]}
+            width={width}
+            height={height}
+            rowCount={data.length}
+            rowHeight={() => 35}
+            onScroll={handleScroll}
+          >
+            {Cell}
+          </Grid>
+        </>
+      )}
+    </AutoSizer>
   );
 };
 
