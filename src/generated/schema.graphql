@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Aug 05 2019 15:30:14 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Aug 06 2019 14:03:01 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28686,33 +28686,6 @@ type Forbidden {
   reason: String
 }
 
-interface Group {
-  types: [OrganizationType!]!
-  name: String!
-  name2: String
-  tel: String
-  street: String
-  locality: String
-  region: String
-  postalCode: String
-  country: String
-  avatar: FilePayload
-  disabled: Boolean!
-  dummy: Boolean!
-  users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPagination!
-
-  """Resolving the current partnership of this group from user's group"""
-  partner: PartnerPayload
-  partners(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnerPayloadPagination!
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  createdBy: UserPayload
-  updatedBy: UserPayload
-  deletedBy: UserPayload
-}
-
 type Import {
   id: ID!
 }
@@ -30401,7 +30374,7 @@ input OrderUpdateWrapperInput {
   input: OrderUpdateInput!
 }
 
-type Organization implements Group & Model {
+type Organization implements Model {
   types: [OrganizationType!]!
   name: String!
   name2: String
@@ -30416,7 +30389,9 @@ type Organization implements Group & Model {
   dummy: Boolean!
   users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPagination!
 
-  """Resolving the current partnership of this group from user's group"""
+  """
+  Resolving the current partnership of this organization from user's organization
+  """
   partner: PartnerPayload
   partners(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnerPayloadPagination!
   id: ID!
@@ -30466,7 +30441,6 @@ type Parameter {
 }
 
 type Partner implements Model {
-  group: OrganizationPayload! @deprecated(reason: "Use `organization` instead")
   organization: OrganizationPayload!
   types: [OrganizationType!]!
   name: String
@@ -30505,14 +30479,12 @@ type PartnerPayloadPagination {
 
 type Partnership implements Model {
   confirmed: Boolean!
-  leftGroup: OrganizationPayload! @deprecated(reason: "Use `leftOrganization` instead")
   leftOrganization: OrganizationPayload!
   leftTypes: [OrganizationType!]!
   leftName: String
   leftCode: String
   leftConfirmedAt: DateTime
   leftRoles: [RolePayload!]!
-  rightGroup: OrganizationPayload! @deprecated(reason: "Use `rightOrganization` instead")
   rightOrganization: OrganizationPayload!
   rightTypes: [OrganizationType!]!
   rightName: String
@@ -87427,7 +87399,6 @@ scalar Upload
 
 type User implements Model & Tagged & Memorizable {
   email: String!
-  group: OrganizationPayload @deprecated(reason: "Use `organization` instead")
   organization: OrganizationPayload
   superAdmin: Boolean!
   role: String! @deprecated(reason: "Shouldn't be used anymore")
@@ -87457,8 +87428,6 @@ input UserFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   role: String
-  groupId: ID
-  groupIds: [ID!]
   organizationId: ID
   organizationIds: [ID!]
 }
@@ -87587,7 +87556,6 @@ type Warehouse implements Model & Owned & Supervised & Customizable {
   region: String
   postalCode: String
   country: Country
-  groups: [OrganizationPayload!]! @deprecated(reason: "Use `organizations` instead")
   organizations: [OrganizationPayload!]!
   id: ID!
   createdAt: DateTime!
@@ -87612,7 +87580,6 @@ input WarehouseCreateInput {
   country: Country
   customFields: CustomFieldsInput
   inChargeIds: [ID!]
-  groupIds: [ID!]
   organizationIds: [ID!]
 }
 
@@ -87652,7 +87619,6 @@ input WarehouseUpdateInput {
   country: Country
   customFields: CustomFieldsInput
   inChargeIds: [ID!]
-  groupIds: [ID!]
   organizationIds: [ID!]
 }
 
