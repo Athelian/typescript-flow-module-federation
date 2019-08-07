@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { OrderPayload, BatchPayload } from 'generated/graphql';
 import memoize from 'memoize-one';
-import { VariableSizeGrid as Grid } from 'react-window';
+import { VariableSizeList as List } from 'react-window';
 import update from 'immutability-helper';
 import { Query } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
@@ -17,14 +17,7 @@ import { Display } from 'components/Form';
 import BaseCard from 'components/Cards';
 import { orderFocusedListQuery, orderFocusDetailQuery } from 'modules/relationMapV2/query';
 import RelationLine from '../RelationLine';
-import {
-  WrapperStyle,
-  CellStyle,
-  GridStyle,
-  HeadingStyle,
-  ContentStyle,
-  ScrollWrapperStyle,
-} from './style';
+import { WrapperStyle, ListStyle, HeadingStyle, ContentStyle, RowStyle } from './style';
 
 type Entity = 'order' | 'batch' | 'orderItem' | 'container' | 'shipment';
 
@@ -50,7 +43,6 @@ type CellRender = {
 };
 
 const TOTAL_COLUMNS = 5;
-const ROW_HEIGHT = 75;
 const ORDER_WIDTH = 305;
 const ORDER_ITEM_WIDTH = 485;
 const BATCH_WIDTH = 465;
@@ -80,11 +72,10 @@ const ShipmentCard = styled.div`
 
 const Header = React.memo(() => {
   return (
-    <>
+    <div className={RowStyle}>
       <div
         className={HeadingStyle}
         style={{
-          gridColumn: 'span 3',
           backgroundColor: '#ED5724',
           width: ORDER_WIDTH,
         }}
@@ -94,7 +85,6 @@ const Header = React.memo(() => {
       <div
         className={HeadingStyle}
         style={{
-          gridColumn: 'span 3',
           backgroundColor: '#FBAA1D',
           width: ORDER_ITEM_WIDTH,
         }}
@@ -104,7 +94,6 @@ const Header = React.memo(() => {
       <div
         className={HeadingStyle}
         style={{
-          gridColumn: 'span 3',
           backgroundColor: '#12B937',
           width: BATCH_WIDTH,
         }}
@@ -114,7 +103,6 @@ const Header = React.memo(() => {
       <div
         className={HeadingStyle}
         style={{
-          gridColumn: 'span 3',
           backgroundColor: '#30A8E4',
           width: CONTAINER_WIDTH,
         }}
@@ -124,14 +112,13 @@ const Header = React.memo(() => {
       <div
         className={HeadingStyle}
         style={{
-          gridColumn: 'span 3',
           backgroundColor: '#0756AF',
           width: SHIPMENT_WIDTH,
         }}
       >
         Shipments
       </div>
-    </>
+    </div>
   );
 });
 
@@ -146,7 +133,7 @@ function orderCell({
   order: mixed,
   totalItems: number,
 }) {
-  if (!itemPosition && !batchPosition)
+  if (itemPosition === 0)
     return {
       type: 'order',
       data: order,
@@ -188,25 +175,6 @@ function containerCell(batch: BatchPayload): ?CellRender {
   }
 
   return null;
-}
-
-function findColumnWidth(index: number) {
-  switch (index % TOTAL_COLUMNS) {
-    case 0:
-      return ORDER_WIDTH;
-
-    case 1:
-      return ORDER_ITEM_WIDTH;
-
-    case 2:
-      return BATCH_WIDTH;
-
-    case 3:
-      return CONTAINER_WIDTH;
-
-    default:
-      return SHIPMENT_WIDTH;
-  }
 }
 
 const orderCoordinates = memoize(
@@ -373,11 +341,17 @@ const orderCoordinates = memoize(
           // order item has no batches
           result.push(
             ...[
-              {
-                type: 'order',
-                data: order,
-                afterConnector: 1,
-              },
+              index === 0
+                ? {
+                    type: 'order',
+                    data: order,
+                    afterConnector: 1,
+                  }
+                : {
+                    type: 'duplicateOrder',
+                    data: null,
+                    afterConnector: 2,
+                  },
               {
                 beforeConnector: 1,
                 type: 'orderItem',
@@ -458,11 +432,18 @@ const cellRenderer = (
 ) => {
   if (!cell)
     return (
-      <React.Fragment key={uuid()}>
+      <div
+        style={{
+          display: 'flex',
+          gridColumn: 'span 3',
+          width: ORDER_WIDTH,
+        }}
+        key={uuid()}
+      >
         <div className={ContentStyle} />
         <div className={ContentStyle} />
         <div className={ContentStyle} />
-      </React.Fragment>
+      </div>
     );
 
   const { beforeConnector, type, data, entity, afterConnector } = cell;
@@ -540,7 +521,7 @@ const cellRenderer = (
 
     case 'shipmentWithoutContainer':
       content = (
-        <div className={ContentStyle}>
+        <div style={{ width: CONTAINER_WIDTH - 20 }} className={ContentStyle}>
           <RelationLine type={1} />
         </div>
       );
@@ -640,57 +621,90 @@ const cellRenderer = (
       );
       break;
 
+    case 'duplicateOrder':
+      content = (
+        <div
+          style={{
+            width: ORDER_WIDTH - 10,
+          }}
+          className={ContentStyle}
+        >
+          {type}{' '}
+        </div>
+      );
+      break;
+    case 'duplicateOrderItem':
+      content = (
+        <div
+          style={{
+            width: ORDER_ITEM_WIDTH - 20,
+          }}
+          className={ContentStyle}
+        >
+          {type}{' '}
+        </div>
+      );
+      break;
+
     default:
       content = <div className={ContentStyle}>{type} </div>;
   }
 
   return (
-    <React.Fragment key={getByPathWithDefault(uuid(), 'id', cell)}>
+    <div
+      style={{
+        display: 'flex',
+        gridColumn: 'span 3',
+      }}
+      key={`${getByPathWithDefault(uuid(), 'data.id', cell)}-${type}`}
+    >
       <div className={ContentStyle}>
         {beforeConnector && <RelationLine type={beforeConnector} />}
       </div>
       {content}
       <div className={ContentStyle}>{afterConnector && <RelationLine type={afterConnector} />}</div>
-    </React.Fragment>
+    </div>
   );
 };
 
 const LoadingPlaceHolder = React.memo(({ showHeader }: { showHeader: boolean }) => {
   return showHeader ? (
     <div
-      className={WrapperStyle}
       style={{
         overflow: 'hidden',
       }}
+      className={WrapperStyle}
     >
       <Header />
-      {[
-        {
-          type: 'placeholder',
-          entity: 'order',
-        },
-        {
-          type: 'placeholder',
-          entity: 'orderItem',
-        },
-        {
-          type: 'placeholder',
-          entity: 'batch',
-        },
-        {
-          type: 'placeholder',
-          entity: 'container',
-        },
-        {
-          type: 'placeholder',
-          entity: 'shipment',
-        },
-      ].map(cell =>
-        cellRenderer(cell, {
-          onClick: () => {},
-          isExpand: false,
-        })
-      )}
+      <div className={RowStyle}>
+        {[
+          {
+            type: 'placeholder',
+            entity: 'order',
+          },
+          {
+            type: 'placeholder',
+            entity: 'orderItem',
+          },
+          {
+            type: 'placeholder',
+            entity: 'batch',
+          },
+          {
+            type: 'placeholder',
+            entity: 'container',
+          },
+          {
+            type: 'placeholder',
+            entity: 'shipment',
+          },
+        ].map(cell =>
+          cellRenderer(cell, {
+            onClick: () => {},
+            isExpand: false,
+          })
+        )}
+      </div>
     </div>
   ) : (
     [
@@ -745,7 +759,7 @@ const generateCells = memoize(
     onExpand,
     fetchOrder,
   }: {
-    order: { ...OrderPayload, containerCount: number },
+    order: Object,
     isExpand: boolean,
     onExpand: Function,
     fetchOrder: (orderId: string) => void,
@@ -767,7 +781,7 @@ const generateCells = memoize(
   }
 );
 
-const generateGridData = memoize(
+const generateListData = memoize(
   ({
     orders,
     state,
@@ -776,7 +790,7 @@ const generateGridData = memoize(
     queryOrderDetail,
   }: {
     state: {
-      order: mixed,
+      order: Object,
     },
     orders: Array<{ ...OrderPayload, containerCount: number }>,
     expandRows: Array<string>,
@@ -852,27 +866,28 @@ function reducer(
 
 const Cell = React.memo(
   ({
-    columnIndex,
-    rowIndex,
+    index,
     style,
     data,
   }: {
-    columnIndex: number,
-    rowIndex: number,
+    index: number,
     style: Object,
     data: Array<Array<{
-        cell: CellRender,
+        cell: ?CellRender,
         onClick: Function,
         isExpand: boolean,
       }>>,
   }) => {
-    const { cell, onClick, isExpand } = data[rowIndex][columnIndex];
+    const cells = data[index];
     return (
-      <div className={CellStyle} style={style}>
-        {cellRenderer(cell, {
-          onClick,
-          isExpand,
-        })}
+      <div className={RowStyle} style={style}>
+        {cells.map(({ cell, onClick, isExpand }) =>
+          cellRenderer(cell, {
+            onClick,
+            isExpand,
+            style,
+          })
+        )}
       </div>
     );
   }
@@ -881,7 +896,6 @@ const Cell = React.memo(
 export default function OrderFocus() {
   const [expandRows, setExpandRows] = React.useState([]);
   const [state, dispatch] = React.useReducer(reducer, initialState);
-
   const queryOrderDetail = React.useCallback((orderId: string) => {
     apolloClient
       .query({
@@ -928,46 +942,26 @@ export default function OrderFocus() {
         }
 
         const orders = getByPathWithDefault([], 'orders.nodes', data);
-        const rowCount = orders.reduce((total, order) => {
-          const isLoadedData =
-            getByPathWithDefault([], 'orderItems', order).length ===
-            getByPathWithDefault(0, 'orderItemCount', order);
-          const cells = orderCoordinates({
-            isExpand: expandRows.includes(order.id),
-            order,
-            isLoadedData,
-          });
-          return total + cells.length / TOTAL_COLUMNS;
-        }, 0);
-        const ordersData = generateGridData({
+        const ordersData = generateListData({
           orders,
           state,
           expandRows,
           setExpandRows,
           queryOrderDetail,
         });
+        const rowCount = ordersData.length;
         return (
-          <div className={ScrollWrapperStyle}>
-            <div
-              style={{
-                display: 'flex',
-                width:
-                  ORDER_WIDTH + ORDER_ITEM_WIDTH + BATCH_WIDTH + CONTAINER_WIDTH + SHIPMENT_WIDTH,
-              }}
-            >
-              <Header />
-            </div>
+          <div className={WrapperStyle}>
+            <Header />
             {orders.length > 0 ? (
-              <Grid
+              <List
                 itemData={ordersData}
-                className={GridStyle}
-                columnCount={TOTAL_COLUMNS}
-                columnWidth={findColumnWidth}
-                rowCount={rowCount}
-                rowHeight={() => ROW_HEIGHT}
-                onItemsRendered={({ visibleRowStopIndex }) => {
-                  // when it reaches out to last three row, will load more data
-                  if (hasMoreItems(data, 'orders') && visibleRowStopIndex > rowCount - 2) {
+                className={ListStyle}
+                itemCount={rowCount}
+                itemSize={() => 75}
+                onItemsRendered={({ visibleStopIndex }) => {
+                  const isLastCell = visibleStopIndex === rowCount - 1;
+                  if (hasMoreItems(data, 'orders') && isLastCell) {
                     loadMore({ fetchMore, data }, queryOrderVariables, 'orders');
                   }
                 }}
@@ -977,7 +971,7 @@ export default function OrderFocus() {
                 }
               >
                 {Cell}
-              </Grid>
+              </List>
             ) : (
               <Display>
                 <FormattedMessage

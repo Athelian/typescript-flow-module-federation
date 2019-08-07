@@ -3,13 +3,12 @@ import { css } from 'react-emotion';
 import { scrollbars } from 'styles/common';
 
 export const WrapperStyle = css`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   ${scrollbars.MAIN};
-  grid-template-columns: repeat(15, min-content);
-  grid-template-rows: auto;
 `;
 
 export const ContentStyle = css`
@@ -25,19 +24,11 @@ export const HeadingStyle = css`
   z-index: 2;
 `;
 
-export const ScrollWrapperStyle = css`
-  ${scrollbars.MAIN};
-  width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  flex: 1;
+export const ListStyle = css`
+  height: calc(100vh - 120px);
 `;
 
-export const GridStyle = css`
-  grid-column: span 15;
-`;
-
-export const CellStyle = css`
+export const RowStyle = css`
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: repeat(15, min-content);
 `;
