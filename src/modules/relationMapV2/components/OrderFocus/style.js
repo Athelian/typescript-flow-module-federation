@@ -25,7 +25,7 @@ export const HeadingStyle = css`
 `;
 
 export const ListStyle = css`
-  height: calc(100vh - 120px);
+  ${scrollbars.MAIN};
 `;
 
 export const RowStyle = css`

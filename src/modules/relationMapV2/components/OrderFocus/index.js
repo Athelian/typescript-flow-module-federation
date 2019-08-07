@@ -70,9 +70,9 @@ const ShipmentCard = styled.div`
   height: 55px;
 `;
 
-const Header = React.memo(() => {
+const Header = React.memo(({ style }: { style?: Object }) => {
   return (
-    <div className={RowStyle}>
+    <div style={style} className={RowStyle}>
       <div
         className={HeadingStyle}
         style={{
@@ -667,88 +667,52 @@ const cellRenderer = (
   );
 };
 
-const LoadingPlaceHolder = React.memo(({ showHeader }: { showHeader: boolean }) => {
-  return showHeader ? (
-    <div
-      style={{
-        overflow: 'hidden',
-      }}
-      className={WrapperStyle}
-    >
-      <Header />
-      <div className={RowStyle}>
-        {[
-          {
-            type: 'placeholder',
-            entity: 'order',
+const LoadingPlaceHolder = React.memo(() => {
+  return (
+    <div className={RowStyle} style={{ overflow: 'hidden', height: window.innerHeight - 120 }}>
+      {[
+        {
+          type: 'placeholder',
+          entity: 'order',
+          data: {
+            id: uuid(),
           },
-          {
-            type: 'placeholder',
-            entity: 'orderItem',
+        },
+        {
+          type: 'placeholder',
+          entity: 'orderItem',
+          data: {
+            id: uuid(),
           },
-          {
-            type: 'placeholder',
-            entity: 'batch',
+        },
+        {
+          type: 'placeholder',
+          entity: 'batch',
+          data: {
+            id: uuid(),
           },
-          {
-            type: 'placeholder',
-            entity: 'container',
+        },
+        {
+          type: 'placeholder',
+          entity: 'container',
+          data: {
+            id: uuid(),
           },
-          {
-            type: 'placeholder',
-            entity: 'shipment',
+        },
+        {
+          type: 'placeholder',
+          entity: 'shipment',
+          data: {
+            id: uuid(),
           },
-        ].map(cell =>
-          cellRenderer(cell, {
-            onClick: () => {},
-            isExpand: false,
-          })
-        )}
-      </div>
+        },
+      ].map(cell =>
+        cellRenderer(cell, {
+          onClick: () => {},
+          isExpand: false,
+        })
+      )}
     </div>
-  ) : (
-    [
-      {
-        type: 'placeholder',
-        entity: 'order',
-        data: {
-          id: uuid(),
-        },
-      },
-      {
-        type: 'placeholder',
-        entity: 'orderItem',
-        data: {
-          id: uuid(),
-        },
-      },
-      {
-        type: 'placeholder',
-        entity: 'batch',
-        data: {
-          id: uuid(),
-        },
-      },
-      {
-        type: 'placeholder',
-        entity: 'container',
-        data: {
-          id: uuid(),
-        },
-      },
-      {
-        type: 'placeholder',
-        entity: 'shipment',
-        data: {
-          id: uuid(),
-        },
-      },
-    ].map(cell =>
-      cellRenderer(cell, {
-        onClick: () => {},
-        isExpand: false,
-      })
-    )
   );
 });
 
@@ -806,7 +770,35 @@ const generateListData = memoize(
         : order
     );
 
-    const result = [];
+    const result = [
+      [
+        {
+          cell: null,
+          isExpand: false,
+          onClick: () => {},
+        },
+        {
+          cell: null,
+          isExpand: false,
+          onClick: () => {},
+        },
+        {
+          cell: null,
+          isExpand: false,
+          onClick: () => {},
+        },
+        {
+          cell: null,
+          isExpand: false,
+          onClick: () => {},
+        },
+        {
+          cell: null,
+          isExpand: false,
+          onClick: () => {},
+        },
+      ],
+    ]; // empty 1st cell for header
 
     ordersData.forEach(order => {
       const { cells, onClick, isExpand } = generateCells({
@@ -893,6 +885,17 @@ const Cell = React.memo(
   }
 );
 
+const innerElementType = React.forwardRef(
+  ({ children, ...rest }: { children: React.Node }, ref) => (
+    <div ref={ref} {...rest}>
+      <Header
+        style={{ top: 0, left: 0, width: '100%', height: 70, zIndex: 2, position: 'sticky' }}
+      />
+      {children}
+    </div>
+  )
+);
+
 export default function OrderFocus() {
   const [expandRows, setExpandRows] = React.useState([]);
   const [state, dispatch] = React.useReducer(reducer, initialState);
@@ -931,58 +934,60 @@ export default function OrderFocus() {
   );
 
   return (
-    <Query query={orderFocusedListQuery} variables={queryOrderVariables} fetchPolicy="network-only">
-      {({ loading, data, error, fetchMore }) => {
-        if (error) {
-          return error.message;
-        }
+    <div className={WrapperStyle}>
+      <Query
+        query={orderFocusedListQuery}
+        variables={queryOrderVariables}
+        fetchPolicy="network-only"
+      >
+        {({ loading, data, error, fetchMore }) => {
+          if (error) {
+            return error.message;
+          }
 
-        if (loading) {
-          return <LoadingPlaceHolder showHeader />;
-        }
+          if (loading) {
+            return (
+              <>
+                <Header />
+                <LoadingPlaceHolder />
+              </>
+            );
+          }
 
-        const orders = getByPathWithDefault([], 'orders.nodes', data);
-        const ordersData = generateListData({
-          orders,
-          state,
-          expandRows,
-          setExpandRows,
-          queryOrderDetail,
-        });
-        const rowCount = ordersData.length;
-        return (
-          <div className={WrapperStyle}>
-            <Header />
-            {orders.length > 0 ? (
-              <List
-                itemData={ordersData}
-                className={ListStyle}
-                itemCount={rowCount}
-                itemSize={() => 75}
-                onItemsRendered={({ visibleStopIndex }) => {
-                  const isLastCell = visibleStopIndex === rowCount - 1;
-                  if (hasMoreItems(data, 'orders') && isLastCell) {
-                    loadMore({ fetchMore, data }, queryOrderVariables, 'orders');
-                  }
-                }}
-                height={window.innerHeight - 120}
-                width={
-                  ORDER_WIDTH + ORDER_ITEM_WIDTH + BATCH_WIDTH + CONTAINER_WIDTH + SHIPMENT_WIDTH
+          const orders = getByPathWithDefault([], 'orders.nodes', data);
+          const ordersData = generateListData({
+            orders,
+            state,
+            expandRows,
+            setExpandRows,
+            queryOrderDetail,
+          });
+          const rowCount = ordersData.length;
+          return orders.length > 0 ? (
+            <List
+              itemData={ordersData}
+              className={ListStyle}
+              itemCount={rowCount}
+              innerElementType={innerElementType}
+              itemSize={() => 75}
+              onItemsRendered={({ visibleStopIndex }) => {
+                const isLastCell = visibleStopIndex === rowCount - 1;
+                if (hasMoreItems(data, 'orders') && isLastCell) {
+                  loadMore({ fetchMore, data }, queryOrderVariables, 'orders');
                 }
-              >
-                {Cell}
-              </List>
-            ) : (
-              <Display>
-                <FormattedMessage
-                  id="modules.Orders.noOrderFound"
-                  defaultMessage="No orders found"
-                />
-              </Display>
-            )}
-          </div>
-        );
-      }}
-    </Query>
+              }}
+              height={window.innerHeight - 50}
+              width={window.innerWidth - 200}
+            >
+              {Cell}
+            </List>
+          ) : (
+            <Display>
+              <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
+            </Display>
+          );
+        }}
+      </Query>
+    </div>
   );
 }
