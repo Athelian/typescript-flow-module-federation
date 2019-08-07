@@ -69,7 +69,14 @@ const Cell = ({
 
   return (
     <div style={style} className={ColumnStyle}>
-      {contentValue && <TextInput name={contentKey} value={contentValue} />}
+      {contentValue && (
+        <TextInput
+          width={`${style.width}px`}
+          height={`${style.height}px`}
+          name={contentKey}
+          value={contentValue}
+        />
+      )}
     </div>
   );
 };
