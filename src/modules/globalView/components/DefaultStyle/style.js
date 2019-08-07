@@ -8,5 +8,7 @@ export const DefaultStyleStyle = css`
   align-items: center;
   border: 1px solid rgba(0, 0, 0, 0.1);
   cursor: text;
-  ${fontSizes.MAIN};
+  & > input {
+    ${fontSizes.MAIN};
+  }
 `;
