@@ -5,6 +5,8 @@ import { scrollbars } from 'styles/common';
 export const WrapperStyle = css`
   display: grid;
   width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
   ${scrollbars.MAIN};
   grid-template-columns: repeat(15, min-content);
   grid-template-rows: auto;
@@ -26,6 +28,16 @@ export const HeadingStyle = css`
 export const ScrollWrapperStyle = css`
   ${scrollbars.MAIN};
   width: 100%;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
   flex: 1;
+`;
+
+export const GridStyle = css`
+  grid-column: span 15;
+`;
+
+export const CellStyle = css`
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
 `;
