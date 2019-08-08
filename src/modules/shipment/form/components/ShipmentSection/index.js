@@ -4,7 +4,9 @@ import { Subscribe } from 'unstated';
 import { BooleanValue, ObjectValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
+import apolloClient from 'apollo';
 import emitter from 'utils/emitter';
+import logger from 'utils/logger';
 import { getByPath, getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import { getUniqueExporters } from 'utils/shipment';
@@ -38,6 +40,7 @@ import {
   SHIPMENT_SET_PORT,
 } from 'modules/permission/constants/shipment';
 import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
+import { shipmentFormTimelineAndCargoQuery } from 'modules/shipment/form/components/TimelineAndCargoSections/query';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
 import { FormField } from 'modules/form';
@@ -840,6 +843,62 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                                 containersContainer.onChangePartner(exporter);
                                               }
                                             } else {
+                                              // fetch the timeline and cargo data for change the exporter
+                                              if (!batchesContainer.state.hasCalledBatchesApiYet) {
+                                                apolloClient
+                                                  .query({
+                                                    query: shipmentFormTimelineAndCargoQuery,
+                                                    variables: { id: shipment.id },
+                                                  })
+                                                  .then(({ data }) => {
+                                                    logger.warn({
+                                                      data,
+                                                    });
+                                                    const cargoReady = getByPathWithDefault(
+                                                      {},
+                                                      'shipment.cargoReady',
+                                                      data
+                                                    );
+                                                    const voyages = getByPathWithDefault(
+                                                      [],
+                                                      'shipment.voyages',
+                                                      data
+                                                    );
+                                                    const containerGroups = getByPathWithDefault(
+                                                      [{}],
+                                                      'shipment.containerGroups',
+                                                      data
+                                                    );
+                                                    timelineContainer.initDetailValues(
+                                                      {
+                                                        cargoReady,
+                                                        voyages,
+                                                        containerGroups,
+                                                      },
+                                                      true
+                                                    );
+
+                                                    const batches = getByPathWithDefault(
+                                                      [],
+                                                      'shipment.batches',
+                                                      data
+                                                    );
+                                                    batchesContainer.initDetailValues(
+                                                      batches,
+                                                      true
+                                                    );
+                                                    const containers = getByPathWithDefault(
+                                                      [],
+                                                      'shipment.containers',
+                                                      data
+                                                    );
+                                                    containersContainer.initDetailValues(
+                                                      containers,
+                                                      true
+                                                    );
+                                                  })
+                                                  .catch(logger.error);
+                                              }
                                               batchesContainer.waitForBatchesSectionReadyThenChangeMainExporter(
                                                 selectedExporter
                                               );
