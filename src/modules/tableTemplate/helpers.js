@@ -73,7 +73,7 @@ const totalBatchesPrice = (allBatches: Array<Object>, editData: Object) => {
 
 export function calculateShipmentTotalPrice(shipmentId: string, editData: Object) {
   const allBatches = (Object.entries(editData.batches || {}): Array<any>).filter(
-    ([, batch]) => batch.shipment === shipmentId
+    ([, batch]) => batch.mainShipment === shipmentId
   );
 
   return totalBatchesPrice(allBatches, editData);
