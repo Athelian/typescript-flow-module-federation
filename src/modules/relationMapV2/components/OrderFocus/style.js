@@ -30,5 +30,5 @@ export const ListStyle = css`
 
 export const RowStyle = css`
   display: grid;
-  grid-template-columns: repeat(15, min-content);
+  grid-template-columns: repeat(5, min-content);
 `;

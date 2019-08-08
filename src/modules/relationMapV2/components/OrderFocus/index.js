@@ -133,7 +133,7 @@ function orderCell({
   order: mixed,
   totalItems: number,
 }) {
-  if (itemPosition === 0)
+  if (itemPosition === 0 && batchPosition === 0)
     return {
       type: 'order',
       data: order,
@@ -435,7 +435,6 @@ const cellRenderer = (
       <div
         style={{
           display: 'flex',
-          gridColumn: 'span 3',
           width: ORDER_WIDTH,
         }}
         key={uuid()}
@@ -654,7 +653,6 @@ const cellRenderer = (
     <div
       style={{
         display: 'flex',
-        gridColumn: 'span 3',
       }}
       key={`${getByPathWithDefault(uuid(), 'data.id', cell)}-${type}`}
     >
@@ -888,9 +886,7 @@ const Cell = React.memo(
 const innerElementType = React.forwardRef(
   ({ children, ...rest }: { children: React.Node }, ref) => (
     <div ref={ref} {...rest}>
-      <Header
-        style={{ top: 0, left: 0, width: '100%', height: 70, zIndex: 2, position: 'sticky' }}
-      />
+      <Header style={{ top: 0, left: 0, width: '100%', zIndex: 2, position: 'sticky' }} />
       {children}
     </div>
   )
