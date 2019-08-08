@@ -117,6 +117,7 @@ const httpWithUploadLink = createUploadLink({
 });
 
 const cache = new InMemoryCache({
+  freezeResults: true,
   fragmentMatcher: new IntrospectionFragmentMatcher({
     introspectionQueryResultData,
   }),
@@ -137,6 +138,7 @@ const defaultOptions = {
 };
 
 const client: Object = new ApolloClient({
+  assumeImmutableResults: true,
   link: ApolloLink.from([errorLink, SSELink, httpWithUploadLink]),
   cache,
   defaultOptions,

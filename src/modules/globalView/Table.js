@@ -4,7 +4,7 @@ import { VariableSizeGrid as Grid } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import Draggable from 'react-draggable';
 import { getByPath } from 'utils/fp';
-import InlineTextInput from './components/InlineTextInput';
+import TextInput from './components/TextInput';
 import { HeaderStyle, HeaderItemStyle, ColumnStyle, DragHandleIconStyle } from './style';
 
 const HeaderItem = ({ index, item, width, handleDrag }: Object) => {
@@ -69,7 +69,14 @@ const Cell = ({
 
   return (
     <div style={style} className={ColumnStyle}>
-      {contentValue && <InlineTextInput name={contentKey} value={contentValue} />}
+      {contentValue && (
+        <TextInput
+          width={`${style.width}px`}
+          height={`${style.height}px`}
+          name={contentKey}
+          value={contentValue}
+        />
+      )}
     </div>
   );
 };
