@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import type { OrderPayload, BatchPayload } from 'generated/graphql';
+import produce from 'immer';
 import memoize from 'memoize-one';
 import { VariableSizeList as List } from 'react-window';
 import update from 'immutability-helper';
@@ -12,6 +13,7 @@ import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
+import { UIContext } from 'modules/ui';
 import LoadingIcon from 'components/LoadingIcon';
 import { Display } from 'components/Form';
 import BaseCard from 'components/Cards';
@@ -40,6 +42,11 @@ type CellRender = {
   beforeConnector?: ?number,
   afterConnector?: ?number,
   isLoadedData?: boolean,
+};
+
+type State = {
+  order: Object,
+  targets: Array<string>,
 };
 
 const TOTAL_COLUMNS = 5;
@@ -425,9 +432,13 @@ const cellRenderer = (
   {
     onClick,
     isExpand,
+    dispatch,
+    state,
   }: {
     onClick: Function,
+    dispatch: Function,
     isExpand: boolean,
+    state: State,
   }
 ) => {
   if (!cell)
@@ -470,6 +481,16 @@ const cellRenderer = (
             icon="ORDER"
             color="ORDER"
             isArchived={getByPathWithDefault(false, 'archived', data)}
+            selected={state.targets.includes(`ORDER-${getByPathWithDefault('', 'id', data)}`)}
+            selectable
+            onClick={() =>
+              dispatch({
+                type: 'TARGET',
+                payload: {
+                  entity: `ORDER-${getByPathWithDefault('', 'id', data)}`,
+                },
+              })
+            }
           >
             <OrderCard>{getByPathWithDefault('', 'poNo', data)}</OrderCard>
           </BaseCard>
@@ -483,6 +504,16 @@ const cellRenderer = (
             icon="ORDER_ITEM"
             color="ORDER_ITEM"
             isArchived={getByPathWithDefault(false, 'archived', data)}
+            selected={state.targets.includes(`ORDER_ITEM-${getByPathWithDefault('', 'id', data)}`)}
+            selectable
+            onClick={() =>
+              dispatch({
+                type: 'TARGET',
+                payload: {
+                  entity: `ORDER_ITEM-${getByPathWithDefault('', 'id', data)}`,
+                },
+              })
+            }
           >
             <ItemCard>{getByPathWithDefault('', 'no', data)}</ItemCard>
           </BaseCard>
@@ -497,6 +528,16 @@ const cellRenderer = (
             icon="BATCH"
             color="BATCH"
             isArchived={getByPathWithDefault(false, 'archived', data)}
+            selected={state.targets.includes(`BATCH-${getByPathWithDefault('', 'id', data)}`)}
+            selectable
+            onClick={() =>
+              dispatch({
+                type: 'TARGET',
+                payload: {
+                  entity: `BATCH-${getByPathWithDefault('', 'id', data)}`,
+                },
+              })
+            }
           >
             <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
           </BaseCard>
@@ -511,6 +552,16 @@ const cellRenderer = (
             icon="SHIPMENT"
             color="SHIPMENT"
             isArchived={getByPathWithDefault(false, 'archived', data)}
+            selected={state.targets.includes(`SHIPMENT-${getByPathWithDefault('', 'id', data)}`)}
+            selectable
+            onClick={() =>
+              dispatch({
+                type: 'TARGET',
+                payload: {
+                  entity: `SHIPMENT-${getByPathWithDefault('', 'id', data)}`,
+                },
+              })
+            }
           >
             <ShipmentCard>{getByPathWithDefault('', 'blNo', data)}</ShipmentCard>
           </BaseCard>
@@ -533,6 +584,16 @@ const cellRenderer = (
             icon="CONTAINER"
             color="CONTAINER"
             isArchived={getByPathWithDefault(false, 'archived', data)}
+            selected={state.targets.includes(`CONTAINER-${getByPathWithDefault('', 'id', data)}`)}
+            selectable
+            onClick={() =>
+              dispatch({
+                type: 'TARGET',
+                payload: {
+                  entity: `CONTAINER-${getByPathWithDefault('', 'id', data)}`,
+                },
+              })
+            }
           >
             <ContainerCard>{getByPathWithDefault('', 'no', data)}</ContainerCard>
           </BaseCard>
@@ -707,7 +768,12 @@ const LoadingPlaceHolder = React.memo(() => {
       ].map(cell =>
         cellRenderer(cell, {
           onClick: () => {},
+          dispatch: () => {},
           isExpand: false,
+          state: {
+            order: {},
+            targets: [],
+          },
         })
       )}
     </div>
@@ -750,14 +816,14 @@ const generateListData = memoize(
     expandRows,
     setExpandRows,
     queryOrderDetail,
+    dispatch,
   }: {
-    state: {
-      order: Object,
-    },
+    state: State,
     orders: Array<{ ...OrderPayload, containerCount: number }>,
     expandRows: Array<string>,
     setExpandRows: Function,
     queryOrderDetail: Function,
+    dispatch: Function,
   }) => {
     const ordersData = orders.map(order =>
       state.order[order.id]
@@ -774,26 +840,36 @@ const generateListData = memoize(
           cell: null,
           isExpand: false,
           onClick: () => {},
+          dispatch: () => {},
+          state,
         },
         {
           cell: null,
           isExpand: false,
           onClick: () => {},
+          dispatch: () => {},
+          state,
         },
         {
           cell: null,
           isExpand: false,
           onClick: () => {},
+          dispatch: () => {},
+          state,
         },
         {
           cell: null,
           isExpand: false,
           onClick: () => {},
+          dispatch: () => {},
+          state,
         },
         {
           cell: null,
           isExpand: false,
           onClick: () => {},
+          dispatch: () => {},
+          state,
         },
       ],
     ]; // empty 1st cell for header
@@ -812,7 +888,9 @@ const generateListData = memoize(
         row.push({
           cell,
           onClick,
+          dispatch,
           isExpand,
+          state,
         });
         if (counter % TOTAL_COLUMNS === 0) {
           result.push(row);
@@ -831,15 +909,19 @@ const hasMoreItems = (data: Object, model: string = 'orders') => {
   return nextPage <= totalPage;
 };
 
-const initialState = {
+const initialState: State = {
   order: {},
+  targets: [],
 };
 
 function reducer(
   state,
   action: {
-    type: 'FETCH_ORDER',
-    payload: mixed,
+    type: 'FETCH_ORDER' | 'TARGET',
+    payload: {
+      entity?: string,
+      [string]: mixed,
+    },
   }
 ) {
   switch (action.type) {
@@ -848,6 +930,15 @@ function reducer(
         order: {
           $merge: action.payload,
         },
+      });
+
+    case 'TARGET':
+      return produce(state, draft => {
+        if (draft.targets.includes(action.payload.entity)) {
+          draft.targets.splice(draft.targets.indexOf(action.payload.entity), 1);
+        } else {
+          draft.targets.push(action.payload.entity || '');
+        }
       });
     default:
       return state;
@@ -865,15 +956,19 @@ const Cell = React.memo(
     data: Array<Array<{
         cell: ?CellRender,
         onClick: Function,
+        dispatch: Function,
+        state: State,
         isExpand: boolean,
       }>>,
   }) => {
     const cells = data[index];
     return (
       <div className={RowStyle} style={style}>
-        {cells.map(({ cell, onClick, isExpand }) =>
+        {cells.map(({ cell, onClick, dispatch, isExpand, state }) =>
           cellRenderer(cell, {
             onClick,
+            dispatch,
+            state,
             isExpand,
             style,
           })
@@ -893,8 +988,12 @@ const innerElementType = React.forwardRef(
 );
 
 export default function OrderFocus() {
+  const uiContext = React.useContext(UIContext);
   const [expandRows, setExpandRows] = React.useState([]);
   const [state, dispatch] = React.useReducer(reducer, initialState);
+  console.warn({
+    state,
+  });
   const queryOrderDetail = React.useCallback((orderId: string) => {
     apolloClient
       .query({
@@ -957,6 +1056,7 @@ export default function OrderFocus() {
             expandRows,
             setExpandRows,
             queryOrderDetail,
+            dispatch,
           });
           const rowCount = ordersData.length;
           return orders.length > 0 ? (
@@ -973,7 +1073,7 @@ export default function OrderFocus() {
                 }
               }}
               height={window.innerHeight - 50}
-              width={window.innerWidth - 200}
+              width={uiContext.isSideBarExpanded ? window.innerWidth - 200 : window.innerWidth - 50}
             >
               {Cell}
             </List>
