@@ -822,7 +822,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                             />
                                           }
                                           onSelect={selectedExporter => {
-                                            exporterSelectorToggle(false);
                                             setFieldValue(
                                               'inCharges',
                                               values.inCharges.filter(
@@ -842,6 +841,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                                 timelineContainer.onChangePartner(exporter);
                                                 containersContainer.onChangePartner(exporter);
                                               }
+                                              exporterSelectorToggle(false);
                                             } else {
                                               // fetch the timeline and cargo data for change the exporter
                                               if (!batchesContainer.state.hasCalledBatchesApiYet) {
@@ -896,9 +896,14 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                                       containers,
                                                       true
                                                     );
+                                                    exporterSelectorToggle(false);
                                                   })
-                                                  .catch(logger.error);
+                                                  .catch(error => {
+                                                    logger.error(error);
+                                                    exporterSelectorToggle(false);
+                                                  });
                                               }
+                                              exporterSelectorToggle(false);
                                               batchesContainer.waitForBatchesSectionReadyThenChangeMainExporter(
                                                 selectedExporter
                                               );
