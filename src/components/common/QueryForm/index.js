@@ -50,14 +50,14 @@ export default function QueryForm({ query, entityId, entityType, render, onCompl
           return null;
         }
 
-        const partnerId = getByPath(`${entityType}.ownedBy.id`, data);
-        const isOwner = isOwnerBy(partnerId);
+        const organizationId = getByPath(`${entityType}.ownedBy.id`, data);
+        const isOwner = isOwnerBy(organizationId);
         if (!isOwner) {
           // query permission for partner
           return (
             <Query
               query={partnerPermissionQuery}
-              variables={{ partnerId }}
+              variables={{ organizationId }}
               fetchPolicy="cache-first"
             >
               {({ loading: isLoading, data: permissionData, error: permissionError }) => {

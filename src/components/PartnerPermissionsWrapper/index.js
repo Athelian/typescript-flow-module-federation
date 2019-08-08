@@ -21,8 +21,8 @@ const PartnerPermissionsWrapper = ({ data, children }: Props) => {
     return children([], false);
   }
 
-  const partnerId = getByPath('ownedBy.id', data);
-  const isOwner = isOwnerBy(partnerId);
+  const organizationId = getByPath('ownedBy.id', data);
+  const isOwner = isOwnerBy(organizationId);
 
   if (isOwner) {
     return children(permissions, isOwner);
