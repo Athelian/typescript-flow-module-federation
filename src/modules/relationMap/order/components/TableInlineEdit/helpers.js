@@ -9,6 +9,10 @@ import { formatToDateLabel } from 'utils/date';
 import logger from 'utils/logger';
 import { prepareCustomFieldsData, list2Map } from 'utils/customFields';
 
+const isExpandRow = (field: Object) =>
+  getByPathWithDefault('', 'type', field) === 'metric' ||
+  getByPathWithDefault(false, 'meta.expandRow', field);
+
 const formatTimeline = (timeline: Object) => {
   if (!timeline) return null;
 
@@ -556,7 +560,7 @@ export const parseChangedData = ({
   };
 };
 
-export const getFieldValueByType = (type: string) => (value: any) => {
+const getFieldValueByType = (type: string) => (value: any) => {
   switch (type) {
     case 'date':
     case 'timeline':
@@ -567,25 +571,28 @@ export const getFieldValueByType = (type: string) => (value: any) => {
   }
 };
 
-export function getFieldValues(fields: Array<Object>, values: Array<Object>, editData: Object) {
-  const fieldValues: Array<string> = (fields: Array<Object>).map(
-    ({ name, type, getExportValue }): any => {
-      const getValueFunction =
-        typeof getExportValue === 'function'
-          ? partialRight(getExportValue, [editData])
-          : getByPathWithDefault('', name);
-      const value = compose(
-        getFieldValueByType(type),
-        getValueFunction
-      )(values);
-      return value;
+function getFieldValues(fields: Array<Object>, values: Array<Object>, editData: Object) {
+  const fieldValues: Array<string | Array<string>> = (fields: Array<Object>).map(field => {
+    const { name, type, getExportValue } = field;
+    const getValueFunction =
+      typeof getExportValue === 'function'
+        ? partialRight(getExportValue, [editData])
+        : getByPathWithDefault('', name);
+    const value = compose(
+      getFieldValueByType(type),
+      getValueFunction
+    )(values);
+    if (isExpandRow(field)) {
+      return value.split(',');
     }
-  );
-  return fieldValues;
+    return value;
+  });
+  return flatten(fieldValues);
 }
 
 export function getEmptyValues(fields: Array<Object>) {
-  return (fields.map(() => ''): Array<string>);
+  const expandRows = fields.filter(isExpandRow);
+  return ([...fields, ...expandRows].map(() => ''): Array<string>);
 }
 
 export function getCustomFieldValues(fields: Array<Object>, values: Array<Object>) {
@@ -671,8 +678,18 @@ export function getExportColumns(
     ...shipmentCustomFieldsFilter,
     ...productColumnFieldsFilter,
     ...productCustomFieldsFilter,
-  ].map(column => (column.messageId ? intl.formatMessage({ id: column.messageId }) : column.name));
-  return allColumns;
+  ].map(column => {
+    if (isExpandRow(column)) {
+      return [
+        column.messageId ? intl.formatMessage({ id: column.messageId }) : column.name,
+        column.type === 'metric'
+          ? intl.formatMessage({ id: 'modules.RelationMaps.filter.metric' })
+          : intl.formatMessage({ id: 'modules.RelationMaps.filter.currency' }),
+      ];
+    }
+    return column.messageId ? intl.formatMessage({ id: column.messageId }) : column.name;
+  });
+  return flatten(allColumns);
 }
 
 export function getExportRows(info: Object): Array<Array<?string>> {
