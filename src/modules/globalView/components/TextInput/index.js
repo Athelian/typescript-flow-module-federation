@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 
 import { InputStyle } from './style';
 
@@ -18,7 +18,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   width: '100px',
-  height: '35px',
+  height: '50px',
   onBlur: () => {},
 };
 

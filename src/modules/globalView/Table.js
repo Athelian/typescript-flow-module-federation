@@ -7,10 +7,16 @@ import { getByPathWithDefault } from 'utils/fp';
 import TextInput from './components/TextInput';
 import { HeaderStyle, HeaderItemStyle, CellStyle, DragHandleIconStyle } from './style';
 
-const ViewContext = React.createContext({
+const ViewContext = React.createContext<{
+  focusedId: ?string,
+  editingId: ?string,
+  setFocusedId: Function,
+  setEditingId: Function,
+}>({
   focusedId: undefined,
   editingId: undefined,
   setFocusedId: () => {},
+  setEditingId: () => {},
 });
 
 const HeaderItem = ({ index, item, width, handleDrag }: Object) => {
@@ -86,20 +92,16 @@ const Cell = ({
         }
       } else {
         inputRef.current.blur();
-        cellRef.current.style.pointerEvents = '';
+        if (cellRef && cellRef.current) {
+          cellRef.current.style.pointerEvents = '';
+        }
       }
     }
   }, [inputRef, editingId, key]);
 
   const onBlur = () => {
-    setFocusedId(undefined);
     setEditingId(undefined);
-    if (inputRef && inputRef.current) {
-      inputRef.current.blur();
-    }
-    if (cellRef && cellRef.current) {
-      cellRef.current.style.pointerEvents = '';
-    }
+    setFocusedId(undefined);
   };
 
   return (
@@ -164,6 +166,8 @@ const Table = ({
   const [focusedId, setFocusedId] = React.useState();
   const [editingId, setEditingId] = React.useState();
 
+  console.warn({ focusedId, editingId });
+
   const handleScroll = ({ scrollLeft }: Object) => {
     if (bodyRef.current && headerRef.current) {
       headerRef.current.scrollLeft = scrollLeft;
@@ -208,7 +212,7 @@ const Table = ({
               width={width}
               height={height}
               rowCount={data.length}
-              rowHeight={() => 35}
+              rowHeight={() => 50}
               onScroll={handleScroll}
             >
               {Cell}

@@ -94,6 +94,30 @@ const mockData = [
     { key: 'batch.6.name', start: 5, lines: 1, value: 'batch 3' },
     { key: 'batch.6.others', start: 5, lines: 1, value: 'batch 3 others' },
   ],
+  [
+    { key: 'order.3.name', start: 6, lines: 3, value: 'order 1' },
+    { key: 'order.3.others', start: 6, lines: 3, value: 'order 1 others' },
+    { key: 'item.5.name', start: 6, lines: 2, value: 'item 1' },
+    { key: 'item.5.others', start: 6, lines: 2, value: 'item 1 others' },
+    { key: 'batch.7.name', start: 6, lines: 1, value: 'batch 1' },
+    { key: 'batch.7.others', start: 6, lines: 1, value: 'batch 1 others' },
+  ],
+  [
+    { key: 'order.3.name', start: 6, lines: 3, value: '' },
+    { key: 'order.3.others', start: 6, lines: 3, value: '' },
+    { key: 'item.5.name', start: 6, lines: 2, value: '' },
+    { key: 'item.5.others', start: 6, lines: 2, value: '' },
+    { key: 'batch.8.name', start: 7, lines: 1, value: 'batch 2' },
+    { key: 'batch.8.others', start: 7, lines: 1, value: 'batch 2 others' },
+  ],
+  [
+    { key: 'order.3.name', start: 6, lines: 3, value: '' },
+    { key: 'order.3.others', start: 6, lines: 3, value: '' },
+    { key: 'item.6.name', start: 8, lines: 1, value: 'item 2' },
+    { key: 'item.6.others', start: 8, lines: 1, value: 'item 2 others' },
+    { key: 'batch.9.name', start: 8, lines: 1, value: 'batch 3' },
+    { key: 'batch.9.others', start: 8, lines: 1, value: 'batch 3 others' },
+  ],
 ];
 
 const columnWidths = mockHeaderItems.map(() => 200);
@@ -101,7 +125,7 @@ const columnWidths = mockHeaderItems.map(() => 200);
 storiesOf('Modules/GlobalView', module).add('virtual list', () => (
   <div
     style={{
-      height: '80vh',
+      height: '50vh',
       width: '80vw',
     }}
   >
