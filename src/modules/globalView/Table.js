@@ -85,7 +85,7 @@ const Cell = ({
 
   React.useEffect(() => {
     if (inputRef && inputRef.current) {
-      if (editingId === key) {
+      if (editingId && editingId === key) {
         if (
           !document.activeElement ||
           (document.activeElement && document.activeElement.tagName !== 'INPUT')
@@ -108,13 +108,57 @@ const Cell = ({
     }
   }, [editingId, key]);
 
+  React.useEffect(() => {
+    const name = document.activeElement ? document.activeElement.getAttribute('name') : '';
+    if (focusedId && focusedId === key && name !== '' && name !== key) {
+      if (cellRef && cellRef.current) {
+        cellRef.current.focus();
+      }
+    }
+  }, [focusedId, key]);
+
   const onBlur = () => {
     setEditingId(undefined);
+  };
+
+  const handleKeyUp = e => {
+    let newKey = '';
+    switch (e.key) {
+      case 'ArrowUp': {
+        newKey = getByPathWithDefault('', `${rowIndex - 1}.${columnIndex}.key`, data);
+        break;
+      }
+      case 'Tab': {
+        if (e.shiftKey) {
+          newKey = getByPathWithDefault('', `${rowIndex}.${columnIndex - 1}.key`, data);
+        } else {
+          newKey = getByPathWithDefault('', `${rowIndex}.${columnIndex + 1}.key`, data);
+        }
+        break;
+      }
+      case 'ArrowRight': {
+        newKey = getByPathWithDefault('', `${rowIndex}.${columnIndex + 1}.key`, data);
+        break;
+      }
+      case 'ArrowDown': {
+        newKey = getByPathWithDefault('', `${rowIndex + lines}.${columnIndex}.key`, data);
+        break;
+      }
+      case 'ArrowLeft': {
+        newKey = getByPathWithDefault('', `${rowIndex}.${columnIndex - 1}.key`, data);
+        break;
+      }
+      default:
+    }
+    if (newKey !== '') {
+      setFocusedId(newKey);
+    }
   };
 
   return (
     <div style={style}>
       <div
+        name={key}
         tabIndex="-1"
         ref={cellRef}
         role="presentation"
@@ -127,10 +171,12 @@ const Cell = ({
           leftBorder: start <= rowIndex && rowIndex <= start + lines,
           focused: focusedId === key || editingId === key,
         })}
-        onClick={() => {
+        onClick={e => {
+          e.preventDefault();
           setFocusedId(key);
         }}
-        onDoubleClick={() => {
+        onDoubleClick={e => {
+          e.preventDefault();
           if (inputRef && inputRef.current) {
             inputRef.current.focus();
           }
@@ -146,6 +192,7 @@ const Cell = ({
             setEditingId(key);
           }
         }}
+        onKeyUp={handleKeyUp}
       />
       {value && (
         <TextInput
