@@ -13,18 +13,14 @@ type Props = {|
    * Has targeted
    */
   isTargeted?: boolean,
-  /**
-   * Has highlighted
-   */
-  isFocused?: boolean,
   type: LINE_CONNECTOR,
 |};
 
-const RelationLine = ({ type, isFocused, isTargeted, hasRelation }: Props) => {
+const RelationLine = ({ type, isTargeted, hasRelation }: Props) => {
   const className =
     type === 'VERTICAL'
-      ? RelationLineVerticalStyle(Boolean(isFocused), Boolean(isTargeted))
-      : RelationLineHorizontalStyle(Boolean(isFocused), Boolean(isTargeted), Boolean(hasRelation));
+      ? RelationLineVerticalStyle(Boolean(isTargeted))
+      : RelationLineHorizontalStyle(Boolean(isTargeted), Boolean(hasRelation));
   return <div className={className} />;
 };
 
