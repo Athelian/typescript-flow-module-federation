@@ -21,6 +21,7 @@ import { orderFocusedListQuery, orderFocusDetailQuery } from 'modules/relationMa
 import type { LINE_CONNECTOR } from '../RelationLine';
 import RelationLine from '../RelationLine';
 import { WrapperStyle, ListStyle, HeadingStyle, ContentStyle, RowStyle } from './style';
+import SelectedEntity from '../SelectedEntity';
 
 type Entity = 'order' | 'batch' | 'orderItem' | 'container' | 'shipment';
 
@@ -1031,61 +1032,69 @@ export default function OrderFocus() {
   );
 
   return (
-    <div className={WrapperStyle}>
-      <Query
-        query={orderFocusedListQuery}
-        variables={queryOrderVariables}
-        fetchPolicy="network-only"
-      >
-        {({ loading, data, error, fetchMore }) => {
-          if (error) {
-            return error.message;
-          }
+    <>
+      <div className={WrapperStyle}>
+        <Query
+          query={orderFocusedListQuery}
+          variables={queryOrderVariables}
+          fetchPolicy="network-only"
+        >
+          {({ loading, data, error, fetchMore }) => {
+            if (error) {
+              return error.message;
+            }
 
-          if (loading) {
-            return (
-              <>
-                <Header />
-                <LoadingPlaceHolder />
-              </>
-            );
-          }
+            if (loading) {
+              return (
+                <>
+                  <Header />
+                  <LoadingPlaceHolder />
+                </>
+              );
+            }
 
-          const orders = getByPathWithDefault([], 'orders.nodes', data);
-          const ordersData = generateListData({
-            orders,
-            state,
-            expandRows,
-            setExpandRows,
-            queryOrderDetail,
-            dispatch,
-          });
-          const rowCount = ordersData.length;
-          return orders.length > 0 ? (
-            <List
-              itemData={ordersData}
-              className={ListStyle}
-              itemCount={rowCount}
-              innerElementType={innerElementType}
-              itemSize={() => 75}
-              onItemsRendered={({ visibleStopIndex }) => {
-                const isLastCell = visibleStopIndex === rowCount - 1;
-                if (hasMoreItems(data, 'orders') && isLastCell) {
-                  loadMore({ fetchMore, data }, queryOrderVariables, 'orders');
+            const orders = getByPathWithDefault([], 'orders.nodes', data);
+            const ordersData = generateListData({
+              orders,
+              state,
+              expandRows,
+              setExpandRows,
+              queryOrderDetail,
+              dispatch,
+            });
+            const rowCount = ordersData.length;
+            return orders.length > 0 ? (
+              <List
+                itemData={ordersData}
+                className={ListStyle}
+                itemCount={rowCount}
+                innerElementType={innerElementType}
+                itemSize={() => 75}
+                onItemsRendered={({ visibleStopIndex }) => {
+                  const isLastCell = visibleStopIndex === rowCount - 1;
+                  if (hasMoreItems(data, 'orders') && isLastCell) {
+                    loadMore({ fetchMore, data }, queryOrderVariables, 'orders');
+                  }
+                }}
+                height={window.innerHeight - 50}
+                width={
+                  uiContext.isSideBarExpanded ? window.innerWidth - 200 : window.innerWidth - 50
                 }
-              }}
-              height={window.innerHeight - 50}
-              width={uiContext.isSideBarExpanded ? window.innerWidth - 200 : window.innerWidth - 50}
-            >
-              {Cell}
-            </List>
-          ) : (
-            <Display>
-              <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
-            </Display>
-          );
-        }}
-      </Query>
-    </div>
+              >
+                {Cell}
+              </List>
+            ) : (
+              <Display>
+                <FormattedMessage
+                  id="modules.Orders.noOrderFound"
+                  defaultMessage="No orders found"
+                />
+              </Display>
+            );
+          }}
+        </Query>
+      </div>
+      <SelectedEntity targets={state.targets} />
+    </>
   );
 }
