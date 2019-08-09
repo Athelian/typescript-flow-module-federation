@@ -106,6 +106,7 @@ const Cell = ({
   return (
     <div style={style}>
       <div
+        tabIndex="-1"
         ref={cellRef}
         role="presentation"
         className={CellStyle({
