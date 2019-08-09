@@ -15,7 +15,7 @@ type ContextProps = {
   toggleSideBarExpansion: Function,
 };
 
-const UIContext: React.Context<ContextProps> = React.createContext({
+export const UIContext: React.Context<ContextProps> = React.createContext({
   isSideBarExpanded: true,
   toggleSideBarExpansion: () => {},
 });

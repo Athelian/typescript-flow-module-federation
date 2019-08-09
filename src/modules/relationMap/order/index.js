@@ -12,7 +12,7 @@ import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relation
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import scrollIntoView from 'utils/scrollIntoView';
-import useFilter from 'hooks/useFilter';
+import usePersistFilter from 'hooks/usePersistFilter';
 import Icon from 'components/Icon';
 import { Label, ToggleInput, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
@@ -107,13 +107,13 @@ const Order = ({ intl }: Props) => {
     queryVariables: queryOrderVariables,
     filterAndSort: orderFilterAndSort,
     onChangeFilter: onChangeOrderFilter,
-  } = useFilter(initOrderFilter, 'filterRelationMap');
+  } = usePersistFilter(initOrderFilter, 'filterRelationMap');
 
   const {
     queryVariables: queryShipmentVariables,
     filterAndSort: shipmentFilterAndSort,
     onChangeFilter: onChangeShipmentFilter,
-  } = useFilter(initShipmentFilter, 'allShipmentFilter');
+  } = usePersistFilter(initShipmentFilter, 'allShipmentFilter');
 
   const lastOrderFilter = usePrevious(orderFilterAndSort);
 

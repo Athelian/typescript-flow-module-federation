@@ -61,6 +61,7 @@ const TimelineAndCargoSections = (props: Props) => {
           entityId={entityId}
           isLoading={isLoading}
           onCompleted={result => {
+            if (timelineContainer.state.hasCalledTimelineApiYet) return;
             const cargoReady = getByPathWithDefault({}, 'shipment.cargoReady', result);
             const voyages = getByPathWithDefault([], 'shipment.voyages', result);
             const containerGroups = getByPathWithDefault([{}], 'shipment.containerGroups', result);

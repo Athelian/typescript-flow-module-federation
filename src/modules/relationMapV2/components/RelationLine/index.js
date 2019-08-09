@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
-import { getByPathWithDefault } from 'utils/fp';
-import * as style from './style';
+import { RelationLineHorizontalStyle, RelationLineVerticalStyle } from './style';
+
+export type LINE_CONNECTOR = 'VERTICAL' | 'HORIZONTAL';
 
 type Props = {|
   /**
@@ -12,20 +13,14 @@ type Props = {|
    * Has targeted
    */
   isTargeted?: boolean,
-  /**
-   * Has highlighted
-   */
-  isFocused?: boolean,
-  type: number,
+  type: LINE_CONNECTOR,
 |};
 
-const RelationLine = (props: Props) => {
-  const { type, isFocused, isTargeted, hasRelation } = props;
-  const className = getByPathWithDefault('', `RelationLine${type}Style`, style)(
-    isFocused,
-    isTargeted,
-    hasRelation
-  );
+const RelationLine = ({ type, isTargeted, hasRelation }: Props) => {
+  const className =
+    type === 'VERTICAL'
+      ? RelationLineVerticalStyle(Boolean(isTargeted))
+      : RelationLineHorizontalStyle(Boolean(isTargeted), Boolean(hasRelation));
   return <div className={className} />;
 };
 

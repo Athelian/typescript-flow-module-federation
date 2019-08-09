@@ -539,9 +539,10 @@ export const orderColumnFields = [
     },
     getExportValue: (values: Object, editData: Object) => {
       const { amount, currency } = calculateOrderTotalPrice(values, editData);
-      return `${amount} ${currency}`;
+      return [amount, currency];
     },
     meta: {
+      expandRow: true,
       renderValue: (values: Object, editData: Object) => {
         const { amount, currency } = calculateOrderTotalPrice(values, editData);
         return <FormattedNumber value={amount} suffix={currency} />;
@@ -566,14 +567,15 @@ export const orderColumnFields = [
     getExportValue: (values: Object, editData: Object) => {
       const { orderItems = [] } = values;
       if (orderItems.length === 0) {
-        return '0m³';
+        return ['', ''];
       }
 
       const orderTotalVolume = calculateOrderTotalVolume(orderItems, editData);
 
-      return `${orderTotalVolume}m³`;
+      return [orderTotalVolume, 'm³'];
     },
     meta: {
+      expandRow: true,
       renderValue: (values: Object, editData: Object) => {
         const { orderItems = [] } = values;
         if (orderItems.length === 0) {
@@ -740,9 +742,10 @@ export const orderItemColumnFields = [
     },
     getExportValue: (values: Object, editData: Object) => {
       const { amount, currency } = calculateOrderItemTotalPrice(values.id, editData);
-      return `${amount} ${currency}`;
+      return [amount, currency];
     },
     meta: {
+      expandRow: true,
       renderValue: (values: Object, editData: Object) => {
         const { amount, currency } = calculateOrderItemTotalPrice(values.id, editData);
         return <FormattedNumber value={amount} suffix={currency} />;
@@ -1003,9 +1006,10 @@ export const batchColumnFields = [
     },
     getExportValue: (values: Object, editData: Object) => {
       const { amount, currency } = calculateBatchTotalPrice(values.id, editData);
-      return `${amount} ${currency}`;
+      return [amount, currency];
     },
     meta: {
+      expandRow: true,
       renderValue: (values: Object, editData: Object) => {
         const { amount, currency } = calculateBatchTotalPrice(values.id, editData);
         return <FormattedNumber value={amount} suffix={currency} />;
@@ -1045,8 +1049,11 @@ export const batchColumnFields = [
       metrics: weightMetrics,
       convert: convertWeight,
     },
-    getExportValue: ({ packageGrossWeight }: { packageGrossWeight: Object } = {}) =>
-      (packageGrossWeight && `${packageGrossWeight.value} ${packageGrossWeight.metric}`) || '',
+    getExportValue: ({ packageGrossWeight }: { packageGrossWeight: Object } = {}) => {
+      if (packageGrossWeight) return [packageGrossWeight.value, packageGrossWeight.metric];
+
+      return ['', ''];
+    },
   },
   {
     messageId: batchMessages.packageVolume.id,
@@ -1057,11 +1064,14 @@ export const batchColumnFields = [
       metrics: volumeMetrics,
       convert: convertVolume,
     },
-    getExportValue: ({ packageVolume }: { packageVolume: Object } = {}) =>
-      (packageVolume && `${packageVolume.value} ${packageVolume.metric}`) || '',
+    getExportValue: ({ packageVolume }: { packageVolume: Object } = {}) => {
+      if (packageVolume) return [packageVolume.value, packageVolume.metric];
+
+      return ['', ''];
+    },
   },
   {
-    messageId: 'modules.Batches.pkgWidth',
+    messageId: 'packageWidth',
     columnName: 'batch.packageWidth',
     name: 'packageSize.width',
     type: 'metric',
@@ -1071,14 +1081,15 @@ export const batchColumnFields = [
       sourcePath: 'packageSize',
       destPath: 'width',
     },
-    getExportValue: ({ packageSize }: { packageSize: Object } = {}) =>
-      (packageSize &&
-        packageSize.width &&
-        `${packageSize.width.value} ${packageSize.width.metric}`) ||
-      '',
+    getExportValue: ({ packageSize }: { packageSize: Object } = {}) => {
+      if (packageSize && packageSize.width)
+        return [packageSize.width.value, packageSize.width.metric];
+
+      return ['', ''];
+    },
   },
   {
-    messageId: 'modules.Batches.pkgHeight',
+    messageId: 'packageHeight',
     name: 'packageSize.height',
     columnName: 'batch.packageHeight',
     type: 'metric',
@@ -1088,14 +1099,15 @@ export const batchColumnFields = [
       sourcePath: 'packageSize',
       destPath: 'height',
     },
-    getExportValue: ({ packageSize }: { packageSize: Object } = {}) =>
-      (packageSize &&
-        packageSize.height &&
-        `${packageSize.height.value} ${packageSize.height.metric}`) ||
-      '',
+    getExportValue: ({ packageSize }: { packageSize: Object } = {}) => {
+      if (packageSize && packageSize.height)
+        return [packageSize.height.value, packageSize.height.metric];
+
+      return ['', ''];
+    },
   },
   {
-    messageId: 'modules.Batches.pkgLength',
+    messageId: 'packageLength',
     name: 'packageSize.length',
     columnName: 'batch.packageLength',
     type: 'metric',
@@ -1105,11 +1117,12 @@ export const batchColumnFields = [
       sourcePath: 'packageSize',
       destPath: 'length',
     },
-    getExportValue: ({ packageSize }: { packageSize: Object } = {}) =>
-      (packageSize &&
-        packageSize.length &&
-        `${packageSize.length.value} ${packageSize.length.metric}`) ||
-      '',
+    getExportValue: ({ packageSize }: { packageSize: Object } = {}) => {
+      if (packageSize && packageSize.length)
+        return [packageSize.length.value, packageSize.length.metric];
+
+      return ['', ''];
+    },
   },
 ];
 
@@ -1375,11 +1388,15 @@ export const containerColumnFields = [
     getExportValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
       const container = editData.containers[containerId];
-      return `${(container.batches || []).reduce((total, batch) => {
-        return total + findVolume(getByPath(`batches.${batch.id}`, editData));
-      }, 0)}m³`;
+      return [
+        (container.batches || []).reduce((total, batch) => {
+          return total + findVolume(getByPath(`batches.${batch.id}`, editData));
+        }, 0),
+        'm³',
+      ];
     },
     meta: {
+      expandRow: true,
       renderValue: (values: Object, editData: Object) => {
         const { id: containerId } = values;
         const container = editData.containers[containerId];
@@ -1407,11 +1424,15 @@ export const containerColumnFields = [
     getExportValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
       const container = editData.containers[containerId];
-      return `${(container.batches || []).reduce((total, batch) => {
-        return total + findWeight(getByPath(`batches.${batch.id}`, editData));
-      }, 0)}kg`;
+      return [
+        (container.batches || []).reduce((total, batch) => {
+          return total + findWeight(getByPath(`batches.${batch.id}`, editData));
+        }, 0),
+        'kg',
+      ];
     },
     meta: {
+      expandRow: true,
       renderValue: (values: Object, editData: Object) => {
         const { id: containerId } = values;
         const container = editData.containers[containerId];
@@ -1438,10 +1459,11 @@ export const containerColumnFields = [
     getExportValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
       const { total, allCurrencies } = calculateContainerTotalPrice(containerId, editData);
-      if (total < 0) return 'Invalid';
-      return `${total}${allCurrencies[0] || 'USD'}`;
+      if (total < 0) return ['Invalid', ''];
+      return [total, allCurrencies[0] || ''];
     },
     meta: {
+      expandRow: true,
       renderValue: (values: Object, editData: Object) => {
         const { id: containerId } = values;
         const { total, allCurrencies } = calculateContainerTotalPrice(containerId, editData);
@@ -1656,9 +1678,10 @@ export const shipmentColumnFields = [
     getExportValue: (values: Object, editData: Object) => {
       const { id: shipmentId } = values;
       const shipmentTotalVolume = calculateShipmentTotalVolume(shipmentId, editData);
-      return `${shipmentTotalVolume}m³`;
+      return [shipmentTotalVolume, 'm³'];
     },
     meta: {
+      expandRow: true,
       renderValue: (values: Object, editData: Object) => {
         const { id: shipmentId } = values;
         const shipmentTotalVolume = calculateShipmentTotalVolume(shipmentId, editData);
@@ -1722,10 +1745,11 @@ export const shipmentColumnFields = [
     getExportValue: (values: Object, editData: Object) => {
       const { id: shipmentId } = values;
       const { total, allCurrencies } = calculateShipmentTotalPrice(shipmentId, editData);
-      if (total < 0) return 'Invalid';
-      return `${total}${allCurrencies[0] || 'USD'}`;
+      if (total < 0) return ['Invalid', ''];
+      return [total, allCurrencies[0] || ''];
     },
     meta: {
+      expandRow: true,
       renderValue: (values: Object, editData: Object) => {
         const { id: shipmentId } = values;
         const { total, allCurrencies } = calculateShipmentTotalPrice(shipmentId, editData);

@@ -3,9 +3,21 @@ import * as React from 'react';
 import { VariableSizeGrid as Grid } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import Draggable from 'react-draggable';
-import { getByPath } from 'utils/fp';
+import { getByPathWithDefault } from 'utils/fp';
 import TextInput from './components/TextInput';
-import { HeaderStyle, HeaderItemStyle, ColumnStyle, DragHandleIconStyle } from './style';
+import { HeaderStyle, HeaderItemStyle, CellStyle, DragHandleIconStyle } from './style';
+
+const ViewContext = React.createContext<{
+  focusedId: ?string,
+  editingId: ?string,
+  setFocusedId: Function,
+  setEditingId: Function,
+}>({
+  focusedId: undefined,
+  editingId: undefined,
+  setFocusedId: () => {},
+  setEditingId: () => {},
+});
 
 const HeaderItem = ({ index, item, width, handleDrag }: Object) => {
   return (
@@ -64,17 +76,85 @@ const Cell = ({
   rowIndex: number,
   style: Object,
 }) => {
-  const contentKey = getByPath(`${rowIndex}.${columnIndex}.key`, data);
-  const contentValue = getByPath(`${rowIndex}.${columnIndex}.value`, data);
+  const item = getByPathWithDefault({}, `${rowIndex}.${columnIndex}`, data);
+  const { key, value, start, lines } = item;
+
+  const cellRef = React.useRef(null);
+  const inputRef = React.useRef(null);
+  const { focusedId, setFocusedId, editingId, setEditingId } = React.useContext(ViewContext);
+
+  React.useEffect(() => {
+    if (inputRef && inputRef.current) {
+      if (editingId === key) {
+        if (
+          !document.activeElement ||
+          (document.activeElement && document.activeElement.tagName !== 'INPUT')
+        ) {
+          inputRef.current.focus();
+        }
+      } else {
+        inputRef.current.blur();
+      }
+    }
+  }, [inputRef, editingId, key]);
+
+  React.useEffect(() => {
+    if (cellRef && cellRef.current) {
+      if (editingId === key) {
+        cellRef.current.style.pointerEvents = 'none';
+      } else {
+        cellRef.current.style.pointerEvents = '';
+      }
+    }
+  }, [editingId, key]);
+
+  const onBlur = () => {
+    setEditingId(undefined);
+  };
 
   return (
-    <div style={style} className={ColumnStyle}>
-      {contentValue && (
+    <div style={style}>
+      <div
+        tabIndex="-1"
+        ref={cellRef}
+        role="presentation"
+        className={CellStyle({
+          width: style.width,
+          height: style.height,
+          topBorder: rowIndex === start,
+          rightBorder: start <= rowIndex && rowIndex <= start + lines,
+          bottomBorder: rowIndex === start + lines - 1,
+          leftBorder: start <= rowIndex && rowIndex <= start + lines,
+          focused: focusedId === key || editingId === key,
+        })}
+        onClick={() => {
+          setFocusedId(key);
+        }}
+        onDoubleClick={() => {
+          if (inputRef && inputRef.current) {
+            inputRef.current.focus();
+          }
+          setEditingId(key);
+        }}
+        onKeyDown={e => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (e.key === 'Enter') {
+            if (inputRef && inputRef.current) {
+              inputRef.current.focus();
+            }
+            setEditingId(key);
+          }
+        }}
+      />
+      {value && (
         <TextInput
+          inputRef={inputRef}
           width={`${style.width}px`}
           height={`${style.height}px`}
-          name={contentKey}
-          value={contentValue}
+          name={key}
+          value={value}
+          onBlur={onBlur}
         />
       )}
     </div>
@@ -94,6 +174,8 @@ const Table = ({
   const bodyRef = React.useRef(null);
   const gridRef = React.useRef(null);
   const [widths, setWidths] = React.useState(columnWidths);
+  const [focusedId, setFocusedId] = React.useState();
+  const [editingId, setEditingId] = React.useState();
 
   const handleScroll = ({ scrollLeft }: Object) => {
     if (bodyRef.current && headerRef.current) {
@@ -121,21 +203,30 @@ const Table = ({
               }
             }}
           />
-          <Grid
-            // $FlowFixMe: expected object, but exist function, because we use hooks. it should be supported by library.
-            ref={gridRef}
-            innerRef={bodyRef}
-            itemData={data}
-            columnCount={keys.length}
-            columnWidth={index => widths[index]}
-            width={width}
-            height={height}
-            rowCount={data.length}
-            rowHeight={() => 35}
-            onScroll={handleScroll}
+          <ViewContext.Provider
+            value={{
+              focusedId,
+              setFocusedId,
+              editingId,
+              setEditingId,
+            }}
           >
-            {Cell}
-          </Grid>
+            <Grid
+              // $FlowFixMe: expected object, but exist function, because we use hooks. it should be supported by library.
+              ref={gridRef}
+              innerRef={bodyRef}
+              itemData={data}
+              columnCount={keys.length}
+              columnWidth={index => widths[index]}
+              width={width}
+              height={height}
+              rowCount={data.length}
+              rowHeight={() => 50}
+              onScroll={handleScroll}
+            >
+              {Cell}
+            </Grid>
+          </ViewContext.Provider>
         </>
       )}
     </AutoSizer>

@@ -113,6 +113,7 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                             </SlideView>
 
                             <ProductProviderCard
+                              showActionsOnHover
                               productProvider={productProvider}
                               onClick={() => slideToggle(true)}
                               onRemove={() => removeArrayItem(`productProviders.${index}`)}

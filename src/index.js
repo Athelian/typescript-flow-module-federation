@@ -1,6 +1,6 @@
 // @flow
-// $FlowFixMe not have type yet
-import React, { unstable_Profiler as Profiler } from 'react';
+// $FlowIssue Profiler is not have typed yet
+import React, { Profiler } from 'react';
 import { unstable_trace as trace } from 'scheduler/tracing';
 import NP from 'number-precision';
 import { hydrate, render } from 'react-dom';

@@ -10,7 +10,7 @@ import Icon from 'components/Icon';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
-import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
+import { ORDER_ITEMS_FORM, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import {
   BATCH_UPDATE,
   BATCH_SET_NO,
@@ -305,9 +305,9 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
                         viewable={viewable}
                         navigable={navigable}
                         config={config}
-                        readOnly={itemConfig === READONLY}
+                        readOnly={itemConfig === READONLY && !hasPermission(ORDER_ITEMS_FORM)}
                         onClick={() => {
-                          if (itemConfig === NAVIGABLE) {
+                          if (itemConfig === NAVIGABLE && hasPermission(ORDER_ITEMS_FORM)) {
                             navigate(`/order-item/${encodeId(orderItem.id)}`);
                           }
                         }}

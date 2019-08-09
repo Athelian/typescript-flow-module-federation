@@ -2,11 +2,39 @@
 import { css } from 'react-emotion';
 import { layout } from 'styles/common';
 
-export const ColumnStyle = css`
-  display: inline-block;
-  width: 200px;
-  overflow: hidden;
-`;
+export const CellStyle = ({
+  width,
+  height,
+  focused,
+  topBorder,
+  rightBorder,
+  bottomBorder,
+  leftBorder,
+}: {
+  width: number,
+  height: number,
+  focused: boolean,
+  topBorder: boolean,
+  rightBorder: boolean,
+  bottomBorder: boolean,
+  leftBorder: boolean,
+}) => {
+  return css`
+    width: ${width}px;
+    height: ${height}px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 2px solid transparent;
+    ${focused &&
+      `
+    border-top-color: ${topBorder ? 'blue' : 'transparent'};
+    border-right-color: ${rightBorder ? 'blue' : 'transparent'};
+    border-bottom-color: ${bottomBorder ? 'blue' : 'transparent'};
+    border-left-color: ${leftBorder ? 'blue' : 'transparent'};
+  `}
+  `;
+};
 
 export const HeaderWrapperStyle = css``;
 
