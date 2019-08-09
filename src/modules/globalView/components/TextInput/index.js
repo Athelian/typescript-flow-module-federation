@@ -1,73 +1,38 @@
 // @flow
-import React, { useRef } from 'react';
+import * as React from 'react';
 
-import { ButtonStyle, InputStyle } from './style';
+import { InputStyle } from './style';
 
 type OptionalProps = {
   width: string,
   height: string,
+  onBlur: Function,
 };
 
 type Props = OptionalProps & {
+  inputRef: React.Ref<any>,
+
   name: string,
   value: string,
 };
 
 const defaultProps = {
   width: '100px',
-  height: '35px',
+  height: '50px',
+  onBlur: () => {},
 };
 
-const TextInput = ({ name, value, width, height }: Props) => {
-  const inputRef = useRef(null);
-  const buttonRef = useRef(null);
-
-  const onFocus = () => {
-    if (inputRef && inputRef.current) {
-      inputRef.current.focus();
-    }
-    if (buttonRef && buttonRef.current) {
-      buttonRef.current.style.display = 'contents';
-    }
-  };
-
-  const onBlur = () => {
-    if (inputRef && inputRef.current) {
-      inputRef.current.blur();
-    }
-    if (buttonRef && buttonRef.current) {
-      buttonRef.current.style.display = '';
-    }
-  };
-
+const TextInput = ({ name, value, width, height, inputRef, onBlur }: Props) => {
   return (
-    <div>
-      <button
-        ref={buttonRef}
-        tabIndex="0"
-        type="button"
-        className={ButtonStyle({ width, height })}
-        onDoubleClick={() => {
-          onFocus();
-        }}
-        onKeyDown={e => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (e.key === 'Enter') {
-            onFocus();
-          }
-        }}
-      />
-      <input
-        className={InputStyle({ width, height })}
-        tabIndex="-1"
-        ref={inputRef}
-        name={name}
-        defaultValue={value}
-        align="left"
-        onBlur={onBlur}
-      />
-    </div>
+    <input
+      className={InputStyle({ width, height })}
+      tabIndex="-1"
+      ref={inputRef}
+      name={name}
+      defaultValue={value}
+      align="left"
+      onBlur={onBlur}
+    />
   );
 };
 
