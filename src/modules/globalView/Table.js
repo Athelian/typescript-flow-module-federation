@@ -86,18 +86,27 @@ const Cell = ({
   React.useEffect(() => {
     if (inputRef && inputRef.current) {
       if (editingId === key) {
-        inputRef.current.focus();
-        if (cellRef && cellRef.current) {
-          cellRef.current.style.pointerEvents = 'none';
+        if (
+          !document.activeElement ||
+          (document.activeElement && document.activeElement.tagName !== 'INPUT')
+        ) {
+          inputRef.current.focus();
         }
       } else {
         inputRef.current.blur();
-        if (cellRef && cellRef.current) {
-          cellRef.current.style.pointerEvents = '';
-        }
       }
     }
   }, [inputRef, editingId, key]);
+
+  React.useEffect(() => {
+    if (cellRef && cellRef.current) {
+      if (editingId === key) {
+        cellRef.current.style.pointerEvents = 'none';
+      } else {
+        cellRef.current.style.pointerEvents = '';
+      }
+    }
+  }, [editingId, key]);
 
   const onBlur = () => {
     setEditingId(undefined);
@@ -122,12 +131,18 @@ const Cell = ({
           setFocusedId(key);
         }}
         onDoubleClick={() => {
+          if (inputRef && inputRef.current) {
+            inputRef.current.focus();
+          }
           setEditingId(key);
         }}
         onKeyDown={e => {
           e.preventDefault();
           e.stopPropagation();
           if (e.key === 'Enter') {
+            if (inputRef && inputRef.current) {
+              inputRef.current.focus();
+            }
             setEditingId(key);
           }
         }}
