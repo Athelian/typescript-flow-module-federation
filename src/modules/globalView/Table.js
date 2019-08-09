@@ -101,13 +101,11 @@ const Cell = ({
 
   const onBlur = () => {
     setEditingId(undefined);
-    setFocusedId(undefined);
   };
 
   return (
     <div style={style}>
       <div
-        tabIndex="-1"
         ref={cellRef}
         role="presentation"
         className={CellStyle({
@@ -121,9 +119,6 @@ const Cell = ({
         })}
         onClick={() => {
           setFocusedId(key);
-        }}
-        onBlur={() => {
-          setFocusedId(undefined);
         }}
         onDoubleClick={() => {
           setEditingId(key);
@@ -165,8 +160,6 @@ const Table = ({
   const [widths, setWidths] = React.useState(columnWidths);
   const [focusedId, setFocusedId] = React.useState();
   const [editingId, setEditingId] = React.useState();
-
-  console.warn({ focusedId, editingId });
 
   const handleScroll = ({ scrollLeft }: Object) => {
     if (bodyRef.current && headerRef.current) {
