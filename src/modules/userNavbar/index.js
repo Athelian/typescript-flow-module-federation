@@ -72,9 +72,11 @@ class UserNavBar extends React.Component<Props, State> {
           query={countNotificationQuery}
           fetchPolicy="network-only"
           onCompleted={result => {
-            this.setState({
-              unSeen: getByPathWithDefault(0, 'viewer.notificationUnseen', result),
-            });
+            if (unSeen !== getByPathWithDefault(0, 'viewer.notificationUnseen', result)) {
+              this.setState({
+                unSeen: getByPathWithDefault(0, 'viewer.notificationUnseen', result),
+              });
+            }
           }}
         >
           {({ client, refetch }) => {
