@@ -305,7 +305,7 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
                         viewable={viewable}
                         navigable={navigable}
                         config={config}
-                        readOnly={itemConfig === READONLY}
+                        readOnly={itemConfig === READONLY && !hasPermission(ORDER_ITEMS_FORM)}
                         onClick={() => {
                           if (itemConfig === NAVIGABLE && hasPermission(ORDER_ITEMS_FORM)) {
                             navigate(`/order-item/${encodeId(orderItem.id)}`);
