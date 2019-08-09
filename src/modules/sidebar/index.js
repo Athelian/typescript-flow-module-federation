@@ -23,6 +23,7 @@ import { TASK_LIST, TASK_TEMPLATE_LIST } from 'modules/permission/constants/task
 import usePermission from 'hooks/usePermission';
 import { FormattedMessage } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
+import { isEnableBetaFeature } from 'utils/env';
 import { Logo, MenuItem, SubMenu } from './components';
 import { SideBarWrapperStyle, SideBarBodyStyle } from './style';
 import messages from './messages';
@@ -59,6 +60,14 @@ const SideBar = () => {
                 <div className={SideBarWrapperStyle(uiState.isSideBarExpanded)}>
                   <Logo {...uiState} />
                   <div className={SideBarBodyStyle}>
+                    {isEnableBetaFeature && (
+                      <MenuItem
+                        path={`/${PATH_RM}-beta`}
+                        isActive={pathnameSplit[1] === `${PATH_RM}-beta`}
+                        icon="UNKNOWN"
+                        label={<FormattedMessage {...messages.relationMap} />}
+                      />
+                    )}
                     {(hasPermission(RM_ORDER_FOCUS_LIST) ||
                       hasPermission(RM_PRODUCT_FOCUS_LIST)) && (
                       <MenuItem

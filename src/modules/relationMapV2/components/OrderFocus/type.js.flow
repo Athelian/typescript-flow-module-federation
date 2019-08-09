@@ -1,0 +1,38 @@
+// @flow
+import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
+import type { LINE_CONNECTOR } from '../RelationLine';
+
+export type Entity =
+  | typeof ORDER
+  | typeof BATCH
+  | typeof ORDER_ITEM
+  | typeof CONTAINER
+  | typeof SHIPMENT;
+
+export type CellRender = {
+  // eslint-disable-next-line flowtype/space-after-type-colon
+  type:
+    | typeof ORDER
+    | 'duplicateOrder'
+    | 'duplicateOrderItem'
+    | typeof ORDER_ITEM
+    | typeof BATCH
+    | typeof SHIPMENT
+    | 'shipmentWithoutContainer'
+    | typeof CONTAINER
+    | 'itemSummary'
+    | 'batchSummary'
+    | 'containerSummary'
+    | 'shipmentSummary'
+    | 'placeholder',
+  data?: mixed,
+  entity?: Entity,
+  beforeConnector?: ?LINE_CONNECTOR,
+  afterConnector?: ?LINE_CONNECTOR,
+  isLoadedData?: boolean,
+};
+
+export type State = {
+  order: Object,
+  targets: Array<string>,
+};

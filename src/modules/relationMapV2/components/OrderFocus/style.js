@@ -16,14 +16,6 @@ export const ContentStyle = css`
   min-width: 10px;
 `;
 
-export const HeadingStyle = css`
-  padding: 20px;
-  color: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 2;
-`;
-
 export const ListStyle = css`
   ${scrollbars.MAIN};
 `;
