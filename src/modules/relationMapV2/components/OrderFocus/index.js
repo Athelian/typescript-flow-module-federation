@@ -18,6 +18,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import { Display } from 'components/Form';
 import BaseCard from 'components/Cards';
 import { orderFocusedListQuery, orderFocusDetailQuery } from 'modules/relationMapV2/query';
+import type { LINE_CONNECTOR } from '../RelationLine';
 import RelationLine from '../RelationLine';
 import { WrapperStyle, ListStyle, HeadingStyle, ContentStyle, RowStyle } from './style';
 
@@ -39,8 +40,8 @@ type CellRender = {
     | 'placeholder',
   data?: mixed,
   entity?: Entity,
-  beforeConnector?: ?number,
-  afterConnector?: ?number,
+  beforeConnector?: ?LINE_CONNECTOR,
+  afterConnector?: ?LINE_CONNECTOR,
   isLoadedData?: boolean,
 };
 
@@ -144,7 +145,7 @@ function orderCell({
     return {
       type: 'order',
       data: order,
-      afterConnector: 1,
+      afterConnector: 'HORIZONTAL',
     };
 
   const isTheLastItemWithFirstBatch = itemPosition === totalItems - 1 && batchPosition === 0;
@@ -154,7 +155,7 @@ function orderCell({
     return {
       type: 'duplicateOrder',
       data: null,
-      afterConnector: 2,
+      afterConnector: 'VERTICAL',
     };
   return null;
 }
@@ -162,10 +163,10 @@ function orderCell({
 function containerCell(batch: BatchPayload): ?CellRender {
   if (getByPathWithDefault(null, 'container', batch)) {
     return {
-      beforeConnector: 1,
+      beforeConnector: 'HORIZONTAL',
       type: 'container',
       data: getByPathWithDefault(null, 'container', batch),
-      afterConnector: 1,
+      afterConnector: 'HORIZONTAL',
     };
   }
 
@@ -174,10 +175,10 @@ function containerCell(batch: BatchPayload): ?CellRender {
     !getByPathWithDefault(null, 'container', batch)
   ) {
     return {
-      beforeConnector: 1,
+      beforeConnector: 'HORIZONTAL',
       type: 'shipmentWithoutContainer',
       data: null,
-      afterConnector: 1,
+      afterConnector: 'HORIZONTAL',
     };
   }
 
@@ -202,28 +203,28 @@ const orderCoordinates = memoize(
             {
               type: 'order',
               data: order,
-              afterConnector: 1,
+              afterConnector: 'HORIZONTAL',
             },
             {
-              beforeConnector: 1,
+              beforeConnector: 'HORIZONTAL',
               type: 'itemSummary',
               data: order,
-              afterConnector: 1,
+              afterConnector: 'HORIZONTAL',
             },
             {
-              beforeConnector: 1,
+              beforeConnector: 'HORIZONTAL',
               type: 'batchSummary',
               data: order,
-              afterConnector: 1,
+              afterConnector: 'HORIZONTAL',
             },
             {
-              beforeConnector: 1,
+              beforeConnector: 'HORIZONTAL',
               type: 'containerSummary',
               data: order,
-              afterConnector: 1,
+              afterConnector: 'HORIZONTAL',
             },
             {
-              beforeConnector: 1,
+              beforeConnector: 'HORIZONTAL',
               type: 'shipmentSummary',
               data: order,
             },
@@ -245,22 +246,22 @@ const orderCoordinates = memoize(
       {
         type: 'itemSummary',
         data: order,
-        afterConnector: 1,
+        afterConnector: 'HORIZONTAL',
       },
       {
-        beforeConnector: 1,
+        beforeConnector: 'HORIZONTAL',
         type: 'batchSummary',
         data: order,
-        afterConnector: 1,
+        afterConnector: 'HORIZONTAL',
       },
       {
-        beforeConnector: 1,
+        beforeConnector: 'HORIZONTAL',
         type: 'containerSummary',
         data: order,
-        afterConnector: 1,
+        afterConnector: 'HORIZONTAL',
       },
       {
-        beforeConnector: 1,
+        beforeConnector: 'HORIZONTAL',
         type: 'shipmentSummary',
         data: order,
       },
@@ -271,31 +272,31 @@ const orderCoordinates = memoize(
           {
             type: 'order',
             data: order,
-            afterConnector: 1,
+            afterConnector: 'HORIZONTAL',
           },
           {
-            beforeConnector: 1,
+            beforeConnector: 'HORIZONTAL',
             type: 'placeholder',
             entity: 'orderItem',
-            afterConnector: 1,
+            afterConnector: 'HORIZONTAL',
           },
           {
-            beforeConnector: 1,
+            beforeConnector: 'HORIZONTAL',
             type: 'placeholder',
             entity: 'batch',
-            afterConnector: 1,
+            afterConnector: 'HORIZONTAL',
           },
           {
-            beforeConnector: 1,
+            beforeConnector: 'HORIZONTAL',
             type: 'placeholder',
             entity: 'container',
-            afterConnector: 1,
+            afterConnector: 'HORIZONTAL',
           },
           {
-            beforeConnector: 1,
+            beforeConnector: 'HORIZONTAL',
             type: 'placeholder',
             entity: 'shipment',
-            afterConnector: 1,
+            afterConnector: 'HORIZONTAL',
           },
         ]
       );
@@ -317,26 +318,27 @@ const orderCoordinates = memoize(
                 }),
                 !position
                   ? {
-                      beforeConnector: 1,
+                      beforeConnector: 'HORIZONTAL',
                       type: 'orderItem',
                       data: item,
-                      afterConnector: 1,
+                      afterConnector: 'HORIZONTAL',
                     }
                   : {
                       type: 'duplicateOrderItem',
                       data: order,
-                      afterConnector: 2,
+                      afterConnector: 'VERTICAL',
                     },
                 {
-                  beforeConnector: 1,
+                  beforeConnector: 'HORIZONTAL',
                   type: 'batch',
                   data: batch,
-                  afterConnector: batch && (batch.container || batch.shipment) ? 1 : null,
+                  afterConnector:
+                    batch && (batch.container || batch.shipment) ? 'HORIZONTAL' : null,
                 },
                 containerCell(batch),
                 batch && batch.shipment
                   ? {
-                      beforeConnector: 1,
+                      beforeConnector: 'HORIZONTAL',
                       type: 'shipment',
                       data: batch.shipment,
                     }
@@ -352,15 +354,15 @@ const orderCoordinates = memoize(
                 ? {
                     type: 'order',
                     data: order,
-                    afterConnector: 1,
+                    afterConnector: 'HORIZONTAL',
                   }
                 : {
                     type: 'duplicateOrder',
                     data: null,
-                    afterConnector: 2,
+                    afterConnector: 'VERTICAL',
                   },
               {
-                beforeConnector: 1,
+                beforeConnector: 'HORIZONTAL',
                 type: 'orderItem',
                 data: item,
               },
@@ -572,7 +574,7 @@ const cellRenderer = (
     case 'shipmentWithoutContainer':
       content = (
         <div style={{ width: CONTAINER_WIDTH - 20 }} className={ContentStyle}>
-          <RelationLine type={1} />
+          <RelationLine type="HORIZONTAL" />
         </div>
       );
       break;
