@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import type { OrderPayload } from 'generated/graphql';
+import { flatten } from 'lodash';
 import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import LoadingIcon from 'components/LoadingIcon';
@@ -12,8 +13,10 @@ import {
   CONTAINER,
   SHIPMENT,
   ORDER_WIDTH,
+  BATCH_WIDTH,
   ORDER_ITEM_WIDTH,
   CONTAINER_WIDTH,
+  SHIPMENT_WIDTH,
 } from 'modules/relationMapV2/constants';
 import type { CellRender, State } from './type.js.flow';
 import RelationLine from '../RelationLine';
@@ -242,63 +245,120 @@ const cellRenderer = (
       );
       break;
     }
-    case 'batchSummary':
-      content = (
-        <div className={ContentStyle} onClick={onClick} role="presentation">
-          <BaseCard
-            icon={isExpand ? 'CHEVRON_DOUBLE_UP' : 'CHEVRON_DOWN'}
-            color={isExpand ? 'GRAY_QUITE_LIGHT' : 'BLACK'}
-            style={
-              isExpand
-                ? {
-                    background: '#DDDDDD',
-                  }
-                : {}
-            }
-          >
-            <BatchCard>Total: {getByPathWithDefault(0, 'batchCount', data)}</BatchCard>
-          </BaseCard>
-        </div>
-      );
+    case 'batchSummary': {
+      const total = getByPathWithDefault(0, 'batchCount', data);
+      if (total) {
+        const batchIds = flatten(
+          getByPathWithDefault([], 'data.orderItems', cell).map(item =>
+            getByPathWithDefault([], 'batches', item).map(batch =>
+              getByPathWithDefault('', 'id', batch)
+            )
+          )
+        );
+        const isTargetedAnyBatches = batchIds.some(batchId =>
+          state.targets.includes(`${BATCH}-${batchId}`)
+        );
+        content = (
+          <div className={ContentStyle} onClick={onClick} role="presentation">
+            <BaseCard
+              icon={isExpand ? 'CHEVRON_DOUBLE_UP' : 'CHEVRON_DOWN'}
+              color={isExpand ? 'GRAY_QUITE_LIGHT' : 'BLACK'}
+              style={
+                isExpand
+                  ? {
+                      background: '#DDDDDD',
+                    }
+                  : {}
+              }
+              selected={!isExpand && isTargetedAnyBatches}
+              selectable
+            >
+              <BatchCard>Total: {getByPathWithDefault(0, 'batchCount', data)}</BatchCard>
+            </BaseCard>
+          </div>
+        );
+      } else {
+        content = (
+          <div
+            style={{
+              width: BATCH_WIDTH - 20,
+            }}
+            className={ContentStyle}
+          />
+        );
+      }
       break;
-    case 'containerSummary':
-      content = (
-        <div className={ContentStyle} onClick={onClick} role="presentation">
-          <BaseCard
-            icon={isExpand ? 'CHEVRON_DOUBLE_UP' : 'CHEVRON_DOWN'}
-            color={isExpand ? 'GRAY_QUITE_LIGHT' : 'BLACK'}
-            style={
-              isExpand
-                ? {
-                    background: '#DDDDDD',
-                  }
-                : {}
-            }
-          >
-            <ContainerCard>Total: {getByPathWithDefault(0, 'containerCount', data)}</ContainerCard>
-          </BaseCard>
-        </div>
-      );
+    }
+    case 'containerSummary': {
+      const total = getByPathWithDefault(0, 'containerCount', data);
+      const shipmentCount = getByPathWithDefault(0, 'shipmentCount', data);
+      if (total) {
+        content = (
+          <div className={ContentStyle} onClick={onClick} role="presentation">
+            <BaseCard
+              icon={isExpand ? 'CHEVRON_DOUBLE_UP' : 'CHEVRON_DOWN'}
+              color={isExpand ? 'GRAY_QUITE_LIGHT' : 'BLACK'}
+              style={
+                isExpand
+                  ? {
+                      background: '#DDDDDD',
+                    }
+                  : {}
+              }
+            >
+              <ContainerCard>
+                Total: {getByPathWithDefault(0, 'containerCount', data)}
+              </ContainerCard>
+            </BaseCard>
+          </div>
+        );
+      } else if (shipmentCount) {
+        content = (
+          <div style={{ width: CONTAINER_WIDTH - 20 }} className={ContentStyle}>
+            <RelationLine
+              {...findLineColors({
+                position: 'center',
+                isExpand,
+                type,
+                state,
+                cell,
+                order,
+              })}
+              type="HORIZONTAL"
+            />
+          </div>
+        );
+      } else {
+        content = <div style={{ width: CONTAINER_WIDTH - 20 }} className={ContentStyle} />;
+      }
       break;
-    case 'shipmentSummary':
-      content = (
-        <div className={ContentStyle} onClick={onClick} role="presentation">
-          <BaseCard
-            icon={isExpand ? 'CHEVRON_DOUBLE_UP' : 'CHEVRON_DOWN'}
-            color={isExpand ? 'GRAY_QUITE_LIGHT' : 'BLACK'}
-            style={
-              isExpand
-                ? {
-                    background: '#DDDDDD',
-                  }
-                : {}
-            }
-          >
-            <ShipmentCard>Total {getByPathWithDefault(0, 'shipmentCount', data)}</ShipmentCard>
-          </BaseCard>
-        </div>
-      );
+    }
+    case 'shipmentSummary': {
+      const total = getByPathWithDefault(0, 'shipmentCount', data);
+      if (total) {
+        content = (
+          <div className={ContentStyle} onClick={onClick} role="presentation">
+            <BaseCard
+              icon={isExpand ? 'CHEVRON_DOUBLE_UP' : 'CHEVRON_DOWN'}
+              color={isExpand ? 'GRAY_QUITE_LIGHT' : 'BLACK'}
+              style={
+                isExpand
+                  ? {
+                      background: '#DDDDDD',
+                    }
+                  : {}
+              }
+            >
+              <ShipmentCard>Total {getByPathWithDefault(0, 'shipmentCount', data)}</ShipmentCard>
+            </BaseCard>
+          </div>
+        );
+      } else {
+        content = <div style={{ width: SHIPMENT_WIDTH - 20 }} className={ContentStyle} />;
+      }
+
       break;
+    }
     case 'duplicateOrder':
       content = (
         <div

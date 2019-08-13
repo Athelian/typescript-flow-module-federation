@@ -92,6 +92,10 @@ export const orderCoordinates = memoize(
   }): Array<?CellRender> => {
     const orderItems = getByPathWithDefault([], 'orderItems', order);
     const orderItemCount = getByPathWithDefault(0, 'orderItemCount', order);
+    const batchCount = getByPathWithDefault(0, 'batchCount', order);
+    const containerCount = getByPathWithDefault(0, 'containerCount', order);
+    const shipmentCount = getByPathWithDefault(0, 'shipmentCount', order);
+    // TODO: need to change the style for the summary row is closed to the next one
     if (!isExpand) {
       return orderItemCount > 0
         ? [
@@ -104,22 +108,22 @@ export const orderCoordinates = memoize(
               beforeConnector: 'HORIZONTAL',
               type: 'itemSummary',
               data: order,
-              afterConnector: 'HORIZONTAL',
+              ...(batchCount ? { afterConnector: 'HORIZONTAL' } : {}),
             },
             {
-              beforeConnector: 'HORIZONTAL',
+              ...(containerCount || shipmentCount ? { beforeConnector: 'HORIZONTAL' } : {}),
               type: 'batchSummary',
               data: order,
-              afterConnector: 'HORIZONTAL',
+              ...(containerCount || shipmentCount ? { afterConnector: 'HORIZONTAL' } : {}),
             },
             {
-              beforeConnector: 'HORIZONTAL',
+              ...(shipmentCount ? { beforeConnector: 'HORIZONTAL' } : {}),
               type: 'containerSummary',
               data: order,
-              afterConnector: 'HORIZONTAL',
+              ...(shipmentCount ? { afterConnector: 'HORIZONTAL' } : {}),
             },
             {
-              beforeConnector: 'HORIZONTAL',
+              ...(shipmentCount ? { beforeConnector: 'HORIZONTAL' } : {}),
               type: 'shipmentSummary',
               data: order,
             },
@@ -140,22 +144,16 @@ export const orderCoordinates = memoize(
       {
         type: 'itemSummary',
         data: order,
-        afterConnector: 'HORIZONTAL',
       },
       {
-        beforeConnector: 'HORIZONTAL',
         type: 'batchSummary',
         data: order,
-        afterConnector: 'HORIZONTAL',
       },
       {
-        beforeConnector: 'HORIZONTAL',
         type: 'containerSummary',
         data: order,
-        afterConnector: 'HORIZONTAL',
       },
       {
-        beforeConnector: 'HORIZONTAL',
         type: 'shipmentSummary',
         data: order,
       },
@@ -403,7 +401,7 @@ export const findLineColors = ({
       const isTargetedAnyItems = orderItemIds.some(itemId =>
         state.targets.includes(`${ORDER_ITEM}-${itemId}`)
       );
-      const isTargetedAnyBatch = batchIds.some(batchId =>
+      const isTargetedAnyBatches = batchIds.some(batchId =>
         state.targets.includes(`${BATCH}-${batchId}`)
       );
       if (position === 'before') {
@@ -413,8 +411,44 @@ export const findLineColors = ({
         };
       }
       return {
-        isTargeted: isTargetedAnyBatch,
-        hasRelation: isTargetedAnyBatch,
+        isTargeted: isTargetedAnyItems && isTargetedAnyBatches,
+        hasRelation: isTargetedAnyBatches,
+      };
+    }
+    case 'batchSummary': {
+      if (isExpand) {
+        return {
+          isTargeted: false,
+          hasRelation: false,
+        };
+      }
+      const orderItemIds = flatten(
+        getByPathWithDefault([], 'orderItems', order).map(item =>
+          getByPathWithDefault('', 'id', item)
+        )
+      );
+      const batchIds = flatten(
+        getByPathWithDefault([], 'orderItems', order).map(item =>
+          getByPathWithDefault([], 'batches', item).map(batch =>
+            getByPathWithDefault('', 'id', batch)
+          )
+        )
+      );
+      const isTargetedAnyItems = orderItemIds.some(itemId =>
+        state.targets.includes(`${ORDER_ITEM}-${itemId}`)
+      );
+      const isTargetedAnyBatches = batchIds.some(batchId =>
+        state.targets.includes(`${BATCH}-${batchId}`)
+      );
+      if (position === 'before') {
+        return {
+          isTargeted: isTargetedAnyItems && isTargetedAnyBatches,
+          hasRelation: isTargetedAnyBatches,
+        };
+      }
+      return {
+        isTargeted: isTargetedAnyBatches,
+        hasRelation: isTargetedAnyBatches,
       };
     }
     default:

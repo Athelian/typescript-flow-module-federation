@@ -176,6 +176,7 @@ export const orderCardOptimiseFragment = gql`
     poNo
     orderItemCount
     batchCount
+    containerCount
     shipmentCount
     todo {
       taskCount {
