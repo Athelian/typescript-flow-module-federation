@@ -1,8 +1,6 @@
 // @flow
 import * as React from 'react';
-import type { OrderPayload } from 'generated/graphql';
 import produce from 'immer';
-import memoize from 'memoize-one';
 import { VariableSizeList as List } from 'react-window';
 import update from 'immutability-helper';
 import { Query } from 'react-apollo';
@@ -15,21 +13,14 @@ import { getByPathWithDefault } from 'utils/fp';
 import { UIContext } from 'modules/ui';
 import { Display } from 'components/Form';
 import { orderFocusedListQuery, orderFocusDetailQuery } from 'modules/relationMapV2/query';
-import {
-  ORDER,
-  ORDER_ITEM,
-  BATCH,
-  CONTAINER,
-  SHIPMENT,
-  TOTAL_COLUMNS,
-} from 'modules/relationMapV2/constants';
+import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import type { State } from './type.js.flow';
 import { WrapperStyle, ListStyle, RowStyle } from './style';
 import SelectedEntity from '../SelectedEntity';
 import Header from '../Header';
 import Cell from '../Cell';
 import cellRenderer from './cellRenderer';
-import { orderCoordinates } from './helpers';
+import generateListData from './generateListData';
 
 const LoadingPlaceHolder = React.memo(() => {
   return (
@@ -75,6 +66,7 @@ const LoadingPlaceHolder = React.memo(() => {
           onClick: () => {},
           dispatch: () => {},
           isExpand: false,
+          order: {},
           state: {
             order: {},
             targets: [],
@@ -84,129 +76,6 @@ const LoadingPlaceHolder = React.memo(() => {
     </div>
   );
 });
-
-const generateCells = memoize(
-  ({
-    order,
-    isExpand,
-    onExpand,
-    fetchOrder,
-  }: {
-    order: Object,
-    isExpand: boolean,
-    onExpand: Function,
-    fetchOrder: (orderId: string) => void,
-  }) => {
-    const isLoadedData =
-      getByPathWithDefault([], 'orderItems', order).length ===
-      getByPathWithDefault(0, 'orderItemCount', order);
-    const onClick = () => {
-      if (!isExpand) {
-        onExpand(expandIds => [...expandIds, order.id]);
-        if (!isLoadedData && order.id) fetchOrder(order.id);
-      } else {
-        onExpand(expandIds => expandIds.filter(id => id !== order.id));
-      }
-    };
-
-    const cells = orderCoordinates({ isExpand, order, isLoadedData });
-    return { cells, onClick, isExpand };
-  }
-);
-
-const generateListData = memoize(
-  ({
-    orders,
-    state,
-    expandRows,
-    setExpandRows,
-    queryOrderDetail,
-    dispatch,
-  }: {
-    state: State,
-    orders: Array<{ ...OrderPayload, containerCount: number }>,
-    expandRows: Array<string>,
-    setExpandRows: Function,
-    queryOrderDetail: Function,
-    dispatch: Function,
-  }) => {
-    const ordersData = orders.map(order =>
-      state.order[order.id]
-        ? {
-            ...order,
-            ...state.order[order.id],
-          }
-        : order
-    );
-
-    const result = [
-      [
-        {
-          cell: null,
-          isExpand: false,
-          onClick: () => {},
-          dispatch: () => {},
-          state,
-        },
-        {
-          cell: null,
-          isExpand: false,
-          onClick: () => {},
-          dispatch: () => {},
-          state,
-        },
-        {
-          cell: null,
-          isExpand: false,
-          onClick: () => {},
-          dispatch: () => {},
-          state,
-        },
-        {
-          cell: null,
-          isExpand: false,
-          onClick: () => {},
-          dispatch: () => {},
-          state,
-        },
-        {
-          cell: null,
-          isExpand: false,
-          onClick: () => {},
-          dispatch: () => {},
-          state,
-        },
-      ],
-    ]; // empty 1st cell for header
-
-    ordersData.forEach(order => {
-      const { cells, onClick, isExpand } = generateCells({
-        order,
-        isExpand: expandRows.includes(order.id),
-        onExpand: setExpandRows,
-        fetchOrder: queryOrderDetail,
-      });
-      let counter = 0;
-      let row = [];
-      cells.forEach(cell => {
-        counter += 1;
-        row.push({
-          cell,
-          onClick,
-          dispatch,
-          isExpand,
-          state,
-        });
-        if (counter % TOTAL_COLUMNS === 0) {
-          result.push(row);
-          row = [];
-        }
-      });
-    });
-
-    return result;
-  }
-);
 
 const hasMoreItems = (data: Object, model: string = 'orders') => {
   const nextPage = getByPathWithDefault(1, `${model}.page`, data) + 1;
@@ -263,9 +132,6 @@ export default function OrderFocus() {
   const uiContext = React.useContext(UIContext);
   const [expandRows, setExpandRows] = React.useState([]);
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  console.warn({
-    state,
-  });
   const queryOrderDetail = React.useCallback((orderId: string) => {
     apolloClient
       .query({

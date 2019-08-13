@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import type { BatchPayload } from 'generated/graphql';
+import type { OrderPayload, BatchPayload } from 'generated/graphql';
+import { flatten } from 'lodash';
 import memoize from 'memoize-one';
 import styled from 'react-emotion';
 import { getByPathWithDefault } from 'utils/fp';
@@ -321,37 +322,99 @@ export const getCardByEntity = (entity: ?Entity) => {
 export const findLineColors = ({
   type,
   state,
+  order,
   cell,
   position,
+  isExpand,
 }: {|
   position: 'before' | 'center' | 'after',
   type: string,
+  isExpand: boolean,
   state: State,
   cell: CellRender,
+  order?: OrderPayload,
 |}) => {
+  // TODO: apply the colors for lines
   switch (type) {
-    case 'itemSummary': {
+    case 'Order': {
       const orderId = getByPathWithDefault('', 'data.id', cell);
-      const orderItemIds = getByPathWithDefault([], 'data.orderItems', cell).map(item =>
-        getByPathWithDefault('', 'id', item)
+      const orderItemIds = flatten(
+        getByPathWithDefault([], 'data.orderItems', cell).map(item =>
+          getByPathWithDefault('', 'id', item)
+        )
       );
-      console.warn({
-        orderItemIds,
-        cell,
-      });
-      const hasRelation = state.targets.includes(`${ORDER}-${orderId}`);
-      const isTargeted = orderItemIds.some(itemId =>
-        state.targets.includes(`${ORDER}-ITEM-${itemId}`)
+      const isTargetedOrder = state.targets.includes(`${ORDER}-${orderId}`);
+      const isTargetedAnyItems = orderItemIds.some(itemId =>
+        state.targets.includes(`${ORDER_ITEM}-${itemId}`)
+      );
+
+      return {
+        isTargeted: isTargetedOrder && isTargetedAnyItems,
+        hasRelation: isTargetedAnyItems,
+      };
+    }
+    case 'OrderItem': {
+      const orderId = getByPathWithDefault('', 'id', order);
+      const itemId = getByPathWithDefault('', 'data.id', cell);
+      const batchIds = flatten(
+        getByPathWithDefault([], 'data.batches', cell).map(item =>
+          getByPathWithDefault('', 'id', item)
+        )
+      );
+      const isTargetedOrder = state.targets.includes(`${ORDER}-${orderId}`);
+      const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${itemId}`);
+      const isTargetedAnyBatches = batchIds.some(batchId =>
+        state.targets.includes(`${BATCH}-${batchId}`)
+      );
+
+      if (position === 'before') {
+        return {
+          isTargeted: isTargetedOrder && isTargetedItem,
+          hasRelation: isTargetedItem,
+        };
+      }
+
+      return {
+        isTargeted: isTargetedItem && isTargetedAnyBatches,
+        hasRelation: isTargetedAnyBatches,
+      };
+    }
+    case 'itemSummary': {
+      if (isExpand) {
+        return {
+          isTargeted: false,
+          hasRelation: false,
+        };
+      }
+      const orderId = getByPathWithDefault('', 'data.id', cell);
+      const orderItemIds = flatten(
+        getByPathWithDefault([], 'data.orderItems', cell).map(item =>
+          getByPathWithDefault('', 'id', item)
+        )
+      );
+      const batchIds = flatten(
+        getByPathWithDefault([], 'data.orderItems', cell).map(item =>
+          getByPathWithDefault([], 'batches', item).map(batch =>
+            getByPathWithDefault('', 'id', batch)
+          )
+        )
+      );
+      const isTargetedOrder = state.targets.includes(`${ORDER}-${orderId}`);
+      const isTargetedAnyItems = orderItemIds.some(itemId =>
+        state.targets.includes(`${ORDER_ITEM}-${itemId}`)
+      );
+      const isTargetedAnyBatch = batchIds.some(batchId =>
+        state.targets.includes(`${BATCH}-${batchId}`)
       );
       if (position === 'before') {
         return {
-          isTargeted,
-          hasRelation,
+          isTargeted: isTargetedOrder && isTargetedAnyItems,
+          hasRelation: isTargetedOrder,
         };
       }
       return {
-        isTargeted,
-        hasRelation,
+        isTargeted: isTargetedAnyBatch,
+        hasRelation: isTargetedAnyBatch,
       };
     }
     default:

@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { OrderPayload } from 'generated/graphql';
 import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import LoadingIcon from 'components/LoadingIcon';
@@ -36,11 +37,13 @@ const cellRenderer = (
     isExpand,
     dispatch,
     state,
+    order,
   }: {
     onClick: Function,
     dispatch: Function,
     isExpand: boolean,
     state: State,
+    order: OrderPayload,
   }
 ) => {
   if (!cell)
@@ -175,9 +178,11 @@ const cellRenderer = (
           <RelationLine
             {...findLineColors({
               position: 'center',
+              isExpand,
               type,
               state,
               cell,
+              order,
             })}
             type="HORIZONTAL"
           />
@@ -209,7 +214,13 @@ const cellRenderer = (
         </div>
       );
       break;
-    case 'itemSummary':
+    case 'itemSummary': {
+      const orderItemIds = getByPathWithDefault([], 'data.orderItems', cell).map(item =>
+        getByPathWithDefault('', 'id', item)
+      );
+      const selected = orderItemIds.some(itemId =>
+        state.targets.includes(`${ORDER_ITEM}-${itemId}`)
+      );
       content = (
         <div className={ContentStyle} onClick={onClick} role="presentation">
           <BaseCard
@@ -222,12 +233,15 @@ const cellRenderer = (
                   }
                 : {}
             }
+            selected={!isExpand && selected}
+            selectable
           >
             <ItemCard>Total: {getByPathWithDefault(0, 'orderItemCount', data)} </ItemCard>
           </BaseCard>
         </div>
       );
       break;
+    }
     case 'batchSummary':
       content = (
         <div className={ContentStyle} onClick={onClick} role="presentation">
@@ -324,9 +338,11 @@ const cellRenderer = (
           <RelationLine
             {...findLineColors({
               position: 'before',
+              isExpand,
               type,
               state,
               cell,
+              order,
             })}
             type={beforeConnector}
           />
@@ -338,9 +354,11 @@ const cellRenderer = (
           <RelationLine
             {...findLineColors({
               position: 'after',
+              isExpand,
               type,
               state,
               cell,
+              order,
             })}
             type={afterConnector}
           />
