@@ -68,6 +68,6 @@ export default class ShipmentInfoContainer extends Container<ShipmentInfoType> {
   initDetailValues = (values: Object) => {
     const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);
-    this.originalValues = Object.assign({}, parsedValues);
+    this.originalValues = { ...parsedValues };
   };
 }

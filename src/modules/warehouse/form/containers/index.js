@@ -68,6 +68,6 @@ export default class WarehouseContainer extends Container<FormState> {
   initDetailValues = (values: Object) => {
     const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
     this.setState(parsedValues);
-    this.originalValues = Object.assign({}, parsedValues);
+    this.originalValues = { ...parsedValues };
   };
 }

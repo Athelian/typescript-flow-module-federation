@@ -390,6 +390,9 @@ exports[`Cards render ProjectCard 1`] = `
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
 }
 
 .emotion-28 {
@@ -429,6 +432,9 @@ exports[`Cards render ProjectCard 1`] = `
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
 }
 
 <div
@@ -1066,6 +1072,9 @@ exports[`Cards render ProjectCard 2`] = `
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
 }
 
 .emotion-28 {
@@ -1105,6 +1114,9 @@ exports[`Cards render ProjectCard 2`] = `
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
 }
 
 <div

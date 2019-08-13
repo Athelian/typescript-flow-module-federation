@@ -39,12 +39,12 @@ const FormattedDate = ({ value, mode = 'date' }: Props) => {
       return <FormattedTime value={isDataType(Date, value) ? value : new Date(value)} />;
     case 'time-relative':
       return (
-        <React.Fragment>
+        <>
           <FormattedTime value={isDataType(Date, value) ? value : new Date(value)} />
           {` (`}
           <FormattedRelative value={isDataType(Date, value) ? value : new Date(value)} />
           {`)`}
-        </React.Fragment>
+        </>
       );
     default:
       return '';

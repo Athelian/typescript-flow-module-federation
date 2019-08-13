@@ -38,7 +38,7 @@ export default class CustomFieldsContainer extends Container<FormState> {
   initDetailValues = (values: Object) => {
     const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
     this.setState(parsedValues);
-    this.originalValues = Object.assign({}, parsedValues);
+    this.originalValues = { ...parsedValues };
   };
 
   setFieldValue = (path: string, value: any) => {
