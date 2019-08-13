@@ -111,7 +111,7 @@ export const orderCoordinates = memoize(
               ...(batchCount ? { afterConnector: 'HORIZONTAL' } : {}),
             },
             {
-              ...(containerCount || shipmentCount ? { beforeConnector: 'HORIZONTAL' } : {}),
+              ...(batchCount ? { beforeConnector: 'HORIZONTAL' } : {}),
               type: 'batchSummary',
               data: order,
               ...(containerCount || shipmentCount ? { afterConnector: 'HORIZONTAL' } : {}),
@@ -216,7 +216,11 @@ export const orderCoordinates = memoize(
                     }
                   : {
                       type: 'duplicateOrderItem',
-                      data: order,
+                      data: {
+                        order,
+                        itemPosition: index,
+                        batchPosition: position,
+                      },
                       afterConnector: 'VERTICAL',
                     },
                 {
@@ -375,6 +379,52 @@ export const findLineColors = ({
       return {
         isTargeted: isTargetedItem && isTargetedAnyBatches,
         hasRelation: isTargetedAnyBatches,
+      };
+    }
+    case 'Batch': {
+      const batchId = getByPathWithDefault('', 'data.id', cell);
+      const orderItems = getByPathWithDefault([], 'orderItems', order);
+      const findParentItem = orderItems.find(item =>
+        item.batches.map(batch => batch.id).includes(batchId)
+      );
+      const isTargetedBatch = state.targets.includes(`${BATCH}-${batchId}`);
+      const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${findParentItem.id}`);
+      if (position === 'before') {
+        return {
+          isTargeted: isTargetedItem && isTargetedBatch,
+          hasRelation: isTargetedItem && isTargetedBatch,
+        };
+      }
+
+      return {
+        isTargeted: isTargetedBatch,
+        hasRelation: isTargetedBatch,
+      };
+    }
+    case 'duplicateOrderItem': {
+      const itemId = getByPathWithDefault(
+        '',
+        `orderItems.${getByPathWithDefault(0, 'data.itemPosition', cell)}.id`,
+        order
+      );
+      const batchPosition = getByPathWithDefault(0, 'data.batchPosition', cell);
+      const batches = getByPathWithDefault(
+        '',
+        `orderItems.${getByPathWithDefault(0, 'data.itemPosition', cell)}.batches`,
+        order
+      );
+      let foundPosition = -1;
+      for (let index = batches.length - 1; index > 0; index -= 1) {
+        const isTargetedBatch = state.targets.includes(`${BATCH}-${batches[index].id}`);
+        if (isTargetedBatch) {
+          foundPosition = index;
+          break;
+        }
+      }
+      const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${itemId}`);
+      return {
+        isTargeted: isTargetedItem && foundPosition >= batchPosition,
+        hasRelation: false,
       };
     }
     case 'itemSummary': {

@@ -13,13 +13,13 @@ export type CellRender = {
   // eslint-disable-next-line flowtype/space-after-type-colon
   type:
     | typeof ORDER
-    | 'duplicateOrder'
-    | 'duplicateOrderItem'
     | typeof ORDER_ITEM
     | typeof BATCH
-    | typeof SHIPMENT
-    | 'shipmentWithoutContainer'
     | typeof CONTAINER
+    | typeof SHIPMENT
+    | 'duplicateOrder'
+    | 'duplicateOrderItem'
+    | 'shipmentWithoutContainer'
     | 'itemSummary'
     | 'batchSummary'
     | 'containerSummary'

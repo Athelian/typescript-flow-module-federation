@@ -371,18 +371,17 @@ const cellRenderer = (
         </div>
       );
       break;
-    case 'duplicateOrderItem':
+    case 'duplicateOrderItem': {
       content = (
         <div
           style={{
             width: ORDER_ITEM_WIDTH - 20,
           }}
           className={ContentStyle}
-        >
-          {type}{' '}
-        </div>
+        />
       );
       break;
+    }
     default:
       content = <div className={ContentStyle}>{type} </div>;
   }
