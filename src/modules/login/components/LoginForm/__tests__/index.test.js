@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'unstated';
-import 'jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import { render, cleanup, fireEvent } from '@testing-library/react';
 import LanguageProvider from 'modules/language';
 import LoginForm from '../index';
