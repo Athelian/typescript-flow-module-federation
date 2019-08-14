@@ -194,7 +194,6 @@ export default function OrderFocus() {
               state,
               expandRows,
               setExpandRows,
-              queryOrderDetail,
               dispatch,
             });
             const rowCount = ordersData.length;
@@ -205,10 +204,19 @@ export default function OrderFocus() {
                 itemCount={rowCount}
                 innerElementType={innerElementType}
                 itemSize={() => 75}
-                onItemsRendered={({ visibleStopIndex }) => {
+                onItemsRendered={({ visibleStartIndex, visibleStopIndex }) => {
                   const isLastCell = visibleStopIndex === rowCount - 1;
                   if (hasMoreItems(data, 'orders') && isLastCell) {
                     loadMore({ fetchMore, data }, queryOrderVariables, 'orders');
+                  }
+                  for (let index = visibleStartIndex; index < visibleStopIndex; index += 1) {
+                    const [{ order }] = ordersData[index];
+                    const isLoadedData =
+                      getByPathWithDefault([], 'orderItems', order).length ===
+                      getByPathWithDefault(0, 'orderItemCount', order);
+                    if (!isLoadedData && getByPathWithDefault(0, 'orderItemCount', order) > 0) {
+                      queryOrderDetail(getByPathWithDefault(0, 'id', order));
+                    }
                   }
                 }}
                 height={window.innerHeight - 50}

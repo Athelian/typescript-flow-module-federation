@@ -7,25 +7,13 @@ import type { State } from './type.js.flow';
 import { orderCoordinates } from './helpers';
 
 const generateCells = memoize(
-  ({
-    order,
-    isExpand,
-    onExpand,
-    fetchOrder,
-  }: {
-    order: Object,
-    isExpand: boolean,
-    onExpand: Function,
-    fetchOrder: (orderId: string) => void,
-  }) => {
+  ({ order, isExpand, onExpand }: {| order: Object, isExpand: boolean, onExpand: Function |}) => {
     const isLoadedData =
       getByPathWithDefault([], 'orderItems', order).length ===
       getByPathWithDefault(0, 'orderItemCount', order);
     const onClick = () => {
       if (!isExpand) {
         onExpand(expandIds => [...expandIds, getByPathWithDefault('', 'id', order)]);
-        if (!isLoadedData && getByPathWithDefault('', 'id', order))
-          fetchOrder(getByPathWithDefault('', 'id', order));
       } else {
         onExpand(expandIds => expandIds.filter(id => id !== getByPathWithDefault('', 'id', order)));
       }
@@ -41,16 +29,14 @@ const generateListData = memoize(
     state,
     expandRows,
     setExpandRows,
-    queryOrderDetail,
     dispatch,
-  }: {
+  }: {|
     state: State,
     orders: Array<OrderPayload>,
     expandRows: Array<string>,
     setExpandRows: Function,
-    queryOrderDetail: Function,
     dispatch: Function,
-  }) => {
+  |}) => {
     const ordersData = orders.map(order =>
       state.order[getByPathWithDefault('', 'id', order)]
         ? {
@@ -109,7 +95,6 @@ const generateListData = memoize(
         order,
         isExpand,
         onExpand: setExpandRows,
-        fetchOrder: queryOrderDetail,
       });
       let counter = 0;
       let row = [];

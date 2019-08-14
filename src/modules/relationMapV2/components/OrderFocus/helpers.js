@@ -674,7 +674,7 @@ export const findLineColors = ({
       return {
         isTargeted: containerCount
           ? isTargetedAnyContainers && isTargetedAnyShipments
-          : isTargetedAnyShipments,
+          : isTargetedAnyShipments && isTargetedAnyBatches,
         hasRelation: isTargetedAnyShipments,
       };
     }
