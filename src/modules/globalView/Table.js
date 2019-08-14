@@ -136,8 +136,12 @@ const Cell = ({
       setFocused(false);
     }
   };
+  if (key === 'item.1.name') {
+    console.warn({ focusedId, key });
+  }
 
   const handleCellKeyDown = e => {
+    e.preventDefault();
     e.stopPropagation();
     switch (e.key) {
       case 'Enter': {
@@ -194,6 +198,7 @@ const Cell = ({
       }
       case 'Tab': {
         if (e.shiftKey) {
+          e.preventDefault();
           const newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
           focusNewCell(newKey);
         } else {
