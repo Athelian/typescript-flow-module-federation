@@ -136,9 +136,6 @@ const Cell = ({
       setFocused(false);
     }
   };
-  if (key === 'item.1.name') {
-    console.warn({ focusedId, key });
-  }
 
   const handleCellKeyDown = e => {
     e.preventDefault();
