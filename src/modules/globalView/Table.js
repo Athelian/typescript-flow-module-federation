@@ -127,62 +127,83 @@ const Cell = ({
     setFocused(false);
   };
 
-  const handleCellKeyDown = e => {
-    let newKey = '';
+  const focusNewCell = (cellKey: string) => {
+    if (inputRef && inputRef.current) {
+      inputRef.current.blur();
+    }
+    if (cellKey !== '') {
+      setFocusedId(cellKey);
+      setFocused(false);
+    }
+  };
 
+  const handleCellKeyDown = e => {
+    e.stopPropagation();
     switch (e.key) {
       case 'Enter': {
         setEditingId(key);
         break;
       }
       case 'ArrowUp': {
-        newKey = getByPathWithDefault('', `${start - 1}.${columnIndex}.key`, data);
-        setFocusedId(newKey);
-        setFocused(false);
+        const newKey = getByPathWithDefault('', `${start - 1}.${columnIndex}.key`, data);
+        focusNewCell(newKey);
         break;
       }
       case 'Tab': {
         if (e.shiftKey) {
-          newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
-          setFocusedId(newKey);
-          setFocused(false);
+          const newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
+          focusNewCell(newKey);
         } else {
-          newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
-          setFocusedId(newKey);
-          setFocused(false);
+          const newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
+          focusNewCell(newKey);
         }
         break;
       }
       case 'ArrowRight': {
-        newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
-        setFocusedId(newKey);
-        setFocused(false);
+        const newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
+        focusNewCell(newKey);
         break;
       }
       case 'ArrowDown': {
-        newKey = getByPathWithDefault('', `${start + lines}.${columnIndex}.key`, data);
-        setFocusedId(newKey);
-        setFocused(false);
+        const newKey = getByPathWithDefault('', `${start + lines}.${columnIndex}.key`, data);
+        focusNewCell(newKey);
         break;
       }
       case 'ArrowLeft': {
-        newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
-        setFocusedId(newKey);
-        setFocused(false);
+        const newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
+        focusNewCell(newKey);
         break;
       }
       default:
+        break;
     }
   };
 
   const handleInputKeyDown = e => {
     e.stopPropagation();
-    if (e.key === 'Enter' || e.key === 'Tab') {
-      if (inputRef && inputRef.current) {
-        inputRef.current.blur();
-        handleInputBlur();
-        setFocused(false);
+    switch (e.key) {
+      case 'Enter': {
+        if (e.shiftKey) {
+          const newKey = getByPathWithDefault('', `${start - 1}.${columnIndex}.key`, data);
+          focusNewCell(newKey);
+        } else {
+          const newKey = getByPathWithDefault('', `${start + lines}.${columnIndex}.key`, data);
+          focusNewCell(newKey);
+        }
+        break;
       }
+      case 'Tab': {
+        if (e.shiftKey) {
+          const newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
+          focusNewCell(newKey);
+        } else {
+          const newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
+          focusNewCell(newKey);
+        }
+        break;
+      }
+      default:
+        break;
     }
   };
 
