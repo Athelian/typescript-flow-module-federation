@@ -7,6 +7,7 @@ type OptionalProps = {
   width: string,
   height: string,
   onBlur: Function,
+  onKeyDown: Function,
 };
 
 type Props = OptionalProps & {
@@ -20,9 +21,10 @@ const defaultProps = {
   width: '100px',
   height: '50px',
   onBlur: () => {},
+  onKeyDown: () => {},
 };
 
-const TextInput = ({ name, value, width, height, inputRef, onBlur }: Props) => {
+const TextInput = ({ name, value, width, height, inputRef, onBlur, onKeyDown }: Props) => {
   return (
     <input
       className={InputStyle({ width, height })}
@@ -32,6 +34,7 @@ const TextInput = ({ name, value, width, height, inputRef, onBlur }: Props) => {
       defaultValue={value}
       align="left"
       onBlur={onBlur}
+      onKeyDown={onKeyDown}
     />
   );
 };
