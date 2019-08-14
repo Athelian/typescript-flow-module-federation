@@ -18,7 +18,7 @@ import type { State } from './type.js.flow';
 import { WrapperStyle, ListStyle, RowStyle } from './style';
 import SelectedEntity from '../SelectedEntity';
 import Header from '../Header';
-import Cell from '../Cell';
+import Row from '../Row';
 import cellRenderer from './cellRenderer';
 import generateListData from './generateListData';
 
@@ -216,7 +216,7 @@ export default function OrderFocus() {
                   uiContext.isSideBarExpanded ? window.innerWidth - 200 : window.innerWidth - 50
                 }
               >
-                {Cell}
+                {Row}
               </List>
             ) : (
               <Display>

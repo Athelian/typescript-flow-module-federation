@@ -18,7 +18,7 @@ type Props = {
     }>>,
 };
 
-const Cell = React.memo<Props>(({ index, style, data }: Props) => {
+const Row = React.memo<Props>(({ index, style, data }: Props) => {
   const cells = data[index];
   return (
     <div className={RowStyle} style={style}>
@@ -36,4 +36,4 @@ const Cell = React.memo<Props>(({ index, style, data }: Props) => {
   );
 });
 
-export default Cell;
+export default Row;

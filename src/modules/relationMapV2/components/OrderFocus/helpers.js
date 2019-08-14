@@ -402,15 +402,15 @@ export const findLineColors = ({
     case BATCH: {
       const batchId = getByPathWithDefault('', 'data.id', cell);
       const orderItems = getByPathWithDefault([], 'orderItems', order);
-      const findParentItem = orderItems.find(item =>
+      const foundParentItem = orderItems.find(item =>
         item.batches.map(batch => batch.id).includes(batchId)
       );
-      const batch = findParentItem.batches.find(item => item.id === batchId);
+      const batch = foundParentItem.batches.find(item => item.id === batchId);
       const isTargetedBatch = state.targets.includes(`${BATCH}-${batchId}`);
-      const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${findParentItem.id}`);
-      const isTargetContainer =
+      const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${foundParentItem.id}`);
+      const isTargetedContainer =
         batch.container && state.targets.includes(`${CONTAINER}-${batch.container.id}`);
-      const isTargetShipment =
+      const isTargetedShipment =
         batch.shipment && state.targets.includes(`${SHIPMENT}-${batch.shipment.id}`);
       if (position === 'before') {
         return {
@@ -420,7 +420,7 @@ export const findLineColors = ({
       }
 
       return {
-        isTargeted: isTargetedBatch && (isTargetContainer || isTargetShipment),
+        isTargeted: isTargetedBatch && (isTargetedContainer || isTargetedShipment),
         hasRelation: isTargetedBatch,
       };
     }
