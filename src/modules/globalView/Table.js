@@ -125,27 +125,27 @@ const Cell = ({
     let newKey = '';
     switch (e.key) {
       case 'ArrowUp': {
-        newKey = getByPathWithDefault('', `${rowIndex - 1}.${columnIndex}.key`, data);
+        newKey = getByPathWithDefault('', `${start - 1}.${columnIndex}.key`, data);
         break;
       }
       case 'Tab': {
         if (e.shiftKey) {
-          newKey = getByPathWithDefault('', `${rowIndex}.${columnIndex - 1}.key`, data);
+          newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
         } else {
-          newKey = getByPathWithDefault('', `${rowIndex}.${columnIndex + 1}.key`, data);
+          newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
         }
         break;
       }
       case 'ArrowRight': {
-        newKey = getByPathWithDefault('', `${rowIndex}.${columnIndex + 1}.key`, data);
+        newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
         break;
       }
       case 'ArrowDown': {
-        newKey = getByPathWithDefault('', `${rowIndex + lines}.${columnIndex}.key`, data);
+        newKey = getByPathWithDefault('', `${start + lines}.${columnIndex}.key`, data);
         break;
       }
       case 'ArrowLeft': {
-        newKey = getByPathWithDefault('', `${rowIndex}.${columnIndex - 1}.key`, data);
+        newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
         break;
       }
       default:
