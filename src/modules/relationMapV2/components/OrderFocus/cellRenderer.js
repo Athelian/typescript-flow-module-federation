@@ -20,6 +20,7 @@ import {
 } from 'modules/relationMapV2/constants';
 import type { CellRender, State } from './type.js.flow';
 import RelationLine from '../RelationLine';
+import { useClickPreventionOnDoubleClick } from './hooks';
 import { ContentStyle } from './style';
 import {
   getColorByEntity,
@@ -32,6 +33,203 @@ import {
   ShipmentCard,
   ContainerCard,
 } from './helpers';
+
+function OrderCell({ data, state, dispatch }: { data: Object, state: State, dispatch: Function }) {
+  const onTargetTree = () => {
+    const targets = [`${ORDER}-${getByPathWithDefault('', 'id', data)}`];
+    const orderItems = getByPathWithDefault([], 'orderItems', data);
+    orderItems.forEach(item => {
+      targets.push(`${ORDER_ITEM}-${getByPathWithDefault('', 'id', item)}`);
+      const batches = getByPathWithDefault([], 'batches', item);
+      batches.forEach(batch => {
+        targets.push(`${BATCH}-${getByPathWithDefault('', 'id', batch)}`);
+        if (batch.container) {
+          targets.push(`${CONTAINER}-${getByPathWithDefault('', 'container.id', batch)}`);
+        }
+        if (batch.shipment) {
+          targets.push(`${SHIPMENT}-${getByPathWithDefault('', 'shipment.id', batch)}`);
+        }
+      });
+    });
+    dispatch({
+      type: 'TARGET_TREE',
+      payload: {
+        targets,
+      },
+    });
+  };
+  const onTarget = () => {
+    dispatch({
+      type: 'TARGET',
+      payload: {
+        entity: `${ORDER}-${getByPathWithDefault('', 'id', data)}`,
+      },
+    });
+  };
+  const [handleClick, handleDoubleClick] = useClickPreventionOnDoubleClick(onTarget, onTargetTree);
+  return (
+    <div className={ContentStyle}>
+      <BaseCard
+        icon="ORDER"
+        color="ORDER"
+        isArchived={getByPathWithDefault(false, 'archived', data)}
+        selected={state.targets.includes(`${ORDER}-${getByPathWithDefault('', 'id', data)}`)}
+        selectable
+        onDoubleClick={handleDoubleClick}
+        onClick={handleClick}
+      >
+        <OrderCard>{getByPathWithDefault('', 'poNo', data)}</OrderCard>
+      </BaseCard>
+    </div>
+  );
+}
+
+function OrderItemCell({
+  data,
+  state,
+  dispatch,
+}: {
+  data: Object,
+  state: State,
+  dispatch: Function,
+}) {
+  const onTargetTree = () => {
+    const targets = [];
+    targets.push(`${ORDER_ITEM}-${getByPathWithDefault('', 'id', data)}`);
+    const batches = getByPathWithDefault([], 'batches', data);
+    batches.forEach(batch => {
+      targets.push(`${BATCH}-${getByPathWithDefault('', 'id', batch)}`);
+      if (batch.container) {
+        targets.push(`${CONTAINER}-${getByPathWithDefault('', 'container.id', batch)}`);
+      }
+      if (batch.shipment) {
+        targets.push(`${SHIPMENT}-${getByPathWithDefault('', 'shipment.id', batch)}`);
+      }
+    });
+    dispatch({
+      type: 'TARGET_TREE',
+      payload: {
+        targets,
+      },
+    });
+  };
+  const onTarget = () => {
+    dispatch({
+      type: 'TARGET',
+      payload: {
+        entity: `${ORDER_ITEM}-${getByPathWithDefault('', 'id', data)}`,
+      },
+    });
+  };
+  // NOTE: try to test the click and double click without timeout
+  // const [handleClick, handleDoubleClick] = useClickPreventionOnDoubleClick(onTarget, onTargetTree);
+  return (
+    <div className={ContentStyle}>
+      <BaseCard
+        icon="ORDER_ITEM"
+        color="ORDER_ITEM"
+        isArchived={getByPathWithDefault(false, 'archived', data)}
+        selected={state.targets.includes(`${ORDER_ITEM}-${getByPathWithDefault('', 'id', data)}`)}
+        selectable
+        onDoubleClick={onTargetTree}
+        onClick={onTarget}
+      >
+        <ItemCard>{getByPathWithDefault('', 'no', data)}</ItemCard>
+      </BaseCard>
+    </div>
+  );
+}
+
+function BatchCell({ data, state, dispatch }: { data: Object, state: State, dispatch: Function }) {
+  const onTargetTree = () => {
+    const targets = [];
+    targets.push(`${BATCH}-${getByPathWithDefault('', 'id', data)}`);
+    if (data.container) {
+      targets.push(`${CONTAINER}-${getByPathWithDefault('', 'container.id', data)}`);
+    }
+    if (data.shipment) {
+      targets.push(`${SHIPMENT}-${getByPathWithDefault('', 'shipment.id', data)}`);
+    }
+    dispatch({
+      type: 'TARGET_TREE',
+      payload: {
+        targets,
+      },
+    });
+  };
+  const onTarget = () => {
+    dispatch({
+      type: 'TARGET',
+      payload: {
+        entity: `${BATCH}-${getByPathWithDefault('', 'id', data)}`,
+      },
+    });
+  };
+  const [handleClick, handleDoubleClick] = useClickPreventionOnDoubleClick(onTarget, onTargetTree);
+  return (
+    <div className={ContentStyle}>
+      <BaseCard
+        icon="BATCH"
+        color="BATCH"
+        isArchived={getByPathWithDefault(false, 'archived', data)}
+        selected={state.targets.includes(`${BATCH}-${getByPathWithDefault('', 'id', data)}`)}
+        selectable
+        onDoubleClick={handleDoubleClick}
+        onClick={handleClick}
+      >
+        <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
+      </BaseCard>
+    </div>
+  );
+}
+
+function ContainerCell({
+  data,
+  state,
+  dispatch,
+}: {
+  data: Object,
+  state: State,
+  dispatch: Function,
+}) {
+  const onTargetTree = () => {
+    const targets = [];
+    targets.push(`${CONTAINER}-${getByPathWithDefault('', 'id', data)}`);
+    if (data.relatedBatch && data.relatedBatch.shipment) {
+      targets.push(`${SHIPMENT}-${getByPathWithDefault('', 'relatedBatch.shipment.id', data)}`);
+    }
+    dispatch({
+      type: 'TARGET_TREE',
+      payload: {
+        targets,
+      },
+    });
+  };
+  const onTarget = () => {
+    dispatch({
+      type: 'TARGET',
+      payload: {
+        entity: `${CONTAINER}-${getByPathWithDefault('', 'id', data)}`,
+      },
+    });
+  };
+  const [handleClick, handleDoubleClick] = useClickPreventionOnDoubleClick(onTarget, onTargetTree);
+  return (
+    <div className={ContentStyle}>
+      <BaseCard
+        icon="CONTAINER"
+        color="CONTAINER"
+        isArchived={getByPathWithDefault(false, 'archived', data)}
+        selected={state.targets.includes(`${CONTAINER}-${getByPathWithDefault('', 'id', data)}`)}
+        selectable
+        onDoubleClick={handleDoubleClick}
+        onClick={handleClick}
+      >
+        <ContainerCard>{getByPathWithDefault('', 'no', data)}</ContainerCard>
+      </BaseCard>
+    </div>
+  );
+}
 
 const cellRenderer = (
   cell: ?CellRender,
@@ -81,77 +279,18 @@ const cellRenderer = (
       );
       break;
     }
-    case ORDER:
-      content = (
-        <div className={ContentStyle}>
-          <BaseCard
-            icon="ORDER"
-            color="ORDER"
-            isArchived={getByPathWithDefault(false, 'archived', data)}
-            selected={state.targets.includes(`${ORDER}-${getByPathWithDefault('', 'id', data)}`)}
-            selectable
-            onClick={() =>
-              dispatch({
-                type: 'TARGET',
-                payload: {
-                  entity: `${ORDER}-${getByPathWithDefault('', 'id', data)}`,
-                },
-              })
-            }
-          >
-            <OrderCard>{getByPathWithDefault('', 'poNo', data)}</OrderCard>
-          </BaseCard>
-        </div>
-      );
+    case ORDER: {
+      content = <OrderCell data={data} state={state} dispatch={dispatch} />;
       break;
-    case ORDER_ITEM:
-      content = (
-        <div className={ContentStyle}>
-          <BaseCard
-            icon="ORDER_ITEM"
-            color="ORDER_ITEM"
-            isArchived={getByPathWithDefault(false, 'archived', data)}
-            selected={state.targets.includes(
-              `${ORDER_ITEM}-${getByPathWithDefault('', 'id', data)}`
-            )}
-            selectable
-            onClick={() =>
-              dispatch({
-                type: 'TARGET',
-                payload: {
-                  entity: `${ORDER_ITEM}-${getByPathWithDefault('', 'id', data)}`,
-                },
-              })
-            }
-          >
-            <ItemCard>{getByPathWithDefault('', 'no', data)}</ItemCard>
-          </BaseCard>
-        </div>
-      );
+    }
+    case ORDER_ITEM: {
+      content = <OrderItemCell data={data} state={state} dispatch={dispatch} />;
       break;
-    case BATCH:
-      content = (
-        <div className={ContentStyle}>
-          <BaseCard
-            icon="BATCH"
-            color="BATCH"
-            isArchived={getByPathWithDefault(false, 'archived', data)}
-            selected={state.targets.includes(`${BATCH}-${getByPathWithDefault('', 'id', data)}`)}
-            selectable
-            onClick={() =>
-              dispatch({
-                type: 'TARGET',
-                payload: {
-                  entity: `${BATCH}-${getByPathWithDefault('', 'id', data)}`,
-                },
-              })
-            }
-          >
-            <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
-          </BaseCard>
-        </div>
-      );
+    }
+    case BATCH: {
+      content = <BatchCell data={data} state={state} dispatch={dispatch} />;
       break;
+    }
     case SHIPMENT:
       content = (
         <div className={ContentStyle}>
@@ -193,29 +332,7 @@ const cellRenderer = (
       );
       break;
     case CONTAINER: {
-      content = (
-        <div className={ContentStyle}>
-          <BaseCard
-            icon="CONTAINER"
-            color="CONTAINER"
-            isArchived={getByPathWithDefault(false, 'archived', data)}
-            selected={state.targets.includes(
-              `${CONTAINER}-${getByPathWithDefault('', 'id', data)}`
-            )}
-            selectable
-            onClick={() =>
-              dispatch({
-                type: 'TARGET',
-                payload: {
-                  entity: `${CONTAINER}-${getByPathWithDefault('', 'id', data)}`,
-                },
-              })
-            }
-          >
-            <ContainerCard>{getByPathWithDefault('', 'no', data)}</ContainerCard>
-          </BaseCard>
-        </div>
-      );
+      content = <ContainerCell data={data} state={state} dispatch={dispatch} />;
       break;
     }
     case 'itemSummary': {
