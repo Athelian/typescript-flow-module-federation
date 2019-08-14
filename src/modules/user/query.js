@@ -12,7 +12,6 @@ export const userDetailQuery = gql`
           lastName
           language
           timezone
-          role
           organization {
             ... on Organization {
               id

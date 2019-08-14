@@ -11,7 +11,6 @@ export const staffCardFragment = gql`
   fragment staffCardFragment on User {
     id
     email
-    role
     roles {
       ... on Role {
         id

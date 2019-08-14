@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 // @flow
 import * as React from 'react';
 import { navigate } from '@reach/router';

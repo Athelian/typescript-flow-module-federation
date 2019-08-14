@@ -43,7 +43,7 @@ export default class TemplateFormContainer extends Container<FormState> {
   initDetailValues = (values: Object) => {
     const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
     this.setState(parsedValues);
-    this.originalValues = Object.assign({}, parsedValues);
+    this.originalValues = { ...parsedValues };
   };
 
   hasSelectField = (selectedField: string) => this.state.fields.includes(selectedField);

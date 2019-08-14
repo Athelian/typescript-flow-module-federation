@@ -37,6 +37,6 @@ export default class ChangePasswordContainer extends Container<FormState> {
   initDetailValues = (values: Object) => {
     const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);
-    this.originalValues = Object.assign({}, parsedValues);
+    this.originalValues = { ...parsedValues };
   };
 }

@@ -18,7 +18,7 @@ export function calculateOrderTotalVolume(orderItems: Array<string>, editData: O
 
 export function calculateShipmentTotalBatchQuantity(shipmentId: string, editData: Object) {
   const allBatches = (Object.entries(editData.batches || {}): Array<any>).filter(
-    ([, batch]) => batch.shipment === shipmentId
+    ([, batch]) => batch.mainShipment === shipmentId
   );
   const reducer = (accumulator, currentValue) => accumulator + currentValue;
   return allBatches.length > 0
@@ -31,7 +31,7 @@ export function calculateShipmentTotalBatchQuantity(shipmentId: string, editData
 
 export function calculateShipmentTotalVolume(shipmentId: string, editData: Object) {
   const allBatches = (Object.entries(editData.batches || {}): Array<any>).filter(
-    ([, batch]) => batch.shipment === shipmentId
+    ([, batch]) => batch.mainShipment === shipmentId
   );
 
   const shipmentTotalBatchQuantity = allBatches.reduce((total, [, batch]) => {

@@ -19,12 +19,6 @@ type State = {
 export default class Layout extends React.Component<Props, State> {
   state: State = { hasError: false };
 
-  onReportError = () => {
-    if (Sentry.lastEventId() && !isDevEnvironment) {
-      Sentry.showReportDialog();
-    }
-  };
-
   static getDerivedStateFromError(error: Object) {
     if (!isDevEnvironment) {
       Sentry.captureException(error);
@@ -38,6 +32,12 @@ export default class Layout extends React.Component<Props, State> {
       Sentry.captureException(error);
     }
   }
+
+  onReportError = () => {
+    if (Sentry.lastEventId() && !isDevEnvironment) {
+      Sentry.showReportDialog();
+    }
+  };
 
   render() {
     const { isSideBarExpanded, children } = this.props;

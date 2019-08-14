@@ -682,7 +682,7 @@ export function getExportColumns(
     if (isExpandRow(column)) {
       return [
         column.messageId ? intl.formatMessage({ id: column.messageId }) : column.name,
-        column.type === 'metric'
+        column.type === 'metric' || (column.meta && column.meta.type === 'metric')
           ? intl.formatMessage({ id: 'modules.RelationMaps.filter.metric' })
           : intl.formatMessage({ id: 'modules.RelationMaps.filter.currency' }),
       ];

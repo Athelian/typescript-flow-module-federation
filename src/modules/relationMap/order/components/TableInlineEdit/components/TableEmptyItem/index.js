@@ -25,7 +25,6 @@ function TableEmptyItem({ fields, rowNo, columnNo }: Props) {
           key={`${name}-${type || id || ''}`}
           className={EmptyItemStyle}
           id={`input-${rowNo}-${fieldCounter + columnNo + 1}`}
-          role="button"
           disabled
         />
       ))}

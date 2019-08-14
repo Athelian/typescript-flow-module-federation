@@ -38,7 +38,7 @@ export default class MaskContainer extends Container<FormState> {
   initDetailValues = (values: Object) => {
     const parsedValues: Object = cleanUpData(values);
     this.setState(parsedValues);
-    this.originalValues = Object.assign({}, parsedValues);
+    this.originalValues = { ...parsedValues };
   };
 
   setFieldArrayValue = (path: string, value: any) => {

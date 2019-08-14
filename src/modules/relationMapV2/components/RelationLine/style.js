@@ -42,13 +42,14 @@ export const RelationLineVerticalStyle = (isTargeted: boolean) => css`
   width: calc(100%);
   min-width: 10px;
   height: 40px;
+  margin-left: 2px;
 
   &::after {
     content: '';
     position: absolute;
     left: 50%;
     bottom: 15px;
-    top: -40px;
+    top: -50px;
     border-right: 3px solid ${borderBackground(isTargeted)};
   }
 `;

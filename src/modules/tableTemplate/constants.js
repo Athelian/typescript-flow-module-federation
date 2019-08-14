@@ -543,6 +543,7 @@ export const orderColumnFields = [
     },
     meta: {
       expandRow: true,
+      type: 'currency',
       renderValue: (values: Object, editData: Object) => {
         const { amount, currency } = calculateOrderTotalPrice(values, editData);
         return <FormattedNumber value={amount} suffix={currency} />;
@@ -576,6 +577,7 @@ export const orderColumnFields = [
     },
     meta: {
       expandRow: true,
+      type: 'metric',
       renderValue: (values: Object, editData: Object) => {
         const { orderItems = [] } = values;
         if (orderItems.length === 0) {
@@ -746,6 +748,7 @@ export const orderItemColumnFields = [
     },
     meta: {
       expandRow: true,
+      type: 'currency',
       renderValue: (values: Object, editData: Object) => {
         const { amount, currency } = calculateOrderItemTotalPrice(values.id, editData);
         return <FormattedNumber value={amount} suffix={currency} />;
@@ -1010,6 +1013,7 @@ export const batchColumnFields = [
     },
     meta: {
       expandRow: true,
+      type: 'currency',
       renderValue: (values: Object, editData: Object) => {
         const { amount, currency } = calculateBatchTotalPrice(values.id, editData);
         return <FormattedNumber value={amount} suffix={currency} />;
@@ -1397,6 +1401,7 @@ export const containerColumnFields = [
     },
     meta: {
       expandRow: true,
+      type: 'metric',
       renderValue: (values: Object, editData: Object) => {
         const { id: containerId } = values;
         const container = editData.containers[containerId];
@@ -1433,6 +1438,7 @@ export const containerColumnFields = [
     },
     meta: {
       expandRow: true,
+      type: 'metric',
       renderValue: (values: Object, editData: Object) => {
         const { id: containerId } = values;
         const container = editData.containers[containerId];
@@ -1464,6 +1470,7 @@ export const containerColumnFields = [
     },
     meta: {
       expandRow: true,
+      type: 'currency',
       renderValue: (values: Object, editData: Object) => {
         const { id: containerId } = values;
         const { total, allCurrencies } = calculateContainerTotalPrice(containerId, editData);
@@ -1682,6 +1689,7 @@ export const shipmentColumnFields = [
     },
     meta: {
       expandRow: true,
+      type: 'metric',
       renderValue: (values: Object, editData: Object) => {
         const { id: shipmentId } = values;
         const shipmentTotalVolume = calculateShipmentTotalVolume(shipmentId, editData);
@@ -1750,6 +1758,7 @@ export const shipmentColumnFields = [
     },
     meta: {
       expandRow: true,
+      type: 'currency',
       renderValue: (values: Object, editData: Object) => {
         const { id: shipmentId } = values;
         const { total, allCurrencies } = calculateShipmentTotalPrice(shipmentId, editData);

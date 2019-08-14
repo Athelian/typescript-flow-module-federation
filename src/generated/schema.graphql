@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Aug 08 2019 10:06:01 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Aug 14 2019 11:44:37 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26727,8 +26727,18 @@ input BatchFilterInput {
 
 union BatchPayload = Batch | BadRequest | Forbidden | NotFound
 
-type BatchPayloadPagination {
+type BatchPayloadPaginatedList implements Paginated {
   nodes: [BatchPayload!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+type BatchPayloadPaginatedSearch implements Paginated {
+  nodes: [BatchPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -27011,8 +27021,9 @@ enum ContainerOption {
 
 union ContainerPayload = Container | BadRequest | Forbidden | NotFound
 
-type ContainerPayloadPagination {
+type ContainerPayloadPaginatedSearch implements Paginated {
   nodes: [ContainerPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -28396,6 +28407,11 @@ type EntitiesMany {
   warehouses: [WarehousePayload]
 }
 
+type EntityHit {
+  field: String
+  entity: EntityPayload!
+}
+
 input EntityInput {
   productId: ID
   productProviderId: ID
@@ -28413,30 +28429,6 @@ union EntityPayload = Product | ProductProvider | ProductProviderPackage | Order
 
 type EntityValue {
   entity: EntityPayload
-}
-
-union Entry = Event | Comment | BadRequest | Forbidden | NotFound
-
-type EntryPagination {
-  nodes: [Entry!]!
-  page: Int!
-  perPage: Int!
-  totalPage: Int!
-  count: Int!
-  totalCount: Int!
-}
-
-type Event implements Model & Owned {
-  entity: EntityPayload!
-  logs: [Log!]!
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  createdBy: UserPayload
-  updatedBy: UserPayload
-  deletedBy: UserPayload
-  ownedBy: OrganizationPayload!
 }
 
 type Export {
@@ -28604,8 +28596,9 @@ input FileInput {
 
 union FilePayload = File | BadRequest | Forbidden | NotFound
 
-type FilePayloadPagination {
+type FilePayloadPaginatedSearch implements Paginated {
   nodes: [FilePayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -28686,6 +28679,11 @@ type Forbidden {
   reason: String
 }
 
+type Hit {
+  score: Float!
+  entityHits: [EntityHit!]!
+}
+
 type Import {
   id: ID!
 }
@@ -28762,7 +28760,7 @@ type IntegrationConfiguration implements Model & Owned {
   automated: Boolean!
   interval: Duration!
   key: String
-  integrationLinks(page: Int! = 1, perPage: Int! = 10): IntegrationLinkPayloadPagination!
+  integrationLinks(page: Int! = 1, perPage: Int! = 10): IntegrationLinkPayloadPaginatedList!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -28791,8 +28789,9 @@ input IntegrationConfigurationFilterInput {
 
 union IntegrationConfigurationPayload = IntegrationConfiguration | BadRequest | Forbidden | NotFound
 
-type IntegrationConfigurationPayloadPagination {
+type IntegrationConfigurationPayloadPaginatedSearch implements Paginated {
   nodes: [IntegrationConfigurationPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -28858,8 +28857,18 @@ input IntegrationLinkFilterInput {
 
 union IntegrationLinkPayload = IntegrationLink | BadRequest | Forbidden | NotFound
 
-type IntegrationLinkPayloadPagination {
+type IntegrationLinkPayloadPaginatedList implements Paginated {
   nodes: [IntegrationLinkPayload!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+type IntegrationLinkPayloadPaginatedSearch implements Paginated {
+  nodes: [IntegrationLinkPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -28897,8 +28906,9 @@ input IntegrationLinkUpdateInput {
 
 union IntegrationPayload = Integration | BadRequest | Forbidden | NotFound
 
-type IntegrationPayloadPagination {
+type IntegrationPayloadPaginatedSearch implements Paginated {
   nodes: [IntegrationPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -29504,13 +29514,6 @@ enum LoadType {
   LCL
 }
 
-type Log {
-  id: ID!
-  entity: EntityPayload!
-  translationKey: String!
-  parameters: [Parameter!]!
-}
-
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -29571,8 +29574,9 @@ input MaskEditFilterInput {
 
 union MaskEditPayload = MaskEdit | BadRequest | Forbidden | NotFound
 
-type MaskEditPayloadPagination {
+type MaskEditPayloadPaginatedSearch implements Paginated {
   nodes: [MaskEditPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -29608,8 +29612,9 @@ input MaskFilterInput {
 
 union MaskPayload = Mask | BadRequest | Forbidden | NotFound
 
-type MaskPayloadPagination {
+type MaskPayloadPaginatedSearch implements Paginated {
   nodes: [MaskPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -29665,20 +29670,20 @@ type Milestone implements Model & Owned & Sortable {
   entitiesRelatedCount: MilestoneEntitiesCount!
   taskCount: TaskCount!
   tasks: [TaskPayload!]!
-  products(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPayloadPagination!
-  productsRelated(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPayloadPagination!
-  productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPayloadPagination!
-  productProvidersRelated(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPayloadPagination!
-  orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPagination!
-  ordersRelated(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPagination!
-  orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPagination!
-  orderItemsRelated(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPagination!
-  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPagination!
-  batchesRelated(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPagination!
-  shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPagination!
-  shipmentsRelated(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPagination!
-  containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPagination!
-  containersRelated(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPagination!
+  products(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPayloadPaginatedSearch!
+  productsRelated(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPayloadPaginatedSearch!
+  productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPayloadPaginatedSearch!
+  productProvidersRelated(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPayloadPaginatedSearch!
+  orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPaginatedSearch!
+  ordersRelated(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPaginatedSearch!
+  orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPaginatedSearch!
+  orderItemsRelated(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPaginatedSearch!
+  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPaginatedSearch!
+  batchesRelated(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPaginatedSearch!
+  shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPaginatedSearch!
+  shipmentsRelated(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPaginatedSearch!
+  containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPaginatedSearch!
+  containersRelated(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPaginatedSearch!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -29870,7 +29875,7 @@ type Notification {
 
 union NotificationPayload = Notification | BadRequest | Forbidden | NotFound
 
-type NotificationPayloadPagination {
+type NotificationPayloadPaginatedList implements Paginated {
   nodes: [NotificationPayload!]!
   page: Int!
   perPage: Int!
@@ -30261,8 +30266,9 @@ input OrderItemFilterInput {
 
 union OrderItemPayload = OrderItem | BadRequest | Forbidden | NotFound
 
-type OrderItemPayloadPagination {
+type OrderItemPayloadPaginatedSearch implements Paginated {
   nodes: [OrderItemPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -30330,8 +30336,9 @@ input OrderOrderItemUpdateInput {
 
 union OrderPayload = Order | BadRequest | Forbidden | NotFound
 
-type OrderPayloadPagination {
+type OrderPayloadPaginatedSearch implements Paginated {
   nodes: [OrderPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -30389,13 +30396,13 @@ type Organization implements Model {
   avatar: FilePayload
   disabled: Boolean!
   dummy: Boolean!
-  users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPagination!
+  users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPaginatedSearch!
 
   """
   Resolving the current partnership of this organization from user's organization
   """
   partner: PartnerPayload
-  partners(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnerPayloadPagination!
+  partners(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnerPayloadPaginatedSearch!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -30437,9 +30444,12 @@ interface Package {
   packageCapacity: Float
 }
 
-type Parameter {
-  key: String!
-  value: Value
+interface Paginated {
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
 }
 
 type Partner implements Model {
@@ -30470,8 +30480,9 @@ input PartnerFilterInput {
 
 union PartnerPayload = Partner | BadRequest | Forbidden | NotFound
 
-type PartnerPayloadPagination {
+type PartnerPayloadPaginatedSearch implements Paginated {
   nodes: [PartnerPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -30504,8 +30515,9 @@ type Partnership implements Model {
 
 union PartnershipPayload = Partnership | BadRequest | Forbidden | NotFound
 
-type PartnershipPayloadPagination {
+type PartnershipPayloadPaginatedSearch implements Paginated {
   nodes: [PartnershipPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -30559,11 +30571,11 @@ type Product implements Model & Owned & Tagged & Documented & Memorizable & Cust
   productProviders: [ProductProviderPayload!]!
   timeline: Timeline!
   todo: Todo!
-  orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPagination!
-  orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPagination!
-  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPagination!
-  shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPagination!
-  containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPagination!
+  orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPaginatedSearch!
+  orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPaginatedSearch!
+  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPaginatedSearch!
+  shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPaginatedSearch!
+  containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPaginatedSearch!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -30608,8 +30620,9 @@ input ProductFilterInput {
 
 union ProductPayload = Product | BadRequest | Forbidden | NotFound
 
-type ProductPayloadPagination {
+type ProductPayloadPaginatedSearch implements Paginated {
   nodes: [ProductPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -30647,7 +30660,7 @@ type ProductProvider implements Model & Owned & Sortable & Documented & Customiz
   packages: [ProductProviderPackagePayload!]!
   timeline: Timeline!
   todo: Todo!
-  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPagination!
+  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPaginatedSearch!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -30741,8 +30754,9 @@ input ProductProviderPackageUpdateInput {
 
 union ProductProviderPayload = ProductProvider | BadRequest | Forbidden | NotFound
 
-type ProductProviderPayloadPagination {
+type ProductProviderPayloadPaginatedSearch implements Paginated {
   nodes: [ProductProviderPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -30868,8 +30882,9 @@ input ProjectMilestoneUpdateInput {
 
 union ProjectPayload = Project | BadRequest | Forbidden | NotFound
 
-type ProjectPayloadPagination {
+type ProjectPayloadPaginatedSearch implements Paginated {
   nodes: [ProjectPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -30896,62 +30911,62 @@ type Query {
   viewer: Viewer!
   authenticated: Boolean!
   user(id: ID!): UserPayload!
-  users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPagination!
+  users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPaginatedSearch!
   partnership(id: ID!): PartnershipPayload!
-  partnerships(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnershipPayloadPagination!
+  partnerships(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnershipPayloadPaginatedSearch!
   product(id: ID!): ProductPayload!
-  products(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPayloadPagination!
+  products(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPayloadPaginatedSearch!
   productsByIDs(ids: [ID!]!): [ProductPayload!]!
   productExport(id: ID!, templateId: ID!): ExportPayload!
   productsExport(templateId: ID!, filterBy: ProductFilterInput, sortBy: ProductSortInput): ExportPayload!
   productsByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
   productProvider(id: ID!): ProductProviderPayload!
-  productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPayloadPagination!
+  productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPayloadPaginatedSearch!
   productProvidersByIDs(ids: [ID!]!): [ProductProviderPayload!]!
   order(id: ID!): OrderPayload!
-  orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPagination!
+  orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPaginatedSearch!
   ordersByIDs(ids: [ID!]!): [OrderPayload!]!
   orderExport(id: ID!, templateId: ID!): ExportPayload!
   ordersExport(templateId: ID!, filterBy: OrderFilterInput, sortBy: OrderSortInput): ExportPayload!
   ordersByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
   orderItem(id: ID!): OrderItemPayload!
-  orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPagination!
+  orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPaginatedSearch!
   orderItemsByIDs(ids: [ID!]!): [OrderItemPayload!]!
   batch(id: ID!): BatchPayload!
-  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPagination!
+  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPaginatedSearch!
   batchesByIDs(ids: [ID!]!): [BatchPayload!]!
   batchesTable(entities: [EntityInput!]!): [BatchPayload!]!
   shipment(id: ID!): ShipmentPayload!
-  shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPagination!
+  shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPaginatedSearch!
   shipmentsByIDs(ids: [ID!]!): [ShipmentPayload!]!
   shipmentExport(id: ID!, templateId: ID!): ExportPayload!
   shipmentsExport(templateId: ID!, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ExportPayload!
   shipmentsByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
   container(id: ID!): ContainerPayload!
-  containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPagination!
+  containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPaginatedSearch!
   containersByIDs(ids: [ID!]!): [ContainerPayload!]!
   containerExport(id: ID!, templateId: ID!): ExportPayload!
   containersExport(templateId: ID!, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ExportPayload!
   containersByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
   warehouse(id: ID!): WarehousePayload!
-  warehouses(page: Int! = 1, perPage: Int! = 10, filterBy: WarehouseFilterInput, sortBy: WarehouseSortInput): WarehousePayloadPagination!
+  warehouses(page: Int! = 1, perPage: Int! = 10, filterBy: WarehouseFilterInput, sortBy: WarehouseSortInput): WarehousePayloadPaginatedSearch!
   warehousesByIDs(ids: [ID!]!): [WarehousePayload!]!
   tag(id: ID!): TagPayload!
-  tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPayloadPagination!
+  tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPayloadPaginatedSearch!
   tagExport(id: ID!, templateId: ID!): ExportPayload!
   tagsExport(templateId: ID!, filterBy: TagFilterInput, sortBy: TagSortInput): ExportPayload!
   tagsByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
   task(id: ID!): TaskPayload!
-  tasks(page: Int! = 1, perPage: Int! = 10, filterBy: TaskFilterInput, sortBy: TaskSortInput): TaskPayloadPagination!
+  tasks(page: Int! = 1, perPage: Int! = 10, filterBy: TaskFilterInput, sortBy: TaskSortInput): TaskPayloadPaginatedSearch!
   tasksByIDs(ids: [ID!]!): [TaskPayload!]!
   taskExport(id: ID!, templateId: ID!): ExportPayload!
   tasksExport(templateId: ID!, filterBy: TaskFilterInput, sortBy: TaskSortInput): ExportPayload!
   tasksByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
   taskTemplate(id: ID!): TaskTemplatePayload!
-  taskTemplates(page: Int! = 1, perPage: Int! = 10, filterBy: TaskTemplateFilterInput, sortBy: TaskTemplateSortInput): TaskTemplatePayloadPagination!
+  taskTemplates(page: Int! = 1, perPage: Int! = 10, filterBy: TaskTemplateFilterInput, sortBy: TaskTemplateSortInput): TaskTemplatePayloadPaginatedSearch!
   taskTemplatesByIDs(ids: [ID!]!): [TaskTemplatePayload!]!
   project(id: ID!): ProjectPayload!
-  projects(page: Int! = 1, perPage: Int! = 10, filterBy: ProjectFilterInput, sortBy: ProjectSortInput): ProjectPayloadPagination!
+  projects(page: Int! = 1, perPage: Int! = 10, filterBy: ProjectFilterInput, sortBy: ProjectSortInput): ProjectPayloadPaginatedSearch!
   projectsByIDs(ids: [ID!]!): [ProjectPayload!]!
   projectExport(id: ID!, templateId: ID!): ExportPayload!
   projectsExport(templateId: ID!, filterBy: ProjectFilterInput, sortBy: ProjectSortInput): ExportPayload!
@@ -30961,25 +30976,25 @@ type Query {
   fieldDefinition(id: ID!): FieldDefinitionPayload!
   fieldDefinitions(entityType: CustomizableEntityType!): [FieldDefinitionPayload!]!
   mask(id: ID!): MaskPayload!
-  masks(page: Int! = 1, perPage: Int! = 10, filterBy: MaskFilterInput, sortBy: MaskSortInput): MaskPayloadPagination!
+  masks(page: Int! = 1, perPage: Int! = 10, filterBy: MaskFilterInput, sortBy: MaskSortInput): MaskPayloadPaginatedSearch!
   masksByIDs(ids: [ID!]!): [MaskPayload!]!
   maskEdit(id: ID!): MaskEditPayload!
-  maskEdits(page: Int! = 1, perPage: Int! = 10, filterBy: MaskEditFilterInput, sortBy: MaskEditSortInput): MaskEditPayloadPagination!
+  maskEdits(page: Int! = 1, perPage: Int! = 10, filterBy: MaskEditFilterInput, sortBy: MaskEditSortInput): MaskEditPayloadPaginatedSearch!
   maskEditsByIDs(ids: [ID!]!): [MaskEditPayload!]!
   integration(id: ID!): IntegrationPayload!
-  integrations(page: Int! = 1, perPage: Int! = 10, filterBy: IntegrationFilterInput, sortBy: IntegrationSortInput): IntegrationPayloadPagination!
+  integrations(page: Int! = 1, perPage: Int! = 10, filterBy: IntegrationFilterInput, sortBy: IntegrationSortInput): IntegrationPayloadPaginatedSearch!
   integrationConfiguration(id: ID!): IntegrationConfigurationPayload!
-  integrationConfigurations(page: Int! = 1, perPage: Int! = 10, filterBy: IntegrationConfigurationFilterInput, sortBy: IntegrationConfigurationSortInput): IntegrationConfigurationPayloadPagination!
+  integrationConfigurations(page: Int! = 1, perPage: Int! = 10, filterBy: IntegrationConfigurationFilterInput, sortBy: IntegrationConfigurationSortInput): IntegrationConfigurationPayloadPaginatedSearch!
   integrationLink(id: ID!): IntegrationLinkPayload!
-  integrationLinks(page: Int! = 1, perPage: Int! = 10, filterBy: IntegrationLinkFilterInput, sortBy: IntegrationLinkSortInput): IntegrationLinkPayloadPagination!
+  integrationLinks(page: Int! = 1, perPage: Int! = 10, filterBy: IntegrationLinkFilterInput, sortBy: IntegrationLinkSortInput): IntegrationLinkPayloadPaginatedSearch!
   file(id: ID!): FilePayload!
-  files(page: Int! = 1, perPage: Int! = 10, filterBy: FileFilterInput, sortBy: FileSortInput): FilePayloadPagination!
+  files(page: Int! = 1, perPage: Int! = 10, filterBy: FileFilterInput, sortBy: FileSortInput): FilePayloadPaginatedSearch!
   filesByIDs(ids: [ID!]!): [FilePayload!]!
   exportTemplates(filterBy: ExportTemplateFilterInput): [ExportTemplatePayload!]!
   exportExtensions: [ExportExtensionPayload!]!
   genericExport(extension: String!, columns: [String!]!, rows: [[String]!]!): ExportPayload!
   role(id: ID!): RolePayload!
-  roles(page: Int! = 1, perPage: Int! = 10): RolePayloadPagination!
+  roles(page: Int! = 1, perPage: Int! = 10): RolePayloadPaginatedList!
   permissions: [String!]!
   orderShipmentTable(entities: [EntityInput!]!): [EntityPayload!]!
 }
@@ -31040,7 +31055,7 @@ input RoleCreateInput {
 
 union RolePayload = Role | BadRequest | Forbidden | NotFound
 
-type RolePayloadPagination {
+type RolePayloadPaginatedList implements Paginated {
   nodes: [RolePayload!]!
   page: Int!
   perPage: Int!
@@ -86772,8 +86787,9 @@ input ShipmentFilterInput {
 
 union ShipmentPayload = Shipment | BadRequest | Forbidden | NotFound
 
-type ShipmentPayloadPagination {
+type ShipmentPayloadPaginatedSearch implements Paginated {
   nodes: [ShipmentPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -86938,8 +86954,9 @@ interface Tagged {
 
 union TagPayload = Tag | BadRequest | Forbidden | NotFound
 
-type TagPayloadPagination {
+type TagPayloadPaginatedSearch implements Paginated {
   nodes: [TagPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -87082,8 +87099,9 @@ input TaskFilterInput {
 
 union TaskPayload = Task | BadRequest | Forbidden | NotFound
 
-type TaskPayloadPagination {
+type TaskPayloadPaginatedSearch implements Paginated {
   nodes: [TaskPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -87155,8 +87173,9 @@ input TaskTemplateFilterInput {
 
 union TaskTemplatePayload = TaskTemplate | BadRequest | Forbidden | NotFound
 
-type TaskTemplatePayloadPagination {
+type TaskTemplatePayloadPaginatedSearch implements Paginated {
   nodes: [TaskTemplatePayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -87266,7 +87285,7 @@ input TaskUpdateWrapperInput {
 
 type Timeline {
   unreadCount: Int!
-  entries(page: Int! = 1, perPage: Int! = 10): EntryPagination!
+  entries(page: Int! = 1, perPage: Int! = 10): BatchPayloadPaginatedList!
 }
 
 type TimelineDate implements Model & Owned & Memorizable {
@@ -87403,8 +87422,8 @@ type User implements Model & Tagged & Memorizable {
   email: String!
   organization: OrganizationPayload
   superAdmin: Boolean!
-  role: String! @deprecated(reason: "Shouldn't be used anymore")
   roles: [RolePayload!]!
+  role: String! @deprecated(reason: "Shouldn't be used anymore")
   disabled: Boolean!
   firstName: String!
   lastName: String!
@@ -87429,15 +87448,15 @@ input UserFilterInput {
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
-  role: String
   organizationId: ID
   organizationIds: [ID!]
 }
 
 union UserPayload = User | BadRequest | Forbidden | NotFound
 
-type UserPayloadPagination {
+type UserPayloadPaginatedSearch implements Paginated {
   nodes: [UserPayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -87498,7 +87517,7 @@ type Viewer {
   user: UserPayload!
   permissions: [String!]!
   permissionsForOrganization(organizationId: ID!): [String!]!
-  notifications(page: Int! = 1, perPage: Int! = 10): NotificationPayloadPagination!
+  notifications(page: Int! = 1, perPage: Int! = 10): NotificationPayloadPaginatedList!
   notificationUnread: Int!
   notificationUnseen: Int!
   token: String
@@ -87595,8 +87614,9 @@ input WarehouseFilterInput {
 
 union WarehousePayload = Warehouse | BadRequest | Forbidden | NotFound
 
-type WarehousePayloadPagination {
+type WarehousePayloadPaginatedSearch implements Paginated {
   nodes: [WarehousePayload!]!
+  hits: [Hit!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
