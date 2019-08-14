@@ -192,7 +192,7 @@ const cellRenderer = (
         </div>
       );
       break;
-    case CONTAINER:
+    case CONTAINER: {
       content = (
         <div className={ContentStyle}>
           <BaseCard
@@ -217,6 +217,7 @@ const cellRenderer = (
         </div>
       );
       break;
+    }
     case 'itemSummary': {
       const orderItemIds = getByPathWithDefault([], 'data.orderItems', cell).map(item =>
         getByPathWithDefault('', 'id', item)
@@ -293,6 +294,17 @@ const cellRenderer = (
       const total = getByPathWithDefault(0, 'containerCount', data);
       const shipmentCount = getByPathWithDefault(0, 'shipmentCount', data);
       if (total) {
+        const containerIds = flatten(
+          getByPathWithDefault([], 'data.orderItems', cell).map(item =>
+            getByPathWithDefault([], 'batches', item).map(batch =>
+              getByPathWithDefault('', 'container.id', batch)
+            )
+          )
+        ).filter(Boolean);
+
+        const isTargetedAnyContainers = containerIds.some(containerId =>
+          state.targets.includes(`${CONTAINER}-${containerId}`)
+        );
         content = (
           <div className={ContentStyle} onClick={onClick} role="presentation">
             <BaseCard
@@ -305,6 +317,8 @@ const cellRenderer = (
                     }
                   : {}
               }
+              selected={!isExpand && isTargetedAnyContainers}
+              selectable
             >
               <ContainerCard>
                 Total: {getByPathWithDefault(0, 'containerCount', data)}
@@ -313,17 +327,32 @@ const cellRenderer = (
           </div>
         );
       } else if (shipmentCount) {
+        const shipmentIds = flatten(
+          getByPathWithDefault([], 'data.orderItems', cell).map(item =>
+            getByPathWithDefault([], 'batches', item).map(batch =>
+              getByPathWithDefault('', 'shipment.id', batch)
+            )
+          )
+        ).filter(Boolean);
+        const batchIds = flatten(
+          getByPathWithDefault([], 'data.orderItems', cell).map(item =>
+            getByPathWithDefault([], 'batches', item).map(batch =>
+              getByPathWithDefault('', 'id', batch)
+            )
+          )
+        ).filter(Boolean);
+
+        const isTargetedAnyShipments = shipmentIds.some(shipmentId =>
+          state.targets.includes(`${SHIPMENT}-${shipmentId}`)
+        );
+        const isTargetedAnyBatches = batchIds.some(batchId =>
+          state.targets.includes(`${BATCH}-${batchId}`)
+        );
         content = (
           <div style={{ width: CONTAINER_WIDTH - 20 }} className={ContentStyle}>
             <RelationLine
-              {...findLineColors({
-                position: 'center',
-                isExpand,
-                type,
-                state,
-                cell,
-                order,
-              })}
+              isTargeted={isTargetedAnyShipments && isTargetedAnyBatches}
+              hasRelation={isTargetedAnyShipments && isTargetedAnyBatches}
               type="HORIZONTAL"
             />
           </div>
@@ -336,6 +365,17 @@ const cellRenderer = (
     case 'shipmentSummary': {
       const total = getByPathWithDefault(0, 'shipmentCount', data);
       if (total) {
+        const shipmentIds = flatten(
+          getByPathWithDefault([], 'data.orderItems', cell).map(item =>
+            getByPathWithDefault([], 'batches', item).map(batch =>
+              getByPathWithDefault('', 'shipment.id', batch)
+            )
+          )
+        ).filter(Boolean);
+
+        const isTargetedAnyShipments = shipmentIds.some(shipmentId =>
+          state.targets.includes(`${SHIPMENT}-${shipmentId}`)
+        );
         content = (
           <div className={ContentStyle} onClick={onClick} role="presentation">
             <BaseCard
@@ -348,6 +388,8 @@ const cellRenderer = (
                     }
                   : {}
               }
+              selected={!isExpand && isTargetedAnyShipments}
+              selectable
             >
               <ShipmentCard>Total {getByPathWithDefault(0, 'shipmentCount', data)}</ShipmentCard>
             </BaseCard>
@@ -366,9 +408,7 @@ const cellRenderer = (
             width: ORDER_WIDTH - 20,
           }}
           className={ContentStyle}
-        >
-          {type}{' '}
-        </div>
+        />
       );
       break;
     case 'duplicateOrderItem': {

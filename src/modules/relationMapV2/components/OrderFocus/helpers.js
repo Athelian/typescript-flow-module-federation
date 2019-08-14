@@ -51,29 +51,37 @@ function orderCell({
   if (isTheLastItemWithFirstBatch || isNotTheLastItem)
     return {
       type: 'duplicateOrder',
-      data: null,
+      data: {
+        order,
+        itemPosition,
+      },
       afterConnector: 'VERTICAL',
     };
   return null;
 }
 
 function containerCell(batch: BatchPayload): ?CellRender {
-  if (getByPathWithDefault(null, CONTAINER, batch)) {
+  if (getByPathWithDefault(null, 'container', batch)) {
     return {
       beforeConnector: 'HORIZONTAL',
       type: CONTAINER,
-      data: getByPathWithDefault(null, CONTAINER, batch),
+      data: {
+        ...getByPathWithDefault({}, 'container', batch),
+        relatedBatch: batch,
+      },
       afterConnector: 'HORIZONTAL',
     };
   }
   if (
-    getByPathWithDefault(null, SHIPMENT, batch) &&
-    !getByPathWithDefault(null, CONTAINER, batch)
+    getByPathWithDefault(null, 'shipment', batch) &&
+    !getByPathWithDefault(null, 'container', batch)
   ) {
     return {
       beforeConnector: 'HORIZONTAL',
       type: 'shipmentWithoutContainer',
-      data: null,
+      data: {
+        relatedBatch: batch,
+      },
       afterConnector: 'HORIZONTAL',
     };
   }
@@ -149,10 +157,15 @@ export const orderCoordinates = memoize(
         type: 'batchSummary',
         data: order,
       },
-      {
-        type: 'containerSummary',
-        data: order,
-      },
+      containerCount
+        ? {
+            type: 'containerSummary',
+            data: order,
+          }
+        : {
+            type: 'containerSummary',
+            data: null,
+          },
       {
         type: 'shipmentSummary',
         data: order,
@@ -235,7 +248,10 @@ export const orderCoordinates = memoize(
                   ? {
                       beforeConnector: 'HORIZONTAL',
                       type: SHIPMENT,
-                      data: batch.shipment,
+                      data: {
+                        ...batch.shipment,
+                        relatedBatch: batch,
+                      },
                     }
                   : null,
               ]
@@ -253,7 +269,10 @@ export const orderCoordinates = memoize(
                   }
                 : {
                     type: 'duplicateOrder',
-                    data: null,
+                    data: {
+                      order,
+                      itemPosition: index,
+                    },
                     afterConnector: 'VERTICAL',
                   },
               {
@@ -336,9 +355,8 @@ export const findLineColors = ({
   cell: CellRender,
   order?: OrderPayload,
 |}) => {
-  // TODO: apply the colors for lines
   switch (type) {
-    case 'Order': {
+    case ORDER: {
       const orderId = getByPathWithDefault('', 'data.id', cell);
       const orderItemIds = flatten(
         getByPathWithDefault([], 'data.orderItems', cell).map(item =>
@@ -355,7 +373,7 @@ export const findLineColors = ({
         hasRelation: isTargetedAnyItems,
       };
     }
-    case 'OrderItem': {
+    case ORDER_ITEM: {
       const orderId = getByPathWithDefault('', 'id', order);
       const itemId = getByPathWithDefault('', 'data.id', cell);
       const batchIds = flatten(
@@ -381,14 +399,19 @@ export const findLineColors = ({
         hasRelation: isTargetedAnyBatches,
       };
     }
-    case 'Batch': {
+    case BATCH: {
       const batchId = getByPathWithDefault('', 'data.id', cell);
       const orderItems = getByPathWithDefault([], 'orderItems', order);
       const findParentItem = orderItems.find(item =>
         item.batches.map(batch => batch.id).includes(batchId)
       );
+      const batch = findParentItem.batches.find(item => item.id === batchId);
       const isTargetedBatch = state.targets.includes(`${BATCH}-${batchId}`);
       const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${findParentItem.id}`);
+      const isTargetContainer =
+        batch.container && state.targets.includes(`${CONTAINER}-${batch.container.id}`);
+      const isTargetShipment =
+        batch.shipment && state.targets.includes(`${SHIPMENT}-${batch.shipment.id}`);
       if (position === 'before') {
         return {
           isTargeted: isTargetedItem && isTargetedBatch,
@@ -397,8 +420,70 @@ export const findLineColors = ({
       }
 
       return {
-        isTargeted: isTargetedBatch,
+        isTargeted: isTargetedBatch && (isTargetContainer || isTargetShipment),
         hasRelation: isTargetedBatch,
+      };
+    }
+    case CONTAINER: {
+      const containerId = getByPathWithDefault('', 'data.id', cell);
+      const isTargetedContainer = state.targets.includes(`${CONTAINER}-${containerId}`);
+      const isTargetedBatch = state.targets.includes(
+        `${BATCH}-${getByPathWithDefault('', 'data.relatedBatch.id', cell)}`
+      );
+      const isTargetedShipment = state.targets.includes(
+        `${SHIPMENT}-${getByPathWithDefault('', 'data.relatedBatch.shipment.id', cell)}`
+      );
+
+      if (position === 'before') {
+        return {
+          isTargeted: isTargetedContainer && isTargetedBatch,
+          hasRelation: isTargetedContainer && isTargetedBatch,
+        };
+      }
+      return {
+        isTargeted: isTargetedContainer && isTargetedShipment,
+        hasRelation: isTargetedContainer && isTargetedShipment,
+      };
+    }
+    case SHIPMENT: {
+      const shipmentId = getByPathWithDefault('', 'data.id', cell);
+      const isTargetedShipment = state.targets.includes(`${SHIPMENT}-${shipmentId}`);
+      const isTargetedRelateEntity = getByPathWithDefault(null, 'data.relatedBatch.container', cell)
+        ? state.targets.includes(
+            `${CONTAINER}-${getByPathWithDefault('', 'data.relatedBatch.container.id', cell)}`
+          )
+        : state.targets.includes(
+            `${BATCH}-${getByPathWithDefault('', 'data.relatedBatch.id', cell)}`
+          );
+
+      if (position === 'before') {
+        return {
+          isTargeted: isTargetedShipment && isTargetedRelateEntity,
+          hasRelation: isTargetedShipment && isTargetedRelateEntity,
+        };
+      }
+      return {
+        isTargeted: false,
+        hasRelation: false,
+      };
+    }
+    case 'duplicateOrder': {
+      const itemPosition = getByPathWithDefault(0, 'data.itemPosition', cell);
+      const items = getByPathWithDefault('', 'orderItems', order);
+      let foundPosition = -1;
+      for (let index = items.length - 1; index > 0; index -= 1) {
+        const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${items[index].id}`);
+        if (isTargetedItem) {
+          foundPosition = index;
+          break;
+        }
+      }
+      const isTargetedOrder = state.targets.includes(
+        `${ORDER}-${getByPathWithDefault('', 'id', order)}`
+      );
+      return {
+        isTargeted: isTargetedOrder && foundPosition >= itemPosition,
+        hasRelation: false,
       };
     }
     case 'duplicateOrderItem': {
@@ -490,6 +575,27 @@ export const findLineColors = ({
       const isTargetedAnyBatches = batchIds.some(batchId =>
         state.targets.includes(`${BATCH}-${batchId}`)
       );
+      const containerCount = getByPathWithDefault(0, 'containerCount', order);
+      const containerIds = flatten(
+        getByPathWithDefault([], 'orderItems', order).map(item =>
+          getByPathWithDefault([], 'batches', item).map(batch =>
+            getByPathWithDefault('', 'container.id', batch)
+          )
+        )
+      );
+      const shipmentIds = flatten(
+        getByPathWithDefault([], 'orderItems', order).map(item =>
+          getByPathWithDefault([], 'batches', item).map(batch =>
+            getByPathWithDefault('', 'shipment.id', batch)
+          )
+        )
+      );
+      const isTargetedAnyShipments = shipmentIds.some(batchId =>
+        state.targets.includes(`${SHIPMENT}-${batchId}`)
+      );
+      const isTargetedAnyContainers = containerIds.some(containerId =>
+        state.targets.includes(`${CONTAINER}-${containerId}`)
+      );
       if (position === 'before') {
         return {
           isTargeted: isTargetedAnyItems && isTargetedAnyBatches,
@@ -497,8 +603,132 @@ export const findLineColors = ({
         };
       }
       return {
-        isTargeted: isTargetedAnyBatches,
-        hasRelation: isTargetedAnyBatches,
+        isTargeted: containerCount
+          ? isTargetedAnyBatches && isTargetedAnyContainers
+          : isTargetedAnyBatches && isTargetedAnyShipments,
+        hasRelation: containerCount
+          ? isTargetedAnyBatches && isTargetedAnyContainers
+          : isTargetedAnyBatches && isTargetedAnyShipments,
+      };
+    }
+    case 'shipmentWithoutContainer': {
+      const isTargetedBatch = state.targets.includes(
+        `${BATCH}-${getByPathWithDefault('', 'data.relatedBatch.id', cell)}`
+      );
+      const isTargetedShipment = state.targets.includes(
+        `${SHIPMENT}-${getByPathWithDefault('', 'data.relatedBatch.shipment.id', cell)}`
+      );
+      return {
+        isTargeted: isTargetedBatch && isTargetedShipment,
+        hasRelation: isTargetedBatch && isTargetedShipment,
+      };
+    }
+    case 'containerSummary': {
+      if (isExpand) {
+        return {
+          isTargeted: false,
+          hasRelation: false,
+        };
+      }
+      const containerCount = getByPathWithDefault(0, 'containerCount', order);
+      const batchIds = flatten(
+        getByPathWithDefault([], 'orderItems', order).map(item =>
+          getByPathWithDefault([], 'batches', item).map(batch =>
+            getByPathWithDefault('', 'id', batch)
+          )
+        )
+      );
+      const containerIds = flatten(
+        getByPathWithDefault([], 'orderItems', order).map(item =>
+          getByPathWithDefault([], 'batches', item).map(batch =>
+            getByPathWithDefault('', 'container.id', batch)
+          )
+        )
+      );
+      const shipmentIds = flatten(
+        getByPathWithDefault([], 'orderItems', order).map(item =>
+          getByPathWithDefault([], 'batches', item).map(batch =>
+            getByPathWithDefault('', 'shipment.id', batch)
+          )
+        )
+      );
+      const isTargetedAnyBatches = batchIds.some(batchId =>
+        state.targets.includes(`${BATCH}-${batchId}`)
+      );
+      const isTargetedAnyShipments = shipmentIds.some(batchId =>
+        state.targets.includes(`${SHIPMENT}-${batchId}`)
+      );
+      const isTargetedAnyContainers = containerIds.some(containerId =>
+        state.targets.includes(`${CONTAINER}-${containerId}`)
+      );
+      if (position === 'before') {
+        return {
+          isTargeted: containerCount
+            ? isTargetedAnyBatches && isTargetedAnyContainers
+            : isTargetedAnyBatches && isTargetedAnyShipments,
+          hasRelation: containerCount
+            ? isTargetedAnyBatches && isTargetedAnyContainers
+            : isTargetedAnyBatches && isTargetedAnyShipments,
+        };
+      }
+      return {
+        isTargeted: containerCount
+          ? isTargetedAnyContainers && isTargetedAnyShipments
+          : isTargetedAnyShipments,
+        hasRelation: isTargetedAnyShipments,
+      };
+    }
+    case 'shipmentSummary': {
+      if (isExpand) {
+        return {
+          isTargeted: false,
+          hasRelation: false,
+        };
+      }
+      const containerCount = getByPathWithDefault(0, 'containerCount', order);
+      const batchIds = flatten(
+        getByPathWithDefault([], 'orderItems', order).map(item =>
+          getByPathWithDefault([], 'batches', item).map(batch =>
+            getByPathWithDefault('', 'id', batch)
+          )
+        )
+      );
+      const containerIds = flatten(
+        getByPathWithDefault([], 'orderItems', order).map(item =>
+          getByPathWithDefault([], 'batches', item).map(batch =>
+            getByPathWithDefault('', 'container.id', batch)
+          )
+        )
+      );
+      const shipmentIds = flatten(
+        getByPathWithDefault([], 'orderItems', order).map(item =>
+          getByPathWithDefault([], 'batches', item).map(batch =>
+            getByPathWithDefault('', 'shipment.id', batch)
+          )
+        )
+      );
+      const isTargetedAnyBatches = batchIds.some(batchId =>
+        state.targets.includes(`${BATCH}-${batchId}`)
+      );
+      const isTargetedAnyContainers = containerIds.some(containerId =>
+        state.targets.includes(`${CONTAINER}-${containerId}`)
+      );
+      const isTargetedAnyShipments = shipmentIds.some(batchId =>
+        state.targets.includes(`${SHIPMENT}-${batchId}`)
+      );
+      if (position === 'before') {
+        return {
+          isTargeted: containerCount
+            ? isTargetedAnyContainers && isTargetedAnyShipments
+            : isTargetedAnyBatches && isTargetedAnyShipments,
+          hasRelation: containerCount
+            ? isTargetedAnyContainers && isTargetedAnyShipments
+            : isTargetedAnyBatches && isTargetedAnyShipments,
+        };
+      }
+      return {
+        isTargeted: false,
+        hasRelation: false,
       };
     }
     default:
