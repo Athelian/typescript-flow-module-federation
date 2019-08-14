@@ -8,13 +8,17 @@ import TextInput from './components/TextInput';
 import { HeaderStyle, HeaderItemStyle, CellStyle, DragHandleIconStyle } from './style';
 
 const ViewContext = React.createContext<{
+  focused: ?boolean,
   focusedId: ?string,
   editingId: ?string,
+  setFocused: Function,
   setFocusedId: Function,
   setEditingId: Function,
 }>({
+  focused: false,
   focusedId: undefined,
   editingId: undefined,
+  setFocused: () => {},
   setFocusedId: () => {},
   setEditingId: () => {},
 });
@@ -81,23 +85,33 @@ const Cell = ({
 
   const cellRef = React.useRef(null);
   const inputRef = React.useRef(null);
-  const { focusedId, setFocusedId, editingId, setEditingId } = React.useContext(ViewContext);
+  const {
+    focused,
+    setFocused,
+    focusedId,
+    setFocusedId,
+    editingId,
+    setEditingId,
+  } = React.useContext(ViewContext);
 
+  // focus first cell
   React.useEffect(() => {
-    if (inputRef && inputRef.current) {
-      if (editingId && editingId === key) {
-        if (
-          !document.activeElement ||
-          (document.activeElement && document.activeElement.tagName !== 'INPUT')
-        ) {
-          inputRef.current.focus();
-        }
-      } else {
-        inputRef.current.blur();
+    if (!focused && focusedId && focusedId === key) {
+      if (cellRef && cellRef.current) {
+        cellRef.current.focus();
+        setFocused(true);
       }
+    }
+  }, [focused, focusedId, key, setFocused]);
+
+  // focus input
+  React.useEffect(() => {
+    if (inputRef && inputRef.current && editingId && editingId === key) {
+      inputRef.current.focus();
     }
   }, [inputRef, editingId, key]);
 
+  // change cell style
   React.useEffect(() => {
     if (cellRef && cellRef.current) {
       if (editingId === key) {
@@ -108,50 +122,90 @@ const Cell = ({
     }
   }, [editingId, key]);
 
-  React.useEffect(() => {
-    const name = document.activeElement ? document.activeElement.getAttribute('name') : '';
-    if (focusedId && focusedId === key && name !== '' && name !== key) {
-      if (cellRef && cellRef.current) {
-        cellRef.current.focus();
-      }
-    }
-  }, [focusedId, key]);
-
-  const onBlur = () => {
+  const handleInputBlur = () => {
     setEditingId(undefined);
+    setFocused(false);
   };
 
-  const handleKeyUp = e => {
-    let newKey = '';
+  const focusNewCell = (cellKey: string) => {
+    if (inputRef && inputRef.current) {
+      inputRef.current.blur();
+    }
+    if (cellKey !== '') {
+      setFocusedId(cellKey);
+      setFocused(false);
+    }
+  };
+
+  const handleCellKeyDown = e => {
+    e.preventDefault();
+    e.stopPropagation();
     switch (e.key) {
+      case 'Enter': {
+        setEditingId(key);
+        break;
+      }
       case 'ArrowUp': {
-        newKey = getByPathWithDefault('', `${start - 1}.${columnIndex}.key`, data);
+        const newKey = getByPathWithDefault('', `${start - 1}.${columnIndex}.key`, data);
+        focusNewCell(newKey);
         break;
       }
       case 'Tab': {
         if (e.shiftKey) {
-          newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
+          const newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
+          focusNewCell(newKey);
         } else {
-          newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
+          const newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
+          focusNewCell(newKey);
         }
         break;
       }
       case 'ArrowRight': {
-        newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
+        const newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
+        focusNewCell(newKey);
         break;
       }
       case 'ArrowDown': {
-        newKey = getByPathWithDefault('', `${start + lines}.${columnIndex}.key`, data);
+        const newKey = getByPathWithDefault('', `${start + lines}.${columnIndex}.key`, data);
+        focusNewCell(newKey);
         break;
       }
       case 'ArrowLeft': {
-        newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
+        const newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
+        focusNewCell(newKey);
         break;
       }
       default:
+        break;
     }
-    if (newKey !== '') {
-      setFocusedId(newKey);
+  };
+
+  const handleInputKeyDown = e => {
+    e.stopPropagation();
+    switch (e.key) {
+      case 'Enter': {
+        if (e.shiftKey) {
+          const newKey = getByPathWithDefault('', `${start - 1}.${columnIndex}.key`, data);
+          focusNewCell(newKey);
+        } else {
+          const newKey = getByPathWithDefault('', `${start + lines}.${columnIndex}.key`, data);
+          focusNewCell(newKey);
+        }
+        break;
+      }
+      case 'Tab': {
+        if (e.shiftKey) {
+          e.preventDefault();
+          const newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
+          focusNewCell(newKey);
+        } else {
+          const newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
+          focusNewCell(newKey);
+        }
+        break;
+      }
+      default:
+        break;
     }
   };
 
@@ -174,6 +228,7 @@ const Cell = ({
         onClick={e => {
           e.preventDefault();
           setFocusedId(key);
+          setFocused(false);
         }}
         onDoubleClick={e => {
           e.preventDefault();
@@ -182,17 +237,7 @@ const Cell = ({
           }
           setEditingId(key);
         }}
-        onKeyDown={e => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (e.key === 'Enter') {
-            if (inputRef && inputRef.current) {
-              inputRef.current.focus();
-            }
-            setEditingId(key);
-          }
-        }}
-        onKeyUp={handleKeyUp}
+        onKeyDown={handleCellKeyDown}
       />
       {value && (
         <TextInput
@@ -201,7 +246,8 @@ const Cell = ({
           height={`${style.height}px`}
           name={key}
           value={value}
-          onBlur={onBlur}
+          onBlur={handleInputBlur}
+          onKeyDown={handleInputKeyDown}
         />
       )}
     </div>
@@ -221,6 +267,7 @@ const Table = ({
   const bodyRef = React.useRef(null);
   const gridRef = React.useRef(null);
   const [widths, setWidths] = React.useState(columnWidths);
+  const [focused, setFocused] = React.useState(false);
   const [focusedId, setFocusedId] = React.useState();
   const [editingId, setEditingId] = React.useState();
 
@@ -252,6 +299,8 @@ const Table = ({
           />
           <ViewContext.Provider
             value={{
+              focused,
+              setFocused,
               focusedId,
               setFocusedId,
               editingId,
