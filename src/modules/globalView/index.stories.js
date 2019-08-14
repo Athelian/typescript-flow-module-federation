@@ -130,18 +130,18 @@ const mockData = [
   [
     { key: 'order.1.name', start: 0, lines: 4, value: '' },
     { key: 'order.1.others', start: 0, lines: 4, value: '' },
-    { key: 'item.2.name', start: 2, lines: 1, value: 'item 2' },
-    { key: 'item.2.others', start: 2, lines: 1, value: 'item 2 others' },
+    { key: 'item.2.name', start: 2, lines: 2, value: 'item 2' },
+    { key: 'item.2.others', start: 2, lines: 2, value: 'item 2 others' },
     { key: 'batch.3.name', start: 2, lines: 1, value: 'batch 3' },
     { key: 'batch.3.others', start: 2, lines: 1, value: 'batch 3 others' },
   ],
   [
     { key: 'order.1.name', start: 0, lines: 4, value: '' },
     { key: 'order.1.others', start: 0, lines: 4, value: '' },
-    { key: 'item.2.name', start: 3, lines: 1, value: 'item 2' },
-    { key: 'item.2.others', start: 3, lines: 1, value: 'item 2 others' },
-    { key: 'batch.3.name', start: 3, lines: 1, value: 'batch 3' },
-    { key: 'batch.3.others', start: 3, lines: 1, value: 'batch 3 others' },
+    { key: 'item.2.name', start: 2, lines: 2, value: '' },
+    { key: 'item.2.others', start: 2, lines: 2, value: '' },
+    { key: 'batch.100.name', start: 3, lines: 1, value: 'batch 100' },
+    { key: 'batch.100.others', start: 3, lines: 1, value: 'batch 100 others' },
   ],
   // copy
   [
