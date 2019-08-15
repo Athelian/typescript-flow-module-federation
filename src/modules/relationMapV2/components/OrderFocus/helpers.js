@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { colors, borderRadiuses } from 'styles/common';
 import type { BatchPayload } from 'generated/graphql';
 import memoize from 'memoize-one';
 import styled from 'react-emotion';
@@ -26,6 +27,13 @@ export const ContainerCard = styled.div`
 export const ShipmentCard = styled.div`
   width: 515px;
   height: 55px;
+`;
+export const HeaderCard = styled.div`
+  ${borderRadiuses.MAIN};
+  background: ${props => (props.isExpand ? colors.GRAY_VERY_LIGHT : colors.WHITE)};
+  border: 4px solid ${props => (props.selected ? colors.TEAL : colors.TRANSPARENT)};
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
 `;
 
 function orderCell({

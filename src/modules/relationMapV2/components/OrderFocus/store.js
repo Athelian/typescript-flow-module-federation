@@ -54,7 +54,7 @@ export function reducer(
         const isTargetAll = targets.every(entity => draft.targets.includes(entity));
         targets.forEach(entity => {
           if (isTargetAll) {
-            draft.targets.splice(draft.targets.indexOf(action.payload.entity), 1);
+            draft.targets.splice(draft.targets.indexOf(entity), 1);
           } else if (!draft.targets.includes(entity)) {
             draft.targets.push(entity);
           }

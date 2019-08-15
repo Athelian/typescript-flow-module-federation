@@ -2,6 +2,7 @@
 // @flow
 import * as React from 'react';
 import type { OrderPayload } from 'generated/graphql';
+import { FormattedMessage } from 'react-intl';
 import { flatten } from 'lodash';
 import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
@@ -32,6 +33,7 @@ import {
   BatchCard,
   ShipmentCard,
   ContainerCard,
+  HeaderCard,
 } from './helpers';
 import { RelationMapContext } from './store';
 
@@ -77,7 +79,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
   const orderId = getByPathWithDefault('', 'id', data);
   const orderItemIds = flatten(
     getByPathWithDefault([], 'orderItems', data).map(item => getByPathWithDefault('', 'id', item))
-  );
+  ).filter(Boolean);
   const isTargetedOrder = state.targets.includes(`${ORDER}-${orderId}`);
   const isTargetedAnyItems = orderItemIds.some(itemId =>
     state.targets.includes(`${ORDER_ITEM}-${itemId}`)
@@ -434,16 +436,16 @@ function ItemSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { isExpand: boolean, onClick: Function }) {
-  const { state } = React.useContext(RelationMapContext);
-  const orderItemIds = getByPathWithDefault([], 'orderItems', data).map(item =>
-    getByPathWithDefault('', 'id', item)
-  );
+  const { state, dispatch } = React.useContext(RelationMapContext);
+  const orderItemIds = getByPathWithDefault([], 'orderItems', data)
+    .map(item => getByPathWithDefault('', 'id', item))
+    .filter(Boolean);
   const orderId = getByPathWithDefault('', 'id', data);
   const batchIds = flatten(
     getByPathWithDefault([], 'orderItems', data).map(item =>
       getByPathWithDefault([], 'batches', item).map(batch => getByPathWithDefault('', 'id', batch))
     )
-  );
+  ).filter(Boolean);
   const selected = orderItemIds.some(itemId => state.targets.includes(`${ORDER_ITEM}-${itemId}`));
   const isTargetedOrder = state.targets.includes(`${ORDER}-${orderId}`);
   const isTargetedAnyItems = orderItemIds.some(itemId =>
@@ -463,22 +465,32 @@ function ItemSummaryCell({
           />
         )}
       </div>
-      <div className={ContentStyle} onClick={onClick} role="presentation">
-        <BaseCard
-          icon={isExpand ? 'CHEVRON_DOUBLE_UP' : 'CHEVRON_DOWN'}
-          color={isExpand ? 'GRAY_QUITE_LIGHT' : 'BLACK'}
-          style={
-            isExpand
-              ? {
-                  background: '#DDDDDD',
-                }
-              : {}
-          }
-          selected={!isExpand && selected}
-          selectable
-        >
-          <ItemCard>Total: {getByPathWithDefault(0, 'orderItemCount', data)} </ItemCard>
-        </BaseCard>
+      <div className={ContentStyle} role="presentation">
+        <HeaderCard isExpand={isExpand} selected={!isExpand && selected} onClick={onClick}>
+          <ItemCard>
+            <p>Total: {getByPathWithDefault(0, 'orderItemCount', data)}</p>
+            <button
+              type="button"
+              onClick={evt => {
+                evt.stopPropagation();
+                const itemIds = flatten(
+                  getByPathWithDefault([], `order.${orderId}.orderItems`, state).map(item =>
+                    getByPathWithDefault('', 'id', item)
+                  )
+                ).filter(Boolean);
+                const targets = itemIds.map(id => `${ORDER_ITEM}-${id}`);
+                dispatch({
+                  type: 'TARGET_ALL',
+                  payload: {
+                    targets,
+                  },
+                });
+              }}
+            >
+              <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+            </button>
+          </ItemCard>
+        </HeaderCard>
       </div>
       <div className={ContentStyle}>
         {afterConnector && (
@@ -501,15 +513,15 @@ function BatchSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state } = React.useContext(RelationMapContext);
+  const { state, dispatch } = React.useContext(RelationMapContext);
   const orderItemIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item => getByPathWithDefault('', 'id', item))
-  );
+  ).filter(Boolean);
   const batchIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item =>
       getByPathWithDefault([], 'batches', item).map(batch => getByPathWithDefault('', 'id', batch))
     )
-  );
+  ).filter(Boolean);
   const isTargetedAnyItems = orderItemIds.some(itemId =>
     state.targets.includes(`${ORDER_ITEM}-${itemId}`)
   );
@@ -523,14 +535,14 @@ function BatchSummaryCell({
         getByPathWithDefault('', 'container.id', batch)
       )
     )
-  );
+  ).filter(Boolean);
   const shipmentIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item =>
       getByPathWithDefault([], 'batches', item).map(batch =>
         getByPathWithDefault('', 'shipment.id', batch)
       )
     )
-  );
+  ).filter(Boolean);
   const isTargetedAnyShipments = shipmentIds.some(batchId =>
     state.targets.includes(`${SHIPMENT}-${batchId}`)
   );
@@ -556,22 +568,32 @@ function BatchSummaryCell({
         )}
       </div>
       {total ? (
-        <div className={ContentStyle} onClick={onClick} role="presentation">
-          <BaseCard
-            icon={isExpand ? 'CHEVRON_DOUBLE_UP' : 'CHEVRON_DOWN'}
-            color={isExpand ? 'GRAY_QUITE_LIGHT' : 'BLACK'}
-            style={
-              isExpand
-                ? {
-                    background: '#DDDDDD',
-                  }
-                : {}
-            }
+        <div className={ContentStyle}>
+          <HeaderCard
+            isExpand={isExpand}
             selected={!isExpand && isTargetedAnyBatches}
-            selectable
+            onClick={onClick}
           >
-            <BatchCard>Total: {getByPathWithDefault(0, 'batchCount', data)}</BatchCard>
-          </BaseCard>
+            <BatchCard>
+              <p>Total: {getByPathWithDefault(0, 'batchCount', data)}</p>
+              <button
+                type="button"
+                onClick={evt => {
+                  evt.stopPropagation();
+                  const targets = [];
+                  batchIds.forEach(id => targets.push(`${BATCH}-${id}`));
+                  dispatch({
+                    type: 'TARGET_ALL',
+                    payload: {
+                      targets,
+                    },
+                  });
+                }}
+              >
+                <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              </button>
+            </BatchCard>
+          </HeaderCard>
         </div>
       ) : (
         <div
@@ -602,27 +624,27 @@ function ContainerSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state } = React.useContext(RelationMapContext);
+  const { state, dispatch } = React.useContext(RelationMapContext);
   const containerCount = getByPathWithDefault(0, 'containerCount', order);
   const batchIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item =>
       getByPathWithDefault([], 'batches', item).map(batch => getByPathWithDefault('', 'id', batch))
     )
-  );
+  ).filter(Boolean);
   const containerIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item =>
       getByPathWithDefault([], 'batches', item).map(batch =>
         getByPathWithDefault('', 'container.id', batch)
       )
     )
-  );
+  ).filter(Boolean);
   const shipmentIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item =>
       getByPathWithDefault([], 'batches', item).map(batch =>
         getByPathWithDefault('', 'shipment.id', batch)
       )
     )
-  );
+  ).filter(Boolean);
   const isTargetedAnyBatches = batchIds.some(batchId =>
     state.targets.includes(`${BATCH}-${batchId}`)
   );
@@ -662,24 +684,35 @@ function ContainerSummaryCell({
         const shipmentCount = getByPathWithDefault(0, 'shipmentCount', data);
         if (total) {
           return (
-            <div className={ContentStyle} onClick={onClick} role="presentation">
-              <BaseCard
-                icon={isExpand ? 'CHEVRON_DOUBLE_UP' : 'CHEVRON_DOWN'}
-                color={isExpand ? 'GRAY_QUITE_LIGHT' : 'BLACK'}
-                style={
-                  isExpand
-                    ? {
-                        background: '#DDDDDD',
-                      }
-                    : {}
-                }
+            <div className={ContentStyle}>
+              <HeaderCard
+                isExpand={isExpand}
                 selected={!isExpand && isTargetedAnyContainers}
-                selectable
+                onClick={onClick}
               >
                 <ContainerCard>
-                  Total: {getByPathWithDefault(0, 'containerCount', data)}
+                  <p>Total: {getByPathWithDefault(0, 'containerCount', data)}</p>
+                  <button
+                    type="button"
+                    onClick={evt => {
+                      evt.stopPropagation();
+                      const targets = [];
+                      containerIds.forEach(id => targets.push(`${CONTAINER}-${id}`));
+                      dispatch({
+                        type: 'TARGET_ALL',
+                        payload: {
+                          targets,
+                        },
+                      });
+                    }}
+                  >
+                    <FormattedMessage
+                      id="components.button.SelectAll"
+                      defaultMessage="SELECT ALL"
+                    />
+                  </button>
                 </ContainerCard>
-              </BaseCard>
+              </HeaderCard>
             </div>
           );
         }
@@ -719,27 +752,27 @@ function ShipmentSummaryCell({
   isExpand,
   beforeConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state } = React.useContext(RelationMapContext);
+  const { state, dispatch } = React.useContext(RelationMapContext);
   const containerCount = getByPathWithDefault(0, 'containerCount', order);
   const batchIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item =>
       getByPathWithDefault([], 'batches', item).map(batch => getByPathWithDefault('', 'id', batch))
     )
-  );
+  ).filter(Boolean);
   const containerIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item =>
       getByPathWithDefault([], 'batches', item).map(batch =>
         getByPathWithDefault('', 'container.id', batch)
       )
     )
-  );
+  ).filter(Boolean);
   const shipmentIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item =>
       getByPathWithDefault([], 'batches', item).map(batch =>
         getByPathWithDefault('', 'shipment.id', batch)
       )
     )
-  );
+  ).filter(Boolean);
   const isTargetedAnyBatches = batchIds.some(batchId =>
     state.targets.includes(`${BATCH}-${batchId}`)
   );
@@ -772,22 +805,36 @@ function ShipmentSummaryCell({
         const total = getByPathWithDefault(0, 'shipmentCount', data);
         if (total) {
           return (
-            <div className={ContentStyle} onClick={onClick} role="presentation">
-              <BaseCard
-                icon={isExpand ? 'CHEVRON_DOUBLE_UP' : 'CHEVRON_DOWN'}
-                color={isExpand ? 'GRAY_QUITE_LIGHT' : 'BLACK'}
-                style={
-                  isExpand
-                    ? {
-                        background: '#DDDDDD',
-                      }
-                    : {}
-                }
+            <div className={ContentStyle} role="presentation">
+              <HeaderCard
+                isExpand={isExpand}
                 selected={!isExpand && isTargetedAnyShipments}
                 selectable
+                onClick={onClick}
               >
-                <ShipmentCard>Total {getByPathWithDefault(0, 'shipmentCount', data)}</ShipmentCard>
-              </BaseCard>
+                <ShipmentCard>
+                  <p>Total {getByPathWithDefault(0, 'shipmentCount', data)}</p>
+                  <button
+                    type="button"
+                    onClick={evt => {
+                      evt.stopPropagation();
+                      const targets = [];
+                      shipmentIds.forEach(id => targets.push(`${SHIPMENT}-${id}`));
+                      dispatch({
+                        type: 'TARGET_ALL',
+                        payload: {
+                          targets,
+                        },
+                      });
+                    }}
+                  >
+                    <FormattedMessage
+                      id="components.button.SelectAll"
+                      defaultMessage="SELECT ALL"
+                    />
+                  </button>
+                </ShipmentCard>
+              </HeaderCard>
             </div>
           );
         }
