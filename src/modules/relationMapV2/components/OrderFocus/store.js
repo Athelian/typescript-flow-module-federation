@@ -1,17 +1,31 @@
 // @flow
+import { createContext } from 'react';
+import type { OrderPayload } from 'generated/graphql';
 import produce from 'immer';
 import update from 'immutability-helper';
 import type { State } from './type.js.flow';
+
+type ContextProps = {
+  state: State,
+  dispatch: Function,
+  orders: Array<OrderPayload>,
+};
 
 export const initialState: State = {
   order: {},
   targets: [],
 };
 
+export const RelationMapContext = createContext<ContextProps>({
+  state: initialState,
+  dispatch: () => {},
+  orders: [],
+});
+
 export function reducer(
   state: State,
   action: {
-    type: 'FETCH_ORDER' | 'TARGET' | 'TARGET_TREE',
+    type: 'FETCH_ORDER' | 'TARGET' | 'TARGET_ALL',
     payload: {
       entity?: string,
       targets?: Array<string>,
@@ -34,7 +48,7 @@ export function reducer(
           draft.targets.push(action.payload.entity || '');
         }
       });
-    case 'TARGET_TREE':
+    case 'TARGET_ALL':
       return produce(state, draft => {
         const { targets = [] } = action.payload;
         const isTargetAll = targets.every(entity => draft.targets.includes(entity));

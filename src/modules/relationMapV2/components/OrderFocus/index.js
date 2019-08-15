@@ -18,7 +18,7 @@ import Header from '../Header';
 import Row from '../Row';
 import cellRenderer from './cellRenderer';
 import generateListData from './generateListData';
-import { reducer, initialState } from './store';
+import { reducer, initialState, RelationMapContext } from './store';
 
 const LoadingPlaceHolder = React.memo(() => {
   return (
@@ -156,38 +156,39 @@ export default function OrderFocus() {
               state,
               expandRows,
               setExpandRows,
-              dispatch,
             });
             const rowCount = ordersData.length;
             return orders.length > 0 ? (
-              <List
-                itemData={ordersData}
-                className={ListStyle}
-                itemCount={rowCount}
-                innerElementType={innerElementType}
-                itemSize={() => 75}
-                onItemsRendered={({ visibleStartIndex, visibleStopIndex }) => {
-                  const isLastCell = visibleStopIndex === rowCount - 1;
-                  if (hasMoreItems(data, 'orders') && isLastCell) {
-                    loadMore({ fetchMore, data }, queryOrderVariables, 'orders');
-                  }
-                  for (let index = visibleStartIndex; index < visibleStopIndex; index += 1) {
-                    const [{ order }] = ordersData[index];
-                    const isLoadedData =
-                      getByPathWithDefault([], 'orderItems', order).length ===
-                      getByPathWithDefault(0, 'orderItemCount', order);
-                    if (!isLoadedData && getByPathWithDefault(0, 'orderItemCount', order) > 0) {
-                      queryOrderDetail(getByPathWithDefault(0, 'id', order));
+              <RelationMapContext.Provider value={{ state, orders, dispatch }}>
+                <List
+                  itemData={ordersData}
+                  className={ListStyle}
+                  itemCount={rowCount}
+                  innerElementType={innerElementType}
+                  itemSize={() => 75}
+                  onItemsRendered={({ visibleStartIndex, visibleStopIndex }) => {
+                    const isLastCell = visibleStopIndex === rowCount - 1;
+                    if (hasMoreItems(data, 'orders') && isLastCell) {
+                      loadMore({ fetchMore, data }, queryOrderVariables, 'orders');
                     }
+                    for (let index = visibleStartIndex; index < visibleStopIndex; index += 1) {
+                      const [{ order }] = ordersData[index];
+                      const isLoadedData =
+                        getByPathWithDefault([], 'orderItems', order).length ===
+                        getByPathWithDefault(0, 'orderItemCount', order);
+                      if (!isLoadedData && getByPathWithDefault(0, 'orderItemCount', order) > 0) {
+                        queryOrderDetail(getByPathWithDefault(0, 'id', order));
+                      }
+                    }
+                  }}
+                  height={window.innerHeight - 50}
+                  width={
+                    uiContext.isSideBarExpanded ? window.innerWidth - 200 : window.innerWidth - 50
                   }
-                }}
-                height={window.innerHeight - 50}
-                width={
-                  uiContext.isSideBarExpanded ? window.innerWidth - 200 : window.innerWidth - 50
-                }
-              >
-                {Row}
-              </List>
+                >
+                  {Row}
+                </List>
+              </RelationMapContext.Provider>
             ) : (
               <Display>
                 <FormattedMessage

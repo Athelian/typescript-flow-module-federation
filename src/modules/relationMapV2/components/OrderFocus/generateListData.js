@@ -29,13 +29,11 @@ const generateListData = memoize(
     state,
     expandRows,
     setExpandRows,
-    dispatch,
   }: {|
     state: State,
     orders: Array<OrderPayload>,
     expandRows: Array<string>,
     setExpandRows: Function,
-    dispatch: Function,
   |}) => {
     const ordersData = orders.map(order =>
       state.order[getByPathWithDefault('', 'id', order)]
@@ -51,40 +49,30 @@ const generateListData = memoize(
           cell: null,
           isExpand: false,
           onClick: () => {},
-          dispatch: () => {},
-          state,
           order: {},
         },
         {
           cell: null,
           isExpand: false,
           onClick: () => {},
-          dispatch: () => {},
-          state,
           order: {},
         },
         {
           cell: null,
           isExpand: false,
           onClick: () => {},
-          dispatch: () => {},
-          state,
           order: {},
         },
         {
           cell: null,
           isExpand: false,
           onClick: () => {},
-          dispatch: () => {},
-          state,
           order: {},
         },
         {
           cell: null,
           isExpand: false,
           onClick: () => {},
-          dispatch: () => {},
-          state,
           order: {},
         },
       ],
@@ -103,9 +91,7 @@ const generateListData = memoize(
         row.push({
           cell,
           onClick,
-          dispatch,
           isExpand,
-          state,
           order,
         });
         if (counter % TOTAL_COLUMNS === 0) {
