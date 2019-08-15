@@ -79,7 +79,7 @@
     "build": "build:prod",
     "build:prod": "cross-env NODE_ENV=production node scripts/build.js",
     "build:stg": "cross-env NODE_ENV=staging node scripts/build.js",
-    "now-build": "yarn build:stg",
+    "now-build": "build:stg",
     "postbuild": "react-snap",
     "test": "node scripts/test.js",
     "stylelint": "stylelint src/**/*.{js,jsx,css}",

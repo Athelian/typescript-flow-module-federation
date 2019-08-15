@@ -5,26 +5,10 @@ name: 'Deploy Staging'
 triggers:
 - branches: ['develop']
 steps:
-- name: 'gcr.io/cloud-builders/gsutil'
-  entrypoint: 'bash'
-  args:
-    - '-c'
-    - |
-      gsutil cp gs://zenport-gcb-bridge/cache/web-app-develop_node_modules.tar.gz node_modules.tar.gz || true
-      if [ -e node_modules.tar.gz ]; then
-        tar -xzf node_modules.tar.gz
-      fi
-- name: 'node:10.15.3'
+- name: 'node:10-slim'
   entrypoint: yarn
-  args: ['install']
-- name: 'gcr.io/cloud-builders/gsutil'
-  entrypoint: 'bash'
-  args:
-    - '-c'
-    - |
-      tar -czf node_modules.tar.gz node_modules
-      gsutil cp node_modules.tar.gz gs://zenport-gcb-bridge/cache/web-app-develop_node_modules.tar.gz
-- name: 'node:10.15.3'
+  args: ['install', '--non-interactive', '--no-progress', '--frozen-lockfile', '--ignore-optional']
+- name: 'node:10-slim'
   entrypoint: yarn
   args: ['build:stg']
   env: ['ZENPORT_FIREBASE_DEPLOY_REVISION=$SHORT_SHA']
@@ -47,26 +31,10 @@ name: 'Deploy Staging Hotfixes'
 triggers:
   - branches: ['hotfixes']
 steps:
-  - name: 'gcr.io/cloud-builders/gsutil'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        gsutil cp gs://zenport-gcb-bridge/cache/web-app-hotfixes_node_modules.tar.gz node_modules.tar.gz || true
-        if [ -e node_modules.tar.gz ]; then
-          tar -xzf node_modules.tar.gz
-        fi
-  - name: 'node:10.15.3'
+  - name: 'node:10-slim'
     entrypoint: yarn
-    args: ['install']
-  - name: 'gcr.io/cloud-builders/gsutil'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        tar -czf node_modules.tar.gz node_modules
-        gsutil cp node_modules.tar.gz gs://zenport-gcb-bridge/cache/web-app-hotfixes_node_modules.tar.gz
-  - name: 'node:10.15.3'
+    args: ['install', '--non-interactive', '--no-progress', '--frozen-lockfile', '--ignore-optional']
+  - name: 'node:10-slim'
     entrypoint: yarn
     args: ['build:stg']
     env:
@@ -91,26 +59,10 @@ name: 'Deploy Prod'
 triggers:
   - branches: ['master']
 steps:
-  - name: 'gcr.io/cloud-builders/gsutil'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        gsutil cp gs://zenport-gcb-bridge/cache/web-app-master_node_modules.tar.gz node_modules.tar.gz || true
-        if [ -e node_modules.tar.gz ]; then
-          tar -xzf node_modules.tar.gz
-        fi
-  - name: 'node:10.15.3'
+  - name: 'node:10-slim'
     entrypoint: yarn
-    args: ['install']
-  - name: 'gcr.io/cloud-builders/gsutil'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        tar -czf node_modules.tar.gz node_modules
-        gsutil cp node_modules.tar.gz gs://zenport-gcb-bridge/cache/web-app-master_node_modules.tar.gz
-  - name: 'node:10.15.3'
+    args: ['install', '--non-interactive', '--no-progress', '--frozen-lockfile', '--ignore-optional']
+  - name: 'node:10-slim'
     entrypoint: yarn
     args: ['build:prod']
     env: ['ZENPORT_FIREBASE_DEPLOY_REVISION=$SHORT_SHA']
