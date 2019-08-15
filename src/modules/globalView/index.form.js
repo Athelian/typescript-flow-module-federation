@@ -6,6 +6,8 @@ import { NavBar } from 'components/NavBar';
 import { getByPathWithDefault } from 'utils/fp';
 
 import { ordersInGlobalViewQuery } from './query';
+import { transferOrder } from './helper';
+import Table from './Table';
 
 const initialVariables = {
   page: 1,
@@ -25,13 +27,31 @@ const GlobalView = () => {
               return error.message;
             }
 
-            const nextPage = getByPathWithDefault(1, 'orders.page', data) + 1;
-            const totalPage = getByPathWithDefault(1, 'orders.totalPage', data);
-            const hasMore = nextPage <= totalPage;
+            // const nextPage = getByPathWithDefault(1, 'orders.page', data) + 1;
+            // const totalPage = getByPathWithDefault(1, 'orders.totalPage', data);
+            // const hasMore = nextPage <= totalPage;
 
-            console.debug(hasMore);
+            const orders = getByPathWithDefault([], 'orders.nodes', data);
 
-            return <div>hahah</div>;
+            const keys = [
+              'order name',
+              'order others',
+              'item name',
+              'item others',
+              'batch name',
+              'batch others',
+              'container name',
+              'container others',
+              'shipment name',
+              'shipment others',
+            ];
+            const columnWidths = Array(keys.length).fill(200);
+
+            const tableData = orders.forEach(order => {
+              return transferOrder(order);
+            });
+
+            return <Table columnWidths={columnWidths} keys={keys} data={tableData} />;
           }}
         </Query>
       </Content>

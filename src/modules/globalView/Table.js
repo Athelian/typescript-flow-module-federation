@@ -329,4 +329,10 @@ const Table = ({
   );
 };
 
+const defaultProps = {
+  data: [],
+};
+
+Table.defaultProps = defaultProps;
+
 export default Table;
