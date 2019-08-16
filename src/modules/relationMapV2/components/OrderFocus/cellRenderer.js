@@ -129,7 +129,7 @@ function OrderItemCell({
   const { state, dispatch } = React.useContext(RelationMapContext);
   const orderId = getByPathWithDefault('', 'id', order);
   const itemId = getByPathWithDefault('', 'id', data);
-  const entity = `${ORDER_ITEM}-${orderId}`;
+  const entity = `${ORDER_ITEM}-${itemId}`;
   const batchIds = flatten(
     getByPathWithDefault([], 'batches', data).map(item => getByPathWithDefault('', 'id', item))
   );
@@ -268,7 +268,23 @@ function BatchCell({
           />
         )}
       </div>
-      <Draggable>
+      <Draggable
+        onMouseDown={evt => {
+          console.warn('onMouseDown', evt);
+        }}
+        onMouseUp={evt => {
+          console.warn('onMouseUp', evt);
+        }}
+        onTouchStart={evt => {
+          console.warn('onTouchStart', evt);
+        }}
+        onTouchEnd={evt => {
+          console.warn('onTouchEnd', evt);
+        }}
+        onStart={console.warn}
+        onDrag={console.warn}
+        onStop={console.warn}
+      >
         <div className={ContentStyle}>
           <BaseCard
             icon="BATCH"
