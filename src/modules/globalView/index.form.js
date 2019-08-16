@@ -6,7 +6,14 @@ import { NavBar } from 'components/NavBar';
 import { getByPathWithDefault } from 'utils/fp';
 
 import { ordersInGlobalViewQuery } from './query';
-import { transferOrder } from './helper';
+import {
+  transferOrder,
+  OrderFields,
+  OrderItemFields,
+  BatchFields,
+  ContainerFields,
+  ShipmentFields,
+} from './helper';
 import Table from './Table';
 
 const initialVariables = {
@@ -20,7 +27,7 @@ const GlobalView = () => {
   return (
     <>
       <NavBar>Menu</NavBar>
-      <Content>
+      <Content notCenter>
         <Query query={ordersInGlobalViewQuery} variables={initialVariables}>
           {({ error, data }) => {
             if (error) {
@@ -34,21 +41,29 @@ const GlobalView = () => {
             const orders = getByPathWithDefault([], 'orders.nodes', data);
 
             const keys = [
-              'order name',
-              'order others',
-              'item name',
-              'item others',
-              'batch name',
-              'batch others',
-              'container name',
-              'container others',
-              'shipment name',
-              'shipment others',
+              ...OrderFields,
+              ...OrderItemFields,
+              ...BatchFields,
+              ...ContainerFields,
+              ...ShipmentFields,
             ];
             const columnWidths = Array(keys.length).fill(200);
 
-            const tableData = orders.forEach(order => {
-              return transferOrder(order);
+            let tableData = [];
+
+            orders.forEach(order => {
+              tableData = [
+                ...tableData,
+                ...transferOrder({
+                  order,
+                  rowIndex: tableData.length,
+                  orderFields: OrderFields,
+                  orderItemFields: OrderItemFields,
+                  batchFields: BatchFields,
+                  containerFields: ContainerFields,
+                  shipmentFields: ShipmentFields,
+                }),
+              ];
             });
 
             return <Table columnWidths={columnWidths} keys={keys} data={tableData} />;

@@ -239,7 +239,7 @@ const Cell = ({
         }}
         onKeyDown={handleCellKeyDown}
       />
-      {value && (
+      {start === rowIndex && (
         <TextInput
           inputRef={inputRef}
           width={`${style.width}px`}

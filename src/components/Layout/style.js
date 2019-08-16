@@ -9,7 +9,7 @@ export const LayoutWrapperStyle: string = css`
   position: relative;
 `;
 
-export const ContentWrapperStyle: string = css`
+export const ContentWrapperStyle = ({ notCenter = false }: { notCenter: boolean }) => css`
   height: calc(100vh - 50px);
   width: 100%;
   overflow-x: hidden;
@@ -18,7 +18,7 @@ export const ContentWrapperStyle: string = css`
   margin-top: 50px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  ${!notCenter && `align-items: center;`}
   ${transitions.EXPAND};
 `;
 

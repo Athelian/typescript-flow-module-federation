@@ -6,7 +6,7 @@ export const orderFragmentInGlobalView = gql`
   fragment orderFragmentInGlobalView on Order {
     id
     poNo
-
+    currency
     orderItems {
       ...orderItemFragmentInGlobalView
     }
@@ -18,7 +18,6 @@ export const orderItemFragmentInGlobalView = gql`
     id
     no
     quantity
-
     batches {
       ...batchFragmentInGlobalView
     }
@@ -29,14 +28,15 @@ export const batchFragmentInGlobalView = gql`
   fragment batchFragmentInGlobalView on Batch {
     id
     no
-    shipment {
-      ... on Shipment {
+    quantity
+    container {
+      ... on Container {
         id
         no
       }
     }
-    container {
-      ... on Container {
+    shipment {
+      ... on Shipment {
         id
         no
       }
