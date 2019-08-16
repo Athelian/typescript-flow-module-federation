@@ -2,6 +2,7 @@
 // @flow
 import * as React from 'react';
 import type { OrderPayload } from 'generated/graphql';
+import Draggable from 'react-draggable';
 import { FormattedMessage } from 'react-intl';
 import { flatten } from 'lodash';
 import { uuid } from 'utils/id';
@@ -36,6 +37,7 @@ import {
   HeaderCard,
 } from './helpers';
 import { RelationMapContext } from './store';
+import { handleClickAndDoubleClick } from './hooks';
 
 type CellProps = {
   data: Object,
@@ -45,8 +47,9 @@ type CellProps = {
 
 function OrderCell({ data, afterConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
+  const entity = `${ORDER}-${getByPathWithDefault('', 'id', data)}`;
   const onTargetTree = () => {
-    const targets = [`${ORDER}-${getByPathWithDefault('', 'id', data)}`];
+    const targets = [];
     const orderItems = getByPathWithDefault([], 'orderItems', data);
     orderItems.forEach(item => {
       targets.push(`${ORDER_ITEM}-${getByPathWithDefault('', 'id', item)}`);
@@ -62,9 +65,10 @@ function OrderCell({ data, afterConnector }: CellProps) {
       });
     });
     dispatch({
-      type: 'TARGET_ALL',
+      type: 'TARGET_TREE',
       payload: {
         targets,
+        entity,
       },
     });
   };
@@ -72,7 +76,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
     dispatch({
       type: 'TARGET',
       payload: {
-        entity: `${ORDER}-${getByPathWithDefault('', 'id', data)}`,
+        entity,
       },
     });
   };
@@ -87,6 +91,11 @@ function OrderCell({ data, afterConnector }: CellProps) {
 
   const isTargeted = isTargetedOrder && isTargetedAnyItems;
   const hasRelation = isTargetedAnyItems;
+  const handleClick = handleClickAndDoubleClick({
+    clickId: entity,
+    onClick: onTarget,
+    onDoubleClick: onTargetTree,
+  });
   return (
     <>
       <div className={ContentStyle} />
@@ -97,8 +106,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
           isArchived={getByPathWithDefault(false, 'archived', data)}
           selected={state.targets.includes(`${ORDER}-${getByPathWithDefault('', 'id', data)}`)}
           selectable
-          onDoubleClick={onTargetTree}
-          onClick={onTarget}
+          onClick={handleClick}
         >
           <OrderCard>{getByPathWithDefault('', 'poNo', data)}</OrderCard>
         </BaseCard>
@@ -121,6 +129,7 @@ function OrderItemCell({
   const { state, dispatch } = React.useContext(RelationMapContext);
   const orderId = getByPathWithDefault('', 'id', order);
   const itemId = getByPathWithDefault('', 'id', data);
+  const entity = `${ORDER_ITEM}-${orderId}`;
   const batchIds = flatten(
     getByPathWithDefault([], 'batches', data).map(item => getByPathWithDefault('', 'id', item))
   );
@@ -131,7 +140,6 @@ function OrderItemCell({
   );
   const onTargetTree = () => {
     const targets = [];
-    targets.push(`${ORDER_ITEM}-${getByPathWithDefault('', 'id', data)}`);
     const batches = getByPathWithDefault([], 'batches', data);
     batches.forEach(batch => {
       targets.push(`${BATCH}-${getByPathWithDefault('', 'id', batch)}`);
@@ -143,9 +151,10 @@ function OrderItemCell({
       }
     });
     dispatch({
-      type: 'TARGET_ALL',
+      type: 'TARGET_TREE',
       payload: {
         targets,
+        entity,
       },
     });
   };
@@ -153,12 +162,15 @@ function OrderItemCell({
     dispatch({
       type: 'TARGET',
       payload: {
-        entity: `${ORDER_ITEM}-${getByPathWithDefault('', 'id', data)}`,
+        entity,
       },
     });
   };
-  // NOTE: try to test the click and double click without timeout
-  // const [handleClick, handleDoubleClick] = useClickPreventionOnDoubleClick(onTarget, onTargetTree);
+  const handleClick = handleClickAndDoubleClick({
+    clickId: entity,
+    onClick: onTarget,
+    onDoubleClick: onTargetTree,
+  });
   return (
     <>
       <div className={ContentStyle}>
@@ -177,8 +189,7 @@ function OrderItemCell({
           isArchived={getByPathWithDefault(false, 'archived', data)}
           selected={state.targets.includes(`${ORDER_ITEM}-${getByPathWithDefault('', 'id', data)}`)}
           selectable
-          onDoubleClick={onTargetTree}
-          onClick={onTarget}
+          onClick={handleClick}
         >
           <ItemCard>{getByPathWithDefault('', 'no', data)}</ItemCard>
         </BaseCard>
@@ -204,6 +215,7 @@ function BatchCell({
 }: CellProps & { order: OrderPayload }) {
   const { state, dispatch } = React.useContext(RelationMapContext);
   const batchId = getByPathWithDefault('', 'id', data);
+  const entity = `${BATCH}-${batchId}`;
   const orderItems = getByPathWithDefault([], 'orderItems', order);
   const foundParentItem = orderItems.find(item =>
     item.batches.map(batch => batch.id).includes(batchId)
@@ -217,7 +229,6 @@ function BatchCell({
     batch.shipment && state.targets.includes(`${SHIPMENT}-${batch.shipment.id}`);
   const onTargetTree = () => {
     const targets = [];
-    targets.push(`${BATCH}-${getByPathWithDefault('', 'id', data)}`);
     if (data.container) {
       targets.push(`${CONTAINER}-${getByPathWithDefault('', 'container.id', data)}`);
     }
@@ -225,9 +236,10 @@ function BatchCell({
       targets.push(`${SHIPMENT}-${getByPathWithDefault('', 'shipment.id', data)}`);
     }
     dispatch({
-      type: 'TARGET_ALL',
+      type: 'TARGET_TREE',
       payload: {
         targets,
+        entity,
       },
     });
   };
@@ -235,10 +247,16 @@ function BatchCell({
     dispatch({
       type: 'TARGET',
       payload: {
-        entity: `${BATCH}-${getByPathWithDefault('', 'id', data)}`,
+        entity,
       },
     });
   };
+
+  const handleClick = handleClickAndDoubleClick({
+    clickId: entity,
+    onClick: onTarget,
+    onDoubleClick: onTargetTree,
+  });
   return (
     <>
       <div className={ContentStyle}>
@@ -250,19 +268,20 @@ function BatchCell({
           />
         )}
       </div>
-      <div className={ContentStyle}>
-        <BaseCard
-          icon="BATCH"
-          color="BATCH"
-          isArchived={getByPathWithDefault(false, 'archived', data)}
-          selected={state.targets.includes(`${BATCH}-${getByPathWithDefault('', 'id', data)}`)}
-          selectable
-          onDoubleClick={onTargetTree}
-          onClick={onTarget}
-        >
-          <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
-        </BaseCard>
-      </div>
+      <Draggable>
+        <div className={ContentStyle}>
+          <BaseCard
+            icon="BATCH"
+            color="BATCH"
+            isArchived={getByPathWithDefault(false, 'archived', data)}
+            selected={state.targets.includes(`${BATCH}-${getByPathWithDefault('', 'id', data)}`)}
+            selectable
+            onClick={handleClick}
+          >
+            <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
+          </BaseCard>
+        </div>
+      </Draggable>
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine
@@ -286,16 +305,17 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
   const isTargetedShipment = state.targets.includes(
     `${SHIPMENT}-${getByPathWithDefault('', 'relatedBatch.shipment.id', data)}`
   );
+  const entity = `${CONTAINER}-${containerId}`;
   const onTargetTree = () => {
     const targets = [];
-    targets.push(`${CONTAINER}-${getByPathWithDefault('', 'id', data)}`);
     if (data.relatedBatch && data.relatedBatch.shipment) {
       targets.push(`${SHIPMENT}-${getByPathWithDefault('', 'relatedBatch.shipment.id', data)}`);
     }
     dispatch({
-      type: 'TARGET_ALL',
+      type: 'TARGET_TREE',
       payload: {
         targets,
+        entity,
       },
     });
   };
@@ -303,10 +323,15 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
     dispatch({
       type: 'TARGET',
       payload: {
-        entity: `${CONTAINER}-${getByPathWithDefault('', 'id', data)}`,
+        entity,
       },
     });
   };
+  const handleClick = handleClickAndDoubleClick({
+    clickId: entity,
+    onClick: onTarget,
+    onDoubleClick: onTargetTree,
+  });
   return (
     <>
       <div className={ContentStyle}>
@@ -325,8 +350,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
           isArchived={getByPathWithDefault(false, 'archived', data)}
           selected={state.targets.includes(`${CONTAINER}-${getByPathWithDefault('', 'id', data)}`)}
           selectable
-          onDoubleClick={onTargetTree}
-          onClick={onTarget}
+          onClick={handleClick}
         >
           <ContainerCard>{getByPathWithDefault('', 'no', data)}</ContainerCard>
         </BaseCard>

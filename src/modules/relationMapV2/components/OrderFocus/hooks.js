@@ -69,9 +69,8 @@ export const useClickPreventionOnDoubleClick = (onClick: Function, onDoubleClick
 
   const handleClick = () => {
     api.clearPendingPromises();
-    const waitForClick = cancellablePromise(delay(250));
+    const waitForClick = cancellablePromise(delay(200));
     api.appendPendingPromise(waitForClick);
-
     return waitForClick.promise
       .then(() => {
         api.removePendingPromise(waitForClick);
@@ -91,4 +90,33 @@ export const useClickPreventionOnDoubleClick = (onClick: Function, onDoubleClick
   };
 
   return [handleClick, handleDoubleClick];
+};
+
+const DELAY = 200; // 0.2 second
+const timer = {};
+const isTimeoutRunning = {};
+export const handleClickAndDoubleClick = ({
+  clickId,
+  onClick,
+  onDoubleClick,
+}: {
+  clickId: string,
+  onClick: Function,
+  onDoubleClick: Function,
+}) => {
+  const handleClick = () => {
+    if (isTimeoutRunning[clickId]) {
+      onDoubleClick();
+      clearTimeout(timer[clickId]);
+      isTimeoutRunning[clickId] = false;
+    } else {
+      onClick();
+      isTimeoutRunning[clickId] = true;
+      timer[clickId] = setTimeout(() => {
+        isTimeoutRunning[clickId] = false;
+      }, DELAY);
+    }
+  };
+
+  return handleClick;
 };

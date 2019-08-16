@@ -25,7 +25,7 @@ export const RelationMapContext = createContext<ContextProps>({
 export function reducer(
   state: State,
   action: {
-    type: 'FETCH_ORDER' | 'TARGET' | 'TARGET_ALL',
+    type: 'FETCH_ORDER' | 'TARGET' | 'TARGET_ALL' | 'TARGET_TREE',
     payload: {
       entity?: string,
       targets?: Array<string>,
@@ -48,6 +48,32 @@ export function reducer(
           draft.targets.push(action.payload.entity || '');
         }
       });
+    case 'TARGET_TREE': {
+      return produce(state, draft => {
+        const { targets = [], entity: sourceEntity = '' } = action.payload;
+        const isTargetAll = targets.every(entity => draft.targets.includes(entity));
+
+        targets.forEach(entity => {
+          if (isTargetAll) {
+            draft.targets.splice(draft.targets.indexOf(entity), 1);
+          } else if (!draft.targets.includes(entity)) {
+            draft.targets.push(entity);
+          }
+        });
+
+        // case 1: source entity is targeted and remain tree is not targeting
+        if (!draft.targets.includes(sourceEntity) && !isTargetAll) {
+          draft.targets.push(sourceEntity);
+        }
+
+        // case 2: all entities has targeted except the source
+        if (isTargetAll && draft.targets.includes(sourceEntity)) {
+          targets.forEach(entity => {
+            draft.targets.push(entity);
+          });
+        }
+      });
+    }
     case 'TARGET_ALL':
       return produce(state, draft => {
         const { targets = [] } = action.payload;
