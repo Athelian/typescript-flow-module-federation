@@ -29,14 +29,14 @@ const GlobalView = () => {
       <NavBar>Menu</NavBar>
       <Content notCenter>
         <Query query={ordersInGlobalViewQuery} variables={initialVariables}>
-          {({ error, data }) => {
+          {({ error, data, loading, fetchMore }) => {
             if (error) {
               return error.message;
             }
 
-            // const nextPage = getByPathWithDefault(1, 'orders.page', data) + 1;
-            // const totalPage = getByPathWithDefault(1, 'orders.totalPage', data);
-            // const hasMore = nextPage <= totalPage;
+            const nextPage = getByPathWithDefault(1, 'orders.page', data) + 1;
+            const totalPage = getByPathWithDefault(1, 'orders.totalPage', data);
+            const hasMore = nextPage <= totalPage;
 
             const orders = getByPathWithDefault([], 'orders.nodes', data);
 
@@ -49,14 +49,13 @@ const GlobalView = () => {
             ];
             const columnWidths = Array(keys.length).fill(200);
 
-            let tableData = [];
-
+            let rows = [];
             orders.forEach(order => {
-              tableData = [
-                ...tableData,
+              rows = [
+                ...rows,
                 ...transferOrder({
                   order,
-                  rowIndex: tableData.length,
+                  rowIndex: rows.length,
                   orderFields: OrderFields,
                   orderItemFields: OrderItemFields,
                   batchFields: BatchFields,
@@ -65,8 +64,17 @@ const GlobalView = () => {
                 }),
               ];
             });
-
-            return <Table columnWidths={columnWidths} keys={keys} data={tableData} />;
+            return (
+              <Table
+                columnWidths={columnWidths}
+                keys={keys}
+                originalData={data}
+                rows={rows}
+                loading={loading}
+                hasMore={hasMore}
+                fetchMore={fetchMore}
+              />
+            );
           }}
         </Query>
       </Content>

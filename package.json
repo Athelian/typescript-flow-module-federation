@@ -67,6 +67,7 @@
     "react-values": "^0.3.3",
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "^1.8.5",
+    "react-window-infinite-loader": "^1.0.3",
     "scheduler": "^0.15.0",
     "scroll-into-view-if-needed": "^2.2.20",
     "tippy.js": "^4.3.5",

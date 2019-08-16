@@ -2,6 +2,8 @@
 import * as React from 'react';
 import { VariableSizeGrid as Grid } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import InfiniteLoader from 'react-window-infinite-loader';
+import loadMore from 'utils/loadMore';
 import Draggable from 'react-draggable';
 import { getByPathWithDefault } from 'utils/fp';
 import TextInput from './components/TextInput';
@@ -257,11 +259,19 @@ const Cell = ({
 const Table = ({
   columnWidths,
   keys,
-  data,
+  originalData,
+  rows,
+  loading,
+  hasMore,
+  fetchMore,
 }: {
   columnWidths: Array<number>,
   keys: Array<string>,
-  data: any,
+  originalData: Object,
+  rows: Array<Object>,
+  loading: boolean,
+  hasMore: boolean,
+  fetchMore: Function,
 }) => {
   const headerRef = React.useRef(null);
   const bodyRef = React.useRef(null);
@@ -276,6 +286,12 @@ const Table = ({
       headerRef.current.scrollLeft = scrollLeft;
     }
   };
+
+  const itemCount = hasMore ? rows.length + 1 : rows.length;
+  const loadMoreItems = loading
+    ? () => {}
+    : () => loadMore({ fetchMore, data: originalData }, {}, 'orders');
+  const isItemLoaded = index => !hasMore || index < rows.length;
 
   return (
     <AutoSizer>
@@ -292,7 +308,7 @@ const Table = ({
                 newWidths[index] = newWidth;
                 return newWidths;
               });
-              if (gridRef.current) {
+              if (gridRef && gridRef.current) {
                 gridRef.current.resetAfterColumnIndex(index);
               }
             }}
@@ -307,21 +323,55 @@ const Table = ({
               setEditingId,
             }}
           >
-            <Grid
-              // $FlowFixMe: expected object, but exist function, because we use hooks. it should be supported by library.
-              ref={gridRef}
-              innerRef={bodyRef}
-              itemData={data}
-              columnCount={keys.length}
-              columnWidth={index => widths[index]}
-              width={width}
-              height={height}
-              rowCount={data.length}
-              rowHeight={() => 50}
-              onScroll={handleScroll}
+            <InfiniteLoader
+              isItemLoaded={isItemLoaded}
+              itemCount={itemCount}
+              loadMoreItems={loadMoreItems}
             >
-              {Cell}
-            </Grid>
+              {({ onItemsRendered, ref }) => {
+                const itemsRendered = gridData => {
+                  const {
+                    visibleRowStartIndex,
+                    visibleRowStopIndex,
+                    visibleColumnStopIndex,
+                    overscanRowStartIndex,
+                    overscanRowStopIndex,
+                    overscanColumnStopIndex,
+                  } = gridData;
+
+                  const endCol = (loading ? overscanColumnStopIndex : visibleColumnStopIndex) + 1;
+                  const startRow = loading ? overscanRowStartIndex : visibleRowStartIndex;
+                  const endRow = loading ? overscanRowStopIndex : visibleRowStopIndex;
+
+                  const visibleStartIndex = startRow * endCol;
+                  const visibleStopIndex = endRow * endCol;
+
+                  return onItemsRendered({
+                    visibleStartIndex,
+                    visibleStopIndex,
+                  });
+                };
+                return (
+                  <Grid
+                    // $FlowFixMe: expected object, but exist function, because we use hooks. it should be supported by library.
+                    // ref={gridRef}
+                    ref={ref}
+                    innerRef={bodyRef}
+                    itemData={rows}
+                    columnCount={keys.length}
+                    columnWidth={index => widths[index]}
+                    width={width}
+                    height={height}
+                    rowCount={itemCount}
+                    rowHeight={() => 50}
+                    onScroll={handleScroll}
+                    onItemsRendered={itemsRendered}
+                  >
+                    {Cell}
+                  </Grid>
+                );
+              }}
+            </InfiniteLoader>
           </ViewContext.Provider>
         </>
       )}
@@ -330,7 +380,7 @@ const Table = ({
 };
 
 const defaultProps = {
-  data: [],
+  rows: [],
 };
 
 Table.defaultProps = defaultProps;
