@@ -1,0 +1,12 @@
+.firebase/
+.github/
+build/
+node_modules/
+.editorconfig
+.firebaserc
+.gitignore
+runner.Dockerfile
+cloudbuild.bridge.yaml
+codegen.yml
+firebase.json
+README.md
