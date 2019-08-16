@@ -62,7 +62,7 @@ const timelineGenerator = (): Timeline => {
       totalPage: 0,
       count: 0,
       totalCount: 0,
-      __typename: 'EntryPagination',
+      __typename: 'EntryPaginatedList',
     },
     __typename: 'Timeline',
   };
@@ -77,8 +77,9 @@ const groupGenerator = (): OrganizationPayload => {
     disabled: false,
     dummy: false,
     partners: {
-      __typename: 'PartnerPayloadPagination',
+      __typename: 'PartnerPayloadPaginatedSearch',
       nodes: [],
+      hits: [],
       page: 0,
       perPage: 0,
       totalPage: 0,
@@ -87,8 +88,9 @@ const groupGenerator = (): OrganizationPayload => {
     },
     types: [],
     users: {
-      __typename: 'UserPayloadPagination',
+      __typename: 'UserPayloadPaginatedSearch',
       nodes: [],
+      hits: [],
       page: 0,
       perPage: 0,
       totalPage: 0,
@@ -126,7 +128,7 @@ const priceGenerator = (): Price => {
   };
 };
 
-export const orderGenerator = (): { ...OrderPayload, containerCount: number } => {
+export const orderGenerator = (): OrderPayload => {
   return {
     id: faker.random.uuid(),
     archived: faker.random.boolean(),
@@ -144,7 +146,6 @@ export const orderGenerator = (): { ...OrderPayload, containerCount: number } =>
     orderItems: [],
     ownedBy: groupGenerator(),
     poNo: faker.name.findName(),
-    // TODO: wait for API
     containerCount: faker.random.number(),
     shipmentCount: faker.random.number(),
     shipments: [],
@@ -157,7 +158,6 @@ export const orderGenerator = (): { ...OrderPayload, containerCount: number } =>
     totalShipped: 0,
     updatedAt: faker.date.future(),
     updatedBy: userGenerator(),
-    __typename: 'Order',
   };
 };
 
@@ -167,8 +167,9 @@ const productGenerator = (): ProductPayload => {
     __typename: 'Product',
     archived: faker.random.boolean(),
     batches: {
-      __typename: 'BatchPayloadPagination',
+      __typename: 'BatchPayloadPaginatedSearch',
       nodes: [],
+      hits: [],
       page: 0,
       perPage: 0,
       totalPage: 0,
@@ -176,8 +177,9 @@ const productGenerator = (): ProductPayload => {
       totalCount: 0,
     },
     containers: {
-      __typename: 'ContainerPayloadPagination',
+      __typename: 'ContainerPayloadPaginatedSearch',
       nodes: [],
+      hits: [],
       page: 0,
       perPage: 0,
       totalPage: 0,
@@ -190,8 +192,9 @@ const productGenerator = (): ProductPayload => {
     importer: groupGenerator(),
     name: faker.name.findName(),
     orderItems: {
-      __typename: 'OrderItemPayloadPagination',
+      __typename: 'OrderItemPayloadPaginatedSearch',
       nodes: [],
+      hits: [],
       page: 0,
       perPage: 0,
       totalPage: 0,
@@ -199,8 +202,9 @@ const productGenerator = (): ProductPayload => {
       totalCount: 0,
     },
     orders: {
-      __typename: 'OrderPayloadPagination',
+      __typename: 'OrderPayloadPaginatedSearch',
       nodes: [],
+      hits: [],
       page: 0,
       perPage: 0,
       totalPage: 0,
@@ -211,8 +215,9 @@ const productGenerator = (): ProductPayload => {
     productProviders: [],
     serial: faker.name.findName(),
     shipments: {
-      __typename: 'ShipmentPayloadPagination',
+      __typename: 'ShipmentPayloadPaginatedSearch',
       nodes: [],
+      hits: [],
       page: 0,
       perPage: 0,
       totalPage: 0,
@@ -234,8 +239,9 @@ const productProviderGenerator = (): ProductProviderPayload => {
     autoCalculatePackageVolume: faker.random.boolean(),
     autoCalculateUnitVolume: faker.random.boolean(),
     batches: {
-      __typename: 'BatchPayloadPagination',
+      __typename: 'BatchPayloadPaginatedSearch',
       nodes: [],
+      hits: [],
       page: 0,
       perPage: 0,
       totalPage: 0,
@@ -270,7 +276,6 @@ export const orderItemGenerator = (): OrderItemPayload => {
     customFields: customFieldsGenerator(),
     files: [],
     no: faker.name.findName(),
-    // $FlowIgnore we will remove this when API have containerCount field
     order: orderGenerator(),
     ownedBy: groupGenerator(),
     price: priceGenerator(),
