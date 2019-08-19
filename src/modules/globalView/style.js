@@ -36,6 +36,32 @@ export const CellStyle = ({
   `;
 };
 
+export const EmptyCellStyle = ({
+  width,
+  height,
+  focused,
+}: {
+  width: number,
+  height: number,
+  focused: boolean,
+}) => {
+  return css`
+    width: ${width}px;
+    height: ${height}px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 2px solid transparent;
+    ${focused &&
+      `
+    border-top-color: blue;
+    border-right-color: blue;
+    border-bottom-color: blue;
+    border-left-color: blue;
+  `}
+  `;
+};
+
 export const HeaderWrapperStyle = css``;
 
 export const HeaderStyle = (width: number) => css`

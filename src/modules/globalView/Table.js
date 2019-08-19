@@ -7,7 +7,13 @@ import loadMore from 'utils/loadMore';
 import Draggable from 'react-draggable';
 import { getByPathWithDefault } from 'utils/fp';
 import TextInput from './components/TextInput';
-import { HeaderStyle, HeaderItemStyle, CellStyle, DragHandleIconStyle } from './style';
+import {
+  HeaderStyle,
+  HeaderItemStyle,
+  CellStyle,
+  DragHandleIconStyle,
+  EmptyCellStyle,
+} from './style';
 
 const ViewContext = React.createContext<{
   focused: ?boolean,
@@ -83,7 +89,9 @@ const Cell = ({
   style: Object,
 }) => {
   const item = getByPathWithDefault({}, `${rowIndex}.${columnIndex}`, data);
-  const { key, value, start, lines } = item;
+  const { value, start, lines } = item;
+
+  const key = item.key || `empty.${rowIndex}.${columnIndex}`;
 
   const cellRef = React.useRef(null);
   const inputRef = React.useRef(null);
@@ -98,8 +106,12 @@ const Cell = ({
 
   // focus first cell
   React.useEffect(() => {
-    if (!focused && focusedId && focusedId === key) {
-      if (cellRef && cellRef.current) {
+    if (cellRef && cellRef.current) {
+      if (
+        !focused &&
+        focusedId &&
+        (focusedId === key || focusedId === cellRef.current.getAttribute('name'))
+      ) {
         cellRef.current.focus();
         setFocused(true);
       }
@@ -129,15 +141,18 @@ const Cell = ({
     setFocused(false);
   };
 
-  const focusNewCell = (cellKey: string) => {
-    if (inputRef && inputRef.current) {
-      inputRef.current.blur();
-    }
-    if (cellKey !== '') {
-      setFocusedId(cellKey);
+  const navigateNextCell = React.useCallback(
+    (next: string) => {
+      if (inputRef && inputRef.current) {
+        inputRef.current.blur();
+      }
+
+      const cellName = getByPathWithDefault(`empty.${next}`, `${next}.key`, data);
+      setFocusedId(cellName);
       setFocused(false);
-    }
-  };
+    },
+    [data, setFocused, setFocusedId]
+  );
 
   const handleCellKeyDown = e => {
     e.preventDefault();
@@ -148,33 +163,33 @@ const Cell = ({
         break;
       }
       case 'ArrowUp': {
-        const newKey = getByPathWithDefault('', `${start - 1}.${columnIndex}.key`, data);
-        focusNewCell(newKey);
+        const next = start ? `${start - 1}.${columnIndex}` : `${rowIndex - 1}.${columnIndex}`;
+        navigateNextCell(next);
         break;
       }
       case 'Tab': {
         if (e.shiftKey) {
-          const newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
-          focusNewCell(newKey);
+          const next = start ? `${start}.${columnIndex - 1}` : `${rowIndex}.${columnIndex - 1}`;
+          navigateNextCell(next);
         } else {
-          const newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
-          focusNewCell(newKey);
+          const next = start ? `${start}.${columnIndex + 1}` : `${rowIndex}.${columnIndex + 1}`;
+          navigateNextCell(next);
         }
         break;
       }
       case 'ArrowRight': {
-        const newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
-        focusNewCell(newKey);
+        const next = start ? `${start}.${columnIndex + 1}` : `${rowIndex}.${columnIndex + 1}`;
+        navigateNextCell(next);
         break;
       }
       case 'ArrowDown': {
-        const newKey = getByPathWithDefault('', `${start + lines}.${columnIndex}.key`, data);
-        focusNewCell(newKey);
+        const next = start ? `${start + lines}.${columnIndex}` : `${rowIndex + 1}.${columnIndex}`;
+        navigateNextCell(next);
         break;
       }
       case 'ArrowLeft': {
-        const newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
-        focusNewCell(newKey);
+        const next = start ? `${start}.${columnIndex - 1}` : `${rowIndex}.${columnIndex - 1}`;
+        navigateNextCell(next);
         break;
       }
       default:
@@ -187,22 +202,22 @@ const Cell = ({
     switch (e.key) {
       case 'Enter': {
         if (e.shiftKey) {
-          const newKey = getByPathWithDefault('', `${start - 1}.${columnIndex}.key`, data);
-          focusNewCell(newKey);
+          const next = start ? `${start - 1}.${columnIndex}` : `${rowIndex - 1}.${columnIndex}`;
+          navigateNextCell(next);
         } else {
-          const newKey = getByPathWithDefault('', `${start + lines}.${columnIndex}.key`, data);
-          focusNewCell(newKey);
+          const next = start ? `${start + lines}.${columnIndex}` : `${rowIndex + 1}.${columnIndex}`;
+          navigateNextCell(next);
         }
         break;
       }
       case 'Tab': {
         if (e.shiftKey) {
           e.preventDefault();
-          const newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
-          focusNewCell(newKey);
+          const next = start ? `${start}.${columnIndex - 1}` : `${rowIndex}.${columnIndex - 1}`;
+          navigateNextCell(next);
         } else {
-          const newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
-          focusNewCell(newKey);
+          const next = start ? `${start}.${columnIndex + 1}` : `${rowIndex}.${columnIndex + 1}`;
+          navigateNextCell(next);
         }
         break;
       }
@@ -218,15 +233,24 @@ const Cell = ({
         tabIndex="-1"
         ref={cellRef}
         role="presentation"
-        className={CellStyle({
-          width: style.width,
-          height: style.height,
-          topBorder: rowIndex === start,
-          rightBorder: start <= rowIndex && rowIndex <= start + lines,
-          bottomBorder: rowIndex === start + lines - 1,
-          leftBorder: start <= rowIndex && rowIndex <= start + lines,
-          focused: focusedId === key || editingId === key,
-        })}
+        className={
+          item.key === undefined
+            ? EmptyCellStyle({
+                width: style.width,
+                height: style.height,
+                focused: focusedId === key,
+              })
+            : CellStyle({
+                width: style.width,
+                height: style.height,
+                topBorder: rowIndex === start,
+                rightBorder: start <= rowIndex && rowIndex <= start + lines,
+                bottomBorder: rowIndex === start + lines - 1,
+                leftBorder: start <= rowIndex && rowIndex <= start + lines,
+                isEmptyCell: item.key === undefined,
+                focused: focusedId === key || editingId === key,
+              })
+        }
         onClick={e => {
           e.preventDefault();
           setFocusedId(key);
