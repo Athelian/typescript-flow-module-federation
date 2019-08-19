@@ -3,6 +3,7 @@ import * as React from 'react';
 import { VariableSizeGrid as Grid } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
+import { isEqual } from 'lodash';
 import loadMore from 'utils/loadMore';
 import Draggable from 'react-draggable';
 import { getByPathWithDefault } from 'utils/fp';
@@ -22,6 +23,8 @@ const ViewContext = React.createContext<{
   setFocused: Function,
   setFocusedId: Function,
   setEditingId: Function,
+  focusedXY: Array<number>,
+  setFocusedXY: Function,
 }>({
   focused: false,
   focusedId: undefined,
@@ -29,6 +32,8 @@ const ViewContext = React.createContext<{
   setFocused: () => {},
   setFocusedId: () => {},
   setEditingId: () => {},
+  focusedXY: [],
+  setFocusedXY: () => {},
 });
 
 const HeaderItem = ({ index, item, width, handleDrag }: Object) => {
@@ -102,11 +107,17 @@ const Cell = ({
     setFocusedId,
     editingId,
     setEditingId,
+    focusedXY,
+    setFocusedXY,
   } = React.useContext(ViewContext);
 
   // focus first cell
   React.useEffect(() => {
     if (cellRef && cellRef.current) {
+      if (lines === 1 && isEqual(focusedXY, [rowIndex, columnIndex])) {
+        cellRef.current.focus();
+        setFocused(true);
+      }
       if (
         !focused &&
         focusedId &&
@@ -116,14 +127,20 @@ const Cell = ({
         setFocused(true);
       }
     }
-  }, [focused, focusedId, key, setFocused]);
+  }, [focused, focusedId, key, setFocused, focusedXY, rowIndex, columnIndex, lines]);
 
   // focus input
   React.useEffect(() => {
-    if (inputRef && inputRef.current && editingId && editingId === key) {
+    if (
+      inputRef &&
+      inputRef.current &&
+      editingId &&
+      editingId === key &&
+      isEqual(focusedXY, [rowIndex, columnIndex])
+    ) {
       inputRef.current.focus();
     }
-  }, [inputRef, editingId, key]);
+  }, [inputRef, editingId, key, focusedXY, rowIndex, columnIndex]);
 
   // change cell style
   React.useEffect(() => {
@@ -137,22 +154,23 @@ const Cell = ({
   }, [editingId, key]);
 
   const handleInputBlur = () => {
+    setFocusedXY([]);
     setEditingId(undefined);
     setFocused(false);
   };
 
-  const navigateNextCell = React.useCallback(
-    (next: string) => {
-      if (inputRef && inputRef.current) {
-        inputRef.current.blur();
-      }
+  const navigateNextCell = (position: Array<number>) => {
+    if (inputRef && inputRef.current) {
+      inputRef.current.blur();
+    }
+    const [row, column] = position;
+    const next = `${row}.${column}`;
 
-      const cellName = getByPathWithDefault(`empty.${next}`, `${next}.key`, data);
-      setFocusedId(cellName);
-      setFocused(false);
-    },
-    [data, setFocused, setFocusedId]
-  );
+    const cellName = getByPathWithDefault(`empty.${next}`, `${next}.key`, data);
+    setFocusedId(cellName);
+    setFocusedXY(position);
+    setFocused(false);
+  };
 
   const handleCellKeyDown = e => {
     e.preventDefault();
@@ -163,33 +181,33 @@ const Cell = ({
         break;
       }
       case 'ArrowUp': {
-        const next = start ? `${start - 1}.${columnIndex}` : `${rowIndex - 1}.${columnIndex}`;
-        navigateNextCell(next);
+        const position = start ? [start - 1, columnIndex] : [rowIndex - 1, columnIndex];
+        navigateNextCell(position);
         break;
       }
       case 'Tab': {
         if (e.shiftKey) {
-          const next = start ? `${start}.${columnIndex - 1}` : `${rowIndex}.${columnIndex - 1}`;
-          navigateNextCell(next);
+          const position = start ? [start, columnIndex - 1] : [rowIndex, columnIndex - 1];
+          navigateNextCell(position);
         } else {
-          const next = start ? `${start}.${columnIndex + 1}` : `${rowIndex}.${columnIndex + 1}`;
-          navigateNextCell(next);
+          const position = start ? [start, columnIndex + 1] : [rowIndex, columnIndex + 1];
+          navigateNextCell(position);
         }
         break;
       }
       case 'ArrowRight': {
-        const next = start ? `${start}.${columnIndex + 1}` : `${rowIndex}.${columnIndex + 1}`;
-        navigateNextCell(next);
+        const position = start ? [start, columnIndex + 1] : [rowIndex, columnIndex + 1];
+        navigateNextCell(position);
         break;
       }
       case 'ArrowDown': {
-        const next = start ? `${start + lines}.${columnIndex}` : `${rowIndex + 1}.${columnIndex}`;
-        navigateNextCell(next);
+        const position = start ? [start + lines, columnIndex] : [rowIndex + 1, columnIndex];
+        navigateNextCell(position);
         break;
       }
       case 'ArrowLeft': {
-        const next = start ? `${start}.${columnIndex - 1}` : `${rowIndex}.${columnIndex - 1}`;
-        navigateNextCell(next);
+        const position = start ? [start, columnIndex - 1] : [rowIndex, columnIndex - 1];
+        navigateNextCell(position);
         break;
       }
       default:
@@ -202,22 +220,22 @@ const Cell = ({
     switch (e.key) {
       case 'Enter': {
         if (e.shiftKey) {
-          const next = start ? `${start - 1}.${columnIndex}` : `${rowIndex - 1}.${columnIndex}`;
-          navigateNextCell(next);
+          const position = start ? [start - 1, columnIndex] : [rowIndex - 1, columnIndex];
+          navigateNextCell(position);
         } else {
-          const next = start ? `${start + lines}.${columnIndex}` : `${rowIndex + 1}.${columnIndex}`;
-          navigateNextCell(next);
+          const position = start ? [start + lines, columnIndex] : [rowIndex + 1, columnIndex];
+          navigateNextCell(position);
         }
         break;
       }
       case 'Tab': {
         if (e.shiftKey) {
           e.preventDefault();
-          const next = start ? `${start}.${columnIndex - 1}` : `${rowIndex}.${columnIndex - 1}`;
-          navigateNextCell(next);
+          const position = start ? [start, columnIndex - 1] : [rowIndex, columnIndex - 1];
+          navigateNextCell(position);
         } else {
-          const next = start ? `${start}.${columnIndex + 1}` : `${rowIndex}.${columnIndex + 1}`;
-          navigateNextCell(next);
+          const position = start ? [start, columnIndex + 1] : [rowIndex, columnIndex + 1];
+          navigateNextCell(position);
         }
         break;
       }
@@ -231,6 +249,7 @@ const Cell = ({
       <div
         name={key}
         tabIndex="-1"
+        // $FlowFixMe: Cannot create div element because a call signature declaring the expected parameter / return type is missing in object type [1] but exists in function type [2] in property ref.
         ref={cellRef}
         role="presentation"
         className={
@@ -248,12 +267,14 @@ const Cell = ({
                 bottomBorder: rowIndex === start + lines - 1,
                 leftBorder: start <= rowIndex && rowIndex <= start + lines,
                 isEmptyCell: item.key === undefined,
-                focused: focusedId === key || editingId === key,
+                focused: isEqual(focusedXY, [rowIndex, columnIndex]),
+                wrapped: focusedId === key,
               })
         }
         onClick={e => {
           e.preventDefault();
           setFocusedId(key);
+          setFocusedXY([rowIndex, columnIndex]);
           setFocused(false);
         }}
         onDoubleClick={e => {
@@ -261,6 +282,7 @@ const Cell = ({
           if (inputRef && inputRef.current) {
             inputRef.current.focus();
           }
+          setFocusedXY([rowIndex, columnIndex]);
           setEditingId(key);
         }}
         onKeyDown={handleCellKeyDown}
@@ -303,6 +325,7 @@ const Table = ({
   const [widths, setWidths] = React.useState(columnWidths);
   const [focused, setFocused] = React.useState(false);
   const [focusedId, setFocusedId] = React.useState();
+  const [focusedXY, setFocusedXY] = React.useState([]);
   const [editingId, setEditingId] = React.useState();
 
   const handleScroll = ({ scrollLeft }: Object) => {
@@ -345,6 +368,8 @@ const Table = ({
               setFocusedId,
               editingId,
               setEditingId,
+              focusedXY,
+              setFocusedXY,
             }}
           >
             <InfiniteLoader
