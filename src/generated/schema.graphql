@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Aug 14 2019 11:44:37 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Aug 16 2019 15:56:03 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26727,15 +26727,6 @@ input BatchFilterInput {
 
 union BatchPayload = Batch | BadRequest | Forbidden | NotFound
 
-type BatchPayloadPaginatedList implements Paginated {
-  nodes: [BatchPayload!]!
-  page: Int!
-  perPage: Int!
-  totalPage: Int!
-  count: Int!
-  totalCount: Int!
-}
-
 type BatchPayloadPaginatedSearch implements Paginated {
   nodes: [BatchPayload!]!
   hits: [Hit!]!
@@ -28431,6 +28422,30 @@ type EntityValue {
   entity: EntityPayload
 }
 
+union Entry = Event | Comment | BadRequest | Forbidden | NotFound
+
+type EntryPaginatedList implements Paginated {
+  nodes: [Entry!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+type Event implements Model & Owned {
+  entity: EntityPayload!
+  logs: [Log!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: OrganizationPayload!
+}
+
 type Export {
   id: ID!
 }
@@ -29514,6 +29529,13 @@ enum LoadType {
   LCL
 }
 
+type Log {
+  id: ID!
+  entity: EntityPayload!
+  translationKey: String!
+  parameters: [Parameter!]!
+}
+
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -30450,6 +30472,11 @@ interface Paginated {
   totalPage: Int!
   count: Int!
   totalCount: Int!
+}
+
+type Parameter {
+  key: String!
+  value: Value
 }
 
 type Partner implements Model {
@@ -87285,7 +87312,7 @@ input TaskUpdateWrapperInput {
 
 type Timeline {
   unreadCount: Int!
-  entries(page: Int! = 1, perPage: Int! = 10): BatchPayloadPaginatedList!
+  entries(page: Int! = 1, perPage: Int! = 10): EntryPaginatedList!
 }
 
 type TimelineDate implements Model & Owned & Memorizable {

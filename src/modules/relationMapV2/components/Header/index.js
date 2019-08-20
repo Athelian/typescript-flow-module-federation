@@ -1,17 +1,27 @@
 // @flow
 import * as React from 'react';
+import { flatten, flattenDeep } from 'lodash';
+import { FormattedMessage } from 'react-intl';
 import {
+  ORDER,
+  ORDER_ITEM,
+  BATCH,
+  CONTAINER,
+  SHIPMENT,
   ORDER_WIDTH,
   ORDER_ITEM_WIDTH,
   BATCH_WIDTH,
   CONTAINER_WIDTH,
   SHIPMENT_WIDTH,
 } from 'modules/relationMapV2/constants';
-import { HeadingStyle, RowStyle } from './style';
+import { getByPathWithDefault } from 'utils/fp';
+import { HeadingStyle, ButtonStyle, RowStyle } from './style';
+import { RelationMapContext } from '../OrderFocus/store';
 
 type Props = { style?: Object };
 
 const Header = React.memo<Props>(({ style }: Props) => {
+  const { state, orders, dispatch } = React.useContext(RelationMapContext);
   return (
     <div style={style} className={RowStyle}>
       <div
@@ -22,6 +32,23 @@ const Header = React.memo<Props>(({ style }: Props) => {
         }}
       >
         Orders
+        <button
+          type="button"
+          className={ButtonStyle}
+          onClick={() => {
+            const targets = orders.map(
+              order => `${ORDER}-${getByPathWithDefault('', 'id', order)}`
+            );
+            dispatch({
+              type: 'TARGET_ALL',
+              payload: {
+                targets,
+              },
+            });
+          }}
+        >
+          <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+        </button>
       </div>
       <div
         className={HeadingStyle}
@@ -31,6 +58,30 @@ const Header = React.memo<Props>(({ style }: Props) => {
         }}
       >
         Items
+        <button
+          type="button"
+          className={ButtonStyle}
+          onClick={() => {
+            const orderItemIds = flatten(
+              orders.map(order =>
+                getByPathWithDefault(
+                  [],
+                  `order.${getByPathWithDefault('', 'id', order)}.orderItems`,
+                  state
+                ).map(item => getByPathWithDefault('', 'id', item))
+              )
+            ).filter(Boolean);
+            const targets = orderItemIds.map(id => `${ORDER_ITEM}-${id}`);
+            dispatch({
+              type: 'TARGET_ALL',
+              payload: {
+                targets,
+              },
+            });
+          }}
+        >
+          <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+        </button>
       </div>
       <div
         className={HeadingStyle}
@@ -40,6 +91,34 @@ const Header = React.memo<Props>(({ style }: Props) => {
         }}
       >
         Batches
+        <button
+          type="button"
+          className={ButtonStyle}
+          onClick={() => {
+            const batchIds = flattenDeep(
+              orders.map(order =>
+                getByPathWithDefault(
+                  [],
+                  `order.${getByPathWithDefault('', 'id', order)}.orderItems`,
+                  state
+                ).map(item =>
+                  getByPathWithDefault([], 'batches', item).map(batch =>
+                    getByPathWithDefault('', 'id', batch)
+                  )
+                )
+              )
+            ).filter(Boolean);
+            const targets = batchIds.map(id => `${BATCH}-${id}`);
+            dispatch({
+              type: 'TARGET_ALL',
+              payload: {
+                targets,
+              },
+            });
+          }}
+        >
+          <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+        </button>
       </div>
       <div
         className={HeadingStyle}
@@ -49,6 +128,34 @@ const Header = React.memo<Props>(({ style }: Props) => {
         }}
       >
         Containers
+        <button
+          type="button"
+          className={ButtonStyle}
+          onClick={() => {
+            const containerIds = flattenDeep(
+              orders.map(order =>
+                getByPathWithDefault(
+                  [],
+                  `order.${getByPathWithDefault('', 'id', order)}.orderItems`,
+                  state
+                ).map(item =>
+                  getByPathWithDefault([], 'batches', item).map(batch =>
+                    getByPathWithDefault('', 'container.id', batch)
+                  )
+                )
+              )
+            ).filter(Boolean);
+            const targets = containerIds.map(id => `${CONTAINER}-${id}`);
+            dispatch({
+              type: 'TARGET_ALL',
+              payload: {
+                targets,
+              },
+            });
+          }}
+        >
+          <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+        </button>
       </div>
       <div
         className={HeadingStyle}
@@ -58,6 +165,34 @@ const Header = React.memo<Props>(({ style }: Props) => {
         }}
       >
         Shipments
+        <button
+          type="button"
+          className={ButtonStyle}
+          onClick={() => {
+            const shipmentIds = flattenDeep(
+              orders.map(order =>
+                getByPathWithDefault(
+                  [],
+                  `order.${getByPathWithDefault('', 'id', order)}.orderItems`,
+                  state
+                ).map(item =>
+                  getByPathWithDefault([], 'batches', item).map(batch =>
+                    getByPathWithDefault('', 'shipment.id', batch)
+                  )
+                )
+              )
+            ).filter(Boolean);
+            const targets = shipmentIds.map(id => `${SHIPMENT}-${id}`);
+            dispatch({
+              type: 'TARGET_ALL',
+              payload: {
+                targets,
+              },
+            });
+          }}
+        >
+          <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+        </button>
       </div>
     </div>
   );

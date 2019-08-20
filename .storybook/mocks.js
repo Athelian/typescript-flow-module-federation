@@ -89,8 +89,7 @@ const baseTimelineMock = (): Timeline => {
       totalPage: 0,
       count: 0,
       totalCount: 0,
-      // TODO: confirm with Maxime, looks wrong
-      __typename: 'BatchPayloadPaginatedList',
+      __typename: 'EntryPaginatedList',
     },
     __typename: 'Timeline',
   };

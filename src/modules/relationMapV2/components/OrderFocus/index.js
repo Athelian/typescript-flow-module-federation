@@ -1,8 +1,6 @@
 // @flow
 import * as React from 'react';
-import produce from 'immer';
 import { VariableSizeList as List } from 'react-window';
-import update from 'immutability-helper';
 import { Query } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import apolloClient from 'apollo';
@@ -14,13 +12,13 @@ import { UIContext } from 'modules/ui';
 import { Display } from 'components/Form';
 import { orderFocusedListQuery, orderFocusDetailQuery } from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import type { State } from './type.js.flow';
 import { WrapperStyle, ListStyle, RowStyle } from './style';
 import SelectedEntity from '../SelectedEntity';
 import Header from '../Header';
 import Row from '../Row';
 import cellRenderer from './cellRenderer';
 import generateListData from './generateListData';
+import { reducer, initialState, RelationMapContext } from './store';
 
 const LoadingPlaceHolder = React.memo(() => {
   return (
@@ -82,42 +80,6 @@ const hasMoreItems = (data: Object, model: string = 'orders') => {
   const totalPage = getByPathWithDefault(1, `${model}.totalPage`, data);
   return nextPage <= totalPage;
 };
-
-const initialState: State = {
-  order: {},
-  targets: [],
-};
-
-function reducer(
-  state,
-  action: {
-    type: 'FETCH_ORDER' | 'TARGET',
-    payload: {
-      entity?: string,
-      [string]: mixed,
-    },
-  }
-) {
-  switch (action.type) {
-    case 'FETCH_ORDER':
-      return update(state, {
-        order: {
-          $merge: action.payload,
-        },
-      });
-
-    case 'TARGET':
-      return produce(state, draft => {
-        if (draft.targets.includes(action.payload.entity)) {
-          draft.targets.splice(draft.targets.indexOf(action.payload.entity), 1);
-        } else {
-          draft.targets.push(action.payload.entity || '');
-        }
-      });
-    default:
-      return state;
-  }
-}
 
 const innerElementType = React.forwardRef(
   ({ children, ...rest }: { children: React.Node }, ref) => (
@@ -194,30 +156,39 @@ export default function OrderFocus() {
               state,
               expandRows,
               setExpandRows,
-              queryOrderDetail,
-              dispatch,
             });
             const rowCount = ordersData.length;
             return orders.length > 0 ? (
-              <List
-                itemData={ordersData}
-                className={ListStyle}
-                itemCount={rowCount}
-                innerElementType={innerElementType}
-                itemSize={() => 75}
-                onItemsRendered={({ visibleStopIndex }) => {
-                  const isLastCell = visibleStopIndex === rowCount - 1;
-                  if (hasMoreItems(data, 'orders') && isLastCell) {
-                    loadMore({ fetchMore, data }, queryOrderVariables, 'orders');
+              <RelationMapContext.Provider value={{ state, orders, dispatch }}>
+                <List
+                  itemData={ordersData}
+                  className={ListStyle}
+                  itemCount={rowCount}
+                  innerElementType={innerElementType}
+                  itemSize={() => 75}
+                  onItemsRendered={({ visibleStartIndex, visibleStopIndex }) => {
+                    const isLastCell = visibleStopIndex === rowCount - 1;
+                    if (hasMoreItems(data, 'orders') && isLastCell) {
+                      loadMore({ fetchMore, data }, queryOrderVariables, 'orders');
+                    }
+                    for (let index = visibleStartIndex; index < visibleStopIndex; index += 1) {
+                      const [{ order }] = ordersData[index];
+                      const isLoadedData =
+                        getByPathWithDefault([], 'orderItems', order).length ===
+                        getByPathWithDefault(0, 'orderItemCount', order);
+                      if (!isLoadedData && getByPathWithDefault(0, 'orderItemCount', order) > 0) {
+                        queryOrderDetail(getByPathWithDefault(0, 'id', order));
+                      }
+                    }
+                  }}
+                  height={window.innerHeight - 50}
+                  width={
+                    uiContext.isSideBarExpanded ? window.innerWidth - 200 : window.innerWidth - 50
                   }
-                }}
-                height={window.innerHeight - 50}
-                width={
-                  uiContext.isSideBarExpanded ? window.innerWidth - 200 : window.innerWidth - 50
-                }
-              >
-                {Row}
-              </List>
+                >
+                  {Row}
+                </List>
+              </RelationMapContext.Provider>
             ) : (
               <Display>
                 <FormattedMessage
