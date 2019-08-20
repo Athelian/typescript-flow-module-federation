@@ -18,20 +18,16 @@ import {
 
 const ViewContext = React.createContext<{
   columnCount: number,
-  focused: ?boolean,
   focusedId: ?string,
   editingId: ?string,
-  setFocused: Function,
   setFocusedId: Function,
   setEditingId: Function,
   focusedXY: Array<number>,
   setFocusedXY: Function,
 }>({
   columnCount: 0,
-  focused: false,
   focusedId: undefined,
   editingId: undefined,
-  setFocused: () => {},
   setFocusedId: () => {},
   setEditingId: () => {},
   focusedXY: [],
@@ -104,8 +100,6 @@ const Cell = ({
   const inputRef = React.useRef(null);
   const {
     columnCount,
-    // focused,
-    setFocused,
     focusedId,
     setFocusedId,
     editingId,
@@ -119,7 +113,6 @@ const Cell = ({
     if (cellRef && cellRef.current) {
       if (isEqual(focusedXY, [rowIndex, columnIndex])) {
         cellRef.current.focus();
-        // setFocused(true);
       }
     }
   }, [columnIndex, focusedXY, rowIndex]);
@@ -151,7 +144,6 @@ const Cell = ({
   const handleInputBlur = () => {
     setFocusedXY([]);
     setEditingId(undefined);
-    setFocused(false);
   };
 
   const navigateNextCell = (position: Array<number>) => {
@@ -167,7 +159,6 @@ const Cell = ({
     const cellName = getByPathWithDefault(`empty.${next}`, `${next}.key`, data);
     setFocusedId(cellName);
     setFocusedXY(position);
-    setFocused(false);
   };
 
   const upPosition = [
@@ -188,7 +179,6 @@ const Cell = ({
     switch (e.key) {
       case 'Enter': {
         setEditingId(key);
-        // TODO: why not ref.current
         break;
       }
 
@@ -277,13 +267,9 @@ const Cell = ({
           e.preventDefault();
           setFocusedId(key);
           setFocusedXY(start === undefined ? [rowIndex, columnIndex] : [start, columnIndex]);
-          // setFocused(false);
         }}
         onDoubleClick={e => {
           e.preventDefault();
-          if (inputRef && inputRef.current) {
-            inputRef.current.focus();
-          }
           setFocusedXY(start === undefined ? [rowIndex, columnIndex] : [start, columnIndex]);
           setEditingId(key);
         }}
@@ -325,7 +311,7 @@ const Table = ({
   const bodyRef = React.useRef(null);
   const gridRef = React.useRef(null);
   const [widths, setWidths] = React.useState(columnWidths);
-  const [focused, setFocused] = React.useState(false);
+
   const [focusedId, setFocusedId] = React.useState();
   const [focusedXY, setFocusedXY] = React.useState([]);
   const [editingId, setEditingId] = React.useState();
@@ -365,8 +351,6 @@ const Table = ({
           <ViewContext.Provider
             value={{
               columnCount: keys.length,
-              focused,
-              setFocused,
               focusedId,
               setFocusedId,
               editingId,
