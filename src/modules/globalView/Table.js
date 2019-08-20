@@ -181,32 +181,38 @@ const Cell = ({
         break;
       }
       case 'ArrowUp': {
-        const position = start ? [start - 1, columnIndex] : [rowIndex - 1, columnIndex];
+        const position =
+          start === undefined ? [rowIndex - 1, columnIndex] : [start - 1, columnIndex];
         navigateNextCell(position);
         break;
       }
       case 'Tab': {
         if (e.shiftKey) {
-          const position = start ? [start, columnIndex - 1] : [rowIndex, columnIndex - 1];
+          const position =
+            start === undefined ? [rowIndex, columnIndex - 1] : [start, columnIndex - 1];
           navigateNextCell(position);
         } else {
-          const position = start ? [start, columnIndex + 1] : [rowIndex, columnIndex + 1];
+          const position =
+            start === undefined ? [rowIndex, columnIndex + 1] : [start, columnIndex + 1];
           navigateNextCell(position);
         }
         break;
       }
       case 'ArrowRight': {
-        const position = start ? [start, columnIndex + 1] : [rowIndex, columnIndex + 1];
+        const position =
+          start === undefined ? [rowIndex, columnIndex + 1] : [start, columnIndex + 1];
         navigateNextCell(position);
         break;
       }
       case 'ArrowDown': {
-        const position = start ? [start + lines, columnIndex] : [rowIndex + 1, columnIndex];
+        const position =
+          start === undefined ? [rowIndex + 1, columnIndex] : [start + lines, columnIndex];
         navigateNextCell(position);
         break;
       }
       case 'ArrowLeft': {
-        const position = start ? [start, columnIndex - 1] : [rowIndex, columnIndex - 1];
+        const position =
+          start === undefined ? [rowIndex, columnIndex - 1] : [start, columnIndex - 1];
         navigateNextCell(position);
         break;
       }
@@ -220,10 +226,12 @@ const Cell = ({
     switch (e.key) {
       case 'Enter': {
         if (e.shiftKey) {
-          const position = start ? [start - 1, columnIndex] : [rowIndex - 1, columnIndex];
+          const position =
+            start === undefined ? [rowIndex - 1, columnIndex] : [start - 1, columnIndex];
           navigateNextCell(position);
         } else {
-          const position = start ? [start + lines, columnIndex] : [rowIndex + 1, columnIndex];
+          const position =
+            start === undefined ? [rowIndex + 1, columnIndex] : [start + lines, columnIndex];
           navigateNextCell(position);
         }
         break;
@@ -231,10 +239,12 @@ const Cell = ({
       case 'Tab': {
         if (e.shiftKey) {
           e.preventDefault();
-          const position = start ? [start, columnIndex - 1] : [rowIndex, columnIndex - 1];
+          const position =
+            start === undefined ? [rowIndex, columnIndex - 1] : [start, columnIndex - 1];
           navigateNextCell(position);
         } else {
-          const position = start ? [start, columnIndex + 1] : [rowIndex, columnIndex + 1];
+          const position =
+            start === undefined ? [rowIndex, columnIndex + 1] : [start, columnIndex + 1];
           navigateNextCell(position);
         }
         break;
@@ -274,7 +284,7 @@ const Cell = ({
         onClick={e => {
           e.preventDefault();
           setFocusedId(key);
-          setFocusedXY([rowIndex, columnIndex]);
+          setFocusedXY(start === undefined ? [rowIndex, columnIndex] : [start, columnIndex]);
           setFocused(false);
         }}
         onDoubleClick={e => {
@@ -282,7 +292,7 @@ const Cell = ({
           if (inputRef && inputRef.current) {
             inputRef.current.focus();
           }
-          setFocusedXY([rowIndex, columnIndex]);
+          setFocusedXY(start === undefined ? [rowIndex, columnIndex] : [start, columnIndex]);
           setEditingId(key);
         }}
         onKeyDown={handleCellKeyDown}
