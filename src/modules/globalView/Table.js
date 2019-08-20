@@ -17,6 +17,7 @@ import {
 } from './style';
 
 const ViewContext = React.createContext<{
+  columnCount: number,
   focused: ?boolean,
   focusedId: ?string,
   editingId: ?string,
@@ -26,6 +27,7 @@ const ViewContext = React.createContext<{
   focusedXY: Array<number>,
   setFocusedXY: Function,
 }>({
+  columnCount: 0,
   focused: false,
   focusedId: undefined,
   editingId: undefined,
@@ -101,7 +103,8 @@ const Cell = ({
   const cellRef = React.useRef(null);
   const inputRef = React.useRef(null);
   const {
-    focused,
+    columnCount,
+    // focused,
     setFocused,
     focusedId,
     setFocusedId,
@@ -114,20 +117,12 @@ const Cell = ({
   // focus first cell
   React.useEffect(() => {
     if (cellRef && cellRef.current) {
-      if (lines === 1 && isEqual(focusedXY, [rowIndex, columnIndex])) {
+      if (isEqual(focusedXY, [rowIndex, columnIndex])) {
         cellRef.current.focus();
-        setFocused(true);
-      }
-      if (
-        !focused &&
-        focusedId &&
-        (focusedId === key || focusedId === cellRef.current.getAttribute('name'))
-      ) {
-        cellRef.current.focus();
-        setFocused(true);
+        // setFocused(true);
       }
     }
-  }, [focused, focusedId, key, setFocused, focusedXY, rowIndex, columnIndex, lines]);
+  }, [columnIndex, focusedXY, rowIndex]);
 
   // focus input
   React.useEffect(() => {
@@ -160,10 +155,13 @@ const Cell = ({
   };
 
   const navigateNextCell = (position: Array<number>) => {
+    const [row, column] = position;
+    if (row < 0 || column < 0 || column >= columnCount) {
+      return;
+    }
     if (inputRef && inputRef.current) {
       inputRef.current.blur();
     }
-    const [row, column] = position;
     const next = `${row}.${column}`;
 
     const cellName = getByPathWithDefault(`empty.${next}`, `${next}.key`, data);
@@ -172,48 +170,50 @@ const Cell = ({
     setFocused(false);
   };
 
+  const upPosition = [
+    getByPathWithDefault(rowIndex - 1, `${rowIndex - 1}.${columnIndex}.start`, data),
+    columnIndex,
+  ];
+  const rightPosition = [start === undefined ? rowIndex : start, columnIndex + 1];
+  const downPosition = [start === undefined ? rowIndex + 1 : start + lines, columnIndex];
+  const leftPosition = [
+    getByPathWithDefault(rowIndex, `${rowIndex}.${columnIndex - 1}.start`, data),
+    columnIndex - 1,
+  ];
+
   const handleCellKeyDown = e => {
     e.preventDefault();
     e.stopPropagation();
+
     switch (e.key) {
       case 'Enter': {
         setEditingId(key);
+        // TODO: why not ref.current
         break;
       }
-      case 'ArrowUp': {
-        const position =
-          start === undefined ? [rowIndex - 1, columnIndex] : [start - 1, columnIndex];
-        navigateNextCell(position);
-        break;
-      }
+
       case 'Tab': {
         if (e.shiftKey) {
-          const position =
-            start === undefined ? [rowIndex, columnIndex - 1] : [start, columnIndex - 1];
-          navigateNextCell(position);
+          navigateNextCell(leftPosition);
         } else {
-          const position =
-            start === undefined ? [rowIndex, columnIndex + 1] : [start, columnIndex + 1];
-          navigateNextCell(position);
+          navigateNextCell(rightPosition);
         }
         break;
       }
       case 'ArrowRight': {
-        const position =
-          start === undefined ? [rowIndex, columnIndex + 1] : [start, columnIndex + 1];
-        navigateNextCell(position);
+        navigateNextCell(rightPosition);
         break;
       }
       case 'ArrowDown': {
-        const position =
-          start === undefined ? [rowIndex + 1, columnIndex] : [start + lines, columnIndex];
-        navigateNextCell(position);
+        navigateNextCell(downPosition);
         break;
       }
       case 'ArrowLeft': {
-        const position =
-          start === undefined ? [rowIndex, columnIndex - 1] : [start, columnIndex - 1];
-        navigateNextCell(position);
+        navigateNextCell(leftPosition);
+        break;
+      }
+      case 'ArrowUp': {
+        navigateNextCell(upPosition);
         break;
       }
       default:
@@ -226,26 +226,18 @@ const Cell = ({
     switch (e.key) {
       case 'Enter': {
         if (e.shiftKey) {
-          const position =
-            start === undefined ? [rowIndex - 1, columnIndex] : [start - 1, columnIndex];
-          navigateNextCell(position);
+          navigateNextCell(upPosition);
         } else {
-          const position =
-            start === undefined ? [rowIndex + 1, columnIndex] : [start + lines, columnIndex];
-          navigateNextCell(position);
+          navigateNextCell(downPosition);
         }
         break;
       }
       case 'Tab': {
         if (e.shiftKey) {
           e.preventDefault();
-          const position =
-            start === undefined ? [rowIndex, columnIndex - 1] : [start, columnIndex - 1];
-          navigateNextCell(position);
+          navigateNextCell(leftPosition);
         } else {
-          const position =
-            start === undefined ? [rowIndex, columnIndex + 1] : [start, columnIndex + 1];
-          navigateNextCell(position);
+          navigateNextCell(rightPosition);
         }
         break;
       }
@@ -285,7 +277,7 @@ const Cell = ({
           e.preventDefault();
           setFocusedId(key);
           setFocusedXY(start === undefined ? [rowIndex, columnIndex] : [start, columnIndex]);
-          setFocused(false);
+          // setFocused(false);
         }}
         onDoubleClick={e => {
           e.preventDefault();
@@ -372,6 +364,7 @@ const Table = ({
           />
           <ViewContext.Provider
             value={{
+              columnCount: keys.length,
               focused,
               setFocused,
               focusedId,
