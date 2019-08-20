@@ -165,11 +165,11 @@ const ShipmentBatchCard = ({
 
   const tags = getByPathWithDefault([], 'tags', batch);
   const order = getByPathWithDefault({}, 'orderItem.order', batch);
-  const container = getByPathWithDefault(null, 'container', batch);
-  const price = getByPathWithDefault(null, 'orderItem.price', batch);
-  const product = getByPathWithDefault(null, 'orderItem.productProvider.product', batch);
+  const container = getByPathWithDefault({}, 'container', batch);
+  const price = getByPathWithDefault({}, 'orderItem.price', batch);
+  const product = getByPathWithDefault({}, 'orderItem.productProvider.product', batch);
   const productProviderName = getByPathWithDefault('', 'orderItem.productProvider.name', batch);
-  const todo = getByPathWithDefault(null, 'todo', batch);
+  const todo = getByPathWithDefault({}, 'todo', batch);
   const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
 
   const quantityName = `batches.${id}.quantity`;
@@ -212,7 +212,7 @@ const ShipmentBatchCard = ({
 
           <div className={ProductInfoWrapperStyle}>
             <div className={ProductNameWrapperStyle}>
-              {mergedNavigable.product ? (
+              {mergedNavigable.product && product.id ? (
                 <Link
                   className={ProductIconLinkStyle}
                   to={`/product/${encodeId(product.id)}`}
@@ -411,8 +411,8 @@ const ShipmentBatchCard = ({
               input={
                 <Display blackout={!mergedViewable.price}>
                   <FormattedNumber
-                    value={(price && price.amount ? price.amount : 0) * latestQuantity}
-                    suffix={currency || (price && price.currency)}
+                    value={(price.amount || 0) * latestQuantity}
+                    suffix={currency || price.currency}
                   />
                 </Display>
               }
@@ -452,12 +452,12 @@ const ShipmentBatchCard = ({
           <div className={ContainerWrapperStyle}>
             <RelateEntity
               link={
-                mergedNavigable.container && container && container.id
+                mergedNavigable.container && container.id
                   ? `/container/${encodeId(container.id)}`
                   : ''
               }
               entity="CONTAINER"
-              value={getByPathWithDefault(null, 'no', container)}
+              value={container.no}
             />
           </div>
 
