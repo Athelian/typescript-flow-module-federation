@@ -212,7 +212,7 @@ const ShipmentBatchCard = ({
 
           <div className={ProductInfoWrapperStyle}>
             <div className={ProductNameWrapperStyle}>
-              {mergedNavigable.product ? (
+              {mergedNavigable.product && product.id ? (
                 <Link
                   className={ProductIconLinkStyle}
                   to={`/product/${encodeId(product.id)}`}
