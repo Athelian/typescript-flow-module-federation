@@ -12,10 +12,26 @@ type ContextProps = {|
   entities: Object,
 |};
 
+const initMoveEntity = {
+  from: {
+    id: '',
+    icon: 'BATCH',
+    value: '',
+  },
+  to: {
+    id: '',
+    icon: 'ORDER',
+    value: '',
+  },
+};
 export const initialState: State = {
   order: {},
   targets: [],
   isDragging: false,
+  moveEntity: {
+    isOpen: false,
+    detail: initMoveEntity,
+  },
 };
 
 export const RelationMapContext = createContext<ContextProps>({
@@ -28,7 +44,15 @@ export const RelationMapContext = createContext<ContextProps>({
 export function reducer(
   state: State,
   action: {
-    type: 'FETCH_ORDER' | 'TARGET' | 'TARGET_ALL' | 'TARGET_TREE' | 'DND' | 'START_DND' | 'END_DND',
+    type: | 'FETCH_ORDER'
+      | 'TARGET'
+      | 'TARGET_ALL'
+      | 'TARGET_TREE'
+      | 'DND'
+      | 'START_DND'
+      | 'END_DND'
+      | 'CANCEL_MOVE'
+      | 'CONFIRM_MOVE',
     payload: {
       entity?: string,
       targets?: Array<string>,
@@ -100,8 +124,28 @@ export function reducer(
         });
       });
     case 'DND': {
-      console.warn({ action });
-      return state;
+      return update(state, {
+        moveEntity: {
+          isOpen: { $set: true },
+          detail: { $set: action.payload },
+        },
+      });
+    }
+    case 'CANCEL_MOVE': {
+      return update(state, {
+        moveEntity: {
+          isOpen: { $set: false },
+          detail: { $set: initMoveEntity },
+        },
+      });
+    }
+    case 'CONFIRM_MOVE': {
+      return update(state, {
+        moveEntity: {
+          isOpen: { $set: false },
+          detail: { $set: initMoveEntity },
+        },
+      });
     }
     default:
       return state;

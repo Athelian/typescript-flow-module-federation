@@ -135,6 +135,56 @@ const baseDragStyle = {
   cursor: 'move',
 };
 
+const getIdentifier = ({
+  id,
+  type,
+  entities,
+}: {
+  id: string,
+  type: typeof ORDER | typeof BATCH | typeof ORDER_ITEM | typeof CONTAINER | typeof SHIPMENT,
+  entities: Object,
+}) => {
+  switch (type) {
+    case ORDER:
+      return {
+        id,
+        icon: 'ORDER',
+        value: getByPathWithDefault('', `orders.${id}.no`, entities),
+      };
+    case ORDER_ITEM:
+      return {
+        id,
+        icon: 'ORDER_ITEM',
+        value: getByPathWithDefault('', `orderItems.${id}.no`, entities),
+      };
+    case BATCH:
+      return {
+        id,
+        icon: 'BATCH',
+        value: getByPathWithDefault('', `batches.${id}.no`, entities),
+      };
+    case CONTAINER:
+      return {
+        id,
+        icon: 'CONTAINER',
+        value: getByPathWithDefault('', `containers.${id}.no`, entities),
+      };
+    case SHIPMENT:
+      return {
+        id,
+        icon: 'SHIPMENT',
+        value: getByPathWithDefault('', `shipments.${id}.blNo`, entities),
+      };
+
+    default:
+      return {
+        id,
+        icon: 'ORDER',
+        value: '',
+      };
+  }
+};
+
 const hasPermissionToMove = order => !!order;
 const orderDropMessage = ({
   orderId,
@@ -477,7 +527,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
           return false;
       }
     },
-    drop: () => ({ type: ORDER_ITEM, id: orderId }),
+    drop: () => ({ type: ORDER, id: orderId }),
     collect: monitor => ({
       isOver: !!monitor.isOver(),
       canDrop: !!monitor.canDrop(),
@@ -797,7 +847,7 @@ function BatchCell({
   afterConnector,
 }: CellProps & { order: OrderPayload }) {
   const batchId = getByPathWithDefault('', 'id', data);
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch, entities } = React.useContext(RelationMapContext);
   const [{ isOver, canDrop, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
     canDrop: () => false,
@@ -820,7 +870,16 @@ function BatchCell({
       if (item && dropResult) {
         dispatch({
           type: 'DND',
-          payload: { item, dropResult },
+          payload: {
+            from: getIdentifier({
+              ...item,
+              entities,
+            }),
+            to: getIdentifier({
+              ...dropResult,
+              entities,
+            }),
+          },
         });
       }
       dispatch({

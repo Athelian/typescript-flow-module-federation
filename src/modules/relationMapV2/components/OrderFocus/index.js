@@ -15,6 +15,7 @@ import { Display } from 'components/Form';
 import { orderFocusedListQuery, orderFocusDetailQuery } from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { WrapperStyle, ListStyle, RowStyle } from './style';
+import MoveEntityConfirm from '../MoveEntityConfirm';
 import SelectedEntity from '../SelectedEntity';
 import Header from '../Header';
 import Row from '../Row';
@@ -131,6 +132,9 @@ export default function OrderFocus() {
     'orderFocusedFilter'
   );
 
+  console.warn({
+    state,
+  });
   return (
     <>
       <div className={WrapperStyle}>
@@ -213,6 +217,22 @@ export default function OrderFocus() {
         </DndProvider>
       </div>
       {state.targets.length > 0 && <SelectedEntity targets={state.targets} />}
+      <MoveEntityConfirm
+        onCancel={() =>
+          dispatch({
+            type: 'CANCEL_MOVE',
+            payload: {},
+          })
+        }
+        onConfirm={() =>
+          dispatch({
+            type: 'CONFIRM_MOVE',
+            payload: {},
+          })
+        }
+        isOpen={state.moveEntity.isOpen}
+        {...state.moveEntity.detail}
+      />
     </>
   );
 }

@@ -36,4 +36,19 @@ export type State = {|
   order: Object,
   targets: Array<string>,
   isDragging: boolean,
+  moveEntity: {
+    isOpen: boolean,
+    detail: {
+      from: {
+        id: string,
+        icon: string,
+        value: string,
+      },
+      to: {
+        id: string,
+        icon: string,
+        value: string,
+      },
+    },
+  },
 |};
