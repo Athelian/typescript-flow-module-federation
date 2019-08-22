@@ -32,7 +32,8 @@ export type CellRender = {
   isLoadedData?: boolean,
 };
 
-export type State = {
+export type State = {|
   order: Object,
   targets: Array<string>,
-};
+  isDragging: boolean,
+|};

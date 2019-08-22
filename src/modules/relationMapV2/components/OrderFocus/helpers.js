@@ -34,6 +34,9 @@ export const HeaderCard = styled.div`
   border: 4px solid ${props => (props.selected ? colors.TEAL : colors.TRANSPARENT)};
   width: calc(100% - 8px);
   height: calc(100% - 8px);
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 function orderCell({
@@ -41,12 +44,12 @@ function orderCell({
   batchPosition,
   order,
   totalItems,
-}: {
+}: {|
   itemPosition: number,
   batchPosition: number,
   order: mixed,
   totalItems: number,
-}) {
+|}) {
   if (itemPosition === 0 && batchPosition === 0)
     return {
       type: ORDER,
@@ -61,6 +64,7 @@ function orderCell({
       data: {
         order,
         itemPosition,
+        batchPosition,
       },
       afterConnector: 'VERTICAL',
     };

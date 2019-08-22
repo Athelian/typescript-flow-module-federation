@@ -5,27 +5,30 @@ import produce from 'immer';
 import update from 'immutability-helper';
 import type { State } from './type.js.flow';
 
-type ContextProps = {
+type ContextProps = {|
   state: State,
   dispatch: Function,
   orders: Array<OrderPayload>,
-};
+  entities: Object,
+|};
 
 export const initialState: State = {
   order: {},
   targets: [],
+  isDragging: false,
 };
 
 export const RelationMapContext = createContext<ContextProps>({
   state: initialState,
   dispatch: () => {},
   orders: [],
+  entities: {},
 });
 
 export function reducer(
   state: State,
   action: {
-    type: 'FETCH_ORDER' | 'TARGET' | 'TARGET_ALL' | 'TARGET_TREE',
+    type: 'FETCH_ORDER' | 'TARGET' | 'TARGET_ALL' | 'TARGET_TREE' | 'DND' | 'START_DND' | 'END_DND',
     payload: {
       entity?: string,
       targets?: Array<string>,
@@ -40,6 +43,16 @@ export function reducer(
           $merge: action.payload,
         },
       });
+    case 'START_DND':
+      return {
+        ...state,
+        isDragging: true,
+      };
+    case 'END_DND':
+      return {
+        ...state,
+        isDragging: false,
+      };
     case 'TARGET':
       return produce(state, draft => {
         if (draft.targets.includes(action.payload.entity)) {
@@ -86,6 +99,10 @@ export function reducer(
           }
         });
       });
+    case 'DND': {
+      console.warn({ action });
+      return state;
+    }
     default:
       return state;
   }

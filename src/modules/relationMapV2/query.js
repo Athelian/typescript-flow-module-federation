@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { tagFragment, taskCountFragment } from 'graphql';
+import { tagFragment, taskCountFragment, ownedByFragment } from 'graphql';
 
 export const productProviderNewRMFragment = gql`
   fragment productProviderNewRMFragment on ProductProvider {
@@ -198,16 +198,33 @@ export const orderCardOptimiseFragment = gql`
     tags {
       ...tagFragment
     }
-    # TODO: query for collapse batch, container and shipment
   }
 `;
 
 export const orderCardWithOptimiseFragment = gql`
   fragment orderCardWithOptimiseFragment on Order {
     id
+    exporter {
+      ... on Organization {
+        id
+        name
+      }
+    }
+    importer {
+      ... on Organization {
+        id
+        name
+      }
+    }
+    ownedBy {
+      ...ownedByFragment
+    }
     orderItems {
       ... on OrderItem {
         id
+        ownedBy {
+          ...ownedByFragment
+        }
         archived
         no
         quantity
@@ -222,26 +239,19 @@ export const orderCardWithOptimiseFragment = gql`
         batches {
           ... on Batch {
             id
+            ownedBy {
+              ...ownedByFragment
+            }
             archived
             no
             shipment {
               ... on Shipment {
                 id
-                blNo
               }
             }
             container {
               ... on Container {
                 id
-                no
-                tags {
-                  ...tagFragment
-                }
-                todo {
-                  taskCount {
-                    ...taskCountFragment
-                  }
-                }
               }
             }
             todo {
@@ -253,13 +263,54 @@ export const orderCardWithOptimiseFragment = gql`
         }
       }
     }
+    containers {
+      ... on Container {
+        id
+        no
+        ownedBy {
+          ...ownedByFragment
+        }
+        shipment {
+          ... on Shipment {
+            id
+          }
+        }
+      }
+    }
     shipments {
       ... on Shipment {
         id
+        exporter {
+          ... on Organization {
+            id
+            name
+          }
+        }
+        importer {
+          ... on Organization {
+            id
+            name
+          }
+        }
         archived
         blNo
+        ownedBy {
+          ...ownedByFragment
+        }
         tags {
           ...tagFragment
+        }
+        exporter {
+          ... on Organization {
+            id
+            name
+          }
+        }
+        importer {
+          ... on Organization {
+            id
+            name
+          }
         }
       }
     }
@@ -411,4 +462,5 @@ export const orderFocusDetailQuery = gql`
   ${orderCardWithOptimiseFragment}
   ${tagFragment}
   ${taskCountFragment}
+  ${ownedByFragment}
 `;
