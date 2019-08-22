@@ -133,9 +133,6 @@ export default function OrderFocus() {
     'orderFocusedFilter'
   );
 
-  console.warn({
-    state,
-  });
   return (
     <>
       <div className={WrapperStyle}>
