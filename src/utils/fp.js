@@ -1,4 +1,6 @@
 // @flow
+/* eslint-disable react-hooks/rules-of-hooks */
+// disable hooks on this file due to that plugin think that `useWith` is a hook
 import {
   is,
   path,
