@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Aug 16 2019 15:56:03 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Aug 21 2019 14:16:51 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28862,14 +28862,6 @@ input IntegrationLinkCreateInput {
   interval: DurationInput!
 }
 
-input IntegrationLinkFilterInput {
-  query: String
-  excludeIds: [ID!]
-  createdAt: DateRangeInput
-  updatedAt: DateRangeInput
-  configurationId: ID
-}
-
 union IntegrationLinkPayload = IntegrationLink | BadRequest | Forbidden | NotFound
 
 type IntegrationLinkPayloadPaginatedList implements Paginated {
@@ -28879,21 +28871,6 @@ type IntegrationLinkPayloadPaginatedList implements Paginated {
   totalPage: Int!
   count: Int!
   totalCount: Int!
-}
-
-type IntegrationLinkPayloadPaginatedSearch implements Paginated {
-  nodes: [IntegrationLinkPayload!]!
-  hits: [Hit!]!
-  page: Int!
-  perPage: Int!
-  totalPage: Int!
-  count: Int!
-  totalCount: Int!
-}
-
-input IntegrationLinkSortInput {
-  createdAt: SortOrder
-  updatedAt: SortOrder
 }
 
 enum IntegrationLinkStatus {
@@ -29685,6 +29662,8 @@ type Milestone implements Model & Owned & Sortable {
   name: String!
   description: String
   dueDate: DateTime
+  dueDateInterval: Interval
+  dueDateBinding: MilestoneDateBinding
   project: ProjectPayload!
   completedBy: UserPayload
   completedAt: DateTime
@@ -29692,20 +29671,6 @@ type Milestone implements Model & Owned & Sortable {
   entitiesRelatedCount: MilestoneEntitiesCount!
   taskCount: TaskCount!
   tasks: [TaskPayload!]!
-  products(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPayloadPaginatedSearch!
-  productsRelated(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPayloadPaginatedSearch!
-  productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPayloadPaginatedSearch!
-  productProvidersRelated(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPayloadPaginatedSearch!
-  orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPaginatedSearch!
-  ordersRelated(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPaginatedSearch!
-  orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPaginatedSearch!
-  orderItemsRelated(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPaginatedSearch!
-  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPaginatedSearch!
-  batchesRelated(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPaginatedSearch!
-  shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPaginatedSearch!
-  shipmentsRelated(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPaginatedSearch!
-  containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPaginatedSearch!
-  containersRelated(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPaginatedSearch!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -29721,10 +29686,16 @@ input MilestoneCreateInput {
   name: String!
   description: String
   dueDate: DateTime
+  dueDateInterval: IntervalInput
+  dueDateBinding: MilestoneDateBinding
   completedById: ID
   completedAt: DateTime
   tasks: [MilestoneTaskInput!]
   projectId: ID!
+}
+
+enum MilestoneDateBinding {
+  ProjectDueDate
 }
 
 type MilestoneEntitiesCount {
@@ -29771,6 +29742,8 @@ input MilestoneUpdateInput {
   name: String
   description: String
   dueDate: DateTime
+  dueDateInterval: IntervalInput
+  dueDateBinding: MilestoneDateBinding
   completedById: ID
   completedAt: DateTime
   tasks: [MilestoneTaskInput!]
@@ -30310,7 +30283,6 @@ input OrderItemSortInput {
 }
 
 input OrderItemUpdateInput {
-  id: ID
   productProviderId: ID
   no: String
   price: PriceInput
@@ -30343,7 +30315,6 @@ input OrderOrderItemCreateInput {
 }
 
 input OrderOrderItemUpdateInput {
-  id: ID
   productProviderId: ID
   no: String
   price: PriceInput
@@ -30354,6 +30325,7 @@ input OrderOrderItemUpdateInput {
   files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
+  id: ID
 }
 
 union OrderPayload = Order | BadRequest | Forbidden | NotFound
@@ -30892,6 +30864,8 @@ input ProjectMilestoneCreateInput {
   name: String!
   description: String
   dueDate: DateTime
+  dueDateInterval: IntervalInput
+  dueDateBinding: MilestoneDateBinding
   completedById: ID
   completedAt: DateTime
   tasks: [MilestoneTaskInput!]
@@ -30901,6 +30875,8 @@ input ProjectMilestoneUpdateInput {
   name: String
   description: String
   dueDate: DateTime
+  dueDateInterval: IntervalInput
+  dueDateBinding: MilestoneDateBinding
   completedById: ID
   completedAt: DateTime
   tasks: [MilestoneTaskInput!]
@@ -31013,7 +30989,6 @@ type Query {
   integrationConfiguration(id: ID!): IntegrationConfigurationPayload!
   integrationConfigurations(page: Int! = 1, perPage: Int! = 10, filterBy: IntegrationConfigurationFilterInput, sortBy: IntegrationConfigurationSortInput): IntegrationConfigurationPayloadPaginatedSearch!
   integrationLink(id: ID!): IntegrationLinkPayload!
-  integrationLinks(page: Int! = 1, perPage: Int! = 10, filterBy: IntegrationLinkFilterInput, sortBy: IntegrationLinkSortInput): IntegrationLinkPayloadPaginatedSearch!
   file(id: ID!): FilePayload!
   files(page: Int! = 1, perPage: Int! = 10, filterBy: FileFilterInput, sortBy: FileSortInput): FilePayloadPaginatedSearch!
   filesByIDs(ids: [ID!]!): [FilePayload!]!
