@@ -577,7 +577,7 @@ function getFieldValues(fields: Array<Object>, values: Array<Object>, editData: 
     const getValueFunction =
       typeof getExportValue === 'function'
         ? partialRight(getExportValue, [editData])
-        : getByPathWithDefault('', name);
+        : getByPathWithDefault('', name, values);
     const value = compose(
       getFieldValueByType(type),
       getValueFunction
