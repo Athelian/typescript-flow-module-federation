@@ -92,6 +92,7 @@ function reducer(state: State, action: { type: string, payload?: any }): State {
         exportId: null,
         exportVariables: action.payload,
         filePath: null,
+        options: null,
       };
     case 'start':
       return {
