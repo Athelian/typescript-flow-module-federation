@@ -61,6 +61,7 @@ export const colors = {
   TEMPLATE: '#CCCCCC',
   EDIT: '#CCCCCC',
   DOCUMENT: '#8FBEB3',
+  TABLE: '#5F9286',
 
   URGENT: '#F12C2C',
 
