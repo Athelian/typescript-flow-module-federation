@@ -138,7 +138,7 @@ function BaseExportButton({ label, disabled, exportQuery, onLoad, client }: Prop
     onLoad(client)
       .then(options => dispatch({ type: 'loaded', payload: options }))
       .catch(logger.error);
-  }, [state.open, state.options]);
+  }, [client, onLoad, state.open, state.options]);
 
   /**
    * On template selection by the user, we start the exporting process and get the export id.
@@ -160,7 +160,7 @@ function BaseExportButton({ label, disabled, exportQuery, onLoad, client }: Prop
         });
       })
       .catch(logger.error);
-  }, [state.exportVariables]);
+  }, [client, exportQuery, state.exportVariables]);
 
   /**
    * With export id, start a subscription to wait for the generated file information.
@@ -188,7 +188,7 @@ function BaseExportButton({ label, disabled, exportQuery, onLoad, client }: Prop
       });
 
     return () => subscription.unsubscribe();
-  }, [state.exportId]);
+  }, [client, state.exportId]);
 
   /**
    * After receiving the file path, start the download.
