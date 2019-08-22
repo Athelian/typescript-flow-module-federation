@@ -30,6 +30,7 @@ export const initialState: State = {
   isDragging: false,
   moveEntity: {
     isOpen: false,
+    isProcessing: false,
     detail: initMoveEntity,
   },
 };
@@ -52,7 +53,9 @@ export function reducer(
       | 'START_DND'
       | 'END_DND'
       | 'CANCEL_MOVE'
-      | 'CONFIRM_MOVE',
+      | 'CONFIRM_MOVE'
+      | 'CONFIRM_MOVE_START'
+      | 'CONFIRM_MOVE_END',
     payload: {
       entity?: string,
       targets?: Array<string>,
@@ -139,11 +142,19 @@ export function reducer(
         },
       });
     }
-    case 'CONFIRM_MOVE': {
+    case 'CONFIRM_MOVE_END': {
       return update(state, {
         moveEntity: {
           isOpen: { $set: false },
+          isProcessing: { $set: false },
           detail: { $set: initMoveEntity },
+        },
+      });
+    }
+    case 'CONFIRM_MOVE_START': {
+      return update(state, {
+        moveEntity: {
+          isProcessing: { $set: true },
         },
       });
     }

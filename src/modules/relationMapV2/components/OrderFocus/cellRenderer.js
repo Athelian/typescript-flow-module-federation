@@ -149,7 +149,7 @@ const getIdentifier = ({
       return {
         id,
         icon: 'ORDER',
-        value: getByPathWithDefault('', `orders.${id}.no`, entities),
+        value: getByPathWithDefault('', `orders.${id}.poNo`, entities),
       };
     case ORDER_ITEM:
       return {
@@ -498,7 +498,7 @@ const shipmentDropMessage = ({
 };
 
 function OrderCell({ data, afterConnector }: CellProps) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch, entities } = React.useContext(RelationMapContext);
   const orderId = getByPathWithDefault('', 'id', data);
   const [{ isOver, canDrop, dropMessage, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
@@ -514,12 +514,12 @@ function OrderCell({ data, afterConnector }: CellProps) {
           if (!parentOrderId) return false;
           const isOwnOrder = orderId === parentOrderId;
           const isDifferentImporter =
-            getByPathWithDefault('', 'importer.id', state.order[orderId]) !==
-            getByPathWithDefault('', 'importer.id', state.order[parentOrderId]);
+            getByPathWithDefault('', 'importer.id', entities.orders[orderId]) !==
+            getByPathWithDefault('', 'importer.id', entities.orders[parentOrderId]);
           const isDifferentExporter =
-            getByPathWithDefault('', 'exporter.id', state.order[orderId]) !==
-            getByPathWithDefault('', 'exporter.id', state.order[parentOrderId]);
-          const noPermission = !hasPermissionToMove(state.order[orderId]);
+            getByPathWithDefault('', 'exporter.id', entities.orders[orderId]) !==
+            getByPathWithDefault('', 'exporter.id', entities.orders[parentOrderId]);
+          const noPermission = !hasPermissionToMove(entities.orders[orderId]);
           return !isOwnOrder && !isDifferentImporter && !isDifferentExporter && !noPermission;
         }
 

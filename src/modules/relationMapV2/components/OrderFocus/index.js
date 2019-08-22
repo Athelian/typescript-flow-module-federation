@@ -22,6 +22,7 @@ import Row from '../Row';
 import cellRenderer from './cellRenderer';
 import generateListData from './generateListData';
 import { reducer, initialState, RelationMapContext } from './store';
+import { moveEntityMutation } from './mutation';
 import normalize from './normalize';
 
 const LoadingPlaceHolder = React.memo(() => {
@@ -203,6 +204,30 @@ export default function OrderFocus() {
                   >
                     {Row}
                   </List>
+                  <MoveEntityConfirm
+                    isProcessing={state.moveEntity.isProcessing}
+                    onCancel={() =>
+                      dispatch({
+                        type: 'CANCEL_MOVE',
+                        payload: {},
+                      })
+                    }
+                    onConfirm={async () => {
+                      dispatch({
+                        type: 'CONFIRM_MOVE_START',
+                        payload: {},
+                      });
+
+                      const { orderIds = [] } = await moveEntityMutation(state, entities);
+                      dispatch({
+                        type: 'CONFIRM_MOVE_END',
+                        payload: { orderIds },
+                      });
+                      orderIds.map(orderId => queryOrderDetail(orderId));
+                    }}
+                    isOpen={state.moveEntity.isOpen}
+                    {...state.moveEntity.detail}
+                  />
                 </RelationMapContext.Provider>
               ) : (
                 <Display>
@@ -217,22 +242,6 @@ export default function OrderFocus() {
         </DndProvider>
       </div>
       {state.targets.length > 0 && <SelectedEntity targets={state.targets} />}
-      <MoveEntityConfirm
-        onCancel={() =>
-          dispatch({
-            type: 'CANCEL_MOVE',
-            payload: {},
-          })
-        }
-        onConfirm={() =>
-          dispatch({
-            type: 'CONFIRM_MOVE',
-            payload: {},
-          })
-        }
-        isOpen={state.moveEntity.isOpen}
-        {...state.moveEntity.detail}
-      />
     </>
   );
 }

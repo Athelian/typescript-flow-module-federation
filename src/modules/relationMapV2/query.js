@@ -173,6 +173,7 @@ export const orderCardOptimiseFragment = gql`
   fragment orderCardOptimiseFragment on Order {
     id
     archived
+    currency
     poNo
     orderItemCount
     batchCount
@@ -204,6 +205,7 @@ export const orderCardOptimiseFragment = gql`
 export const orderCardWithOptimiseFragment = gql`
   fragment orderCardWithOptimiseFragment on Order {
     id
+    currency
     exporter {
       ... on Organization {
         id
@@ -225,8 +227,18 @@ export const orderCardWithOptimiseFragment = gql`
         ownedBy {
           ...ownedByFragment
         }
+        productProvider {
+          ... on ProductProvider {
+            id
+            name
+          }
+        }
         archived
         no
+        price {
+          amount
+          currency
+        }
         quantity
         todo {
           taskCount {
@@ -244,6 +256,7 @@ export const orderCardWithOptimiseFragment = gql`
             }
             archived
             no
+            latestQuantity
             shipment {
               ... on Shipment {
                 id

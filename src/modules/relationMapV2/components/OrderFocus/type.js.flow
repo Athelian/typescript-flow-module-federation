@@ -38,6 +38,7 @@ export type State = {|
   isDragging: boolean,
   moveEntity: {
     isOpen: boolean,
+    isProcessing: boolean,
     detail: {
       from: {
         id: string,
