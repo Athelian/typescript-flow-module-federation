@@ -2,7 +2,7 @@
 
 _Links to task(s):_
 
-_Link to testing:_
+<!-- _Link to testing:_ deploy with github actions -->
 
 <!-- Links to documentation or slack discussion -->
 
