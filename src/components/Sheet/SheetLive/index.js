@@ -4,7 +4,7 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { uuid } from 'utils/id';
 import logger from 'utils/logger';
 import { getByPathWithDefault } from 'utils/fp';
-import type { Action } from '../TableState';
+import type { Action } from '../SheetState';
 import { convertEntityToInput } from './helper';
 import {
   blurMutation,
@@ -21,7 +21,7 @@ type Props = {
   dispatch: (action: Action) => void,
 };
 
-const LiveTable = ({ entities, focusedAt, dispatch }: Props) => {
+const SheetLive = ({ entities, focusedAt, dispatch }: Props) => {
   const client = useApolloClient();
   const [id, setId] = React.useState<string | null>(null);
 
@@ -60,11 +60,11 @@ const LiveTable = ({ entities, focusedAt, dispatch }: Props) => {
       });
 
     return () => subscription.unsubscribe();
-  }, [id]);
+  }, [client, dispatch, id]);
 
   // Get current foreign focuses
   React.useEffect(() => {
-    if (!id) {
+    if (!id || entities.length === 0) {
       return;
     }
 
@@ -87,7 +87,7 @@ const LiveTable = ({ entities, focusedAt, dispatch }: Props) => {
           payload: focuses,
         });
       });
-  }, [id, entities]);
+  }, [id, entities, client, dispatch]);
 
   // Notify current user focus
   React.useEffect(() => {
@@ -114,11 +114,11 @@ const LiveTable = ({ entities, focusedAt, dispatch }: Props) => {
         },
       });
     }
-  }, [id, focusedAt]);
+  }, [client, focusedAt, id]);
 
   // Ask which entities to listen for focuses
   React.useEffect(() => {
-    if (!id) {
+    if (!id || entities.length === 0) {
       return () => {};
     }
 
@@ -134,16 +134,17 @@ const LiveTable = ({ entities, focusedAt, dispatch }: Props) => {
       },
     });
 
-    return () =>
+    return () => {
       client.mutate({
         mutation: focusUnsubscribeAllMutation,
         variables: {
           id,
         },
       });
-  }, [id, entities]);
+    };
+  }, [id, entities, client]);
 
   return null;
 };
 
-export default LiveTable;
+export default SheetLive;

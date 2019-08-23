@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react';
-import TableState from '../TableState';
-import TableRenderer from '../TableRenderer';
-import LiveTable from '../LiveTable';
+import SheetState from '../SheetState';
+import SheetRenderer from '../SheetRenderer';
+import SheetLive from '../SheetLive';
 import Cell from '../Cell';
-import type { ColumnConfig } from '../TableRenderer';
-import type { CellValue } from '../TableState';
+import type { ColumnConfig } from '../SheetRenderer';
+import type { CellValue } from '../SheetState';
 
 type Props = {
   columns: Array<ColumnConfig>,
@@ -16,9 +16,9 @@ type Props = {
   onLoadMore: () => Promise<Array<Object>>,
 };
 
-const Table = ({ columns, items, loading, hasMore, transformItem, onLoadMore }: Props) => {
+const Sheet = ({ columns, items, loading, hasMore, transformItem, onLoadMore }: Props) => {
   return (
-    <TableState
+    <SheetState
       columns={columns}
       items={items}
       transformItem={transformItem}
@@ -50,8 +50,8 @@ const Table = ({ columns, items, loading, hasMore, transformItem, onLoadMore }: 
 
         return (
           <>
-            <LiveTable entities={entities} focusedAt={focusedEntity} dispatch={dispatch} />
-            <TableRenderer
+            <SheetLive entities={entities} focusedAt={focusedEntity} dispatch={dispatch} />
+            <SheetRenderer
               columns={columnsWithWidth}
               rowCount={rows.length}
               loading={loading}
@@ -86,12 +86,12 @@ const Table = ({ columns, items, loading, hasMore, transformItem, onLoadMore }: 
                   />
                 );
               }}
-            </TableRenderer>
+            </SheetRenderer>
           </>
         );
       }}
-    </TableState>
+    </SheetState>
   );
 };
 
-export default Table;
+export default Sheet;

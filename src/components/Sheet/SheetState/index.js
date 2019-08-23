@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import type { ColumnConfig } from '../TableRenderer';
+import type { ColumnConfig } from '../SheetRenderer';
 import { cellReducer } from './reducer';
 
 export type CellValue = {
@@ -72,7 +72,7 @@ type Props = {
   children: RenderProps => React.Node,
 };
 
-const TableState = ({ columns, items, transformItem, onLoadMore, children }: Props) => {
+const SheetState = ({ columns, items, transformItem, onLoadMore, children }: Props) => {
   const [columnWidths, setColumnWidths] = React.useState<Array<{ width: number, key: string }>>([]);
   const [loadingMore, setLoadingMore] = React.useState<boolean>(false);
 
@@ -148,4 +148,4 @@ const TableState = ({ columns, items, transformItem, onLoadMore, children }: Pro
   });
 };
 
-export default TableState;
+export default SheetState;

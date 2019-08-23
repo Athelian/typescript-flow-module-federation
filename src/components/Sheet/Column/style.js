@@ -8,6 +8,7 @@ export const ColumnStyle = (width: number) => css`
   position: relative;
   overflow: hidden;
   min-width: ${width}px;
+  max-width: ${width}px;
   padding: 5px 15px;
   border-right: 0.5px solid rgba(0, 0, 0, 0.1);
 
@@ -26,6 +27,7 @@ export const TitleStyle = css`
   line-height: 15px;
   letter-spacing: 2px;
   text-transform: uppercase;
+  white-space: nowrap;
 `;
 
 export const DragHandleStyle = (dragging: boolean) => css`

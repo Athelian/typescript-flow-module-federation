@@ -1,5 +1,5 @@
 // @flow
-import type { ColumnConfig } from '../TableRenderer';
+import type { ColumnConfig } from '../SheetRenderer';
 import type { Action, CellValue, State, Position, ForeignFocus } from './index';
 
 function getEntities(rows: Array<Array<CellValue>>): Array<{ id: string, type: string }> {

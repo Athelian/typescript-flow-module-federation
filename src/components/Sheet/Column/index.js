@@ -21,7 +21,7 @@ const Column = ({ title, width: initialWidth, onResize }: Props) => {
           setDragging(true);
         }}
         onDrag={(event, { deltaX }) => {
-          setWidth(width + deltaX);
+          setWidth(Math.max(40, width + deltaX));
         }}
         onStop={() => {
           setDragging(false);

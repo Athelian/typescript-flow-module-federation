@@ -3,9 +3,9 @@ import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar } from 'components/NavBar';
-import { Table } from 'components/Table';
+import { Sheet } from 'components/Sheet';
 import { transformer } from './transformer';
-import { ordersGlobalViewQuery } from './query';
+import { orderSheetQuery } from './query';
 import { getByPathWithDefault } from '../../utils/fp';
 
 const columnsConfig = [
@@ -51,7 +51,7 @@ const columnsConfig = [
   },
 ];
 
-const AlphaGVOrdersModule = () => {
+const OrderSheetModule = () => {
   const client = useApolloClient();
 
   const [initialOrders, setInitialOrders] = React.useState<Object>([]);
@@ -66,7 +66,7 @@ const AlphaGVOrdersModule = () => {
 
     client
       .query({
-        query: ordersGlobalViewQuery,
+        query: orderSheetQuery,
         variables: { page: 1, perPage: 20, filterBy: {}, sortBy: {} },
       })
       .then(({ data }) => {
@@ -82,7 +82,7 @@ const AlphaGVOrdersModule = () => {
         <EntityIcon icon="SHEET" color="SHEET" />
       </NavBar>
 
-      <Table
+      <Sheet
         columns={columnsConfig}
         loading={loading}
         items={initialOrders}
@@ -91,7 +91,7 @@ const AlphaGVOrdersModule = () => {
         onLoadMore={() =>
           client
             .query({
-              query: ordersGlobalViewQuery,
+              query: orderSheetQuery,
               variables: { page: page.page + 1, perPage: 20, filterBy: {}, sortBy: {} },
             })
             .then(({ data }) => {
@@ -107,4 +107,4 @@ const AlphaGVOrdersModule = () => {
   );
 };
 
-export default AlphaGVOrdersModule;
+export default OrderSheetModule;

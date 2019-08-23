@@ -3,7 +3,8 @@ import * as React from 'react';
 import { VariableSizeGrid } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
-import type { Action, Position } from '../TableState';
+import LoadingIcon from 'components/LoadingIcon';
+import type { Action, Position } from '../SheetState';
 import Column from '../Column';
 import { ColumnsWrapperStyle, ContentStyle, WrapperStyle } from './style';
 
@@ -27,7 +28,7 @@ type Props = {
   children: ({ x: number, y: number }) => React.Node,
 };
 
-const TableRenderer = ({
+const SheetRenderer = ({
   columns,
   rowCount,
   loading,
@@ -51,7 +52,7 @@ const TableRenderer = ({
     }
 
     gridRef.current.scrollToItem({
-      align: 'center',
+      align: 'auto',
       rowIndex: focusedAt.x,
       columnIndex: focusedAt.y,
     });
@@ -118,7 +119,7 @@ const TableRenderer = ({
       </div>
       <div className={ContentStyle} role="presentation" tabIndex="-1" onKeyDown={handleKeyDown}>
         {loading ? (
-          'loading'
+          <LoadingIcon />
         ) : (
           <AutoSizer>
             {({ height, width }) => (
@@ -170,7 +171,7 @@ const TableRenderer = ({
                       rowHeight={() => 40}
                       onScroll={handleScroll}
                       onItemsRendered={itemsRendered}
-                      overscanRowCount={20}
+                      overscanRowCount={5}
                     >
                       {({ style, columnIndex, rowIndex }) => {
                         if (rowIndex >= rowCount) {
@@ -198,4 +199,4 @@ const TableRenderer = ({
   );
 };
 
-export default TableRenderer;
+export default SheetRenderer;

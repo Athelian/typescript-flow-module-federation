@@ -1,17 +1,15 @@
 // @flow
-import { transformField } from 'components/Table';
-import type { CellValue } from 'components/Table/TableState';
+import { transformField } from 'components/Sheet';
+import type { CellValue } from 'components/Sheet/SheetState';
 
 function transformOrder(order: Object): Array<CellValue> {
   return [
     {
       columnKey: 'order.poNo',
-      duplicatable: false,
       ...transformField(null, order, 'poNo', () => true),
     },
     {
       columnKey: 'order.currency',
-      duplicatable: false,
       ...transformField(null, order, 'currency', () => true),
     },
   ];
@@ -21,12 +19,10 @@ const transformOrderItem = (itemIdx: number, orderItem: Object): Array<CellValue
   return [
     {
       columnKey: 'order.orderItem.no',
-      duplicatable: false,
       ...transformField(`orderItems.${itemIdx}`, orderItem, 'no', () => true),
     },
     {
       columnKey: 'order.orderItem.quantity',
-      duplicatable: false,
       ...transformField(`orderItems.${itemIdx}`, orderItem, 'quantity', () => true),
     },
   ];
@@ -36,12 +32,10 @@ const transformBatch = (itemIdx: number, batchIdx: number, batch: Object): Array
   return [
     {
       columnKey: 'order.orderItem.batch.no',
-      duplicatable: false,
       ...transformField(`orderItems.${itemIdx}.batches.${batchIdx}`, batch, 'no', () => true),
     },
     {
       columnKey: 'order.orderItem.batch.quantity',
-      duplicatable: false,
       ...transformField(`orderItems.${itemIdx}.batches.${batchIdx}`, batch, 'quantity', () => true),
     },
     {

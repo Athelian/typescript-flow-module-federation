@@ -2,13 +2,13 @@
 import gql from 'graphql-tag';
 import { forbiddenFragment } from 'graphql';
 
-const orderFragmentGlobalView = gql`
-  fragment orderFragmentGlobalView on Order {
+const orderSheetFragment = gql`
+  fragment orderSheetFragment on Order {
     id
     poNo
     currency
     orderItems {
-      ...orderItemFragmentGlobalView
+      ...orderItemSheetFragment
     }
     ownedBy {
       ... on Organization {
@@ -18,13 +18,13 @@ const orderFragmentGlobalView = gql`
   }
 `;
 
-const orderItemFragmentGlobalView = gql`
-  fragment orderItemFragmentGlobalView on OrderItem {
+const orderItemSheetFragment = gql`
+  fragment orderItemSheetFragment on OrderItem {
     id
     no
     quantity
     batches {
-      ...batchFragmentGlobalView
+      ...batchSheetFragment
     }
     ownedBy {
       ... on Organization {
@@ -34,8 +34,8 @@ const orderItemFragmentGlobalView = gql`
   }
 `;
 
-const batchFragmentGlobalView = gql`
-  fragment batchFragmentGlobalView on Batch {
+const batchSheetFragment = gql`
+  fragment batchSheetFragment on Batch {
     id
     no
     quantity
@@ -69,8 +69,8 @@ const batchFragmentGlobalView = gql`
   }
 `;
 
-export const ordersGlobalViewQuery = gql`
-  query ordersInGlobalViewQuery(
+export const orderSheetQuery = gql`
+  query orderSheetQuery(
     $page: Int!
     $perPage: Int!
     $filterBy: OrderFilterInput
@@ -78,16 +78,16 @@ export const ordersGlobalViewQuery = gql`
   ) {
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...orderFragmentGlobalView
+        ...orderSheetFragment
         ...forbiddenFragment
       }
       page
       totalPage
     }
   }
-  ${orderFragmentGlobalView}
-  ${orderItemFragmentGlobalView}
-  ${batchFragmentGlobalView}
 
+  ${orderSheetFragment}
+  ${orderItemSheetFragment}
+  ${batchSheetFragment}
   ${forbiddenFragment}
 `;
