@@ -23,6 +23,7 @@ import {
   CONTAINER_WIDTH,
   SHIPMENT_WIDTH,
 } from 'modules/relationMapV2/constants';
+import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import type { CellRender, State } from './type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
 import RelationLine from '../RelationLine';
@@ -185,20 +186,43 @@ const getIdentifier = ({
   }
 };
 
-const hasPermissionToMove = order => !!order;
+// NOTE: this is setup for future permission. It is not reayd yet.
+const hasPermissionToMove = ({
+  state,
+  entity,
+  type,
+}: {|
+  state: State,
+  entity: Object,
+  type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT,
+|}) => {
+  const organizationId = getByPathWithDefault('', 'ownedBy', entity);
+  const permissions = getByPathWithDefault([], `permission.${organizationId}`, state);
+  switch (type) {
+    case BATCH: {
+      return permissions.includes(BATCH_UPDATE) || permissions.includes(BATCH_SET_ORDER_ITEM);
+    }
+
+    default:
+      return true;
+  }
+};
+
 const orderDropMessage = ({
   orderId,
   state,
+  entities,
   item,
 }: {|
   state: State,
+  entities: Object,
   orderId: string,
   item: ?{
     type: string,
     id: string,
   },
 |}) => {
-  const type = item && item.type;
+  const type = (item && item.type) || '';
   switch (type) {
     case BATCH: {
       const batchId = item && item.id;
@@ -219,8 +243,8 @@ const orderDropMessage = ({
         );
 
       const isDifferentImporter =
-        getByPathWithDefault('', 'importer.id', state.order[orderId]) !==
-        getByPathWithDefault('', 'importer.id', state.order[parentOrderId]);
+        getByPathWithDefault('', 'importer.id', entities.orders[orderId]) !==
+        getByPathWithDefault('', 'importer.id', entities.orders[parentOrderId]);
       if (isDifferentImporter)
         return (
           <div>
@@ -230,8 +254,8 @@ const orderDropMessage = ({
         );
 
       const isDifferentExporter =
-        getByPathWithDefault('', 'exporter.id', state.order[orderId]) !==
-        getByPathWithDefault('', 'exporter.id', state.order[parentOrderId]);
+        getByPathWithDefault('', 'exporter.id', entities.orders[orderId]) !==
+        getByPathWithDefault('', 'exporter.id', entities.orders[parentOrderId]);
       if (isDifferentExporter)
         return (
           <div>
@@ -240,7 +264,11 @@ const orderDropMessage = ({
           </div>
         );
 
-      const noPermission = !hasPermissionToMove(state.order[orderId]);
+      const noPermission = !hasPermissionToMove({
+        entity: state.order[orderId],
+        type: ORDER,
+        state,
+      });
       if (noPermission)
         return (
           <div>
@@ -271,12 +299,12 @@ const orderItemDropMessage = ({
   state: State,
   itemId: string,
   order: OrderPayload,
-  item: ?{
+  item: {
     type: string,
     id: string,
   },
 |}) => {
-  const type = item && item.type;
+  const type = (item && item.type) || '';
   switch (type) {
     case BATCH: {
       const batchId = item && item.id;
@@ -323,9 +351,13 @@ const orderItemDropMessage = ({
           </div>
         );
 
-      const noPermission = !hasPermissionToMove(
-        getByPathWithDefault([], 'orderItems', order).find(orderItem => orderItem.id === itemId)
-      );
+      const noPermission = !hasPermissionToMove({
+        entity: getByPathWithDefault([], 'orderItems', order).find(
+          orderItem => orderItem.id === itemId
+        ),
+        type: ORDER_ITEM,
+        state,
+      });
       if (noPermission)
         return (
           <div>
@@ -356,7 +388,7 @@ const containerDropMessage = ({
     id: string,
   },
 |}) => {
-  const type = item && item.type;
+  const type = (item && item.type) || '';
   switch (type) {
     case BATCH: {
       const batchId = (item && item.id) || 0;
@@ -403,7 +435,7 @@ const containerDropMessage = ({
           </div>
         );
 
-      const noPermission = !hasPermissionToMove(container);
+      const noPermission = !hasPermissionToMove({ entity: container, type: CONTAINER, state });
       if (noPermission)
         return (
           <div>
@@ -434,7 +466,7 @@ const shipmentDropMessage = ({
     id: string,
   },
 |}) => {
-  const type = item && item.type;
+  const type = (item && item.type) || '';
   switch (type) {
     case BATCH: {
       const batchId = (item && item.id) || 0;
@@ -480,7 +512,7 @@ const shipmentDropMessage = ({
           </div>
         );
 
-      const noPermission = !hasPermissionToMove(shipment);
+      const noPermission = !hasPermissionToMove({ entity: shipment, type: SHIPMENT, state });
       if (noPermission)
         return (
           <div>
@@ -519,7 +551,11 @@ function OrderCell({ data, afterConnector }: CellProps) {
           const isDifferentExporter =
             getByPathWithDefault('', 'exporter.id', entities.orders[orderId]) !==
             getByPathWithDefault('', 'exporter.id', entities.orders[parentOrderId]);
-          const noPermission = !hasPermissionToMove(entities.orders[orderId]);
+          const noPermission = !hasPermissionToMove({
+            entity: entities.orders[orderId],
+            type: ORDER,
+            state,
+          });
           return !isOwnOrder && !isDifferentImporter && !isDifferentExporter && !noPermission;
         }
 
@@ -534,6 +570,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
       isSameItem: monitor.getItem() && monitor.getItem().id === orderId,
       dropMessage: orderDropMessage({
         state,
+        entities,
         orderId,
         item: monitor.getItem(),
       }),
@@ -694,9 +731,13 @@ function OrderItemCell({
           const isDifferentExporter =
             getByPathWithDefault('', 'exporter.id', order) !==
             getByPathWithDefault('', 'exporter.id', state.order[parentOrderId]);
-          const noPermission = !hasPermissionToMove(
-            getByPathWithDefault([], 'orderItems', order).find(orderItem => orderItem.id === itemId)
-          );
+          const noPermission = !hasPermissionToMove({
+            entity: getByPathWithDefault([], 'orderItems', order).find(
+              orderItem => orderItem.id === itemId
+            ),
+            type: ORDER_ITEM,
+            state,
+          });
           return !isOwnItem && !isDifferentImporter && !isDifferentExporter && !noPermission;
         }
 
@@ -865,6 +906,12 @@ function BatchCell({
         type: 'START_DND',
       });
     },
+    canDrag: () => {
+      const entity = getByPathWithDefault({}, `batches.${batchId}`, entities);
+      const organizationId = getByPathWithDefault('', 'ownedBy', entity);
+      const permissions = getByPathWithDefault([], `permission.${organizationId}`, state);
+      return permissions.includes(BATCH_UPDATE) || permissions.includes(BATCH_SET_ORDER_ITEM);
+    },
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
       if (item && dropResult) {
@@ -1020,7 +1067,11 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             shipment.exporter &&
             getByPathWithDefault('', 'exporter.id', shipment) !==
               getByPathWithDefault('', 'exporter.id', order);
-          const noPermission = !hasPermissionToMove(container);
+          const noPermission = !hasPermissionToMove({
+            entity: container,
+            type: CONTAINER,
+            state,
+          });
           return !isOwnContainer && !isDifferentImporter && !isDifferentExporter && !noPermission;
         }
 
@@ -1196,7 +1247,11 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
             shipment.exporter &&
             getByPathWithDefault('', 'exporter.id', shipment) !==
               getByPathWithDefault('', 'exporter.id', order);
-          const noPermission = !hasPermissionToMove(shipment);
+          const noPermission = !hasPermissionToMove({
+            entity: shipment,
+            type: SHIPMENT,
+            state,
+          });
           return !isOwnShipment && !isDifferentImporter && !isDifferentExporter && !noPermission;
         }
 

@@ -11,6 +11,7 @@ import loadMore from 'utils/loadMore';
 import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import { UIContext } from 'modules/ui';
+import { partnerPermissionQuery } from 'components/common/QueryForm/query';
 import { Display } from 'components/Form';
 import { orderFocusedListQuery, orderFocusDetailQuery } from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
@@ -116,6 +117,27 @@ export default function OrderFocus() {
         });
       });
   }, []);
+  const queryPermission = React.useCallback((organizationId: string) => {
+    apolloClient
+      .query({
+        query: partnerPermissionQuery,
+        variables: {
+          organizationId,
+        },
+      })
+      .then(result => {
+        dispatch({
+          type: 'FETCH_PERMISSION',
+          payload: {
+            [organizationId]: getByPathWithDefault(
+              [],
+              'data.viewer.permissionsForOrganization',
+              result
+            ),
+          },
+        });
+      });
+  }, []);
 
   const { queryVariables: queryOrderVariables } = useFilter(
     {
@@ -171,6 +193,11 @@ export default function OrderFocus() {
               });
               const rowCount = ordersData.length;
               const entities = normalize({ orders });
+              Object.keys(entities.organizations || {}).forEach(organizationId => {
+                if (!state.permission[organizationId]) {
+                  queryPermission(organizationId);
+                }
+              });
               return orders.length > 0 ? (
                 <RelationMapContext.Provider value={{ state, orders, entities, dispatch }}>
                   <List

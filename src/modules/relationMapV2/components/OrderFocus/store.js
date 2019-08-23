@@ -33,6 +33,7 @@ export const initialState: State = {
     isProcessing: false,
     detail: initMoveEntity,
   },
+  permission: {},
 };
 
 export const RelationMapContext = createContext<ContextProps>({
@@ -55,7 +56,8 @@ export function reducer(
       | 'CANCEL_MOVE'
       | 'CONFIRM_MOVE'
       | 'CONFIRM_MOVE_START'
-      | 'CONFIRM_MOVE_END',
+      | 'CONFIRM_MOVE_END'
+      | 'FETCH_PERMISSION',
     payload: {
       entity?: string,
       targets?: Array<string>,
@@ -80,6 +82,12 @@ export function reducer(
         ...state,
         isDragging: false,
       };
+    case 'FETCH_PERMISSION':
+      return update(state, {
+        permission: {
+          $merge: action.payload,
+        },
+      });
     case 'TARGET':
       return produce(state, draft => {
         if (draft.targets.includes(action.payload.entity)) {
