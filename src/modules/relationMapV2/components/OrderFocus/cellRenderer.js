@@ -578,6 +578,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
   });
   const [{ isDragging }, drag] = useDrag({
     item: { type: ORDER, id: orderId },
+    canDrag: () => false,
     begin: () => {
       dispatch({
         type: 'START_DND',
@@ -760,6 +761,7 @@ function OrderItemCell({
   });
   const [{ isDragging }, drag] = useDrag({
     item: { type: ORDER_ITEM, id: itemId },
+    canDrag: () => false,
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
       if (item && dropResult) {
@@ -1094,6 +1096,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
   });
   const [{ isDragging }, drag] = useDrag({
     item: { type: CONTAINER, id: containerId },
+    canDrag: () => false,
     begin: () => {
       dispatch({
         type: 'START_DND',
@@ -1274,6 +1277,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
   });
   const [{ isDragging }, drag] = useDrag({
     item: { type: SHIPMENT, id: shipmentId },
+    canDrag: () => false,
     begin: () => {
       dispatch({
         type: 'START_DND',
