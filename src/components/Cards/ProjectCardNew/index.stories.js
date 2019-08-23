@@ -13,42 +13,46 @@ const milestone = {
   total: 2,
   dueDate: '2020/04/05',
   estDate: '2020/04/25',
+  completedAt: null,
 };
 
 const milestones = [
   {
     id: 2,
     name: 'milestone 1',
-    isCompleted: false,
-    completed: 0,
-    total: 0,
+    isCompleted: true,
+    completed: 2,
+    total: 2,
     dueDate: '2020/01/05',
-    completedAt: '2020/01/03',
+    completedAt: '2020/01/09',
   },
   {
     id: 3,
     name: 'milestone 2',
-    completed: 0,
-    total: 1,
-    dueDate: '2020/01/05',
-    completedAt: '2020/01/03',
+    isCompleted: false,
+    completed: 1,
+    total: 2,
+    dueDate: '2020/02/05',
+    completedAt: null,
+    estData: '2020/02/02',
   },
   {
     id: 4,
     name: 'milestone 3',
-    completed: 1,
-    total: 1,
+    isCompleted: false,
+    completed: 0,
+    total: 2,
     dueDate: '2020/01/05',
     completedAt: '2020/01/03',
   },
   {
     id: 5,
     name: 'milestone 4',
-    isCompleted: true,
-    completed: 1,
-    total: 10,
-    dueDate: '2020/01/05',
-    completedAt: '2020/01/03',
+    isCompleted: false,
+    completed: 0,
+    total: 2,
+    dueDate: '2020/04/05',
+    estDate: '2020/04/25',
   },
 ];
 
@@ -82,7 +86,7 @@ storiesOf('Card/ProjectCard', module)
     <ProjectCard
       project={{
         ...project,
-        milestones: [...milestones],
+        milestones,
       }}
     />
   ))
@@ -90,7 +94,7 @@ storiesOf('Card/ProjectCard', module)
     <ProjectCard
       project={{
         ...project,
-        milestones: [milestone, ...milestones],
+        milestones: [...milestones, milestone],
       }}
     />
   ));

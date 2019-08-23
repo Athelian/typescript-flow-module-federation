@@ -1,15 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 
-import {
-  colors,
-  borderRadiuses,
-  presets,
-  fontSizes,
-  scrollbars,
-  fontSizesWithHeights,
-  layout,
-} from 'styles/common';
+import { colors, borderRadiuses, presets, fontSizes, scrollbars, layout } from 'styles/common';
 
 export const InfoIconStyle: string = css`
   color: ${colors.GRAY_LIGHT};
@@ -26,8 +18,21 @@ export const ProjectCardStyle: string = css`
 export const ProjectCardHeaderStyle: string = css`
   width: 100%;
   display: flex;
-  justify-content: space-between;
-  padding: 0 20px 0 0;
+  padding: 5px 35px 5px 5px;
+  ${fontSizes.MAIN};
+`;
+
+export const ProjectNameStyle: string = css`
+  width: 200px;
+  color: ${colors.BLACK};
+  ${presets.ELLIPSIS};
+`;
+
+export const ProjectDueDateStyle: string = css`
+  display: grid;
+  width: 170px;
+  grid-template-columns: 30px 70px 20px 20px;
+  grid-gap: 10px;
 `;
 
 export const ProjectCardBodyStyle: string = css`
@@ -47,20 +52,18 @@ export const ProjectCardBodyStyle: string = css`
 export const TimelineStyle: string = css`
   justify-items: right;
   display: grid;
-  grid-gap: 5px;
+  grid-gap: 12px;
 `;
 
 export const MilestoneNameStyle = (completed: boolean): string => css`
-  height: 20px;
-  width: auto;
-  max-width: calc(100% - 10px);
   line-height: 20px;
+  height: 20px;
+  width: 115px;
+  text-align: center;
   ${presets.ELLIPSIS};
   ${borderRadiuses.BUTTON};
   background-color: ${completed ? colors.TEAL : colors.GRAY_SUPER_LIGHT};
-  color: ${completed ? colors.WHITE : colors.GRAY_DARK};
-  font-weight: bold;
-  ${fontSizes.MEDIUM};
+  color: ${completed ? colors.WHITE : colors.BLACK};
   padding: 0 10px;
   margin: 0 0 0 10px;
   & > svg {
@@ -71,12 +74,12 @@ export const MilestoneNameStyle = (completed: boolean): string => css`
 export const ProgressBarStyle: string = css`
   position: relative;
   ${borderRadiuses.BUTTON};
-  background-color: ${colors.GRAY_LIGHT};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
   width: 100%;
 `;
 
 export const BarStyle = (percent: number): string => css`
-  background-color: ${percent ? colors.TEAL : colors.GRAY_LIGHT};
+  background-color: ${percent ? colors.TEAL : colors.GRAY_SUPER_LIGHT};
   height: 10px;
   min-width: 10px;
   width: ${percent}%;
@@ -88,16 +91,16 @@ export const MilestoneTickStyle = (completed: boolean): string => css`
   align-items: center;
   justify-content: center;
   position: absolute;
-  right: -7px;
-  top: -2px;
-  background-color: ${completed ? colors.TEAL : colors.GRAY_LIGHT};
-  height: 14px;
-  width: 14px;
+  right: -15px;
+  top: -10px;
+  background-color: ${completed ? colors.TEAL : colors.GRAY_SUPER_LIGHT};
+  color: ${completed ? colors.WHITE : colors.GRAY_DARK};
+  height: 30px;
+  width: 30px;
   ${borderRadiuses.CIRCLE};
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
   z-index: 1;
-  color: ${completed ? colors.WHITE : colors.GRAY_DARK};
-  font-size: 10px;
+  ${fontSizes.SMALL};
 `;
 
 export const TasksWrapperStyle = (completed: boolean): string => css`
@@ -106,6 +109,7 @@ export const TasksWrapperStyle = (completed: boolean): string => css`
   ${borderRadiuses.BUTTON};
   background-color: ${completed ? colors.TEAL : colors.GRAY_SUPER_LIGHT};
   padding: 5px;
+  max-width: 115px;
 `;
 
 export const CompletedTasksStyle = (completed: boolean, count: number): string => {
@@ -130,25 +134,27 @@ export const TaskIconStyle = (completed: boolean): string => css`
   color: ${completed ? colors.WHITE : colors.PURPLE};
 `;
 
-export const ProjectNameStyle: string = css`
-  ${fontSizesWithHeights.MAIN};
-  color: ${colors.BLACK};
-  font-weight: bold;
-  ${presets.ELLIPSIS};
-`;
-
-export const ProjectDueDateStyle: string = css`
-  display: grid;
-  width: 160px;
-  grid-template-columns: 40px 60px 40px 20px;
-  ${fontSizes.SMALL};
+export const DiffDateStyle = (diff: number): string => css`
+  color: ${diff > 0 ? colors.RED : colors.TEAL};
 `;
 
 export const DateStyle: string = css`
+  position: relative;
   display: grid;
   width: 140px;
-  grid-template-columns: 36px 60px;
+  grid-template-columns: 55px 65px;
+
   ${fontSizes.SMALL};
+`;
+
+export const MilestoneDiffDateStyle = (diff: number): string => css`
+  position: absolute;
+  right: 5px;
+  color: ${diff > 0 ? colors.RED : colors.TEAL};
+`;
+
+export const MilestoneDateStyle: string = css`
+  // position: relative;
 `;
 
 export const TagsWrapperStyle: string = css`
