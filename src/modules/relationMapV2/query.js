@@ -176,6 +176,7 @@ export const orderCardOptimiseFragment = gql`
     currency
     poNo
     orderItemCount
+    orderItemChildlessCount
     batchCount
     containerCount
     shipmentCount

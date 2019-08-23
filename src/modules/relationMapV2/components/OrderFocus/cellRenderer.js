@@ -37,9 +37,9 @@ import {
   ShipmentCard,
   ContainerCard,
   HeaderCard,
+  handleClickAndDoubleClick,
 } from './helpers';
 import { RelationMapContext } from './store';
-import { handleClickAndDoubleClick } from './hooks';
 
 type CellProps = {
   data: Object,
