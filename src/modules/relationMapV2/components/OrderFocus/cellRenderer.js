@@ -670,7 +670,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
             selectable={state.targets.includes(`${ORDER}-${getByPathWithDefault('', 'id', data)}`)}
             onClick={handleClick}
           >
-            <div ref={drag} style={baseDragStyle}>
+            <div ref={drag}>
               <OrderCard>{getByPathWithDefault('', 'poNo', data)}</OrderCard>
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
@@ -851,7 +851,7 @@ function OrderItemCell({
             )}
             onClick={handleClick}
           >
-            <div ref={drag} style={baseDragStyle}>
+            <div ref={drag}>
               <ItemCard>{getByPathWithDefault('', 'no', data)}</ItemCard>
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
@@ -1182,7 +1182,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             selectable={state.targets.includes(`${CONTAINER}-${containerId}`)}
             onClick={handleClick}
           >
-            <div ref={drag} style={baseDragStyle}>
+            <div ref={drag}>
               <ContainerCard>
                 {getByPathWithDefault('', `containers.${containerId}.no`, entities)}
               </ContainerCard>
@@ -1343,7 +1343,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
             selectable={state.targets.includes(`${SHIPMENT}-${shipmentId}`)}
             onClick={onTarget}
           >
-            <div ref={drag} style={baseDragStyle}>
+            <div ref={drag}>
               <ShipmentCard>
                 {getByPathWithDefault('', `shipments.${shipmentId}.blNo`, entities)}
               </ShipmentCard>
