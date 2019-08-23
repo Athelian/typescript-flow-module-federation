@@ -574,6 +574,7 @@ const getFieldValueByType = (type: string) => (value: any) => {
 function getFieldValues(fields: Array<Object>, values: Array<Object>, editData: Object) {
   const fieldValues: Array<string | Array<string>> = (fields: Array<Object>).map(field => {
     const { name, type, getExportValue } = field;
+    // return a function
     const getValueFunction =
       typeof getExportValue === 'function'
         ? partialRight(getExportValue, [editData])

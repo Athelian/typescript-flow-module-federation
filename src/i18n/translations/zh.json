@@ -929,6 +929,7 @@
   "components.button.newQuantity": "新数量",
   "modules.RelationMaps.lastUsed": "最后使用的模板:",
   "modules.RelationMaps.showAll": "显示全部",
+  "components.button.SelectAll": "SELECT ALL",
   "modules.resetPassword.passwordChanged": "密码成功重置",
   "modules.resetPassword.requestInvalid": "重置请求无效或已过期。",
   "modules.resetPassword.login": "回到进入",

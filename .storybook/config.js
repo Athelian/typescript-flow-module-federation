@@ -33,7 +33,10 @@ addDecorator(
 addDecorator(storyFn => (
   <Provider>
     <IntlProvider locale="en">
-      <StoryBookWrapper>{storyFn()}</StoryBookWrapper>
+      <StoryBookWrapper>
+        {storyFn()}
+        <div id="dialog-root" />
+      </StoryBookWrapper>
     </IntlProvider>
   </Provider>
 ));

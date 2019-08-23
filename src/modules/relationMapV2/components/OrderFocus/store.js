@@ -5,27 +5,59 @@ import produce from 'immer';
 import update from 'immutability-helper';
 import type { State } from './type.js.flow';
 
-type ContextProps = {
+type ContextProps = {|
   state: State,
   dispatch: Function,
   orders: Array<OrderPayload>,
-};
+  entities: Object,
+|};
 
+const initMoveEntity = {
+  from: {
+    id: '',
+    icon: 'BATCH',
+    value: '',
+  },
+  to: {
+    id: '',
+    icon: 'ORDER',
+    value: '',
+  },
+};
 export const initialState: State = {
   order: {},
   targets: [],
+  isDragging: false,
+  moveEntity: {
+    isOpen: false,
+    isProcessing: false,
+    detail: initMoveEntity,
+  },
+  permission: {},
 };
 
 export const RelationMapContext = createContext<ContextProps>({
   state: initialState,
   dispatch: () => {},
   orders: [],
+  entities: {},
 });
 
 export function reducer(
   state: State,
   action: {
-    type: 'FETCH_ORDER' | 'TARGET' | 'TARGET_ALL' | 'TARGET_TREE',
+    type: | 'FETCH_ORDER'
+      | 'TARGET'
+      | 'TARGET_ALL'
+      | 'TARGET_TREE'
+      | 'DND'
+      | 'START_DND'
+      | 'END_DND'
+      | 'CANCEL_MOVE'
+      | 'CONFIRM_MOVE'
+      | 'CONFIRM_MOVE_START'
+      | 'CONFIRM_MOVE_END'
+      | 'FETCH_PERMISSION',
     payload: {
       entity?: string,
       targets?: Array<string>,
@@ -37,6 +69,22 @@ export function reducer(
     case 'FETCH_ORDER':
       return update(state, {
         order: {
+          $merge: action.payload,
+        },
+      });
+    case 'START_DND':
+      return {
+        ...state,
+        isDragging: true,
+      };
+    case 'END_DND':
+      return {
+        ...state,
+        isDragging: false,
+      };
+    case 'FETCH_PERMISSION':
+      return update(state, {
+        permission: {
           $merge: action.payload,
         },
       });
@@ -86,6 +134,38 @@ export function reducer(
           }
         });
       });
+    case 'DND': {
+      return update(state, {
+        moveEntity: {
+          isOpen: { $set: true },
+          detail: { $set: action.payload },
+        },
+      });
+    }
+    case 'CANCEL_MOVE': {
+      return update(state, {
+        moveEntity: {
+          isOpen: { $set: false },
+          detail: { $set: initMoveEntity },
+        },
+      });
+    }
+    case 'CONFIRM_MOVE_END': {
+      return update(state, {
+        moveEntity: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+          detail: { $set: initMoveEntity },
+        },
+      });
+    }
+    case 'CONFIRM_MOVE_START': {
+      return update(state, {
+        moveEntity: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
     default:
       return state;
   }

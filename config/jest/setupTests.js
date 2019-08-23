@@ -1,7 +1,6 @@
 import * as emotion from 'emotion';
 /* eslint-disable import/no-extraneous-dependencies */
 import { createSerializer } from 'jest-emotion';
-import '@testing-library/react/cleanup-after-each';
 import IntlPolyfill from 'intl';
 
 expect.addSnapshotSerializer(createSerializer(emotion));

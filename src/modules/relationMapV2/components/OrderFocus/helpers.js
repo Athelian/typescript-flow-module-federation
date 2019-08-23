@@ -8,6 +8,36 @@ import { getByPathWithDefault } from 'utils/fp';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import type { CellRender, Entity } from './type.js.flow';
 
+const DELAY = 200; // 0.2 second
+const timer = {};
+const isTimeoutRunning = {};
+
+export const handleClickAndDoubleClick = ({
+  clickId,
+  onClick,
+  onDoubleClick,
+}: {
+  clickId: string,
+  onClick: Function,
+  onDoubleClick: Function,
+}) => {
+  const handleClick = () => {
+    if (isTimeoutRunning[clickId]) {
+      onDoubleClick();
+      clearTimeout(timer[clickId]);
+      isTimeoutRunning[clickId] = false;
+    } else {
+      onClick();
+      isTimeoutRunning[clickId] = true;
+      timer[clickId] = setTimeout(() => {
+        isTimeoutRunning[clickId] = false;
+      }, DELAY);
+    }
+  };
+
+  return handleClick;
+};
+
 export const OrderCard = styled.div`
   width: 285px;
   height: 55px;
@@ -34,6 +64,9 @@ export const HeaderCard = styled.div`
   border: 4px solid ${props => (props.selected ? colors.TEAL : colors.TRANSPARENT)};
   width: calc(100% - 8px);
   height: calc(100% - 8px);
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 function orderCell({
@@ -41,12 +74,12 @@ function orderCell({
   batchPosition,
   order,
   totalItems,
-}: {
+}: {|
   itemPosition: number,
   batchPosition: number,
   order: mixed,
   totalItems: number,
-}) {
+|}) {
   if (itemPosition === 0 && batchPosition === 0)
     return {
       type: ORDER,
@@ -61,6 +94,7 @@ function orderCell({
       data: {
         order,
         itemPosition,
+        batchPosition,
       },
       afterConnector: 'VERTICAL',
     };
@@ -107,6 +141,7 @@ export const orderCoordinates = memoize(
   }): Array<?CellRender> => {
     const orderItems = getByPathWithDefault([], 'orderItems', order);
     const orderItemCount = getByPathWithDefault(0, 'orderItemCount', order);
+    const orderItemChildlessCount = getByPathWithDefault(0, 'orderItemChildlessCount', order);
     const batchCount = getByPathWithDefault(0, 'batchCount', order);
     const containerCount = getByPathWithDefault(0, 'containerCount', order);
     const shipmentCount = getByPathWithDefault(0, 'shipmentCount', order);
@@ -179,39 +214,44 @@ export const orderCoordinates = memoize(
       },
     ];
     if (!isLoadedData) {
-      result.push(
-        ...[
-          {
-            type: ORDER,
-            data: order,
-            afterConnector: 'HORIZONTAL',
-          },
-          {
-            beforeConnector: 'HORIZONTAL',
-            type: 'placeholder',
-            entity: ORDER_ITEM,
-            afterConnector: 'HORIZONTAL',
-          },
-          {
-            beforeConnector: 'HORIZONTAL',
-            type: 'placeholder',
-            entity: BATCH,
-            afterConnector: 'HORIZONTAL',
-          },
-          {
-            beforeConnector: 'HORIZONTAL',
-            type: 'placeholder',
-            entity: CONTAINER,
-            afterConnector: 'HORIZONTAL',
-          },
-          {
-            beforeConnector: 'HORIZONTAL',
-            type: 'placeholder',
-            entity: SHIPMENT,
-            afterConnector: 'HORIZONTAL',
-          },
-        ]
-      );
+      // calculate the total base on container count
+      for (let index = 0; index < orderItemChildlessCount + batchCount; index += 1) {
+        result.push(
+          ...[
+            index > 0
+              ? null
+              : {
+                  type: ORDER,
+                  data: order,
+                  afterConnector: 'HORIZONTAL',
+                },
+            {
+              beforeConnector: 'HORIZONTAL',
+              type: 'placeholder',
+              entity: ORDER_ITEM,
+              afterConnector: 'HORIZONTAL',
+            },
+            {
+              beforeConnector: 'HORIZONTAL',
+              type: 'placeholder',
+              entity: BATCH,
+              afterConnector: 'HORIZONTAL',
+            },
+            {
+              beforeConnector: 'HORIZONTAL',
+              type: 'placeholder',
+              entity: CONTAINER,
+              afterConnector: 'HORIZONTAL',
+            },
+            {
+              beforeConnector: 'HORIZONTAL',
+              type: 'placeholder',
+              entity: SHIPMENT,
+              afterConnector: 'HORIZONTAL',
+            },
+          ]
+        );
+      }
       return result;
     }
     if (orderItemCount > 0) {

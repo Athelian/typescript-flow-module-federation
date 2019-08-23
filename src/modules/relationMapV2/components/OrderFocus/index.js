@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import { DndProvider } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 import { VariableSizeList as List } from 'react-window';
 import { Query } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
@@ -9,16 +11,20 @@ import loadMore from 'utils/loadMore';
 import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import { UIContext } from 'modules/ui';
+import { partnerPermissionQuery } from 'components/common/QueryForm/query';
 import { Display } from 'components/Form';
 import { orderFocusedListQuery, orderFocusDetailQuery } from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { WrapperStyle, ListStyle, RowStyle } from './style';
+import MoveEntityConfirm from '../MoveEntityConfirm';
 import SelectedEntity from '../SelectedEntity';
 import Header from '../Header';
 import Row from '../Row';
 import cellRenderer from './cellRenderer';
 import generateListData from './generateListData';
 import { reducer, initialState, RelationMapContext } from './store';
+import { moveEntityMutation } from './mutation';
+import normalize from './normalize';
 
 const LoadingPlaceHolder = React.memo(() => {
   return (
@@ -111,6 +117,27 @@ export default function OrderFocus() {
         });
       });
   }, []);
+  const queryPermission = React.useCallback((organizationId: string) => {
+    apolloClient
+      .query({
+        query: partnerPermissionQuery,
+        variables: {
+          organizationId,
+        },
+      })
+      .then(result => {
+        dispatch({
+          type: 'FETCH_PERMISSION',
+          payload: {
+            [organizationId]: getByPathWithDefault(
+              [],
+              'data.viewer.permissionsForOrganization',
+              result
+            ),
+          },
+        });
+      });
+  }, []);
 
   const { queryVariables: queryOrderVariables } = useFilter(
     {
@@ -131,74 +158,112 @@ export default function OrderFocus() {
   return (
     <>
       <div className={WrapperStyle}>
-        <Query
-          query={orderFocusedListQuery}
-          variables={queryOrderVariables}
-          fetchPolicy="network-only"
-        >
-          {({ loading, data, error, fetchMore }) => {
-            if (error) {
-              return error.message;
-            }
+        <DndProvider backend={HTML5Backend}>
+          <Query
+            query={orderFocusedListQuery}
+            variables={queryOrderVariables}
+            fetchPolicy="network-only"
+          >
+            {({ loading, data, error, fetchMore }) => {
+              if (error) {
+                return error.message;
+              }
 
-            if (loading) {
-              return (
-                <>
-                  <Header />
-                  <LoadingPlaceHolder />
-                </>
+              if (loading) {
+                return (
+                  <>
+                    <Header />
+                    <LoadingPlaceHolder />
+                  </>
+                );
+              }
+
+              const orders = getByPathWithDefault([], 'orders.nodes', data).map(order =>
+                state.order[getByPathWithDefault('', 'id', order)]
+                  ? {
+                      ...order,
+                      ...state.order[getByPathWithDefault('', 'id', order)],
+                    }
+                  : order
               );
-            }
-
-            const orders = getByPathWithDefault([], 'orders.nodes', data);
-            const ordersData = generateListData({
-              orders,
-              state,
-              expandRows,
-              setExpandRows,
-            });
-            const rowCount = ordersData.length;
-            return orders.length > 0 ? (
-              <RelationMapContext.Provider value={{ state, orders, dispatch }}>
-                <List
-                  itemData={ordersData}
-                  className={ListStyle}
-                  itemCount={rowCount}
-                  innerElementType={innerElementType}
-                  itemSize={() => 75}
-                  onItemsRendered={({ visibleStartIndex, visibleStopIndex }) => {
-                    const isLastCell = visibleStopIndex === rowCount - 1;
-                    if (hasMoreItems(data, 'orders') && isLastCell) {
-                      loadMore({ fetchMore, data }, queryOrderVariables, 'orders');
-                    }
-                    for (let index = visibleStartIndex; index < visibleStopIndex; index += 1) {
-                      const [{ order }] = ordersData[index];
-                      const isLoadedData =
-                        getByPathWithDefault([], 'orderItems', order).length ===
-                        getByPathWithDefault(0, 'orderItemCount', order);
-                      if (!isLoadedData && getByPathWithDefault(0, 'orderItemCount', order) > 0) {
-                        queryOrderDetail(getByPathWithDefault(0, 'id', order));
+              const ordersData = generateListData({
+                orders,
+                expandRows,
+                setExpandRows,
+              });
+              const rowCount = ordersData.length;
+              const entities = normalize({ orders });
+              Object.keys(entities.organizations || {}).forEach(organizationId => {
+                if (!state.permission[organizationId]) {
+                  queryPermission(organizationId);
+                }
+              });
+              return orders.length > 0 ? (
+                <RelationMapContext.Provider value={{ state, orders, entities, dispatch }}>
+                  <List
+                    itemData={ordersData}
+                    className={ListStyle}
+                    itemCount={rowCount}
+                    innerElementType={innerElementType}
+                    itemSize={() => 75}
+                    onItemsRendered={({ visibleStartIndex, visibleStopIndex }) => {
+                      const isLastCell = visibleStopIndex === rowCount - 1;
+                      if (hasMoreItems(data, 'orders') && isLastCell) {
+                        loadMore({ fetchMore, data }, queryOrderVariables, 'orders');
                       }
+                      for (let index = visibleStartIndex; index < visibleStopIndex; index += 1) {
+                        const [{ order }] = ordersData[index];
+                        const isLoadedData =
+                          getByPathWithDefault([], 'orderItems', order).length ===
+                          getByPathWithDefault(0, 'orderItemCount', order);
+                        if (!isLoadedData && getByPathWithDefault(0, 'orderItemCount', order) > 0) {
+                          queryOrderDetail(getByPathWithDefault(0, 'id', order));
+                        }
+                      }
+                    }}
+                    height={window.innerHeight - 50}
+                    width={
+                      uiContext.isSideBarExpanded ? window.innerWidth - 200 : window.innerWidth - 50
                     }
-                  }}
-                  height={window.innerHeight - 50}
-                  width={
-                    uiContext.isSideBarExpanded ? window.innerWidth - 200 : window.innerWidth - 50
-                  }
-                >
-                  {Row}
-                </List>
-              </RelationMapContext.Provider>
-            ) : (
-              <Display>
-                <FormattedMessage
-                  id="modules.Orders.noOrderFound"
-                  defaultMessage="No orders found"
-                />
-              </Display>
-            );
-          }}
-        </Query>
+                  >
+                    {Row}
+                  </List>
+                  <MoveEntityConfirm
+                    isProcessing={state.moveEntity.isProcessing}
+                    onCancel={() =>
+                      dispatch({
+                        type: 'CANCEL_MOVE',
+                        payload: {},
+                      })
+                    }
+                    onConfirm={async () => {
+                      dispatch({
+                        type: 'CONFIRM_MOVE_START',
+                        payload: {},
+                      });
+
+                      const { orderIds = [] } = await moveEntityMutation(state, entities);
+                      dispatch({
+                        type: 'CONFIRM_MOVE_END',
+                        payload: { orderIds },
+                      });
+                      orderIds.map(orderId => queryOrderDetail(orderId));
+                    }}
+                    isOpen={state.moveEntity.isOpen}
+                    {...state.moveEntity.detail}
+                  />
+                </RelationMapContext.Provider>
+              ) : (
+                <Display>
+                  <FormattedMessage
+                    id="modules.Orders.noOrderFound"
+                    defaultMessage="No orders found"
+                  />
+                </Display>
+              );
+            }}
+          </Query>
+        </DndProvider>
       </div>
       {state.targets.length > 0 && <SelectedEntity targets={state.targets} />}
     </>

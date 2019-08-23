@@ -2,25 +2,36 @@
 import * as React from 'react';
 import { VariableSizeGrid as Grid } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import InfiniteLoader from 'react-window-infinite-loader';
+import { isEqual } from 'lodash';
+import loadMore from 'utils/loadMore';
 import Draggable from 'react-draggable';
 import { getByPathWithDefault } from 'utils/fp';
 import TextInput from './components/TextInput';
-import { HeaderStyle, HeaderItemStyle, CellStyle, DragHandleIconStyle } from './style';
+import {
+  HeaderStyle,
+  HeaderItemStyle,
+  CellStyle,
+  DragHandleIconStyle,
+  EmptyCellStyle,
+} from './style';
 
 const ViewContext = React.createContext<{
-  focused: ?boolean,
+  columnCount: number,
   focusedId: ?string,
   editingId: ?string,
-  setFocused: Function,
   setFocusedId: Function,
   setEditingId: Function,
+  focusedXY: Array<number>,
+  setFocusedXY: Function,
 }>({
-  focused: false,
+  columnCount: 0,
   focusedId: undefined,
   editingId: undefined,
-  setFocused: () => {},
   setFocusedId: () => {},
   setEditingId: () => {},
+  focusedXY: [],
+  setFocusedXY: () => {},
 });
 
 const HeaderItem = ({ index, item, width, handleDrag }: Object) => {
@@ -81,35 +92,43 @@ const Cell = ({
   style: Object,
 }) => {
   const item = getByPathWithDefault({}, `${rowIndex}.${columnIndex}`, data);
-  const { key, value, start, lines } = item;
+  const { value, start, lines } = item;
+
+  const key = item.key || `empty.${rowIndex}.${columnIndex}`;
 
   const cellRef = React.useRef(null);
   const inputRef = React.useRef(null);
   const {
-    focused,
-    setFocused,
+    columnCount,
     focusedId,
     setFocusedId,
     editingId,
     setEditingId,
+    focusedXY,
+    setFocusedXY,
   } = React.useContext(ViewContext);
 
   // focus first cell
   React.useEffect(() => {
-    if (!focused && focusedId && focusedId === key) {
-      if (cellRef && cellRef.current) {
+    if (cellRef && cellRef.current) {
+      if (isEqual(focusedXY, [rowIndex, columnIndex])) {
         cellRef.current.focus();
-        setFocused(true);
       }
     }
-  }, [focused, focusedId, key, setFocused]);
+  }, [columnIndex, focusedXY, rowIndex]);
 
   // focus input
   React.useEffect(() => {
-    if (inputRef && inputRef.current && editingId && editingId === key) {
+    if (
+      inputRef &&
+      inputRef.current &&
+      editingId &&
+      editingId === key &&
+      isEqual(focusedXY, [rowIndex, columnIndex])
+    ) {
       inputRef.current.focus();
     }
-  }, [inputRef, editingId, key]);
+  }, [inputRef, editingId, key, focusedXY, rowIndex, columnIndex]);
 
   // change cell style
   React.useEffect(() => {
@@ -123,56 +142,68 @@ const Cell = ({
   }, [editingId, key]);
 
   const handleInputBlur = () => {
+    setFocusedXY([]);
     setEditingId(undefined);
-    setFocused(false);
   };
 
-  const focusNewCell = (cellKey: string) => {
+  const navigateNextCell = (position: Array<number>) => {
+    const [row, column] = position;
+    if (row < 0 || column < 0 || column >= columnCount) {
+      return;
+    }
     if (inputRef && inputRef.current) {
       inputRef.current.blur();
     }
-    if (cellKey !== '') {
-      setFocusedId(cellKey);
-      setFocused(false);
-    }
+    const next = `${row}.${column}`;
+
+    const cellName = getByPathWithDefault(`empty.${next}`, `${next}.key`, data);
+    setFocusedId(cellName);
+    setFocusedXY(position);
   };
+
+  const upPosition = [
+    getByPathWithDefault(rowIndex - 1, `${rowIndex - 1}.${columnIndex}.start`, data),
+    columnIndex,
+  ];
+  const rightPosition = [start === undefined ? rowIndex : start, columnIndex + 1];
+  const downPosition = [start === undefined ? rowIndex + 1 : start + lines, columnIndex];
+  const leftPosition = [
+    getByPathWithDefault(rowIndex, `${rowIndex}.${columnIndex - 1}.start`, data),
+    columnIndex - 1,
+  ];
 
   const handleCellKeyDown = e => {
     e.preventDefault();
     e.stopPropagation();
+
     switch (e.key) {
       case 'Enter': {
         setEditingId(key);
         break;
       }
-      case 'ArrowUp': {
-        const newKey = getByPathWithDefault('', `${start - 1}.${columnIndex}.key`, data);
-        focusNewCell(newKey);
-        break;
-      }
+
       case 'Tab': {
         if (e.shiftKey) {
-          const newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
-          focusNewCell(newKey);
+          navigateNextCell(leftPosition);
         } else {
-          const newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
-          focusNewCell(newKey);
+          navigateNextCell(rightPosition);
         }
         break;
       }
       case 'ArrowRight': {
-        const newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
-        focusNewCell(newKey);
+        navigateNextCell(rightPosition);
         break;
       }
       case 'ArrowDown': {
-        const newKey = getByPathWithDefault('', `${start + lines}.${columnIndex}.key`, data);
-        focusNewCell(newKey);
+        navigateNextCell(downPosition);
         break;
       }
       case 'ArrowLeft': {
-        const newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
-        focusNewCell(newKey);
+        navigateNextCell(leftPosition);
+        break;
+      }
+      case 'ArrowUp': {
+        navigateNextCell(upPosition);
         break;
       }
       default:
@@ -185,22 +216,18 @@ const Cell = ({
     switch (e.key) {
       case 'Enter': {
         if (e.shiftKey) {
-          const newKey = getByPathWithDefault('', `${start - 1}.${columnIndex}.key`, data);
-          focusNewCell(newKey);
+          navigateNextCell(upPosition);
         } else {
-          const newKey = getByPathWithDefault('', `${start + lines}.${columnIndex}.key`, data);
-          focusNewCell(newKey);
+          navigateNextCell(downPosition);
         }
         break;
       }
       case 'Tab': {
         if (e.shiftKey) {
           e.preventDefault();
-          const newKey = getByPathWithDefault('', `${start}.${columnIndex - 1}.key`, data);
-          focusNewCell(newKey);
+          navigateNextCell(leftPosition);
         } else {
-          const newKey = getByPathWithDefault('', `${start}.${columnIndex + 1}.key`, data);
-          focusNewCell(newKey);
+          navigateNextCell(rightPosition);
         }
         break;
       }
@@ -214,32 +241,41 @@ const Cell = ({
       <div
         name={key}
         tabIndex="-1"
+        // $FlowFixMe: Cannot create div element because a call signature declaring the expected parameter / return type is missing in object type [1] but exists in function type [2] in property ref.
         ref={cellRef}
         role="presentation"
-        className={CellStyle({
-          width: style.width,
-          height: style.height,
-          topBorder: rowIndex === start,
-          rightBorder: start <= rowIndex && rowIndex <= start + lines,
-          bottomBorder: rowIndex === start + lines - 1,
-          leftBorder: start <= rowIndex && rowIndex <= start + lines,
-          focused: focusedId === key || editingId === key,
-        })}
+        className={
+          item.key === undefined
+            ? EmptyCellStyle({
+                width: style.width,
+                height: style.height,
+                focused: focusedId === key,
+              })
+            : CellStyle({
+                width: style.width,
+                height: style.height,
+                topBorder: rowIndex === start,
+                rightBorder: start <= rowIndex && rowIndex <= start + lines,
+                bottomBorder: rowIndex === start + lines - 1,
+                leftBorder: start <= rowIndex && rowIndex <= start + lines,
+                isEmptyCell: item.key === undefined,
+                focused: isEqual(focusedXY, [rowIndex, columnIndex]),
+                wrapped: focusedId === key,
+              })
+        }
         onClick={e => {
           e.preventDefault();
           setFocusedId(key);
-          setFocused(false);
+          setFocusedXY(start === undefined ? [rowIndex, columnIndex] : [start, columnIndex]);
         }}
         onDoubleClick={e => {
           e.preventDefault();
-          if (inputRef && inputRef.current) {
-            inputRef.current.focus();
-          }
+          setFocusedXY(start === undefined ? [rowIndex, columnIndex] : [start, columnIndex]);
           setEditingId(key);
         }}
         onKeyDown={handleCellKeyDown}
       />
-      {value && (
+      {start === rowIndex && (
         <TextInput
           inputRef={inputRef}
           width={`${style.width}px`}
@@ -257,18 +293,27 @@ const Cell = ({
 const Table = ({
   columnWidths,
   keys,
-  data,
+  originalData,
+  rows,
+  loading,
+  hasMore,
+  fetchMore,
 }: {
   columnWidths: Array<number>,
   keys: Array<string>,
-  data: any,
+  originalData: Object,
+  rows: Array<Object>,
+  loading: boolean,
+  hasMore: boolean,
+  fetchMore: Function,
 }) => {
   const headerRef = React.useRef(null);
   const bodyRef = React.useRef(null);
   const gridRef = React.useRef(null);
   const [widths, setWidths] = React.useState(columnWidths);
-  const [focused, setFocused] = React.useState(false);
+
   const [focusedId, setFocusedId] = React.useState();
+  const [focusedXY, setFocusedXY] = React.useState([]);
   const [editingId, setEditingId] = React.useState();
 
   const handleScroll = ({ scrollLeft }: Object) => {
@@ -276,6 +321,12 @@ const Table = ({
       headerRef.current.scrollLeft = scrollLeft;
     }
   };
+
+  const itemCount = hasMore ? rows.length + 1 : rows.length;
+  const loadMoreItems = loading
+    ? () => {}
+    : () => loadMore({ fetchMore, data: originalData }, {}, 'orders');
+  const isItemLoaded = index => !hasMore || index < rows.length;
 
   return (
     <AutoSizer>
@@ -292,41 +343,82 @@ const Table = ({
                 newWidths[index] = newWidth;
                 return newWidths;
               });
-              if (gridRef.current) {
+              if (gridRef && gridRef.current) {
                 gridRef.current.resetAfterColumnIndex(index);
               }
             }}
           />
           <ViewContext.Provider
             value={{
-              focused,
-              setFocused,
+              columnCount: keys.length,
               focusedId,
               setFocusedId,
               editingId,
               setEditingId,
+              focusedXY,
+              setFocusedXY,
             }}
           >
-            <Grid
-              // $FlowFixMe: expected object, but exist function, because we use hooks. it should be supported by library.
-              ref={gridRef}
-              innerRef={bodyRef}
-              itemData={data}
-              columnCount={keys.length}
-              columnWidth={index => widths[index]}
-              width={width}
-              height={height}
-              rowCount={data.length}
-              rowHeight={() => 50}
-              onScroll={handleScroll}
+            <InfiniteLoader
+              isItemLoaded={isItemLoaded}
+              itemCount={itemCount}
+              loadMoreItems={loadMoreItems}
             >
-              {Cell}
-            </Grid>
+              {({ onItemsRendered, ref }) => {
+                const itemsRendered = gridData => {
+                  const {
+                    visibleRowStartIndex,
+                    visibleRowStopIndex,
+                    visibleColumnStopIndex,
+                    overscanRowStartIndex,
+                    overscanRowStopIndex,
+                    overscanColumnStopIndex,
+                  } = gridData;
+
+                  const endCol = (loading ? overscanColumnStopIndex : visibleColumnStopIndex) + 1;
+                  const startRow = loading ? overscanRowStartIndex : visibleRowStartIndex;
+                  const endRow = loading ? overscanRowStopIndex : visibleRowStopIndex;
+
+                  const visibleStartIndex = startRow * endCol;
+                  const visibleStopIndex = endRow * endCol;
+
+                  return onItemsRendered({
+                    visibleStartIndex,
+                    visibleStopIndex,
+                  });
+                };
+                return (
+                  <Grid
+                    // $FlowFixMe: expected object, but exist function, because we use hooks. it should be supported by library.
+                    // ref={gridRef}
+                    ref={ref}
+                    innerRef={bodyRef}
+                    itemData={rows}
+                    columnCount={keys.length}
+                    columnWidth={index => widths[index]}
+                    width={width}
+                    height={height}
+                    rowCount={itemCount}
+                    rowHeight={() => 50}
+                    onScroll={handleScroll}
+                    onItemsRendered={itemsRendered}
+                  >
+                    {Cell}
+                  </Grid>
+                );
+              }}
+            </InfiniteLoader>
           </ViewContext.Provider>
         </>
       )}
     </AutoSizer>
   );
 };
+
+const defaultProps = {
+  rows: [],
+};
+
+Table.defaultProps = defaultProps;
 
 export default Table;

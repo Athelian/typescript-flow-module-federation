@@ -24,7 +24,6 @@ const Row = React.memo<Props>(({ index, style, data }: Props) => {
         cellRenderer(cell, {
           onClick,
           isExpand,
-          style,
           order,
         })
       )}

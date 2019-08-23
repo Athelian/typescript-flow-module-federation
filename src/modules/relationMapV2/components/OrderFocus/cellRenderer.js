@@ -2,12 +2,14 @@
 // @flow
 import * as React from 'react';
 import type { OrderPayload } from 'generated/graphql';
-import Draggable from 'react-draggable';
+import { useDrop, useDrag } from 'react-dnd';
 import { FormattedMessage } from 'react-intl';
-import { flatten } from 'lodash';
+import { flatten, findKey } from 'lodash';
 import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
+import { Tooltip } from 'components/Tooltip';
 import LoadingIcon from 'components/LoadingIcon';
+import Icon from 'components/Icon';
 import BaseCard from 'components/Cards';
 import {
   ORDER,
@@ -21,7 +23,8 @@ import {
   CONTAINER_WIDTH,
   SHIPMENT_WIDTH,
 } from 'modules/relationMapV2/constants';
-import type { CellRender } from './type.js.flow';
+import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
+import type { CellRender, State } from './type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
 import RelationLine from '../RelationLine';
 import { ContentStyle } from './style';
@@ -35,9 +38,9 @@ import {
   ShipmentCard,
   ContainerCard,
   HeaderCard,
+  handleClickAndDoubleClick,
 } from './helpers';
 import { RelationMapContext } from './store';
-import { handleClickAndDoubleClick } from './hooks';
 
 type CellProps = {
   data: Object,
@@ -45,8 +48,558 @@ type CellProps = {
   afterConnector?: ?LINE_CONNECTOR,
 };
 
+export const Overlay = ({
+  color,
+  message,
+  icon,
+}: {
+  color: string,
+  message?: React$Node,
+  icon?: React$Node,
+}) => {
+  return message ? (
+    <Tooltip visible message={message}>
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          height: '100%',
+          width: '100%',
+          zIndex: 4,
+          backgroundColor: color,
+          borderRadius: '5px',
+        }}
+      >
+        {icon && (
+          <div
+            style={{
+              position: 'absolute',
+              width: '55px',
+              height: '55px',
+              right: '0px',
+              top: '0px',
+              fontSize: '48px',
+              lineHeight: '48px',
+              display: 'flex',
+              alignItems: 'center',
+              textAlign: 'center',
+              letterSpacing: '2px',
+              textTransform: 'uppercase',
+              color: '#fff',
+            }}
+          >
+            {icon}
+          </div>
+        )}
+      </div>
+    </Tooltip>
+  ) : (
+    <div
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        height: '100%',
+        width: '100%',
+        zIndex: 4,
+        backgroundColor: color,
+        borderRadius: '5px',
+      }}
+    >
+      {icon && (
+        <div
+          style={{
+            position: 'absolute',
+            width: '55px',
+            height: '55px',
+            right: '0px',
+            top: '0px',
+            fontSize: '48px',
+            lineHeight: '48px',
+            display: 'flex',
+            alignItems: 'center',
+            textAlign: 'center',
+            letterSpacing: '2px',
+            textTransform: 'uppercase',
+            color,
+          }}
+        >
+          {icon}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const baseDragStyle = {
+  cursor: 'move',
+};
+
+const getIdentifier = ({
+  id,
+  type,
+  entities,
+}: {
+  id: string,
+  type: typeof ORDER | typeof BATCH | typeof ORDER_ITEM | typeof CONTAINER | typeof SHIPMENT,
+  entities: Object,
+}) => {
+  switch (type) {
+    case ORDER:
+      return {
+        id,
+        icon: 'ORDER',
+        value: getByPathWithDefault('', `orders.${id}.poNo`, entities),
+      };
+    case ORDER_ITEM:
+      return {
+        id,
+        icon: 'ORDER_ITEM',
+        value: getByPathWithDefault('', `orderItems.${id}.no`, entities),
+      };
+    case BATCH:
+      return {
+        id,
+        icon: 'BATCH',
+        value: getByPathWithDefault('', `batches.${id}.no`, entities),
+      };
+    case CONTAINER:
+      return {
+        id,
+        icon: 'CONTAINER',
+        value: getByPathWithDefault('', `containers.${id}.no`, entities),
+      };
+    case SHIPMENT:
+      return {
+        id,
+        icon: 'SHIPMENT',
+        value: getByPathWithDefault('', `shipments.${id}.blNo`, entities),
+      };
+
+    default:
+      return {
+        id,
+        icon: 'ORDER',
+        value: '',
+      };
+  }
+};
+
+// NOTE: this is setup for future permission. It is not reayd yet.
+const hasPermissionToMove = ({
+  state,
+  entity,
+  type,
+}: {|
+  state: State,
+  entity: Object,
+  type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT,
+|}) => {
+  const organizationId = getByPathWithDefault('', 'ownedBy', entity);
+  const permissions = getByPathWithDefault([], `permission.${organizationId}`, state);
+  switch (type) {
+    case BATCH: {
+      return permissions.includes(BATCH_UPDATE) || permissions.includes(BATCH_SET_ORDER_ITEM);
+    }
+
+    default:
+      return true;
+  }
+};
+
+const orderDropMessage = ({
+  orderId,
+  state,
+  entities,
+  item,
+}: {|
+  state: State,
+  entities: Object,
+  orderId: string,
+  item: ?{
+    type: string,
+    id: string,
+  },
+|}) => {
+  const type = (item && item.type) || '';
+  switch (type) {
+    case BATCH: {
+      const batchId = item && item.id;
+      const parentOrderId = findKey(state.order, order => {
+        return order.orderItems.some(orderItem =>
+          orderItem.batches.map(batch => batch.id).includes(batchId)
+        );
+      });
+      if (!parentOrderId) return '';
+
+      const isOwnOrder = orderId === parentOrderId;
+      if (isOwnOrder)
+        return (
+          <div>
+            CANNOT MOVE TO ORDER <br />
+            (SAME ORDER)
+          </div>
+        );
+
+      const isDifferentImporter =
+        getByPathWithDefault('', 'importer.id', entities.orders[orderId]) !==
+        getByPathWithDefault('', 'importer.id', entities.orders[parentOrderId]);
+      if (isDifferentImporter)
+        return (
+          <div>
+            CANNOT MOVE TO ORDER <br />
+            (IMPORTER MISMATCHED)
+          </div>
+        );
+
+      const isDifferentExporter =
+        getByPathWithDefault('', 'exporter.id', entities.orders[orderId]) !==
+        getByPathWithDefault('', 'exporter.id', entities.orders[parentOrderId]);
+      if (isDifferentExporter)
+        return (
+          <div>
+            CANNOT MOVE TO ORDER <br />
+            (EXPORTER MISMATCHED)
+          </div>
+        );
+
+      const noPermission = !hasPermissionToMove({
+        entity: state.order[orderId],
+        type: ORDER,
+        state,
+      });
+      if (noPermission)
+        return (
+          <div>
+            CANNOT MOVE TO ORDER <br />
+            (NO PERMISSION)
+          </div>
+        );
+
+      return (
+        <div>
+          MOVE TO ORDER <br />
+          (ITEM WILL BE GENERATED)
+        </div>
+      );
+    }
+
+    default:
+      return '';
+  }
+};
+
+const orderItemDropMessage = ({
+  itemId,
+  order,
+  state,
+  item,
+}: {|
+  state: State,
+  itemId: string,
+  order: OrderPayload,
+  item: {
+    type: string,
+    id: string,
+  },
+|}) => {
+  const type = (item && item.type) || '';
+  switch (type) {
+    case BATCH: {
+      const batchId = item && item.id;
+      const parentOrderId = findKey(state.order, currentOrder => {
+        return currentOrder.orderItems.some(orderItem =>
+          orderItem.batches.map(batch => batch.id).includes(batchId)
+        );
+      });
+      if (!parentOrderId) return '';
+
+      const parentItem = getByPathWithDefault([], 'orderItems', state.order[parentOrderId]).find(
+        orderItem => orderItem.batches.map(batch => batch.id).includes(batchId)
+      );
+      if (!parentItem) return '';
+
+      const isOwnItem = parentItem.id === itemId;
+      if (isOwnItem)
+        return (
+          <div>
+            CANNOT MOVE TO ITEM <br />
+            (SAME ITEM)
+          </div>
+        );
+
+      const isDifferentImporter =
+        getByPathWithDefault('', 'importer.id', order) !==
+        getByPathWithDefault('', 'importer.id', state.order[parentOrderId]);
+      if (isDifferentImporter)
+        return (
+          <div>
+            CANNOT MOVE TO ITEM <br />
+            (IMPORTER MISMATCHED)
+          </div>
+        );
+
+      const isDifferentExporter =
+        getByPathWithDefault('', 'exporter.id', order) !==
+        getByPathWithDefault('', 'exporter.id', state.order[parentOrderId]);
+      if (isDifferentExporter)
+        return (
+          <div>
+            CANNOT MOVE TO ITEM <br />
+            (EXPORTER MISMATCHED)
+          </div>
+        );
+
+      const noPermission = !hasPermissionToMove({
+        entity: getByPathWithDefault([], 'orderItems', order).find(
+          orderItem => orderItem.id === itemId
+        ),
+        type: ORDER_ITEM,
+        state,
+      });
+      if (noPermission)
+        return (
+          <div>
+            CANNOT MOVE TO ITEM <br />
+            (NO PERMISSION)
+          </div>
+        );
+
+      return <div>MOVE TO ITEM</div>;
+    }
+
+    default:
+      return '';
+  }
+};
+
+const containerDropMessage = ({
+  containerId,
+  entities,
+  state,
+  item,
+}: {|
+  state: State,
+  entities: Object,
+  containerId: string,
+  item: ?{
+    type: string,
+    id: string,
+  },
+|}) => {
+  const type = (item && item.type) || '';
+  switch (type) {
+    case BATCH: {
+      const batchId = (item && item.id) || 0;
+      const parentOrderId = findKey(state.order, currentOrder => {
+        return currentOrder.orderItems.some(orderItem =>
+          orderItem.batches.map(batch => batch.id).includes(batchId)
+        );
+      });
+      if (!parentOrderId) return '';
+      const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
+      const isOwnContainer = batch.container === containerId;
+      if (isOwnContainer)
+        return (
+          <div>
+            CANNOT MOVE TO CONTAINER <br />
+            (SAME CONTAINER)
+          </div>
+        );
+
+      const container = getByPathWithDefault({}, `containers.${containerId}`, entities);
+      const shipment = getByPathWithDefault({}, `shipments.${container.shipment}`, entities);
+      const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
+
+      const isDifferentImporter =
+        getByPathWithDefault('', 'importer.id', shipment) !==
+        getByPathWithDefault('', 'importer.id', order);
+      if (isDifferentImporter)
+        return (
+          <div>
+            CANNOT MOVE TO CONTAINER <br />
+            (IMPORTER MISMATCHED)
+          </div>
+        );
+
+      const isDifferentExporter =
+        shipment.exporter &&
+        getByPathWithDefault('', 'exporter.id', shipment) !==
+          getByPathWithDefault('', 'exporter.id', order);
+      if (isDifferentExporter)
+        return (
+          <div>
+            CANNOT MOVE TO CONTAINER <br />
+            (EXPORTER MISMATCHED)
+          </div>
+        );
+
+      const noPermission = !hasPermissionToMove({ entity: container, type: CONTAINER, state });
+      if (noPermission)
+        return (
+          <div>
+            CANNOT MOVE TO CONTAINER <br />
+            (NO PERMISSION)
+          </div>
+        );
+
+      return <div>MOVE TO CONTAINER</div>;
+    }
+
+    default:
+      return '';
+  }
+};
+
+const shipmentDropMessage = ({
+  shipmentId,
+  entities,
+  state,
+  item,
+}: {|
+  state: State,
+  entities: Object,
+  shipmentId: string,
+  item: ?{
+    type: string,
+    id: string,
+  },
+|}) => {
+  const type = (item && item.type) || '';
+  switch (type) {
+    case BATCH: {
+      const batchId = (item && item.id) || 0;
+      const parentOrderId = findKey(state.order, currentOrder => {
+        return currentOrder.orderItems.some(orderItem =>
+          orderItem.batches.map(batch => batch.id).includes(batchId)
+        );
+      });
+      if (!parentOrderId) return '';
+      const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
+      const isOwnShipment = batch.shipment === shipmentId;
+      if (isOwnShipment)
+        return (
+          <div>
+            CANNOT MOVE TO SHIPMENT <br />
+            (SAME SHIPMENT)
+          </div>
+        );
+
+      const shipment = getByPathWithDefault({}, `shipments.${shipmentId}`, entities);
+      const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
+
+      const isDifferentImporter =
+        getByPathWithDefault('', 'importer.id', shipment) !==
+        getByPathWithDefault('', 'importer.id', order);
+      if (isDifferentImporter)
+        return (
+          <div>
+            CANNOT MOVE TO SHIPMENT <br />
+            (IMPORTER MISMATCHED)
+          </div>
+        );
+
+      const isDifferentExporter =
+        shipment.exporter &&
+        getByPathWithDefault('', 'exporter.id', shipment) !==
+          getByPathWithDefault('', 'exporter.id', order);
+      if (isDifferentExporter)
+        return (
+          <div>
+            CANNOT MOVE TO SHIPMENT <br />
+            (EXPORTER MISMATCHED)
+          </div>
+        );
+
+      const noPermission = !hasPermissionToMove({ entity: shipment, type: SHIPMENT, state });
+      if (noPermission)
+        return (
+          <div>
+            CANNOT MOVE TO SHIPMENT <br />
+            (NO PERMISSION)
+          </div>
+        );
+
+      return <div>MOVE TO SHIPMENT</div>;
+    }
+
+    default:
+      return '';
+  }
+};
+
 function OrderCell({ data, afterConnector }: CellProps) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch, entities } = React.useContext(RelationMapContext);
+  const orderId = getByPathWithDefault('', 'id', data);
+  const [{ isOver, canDrop, dropMessage, isSameItem }, drop] = useDrop({
+    accept: [BATCH, ORDER_ITEM],
+    canDrop: item => {
+      switch (item.type) {
+        case BATCH: {
+          const batchId = item.id;
+          const parentOrderId = findKey(state.order, order => {
+            return order.orderItems.some(orderItem =>
+              orderItem.batches.map(batch => batch.id).includes(batchId)
+            );
+          });
+          if (!parentOrderId) return false;
+          const isOwnOrder = orderId === parentOrderId;
+          const isDifferentImporter =
+            getByPathWithDefault('', 'importer.id', entities.orders[orderId]) !==
+            getByPathWithDefault('', 'importer.id', entities.orders[parentOrderId]);
+          const isDifferentExporter =
+            getByPathWithDefault('', 'exporter.id', entities.orders[orderId]) !==
+            getByPathWithDefault('', 'exporter.id', entities.orders[parentOrderId]);
+          const noPermission = !hasPermissionToMove({
+            entity: entities.orders[orderId],
+            type: ORDER,
+            state,
+          });
+          return !isOwnOrder && !isDifferentImporter && !isDifferentExporter && !noPermission;
+        }
+
+        default:
+          return false;
+      }
+    },
+    drop: () => ({ type: ORDER, id: orderId }),
+    collect: monitor => ({
+      isOver: !!monitor.isOver(),
+      canDrop: !!monitor.canDrop(),
+      isSameItem: monitor.getItem() && monitor.getItem().id === orderId,
+      dropMessage: orderDropMessage({
+        state,
+        entities,
+        orderId,
+        item: monitor.getItem(),
+      }),
+    }),
+  });
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: ORDER, id: orderId },
+    canDrag: () => false,
+    begin: () => {
+      dispatch({
+        type: 'START_DND',
+      });
+    },
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult();
+      if (item && dropResult) {
+        dispatch({
+          type: 'DND',
+          payload: { item, dropResult },
+        });
+      }
+      dispatch({
+        type: 'END_DND',
+      });
+    },
+    collect: monitor => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
   const entity = `${ORDER}-${getByPathWithDefault('', 'id', data)}`;
   const onTargetTree = () => {
     const targets = [];
@@ -80,7 +633,6 @@ function OrderCell({ data, afterConnector }: CellProps) {
       },
     });
   };
-  const orderId = getByPathWithDefault('', 'id', data);
   const orderItemIds = flatten(
     getByPathWithDefault([], 'orderItems', data).map(item => getByPathWithDefault('', 'id', item))
   ).filter(Boolean);
@@ -99,17 +651,43 @@ function OrderCell({ data, afterConnector }: CellProps) {
   return (
     <>
       <div className={ContentStyle} />
-      <div className={ContentStyle}>
-        <BaseCard
-          icon="ORDER"
-          color="ORDER"
-          isArchived={getByPathWithDefault(false, 'archived', data)}
-          selected={state.targets.includes(`${ORDER}-${getByPathWithDefault('', 'id', data)}`)}
-          selectable
-          onClick={handleClick}
-        >
-          <OrderCard>{getByPathWithDefault('', 'poNo', data)}</OrderCard>
-        </BaseCard>
+      <div ref={drop} className={ContentStyle}>
+        {isDragging ? (
+          <div
+            style={{
+              background: '#AAAAAA',
+              width: ORDER_WIDTH - 20,
+              height: '100%',
+              borderRadius: '5px',
+            }}
+          />
+        ) : (
+          <BaseCard
+            icon="ORDER"
+            color="ORDER"
+            isArchived={getByPathWithDefault(false, 'archived', data)}
+            selected={state.targets.includes(`${ORDER}-${getByPathWithDefault('', 'id', data)}`)}
+            selectable={state.targets.includes(`${ORDER}-${getByPathWithDefault('', 'id', data)}`)}
+            onClick={handleClick}
+          >
+            <div ref={drag}>
+              <OrderCard>{getByPathWithDefault('', 'poNo', data)}</OrderCard>
+              {(isOver || state.isDragging) && !isSameItem && !canDrop && (
+                <Overlay
+                  color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
+                  message={isOver && dropMessage}
+                  icon={<Icon icon="CANCEL" />}
+                />
+              )}
+              {!isOver && canDrop && (
+                <Overlay color="rgba(17, 209, 166, 0.25)" icon={<Icon icon="EXCHANGE" />} />
+              )}
+              {isOver && canDrop && (
+                <Overlay message={dropMessage} icon={<Icon icon="EXCHANGE" />} color="#11D1A6" />
+              )}
+            </div>
+          </BaseCard>
+        )}
       </div>
       <div className={ContentStyle}>
         {afterConnector && (
@@ -129,6 +707,74 @@ function OrderItemCell({
   const { state, dispatch } = React.useContext(RelationMapContext);
   const orderId = getByPathWithDefault('', 'id', order);
   const itemId = getByPathWithDefault('', 'id', data);
+  const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
+    accept: BATCH,
+    canDrop: item => {
+      switch (item.type) {
+        case BATCH: {
+          const batchId = item.id;
+          const parentOrderId = findKey(state.order, currentOrder => {
+            return currentOrder.orderItems.some(orderItem =>
+              orderItem.batches.map(batch => batch.id).includes(batchId)
+            );
+          });
+          if (!parentOrderId) return false;
+          const parentItem = getByPathWithDefault(
+            [],
+            'orderItems',
+            state.order[parentOrderId]
+          ).find(orderItem => orderItem.batches.map(batch => batch.id).includes(batchId));
+          if (!parentItem) return true;
+          const isOwnItem = parentItem.id === itemId;
+          const isDifferentImporter =
+            getByPathWithDefault('', 'importer.id', order) !==
+            getByPathWithDefault('', 'importer.id', state.order[parentOrderId]);
+          const isDifferentExporter =
+            getByPathWithDefault('', 'exporter.id', order) !==
+            getByPathWithDefault('', 'exporter.id', state.order[parentOrderId]);
+          const noPermission = !hasPermissionToMove({
+            entity: getByPathWithDefault([], 'orderItems', order).find(
+              orderItem => orderItem.id === itemId
+            ),
+            type: ORDER_ITEM,
+            state,
+          });
+          return !isOwnItem && !isDifferentImporter && !isDifferentExporter && !noPermission;
+        }
+
+        default:
+          return false;
+      }
+    },
+    drop: () => ({ type: ORDER_ITEM, id: itemId }),
+    collect: monitor => ({
+      isOver: !!monitor.isOver(),
+      canDrop: !!monitor.canDrop(),
+      isSameItem: monitor.getItem() && monitor.getItem().id === itemId,
+      dropMessage: orderItemDropMessage({
+        state,
+        order,
+        itemId,
+        item: monitor.getItem(),
+      }),
+    }),
+  });
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: ORDER_ITEM, id: itemId },
+    canDrag: () => false,
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult();
+      if (item && dropResult) {
+        dispatch({
+          type: 'DND',
+          payload: { item, dropResult },
+        });
+      }
+    },
+    collect: monitor => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
   const entity = `${ORDER_ITEM}-${itemId}`;
   const batchIds = flatten(
     getByPathWithDefault([], 'batches', data).map(item => getByPathWithDefault('', 'id', item))
@@ -182,17 +828,47 @@ function OrderItemCell({
           />
         )}
       </div>
-      <div className={ContentStyle}>
-        <BaseCard
-          icon="ORDER_ITEM"
-          color="ORDER_ITEM"
-          isArchived={getByPathWithDefault(false, 'archived', data)}
-          selected={state.targets.includes(`${ORDER_ITEM}-${getByPathWithDefault('', 'id', data)}`)}
-          selectable
-          onClick={handleClick}
-        >
-          <ItemCard>{getByPathWithDefault('', 'no', data)}</ItemCard>
-        </BaseCard>
+      <div ref={drop} className={ContentStyle}>
+        {isDragging ? (
+          <div
+            style={{
+              background: '#AAAAAA',
+              width: ORDER_ITEM_WIDTH - 20,
+              height: '100%',
+              borderRadius: '5px',
+            }}
+          />
+        ) : (
+          <BaseCard
+            icon="ORDER_ITEM"
+            color="ORDER_ITEM"
+            isArchived={getByPathWithDefault(false, 'archived', data)}
+            selected={state.targets.includes(
+              `${ORDER_ITEM}-${getByPathWithDefault('', 'id', data)}`
+            )}
+            selectable={state.targets.includes(
+              `${ORDER_ITEM}-${getByPathWithDefault('', 'id', data)}`
+            )}
+            onClick={handleClick}
+          >
+            <div ref={drag}>
+              <ItemCard>{getByPathWithDefault('', 'no', data)}</ItemCard>
+              {(isOver || state.isDragging) && !isSameItem && !canDrop && (
+                <Overlay
+                  color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
+                  message={isOver && dropMessage}
+                  icon={<Icon icon="CANCEL" />}
+                />
+              )}
+              {!isOver && canDrop && (
+                <Overlay color="rgba(17, 209, 166, 0.25)" icon={<Icon icon="EXCHANGE" />} />
+              )}
+              {isOver && canDrop && (
+                <Overlay message={dropMessage} icon={<Icon icon="EXCHANGE" />} color="#11D1A6" />
+              )}
+            </div>
+          </BaseCard>
+        )}
       </div>
       <div className={ContentStyle}>
         {afterConnector && (
@@ -213,8 +889,57 @@ function BatchCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload }) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
   const batchId = getByPathWithDefault('', 'id', data);
+  const { state, dispatch, entities } = React.useContext(RelationMapContext);
+  const [{ isOver, canDrop, isSameItem }, drop] = useDrop({
+    accept: [BATCH, ORDER_ITEM],
+    canDrop: () => false,
+    drop: () => ({ type: BATCH, id: batchId }),
+    collect: monitor => ({
+      isOver: !!monitor.isOver(),
+      canDrop: !!monitor.canDrop(),
+      isSameItem: monitor.getItem() && monitor.getItem().id === batchId,
+    }),
+  });
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: BATCH, id: batchId },
+    begin: () => {
+      dispatch({
+        type: 'START_DND',
+      });
+    },
+    canDrag: () => {
+      const entity = getByPathWithDefault({}, `batches.${batchId}`, entities);
+      const organizationId = getByPathWithDefault('', 'ownedBy', entity);
+      const permissions = getByPathWithDefault([], `permission.${organizationId}`, state);
+      return permissions.includes(BATCH_UPDATE) || permissions.includes(BATCH_SET_ORDER_ITEM);
+    },
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult();
+      if (item && dropResult) {
+        dispatch({
+          type: 'DND',
+          payload: {
+            from: getIdentifier({
+              ...item,
+              entities,
+            }),
+            to: getIdentifier({
+              ...dropResult,
+              entities,
+            }),
+          },
+        });
+      }
+      dispatch({
+        type: 'END_DND',
+      });
+    },
+    collect: monitor => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
+
   const entity = `${BATCH}-${batchId}`;
   const orderItems = getByPathWithDefault([], 'orderItems', order);
   const foundParentItem = orderItems.find(item =>
@@ -268,36 +993,41 @@ function BatchCell({
           />
         )}
       </div>
-      <Draggable
-        onMouseDown={evt => {
-          console.warn('onMouseDown', evt);
-        }}
-        onMouseUp={evt => {
-          console.warn('onMouseUp', evt);
-        }}
-        onTouchStart={evt => {
-          console.warn('onTouchStart', evt);
-        }}
-        onTouchEnd={evt => {
-          console.warn('onTouchEnd', evt);
-        }}
-        onStart={console.warn}
-        onDrag={console.warn}
-        onStop={console.warn}
-      >
-        <div className={ContentStyle}>
+      <div ref={drop} className={ContentStyle}>
+        {isDragging ? (
+          <div
+            style={{
+              background: '#AAAAAA',
+              width: BATCH_WIDTH - 20,
+              height: '100%',
+              borderRadius: '5px',
+            }}
+          />
+        ) : (
           <BaseCard
             icon="BATCH"
             color="BATCH"
             isArchived={getByPathWithDefault(false, 'archived', data)}
             selected={state.targets.includes(`${BATCH}-${getByPathWithDefault('', 'id', data)}`)}
-            selectable
+            selectable={state.targets.includes(`${BATCH}-${getByPathWithDefault('', 'id', data)}`)}
             onClick={handleClick}
           >
-            <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
+            <div ref={drag} style={baseDragStyle}>
+              <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
+              {(isOver || state.isDragging) && !isSameItem && !canDrop && (
+                <Overlay
+                  color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
+                  message={isOver && 'CANNOT MOVE TO BATCH'}
+                  icon={<Icon icon="CANCEL" />}
+                />
+              )}
+              {!isOver && canDrop && <Overlay color="rgba(17, 209, 166, 0.25)" />}
+              {isOver && canDrop && <Overlay color="#11D1A6" />}
+            </div>
           </BaseCard>
-        </div>
-      </Draggable>
+        )}
+      </div>
+
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine
@@ -312,8 +1042,82 @@ function BatchCell({
 }
 
 function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch, entities } = React.useContext(RelationMapContext);
   const containerId = getByPathWithDefault('', 'id', data);
+  const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
+    accept: BATCH,
+    canDrop: item => {
+      switch (item.type) {
+        case BATCH: {
+          const batchId = item.id;
+          const parentOrderId = findKey(state.order, currentOrder => {
+            return currentOrder.orderItems.some(orderItem =>
+              orderItem.batches.map(batch => batch.id).includes(batchId)
+            );
+          });
+          if (!parentOrderId) return false;
+
+          const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
+          const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
+          const container = getByPathWithDefault({}, `containers.${containerId}`, entities);
+          const shipment = getByPathWithDefault({}, `shipments.${container.shipment}`, entities);
+          const isOwnContainer = batch.container === containerId;
+          const isDifferentImporter =
+            getByPathWithDefault('', 'importer.id', shipment) !==
+            getByPathWithDefault('', 'importer.id', order);
+          const isDifferentExporter =
+            shipment.exporter &&
+            getByPathWithDefault('', 'exporter.id', shipment) !==
+              getByPathWithDefault('', 'exporter.id', order);
+          const noPermission = !hasPermissionToMove({
+            entity: container,
+            type: CONTAINER,
+            state,
+          });
+          return !isOwnContainer && !isDifferentImporter && !isDifferentExporter && !noPermission;
+        }
+
+        default:
+          return false;
+      }
+    },
+    drop: () => ({ type: CONTAINER, id: containerId }),
+    collect: monitor => ({
+      isOver: !!monitor.isOver(),
+      canDrop: !!monitor.canDrop(),
+      isSameItem: monitor.getItem() && monitor.getItem().id === containerId,
+      dropMessage: containerDropMessage({
+        state,
+        entities,
+        containerId,
+        item: monitor.getItem(),
+      }),
+    }),
+  });
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: CONTAINER, id: containerId },
+    canDrag: () => false,
+    begin: () => {
+      dispatch({
+        type: 'START_DND',
+      });
+    },
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult();
+      if (item && dropResult) {
+        dispatch({
+          type: 'DND',
+          payload: { item, dropResult },
+        });
+      }
+      dispatch({
+        type: 'END_DND',
+      });
+    },
+    collect: monitor => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
   const isTargetedContainer = state.targets.includes(`${CONTAINER}-${containerId}`);
   const isTargetedBatch = state.targets.includes(
     `${BATCH}-${getByPathWithDefault('', 'relatedBatch.id', data)}`
@@ -359,17 +1163,45 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
           />
         )}
       </div>
-      <div className={ContentStyle}>
-        <BaseCard
-          icon="CONTAINER"
-          color="CONTAINER"
-          isArchived={getByPathWithDefault(false, 'archived', data)}
-          selected={state.targets.includes(`${CONTAINER}-${getByPathWithDefault('', 'id', data)}`)}
-          selectable
-          onClick={handleClick}
-        >
-          <ContainerCard>{getByPathWithDefault('', 'no', data)}</ContainerCard>
-        </BaseCard>
+      <div ref={drop} className={ContentStyle}>
+        {isDragging ? (
+          <div
+            style={{
+              background: '#AAAAAA',
+              width: CONTAINER_WIDTH - 20,
+              height: '100%',
+              borderRadius: '5px',
+            }}
+          />
+        ) : (
+          <BaseCard
+            icon="CONTAINER"
+            color="CONTAINER"
+            isArchived={getByPathWithDefault(false, `containers.${containerId}.archived`, entities)}
+            selected={state.targets.includes(`${CONTAINER}-${containerId}`)}
+            selectable={state.targets.includes(`${CONTAINER}-${containerId}`)}
+            onClick={handleClick}
+          >
+            <div ref={drag}>
+              <ContainerCard>
+                {getByPathWithDefault('', `containers.${containerId}.no`, entities)}
+              </ContainerCard>
+              {(isOver || state.isDragging) && !isSameItem && !canDrop && (
+                <Overlay
+                  color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
+                  message={isOver && dropMessage}
+                  icon={<Icon icon="CANCEL" />}
+                />
+              )}
+              {!isOver && canDrop && (
+                <Overlay color="rgba(17, 209, 166, 0.25)" icon={<Icon icon="EXCHANGE" />} />
+              )}
+              {isOver && canDrop && (
+                <Overlay message={dropMessage} icon={<Icon icon="EXCHANGE" />} color="#11D1A6" />
+              )}
+            </div>
+          </BaseCard>
+        )}
       </div>
       <div className={ContentStyle}>
         {afterConnector && (
@@ -385,8 +1217,88 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
 }
 
 function ShipmentCell({ data, beforeConnector }: CellProps) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch, entities } = React.useContext(RelationMapContext);
   const shipmentId = getByPathWithDefault('', 'id', data);
+  const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
+    accept: BATCH,
+    canDrop: item => {
+      switch (item.type) {
+        case BATCH: {
+          const batchId = item.id;
+          const parentOrderId = findKey(state.order, currentOrder => {
+            return currentOrder.orderItems.some(orderItem =>
+              orderItem.batches.map(batch => batch.id).includes(batchId)
+            );
+          });
+          if (!parentOrderId) return false;
+
+          const parentItem = getByPathWithDefault(
+            [],
+            'orderItems',
+            state.order[parentOrderId]
+          ).find(orderItem => orderItem.batches.map(batch => batch.id).includes(batchId));
+          if (!parentItem) return true;
+
+          const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
+          const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
+          const shipment = getByPathWithDefault({}, `shipments.${shipmentId}`, entities);
+          const isOwnShipment = batch.shipment === shipmentId;
+          const isDifferentImporter =
+            getByPathWithDefault('', 'importer.id', shipment) !==
+            getByPathWithDefault('', 'importer.id', order);
+          const isDifferentExporter =
+            shipment.exporter &&
+            getByPathWithDefault('', 'exporter.id', shipment) !==
+              getByPathWithDefault('', 'exporter.id', order);
+          const noPermission = !hasPermissionToMove({
+            entity: shipment,
+            type: SHIPMENT,
+            state,
+          });
+          return !isOwnShipment && !isDifferentImporter && !isDifferentExporter && !noPermission;
+        }
+
+        default:
+          return false;
+      }
+    },
+    drop: () => ({ type: SHIPMENT, id: shipmentId }),
+    collect: monitor => ({
+      isOver: !!monitor.isOver(),
+      canDrop: !!monitor.canDrop(),
+      isSameItem: monitor.getItem() && monitor.getItem().id === shipmentId,
+      dropMessage: shipmentDropMessage({
+        state,
+        entities,
+        shipmentId,
+        item: monitor.getItem(),
+      }),
+    }),
+  });
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: SHIPMENT, id: shipmentId },
+    canDrag: () => false,
+    begin: () => {
+      dispatch({
+        type: 'START_DND',
+      });
+    },
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult();
+      if (item && dropResult) {
+        dispatch({
+          type: 'DND',
+          payload: { item, dropResult },
+        });
+      }
+      dispatch({
+        type: 'END_DND',
+      });
+    },
+    collect: monitor => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
   const isTargetedShipment = state.targets.includes(`${SHIPMENT}-${shipmentId}`);
   const isTargetedRelateEntity = getByPathWithDefault(null, 'relatedBatch.container', data)
     ? state.targets.includes(
@@ -397,7 +1309,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
     dispatch({
       type: 'TARGET',
       payload: {
-        entity: `${SHIPMENT}-${getByPathWithDefault('', 'id', data)}`,
+        entity: `${SHIPMENT}-${shipmentId}`,
       },
     });
   };
@@ -412,18 +1324,45 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
           />
         )}
       </div>
-      <div className={ContentStyle}>
-        <BaseCard
-          icon="SHIPMENT"
-          color="SHIPMENT"
-          isArchived={getByPathWithDefault(false, 'archived', data)}
-          selected={state.targets.includes(`${SHIPMENT}-${getByPathWithDefault('', 'id', data)}`)}
-          selectable
-          onDoubleClick={onTarget}
-          onClick={onTarget}
-        >
-          <ShipmentCard>{getByPathWithDefault('', 'blNo', data)}</ShipmentCard>
-        </BaseCard>
+      <div ref={drop} className={ContentStyle}>
+        {isDragging ? (
+          <div
+            style={{
+              background: '#AAAAAA',
+              width: SHIPMENT_WIDTH - 20,
+              height: '100%',
+              borderRadius: '5px',
+            }}
+          />
+        ) : (
+          <BaseCard
+            icon="SHIPMENT"
+            color="SHIPMENT"
+            isArchived={getByPathWithDefault(false, `shipments.${shipmentId}.archived`, entities)}
+            selected={state.targets.includes(`${SHIPMENT}-${shipmentId}`)}
+            selectable={state.targets.includes(`${SHIPMENT}-${shipmentId}`)}
+            onClick={onTarget}
+          >
+            <div ref={drag}>
+              <ShipmentCard>
+                {getByPathWithDefault('', `shipments.${shipmentId}.blNo`, entities)}
+              </ShipmentCard>
+              {(isOver || state.isDragging) && !isSameItem && !canDrop && (
+                <Overlay
+                  color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
+                  message={isOver && dropMessage}
+                  icon={<Icon icon="CANCEL" />}
+                />
+              )}
+              {!isOver && canDrop && (
+                <Overlay color="rgba(17, 209, 166, 0.25)" icon={<Icon icon="EXCHANGE" />} />
+              )}
+              {isOver && canDrop && (
+                <Overlay message={dropMessage} icon={<Icon icon="EXCHANGE" />} color="#11D1A6" />
+              )}
+            </div>
+          </BaseCard>
+        )}
       </div>
       <div className={ContentStyle} />
     </>
@@ -895,6 +1834,7 @@ function DuplicateOrderCell({
 }: CellProps & { order: OrderPayload }) {
   const { state } = React.useContext(RelationMapContext);
   const itemPosition = getByPathWithDefault(0, 'itemPosition', data);
+  const batchPosition = getByPathWithDefault(0, 'batchPosition', data);
   const items = getByPathWithDefault('', 'orderItems', order);
   let foundPosition = -1;
   for (let index = items.length - 1; index > 0; index -= 1) {
@@ -907,8 +1847,11 @@ function DuplicateOrderCell({
   const isTargetedOrder = state.targets.includes(
     `${ORDER}-${getByPathWithDefault('', 'id', order)}`
   );
+
   const connector = {
-    isTargeted: isTargetedOrder && foundPosition >= itemPosition,
+    isTargeted:
+      isTargetedOrder &&
+      (foundPosition > itemPosition || (batchPosition === 0 && foundPosition === itemPosition)),
     hasRelation: false,
   };
   return (

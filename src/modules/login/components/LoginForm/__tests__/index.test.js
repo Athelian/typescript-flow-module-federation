@@ -25,7 +25,7 @@ describe('<LoginForm />', () => {
     expect(emailElement).not.toBeNull();
     expect(passwordElement).not.toBeNull();
     expect(submitButtonElement).not.toBeNull();
-    expect(submitButtonElement).toHaveAttribute('disabled');
+    expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
   });
 
   it('should allow to click on submit button on valid data', () => {

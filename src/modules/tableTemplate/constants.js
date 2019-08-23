@@ -32,6 +32,9 @@ import {
   calculateContainerTotalPrice,
 } from './helpers';
 
+const ARCHIVED = 'Archived';
+const ACTIVE = 'Active';
+
 export const orderColumns = [
   {
     id: 0,
@@ -391,6 +394,9 @@ export const orderColumnFields = [
     name: 'archived',
     columnName: 'order.archived',
     type: 'status',
+    getExportValue: (values: Object) => {
+      return values.archived ? ARCHIVED : ACTIVE;
+    },
     meta: {
       editable: true,
       entity: 'Order',
@@ -610,7 +616,7 @@ export const orderItemColumnFields = [
     getExportValue: (values: Object, editData: Object) => {
       const { order: orderId } = values;
       const { orders } = editData;
-      return getByPathWithDefault(false, `${orderId}.archived`, orders);
+      return getByPathWithDefault(false, `${orderId}.archived`, orders) ? ARCHIVED : ACTIVE;
     },
   },
   {
@@ -763,6 +769,9 @@ export const productColumnFields = [
     name: 'archived',
     columnName: 'product.archived',
     type: 'status',
+    getExportValue: (values: Object) => {
+      return values.archived ? ARCHIVED : ACTIVE;
+    },
     meta: {
       editable: true,
       entity: 'Product',
@@ -874,10 +883,10 @@ export const batchColumnFields = [
       const { orderItem: orderItemId, mainShipment: shipmentId } = values;
       const { orders, orderItems, shipments } = editData;
       const orderId = getByPathWithDefault('', `${orderItemId}.order`, orderItems);
-      return (
-        getByPathWithDefault(false, `${orderId}.archived`, orders) &&
+      return getByPathWithDefault(false, `${orderId}.archived`, orders) &&
         getByPathWithDefault(true, `${shipmentId}.archived`, shipments)
-      );
+        ? ARCHIVED
+        : ACTIVE;
     },
   },
   {
@@ -1148,7 +1157,7 @@ export const containerColumnFields = [
     getExportValue: (values: Object, editData: Object) => {
       const { shipment: shipmentId } = values;
       const { shipments } = editData;
-      return getByPathWithDefault(false, `${shipmentId}.archived`, shipments);
+      return getByPathWithDefault(false, `${shipmentId}.archived`, shipments) ? ARCHIVED : ACTIVE;
     },
   },
   {
@@ -1502,6 +1511,9 @@ export const shipmentColumnFields = [
     name: 'archived',
     columnName: 'shipment.archived',
     type: 'status',
+    getExportValue: (values: Object) => {
+      return values.archived ? ARCHIVED : ACTIVE;
+    },
     meta: {
       editable: true,
       entity: 'Shipment',

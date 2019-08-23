@@ -6,6 +6,7 @@ export const CellStyle = ({
   width,
   height,
   focused,
+  wrapped,
   topBorder,
   rightBorder,
   bottomBorder,
@@ -14,6 +15,7 @@ export const CellStyle = ({
   width: number,
   height: number,
   focused: boolean,
+  wrapped: boolean,
   topBorder: boolean,
   rightBorder: boolean,
   bottomBorder: boolean,
@@ -25,13 +27,40 @@ export const CellStyle = ({
     position: absolute;
     top: 0;
     left: 0;
-    border: 2px solid transparent;
-    ${focused &&
+    border: 2px dashed transparent;
+    ${wrapped &&
       `
     border-top-color: ${topBorder ? 'blue' : 'transparent'};
     border-right-color: ${rightBorder ? 'blue' : 'transparent'};
     border-bottom-color: ${bottomBorder ? 'blue' : 'transparent'};
     border-left-color: ${leftBorder ? 'blue' : 'transparent'};
+  `}
+    ${focused && ` border-style: solid;`}
+  `;
+};
+
+export const EmptyCellStyle = ({
+  width,
+  height,
+  focused,
+}: {
+  width: number,
+  height: number,
+  focused: boolean,
+}) => {
+  return css`
+    width: ${width}px;
+    height: ${height}px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 2px solid transparent;
+    ${focused &&
+      `
+    border-top-color: blue;
+    border-right-color: blue;
+    border-bottom-color: blue;
+    border-left-color: blue;
   `}
   `;
 };

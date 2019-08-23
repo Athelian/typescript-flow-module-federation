@@ -3,7 +3,6 @@ import type { OrderPayload } from 'generated/graphql';
 import memoize from 'memoize-one';
 import { getByPathWithDefault } from 'utils/fp';
 import { TOTAL_COLUMNS } from 'modules/relationMapV2/constants';
-import type { State } from './type.js.flow';
 import { orderCoordinates } from './helpers';
 
 const generateCells = memoize(
@@ -26,23 +25,13 @@ const generateCells = memoize(
 const generateListData = memoize(
   ({
     orders,
-    state,
     expandRows,
     setExpandRows,
   }: {|
-    state: State,
     orders: Array<OrderPayload>,
     expandRows: Array<string>,
     setExpandRows: Function,
   |}) => {
-    const ordersData = orders.map(order =>
-      state.order[getByPathWithDefault('', 'id', order)]
-        ? {
-            ...order,
-            ...state.order[getByPathWithDefault('', 'id', order)],
-          }
-        : order
-    );
     const result = [
       [
         {
@@ -77,7 +66,7 @@ const generateListData = memoize(
         },
       ],
     ]; // empty 1st cell for header
-    ordersData.forEach(order => {
+    orders.forEach(order => {
       const isExpand = expandRows.includes(getByPathWithDefault('', 'id', order));
       const { cells, onClick } = generateCells({
         order,
