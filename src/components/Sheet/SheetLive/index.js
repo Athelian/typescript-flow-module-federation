@@ -114,7 +114,14 @@ const SheetLive = ({ entities, focusedAt, dispatch }: Props) => {
         },
       });
     }
-  }, [client, focusedAt, id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    id,
+    focusedAt ? focusedAt.id : null,
+    focusedAt ? focusedAt.type : null,
+    focusedAt ? focusedAt.field : null,
+    client,
+  ]);
 
   // Ask which entities to listen for focuses
   React.useEffect(() => {
