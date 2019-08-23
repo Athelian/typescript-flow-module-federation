@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import type { CellConfig, ColumnConfig } from '../TableRenderer';
+import type { ColumnConfig } from '../TableRenderer';
 import { cellReducer } from './reducer';
 
 export type CellValue = {
@@ -16,9 +16,10 @@ export type CellValue = {
     value: any,
     path: string,
   } | null,
-  empty: boolean,
-  forbidden: boolean,
-  duplicatable: boolean,
+  readonly?: boolean,
+  empty?: boolean,
+  forbidden?: boolean,
+  duplicatable?: boolean,
 };
 
 export type Position = {
@@ -26,23 +27,36 @@ export type Position = {
   y: number,
 };
 
+export type ForeignFocus = {
+  id: string,
+  user: {
+    firstName: string,
+    lastName: string,
+  },
+} & Position;
+
 export type State = {
   items: Array<Object>,
   rows: Array<Array<CellValue>>,
+  entities: Array<{ id: string, type: string }>,
   focusedAt: Position | null,
   weakFocusedAt: Array<Position>,
+  foreignFocuses: Array<Object>,
+  foreignFocusedAt: Array<ForeignFocus>,
 };
 
 export type Action = {
   type: string,
   cell?: Position,
-  state?: any,
+  payload?: any,
 };
 
 type RenderProps = {
-  rows: Array<Array<CellConfig>>,
+  rows: Array<Array<CellValue>>,
+  entities: Array<{ id: string, type: string }>,
   focusedAt: Position | null,
   weakFocusedAt: Array<Position>,
+  foreignFocusedAt: Array<ForeignFocus>,
   columns: Array<ColumnConfig>,
   loadingMore: boolean,
   dispatch: (action: Action) => void,
@@ -53,7 +67,7 @@ type RenderProps = {
 type Props = {
   columns: Array<ColumnConfig>,
   items: Array<Object>,
-  transformItem: Object => Array<Array<CellConfig>>,
+  transformItem: Object => Array<Array<CellValue>>,
   onLoadMore: () => Promise<Array<Object>>,
   children: RenderProps => React.Node,
 };
@@ -73,14 +87,17 @@ const TableState = ({ columns, items, transformItem, onLoadMore, children }: Pro
   const [state, dispatch] = React.useReducer<State, Action>(cellReducer(transformItem), {
     items: [],
     rows: [],
+    entities: [],
     focusedAt: null,
     weakFocusedAt: [],
+    foreignFocuses: [],
+    foreignFocusedAt: [],
   });
 
   React.useEffect(() => {
     dispatch({
       type: 'init',
-      state: {
+      payload: {
         items,
         columns,
       },
@@ -90,7 +107,7 @@ const TableState = ({ columns, items, transformItem, onLoadMore, children }: Pro
   React.useEffect(() => {
     dispatch({
       type: 'rearrange',
-      state: columns,
+      payload: columns,
     });
   }, [columns]);
 
@@ -101,7 +118,7 @@ const TableState = ({ columns, items, transformItem, onLoadMore, children }: Pro
       .then(newItems =>
         dispatch({
           type: 'append',
-          state: {
+          payload: {
             items: newItems,
             columns,
           },
@@ -112,8 +129,10 @@ const TableState = ({ columns, items, transformItem, onLoadMore, children }: Pro
 
   return children({
     rows: state.rows,
+    entities: state.entities,
     focusedAt: state.focusedAt,
     weakFocusedAt: state.weakFocusedAt,
+    foreignFocusedAt: state.foreignFocusedAt,
     columns: columns.map(c => {
       const columnWidth = columnWidths.find(p => p.key === c.key);
       if (columnWidth) {

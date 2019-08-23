@@ -1,39 +1,60 @@
 // @flow
 import * as React from 'react';
-import { CellStyle } from './style';
+import FormattedName from 'components/FormattedName';
+import { CellStyle, FocusesWrapperStyle, FocusStyle } from './style';
 
 type Props = {
   value: any,
   focus: boolean,
   weakFocus: boolean,
+  foreignFocuses: Array<{ id: string, firstName: string, lastName: string }>,
   readonly: boolean,
   empty: boolean,
   forbidden: boolean,
   permitted: boolean,
-  dispatch: ({ type: string, state?: any }) => void,
+  onFirstRow: boolean,
+  dispatch: ({ type: string, payload?: any }) => void,
 };
 
-const Cell = React.memo(
-  ({ value, focus, weakFocus, readonly, empty, forbidden, permitted, dispatch }: Props) => {
-    const disabled = forbidden || !permitted;
+const Cell = ({
+  value,
+  focus,
+  weakFocus,
+  foreignFocuses,
+  readonly,
+  empty,
+  forbidden,
+  permitted,
+  onFirstRow,
+  dispatch,
+}: Props) => {
+  const disabled = forbidden || !permitted;
 
-    const handleClick = () => {
-      dispatch({
-        type: 'focus',
-      });
-    };
+  const handleClick = () => {
+    dispatch({
+      type: 'focus',
+    });
+  };
 
-    return (
-      <div
-        className={CellStyle(focus, weakFocus, readonly, disabled, empty)}
-        role="presentation"
-        onClick={handleClick}
-      >
-        {forbidden ? 'blackout' : value}
-      </div>
-    );
-  }
-);
+  return (
+    <div
+      className={CellStyle(focus, foreignFocuses.length > 0, weakFocus, readonly, disabled, empty)}
+      role="presentation"
+      onClick={handleClick}
+    >
+      {foreignFocuses.length > 0 && (
+        <div id="focuses" className={FocusesWrapperStyle(onFirstRow)}>
+          {foreignFocuses.map(ff => (
+            <span key={ff.id} className={FocusStyle(onFirstRow)}>
+              <FormattedName firstName={ff.firstName} lastName={ff.lastName} />
+            </span>
+          ))}
+        </div>
+      )}
+      {forbidden ? 'blackout' : value}
+    </div>
+  );
+};
 
 Cell.defaultProps = {
   value: null,
@@ -43,6 +64,7 @@ Cell.defaultProps = {
   empty: false,
   forbidden: false,
   permitted: false,
+  onFirstRow: false,
 };
 
-export default Cell;
+export default React.memo<Props>(Cell);

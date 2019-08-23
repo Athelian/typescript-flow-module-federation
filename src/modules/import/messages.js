@@ -44,6 +44,6 @@ export default defineMessages({
   },
   error: {
     id: 'modules.Import.error',
-    defaultMessage: 'Data on CellConfig {location} as error: {error}',
+    defaultMessage: 'Data on Cell {location} as error: {error}',
   },
 });

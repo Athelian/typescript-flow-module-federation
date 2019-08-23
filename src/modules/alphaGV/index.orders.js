@@ -79,7 +79,7 @@ const AlphaGVOrdersModule = () => {
   return (
     <Content>
       <NavBar>
-        <EntityIcon icon="EXCEL" color="TABLE" />
+        <EntityIcon icon="SHEET" color="SHEET" />
       </NavBar>
 
       <Table

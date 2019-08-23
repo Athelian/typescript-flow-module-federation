@@ -11,12 +11,12 @@ export type ColumnConfig = {
   key: string,
   title: any,
   width: number,
-  hidden: boolean,
+  hidden?: boolean,
 };
 
 type Props = {
   columns: Array<ColumnConfig>,
-  rowCount: Array<Array<Object>>,
+  rowCount: number,
   loading: boolean,
   loadingMore: boolean,
   hasMore: boolean,
@@ -24,7 +24,7 @@ type Props = {
   onThreshold: () => void,
   onColumnResize: (key: string, width: number) => void,
   dispatch: (action: Action) => void,
-  children: ({ cell: Object, x: number, y: number }) => React.Node,
+  children: ({ x: number, y: number }) => React.Node,
 };
 
 const TableRenderer = ({
@@ -41,14 +41,17 @@ const TableRenderer = ({
 }: Props) => {
   const columnsRef = React.useRef(null);
   const gridRef = React.useRef(null);
+  const setGridRef = React.useCallback(el => {
+    gridRef.current = el;
+  }, []);
 
   React.useEffect(() => {
     if (!gridRef.current || !focusedAt) {
       return;
     }
 
-    // eslint-disable-next-line no-underscore-dangle
-    gridRef.current._listRef.scrollToItem({
+    gridRef.current.scrollToItem({
+      align: 'center',
       rowIndex: focusedAt.x,
       columnIndex: focusedAt.y,
     });
@@ -59,8 +62,7 @@ const TableRenderer = ({
       return;
     }
 
-    // eslint-disable-next-line no-underscore-dangle
-    gridRef.current._listRef.resetAfterColumnIndex(0);
+    gridRef.current.resetAfterColumnIndex(0);
   }, [columns]);
 
   const rowCountWithLoading = loadingMore ? rowCount + 1 : rowCount;
@@ -71,7 +73,7 @@ const TableRenderer = ({
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = e => {
     switch (e.key) {
       case 'ArrowUp': {
         dispatch({
@@ -121,7 +123,6 @@ const TableRenderer = ({
           <AutoSizer>
             {({ height, width }) => (
               <InfiniteLoader
-                ref={gridRef}
                 isItemLoaded={index => index < rowCount || !hasMore}
                 itemCount={hasMore ? rowCount * 100 : rowCount}
                 loadMoreItems={() => {
@@ -157,7 +158,10 @@ const TableRenderer = ({
 
                   return (
                     <VariableSizeGrid
-                      ref={ref}
+                      ref={r => {
+                        ref(r);
+                        setGridRef(r);
+                      }}
                       width={width}
                       height={height}
                       columnCount={columns.length}
