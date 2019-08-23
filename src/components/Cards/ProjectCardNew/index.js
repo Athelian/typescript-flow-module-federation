@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { differenceInCalendarDays } from 'date-fns';
 import Divider from 'components/Divider';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import { Tooltip } from 'components/Tooltip';
+import { diffDueDate } from 'utils/ui';
 import ProjectDueDateDiffToolTip from './components/ProjectDueDateDiffToolTip';
 import MilestoneBlock from './components/MilestoneBlock';
 import BaseCard from '../BaseCard';
@@ -34,35 +34,9 @@ const ProjectCardNew = ({ project }: Props) => {
     estDate: lastMilestoneEstDate,
   } = lastMileStone;
 
-  let projectDueDateElement;
-  if (isLastMilestoneCompleted) {
-    if (dueDate && lastMilestoneCompletedAt) {
-      const diffDate = differenceInCalendarDays(
-        new Date(lastMilestoneCompletedAt),
-        new Date(dueDate)
-      );
-      if (diffDate === 0) {
-        projectDueDateElement = '';
-      } else if (diffDate > 0) {
-        projectDueDateElement = <div className={DiffDateStyle('RED')}>{`+${diffDate}`}</div>;
-      } else {
-        projectDueDateElement = <div className={DiffDateStyle('TEAL')}>{diffDate}</div>;
-      }
-    } else {
-      projectDueDateElement = <div className={DiffDateStyle('GRAY')}>N/A</div>;
-    }
-  } else if (dueDate && lastMilestoneEstDate) {
-    const diffDate = differenceInCalendarDays(new Date(lastMilestoneEstDate), new Date(dueDate));
-    if (diffDate === 0) {
-      projectDueDateElement = '';
-    } else if (diffDate > 0) {
-      projectDueDateElement = <div className={DiffDateStyle('RED')}>{`+${diffDate}`}</div>;
-    } else {
-      projectDueDateElement = <div className={DiffDateStyle('TEAL')}>{diffDate}</div>;
-    }
-  } else {
-    projectDueDateElement = <div className={DiffDateStyle('GRAY')}>N/A</div>;
-  }
+  const { value: dueDateDiff, color } = isLastMilestoneCompleted
+    ? diffDueDate({ dueDate, date: lastMilestoneCompletedAt })
+    : diffDueDate({ dueDate, date: lastMilestoneEstDate });
 
   return (
     <BaseCard icon="PROJECT" color="PROJECT">
@@ -74,7 +48,7 @@ const ProjectCardNew = ({ project }: Props) => {
               <FormattedMessage id="components.card.due" defaultMessage="DUE" />
             </div>
             <div>{dueDate}</div>
-            {projectDueDateElement}
+            {dueDateDiff !== 0 && <div className={DiffDateStyle(color)}>{dueDateDiff}</div>}
             <Tooltip
               message={
                 <ProjectDueDateDiffToolTip

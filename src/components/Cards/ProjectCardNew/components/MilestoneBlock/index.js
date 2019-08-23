@@ -2,10 +2,9 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import FormattedDate from 'components/FormattedDate';
-import { differenceInCalendarDays } from 'date-fns';
 import Icon from 'components/Icon';
 import { Tooltip } from 'components/Tooltip';
-import { calculatePercentage } from 'utils/ui';
+import { calculatePercentage, diffDueDate } from 'utils/ui';
 import MilestoneDueDateToolTip from '../MilestoneDueDateToolTip';
 
 import {
@@ -29,32 +28,9 @@ type Props = {
 const MilestoneBlock = ({ milestone }: Props) => {
   const { name, total, completed, isCompleted, dueDate, estDate, completedAt } = milestone;
 
-  let diffDueDate;
-  if (isCompleted) {
-    if (dueDate && completedAt) {
-      const diffDate = differenceInCalendarDays(new Date(completedAt), new Date(dueDate));
-      if (diffDate === 0) {
-        diffDueDate = '';
-      } else if (diffDate > 0) {
-        diffDueDate = <span className={MilestoneDiffDateStyle('RED')}>{`+${diffDate}`}</span>;
-      } else {
-        diffDueDate = <span className={MilestoneDiffDateStyle('TEAL')}>{diffDate}</span>;
-      }
-    } else {
-      diffDueDate = <span className={MilestoneDiffDateStyle('GRAY')}>N/A</span>;
-    }
-  } else if (dueDate && estDate) {
-    const diffDate = differenceInCalendarDays(new Date(estDate), new Date(dueDate));
-    if (diffDate === 0) {
-      diffDueDate = '';
-    } else if (diffDate > 0) {
-      diffDueDate = <span className={MilestoneDiffDateStyle('RED')}>{`+${diffDate}`}</span>;
-    } else {
-      diffDueDate = <span className={MilestoneDiffDateStyle('TEAL')}>{diffDate}</span>;
-    }
-  } else {
-    diffDueDate = <span className={MilestoneDiffDateStyle('GRAY')}>N/A</span>;
-  }
+  const { value: dueDateDiff, color } = isCompleted
+    ? diffDueDate({ dueDate, date: completedAt })
+    : diffDueDate({ dueDate, date: estDate });
 
   return (
     <div className={TimelineStyle}>
@@ -89,7 +65,9 @@ const MilestoneBlock = ({ milestone }: Props) => {
                 <FormattedMessage id="components.card.compl" defaultMessage="COMPL." />
                 <div>
                   {completedAt ? <FormattedDate value={completedAt} /> : 'N/A'}
-                  {diffDueDate}
+                  {dueDateDiff !== 0 && (
+                    <span className={MilestoneDiffDateStyle(color)}>{dueDateDiff}</span>
+                  )}
                 </div>
               </>
             ) : (
@@ -97,7 +75,9 @@ const MilestoneBlock = ({ milestone }: Props) => {
                 <FormattedMessage id="components.card.est." defaultMessage="EST." />
                 <div>
                   {estDate ? <FormattedDate value={estDate} /> : 'N/A'}
-                  {diffDueDate}
+                  {dueDateDiff !== 0 && (
+                    <span className={MilestoneDiffDateStyle(color)}>{dueDateDiff}</span>
+                  )}
                 </div>
               </>
             )}
