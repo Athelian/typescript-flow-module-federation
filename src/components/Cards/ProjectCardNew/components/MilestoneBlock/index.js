@@ -5,6 +5,7 @@ import FormattedDate from 'components/FormattedDate';
 import Icon from 'components/Icon';
 import { Tooltip } from 'components/Tooltip';
 import { calculatePercentage, diffDueDate } from 'utils/ui';
+import { isNullOrUndefined } from 'utils/fp';
 import MilestoneDueDateToolTip from '../MilestoneDueDateToolTip';
 
 import {
@@ -26,7 +27,11 @@ type Props = {
 };
 
 const MilestoneBlock = ({ milestone }: Props) => {
-  const { name, total, completed, isCompleted, dueDate, estDate, completedAt } = milestone;
+  const { name, dueDate, estDate, completedAt, tasks = [] } = milestone;
+
+  const isCompleted = !isNullOrUndefined(completedAt);
+  const total = tasks.length;
+  const completed = tasks.filter(item => isNullOrUndefined(item.completedAt)).length;
 
   const { value: dueDateDiff, color } = isCompleted
     ? diffDueDate({ dueDate, date: completedAt })

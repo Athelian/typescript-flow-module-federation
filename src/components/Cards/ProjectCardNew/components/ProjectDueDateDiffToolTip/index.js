@@ -11,7 +11,7 @@ type Props = {
   completedAt: ?string,
 };
 
-const dueDateDiffToolTip = ({ dueDate, estDate, completedAt }: Props) => {
+const ProjectDueDateDiffToolTip = ({ dueDate, estDate, completedAt }: Props) => {
   const diffDueDateAndEstDate = diffDueDate({ dueDate, date: estDate });
   const diffDueDateAndCompletedAt = diffDueDate({ dueDate, date: completedAt });
 
@@ -21,9 +21,7 @@ const dueDateDiffToolTip = ({ dueDate, estDate, completedAt }: Props) => {
         <div>
           <FormattedMessage id="components.cards.dueDate" defaultMessage="Due Date" />
         </div>
-        <div>
-          <FormattedDate value={dueDate} />
-        </div>
+        <div>{dueDate ? <FormattedDate value={dueDate} /> : 'N/A'}</div>
         <div>
           <FormattedMessage id="components.card.diffWDue" defaultMessage="Diff. w/Due" />
         </div>
@@ -54,4 +52,4 @@ const dueDateDiffToolTip = ({ dueDate, estDate, completedAt }: Props) => {
   );
 };
 
-export default dueDateDiffToolTip;
+export default ProjectDueDateDiffToolTip;

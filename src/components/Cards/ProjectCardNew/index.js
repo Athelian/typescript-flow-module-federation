@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, FormattedDate } from 'react-intl';
 import Divider from 'components/Divider';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -20,11 +20,15 @@ import {
   TagsWrapperStyle,
 } from './style';
 
-type Props = {
+type OptionalProps = {
+  onClick: Function,
+};
+
+type Props = OptionalProps & {
   project: Object,
 };
 
-const ProjectCardNew = ({ project }: Props) => {
+const ProjectCardNew = ({ project, onClick }: Props) => {
   const { name, dueDate, tags = [], milestones = [] } = project;
   // milestones at latest one milestone
   const lastMileStone = milestones[milestones.length - 1];
@@ -39,7 +43,7 @@ const ProjectCardNew = ({ project }: Props) => {
     : diffDueDate({ dueDate, date: lastMilestoneEstDate });
 
   return (
-    <BaseCard icon="PROJECT" color="PROJECT">
+    <BaseCard icon="PROJECT" color="PROJECT" onClick={onClick}>
       <div className={ProjectCardStyle}>
         <div className={ProjectCardHeaderStyle}>
           <div className={ProjectNameStyle}>{name}</div>
@@ -47,7 +51,7 @@ const ProjectCardNew = ({ project }: Props) => {
             <div>
               <FormattedMessage id="components.card.due" defaultMessage="DUE" />
             </div>
-            <div>{dueDate}</div>
+            {dueDate ? <FormattedDate value={dueDate} /> : 'N/A'}
             {dueDateDiff !== 0 && <div className={DiffDateStyle(color)}>{dueDateDiff}</div>}
             <Tooltip
               message={
