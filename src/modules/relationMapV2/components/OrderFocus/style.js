@@ -24,3 +24,14 @@ export const RowStyle = css`
   display: grid;
   grid-template-columns: repeat(5, min-content);
 `;
+
+export const MatchedStyle = css`
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  height: calc(100% + 8px);
+  width: calc(100% + 8px);
+  border-radius: 9px;
+  background: rgba(11, 110, 222, 0.5);
+  z-index: -1;
+`;

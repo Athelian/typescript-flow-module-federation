@@ -4,11 +4,11 @@ import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { VariableSizeList as List } from 'react-window';
 import { Query } from 'react-apollo';
+import { get, set, uniq } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
 import apolloClient from 'apollo';
-import useFilter from 'hooks/useFilter';
-import loadMore from 'utils/loadMore';
 import { uuid } from 'utils/id';
+import logger from 'utils/logger';
 import { getByPathWithDefault } from 'utils/fp';
 import { UIContext } from 'modules/ui';
 import { partnerPermissionQuery } from 'components/common/QueryForm/query';
@@ -96,7 +96,72 @@ const innerElementType = React.forwardRef(
   )
 );
 
-export default function OrderFocus() {
+type Props = {
+  filterBy: {
+    query: string,
+    archived: boolean,
+  },
+  sortBy: {
+    [field: string]: string,
+  },
+  perPage: number,
+  page: number,
+};
+
+const loadMore = (
+  clientData: { fetchMore: Function, data: ?Object },
+  filtersAndSort: Object = {},
+  selectedField: string = ''
+) => {
+  const { data = { [`${selectedField}`]: { page: 1, totalPage: 0 } }, fetchMore } = clientData;
+  if (!data) return Promise.resolve({});
+  const nextPage = get(`${selectedField}.page`, data) + 1;
+  const totalPage = get(`${selectedField}.totalPage`, data);
+  if (nextPage > totalPage) return Promise.resolve({});
+  logger.warn('loadMore nextPage', nextPage);
+  return fetchMore({
+    variables: {
+      ...filtersAndSort,
+      filter: filtersAndSort.filter,
+      ...(filtersAndSort && filtersAndSort.sort
+        ? { sort: { [filtersAndSort.sort.field]: filtersAndSort.sort.direction } }
+        : {}),
+      page: nextPage,
+    },
+    updateQuery: (prevResult, { fetchMoreResult }) => {
+      logger.warn('updateQuery');
+
+      if (
+        get(`${selectedField}.page`, prevResult) + 1 !==
+        get(`${selectedField}.page`, fetchMoreResult)
+      ) {
+        return prevResult;
+      }
+
+      if (get(`${selectedField}.nodes`, fetchMoreResult).length === 0) return prevResult;
+
+      const result = set(
+        `${selectedField}.hits`,
+        uniq([
+          ...get(`${selectedField}.hits`, prevResult),
+          ...get(`${selectedField}.hits`, fetchMoreResult),
+        ]),
+        fetchMoreResult
+      );
+
+      return set(
+        `${selectedField}.nodes`,
+        uniq([
+          ...get(`${selectedField}.nodes`, prevResult),
+          ...get(`${selectedField}.nodes`, fetchMoreResult),
+        ]),
+        result
+      );
+    },
+  }).catch(logger.warn);
+};
+
+export default function OrderFocus({ ...filtersAndSort }: Props) {
   const uiContext = React.useContext(UIContext);
   const [expandRows, setExpandRows] = React.useState([]);
   const [state, dispatch] = React.useReducer(reducer, initialState);
@@ -139,29 +204,13 @@ export default function OrderFocus() {
       });
   }, []);
 
-  const { queryVariables: queryOrderVariables } = useFilter(
-    {
-      page: 1,
-      perPage: 10,
-      filter: {
-        query: '',
-        archived: false,
-      },
-      sort: {
-        field: 'updatedAt',
-        direction: 'DESCENDING',
-      },
-    },
-    'orderFocusedFilter'
-  );
-
   return (
     <>
       <div className={WrapperStyle}>
         <DndProvider backend={HTML5Backend}>
           <Query
             query={orderFocusedListQuery}
-            variables={queryOrderVariables}
+            variables={filtersAndSort}
             fetchPolicy="network-only"
           >
             {({ loading, data, error, fetchMore }) => {
@@ -186,6 +235,7 @@ export default function OrderFocus() {
                     }
                   : order
               );
+              const hits = getByPathWithDefault([], 'orders.hits', data);
               const ordersData = generateListData({
                 orders,
                 expandRows,
@@ -199,7 +249,7 @@ export default function OrderFocus() {
                 }
               });
               return orders.length > 0 ? (
-                <RelationMapContext.Provider value={{ state, orders, entities, dispatch }}>
+                <RelationMapContext.Provider value={{ state, orders, hits, entities, dispatch }}>
                   <List
                     itemData={ordersData}
                     className={ListStyle}
@@ -209,7 +259,7 @@ export default function OrderFocus() {
                     onItemsRendered={({ visibleStartIndex, visibleStopIndex }) => {
                       const isLastCell = visibleStopIndex === rowCount - 1;
                       if (hasMoreItems(data, 'orders') && isLastCell) {
-                        loadMore({ fetchMore, data }, queryOrderVariables, 'orders');
+                        loadMore({ fetchMore, data }, filtersAndSort, 'orders');
                       }
                       for (let index = visibleStartIndex; index < visibleStopIndex; index += 1) {
                         const [{ order }] = ordersData[index];

@@ -27,7 +27,7 @@ import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants
 import type { CellRender, State } from './type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
 import RelationLine from '../RelationLine';
-import { ContentStyle } from './style';
+import { ContentStyle, MatchedStyle } from './style';
 import {
   getColorByEntity,
   getIconByEntity,
@@ -41,11 +41,22 @@ import {
   handleClickAndDoubleClick,
 } from './helpers';
 import { RelationMapContext } from './store';
+import { normalizeEntity } from './normalize';
 
 type CellProps = {
   data: Object,
   beforeConnector?: ?LINE_CONNECTOR,
   afterConnector?: ?LINE_CONNECTOR,
+};
+
+export const MatchedResult = ({ entity }: { entity: Object }) => {
+  const { hits } = React.useContext(RelationMapContext);
+  const matches = normalizeEntity({ hits });
+  // eslint-disable-next-line no-underscore-dangle
+  if (matches.entity && matches.entity[`${entity.id}-${entity.__typename}`])
+    return <div className={MatchedStyle} />;
+
+  return null;
 };
 
 export const Overlay = ({
@@ -672,6 +683,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
           >
             <div ref={drag}>
               <OrderCard>{getByPathWithDefault('', 'poNo', data)}</OrderCard>
+              <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
