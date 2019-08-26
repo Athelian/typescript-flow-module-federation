@@ -167,15 +167,21 @@ const SheetRenderer = ({
                       height={height}
                       columnCount={columns.length}
                       columnWidth={index => columns[index].width}
+                      estimatedColumnWidth={200}
                       rowCount={rowCountWithLoading}
                       rowHeight={() => 30}
+                      estimatedRowHeight={30}
                       onScroll={handleScroll}
                       onItemsRendered={itemsRendered}
                       overscanRowCount={10}
                     >
                       {({ style, columnIndex, rowIndex }) => {
                         if (rowIndex >= rowCount) {
-                          return 'loading';
+                          return columnIndex === 0 ? (
+                            <div style={style}>
+                              <LoadingIcon size={10} />
+                            </div>
+                          ) : null;
                         }
 
                         return (

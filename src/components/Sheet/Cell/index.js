@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
 import FormattedName from 'components/FormattedName';
+import { Display } from 'components/Form';
 import { CellBorderStyle, CellStyle, FocusesWrapperStyle, FocusStyle } from './style';
-import { Display } from '../../Form';
 
 type Props = {
   value: any,
