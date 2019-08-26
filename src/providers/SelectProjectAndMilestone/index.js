@@ -14,7 +14,8 @@ import { currentSort } from 'components/common/FilterToolBar';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { Display } from 'components/Form';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import BaseCard, { ProjectCard } from 'components/Cards';
+import BaseCard from 'components/Cards';
+import ProjectCardNew from 'components/Cards/ProjectCardNew';
 import messages from 'modules/project/messages';
 import useFilter from 'hooks/useFilter';
 import SelectMilestone from './SelectMilestone';
@@ -176,7 +177,7 @@ function SelectProjectAndMilestone({
                         defaultMessage="No projects found"
                       />
                     }
-                    itemWidth="195px"
+                    itemWidth="645px"
                   >
                     {projects.map(item => {
                       const selected =
@@ -207,7 +208,7 @@ function SelectProjectAndMilestone({
                                     </div>
                                   )}
 
-                                <ProjectCard
+                                <ProjectCardNew
                                   key={item.id}
                                   project={item}
                                   onClick={() => {

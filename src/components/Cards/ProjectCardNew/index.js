@@ -28,7 +28,7 @@ type Props = OptionalProps & {
   project: Object,
 };
 
-const ProjectCardNew = ({ project, onClick }: Props) => {
+const ProjectCardNew = ({ project, onClick, ...rest }: Props) => {
   const { name, dueDate, tags = [], milestones = [] } = project;
   // milestones at latest one milestone
   const lastMileStone = milestones[milestones.length - 1];
@@ -43,7 +43,7 @@ const ProjectCardNew = ({ project, onClick }: Props) => {
     : diffDueDate({ dueDate, date: lastMilestoneEstDate });
 
   return (
-    <BaseCard icon="PROJECT" color="PROJECT" onClick={onClick}>
+    <BaseCard icon="PROJECT" color="PROJECT" onClick={onClick} {...rest}>
       <div className={ProjectCardStyle}>
         <div className={ProjectCardHeaderStyle}>
           <div className={ProjectNameStyle}>{name}</div>
