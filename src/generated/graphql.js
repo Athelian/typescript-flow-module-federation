@@ -19,6 +19,8 @@ export type Scalars = {
    * The Upload type is only meant to be use as an input, not as an output.
  **/
   Upload: any,
+  /** Void scalar */
+  Void: any,
 };
 
 export const AirportValues = Object.freeze({
@@ -17987,6 +17989,12 @@ export type BatchUpdateWrapperInput = {
   input: BatchUpdateInput,
 };
 
+export type Blur = {
+  __typename?: 'Blur',
+  id: $ElementType<Scalars, 'ID'>,
+  user: UserPayload,
+};
+
 export type BooleanValue = {
   __typename?: 'BooleanValue',
   boolean: $ElementType<Scalars, 'Boolean'>,
@@ -17995,6 +18003,13 @@ export type BooleanValue = {
 export type ChangePasswordInput = {
   currentPassword: $ElementType<Scalars, 'String'>,
   newPassword: $ElementType<Scalars, 'String'>,
+};
+
+export type ChangeType = {
+  __typename?: 'ChangeType',
+  old?: ?Value,
+  new?: ?Value,
+  field: $ElementType<Scalars, 'String'>,
 };
 
 export type Comment = Model & Owned & {
@@ -19154,6 +19169,14 @@ export type EntitiesMany = {
   warehouses?: ?Array<?WarehousePayload>,
 };
 
+export type EntityEvent = {
+  __typename?: 'EntityEvent',
+  lifeCycle: LifeCycle,
+  entity: EntityPayload,
+  reference: Reference,
+  changes?: ?Array<ChangeType>,
+};
+
 export type EntityHit = {
   __typename?: 'EntityHit',
   field?: ?$ElementType<Scalars, 'String'>,
@@ -19445,6 +19468,23 @@ export type FloatValue = {
   __typename?: 'FloatValue',
   float: $ElementType<Scalars, 'Float'>,
 };
+
+export type Focus = {
+  __typename?: 'Focus',
+  id: $ElementType<Scalars, 'ID'>,
+  user: UserPayload,
+  entity: EntityPayload,
+  field: $ElementType<Scalars, 'String'>,
+};
+
+export type FocusEvent = Focus | Blur;
+
+export type FocusingInput = {
+  entity: EntityInput,
+  field: $ElementType<Scalars, 'String'>,
+};
+
+export type FocusPayload = Focus | BadRequest | Forbidden | NotFound;
 
 export type Forbidden = {
   __typename?: 'Forbidden',
@@ -20093,6 +20133,20 @@ export const LanguageValues = Object.freeze({
 
 export type Language = $Values<typeof LanguageValues>;
 
+export const LifeCycleValues = Object.freeze({
+  /** Update */
+  Update: 'Update', 
+  /** Create */
+  Create: 'Create', 
+  /** SoftDelete */
+  SoftDelete: 'SoftDelete', 
+  /** Delete */
+  Delete: 'Delete'
+});
+
+
+export type LifeCycle = $Values<typeof LifeCycleValues>;
+
 export const LoadTypeValues = Object.freeze({
   Fcl: 'FCL', 
   Lcl: 'LCL'
@@ -20456,6 +20510,14 @@ export type Mutation = {
   integrationLinkExecute?: ?EmptyPayload,
   integrationLinkDelete?: ?EmptyPayload,
   import: ImportPayload,
+  focus: $ElementType<Scalars, 'Void'>,
+  blur: $ElementType<Scalars, 'Void'>,
+  entitySubscribe: $ElementType<Scalars, 'Void'>,
+  entityUnsubscribe: $ElementType<Scalars, 'Void'>,
+  entityUnsubscribeAll: $ElementType<Scalars, 'Void'>,
+  focusSubscribe: $ElementType<Scalars, 'Void'>,
+  focusUnsubscribe: $ElementType<Scalars, 'Void'>,
+  focusUnsubscribeAll: $ElementType<Scalars, 'Void'>,
 };
 
 
@@ -20914,6 +20976,51 @@ export type MutationIntegrationLinkDeleteArgs = {
 
 export type MutationImportArgs = {
   file: $ElementType<Scalars, 'Upload'>
+};
+
+
+export type MutationFocusArgs = {
+  id: $ElementType<Scalars, 'ID'>,
+  input: FocusingInput
+};
+
+
+export type MutationBlurArgs = {
+  id: $ElementType<Scalars, 'ID'>
+};
+
+
+export type MutationEntitySubscribeArgs = {
+  id: $ElementType<Scalars, 'ID'>,
+  input: SubscriptionInput
+};
+
+
+export type MutationEntityUnsubscribeArgs = {
+  id: $ElementType<Scalars, 'ID'>,
+  input: SubscriptionInput
+};
+
+
+export type MutationEntityUnsubscribeAllArgs = {
+  id: $ElementType<Scalars, 'ID'>
+};
+
+
+export type MutationFocusSubscribeArgs = {
+  id: $ElementType<Scalars, 'ID'>,
+  input: SubscriptionInput
+};
+
+
+export type MutationFocusUnsubscribeArgs = {
+  id: $ElementType<Scalars, 'ID'>,
+  input: SubscriptionInput
+};
+
+
+export type MutationFocusUnsubscribeAllArgs = {
+  id: $ElementType<Scalars, 'ID'>
 };
 
 export type NotFound = {
@@ -22093,6 +22200,7 @@ export type Query = {
   roles: RolePayloadPaginatedList,
   permissions: Array<$ElementType<Scalars, 'String'>>,
   orderShipmentTable: Array<EntityPayload>,
+  focuses: Array<FocusPayload>,
 };
 
 
@@ -22600,6 +22708,12 @@ export type QueryRolesArgs = {
 
 
 export type QueryOrderShipmentTableArgs = {
+  entities: Array<EntityInput>
+};
+
+
+export type QueryFocusesArgs = {
+  id: $ElementType<Scalars, 'ID'>,
   entities: Array<EntityInput>
 };
 
@@ -59994,6 +60108,8 @@ export type Subscription = {
   notificationNew: Notification,
   importEvent: ImportEvent,
   exportReady: File,
+  entityEvent: EntityEvent,
+  focusEvent: FocusEvent,
 };
 
 
@@ -60004,6 +60120,20 @@ export type SubscriptionImportEventArgs = {
 
 export type SubscriptionExportReadyArgs = {
   id: $ElementType<Scalars, 'ID'>
+};
+
+
+export type SubscriptionEntityEventArgs = {
+  id: $ElementType<Scalars, 'ID'>
+};
+
+
+export type SubscriptionFocusEventArgs = {
+  id: $ElementType<Scalars, 'ID'>
+};
+
+export type SubscriptionInput = {
+  entities: Array<EntityInput>,
 };
 
 export type Supervised = {
@@ -60685,6 +60815,7 @@ export type ViolationParameter = {
   key: $ElementType<Scalars, 'String'>,
   value: $ElementType<Scalars, 'String'>,
 };
+
 
 export type Voyage = Model & Owned & Sortable & {
   __typename?: 'Voyage',
@@ -64258,6 +64389,24 @@ export type WarehouseCardFragmentFragment = (
       },
       {
         "kind": "UNION",
+        "name": "FocusPayload",
+        "possibleTypes": [
+          {
+            "name": "Focus"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
         "name": "TokenPayload",
         "possibleTypes": [
           {
@@ -64376,6 +64525,18 @@ export type WarehouseCardFragmentFragment = (
           },
           {
             "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "FocusEvent",
+        "possibleTypes": [
+          {
+            "name": "Focus"
+          },
+          {
+            "name": "Blur"
           }
         ]
       }
