@@ -21,6 +21,39 @@ export const projectCardFragment = gql`
   }
 `;
 
+export const milestoneFragment = gql`
+  fragment milestoneFragment on Milestone {
+    id
+    name
+    dueDate
+    completedAt
+    tasks {
+      ... on Task {
+        id
+        completedAt
+      }
+    }
+  }
+`;
+
+export const projectCardNewFragment = gql`
+  fragment projectCardNewFragment on Project {
+    id
+    name
+    description
+    dueDate
+    milestones {
+      ...milestoneFragment
+    }
+    taskCount {
+      ...taskCountFragment
+    }
+    tags {
+      ...tagFragment
+    }
+  }
+`;
+
 export const milestoneCardFragment = gql`
   fragment milestoneCardFragment on Milestone {
     id

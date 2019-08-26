@@ -40,6 +40,8 @@ import { tagFormFragment, tagCardFragment } from './tag/fragment';
 import { warehouseFormFragment, warehouseCardFragment } from './warehouse/fragment';
 import {
   projectCardFragment,
+  milestoneFragment,
+  projectCardNewFragment,
   milestoneCardFragment,
   projectFormQueryFragment,
   projectFormFragment,
@@ -134,6 +136,8 @@ export {
   forbiddenFragment,
   ownedByFragment,
   projectCardFragment,
+  milestoneFragment,
+  projectCardNewFragment,
   milestoneCardFragment,
   projectFormQueryFragment,
   projectFormFragment,

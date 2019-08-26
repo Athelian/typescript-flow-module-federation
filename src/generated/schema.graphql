@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Aug 21 2019 14:16:51 GMT+0900 (Japan Standard Time)
+# timestamp: Thu Aug 22 2019 18:04:33 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26834,6 +26834,11 @@ input BatchUpdateWrapperInput {
   input: BatchUpdateInput!
 }
 
+type Blur {
+  id: ID!
+  user: UserPayload!
+}
+
 type BooleanValue {
   boolean: Boolean!
 }
@@ -26841,6 +26846,12 @@ type BooleanValue {
 input ChangePasswordInput {
   currentPassword: String!
   newPassword: String!
+}
+
+type ChangeType {
+  old: Value
+  new: Value
+  field: String!
 }
 
 type Comment implements Model & Owned {
@@ -28398,6 +28409,13 @@ type EntitiesMany {
   warehouses: [WarehousePayload]
 }
 
+type EntityEvent {
+  lifeCycle: LifeCycle!
+  entity: EntityPayload!
+  reference: Reference!
+  changes: [ChangeType!]
+}
+
 type EntityHit {
   field: String
   entity: EntityPayload!
@@ -28688,6 +28706,22 @@ enum FileType {
 type FloatValue {
   float: Float!
 }
+
+type Focus {
+  id: ID!
+  user: UserPayload!
+  entity: EntityPayload!
+  field: String!
+}
+
+union FocusEvent = Focus | Blur
+
+input FocusingInput {
+  entity: EntityInput!
+  field: String!
+}
+
+union FocusPayload = Focus | BadRequest | Forbidden | NotFound
 
 type Forbidden {
   reference: Reference
@@ -29501,6 +29535,20 @@ enum Language {
   zu
 }
 
+enum LifeCycle {
+  """Update"""
+  Update
+
+  """Create"""
+  Create
+
+  """SoftDelete"""
+  SoftDelete
+
+  """Delete"""
+  Delete
+}
+
 enum LoadType {
   FCL
   LCL
@@ -29850,6 +29898,14 @@ type Mutation {
   integrationLinkExecute(id: ID!): EmptyPayload
   integrationLinkDelete(id: ID!): EmptyPayload
   import(file: Upload!): ImportPayload!
+  focus(id: ID!, input: FocusingInput!): Void!
+  blur(id: ID!): Void!
+  entitySubscribe(id: ID!, input: SubscriptionInput!): Void!
+  entityUnsubscribe(id: ID!, input: SubscriptionInput!): Void!
+  entityUnsubscribeAll(id: ID!): Void!
+  focusSubscribe(id: ID!, input: SubscriptionInput!): Void!
+  focusUnsubscribe(id: ID!, input: SubscriptionInput!): Void!
+  focusUnsubscribeAll(id: ID!): Void!
 }
 
 type NotFound {
@@ -30999,6 +31055,7 @@ type Query {
   roles(page: Int! = 1, perPage: Int! = 10): RolePayloadPaginatedList!
   permissions: [String!]!
   orderShipmentTable(entities: [EntityInput!]!): [EntityPayload!]!
+  focuses(id: ID!, entities: [EntityInput!]!): [FocusPayload!]!
 }
 
 type Reference {
@@ -86885,6 +86942,12 @@ type Subscription {
   notificationNew: Notification!
   importEvent(id: ID!): ImportEvent!
   exportReady(id: ID!): File!
+  entityEvent(id: ID!): EntityEvent!
+  focusEvent(id: ID!): FocusEvent!
+}
+
+input SubscriptionInput {
+  entities: [EntityInput!]!
 }
 
 interface Supervised {
@@ -87537,6 +87600,9 @@ type ViolationParameter {
   key: String!
   value: String!
 }
+
+"""Void scalar"""
+scalar Void
 
 type Voyage implements Model & Owned & Sortable {
   vesselName: String

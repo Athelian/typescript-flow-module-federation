@@ -2,6 +2,7 @@
 import * as React from 'react';
 import Icon from 'components/Icon';
 import FormattedDate from 'components/FormattedDate';
+import { calculatePercentage } from 'utils/ui';
 import {
   TimelineWrapperStyle,
   TimelineStyle,
@@ -23,15 +24,6 @@ type Props = {
     isCompleted: boolean,
     name: string,
   }>,
-};
-
-const calculatePercentage = (total: number, completed: number) => {
-  if (total) {
-    if (completed >= total) return 100;
-    return Math.round((completed * 100) / total);
-  }
-
-  return 0;
 };
 
 export default function MilestonesTimeline({ milestones }: Props) {

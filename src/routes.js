@@ -37,6 +37,7 @@ const AsyncTaskTemplate = lazy(() => import('./modules/taskTemplate'));
 const AsyncProfile = lazy(() => import('./modules/profile'));
 const AsyncDocument = lazy(() => import('./modules/document'));
 const AsyncGlobalView = lazy(() => import('./modules/globalView'));
+const AsyncSheet = lazy(() => import('./modules/sheet'));
 
 const Routes: StatelessFunctionalComponent<{}> = () => (
   <UIConsumer>
@@ -77,6 +78,7 @@ const Routes: StatelessFunctionalComponent<{}> = () => (
                 <AsyncProfile path="profile/*" />
                 <AsyncDocument path="document/*" />
                 <AsyncGlobalView path="global-view" />
+                <AsyncSheet path="sheet/*" />
                 <PageNotFound default />
               </Layout>
             </Authorized>

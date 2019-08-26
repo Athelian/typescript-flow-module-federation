@@ -42,6 +42,7 @@ import {
   faKey as PASSWORD,
   faRedo as FORGOT,
   faFileImport as IMPORT,
+  faTh as SHEET,
   // Common UI
   faFolderOpen as ACTIVE,
   faArchive as ARCHIVE,
@@ -198,6 +199,7 @@ export default {
   PASSWORD,
   FORGOT,
   IMPORT,
+  SHEET,
   TH_LIST,
   RELATION_MAP,
   MILESTONE,

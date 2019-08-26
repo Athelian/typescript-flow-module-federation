@@ -353,9 +353,10 @@ const ContainerSection = () => {
                             const { autoCalculatedFreeTimeStartDate } = values;
                             if (!autoCalculatedFreeTimeStartDate) {
                               const voyages = getByPathWithDefault([], 'shipment.voyages', values);
-                              const freeTimeStartDate = getLatestDate(
-                                voyages[voyages.length - 1].arrival
-                              );
+                              const freeTimeStartDate =
+                                voyages.length > 0
+                                  ? getLatestDate(voyages[voyages.length - 1].arrival)
+                                  : null;
                               setFieldValue('freeTimeStartDate', freeTimeStartDate);
                             }
                             setFieldValue(

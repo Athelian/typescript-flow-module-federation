@@ -45,6 +45,7 @@ import {
   PATH_TAG,
   PATH_PROJECT,
   PATH_DOCUMENT,
+  PATH_SHEET,
 } from './constants';
 
 const SideBar = () => {
@@ -76,6 +77,22 @@ const SideBar = () => {
                         icon="RELATION_MAP"
                         label={<FormattedMessage {...messages.relationMap} />}
                       />
+                    )}
+                    {isEnableBetaFeature && (
+                      <SubMenu
+                        hasActiveChild={[PATH_SHEET].includes(pathnameSplit[1])}
+                        icon="SHEET"
+                        label="SHEET (Global table View)"
+                      >
+                        {hasPermission(ORDER_LIST) && (
+                          <MenuItem
+                            path={`/${PATH_SHEET}/${PATH_ORDER}`}
+                            isActive={pathnameSplit[2] === PATH_ORDER}
+                            icon="ORDER"
+                            label={<FormattedMessage {...messages.order} />}
+                          />
+                        )}
+                      </SubMenu>
                     )}
                     {hasPermission([ORDER_LIST, BATCH_LIST, ORDER_ITEMS_LIST]) && (
                       <SubMenu
