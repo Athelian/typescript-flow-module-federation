@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
 import GridView from 'components/GridView';
-import { ProjectCard } from 'components/Cards';
+import ProjectCardNew from 'components/Cards/ProjectCardNew';
 
 type Props = {
   items: Array<Object>,
@@ -23,10 +23,10 @@ const ProjectGridView = ({ items, onLoadMore, hasMore, isLoading }: Props) => {
       emptyMessage={
         <FormattedMessage id="modules.project.noFound" defaultMessage="No projects found" />
       }
-      itemWidth="195px"
+      itemWidth="645px"
     >
       {items.map(item => (
-        <ProjectCard
+        <ProjectCardNew
           key={item.id}
           project={item}
           onClick={() => navigate(`/project/${encodeId(item.id)}`)}
