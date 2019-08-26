@@ -9,6 +9,8 @@ const shipment = new schema.Entity('shipments');
 const order = new schema.Entity('orders');
 const ownedBy = new schema.Entity('organizations');
 
+// TODO: try to define a mapping key on schema
+
 batch.define({
   shipment,
   container,
