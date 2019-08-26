@@ -267,6 +267,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                               defaultMessage="The name of End Product with the same Exporter and Supplier must be unique"
                             />
                           ),
+                          isTouched: true,
                         }
                       : {})}
                     editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_NAME])}
