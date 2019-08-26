@@ -168,10 +168,10 @@ const SheetRenderer = ({
                       columnCount={columns.length}
                       columnWidth={index => columns[index].width}
                       rowCount={rowCountWithLoading}
-                      rowHeight={() => 40}
+                      rowHeight={() => 30}
                       onScroll={handleScroll}
                       onItemsRendered={itemsRendered}
-                      overscanRowCount={5}
+                      overscanRowCount={10}
                     >
                       {({ style, columnIndex, rowIndex }) => {
                         if (rowIndex >= rowCount) {

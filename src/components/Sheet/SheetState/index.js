@@ -17,15 +17,22 @@ export type CellValue = {
     path: string,
   } | null,
   readonly?: boolean,
+  disabled?: boolean,
   empty?: boolean,
   forbidden?: boolean,
   duplicatable?: boolean,
+  parent?: boolean,
+  extended?: number,
 };
 
 export type Position = {
   x: number,
   y: number,
 };
+
+export type Focus = {
+  cell: CellValue,
+} & Position;
 
 export type ForeignFocus = {
   id: string,
@@ -39,7 +46,7 @@ export type State = {
   items: Array<Object>,
   rows: Array<Array<CellValue>>,
   entities: Array<{ id: string, type: string }>,
-  focusedAt: Position | null,
+  focusedAt: Focus | null,
   weakFocusedAt: Array<Position>,
   foreignFocuses: Array<Object>,
   foreignFocusedAt: Array<ForeignFocus>,
@@ -54,7 +61,7 @@ export type Action = {
 type RenderProps = {
   rows: Array<Array<CellValue>>,
   entities: Array<{ id: string, type: string }>,
-  focusedAt: Position | null,
+  focusedAt: Focus | null,
   weakFocusedAt: Array<Position>,
   foreignFocusedAt: Array<ForeignFocus>,
   columns: Array<ColumnConfig>,

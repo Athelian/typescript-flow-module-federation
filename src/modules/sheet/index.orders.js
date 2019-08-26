@@ -1,12 +1,12 @@
 // @flow
 import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
+import { getByPathWithDefault } from 'utils/fp';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar } from 'components/NavBar';
 import { Sheet } from 'components/Sheet';
 import { transformer } from './transformer';
 import { orderSheetQuery } from './query';
-import { getByPathWithDefault } from '../../utils/fp';
 
 const columnsConfig = [
   {

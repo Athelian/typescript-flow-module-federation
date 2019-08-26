@@ -42,6 +42,38 @@ function getForeignFocusedAt(rows: Array<Array<CellValue>>, focus: Object): Arra
     }));
 }
 
+function extendParentCells(rows: Array<Array<CellValue>>): Array<Array<CellValue>> {
+  return rows.map((row, x) =>
+    row.map((cell, y) => {
+      if (!cell.parent) {
+        return cell;
+      }
+
+      let i = x + 1;
+      let extended = 0;
+      while (true) {
+        if (rows.length <= i) {
+          break;
+        }
+
+        const bottomCell = rows[i][y];
+        if (bottomCell.empty) {
+          extended += 1;
+        } else {
+          break;
+        }
+
+        i += 1;
+      }
+
+      return {
+        ...cell,
+        extended,
+      };
+    })
+  );
+}
+
 export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
   const transformItems = (
     items: Array<Object>,
@@ -71,24 +103,42 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
       };
     }
 
-    function getNextFocusablePosition(from: Position, getNext: Position => Position): Position {
+    function getFocusableFromEmpty(from: Position): Position {
+      let current = from;
+
+      while (true) {
+        current = getSafePosition({ x: current.x - 1, y: current.y });
+        const cell = state.rows[current.x][current.y];
+
+        if (!cell.empty) {
+          break;
+        }
+      }
+
+      return current;
+    }
+
+    function getNextFocusable(
+      from: Position,
+      getNext: Position => Position,
+      skipEmpty: boolean
+    ): Position {
       let current = from;
 
       while (true) {
         const next = getSafePosition(getNext(current));
         if (current.x === next.x && current.y === next.y) {
-          const cell = state.rows[current.x][current.y];
-          if (cell.empty) {
-            current = from;
-          }
-
           break;
         }
 
         current = next;
 
         const cell = state.rows[current.x][current.y];
+
         if (!cell.empty) {
+          break;
+        } else if (cell.empty && !skipEmpty) {
+          current = getFocusableFromEmpty(current);
           break;
         }
       }
@@ -103,7 +153,7 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
         }
 
         const { items, columns } = action.payload;
-        const rows = transformItems(items, columns);
+        const rows = extendParentCells(transformItems(items, columns));
         const entities = getEntities(rows);
 
         return {
@@ -123,7 +173,7 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
         }
 
         const { items, columns } = action.payload;
-        const rows = transformItems(items, columns);
+        const rows = extendParentCells(transformItems(items, columns));
         const entities = getEntities(rows);
         const foreignFocusedAt = state.foreignFocuses
           .map(focus => getForeignFocusedAt(rows, focus))
@@ -143,7 +193,7 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
         }
 
         const columns = action.payload;
-        const rows = transformItems(state.items, columns);
+        const rows = extendParentCells(transformItems(state.items, columns));
         const foreignFocusedAt = state.foreignFocuses
           .map(focus => getForeignFocusedAt(rows, focus))
           .flat();
@@ -185,7 +235,10 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
 
         return {
           ...state,
-          focusedAt: action.cell,
+          focusedAt: {
+            ...action.cell,
+            cell: targetCell,
+          },
           weakFocusedAt,
         };
       }
@@ -203,7 +256,7 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
 
         return reducer(state, {
           type: 'focus',
-          cell: getNextFocusablePosition(state.focusedAt, pos => ({ ...pos, x: pos.x - 1 })),
+          cell: getNextFocusable(state.focusedAt, pos => ({ ...pos, x: pos.x - 1 }), true),
         });
       }
       case 'focus_down': {
@@ -213,7 +266,7 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
 
         return reducer(state, {
           type: 'focus',
-          cell: getNextFocusablePosition(state.focusedAt, pos => ({ ...pos, x: pos.x + 1 })),
+          cell: getNextFocusable(state.focusedAt, pos => ({ ...pos, x: pos.x + 1 }), true),
         });
       }
       case 'focus_right': {
@@ -223,7 +276,7 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
 
         return reducer(state, {
           type: 'focus',
-          cell: getNextFocusablePosition(state.focusedAt, pos => ({ ...pos, y: pos.y + 1 })),
+          cell: getNextFocusable(state.focusedAt, pos => ({ ...pos, y: pos.y + 1 }), false),
         });
       }
       case 'focus_left': {
@@ -233,7 +286,7 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
 
         return reducer(state, {
           type: 'focus',
-          cell: getNextFocusablePosition(state.focusedAt, pos => ({ ...pos, y: pos.y - 1 })),
+          cell: getNextFocusable(state.focusedAt, pos => ({ ...pos, y: pos.y - 1 }), false),
         });
       }
       case 'foreign_focuses': {

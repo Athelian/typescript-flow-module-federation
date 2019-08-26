@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import FormattedName from 'components/FormattedName';
-import { CellStyle, FocusesWrapperStyle, FocusStyle } from './style';
+import { CellBorderStyle, CellStyle, FocusesWrapperStyle, FocusStyle } from './style';
+import { Display } from '../../Form';
 
 type Props = {
   value: any,
@@ -9,10 +10,10 @@ type Props = {
   weakFocus: boolean,
   foreignFocuses: Array<{ id: string, firstName: string, lastName: string }>,
   readonly: boolean,
-  empty: boolean,
   forbidden: boolean,
-  permitted: boolean,
+  disabled: boolean,
   onFirstRow: boolean,
+  extended: number,
   dispatch: ({ type: string, payload?: any }) => void,
 };
 
@@ -22,14 +23,12 @@ const Cell = ({
   weakFocus,
   foreignFocuses,
   readonly,
-  empty,
   forbidden,
-  permitted,
+  disabled,
   onFirstRow,
+  extended,
   dispatch,
 }: Props) => {
-  const disabled = forbidden || !permitted;
-
   const handleClick = () => {
     dispatch({
       type: 'focus',
@@ -38,10 +37,11 @@ const Cell = ({
 
   return (
     <div
-      className={CellStyle(focus, foreignFocuses.length > 0, weakFocus, readonly, disabled, empty)}
+      className={CellStyle(readonly, disabled, extended)}
       role="presentation"
       onClick={handleClick}
     >
+      <div className={CellBorderStyle(focus, foreignFocuses.length > 0, weakFocus)} />
       {foreignFocuses.length > 0 && (
         <div id="focuses" className={FocusesWrapperStyle(onFirstRow)}>
           {foreignFocuses.map(ff => (
@@ -51,7 +51,14 @@ const Cell = ({
           ))}
         </div>
       )}
-      {forbidden ? 'blackout' : value}
+
+      {readonly || disabled || forbidden ? (
+        <Display height="30px" blackout={forbidden}>
+          {value}
+        </Display>
+      ) : (
+        value
+      )}
     </div>
   );
 };
@@ -61,10 +68,10 @@ Cell.defaultProps = {
   focus: false,
   weakFocus: false,
   readonly: false,
-  empty: false,
   forbidden: false,
-  permitted: false,
+  disabled: false,
   onFirstRow: false,
+  extended: 0,
 };
 
 export default React.memo<Props>(Cell);

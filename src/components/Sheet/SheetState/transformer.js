@@ -10,7 +10,6 @@ export const transformField = (
     return {
       entity: null,
       data: null,
-      empty: true,
       forbidden: false,
     };
   }
@@ -20,7 +19,6 @@ export const transformField = (
       return {
         entity: null,
         data: null,
-        empty: false,
         forbidden: true,
       };
     default:
@@ -36,7 +34,6 @@ export const transformField = (
           value: entity[field],
           path: basePath ? `${basePath}.${field}` : field,
         },
-        empty: false,
         forbidden: false,
       };
   }

@@ -6,23 +6,37 @@ function transformOrder(order: Object): Array<CellValue> {
   return [
     {
       columnKey: 'order.poNo',
+      empty: !order,
+      parent: true,
       ...transformField(null, order, 'poNo', () => true),
     },
     {
       columnKey: 'order.currency',
+      empty: !order,
+      parent: true,
       ...transformField(null, order, 'currency', () => true),
     },
   ];
 }
 
-const transformOrderItem = (itemIdx: number, orderItem: Object): Array<CellValue> => {
+const transformOrderItem = (
+  itemIdx: number,
+  orderItem: Object,
+  hasItems: boolean
+): Array<CellValue> => {
   return [
     {
       columnKey: 'order.orderItem.no',
+      disabled: !hasItems && !orderItem,
+      empty: hasItems && !orderItem,
+      parent: true,
       ...transformField(`orderItems.${itemIdx}`, orderItem, 'no', () => true),
     },
     {
       columnKey: 'order.orderItem.quantity',
+      disabled: !hasItems && !orderItem,
+      empty: hasItems && !orderItem,
+      parent: true,
       ...transformField(`orderItems.${itemIdx}`, orderItem, 'quantity', () => true),
     },
   ];
@@ -32,15 +46,18 @@ const transformBatch = (itemIdx: number, batchIdx: number, batch: Object): Array
   return [
     {
       columnKey: 'order.orderItem.batch.no',
+      disabled: !batch,
       ...transformField(`orderItems.${itemIdx}.batches.${batchIdx}`, batch, 'no', () => true),
     },
     {
       columnKey: 'order.orderItem.batch.quantity',
+      disabled: !batch,
       ...transformField(`orderItems.${itemIdx}.batches.${batchIdx}`, batch, 'quantity', () => true),
     },
     {
       columnKey: 'order.orderItem.batch.container.no',
       duplicatable: true,
+      disabled: !(batch ? batch.container : null),
       ...transformField(
         `orderItems.${itemIdx}.batches.${batchIdx}.container`,
         batch ? batch.container : null,
@@ -51,6 +68,7 @@ const transformBatch = (itemIdx: number, batchIdx: number, batch: Object): Array
     {
       columnKey: 'order.orderItem.batch.shipment.no',
       duplicatable: true,
+      disabled: !(batch ? batch.shipment : null),
       ...transformField(
         `orderItems.${itemIdx}.batches.${batchIdx}.shipment`,
         batch ? batch.shipment : null,
@@ -68,7 +86,7 @@ export function transformer(order: Object): Array<Array<CellValue>> {
 
   if (order.orderItems.length > 0) {
     order.orderItems.forEach((orderItem, orderItemIdx) => {
-      let orderItemCells = transformOrderItem(orderItemIdx, orderItem);
+      let orderItemCells = transformOrderItem(orderItemIdx, orderItem, true);
 
       if (orderItem.batches.length > 0) {
         orderItem.batches.forEach((batch, batchIdx) => {
@@ -78,19 +96,23 @@ export function transformer(order: Object): Array<Array<CellValue>> {
             ...transformBatch(orderItemIdx, batchIdx, batch),
           ]);
           orderCells = transformOrder(null);
-          orderItemCells = transformOrderItem(orderItemIdx, null);
+          orderItemCells = transformOrderItem(orderItemIdx, null, true);
         });
       } else {
         rows.push([
           ...orderCells,
-          ...transformOrderItem(0, orderItem),
+          ...transformOrderItem(0, orderItem, true),
           ...transformBatch(0, 0, null),
         ]);
         orderCells = transformOrder(null);
       }
     });
   } else {
-    rows.push([...orderCells, ...transformOrderItem(0, null), ...transformBatch(0, 0, null)]);
+    rows.push([
+      ...orderCells,
+      ...transformOrderItem(0, null, false),
+      ...transformBatch(0, 0, null),
+    ]);
   }
 
   return rows;

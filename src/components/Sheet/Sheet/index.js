@@ -35,61 +35,55 @@ const Sheet = ({ columns, items, loading, hasMore, transformItem, onLoadMore }: 
         dispatch,
         handleColumnResize,
         handleThreshold,
-      }) => {
-        let focusedEntity = null;
-        if (focusedAt) {
-          const cell = rows[focusedAt.x][focusedAt.y];
-          if (cell.entity) {
-            focusedEntity = {
-              id: cell.entity.id,
-              type: cell.entity.type,
-              field: cell.entity.field,
-            };
-          }
-        }
+      }) => (
+        <>
+          <SheetLive
+            entities={entities}
+            focusedAt={focusedAt ? focusedAt.cell.entity : null}
+            dispatch={dispatch}
+          />
+          <SheetRenderer
+            columns={columnsWithWidth}
+            rowCount={rows.length}
+            loading={loading}
+            loadingMore={loadingMore}
+            focusedAt={focusedAt}
+            dispatch={dispatch}
+            hasMore={hasMore}
+            onThreshold={handleThreshold}
+            onColumnResize={handleColumnResize}
+          >
+            {({ x, y }) => {
+              const cell = rows[x][y];
 
-        return (
-          <>
-            <SheetLive entities={entities} focusedAt={focusedEntity} dispatch={dispatch} />
-            <SheetRenderer
-              columns={columnsWithWidth}
-              rowCount={rows.length}
-              loading={loading}
-              loadingMore={loadingMore}
-              focusedAt={focusedAt}
-              dispatch={dispatch}
-              hasMore={hasMore}
-              onThreshold={handleThreshold}
-              onColumnResize={handleColumnResize}
-            >
-              {({ x, y }) => {
-                const cell = rows[x][y];
+              if (cell.empty) {
+                return null;
+              }
 
-                return (
-                  <Cell
-                    value={cell.data ? cell.data.value : null}
-                    focus={!!focusedAt && focusedAt.x === x && focusedAt.y === y}
-                    weakFocus={!!weakFocusedAt.find(f => f.x === x && f.y === y)}
-                    foreignFocuses={foreignFocusedAt
-                      .filter(f => f.x === x && f.y === y)
-                      .map(f => ({
-                        id: f.id,
-                        firstName: f.user.firstName,
-                        lastName: f.user.lastName,
-                      }))}
-                    readonly={cell.readonly || false}
-                    empty={cell.empty || false}
-                    forbidden={cell.forbidden || false}
-                    permitted // TODO: use hasPermission thing
-                    onFirstRow={x === 0}
-                    dispatch={action => dispatch({ ...action, cell: { x, y } })}
-                  />
-                );
-              }}
-            </SheetRenderer>
-          </>
-        );
-      }}
+              return (
+                <Cell
+                  value={cell.data ? cell.data.value : null}
+                  focus={!!focusedAt && focusedAt.x === x && focusedAt.y === y}
+                  weakFocus={!!weakFocusedAt.find(f => f.x === x && f.y === y)}
+                  foreignFocuses={foreignFocusedAt
+                    .filter(f => f.x === x && f.y === y)
+                    .map(f => ({
+                      id: f.id,
+                      firstName: f.user.firstName,
+                      lastName: f.user.lastName,
+                    }))}
+                  readonly={cell.readonly || false}
+                  forbidden={cell.forbidden || false}
+                  disabled={cell.disabled} // TODO: use hasPermission thing
+                  onFirstRow={x === 0}
+                  extended={cell.extended}
+                  dispatch={action => dispatch({ ...action, cell: { x, y } })}
+                />
+              );
+            }}
+          </SheetRenderer>
+        </>
+      )}
     </SheetState>
   );
 };
