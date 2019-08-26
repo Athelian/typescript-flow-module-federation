@@ -4,32 +4,30 @@ import { css } from 'react-emotion';
 import { colors, borderRadiuses, presets, fontSizes } from 'styles/common';
 
 export const TimelineStyle: string = css`
-  justify-items: right;
-  display: grid;
-  grid-gap: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 `;
 
-export const MilestoneNameStyle = (completed: boolean): string => css`
-  line-height: 20px;
-  height: 20px;
+export const MilestoneNameStyle: string = css`
   width: 115px;
-  text-align: center;
+  height: 20px;
   ${presets.ELLIPSIS};
   ${borderRadiuses.BUTTON};
-  background-color: ${completed ? colors.TEAL : colors.GRAY_SUPER_LIGHT};
-  color: ${completed ? colors.WHITE : colors.BLACK};
-  padding: 0 10px;
-  margin: 0 0 0 10px;
-  & > svg {
-    margin: 0 2px 0 0;
-  }
+  text-align: center;
+  ${fontSizes.MAIN};
+  font-weight: bold;
+  color: ${colors.BLACK};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
 `;
 
 export const ProgressBarStyle: string = css`
+  display: flex;
   position: relative;
-  ${borderRadiuses.BUTTON};
   background-color: ${colors.GRAY_SUPER_LIGHT};
   width: 100%;
+  ${borderRadiuses.BUTTON};
+  margin: 15px 0;
 `;
 
 export const BarStyle = (percent: number): string => css`
@@ -40,64 +38,81 @@ export const BarStyle = (percent: number): string => css`
   ${borderRadiuses.BUTTON};
 `;
 
-export const MilestoneTickStyle = (completed: boolean): string => css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+export const MilestoneTickStyle = (isCompleted: boolean): string => css`
   position: absolute;
   right: -15px;
   top: -10px;
-  background-color: ${completed ? colors.TEAL : colors.GRAY_SUPER_LIGHT};
-  color: ${completed ? colors.WHITE : colors.GRAY_DARK};
-  height: 30px;
-  width: 30px;
-  ${borderRadiuses.CIRCLE};
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
-  z-index: 1;
-  ${fontSizes.SMALL};
-`;
-
-export const TasksWrapperStyle = (completed: boolean): string => css`
   display: flex;
-  ${presets.ELLIPSIS};
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  z-index: 1;
+  ${fontSizes.MAIN};
+  ${borderRadiuses.CIRCLE};
+  ${isCompleted
+    ? `
+    color: ${colors.WHITE};
+    background-color: ${colors.TEAL};
+  `
+    : `
+    color: ${colors.GRAY_DARK};
+    background-color: ${colors.GRAY_SUPER_LIGHT};
+  `};
+`;
+
+export const TasksWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+  line-height: 20px;
   ${borderRadiuses.BUTTON};
-  background-color: ${completed ? colors.TEAL : colors.GRAY_SUPER_LIGHT};
-  padding: 5px;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  height: 20px;
   max-width: 115px;
-`;
-
-export const CompletedTasksStyle = (completed: boolean, count: number): string => {
-  let color = colors.GRAY_DARK;
-  if (completed) {
-    color = colors.WHITE;
-  } else if (count > 0) {
-    color = colors.TEAL;
-  }
-  return css`
-    color: ${color};
-  `;
-};
-
-export const TotalTasksStyle = (completed: boolean): string => css`
   ${fontSizes.SMALL};
-  color: ${completed ? colors.WHITE : colors.GRAY_DARK};
-  margin: 0 0 0 3px;
+  padding: 0 0 0 5px;
 `;
 
-export const TaskIconStyle = (completed: boolean): string => css`
-  color: ${completed ? colors.WHITE : colors.PURPLE};
+export const CompletedTasksStyle = (count: number): string => css`
+  color: ${count > 0 ? colors.TEAL : colors.GRAY_DARK};
+  font-weight: bold;
 `;
 
-export const MilestoneDateStyle: string = css`
+export const TotalTasksStyle: string = css`
+  color: ${colors.GRAY_DARK};
+`;
+
+export const TaskIconStyle: string = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${colors.TASK};
+  width: 20px;
+  height: 20px;
+`;
+
+export const MilestoneDatesWrapperStyle: string = css`
+  display: flex;
+  flex-direction: column;
+  height: 20px;
+  margin: 5px 0 0 0;
+`;
+
+export const MilestoneDateWrapperStyle: string = css`
   position: relative;
-  display: grid;
-  width: 140px;
-  grid-template-columns: 55px 65px;
-  ${fontSizes.SMALL};
+  display: flex;
 `;
 
-export const MilestoneDiffDateStyle = (color: string): string => css`
+export const MilestoneDateStyle = (hasDate: boolean): string => css`
+  ${presets.ELLIPSIS};
+  color: ${hasDate ? colors.BLACK : colors.GRAY_LIGHT};
+  font-weight: bold;
+  ${fontSizes.SMALL};
+  line-height: 20px;
+`;
+
+export const MilestoneDiffDateStyle = (diff: number): string => css`
   position: absolute;
-  right: 5px;
-  color: ${color};
+  left: calc(100% + 5px);
+  color: ${diff > 0 ? colors.RED : colors.TEAL};
 `;
