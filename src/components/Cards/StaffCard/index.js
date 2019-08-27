@@ -31,10 +31,13 @@ const defaultProps = {
   actions: [],
 };
 
+const MANAGER = 'MANAGER';
+const USER = 'USER';
+
 const StaffCard = ({ staff, onClick, actions, ...rest }: Props) => {
   const { firstName, lastName, roles, email, tags, organization } = staff;
 
-  const userRoleIcon = roles.some(role => role.name === 'admin') ? 'MANAGER' : 'USER';
+  const userRoleIcon = roles.some(({ name = '' }) => name.includes('admin')) ? MANAGER : USER;
 
   return (
     <BaseCard icon="STAFF" color="STAFF" actions={actions} {...rest}>

@@ -80,10 +80,12 @@ const valueFragment = gql`
           id
         }
         ... on Tag {
+          id
           name
           color
         }
         ... on User {
+          id
           firstName
           lastName
         }
