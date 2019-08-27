@@ -1477,11 +1477,11 @@ function ItemSummaryCell({
             <div
               style={{
                 position: 'absolute',
-                top: '8px',
-                right: '-47px',
+                top: '-6px',
+                right: '-8px',
                 border: '4px solid rgba(11, 110, 222, 0.5)',
                 height: '60px',
-                width: '453px',
+                width: ORDER_ITEM_WIDTH - 13,
                 borderRadius: '9px',
               }}
             />
@@ -1599,11 +1599,11 @@ function BatchSummaryCell({
               <div
                 style={{
                   position: 'absolute',
-                  top: '8px',
-                  right: '-47px',
+                  top: '-6px',
+                  right: '-8px',
                   border: '4px solid rgba(11,110,222,0.5)',
                   height: 60,
-                  width: ORDER_ITEM_WIDTH - 30,
+                  width: BATCH_WIDTH - 13,
                   borderRadius: '9px',
                 }}
               />
@@ -1658,7 +1658,7 @@ function ContainerSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch, hits } = React.useContext(RelationMapContext);
   const containerCount = getByPathWithDefault(0, 'containerCount', order);
   const batchIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item =>
@@ -1702,6 +1702,10 @@ function ContainerSummaryCell({
       : isTargetedAnyShipments && isTargetedAnyBatches,
     hasRelation: isTargetedAnyShipments,
   };
+  const matches = normalizeEntity({ hits });
+  const isMatched = containerIds.some(
+    itemId => matches.entity && matches.entity[`${itemId}-${CONTAINER}`]
+  );
   return (
     <>
       <div className={ContentStyle}>
@@ -1724,6 +1728,19 @@ function ContainerSummaryCell({
                 selected={!isExpand && isTargetedAnyContainers}
                 onClick={onClick}
               >
+                {isMatched && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '-6px',
+                      right: '-8px',
+                      border: '4px solid rgba(11,110,222,0.5)',
+                      height: 60,
+                      width: CONTAINER_WIDTH - 13,
+                      borderRadius: '9px',
+                    }}
+                  />
+                )}
                 <ContainerCard>
                   <p>Total: {getByPathWithDefault(0, 'containerCount', data)}</p>
                   <button
@@ -1786,7 +1803,7 @@ function ShipmentSummaryCell({
   isExpand,
   beforeConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch, hits } = React.useContext(RelationMapContext);
   const containerCount = getByPathWithDefault(0, 'containerCount', order);
   const batchIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item =>
@@ -1824,6 +1841,10 @@ function ShipmentSummaryCell({
       ? isTargetedAnyContainers && isTargetedAnyShipments
       : isTargetedAnyBatches && isTargetedAnyShipments,
   };
+  const matches = normalizeEntity({ hits });
+  const isMatched = shipmentIds.some(
+    itemId => matches.entity && matches.entity[`${itemId}-${SHIPMENT}`]
+  );
   return (
     <>
       <div className={ContentStyle}>
@@ -1846,6 +1867,19 @@ function ShipmentSummaryCell({
                 selectable
                 onClick={onClick}
               >
+                {isMatched && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '-6px',
+                      right: '-8px',
+                      border: '4px solid rgba(11,110,222,0.5)',
+                      height: 60,
+                      width: SHIPMENT_WIDTH - 13,
+                      borderRadius: '9px',
+                    }}
+                  />
+                )}
                 <ShipmentCard>
                   <p>Total {getByPathWithDefault(0, 'shipmentCount', data)}</p>
                   <button
