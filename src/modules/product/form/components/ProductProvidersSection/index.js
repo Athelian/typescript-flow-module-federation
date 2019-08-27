@@ -132,6 +132,7 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                                   productProviders={productProviders}
                                   productProvider={{
                                     ...productProvider,
+                                    referenced: null,
                                     isNew: true,
                                     id: uuid(),
                                   }}
