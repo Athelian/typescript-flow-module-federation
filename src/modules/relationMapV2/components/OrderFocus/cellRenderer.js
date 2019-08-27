@@ -52,11 +52,13 @@ type CellProps = {
 export const MatchedResult = ({ entity }: { entity: Object }) => {
   const { hits } = React.useContext(RelationMapContext);
   const matches = normalizeEntity({ hits });
-  // eslint-disable-next-line no-underscore-dangle
-  if (matches.entity && matches.entity[`${entity.id}-${entity.__typename}`])
-    return <div className={MatchedStyle} />;
-
-  return null;
+  return (
+    <div
+      className={MatchedStyle(
+        matches.entity && matches.entity[`${entity.id}-${entity.__typename}`]
+      )}
+    />
+  );
 };
 
 export const Overlay = ({
@@ -865,6 +867,7 @@ function OrderItemCell({
           >
             <div ref={drag}>
               <ItemCard>{getByPathWithDefault('', 'no', data)}</ItemCard>
+              <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
@@ -1026,6 +1029,7 @@ function BatchCell({
           >
             <div ref={drag} style={baseDragStyle}>
               <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
+              <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
@@ -1198,6 +1202,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
               <ContainerCard>
                 {getByPathWithDefault('', `containers.${containerId}.no`, entities)}
               </ContainerCard>
+              <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
@@ -1359,6 +1364,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
               <ShipmentCard>
                 {getByPathWithDefault('', `shipments.${shipmentId}.blNo`, entities)}
               </ShipmentCard>
+              <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}

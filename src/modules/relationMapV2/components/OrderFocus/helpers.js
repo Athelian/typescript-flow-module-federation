@@ -41,7 +41,6 @@ export const handleClickAndDoubleClick = ({
 export const OrderCard = styled.div`
   width: 285px;
   height: 55px;
-  background: #fff;
 `;
 export const ItemCard = styled.div`
   width: 465px;

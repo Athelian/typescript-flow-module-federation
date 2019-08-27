@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { scrollbars } from 'styles/common';
+import { colors, scrollbars } from 'styles/common';
 
 export const WrapperStyle = css`
   display: flex;
@@ -25,13 +25,25 @@ export const RowStyle = css`
   grid-template-columns: repeat(5, min-content);
 `;
 
-export const MatchedStyle = css`
+export const MatchedStyle = (isMatched: boolean) => css`
   position: absolute;
-  left: -4px;
-  top: -4px;
-  height: calc(100% + 8px);
+  border: 4px solid ${colors.TRANSPARENT};
+  background-color: ${colors.WHITE};
+  z-index: -1;
+  ${isMatched
+    ? `
+    left: -4px;
+    top: -4px;
+    height: calc(100% + 8px);
   width: calc(100% + 8px);
   border-radius: 9px;
-  background: rgba(11, 110, 222, 0.5);
-  z-index: -1;
+  border-color: rgba(11, 110, 222, 0.5);
+  `
+    : `
+  left: 0px;
+  top: 0px;
+  height: 100%;
+width: 100%;
+border-radius: 5px;
+  `}
 `;
