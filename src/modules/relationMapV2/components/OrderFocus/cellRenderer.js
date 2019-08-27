@@ -1087,6 +1087,7 @@ function BatchCell({
 function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
   const { state, dispatch, entities } = React.useContext(RelationMapContext);
   const containerId = getByPathWithDefault('', 'id', data);
+  const shipmentId = getByPathWithDefault('', 'relatedBatch.shipment.id', data);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
     accept: BATCH,
     canDrop: item => {
@@ -1190,10 +1191,22 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
       },
     });
   };
+  const orderIds = Object.keys(entities.orders).filter(orderId =>
+    getByPathWithDefault([], 'shipments', entities.orders[orderId]).includes(shipmentId)
+  );
   const handleClick = handleClickAndDoubleClick({
     clickId: entity,
     onClick: onTarget,
     onDoubleClick: onTargetTree,
+    onCtrlClick: () =>
+      dispatch({
+        type: 'EDIT',
+        payload: {
+          type: CONTAINER,
+          selectedId: containerId,
+          orderIds,
+        },
+      }),
   });
   return (
     <>

@@ -4,12 +4,13 @@ import SlideView from 'components/SlideView';
 import OrderForm from 'modules/order/index.form';
 import ItemForm from 'modules/orderItem/index.form';
 import BatchForm from 'modules/batch/index.form';
+import ContainerForm from 'modules/container/index.form';
 import ShipmentForm from 'modules/shipment/index.form';
-import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMapV2/constants';
+import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
 import { encodeId } from 'utils/id';
 
 type Props = {|
-  type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof SHIPMENT,
+  type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof SHIPMENT | typeof CONTAINER,
   selectedId: string,
   onClose: () => void,
 |};
@@ -27,6 +28,10 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
     }
     case BATCH: {
       form = <BatchForm batchId={encodeId(id)} isSlideView />;
+      break;
+    }
+    case CONTAINER: {
+      form = <ContainerForm containerId={encodeId(id)} isSlideView />;
       break;
     }
     case SHIPMENT: {

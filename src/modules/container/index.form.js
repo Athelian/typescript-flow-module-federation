@@ -8,8 +8,8 @@ import { getByPath } from 'utils/fp';
 import { decodeId } from 'utils/id';
 import { SaveButton, ResetButton, ExportButton } from 'components/Buttons';
 import { FormContainer, resetFormState } from 'modules/form';
-import { Content } from 'components/Layout';
-import { NavBar, EntityIcon } from 'components/NavBar';
+import { Content, SlideViewLayout } from 'components/Layout';
+import { NavBar, EntityIcon, SlideViewNavBar } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { QueryForm } from 'components/common';
@@ -23,6 +23,7 @@ import { containerExportQuery } from './query';
 
 type OptionalProps = {
   containerId: string,
+  isSlideView: boolean,
 };
 
 type Props = OptionalProps & {
@@ -31,6 +32,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   containerId: '',
+  isSlideView: false,
 };
 
 type UpdateContainerResponse = {|
@@ -142,9 +144,10 @@ class ContainerFormModule extends React.Component<Props> {
   };
 
   render() {
-    const { containerId } = this.props;
+    const { containerId, isSlideView } = this.props;
     const mutationKey = { key: decodeId(containerId) };
-
+    const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
+    const CurrentLayout = isSlideView ? SlideViewLayout : React.Fragment;
     return (
       <Provider inject={[formContainer]}>
         <Mutation
@@ -153,8 +156,8 @@ class ContainerFormModule extends React.Component<Props> {
           {...mutationKey}
         >
           {(saveContainer, { loading, error }) => (
-            <>
-              <NavBar>
+            <CurrentLayout>
+              <CurrentNavBar>
                 <EntityIcon icon="CONTAINER" color="CONTAINER" />
                 <JumpToSection>
                   <SectionTabs
@@ -252,7 +255,7 @@ class ContainerFormModule extends React.Component<Props> {
                     </>
                   )}
                 </Subscribe>
-              </NavBar>
+              </CurrentNavBar>
               <Content>
                 {error && <p>Error: Please try again.</p>}
                 <QueryForm
@@ -276,7 +279,7 @@ class ContainerFormModule extends React.Component<Props> {
                   }}
                 />
               </Content>
-            </>
+            </CurrentLayout>
           )}
         </Mutation>
       </Provider>
