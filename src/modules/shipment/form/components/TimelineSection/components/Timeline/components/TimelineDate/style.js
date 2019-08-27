@@ -24,7 +24,7 @@ type DateProps = {
 };
 
 export const DateStyle = ({ shownDate, vertical }: DateProps): string => css`
-  color: ${shownDate ? colors.BLACK : colors.GRAY_LIGHT};
+  color: ${shownDate ? colors.WHITE : colors.GRAY_LIGHT};
   ${presets.ELLIPSIS};
   font-weight: bold;
   ${vertical
