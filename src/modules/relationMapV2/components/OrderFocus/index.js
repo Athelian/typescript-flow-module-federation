@@ -17,6 +17,7 @@ import { Display } from 'components/Form';
 import { orderFocusedListQuery, orderFocusDetailQuery } from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { WrapperStyle, ListStyle, RowStyle } from './style';
+import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import SelectedEntity from '../SelectedEntity';
 import Header from '../Header';
@@ -308,6 +309,26 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
                     }}
                     isOpen={state.moveEntity.isOpen}
                     {...state.moveEntity.detail}
+                  />
+                  <EditFormSlideView
+                    type={state.edit.type}
+                    selectedId={state.edit.selectedId}
+                    onClose={() => {
+                      if (state.edit.type === ORDER) {
+                        queryOrderDetail(state.edit.selectedId);
+                      } else if (state.edit.orderId) {
+                        queryOrderDetail(state.edit.orderId);
+                      } else if (state.edit.orderIds && state.edit.orderIds.length) {
+                        state.edit.orderIds.map(orderId => queryOrderDetail(orderId));
+                      }
+                      dispatch({
+                        type: 'EDIT',
+                        payload: {
+                          type: '',
+                          selectedId: '',
+                        },
+                      });
+                    }}
                   />
                 </RelationMapContext.Provider>
               ) : (

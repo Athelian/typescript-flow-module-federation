@@ -660,6 +660,14 @@ function OrderCell({ data, afterConnector }: CellProps) {
     clickId: entity,
     onClick: onTarget,
     onDoubleClick: onTargetTree,
+    onCtrlClick: () =>
+      dispatch({
+        type: 'EDIT',
+        payload: {
+          type: ORDER,
+          selectedId: orderId,
+        },
+      }),
   });
   return (
     <>
@@ -830,6 +838,15 @@ function OrderItemCell({
     clickId: entity,
     onClick: onTarget,
     onDoubleClick: onTargetTree,
+    onCtrlClick: () =>
+      dispatch({
+        type: 'EDIT',
+        payload: {
+          type: ORDER_ITEM,
+          selectedId: itemId,
+          orderId,
+        },
+      }),
   });
   return (
     <>
@@ -956,6 +973,7 @@ function BatchCell({
   });
 
   const entity = `${BATCH}-${batchId}`;
+  const orderId = getByPathWithDefault('', 'id', order);
   const orderItems = getByPathWithDefault([], 'orderItems', order);
   const foundParentItem = orderItems.find(item =>
     item.batches.map(batch => batch.id).includes(batchId)
@@ -996,6 +1014,15 @@ function BatchCell({
     clickId: entity,
     onClick: onTarget,
     onDoubleClick: onTargetTree,
+    onCtrlClick: () =>
+      dispatch({
+        type: 'EDIT',
+        payload: {
+          type: BATCH,
+          selectedId: batchId,
+          orderId,
+        },
+      }),
   });
   return (
     <>
@@ -1322,6 +1349,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
         `${CONTAINER}-${getByPathWithDefault('', 'relatedBatch.container.id', data)}`
       )
     : state.targets.includes(`${BATCH}-${getByPathWithDefault('', 'relatedBatch.id', data)}`);
+  const entity = `${SHIPMENT}-${shipmentId}`;
   const onTarget = () => {
     dispatch({
       type: 'TARGET',
@@ -1330,6 +1358,24 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
       },
     });
   };
+
+  const orderIds = Object.keys(entities.orders).filter(orderId =>
+    getByPathWithDefault([], 'shipments', entities.orders[orderId]).includes(shipmentId)
+  );
+  const handleClick = handleClickAndDoubleClick({
+    clickId: entity,
+    onClick: onTarget,
+    onDoubleClick: onTarget,
+    onCtrlClick: () =>
+      dispatch({
+        type: 'EDIT',
+        payload: {
+          type: SHIPMENT,
+          selectedId: shipmentId,
+          orderIds,
+        },
+      }),
+  });
   return (
     <>
       <div className={ContentStyle}>
@@ -1358,7 +1404,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
             isArchived={getByPathWithDefault(false, `shipments.${shipmentId}.archived`, entities)}
             selected={state.targets.includes(`${SHIPMENT}-${shipmentId}`)}
             selectable={state.targets.includes(`${SHIPMENT}-${shipmentId}`)}
-            onClick={onTarget}
+            onClick={handleClick}
           >
             <div ref={drag}>
               <ShipmentCard>

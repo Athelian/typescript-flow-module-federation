@@ -25,6 +25,7 @@ const initMoveEntity = {
     value: '',
   },
 };
+
 export const initialState: State = {
   order: {},
   targets: [],
@@ -33,6 +34,10 @@ export const initialState: State = {
     isOpen: false,
     isProcessing: false,
     detail: initMoveEntity,
+  },
+  edit: {
+    type: '',
+    selectedId: '',
   },
   permission: {},
 };
@@ -59,7 +64,8 @@ export function reducer(
       | 'CONFIRM_MOVE'
       | 'CONFIRM_MOVE_START'
       | 'CONFIRM_MOVE_END'
-      | 'FETCH_PERMISSION',
+      | 'FETCH_PERMISSION'
+      | 'EDIT',
     payload: {
       entity?: string,
       targets?: Array<string>,
@@ -71,6 +77,12 @@ export function reducer(
     case 'FETCH_ORDER':
       return update(state, {
         order: {
+          $merge: action.payload,
+        },
+      });
+    case 'EDIT':
+      return update(state, {
+        edit: {
           $merge: action.payload,
         },
       });

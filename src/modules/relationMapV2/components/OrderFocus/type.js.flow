@@ -52,5 +52,11 @@ export type State = {|
       },
     },
   },
+  edit: {
+    type: string,
+    selectedId: string,
+    orderId?: string,
+    orderIds?: Array<string>,
+  },
   permission: Object,
 |};
