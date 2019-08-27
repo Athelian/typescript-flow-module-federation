@@ -1433,7 +1433,7 @@ function ItemSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch, hits } = React.useContext(RelationMapContext);
   const orderItemIds = getByPathWithDefault([], 'orderItems', data)
     .map(item => getByPathWithDefault('', 'id', item))
     .filter(Boolean);
@@ -1451,6 +1451,10 @@ function ItemSummaryCell({
   const isTargetedAnyBatches = batchIds.some(batchId =>
     state.targets.includes(`${BATCH}-${batchId}`)
   );
+  const matches = normalizeEntity({ hits });
+  const isMatched = orderItemIds.some(
+    itemId => matches.entity && matches.entity[`${itemId}-${ORDER_ITEM}`]
+  );
   return (
     <>
       <div className={ContentStyle}>
@@ -1463,7 +1467,25 @@ function ItemSummaryCell({
         )}
       </div>
       <div className={ContentStyle} role="presentation">
-        <HeaderCard isExpand={isExpand} selected={!isExpand && selected} onClick={onClick}>
+        <HeaderCard
+          isMatched={isMatched}
+          isExpand={isExpand}
+          selected={!isExpand && selected}
+          onClick={onClick}
+        >
+          {isMatched && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '8px',
+                right: '-47px',
+                border: '4px solid rgba(11, 110, 222, 0.5)',
+                height: '60px',
+                width: '453px',
+                borderRadius: '9px',
+              }}
+            />
+          )}
           <ItemCard>
             <p>Total: {getByPathWithDefault(0, 'orderItemCount', data)}</p>
             <button
@@ -1510,7 +1532,7 @@ function BatchSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch, hits } = React.useContext(RelationMapContext);
   const orderItemIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item => getByPathWithDefault('', 'id', item))
   ).filter(Boolean);
@@ -1553,6 +1575,8 @@ function BatchSummaryCell({
     ? isTargetedAnyBatches && isTargetedAnyContainers
     : isTargetedAnyBatches && isTargetedAnyShipments;
   const total = getByPathWithDefault(0, 'batchCount', data);
+  const matches = normalizeEntity({ hits });
+  const isMatched = batchIds.some(itemId => matches.entity && matches.entity[`${itemId}-${BATCH}`]);
   return (
     <>
       <div className={ContentStyle}>
@@ -1571,6 +1595,19 @@ function BatchSummaryCell({
             selected={!isExpand && isTargetedAnyBatches}
             onClick={onClick}
           >
+            {isMatched && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '8px',
+                  right: '-47px',
+                  border: '4px solid rgba(11,110,222,0.5)',
+                  height: 60,
+                  width: ORDER_ITEM_WIDTH - 30,
+                  borderRadius: '9px',
+                }}
+              />
+            )}
             <BatchCard>
               <p>Total: {getByPathWithDefault(0, 'batchCount', data)}</p>
               <button

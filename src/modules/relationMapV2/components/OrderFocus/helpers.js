@@ -59,6 +59,7 @@ export const ShipmentCard = styled.div`
   height: 55px;
 `;
 export const HeaderCard = styled.div`
+  position: relation;
   ${borderRadiuses.MAIN};
   background: ${props => (props.isExpand ? colors.GRAY_VERY_LIGHT : colors.WHITE)};
   border: 4px solid ${props => (props.selected ? colors.TEAL : colors.TRANSPARENT)};
