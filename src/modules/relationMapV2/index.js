@@ -6,6 +6,7 @@ import { NavBar, EntityIcon } from 'components/NavBar';
 import FilterToolBar from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
 import OrderFocus from './components/OrderFocus';
+import CustomFiler from './components/CustomFilter';
 
 const RelationMap = () => {
   const sortFields = [];
@@ -23,6 +24,7 @@ const RelationMap = () => {
     },
     'rmFilterV2'
   );
+  const [isShow, setIsShow] = React.useState(false);
   return (
     <Provider>
       <NavBar>
@@ -34,8 +36,31 @@ const RelationMap = () => {
           canSearch
           canSort={false}
         />
+        <label>
+          Advance filter:
+          <input
+            name="check"
+            type="checkbox"
+            checked={isShow}
+            onChange={() => {
+              setIsShow(!isShow);
+              onChangeFilter({
+                ...filterAndSort,
+                filter: { query: filterAndSort.filter.query },
+              });
+            }}
+          />
+        </label>
+        <CustomFiler
+          isEnable={isShow}
+          onChange={newFilter => {
+            onChangeFilter({
+              ...filterAndSort,
+              filter: { query: filterAndSort.filter.query, ...newFilter },
+            });
+          }}
+        />
       </NavBar>
-
       <Content>
         <OrderFocus {...queryVariables} />
       </Content>
