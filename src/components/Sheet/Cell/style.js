@@ -11,10 +11,12 @@ export const CellStyle = (readonly: boolean, disabled: boolean, extended: number
   }
 
   return css`
+    ${layout.HORIZONTAL};
+    ${layout.CENTER};
     position: relative;
     width: 100%;
     height: ${extended > 0 ? `${(extended + 1) * 30}px` : '100%'};
-    ${extended && 'z-index: 2;'}
+    ${extended && 'z-index: 2'};
     box-sizing: border-box;
     background-color: ${backgroundColor};
 
@@ -57,8 +59,8 @@ export const FocusesWrapperStyle = (onFirstRow: boolean) => css`
   ${layout.HORIZONTAL};
   display: none;
   position: absolute;
-  ${onFirstRow ? 'bottom: -16px;' : 'top: -16px;'}
-  left: -2px;
+  ${onFirstRow ? 'bottom: -14px;' : 'top: -14px;'}
+  left: 0px;
   z-index: 4;
 `;
 

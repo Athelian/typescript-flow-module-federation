@@ -25,7 +25,7 @@ type Props = {
   onThreshold: () => void,
   onColumnResize: (key: string, width: number) => void,
   dispatch: (action: Action) => void,
-  children: ({ x: number, y: number }) => React.Node,
+  children: React.ComponentType<any>,
 };
 
 const SheetRenderer = ({
@@ -63,6 +63,7 @@ const SheetRenderer = ({
       return;
     }
 
+    // $FlowFixMe Annotate by VariableSizeGrid doesn't work
     gridRef.current.resetAfterColumnIndex(0);
   }, [columns]);
 
@@ -167,32 +168,13 @@ const SheetRenderer = ({
                       height={height}
                       columnCount={columns.length}
                       columnWidth={index => columns[index].width}
-                      estimatedColumnWidth={200}
                       rowCount={rowCountWithLoading}
                       rowHeight={() => 30}
-                      estimatedRowHeight={30}
                       onScroll={handleScroll}
                       onItemsRendered={itemsRendered}
                       overscanRowCount={10}
                     >
-                      {({ style, columnIndex, rowIndex }) => {
-                        if (rowIndex >= rowCount) {
-                          return columnIndex === 0 ? (
-                            <div style={style}>
-                              <LoadingIcon size={10} />
-                            </div>
-                          ) : null;
-                        }
-
-                        return (
-                          <div style={style}>
-                            {children({
-                              x: rowIndex,
-                              y: columnIndex,
-                            })}
-                          </div>
-                        );
-                      }}
+                      {children}
                     </VariableSizeGrid>
                   );
                 }}

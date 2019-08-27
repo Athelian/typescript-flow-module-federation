@@ -6,12 +6,14 @@ function transformOrder(order: Object): Array<CellValue> {
   return [
     {
       columnKey: 'order.poNo',
+      type: 'text',
       empty: !order,
       parent: true,
       ...transformField(null, order, 'poNo', () => true),
     },
     {
       columnKey: 'order.currency',
+      type: 'text',
       empty: !order,
       parent: true,
       ...transformField(null, order, 'currency', () => true),
@@ -27,18 +29,20 @@ const transformOrderItem = (
   return [
     {
       columnKey: 'order.orderItem.no',
+      type: 'text',
       disabled: !hasItems && !orderItem,
       empty: hasItems && !orderItem,
       parent: true,
       ...transformField(`orderItems.${itemIdx}`, orderItem, 'no', () => true),
     },
-    {
+    /* {
       columnKey: 'order.orderItem.quantity',
+      type: 'number',
       disabled: !hasItems && !orderItem,
       empty: hasItems && !orderItem,
       parent: true,
       ...transformField(`orderItems.${itemIdx}`, orderItem, 'quantity', () => true),
-    },
+    }, */
   ];
 };
 
@@ -46,16 +50,19 @@ const transformBatch = (itemIdx: number, batchIdx: number, batch: Object): Array
   return [
     {
       columnKey: 'order.orderItem.batch.no',
+      type: 'text',
       disabled: !batch,
       ...transformField(`orderItems.${itemIdx}.batches.${batchIdx}`, batch, 'no', () => true),
     },
-    {
+    /* {
       columnKey: 'order.orderItem.batch.quantity',
+      type: 'number',
       disabled: !batch,
       ...transformField(`orderItems.${itemIdx}.batches.${batchIdx}`, batch, 'quantity', () => true),
-    },
+    }, */
     {
       columnKey: 'order.orderItem.batch.container.no',
+      type: 'text',
       duplicatable: true,
       disabled: !(batch ? batch.container : null),
       ...transformField(
@@ -67,6 +74,7 @@ const transformBatch = (itemIdx: number, batchIdx: number, batch: Object): Array
     },
     {
       columnKey: 'order.orderItem.batch.shipment.no',
+      type: 'text',
       duplicatable: true,
       disabled: !(batch ? batch.shipment : null),
       ...transformField(
