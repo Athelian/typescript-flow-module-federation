@@ -1,11 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, fontSizes } from 'styles/common';
+import { layout, colors, fontSizes } from 'styles/common';
 
 export const WrapperStyle = css`
-  flex: 1;
+  ${layout.HORIZONTAL};
+  ${layout.CENTER};
   padding: 0 5px;
-  z-index: 2;
+  height: 30px;
 
   & > input {
     width: 100%;

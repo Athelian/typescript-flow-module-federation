@@ -1,7 +1,7 @@
 // @flow
 
 export const transformField = (
-  basePath: string | null,
+  basePath: string,
   entity: Object | null,
   field: string,
   permissions: () => boolean
@@ -16,6 +16,7 @@ export const transformField = (
 
   switch (entity.__typename) {
     case 'Forbidden':
+    case 'NotFound':
       return {
         entity: null,
         data: null,
@@ -32,7 +33,7 @@ export const transformField = (
         },
         data: {
           value: entity[field],
-          path: basePath ? `${basePath}.${field}` : field,
+          path: `${basePath}.${field}`,
         },
         forbidden: false,
       };
