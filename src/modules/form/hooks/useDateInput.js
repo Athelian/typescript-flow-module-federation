@@ -1,7 +1,7 @@
 // @flow
 
 import { useState, useCallback } from 'react';
-import { isValid } from 'date-fns';
+import { isValid } from 'utils/date';
 import { date } from 'yup';
 import type { ValidationObject } from './type.js.flow';
 

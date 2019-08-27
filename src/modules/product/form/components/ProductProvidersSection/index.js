@@ -6,11 +6,11 @@ import { isForbidden } from 'utils/data';
 import usePermission from 'hooks/usePermission';
 import { SectionNavBar } from 'components/NavBar';
 import { ProductProviderCard } from 'components/Cards';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, ObjectValue } from 'react-values';
 import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
-import { injectUid } from 'utils/id';
+import { uuid } from 'utils/id';
 import generateEndProduct from 'utils/product';
 import { ProductProvidersContainer } from 'modules/product/form/containers';
 import {
@@ -94,19 +94,55 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                   {productProviders
                     .filter(item => !isForbidden(item))
                     .map((productProvider, index): React.Node => (
-                      <BooleanValue key={productProvider.id}>
-                        {({ value: opened, set: slideToggle }) => (
+                      <ObjectValue
+                        key={productProvider.id}
+                        defaultValue={{
+                          updateFormOpened: false,
+                          cloneFormOpened: false,
+                        }}
+                      >
+                        {({ value: { updateFormOpened, cloneFormOpened }, set: slideToggle }) => (
                           <>
-                            <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                              {opened && (
+                            <SlideView
+                              isOpen={updateFormOpened}
+                              onRequestClose={() => slideToggle('updateFormOpened', false)}
+                            >
+                              {updateFormOpened && (
                                 <ProductProviderFormWrapper
                                   isOwner={isOwner}
                                   productProviders={productProviders}
                                   productProvider={productProvider}
-                                  onCancel={() => slideToggle(false)}
+                                  onCancel={() => slideToggle('updateFormOpened', false)}
                                   onSave={newProvider => {
-                                    slideToggle(false);
+                                    slideToggle('updateFormOpened', false);
                                     setFieldValue(`productProviders.${index}`, newProvider);
+                                  }}
+                                />
+                              )}
+                            </SlideView>
+
+                            <SlideView
+                              isOpen={cloneFormOpened}
+                              onRequestClose={() => slideToggle('cloneFormOpened', false)}
+                            >
+                              {cloneFormOpened && (
+                                <ProductProviderFormWrapper
+                                  isNew
+                                  isOwner={isOwner}
+                                  productProviders={productProviders}
+                                  productProvider={{
+                                    ...productProvider,
+                                    referenced: false,
+                                    isNew: true,
+                                    id: uuid(),
+                                  }}
+                                  onCancel={() => slideToggle('cloneFormOpened', false)}
+                                  onSave={newProvider => {
+                                    slideToggle('cloneFormOpened', false);
+                                    setFieldValue(
+                                      `productProviders.${productProviders.length}`,
+                                      newProvider
+                                    );
                                   }}
                                 />
                               )}
@@ -115,21 +151,13 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                             <ProductProviderCard
                               showActionsOnHover
                               productProvider={productProvider}
-                              onClick={() => slideToggle(true)}
                               onRemove={() => removeArrayItem(`productProviders.${index}`)}
-                              onClone={({ id, ...rest }) => {
-                                setFieldValue(
-                                  `productProviders.${productProviders.length}`,
-                                  injectUid({
-                                    ...rest,
-                                    isNew: true,
-                                  })
-                                );
-                              }}
+                              onClick={() => slideToggle('updateFormOpened', true)}
+                              onClone={() => slideToggle('cloneFormOpened', true)}
                             />
                           </>
                         )}
-                      </BooleanValue>
+                      </ObjectValue>
                     ))}
                 </div>
               )}

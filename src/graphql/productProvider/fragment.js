@@ -98,6 +98,9 @@ export const productProviderCardFragment = gql`
     supplier {
       ...partnerNameFragment
     }
+    unitPrice {
+      ...priceFragment
+    }
     product {
       ... on Product {
         id

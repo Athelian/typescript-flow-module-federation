@@ -232,6 +232,11 @@ export const orderCardWithOptimiseFragment = gql`
           ... on ProductProvider {
             id
             name
+            product {
+              ... on Product {
+                id
+              }
+            }
           }
         }
         archived
@@ -455,6 +460,20 @@ export const orderFocusedListQuery = gql`
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...orderCardOptimiseFragment
+      }
+      hits {
+        ... on Hit {
+          entityHits {
+            ... on EntityHit {
+              field
+              entity {
+                ... on Model {
+                  id
+                }
+              }
+            }
+          }
+        }
       }
       page
       totalPage

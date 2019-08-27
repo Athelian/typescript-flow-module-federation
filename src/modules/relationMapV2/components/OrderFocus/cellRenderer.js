@@ -27,7 +27,7 @@ import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants
 import type { CellRender, State } from './type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
 import RelationLine from '../RelationLine';
-import { ContentStyle } from './style';
+import { ContentStyle, MatchedStyle } from './style';
 import {
   getColorByEntity,
   getIconByEntity,
@@ -41,11 +41,24 @@ import {
   handleClickAndDoubleClick,
 } from './helpers';
 import { RelationMapContext } from './store';
+import { normalizeEntity } from './normalize';
 
 type CellProps = {
   data: Object,
   beforeConnector?: ?LINE_CONNECTOR,
   afterConnector?: ?LINE_CONNECTOR,
+};
+
+export const MatchedResult = ({ entity }: { entity: Object }) => {
+  const { hits } = React.useContext(RelationMapContext);
+  const matches = normalizeEntity({ hits });
+  return (
+    <div
+      className={MatchedStyle(
+        matches.entity && matches.entity[`${entity.id}-${entity.__typename}`]
+      )}
+    />
+  );
 };
 
 export const Overlay = ({
@@ -672,6 +685,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
           >
             <div ref={drag}>
               <OrderCard>{getByPathWithDefault('', 'poNo', data)}</OrderCard>
+              <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
@@ -853,6 +867,7 @@ function OrderItemCell({
           >
             <div ref={drag}>
               <ItemCard>{getByPathWithDefault('', 'no', data)}</ItemCard>
+              <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
@@ -1014,6 +1029,7 @@ function BatchCell({
           >
             <div ref={drag} style={baseDragStyle}>
               <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
+              <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
@@ -1186,6 +1202,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
               <ContainerCard>
                 {getByPathWithDefault('', `containers.${containerId}.no`, entities)}
               </ContainerCard>
+              <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
@@ -1347,6 +1364,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
               <ShipmentCard>
                 {getByPathWithDefault('', `shipments.${shipmentId}.blNo`, entities)}
               </ShipmentCard>
+              <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
@@ -1415,7 +1433,7 @@ function ItemSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch, hits } = React.useContext(RelationMapContext);
   const orderItemIds = getByPathWithDefault([], 'orderItems', data)
     .map(item => getByPathWithDefault('', 'id', item))
     .filter(Boolean);
@@ -1433,6 +1451,10 @@ function ItemSummaryCell({
   const isTargetedAnyBatches = batchIds.some(batchId =>
     state.targets.includes(`${BATCH}-${batchId}`)
   );
+  const matches = normalizeEntity({ hits });
+  const isMatched = orderItemIds.some(
+    itemId => matches.entity && matches.entity[`${itemId}-${ORDER_ITEM}`]
+  );
   return (
     <>
       <div className={ContentStyle}>
@@ -1445,7 +1467,25 @@ function ItemSummaryCell({
         )}
       </div>
       <div className={ContentStyle} role="presentation">
-        <HeaderCard isExpand={isExpand} selected={!isExpand && selected} onClick={onClick}>
+        <HeaderCard
+          isMatched={isMatched}
+          isExpand={isExpand}
+          selected={!isExpand && selected}
+          onClick={onClick}
+        >
+          {isMatched && !isExpand && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '-6px',
+                right: '-8px',
+                border: '4px solid rgba(11, 110, 222, 0.5)',
+                height: '60px',
+                width: ORDER_ITEM_WIDTH - 13,
+                borderRadius: '9px',
+              }}
+            />
+          )}
           <ItemCard>
             <p>Total: {getByPathWithDefault(0, 'orderItemCount', data)}</p>
             <button
@@ -1492,7 +1532,7 @@ function BatchSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch, hits } = React.useContext(RelationMapContext);
   const orderItemIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item => getByPathWithDefault('', 'id', item))
   ).filter(Boolean);
@@ -1535,6 +1575,8 @@ function BatchSummaryCell({
     ? isTargetedAnyBatches && isTargetedAnyContainers
     : isTargetedAnyBatches && isTargetedAnyShipments;
   const total = getByPathWithDefault(0, 'batchCount', data);
+  const matches = normalizeEntity({ hits });
+  const isMatched = batchIds.some(itemId => matches.entity && matches.entity[`${itemId}-${BATCH}`]);
   return (
     <>
       <div className={ContentStyle}>
@@ -1553,6 +1595,19 @@ function BatchSummaryCell({
             selected={!isExpand && isTargetedAnyBatches}
             onClick={onClick}
           >
+            {isMatched && !isExpand && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '-6px',
+                  right: '-8px',
+                  border: '4px solid rgba(11,110,222,0.5)',
+                  height: 60,
+                  width: BATCH_WIDTH - 13,
+                  borderRadius: '9px',
+                }}
+              />
+            )}
             <BatchCard>
               <p>Total: {getByPathWithDefault(0, 'batchCount', data)}</p>
               <button
@@ -1603,7 +1658,7 @@ function ContainerSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch, hits } = React.useContext(RelationMapContext);
   const containerCount = getByPathWithDefault(0, 'containerCount', order);
   const batchIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item =>
@@ -1647,6 +1702,10 @@ function ContainerSummaryCell({
       : isTargetedAnyShipments && isTargetedAnyBatches,
     hasRelation: isTargetedAnyShipments,
   };
+  const matches = normalizeEntity({ hits });
+  const isMatched = containerIds.some(
+    itemId => matches.entity && matches.entity[`${itemId}-${CONTAINER}`]
+  );
   return (
     <>
       <div className={ContentStyle}>
@@ -1669,6 +1728,19 @@ function ContainerSummaryCell({
                 selected={!isExpand && isTargetedAnyContainers}
                 onClick={onClick}
               >
+                {isMatched && !isExpand && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '-6px',
+                      right: '-8px',
+                      border: '4px solid rgba(11,110,222,0.5)',
+                      height: 60,
+                      width: CONTAINER_WIDTH - 13,
+                      borderRadius: '9px',
+                    }}
+                  />
+                )}
                 <ContainerCard>
                   <p>Total: {getByPathWithDefault(0, 'containerCount', data)}</p>
                   <button
@@ -1731,7 +1803,7 @@ function ShipmentSummaryCell({
   isExpand,
   beforeConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch, hits } = React.useContext(RelationMapContext);
   const containerCount = getByPathWithDefault(0, 'containerCount', order);
   const batchIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item =>
@@ -1769,6 +1841,10 @@ function ShipmentSummaryCell({
       ? isTargetedAnyContainers && isTargetedAnyShipments
       : isTargetedAnyBatches && isTargetedAnyShipments,
   };
+  const matches = normalizeEntity({ hits });
+  const isMatched = shipmentIds.some(
+    itemId => matches.entity && matches.entity[`${itemId}-${SHIPMENT}`]
+  );
   return (
     <>
       <div className={ContentStyle}>
@@ -1791,6 +1867,19 @@ function ShipmentSummaryCell({
                 selectable
                 onClick={onClick}
               >
+                {isMatched && !isExpand && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '-6px',
+                      right: '-8px',
+                      border: '4px solid rgba(11,110,222,0.5)',
+                      height: 60,
+                      width: SHIPMENT_WIDTH - 13,
+                      borderRadius: '9px',
+                    }}
+                  />
+                )}
                 <ShipmentCard>
                   <p>Total {getByPathWithDefault(0, 'shipmentCount', data)}</p>
                   <button

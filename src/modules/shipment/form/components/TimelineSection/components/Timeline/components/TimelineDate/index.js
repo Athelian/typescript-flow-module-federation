@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { compact } from 'lodash';
-import differenceInDays from 'date-fns/differenceInDays';
+import { differenceInCalendarDays } from 'utils/date';
 import Icon from 'components/Icon';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
@@ -49,7 +49,7 @@ const TimelineDate = ({ timelineDate, prefixIcon, vertical }: Props) => {
 
   let delayAmount = 0;
   if (date && shownDate && hasMultipleDates) {
-    delayAmount = differenceInDays(new Date(shownDate), new Date(date));
+    delayAmount = differenceInCalendarDays(new Date(shownDate), new Date(date));
   }
 
   return (

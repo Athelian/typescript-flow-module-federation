@@ -8,6 +8,22 @@ const orderItem = new schema.Entity('orderItems');
 const shipment = new schema.Entity('shipments');
 const order = new schema.Entity('orders');
 const ownedBy = new schema.Entity('organizations');
+const hit = new schema.Entity('hits');
+const entity = new schema.Entity(
+  'entity',
+  {},
+  // eslint-disable-next-line no-underscore-dangle
+  { idAttribute: value => `${value.id}-${value.__typename}` }
+);
+const entityHit = new schema.Entity('entityHits');
+entityHit.define({
+  entity,
+});
+hit.define({
+  entityHits: [entityHit],
+});
+
+// TODO: try to define a mapping key on schema
 
 batch.define({
   shipment,
@@ -39,5 +55,10 @@ shipment.define({
 
 export default memoize(originalData => {
   const { entities } = normalize(originalData, { orders: [order] });
+  return entities;
+}, isDeepEqual);
+
+export const normalizeEntity = memoize(originalData => {
+  const { entities } = normalize(originalData, { hits: [hit] });
   return entities;
 }, isDeepEqual);

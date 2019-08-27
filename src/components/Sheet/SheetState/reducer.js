@@ -8,8 +8,10 @@ function getEntities(rows: Array<Array<CellValue>>): Array<{ id: string, type: s
       .map(row =>
         row
           .filter(cell => !!cell.entity)
+          // $FlowFixMe nullable cell.entity is already filtered
           .map(cell => ({ id: cell.entity.id, type: cell.entity.type }))
       )
+      // $FlowFixMe flow doesn't support flat()
       .flat()
       .reduce((m, e) => {
         m.set(`${e.type}:${e.id}`, e);
@@ -79,15 +81,18 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
     items: Array<Object>,
     columns: Array<ColumnConfig>
   ): Array<Array<CellValue>> => {
-    return items
-      .map(
-        (item: Object) =>
-          transformer(item).map(row =>
-            columns.map(column => row.find(cell => column.key === cell.columnKey))
-          ),
-        {}
-      )
-      .flat();
+    return (
+      items
+        .map(
+          (item: Object) =>
+            transformer(item).map(row =>
+              columns.map(column => row.find(cell => column.key === cell.columnKey))
+            ),
+          {}
+        )
+        // $FlowFixMe flow doesn't support flat()
+        .flat()
+    );
   };
 
   function reducer(state: State, action: Action) {
@@ -158,6 +163,7 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
 
         return {
           ...state,
+          initialized: true,
           items,
           rows,
           entities,
@@ -177,6 +183,7 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
         const entities = getEntities(rows);
         const foreignFocusedAt = state.foreignFocuses
           .map(focus => getForeignFocusedAt(rows, focus))
+          // $FlowFixMe flow doesn't support flat()
           .flat();
 
         return {
@@ -196,6 +203,7 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
         const rows = extendParentCells(transformItems(state.items, columns));
         const foreignFocusedAt = state.foreignFocuses
           .map(focus => getForeignFocusedAt(rows, focus))
+          // $FlowFixMe flow doesn't support flat()
           .flat();
 
         return {
@@ -206,9 +214,21 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
           foreignFocusedAt,
         };
       }
+      case 'change_value':
+        if (!targetCell) {
+          throw new Error('cell not found');
+        }
+
+        // TODO: update cell & original value
+
+        return state;
       case 'focus': {
         if (!targetCell) {
           throw new Error('cell not found');
+        }
+
+        if (state.focusedAt !== null && state.focusedAt.cell === targetCell) {
+          return state;
         }
 
         if (targetCell.empty) {
@@ -219,6 +239,7 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
           ? state.rows.reduce((positions, row, x) => {
               row.forEach((cell, y) => {
                 if (
+                  // $FlowFixMe nullable targetCell is already checked
                   targetCell.entity &&
                   cell.entity &&
                   targetCell.entity.id === cell.entity.id &&
@@ -296,6 +317,7 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
 
         const foreignFocusedAt = action.payload
           .map(focus => getForeignFocusedAt(state.rows, focus))
+          // $FlowFixMe flow doesn't support flat()
           .flat();
 
         return {
@@ -328,6 +350,7 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
 
         return {
           ...state,
+          // $FlowFixMe nullable action.payload is already checked
           foreignFocusedAt: state.foreignFocusedAt.filter(ff => ff.id !== action.payload.id),
         };
       }
