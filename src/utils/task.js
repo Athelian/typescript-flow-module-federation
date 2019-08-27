@@ -1,7 +1,7 @@
 // @flow
 import type { User, Task } from 'generated/graphql';
 import { sumBy } from 'lodash';
-import { isBefore } from 'date-fns';
+import { isBefore } from 'utils/date';
 import { encodeId } from 'utils/id';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
@@ -581,6 +581,8 @@ export const getParentInfo = (
   parent: Object
 ): {
   parentType: string,
+
+  // prettier-ignore
   parentIcon: | 'ORDER'
     | 'BATCH'
     | 'SHIPMENT'

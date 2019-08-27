@@ -24,6 +24,9 @@ export {
   addDays,
   addWeeks,
   addMonths,
+  startOfDay,
+  format,
+  isValid,
 };
 
 export const formatToDateInput = (date: string): string =>

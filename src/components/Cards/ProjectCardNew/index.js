@@ -1,11 +1,11 @@
 // @flow
-import { differenceInCalendarDays } from 'date-fns';
 import React from 'react';
 import { FormattedMessage, FormattedDate } from 'react-intl';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import { Display, Label } from 'components/Form';
 import { Tooltip } from 'components/Tooltip';
+import { differenceInCalendarDays } from 'utils/date';
 import ProjectDueDateDiffToolTip from './components/ProjectDueDateDiffToolTip';
 import MilestoneBlock from './components/MilestoneBlock';
 import BaseCard from '../BaseCard';

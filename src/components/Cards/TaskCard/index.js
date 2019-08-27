@@ -2,11 +2,10 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { ObjectValue } from 'react-values';
-import { isBefore } from 'date-fns';
 import emitter from 'utils/emitter';
 import { encodeId } from 'utils/id';
 import { getParentInfo } from 'utils/task';
-import { formatToGraphql, startOfToday } from 'utils/date';
+import { formatToGraphql, startOfToday, isBefore } from 'utils/date';
 import { isNotFound, isForbidden } from 'utils/data';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
