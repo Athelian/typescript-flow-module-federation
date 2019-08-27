@@ -1473,7 +1473,7 @@ function ItemSummaryCell({
           selected={!isExpand && selected}
           onClick={onClick}
         >
-          {isMatched && (
+          {isMatched && !isExpand && (
             <div
               style={{
                 position: 'absolute',
@@ -1595,7 +1595,7 @@ function BatchSummaryCell({
             selected={!isExpand && isTargetedAnyBatches}
             onClick={onClick}
           >
-            {isMatched && (
+            {isMatched && !isExpand && (
               <div
                 style={{
                   position: 'absolute',
@@ -1728,7 +1728,7 @@ function ContainerSummaryCell({
                 selected={!isExpand && isTargetedAnyContainers}
                 onClick={onClick}
               >
-                {isMatched && (
+                {isMatched && !isExpand && (
                   <div
                     style={{
                       position: 'absolute',
@@ -1867,7 +1867,7 @@ function ShipmentSummaryCell({
                 selectable
                 onClick={onClick}
               >
-                {isMatched && (
+                {isMatched && !isExpand && (
                   <div
                     style={{
                       position: 'absolute',

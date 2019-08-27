@@ -7,9 +7,10 @@ import { Query } from 'react-apollo';
 import { get, set, uniq } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
 import apolloClient from 'apollo';
+import usePrevious from 'hooks/usePrevious';
 import { uuid } from 'utils/id';
 import logger from 'utils/logger';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { UIContext } from 'modules/ui';
 import { partnerPermissionQuery } from 'components/common/QueryForm/query';
 import { Display } from 'components/Form';
@@ -164,6 +165,12 @@ const loadMore = (
 export default function OrderFocus({ ...filtersAndSort }: Props) {
   const uiContext = React.useContext(UIContext);
   const [expandRows, setExpandRows] = React.useState([]);
+  const lastFiltersAndSort = usePrevious(filtersAndSort);
+  React.useEffect(() => {
+    if (!isEquals(lastFiltersAndSort, filtersAndSort)) {
+      setExpandRows([]);
+    }
+  }, [lastFiltersAndSort, filtersAndSort]);
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const queryOrderDetail = React.useCallback((orderId: string) => {
     apolloClient
