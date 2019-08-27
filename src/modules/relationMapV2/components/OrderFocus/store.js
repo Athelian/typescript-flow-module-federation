@@ -54,6 +54,7 @@ export function reducer(
   state: State,
   action: {
     type: | 'FETCH_ORDER'
+      | 'FETCH_ORDERS'
       | 'TARGET'
       | 'TARGET_ALL'
       | 'TARGET_TREE'
@@ -69,6 +70,7 @@ export function reducer(
     payload: {
       entity?: string,
       targets?: Array<string>,
+      orders?: Array<OrderPayload>,
       [string]: mixed,
     },
   }
@@ -80,6 +82,17 @@ export function reducer(
           $merge: action.payload,
         },
       });
+    case 'FETCH_ORDERS': {
+      return produce(state, draft => {
+        const { orders = [] } = action.payload;
+        orders.forEach(order => {
+          if (order.id) {
+            // eslint-disable-next-line no-param-reassign
+            draft.order[order.id] = order;
+          }
+        });
+      });
+    }
     case 'EDIT':
       return update(state, {
         edit: {

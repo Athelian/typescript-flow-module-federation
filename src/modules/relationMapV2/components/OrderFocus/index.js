@@ -177,23 +177,26 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
     }
   }, [lastFiltersAndSort, filtersAndSort]);
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const queryOrderDetail = React.useCallback((orderId: string, isPreload: boolean = false) => {
-    apolloClient
-      .query({
-        query: isPreload ? orderFocusDetailQuery : orderFullFocusDetailQuery,
-        variables: {
-          id: orderId,
-        },
-      })
-      .then(result => {
-        dispatch({
-          type: 'FETCH_ORDER',
-          payload: {
-            [orderId]: result.data.order,
+  const queryOrdersDetail = React.useCallback(
+    (orderIds: Array<string>, isPreload: boolean = false) => {
+      apolloClient
+        .query({
+          query: isPreload ? orderFocusDetailQuery : orderFullFocusDetailQuery,
+          variables: {
+            ids: orderIds,
           },
+        })
+        .then(result => {
+          dispatch({
+            type: 'FETCH_ORDERS',
+            payload: {
+              orders: result.data.ordersByIDs,
+            },
+          });
         });
-      });
-  }, []);
+    },
+    []
+  );
   const queryPermission = React.useCallback((organizationId: string) => {
     apolloClient
       .query({
@@ -273,15 +276,17 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
                       if (hasMoreItems(data, 'orders') && isLastCell) {
                         loadMore({ fetchMore, data }, filtersAndSort, 'orders');
                       }
+                      const orderIds: Array<string> = [];
                       for (let index = visibleStartIndex; index < visibleStopIndex; index += 1) {
                         const [{ order }] = ordersData[index];
                         const isLoadedData =
                           getByPathWithDefault([], 'orderItems', order).length ===
                           getByPathWithDefault(0, 'orderItemCount', order);
                         if (!isLoadedData && getByPathWithDefault(0, 'orderItemCount', order) > 0) {
-                          queryOrderDetail(getByPathWithDefault(0, 'id', order), true);
+                          orderIds.push(getByPathWithDefault('', 'id', order));
                         }
                       }
+                      queryOrdersDetail(orderIds, true);
                     }}
                     height={window.innerHeight - 50}
                     width={
@@ -309,7 +314,7 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
                         type: 'CONFIRM_MOVE_END',
                         payload: { orderIds },
                       });
-                      orderIds.map(orderId => queryOrderDetail(orderId));
+                      queryOrdersDetail(orderIds);
                     }}
                     isOpen={state.moveEntity.isOpen}
                     {...state.moveEntity.detail}
@@ -319,11 +324,11 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
                     selectedId={state.edit.selectedId}
                     onClose={() => {
                       if (state.edit.type === ORDER) {
-                        queryOrderDetail(state.edit.selectedId);
+                        queryOrdersDetail([state.edit.selectedId]);
                       } else if (state.edit.orderId) {
-                        queryOrderDetail(state.edit.orderId);
+                        queryOrdersDetail([state.edit.orderId]);
                       } else if (state.edit.orderIds && state.edit.orderIds.length) {
-                        state.edit.orderIds.map(orderId => queryOrderDetail(orderId));
+                        queryOrdersDetail(state.edit.orderIds);
                       }
                       dispatch({
                         type: 'EDIT',
