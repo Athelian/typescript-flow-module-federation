@@ -199,7 +199,7 @@ const getIdentifier = ({
   }
 };
 
-// NOTE: this is setup for future permission. It is not reayd yet.
+// NOTE: this is setup for future permission. It is not ready yet.
 const hasPermissionToMove = ({
   state,
   entity,
