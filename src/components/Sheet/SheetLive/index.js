@@ -4,7 +4,7 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { uuid } from 'utils/id';
 import logger from 'utils/logger';
 import { getByPathWithDefault } from 'utils/fp';
-import type { Action } from '../SheetState';
+import { useSheetState } from '../SheetState';
 import { convertEntityToInput } from './helper';
 import {
   blurMutation,
@@ -15,15 +15,12 @@ import {
   focusUnsubscribeAllMutation,
 } from './query';
 
-type Props = {
-  entities: Array<{ id: string, type: string }>,
-  focusedAt: { id: string, type: string, field: string } | null,
-  dispatch: (action: Action) => void,
-};
-
-const SheetLive = ({ entities, focusedAt, dispatch }: Props) => {
+export const useSheetLive = () => {
   const client = useApolloClient();
   const [id, setId] = React.useState<string | null>(null);
+  const [state, dispatch] = useSheetState();
+  const { entities, focusedAt } = state;
+  const focusedEntity = focusedAt ? focusedAt.cell.entity : null;
 
   // Assign a table subscription ID
   React.useEffect(() => {
@@ -95,14 +92,14 @@ const SheetLive = ({ entities, focusedAt, dispatch }: Props) => {
       return;
     }
 
-    if (focusedAt) {
+    if (focusedEntity) {
       client.mutate({
         mutation: focusMutation,
         variables: {
           id,
           input: {
-            entity: convertEntityToInput(focusedAt.id, focusedAt.type),
-            field: focusedAt.field,
+            entity: convertEntityToInput(focusedEntity.id, focusedEntity.type),
+            field: focusedEntity.field,
           },
         },
       });
@@ -114,7 +111,7 @@ const SheetLive = ({ entities, focusedAt, dispatch }: Props) => {
         },
       });
     }
-  }, [id, focusedAt, client]);
+  }, [id, focusedEntity, client]);
 
   // Ask which entities to listen for focuses
   React.useEffect(() => {
@@ -143,8 +140,4 @@ const SheetLive = ({ entities, focusedAt, dispatch }: Props) => {
       });
     };
   }, [id, entities, client]);
-
-  return null;
 };
-
-export default SheetLive;

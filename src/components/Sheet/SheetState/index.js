@@ -16,6 +16,7 @@ export type CellValue = {
     value: any,
     path: string,
   } | null,
+  type: string,
   readonly?: boolean,
   disabled?: boolean,
   empty?: boolean,
@@ -43,6 +44,7 @@ export type ForeignFocus = {
 } & Position;
 
 export type State = {
+  initialized: boolean,
   items: Array<Object>,
   rows: Array<Array<CellValue>>,
   entities: Array<{ id: string, type: string }>,
@@ -58,48 +60,31 @@ export type Action = {
   payload?: any,
 };
 
-type RenderProps = {
-  rows: Array<Array<CellValue>>,
-  entities: Array<{ id: string, type: string }>,
-  focusedAt: Focus | null,
-  weakFocusedAt: Array<Position>,
-  foreignFocusedAt: Array<ForeignFocus>,
-  columns: Array<ColumnConfig>,
-  loadingMore: boolean,
-  dispatch: (action: Action) => void,
-  handleThreshold: () => void,
-  handleColumnResize: (string, number) => void,
-};
-
 type Props = {
-  columns: Array<ColumnConfig>,
-  items: Array<Object>,
   transformItem: Object => Array<Array<CellValue>>,
-  onLoadMore: () => Promise<Array<Object>>,
-  children: RenderProps => React.Node,
+  children: React.Node,
 };
 
-const SheetState = ({ columns, items, transformItem, onLoadMore, children }: Props) => {
-  const [columnWidths, setColumnWidths] = React.useState<Array<{ width: number, key: string }>>([]);
-  const [loadingMore, setLoadingMore] = React.useState<boolean>(false);
+const initialState: State = {
+  initialized: false,
+  items: [],
+  rows: [],
+  entities: [],
+  focusedAt: null,
+  weakFocusedAt: [],
+  foreignFocuses: [],
+  foreignFocusedAt: [],
+};
 
-  const onColumnResize = (key: string, width: number) => {
-    if (columnWidths.find(c => c.key === key)) {
-      setColumnWidths(columnWidths.map(c => (c.key === key ? { ...c, width } : c)));
-    } else {
-      setColumnWidths([...columnWidths, { key, width }]);
-    }
-  };
+export const SheetStateContext = React.createContext<[State, (Action) => void]>([
+  initialState,
+  () => {},
+]);
 
-  const [state, dispatch] = React.useReducer<State, Action>(cellReducer(transformItem), {
-    items: [],
-    rows: [],
-    entities: [],
-    focusedAt: null,
-    weakFocusedAt: [],
-    foreignFocuses: [],
-    foreignFocusedAt: [],
-  });
+export const useSheetState = () => React.useContext(SheetStateContext);
+
+export const useSheetStateInitializer = (columns: Array<ColumnConfig>, items: Array<Object>) => {
+  const [state, dispatch] = useSheetState();
 
   React.useEffect(() => {
     dispatch({
@@ -109,16 +94,29 @@ const SheetState = ({ columns, items, transformItem, onLoadMore, children }: Pro
         columns,
       },
     });
-  }, [columns, items, items.length]);
+  }, [columns, dispatch, items]);
 
   React.useEffect(() => {
+    if (!state.initialized) {
+      return;
+    }
+
     dispatch({
       type: 'rearrange',
       payload: columns,
     });
-  }, [columns]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [columns, dispatch]);
+};
 
-  const handleThreshold = () => {
+export const useSheetStateLoadMore = (
+  onLoadMore: () => Promise<Array<Object>>,
+  columns: Array<ColumnConfig>
+) => {
+  const [loadingMore, setLoadingMore] = React.useState<boolean>(false);
+  const [, dispatch] = useSheetState();
+
+  function handleThreshold() {
     setLoadingMore(true);
 
     onLoadMore()
@@ -132,27 +130,15 @@ const SheetState = ({ columns, items, transformItem, onLoadMore, children }: Pro
         })
       )
       .then(() => setLoadingMore(false));
-  };
+  }
 
-  return children({
-    rows: state.rows,
-    entities: state.entities,
-    focusedAt: state.focusedAt,
-    weakFocusedAt: state.weakFocusedAt,
-    foreignFocusedAt: state.foreignFocusedAt,
-    columns: columns.map(c => {
-      const columnWidth = columnWidths.find(p => p.key === c.key);
-      if (columnWidth) {
-        return { ...c, width: columnWidth.width };
-      }
+  return [loadingMore, handleThreshold];
+};
 
-      return c;
-    }),
-    loadingMore,
-    dispatch,
-    handleThreshold,
-    handleColumnResize: onColumnResize,
-  });
+export const SheetState = ({ transformItem, children }: Props) => {
+  const reducer = React.useReducer<State, Action>(cellReducer(transformItem), initialState);
+
+  return <SheetStateContext.Provider value={reducer}>{children}</SheetStateContext.Provider>;
 };
 
 export default SheetState;
