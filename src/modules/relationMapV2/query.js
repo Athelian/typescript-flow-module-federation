@@ -497,3 +497,18 @@ export const orderFocusDetailQuery = gql`
   ${taskCountFragment}
   ${ownedByFragment}
 `;
+
+export const orderFullFocusDetailQuery = gql`
+  query orderFocusDetailQuery($id: ID!) {
+    order(id: $id) {
+      ...orderCardOptimiseFragment
+      ...orderCardWithOptimiseFragment
+    }
+  }
+
+  ${orderCardOptimiseFragment}
+  ${orderCardWithOptimiseFragment}
+  ${tagFragment}
+  ${taskCountFragment}
+  ${ownedByFragment}
+`;

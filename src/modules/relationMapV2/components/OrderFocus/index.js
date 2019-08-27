@@ -14,7 +14,11 @@ import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { UIContext } from 'modules/ui';
 import { partnerPermissionQuery } from 'components/common/QueryForm/query';
 import { Display } from 'components/Form';
-import { orderFocusedListQuery, orderFocusDetailQuery } from 'modules/relationMapV2/query';
+import {
+  orderFocusedListQuery,
+  orderFocusDetailQuery,
+  orderFullFocusDetailQuery,
+} from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { WrapperStyle, ListStyle, RowStyle } from './style';
 import EditFormSlideView from '../EditFormSlideView';
@@ -173,10 +177,10 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
     }
   }, [lastFiltersAndSort, filtersAndSort]);
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const queryOrderDetail = React.useCallback((orderId: string) => {
+  const queryOrderDetail = React.useCallback((orderId: string, isPreload: boolean = false) => {
     apolloClient
       .query({
-        query: orderFocusDetailQuery,
+        query: isPreload ? orderFocusDetailQuery : orderFullFocusDetailQuery,
         variables: {
           id: orderId,
         },
@@ -275,7 +279,7 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
                           getByPathWithDefault([], 'orderItems', order).length ===
                           getByPathWithDefault(0, 'orderItemCount', order);
                         if (!isLoadedData && getByPathWithDefault(0, 'orderItemCount', order) > 0) {
-                          queryOrderDetail(getByPathWithDefault(0, 'id', order));
+                          queryOrderDetail(getByPathWithDefault(0, 'id', order), true);
                         }
                       }
                     }}
