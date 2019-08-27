@@ -1,6 +1,6 @@
 // @flow
 import { type IntlShape } from 'react-intl';
-import { addWeeks, addMonths, addDays, startOfDay, format, isValid } from 'date-fns';
+import { addWeeks, addMonths, addDays, startOfDay, format, isValid } from 'utils/date';
 import logger from 'utils/logger';
 import { orderBinding, orderItemBinding, batchBinding, shipmentBinding } from './constants';
 

@@ -1,5 +1,5 @@
 // @flow
-import { differenceInCalendarDays } from 'date-fns';
+import { differenceInCalendarDays } from 'utils/date';
 
 export const calculatePercentage = (total: number, completed: number) => {
   if (total) {

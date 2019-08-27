@@ -3,9 +3,8 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { differenceInCalendarDays } from 'date-fns';
 import { isNullOrUndefined, getByPathWithDefault, getByPath } from 'utils/fp';
-import { startOfToday } from 'utils/date';
+import { startOfToday, differenceInCalendarDays } from 'utils/date';
 import FormattedDate from 'components/FormattedDate';
 import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
 import {

@@ -1,5 +1,4 @@
 // @flow
-import { differenceInCalendarDays } from 'date-fns';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import FormattedDate from 'components/FormattedDate';
@@ -8,6 +7,7 @@ import { Label } from 'components/Form';
 import { Tooltip } from 'components/Tooltip';
 import { calculatePercentage } from 'utils/ui';
 import { isNullOrUndefined } from 'utils/fp';
+import { differenceInCalendarDays } from 'utils/date';
 import MilestoneDueDateToolTip from '../MilestoneDueDateToolTip';
 import {
   TimelineStyle,

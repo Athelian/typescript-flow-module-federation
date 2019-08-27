@@ -1,9 +1,9 @@
 // @flow
 import type { BatchPayload, OrderPayload, MetricValue, ContainerPayload } from 'generated/graphql';
 import { uniqBy } from 'lodash';
-import { addDays } from 'date-fns';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { findVolume } from 'utils/batch';
+import { addDays } from 'utils/date';
 
 export const uniqueOrders = (batches: Array<BatchPayload>): Array<OrderPayload> =>
   uniqBy(batches.map(batch => getByPath('orderItem.order', batch)).filter(Boolean), 'id');

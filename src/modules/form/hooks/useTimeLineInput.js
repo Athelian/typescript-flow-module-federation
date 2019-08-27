@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import * as Yup from 'yup';
-import differenceInDays from 'date-fns/differenceInDays';
+import { differenceInCalendarDays } from 'utils/date';
 
 type TimeLineProps = {
   approvedBy?: {
@@ -42,7 +42,7 @@ const findDelay = (timelineDateRevisions: Array<Object>, date: ?Date) => {
 
   let delayAmount = 0;
   if (date && shownDate && hasMultipleDates) {
-    delayAmount = differenceInDays(new Date(shownDate), new Date(date));
+    delayAmount = differenceInCalendarDays(new Date(shownDate), new Date(date));
   }
   return delayAmount;
 };
