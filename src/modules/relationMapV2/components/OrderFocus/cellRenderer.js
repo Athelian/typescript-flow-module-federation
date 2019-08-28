@@ -24,6 +24,7 @@ import {
   SHIPMENT_WIDTH,
 } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
+import { Hits } from 'modules/relationMapV2/store';
 import type { CellRender, State } from './type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
 import RelationLine from '../RelationLine';
@@ -41,7 +42,6 @@ import {
   handleClickAndDoubleClick,
 } from './helpers';
 import { RelationMapContext } from './store';
-import { normalizeEntity } from './normalize';
 
 type CellProps = {
   data: Object,
@@ -50,8 +50,7 @@ type CellProps = {
 };
 
 export const MatchedResult = ({ entity }: { entity: Object }) => {
-  const { hits } = React.useContext(RelationMapContext);
-  const matches = normalizeEntity({ hits });
+  const { matches } = Hits.useContainer();
   return (
     <div
       className={MatchedStyle(
@@ -1492,7 +1491,8 @@ function ItemSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { isExpand: boolean, onClick: Function }) {
-  const { state, dispatch, hits } = React.useContext(RelationMapContext);
+  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { matches } = Hits.useContainer();
   const orderItemIds = getByPathWithDefault([], 'orderItems', data)
     .map(item => getByPathWithDefault('', 'id', item))
     .filter(Boolean);
@@ -1510,7 +1510,6 @@ function ItemSummaryCell({
   const isTargetedAnyBatches = batchIds.some(batchId =>
     state.targets.includes(`${BATCH}-${batchId}`)
   );
-  const matches = normalizeEntity({ hits });
   const isMatched = orderItemIds.some(
     itemId => matches.entity && matches.entity[`${itemId}-${ORDER_ITEM}`]
   );
@@ -1591,7 +1590,8 @@ function BatchSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state, dispatch, hits } = React.useContext(RelationMapContext);
+  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { matches } = Hits.useContainer();
   const orderItemIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item => getByPathWithDefault('', 'id', item))
   ).filter(Boolean);
@@ -1634,7 +1634,6 @@ function BatchSummaryCell({
     ? isTargetedAnyBatches && isTargetedAnyContainers
     : isTargetedAnyBatches && isTargetedAnyShipments;
   const total = getByPathWithDefault(0, 'batchCount', data);
-  const matches = normalizeEntity({ hits });
   const isMatched = batchIds.some(itemId => matches.entity && matches.entity[`${itemId}-${BATCH}`]);
   return (
     <>
@@ -1717,7 +1716,8 @@ function ContainerSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state, dispatch, hits } = React.useContext(RelationMapContext);
+  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { matches } = Hits.useContainer();
   const containerCount = getByPathWithDefault(0, 'containerCount', order);
   const batchIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item =>
@@ -1761,7 +1761,6 @@ function ContainerSummaryCell({
       : isTargetedAnyShipments && isTargetedAnyBatches,
     hasRelation: isTargetedAnyShipments,
   };
-  const matches = normalizeEntity({ hits });
   const isMatched = containerIds.some(
     itemId => matches.entity && matches.entity[`${itemId}-${CONTAINER}`]
   );
@@ -1862,7 +1861,8 @@ function ShipmentSummaryCell({
   isExpand,
   beforeConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state, dispatch, hits } = React.useContext(RelationMapContext);
+  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { matches } = Hits.useContainer();
   const containerCount = getByPathWithDefault(0, 'containerCount', order);
   const batchIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item =>
@@ -1900,7 +1900,6 @@ function ShipmentSummaryCell({
       ? isTargetedAnyContainers && isTargetedAnyShipments
       : isTargetedAnyBatches && isTargetedAnyShipments,
   };
-  const matches = normalizeEntity({ hits });
   const isMatched = shipmentIds.some(
     itemId => matches.entity && matches.entity[`${itemId}-${SHIPMENT}`]
   );

@@ -7,6 +7,7 @@ import FilterToolBar from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
 import OrderFocus from './components/OrderFocus';
 import CustomFiler from './components/CustomFilter';
+import { Hits } from './store';
 
 const RelationMap = () => {
   const sortFields = [];
@@ -27,43 +28,46 @@ const RelationMap = () => {
   const [isShow, setIsShow] = React.useState(false);
   return (
     <Provider>
-      <NavBar>
-        <EntityIcon icon="RELATION_MAP" color="RELATION_MAP" />
-        <FilterToolBar
-          sortFields={sortFields}
-          filtersAndSort={filterAndSort}
-          onChange={onChangeFilter}
-          canSearch
-          canSort={false}
-        />
-        <label>
-          Advance filter:
-          <input
-            name="check"
-            type="checkbox"
-            checked={isShow}
-            onChange={() => {
-              setIsShow(!isShow);
+      <Hits.Provider>
+        <NavBar>
+          <EntityIcon icon="RELATION_MAP" color="RELATION_MAP" />
+          <FilterToolBar
+            sortFields={sortFields}
+            filtersAndSort={filterAndSort}
+            onChange={onChangeFilter}
+            canSearch
+            canSort={false}
+          />
+          <label>
+            Advance filter:
+            <input
+              name="check"
+              type="checkbox"
+              checked={isShow}
+              onChange={() => {
+                setIsShow(!isShow);
+                onChangeFilter({
+                  ...filterAndSort,
+                  filter: { query: filterAndSort.filter.query },
+                });
+              }}
+            />
+          </label>
+          <CustomFiler
+            filter={filterAndSort.filter}
+            isEnable={isShow}
+            onChange={newFilter => {
               onChangeFilter({
                 ...filterAndSort,
-                filter: { query: filterAndSort.filter.query },
+                filter: { query: filterAndSort.filter.query, ...newFilter },
               });
             }}
           />
-        </label>
-        <CustomFiler
-          isEnable={isShow}
-          onChange={newFilter => {
-            onChangeFilter({
-              ...filterAndSort,
-              filter: { query: filterAndSort.filter.query, ...newFilter },
-            });
-          }}
-        />
-      </NavBar>
-      <Content>
-        <OrderFocus {...queryVariables} />
-      </Content>
+        </NavBar>
+        <Content>
+          <OrderFocus {...queryVariables} />
+        </Content>
+      </Hits.Provider>
     </Provider>
   );
 };

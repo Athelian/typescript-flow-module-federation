@@ -1,9 +1,11 @@
 // @flow
 import React from 'react';
+import { Hits } from 'modules/relationMapV2/store';
 
 type Props = {|
   isEnable: boolean,
   onChange: mixed => void,
+  filter: Object,
 |};
 
 const filterMapping = {
@@ -13,7 +15,12 @@ const filterMapping = {
   },
 };
 
-export default function CustomFiler({ isEnable, onChange }: Props) {
+export default function CustomFiler({ isEnable, onChange, filter }: Props) {
+  const store = Hits.useContainer();
+  console.warn({
+    filter,
+    store,
+  });
   if (!isEnable) return null;
   return (
     <div>

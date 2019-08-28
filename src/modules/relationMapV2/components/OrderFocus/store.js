@@ -1,6 +1,6 @@
 // @flow
 import { createContext } from 'react';
-import type { OrderPayload, Hit } from 'generated/graphql';
+import type { OrderPayload } from 'generated/graphql';
 import produce from 'immer';
 import update from 'immutability-helper';
 import type { State } from './type.js.flow';
@@ -9,7 +9,6 @@ type ContextProps = {|
   state: State,
   dispatch: Function,
   orders: Array<OrderPayload>,
-  hits: Array<Hit>,
   entities: Object,
 |};
 
@@ -46,7 +45,6 @@ export const RelationMapContext = createContext<ContextProps>({
   state: initialState,
   dispatch: () => {},
   orders: [],
-  hits: [],
   entities: {},
 });
 

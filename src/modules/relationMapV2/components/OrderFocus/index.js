@@ -20,6 +20,7 @@ import {
   orderFullFocusDetailQuery,
 } from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
+import { Hits } from 'modules/relationMapV2/store';
 import { WrapperStyle, ListStyle, RowStyle } from './style';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
@@ -170,6 +171,7 @@ const loadMore = (
 export default function OrderFocus({ ...filtersAndSort }: Props) {
   const uiContext = React.useContext(UIContext);
   const [expandRows, setExpandRows] = React.useState([]);
+  const hits = Hits.useContainer();
   const lastFiltersAndSort = usePrevious(filtersAndSort);
   React.useEffect(() => {
     if (!isEquals(lastFiltersAndSort, filtersAndSort)) {
@@ -179,21 +181,23 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const queryOrdersDetail = React.useCallback(
     (orderIds: Array<string>, isPreload: boolean = false) => {
-      apolloClient
-        .query({
-          query: isPreload ? orderFocusDetailQuery : orderFullFocusDetailQuery,
-          variables: {
-            ids: orderIds,
-          },
-        })
-        .then(result => {
-          dispatch({
-            type: 'FETCH_ORDERS',
-            payload: {
-              orders: result.data.ordersByIDs,
+      if (orderIds.length) {
+        apolloClient
+          .query({
+            query: isPreload ? orderFocusDetailQuery : orderFullFocusDetailQuery,
+            variables: {
+              ids: orderIds,
             },
+          })
+          .then(result => {
+            dispatch({
+              type: 'FETCH_ORDERS',
+              payload: {
+                orders: result.data.ordersByIDs,
+              },
+            });
           });
-        });
+      }
     },
     []
   );
@@ -250,7 +254,7 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
                     }
                   : order
               );
-              const hits = getByPathWithDefault([], 'orders.hits', data);
+              hits.setHits(getByPathWithDefault([], 'orders.hits', data));
               const ordersData = generateListData({
                 orders,
                 expandRows,
@@ -264,7 +268,7 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
                 }
               });
               return orders.length > 0 ? (
-                <RelationMapContext.Provider value={{ state, orders, hits, entities, dispatch }}>
+                <RelationMapContext.Provider value={{ state, orders, entities, dispatch }}>
                   <List
                     itemData={ordersData}
                     className={ListStyle}
