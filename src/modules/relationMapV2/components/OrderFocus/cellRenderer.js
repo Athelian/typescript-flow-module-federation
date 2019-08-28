@@ -49,15 +49,17 @@ type CellProps = {
   afterConnector?: ?LINE_CONNECTOR,
 };
 
+function isMatchedEntity(matches: Object, entity: Object) {
+  if (entity.__typename === ORDER_ITEM) {
+    return matches.entity && matches.entity[`${entity.productProvider?.product?.id}-Product`];
+  }
+
+  return matches.entity && matches.entity[`${entity.id}-${entity.__typename}`];
+}
+
 export const MatchedResult = ({ entity }: { entity: Object }) => {
   const { matches } = Hits.useContainer();
-  return (
-    <div
-      className={MatchedStyle(
-        matches.entity && matches.entity[`${entity.id}-${entity.__typename}`]
-      )}
-    />
-  );
+  return <div className={MatchedStyle(isMatchedEntity(matches, entity))} />;
 };
 
 export const Overlay = ({
@@ -1277,7 +1279,8 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
 
 function ShipmentCell({ data, beforeConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
-  const { entities } = Entities.useContainer();
+  const { mapping } = Entities.useContainer();
+  const { entities } = mapping;
   const shipmentId = getByPathWithDefault('', 'id', data);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
     accept: BATCH,

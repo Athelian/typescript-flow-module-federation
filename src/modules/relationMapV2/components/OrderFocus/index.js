@@ -171,7 +171,8 @@ const loadMore = (
 export default function OrderFocus({ ...filtersAndSort }: Props) {
   const uiContext = React.useContext(UIContext);
   const [expandRows, setExpandRows] = React.useState([]);
-  const hits = Hits.useContainer();
+  const { initHits } = Hits.useContainer();
+  const { initMapping } = Entities.useContainer();
   const lastFiltersAndSort = usePrevious(filtersAndSort);
   React.useEffect(() => {
     if (!isEquals(lastFiltersAndSort, filtersAndSort)) {
@@ -239,10 +240,10 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
 
               if (loading) {
                 return (
-                  <Entities.Provider>
+                  <>
                     <Header />
                     <LoadingPlaceHolder />
-                  </Entities.Provider>
+                  </>
                 );
               }
 
@@ -254,7 +255,7 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
                     }
                   : order
               );
-              hits.setHits(getByPathWithDefault([], 'orders.hits', data));
+              initHits(getByPathWithDefault([], 'orders.hits', data));
               const ordersData = generateListData({
                 orders,
                 expandRows,
@@ -262,95 +263,92 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
               });
               const rowCount = ordersData.length;
               const entities = normalize({ orders });
+              initMapping({
+                orders,
+                entities,
+              });
               Object.keys(entities.organizations || {}).forEach(organizationId => {
                 if (!state.permission[organizationId]) {
                   queryPermission(organizationId);
                 }
               });
               return orders.length > 0 ? (
-                <Entities.Provider initialState={{ orders, entities }}>
-                  <RelationMapContext.Provider value={{ state, dispatch }}>
-                    <List
-                      itemData={ordersData}
-                      className={ListStyle}
-                      itemCount={rowCount}
-                      innerElementType={innerElementType}
-                      itemSize={() => 75}
-                      onItemsRendered={({ visibleStartIndex, visibleStopIndex }) => {
-                        const isLastCell = visibleStopIndex === rowCount - 1;
-                        if (hasMoreItems(data, 'orders') && isLastCell) {
-                          loadMore({ fetchMore, data }, filtersAndSort, 'orders');
-                        }
-                        const orderIds: Array<string> = [];
-                        for (let index = visibleStartIndex; index < visibleStopIndex; index += 1) {
-                          const [{ order }] = ordersData[index];
-                          const isLoadedData =
-                            getByPathWithDefault([], 'orderItems', order).length ===
-                            getByPathWithDefault(0, 'orderItemCount', order);
-                          if (
-                            !isLoadedData &&
-                            getByPathWithDefault(0, 'orderItemCount', order) > 0
-                          ) {
-                            orderIds.push(getByPathWithDefault('', 'id', order));
-                          }
-                        }
-                        queryOrdersDetail(orderIds, true);
-                      }}
-                      height={window.innerHeight - 50}
-                      width={
-                        uiContext.isSideBarExpanded
-                          ? window.innerWidth - 200
-                          : window.innerWidth - 50
+                <RelationMapContext.Provider value={{ state, dispatch }}>
+                  <List
+                    itemData={ordersData}
+                    className={ListStyle}
+                    itemCount={rowCount}
+                    innerElementType={innerElementType}
+                    itemSize={() => 75}
+                    onItemsRendered={({ visibleStartIndex, visibleStopIndex }) => {
+                      const isLastCell = visibleStopIndex === rowCount - 1;
+                      if (hasMoreItems(data, 'orders') && isLastCell) {
+                        loadMore({ fetchMore, data }, filtersAndSort, 'orders');
                       }
-                    >
-                      {Row}
-                    </List>
-                    <MoveEntityConfirm
-                      isProcessing={state.moveEntity.isProcessing}
-                      onCancel={() =>
-                        dispatch({
-                          type: 'CANCEL_MOVE',
-                          payload: {},
-                        })
+                      const orderIds: Array<string> = [];
+                      for (let index = visibleStartIndex; index < visibleStopIndex; index += 1) {
+                        const [{ order }] = ordersData[index];
+                        const isLoadedData =
+                          getByPathWithDefault([], 'orderItems', order).length ===
+                          getByPathWithDefault(0, 'orderItemCount', order);
+                        if (!isLoadedData && getByPathWithDefault(0, 'orderItemCount', order) > 0) {
+                          orderIds.push(getByPathWithDefault('', 'id', order));
+                        }
                       }
-                      onConfirm={async () => {
-                        dispatch({
-                          type: 'CONFIRM_MOVE_START',
-                          payload: {},
-                        });
+                      queryOrdersDetail(orderIds, true);
+                    }}
+                    height={window.innerHeight - 50}
+                    width={
+                      uiContext.isSideBarExpanded ? window.innerWidth - 200 : window.innerWidth - 50
+                    }
+                  >
+                    {Row}
+                  </List>
+                  <MoveEntityConfirm
+                    isProcessing={state.moveEntity.isProcessing}
+                    onCancel={() =>
+                      dispatch({
+                        type: 'CANCEL_MOVE',
+                        payload: {},
+                      })
+                    }
+                    onConfirm={async () => {
+                      dispatch({
+                        type: 'CONFIRM_MOVE_START',
+                        payload: {},
+                      });
 
-                        const { orderIds = [] } = await moveEntityMutation(state, entities);
-                        dispatch({
-                          type: 'CONFIRM_MOVE_END',
-                          payload: { orderIds },
-                        });
-                        queryOrdersDetail(orderIds);
-                      }}
-                      isOpen={state.moveEntity.isOpen}
-                      {...state.moveEntity.detail}
-                    />
-                    <EditFormSlideView
-                      type={state.edit.type}
-                      selectedId={state.edit.selectedId}
-                      onClose={() => {
-                        if (state.edit.type === ORDER) {
-                          queryOrdersDetail([state.edit.selectedId]);
-                        } else if (state.edit.orderId) {
-                          queryOrdersDetail([state.edit.orderId]);
-                        } else if (state.edit.orderIds && state.edit.orderIds.length) {
-                          queryOrdersDetail(state.edit.orderIds);
-                        }
-                        dispatch({
-                          type: 'EDIT',
-                          payload: {
-                            type: '',
-                            selectedId: '',
-                          },
-                        });
-                      }}
-                    />
-                  </RelationMapContext.Provider>
-                </Entities.Provider>
+                      const { orderIds = [] } = await moveEntityMutation(state, entities);
+                      dispatch({
+                        type: 'CONFIRM_MOVE_END',
+                        payload: { orderIds },
+                      });
+                      queryOrdersDetail(orderIds);
+                    }}
+                    isOpen={state.moveEntity.isOpen}
+                    {...state.moveEntity.detail}
+                  />
+                  <EditFormSlideView
+                    type={state.edit.type}
+                    selectedId={state.edit.selectedId}
+                    onClose={() => {
+                      if (state.edit.type === ORDER) {
+                        queryOrdersDetail([state.edit.selectedId]);
+                      } else if (state.edit.orderId) {
+                        queryOrdersDetail([state.edit.orderId]);
+                      } else if (state.edit.orderIds && state.edit.orderIds.length) {
+                        queryOrdersDetail(state.edit.orderIds);
+                      }
+                      dispatch({
+                        type: 'EDIT',
+                        payload: {
+                          type: '',
+                          selectedId: '',
+                        },
+                      });
+                    }}
+                  />
+                </RelationMapContext.Provider>
               ) : (
                 <Display>
                   <FormattedMessage

@@ -23,7 +23,8 @@ type Props = { style?: Object };
 
 const Header = React.memo<Props>(({ style }: Props) => {
   const { state, dispatch } = React.useContext(RelationMapContext);
-  const { orders, entities } = Entities.useContainer();
+  const { mapping } = Entities.useContainer();
+  const { orders, entities } = mapping;
   return (
     <div style={style} className={RowStyle}>
       <div
