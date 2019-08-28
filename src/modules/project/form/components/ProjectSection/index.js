@@ -43,11 +43,9 @@ import {
   TagsWrapperStyle,
   MilestonesTimelineWrapperStyle,
   TasksInfoWrapperStyle,
-  BindedAndRelatedWrapperStyle,
   ExpandWrapperStyle,
 } from './style';
 import TaskStatus from './components/TaskStatus';
-import BindingAndRelatedEntities from './components/BindingAndRelatedEntities';
 
 type Props = {
   isNew: boolean,
@@ -206,17 +204,6 @@ const ProjectSection = ({ isNew }: Props) => {
                 <div className={TasksInfoWrapperStyle}>
                   <Subscribe to={[ProjectMilestonesContainer]}>
                     {({ taskCount }) => <TaskStatus {...taskCount()} />}
-                  </Subscribe>
-                </div>
-
-                <div className={BindedAndRelatedWrapperStyle}>
-                  <Subscribe to={[ProjectMilestonesContainer]}>
-                    {({ countBindingEntities, countRelatedEntities }) => (
-                      <BindingAndRelatedEntities
-                        binding={countBindingEntities()}
-                        related={countRelatedEntities(values.id)}
-                      />
-                    )}
                   </Subscribe>
                 </div>
               </>
