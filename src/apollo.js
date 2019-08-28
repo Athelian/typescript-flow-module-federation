@@ -9,6 +9,7 @@ import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemo
 import { ApolloLink, NextLink, Observable, type Operation } from 'apollo-link';
 import { createUploadLink } from 'apollo-upload-client';
 import { onError } from 'apollo-link-error';
+import apolloLogger from 'apollo-link-logger';
 import { isDevEnvironment } from './utils/env';
 import introspectionQueryResultData from './generated/fragmentTypes.json';
 import logger from './utils/logger';
@@ -139,7 +140,11 @@ const defaultOptions = {
 
 const client: Object = new ApolloClient({
   assumeImmutableResults: true,
-  link: ApolloLink.from([errorLink, SSELink, httpWithUploadLink]),
+  link: ApolloLink.from(
+    isDevEnvironment
+      ? [apolloLogger, errorLink, SSELink, httpWithUploadLink]
+      : [errorLink, SSELink, httpWithUploadLink]
+  ),
   cache,
   defaultOptions,
 });
