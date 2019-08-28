@@ -181,6 +181,8 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           weakFocusedAt: [],
           foreignFocuses: [],
           foreignFocusedAt: [],
+          erroredAt: null,
+          weakErroredAt: [],
         };
       }
       case Actions.APPEND: {
@@ -225,6 +227,8 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           focusedAt: null,
           weakFocusedAt: [],
           foreignFocusedAt,
+          erroredAt: null,
+          weakErroredAt: [],
         };
       }
       case Actions.CELL_UPDATE:
@@ -364,6 +368,46 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
         }
 
         return newState;
+      }
+      case Actions.SET_ERRORS: {
+        if (!targetCell) {
+          throw new Error('cell not found');
+        }
+
+        if (!action.payload) {
+          return {
+            ...state,
+            erroredAt: null,
+            weakErroredAt: [],
+          };
+        }
+
+        const weakErroredAt = targetCell.duplicatable
+          ? state.rows.reduce((positions, row, x) => {
+              row.forEach((cell, y) => {
+                if (
+                  targetCell.entity &&
+                  cell.entity &&
+                  targetCell.entity.id === cell.entity.id &&
+                  targetCell.entity.type === cell.entity.type &&
+                  targetCell.entity.field === cell.entity.field
+                ) {
+                  positions.push({ x, y });
+                }
+              });
+
+              return positions;
+            }, [])
+          : [];
+
+        return {
+          ...state,
+          erroredAt: {
+            ...action.cell,
+            messages: action.payload,
+          },
+          weakErroredAt,
+        };
       }
       case Actions.FOCUS: {
         if (!targetCell) {

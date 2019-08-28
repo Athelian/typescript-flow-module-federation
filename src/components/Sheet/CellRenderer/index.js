@@ -4,6 +4,7 @@ import { areEqual } from 'react-window';
 import LoadingIcon from 'components/LoadingIcon';
 import { useSheetState } from '../SheetState';
 import Cell from '../Cell';
+import { Actions } from '../SheetState/contants';
 
 type Props = {
   style: Object,
@@ -13,8 +14,33 @@ type Props = {
 
 const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
   const [foreignFocuses, setForeignFocuses] = React.useState<Array<Object>>([]);
-  const { state, dispatch } = useSheetState();
-  const { rows, focusedAt, weakFocusedAt, foreignFocusedAt } = state;
+  const { state, dispatch, mutate } = useSheetState();
+  const { rows, focusedAt, weakFocusedAt, foreignFocusedAt, erroredAt, weakErroredAt } = state;
+  const handleClick = React.useCallback(() => {
+    dispatch({
+      type: Actions.FOCUS,
+      cell: { x: rowIndex, y: columnIndex },
+    });
+  }, [dispatch, columnIndex, rowIndex]);
+  const handleFocusUp = React.useCallback(() => {
+    dispatch({
+      type: Actions.FOCUS_UP,
+    });
+  }, [dispatch]);
+  const handleFocusDown = React.useCallback(() => {
+    dispatch({
+      type: Actions.FOCUS_DOWN,
+    });
+  }, [dispatch]);
+  const handleUpdate = React.useCallback(
+    value => {
+      mutate({
+        cell: { x: rowIndex, y: columnIndex },
+        value,
+      });
+    },
+    [mutate, columnIndex, rowIndex]
+  );
 
   React.useEffect(() => {
     setForeignFocuses(
@@ -52,9 +78,18 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
         readonly={cell.readonly || false}
         forbidden={cell.forbidden || false}
         disabled={cell.disabled || false} // TODO: use hasPermission thing
-        onFirstRow={rowIndex === 0}
+        isFirstRow={rowIndex === 0}
         extended={cell.extended || 0}
-        dispatch={action => dispatch({ ...action, cell: { x: rowIndex, y: columnIndex } })}
+        errors={
+          erroredAt && erroredAt.x === rowIndex && erroredAt.y === columnIndex
+            ? erroredAt.messages
+            : null
+        }
+        weakError={!!weakErroredAt.find(e => e.x === rowIndex && e.y === columnIndex)}
+        onClick={handleClick}
+        onFocusUp={handleFocusUp}
+        onFocusDown={handleFocusDown}
+        onUpdate={handleUpdate}
       />
     </div>
   );

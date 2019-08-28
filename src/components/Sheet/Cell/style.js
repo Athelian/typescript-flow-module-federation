@@ -26,7 +26,13 @@ export const CellStyle = (readonly: boolean, disabled: boolean, extended: number
   `;
 };
 
-export const CellBorderStyle = (focus: boolean, foreignFocus: boolean, weakFocus: boolean) => {
+export const CellBorderStyle = (
+  focus: boolean,
+  foreignFocus: boolean,
+  weakFocus: boolean,
+  error: boolean,
+  weakError: boolean
+) => {
   let border = `
     border-right: 0.5px solid rgba(0, 0, 0, 0.1);
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
@@ -35,6 +41,10 @@ export const CellBorderStyle = (focus: boolean, foreignFocus: boolean, weakFocus
     border = `border: 2px solid ${colors.TEAL};`;
   } else if (weakFocus) {
     border = `border: 2px solid rgba(17, 209, 166, 0.5);`;
+  } else if (error) {
+    border = `border: 2px solid ${colors.RED};`;
+  } else if (weakError) {
+    border = `border: 2px solid rgba(239, 72, 72, 0.5);`;
   } else if (foreignFocus) {
     border = `border: 2px solid ${colors.BLUE};`;
   }
@@ -48,7 +58,12 @@ export const CellBorderStyle = (focus: boolean, foreignFocus: boolean, weakFocus
     ${border};
 
     &:hover {
-      ${!focus && !foreignFocus && !weakFocus && 'border: 2px solid rgba(0, 0, 0, 0.1);'}
+      ${!focus &&
+        !foreignFocus &&
+        !weakFocus &&
+        !error &&
+        !weakError &&
+        'border: 2px solid rgba(0, 0, 0, 0.1);'}
     }
   `;
 };
@@ -61,7 +76,7 @@ export const FocusesWrapperStyle = (onFirstRow: boolean) => css`
   ${layout.HORIZONTAL};
   display: none;
   position: absolute;
-  ${onFirstRow ? 'bottom: -14px;' : 'top: -14px;'}
+  ${onFirstRow ? `top: 30px;` : 'bottom: 30px;'}
   left: 0px;
   z-index: 4;
 `;
@@ -73,4 +88,22 @@ export const FocusStyle = (onFirstRow: boolean) => css`
   ${fontSizes.SMALL};
   line-height: 15px;
   padding: 0 5px;
+`;
+
+export const ErrorsWrapperStyle = (onFirstRow: boolean) => css`
+  ${layout.VERTICAL};
+  align-items: flex-start;
+  position: absolute;
+  ${onFirstRow ? `top: 30px;` : 'bottom: 30px;'}
+  left: 0px;
+  z-index: 4;
+`;
+
+export const ErrorStyle = css`
+  background-color: ${colors.RED};
+  color: ${colors.WHITE};
+  ${fontSizes.SMALL};
+  line-height: 15px;
+  padding: 0 5px;
+  white-space: nowrap;
 `;

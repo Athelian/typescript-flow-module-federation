@@ -2,11 +2,12 @@
 import * as React from 'react';
 import FormattedName from 'components/FormattedName';
 import { Blackout } from 'components/Form';
-import { Actions } from '../SheetState/contants';
 import TextInput from './Inputs/TextInput';
 import {
   CellBorderStyle,
   CellStyle,
+  ErrorStyle,
+  ErrorsWrapperStyle,
   FocusesWrapperStyle,
   FocusStyle,
   InputWrapperStyle,
@@ -21,9 +22,14 @@ type Props = {
   readonly: boolean,
   forbidden: boolean,
   disabled: boolean,
-  onFirstRow: boolean,
+  isFirstRow: boolean,
   extended: number,
-  dispatch: ({ type: string, payload?: any }) => void,
+  errors: Array<string> | null,
+  weakError: boolean,
+  onClick: () => void,
+  onFocusUp: () => void,
+  onFocusDown: () => void,
+  onUpdate: any => void,
 };
 
 const inputs = {
@@ -39,9 +45,14 @@ const Cell = ({
   readonly,
   forbidden,
   disabled,
-  onFirstRow,
+  isFirstRow,
   extended,
-  dispatch,
+  errors,
+  weakError,
+  onClick,
+  onFocusUp,
+  onFocusDown,
+  onUpdate,
 }: Props) => {
   const [dirtyValue, setDirtyValue] = React.useState<any>(value);
   const wrapperRef = React.useRef(null);
@@ -77,12 +88,6 @@ const Cell = ({
     }
   };
 
-  const handleClick = () => {
-    dispatch({
-      type: Actions.FOCUS,
-    });
-  };
-
   const handleInputChange = e => {
     setDirtyValue(e.target.value);
   };
@@ -92,10 +97,7 @@ const Cell = ({
       return;
     }
 
-    dispatch({
-      type: Actions.CELL_UPDATE,
-      payload: dirtyValue,
-    });
+    onUpdate(dirtyValue);
   };
 
   const handleInputKeyDown = (e: SyntheticKeyboardEvent<HTMLDivElement>) => {
@@ -117,9 +119,11 @@ const Cell = ({
           inputRef.current.blur();
         }
 
-        dispatch({
-          type: e.shiftKey ? Actions.FOCUS_UP : Actions.FOCUS_DOWN,
-        });
+        if (e.shiftKey) {
+          onFocusUp();
+        } else {
+          onFocusDown();
+        }
         break;
       default:
         break;
@@ -132,15 +136,34 @@ const Cell = ({
       className={CellStyle(readonly, disabled, extended)}
       role="presentation"
       tabIndex="-1"
-      onClick={handleClick}
+      onClick={onClick}
       onKeyDown={handleKeyDown}
     >
-      <div className={CellBorderStyle(focus, foreignFocuses.length > 0, weakFocus)} />
-      {foreignFocuses.length > 0 && (
-        <div id="focuses" className={FocusesWrapperStyle(onFirstRow)}>
+      <div
+        className={CellBorderStyle(
+          focus,
+          foreignFocuses.length > 0,
+          weakFocus,
+          errors !== null && errors.length > 0,
+          weakError
+        )}
+      />
+
+      {!errors && !weakError && foreignFocuses.length > 0 && (
+        <div id="focuses" className={FocusesWrapperStyle(isFirstRow)}>
           {foreignFocuses.map(ff => (
-            <span key={ff.id} className={FocusStyle(onFirstRow)}>
+            <span key={ff.id} className={FocusStyle(isFirstRow)}>
               <FormattedName firstName={ff.firstName} lastName={ff.lastName} />
+            </span>
+          ))}
+        </div>
+      )}
+
+      {errors !== null && errors.length > 0 && (
+        <div className={ErrorsWrapperStyle(isFirstRow)}>
+          {errors.map(error => (
+            <span key={error} className={ErrorStyle}>
+              {error}
             </span>
           ))}
         </div>
@@ -172,8 +195,10 @@ Cell.defaultProps = {
   readonly: false,
   forbidden: false,
   disabled: false,
-  onFirstRow: false,
+  isFirstRow: false,
   extended: 0,
+  errors: null,
+  weakError: false,
 };
 
 export default React.memo<Props>(Cell);

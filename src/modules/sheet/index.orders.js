@@ -88,6 +88,17 @@ const OrderSheetModule = () => {
         items={initialOrders}
         hasMore={page.page < page.totalPage}
         transformItem={transformer}
+        onMutate={args => {
+          return Promise.resolve(
+            args.value === 'bad'
+              ? [
+                  { message: 'Boo! bad data!' },
+                  { message: "Another error message because It's very bad" },
+                  { message: 'So bad that I add one more error' },
+                ]
+              : null
+          );
+        }}
         onLoadMore={() =>
           client
             .query({
