@@ -5,6 +5,7 @@ import {
   useSheetStateInitializer,
   SheetState,
   useSheetState,
+  useSheetKeyNavigation,
 } from '../SheetState';
 import SheetRenderer from '../SheetRenderer';
 import CellRenderer from '../CellRenderer';
@@ -27,7 +28,8 @@ type Props = {
 const SheetImpl = ({ columns, items, loading, hasMore, onLoadMore }: ImplProps) => {
   useSheetStateInitializer(columns, items);
   const [loadingMore, handleThreshold] = useSheetStateLoadMore(onLoadMore, columns);
-  const [state, dispatch] = useSheetState();
+  const [state] = useSheetState();
+  const handleKeyDown = useSheetKeyNavigation();
   useSheetLive();
 
   const [columnWidths, setColumnWidths] = React.useState<Array<{ width: number, key: string }>>([]);
@@ -63,10 +65,10 @@ const SheetImpl = ({ columns, items, loading, hasMore, onLoadMore }: ImplProps) 
       loading={loading}
       loadingMore={loadingMore}
       focusedAt={state.focusedAt}
-      dispatch={dispatch}
       hasMore={hasMore}
       onThreshold={handleThreshold}
       onColumnResize={onColumnResize}
+      onKeyDown={handleKeyDown}
     >
       {CellRenderer}
     </SheetRenderer>

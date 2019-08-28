@@ -4,7 +4,7 @@ import { VariableSizeGrid } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
 import LoadingIcon from 'components/LoadingIcon';
-import type { Action, Position } from '../SheetState';
+import type { Position } from '../SheetState';
 import Column from '../Column';
 import { ColumnsWrapperStyle, ContentStyle, WrapperStyle } from './style';
 
@@ -24,7 +24,7 @@ type Props = {
   focusedAt: Position | null,
   onThreshold: () => void,
   onColumnResize: (key: string, width: number) => void,
-  dispatch: (action: Action) => void,
+  onKeyDown: (SyntheticKeyboardEvent<HTMLDivElement>) => void,
   children: React.ComponentType<any>,
 };
 
@@ -37,7 +37,7 @@ const SheetRenderer = ({
   focusedAt,
   onThreshold,
   onColumnResize,
-  dispatch,
+  onKeyDown,
   children,
 }: Props) => {
   const columnsRef = React.useRef(null);
@@ -75,37 +75,6 @@ const SheetRenderer = ({
     }
   };
 
-  const handleKeyDown = e => {
-    switch (e.key) {
-      case 'ArrowUp': {
-        dispatch({
-          type: 'focus_up',
-        });
-        return;
-      }
-      case 'ArrowDown': {
-        dispatch({
-          type: 'focus_down',
-        });
-        break;
-      }
-      case 'ArrowRight': {
-        dispatch({
-          type: 'focus_right',
-        });
-        break;
-      }
-      case 'ArrowLeft': {
-        dispatch({
-          type: 'focus_left',
-        });
-        break;
-      }
-      default:
-        break;
-    }
-  };
-
   return (
     <div className={WrapperStyle}>
       <div ref={columnsRef} className={ColumnsWrapperStyle}>
@@ -118,7 +87,7 @@ const SheetRenderer = ({
           />
         ))}
       </div>
-      <div className={ContentStyle} role="presentation" tabIndex="-1" onKeyDown={handleKeyDown}>
+      <div className={ContentStyle} role="presentation" tabIndex="-1" onKeyDown={onKeyDown}>
         {loading ? (
           <LoadingIcon />
         ) : (

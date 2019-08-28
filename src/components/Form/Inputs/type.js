@@ -5,6 +5,7 @@ type OptionalProps = {
   value: any,
   name: string,
   placeholder: React.Node,
+  inputRef: React.Ref,
   onChange: ?Function,
   onBlur: ?Function,
   onFocus: ?Function,

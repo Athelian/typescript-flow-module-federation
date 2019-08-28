@@ -5,6 +5,7 @@ import { uuid } from 'utils/id';
 import logger from 'utils/logger';
 import { getByPathWithDefault } from 'utils/fp';
 import { useSheetState } from '../SheetState';
+import { Actions } from '../SheetState/contants';
 import { convertEntityToInput } from './helper';
 import {
   blurMutation,
@@ -49,7 +50,7 @@ export const useSheetLive = () => {
           }
 
           dispatch({
-            type: focusEvent.__typename === 'Focus' ? 'foreign_focus' : 'foreign_blur',
+            type: focusEvent.__typename === 'Focus' ? Actions.FOREIGN_FOCUS : Actions.FOREIGN_BLUR,
             payload: focusEvent,
           });
         },
@@ -80,7 +81,7 @@ export const useSheetLive = () => {
         const focuses = getByPathWithDefault([], 'focuses', data);
 
         dispatch({
-          type: 'foreign_focuses',
+          type: Actions.FOREIGN_FOCUSES,
           payload: focuses,
         });
       });
