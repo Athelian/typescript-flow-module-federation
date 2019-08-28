@@ -24,6 +24,7 @@ type OptionalProps = {
     }>,
     approvedAt: ?string | Date,
   },
+  color: string,
   vertical: boolean,
 };
 
@@ -36,10 +37,11 @@ const defaultProps = {
     timelineDateRevisions: [],
     approvedAt: null,
   },
+  color: 'BLACK',
   vertical: false,
 };
 
-const TimelineDate = ({ timelineDate, prefixIcon, vertical }: Props) => {
+const TimelineDate = ({ timelineDate, prefixIcon, vertical, color }: Props) => {
   const { date, timelineDateRevisions: rawRevisions, approvedAt } = timelineDate;
 
   const timelineDateRevisions = compact(rawRevisions);
@@ -57,13 +59,15 @@ const TimelineDate = ({ timelineDate, prefixIcon, vertical }: Props) => {
       {vertical && (
         <div className={PrefixIconStyle}>{prefixIcon && <Icon icon={prefixIcon} />}</div>
       )}
-      <div className={DateStyle({ shownDate: !!shownDate, vertical })}>
-        {shownDate ? (
+      {shownDate ? (
+        <div className={DateStyle({ color, vertical })}>
           <FormattedDate value={new Date(shownDate)} />
-        ) : (
+        </div>
+      ) : (
+        <div className={DateStyle({ color: 'GRAY_LIGHT', vertical })}>
           <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
-        )}
-      </div>
+        </div>
+      )}
       <div className={DelayStyle({ delayAmount, vertical })}>
         {delayAmount !== 0 && (
           <>
