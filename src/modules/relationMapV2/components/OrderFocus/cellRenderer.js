@@ -24,7 +24,7 @@ import {
   SHIPMENT_WIDTH,
 } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
-import { Hits } from 'modules/relationMapV2/store';
+import { Hits, Entities } from 'modules/relationMapV2/store';
 import type { CellRender, State } from './type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
 import RelationLine from '../RelationLine';
@@ -542,7 +542,8 @@ const shipmentDropMessage = ({
 };
 
 function OrderCell({ data, afterConnector }: CellProps) {
-  const { state, dispatch, entities } = React.useContext(RelationMapContext);
+  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { entities } = Entities.useContainer();
   const orderId = getByPathWithDefault('', 'id', data);
   const [{ isOver, canDrop, dropMessage, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
@@ -921,7 +922,8 @@ function BatchCell({
   afterConnector,
 }: CellProps & { order: OrderPayload }) {
   const batchId = getByPathWithDefault('', 'id', data);
-  const { state, dispatch, entities } = React.useContext(RelationMapContext);
+  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { entities } = Entities.useContainer();
   const [{ isOver, canDrop, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
     canDrop: () => false,
@@ -1084,7 +1086,8 @@ function BatchCell({
 }
 
 function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
-  const { state, dispatch, entities } = React.useContext(RelationMapContext);
+  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { entities } = Entities.useContainer();
   const containerId = getByPathWithDefault('', 'id', data);
   const shipmentId = getByPathWithDefault('', 'relatedBatch.shipment.id', data);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
@@ -1273,7 +1276,8 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
 }
 
 function ShipmentCell({ data, beforeConnector }: CellProps) {
-  const { state, dispatch, entities } = React.useContext(RelationMapContext);
+  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { entities } = Entities.useContainer();
   const shipmentId = getByPathWithDefault('', 'id', data);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
     accept: BATCH,

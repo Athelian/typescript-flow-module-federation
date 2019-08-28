@@ -8,8 +8,6 @@ import type { State } from './type.js.flow';
 type ContextProps = {|
   state: State,
   dispatch: Function,
-  orders: Array<OrderPayload>,
-  entities: Object,
 |};
 
 const initMoveEntity = {
@@ -44,8 +42,6 @@ export const initialState: State = {
 export const RelationMapContext = createContext<ContextProps>({
   state: initialState,
   dispatch: () => {},
-  orders: [],
-  entities: {},
 });
 
 export function reducer(

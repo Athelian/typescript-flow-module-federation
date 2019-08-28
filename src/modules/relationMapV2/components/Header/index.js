@@ -15,13 +15,15 @@ import {
   SHIPMENT_WIDTH,
 } from 'modules/relationMapV2/constants';
 import { getByPathWithDefault } from 'utils/fp';
+import { Entities } from 'modules/relationMapV2/store';
 import { HeadingStyle, ButtonStyle, RowStyle } from './style';
 import { RelationMapContext } from '../OrderFocus/store';
 
 type Props = { style?: Object };
 
 const Header = React.memo<Props>(({ style }: Props) => {
-  const { state, orders, dispatch, entities } = React.useContext(RelationMapContext);
+  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { orders, entities } = Entities.useContainer();
   return (
     <div style={style} className={RowStyle}>
       <div
