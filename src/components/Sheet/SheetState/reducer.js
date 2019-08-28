@@ -494,7 +494,7 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
 
         return {
           ...state,
-          foreignFocuses: [...state.foreignFocuses.filter(ff => ff.id === focus.id), focus],
+          foreignFocuses: [...state.foreignFocuses.filter(ff => ff.id !== focus.id), focus],
           foreignFocusedAt: [
             ...state.foreignFocusedAt.filter(ff => ff.id !== focus.id),
             ...foreignFocusedAt,
@@ -506,10 +506,12 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           throw new Error('invalid dispatch payload');
         }
 
+        const blur: Object = action.payload;
+
         return {
           ...state,
-          // $FlowFixMe nullable action.payload is already checked
-          foreignFocusedAt: state.foreignFocusedAt.filter(ff => ff.id !== action.payload.id),
+          foreignFocuses: [...state.foreignFocuses.filter(ff => ff.id !== blur.id)],
+          foreignFocusedAt: [...state.foreignFocusedAt.filter(ff => ff.id !== blur.id)],
         };
       }
       default:
