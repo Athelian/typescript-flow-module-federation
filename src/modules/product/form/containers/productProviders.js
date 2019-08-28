@@ -1,6 +1,6 @@
 // @flow
 import { Container } from 'unstated';
-import { set, unset, cloneDeep } from 'lodash';
+import { set, cloneDeep } from 'lodash';
 import update from 'immutability-helper';
 import { isEquals } from 'utils/fp';
 import { extractForbiddenId } from 'utils/data';
@@ -63,9 +63,10 @@ export default class ProductProvidersContainer extends Container<FormState> {
 
   removeArrayItem = (index: number) => {
     this.setState(prevState => {
-      const cloneState = cloneDeep(prevState);
-      unset(cloneState, `productProviders.${index}`);
-      return cloneState;
+      const { productProviders } = prevState;
+      return {
+        productProviders: productProviders.filter((item, itemIndex) => index !== itemIndex),
+      };
     });
   };
 
