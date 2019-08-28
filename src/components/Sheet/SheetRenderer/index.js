@@ -24,7 +24,6 @@ type Props = {
   focusedAt: Position | null,
   onThreshold: () => void,
   onColumnResize: (key: string, width: number) => void,
-  onKeyDown: (SyntheticKeyboardEvent<HTMLDivElement>) => void,
   children: React.ComponentType<any>,
 };
 
@@ -37,7 +36,6 @@ const SheetRenderer = ({
   focusedAt,
   onThreshold,
   onColumnResize,
-  onKeyDown,
   children,
 }: Props) => {
   const columnsRef = React.useRef(null);
@@ -87,7 +85,7 @@ const SheetRenderer = ({
           />
         ))}
       </div>
-      <div className={ContentStyle} role="presentation" tabIndex="-1" onKeyDown={onKeyDown}>
+      <div className={ContentStyle}>
         {loading ? (
           <LoadingIcon />
         ) : (

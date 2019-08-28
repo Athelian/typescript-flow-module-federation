@@ -47,22 +47,8 @@ const Cell = ({
   const inputRef = React.useRef(null);
 
   React.useEffect(() => {
-    if (dirtyValue === value) {
-      return () => {};
-    }
-
-    const handler = setTimeout(() => {
-      dispatch({
-        type: Actions.CHANGE_VALUE,
-        payload: dirtyValue,
-      });
-    }, 10000);
-
-    return () => {
-      clearTimeout(handler);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, dirtyValue]);
+    setDirtyValue(value);
+  }, [value, setDirtyValue]);
 
   const handleKeyDown = (e: SyntheticKeyboardEvent<HTMLDivElement>) => {
     switch (e.key) {
@@ -97,7 +83,7 @@ const Cell = ({
     }
 
     dispatch({
-      type: Actions.CHANGE_VALUE,
+      type: Actions.CELL_UPDATE,
       payload: dirtyValue,
     });
   };

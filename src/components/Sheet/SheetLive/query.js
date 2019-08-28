@@ -66,3 +66,36 @@ export const focusUnsubscribeAllMutation = gql`
     focusUnsubscribeAll(id: $id)
   }
 `;
+
+export const entityEventSubscription = gql`
+  subscription entityEvent($id: ID!) {
+    entityEvent(id: $id) {
+      lifeCycle
+      entity {
+        ... on Model {
+          id
+        }
+      }
+      changes {
+        field
+        new {
+          ... on StringValue {
+            string
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const entitySubscribeMutation = gql`
+  mutation entitySubscribe($id: ID!, $input: SubscriptionInput!) {
+    entitySubscribe(id: $id, input: $input)
+  }
+`;
+
+export const entityUnsubscribeAllMutation = gql`
+  mutation entityUnsubscribeAll($id: ID!) {
+    entityUnsubscribeAll(id: $id)
+  }
+`;

@@ -11,7 +11,7 @@ type Props = {
   readonly: boolean,
 };
 
-const TextInput = React.forwardRef(
+const TextInput = React.forwardRef<Props, HTMLInputElement>(
   ({ value, onChange, onBlur, onKeyDown, readonly }: Props, ref) => {
     return (
       <div className={WrapperStyle}>

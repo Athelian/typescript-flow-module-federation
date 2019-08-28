@@ -48,6 +48,7 @@ export type State = {
   initialized: boolean,
   items: Array<Object>,
   rows: Array<Array<CellValue>>,
+  columns: Array<string>,
   entities: Array<{ id: string, type: string }>,
   focusedAt: Focus | null,
   weakFocusedAt: Array<Position>,
@@ -70,6 +71,7 @@ const initialState: State = {
   initialized: false,
   items: [],
   rows: [],
+  columns: [],
   entities: [],
   focusedAt: null,
   weakFocusedAt: [],
@@ -77,22 +79,22 @@ const initialState: State = {
   foreignFocusedAt: [],
 };
 
-export const SheetStateContext = React.createContext<[State, (Action) => void]>([
-  initialState,
-  () => {},
-]);
+export const SheetStateContext = React.createContext<{ state: State, dispatch: Action => void }>({
+  state: initialState,
+  dispatch: () => {},
+});
 
 export const useSheetState = () => React.useContext(SheetStateContext);
 
 export const useSheetStateInitializer = (columns: Array<ColumnConfig>, items: Array<Object>) => {
-  const [state, dispatch] = useSheetState();
+  const { state, dispatch } = useSheetState();
 
   React.useEffect(() => {
     dispatch({
       type: Actions.INIT,
       payload: {
         items,
-        columns,
+        columns: columns.map(c => c.key),
       },
     });
   }, [columns, dispatch, items]);
@@ -104,18 +106,15 @@ export const useSheetStateInitializer = (columns: Array<ColumnConfig>, items: Ar
 
     dispatch({
       type: Actions.REARRANGE,
-      payload: columns,
+      payload: columns.map(c => c.key),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columns, dispatch]);
 };
 
-export const useSheetStateLoadMore = (
-  onLoadMore: () => Promise<Array<Object>>,
-  columns: Array<ColumnConfig>
-) => {
+export const useSheetStateLoadMore = (onLoadMore: () => Promise<Array<Object>>) => {
   const [loadingMore, setLoadingMore] = React.useState<boolean>(false);
-  const [, dispatch] = useSheetState();
+  const { dispatch } = useSheetState();
 
   function handleThreshold() {
     setLoadingMore(true);
@@ -124,10 +123,7 @@ export const useSheetStateLoadMore = (
       .then(newItems =>
         dispatch({
           type: Actions.APPEND,
-          payload: {
-            items: newItems,
-            columns,
-          },
+          payload: newItems,
         })
       )
       .then(() => setLoadingMore(false));
@@ -137,26 +133,30 @@ export const useSheetStateLoadMore = (
 };
 
 export const useSheetKeyNavigation = () => {
-  const [, dispatch] = useSheetState();
+  const { dispatch } = useSheetState();
 
   function handleKey(e: SyntheticKeyboardEvent<HTMLDivElement>) {
     switch (e.key) {
       case 'ArrowUp':
+        e.preventDefault();
         dispatch({
           type: Actions.FOCUS_UP,
         });
         break;
       case 'ArrowDown':
+        e.preventDefault();
         dispatch({
           type: Actions.FOCUS_DOWN,
         });
         break;
       case 'ArrowRight':
+        e.preventDefault();
         dispatch({
           type: Actions.FOCUS_RIGHT,
         });
         break;
       case 'ArrowLeft':
+        e.preventDefault();
         dispatch({
           type: Actions.FOCUS_LEFT,
         });
@@ -166,13 +166,20 @@ export const useSheetKeyNavigation = () => {
     }
   }
 
-  return handleKey;
+  React.useEffect(() => {
+    window.addEventListener('keydown', handleKey);
+
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [handleKey]);
 };
 
 export const SheetState = ({ transformItem, children }: Props) => {
-  const reducer = React.useReducer<State, Action>(cellReducer(transformItem), initialState);
+  const memoizedReducer = React.useCallback(cellReducer(transformItem), [transformItem]);
+  const [state, dispatch] = React.useReducer<State, Action>(memoizedReducer, initialState);
 
-  return <SheetStateContext.Provider value={reducer}>{children}</SheetStateContext.Provider>;
+  return (
+    <SheetStateContext.Provider value={{ state, dispatch }}>{children}</SheetStateContext.Provider>
+  );
 };
 
 export default SheetState;
