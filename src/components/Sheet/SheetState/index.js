@@ -161,6 +161,12 @@ export const useSheetKeyNavigation = () => {
           type: Actions.FOCUS_LEFT,
         });
         break;
+      case 'Tab':
+        e.preventDefault();
+        dispatch({
+          type: e.shiftKey ? Actions.FOCUS_LEFT : Actions.FOCUS_RIGHT,
+        });
+        break;
       default:
         break;
     }

@@ -130,6 +130,11 @@ function getNextFocusable(
   while (true) {
     const next = getSafePosition(getNext(current), rows);
     if (current.x === next.x && current.y === next.y) {
+      const cell = rows[current.x][current.y];
+      if (cell.empty) {
+        current = from;
+      }
+
       break;
     }
 

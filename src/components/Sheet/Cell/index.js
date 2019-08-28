@@ -44,11 +44,18 @@ const Cell = ({
   dispatch,
 }: Props) => {
   const [dirtyValue, setDirtyValue] = React.useState<any>(value);
+  const wrapperRef = React.useRef(null);
   const inputRef = React.useRef(null);
 
   React.useEffect(() => {
     setDirtyValue(value);
   }, [value, setDirtyValue]);
+
+  React.useEffect(() => {
+    if (focus && wrapperRef.current) {
+      wrapperRef.current.focus();
+    }
+  }, [focus]);
 
   const handleKeyDown = (e: SyntheticKeyboardEvent<HTMLDivElement>) => {
     switch (e.key) {
@@ -60,6 +67,9 @@ const Cell = ({
       case 'Escape':
         if (inputRef.current) {
           inputRef.current.blur();
+        }
+        if (wrapperRef.current) {
+          wrapperRef.current.focus();
         }
         break;
       default:
@@ -96,6 +106,21 @@ const Cell = ({
       case 'ArrowLeft':
         e.stopPropagation();
         break;
+      case 'Tab':
+        if (inputRef.current) {
+          inputRef.current.blur();
+        }
+        break;
+      case 'Enter':
+        e.stopPropagation();
+        if (inputRef.current) {
+          inputRef.current.blur();
+        }
+
+        dispatch({
+          type: e.shiftKey ? Actions.FOCUS_UP : Actions.FOCUS_DOWN,
+        });
+        break;
       default:
         break;
     }
@@ -103,6 +128,7 @@ const Cell = ({
 
   return (
     <div
+      ref={wrapperRef}
       className={CellStyle(readonly, disabled, extended)}
       role="presentation"
       tabIndex="-1"
