@@ -11,7 +11,9 @@ import SheetRenderer from '../SheetRenderer';
 import CellRenderer from '../CellRenderer';
 import type { ColumnConfig } from '../SheetRenderer';
 import type { CellValue } from '../SheetState';
-import { useSheetLive } from '../SheetLive';
+import { SheetLiveID } from '../SheetLive';
+import { useSheetLiveFocus } from '../SheetLive/focus';
+import { useSheetLiveEntity } from '../SheetLive/entity';
 
 type ImplProps = {
   columns: Array<ColumnConfig>,
@@ -27,10 +29,11 @@ type Props = {
 
 const SheetImpl = ({ columns, items, loading, hasMore, onLoadMore }: ImplProps) => {
   useSheetStateInitializer(columns, items);
-  const [loadingMore, handleThreshold] = useSheetStateLoadMore(onLoadMore, columns);
-  const [state] = useSheetState();
-  const handleKeyDown = useSheetKeyNavigation();
-  useSheetLive();
+  const [loadingMore, handleThreshold] = useSheetStateLoadMore(onLoadMore);
+  const { state } = useSheetState();
+  useSheetKeyNavigation();
+  useSheetLiveFocus();
+  useSheetLiveEntity();
 
   const [columnWidths, setColumnWidths] = React.useState<Array<{ width: number, key: string }>>([]);
   const [columnsWithWidth, setColumnsWithWidth] = React.useState<Array<ColumnConfig>>([]);
@@ -68,7 +71,6 @@ const SheetImpl = ({ columns, items, loading, hasMore, onLoadMore }: ImplProps) 
       hasMore={hasMore}
       onThreshold={handleThreshold}
       onColumnResize={onColumnResize}
-      onKeyDown={handleKeyDown}
     >
       {CellRenderer}
     </SheetRenderer>
@@ -77,13 +79,15 @@ const SheetImpl = ({ columns, items, loading, hasMore, onLoadMore }: ImplProps) 
 
 const Sheet = ({ transformItem, columns, items, loading, hasMore, onLoadMore }: Props) => (
   <SheetState transformItem={transformItem}>
-    <SheetImpl
-      columns={columns}
-      items={items}
-      loading={loading}
-      hasMore={hasMore}
-      onLoadMore={onLoadMore}
-    />
+    <SheetLiveID>
+      <SheetImpl
+        columns={columns}
+        items={items}
+        loading={loading}
+        hasMore={hasMore}
+        onLoadMore={onLoadMore}
+      />
+    </SheetLiveID>
   </SheetState>
 );
 

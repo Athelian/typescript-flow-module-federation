@@ -1,6 +1,5 @@
 // @flow
 import { setIn } from 'utils/fp';
-import type { ColumnConfig } from '../SheetRenderer';
 import type { Action, CellValue, State, Position, ForeignFocus } from './index';
 import { Actions } from './contants';
 
@@ -23,7 +22,7 @@ function getEntities(rows: Array<Array<CellValue>>): Array<{ id: string, type: s
   );
 }
 
-function getForeignFocusedAt(rows: Array<Array<CellValue>>, focus: Object): Array<ForeignFocus> {
+function getForeignFocusedAt(focus: Object, rows: Array<Array<CellValue>>): Array<ForeignFocus> {
   return rows
     .reduce((positions, row, x) => {
       row.forEach((cell, y) => {
@@ -78,80 +77,82 @@ function extendParentCells(rows: Array<Array<CellValue>>): Array<Array<CellValue
   );
 }
 
-export function cellReducer(transformer: (number, Object) => Array<Array<CellValue>>) {
-  const transformItems = (
-    from: number,
-    items: Array<Object>,
-    columns: Array<ColumnConfig>
-  ): Array<Array<CellValue>> => {
-    return (
-      items
-        .map(
-          (item: Object, idx: number) =>
-            transformer(from + idx, item).map(row =>
-              columns.map(column => row.find(cell => column.key === cell.columnKey))
-            ),
-          {}
-        )
-        // $FlowFixMe flow doesn't support flat()
-        .flat()
-    );
-  };
+function transformItems(
+  from: number,
+  items: Array<Object>,
+  columns: Array<string>,
+  transformer: (number, Object) => Array<Array<CellValue>>
+): Array<Array<CellValue>> {
+  return (
+    items
+      .map(
+        (item: Object, idx: number) =>
+          transformer(from + idx, item).map(row =>
+            columns.map(column => row.find(cell => column === cell.columnKey))
+          ),
+        {}
+      )
+      // $FlowFixMe flow doesn't support flat()
+      .flat()
+  );
+}
 
+function getSafePosition(position: Position, rows: Array<Array<CellValue>>): Position {
+  return {
+    x: Math.max(0, Math.min(position.x, rows.length - 1)),
+    y: Math.max(0, Math.min(position.y, rows[0].length - 1)),
+  };
+}
+
+function getFocusableFromEmpty(from: Position, rows: Array<Array<CellValue>>): Position {
+  let current = from;
+
+  while (true) {
+    current = getSafePosition({ x: current.x - 1, y: current.y }, rows);
+    const cell = rows[current.x][current.y];
+
+    if (!cell.empty) {
+      break;
+    }
+  }
+
+  return current;
+}
+
+function getNextFocusable(
+  from: Position,
+  getNext: Position => Position,
+  skipEmpty: boolean,
+  rows: Array<Array<CellValue>>
+): Position {
+  let current = from;
+
+  while (true) {
+    const next = getSafePosition(getNext(current), rows);
+    if (current.x === next.x && current.y === next.y) {
+      break;
+    }
+
+    current = next;
+
+    const cell = rows[current.x][current.y];
+
+    if (!cell.empty) {
+      break;
+    } else if (cell.empty && !skipEmpty) {
+      current = getFocusableFromEmpty(current, rows);
+      break;
+    }
+  }
+
+  return current;
+}
+
+export function cellReducer(transformer: (number, Object) => Array<Array<CellValue>>) {
   function reducer(state: State, action: Action) {
     let targetCell: CellValue | null = null;
     if (action.cell) {
       targetCell = state.rows[action.cell.x][action.cell.y];
-    }
-
-    function getSafePosition(position: Position): Position {
-      return {
-        x: Math.max(0, Math.min(position.x, state.rows.length - 1)),
-        y: Math.max(0, Math.min(position.y, state.rows[0].length - 1)),
-      };
-    }
-
-    function getFocusableFromEmpty(from: Position): Position {
-      let current = from;
-
-      while (true) {
-        current = getSafePosition({ x: current.x - 1, y: current.y });
-        const cell = state.rows[current.x][current.y];
-
-        if (!cell.empty) {
-          break;
-        }
-      }
-
-      return current;
-    }
-
-    function getNextFocusable(
-      from: Position,
-      getNext: Position => Position,
-      skipEmpty: boolean
-    ): Position {
-      let current = from;
-
-      while (true) {
-        const next = getSafePosition(getNext(current));
-        if (current.x === next.x && current.y === next.y) {
-          break;
-        }
-
-        current = next;
-
-        const cell = state.rows[current.x][current.y];
-
-        if (!cell.empty) {
-          break;
-        } else if (cell.empty && !skipEmpty) {
-          current = getFocusableFromEmpty(current);
-          break;
-        }
-      }
-
-      return current;
     }
 
     switch (action.type) {
@@ -161,13 +162,14 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
         }
 
         const { items, columns } = action.payload;
-        const rows = extendParentCells(transformItems(0, items, columns));
+        const rows = extendParentCells(transformItems(0, items, columns, transformer));
         const entities = getEntities(rows);
 
         return {
           ...state,
           initialized: true,
           items,
+          columns,
           rows,
           entities,
           focusedAt: null,
@@ -181,11 +183,13 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           throw new Error('invalid dispatch payload');
         }
 
-        const { items, columns } = action.payload;
-        const rows = extendParentCells(transformItems(state.items.length, items, columns));
+        const items = action.payload;
+        const rows = extendParentCells(
+          transformItems(state.items.length, items, state.columns, transformer)
+        );
         const entities = getEntities(rows);
         const foreignFocusedAt = state.foreignFocuses
-          .map(focus => getForeignFocusedAt(rows, focus))
+          .map(focus => getForeignFocusedAt(focus, rows))
           // $FlowFixMe flow doesn't support flat()
           .flat();
 
@@ -203,31 +207,90 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
         }
 
         const columns = action.payload;
-        const rows = extendParentCells(transformItems(0, state.items, columns));
+        const rows = extendParentCells(transformItems(0, state.items, columns, transformer));
         const foreignFocusedAt = state.foreignFocuses
-          .map(focus => getForeignFocusedAt(rows, focus))
+          .map(focus => getForeignFocusedAt(focus, rows))
           // $FlowFixMe flow doesn't support flat()
           .flat();
 
         return {
           ...state,
+          columns,
           rows,
           focusedAt: null,
           weakFocusedAt: [],
           foreignFocusedAt,
         };
       }
-      case Actions.CHANGE_VALUE:
+      case Actions.CELL_UPDATE:
         if (!targetCell) {
           throw new Error('cell not found');
         }
 
+        return reducer(state, {
+          type: Actions.CHANGE_VALUES,
+          payload: [
+            {
+              entity: targetCell.entity,
+              value: action.payload,
+            },
+          ],
+        });
+      case Actions.CHANGE_VALUES: {
+        if (!action.payload) {
+          throw new Error('invalid dispatch payload');
+        }
+
+        const changes = action.payload;
+        if (changes.length === 0) {
+          return state;
+        }
+
+        const cellsToUpdate = changes
+          .map(({ entity, value }) => {
+            return {
+              cells: state.rows
+                .map(row =>
+                  row.filter(cell => {
+                    return (
+                      !cell.empty &&
+                      cell.entity &&
+                      cell.data &&
+                      cell.entity.id === entity.id &&
+                      cell.entity.type === entity.type &&
+                      cell.entity.field === entity.field
+                    );
+                  })
+                )
+                // $FlowFixMe flow doesn't support flat()
+                .flat(),
+              value,
+            };
+          })
+          .filter(change => change.cells.length > 0);
+
+        const items = [...state.items];
+        cellsToUpdate.forEach(({ cells, value }) => {
+          cells.forEach(cell => {
+            setIn(cell.data.path, value, items);
+          });
+        });
+
         return {
           ...state,
-          items: setIn(targetCell.data.path, action.payload, state.items),
-          rows: state.rows.map(row =>
+          items,
+          rows: state.rows.map<Array<CellValue>>(row =>
             row.map(cell => {
-              if (cell !== targetCell) {
+              const update = cellsToUpdate
+                .map(({ cells, value }) => {
+                  return {
+                    cell: cells.find(c => c === cell),
+                    value,
+                  };
+                })
+                .find(c => !!c.cell);
+
+              if (!update) {
                 return cell;
               }
 
@@ -235,12 +298,68 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
                 ...cell,
                 data: {
                   ...cell.data,
-                  value: action.payload,
+                  value: update.value,
                 },
               };
             })
           ),
         };
+      }
+      case Actions.REPLACE_ITEM: {
+        if (!action.payload) {
+          throw new Error('invalid dispatch payload');
+        }
+
+        const { item, index } = action.payload;
+
+        const items = [...state.items];
+        items[index] = item;
+        const rows = extendParentCells(transformItems(0, items, state.columns, transformer));
+        const entities = getEntities(rows);
+
+        const newState = {
+          ...state,
+          items,
+          rows,
+          entities,
+        };
+
+        if (newState.focusedAt) {
+          return reducer(newState, {
+            type: Actions.FOCUS,
+            cell: getSafePosition(newState.focusedAt, newState.rows),
+          });
+        }
+
+        return newState;
+      }
+      case Actions.DELETE_ITEM: {
+        if (action.payload === undefined) {
+          throw new Error('invalid dispatch payload');
+        }
+
+        const items = [...state.items];
+        items.splice(action.payload, 1);
+
+        const rows = extendParentCells(transformItems(0, items, state.columns, transformer));
+        const entities = getEntities(rows);
+
+        const newState = {
+          ...state,
+          items,
+          rows,
+          entities,
+        };
+
+        if (newState.focusedAt) {
+          return reducer(newState, {
+            type: Actions.FOCUS,
+            cell: getSafePosition(newState.focusedAt, newState.rows),
+          });
+        }
+
+        return newState;
+      }
       case Actions.FOCUS: {
         if (!targetCell) {
           throw new Error('cell not found');
@@ -296,7 +415,12 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
 
         return reducer(state, {
           type: Actions.FOCUS,
-          cell: getNextFocusable(state.focusedAt, pos => ({ ...pos, x: pos.x - 1 }), true),
+          cell: getNextFocusable(
+            state.focusedAt,
+            pos => ({ ...pos, x: pos.x - 1 }),
+            true,
+            state.rows
+          ),
         });
       }
       case Actions.FOCUS_DOWN: {
@@ -306,7 +430,12 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
 
         return reducer(state, {
           type: Actions.FOCUS,
-          cell: getNextFocusable(state.focusedAt, pos => ({ ...pos, x: pos.x + 1 }), true),
+          cell: getNextFocusable(
+            state.focusedAt,
+            pos => ({ ...pos, x: pos.x + 1 }),
+            true,
+            state.rows
+          ),
         });
       }
       case Actions.FOCUS_RIGHT: {
@@ -316,7 +445,12 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
 
         return reducer(state, {
           type: Actions.FOCUS,
-          cell: getNextFocusable(state.focusedAt, pos => ({ ...pos, y: pos.y + 1 }), false),
+          cell: getNextFocusable(
+            state.focusedAt,
+            pos => ({ ...pos, y: pos.y + 1 }),
+            false,
+            state.rows
+          ),
         });
       }
       case Actions.FOCUS_LEFT: {
@@ -326,7 +460,12 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
 
         return reducer(state, {
           type: Actions.FOCUS,
-          cell: getNextFocusable(state.focusedAt, pos => ({ ...pos, y: pos.y - 1 }), false),
+          cell: getNextFocusable(
+            state.focusedAt,
+            pos => ({ ...pos, y: pos.y - 1 }),
+            false,
+            state.rows
+          ),
         });
       }
       case Actions.FOREIGN_FOCUSES: {
@@ -335,7 +474,7 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
         }
 
         const foreignFocusedAt = action.payload
-          .map(focus => getForeignFocusedAt(state.rows, focus))
+          .map(focus => getForeignFocusedAt(focus, state.rows))
           // $FlowFixMe flow doesn't support flat()
           .flat();
 
@@ -351,7 +490,7 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
         }
 
         const focus: Object = action.payload;
-        const foreignFocusedAt = getForeignFocusedAt(state.rows, focus);
+        const foreignFocusedAt = getForeignFocusedAt(focus, state.rows);
 
         return {
           ...state,

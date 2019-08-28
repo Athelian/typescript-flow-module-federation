@@ -65,14 +65,14 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
       type: 'text',
       duplicatable: true,
       disabled: !(batch ? batch.container : null),
-      ...transformField(basePath, batch ? batch.container : null, 'no', () => true),
+      ...transformField(`${basePath}.container`, batch ? batch.container : null, 'no', () => true),
     },
     {
       columnKey: 'order.orderItem.batch.shipment.no',
       type: 'text',
       duplicatable: true,
       disabled: !(batch ? batch.shipment : null),
-      ...transformField(basePath, batch ? batch.shipment : null, 'no', () => true),
+      ...transformField(`${basePath}.shipment`, batch ? batch.shipment : null, 'no', () => true),
     },
   ];
 };

@@ -13,7 +13,7 @@ type Props = {
 
 const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
   const [foreignFocuses, setForeignFocuses] = React.useState<Array<Object>>([]);
-  const [state, dispatch] = useSheetState();
+  const { state, dispatch } = useSheetState();
   const { rows, focusedAt, weakFocusedAt, foreignFocusedAt } = state;
 
   React.useEffect(() => {

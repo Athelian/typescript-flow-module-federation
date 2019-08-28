@@ -4,8 +4,8 @@ import * as React from 'react';
 type OptionalProps = {
   value: any,
   name: string,
-  placeholder: React.Node,
-  inputRef: React.Ref,
+  placeholder: ?React.Node,
+  inputRef: ?React.Ref<any>,
   onChange: ?Function,
   onBlur: ?Function,
   onFocus: ?Function,
@@ -21,6 +21,7 @@ export const defaultInputProps = {
   value: '',
   name: '',
   placeholder: null,
+  inputRef: null,
   onChange: null,
   onBlur: null,
   onFocus: null,
