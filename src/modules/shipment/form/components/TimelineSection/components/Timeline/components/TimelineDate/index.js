@@ -24,7 +24,7 @@ type OptionalProps = {
     }>,
     approvedAt: ?string | Date,
   },
-  color?: string,
+  color: string,
   vertical: boolean,
 };
 
@@ -37,6 +37,7 @@ const defaultProps = {
     timelineDateRevisions: [],
     approvedAt: null,
   },
+  color: 'BLACK',
   vertical: false,
 };
 

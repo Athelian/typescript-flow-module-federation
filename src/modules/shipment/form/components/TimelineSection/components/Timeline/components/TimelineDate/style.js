@@ -19,11 +19,11 @@ export const PrefixIconStyle: string = css`
 `;
 
 type DateProps = {
-  color?: string,
+  color: string,
   vertical: boolean,
 };
 
-export const DateStyle = ({ color = 'BLACK', vertical }: DateProps): string => css`
+export const DateStyle = ({ color, vertical }: DateProps): string => css`
   color: ${colors[color]};
   ${presets.ELLIPSIS};
   font-weight: bold;
