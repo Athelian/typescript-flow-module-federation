@@ -17,6 +17,8 @@ import {
   BATCH,
   CONTAINER,
   SHIPMENT,
+  PRODUCT,
+  TAG,
   ORDER_WIDTH,
   BATCH_WIDTH,
   ORDER_ITEM_WIDTH,
@@ -50,11 +52,20 @@ type CellProps = {
 };
 
 function isMatchedEntity(matches: Object, entity: Object) {
+  if (!matches?.entity) return false;
+
   if (entity.__typename === ORDER_ITEM) {
-    return matches.entity && matches.entity[`${entity.productProvider?.product?.id}-Product`];
+    return matches?.entity[`${entity.productProvider?.product?.id}-${PRODUCT}`];
   }
 
-  return matches.entity && matches.entity[`${entity.id}-${entity.__typename}`];
+  if (entity.__typename === ORDER) {
+    return (
+      matches?.entity[`${entity.id}-${entity.__typename}`] ||
+      (entity?.tags ?? []).some(tag => matches?.entity[`${tag?.id}-${TAG}`])
+    );
+  }
+
+  return matches?.entity[`${entity.id}-${entity.__typename}`];
 }
 
 export const MatchedResult = ({ entity }: { entity: Object }) => {
@@ -1503,6 +1514,7 @@ function ItemSummaryCell({
 }: CellProps & { isExpand: boolean, onClick: Function }) {
   const { state, dispatch } = React.useContext(RelationMapContext);
   const { matches } = Hits.useContainer();
+  const { mapping } = Entities.useContainer();
   const orderItemIds = getByPathWithDefault([], 'orderItems', data)
     .map(item => getByPathWithDefault('', 'id', item))
     .filter(Boolean);
@@ -1521,7 +1533,11 @@ function ItemSummaryCell({
     state.targets.includes(`${BATCH}-${batchId}`)
   );
   const isMatched = orderItemIds.some(
-    itemId => matches.entity && matches.entity[`${itemId}-${ORDER_ITEM}`]
+    itemId =>
+      matches.entity &&
+      matches.entity[
+        `${mapping.entities?.orderItems[itemId]?.productProvider?.product?.id}-${PRODUCT}`
+      ]
   );
   return (
     <>

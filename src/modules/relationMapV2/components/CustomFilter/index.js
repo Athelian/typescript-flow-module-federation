@@ -2,7 +2,7 @@
 import React from 'react';
 import { EntityIcon } from 'components/NavBar';
 import { Hits, Entities } from 'modules/relationMapV2/store';
-import { ORDER, BATCH, SHIPMENT } from 'modules/relationMapV2/constants';
+import { ORDER, BATCH, SHIPMENT, TAG, PRODUCT } from 'modules/relationMapV2/constants';
 
 type Props = {|
   isEnable: boolean,
@@ -24,12 +24,14 @@ const MatchesEntity = () => {
   const matchedOrder = keys.filter(key => key.includes(`-${ORDER}`)).length;
   const matchedOrderTags = Object.keys(mapping.entities?.orders ?? {}).filter(orderId =>
     keys.some(key =>
-      (mapping.entities?.orders[orderId]?.tags ?? []).some(tag => key.includes(`${tag?.id}-Tag`))
+      (mapping.entities?.orders[orderId]?.tags ?? []).some(tag => key.includes(`${tag?.id}-${TAG}`))
     )
   ).length;
   const matchedOrderItem = Object.keys(mapping.entities?.orderItems ?? {}).filter(itemId =>
     keys.some(key =>
-      key.includes(`${mapping.entities?.orderItems[itemId]?.productProvider?.product?.id}-Product`)
+      key.includes(
+        `${mapping.entities?.orderItems[itemId]?.productProvider?.product?.id}-${PRODUCT}`
+      )
     )
   ).length;
   const matchedBatch = keys.filter(key => key.includes(`-${BATCH}`)).length;
