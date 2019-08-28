@@ -545,7 +545,8 @@ const shipmentDropMessage = ({
 
 function OrderCell({ data, afterConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
-  const { entities } = Entities.useContainer();
+  const { mapping } = Entities.useContainer();
+  const { entities } = mapping;
   const orderId = getByPathWithDefault('', 'id', data);
   const [{ isOver, canDrop, dropMessage, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
@@ -925,7 +926,8 @@ function BatchCell({
 }: CellProps & { order: OrderPayload }) {
   const batchId = getByPathWithDefault('', 'id', data);
   const { state, dispatch } = React.useContext(RelationMapContext);
-  const { entities } = Entities.useContainer();
+  const { mapping } = Entities.useContainer();
+  const { entities } = mapping;
   const [{ isOver, canDrop, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
     canDrop: () => false,
@@ -1089,7 +1091,8 @@ function BatchCell({
 
 function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
-  const { entities } = Entities.useContainer();
+  const { mapping } = Entities.useContainer();
+  const { entities } = mapping;
   const containerId = getByPathWithDefault('', 'id', data);
   const shipmentId = getByPathWithDefault('', 'relatedBatch.shipment.id', data);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
