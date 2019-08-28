@@ -7,25 +7,28 @@ type Props = {
   value: string | null,
   onChange: string => void,
   onBlur: () => void,
+  onKeyDown: () => void,
   readonly: boolean,
 };
 
-const TextInput = ({ value, onChange, onBlur, readonly }: Props) => {
-  return (
-    <div className={WrapperStyle}>
-      <BaseTextInput
-        value={value}
-        name="value"
-        readOnly={readonly}
-        readOnlyHeight="30px"
-        onChange={onChange}
-        onBlur={onBlur}
-        onKeyDown={e => {
-          e.stopPropagation();
-        }}
-      />
-    </div>
-  );
-};
+const TextInput = React.forwardRef(
+  ({ value, onChange, onBlur, onKeyDown, readonly }: Props, ref) => {
+    return (
+      <div className={WrapperStyle}>
+        <BaseTextInput
+          inputRef={ref}
+          value={value}
+          name="value"
+          tabIndex="-1"
+          readOnly={readonly}
+          readOnlyHeight="30px"
+          onChange={onChange}
+          onBlur={onBlur}
+          onKeyDown={onKeyDown}
+        />
+      </div>
+    );
+  }
+);
 
 export default TextInput;

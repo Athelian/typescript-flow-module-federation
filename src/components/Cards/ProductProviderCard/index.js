@@ -52,7 +52,7 @@ const ProductProviderCard = ({
     : [
         <CardAction icon="CLONE" onClick={() => onClone(productProvider)} />,
         referenced ? null : (
-          <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(productProvider)} />
+          <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove()} />
         ),
       ].filter(Boolean);
 

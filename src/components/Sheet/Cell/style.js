@@ -11,8 +11,6 @@ export const CellStyle = (readonly: boolean, disabled: boolean, extended: number
   }
 
   return css`
-    ${layout.HORIZONTAL};
-    ${layout.CENTER};
     position: relative;
     width: 100%;
     height: ${extended > 0 ? `${(extended + 1) * 30}px` : '100%'};
@@ -54,6 +52,10 @@ export const CellBorderStyle = (focus: boolean, foreignFocus: boolean, weakFocus
     }
   `;
 };
+
+export const InputWrapperStyle = (focus: boolean) => css`
+  ${focus && `position: relative`};
+`;
 
 export const FocusesWrapperStyle = (onFirstRow: boolean) => css`
   ${layout.HORIZONTAL};

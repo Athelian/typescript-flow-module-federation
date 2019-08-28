@@ -101,7 +101,7 @@ const ProjectCardNew = ({ project, onClick, ...rest }: Props) => {
 
         <div className={ProjectCardBodyStyle(milestones.length)}>
           {milestones.map(milestone => (
-            <MilestoneBlock key={milestone.key} milestone={milestone} />
+            <MilestoneBlock key={milestone.id} milestone={milestone} />
           ))}
         </div>
       </div>

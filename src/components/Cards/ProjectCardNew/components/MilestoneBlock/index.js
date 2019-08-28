@@ -35,7 +35,7 @@ const MilestoneBlock = ({ milestone }: Props) => {
 
   const isCompleted = !isNullOrUndefined(completedAt);
   const total = tasks.length;
-  const completed = tasks.filter(item => isNullOrUndefined(item.completedAt)).length;
+  const completed = tasks.filter(item => !isNullOrUndefined(item.completedAt)).length;
 
   let dueDateDiff = 0;
   if (dueDate && completedAt) {

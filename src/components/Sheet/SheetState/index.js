@@ -2,6 +2,7 @@
 import * as React from 'react';
 import type { ColumnConfig } from '../SheetRenderer';
 import { cellReducer } from './reducer';
+import { Actions } from './contants';
 
 export type CellValue = {
   columnKey: string,
@@ -61,7 +62,7 @@ export type Action = {
 };
 
 type Props = {
-  transformItem: Object => Array<Array<CellValue>>,
+  transformItem: (index: number, item: Object) => Array<Array<CellValue>>,
   children: React.Node,
 };
 
@@ -88,7 +89,7 @@ export const useSheetStateInitializer = (columns: Array<ColumnConfig>, items: Ar
 
   React.useEffect(() => {
     dispatch({
-      type: 'init',
+      type: Actions.INIT,
       payload: {
         items,
         columns,
@@ -102,7 +103,7 @@ export const useSheetStateInitializer = (columns: Array<ColumnConfig>, items: Ar
     }
 
     dispatch({
-      type: 'rearrange',
+      type: Actions.REARRANGE,
       payload: columns,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -122,7 +123,7 @@ export const useSheetStateLoadMore = (
     onLoadMore()
       .then(newItems =>
         dispatch({
-          type: 'append',
+          type: Actions.APPEND,
           payload: {
             items: newItems,
             columns,
@@ -133,6 +134,39 @@ export const useSheetStateLoadMore = (
   }
 
   return [loadingMore, handleThreshold];
+};
+
+export const useSheetKeyNavigation = () => {
+  const [, dispatch] = useSheetState();
+
+  function handleKey(e: SyntheticKeyboardEvent<HTMLDivElement>) {
+    switch (e.key) {
+      case 'ArrowUp':
+        dispatch({
+          type: Actions.FOCUS_UP,
+        });
+        break;
+      case 'ArrowDown':
+        dispatch({
+          type: Actions.FOCUS_DOWN,
+        });
+        break;
+      case 'ArrowRight':
+        dispatch({
+          type: Actions.FOCUS_RIGHT,
+        });
+        break;
+      case 'ArrowLeft':
+        dispatch({
+          type: Actions.FOCUS_LEFT,
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
+  return handleKey;
 };
 
 export const SheetState = ({ transformItem, children }: Props) => {

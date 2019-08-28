@@ -151,7 +151,7 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                             <ProductProviderCard
                               showActionsOnHover
                               productProvider={productProvider}
-                              onRemove={() => removeArrayItem(`productProviders.${index}`)}
+                              onRemove={() => removeArrayItem(index)}
                               onClick={() => slideToggle('updateFormOpened', true)}
                               onClone={() => slideToggle('cloneFormOpened', true)}
                             />

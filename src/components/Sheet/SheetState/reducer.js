@@ -1,6 +1,8 @@
 // @flow
+import { setIn } from 'utils/fp';
 import type { ColumnConfig } from '../SheetRenderer';
 import type { Action, CellValue, State, Position, ForeignFocus } from './index';
+import { Actions } from './contants';
 
 function getEntities(rows: Array<Array<CellValue>>): Array<{ id: string, type: string }> {
   return Array.from(
@@ -76,16 +78,17 @@ function extendParentCells(rows: Array<Array<CellValue>>): Array<Array<CellValue
   );
 }
 
-export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
+export function cellReducer(transformer: (number, Object) => Array<Array<CellValue>>) {
   const transformItems = (
+    from: number,
     items: Array<Object>,
     columns: Array<ColumnConfig>
   ): Array<Array<CellValue>> => {
     return (
       items
         .map(
-          (item: Object) =>
-            transformer(item).map(row =>
+          (item: Object, idx: number) =>
+            transformer(from + idx, item).map(row =>
               columns.map(column => row.find(cell => column.key === cell.columnKey))
             ),
           {}
@@ -152,13 +155,13 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
     }
 
     switch (action.type) {
-      case 'init': {
+      case Actions.INIT: {
         if (!action.payload) {
           throw new Error('invalid dispatch payload');
         }
 
         const { items, columns } = action.payload;
-        const rows = extendParentCells(transformItems(items, columns));
+        const rows = extendParentCells(transformItems(0, items, columns));
         const entities = getEntities(rows);
 
         return {
@@ -173,13 +176,13 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
           foreignFocusedAt: [],
         };
       }
-      case 'append': {
+      case Actions.APPEND: {
         if (!action.payload) {
           throw new Error('invalid dispatch payload');
         }
 
         const { items, columns } = action.payload;
-        const rows = extendParentCells(transformItems(items, columns));
+        const rows = extendParentCells(transformItems(state.items.length, items, columns));
         const entities = getEntities(rows);
         const foreignFocusedAt = state.foreignFocuses
           .map(focus => getForeignFocusedAt(rows, focus))
@@ -194,13 +197,13 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
           foreignFocusedAt: [...state.foreignFocusedAt, ...foreignFocusedAt],
         };
       }
-      case 'rearrange': {
+      case Actions.REARRANGE: {
         if (!action.payload) {
           throw new Error('invalid dispatch payload');
         }
 
         const columns = action.payload;
-        const rows = extendParentCells(transformItems(state.items, columns));
+        const rows = extendParentCells(transformItems(0, state.items, columns));
         const foreignFocusedAt = state.foreignFocuses
           .map(focus => getForeignFocusedAt(rows, focus))
           // $FlowFixMe flow doesn't support flat()
@@ -214,15 +217,31 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
           foreignFocusedAt,
         };
       }
-      case 'change_value':
+      case Actions.CHANGE_VALUE:
         if (!targetCell) {
           throw new Error('cell not found');
         }
 
-        // TODO: update cell & original value
+        return {
+          ...state,
+          items: setIn(targetCell.data.path, action.payload, state.items),
+          rows: state.rows.map(row =>
+            row.map(cell => {
+              if (cell !== targetCell) {
+                return cell;
+              }
 
-        return state;
-      case 'focus': {
+              return {
+                ...cell,
+                data: {
+                  ...cell.data,
+                  value: action.payload,
+                },
+              };
+            })
+          ),
+        };
+      case Actions.FOCUS: {
         if (!targetCell) {
           throw new Error('cell not found');
         }
@@ -263,54 +282,54 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
           weakFocusedAt,
         };
       }
-      case 'blur': {
+      case Actions.BLUR: {
         return {
           ...state,
           focusedAt: null,
           weakFocusedAt: [],
         };
       }
-      case 'focus_up': {
+      case Actions.FOCUS_UP: {
         if (!state.focusedAt) {
           return state;
         }
 
         return reducer(state, {
-          type: 'focus',
+          type: Actions.FOCUS,
           cell: getNextFocusable(state.focusedAt, pos => ({ ...pos, x: pos.x - 1 }), true),
         });
       }
-      case 'focus_down': {
+      case Actions.FOCUS_DOWN: {
         if (!state.focusedAt) {
           return state;
         }
 
         return reducer(state, {
-          type: 'focus',
+          type: Actions.FOCUS,
           cell: getNextFocusable(state.focusedAt, pos => ({ ...pos, x: pos.x + 1 }), true),
         });
       }
-      case 'focus_right': {
+      case Actions.FOCUS_RIGHT: {
         if (!state.focusedAt) {
           return state;
         }
 
         return reducer(state, {
-          type: 'focus',
+          type: Actions.FOCUS,
           cell: getNextFocusable(state.focusedAt, pos => ({ ...pos, y: pos.y + 1 }), false),
         });
       }
-      case 'focus_left': {
+      case Actions.FOCUS_LEFT: {
         if (!state.focusedAt) {
           return state;
         }
 
         return reducer(state, {
-          type: 'focus',
+          type: Actions.FOCUS,
           cell: getNextFocusable(state.focusedAt, pos => ({ ...pos, y: pos.y - 1 }), false),
         });
       }
-      case 'foreign_focuses': {
+      case Actions.FOREIGN_FOCUSES: {
         if (!action.payload) {
           throw new Error('invalid dispatch payload');
         }
@@ -326,7 +345,7 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
           foreignFocusedAt,
         };
       }
-      case 'foreign_focus': {
+      case Actions.FOREIGN_FOCUS: {
         if (!action.payload) {
           throw new Error('invalid dispatch payload');
         }
@@ -343,7 +362,7 @@ export function cellReducer(transformer: Object => Array<Array<CellValue>>) {
           ],
         };
       }
-      case 'foreign_blur': {
+      case Actions.FOREIGN_BLUR: {
         if (!action.payload) {
           throw new Error('invalid dispatch payload');
         }

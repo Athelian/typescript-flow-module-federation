@@ -329,6 +329,7 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
                         </div>
                         <div>
                           <TimelineDate
+                            color="WHITE"
                             timelineDate={{
                               date: getByPathWithDefault(
                                 null,
@@ -346,6 +347,7 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
                         </div>
                         <div>
                           <TimelineDate
+                            color="WHITE"
                             timelineDate={{
                               date: getByPathWithDefault(
                                 null,

@@ -18,6 +18,7 @@ const TextInput = ({
   readOnlyWidth,
   readOnlyHeight,
   placeholder,
+  inputRef,
   ...rest
 }: Props) =>
   readOnly ? (
@@ -26,6 +27,7 @@ const TextInput = ({
     </Display>
   ) : (
     <input
+      ref={inputRef}
       value={value}
       style={{ textAlign: align }}
       placeholder={
