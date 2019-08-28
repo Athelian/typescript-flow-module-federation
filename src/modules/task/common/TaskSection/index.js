@@ -1,20 +1,16 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { BooleanValue, ObjectValue } from 'react-values';
+import { BooleanValue } from 'react-values';
 import { lowerFirst } from 'lodash';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import emitter from 'utils/emitter';
 import { injectUid } from 'utils/id';
-import { getByPath } from 'utils/fp';
-import { isNotFound, isForbidden } from 'utils/data';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
-import GridColumn from 'components/GridColumn';
 import { NewButton } from 'components/Buttons';
-import { SectionWrapper, SectionHeader, DashedPlusButton, Label, FieldItem } from 'components/Form';
-import { TemplateCard, GrayCard, ProjectCard, MilestoneCard } from 'components/Cards';
+import { SectionWrapper, SectionHeader, DashedPlusButton, Label } from 'components/Form';
+import { TemplateCard, GrayCard } from 'components/Cards';
 import type { TaskCardEditableProps } from 'components/Cards/TaskCard/type.js.flow';
 import FormattedNumber from 'components/FormattedNumber';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -147,18 +143,16 @@ import { OrderItemTasksContainer } from 'modules/orderItem/form/containers';
 import { BatchTasksContainer } from 'modules/batch/form/containers';
 import { ShipmentTasksContainer } from 'modules/shipment/form/containers';
 import { FormContainer } from 'modules/form';
-import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
+
 import messages from 'modules/task/messages';
 import {
   TasksSectionWrapperStyle,
   TasksSectionStyle,
   TemplateItemStyle,
-  TasksSectionProjectAreaStyle,
   TasksSectionTasksAreaStyle,
 } from './style';
 import Tasks from './components/Tasks';
 import SelectTaskTemplate from './components/SelectTaskTemplate';
-import ConfirmDialog from './components/ConfirmDialog';
 
 export type CompatibleEntityTypes =
   | 'Batch'
@@ -460,7 +454,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
     canAddTasks,
     canDeleteTasks,
     canOrderingTasks,
-    canUpdateMilestone,
+    // canUpdateMilestone,
     canUpdateTaskTemplate,
     tasksContainer,
     editable,
@@ -517,167 +511,6 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
             </SectionNavBar>
 
             <div className={TasksSectionStyle}>
-              <div className={TasksSectionProjectAreaStyle}>
-                <ObjectValue
-                  defaultValue={{
-                    selectedMilestone: milestone,
-                    isOpenOfSelector: false,
-                    isOpenOfConfirmDialog: false,
-                  }}
-                >
-                  {({
-                    value: { selectedMilestone, isOpenOfSelector, isOpenOfConfirmDialog },
-                    set,
-                  }) => (
-                    <div>
-                      {milestone ? (
-                        <div
-                          data-testid="btnSelectMilestone"
-                          role="presentation"
-                          onClick={() =>
-                            canUpdateMilestone ? set('isOpenOfSelector', true) : null
-                          }
-                        >
-                          {(() => {
-                            let milestoneObj;
-                            if (isNotFound(milestone)) {
-                              milestoneObj = null;
-                            } else if (isForbidden(milestone)) {
-                              milestoneObj = {
-                                __typename: 'Forbidden',
-                                project: {
-                                  __typename: 'Forbidden',
-                                },
-                              };
-                            } else {
-                              milestoneObj = milestone;
-                            }
-                            return (
-                              <GridColumn>
-                                <FieldItem
-                                  label={
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.task.project"
-                                        defaultMessage="PROJECT"
-                                      />
-                                    </Label>
-                                  }
-                                  input={
-                                    <ProjectCard project={getByPath('project', milestoneObj)} />
-                                  }
-                                  vertical
-                                />
-                                <FieldItem
-                                  label={
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.task.milestone"
-                                        defaultMessage="MILESTONE"
-                                      />
-                                    </Label>
-                                  }
-                                  input={<MilestoneCard milestone={milestoneObj} />}
-                                  vertical
-                                />
-                              </GridColumn>
-                            );
-                          })()}
-                        </div>
-                      ) : (
-                        <FieldItem
-                          label={
-                            <Label>
-                              <FormattedMessage
-                                id="modules.task.project"
-                                defaultMessage="PROJECT"
-                              />
-                            </Label>
-                          }
-                          input={
-                            <>
-                              {canUpdateMilestone ? (
-                                <DashedPlusButton
-                                  data-testid="btnSelectMilestone"
-                                  width="195px"
-                                  height="463px"
-                                  onClick={() => set('isOpenOfSelector', true)}
-                                />
-                              ) : (
-                                <GrayCard width="195px" height="463px" />
-                              )}
-                            </>
-                          }
-                          vertical
-                        />
-                      )}
-
-                      <SlideView
-                        isOpen={isOpenOfSelector}
-                        onRequestClose={() => set('isOpenOfSelector', false)}
-                      >
-                        {isOpenOfSelector && (
-                          <SelectProjectAndMilestone
-                            cacheKey={`${type}TaskSectionSelectProjectAndMilestone`}
-                            milestone={milestone}
-                            onSelect={newMilestone => {
-                              if (newMilestone) {
-                                set('selectedMilestone', newMilestone);
-                                set('isOpenOfConfirmDialog', true);
-                              } else {
-                                setFieldValue('todo.milestone', null);
-                                set('isOpenOfSelector', false);
-                              }
-                            }}
-                            onCancel={() => set('isOpenOfSelector', false)}
-                          />
-                        )}
-                      </SlideView>
-                      <ConfirmDialog
-                        isOpen={isOpenOfConfirmDialog}
-                        message={
-                          <>
-                            <FormattedMessage
-                              id="modules.task.setProjectWarningMessage"
-                              defaultMessage="Binding this {entityType} to this Project will automatically place any new Tasks into the same Project & Milestone."
-                              values={{
-                                entityType: type,
-                              }}
-                            />
-                            <br />
-                            <FormattedMessage
-                              id="modules.task.setProjectConfirmMessage"
-                              defaultMessage="Would you like to add all current Tasks to the selected Project & Milestone?"
-                            />
-                          </>
-                        }
-                        onRequestClose={() => {}}
-                        onCancel={() => {
-                          set('isOpenOfConfirmDialog', false);
-                        }}
-                        onAddNone={() => {
-                          setFieldValue('todo.milestone', selectedMilestone);
-                          set('isOpenOfConfirmDialog', false);
-                          set('isOpenOfSelector', false);
-                        }}
-                        onAddAllTasks={() => {
-                          setFieldValue('todo.milestone', selectedMilestone);
-                          setFieldValue(
-                            'todo.tasks',
-                            tasks.map(task => ({ ...task, milestone: selectedMilestone }))
-                          );
-                          set('isOpenOfConfirmDialog', false);
-                          set('isOpenOfSelector', false);
-                          setTimeout(() => {
-                            emitter.emit('AUTO_DATE');
-                          }, 200);
-                        }}
-                      />
-                    </div>
-                  )}
-                </ObjectValue>
-              </div>
-
               <div className={TasksSectionTasksAreaStyle}>
                 {
                   <BooleanValue>
