@@ -3,7 +3,7 @@ import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import update from 'immutability-helper';
 import { isEquals } from 'utils/fp';
-import { removeNulls, extractForbiddenId } from 'utils/data';
+import { extractForbiddenId } from 'utils/data';
 
 type Price = {
   amount: number,
@@ -61,11 +61,11 @@ export default class ProductProvidersContainer extends Container<FormState> {
     );
   };
 
-  removeArrayItem = (path: string) => {
+  removeArrayItem = (index: number) => {
     this.setState(prevState => {
       const cloneState = cloneDeep(prevState);
-      unset(cloneState, path);
-      return removeNulls(cloneState);
+      unset(cloneState, `productProviders.${index}`);
+      return cloneState;
     });
   };
 
