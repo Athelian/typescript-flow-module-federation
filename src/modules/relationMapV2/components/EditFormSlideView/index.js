@@ -8,6 +8,7 @@ import ContainerForm from 'modules/container/index.form';
 import ShipmentForm from 'modules/shipment/index.form';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
 import { encodeId } from 'utils/id';
+import emitter from 'utils/emitter';
 
 type Props = {|
   type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof SHIPMENT | typeof CONTAINER,
@@ -16,6 +17,17 @@ type Props = {|
 |};
 
 const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
+  const [isReady, setIsReady] = React.useState(true);
+
+  React.useEffect(() => {
+    const listener = emitter.addListener('MUTATION', (status: mixed) => {
+      setIsReady(status !== 'start');
+    });
+    return () => {
+      listener.remove();
+    };
+  }, []);
+
   let form = null;
   switch (type) {
     case ORDER: {
@@ -44,7 +56,7 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
     }
   }
   return (
-    <SlideView isOpen={id !== ''} onRequestClose={onClose}>
+    <SlideView isOpen={id !== ''} onRequestClose={isReady ? onClose : () => {}}>
       {form}
     </SlideView>
   );
