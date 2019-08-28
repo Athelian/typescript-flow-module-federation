@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, borderRadiuses, colors, scrollbars, shadows } from 'styles/common';
+import { presets, borderRadiuses, colors, scrollbars } from 'styles/common';
 
 export const TasksSectionWrapperStyle: string = css`
   position: relative;
@@ -16,18 +16,6 @@ export const TasksSectionStyle: string = css`
   min-height: 523px;
 `;
 
-export const TasksSectionProjectAreaStyle: string = css`
-  ${borderRadiuses.MAIN};
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  position: relative;
-  display: flex;
-  width: 235px;
-  padding: 15px 20px 20px 20px;
-  ${shadows.HEADER_RIGHT};
-  z-index: 2;
-`;
-
 export const TasksSectionTasksAreaStyle: string = css`
   ${borderRadiuses.MAIN};
   border-top-left-radius: 0;
@@ -39,7 +27,6 @@ export const TasksSectionTasksAreaStyle: string = css`
   flex-wrap: wrap;
   padding: 15px 0 15px 10px;
   position: relative;
-  width: 645px;
 `;
 
 export const TemplateItemStyle: string = css`

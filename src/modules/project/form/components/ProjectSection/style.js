@@ -22,7 +22,7 @@ export const ProjectSectionWrapperStyle = (isExpanded: boolean) => css`
 export const MainSectionWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
-  width: calc(100% - 400px);
+  width: calc(100% - 220px);
 `;
 
 export const ProjectInfoWrapperStyle: string = css`
@@ -52,7 +52,7 @@ export const TagsWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
   padding: 0 0 0 20px;
-  grid-template-columns: calc(100vw - 1080px);
+  grid-template-columns: calc(100vw - 900px);
 `;
 
 export const MilestonesTimelineWrapperStyle: string = css`
@@ -65,15 +65,6 @@ export const TasksInfoWrapperStyle: string = css`
   ${shadows.HEADER_LEFT};
   padding: 25px 15px 20px 20px;
   width: 220px;
-  flex-shrink: 0;
-`;
-
-export const BindedAndRelatedWrapperStyle: string = css`
-  position: relative;
-  background-color: ${colors.WHITE};
-  ${shadows.HEADER_LEFT};
-  padding: 25px 15px 20px 20px;
-  width: 180px;
   flex-shrink: 0;
 `;
 
