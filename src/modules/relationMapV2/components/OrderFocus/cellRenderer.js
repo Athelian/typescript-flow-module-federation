@@ -1534,8 +1534,8 @@ function ItemSummaryCell({
   );
   const isMatched = orderItemIds.some(
     itemId =>
-      matches?.entity[
-        `${mapping.entities?.orderItems?.[itemId]?.productProvider?.product?.id}-${PRODUCT}`
+      matches?.entity?.[
+        `${mapping?.entities?.orderItems?.[itemId]?.productProvider?.product?.id}-${PRODUCT}`
       ]
   );
   return (

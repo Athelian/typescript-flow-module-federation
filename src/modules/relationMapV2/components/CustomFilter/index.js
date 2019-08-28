@@ -30,7 +30,7 @@ const MatchesEntity = () => {
   const matchedOrderItem = Object.keys(mapping.entities?.orderItems ?? {}).filter(itemId =>
     keys.some(key =>
       key.includes(
-        `${mapping.entities?.orderItems[itemId]?.productProvider?.product?.id}-${PRODUCT}`
+        `${mapping.entities?.orderItems?.[itemId]?.productProvider?.product?.id}-${PRODUCT}`
       )
     )
   ).length;
