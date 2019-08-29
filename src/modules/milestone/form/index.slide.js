@@ -21,11 +21,12 @@ type Props = {
 };
 
 const MilestoneFormSlide = ({ milestone, onSave }: Props) => {
+  const formContainer = new FormContainer();
   return (
-    <Provider>
+    <Provider inject={[formContainer]}>
       <SlideViewLayout>
-        <Subscribe to={[MilestoneStateContainer, FormContainer]}>
-          {(milestoneStateContainer, formContainer) => {
+        <Subscribe to={[MilestoneStateContainer]}>
+          {milestoneStateContainer => {
             return (
               <SlideViewNavBar>
                 <EntityIcon icon="MILESTONE" color="MILESTONE" />
