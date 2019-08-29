@@ -3,12 +3,11 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { UserConsumer } from 'modules/user';
-import UserAvatar from 'components/UserAvatar';
 import MilestoneStateContainer from 'modules/milestone/form/container';
 import validator from 'modules/tags/form/validator';
 import { FormField } from 'modules/form';
 
-import { todayForDateInput } from 'utils/date';
+import UserAvatar from 'components/UserAvatar';
 import {
   Label,
   SectionHeader,
@@ -19,8 +18,19 @@ import {
   TextAreaInputFactory,
   SelectInputFactory,
 } from 'components/Form';
-
 import GridColumn from 'components/GridColumn';
+
+import { todayForDateInput } from 'utils/date';
+import usePermission from 'hooks/usePermission';
+import {
+  MILESTONE_CREATE,
+  MILESTONE_UPDATE,
+  MILESTONE_SET_NAME,
+  MILESTONE_SET_COMPLETED,
+  MILESTONE_SET_DUE_DATE,
+  MILESTONE_SET_DESCRIPTION,
+} from 'modules/permission/constants/milestone';
+
 import {
   CommonFormWrapperStyle,
   MilestoneSectionStyle,
@@ -28,14 +38,14 @@ import {
   DescriptionLabelWrapperStyle,
   StatusWrapperStyle,
   CompletedAvatarStyle,
+  StatusColorStyle,
 } from './style';
 
 const MilestoneSection = () => {
-  // const { hasPermission } = usePermission();
-  // const allowCreate = hasPermission(TAG_CREATE);
-  // const allowUpdate = hasPermission(TAG_UPDATE);
-  // const allowCreateOrUpdate = allowCreate || allowUpdate;
-  const canCreateOrUpdate = true;
+  const { hasPermission } = usePermission();
+  const canCreate = hasPermission(MILESTONE_CREATE);
+  const canUpdate = hasPermission(MILESTONE_UPDATE);
+  const canCreateOrUpdate = canCreate || canUpdate;
 
   return (
     <Subscribe to={[MilestoneStateContainer]}>
@@ -73,7 +83,7 @@ const MilestoneSection = () => {
                           required
                           originalValue={originalValues[name]}
                           label={<FormattedMessage id="common.name" defaultMessage="NAME" />}
-                          editable={canCreateOrUpdate}
+                          editable={canCreateOrUpdate || hasPermission(MILESTONE_SET_NAME)}
                         />
                       )}
                     </FormField>
@@ -91,7 +101,7 @@ const MilestoneSection = () => {
                           {...inputHandlers}
                           originalValue={originalValues[name]}
                           label={<FormattedMessage id="common.dueDate" defaultMessage="DUE DATE" />}
-                          editable={canCreateOrUpdate}
+                          editable={canCreateOrUpdate || hasPermission(MILESTONE_SET_DUE_DATE)}
                         />
                       )}
                     </FormField>
@@ -118,7 +128,7 @@ const MilestoneSection = () => {
                           }
                           inputHeight="100px"
                           inputWidth="200px"
-                          editable={canCreateOrUpdate}
+                          editable={canCreateOrUpdate || hasPermission(MILESTONE_SET_DESCRIPTION)}
                         />
                       )}
                     </FormField>
@@ -131,27 +141,31 @@ const MilestoneSection = () => {
                     <UserConsumer>
                       {({ user }) => (
                         <div className={StatusWrapperStyle}>
-                          <FormField name="completeBy" initValue={milestoneStatus}>
+                          <FormField name="completedBy" initValue={milestoneStatus}>
                             {({ ...inputHandlers }) => (
-                              <SelectInputFactory
-                                {...inputHandlers}
-                                items={[
-                                  { label: 'uncompleted', value: 'uncompleted' },
-                                  { label: 'completed', value: 'completed' },
-                                ]}
-                                onChange={event => {
-                                  const { value: status } = event.target;
-                                  if (status === 'completed') {
-                                    setFieldValue('completedAt', todayForDateInput());
-                                    setFieldValue('completedBy', user);
-                                  } else {
-                                    setFieldValue('completedAt', null);
-                                    setFieldValue('completedBy', null);
+                              <span className={StatusColorStyle(completedAt)}>
+                                <SelectInputFactory
+                                  {...inputHandlers}
+                                  items={[
+                                    { label: 'uncompleted', value: 'uncompleted' },
+                                    { label: 'completed', value: 'completed' },
+                                  ]}
+                                  onChange={event => {
+                                    const { value: status } = event.target;
+                                    if (status === 'completed') {
+                                      setFieldValue('completedAt', todayForDateInput());
+                                      setFieldValue('completedBy', user);
+                                    } else {
+                                      setFieldValue('completedAt', null);
+                                      setFieldValue('completedBy', null);
+                                    }
+                                  }}
+                                  hideTooltip
+                                  editable={
+                                    canCreateOrUpdate || hasPermission(MILESTONE_SET_COMPLETED)
                                   }
-                                }}
-                                hideTooltip
-                                editable={canCreateOrUpdate}
-                              />
+                                />
+                              </span>
                             )}
                           </FormField>
                           {completedBy && (

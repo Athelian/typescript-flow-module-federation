@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, layout } from 'styles/common';
+import { presets, layout, colors } from 'styles/common';
 
 export const CommonFormWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
@@ -34,3 +34,18 @@ export const CompletedAvatarStyle: string = css`
   right: -40px;
   top: 0;
 `;
+
+export const StatusColorStyle = (completed: boolean) => {
+  return css`
+    & > div {
+      & > div {
+        & > div {
+          background-color: ${completed ? colors.TEAL : colors.GRAY_SUPER_LIGHT};
+          & > input {
+            color: ${completed ? colors.WHITE : colors.GRAY};
+          }
+        }
+      }
+    }
+  `;
+};
