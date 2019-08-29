@@ -47,3 +47,15 @@ width: 100%;
 border-radius: 5px;
   `}
 `;
+
+export const ActionsBackdropStyle: string = css`
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 100px;
+  width: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #eee);
+  pointer-events: none;
+`;
