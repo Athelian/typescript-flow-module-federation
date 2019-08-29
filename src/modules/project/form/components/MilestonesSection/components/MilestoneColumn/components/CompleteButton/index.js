@@ -51,7 +51,9 @@ const CompleteButton = ({
     <button
       type="button"
       className={TaskStatusButtonStyle}
-      onClick={() => {
+      onClick={event => {
+        event.stopPropagation();
+
         if (!completedAt && editable) {
           onComplete();
         }

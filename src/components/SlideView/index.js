@@ -107,7 +107,10 @@ class SlideView extends React.Component<Props, State> {
           >
             <div
               className={BackdropStyle({ isOpen, neverOpened })}
-              onClick={onRequestClose}
+              onClick={event => {
+                event.stopPropagation();
+                onRequestClose();
+              }}
               role="presentation"
             >
               <div

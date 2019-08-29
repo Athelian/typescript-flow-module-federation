@@ -1,0 +1,9 @@
+// @flow
+
+export type Tag = {
+  id: string,
+  name: string,
+  description: ?string,
+  color: string,
+  entityTypes: Array<string>,
+};
