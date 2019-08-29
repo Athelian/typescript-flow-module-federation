@@ -32,13 +32,13 @@ const SSELink = new ApolloLink((operation: Operation, forward?: NextLink) => {
 });
 
 const snipperLink = new ApolloLink((operation: Operation, forward?: NextLink) => {
-  const isMutate = operation.operationName.includes('Update');
+  const isMutate = (operation?.operationName ?? '').includes('Update');
   if (isMutate) {
-    emitter.emit('MUTATION', 'start');
+    emitter.emit('MUTATION');
   }
   return (forward?.(operation) ?? []).map(result => {
     if (isMutate) {
-      emitter.emit('MUTATION', 'stop');
+      emitter.emit('MUTATION', result);
     }
     return result;
   });
@@ -108,13 +108,13 @@ const defaultOptions = {
   },
 };
 
-const links = [snipperLink, errorLink, SSELink, httpWithUploadLink];
-
-if (isDevEnvironment) links.push(apolloLogger);
-
 const client: Object = new ApolloClient({
   assumeImmutableResults: true,
-  link: ApolloLink.from(links),
+  link: ApolloLink.from(
+    isDevEnvironment
+      ? [errorLink, SSELink, httpWithUploadLink, snipperLink, apolloLogger]
+      : [errorLink, SSELink, httpWithUploadLink, snipperLink]
+  ),
   cache,
   defaultOptions,
 });

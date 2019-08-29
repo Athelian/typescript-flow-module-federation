@@ -20,8 +20,8 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
   const [isReady, setIsReady] = React.useState(true);
 
   React.useEffect(() => {
-    const listener = emitter.addListener('MUTATION', (status: mixed) => {
-      setIsReady(status !== 'start');
+    const listener = emitter.addListener('MUTATION', (result: Object) => {
+      setIsReady(!!result);
     });
     return () => {
       listener.remove();
