@@ -386,6 +386,7 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           ? state.rows.reduce((positions, row, x) => {
               row.forEach((cell, y) => {
                 if (
+                  // $FlowFixMe nullable targetCell is already checked
                   targetCell.entity &&
                   cell.entity &&
                   targetCell.entity.id === cell.entity.id &&

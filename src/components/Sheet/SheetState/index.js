@@ -201,6 +201,9 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
   const memoizedMutate = React.useCallback(
     ({ cell, value }) => {
       const cellValue = state.rows[cell.x][cell.y];
+      if (!cellValue.entity || !cellValue.data) {
+        return;
+      }
 
       dispatch({
         type: Actions.CELL_UPDATE,
@@ -210,9 +213,12 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
 
       onMutate({
         entity: {
+          // $FlowFixMe nullable entity is already checked
           id: cellValue.entity.id,
-          typ: cellValue.entity.type,
+          // $FlowFixMe nullable entity is already checked
+          type: cellValue.entity.type,
         },
+        // $FlowFixMe nullable entity is already checked
         field: cellValue.entity.field,
         value,
       }).then(violations => {
@@ -223,6 +229,7 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
         dispatch({
           type: Actions.CELL_UPDATE,
           cell,
+          // $FlowFixMe nullable data is already checked
           payload: cellValue.data.value,
         });
 
@@ -244,6 +251,7 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
     const handler = setTimeout(() => {
       dispatch({
         type: Actions.SET_ERRORS,
+        // $FlowFixMe nullable erroredAt is already checked
         cell: state.erroredAt,
         payload: null,
       });

@@ -77,7 +77,7 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
   ];
 };
 
-export function transformer(index: number, order: Object): Array<Array<CellValue>> {
+export default function transformer(index: number, order: Object): Array<Array<CellValue>> {
   const rows = [];
 
   let orderCells = transformOrder(`${index}`, order);
