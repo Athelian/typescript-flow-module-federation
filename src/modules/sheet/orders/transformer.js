@@ -18,7 +18,12 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
       type: 'text',
       empty: !order,
       parent: true,
-      ...transformField(basePath, order, 'poNo', hp => hp(ORDER_UPDATE) || hp(ORDER_SET_PO_NO)),
+      ...transformField(
+        basePath,
+        order,
+        'poNo',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_PO_NO)
+      ),
     },
     {
       columnKey: 'order.currency',
@@ -29,7 +34,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
         basePath,
         order,
         'currency',
-        hp => hp(ORDER_UPDATE) || hp(ORDER_SET_CURRENCY)
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_CURRENCY)
       ),
     },
   ];
@@ -51,7 +56,7 @@ const transformOrderItem = (
         basePath,
         orderItem,
         'no',
-        hp => hp(ORDER_ITEMS_UPDATE) || hp(ORDER_ITEMS_SET_NO)
+        hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_NO)
       ),
     },
     /* {
@@ -71,7 +76,12 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
       columnKey: 'order.orderItem.batch.no',
       type: 'text',
       disabled: !batch,
-      ...transformField(basePath, batch, 'no', hp => hp(BATCH_UPDATE) || hp(BATCH_SET_NO)),
+      ...transformField(
+        basePath,
+        batch,
+        'no',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_NO)
+      ),
     },
     /* {
       columnKey: 'order.orderItem.batch.quantity',
@@ -88,7 +98,7 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
         `${basePath}.container`,
         batch ? batch.container : null,
         'no',
-        hp => hp(CONTAINER_UPDATE) || hp(CONTAINER_SET_NO)
+        hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_NO)
       ),
     },
     {
@@ -100,7 +110,7 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
         `${basePath}.shipment`,
         batch ? batch.shipment : null,
         'no',
-        hp => hp(SHIPMENT_UPDATE) || hp(SHIPMENT_SET_NO)
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_NO)
       ),
     },
   ];

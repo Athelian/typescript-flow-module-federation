@@ -23,7 +23,7 @@ type Props = {
 };
 
 export const Permissions = ({ children }: Props) => {
-  const [permissions, setPermissions] = React.useState<{ [string]: Array<string> }>([]);
+  const [permissions, setPermissions] = React.useState<{ [string]: Array<string> }>({});
   const client = useApolloClient();
 
   const hasPermissionsByOrganization = React.useCallback(
