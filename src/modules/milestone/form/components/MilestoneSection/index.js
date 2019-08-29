@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { UserConsumer } from 'modules/user';
 import MilestoneStateContainer from 'modules/milestone/form/container';
@@ -9,7 +10,6 @@ import { FormField } from 'modules/form';
 
 import UserAvatar from 'components/UserAvatar';
 import {
-  Label,
   SectionHeader,
   SectionWrapper,
   LastModified,
@@ -35,13 +35,16 @@ import {
   CommonFormWrapperStyle,
   MilestoneSectionStyle,
   FieldsWrapperStyle,
-  DescriptionLabelWrapperStyle,
   StatusWrapperStyle,
   CompletedAvatarStyle,
   StatusColorStyle,
 } from './style';
 
-const MilestoneSection = () => {
+type Props = {
+  intl: IntlShape,
+};
+
+const MilestoneSection = ({ intl }: Props) => {
   const { hasPermission } = usePermission();
   const canCreate = hasPermission(MILESTONE_CREATE);
   const canUpdate = hasPermission(MILESTONE_UPDATE);
@@ -119,15 +122,13 @@ const MilestoneSection = () => {
                           {...inputHandlers}
                           originalValue={originalValues[name]}
                           label={
-                            <div className={DescriptionLabelWrapperStyle}>
-                              <FormattedMessage
-                                id="common.description"
-                                defaultMessage="DESCRIPTION"
-                              />
-                            </div>
+                            <FormattedMessage
+                              id="common.description"
+                              defaultMessage="DESCRIPTION"
+                            />
                           }
                           inputHeight="100px"
-                          inputWidth="200px"
+                          inputWidth="400px"
                           editable={canCreateOrUpdate || hasPermission(MILESTONE_SET_DESCRIPTION)}
                         />
                       )}
@@ -135,23 +136,33 @@ const MilestoneSection = () => {
                   </GridColumn>
 
                   <GridColumn>
-                    <Label>
-                      <FormattedMessage id="modules.milestone.status" defaultMessage="STATUS" />
-                    </Label>
                     <UserConsumer>
                       {({ user }) => (
                         <div className={StatusWrapperStyle}>
-                          <FormField name="completedBy" initValue={milestoneStatus}>
+                          <FormField name="completedBy" initValue={milestoneStatus} values={values}>
                             {({ ...inputHandlers }) => (
                               <span className={StatusColorStyle(completedAt)}>
                                 <SelectInputFactory
                                   {...inputHandlers}
                                   items={[
-                                    { label: 'uncompleted', value: 'uncompleted' },
-                                    { label: 'completed', value: 'completed' },
+                                    {
+                                      value: 'uncompleted',
+                                      label: intl.formatMessage({
+                                        id: 'modules.milestone.uncompleted',
+                                        defaultMessage: 'Uncompleted',
+                                      }),
+                                    },
+                                    {
+                                      value: 'completed',
+                                      label: intl.formatMessage({
+                                        id: 'modules.milestone.completed',
+                                        defaultMessage: 'Completed',
+                                      }),
+                                    },
                                   ]}
                                   onChange={event => {
                                     const { value: status } = event.target;
+                                    console.debug(event.target);
                                     if (status === 'completed') {
                                       setFieldValue('completedAt', todayForDateInput());
                                       setFieldValue('completedBy', user);
@@ -160,7 +171,15 @@ const MilestoneSection = () => {
                                       setFieldValue('completedBy', null);
                                     }
                                   }}
+                                  required
                                   hideTooltip
+                                  vertical
+                                  label={
+                                    <FormattedMessage
+                                      id="modules.milestone.status"
+                                      defaultMessage="STATUS"
+                                    />
+                                  }
                                   editable={
                                     canCreateOrUpdate || hasPermission(MILESTONE_SET_COMPLETED)
                                   }
@@ -216,4 +235,4 @@ const MilestoneSection = () => {
     </Subscribe>
   );
 };
-export default MilestoneSection;
+export default injectIntl(MilestoneSection);

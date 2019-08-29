@@ -21,10 +21,6 @@ export const FieldsWrapperStyle: string = css`
   justify-content: space-between;
 `;
 
-export const DescriptionLabelWrapperStyle: string = css`
-  height: 90px;
-`;
-
 export const StatusWrapperStyle: string = css`
   position: relative;
 `;
@@ -32,7 +28,7 @@ export const StatusWrapperStyle: string = css`
 export const CompletedAvatarStyle: string = css`
   position: absolute;
   right: -40px;
-  top: 0;
+  top: 35px;
 `;
 
 export const StatusColorStyle = (completed: boolean) => {
