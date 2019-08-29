@@ -2,8 +2,6 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
-import usePermission from 'hooks/usePermission';
-import usePartnerPermission from 'hooks/usePartnerPermission';
 import { getByPathWithDefault } from 'utils/fp';
 import { OrderFilesContainer } from 'modules/order/form/containers';
 import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
@@ -26,16 +24,17 @@ import {
   DOCUMENT_UPDATE,
 } from 'modules/permission/constants/file';
 import { DocumentsInput, SectionHeader } from 'components/Form';
+import { useHasPermissions } from 'components/Permissions';
 import { orderFormFilesQuery } from './query';
 
 type Props = {
   isLoading: boolean,
   entityId: string,
+  order: Object,
 };
 
-function DocumentsSection({ isLoading, entityId }: Props) {
-  const { isOwner } = usePartnerPermission();
-  const { hasPermission } = usePermission(isOwner);
+function DocumentsSection({ isLoading, entityId, order }: Props) {
+  const hasPermission = useHasPermissions(order?.ownedBy?.id);
 
   return (
     <Subscribe to={[OrderFilesContainer]}>

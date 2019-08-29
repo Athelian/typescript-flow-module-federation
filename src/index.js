@@ -10,7 +10,8 @@ import UNSTATED from 'unstated-debug';
 import FullStory from 'react-fullstory';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AuthenticationProvider from './modules/authentication';
+import AuthenticatedProvider from './components/Authenticated';
+import { PermissionsProvider } from './components/Permissions';
 import LanguageProvider from './modules/language';
 import UIProvider from './modules/ui';
 import apolloClient from './apollo';
@@ -44,27 +45,29 @@ const renderApp = (Component, renderFn) => {
           {isAppInProduction && <FullStory org={process.env.ZENPORT_FULLSTORY_ID} />}
           <ApolloHookProvider client={apolloClient}>
             <ApolloProvider client={apolloClient}>
-              <AuthenticationProvider>
-                <LanguageProvider>
-                  <>
-                    {isAppInProduction && (
-                      <DeployNotifier
-                        revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
-                        revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
-                      />
-                    )}
-                    <UIProvider>
-                      {isEnableStrictMode ? (
-                        <React.StrictMode>
-                          <Component />
-                        </React.StrictMode>
-                      ) : (
-                        <Component />
+              <AuthenticatedProvider>
+                <PermissionsProvider>
+                  <LanguageProvider>
+                    <>
+                      {isAppInProduction && (
+                        <DeployNotifier
+                          revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
+                          revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
+                        />
                       )}
-                    </UIProvider>
-                  </>
-                </LanguageProvider>
-              </AuthenticationProvider>
+                      <UIProvider>
+                        {isEnableStrictMode ? (
+                          <React.StrictMode>
+                            <Component />
+                          </React.StrictMode>
+                        ) : (
+                          <Component />
+                        )}
+                      </UIProvider>
+                    </>
+                  </LanguageProvider>
+                </PermissionsProvider>
+              </AuthenticatedProvider>
             </ApolloProvider>
           </ApolloHookProvider>
 
@@ -84,7 +87,7 @@ if (container.hasChildNodes()) {
 
 serviceWorker.register({
   onUpdate: registration => {
-    // TODO: notify our client with toastr
+    // TODO: notify our client with toast
     logger.warn(
       'New content is available and will be used when all tabs for this page are closed',
       registration

@@ -10,8 +10,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import { CloneButton } from 'components/Buttons';
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
 import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
-import usePartnerPermission from 'hooks/usePartnerPermission';
-import usePermission from 'hooks/usePermission';
+import { useHasPermissions } from 'components/Permissions';
 import emitter from 'utils/emitter';
 import { spanWithColor } from 'utils/color';
 import {
@@ -78,8 +77,7 @@ type Props = {
 };
 
 const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
-  const { isOwner } = usePartnerPermission();
-  const { hasPermission } = usePermission(isOwner);
+  const hasPermission = useHasPermissions(order?.ownedBy?.id);
   const { updatedAt, updatedBy, archived } = order;
   return (
     <MainSectionPlaceholder height={961} isLoading={isLoading}>

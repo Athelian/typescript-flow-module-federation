@@ -4,7 +4,7 @@ import type { ComponentType, StatelessFunctionalComponent } from 'react';
 import { hot } from 'react-hot-loader';
 import { Router } from '@reach/router';
 import UserProvider from 'modules/user';
-import { AuthenticationConsumer } from 'modules/authentication';
+import { AuthenticationConsumer } from 'components/Authenticated';
 import { UIConsumer } from 'modules/ui';
 import { Layout } from './components/Layout';
 import LoadingIcon from './components/LoadingIcon';

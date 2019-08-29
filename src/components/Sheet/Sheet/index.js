@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { Permissions } from '../Permissions';
 import {
   useSheetStateLoadMore,
   useSheetStateInitializer,
@@ -88,19 +87,17 @@ const Sheet = ({
   hasMore,
   onLoadMore,
 }: Props) => (
-  <Permissions>
-    <SheetState transformItem={transformItem} onMutate={onMutate}>
-      <SheetLiveID>
-        <SheetImpl
-          columns={columns}
-          items={items}
-          loading={loading}
-          hasMore={hasMore}
-          onLoadMore={onLoadMore}
-        />
-      </SheetLiveID>
-    </SheetState>
-  </Permissions>
+  <SheetState transformItem={transformItem} onMutate={onMutate}>
+    <SheetLiveID>
+      <SheetImpl
+        columns={columns}
+        items={items}
+        loading={loading}
+        hasMore={hasMore}
+        onLoadMore={onLoadMore}
+      />
+    </SheetLiveID>
+  </SheetState>
 );
 
 export default Sheet;

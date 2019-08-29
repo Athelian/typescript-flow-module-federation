@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Location, Redirect } from '@reach/router';
 import UserProvider from 'modules/user';
-import { AuthenticationConsumer } from 'modules/authentication';
+import { AuthenticationConsumer } from 'components/Authenticated';
 
 type Props = {
   children: React.Node,
