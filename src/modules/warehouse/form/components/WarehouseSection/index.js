@@ -11,12 +11,13 @@ import {
   WAREHOUSE_UPDATE,
   WAREHOUSE_SET_CUSTOM_FIELDS,
   WAREHOUSE_SET_CUSTOM_FIELDS_MASK,
+  WAREHOUSE_CREATE,
 } from 'modules/permission/constants/warehouse';
 import { STAFF_LIST } from 'modules/permission/constants/staff';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
-import WarehouseContainer from 'modules/warehouse/form/containers';
+import WarehouseInfoContainer from 'modules/warehouse/form/containers';
 import validator from 'modules/warehouse/form/validator';
 import SlideView from 'components/SlideView';
 import { FormField } from 'modules/form';
@@ -24,12 +25,12 @@ import GridColumn from 'components/GridColumn';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
 import SelectPartners from 'components/SelectPartners';
+import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
 import {
   FieldItem,
   FormTooltip,
   Label,
   SectionHeader,
-  SectionWrapper,
   LastModified,
   TextInputFactory,
   EnumSearchSelectInputFactory,
@@ -38,43 +39,44 @@ import {
   MetricInputFactory,
 } from 'components/Form';
 import { getByPath } from 'utils/fp';
-
 import { WarehouseSectionWrapperStyle, MainFieldsWrapperStyle } from './style';
 import { renderPartners } from './helpers';
 
 type Props = {
   isNew: boolean,
+  isClone: boolean,
+  isLoading: Boolean,
 };
 
-const WarehouseSection = ({ isNew }: Props) => {
+const WarehouseSection = ({ isNew, isClone, isLoading }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const { organization } = useUser();
   const allowUpdate = hasPermission(WAREHOUSE_UPDATE);
 
   return (
-    <Subscribe to={[WarehouseContainer]}>
+    <Subscribe to={[WarehouseInfoContainer]}>
       {({ originalValues, state, setFieldValue, setFieldArrayValue }) => {
         const values = { ...originalValues, ...state };
+        const { updatedAt, updatedBy } = originalValues;
 
         return (
-          <SectionWrapper id="warehouse_warehouseSection">
+          <MainSectionPlaceholder height={665} isLoading={isLoading}>
             <SectionHeader
               icon="WAREHOUSE"
               title={
                 <FormattedMessage id="modules.WareHouses.warehouse" defaultMessage="WAREHOUSE" />
               }
             >
-              {!isNew && (
-                <LastModified
-                  updatedAt={originalValues.updatedAt}
-                  updatedBy={originalValues.updatedBy}
-                />
-              )}
-              {!isNew && allowUpdate && isOwner && (
-                <CloneButton
-                  onClick={() => navigate(`/warehouse/clone/${encodeId(originalValues.id)}`)}
-                />
+              {!isNew && !isClone && (
+                <>
+                  <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
+                  {hasPermission([WAREHOUSE_CREATE]) && (
+                    <CloneButton
+                      onClick={() => navigate(`/warehouse/clone/${encodeId(originalValues.id)}`)}
+                    />
+                  )}
+                </>
               )}
             </SectionHeader>
             <div className={WarehouseSectionWrapperStyle}>
@@ -334,7 +336,7 @@ const WarehouseSection = ({ isNew }: Props) => {
                 </GridColumn>
               </div>
             </div>
-          </SectionWrapper>
+          </MainSectionPlaceholder>
         );
       }}
     </Subscribe>
