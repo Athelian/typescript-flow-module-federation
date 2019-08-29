@@ -21,10 +21,11 @@ import {
 } from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { Hits, Entities } from 'modules/relationMapV2/store';
-import { WrapperStyle, ListStyle, RowStyle } from './style';
+import { WrapperStyle, ListStyle, RowStyle, ActionsBackdropStyle } from './style';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import SelectedEntity from '../SelectedEntity';
+import Actions from '../Actions';
 import Header from '../Header';
 import Row from '../Row';
 import cellRenderer from './cellRenderer';
@@ -361,7 +362,13 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
           </Query>
         </DndProvider>
       </div>
-      {state.targets.length > 0 && <SelectedEntity targets={state.targets} />}
+      {state.targets.length > 0 && (
+        <>
+          <div className={ActionsBackdropStyle} />
+          <SelectedEntity targets={state.targets} />
+          <Actions targets={state.targets} />
+        </>
+      )}
     </>
   );
 }
