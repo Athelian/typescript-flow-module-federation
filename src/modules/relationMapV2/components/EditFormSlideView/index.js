@@ -17,11 +17,17 @@ type Props = {|
 |};
 
 const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
-  const [isReady, setIsReady] = React.useState(true);
+  const isReady = React.useRef(true);
+
+  const onRequestClose = React.useCallback(() => {
+    if (isReady.current) {
+      onClose();
+    }
+  }, [onClose]);
 
   React.useEffect(() => {
     const listener = emitter.addListener('MUTATION', (result: Object) => {
-      setIsReady(!!result);
+      isReady.current = !!result;
     });
     return () => {
       listener.remove();
@@ -56,7 +62,7 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
     }
   }
   return (
-    <SlideView isOpen={id !== ''} onRequestClose={isReady ? onClose : () => {}}>
+    <SlideView isOpen={id !== ''} onRequestClose={onRequestClose}>
       {form}
     </SlideView>
   );
