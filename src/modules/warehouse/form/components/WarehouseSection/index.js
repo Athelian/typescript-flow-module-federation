@@ -25,12 +25,12 @@ import GridColumn from 'components/GridColumn';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
 import SelectPartners from 'components/SelectPartners';
+import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
 import {
   FieldItem,
   FormTooltip,
   Label,
   SectionHeader,
-  SectionWrapper,
   LastModified,
   TextInputFactory,
   EnumSearchSelectInputFactory,
@@ -45,9 +45,10 @@ import { renderPartners } from './helpers';
 type Props = {
   isNew: boolean,
   isClone: boolean,
+  isLoading: Boolean,
 };
 
-const WarehouseSection = ({ isNew, isClone }: Props) => {
+const WarehouseSection = ({ isNew, isClone, isLoading }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const { organization } = useUser();
@@ -60,17 +61,17 @@ const WarehouseSection = ({ isNew, isClone }: Props) => {
         const { updatedAt, updatedBy } = originalValues;
 
         return (
-          <SectionWrapper id="warehouse_warehouseSection">
+          <MainSectionPlaceholder height={665} isLoading={isLoading}>
             <SectionHeader
               icon="WAREHOUSE"
               title={
                 <FormattedMessage id="modules.WareHouses.warehouse" defaultMessage="WAREHOUSE" />
               }
             >
-              {!isNew && (
+              {!isNew && !isClone && (
                 <>
                   <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
-                  {!isClone && hasPermission([WAREHOUSE_CREATE]) && (
+                  {hasPermission([WAREHOUSE_CREATE]) && (
                     <CloneButton
                       onClick={() => navigate(`/warehouse/clone/${encodeId(originalValues.id)}`)}
                     />
@@ -335,7 +336,7 @@ const WarehouseSection = ({ isNew, isClone }: Props) => {
                 </GridColumn>
               </div>
             </div>
-          </SectionWrapper>
+          </MainSectionPlaceholder>
         );
       }}
     </Subscribe>

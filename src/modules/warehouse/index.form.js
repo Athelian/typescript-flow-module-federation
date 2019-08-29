@@ -14,9 +14,10 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import { removeTypename } from 'utils/data';
 import { getByPath } from 'utils/fp';
-import { decodeId, encodeId } from 'utils/id';
+import { decodeId, encodeId, uuid } from 'utils/id';
+import { defaultAreaMetric } from 'utils/metric';
 import WarehouseForm from './form';
-import WarehouseInfoContainer, { warehouseInfoInitValues } from './form/containers';
+import WarehouseInfoContainer from './form/containers';
 import { warehouseFormQuery } from './form/query';
 import {
   createWarehouseMutation,
@@ -128,9 +129,9 @@ class WarehouseFormModule extends React.PureComponent<Props> {
   };
 
   initAllValuesForClone = ({ warehouseInfoState }: WarehouseFormState, warehouse: Object) => {
-    const { name } = warehouse;
+    const { name, ...rest } = warehouse;
     warehouseInfoState.initDetailValues({
-      ...warehouseInfoInitValues,
+      ...rest,
       name: `[cloned] ${name}`,
     });
     return null;
@@ -266,7 +267,23 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                             warehouseInfoState,
                           },
                           {
-                            ...warehouseInfoInitValues,
+                            id: uuid(),
+                            name: '',
+                            street: '',
+                            locality: '',
+                            region: '',
+                            postalCode: '',
+                            country: null,
+                            surface: {
+                              value: 0,
+                              metric: defaultAreaMetric,
+                            },
+                            customFields: {
+                              mask: null,
+                              fieldValues: [],
+                            },
+                            inCharges: [],
+                            organizations: [],
                           }
                         )
                       }
@@ -277,9 +294,13 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                     query={warehouseFormQuery}
                     entityId={warehouseId}
                     entityType="warehouse"
-                    render={warehouse => (
+                    render={(warehouse, { isLoading: loading }) => (
                       <>
-                        <WarehouseForm warehouse={warehouse} isClone={this.isClone()} />
+                        <WarehouseForm
+                          warehouse={warehouse}
+                          isClone={this.isClone()}
+                          isLoading={loading}
+                        />
                         <Subscribe to={[WarehouseInfoContainer]}>
                           {warehouseInfoState =>
                             this.onFormReady(

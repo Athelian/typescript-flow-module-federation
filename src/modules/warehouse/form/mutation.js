@@ -59,7 +59,7 @@ export const updateWarehouseMutation = gql`
 export const prepareParsedWarehouseInput = (
   originalValues: ?Object,
   newValues: Object
-): OrderForm => ({
+): Object => ({
   ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
   ...parseGenericField(
     'street',

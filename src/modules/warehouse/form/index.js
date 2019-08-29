@@ -1,12 +1,14 @@
 // @flow
 import React from 'react';
 import { isEquals } from 'utils/fp';
+import { SectionWrapper } from 'components/Form';
 import { WarehouseSection } from './components';
 import { WarehouseFormWrapperStyle } from './style';
 
 type OptionalProps = {
   isNew: boolean,
   isClone: boolean,
+  isLoading: Boolean,
   warehouse: Object,
 };
 
@@ -15,6 +17,7 @@ type Props = OptionalProps & {};
 const defaultProps = {
   isNew: false,
   isClone: false,
+  isLoading: false,
   warehouse: {},
 };
 
@@ -27,11 +30,13 @@ export default class WarehouseForm extends React.Component<Props> {
   }
 
   render() {
-    const { isNew, isClone } = this.props;
+    const { isNew, isClone, isLoading } = this.props;
 
     return (
       <div className={WarehouseFormWrapperStyle}>
-        <WarehouseSection isNew={isNew} isClone={isClone} />
+        <SectionWrapper id="warehouse_warehouseSection">
+          <WarehouseSection isNew={isNew} isClone={isClone} isLoading={isLoading} />
+        </SectionWrapper>
       </div>
     );
   }
