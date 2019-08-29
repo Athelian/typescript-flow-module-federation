@@ -1,20 +1,25 @@
 // @flow
 import gql from 'graphql-tag';
-import { badRequestFragment } from 'graphql';
-
-export const prepareInput = ({ inCharges, organizations, ...rest }: Object) => ({
-  ...(Array.isArray(inCharges)
-    ? {
-        inChargeIds: inCharges.map(({ id }) => id),
-      }
-    : {}),
-  ...(Array.isArray(organizations)
-    ? {
-        organizationIds: organizations.map(({ id }) => id),
-      }
-    : {}),
-  ...rest,
-});
+import {
+  warehouseFormFragment,
+  userAvatarFragment,
+  metricFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
+  ownedByFragment,
+  partnerCardFragment,
+  badRequestFragment,
+  forbiddenFragment,
+} from 'graphql';
+import {
+  parseGenericField,
+  parseEnumField,
+  parseArrayOfIdsField,
+  parseCustomFieldsField,
+} from 'utils/data';
+import { getByPathWithDefault } from 'utils/fp';
 
 export const createWarehouseMutation = gql`
   mutation warehouseCreate($input: WarehouseCreateInput!) {
@@ -23,19 +28,82 @@ export const createWarehouseMutation = gql`
         id
       }
       ...badRequestFragment
+      ...forbiddenFragment
     }
   }
   ${badRequestFragment}
+  ${forbiddenFragment}
 `;
 
 export const updateWarehouseMutation = gql`
-  mutation warehouseUpdateMutation($id: ID!, $input: WarehouseUpdateInput!) {
+  mutation warehouseUpdate($id: ID!, $input: WarehouseUpdateInput!) {
     warehouseUpdate(id: $id, input: $input) {
-      ... on Warehouse {
-        id
-      }
+      ...warehouseFormFragment
       ...badRequestFragment
+      ...forbiddenFragment
     }
   }
+  ${warehouseFormFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
+  ${ownedByFragment}
+  ${partnerCardFragment}
   ${badRequestFragment}
+  ${forbiddenFragment}
 `;
+
+export const prepareParsedWarehouseInput = (
+  originalValues: ?Object,
+  newValues: Object
+): OrderForm => ({
+  ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
+  ...parseGenericField(
+    'street',
+    getByPathWithDefault(null, 'street', originalValues),
+    newValues.street
+  ),
+  ...parseGenericField(
+    'locality',
+    getByPathWithDefault(null, 'locality', originalValues),
+    newValues.locality
+  ),
+  ...parseGenericField(
+    'region',
+    getByPathWithDefault(null, 'region', originalValues),
+    newValues.region
+  ),
+  ...parseGenericField(
+    'postalCode',
+    getByPathWithDefault(null, 'postalCode', originalValues),
+    newValues.postalCode
+  ),
+  ...parseEnumField(
+    'country',
+    getByPathWithDefault(null, 'country', originalValues),
+    newValues.country
+  ),
+  ...parseGenericField(
+    'surface',
+    getByPathWithDefault(null, 'surface', originalValues),
+    newValues.surface
+  ),
+  ...parseCustomFieldsField(
+    'customFields',
+    getByPathWithDefault(null, 'customFields', originalValues),
+    newValues.customFields
+  ),
+  ...parseArrayOfIdsField(
+    'inChargeIds',
+    getByPathWithDefault([], 'inCharges', originalValues),
+    newValues.inCharges
+  ),
+  ...parseArrayOfIdsField(
+    'organizationIds',
+    getByPathWithDefault([], 'organizations', originalValues),
+    newValues.organizations
+  ),
+});

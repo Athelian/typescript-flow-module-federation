@@ -11,12 +11,13 @@ import {
   WAREHOUSE_UPDATE,
   WAREHOUSE_SET_CUSTOM_FIELDS,
   WAREHOUSE_SET_CUSTOM_FIELDS_MASK,
+  WAREHOUSE_CREATE,
 } from 'modules/permission/constants/warehouse';
 import { STAFF_LIST } from 'modules/permission/constants/staff';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
-import WarehouseContainer from 'modules/warehouse/form/containers';
+import WarehouseInfoContainer from 'modules/warehouse/form/containers';
 import validator from 'modules/warehouse/form/validator';
 import SlideView from 'components/SlideView';
 import { FormField } from 'modules/form';
@@ -38,24 +39,25 @@ import {
   MetricInputFactory,
 } from 'components/Form';
 import { getByPath } from 'utils/fp';
-
 import { WarehouseSectionWrapperStyle, MainFieldsWrapperStyle } from './style';
 import { renderPartners } from './helpers';
 
 type Props = {
   isNew: boolean,
+  isClone: boolean,
 };
 
-const WarehouseSection = ({ isNew }: Props) => {
+const WarehouseSection = ({ isNew, isClone }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const { organization } = useUser();
   const allowUpdate = hasPermission(WAREHOUSE_UPDATE);
 
   return (
-    <Subscribe to={[WarehouseContainer]}>
+    <Subscribe to={[WarehouseInfoContainer]}>
       {({ originalValues, state, setFieldValue, setFieldArrayValue }) => {
         const values = { ...originalValues, ...state };
+        const { updatedAt, updatedBy } = originalValues;
 
         return (
           <SectionWrapper id="warehouse_warehouseSection">
@@ -66,15 +68,14 @@ const WarehouseSection = ({ isNew }: Props) => {
               }
             >
               {!isNew && (
-                <LastModified
-                  updatedAt={originalValues.updatedAt}
-                  updatedBy={originalValues.updatedBy}
-                />
-              )}
-              {!isNew && allowUpdate && isOwner && (
-                <CloneButton
-                  onClick={() => navigate(`/warehouse/clone/${encodeId(originalValues.id)}`)}
-                />
+                <>
+                  <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
+                  {!isClone && hasPermission([WAREHOUSE_CREATE]) && (
+                    <CloneButton
+                      onClick={() => navigate(`/warehouse/clone/${encodeId(originalValues.id)}`)}
+                    />
+                  )}
+                </>
               )}
             </SectionHeader>
             <div className={WarehouseSectionWrapperStyle}>
