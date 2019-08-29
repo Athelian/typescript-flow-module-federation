@@ -1,6 +1,7 @@
 // @flow
+/* eslint-disable no-param-reassign */
 import { createContext } from 'react';
-import type { OrderPayload, OrderItemPayload } from 'generated/graphql';
+import type { Order, OrderItem } from 'generated/graphql';
 import { intersection } from 'lodash';
 import produce from 'immer';
 import update from 'immutability-helper';
@@ -67,9 +68,9 @@ export function reducer(
     payload: {
       entity?: string,
       targets?: Array<string>,
-      orders?: Array<OrderPayload>,
-      orderUpdate?: OrderPayload,
-      orderItemUpdate?: OrderItemPayload,
+      orders?: Array<Order>,
+      orderUpdate?: Order,
+      orderItemUpdate?: OrderItem,
       mapping?: Object,
       [string]: mixed,
     },
@@ -87,7 +88,6 @@ export function reducer(
         const { orders = [] } = action.payload;
         orders.forEach(order => {
           if (order.id) {
-            // eslint-disable-next-line no-param-reassign
             draft.order[order.id] = order;
           }
         });
@@ -162,15 +162,13 @@ export function reducer(
         });
       });
     case 'RECHECK_TARGET': {
-      // $FlowIssue order may be forbidden or not found so flow complain about the id is not found on this case
       if (action.payload?.orderUpdate?.id) {
         return produce(state, draft => {
-          // $FlowIssue order may be forbidden or not found so flow complain about the id is not found on this case
           const orderId = action.payload?.orderUpdate?.id ?? '';
           if (!orderId) {
             return;
           }
-          // $FlowIssue order may be forbidden or not found so flow complain about the orderItems is not found on this case
+          // $FlowIgnore flow doesn't support this way yet
           const orderItems = action.payload?.orderUpdate?.orderItems ?? [];
           const previousIds = {
             orderItemIds: action.payload?.mapping?.orders?.[orderId].orderItems ?? [],
@@ -184,19 +182,22 @@ export function reducer(
           const existItemIds = intersection(previousIds.orderItemIds, orderItemIds);
           previousIds.orderItemIds.forEach(itemId => {
             if (!existItemIds.includes(itemId)) {
-              // remove from targeting
-              draft.targets.splice(draft.targets.indexOf(`${ORDER_ITEM}-${itemId || ''}`), 1);
+              if (draft.targets.includes(`${ORDER_ITEM}-${itemId || ''}`))
+                draft.targets.splice(draft.targets.indexOf(`${ORDER_ITEM}-${itemId || ''}`), 1);
               previousIds.mapping[itemId].forEach(batchId => {
-                draft.targets.splice(draft.targets.indexOf(`${BATCH}-${batchId || ''}`), 1);
+                if (draft.targets.includes(`${BATCH}-${batchId || ''}`))
+                  draft.targets.splice(draft.targets.indexOf(`${BATCH}-${batchId || ''}`), 1);
               });
             } else {
-              // find a batch was removed from item
               const existBatchIds = intersection(
                 previousIds.mapping[itemId],
                 (orderItems?.[itemId]?.batches ?? []).map(batch => batch.id)
               );
               previousIds.mapping[itemId].forEach(batchId => {
-                if (!existBatchIds.includes(batchId))
+                if (
+                  !existBatchIds.includes(batchId) &&
+                  draft.targets.includes(`${BATCH}-${batchId || ''}`)
+                )
                   draft.targets.splice(draft.targets.indexOf(`${BATCH}-${batchId || ''}`), 1);
               });
             }
@@ -204,19 +205,19 @@ export function reducer(
         });
       }
 
-      // $FlowIssue order item may be forbidden or not found so flow complain about the id is not found on this case
       if (action.payload?.orderItemUpdate?.id) {
         return produce(state, draft => {
-          // $FlowIssue order item may be forbidden or not found so flow complain about the id is not found on this case
           const itemId = action.payload?.orderItemUpdate?.id ?? '';
           const previousBatchIds = action.payload?.mapping?.orderItems?.[itemId]?.batches ?? [];
-          // $FlowIssue order may be forbidden or not found so flow complain about the orderItems is not found on this case
+          // $FlowIgnore flow doesn't support this way yet
           const batches = action.payload?.orderItemUpdate?.batches ?? [];
           const existBatchIds = intersection(previousBatchIds, batches.map(batch => batch.id));
 
-          // find a batch was removed from item
           previousBatchIds.forEach(batchId => {
-            if (!existBatchIds.includes(batchId))
+            if (
+              !existBatchIds.includes(batchId) &&
+              draft.targets.includes(`${BATCH}-${batchId || ''}`)
+            )
               draft.targets.splice(draft.targets.indexOf(`${BATCH}-${batchId || ''}`), 1);
           });
         });

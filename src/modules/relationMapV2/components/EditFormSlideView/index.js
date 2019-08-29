@@ -21,7 +21,7 @@ type Props = {|
 const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
   const isReady = React.useRef(true);
   const { dispatch } = React.useContext(RelationMapContext);
-  const { mapping } = Entities.useContainer();
+  const { mapping, checkRemoveEntities } = Entities.useContainer();
   const onRequestClose = React.useCallback(() => {
     if (isReady.current) {
       onClose();
@@ -33,7 +33,8 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
   React.useEffect(() => {
     const listener = emitter.addListener('MUTATION', (result: Object) => {
       isReady.current = !!result;
-      if (result?.data?.orderItemUpdate || result?.data?.orderUpdate) {
+      const entity = result?.data?.orderItemUpdate || result?.data?.orderUpdate;
+      if (entity) {
         dispatch({
           type: 'RECHECK_TARGET',
           payload: {
@@ -44,12 +45,13 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
             },
           },
         });
+        checkRemoveEntities(entity);
       }
     });
     return () => {
       listener.remove();
     };
-  }, [dispatch, orderItems, orders]);
+  }, [checkRemoveEntities, dispatch, orderItems, orders]);
 
   let form = null;
   switch (type) {
