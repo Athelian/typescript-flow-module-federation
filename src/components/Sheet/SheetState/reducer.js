@@ -236,15 +236,22 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           throw new Error('cell not found');
         }
 
-        return reducer(state, {
-          type: Actions.CHANGE_VALUES,
-          payload: [
-            {
-              entity: targetCell.entity,
-              value: action.payload,
-            },
-          ],
-        });
+        return reducer(
+          {
+            ...state,
+            erroredAt: null,
+            weakErroredAt: [],
+          },
+          {
+            type: Actions.CHANGE_VALUES,
+            payload: [
+              {
+                entity: targetCell.entity,
+                value: action.payload,
+              },
+            ],
+          }
+        );
       case Actions.CHANGE_VALUES: {
         if (!action.payload) {
           throw new Error('invalid dispatch payload');

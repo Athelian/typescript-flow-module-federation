@@ -10,7 +10,7 @@ export type CellValue = {
     id: string,
     type: string,
     field: string,
-    permissions: () => boolean,
+    permissions: ((string) => boolean) => boolean,
     ownedBy: string,
   } | null,
   data: {

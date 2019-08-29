@@ -4,7 +4,7 @@ export const transformField = (
   basePath: string,
   entity: Object | null,
   field: string,
-  permissions: () => boolean
+  permissions: ((string) => boolean) => boolean
 ) => {
   if (entity === null) {
     return {
