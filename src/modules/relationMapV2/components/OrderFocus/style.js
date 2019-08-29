@@ -52,9 +52,9 @@ export const ActionsBackdropStyle: string = css`
   display: flex;
   justify-content: space-between;
   position: absolute;
-  bottom: 0;
-  right: 0;
-  height: 100px;
+  bottom: 20px;
+  right: 20px;
+  height: 80px;
   width: 100%;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #eee);
   pointer-events: none;
