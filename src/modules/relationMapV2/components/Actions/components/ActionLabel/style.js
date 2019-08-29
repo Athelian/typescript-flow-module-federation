@@ -3,23 +3,27 @@ import { css } from 'react-emotion';
 import { fontSizes, transitions, borderRadiuses, colors, presets } from 'styles/common';
 
 export const ActionLabelWrapperStyle = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
   opacity: 0;
   width: 0px;
   height: 40px;
   position: absolute;
   top: 0;
-  right: 50px;
-  ${borderRadiuses.BUTTON};
-  ${fontSizes.SMALL};
+  right: 0;
   ${transitions.EXPAND};
-  background-color: rgba(85, 85, 85, 0.9);
-  color: ${colors.WHITE};
   overflow: hidden;
-  ${presets.ELLIPSIS};
 `;
 
-export default ActionLabelWrapperStyle;
+export const ActionLabelStyle = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: calc(100% - 50px);
+  height: 100%;
+  background-color: rgba(85, 85, 85, 0.9);
+  color: ${colors.WHITE};
+  margin: 0 50px 0 0;
+  ${borderRadiuses.BUTTON};
+  ${fontSizes.SMALL};
+  ${presets.ELLIPSIS};
+`;

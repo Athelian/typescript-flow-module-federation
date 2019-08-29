@@ -20,8 +20,8 @@ import {
   orderFullFocusDetailQuery,
 } from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { WrapperStyle, ListStyle, RowStyle, ActionsBackdropStyle } from './style';
 import { Hits, Entities } from 'modules/relationMapV2/store';
+import { WrapperStyle, ListStyle, RowStyle, ActionsBackdropStyle } from './style';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import SelectedEntity from '../SelectedEntity';

@@ -19,7 +19,7 @@ export const ActionButtonWrapperStyle = (isDisabled: boolean) => css`
     &:hover {
       & > span {
         opacity: 1;
-        width: 150px;
+        width: 200px;
       }
     }
   `
@@ -29,7 +29,7 @@ export const ActionButtonWrapperStyle = (isDisabled: boolean) => css`
       color: ${colors.TEAL};
       & > span {
         opacity: 1;
-        width: 150px;
+        width: 200px;
       }
     }
   `}
