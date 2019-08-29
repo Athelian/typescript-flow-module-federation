@@ -162,7 +162,6 @@ const MilestoneSection = ({ intl }: Props) => {
                                   ]}
                                   onChange={event => {
                                     const { value: status } = event.target;
-                                    console.debug(event.target);
                                     if (status === 'completed') {
                                       setFieldValue('completedAt', todayForDateInput());
                                       setFieldValue('completedBy', user);

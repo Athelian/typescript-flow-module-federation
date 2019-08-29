@@ -157,55 +157,58 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                       )}
                     </BooleanValue>
 
-                    <FormField
-                      name={`${milestoneId}.name`}
-                      initValue={values.name}
-                      values={values}
-                      validator={validator}
-                      setFieldValue={onChangeValue}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <TextInputFactory
-                          name={name}
-                          {...inputHandlers}
-                          isNew={isNew}
-                          required
-                          originalValue={initialValues.name}
-                          editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_NAME])}
-                          vertical
-                          inputAlign="left"
-                          inputWidth="205px"
-                        />
-                      )}
-                    </FormField>
-
-                    <FormField
-                      name={`${milestoneId}.dueDate`}
-                      initValue={values.dueDate}
-                      values={values}
-                      validator={validator}
-                      setFieldValue={onChangeValue}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <DateInputFactory
-                          name={name}
-                          {...inputHandlers}
-                          onBlur={evt => {
-                            inputHandlers.onBlur(evt);
-                            setTimeout(() => {
-                              emitter.emit('AUTO_DATE', name, inputHandlers.value);
-                            }, 200);
-                          }}
-                          isNew={isNew}
-                          originalValue={initialValues.dueDate}
-                          label={<FormattedMessage {...messages.dueDate} />}
-                          editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_DUE_DATE])}
-                          inputAlign="left"
-                          labelWidth="80px"
-                          inputWidth="125px"
-                        />
-                      )}
-                    </FormField>
+                    <div role="presentation" onClick={e => e.stopPropagation()}>
+                      <FormField
+                        name={`${milestoneId}.name`}
+                        initValue={values.name}
+                        values={values}
+                        validator={validator}
+                        setFieldValue={onChangeValue}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <TextInputFactory
+                            name={name}
+                            {...inputHandlers}
+                            isNew={isNew}
+                            required
+                            originalValue={initialValues.name}
+                            editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_NAME])}
+                            vertical
+                            inputAlign="left"
+                            inputWidth="205px"
+                          />
+                        )}
+                      </FormField>
+                    </div>
+                    <div role="presentation" onClick={e => e.stopPropagation()}>
+                      <FormField
+                        name={`${milestoneId}.dueDate`}
+                        initValue={values.dueDate}
+                        values={values}
+                        validator={validator}
+                        setFieldValue={onChangeValue}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <DateInputFactory
+                            name={name}
+                            {...inputHandlers}
+                            onBlur={evt => {
+                              inputHandlers.onBlur(evt);
+                              setTimeout(() => {
+                                emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                              }, 200);
+                            }}
+                            isNew={isNew}
+                            originalValue={initialValues.dueDate}
+                            label={<FormattedMessage {...messages.dueDate} />}
+                            editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_DUE_DATE])}
+                            inputAlign="left"
+                            labelWidth="80px"
+                            inputWidth="125px"
+                          />
+                        )}
+                      </FormField>
+                    </div>
 
                     <BooleanValue>
                       {({ value: isDialogOpen, set: dialogToggle }) => (

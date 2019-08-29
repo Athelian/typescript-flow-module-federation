@@ -22,13 +22,7 @@ const defaultProps = {
 };
 
 const FieldItem = ({ vertical, verticalGap, tooltip, label, input }: Props) => (
-  <div
-    className={FieldItemWrapperStyle(vertical, verticalGap)}
-    role="presentation"
-    onClick={event => {
-      event.stopPropagation();
-    }}
-  >
+  <div className={FieldItemWrapperStyle(vertical, verticalGap)}>
     {tooltip && label ? (
       <div className={LabelTooltipWrapperStyle}>
         <div className={TooltipAbsoluteWrapperStyle}>{tooltip}</div>
