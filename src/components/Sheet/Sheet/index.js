@@ -25,6 +25,7 @@ type ImplProps = {
 
 type Props = {
   transformItem: Object => Array<Array<CellValue>>,
+  onMutate: ({ entity: Object, field: string, value: any }) => Promise<Array<Object> | null>,
 } & ImplProps;
 
 const SheetImpl = ({ columns, items, loading, hasMore, onLoadMore }: ImplProps) => {
@@ -77,8 +78,16 @@ const SheetImpl = ({ columns, items, loading, hasMore, onLoadMore }: ImplProps) 
   );
 };
 
-const Sheet = ({ transformItem, columns, items, loading, hasMore, onLoadMore }: Props) => (
-  <SheetState transformItem={transformItem}>
+const Sheet = ({
+  transformItem,
+  onMutate,
+  columns,
+  items,
+  loading,
+  hasMore,
+  onLoadMore,
+}: Props) => (
+  <SheetState transformItem={transformItem} onMutate={onMutate}>
     <SheetLiveID>
       <SheetImpl
         columns={columns}

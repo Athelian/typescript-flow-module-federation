@@ -32,7 +32,7 @@ export type Position = {
   y: number,
 };
 
-export type Focus = {
+type Focus = {
   cell: CellValue,
 } & Position;
 
@@ -42,6 +42,10 @@ export type ForeignFocus = {
     firstName: string,
     lastName: string,
   },
+} & Position;
+
+type Error = {
+  messages: Array<string>,
 } & Position;
 
 export type State = {
@@ -54,6 +58,8 @@ export type State = {
   weakFocusedAt: Array<Position>,
   foreignFocuses: Array<Object>,
   foreignFocusedAt: Array<ForeignFocus>,
+  erroredAt: Error | null,
+  weakErroredAt: Array<Position>,
 };
 
 export type Action = {
@@ -64,6 +70,7 @@ export type Action = {
 
 type Props = {
   transformItem: (index: number, item: Object) => Array<Array<CellValue>>,
+  onMutate: ({ entity: Object, field: string, value: any }) => Promise<Array<Object> | null>,
   children: React.Node,
 };
 
@@ -77,14 +84,23 @@ const initialState: State = {
   weakFocusedAt: [],
   foreignFocuses: [],
   foreignFocusedAt: [],
+  erroredAt: null,
+  weakErroredAt: [],
 };
 
-export const SheetStateContext = React.createContext<{ state: State, dispatch: Action => void }>({
+type Context = {
+  state: State,
+  dispatch: Action => void,
+  mutate: ({ cell: Position, value: any }) => void,
+};
+
+export const SheetStateContext = React.createContext<Context>({
   state: initialState,
   dispatch: () => {},
+  mutate: () => {},
 });
 
-export const useSheetState = () => React.useContext(SheetStateContext);
+export const useSheetState = (): Context => React.useContext(SheetStateContext);
 
 export const useSheetStateInitializer = (columns: Array<ColumnConfig>, items: Array<Object>) => {
   const { state, dispatch } = useSheetState();
@@ -161,6 +177,12 @@ export const useSheetKeyNavigation = () => {
           type: Actions.FOCUS_LEFT,
         });
         break;
+      case 'Tab':
+        e.preventDefault();
+        dispatch({
+          type: e.shiftKey ? Actions.FOCUS_LEFT : Actions.FOCUS_RIGHT,
+        });
+        break;
       default:
         break;
     }
@@ -173,12 +195,69 @@ export const useSheetKeyNavigation = () => {
   }, [handleKey]);
 };
 
-export const SheetState = ({ transformItem, children }: Props) => {
+export const SheetState = ({ transformItem, onMutate, children }: Props) => {
   const memoizedReducer = React.useCallback(cellReducer(transformItem), [transformItem]);
   const [state, dispatch] = React.useReducer<State, Action>(memoizedReducer, initialState);
+  const memoizedMutate = React.useCallback(
+    ({ cell, value }) => {
+      const cellValue = state.rows[cell.x][cell.y];
+
+      dispatch({
+        type: Actions.CELL_UPDATE,
+        cell,
+        payload: value,
+      });
+
+      onMutate({
+        entity: {
+          id: cellValue.entity.id,
+          typ: cellValue.entity.type,
+        },
+        field: cellValue.entity.field,
+        value,
+      }).then(violations => {
+        if (violations === null) {
+          return;
+        }
+
+        dispatch({
+          type: Actions.CELL_UPDATE,
+          cell,
+          payload: cellValue.data.value,
+        });
+
+        dispatch({
+          type: Actions.SET_ERRORS,
+          cell,
+          payload: violations.map(v => v.message),
+        });
+      });
+    },
+    [onMutate, state.rows, dispatch]
+  );
+
+  React.useEffect(() => {
+    if (!state.erroredAt) {
+      return () => {};
+    }
+
+    const handler = setTimeout(() => {
+      dispatch({
+        type: Actions.SET_ERRORS,
+        cell: state.erroredAt,
+        payload: null,
+      });
+    }, 8000);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [state.erroredAt, dispatch]);
 
   return (
-    <SheetStateContext.Provider value={{ state, dispatch }}>{children}</SheetStateContext.Provider>
+    <SheetStateContext.Provider value={{ state, dispatch, mutate: memoizedMutate }}>
+      {children}
+    </SheetStateContext.Provider>
   );
 };
 

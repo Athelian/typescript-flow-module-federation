@@ -8,6 +8,7 @@ export const Actions = {
   CHANGE_VALUES: 'change_values',
   REPLACE_ITEM: 'replace_item',
   DELETE_ITEM: 'delete_item',
+  SET_ERRORS: 'set_errors',
   FOCUS: 'focus',
   FOCUS_UP: 'focus_up',
   FOCUS_DOWN: 'focus_down',
