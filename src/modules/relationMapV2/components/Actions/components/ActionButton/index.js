@@ -14,13 +14,13 @@ const defaultProps = {
 
 function ActionButton({ isDisabled, onClick, children }: Props) {
   return (
-    <button
+    <div
       className={ActionButtonWrapperStyle(isDisabled)}
       onClick={isDisabled ? () => {} : onClick}
-      type="button"
+      role="presentation"
     >
       {children}
-    </button>
+    </div>
   );
 }
 
