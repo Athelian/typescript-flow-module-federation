@@ -1,6 +1,15 @@
 // @flow
 import { transformField } from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState';
+import {
+  ORDER_SET_CURRENCY,
+  ORDER_SET_PO_NO,
+  ORDER_UPDATE,
+} from 'modules/permission/constants/order';
+import { ORDER_ITEMS_SET_NO, ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
+import { BATCH_SET_NO, BATCH_UPDATE } from 'modules/permission/constants/batch';
+import { CONTAINER_SET_NO, CONTAINER_UPDATE } from 'modules/permission/constants/container';
+import { SHIPMENT_SET_NO, SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
 
 function transformOrder(basePath: string, order: Object): Array<CellValue> {
   return [
@@ -9,14 +18,19 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
       type: 'text',
       empty: !order,
       parent: true,
-      ...transformField(basePath, order, 'poNo', () => true),
+      ...transformField(basePath, order, 'poNo', hp => hp(ORDER_UPDATE) || hp(ORDER_SET_PO_NO)),
     },
     {
       columnKey: 'order.currency',
       type: 'text',
       empty: !order,
       parent: true,
-      ...transformField(basePath, order, 'currency', () => true),
+      ...transformField(
+        basePath,
+        order,
+        'currency',
+        hp => hp(ORDER_UPDATE) || hp(ORDER_SET_CURRENCY)
+      ),
     },
   ];
 }
@@ -33,7 +47,12 @@ const transformOrderItem = (
       disabled: !hasItems && !orderItem,
       empty: hasItems && !orderItem,
       parent: true,
-      ...transformField(basePath, orderItem, 'no', () => true),
+      ...transformField(
+        basePath,
+        orderItem,
+        'no',
+        hp => hp(ORDER_ITEMS_UPDATE) || hp(ORDER_ITEMS_SET_NO)
+      ),
     },
     /* {
       columnKey: 'order.orderItem.quantity',
@@ -52,7 +71,7 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
       columnKey: 'order.orderItem.batch.no',
       type: 'text',
       disabled: !batch,
-      ...transformField(basePath, batch, 'no', () => true),
+      ...transformField(basePath, batch, 'no', hp => hp(BATCH_UPDATE) || hp(BATCH_SET_NO)),
     },
     /* {
       columnKey: 'order.orderItem.batch.quantity',
@@ -65,14 +84,24 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
       type: 'text',
       duplicatable: true,
       disabled: !(batch ? batch.container : null),
-      ...transformField(`${basePath}.container`, batch ? batch.container : null, 'no', () => true),
+      ...transformField(
+        `${basePath}.container`,
+        batch ? batch.container : null,
+        'no',
+        hp => hp(CONTAINER_UPDATE) || hp(CONTAINER_SET_NO)
+      ),
     },
     {
       columnKey: 'order.orderItem.batch.shipment.no',
       type: 'text',
       duplicatable: true,
       disabled: !(batch ? batch.shipment : null),
-      ...transformField(`${basePath}.shipment`, batch ? batch.shipment : null, 'no', () => true),
+      ...transformField(
+        `${basePath}.shipment`,
+        batch ? batch.shipment : null,
+        'no',
+        hp => hp(SHIPMENT_UPDATE) || hp(SHIPMENT_SET_NO)
+      ),
     },
   ];
 };
