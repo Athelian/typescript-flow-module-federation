@@ -2966,10 +2966,10 @@
     "@svgr/plugin-svgo" "^4.2.0"
     loader-utils "^1.2.3"
 
-"@tanem/svg-injector@^8.0.28":
-  version "8.0.28"
-  resolved "https://registry.yarnpkg.com/@tanem/svg-injector/-/svg-injector-8.0.28.tgz#e9c017e09e3bc8992d6e0b13e11882347c34abf7"
-  integrity sha512-19GIVJqe4nX0jis9/mijHNz3F/aV5YvyyswPC5O/2v+IEGIZf59k+t2IKhZO36l7SPCYHoUc1rL2yrIU09q/jw==
+"@tanem/svg-injector@^8.0.30":
+  version "8.0.30"
+  resolved "https://registry.yarnpkg.com/@tanem/svg-injector/-/svg-injector-8.0.30.tgz#aeb2f7b88924beacbcbcc9acb9d9e3cb1ce60a63"
+  integrity sha512-fYyP3u0i5d5K53+wFLmZ0FnW9jdzAOWrbs5KMkHVgOUvB6mgBcNMSmBN3/ZwEoushiuqZPdSiAU+r2RJQ8+ebw==
   dependencies:
     "@babel/runtime" "^7.5.5"
 
@@ -3026,10 +3026,10 @@
     "@testing-library/dom" "^6.0.0"
     "@types/testing-library__react" "^9.1.0"
 
-"@tippy.js/react@^2.2.2":
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/@tippy.js/react/-/react-2.2.2.tgz#a0fbc646958cdb002d7d227f7b18dca346c76f2e"
-  integrity sha512-ex6IEy1cFC1a1MqbRaNZqo/MRK/GQOfa/VO5jydYeBrxnxJ3I/3gCX098dUHRLZmB6aFKVY39TwgnQRCbLUG4Q==
+"@tippy.js/react@^2.2.3":
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/@tippy.js/react/-/react-2.2.3.tgz#2ffb0af6693055be7db4b329b2d3cc7f2356f68e"
+  integrity sha512-5XYvbQujzDj9r00JYEz/cBtm6DutjOdv2azdco53B+eWF7FDBCQfkLVn87wimfEpmGK0vqRQv/cwFxFcoOP98Q==
   dependencies:
     prop-types "^15.6.2"
     tippy.js "^4.3.4"
@@ -3885,6 +3885,11 @@ apollo-link-http-common@^0.2.14:
     apollo-link "^1.2.12"
     ts-invariant "^0.4.0"
     tslib "^1.9.3"
+
+apollo-link-logger@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/apollo-link-logger/-/apollo-link-logger-1.2.3.tgz#1f3e6f7849ce7a7e3aa822141fe062cfa278b1e1"
+  integrity sha512-GaVwdHyXmawfvBlHfZkFkBHH3+YH7wibzSCc4/YpIbPVtbtZqi0Qop18w++jgpw385W083DMOdYe2eJsKkZdag==
 
 apollo-link@^1.0.0, apollo-link@^1.2.3:
   version "1.2.11"
@@ -14636,10 +14641,10 @@ react-draggable@^3.3.2:
     classnames "^2.2.5"
     prop-types "^15.6.0"
 
-react-dropzone@^10.1.7:
-  version "10.1.7"
-  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-10.1.7.tgz#faba6b460a41a27a2d642316602924fe0ec2139c"
-  integrity sha512-PT4DHJCQrY/2vVljupveqnlwzVRQGK7U6mhoO0ox6kSJV0EK6W1ZmZpRyHMA1S6/KUOzN+1pASUMSqV/4uAIXg==
+react-dropzone@^10.1.8:
+  version "10.1.8"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-10.1.8.tgz#348895a3ee9efe7c0f6a2f19642f04704c170757"
+  integrity sha512-Lm6+TxIDf/my4i3VdYmufRcrJ4SUbSTJP3HB49V2+HNjZwLI4NKVkaNRHwwSm9CEuzMP+6SW7pT1txc1uBPfDg==
   dependencies:
     attr-accept "^1.1.3"
     file-selector "^0.1.11"
@@ -14702,10 +14707,10 @@ react-helmet-async@^1.0.2:
     react-fast-compare "2.0.4"
     shallowequal "1.1.0"
 
-react-hot-loader@^4.12.11:
-  version "4.12.11"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.12.11.tgz#06bd618d0a7343c8afa4a31206844f651193bae5"
-  integrity sha512-ySsg1hPwr/5dkZCJVp1nZRbwbpbEQ+3e2+bn/D681Wvr9+o+5bLKkTGq0TXskj8HgCS3ScysXddOng9Cg+JKzw==
+react-hot-loader@^4.12.12:
+  version "4.12.12"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.12.12.tgz#8b33f59efef8a34f64e01f0d9393230d4b4bc6d4"
+  integrity sha512-Tkd412j5yPKHoTRsJzZb+5UJNFKkPszm7QGKGYvt+jnzTkDS+qK0u3AYPlB0MmBlwzUKVHICqq5KH9Srzda7XA==
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"
@@ -14841,13 +14846,13 @@ react-snap@^1.23.0:
     serve-static "1.13.2"
     sourcemapped-stacktrace-node "2.1.8"
 
-react-svg@^10.0.19:
-  version "10.0.19"
-  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-10.0.19.tgz#17e68f205ae0437e89a939a8cc51f6d79db5b1dc"
-  integrity sha512-JrsrubRA20sf4m4Mlinnz0I5kiB8NYtz341C3QXfQ4mI5fnu3BfOHbYxO1DVLFbb+NcjM/QEPwWsfGp/gUEtDg==
+react-svg@^10.0.20:
+  version "10.0.20"
+  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-10.0.20.tgz#cbbc7394e711311a6f07a2c679563ea9364bb558"
+  integrity sha512-jX6HMK6Kyj+vMtp54/5jO2ndNQQNWKuSxzkII/BiFRiOQb1QPViekQ8SqrsEPHMO2a0Tnn1UzoSR2pcetx4Dmw==
   dependencies:
     "@babel/runtime" "^7.5.5"
-    "@tanem/svg-injector" "^8.0.28"
+    "@tanem/svg-injector" "^8.0.30"
     prop-types "^15.7.2"
 
 react-syntax-highlighter@^8.0.1:
@@ -17194,7 +17199,12 @@ ts-log@2.1.4:
   resolved "https://registry.yarnpkg.com/ts-log/-/ts-log-2.1.4.tgz#063c5ad1cbab5d49d258d18015963489fb6fb59a"
   integrity sha512-P1EJSoyV+N3bR/IWFeAqXzKPZwHpnLY6j7j58mAvewHRipo+BQM2Y1f9Y9BjEQznKwgqqZm7H8iuixmssU7tYQ==
 
-ts-pnp@1.1.2, ts-pnp@^1.1.2:
+ts-pnp@1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/ts-pnp/-/ts-pnp-1.1.4.tgz#ae27126960ebaefb874c6d7fa4729729ab200d90"
+  integrity sha512-1J/vefLC+BWSo+qe8OnJQfWTYRS6ingxjwqmHMqaMxXMj7kFtKLgAaYW3JeX3mktjgUL+etlU8/B4VUAUI9QGw==
+
+ts-pnp@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/ts-pnp/-/ts-pnp-1.1.2.tgz#be8e4bfce5d00f0f58e0666a82260c34a57af552"
   integrity sha512-f5Knjh7XCyRIzoC/z1Su1yLLRrPrFCgtUAh/9fCSP6NKbATwpOL1+idQVXQokK9GRFURn/jYPGPfegIctwunoA==
@@ -17457,6 +17467,11 @@ unstated-debug@^0.3.2:
   integrity sha512-wwUj1hcw6+PGLUZNVEyEmEJnViVBMOwh0M7gtJyFpLpRyr4gKJ9jobWeq3Ysu5A5elvWLRihtNVf/LQpJEWYwA==
   dependencies:
     deep-object-diff "^1.1.0"
+
+unstated-next@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/unstated-next/-/unstated-next-1.1.0.tgz#7bb4911a12fdf3cc8ad3eb11a0b315e4a8685ea8"
+  integrity sha512-AAn47ZncPvgBGOvMcn8tSRxsrqwf2VdAPxLASTuLJvZt4rhKfDvUkmYZLGfclImSfTVMv7tF4ynaVxin0JjDCA==
 
 unstated@^2.1.1:
   version "2.1.1"
@@ -17886,10 +17901,10 @@ webpack-sources@^1.4.0, webpack-sources@^1.4.1:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
-webpack@4.39.2:
-  version "4.39.2"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.39.2.tgz#c9aa5c1776d7c309d1b3911764f0288c8c2816aa"
-  integrity sha512-AKgTfz3xPSsEibH00JfZ9sHXGUwIQ6eZ9tLN8+VLzachk1Cw2LVmy+4R7ZiwTa9cZZ15tzySjeMui/UnSCAZhA==
+webpack@4.39.3:
+  version "4.39.3"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.39.3.tgz#a02179d1032156b713b6ec2da7e0df9d037def50"
+  integrity sha512-BXSI9M211JyCVc3JxHWDpze85CvjC842EvpRsVTc/d15YJGlox7GIDd38kJgWrb3ZluyvIjgenbLDMBQPDcxYQ==
   dependencies:
     "@webassemblyjs/ast" "1.8.5"
     "@webassemblyjs/helper-module-context" "1.8.5"

@@ -185,28 +185,6 @@ export const projectFormQueryFragment = gql`
             }
           }
         }
-        entitiesCount {
-          ... on MilestoneEntitiesCount {
-            products
-            productProviders
-            orders
-            orderItems
-            batches
-            shipments
-            containers
-          }
-        }
-        entitiesRelatedCount {
-          ... on MilestoneEntitiesCount {
-            products
-            productProviders
-            orders
-            orderItems
-            batches
-            shipments
-            containers
-          }
-        }
       }
     }
   }

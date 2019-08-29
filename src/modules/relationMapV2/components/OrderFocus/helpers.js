@@ -16,18 +16,26 @@ export const handleClickAndDoubleClick = ({
   clickId,
   onClick,
   onDoubleClick,
-}: {
+  onCtrlClick,
+}: {|
   clickId: string,
   onClick: Function,
   onDoubleClick: Function,
-}) => {
-  const handleClick = () => {
+  onCtrlClick?: Function,
+|}) => {
+  const handleClick = (evt: SyntheticMouseEvent<any>) => {
+    evt.persist();
     if (isTimeoutRunning[clickId]) {
       onDoubleClick();
       clearTimeout(timer[clickId]);
       isTimeoutRunning[clickId] = false;
     } else {
-      onClick();
+      if (evt.metaKey || evt.ctrlKey) {
+        const fn = onCtrlClick || onClick;
+        fn();
+      } else {
+        onClick();
+      }
       isTimeoutRunning[clickId] = true;
       timer[clickId] = setTimeout(() => {
         isTimeoutRunning[clickId] = false;

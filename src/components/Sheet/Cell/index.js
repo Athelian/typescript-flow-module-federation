@@ -2,11 +2,12 @@
 import * as React from 'react';
 import FormattedName from 'components/FormattedName';
 import { Blackout } from 'components/Form';
-import { Actions } from '../SheetState/contants';
 import TextInput from './Inputs/TextInput';
 import {
   CellBorderStyle,
   CellStyle,
+  ErrorStyle,
+  ErrorsWrapperStyle,
   FocusesWrapperStyle,
   FocusStyle,
   InputWrapperStyle,
@@ -21,9 +22,14 @@ type Props = {
   readonly: boolean,
   forbidden: boolean,
   disabled: boolean,
-  onFirstRow: boolean,
+  isFirstRow: boolean,
   extended: number,
-  dispatch: ({ type: string, payload?: any }) => void,
+  errors: Array<string> | null,
+  weakError: boolean,
+  onClick: () => void,
+  onFocusUp: () => void,
+  onFocusDown: () => void,
+  onUpdate: any => void,
 };
 
 const inputs = {
@@ -39,30 +45,28 @@ const Cell = ({
   readonly,
   forbidden,
   disabled,
-  onFirstRow,
+  isFirstRow,
   extended,
-  dispatch,
+  errors,
+  weakError,
+  onClick,
+  onFocusUp,
+  onFocusDown,
+  onUpdate,
 }: Props) => {
   const [dirtyValue, setDirtyValue] = React.useState<any>(value);
+  const wrapperRef = React.useRef(null);
   const inputRef = React.useRef(null);
 
   React.useEffect(() => {
-    if (dirtyValue === value) {
-      return () => {};
+    setDirtyValue(value);
+  }, [value, setDirtyValue]);
+
+  React.useEffect(() => {
+    if (focus && wrapperRef.current) {
+      wrapperRef.current.focus();
     }
-
-    const handler = setTimeout(() => {
-      dispatch({
-        type: Actions.CHANGE_VALUE,
-        payload: dirtyValue,
-      });
-    }, 10000);
-
-    return () => {
-      clearTimeout(handler);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, dirtyValue]);
+  }, [focus]);
 
   const handleKeyDown = (e: SyntheticKeyboardEvent<HTMLDivElement>) => {
     switch (e.key) {
@@ -75,16 +79,13 @@ const Cell = ({
         if (inputRef.current) {
           inputRef.current.blur();
         }
+        if (wrapperRef.current) {
+          wrapperRef.current.focus();
+        }
         break;
       default:
         break;
     }
-  };
-
-  const handleClick = () => {
-    dispatch({
-      type: Actions.FOCUS,
-    });
   };
 
   const handleInputChange = e => {
@@ -96,10 +97,7 @@ const Cell = ({
       return;
     }
 
-    dispatch({
-      type: Actions.CHANGE_VALUE,
-      payload: dirtyValue,
-    });
+    onUpdate(dirtyValue);
   };
 
   const handleInputKeyDown = (e: SyntheticKeyboardEvent<HTMLDivElement>) => {
@@ -110,6 +108,23 @@ const Cell = ({
       case 'ArrowLeft':
         e.stopPropagation();
         break;
+      case 'Tab':
+        if (inputRef.current) {
+          inputRef.current.blur();
+        }
+        break;
+      case 'Enter':
+        e.stopPropagation();
+        if (inputRef.current) {
+          inputRef.current.blur();
+        }
+
+        if (e.shiftKey) {
+          onFocusUp();
+        } else {
+          onFocusDown();
+        }
+        break;
       default:
         break;
     }
@@ -117,18 +132,38 @@ const Cell = ({
 
   return (
     <div
+      ref={wrapperRef}
       className={CellStyle(readonly, disabled, extended)}
       role="presentation"
       tabIndex="-1"
-      onClick={handleClick}
+      onClick={onClick}
       onKeyDown={handleKeyDown}
     >
-      <div className={CellBorderStyle(focus, foreignFocuses.length > 0, weakFocus)} />
-      {foreignFocuses.length > 0 && (
-        <div id="focuses" className={FocusesWrapperStyle(onFirstRow)}>
+      <div
+        className={CellBorderStyle(
+          focus,
+          foreignFocuses.length > 0,
+          weakFocus,
+          errors !== null && errors.length > 0,
+          weakError
+        )}
+      />
+
+      {!errors && !weakError && foreignFocuses.length > 0 && (
+        <div id="focuses" className={FocusesWrapperStyle(isFirstRow)}>
           {foreignFocuses.map(ff => (
-            <span key={ff.id} className={FocusStyle(onFirstRow)}>
+            <span key={ff.id} className={FocusStyle(isFirstRow)}>
               <FormattedName firstName={ff.firstName} lastName={ff.lastName} />
+            </span>
+          ))}
+        </div>
+      )}
+
+      {errors !== null && errors.length > 0 && (
+        <div className={ErrorsWrapperStyle(isFirstRow)}>
+          {errors.map(error => (
+            <span key={error} className={ErrorStyle}>
+              {error}
             </span>
           ))}
         </div>
@@ -160,8 +195,10 @@ Cell.defaultProps = {
   readonly: false,
   forbidden: false,
   disabled: false,
-  onFirstRow: false,
+  isFirstRow: false,
   extended: 0,
+  errors: null,
+  weakError: false,
 };
 
 export default React.memo<Props>(Cell);

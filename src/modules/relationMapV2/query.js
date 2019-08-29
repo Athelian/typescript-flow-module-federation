@@ -486,12 +486,27 @@ export const orderFocusedListQuery = gql`
 `;
 
 export const orderFocusDetailQuery = gql`
-  query orderFocusDetailQuery($id: ID!) {
-    order(id: $id) {
+  query orderFocusDetailQuery($ids: [ID!]!) {
+    ordersByIDs(ids: $ids) {
       ...orderCardWithOptimiseFragment
     }
   }
 
+  ${orderCardWithOptimiseFragment}
+  ${tagFragment}
+  ${taskCountFragment}
+  ${ownedByFragment}
+`;
+
+export const orderFullFocusDetailQuery = gql`
+  query orderFullFocusDetailQuery($ids: [ID!]!) {
+    ordersByIDs(ids: $ids) {
+      ...orderCardOptimiseFragment
+      ...orderCardWithOptimiseFragment
+    }
+  }
+
+  ${orderCardOptimiseFragment}
   ${orderCardWithOptimiseFragment}
   ${tagFragment}
   ${taskCountFragment}

@@ -15,13 +15,16 @@ import {
   SHIPMENT_WIDTH,
 } from 'modules/relationMapV2/constants';
 import { getByPathWithDefault } from 'utils/fp';
+import { Entities } from 'modules/relationMapV2/store';
 import { HeadingStyle, ButtonStyle, RowStyle } from './style';
 import { RelationMapContext } from '../OrderFocus/store';
 
 type Props = { style?: Object };
 
 const Header = React.memo<Props>(({ style }: Props) => {
-  const { state, orders, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { mapping } = Entities.useContainer();
+  const { orders, entities } = mapping;
   return (
     <div style={style} className={RowStyle}>
       <div
@@ -31,7 +34,7 @@ const Header = React.memo<Props>(({ style }: Props) => {
           width: ORDER_WIDTH,
         }}
       >
-        Orders
+        Orders ({Object.keys(entities.orders || {}).length})
         <button
           type="button"
           className={ButtonStyle}
@@ -57,7 +60,7 @@ const Header = React.memo<Props>(({ style }: Props) => {
           width: ORDER_ITEM_WIDTH,
         }}
       >
-        Items
+        Items ({Object.keys(entities.orderItems || {}).length})
         <button
           type="button"
           className={ButtonStyle}
@@ -90,7 +93,7 @@ const Header = React.memo<Props>(({ style }: Props) => {
           width: BATCH_WIDTH,
         }}
       >
-        Batches
+        Batches ({Object.keys(entities.batches || {}).length})
         <button
           type="button"
           className={ButtonStyle}
@@ -127,7 +130,7 @@ const Header = React.memo<Props>(({ style }: Props) => {
           width: CONTAINER_WIDTH,
         }}
       >
-        Containers
+        Containers ({Object.keys(entities.containers || {}).length})
         <button
           type="button"
           className={ButtonStyle}
@@ -164,7 +167,7 @@ const Header = React.memo<Props>(({ style }: Props) => {
           width: SHIPMENT_WIDTH,
         }}
       >
-        Shipments
+        Shipments ({Object.keys(entities.shipments || {}).length})
         <button
           type="button"
           className={ButtonStyle}

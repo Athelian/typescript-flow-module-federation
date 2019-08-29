@@ -14,11 +14,18 @@ import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { UIContext } from 'modules/ui';
 import { partnerPermissionQuery } from 'components/common/QueryForm/query';
 import { Display } from 'components/Form';
-import { orderFocusedListQuery, orderFocusDetailQuery } from 'modules/relationMapV2/query';
+import {
+  orderFocusedListQuery,
+  orderFocusDetailQuery,
+  orderFullFocusDetailQuery,
+} from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { WrapperStyle, ListStyle, RowStyle } from './style';
+import { Hits, Entities } from 'modules/relationMapV2/store';
+import { WrapperStyle, ListStyle, RowStyle, ActionsBackdropStyle } from './style';
+import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import SelectedEntity from '../SelectedEntity';
+import Actions from '../Actions';
 import Header from '../Header';
 import Row from '../Row';
 import cellRenderer from './cellRenderer';
@@ -165,6 +172,8 @@ const loadMore = (
 export default function OrderFocus({ ...filtersAndSort }: Props) {
   const uiContext = React.useContext(UIContext);
   const [expandRows, setExpandRows] = React.useState([]);
+  const { initHits } = Hits.useContainer();
+  const { initMapping } = Entities.useContainer();
   const lastFiltersAndSort = usePrevious(filtersAndSort);
   React.useEffect(() => {
     if (!isEquals(lastFiltersAndSort, filtersAndSort)) {
@@ -172,23 +181,28 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
     }
   }, [lastFiltersAndSort, filtersAndSort]);
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const queryOrderDetail = React.useCallback((orderId: string) => {
-    apolloClient
-      .query({
-        query: orderFocusDetailQuery,
-        variables: {
-          id: orderId,
-        },
-      })
-      .then(result => {
-        dispatch({
-          type: 'FETCH_ORDER',
-          payload: {
-            [orderId]: result.data.order,
-          },
-        });
-      });
-  }, []);
+  const queryOrdersDetail = React.useCallback(
+    (orderIds: Array<string>, isPreload: boolean = false) => {
+      if (orderIds.length) {
+        apolloClient
+          .query({
+            query: isPreload ? orderFocusDetailQuery : orderFullFocusDetailQuery,
+            variables: {
+              ids: orderIds,
+            },
+          })
+          .then(result => {
+            dispatch({
+              type: 'FETCH_ORDERS',
+              payload: {
+                orders: result.data.ordersByIDs,
+              },
+            });
+          });
+      }
+    },
+    []
+  );
   const queryPermission = React.useCallback((organizationId: string) => {
     apolloClient
       .query({
@@ -242,7 +256,7 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
                     }
                   : order
               );
-              const hits = getByPathWithDefault([], 'orders.hits', data);
+              initHits(getByPathWithDefault([], 'orders.hits', data));
               const ordersData = generateListData({
                 orders,
                 expandRows,
@@ -250,13 +264,17 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
               });
               const rowCount = ordersData.length;
               const entities = normalize({ orders });
+              initMapping({
+                orders,
+                entities,
+              });
               Object.keys(entities.organizations || {}).forEach(organizationId => {
                 if (!state.permission[organizationId]) {
                   queryPermission(organizationId);
                 }
               });
               return orders.length > 0 ? (
-                <RelationMapContext.Provider value={{ state, orders, hits, entities, dispatch }}>
+                <RelationMapContext.Provider value={{ state, dispatch }}>
                   <List
                     itemData={ordersData}
                     className={ListStyle}
@@ -268,15 +286,17 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
                       if (hasMoreItems(data, 'orders') && isLastCell) {
                         loadMore({ fetchMore, data }, filtersAndSort, 'orders');
                       }
+                      const orderIds: Array<string> = [];
                       for (let index = visibleStartIndex; index < visibleStopIndex; index += 1) {
                         const [{ order }] = ordersData[index];
                         const isLoadedData =
                           getByPathWithDefault([], 'orderItems', order).length ===
                           getByPathWithDefault(0, 'orderItemCount', order);
                         if (!isLoadedData && getByPathWithDefault(0, 'orderItemCount', order) > 0) {
-                          queryOrderDetail(getByPathWithDefault(0, 'id', order));
+                          orderIds.push(getByPathWithDefault('', 'id', order));
                         }
                       }
+                      queryOrdersDetail(orderIds, true);
                     }}
                     height={window.innerHeight - 50}
                     width={
@@ -304,10 +324,30 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
                         type: 'CONFIRM_MOVE_END',
                         payload: { orderIds },
                       });
-                      orderIds.map(orderId => queryOrderDetail(orderId));
+                      queryOrdersDetail(orderIds);
                     }}
                     isOpen={state.moveEntity.isOpen}
                     {...state.moveEntity.detail}
+                  />
+                  <EditFormSlideView
+                    type={state.edit.type}
+                    selectedId={state.edit.selectedId}
+                    onClose={() => {
+                      if (state.edit.type === ORDER) {
+                        queryOrdersDetail([state.edit.selectedId]);
+                      } else if (state.edit.orderId) {
+                        queryOrdersDetail([state.edit.orderId]);
+                      } else if (state.edit.orderIds && state.edit.orderIds.length) {
+                        queryOrdersDetail(state.edit.orderIds);
+                      }
+                      dispatch({
+                        type: 'EDIT',
+                        payload: {
+                          type: '',
+                          selectedId: '',
+                        },
+                      });
+                    }}
                   />
                 </RelationMapContext.Provider>
               ) : (
@@ -322,7 +362,13 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
           </Query>
         </DndProvider>
       </div>
-      {state.targets.length > 0 && <SelectedEntity targets={state.targets} />}
+      {state.targets.length > 0 && (
+        <>
+          <div className={ActionsBackdropStyle} />
+          <SelectedEntity targets={state.targets} />
+          <Actions targets={state.targets} />
+        </>
+      )}
     </>
   );
 }

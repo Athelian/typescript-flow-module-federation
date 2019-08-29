@@ -1,6 +1,6 @@
 // @flow
 import { createContext } from 'react';
-import type { OrderPayload, Hit } from 'generated/graphql';
+import type { OrderPayload } from 'generated/graphql';
 import produce from 'immer';
 import update from 'immutability-helper';
 import type { State } from './type.js.flow';
@@ -8,9 +8,6 @@ import type { State } from './type.js.flow';
 type ContextProps = {|
   state: State,
   dispatch: Function,
-  orders: Array<OrderPayload>,
-  hits: Array<Hit>,
-  entities: Object,
 |};
 
 const initMoveEntity = {
@@ -25,6 +22,7 @@ const initMoveEntity = {
     value: '',
   },
 };
+
 export const initialState: State = {
   order: {},
   targets: [],
@@ -34,21 +32,23 @@ export const initialState: State = {
     isProcessing: false,
     detail: initMoveEntity,
   },
+  edit: {
+    type: '',
+    selectedId: '',
+  },
   permission: {},
 };
 
 export const RelationMapContext = createContext<ContextProps>({
   state: initialState,
   dispatch: () => {},
-  orders: [],
-  hits: [],
-  entities: {},
 });
 
 export function reducer(
   state: State,
   action: {
     type: | 'FETCH_ORDER'
+      | 'FETCH_ORDERS'
       | 'TARGET'
       | 'TARGET_ALL'
       | 'TARGET_TREE'
@@ -59,10 +59,12 @@ export function reducer(
       | 'CONFIRM_MOVE'
       | 'CONFIRM_MOVE_START'
       | 'CONFIRM_MOVE_END'
-      | 'FETCH_PERMISSION',
+      | 'FETCH_PERMISSION'
+      | 'EDIT',
     payload: {
       entity?: string,
       targets?: Array<string>,
+      orders?: Array<OrderPayload>,
       [string]: mixed,
     },
   }
@@ -71,6 +73,23 @@ export function reducer(
     case 'FETCH_ORDER':
       return update(state, {
         order: {
+          $merge: action.payload,
+        },
+      });
+    case 'FETCH_ORDERS': {
+      return produce(state, draft => {
+        const { orders = [] } = action.payload;
+        orders.forEach(order => {
+          if (order.id) {
+            // eslint-disable-next-line no-param-reassign
+            draft.order[order.id] = order;
+          }
+        });
+      });
+    }
+    case 'EDIT':
+      return update(state, {
+        edit: {
           $merge: action.payload,
         },
       });

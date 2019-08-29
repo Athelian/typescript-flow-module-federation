@@ -5,54 +5,14 @@ import { getByPathWithDefault } from 'utils/fp';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar } from 'components/NavBar';
 import { Sheet } from 'components/Sheet';
-import { transformer } from './transformer';
+import columns from './columns';
+import transformer from './transformer';
+import mutate from './mutate';
 import { orderSheetQuery } from './query';
-
-const columnsConfig = [
-  {
-    key: 'order.poNo',
-    title: 'PO No',
-    width: 200,
-  },
-  {
-    key: 'order.currency',
-    title: 'Currency',
-    width: 200,
-  },
-  {
-    key: 'order.orderItem.no',
-    title: 'Item No',
-    width: 200,
-  },
-  /* {
-    key: 'order.orderItem.quantity',
-    title: 'Quantity',
-    width: 200,
-  }, */
-  {
-    key: 'order.orderItem.batch.no',
-    title: 'Batch No',
-    width: 200,
-  },
-  /* {
-    key: 'order.orderItem.batch.quantity',
-    title: 'Quantity',
-    width: 200,
-  }, */
-  {
-    key: 'order.orderItem.batch.container.no',
-    title: 'Container No',
-    width: 200,
-  },
-  {
-    key: 'order.orderItem.batch.shipment.no',
-    title: 'Shipment No',
-    width: 200,
-  },
-];
 
 const OrderSheetModule = () => {
   const client = useApolloClient();
+  const memoizedMutate = React.useCallback(mutate(client), [client]);
 
   const [initialOrders, setInitialOrders] = React.useState<Object>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -83,11 +43,12 @@ const OrderSheetModule = () => {
       </NavBar>
 
       <Sheet
-        columns={columnsConfig}
+        columns={columns}
         loading={loading}
         items={initialOrders}
         hasMore={page.page < page.totalPage}
         transformItem={transformer}
+        onMutate={memoizedMutate}
         onLoadMore={() =>
           client
             .query({

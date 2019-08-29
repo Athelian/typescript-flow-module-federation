@@ -1,7 +1,6 @@
 // @flow
 import { Container } from 'unstated';
-import { cloneDeep, set } from 'lodash';
-import { cleanFalsyAndTypeName, cleanUpData } from 'utils/data';
+import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
 import { defaultAreaMetric } from 'utils/metric';
 
@@ -23,7 +22,7 @@ export type FormState = {
   organizations: Array<Object>,
 };
 
-const initValues = {
+export const warehouseInfoInitValues = {
   name: '',
   street: '',
   locality: '',
@@ -42,20 +41,10 @@ const initValues = {
   organizations: [],
 };
 
-export default class WarehouseContainer extends Container<FormState> {
-  state = initValues;
+export default class WarehouseInfoContainer extends Container<FormState> {
+  state = warehouseInfoInitValues;
 
-  originalValues = initValues;
-
-  setFieldValue = (name: string, value: mixed) => {
-    this.setState({
-      [name]: value,
-    });
-  };
-
-  setFieldArrayValue = (path: string, value: any) => {
-    this.setState(prevState => set(cloneDeep(prevState), path, value));
-  };
+  originalValues = warehouseInfoInitValues;
 
   isDirty = () =>
     !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
@@ -65,8 +54,14 @@ export default class WarehouseContainer extends Container<FormState> {
     this.setState(this.originalValues);
   };
 
+  setFieldValue = (name: string, value: mixed) => {
+    this.setState({
+      [name]: value,
+    });
+  };
+
   initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
+    const parsedValues: Object = { ...warehouseInfoInitValues, ...values };
     this.setState(parsedValues);
     this.originalValues = { ...parsedValues };
   };
