@@ -68,7 +68,10 @@ const BaseButton = ({
           )
     }
     disabled={disabled || isLoading}
-    onClick={onClick}
+    onClick={event => {
+      event.stopPropagation();
+      onClick();
+    }}
     ref={buttonRef}
     {...rest}
   >

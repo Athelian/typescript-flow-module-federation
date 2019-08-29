@@ -225,8 +225,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                                 });
                               }
                             }}
-                            onUnComplete={event => {
-                              event.stopPropagation();
+                            onUnComplete={() => {
                               completedMilestone({
                                 id: milestoneId,
                                 completedBy: null,
@@ -308,8 +307,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                                   defaultMessage="ADD TASK"
                                 />
                               }
-                              onClick={event => {
-                                event.stopPropagation();
+                              onClick={() => {
                                 selectTasksSlideToggle(true);
                               }}
                             />
