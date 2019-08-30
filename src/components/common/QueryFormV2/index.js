@@ -7,6 +7,7 @@ import { usePermissions } from 'components/Context/Permissions';
 import useUser from 'hooks/useUser';
 import { decodeId } from 'utils/id';
 import logger from 'utils/logger';
+import { parseRoute } from 'utils/route';
 import QueryFormPermissionContext from '../QueryForm/context';
 
 type OptionalProps = {
@@ -51,6 +52,11 @@ export default function QueryFormV2({ query, entityId, entityType, render, onCom
       navigate('/404');
       return null;
     default:
+      if (!data?.[entityType]) {
+        navigate(`/${parseRoute(entityType)}`);
+        return null;
+      }
+
       return (
         <QueryFormPermissionContext.Provider
           value={{

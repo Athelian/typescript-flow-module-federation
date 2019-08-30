@@ -16,7 +16,6 @@ type ContextProps = {
     firstName: string,
     lastName: string,
   },
-  permissions: Array<string>,
 };
 
 export const UserContext: React.Context<ContextProps> = React.createContext({
@@ -28,7 +27,6 @@ export const UserContext: React.Context<ContextProps> = React.createContext({
     firstName: '',
     lastName: '',
   },
-  permissions: [],
 });
 
 type Props = {
@@ -69,7 +67,6 @@ const UserProvider = ({ children }: Props) => (
               language: 'en',
               role: 'manager',
             },
-            permissions = [],
           } = getByPathWithDefault({}, 'viewer', data);
 
           const { email, id, firstName, lastName } = user;
@@ -99,9 +96,7 @@ const UserProvider = ({ children }: Props) => (
             });
           }
 
-          return (
-            <UserContext.Provider value={{ user, permissions }}>{children}</UserContext.Provider>
-          );
+          return <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>;
         }}
       </Query>
     )}
