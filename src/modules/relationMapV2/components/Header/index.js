@@ -21,7 +21,7 @@ import batchMessages from 'modules/batch/messages';
 import containerMessages from 'modules/container/messages';
 import shipmentMessages from 'modules/shipment/messages';
 import { getByPathWithDefault } from 'utils/fp';
-import { Entities } from 'modules/relationMapV2/store';
+import { Entities, SortAndFilter } from 'modules/relationMapV2/store';
 import { SortInput } from 'components/NavBar';
 import { HeadingStyle, ButtonStyle, RowStyle } from './style';
 import { RelationMapContext } from '../OrderFocus/store';
@@ -44,6 +44,7 @@ const Header = React.memo<Props>(
   injectIntl(({ style, intl }: Props) => {
     const { state, dispatch } = React.useContext(RelationMapContext);
     const { mapping } = Entities.useContainer();
+    const { filterAndSort, onChangeFilter } = SortAndFilter.useContainer();
     const { orders, entities } = mapping;
     const orderSort = [
       { title: intl.formatMessage(orderMessages.updatedAt), value: 'updatedAt' },
@@ -165,14 +166,19 @@ const Header = React.memo<Props>(
           </div>
           <div>
             <SortInput
-              sort={currentSort(orderSort, {
-                field: 'updatedAt',
-                direction: 'DESCENDING',
-              })}
-              ascending
+              sort={currentSort(orderSort, filterAndSort.sort)}
+              ascending={filterAndSort.sort.direction !== 'DESCENDING'}
               fields={orderSort}
               sortable
-              onChange={console.warn}
+              onChange={({ field: { value }, ascending }) =>
+                onChangeFilter({
+                  ...filterAndSort,
+                  sort: {
+                    field: value,
+                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                  },
+                })
+              }
             />
           </div>
         </div>

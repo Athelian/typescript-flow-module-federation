@@ -3,9 +3,12 @@
 import { useState } from 'react';
 import type { Hit, Order, OrderItem } from 'generated/graphql';
 import { intersection } from 'lodash';
+// $FlowFixMe missing define for partialRight
+import { partialRight } from 'ramda';
 import { createContainer } from 'unstated-next';
 import produce from 'immer';
 import { isEquals } from 'utils/fp';
+import usePersistFilter from 'hooks/usePersistFilter';
 import { normalizeEntity } from 'modules/relationMapV2/components/OrderFocus/normalize';
 
 const defaultState = [];
@@ -108,3 +111,5 @@ export function useEntities(
 }
 
 export const Entities = createContainer(useEntities);
+
+export const SortAndFilter = createContainer(partialRight(usePersistFilter, 'NRMFilter'));

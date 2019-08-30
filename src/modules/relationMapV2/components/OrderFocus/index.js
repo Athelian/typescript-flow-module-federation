@@ -20,7 +20,7 @@ import {
   orderFullFocusDetailQuery,
 } from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { Hits, Entities } from 'modules/relationMapV2/store';
+import { Hits, Entities, SortAndFilter } from 'modules/relationMapV2/store';
 import { WrapperStyle, ListStyle, RowStyle, ActionsBackdropStyle } from './style';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
@@ -104,21 +104,9 @@ const innerElementType = React.forwardRef(
   )
 );
 
-type Props = {
-  filterBy: {
-    query: string,
-    archived: boolean,
-  },
-  sortBy: {
-    [field: string]: string,
-  },
-  perPage: number,
-  page: number,
-};
-
 const loadMore = (
   clientData: { fetchMore: Function, data: ?Object },
-  filtersAndSort: Object = {},
+  queryVariables: Object = {},
   selectedField: string = ''
 ) => {
   const { data = { [`${selectedField}`]: { page: 1, totalPage: 0 } }, fetchMore } = clientData;
@@ -129,10 +117,10 @@ const loadMore = (
   logger.warn('loadMore nextPage', nextPage);
   return fetchMore({
     variables: {
-      ...filtersAndSort,
-      filter: filtersAndSort.filter,
-      ...(filtersAndSort && filtersAndSort.sort
-        ? { sort: { [filtersAndSort.sort.field]: filtersAndSort.sort.direction } }
+      ...queryVariables,
+      filter: queryVariables.filter,
+      ...(queryVariables && queryVariables.sort
+        ? { sort: { [queryVariables.sort.field]: queryVariables.sort.direction } }
         : {}),
       page: nextPage,
     },
@@ -169,17 +157,18 @@ const loadMore = (
   }).catch(logger.warn);
 };
 
-export default function OrderFocus({ ...filtersAndSort }: Props) {
+export default function OrderFocus() {
   const uiContext = React.useContext(UIContext);
   const [expandRows, setExpandRows] = React.useState([]);
   const { initHits } = Hits.useContainer();
   const { initMapping } = Entities.useContainer();
-  const lastFiltersAndSort = usePrevious(filtersAndSort);
+  const { queryVariables } = SortAndFilter.useContainer();
+  const lastQueryVariables = usePrevious(queryVariables);
   React.useEffect(() => {
-    if (!isEquals(lastFiltersAndSort, filtersAndSort)) {
+    if (!isEquals(lastQueryVariables, queryVariables)) {
       setExpandRows([]);
     }
-  }, [lastFiltersAndSort, filtersAndSort]);
+  }, [lastQueryVariables, queryVariables]);
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const queryOrdersDetail = React.useCallback(
     (orderIds: Array<string>, isPreload: boolean = false) => {
@@ -231,7 +220,7 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
         <DndProvider backend={HTML5Backend}>
           <Query
             query={orderFocusedListQuery}
-            variables={filtersAndSort}
+            variables={queryVariables}
             fetchPolicy="network-only"
           >
             {({ loading, data, error, fetchMore }) => {
@@ -284,7 +273,7 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
                     onItemsRendered={({ visibleStartIndex, visibleStopIndex }) => {
                       const isLastCell = visibleStopIndex === rowCount - 1;
                       if (hasMoreItems(data, 'orders') && isLastCell) {
-                        loadMore({ fetchMore, data }, filtersAndSort, 'orders');
+                        loadMore({ fetchMore, data }, queryVariables, 'orders');
                       }
                       const orderIds: Array<string> = [];
                       for (let index = visibleStartIndex; index < visibleStopIndex; index += 1) {
