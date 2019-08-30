@@ -9,4 +9,7 @@ export const partnerPermissionQuery = gql`
   }
 `;
 
+/**
+ * @deprecated
+ */
 export default partnerPermissionQuery;

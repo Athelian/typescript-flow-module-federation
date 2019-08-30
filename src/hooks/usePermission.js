@@ -1,31 +1,34 @@
 // @flow
 import { useContext, useCallback } from 'react';
 import { intersection } from 'lodash';
+import { useHasPermissions } from 'components/Context/Permissions';
 import QueryFormPermissionContext from 'components/common/QueryForm/context';
-import PermissionContext from 'modules/permission/PermissionContext';
+import useUser from './useUser';
 
 /**
  *  Grab the owner permission or partner permission
  *
  * @param {boolean} isOwner
  *
+ * @deprecated This hook use a deprecated form permission context, Use instead the hook useHasPermissions directly
  */
 const usePermission = (isOwner: boolean = true) => {
-  const hasPermission = useCallback(
-    (checkPermission: string | Array<string>, permissions: Array<string>) => {
-      if (Array.isArray(checkPermission)) {
-        return intersection(permissions, checkPermission).length > 0;
-      }
-      return permissions.includes(checkPermission);
-    },
-    []
-  );
-  const { permissions } = useContext(PermissionContext);
   const { permissions: partnerPermissions } = useContext(QueryFormPermissionContext);
+  const { organization } = useUser();
+  const hasPermissionOwner = useHasPermissions(organization?.id);
+
+  const hasPermissionPartner = useCallback(
+    (checkPermission: string | Array<string>) => {
+      if (Array.isArray(checkPermission)) {
+        return intersection(partnerPermissions, checkPermission).length > 0;
+      }
+      return partnerPermissions.includes(checkPermission);
+    },
+    [partnerPermissions]
+  );
 
   return {
-    hasPermission: (checkPermission: string | Array<string>) =>
-      hasPermission(checkPermission, isOwner ? permissions : partnerPermissions),
+    hasPermission: isOwner ? hasPermissionOwner : hasPermissionPartner,
   };
 };
 

@@ -1,11 +1,7 @@
 // @flow
 import * as React from 'react';
-import { Query } from 'react-apollo';
-import { navigate } from '@reach/router';
-import { getByPath, getByPathWithDefault } from 'utils/fp';
-import { partnerPermissionQuery } from 'components/common/QueryForm/query';
+import { usePermissions } from 'components/Context/Permissions';
 import LoadingIcon from 'components/LoadingIcon';
-import PermissionContext from 'modules/permission/PermissionContext';
 import useUser from 'hooks/useUser';
 
 type Props = {
@@ -15,42 +11,18 @@ type Props = {
 
 const PartnerPermissionsWrapper = ({ data, children }: Props) => {
   const { isOwnerBy } = useUser();
-  const { permissions } = React.useContext(PermissionContext);
+  const organizationId = data?.ownedBy?.id;
+  const permissions = usePermissions(organizationId);
 
-  if (!data) {
+  if (!organizationId) {
     return children([], false);
   }
 
-  const organizationId = getByPath('ownedBy.id', data);
-  const isOwner = isOwnerBy(organizationId);
-
-  if (isOwner) {
-    return children(permissions, isOwner);
+  if (permissions.loading) {
+    return <LoadingIcon />;
   }
 
-  return (
-    <Query
-      query={partnerPermissionQuery}
-      variables={{ organizationId: getByPath('ownedBy.id', data) }}
-      fetchPolicy="cache-first"
-    >
-      {({ loading, data: permissionsData, error: permissionError }) => {
-        if (loading) return <LoadingIcon />;
-
-        if (permissionError) {
-          if (permissionError.message && permissionError.message.includes('403')) {
-            navigate('/403');
-          }
-
-          return permissionError.message;
-        }
-        return children(
-          getByPathWithDefault([], 'viewer.permissionsForOrganization', permissionsData),
-          isOwner
-        );
-      }}
-    </Query>
-  );
+  return children(permissions.permissions, isOwnerBy(organizationId));
 };
 
 export default PartnerPermissionsWrapper;

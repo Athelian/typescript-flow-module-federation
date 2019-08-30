@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { areEqual } from 'react-window';
 import LoadingIcon from 'components/LoadingIcon';
-import { useHasPermissions } from 'components/Permissions';
+import { useHasPermissions } from 'components/Context/Permissions';
 import { Actions } from '../SheetState/contants';
 import type { CellValue } from '../SheetState';
 import { useSheetState } from '../SheetState';

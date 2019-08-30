@@ -7,7 +7,6 @@ import { FullStoryAPI } from 'react-fullstory';
 import LoadingIcon from 'components/LoadingIcon';
 import { isAppInProduction } from 'utils/env';
 import { getByPathWithDefault } from 'utils/fp';
-import { PermissionProvider } from 'modules/permission';
 import query from './query';
 
 type ContextProps = {
@@ -101,9 +100,7 @@ const UserProvider = ({ children }: Props) => (
           }
 
           return (
-            <UserContext.Provider value={{ user, permissions }}>
-              <PermissionProvider permissions={permissions}>{children}</PermissionProvider>
-            </UserContext.Provider>
+            <UserContext.Provider value={{ user, permissions }}>{children}</UserContext.Provider>
           );
         }}
       </Query>

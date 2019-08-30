@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import GradientContainer from 'components/GradientContainer';
 import { LanguageConsumer } from 'modules/language';
-import { AuthenticationConsumer } from 'components/Authenticated';
+import { AuthenticationConsumer } from 'components/Context/Authenticated';
 import loginIcon from 'media/icon_white.png';
 import loginIconName from 'media/logo_white.png';
 import LoadingIcon from 'components/LoadingIcon';
