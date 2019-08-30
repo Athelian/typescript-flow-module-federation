@@ -48,8 +48,8 @@ type Props = {|
   milestoneId: string,
   isDragging: boolean,
 |};
-// FIXME: @tj change name, this isn't form, just a card
-export default function MilestoneForm({ provided, milestoneId, isDragging }: Props) {
+
+export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDragging }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const { user } = useUser();
