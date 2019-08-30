@@ -90,14 +90,6 @@ export const itemFormFragment = gql`
     }
     memo
     todo {
-      milestone {
-        ... on Milestone {
-          ...milestoneCardFragment
-          project {
-            ...projectCardFragment
-          }
-        }
-      }
       taskCount {
         ...taskCountFragment
       }

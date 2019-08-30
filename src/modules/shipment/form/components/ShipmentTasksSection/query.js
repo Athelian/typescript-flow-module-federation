@@ -18,14 +18,6 @@ export const shipmentFormTasksQuery = gql`
       ... on Shipment {
         id
         todo {
-          milestone {
-            ... on Milestone {
-              ...milestoneCardFragment
-              project {
-                ...projectCardFragment
-              }
-            }
-          }
           taskCount {
             ...taskCountFragment
           }
