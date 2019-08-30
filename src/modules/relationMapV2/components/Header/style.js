@@ -2,6 +2,10 @@
 import { css } from 'react-emotion';
 
 export const HeadingStyle = css`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
   color: #fff;
   position: sticky;
   top: 0;

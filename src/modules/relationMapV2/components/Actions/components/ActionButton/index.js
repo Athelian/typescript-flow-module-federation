@@ -15,7 +15,7 @@ const defaultProps = {
 function ActionButton({ isDisabled, onClick, children }: Props) {
   return (
     <div
-      className={ActionButtonWrapperStyle(isDisabled)}
+      className={ActionButtonWrapperStyle(Boolean(isDisabled))}
       onClick={isDisabled ? () => {} : onClick}
       role="presentation"
     >
