@@ -52,7 +52,7 @@ const QueryQueryV3 = ({ query, entityId, entityType, render, onCompleted }: Prop
       navigate('/404');
       return null;
     default:
-      return render(data?.[entityType] || {}, permissions.loading);
+      return render(data?.[entityType] ?? {}, permissions.loading);
   }
 };
 

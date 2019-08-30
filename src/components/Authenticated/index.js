@@ -1,16 +1,16 @@
 // @flow
 import * as React from 'react';
-import { useQuery } from 'react-apollo/lib/index';
+import { useQuery } from '@apollo/react-hooks';
 import query from './query';
 
 type Context = {
   authenticated: boolean,
-  setAuthenticated: Function,
+  setAuthenticated: boolean => void,
 };
 
 export const AuthenticatedContext: React.Context<Context> = React.createContext({
   authenticated: false,
-  setAuthenticated: authenticated => authenticated,
+  setAuthenticated: () => {},
 });
 
 export const useAuthenticated = (): Context => React.useContext(AuthenticatedContext);
@@ -31,7 +31,7 @@ const AuthenticatedProvider = ({ children }: Props) => {
   return (
     <AuthenticatedContext.Provider
       value={{
-        authenticated: data?.authenticated || false,
+        authenticated: data?.authenticated ?? false,
         setAuthenticated: (authenticated: boolean) => {
           updateQuery(() => ({ authenticated }));
         },

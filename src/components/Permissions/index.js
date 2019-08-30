@@ -85,7 +85,7 @@ export const PermissionsProvider = ({ children }: Props) => {
             variables: {
               organizationId,
             },
-            fetchPolicy: 'cache-first',
+            fetchPolicy: 'network-only',
           })
           .then(({ data }) => {
             setPermissions({
@@ -113,7 +113,6 @@ export const PermissionsProvider = ({ children }: Props) => {
       const permissionsByOrganization = getPermissionsByOrganization(organizationId);
 
       return (permissionKey: string | Array<string>) => {
-        console.log(permissionsByOrganization, permissionKey);
         if (permissionsByOrganization.loading) {
           return false;
         }
