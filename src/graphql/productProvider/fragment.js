@@ -69,14 +69,6 @@ export const productProviderFormFragment = gql`
       ...forbiddenFragment
     }
     todo {
-      milestone {
-        ... on Milestone {
-          ...milestoneCardFragment
-          project {
-            ...projectCardFragment
-          }
-        }
-      }
       tasks {
         ...taskWithoutParentInfoFragment
       }
