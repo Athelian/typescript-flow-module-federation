@@ -52,7 +52,7 @@ export default function QueryFormV2({ query, entityId, entityType, render, onCom
       navigate('/404');
       return null;
     default:
-      if (!data?.[entityType]) {
+      if (!loading && !data?.[entityType]) {
         navigate(`/${parseRoute(entityType)}`);
         return null;
       }
