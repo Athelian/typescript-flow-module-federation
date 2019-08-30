@@ -7,9 +7,8 @@ import { Content } from 'components/Layout';
 import { NavBar } from 'components/NavBar';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
-import { useHasPermissions } from 'components/Permissions';
+import usePermission from 'hooks/usePermission';
 import useFilter from 'hooks/useFilter';
-import useUser from 'hooks/useUser';
 import { NewButton, ExportButton } from 'components/Buttons';
 import OrderList from './list';
 import messages from './messages';
@@ -49,8 +48,7 @@ function OrderModule(props: Props) {
     'filterOrder'
   );
 
-  const { organization } = useUser();
-  const hasPermission = useHasPermissions(organization.id);
+  const { hasPermission } = usePermission();
 
   return (
     <Content>

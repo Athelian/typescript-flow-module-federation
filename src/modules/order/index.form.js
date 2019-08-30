@@ -11,13 +11,12 @@ import { getByPath } from 'utils/fp';
 import { FormContainer } from 'modules/form';
 import { UserConsumer } from 'modules/user';
 import Timeline from 'modules/timeline/components/Timeline';
-import QueryFormV3 from 'components/common/QueryFormV3';
+import QueryFormV2 from 'components/common/QueryFormV2';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import { NavBar, EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import { PermissionsContext } from 'components/Permissions';
 import { decodeId, encodeId, uuid } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import { initValues as taskInitValues } from 'modules/order/form/containers/tasks';
@@ -495,81 +494,77 @@ class OrderFormModule extends React.PureComponent<Props> {
               <Content>
                 {apiError && <p>Error: Please try again.</p>}
                 {this.isNew() || !orderId ? (
-                  <PermissionsContext.Consumer>
-                    {({ getPermissionsByOrganization }) => (
-                      <UserConsumer>
-                        {({ user }) => {
-                          const { organization } = user;
-                          const { types = [] } = organization;
-                          const { loading } = getPermissionsByOrganization(organization.id);
-                          const isImporter = types.includes('Importer');
-                          return (
-                            <>
-                              <OrderForm
-                                order={{ ownedBy: organization }}
-                                loading={loading}
-                                isNew
-                              />
-                              <Subscribe
-                                to={[
-                                  OrderItemsContainer,
-                                  OrderInfoContainer,
-                                  OrderTagsContainer,
-                                  OrderFilesContainer,
-                                  OrderTasksContainer,
-                                ]}
-                              >
-                                {(
+                  <UserConsumer>
+                    {({ user }) => {
+                      const { organization } = user;
+                      const { types = [] } = organization;
+                      const isImporter = types.includes('Importer');
+                      return (
+                        <>
+                          <OrderForm isNew />
+                          <Subscribe
+                            to={[
+                              OrderItemsContainer,
+                              OrderInfoContainer,
+                              OrderTagsContainer,
+                              OrderFilesContainer,
+                              OrderTasksContainer,
+                            ]}
+                          >
+                            {(
+                              orderItemState,
+                              orderInfoState,
+                              orderTagsState,
+                              orderFilesState,
+                              orderTasksState
+                            ) =>
+                              this.onFormReady(
+                                {
                                   orderItemState,
                                   orderInfoState,
                                   orderTagsState,
                                   orderFilesState,
-                                  orderTasksState
-                                ) =>
-                                  this.onFormReady(
-                                    {
-                                      orderItemState,
-                                      orderInfoState,
-                                      orderTagsState,
-                                      orderFilesState,
-                                      orderTasksState,
-                                    },
-                                    {
-                                      id: uuid(),
-                                      inCharges: [],
-                                      currency: 'USD',
-                                      customFields: {
-                                        mask: null,
-                                        fieldValues: [],
-                                      },
-                                      tags: [],
-                                      importer: isImporter ? organization : {},
-                                      todo: {
-                                        tasks: [],
-                                      },
-                                      files: [],
-                                      orderItems: [],
-                                      shipments: [],
-                                      containers: [],
-                                      ...initDataForSlideView,
-                                    }
-                                  )
+                                  orderTasksState,
+                                },
+                                {
+                                  id: uuid(),
+                                  inCharges: [],
+                                  currency: 'USD',
+                                  customFields: {
+                                    mask: null,
+                                    fieldValues: [],
+                                  },
+                                  tags: [],
+                                  importer: isImporter ? organization : {},
+                                  todo: {
+                                    tasks: [],
+                                  },
+                                  files: [],
+                                  orderItems: [],
+                                  shipments: [],
+                                  containers: [],
+                                  ...initDataForSlideView,
                                 }
-                              </Subscribe>
-                            </>
-                          );
-                        }}
-                      </UserConsumer>
-                    )}
-                  </PermissionsContext.Consumer>
+                              )
+                            }
+                          </Subscribe>
+                        </>
+                      );
+                    }}
+                  </UserConsumer>
                 ) : (
-                  <QueryFormV3
+                  <QueryFormV2
                     query={orderFormQuery}
                     entityId={orderId}
                     entityType="order"
-                    render={(order, loading) => (
+                    render={(order, { isLoading: loading, isOwner }) => (
                       <>
-                        <OrderForm order={order} loading={loading} isClone={this.isClone()} />
+                        <OrderForm
+                          order={order}
+                          loading={loading}
+                          isOwner={isOwner}
+                          isClone={this.isClone()}
+                        />
                         <Subscribe
                           to={[
                             OrderItemsContainer,

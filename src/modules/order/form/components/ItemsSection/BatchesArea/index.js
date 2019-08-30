@@ -11,7 +11,8 @@ import {
   generateCloneBatch,
 } from 'utils/batch';
 import { getByPathWithDefault } from 'utils/fp';
-import { useHasPermissions } from 'components/Permissions';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
 import {
   BATCH_CREATE,
   BATCH_UPDATE,
@@ -87,7 +88,8 @@ function BatchesArea({
   focusedItemIndex,
   orderIsArchived,
 }: Props) {
-  const hasPermission = useHasPermissions(order?.ownedBy?.id);
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
 
   const allowCloneBatch = hasPermission(BATCH_CREATE);
   const allowDeleteBatch = hasPermission(BATCH_DELETE);

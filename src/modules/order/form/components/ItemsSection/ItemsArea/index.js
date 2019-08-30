@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
-import { useHasPermissions } from 'components/Permissions';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
 import SelectProductProviders from 'modules/order/common/SelectProductProviders';
 import ItemFormInSlide from 'modules/orderItem/common/ItemFormInSlide';
 import SlideView from 'components/SlideView';
@@ -57,9 +58,6 @@ type Props = {
   order: {
     currency: string,
     exporter: ?Object,
-    ownedBy: {
-      id: string,
-    },
   },
   setFieldValue: (string, any) => void,
   setFieldTouched: Function,
@@ -79,7 +77,8 @@ function ItemsArea({
   onFocusItem,
   orderIsArchived,
 }: Props) {
-  const hasPermission = useHasPermissions(order?.ownedBy?.id);
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const { currency } = order;
   return (
     <div className={ItemsAreaWrapperStyle(itemsIsExpanded)}>
