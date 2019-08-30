@@ -282,7 +282,7 @@ src/generated
 #1. Generate fragmentTypes.json for apollo client
 yarn apollo-fragments
 #2. Download latest schema from our graphql server
-npx graphql-cli get-schema
+npx graphql-cli get-schema --endpoint dev -p zenport
 #3. Generate fragments
 yarn post:install
 ```

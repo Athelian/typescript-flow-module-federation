@@ -1,5 +1,4 @@
-# source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Sep 02 2019 10:46:49 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Aug 30 2019 14:47:04 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
