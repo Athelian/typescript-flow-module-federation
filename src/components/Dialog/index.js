@@ -16,11 +16,11 @@ type OptionalProps = {
   rootElementId: string,
   width: string,
   showCancelButton: boolean,
+  onRequestClose: (evt: Event) => void,
 };
 
 type Props = OptionalProps & {
   isOpen: boolean,
-  onRequestClose: (evt: Event) => void,
   onCancel?: Function,
   children: React.Node,
 };
@@ -32,6 +32,7 @@ export default class Dialog extends React.Component<Props> {
     rootElementId: 'dialog-root',
     width: 'min-content',
     showCancelButton: false,
+    onRequestClose: () => {},
   };
 
   dialogContainer: HTMLDivElement = document.createElement('div');
@@ -68,12 +69,15 @@ export default class Dialog extends React.Component<Props> {
         {ReactDOM.createPortal(
           <div
             className={isOpen ? BackdropFadeInStyle : BackdropFadeOutStyle}
-            onClick={onRequestClose}
+            onClick={event => {
+              event.stopPropagation();
+              onRequestClose();
+            }}
             role="presentation"
           >
             <div
               className={isOpen ? DialogFadeInStyle(width) : DialogFadeOutStyle(width)}
-              onClick={e => e.stopPropagation()}
+              onClick={event => event.stopPropagation()}
               role="presentation"
             >
               {showCancelButton && (

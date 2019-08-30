@@ -88,6 +88,11 @@ export const projectFormQueryFragment = gql`
     milestones {
       ... on Milestone {
         id
+        updatedAt
+        updatedBy {
+          ...userAvatarFragment
+        }
+
         name
         dueDate
         completedAt
@@ -208,6 +213,24 @@ export const projectFormFragment = gql`
     }
     tags {
       ...tagFragment
+    }
+  }
+`;
+
+export const milestoneFormFragment = gql`
+  fragment milestoneFormFragment on Milestone {
+    id
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+
+    name
+    description
+    dueDate
+    completedAt
+    completedBy {
+      ...userAvatarFragment
     }
   }
 `;

@@ -40,7 +40,14 @@ const CompleteButton = ({
         <>
           <UserAvatar {...completedBy} />
           {editable && (
-            <button type="button" className={DeactivateButtonStyle} onClick={onUnComplete}>
+            <button
+              type="button"
+              className={DeactivateButtonStyle}
+              onClick={event => {
+                event.stopPropagation();
+                onUnComplete();
+              }}
+            >
               <Icon icon="CLEAR" />
             </button>
           )}
@@ -51,7 +58,9 @@ const CompleteButton = ({
     <button
       type="button"
       className={TaskStatusButtonStyle}
-      onClick={() => {
+      onClick={event => {
+        event.stopPropagation();
+
         if (!completedAt && editable) {
           onComplete();
         }

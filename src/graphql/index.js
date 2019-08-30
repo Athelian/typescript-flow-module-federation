@@ -39,10 +39,11 @@ import { staffFormFragment, staffCardFragment } from './staff/fragment';
 import { tagFormFragment, tagCardFragment } from './tag/fragment';
 import { warehouseFormFragment, warehouseCardFragment } from './warehouse/fragment';
 import {
-  projectCardFragment,
   milestoneFragment,
-  projectCardNewFragment,
   milestoneCardFragment,
+  milestoneFormFragment,
+  projectCardFragment,
+  projectCardNewFragment,
   projectFormQueryFragment,
   projectFormFragment,
 } from './project/fragment';
@@ -137,8 +138,9 @@ export {
   ownedByFragment,
   projectCardFragment,
   milestoneFragment,
-  projectCardNewFragment,
+  milestoneFormFragment,
   milestoneCardFragment,
+  projectCardNewFragment,
   projectFormQueryFragment,
   projectFormFragment,
   taskCardFragment,
