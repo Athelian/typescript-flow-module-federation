@@ -310,7 +310,8 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                                   defaultMessage="ADD TASK"
                                 />
                               }
-                              onClick={() => {
+                              onClick={e => {
+                                e.stopPropagation();
                                 selectTasksSlideToggle(true);
                               }}
                             />
