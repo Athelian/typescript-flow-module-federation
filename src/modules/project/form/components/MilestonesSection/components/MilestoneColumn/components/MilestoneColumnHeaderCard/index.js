@@ -6,7 +6,7 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
-import { formatToGraphql, startOfToday } from 'utils/date';
+import { formatToGraphql, startOfToday, differenceInCalendarDays } from 'utils/date';
 import { getByPathWithDefault } from 'utils/fp';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -38,6 +38,8 @@ import {
   TASK_SET_IN_PROGRESS,
   TASK_SET_SKIPPED,
 } from 'modules/permission/constants/task';
+
+import { EstimatedCompletionDateContext } from 'modules/project/form/helpers';
 import validator from './validator';
 import messages from './messages';
 import { MilestoneHeaderWrapperStyle, DeleteButtonStyle, TaskRingWrapperStyle } from './style';
@@ -50,6 +52,8 @@ type Props = {|
 |};
 
 export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDragging }: Props) {
+  const estimatedCompletionDates = React.useContext(EstimatedCompletionDateContext);
+
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const { user } = useUser();
@@ -84,6 +88,12 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
             });
           }
         };
+
+        const completedAtAndDueDateDiff =
+          values.completedAt && values.dueDate
+            ? differenceInCalendarDays(new Date(values.completedAt), new Date(values.dueDate))
+            : 0;
+
         return (
           <>
             <BooleanValue>
@@ -214,6 +224,68 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                           />
                         )}
                       </FormField>
+                    </div>
+
+                    <div role="presentation" onClick={e => e.stopPropagation()}>
+                      {values.completedAt ? (
+                        <FormField
+                          name={`${milestoneId}.completedAt`}
+                          initValue={values.completedAt}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={onChangeValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              onBlur={evt => {
+                                inputHandlers.onBlur(evt);
+                                // setTimeout(() => {
+                                //   emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                                // }, 200);
+                              }}
+                              originalValue={initialValues.completedAt}
+                              label={<FormattedMessage {...messages.completed} />}
+                              editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_COMPLETED])}
+                              inputAlign="left"
+                              labelWidth="80px"
+                              inputWidth="125px"
+                              showDiff
+                              diff={completedAtAndDueDateDiff}
+                            />
+                          )}
+                        </FormField>
+                      ) : (
+                        <FormField
+                          name={`${milestoneId}.estimatedCompletionDate`}
+                          initValue={estimatedCompletionDates[milestoneIndex]}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={onChangeValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              onBlur={evt => {
+                                inputHandlers.onBlur(evt);
+                                // setTimeout(() => {
+                                //   emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                                // }, 200);
+                              }}
+                              isNew={isNew}
+                              originalValue={initialValues.estimatedCompletionDate}
+                              label={<FormattedMessage {...messages.estCompl} />}
+                              // FIXME: @tj MILESTONE_SET_ESTIMATED_COMPLETION_DATE
+                              editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_COMPLETED])}
+                              inputAlign="left"
+                              labelWidth="80px"
+                              inputWidth="125px"
+                            />
+                          )}
+                        </FormField>
+                      )}
                     </div>
 
                     <BooleanValue>

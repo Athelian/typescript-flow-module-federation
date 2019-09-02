@@ -12,7 +12,7 @@ import {
 } from 'components/Form';
 import { FormField } from 'modules/form';
 import { isNullOrUndefined } from 'utils/fp';
-import { calculateMilestonesEstimatedCompletionDate, calculateBindingDate } from 'utils/project';
+import { calculateMilestonesEstimatedCompletionDate } from 'utils/project';
 import {
   AutoDateBackgroundStyle,
   RadioWrapperStyle,
@@ -31,24 +31,20 @@ type Props = {
 const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: Props) => {
   const editable = true;
 
-  let { estimatedCompletionDate } = values;
   let dateBinding = false;
   let dateBindingValue = 0;
   let dateBindingMetric = 'days';
   let dateBindingSign = 'before';
+  let { estimatedCompletionDate } = values;
   if (values.estimatedCompletionDateBinding) {
     dateBinding = true;
 
     const {
       project: { milestones },
     } = values;
-    const index = milestones.findIndex(item => item.id === values.id);
-    const dates = calculateMilestonesEstimatedCompletionDate({ milestones });
-
-    estimatedCompletionDate = calculateBindingDate(
-      dates[index - 1],
-      values.estimatedCompletionDateInterval
-    );
+    const milestoneIndex = milestones.findIndex(item => item.id === values.id);
+    const estimatedCompletionDates = calculateMilestonesEstimatedCompletionDate({ milestones });
+    estimatedCompletionDate = estimatedCompletionDates[milestoneIndex];
 
     const { months, weeks, days } = values.estimatedCompletionDateInterval || {};
     if (!isNullOrUndefined(months)) {
