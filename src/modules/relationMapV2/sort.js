@@ -23,7 +23,7 @@ export type ItemSortField =
 
 export type SortDirection = 'ASCENDING' | 'DESCENDING';
 
-function compareByNumber(firstNumber: number, secondNumber: number) {
+function compareByGeneric(firstNumber: any, secondNumber: any) {
   return firstNumber < secondNumber;
 }
 
@@ -44,11 +44,11 @@ export function sortBatchBy(
     case 'producedAt': {
       compareBy = comparator((firstItem, secondItem) =>
         direction === 'DESCENDING'
-          ? !compareByNumber(
+          ? !compareByGeneric(
               getByPathWithDefault(0, field, firstItem),
               getByPathWithDefault(0, field, secondItem)
             )
-          : compareByNumber(
+          : compareByGeneric(
               getByPathWithDefault(0, field, firstItem),
               getByPathWithDefault(0, field, secondItem)
             )
@@ -74,11 +74,11 @@ export function sortBatchBy(
     default: {
       compareBy = comparator((firstItem, secondItem) =>
         direction === 'DESCENDING'
-          ? !compareByNumber(
+          ? !compareByGeneric(
               getByPathWithDefault(0, 'id', firstItem),
               getByPathWithDefault(0, 'id', secondItem)
             )
-          : compareByNumber(
+          : compareByGeneric(
               getByPathWithDefault(0, 'id', firstItem),
               getByPathWithDefault(0, 'id', secondItem)
             )
@@ -101,11 +101,11 @@ export function sortOrderItemBy(
     case 'updatedAt': {
       compareBy = comparator((firstItem, secondItem) =>
         direction === 'DESCENDING'
-          ? !compareByNumber(
+          ? !compareByGeneric(
               getByPathWithDefault(0, field, firstItem),
               getByPathWithDefault(0, field, secondItem)
             )
-          : compareByNumber(
+          : compareByGeneric(
               getByPathWithDefault(0, field, firstItem),
               getByPathWithDefault(0, field, secondItem)
             )
@@ -188,11 +188,11 @@ export function sortOrderItemBy(
     default: {
       compareBy = comparator((firstItem, secondItem) =>
         direction === 'DESCENDING'
-          ? !compareByNumber(
+          ? !compareByGeneric(
               getByPathWithDefault(0, 'id', firstItem),
               getByPathWithDefault(0, 'id', secondItem)
             )
-          : compareByNumber(
+          : compareByGeneric(
               getByPathWithDefault(0, 'id', firstItem),
               getByPathWithDefault(0, 'id', secondItem)
             )

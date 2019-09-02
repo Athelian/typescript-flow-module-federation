@@ -1,12 +1,5 @@
 import gql from 'graphql-tag';
-import {
-  tagFragment,
-  userAvatarFragment,
-  taskCountFragment,
-  ownedByFragment,
-  portFragment,
-  timelineDateFullFragment,
-} from 'graphql';
+import { tagFragment, taskCountFragment, ownedByFragment } from 'graphql';
 
 export const productProviderNewRMFragment = gql`
   fragment productProviderNewRMFragment on ProductProvider {
@@ -307,17 +300,7 @@ export const orderCardFullFragment = gql`
     containers {
       ... on Container {
         id
-        updatedAt
-        createdAt
-        warehouseArrivalAgreedDate
-        warehouseArrivalActualDate
         no
-        warehouse {
-          ... on Warehouse {
-            id
-            name
-          }
-        }
         ownedBy {
           ...ownedByFragment
         }
@@ -331,8 +314,6 @@ export const orderCardFullFragment = gql`
     shipments {
       ... on Shipment {
         id
-        updatedAt
-        createdAt
         exporter {
           ... on Organization {
             id
@@ -364,54 +345,6 @@ export const orderCardFullFragment = gql`
           ... on Organization {
             id
             name
-          }
-        }
-        cargoReady {
-          ...timelineDateFullFragment
-        }
-        voyages {
-          ... on Voyage {
-            id
-            vesselName
-            vesselCode
-            departurePort {
-              ...portFragment
-            }
-            arrivalPort {
-              ...portFragment
-            }
-            departure {
-              ...timelineDateFullFragment
-            }
-            arrival {
-              ...timelineDateFullFragment
-            }
-          }
-        }
-        containerGroups {
-          ... on ContainerGroup {
-            id
-            warehouse {
-              ... on Warehouse {
-                id
-                name
-                ownedBy {
-                  ... on Organization {
-                    id
-                    name
-                  }
-                }
-              }
-            }
-            customClearance {
-              ...timelineDateFullFragment
-            }
-            warehouseArrival {
-              ...timelineDateFullFragment
-            }
-            deliveryReady {
-              ...timelineDateFullFragment
-            }
           }
         }
       }
@@ -579,9 +512,6 @@ export const orderFocusDetailQuery = gql`
   ${orderCardFullFragment}
   ${tagFragment}
   ${taskCountFragment}
-  ${portFragment}
-  ${userAvatarFragment}
-  ${timelineDateFullFragment}
   ${ownedByFragment}
 `;
 
@@ -595,9 +525,6 @@ export const orderFullFocusDetailQuery = gql`
 
   ${orderCardOptimiseFragment}
   ${orderCardFullFragment}
-  ${portFragment}
-  ${userAvatarFragment}
-  ${timelineDateFullFragment}
   ${tagFragment}
   ${taskCountFragment}
   ${ownedByFragment}
