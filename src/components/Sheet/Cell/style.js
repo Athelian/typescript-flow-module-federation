@@ -72,11 +72,11 @@ export const InputWrapperStyle = (focus: boolean) => css`
   ${focus && `position: relative`};
 `;
 
-export const FocusesWrapperStyle = (onFirstRow: boolean) => css`
+export const FocusesWrapperStyle = (onFirstRow: boolean, extended: number) => css`
   ${layout.HORIZONTAL};
   display: none;
   position: absolute;
-  ${onFirstRow ? `top: 30px;` : 'bottom: 30px;'}
+  ${onFirstRow ? `top: ${(extended + 1) * 30}px;` : `bottom: ${(extended + 1) * 30}px;`}
   left: 0px;
   z-index: 4;
 `;
@@ -90,11 +90,11 @@ export const FocusStyle = (onFirstRow: boolean) => css`
   padding: 0 5px;
 `;
 
-export const ErrorsWrapperStyle = (onFirstRow: boolean) => css`
+export const ErrorsWrapperStyle = (onFirstRow: boolean, extended: number) => css`
   ${layout.VERTICAL};
   align-items: flex-start;
   position: absolute;
-  ${onFirstRow ? `top: 30px;` : 'bottom: 30px;'}
+  ${onFirstRow ? `top: ${(extended + 1) * 30}px;` : `bottom: ${(extended + 1) * 30}px;`}
   left: 0px;
   z-index: 4;
 `;

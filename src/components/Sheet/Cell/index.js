@@ -150,7 +150,7 @@ const Cell = ({
       />
 
       {!errors && !weakError && foreignFocuses.length > 0 && (
-        <div id="focuses" className={FocusesWrapperStyle(isFirstRow)}>
+        <div id="focuses" className={FocusesWrapperStyle(isFirstRow, extended)}>
           {foreignFocuses.map(ff => (
             <span key={ff.id} className={FocusStyle(isFirstRow)}>
               <FormattedName firstName={ff.firstName} lastName={ff.lastName} />
@@ -160,7 +160,7 @@ const Cell = ({
       )}
 
       {errors !== null && errors.length > 0 && (
-        <div className={ErrorsWrapperStyle(isFirstRow)}>
+        <div className={ErrorsWrapperStyle(isFirstRow, extended)}>
           {errors.map(error => (
             <span key={error} className={ErrorStyle}>
               {error}

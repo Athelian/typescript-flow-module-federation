@@ -70,9 +70,9 @@ const CellWrapper = React.memo<WrapperProps>(({ cell, columnIndex, rowIndex }: W
       focus={!!focusedAt && focusedAt.x === rowIndex && focusedAt.y === columnIndex}
       weakFocus={!!weakFocusedAt.find(f => f.x === rowIndex && f.y === columnIndex)}
       foreignFocuses={foreignFocuses}
-      readonly={cell.readonly || false}
+      readonly={cell.readonly || !(cell.entity && cell.entity.permissions(hasPermission))}
       forbidden={cell.forbidden || false}
-      disabled={cell.disabled || !(cell.entity && cell.entity.permissions(hasPermission))}
+      disabled={cell.disabled || false}
       isFirstRow={rowIndex === 0}
       extended={cell.extended || 0}
       errors={
