@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { areEqual } from 'react-window';
 import LoadingIcon from 'components/LoadingIcon';
-import { useOrganizationPermissions } from '../Permissions';
+import { useHasPermissions } from 'components/Context/Permissions';
 import { Actions } from '../SheetState/contants';
 import type { CellValue } from '../SheetState';
 import { useSheetState } from '../SheetState';
@@ -21,7 +21,7 @@ type WrapperProps = {
 };
 
 const CellWrapper = React.memo<WrapperProps>(({ cell, columnIndex, rowIndex }: WrapperProps) => {
-  const hasPermission = useOrganizationPermissions(cell?.entity?.ownedBy);
+  const hasPermission = useHasPermissions(cell?.entity?.ownedBy);
   const [foreignFocuses, setForeignFocuses] = React.useState<Array<Object>>([]);
   const { state, dispatch, mutate } = useSheetState();
   const { focusedAt, weakFocusedAt, foreignFocusedAt, erroredAt, weakErroredAt } = state;

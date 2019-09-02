@@ -1,16 +1,15 @@
 // @flow
-import * as React from 'react';
-import PermissionContext from './PermissionContext';
+import { useHasPermissions } from 'components/Context/Permissions';
+import useUser from 'hooks/useUser';
 
-const hasPermission = (permissions: Array<string>): Function => (path: string): boolean =>
-  permissions.includes(path);
+/**
+ * @deprecated Use instead hook useHasPermissions
+ */
+const PermissionConsumer = ({ children }: { children: Function }) => {
+  const { organization } = useUser();
+  const hasPermission = useHasPermissions(organization?.id);
 
-const PermissionConsumer = ({ children }: { children: Function }) => (
-  <PermissionContext.Consumer>
-    {({ permissions }) => {
-      return children(hasPermission(permissions));
-    }}
-  </PermissionContext.Consumer>
-);
+  return children(hasPermission);
+};
 
 export default PermissionConsumer;

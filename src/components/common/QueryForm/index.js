@@ -1,16 +1,15 @@
 // @flow
 import * as React from 'react';
 import { navigate } from '@reach/router';
-import { Query } from 'react-apollo';
+import { useQuery } from '@apollo/react-hooks';
 import type { DocumentNode } from 'graphql';
 import useUser from 'hooks/useUser';
 import LoadingIcon from 'components/LoadingIcon';
+import { usePermissions } from 'components/Context/Permissions';
 import { decodeId } from 'utils/id';
 import logger from 'utils/logger';
-import { getByPathWithDefault, getByPath } from 'utils/fp';
 import { parseRoute } from 'utils/route';
 import QueryFormPermissionContext from './context';
-import { partnerPermissionQuery } from './query';
 
 type OptionalProps = {
   onCompleted: ?Function,
@@ -24,84 +23,50 @@ type Props = OptionalProps & {
 };
 
 export default function QueryForm({ query, entityId, entityType, render, onCompleted }: Props) {
+  const { data, loading, error } = useQuery(query, {
+    variables: { id: decodeId(entityId) },
+    fetchPolicy: 'network-only',
+    onCompleted: onCompleted || logger.warn,
+    onError: logger.error,
+  });
+
+  const organizationId = data?.[entityType]?.ownedBy?.id;
+  const permissions = usePermissions(organizationId);
   const { isOwnerBy } = useUser();
-  return (
-    <Query
-      query={query}
-      variables={{ id: decodeId(entityId) }}
-      fetchPolicy="network-only"
-      onCompleted={onCompleted || logger.warn}
-      onError={logger.error}
-    >
-      {({ loading, data, error }) => {
-        if (error) {
-          if (error.message && error.message.includes('403')) {
-            navigate('/403');
-          }
+  const isOwner = isOwnerBy(organizationId);
 
-          return error.message;
-        }
+  if (error) {
+    if (error.message && error.message.includes('403')) {
+      navigate('/403');
+    }
 
-        if (loading) return <LoadingIcon />;
+    return error.message;
+  }
 
-        const errorType = getByPath(`${entityType}.__typename`, data);
-        if (['NotFound', 'Forbidden'].includes(errorType)) {
-          navigate('/404');
-          return null;
-        }
+  if (loading || permissions.loading) {
+    return <LoadingIcon />;
+  }
 
-        const organizationId = getByPath(`${entityType}.ownedBy.id`, data);
-        const isOwner = isOwnerBy(organizationId);
-        if (!isOwner) {
-          // query permission for partner
-          return (
-            <Query
-              query={partnerPermissionQuery}
-              variables={{ organizationId }}
-              fetchPolicy="cache-first"
-            >
-              {({ loading: isLoading, data: permissionData, error: permissionError }) => {
-                if (isLoading) return <LoadingIcon />;
-                if (permissionError) {
-                  if (permissionError.message && permissionError.message.includes('403')) {
-                    navigate('/403');
-                  }
-
-                  return permissionError.message;
-                }
-                return (
-                  <QueryFormPermissionContext.Provider
-                    value={{
-                      isOwner: false,
-                      permissions: getByPathWithDefault(
-                        [],
-                        'viewer.permissionsForOrganization',
-                        permissionData
-                      ),
-                    }}
-                  >
-                    {render(getByPathWithDefault({}, entityType, data), isOwner)}
-                  </QueryFormPermissionContext.Provider>
-                );
-              }}
-            </Query>
-          );
-        }
-        if (getByPath(entityType, data)) {
-          return (
-            <QueryFormPermissionContext.Provider
-              value={{
-                isOwner: true,
-                permissions: [],
-              }}
-            >
-              {render(getByPathWithDefault({}, entityType, data), isOwner)}
-            </QueryFormPermissionContext.Provider>
-          );
-        }
+  switch (data?.[entityType]?.__typename) {
+    case 'NotFound':
+    case 'Forbidden':
+      navigate('/404');
+      return null;
+    default:
+      if (!data?.[entityType]) {
         navigate(`/${parseRoute(entityType)}`);
-        return <LoadingIcon />;
-      }}
-    </Query>
-  );
+        return null;
+      }
+
+      return (
+        <QueryFormPermissionContext.Provider
+          value={{
+            isOwner,
+            permissions: permissions.permissions,
+          }}
+        >
+          {render(data?.[entityType] ?? {}, isOwner)}
+        </QueryFormPermissionContext.Provider>
+      );
+  }
 }

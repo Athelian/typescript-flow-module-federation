@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import { Mutation } from 'react-apollo';
 import Icon from 'components/Icon';
 import LogoutDialog from 'components/Dialog/LogoutDialog';
-import { AuthenticationConsumer } from 'modules/authentication';
+import { AuthenticationConsumer } from 'components/Context/Authenticated';
 import { logOutMutation } from 'modules/userNavbar/mutation';
 import messages from 'modules/userNavbar/messages';
 import Import from 'modules/import';
