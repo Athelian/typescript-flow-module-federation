@@ -34,7 +34,7 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
   let dateBinding = false;
   let dateBindingValue = 0;
   let dateBindingMetric = 'days';
-  let dateBindingSign = 'before';
+  const { dateBindingSign } = values;
   let { estimatedCompletionDate } = values;
   if (values.estimatedCompletionDateBinding) {
     dateBinding = true;
@@ -56,15 +56,12 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
     if (!isNullOrUndefined(months)) {
       dateBindingValue = Math.abs(months);
       dateBindingMetric = 'months';
-      dateBindingSign = months > 0 ? 'after' : 'before';
     } else if (!isNullOrUndefined(weeks)) {
       dateBindingValue = Math.abs(weeks);
       dateBindingMetric = 'weeks';
-      dateBindingSign = weeks > 0 ? 'after' : 'before';
     } else if (!isNullOrUndefined(days)) {
       dateBindingValue = Math.abs(days);
       dateBindingMetric = 'days';
-      dateBindingSign = days > 0 ? 'after' : 'before';
     }
   }
 
@@ -92,6 +89,7 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
             setFieldValue('estimatedCompletionDate', estimatedCompletionDate);
             setFieldValue('estimatedCompletionDateBinding', 'MilestoneCompleteDate');
             setFieldValue('estimatedCompletionDateInterval', { days: 0 });
+            setFieldValue('dateBindingSign', 'before');
           }}
           editable={editable}
         />
@@ -131,7 +129,7 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
               setFieldValue={(field, newValue) => {
                 const { value, metric } = newValue;
                 setFieldValue('estimatedCompletionDateInterval', {
-                  [metric]: dateBindingSign === 'before' ? 0 - value : value,
+                  [metric]: dateBindingSign === 'before' ? -Math.abs(value) : Math.abs(value),
                 });
               }}
             >
@@ -154,8 +152,10 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
               initValue={dateBindingSign}
               setFieldValue={(field, value) => {
                 setFieldValue('estimatedCompletionDateInterval', {
-                  [dateBindingMetric]: value === 'before' ? 0 - dateBindingValue : dateBindingValue,
+                  [dateBindingMetric]:
+                    value === 'before' ? -Math.abs(dateBindingValue) : Math.abs(dateBindingValue),
                 });
+                setFieldValue('dateBindingSign', value);
               }}
               saveOnChange
             >
