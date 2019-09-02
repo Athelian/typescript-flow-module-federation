@@ -1,6 +1,6 @@
 // @flow
 /* eslint-disable no-param-reassign */
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Hit, Order, OrderItem } from 'generated/graphql';
 import { intersection } from 'lodash';
 // $FlowFixMe missing define for partialRight
@@ -12,7 +12,7 @@ import usePersistFilter from 'hooks/usePersistFilter';
 import { normalizeEntity } from 'modules/relationMapV2/components/OrderFocus/normalize';
 
 const defaultState = [];
-export function useHits(initialState: Object = defaultState) {
+function useHits(initialState: Object = defaultState) {
   const [hits, setHits] = useState<Array<Hit>>(initialState);
   const initHits = (newHits: Array<Hit>) => {
     if (!isEquals(newHits, hits)) {
@@ -30,7 +30,7 @@ type RelationMapEntities = {
   entities: Object,
 };
 
-export function useEntities(
+function useEntities(
   initialState: RelationMapEntities = {
     orders: [],
     entities: {},
@@ -113,3 +113,76 @@ export function useEntities(
 export const Entities = createContainer(useEntities);
 
 export const SortAndFilter = createContainer(partialRight(usePersistFilter, 'NRMFilter'));
+
+type SortField = {
+  sort: {
+    field: string,
+    direction: string,
+  },
+};
+
+function useClientSorts(
+  initSorts: {
+    orderItem: SortField,
+    batch: SortField,
+    container: SortField,
+    shipment: SortField,
+  } = {
+    orderItem: {
+      sort: {
+        field: 'updatedAt',
+        direction: 'DESCENDING',
+      },
+    },
+    batch: {
+      sort: {
+        field: 'updatedAt',
+        direction: 'DESCENDING',
+      },
+    },
+    container: {
+      sort: {
+        field: 'updatedAt',
+        direction: 'DESCENDING',
+      },
+    },
+    shipment: {
+      sort: {
+        field: 'updatedAt',
+        direction: 'DESCENDING',
+      },
+    },
+  }
+) {
+  const cacheKey = 'NRMLocalSorts';
+  const localFilter = window.localStorage.getItem(cacheKey);
+  const initialFilter = localFilter
+    ? {
+        ...initSorts,
+        ...JSON.parse(localFilter),
+      }
+    : initSorts;
+
+  const [filterAndSort, changeFilterAndSort] = useState(initialFilter);
+
+  const onChangeFilter = useCallback((type: string, newFilter: Object) => {
+    changeFilterAndSort(prevState =>
+      produce(prevState, draft => {
+        draft[type] = newFilter;
+      })
+    );
+  }, []);
+
+  useEffect(() => {
+    if (window.localStorage) {
+      window.localStorage.setItem(cacheKey, JSON.stringify(filterAndSort));
+    }
+  }, [cacheKey, filterAndSort]);
+
+  return {
+    filterAndSort,
+    onChangeFilter,
+  };
+}
+
+export const ClientSorts = createContainer(useClientSorts);

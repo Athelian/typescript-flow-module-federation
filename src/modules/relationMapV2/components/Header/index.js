@@ -21,7 +21,7 @@ import batchMessages from 'modules/batch/messages';
 import containerMessages from 'modules/container/messages';
 import shipmentMessages from 'modules/shipment/messages';
 import { getByPathWithDefault } from 'utils/fp';
-import { Entities, SortAndFilter } from 'modules/relationMapV2/store';
+import { Entities, SortAndFilter, ClientSorts } from 'modules/relationMapV2/store';
 import { SortInput } from 'components/NavBar';
 import { HeadingStyle, ButtonStyle, RowStyle } from './style';
 import { RelationMapContext } from '../OrderFocus/store';
@@ -45,6 +45,10 @@ const Header = React.memo<Props>(
     const { state, dispatch } = React.useContext(RelationMapContext);
     const { mapping } = Entities.useContainer();
     const { filterAndSort, onChangeFilter } = SortAndFilter.useContainer();
+    const clientSorts = ClientSorts.useContainer();
+    console.warn({
+      clientSorts,
+    });
     const { orders, entities } = mapping;
     const orderSort = [
       { title: intl.formatMessage(orderMessages.updatedAt), value: 'updatedAt' },
@@ -218,14 +222,18 @@ const Header = React.memo<Props>(
           </div>
           <div>
             <SortInput
-              sort={currentSort(itemSort, {
-                field: 'updatedAt',
-                direction: 'DESCENDING',
-              })}
-              ascending
+              sort={currentSort(itemSort, clientSorts?.filterAndSort?.orderItem?.sort)}
+              ascending={clientSorts?.filterAndSort?.orderItem?.sort?.direction !== 'DESCENDING'}
               fields={itemSort}
               sortable
-              onChange={console.warn}
+              onChange={({ field: { value }, ascending }) =>
+                clientSorts.onChangeFilter('orderItem', {
+                  sort: {
+                    field: value,
+                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                  },
+                })
+              }
             />
           </div>
         </div>
@@ -269,14 +277,18 @@ const Header = React.memo<Props>(
           </div>
           <div>
             <SortInput
-              sort={currentSort(batchSort, {
-                field: 'updatedAt',
-                direction: 'DESCENDING',
-              })}
-              ascending
+              sort={currentSort(batchSort, clientSorts?.filterAndSort?.batch?.sort)}
+              ascending={clientSorts?.filterAndSort?.batch?.sort?.direction !== 'DESCENDING'}
               fields={batchSort}
               sortable
-              onChange={console.warn}
+              onChange={({ field: { value }, ascending }) =>
+                clientSorts.onChangeFilter('batch', {
+                  sort: {
+                    field: value,
+                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                  },
+                })
+              }
             />
           </div>
         </div>
@@ -320,14 +332,18 @@ const Header = React.memo<Props>(
           </div>
           <div>
             <SortInput
-              sort={currentSort(containerSort, {
-                field: 'updatedAt',
-                direction: 'DESCENDING',
-              })}
-              ascending
+              sort={currentSort(containerSort, clientSorts?.filterAndSort?.container?.sort)}
+              ascending={clientSorts?.filterAndSort?.container?.sort?.direction !== 'DESCENDING'}
               fields={containerSort}
               sortable
-              onChange={console.warn}
+              onChange={({ field: { value }, ascending }) =>
+                clientSorts.onChangeFilter('container', {
+                  sort: {
+                    field: value,
+                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                  },
+                })
+              }
             />
           </div>
         </div>
@@ -371,14 +387,18 @@ const Header = React.memo<Props>(
           </div>
           <div>
             <SortInput
-              sort={currentSort(shipmentSort, {
-                field: 'updatedAt',
-                direction: 'DESCENDING',
-              })}
-              ascending
+              sort={currentSort(shipmentSort, clientSorts?.filterAndSort?.shipment?.sort)}
+              ascending={clientSorts?.filterAndSort?.shipment?.sort?.direction !== 'DESCENDING'}
               fields={shipmentSort}
               sortable
-              onChange={console.warn}
+              onChange={({ field: { value }, ascending }) =>
+                clientSorts.onChangeFilter('shipment', {
+                  sort: {
+                    field: value,
+                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                  },
+                })
+              }
             />
           </div>
         </div>

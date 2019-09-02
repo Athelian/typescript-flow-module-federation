@@ -5,7 +5,7 @@ import { Content } from 'components/Layout';
 import { NavBar, EntityIcon } from 'components/NavBar';
 import OrderFocus from './components/OrderFocus';
 import AdvanceFilter from './components/AdvanceFilter';
-import { Hits, Entities, SortAndFilter } from './store';
+import { Hits, Entities, SortAndFilter, ClientSorts } from './store';
 
 const RelationMap = () => {
   return (
@@ -30,7 +30,9 @@ const RelationMap = () => {
               <AdvanceFilter />
             </NavBar>
             <Content>
-              <OrderFocus />
+              <ClientSorts.Provider>
+                <OrderFocus />
+              </ClientSorts.Provider>
             </Content>
           </SortAndFilter.Provider>
         </Entities.Provider>
