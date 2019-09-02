@@ -6,6 +6,8 @@ import memoize from 'memoize-one';
 import styled from 'react-emotion';
 import { getByPathWithDefault } from 'utils/fp';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
+import { ClientSorts } from 'modules/relationMapV2/store';
+import { sortOrderItemBy, sortBatchBy } from 'modules/relationMapV2/sort';
 import type { CellRender, Entity } from './type.js.flow';
 
 const DELAY = 200; // 0.2 second
@@ -148,7 +150,14 @@ export const orderCoordinates = memoize(
     order: mixed,
     isLoadedData?: boolean,
   }): Array<?CellRender> => {
-    const orderItems = getByPathWithDefault([], 'orderItems', order);
+    const clientSorts = ClientSorts.useContainer();
+    const orderItems = sortOrderItemBy(
+      getByPathWithDefault([], 'orderItems', order),
+      clientSorts?.filterAndSort?.orderItem?.sort ?? {
+        field: 'updatedAt',
+        direction: 'DESCENDING',
+      }
+    );
     const orderItemCount = getByPathWithDefault(0, 'orderItemCount', order);
     const orderItemChildlessCount = getByPathWithDefault(0, 'orderItemChildlessCount', order);
     const batchCount = getByPathWithDefault(0, 'batchCount', order);
@@ -265,7 +274,13 @@ export const orderCoordinates = memoize(
     }
     if (orderItemCount > 0) {
       orderItems.forEach((item, index) => {
-        const batches = getByPathWithDefault([], 'batches', item);
+        const batches = sortBatchBy(
+          getByPathWithDefault([], 'batches', item),
+          clientSorts?.filterAndSort?.batch?.sort ?? {
+            field: 'updatedAt',
+            direction: 'DESCENDING',
+          }
+        );
         if (batches.length) {
           batches.forEach((batch, position) => {
             result.push(

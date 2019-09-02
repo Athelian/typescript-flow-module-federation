@@ -125,8 +125,6 @@ function useClientSorts(
   initSorts: {
     orderItem: SortField,
     batch: SortField,
-    container: SortField,
-    shipment: SortField,
   } = {
     orderItem: {
       sort: {
@@ -135,18 +133,6 @@ function useClientSorts(
       },
     },
     batch: {
-      sort: {
-        field: 'updatedAt',
-        direction: 'DESCENDING',
-      },
-    },
-    container: {
-      sort: {
-        field: 'updatedAt',
-        direction: 'DESCENDING',
-      },
-    },
-    shipment: {
       sort: {
         field: 'updatedAt',
         direction: 'DESCENDING',

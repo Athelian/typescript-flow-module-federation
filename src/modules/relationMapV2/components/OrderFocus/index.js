@@ -262,90 +262,103 @@ export default function OrderFocus() {
                   queryPermission(organizationId);
                 }
               });
-              return orders.length > 0 ? (
+              return (
                 <RelationMapContext.Provider value={{ state, dispatch }}>
-                  <List
-                    itemData={ordersData}
-                    className={ListStyle}
-                    itemCount={rowCount}
-                    innerElementType={innerElementType}
-                    itemSize={() => 75}
-                    onItemsRendered={({ visibleStartIndex, visibleStopIndex }) => {
-                      const isLastCell = visibleStopIndex === rowCount - 1;
-                      if (hasMoreItems(data, 'orders') && isLastCell) {
-                        loadMore({ fetchMore, data }, queryVariables, 'orders');
-                      }
-                      const orderIds: Array<string> = [];
-                      for (let index = visibleStartIndex; index < visibleStopIndex; index += 1) {
-                        const [{ order }] = ordersData[index];
-                        const isLoadedData =
-                          getByPathWithDefault([], 'orderItems', order).length ===
-                          getByPathWithDefault(0, 'orderItemCount', order);
-                        if (!isLoadedData && getByPathWithDefault(0, 'orderItemCount', order) > 0) {
-                          orderIds.push(getByPathWithDefault('', 'id', order));
+                  {orders.length > 0 ? (
+                    <>
+                      <List
+                        itemData={ordersData}
+                        className={ListStyle}
+                        itemCount={rowCount}
+                        innerElementType={innerElementType}
+                        itemSize={() => 75}
+                        onItemsRendered={({ visibleStartIndex, visibleStopIndex }) => {
+                          const isLastCell = visibleStopIndex === rowCount - 1;
+                          if (hasMoreItems(data, 'orders') && isLastCell) {
+                            loadMore({ fetchMore, data }, queryVariables, 'orders');
+                          }
+                          const orderIds: Array<string> = [];
+                          for (
+                            let index = visibleStartIndex;
+                            index < visibleStopIndex;
+                            index += 1
+                          ) {
+                            const [{ order }] = ordersData[index];
+                            const isLoadedData =
+                              getByPathWithDefault([], 'orderItems', order).length ===
+                              getByPathWithDefault(0, 'orderItemCount', order);
+                            if (
+                              !isLoadedData &&
+                              getByPathWithDefault(0, 'orderItemCount', order) > 0
+                            ) {
+                              orderIds.push(getByPathWithDefault('', 'id', order));
+                            }
+                          }
+                          queryOrdersDetail(orderIds, true);
+                        }}
+                        height={window.innerHeight - 50}
+                        width={
+                          uiContext.isSideBarExpanded
+                            ? window.innerWidth - 200
+                            : window.innerWidth - 50
                         }
-                      }
-                      queryOrdersDetail(orderIds, true);
-                    }}
-                    height={window.innerHeight - 50}
-                    width={
-                      uiContext.isSideBarExpanded ? window.innerWidth - 200 : window.innerWidth - 50
-                    }
-                  >
-                    {Row}
-                  </List>
-                  <MoveEntityConfirm
-                    isProcessing={state.moveEntity.isProcessing}
-                    onCancel={() =>
-                      dispatch({
-                        type: 'CANCEL_MOVE',
-                        payload: {},
-                      })
-                    }
-                    onConfirm={async () => {
-                      dispatch({
-                        type: 'CONFIRM_MOVE_START',
-                        payload: {},
-                      });
+                      >
+                        {Row}
+                      </List>
+                      <MoveEntityConfirm
+                        isProcessing={state.moveEntity.isProcessing}
+                        onCancel={() =>
+                          dispatch({
+                            type: 'CANCEL_MOVE',
+                            payload: {},
+                          })
+                        }
+                        onConfirm={async () => {
+                          dispatch({
+                            type: 'CONFIRM_MOVE_START',
+                            payload: {},
+                          });
 
-                      const { orderIds = [] } = await moveEntityMutation(state, entities);
-                      dispatch({
-                        type: 'CONFIRM_MOVE_END',
-                        payload: { orderIds },
-                      });
-                      queryOrdersDetail(orderIds);
-                    }}
-                    isOpen={state.moveEntity.isOpen}
-                    {...state.moveEntity.detail}
-                  />
-                  <EditFormSlideView
-                    type={state.edit.type}
-                    selectedId={state.edit.selectedId}
-                    onClose={() => {
-                      if (state.edit.type === ORDER) {
-                        queryOrdersDetail([state.edit.selectedId]);
-                      } else if (state.edit.orderId) {
-                        queryOrdersDetail([state.edit.orderId]);
-                      } else if (state.edit.orderIds && state.edit.orderIds.length) {
-                        queryOrdersDetail(state.edit.orderIds);
-                      }
-                      dispatch({
-                        type: 'EDIT',
-                        payload: {
-                          type: '',
-                          selectedId: '',
-                        },
-                      });
-                    }}
-                  />
+                          const { orderIds = [] } = await moveEntityMutation(state, entities);
+                          dispatch({
+                            type: 'CONFIRM_MOVE_END',
+                            payload: { orderIds },
+                          });
+                          queryOrdersDetail(orderIds);
+                        }}
+                        isOpen={state.moveEntity.isOpen}
+                        {...state.moveEntity.detail}
+                      />
+                      <EditFormSlideView
+                        type={state.edit.type}
+                        selectedId={state.edit.selectedId}
+                        onClose={() => {
+                          if (state.edit.type === ORDER) {
+                            queryOrdersDetail([state.edit.selectedId]);
+                          } else if (state.edit.orderId) {
+                            queryOrdersDetail([state.edit.orderId]);
+                          } else if (state.edit.orderIds && state.edit.orderIds.length) {
+                            queryOrdersDetail(state.edit.orderIds);
+                          }
+                          dispatch({
+                            type: 'EDIT',
+                            payload: {
+                              type: '',
+                              selectedId: '',
+                            },
+                          });
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <Display>
+                      <FormattedMessage
+                        id="modules.Orders.noOrderFound"
+                        defaultMessage="No orders found"
+                      />
+                    </Display>
+                  )}
                 </RelationMapContext.Provider>
-              ) : (
-                <Display>
-                  <FormattedMessage
-                    id="modules.Orders.noOrderFound"
-                    defaultMessage="No orders found"
-                  />
-                </Display>
               );
             }}
           </Query>

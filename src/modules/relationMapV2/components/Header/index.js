@@ -18,8 +18,6 @@ import {
 import orderMessages from 'modules/order/messages';
 import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
-import containerMessages from 'modules/container/messages';
-import shipmentMessages from 'modules/shipment/messages';
 import { getByPathWithDefault } from 'utils/fp';
 import { Entities, SortAndFilter, ClientSorts } from 'modules/relationMapV2/store';
 import { SortInput } from 'components/NavBar';
@@ -40,7 +38,7 @@ function currentSort(
   return fields[0];
 }
 
-const Header = React.memo<Props>(
+const Header = React.memo<{ style?: Object }>(
   injectIntl(({ style, intl }: Props) => {
     const { state, dispatch } = React.useContext(RelationMapContext);
     const { mapping } = Entities.useContainer();
@@ -75,66 +73,9 @@ const Header = React.memo<Props>(
       { title: intl.formatMessage(batchMessages.updatedAt), value: 'updatedAt' },
       { title: intl.formatMessage(batchMessages.createdAt), value: 'createdAt' },
       { title: intl.formatMessage(batchMessages.batchNo), value: 'no' },
-      { title: intl.formatMessage(batchMessages.poNo), value: 'poNo' },
-      { title: intl.formatMessage(batchMessages.productName), value: 'productName' },
-      { title: intl.formatMessage(batchMessages.productSerial), value: 'productSerial' },
       { title: intl.formatMessage(batchMessages.deliveredAt), value: 'deliveredAt' },
       { title: intl.formatMessage(batchMessages.expiredAt), value: 'expiredAt' },
       { title: intl.formatMessage(batchMessages.producedAt), value: 'producedAt' },
-    ];
-    const containerSort = [
-      { title: intl.formatMessage(containerMessages.updatedAt), value: 'updatedAt' },
-      { title: intl.formatMessage(containerMessages.createdAt), value: 'createdAt' },
-      { title: intl.formatMessage(containerMessages.warehouseName), value: 'warehouseName' },
-      {
-        title: intl.formatMessage(containerMessages.warehouseArrivalActualDate),
-        value: 'warehouseArrivalActualDate',
-      },
-      {
-        title: intl.formatMessage(containerMessages.warehouseArrivalAgreedDate),
-        value: 'warehouseArrivalAgreedDate',
-      },
-    ];
-    const shipmentSort = [
-      { title: intl.formatMessage(shipmentMessages.updatedAt), value: 'updatedAt' },
-      { title: intl.formatMessage(shipmentMessages.createdAt), value: 'createdAt' },
-      { title: intl.formatMessage(shipmentMessages.shipmentId), value: 'no' },
-      { title: intl.formatMessage(shipmentMessages.blNo), value: 'blNo' },
-      { title: intl.formatMessage(shipmentMessages.vesselName), value: 'vesselName' },
-      { title: intl.formatMessage(shipmentMessages.cargoReady), value: 'cargoReady' },
-      {
-        title: intl.formatMessage(shipmentMessages.loadPortDeparture),
-        value: 'loadPortDeparture',
-      },
-      {
-        title: intl.formatMessage(shipmentMessages.firstTransitPortArrival),
-        value: 'firstTransitPortArrival',
-      },
-      {
-        title: intl.formatMessage(shipmentMessages.firstTransitPortDeparture),
-        value: 'firstTransitPortDeparture',
-      },
-      {
-        title: intl.formatMessage(shipmentMessages.secondTransitPortArrival),
-        value: 'secondTransitPortArrival',
-      },
-      {
-        title: intl.formatMessage(shipmentMessages.secondTransitPortDeparture),
-        value: 'secondTransitPortDeparture',
-      },
-      {
-        title: intl.formatMessage(shipmentMessages.dischargePortArrival),
-        value: 'dischargePortArrival',
-      },
-      {
-        title: intl.formatMessage(shipmentMessages.customClearance),
-        value: 'customClearance',
-      },
-      { title: intl.formatMessage(shipmentMessages.warehouseArrival), value: 'warehouseArrival' },
-      {
-        title: intl.formatMessage(shipmentMessages.deliveryReady),
-        value: 'deliveryReady',
-      },
     ];
     return (
       <div style={style} className={RowStyle}>
@@ -327,22 +268,7 @@ const Header = React.memo<Props>(
               <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
             </button>
           </div>
-          <div>
-            <SortInput
-              sort={currentSort(containerSort, clientSorts?.filterAndSort?.container?.sort)}
-              ascending={clientSorts?.filterAndSort?.container?.sort?.direction !== 'DESCENDING'}
-              fields={containerSort}
-              sortable
-              onChange={({ field: { value }, ascending }) =>
-                clientSorts.onChangeFilter('container', {
-                  sort: {
-                    field: value,
-                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
-                  },
-                })
-              }
-            />
-          </div>
+          <div />
         </div>
         <div
           className={HeadingStyle}
@@ -382,22 +308,7 @@ const Header = React.memo<Props>(
               <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
             </button>
           </div>
-          <div>
-            <SortInput
-              sort={currentSort(shipmentSort, clientSorts?.filterAndSort?.shipment?.sort)}
-              ascending={clientSorts?.filterAndSort?.shipment?.sort?.direction !== 'DESCENDING'}
-              fields={shipmentSort}
-              sortable
-              onChange={({ field: { value }, ascending }) =>
-                clientSorts.onChangeFilter('shipment', {
-                  sort: {
-                    field: value,
-                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
-                  },
-                })
-              }
-            />
-          </div>
+          <div />
         </div>
       </div>
     );
