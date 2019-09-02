@@ -10,8 +10,6 @@ import type {
 import { colors } from 'styles/common';
 import { ExtraToggleButton } from '../components';
 
-import { DiffDateStyle } from './style';
-
 type Props = LabelProps &
   TooltipProps &
   InputWrapperProps &
@@ -23,9 +21,6 @@ type Props = LabelProps &
     blackout: boolean,
     inputColor?: string,
     showExtraToggle: boolean,
-    showSyncIcon: boolean,
-    showDiff: Boolean,
-    diff: number,
     toggled: boolean,
     onToggle?: Function,
     toggleMessages?: {
@@ -51,8 +46,6 @@ const defaultProps = {
   blackout: false,
   vertical: false,
   showExtraToggle: false,
-  showDiff: false,
-  diff: 0,
   toggled: true,
 };
 
@@ -86,8 +79,6 @@ const DateInputFactory = ({
   editable,
   blackout,
   showExtraToggle,
-  showDiff,
-  diff,
   toggled,
   onToggle,
   toggleMessages,
@@ -153,12 +144,6 @@ const DateInputFactory = ({
             readOnlyWidth={inputWidth}
             readOnlyHeight={inputHeight}
           />
-        )}
-        {showDiff && (
-          <div className={DiffDateStyle(diff)}>
-            {diff > 0 && '+'}
-            {diff !== 0 && diff}
-          </div>
         )}
         {showExtraToggle && (
           <ExtraToggleButton

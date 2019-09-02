@@ -20,7 +20,7 @@ import TaskRing from 'components/TaskRing';
 import Icon from 'components/Icon';
 import { NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
-import { Label, TextInputFactory, DateInputFactory } from 'components/Form';
+import { TextInputFactory, DateInputFactory } from 'components/Form';
 import { ProjectMilestonesContainer } from 'modules/project/form/containers';
 import {
   MILESTONE_UPDATE,
@@ -31,7 +31,6 @@ import {
   MILESTONE_SET_TASKS,
   MILESTONE_DELETE,
 } from 'modules/permission/constants/milestone';
-
 import MilestoneFormSlide from 'modules/milestone/form/index.slide';
 import {
   TASK_UPDATE,
@@ -39,7 +38,6 @@ import {
   TASK_SET_IN_PROGRESS,
   TASK_SET_SKIPPED,
 } from 'modules/permission/constants/task';
-
 import { EstimatedCompletionDateContext } from 'modules/project/form/helpers';
 import validator from './validator';
 import messages from './messages';
@@ -50,6 +48,7 @@ import {
   TaskRingWrapperStyle,
   AutoDateSyncIconStyle,
   DateInputWrapperStyle,
+  DiffDateStyle,
 } from './style';
 
 type Props = {|
@@ -202,8 +201,8 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                           originalValue={initialValues.name}
                           editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_NAME])}
                           vertical
-                          inputAlign="left"
-                          inputWidth="205px"
+                          inputWidth="225px"
+                          inputHeight="20px"
                         />
                       )}
                     </FormField>
@@ -230,9 +229,10 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                           originalValue={initialValues.dueDate}
                           label={<FormattedMessage {...messages.dueDate} />}
                           editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_DUE_DATE])}
-                          inputAlign="left"
-                          labelWidth="80px"
-                          inputWidth="125px"
+                          labelWidth="95px"
+                          labelHeight="20px"
+                          inputWidth="130px"
+                          inputHeight="20px"
                           hideTooltip
                         />
                       )}
@@ -241,37 +241,37 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
 
                   <div role="presentation" onClick={e => e.stopPropagation()}>
                     {values.completedAt ? (
-                      <FormField
-                        name={`${milestoneId}.completedAt`}
-                        initValue={values.completedAt}
-                        values={values}
-                        validator={validator}
-                        setFieldValue={onChangeValue}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <DateInputFactory
-                            name={name}
-                            {...inputHandlers}
-                            originalValue={initialValues.completedAt}
-                            label={<FormattedMessage {...messages.completed} />}
-                            editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_COMPLETED])}
-                            inputAlign="left"
-                            labelWidth="80px"
-                            inputWidth="125px"
-                            showDiff
-                            hideTooltip
-                            diff={completedAtAndDueDateDiff}
-                          />
-                        )}
-                      </FormField>
+                      <div className={DateInputWrapperStyle}>
+                        <FormField
+                          name={`${milestoneId}.completedAt`}
+                          initValue={values.completedAt}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={onChangeValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              originalValue={initialValues.completedAt}
+                              label={<FormattedMessage {...messages.completed} />}
+                              editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_COMPLETED])}
+                              labelWidth="95px"
+                              labelHeight="20px"
+                              inputWidth="130px"
+                              inputHeight="20px"
+                              hideTooltip
+                              diff={completedAtAndDueDateDiff}
+                            />
+                          )}
+                        </FormField>
+                        <div className={DiffDateStyle(completedAtAndDueDateDiff)}>
+                          {completedAtAndDueDateDiff > 0 && '+'}
+                          {completedAtAndDueDateDiff !== 0 && completedAtAndDueDateDiff}
+                        </div>
+                      </div>
                     ) : (
-                      <div
-                        className={DateInputWrapperStyle(!values.estimatedCompletionDateBinding)}
-                      >
-                        <Label>
-                          <FormattedMessage {...messages.estCompl} />
-                        </Label>
-
+                      <div className={DateInputWrapperStyle}>
                         <FormField
                           name={`${milestoneId}.estimatedCompletionDate`}
                           initValue={estComplDate}
@@ -285,19 +285,18 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                               {...inputHandlers}
                               isNew={isNew}
                               originalValue={initialValues.estimatedCompletionDate}
+                              label={<FormattedMessage {...messages.estCompl} />}
                               editable={
                                 hasPermission([
                                   MILESTONE_UPDATE,
                                   MILESTONE_SET_ESTIMATED_COMPLETION_DATE,
                                 ]) && !values.estimatedCompletionDateBinding
                               }
-                              inputAlign="left"
-                              labelWidth="80px"
-                              inputWidth="125px"
-                              hideTip
-                              showDiff
+                              labelWidth="95px"
+                              labelHeight="20px"
+                              inputWidth="130px"
+                              inputHeight="20px"
                               hideTooltip
-                              diff={estComplDateDiff}
                             />
                           )}
                         </FormField>
@@ -306,6 +305,10 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                             <Icon icon="SYNC" />
                           </div>
                         )}
+                        <div className={DiffDateStyle(estComplDateDiff)}>
+                          {estComplDateDiff > 0 && '+'}
+                          {estComplDateDiff !== 0 && estComplDateDiff}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -405,7 +408,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                             label={
                               <FormattedMessage
                                 id="modules.Milestones.addTask"
-                                defaultMessage="ADD TASK"
+                                defaultMessage="SELECT TASK"
                               />
                             }
                             onClick={e => {

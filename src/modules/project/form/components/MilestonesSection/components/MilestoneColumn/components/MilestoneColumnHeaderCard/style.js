@@ -12,7 +12,7 @@ import {
 
 export const MilestoneHeaderWrapperStyle = (isDragging: boolean) => css`
   ${layout.GRID_VERTICAL};
-  grid-gap: 10px;
+  grid-gap: 5px;
   justify-content: center;
   justify-items: center;
   ${transitions.MAIN};
@@ -52,6 +52,9 @@ export const TaskRingWrapperStyle = css`
 `;
 
 export const AutoDateSyncIconStyle: string = css`
+  position: absolute;
+  right: 25px;
+  top: 0;
   width: 20px;
   height: 20px;
   color: ${colors.GRAY_VERY_LIGHT};
@@ -61,9 +64,20 @@ export const AutoDateSyncIconStyle: string = css`
   ${fontSizes.SMALL};
 `;
 
-export const DateInputWrapperStyle = (editable: boolean): string => css`
-  display: grid;
-  grid-template-columns: ${editable ? '80px 120px' : '80px 100px 20px'};
-  width: 100%;
-  padding: 0 5px;
+export const DateInputWrapperStyle: string = css`
+  position: relative;
+`;
+
+export const DiffDateStyle = (diff: number): string => css`
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: ${diff > 0 ? colors.RED : colors.TEAL};
+  ${fontSizes.SMALL};
+  width: 25px;
+  height: 20px;
+  font-weight: bold;
+  line-height: 20px;
+  text-align: center;
 `;

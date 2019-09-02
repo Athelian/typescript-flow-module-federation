@@ -16,6 +16,7 @@ export const TaskStatusInputWrapperStyle = ({
   height: 40px;
   width: 160px;
   border: 2px solid ${colors.TRANSPARENT};
+  margin: 5px 0;
   ${isCompleted
     ? `
       background-color: ${colors.TEAL};

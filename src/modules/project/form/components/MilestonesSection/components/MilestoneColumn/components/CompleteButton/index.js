@@ -3,7 +3,6 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
-import FormattedDate from 'components/FormattedDate';
 import { type UserAvatarType } from 'types';
 import {
   TaskStatusInputWrapperStyle,
@@ -74,12 +73,6 @@ const CompleteButton = ({
             <FormattedMessage id="components.form.unCompleted" defaultMessage="UNCOMPLETED" />
           )}
         </div>
-
-        {completedAt && (
-          <div className={StatusLabelStyle}>
-            <FormattedDate value={completedAt} />
-          </div>
-        )}
       </div>
 
       {completedAt && <Icon icon="CHECKED" />}
