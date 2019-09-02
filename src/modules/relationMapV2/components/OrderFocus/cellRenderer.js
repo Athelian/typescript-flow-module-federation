@@ -30,6 +30,7 @@ import { Hits, Entities } from 'modules/relationMapV2/store';
 import type { CellRender, State } from './type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
 import RelationLine from '../RelationLine';
+import OrderItemCard from '../OrderItemCard';
 import { ContentStyle, MatchedStyle } from './style';
 import {
   getColorByEntity,
@@ -897,7 +898,7 @@ function OrderItemCell({
             onClick={handleClick}
           >
             <div ref={drag}>
-              <ItemCard>{getByPathWithDefault('', 'no', data)}</ItemCard>
+              <OrderItemCard no={data?.no ?? 'N/A'} onCreateBatch={console.warn} />
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
