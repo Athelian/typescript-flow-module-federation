@@ -150,7 +150,7 @@ function lastSorting({
 }: {|
   id: string,
   sourceEntities: Array<Object>,
-  sortHandler: (Array<T>, sortOption: Object) => Array<T>,
+  sortHandler: (Array<Object>, sortOption: Object) => Array<Object>,
   sort: { field: string, direction: string },
 |}): Array<string> {
   if (
@@ -175,7 +175,7 @@ export const orderCoordinates = memoize(
     order,
   }: {
     isExpand: boolean,
-    order: mixed,
+    order: Object,
     isLoadedData?: boolean,
   }): Array<?CellRender> => {
     const clientSorts = ClientSorts.useContainer();
