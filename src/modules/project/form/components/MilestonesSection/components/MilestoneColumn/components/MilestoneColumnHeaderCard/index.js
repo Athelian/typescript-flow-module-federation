@@ -20,12 +20,13 @@ import TaskRing from 'components/TaskRing';
 import Icon from 'components/Icon';
 import { NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
-import { TextInputFactory, DateInputFactory } from 'components/Form';
+import { Label, TextInputFactory, DateInputFactory } from 'components/Form';
 import { ProjectMilestonesContainer } from 'modules/project/form/containers';
 import {
   MILESTONE_UPDATE,
   MILESTONE_SET_NAME,
   MILESTONE_SET_DUE_DATE,
+  MILESTONE_SET_ESTIMATED_COMPLETION_DATE,
   MILESTONE_SET_COMPLETED,
   MILESTONE_SET_TASKS,
   MILESTONE_DELETE,
@@ -42,8 +43,14 @@ import {
 import { EstimatedCompletionDateContext } from 'modules/project/form/helpers';
 import validator from './validator';
 import messages from './messages';
-import { MilestoneHeaderWrapperStyle, DeleteButtonStyle, TaskRingWrapperStyle } from './style';
 import CompleteButton from '../CompleteButton';
+import {
+  MilestoneHeaderWrapperStyle,
+  DeleteButtonStyle,
+  TaskRingWrapperStyle,
+  AutoDateSyncIconStyle,
+  DateInputWrapperStyle,
+} from './style';
 
 type Props = {|
   provided: DraggableProvided,
@@ -101,111 +108,142 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
             : 0;
 
         return (
-          <>
-            <BooleanValue>
-              {({ value: milestoneFormIsOpened, set: toggleMilestoneForm }) => (
-                <>
-                  <SlideView
-                    isOpen={milestoneFormIsOpened}
-                    onRequestClose={() => toggleMilestoneForm(false)}
-                  >
-                    {milestoneFormIsOpened && (
-                      <MilestoneFormSlide
-                        milestone={{
-                          ...values,
-                          project: {
-                            milestones,
-                          },
-                        }}
-                        onSave={newMilestone => {
-                          const { project, ...rest } = newMilestone;
-                          setDeepFieldValue(`milestones.${milestoneIndex}`, rest);
-                          toggleMilestoneForm(false);
-                        }}
-                      />
-                    )}
-                  </SlideView>
-                  <div
-                    ref={hoverRef}
-                    className={MilestoneHeaderWrapperStyle(isDragging)}
-                    {...provided.dragHandleProps}
-                    role="presentation"
-                    onClick={() => {
-                      toggleMilestoneForm(true);
-                    }}
-                  >
-                    <BooleanValue>
-                      {({ value: deleteDialogIsOpen, set: dialogToggle }) => (
-                        <>
-                          {hasPermission([MILESTONE_DELETE]) && milestones.length > 1 && (
-                            <button
-                              className={DeleteButtonStyle(isHovered)}
-                              type="button"
-                              onClick={event => {
-                                event.stopPropagation();
-                                if (getByPathWithDefault([], 'tasks', values).length > 0) {
-                                  dialogToggle(true);
-                                } else {
-                                  removeMilestone(milestoneId);
-                                }
-                              }}
-                            >
-                              <Icon icon="REMOVE" />
-                            </button>
-                          )}
-                          <DeleteDialog
-                            isOpen={deleteDialogIsOpen}
-                            onRequestClose={() => dialogToggle(false)}
-                            onRemove={() => {
-                              removeMilestone(milestoneId);
-                              dialogToggle(false);
+          <BooleanValue>
+            {({ value: milestoneFormIsOpened, set: toggleMilestoneForm }) => (
+              <>
+                <SlideView
+                  isOpen={milestoneFormIsOpened}
+                  onRequestClose={() => toggleMilestoneForm(false)}
+                >
+                  {milestoneFormIsOpened && (
+                    <MilestoneFormSlide
+                      milestone={{
+                        ...values,
+                        project: {
+                          milestones,
+                        },
+                      }}
+                      onSave={newMilestone => {
+                        const { project, ...rest } = newMilestone;
+                        setDeepFieldValue(`milestones.${milestoneIndex}`, rest);
+                        toggleMilestoneForm(false);
+                      }}
+                    />
+                  )}
+                </SlideView>
+                <div
+                  ref={hoverRef}
+                  className={MilestoneHeaderWrapperStyle(isDragging)}
+                  {...provided.dragHandleProps}
+                  role="presentation"
+                  onClick={() => {
+                    toggleMilestoneForm(true);
+                  }}
+                >
+                  <BooleanValue>
+                    {({ value: deleteDialogIsOpen, set: dialogToggle }) => (
+                      <>
+                        {hasPermission([MILESTONE_DELETE]) && milestones.length > 1 && (
+                          <button
+                            className={DeleteButtonStyle(isHovered)}
+                            type="button"
+                            onClick={event => {
+                              event.stopPropagation();
+                              if (getByPathWithDefault([], 'tasks', values).length > 0) {
+                                dialogToggle(true);
+                              } else {
+                                removeMilestone(milestoneId);
+                              }
                             }}
-                            onRemoveAll={() => {
-                              removeMilestone(milestoneId, true);
-                              dialogToggle(false);
-                            }}
-                            onCancel={() => dialogToggle(false)}
-                            onConfirm={() => {
-                              dialogToggle(false);
-                            }}
-                            message={
-                              <FormattedMessage
-                                id="modules.Projects.removeMilestoneWarningMessage"
-                                defaultMessage="There are some Tasks in this Milestone. Would you like to remove them from the Project (and not delete them) or completely delete them along with this Milestone?"
-                              />
-                            }
-                          />
-                        </>
-                      )}
-                    </BooleanValue>
-
-                    <div role="presentation" onClick={e => e.stopPropagation()}>
-                      <FormField
-                        name={`${milestoneId}.name`}
-                        initValue={values.name}
-                        values={values}
-                        validator={validator}
-                        setFieldValue={onChangeValue}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <TextInputFactory
-                            name={name}
-                            {...inputHandlers}
-                            isNew={isNew}
-                            required
-                            originalValue={initialValues.name}
-                            editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_NAME])}
-                            vertical
-                            inputAlign="left"
-                            inputWidth="205px"
-                          />
+                          >
+                            <Icon icon="REMOVE" />
+                          </button>
                         )}
-                      </FormField>
-                    </div>
-                    <div role="presentation" onClick={e => e.stopPropagation()}>
+                        <DeleteDialog
+                          isOpen={deleteDialogIsOpen}
+                          onRequestClose={() => dialogToggle(false)}
+                          onRemove={() => {
+                            removeMilestone(milestoneId);
+                            dialogToggle(false);
+                          }}
+                          onRemoveAll={() => {
+                            removeMilestone(milestoneId, true);
+                            dialogToggle(false);
+                          }}
+                          onCancel={() => dialogToggle(false)}
+                          onConfirm={() => {
+                            dialogToggle(false);
+                          }}
+                          message={
+                            <FormattedMessage
+                              id="modules.Projects.removeMilestoneWarningMessage"
+                              defaultMessage="There are some Tasks in this Milestone. Would you like to remove them from the Project (and not delete them) or completely delete them along with this Milestone?"
+                            />
+                          }
+                        />
+                      </>
+                    )}
+                  </BooleanValue>
+
+                  <div role="presentation" onClick={e => e.stopPropagation()}>
+                    <FormField
+                      name={`${milestoneId}.name`}
+                      initValue={values.name}
+                      values={values}
+                      validator={validator}
+                      setFieldValue={onChangeValue}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <TextInputFactory
+                          name={name}
+                          {...inputHandlers}
+                          isNew={isNew}
+                          required
+                          originalValue={initialValues.name}
+                          editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_NAME])}
+                          vertical
+                          inputAlign="left"
+                          inputWidth="205px"
+                        />
+                      )}
+                    </FormField>
+                  </div>
+                  <div role="presentation" onClick={e => e.stopPropagation()}>
+                    <FormField
+                      name={`${milestoneId}.dueDate`}
+                      initValue={values.dueDate}
+                      values={values}
+                      validator={validator}
+                      setFieldValue={onChangeValue}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <DateInputFactory
+                          name={name}
+                          {...inputHandlers}
+                          onBlur={evt => {
+                            inputHandlers.onBlur(evt);
+                            setTimeout(() => {
+                              emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                            }, 200);
+                          }}
+                          isNew={isNew}
+                          originalValue={initialValues.dueDate}
+                          label={<FormattedMessage {...messages.dueDate} />}
+                          editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_DUE_DATE])}
+                          inputAlign="left"
+                          labelWidth="80px"
+                          inputWidth="125px"
+                          hideTooltip
+                        />
+                      )}
+                    </FormField>
+                  </div>
+
+                  <div role="presentation" onClick={e => e.stopPropagation()}>
+                    {values.completedAt ? (
                       <FormField
-                        name={`${milestoneId}.dueDate`}
-                        initValue={values.dueDate}
+                        name={`${milestoneId}.completedAt`}
+                        initValue={values.completedAt}
                         values={values}
                         validator={validator}
                         setFieldValue={onChangeValue}
@@ -214,49 +252,26 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                           <DateInputFactory
                             name={name}
                             {...inputHandlers}
-                            onBlur={evt => {
-                              inputHandlers.onBlur(evt);
-                              setTimeout(() => {
-                                emitter.emit('AUTO_DATE', name, inputHandlers.value);
-                              }, 200);
-                            }}
-                            isNew={isNew}
-                            originalValue={initialValues.dueDate}
-                            label={<FormattedMessage {...messages.dueDate} />}
-                            editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_DUE_DATE])}
+                            originalValue={initialValues.completedAt}
+                            label={<FormattedMessage {...messages.completed} />}
+                            editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_COMPLETED])}
                             inputAlign="left"
                             labelWidth="80px"
                             inputWidth="125px"
+                            showDiff
+                            hideTooltip
+                            diff={completedAtAndDueDateDiff}
                           />
                         )}
                       </FormField>
-                    </div>
+                    ) : (
+                      <div
+                        className={DateInputWrapperStyle(!values.estimatedCompletionDateBinding)}
+                      >
+                        <Label>
+                          <FormattedMessage {...messages.estCompl} />
+                        </Label>
 
-                    <div role="presentation" onClick={e => e.stopPropagation()}>
-                      {values.completedAt ? (
-                        <FormField
-                          name={`${milestoneId}.completedAt`}
-                          initValue={values.completedAt}
-                          values={values}
-                          validator={validator}
-                          setFieldValue={onChangeValue}
-                        >
-                          {({ name, ...inputHandlers }) => (
-                            <DateInputFactory
-                              name={name}
-                              {...inputHandlers}
-                              originalValue={initialValues.completedAt}
-                              label={<FormattedMessage {...messages.completed} />}
-                              editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_COMPLETED])}
-                              inputAlign="left"
-                              labelWidth="80px"
-                              inputWidth="125px"
-                              showDiff
-                              diff={completedAtAndDueDateDiff}
-                            />
-                          )}
-                        </FormField>
-                      ) : (
                         <FormField
                           name={`${milestoneId}.estimatedCompletionDate`}
                           initValue={estComplDate}
@@ -270,166 +285,173 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                               {...inputHandlers}
                               isNew={isNew}
                               originalValue={initialValues.estimatedCompletionDate}
-                              label={<FormattedMessage {...messages.estCompl} />}
-                              // FIXME: @tj MILESTONE_SET_ESTIMATED_COMPLETION_DATE
-                              editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_COMPLETED])}
+                              editable={
+                                hasPermission([
+                                  MILESTONE_UPDATE,
+                                  MILESTONE_SET_ESTIMATED_COMPLETION_DATE,
+                                ]) && !values.estimatedCompletionDateBinding
+                              }
                               inputAlign="left"
                               labelWidth="80px"
                               inputWidth="125px"
+                              hideTip
                               showDiff
+                              hideTooltip
                               diff={estComplDateDiff}
-                              showSyncIcon
                             />
                           )}
                         </FormField>
-                      )}
-                    </div>
+                        {values.estimatedCompletionDateBinding && (
+                          <div className={AutoDateSyncIconStyle}>
+                            <Icon icon="SYNC" />
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
 
-                    <BooleanValue>
-                      {({ value: isDialogOpen, set: dialogToggle }) => (
-                        <>
-                          <CompleteButton
-                            editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_COMPLETED])}
-                            onComplete={() => {
-                              const { remain, inProgress } = taskCountByMilestone(milestoneId);
-                              if (remain + inProgress > 0) {
-                                dialogToggle(true);
-                              } else {
-                                completedMilestone({
-                                  id: milestoneId,
-                                  completedBy: user,
-                                  completedAt: formatToGraphql(startOfToday()),
-                                  action: 'leaveUnChange',
-                                });
-                              }
-                            }}
-                            onUnComplete={() => {
-                              completedMilestone({
-                                id: milestoneId,
-                                completedBy: null,
-                                completedAt: null,
-                                action: 'leaveUnChange',
-                              });
-                            }}
-                            completedAt={values.completedAt}
-                            completedBy={values.completedBy}
-                          />
-                          <CompleteDialog
-                            editable={{
-                              skip:
-                                hasPermission(TASK_UPDATE) ||
-                                (hasPermission(TASK_SET_IN_PROGRESS) &&
-                                  hasPermission(TASK_SET_SKIPPED)),
-                              complete:
-                                hasPermission(TASK_UPDATE) ||
-                                (hasPermission(TASK_SET_COMPLETED) &&
-                                  hasPermission(TASK_SET_IN_PROGRESS)),
-                            }}
-                            isOpen={isDialogOpen}
-                            onRequestClose={() => dialogToggle(false)}
-                            onSkip={() => {
-                              dialogToggle(false);
-                              completedMilestone({
-                                id: milestoneId,
-                                completedBy: user,
-                                completedAt: formatToGraphql(startOfToday()),
-                                action: 'setToSkip',
-                              });
-                            }}
-                            onComplete={() => {
-                              dialogToggle(false);
-                              completedMilestone({
-                                id: milestoneId,
-                                completedBy: user,
-                                completedAt: formatToGraphql(startOfToday()),
-                                action: 'setToComplete',
-                              });
-                            }}
-                            onCancel={() => dialogToggle(false)}
-                            onUnChange={() => {
-                              dialogToggle(false);
+                  <BooleanValue>
+                    {({ value: isDialogOpen, set: dialogToggle }) => (
+                      <>
+                        <CompleteButton
+                          editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_COMPLETED])}
+                          onComplete={() => {
+                            const { remain, inProgress } = taskCountByMilestone(milestoneId);
+                            if (remain + inProgress > 0) {
+                              dialogToggle(true);
+                            } else {
                               completedMilestone({
                                 id: milestoneId,
                                 completedBy: user,
                                 completedAt: formatToGraphql(startOfToday()),
                                 action: 'leaveUnChange',
                               });
+                            }
+                          }}
+                          onUnComplete={() => {
+                            completedMilestone({
+                              id: milestoneId,
+                              completedBy: null,
+                              completedAt: null,
+                              action: 'leaveUnChange',
+                            });
+                          }}
+                          completedAt={values.completedAt}
+                          completedBy={values.completedBy}
+                        />
+                        <CompleteDialog
+                          editable={{
+                            skip:
+                              hasPermission(TASK_UPDATE) ||
+                              (hasPermission(TASK_SET_IN_PROGRESS) &&
+                                hasPermission(TASK_SET_SKIPPED)),
+                            complete:
+                              hasPermission(TASK_UPDATE) ||
+                              (hasPermission(TASK_SET_COMPLETED) &&
+                                hasPermission(TASK_SET_IN_PROGRESS)),
+                          }}
+                          isOpen={isDialogOpen}
+                          onRequestClose={() => dialogToggle(false)}
+                          onSkip={() => {
+                            dialogToggle(false);
+                            completedMilestone({
+                              id: milestoneId,
+                              completedBy: user,
+                              completedAt: formatToGraphql(startOfToday()),
+                              action: 'setToSkip',
+                            });
+                          }}
+                          onComplete={() => {
+                            dialogToggle(false);
+                            completedMilestone({
+                              id: milestoneId,
+                              completedBy: user,
+                              completedAt: formatToGraphql(startOfToday()),
+                              action: 'setToComplete',
+                            });
+                          }}
+                          onCancel={() => dialogToggle(false)}
+                          onUnChange={() => {
+                            dialogToggle(false);
+                            completedMilestone({
+                              id: milestoneId,
+                              completedBy: user,
+                              completedAt: formatToGraphql(startOfToday()),
+                              action: 'leaveUnChange',
+                            });
+                          }}
+                          message={(() => {
+                            const { count, remain, inProgress } = taskCountByMilestone(milestoneId);
+                            return (
+                              <FormattedMessage
+                                id="modules.Projects.completeMilestoneWarningMessage"
+                                defaultMessage="There are {numOfTasksUncompletedOrInProgress}/{numOfTotalTasks} that are still Uncompleted or In Progress. Would you like to change their statuses?"
+                                values={{
+                                  numOfTasksUncompletedOrInProgress: remain + inProgress,
+                                  numOfTotalTasks: count,
+                                }}
+                              />
+                            );
+                          })()}
+                        />
+                      </>
+                    )}
+                  </BooleanValue>
+                  <BooleanValue>
+                    {({ value: selectTasksIsOpen, set: selectTasksSlideToggle }) => (
+                      <>
+                        {hasPermission([MILESTONE_UPDATE, MILESTONE_SET_TASKS]) && (
+                          <NewButton
+                            label={
+                              <FormattedMessage
+                                id="modules.Milestones.addTask"
+                                defaultMessage="ADD TASK"
+                              />
+                            }
+                            onClick={e => {
+                              e.stopPropagation();
+                              selectTasksSlideToggle(true);
                             }}
-                            message={(() => {
-                              const { count, remain, inProgress } = taskCountByMilestone(
-                                milestoneId
-                              );
-                              return (
-                                <FormattedMessage
-                                  id="modules.Projects.completeMilestoneWarningMessage"
-                                  defaultMessage="There are {numOfTasksUncompletedOrInProgress}/{numOfTotalTasks} that are still Uncompleted or In Progress. Would you like to change their statuses?"
-                                  values={{
-                                    numOfTasksUncompletedOrInProgress: remain + inProgress,
-                                    numOfTotalTasks: count,
-                                  }}
-                                />
-                              );
-                            })()}
                           />
-                        </>
-                      )}
-                    </BooleanValue>
-                    <BooleanValue>
-                      {({ value: selectTasksIsOpen, set: selectTasksSlideToggle }) => (
-                        <>
-                          {hasPermission([MILESTONE_UPDATE, MILESTONE_SET_TASKS]) && (
-                            <NewButton
-                              label={
-                                <FormattedMessage
-                                  id="modules.Milestones.addTask"
-                                  defaultMessage="ADD TASK"
-                                />
-                              }
-                              onClick={e => {
-                                e.stopPropagation();
-                                selectTasksSlideToggle(true);
+                        )}
+                        <SlideView
+                          isOpen={selectTasksIsOpen}
+                          onRequestClose={() => selectTasksSlideToggle(false)}
+                        >
+                          {selectTasksIsOpen && (
+                            <SelectTasks
+                              filter={{
+                                excludeIds: excludeIds(),
+                                hasMilestoneExceptIds: excludeTaskIds(),
                               }}
+                              selectedTasks={values.tasks || []}
+                              onSelect={selected => {
+                                selectTasksSlideToggle(false);
+                                const counter = getByPathWithDefault([], 'tasks', values).length;
+                                originalTasks.push(...selected);
+                                onChangeValue(`${milestoneId}.tasks`, [
+                                  ...getByPathWithDefault([], 'tasks', values),
+                                  ...selected.map((task, index) => ({
+                                    ...task,
+                                    milestoneSort: counter + index,
+                                  })),
+                                ]);
+                              }}
+                              onCancel={() => selectTasksSlideToggle(false)}
                             />
                           )}
-                          <SlideView
-                            isOpen={selectTasksIsOpen}
-                            onRequestClose={() => selectTasksSlideToggle(false)}
-                          >
-                            {selectTasksIsOpen && (
-                              <SelectTasks
-                                filter={{
-                                  excludeIds: excludeIds(),
-                                  hasMilestoneExceptIds: excludeTaskIds(),
-                                }}
-                                selectedTasks={values.tasks || []}
-                                onSelect={selected => {
-                                  selectTasksSlideToggle(false);
-                                  const counter = getByPathWithDefault([], 'tasks', values).length;
-                                  originalTasks.push(...selected);
-                                  onChangeValue(`${milestoneId}.tasks`, [
-                                    ...getByPathWithDefault([], 'tasks', values),
-                                    ...selected.map((task, index) => ({
-                                      ...task,
-                                      milestoneSort: counter + index,
-                                    })),
-                                  ]);
-                                }}
-                                onCancel={() => selectTasksSlideToggle(false)}
-                              />
-                            )}
-                          </SlideView>
-                        </>
-                      )}
-                    </BooleanValue>
+                        </SlideView>
+                      </>
+                    )}
+                  </BooleanValue>
 
-                    <div className={TaskRingWrapperStyle}>
-                      <TaskRing tasks={values.tasks || []} />
-                    </div>
+                  <div className={TaskRingWrapperStyle}>
+                    <TaskRing tasks={values.tasks || []} />
                   </div>
-                </>
-              )}
-            </BooleanValue>
-          </>
+                </div>
+              </>
+            )}
+          </BooleanValue>
         );
       }}
     </Subscribe>

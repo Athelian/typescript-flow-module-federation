@@ -50,3 +50,20 @@ export const TaskRingWrapperStyle = css`
   right: 10px;
   bottom: 10px;
 `;
+
+export const AutoDateSyncIconStyle: string = css`
+  width: 20px;
+  height: 20px;
+  color: ${colors.GRAY_VERY_LIGHT};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  ${fontSizes.SMALL};
+`;
+
+export const DateInputWrapperStyle = (editable: boolean): string => css`
+  display: grid;
+  grid-template-columns: ${editable ? '80px 120px' : '80px 100px 20px'};
+  width: 100%;
+  padding: 0 5px;
+`;

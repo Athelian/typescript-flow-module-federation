@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import Icon from 'components/Icon';
 import { FieldItem, Label, FormTooltip, DefaultStyle, DateInput, Blackout } from 'components/Form';
 import type {
   LabelProps,
@@ -11,7 +10,7 @@ import type {
 import { colors } from 'styles/common';
 import { ExtraToggleButton } from '../components';
 
-import { DiffDateStyle, SyncButtonStyle } from './style';
+import { DiffDateStyle } from './style';
 
 type Props = LabelProps &
   TooltipProps &
@@ -52,7 +51,6 @@ const defaultProps = {
   blackout: false,
   vertical: false,
   showExtraToggle: false,
-  showSyncIcon: false,
   showDiff: false,
   diff: 0,
   toggled: true,
@@ -88,7 +86,6 @@ const DateInputFactory = ({
   editable,
   blackout,
   showExtraToggle,
-  showSyncIcon,
   showDiff,
   diff,
   toggled,
@@ -156,11 +153,6 @@ const DateInputFactory = ({
             readOnlyWidth={inputWidth}
             readOnlyHeight={inputHeight}
           />
-        )}
-        {showSyncIcon && (
-          <div className={SyncButtonStyle}>
-            <Icon icon="SYNC" />
-          </div>
         )}
         {showDiff && (
           <div className={DiffDateStyle(diff)}>
