@@ -11,3 +11,11 @@ export const DiffDateStyle = (diff: number): string => css`
   line-height: 20px;
   text-align: center;
 `;
+
+export const SyncButtonStyle = css`
+  color: ${colors.GRAY_LIGHT};
+  ${fontSizes.SMALL};
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+`;

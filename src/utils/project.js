@@ -3,7 +3,7 @@ import { isNullOrUndefined } from 'utils/fp';
 import { isValid, addMonths, addWeeks, addDays, formatToDateInput } from 'utils/date';
 
 export const calculateBindingDate = (date: string, dateInterval: Object): ?string => {
-  const baseDate = isValid(new Date(date)) ? new Date(date) : null;
+  const baseDate = date && isValid(new Date(date)) ? new Date(date) : null;
   if (baseDate) {
     const { months, weeks, days } = dateInterval || {};
     if (!isNullOrUndefined(months)) {
@@ -43,22 +43,11 @@ export const calculateMilestonesEstimatedCompletionDate: calculateMilestonesEsti
         estimatedCompletionDates[index] = milestone.estimatedCompletionDate;
       }
     } else {
-      let baseDate = estimatedCompletionDates[index - 1];
-      baseDate = baseDate && isValid(new Date(baseDate)) ? new Date(baseDate) : null;
-      if (baseDate) {
-        const { months, weeks, days } = milestone.estimatedCompletionDateInterval || {};
-        if (!isNullOrUndefined(months)) {
-          estimatedCompletionDates[index] = formatToDateInput(
-            addMonths(baseDate, months).toString()
-          );
-        } else if (!isNullOrUndefined(weeks)) {
-          estimatedCompletionDates[index] = formatToDateInput(addWeeks(baseDate, weeks).toString());
-        } else if (!isNullOrUndefined(days)) {
-          estimatedCompletionDates[index] = formatToDateInput(addDays(baseDate, days).toString());
-        }
-      } else {
-        estimatedCompletionDates[index] = null;
-      }
+      const baseDate = estimatedCompletionDates[index - 1];
+      estimatedCompletionDates[index] = calculateBindingDate(
+        baseDate,
+        milestone.estimatedCompletionDateInterval
+      );
     }
   });
 

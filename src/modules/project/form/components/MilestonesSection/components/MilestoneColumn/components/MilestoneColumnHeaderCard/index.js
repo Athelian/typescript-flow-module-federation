@@ -94,6 +94,12 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
             ? differenceInCalendarDays(new Date(values.completedAt), new Date(values.dueDate))
             : 0;
 
+        const estComplDate = estimatedCompletionDates[milestoneIndex];
+        const estComplDateDiff =
+          estComplDate && values.dueDate
+            ? differenceInCalendarDays(new Date(estComplDate), new Date(values.dueDate))
+            : 0;
+
         return (
           <>
             <BooleanValue>
@@ -239,12 +245,6 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                             <DateInputFactory
                               name={name}
                               {...inputHandlers}
-                              onBlur={evt => {
-                                inputHandlers.onBlur(evt);
-                                // setTimeout(() => {
-                                //   emitter.emit('AUTO_DATE', name, inputHandlers.value);
-                                // }, 200);
-                              }}
                               originalValue={initialValues.completedAt}
                               label={<FormattedMessage {...messages.completed} />}
                               editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_COMPLETED])}
@@ -259,7 +259,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                       ) : (
                         <FormField
                           name={`${milestoneId}.estimatedCompletionDate`}
-                          initValue={estimatedCompletionDates[milestoneIndex]}
+                          initValue={estComplDate}
                           values={values}
                           validator={validator}
                           setFieldValue={onChangeValue}
@@ -268,12 +268,6 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                             <DateInputFactory
                               name={name}
                               {...inputHandlers}
-                              onBlur={evt => {
-                                inputHandlers.onBlur(evt);
-                                // setTimeout(() => {
-                                //   emitter.emit('AUTO_DATE', name, inputHandlers.value);
-                                // }, 200);
-                              }}
                               isNew={isNew}
                               originalValue={initialValues.estimatedCompletionDate}
                               label={<FormattedMessage {...messages.estCompl} />}
@@ -282,6 +276,9 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                               inputAlign="left"
                               labelWidth="80px"
                               inputWidth="125px"
+                              showDiff
+                              diff={estComplDateDiff}
+                              showSyncIcon
                             />
                           )}
                         </FormField>
