@@ -140,6 +140,34 @@ function containerCell(batch: BatchPayload): ?CellRender {
   return null;
 }
 
+const cacheSorted = {};
+
+function lastSorting({
+  sourceEntities,
+  sortHandler,
+  sort,
+  id,
+}: {|
+  id: string,
+  sourceEntities: Array<Object>,
+  sortHandler: (Array<T>, sortOption: Object) => Array<T>,
+  sort: { field: string, direction: string },
+|}): Array<string> {
+  if (
+    cacheSorted?.[id]?.sort?.field === sort.field &&
+    cacheSorted?.[id]?.sort?.direction === sort.direction
+  )
+    return cacheSorted[id].entities;
+
+  cacheSorted[id] = {
+    entities: sortHandler(sourceEntities, sort)
+      .map(item => item?.id)
+      .filter(Boolean),
+    sort,
+  };
+  return cacheSorted[id].entities;
+}
+
 export const orderCoordinates = memoize(
   ({
     isExpand,
@@ -151,18 +179,12 @@ export const orderCoordinates = memoize(
     isLoadedData?: boolean,
   }): Array<?CellRender> => {
     const clientSorts = ClientSorts.useContainer();
-    const orderItems = sortOrderItemBy(
-      getByPathWithDefault([], 'orderItems', order),
-      clientSorts?.filterAndSort?.orderItem?.sort ?? {
-        field: 'updatedAt',
-        direction: 'DESCENDING',
-      }
-    );
-    const orderItemCount = getByPathWithDefault(0, 'orderItemCount', order);
-    const orderItemChildlessCount = getByPathWithDefault(0, 'orderItemChildlessCount', order);
-    const batchCount = getByPathWithDefault(0, 'batchCount', order);
-    const containerCount = getByPathWithDefault(0, 'containerCount', order);
-    const shipmentCount = getByPathWithDefault(0, 'shipmentCount', order);
+    const orderItems = order?.orderItems ?? [];
+    const orderItemCount = order?.orderItemCount ?? 0;
+    const orderItemChildlessCount = order?.orderItemChildlessCount ?? 0;
+    const batchCount = order?.batchCount ?? 0;
+    const containerCount = order?.containerCount ?? 0;
+    const shipmentCount = order?.shipmentCount ?? 0;
     // TODO: need to change the style for the summary row is closed to the next one
     if (!isExpand) {
       return orderItemCount > 0
@@ -207,6 +229,15 @@ export const orderCoordinates = memoize(
             null,
           ];
     }
+    const orderItemsSort = lastSorting({
+      id: `${order?.id}-orderItems`,
+      sourceEntities: orderItems,
+      sortHandler: sortOrderItemBy,
+      sort: clientSorts?.filterAndSort?.orderItem?.sort ?? {
+        field: 'updatedAt',
+        direction: 'DESCENDING',
+      },
+    });
     const result = [
       null,
       {
@@ -273,16 +304,41 @@ export const orderCoordinates = memoize(
       return result;
     }
     if (orderItemCount > 0) {
-      orderItems.forEach((item, index) => {
-        const batches = sortBatchBy(
-          getByPathWithDefault([], 'batches', item),
-          clientSorts?.filterAndSort?.batch?.sort ?? {
+      const itemsList = [];
+      orderItemsSort.forEach(itemId => {
+        const item = orderItems.find(orderItem => orderItem?.id === itemId);
+        if (item) {
+          itemsList.push(item);
+        }
+      });
+      orderItems
+        .filter(item => !orderItemsSort.includes(item?.id))
+        .forEach(item => itemsList.push(item));
+
+      itemsList.forEach((item, index) => {
+        const batches = item?.batches ?? [];
+        const bachesSort = lastSorting({
+          id: `${item?.id}-batches`,
+          sourceEntities: batches,
+          sortHandler: sortBatchBy,
+          sort: clientSorts?.filterAndSort?.batch?.sort ?? {
             field: 'updatedAt',
             direction: 'DESCENDING',
-          }
-        );
+          },
+        });
         if (batches.length) {
-          batches.forEach((batch, position) => {
+          const batchesList = [];
+          bachesSort.forEach(batchId => {
+            const batch = batches.find(batchItem => batchItem?.id === batchId);
+            if (batch) {
+              batchesList.push(batch);
+            }
+          });
+          batches
+            .filter(batch => !bachesSort.includes(batch?.id))
+            .forEach(batch => batchesList.push(batch));
+
+          batchesList.forEach((batch, position) => {
             result.push(
               ...[
                 orderCell({
