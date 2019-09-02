@@ -37,6 +37,7 @@ import {
   parseTodoField,
   parseMemoField,
   parseDefaultIndexField,
+  parseSizeField,
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 
@@ -202,7 +203,7 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
         getByPathWithDefault(null, 'unitVolume', oldProductProvider),
         getByPathWithDefault(null, 'unitVolume', newProductProvider)
       ),
-      ...parseGenericField(
+      ...parseSizeField(
         'unitSize',
         getByPathWithDefault(null, 'unitSize', oldProductProvider),
         getByPathWithDefault(null, 'unitSize', newProductProvider)
@@ -244,7 +245,7 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
             getByPathWithDefault(null, 'volume', oldPackage),
             getByPathWithDefault(null, 'volume', newPackage)
           ),
-          ...parseGenericField(
+          ...parseSizeField(
             'size',
             getByPathWithDefault(null, 'size', oldPackage),
             getByPathWithDefault(null, 'size', newPackage)

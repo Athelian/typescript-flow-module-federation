@@ -40,6 +40,7 @@ import {
   parseArrayOfChildrenField,
   parseCustomFieldsField,
   parseTodoField,
+  parseSizeField,
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 
@@ -209,7 +210,7 @@ export const prepareParsedBatchInput = (
       getByPathWithDefault(null, 'packageVolume', originalValues),
       newValues.packageVolume
     ),
-    ...parseGenericField(
+    ...parseSizeField(
       'packageSize',
       getByPathWithDefault(null, 'packageSize', originalValues),
       newValues.packageSize
