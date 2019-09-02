@@ -1,8 +1,9 @@
 // @flow
-import type { Task } from 'generated/graphql';
+import type { Task, MetricValue } from 'generated/graphql';
 import { diff } from 'deep-object-diff';
 import { is, pipe, when, either, map, reject, isNil, isEmpty, omit } from 'ramda';
 import logger from 'utils/logger';
+import { defaultDistanceMetric } from './metric';
 import { isEquals, getByPathWithDefault, getByPath } from './fp';
 
 export const replaceUndefined: Function = when(
@@ -482,6 +483,27 @@ export const parseTodoField = (
         getByPathWithDefault(null, 'milestone', originalTodo),
         newTodo.milestone
       ),
+    },
+  };
+};
+
+// For Size fields (length, width, height). Needs to handle case when null, need to inject default values for all.
+export const parseSizeField = (
+  key: string,
+  originalSize: ?{
+    height?: MetricValue,
+    width?: MetricValue,
+    length?: MetricValue,
+  },
+  newSize: { height?: MetricValue, width?: MetricValue, length?: MetricValue }
+): Object => {
+  if (isEquals(originalSize, newSize)) return {};
+
+  return {
+    [key]: {
+      height: getByPathWithDefault({ value: 0, metric: defaultDistanceMetric }, 'height', newSize),
+      width: getByPathWithDefault({ value: 0, metric: defaultDistanceMetric }, 'width', newSize),
+      length: getByPathWithDefault({ value: 0, metric: defaultDistanceMetric }, 'length', newSize),
     },
   };
 };
