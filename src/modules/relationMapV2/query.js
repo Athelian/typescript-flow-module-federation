@@ -1,5 +1,12 @@
 import gql from 'graphql-tag';
-import { tagFragment, taskCountFragment, ownedByFragment } from 'graphql';
+import {
+  tagFragment,
+  userAvatarFragment,
+  taskCountFragment,
+  ownedByFragment,
+  portFragment,
+  timelineDateFullFragment,
+} from 'graphql';
 
 export const productProviderNewRMFragment = gql`
   fragment productProviderNewRMFragment on ProductProvider {
@@ -203,8 +210,8 @@ export const orderCardOptimiseFragment = gql`
   }
 `;
 
-export const orderCardWithOptimiseFragment = gql`
-  fragment orderCardWithOptimiseFragment on Order {
+export const orderCardFullFragment = gql`
+  fragment orderCardFullFragment on Order {
     id
     currency
     exporter {
@@ -225,6 +232,8 @@ export const orderCardWithOptimiseFragment = gql`
     orderItems {
       ... on OrderItem {
         id
+        updatedAt
+        createdAt
         ownedBy {
           ...ownedByFragment
         }
@@ -232,9 +241,17 @@ export const orderCardWithOptimiseFragment = gql`
           ... on ProductProvider {
             id
             name
+            supplier {
+              ... on Organization {
+                id
+                name
+              }
+            }
             product {
               ... on Product {
                 id
+                name
+                serial
               }
             }
           }
@@ -257,6 +274,11 @@ export const orderCardWithOptimiseFragment = gql`
         batches {
           ... on Batch {
             id
+            updatedAt
+            createdAt
+            deliveredAt
+            expiredAt
+            desiredAt
             ownedBy {
               ...ownedByFragment
             }
@@ -285,7 +307,17 @@ export const orderCardWithOptimiseFragment = gql`
     containers {
       ... on Container {
         id
+        updatedAt
+        createdAt
+        warehouseArrivalAgreedDate
+        warehouseArrivalActualDate
         no
+        warehouse {
+          ... on Warehouse {
+            id
+            name
+          }
+        }
         ownedBy {
           ...ownedByFragment
         }
@@ -299,6 +331,8 @@ export const orderCardWithOptimiseFragment = gql`
     shipments {
       ... on Shipment {
         id
+        updatedAt
+        createdAt
         exporter {
           ... on Organization {
             id
@@ -312,6 +346,7 @@ export const orderCardWithOptimiseFragment = gql`
           }
         }
         archived
+        no
         blNo
         ownedBy {
           ...ownedByFragment
@@ -329,6 +364,54 @@ export const orderCardWithOptimiseFragment = gql`
           ... on Organization {
             id
             name
+          }
+        }
+        cargoReady {
+          ...timelineDateFullFragment
+        }
+        voyages {
+          ... on Voyage {
+            id
+            vesselName
+            vesselCode
+            departurePort {
+              ...portFragment
+            }
+            arrivalPort {
+              ...portFragment
+            }
+            departure {
+              ...timelineDateFullFragment
+            }
+            arrival {
+              ...timelineDateFullFragment
+            }
+          }
+        }
+        containerGroups {
+          ... on ContainerGroup {
+            id
+            warehouse {
+              ... on Warehouse {
+                id
+                name
+                ownedBy {
+                  ... on Organization {
+                    id
+                    name
+                  }
+                }
+              }
+            }
+            customClearance {
+              ...timelineDateFullFragment
+            }
+            warehouseArrival {
+              ...timelineDateFullFragment
+            }
+            deliveryReady {
+              ...timelineDateFullFragment
+            }
           }
         }
       }
@@ -450,6 +533,7 @@ export const shipmentCardNewRMFragment = gql`
   }
 `;
 
+// TODO: consider to optimise the hits if no search or filter
 export const orderFocusedListQuery = gql`
   query orderFocusedListQuery(
     $page: Int!
@@ -488,13 +572,16 @@ export const orderFocusedListQuery = gql`
 export const orderFocusDetailQuery = gql`
   query orderFocusDetailQuery($ids: [ID!]!) {
     ordersByIDs(ids: $ids) {
-      ...orderCardWithOptimiseFragment
+      ...orderCardFullFragment
     }
   }
 
-  ${orderCardWithOptimiseFragment}
+  ${orderCardFullFragment}
   ${tagFragment}
   ${taskCountFragment}
+  ${portFragment}
+  ${userAvatarFragment}
+  ${timelineDateFullFragment}
   ${ownedByFragment}
 `;
 
@@ -502,12 +589,15 @@ export const orderFullFocusDetailQuery = gql`
   query orderFullFocusDetailQuery($ids: [ID!]!) {
     ordersByIDs(ids: $ids) {
       ...orderCardOptimiseFragment
-      ...orderCardWithOptimiseFragment
+      ...orderCardFullFragment
     }
   }
 
   ${orderCardOptimiseFragment}
-  ${orderCardWithOptimiseFragment}
+  ${orderCardFullFragment}
+  ${portFragment}
+  ${userAvatarFragment}
+  ${timelineDateFullFragment}
   ${tagFragment}
   ${taskCountFragment}
   ${ownedByFragment}

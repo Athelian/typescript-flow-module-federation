@@ -46,9 +46,6 @@ const Header = React.memo<Props>(
     const { mapping } = Entities.useContainer();
     const { filterAndSort, onChangeFilter } = SortAndFilter.useContainer();
     const clientSorts = ClientSorts.useContainer();
-    console.warn({
-      clientSorts,
-    });
     const { orders, entities } = mapping;
     const orderSort = [
       { title: intl.formatMessage(orderMessages.updatedAt), value: 'updatedAt' },
