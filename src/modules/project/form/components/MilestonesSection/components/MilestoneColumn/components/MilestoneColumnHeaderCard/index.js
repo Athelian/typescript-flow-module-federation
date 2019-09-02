@@ -95,9 +95,15 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                   >
                     {milestoneFormIsOpened && (
                       <MilestoneFormSlide
-                        milestone={values}
+                        milestone={{
+                          ...values,
+                          project: {
+                            milestones,
+                          },
+                        }}
                         onSave={newMilestone => {
-                          setDeepFieldValue(`milestones.${milestoneIndex}`, newMilestone);
+                          const { project, ...rest } = newMilestone;
+                          setDeepFieldValue(`milestones.${milestoneIndex}`, rest);
                           toggleMilestoneForm(false);
                         }}
                       />

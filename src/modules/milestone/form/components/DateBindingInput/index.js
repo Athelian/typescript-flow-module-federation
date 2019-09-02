@@ -12,8 +12,7 @@ import {
 } from 'components/Form';
 import { FormField } from 'modules/form';
 import { isNullOrUndefined } from 'utils/fp';
-
-// import { convertBindingToSelection } from 'modules/task/form/components/TaskInfoSection/helpers';
+import { calculateMilestonesEstimatedCompletionDate, calculateBindingDate } from 'utils/project';
 import {
   AutoDateBackgroundStyle,
   RadioWrapperStyle,
@@ -32,12 +31,24 @@ type Props = {
 const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: Props) => {
   const editable = true;
 
+  let { estimatedCompletionDate } = values;
   let dateBinding = false;
   let dateBindingValue = 0;
   let dateBindingMetric = 'days';
   let dateBindingSign = 'before';
   if (values.estimatedCompletionDateBinding) {
     dateBinding = true;
+
+    const {
+      project: { milestones },
+    } = values;
+    const index = milestones.findIndex(item => item.id === values.id);
+    const dates = calculateMilestonesEstimatedCompletionDate({ milestones });
+
+    estimatedCompletionDate = calculateBindingDate(
+      dates[index - 1],
+      values.estimatedCompletionDateInterval
+    );
 
     const { months, weeks, days } = values.estimatedCompletionDateInterval || {};
     if (!isNullOrUndefined(months)) {
@@ -65,6 +76,7 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
           selected={!dateBinding}
           onToggle={() => {
             setFieldValue('estimatedCompletionDateBinding', null);
+            setFieldValue('estimatedCompletionDateInterval', null);
           }}
           editable={editable}
         />
@@ -75,7 +87,9 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
           align="right"
           selected={dateBinding}
           onToggle={() => {
+            setFieldValue('estimatedCompletionDate', estimatedCompletionDate);
             setFieldValue('estimatedCompletionDateBinding', 'MilestoneCompleteDate');
+            setFieldValue('estimatedCompletionDateInterval', { days: 0 });
           }}
           editable={editable}
         />
@@ -83,7 +97,7 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
 
       <FormField
         name="estimatedCompletionDate"
-        initValue={values.estimatedCompletionDate}
+        initValue={estimatedCompletionDate}
         values={values}
         validator={validator}
         setFieldValue={setFieldValue}
