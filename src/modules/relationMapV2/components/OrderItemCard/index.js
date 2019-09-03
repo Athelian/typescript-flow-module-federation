@@ -5,7 +5,7 @@ import { WrapperStyle, BatchIconsStyle } from './style';
 
 type Props = {|
   no: string,
-  onCreateBatch: () => void,
+  onCreateBatch: Event => void,
 |};
 
 export default function OrderItemCard({ no, onCreateBatch }: Props) {

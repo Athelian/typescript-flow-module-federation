@@ -35,6 +35,16 @@ export const initialState: State = {
     isProcessing: false,
     detail: initMoveEntity,
   },
+  createBatch: {
+    isOpen: false,
+    isProcessing: false,
+    detail: {
+      entity: {
+        id: '',
+        no: '',
+      },
+    },
+  },
   edit: {
     type: '',
     selectedId: '',
@@ -64,6 +74,9 @@ export function reducer(
       | 'CONFIRM_MOVE_START'
       | 'CONFIRM_MOVE_END'
       | 'FETCH_PERMISSION'
+      | 'CREATE_BATCH'
+      | 'CREATE_BATCH_START'
+      | 'CREATE_BATCH_END'
       | 'EDIT',
     payload: {
       entity?: string,
@@ -254,6 +267,38 @@ export function reducer(
       return update(state, {
         moveEntity: {
           isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'CREATE_BATCH': {
+      return update(state, {
+        createBatch: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          detail: { $set: action.payload },
+        },
+      });
+    }
+    case 'CREATE_BATCH_START': {
+      return update(state, {
+        createBatch: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'CREATE_BATCH_END': {
+      return update(state, {
+        createBatch: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+          detail: {
+            $set: {
+              entity: {
+                id: '',
+                no: '',
+              },
+            },
+          },
         },
       });
     }

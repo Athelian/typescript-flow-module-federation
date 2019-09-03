@@ -898,7 +898,21 @@ function OrderItemCell({
             onClick={handleClick}
           >
             <div ref={drag}>
-              <OrderItemCard no={data?.no ?? 'N/A'} onCreateBatch={console.warn} />
+              <OrderItemCard
+                no={data?.no ?? 'N/A'}
+                onCreateBatch={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'CREATE_BATCH',
+                    payload: {
+                      entity: {
+                        id: itemId,
+                        no: data?.no,
+                      },
+                    },
+                  });
+                }}
+              />
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay

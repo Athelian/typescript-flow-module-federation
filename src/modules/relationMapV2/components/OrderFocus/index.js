@@ -24,6 +24,7 @@ import { Hits, Entities, SortAndFilter } from 'modules/relationMapV2/store';
 import { WrapperStyle, ListStyle, RowStyle, ActionsBackdropStyle } from './style';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
+import InlineCreateBatch from '../InlineCreateBatch';
 import SelectedEntity from '../SelectedEntity';
 import Actions from '../Actions';
 import Header from '../Header';
@@ -328,6 +329,14 @@ export default function OrderFocus() {
                         }}
                         isOpen={state.moveEntity.isOpen}
                         {...state.moveEntity.detail}
+                      />
+                      <InlineCreateBatch
+                        isProcessing={state.createBatch.isProcessing}
+                        isOpen={state.createBatch.isOpen}
+                        onSuccess={orderId => {
+                          if (orderId) queryOrdersDetail([orderId]);
+                        }}
+                        {...state.createBatch.detail}
                       />
                       <EditFormSlideView
                         type={state.edit.type}

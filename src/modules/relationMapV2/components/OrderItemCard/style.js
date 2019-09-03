@@ -15,8 +15,8 @@ export const WrapperStyle = css`
 
 export const BatchIconsStyle = css`
   position: absolute;
-  right: 0px;
-  bottom: 0px;
+  right: -10px;
+  bottom: -10px;
   background: #12b937;
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
   border-radius: 20px;
