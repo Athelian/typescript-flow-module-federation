@@ -86,6 +86,10 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
         const initialValues =
           (originalValues.milestones || []).find(milestone => milestone.id === milestoneId) || {};
 
+        const validation = validator({
+          name: `${milestoneId}.name`,
+        });
+
         const onChangeValue = (field, value) => {
           const [id, fieldName] = field.split('.') || [];
           if (id) {
@@ -189,7 +193,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                       name={`${milestoneId}.name`}
                       initValue={values.name}
                       values={values}
-                      validator={validator}
+                      validator={validation}
                       setFieldValue={onChangeValue}
                     >
                       {({ name, ...inputHandlers }) => (
@@ -212,7 +216,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                       name={`${milestoneId}.dueDate`}
                       initValue={values.dueDate}
                       values={values}
-                      validator={validator}
+                      validator={validation}
                       setFieldValue={onChangeValue}
                     >
                       {({ name, ...inputHandlers }) => (
@@ -246,7 +250,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                           name={`${milestoneId}.completedAt`}
                           initValue={values.completedAt}
                           values={values}
-                          validator={validator}
+                          validator={validation}
                           setFieldValue={onChangeValue}
                         >
                           {({ name, ...inputHandlers }) => (
@@ -276,7 +280,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                           name={`${milestoneId}.estimatedCompletionDate`}
                           initValue={estComplDate}
                           values={values}
-                          validator={validator}
+                          validator={validation}
                           setFieldValue={onChangeValue}
                         >
                           {({ name, ...inputHandlers }) => (

@@ -1,8 +1,13 @@
 // @flow
 import * as Yup from 'yup';
 
-const validator: Object = Yup.object().shape({
-  name: Yup.string().required(),
-});
+type Props = {
+  name: string,
+};
+
+const validator = ({ name }: Props) =>
+  Yup.object().shape({
+    [name]: Yup.string().required(),
+  });
 
 export default validator;
