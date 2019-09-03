@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { getByPath, isEquals, getByPathWithDefault } from 'utils/fp';
+import { getByPath, getByPathWithDefault } from 'utils/fp';
 import scrollIntoView from 'utils/scrollIntoView';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { SectionWrapper } from 'components/Form';
@@ -25,7 +25,6 @@ type Props = {|
   loading: boolean,
   isNew?: boolean,
   isClone?: boolean,
-  isOwner?: boolean,
   anchor?: string,
   initDataForSlideView?: Object,
 |};
@@ -51,11 +50,6 @@ class ShipmentForm extends React.Component<Props> {
       };
       requestAnimationFrame(retryFindElement);
     }
-  }
-
-  shouldComponentUpdate(nextProps: Props) {
-    const { shipment, isOwner } = this.props;
-    return !isEquals(shipment, nextProps.shipment) || nextProps.isOwner !== isOwner;
   }
 
   render() {

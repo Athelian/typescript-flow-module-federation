@@ -18,7 +18,7 @@ type Props = OptionalProps & {
   query: DocumentNode,
   entityId: string,
   entityType: string,
-  render: (result: Object, { isLoading: boolean, isOwner: boolean }) => React.Node,
+  render: (result: Object, loading: boolean) => React.Node,
 };
 
 const defaultProps = {
@@ -64,10 +64,7 @@ export default function QueryFormV2({ query, entityId, entityType, render, onCom
             permissions: permissions.permissions,
           }}
         >
-          {render(data?.[entityType] ?? {}, {
-            isLoading: permissions.loading || loading,
-            isOwner,
-          })}
+          {render(data?.[entityType] ?? {}, permissions.loading || loading)}
         </QueryFormPermissionContext.Provider>
       );
   }

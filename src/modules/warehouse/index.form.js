@@ -294,7 +294,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                     query={warehouseFormQuery}
                     entityId={warehouseId}
                     entityType="warehouse"
-                    render={(warehouse, { isLoading: loading }) => (
+                    render={(warehouse, loading) => (
                       <>
                         <WarehouseForm
                           warehouse={warehouse}
