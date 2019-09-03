@@ -12,6 +12,7 @@ export default function OrderItemCard({ no, onCreateBatch }: Props) {
   return (
     <div className={WrapperStyle}>
       {no}
+      {/* TODO: Migrate to new permission checking for add batch icon */}
       <div onClick={onCreateBatch} role="presentation" className={BatchIconsStyle}>
         <Icon icon="BATCH" />
         <Icon icon="ADD" />

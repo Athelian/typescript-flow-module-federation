@@ -92,7 +92,7 @@ export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSucc
     <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>
       <div className={DialogStyle}>
         <h3 className={ConfirmMessageStyle}>
-          Creating new <Icon icon="BATCH" /> from <Icon icon="ORDER_ITEM" /> {` ${entity.no}?`}
+          Creating new <Icon icon="BATCH" /> from <Icon icon="ORDER_ITEM" /> {` ${entity.no}...`}
         </h3>
         <LoadingIcon />
       </div>
