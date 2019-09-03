@@ -1,6 +1,6 @@
 // @flow
 import { setIn } from 'utils/fp';
-import type { Action, CellValue, State, Position, ForeignFocus, RowKamoulox } from './index';
+import type { Action, CellValue, State, Position, ForeignFocus } from './index';
 import { Actions } from './contants';
 
 function getEntities(rows: Array<Array<CellValue>>): Array<{ id: string, type: string }> {
