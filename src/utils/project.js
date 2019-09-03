@@ -6,15 +6,14 @@ export const calculateBindingDate = (date: string, dateInterval: Object): ?strin
   const baseDate = date && isValid(new Date(date)) ? new Date(date) : null;
   if (baseDate) {
     const { months, weeks, days } = dateInterval || {};
-    if (!isNullOrUndefined(months)) {
+    if (months) {
       return formatToDateInput(addMonths(baseDate, months).toString());
     }
-    if (!isNullOrUndefined(weeks)) {
+    if (weeks) {
       return formatToDateInput(addWeeks(baseDate, weeks).toString());
     }
-    if (!isNullOrUndefined(days)) {
-      return formatToDateInput(addDays(baseDate, days).toString());
-    }
+
+    return formatToDateInput(addDays(baseDate, days || 0).toString());
   }
   return null;
 };

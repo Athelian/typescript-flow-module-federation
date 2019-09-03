@@ -11,7 +11,6 @@ import {
   Display,
 } from 'components/Form';
 import { FormField } from 'modules/form';
-import { isNullOrUndefined } from 'utils/fp';
 import { calculateMilestonesEstimatedCompletionDate, calculateBindingDate } from 'utils/project';
 import {
   AutoDateBackgroundStyle,
@@ -34,8 +33,9 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
   let dateBinding = false;
   let dateBindingValue = 0;
   let dateBindingMetric = 'days';
-  const { dateBindingSign } = values;
+  const [dateBindingSign, setDateBindingSign] = React.useState('before');
   let { estimatedCompletionDate } = values;
+
   if (values.estimatedCompletionDateBinding) {
     dateBinding = true;
 
@@ -53,14 +53,26 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
           );
 
     const { months, weeks, days } = values.estimatedCompletionDateInterval || {};
-    if (!isNullOrUndefined(months)) {
+    if (months) {
+      if (months > 0) {
+        setDateBindingSign('after');
+      }
       dateBindingValue = Math.abs(months);
       dateBindingMetric = 'months';
-    } else if (!isNullOrUndefined(weeks)) {
+    } else if (weeks) {
+      if (weeks > 0) {
+        setDateBindingSign('after');
+      }
       dateBindingValue = Math.abs(weeks);
       dateBindingMetric = 'weeks';
-    } else if (!isNullOrUndefined(days)) {
+    } else if (days) {
+      if (days > 0 && dateBindingSign === 'before') {
+        setDateBindingSign('after');
+      }
       dateBindingValue = Math.abs(days);
+      dateBindingMetric = 'days';
+    } else {
+      dateBindingValue = 0;
       dateBindingMetric = 'days';
     }
   }
@@ -77,7 +89,7 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
             setFieldValue('estimatedCompletionDateBinding', null);
             setFieldValue('estimatedCompletionDateInterval', null);
           }}
-          editable={editable}
+          editable={editable && dateBinding}
         />
       </div>
 
@@ -88,10 +100,12 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
           onToggle={() => {
             setFieldValue('estimatedCompletionDate', estimatedCompletionDate);
             setFieldValue('estimatedCompletionDateBinding', 'MilestoneCompleteDate');
-            setFieldValue('estimatedCompletionDateInterval', { days: 0 });
-            setFieldValue('dateBindingSign', 'before');
+            setFieldValue('estimatedCompletionDateInterval', {
+              days: 0,
+            });
+            setDateBindingSign('before');
           }}
-          editable={editable}
+          editable={editable && !dateBinding}
         />
       </div>
 
@@ -155,7 +169,7 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
                   [dateBindingMetric]:
                     value === 'before' ? -Math.abs(dateBindingValue) : Math.abs(dateBindingValue),
                 });
-                setFieldValue('dateBindingSign', value);
+                setDateBindingSign(value);
               }}
               saveOnChange
             >
