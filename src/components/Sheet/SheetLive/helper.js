@@ -46,29 +46,3 @@ export const convertEntityToInput = (id: string, type: string): Object => {
       throw new Error('unsupported entity type');
   }
 };
-
-export class Mutex {
-  mutex = Promise.resolve();
-
-  lock(): Promise<() => void> {
-    let begin: (() => void) => void = () => {};
-
-    this.mutex = this.mutex.then(() => {
-      return new Promise(begin);
-    });
-
-    return new Promise(res => {
-      begin = res;
-    });
-  }
-
-  async dispatch<T>(fn: (() => T) | (() => Promise<T>)): Promise<T> {
-    const unlock = await this.lock();
-
-    try {
-      return await Promise.resolve(fn());
-    } finally {
-      unlock();
-    }
-  }
-}

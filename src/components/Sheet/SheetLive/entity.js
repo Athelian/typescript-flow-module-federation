@@ -2,11 +2,12 @@
 import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import logger from 'utils/logger';
+import { Mutex } from 'utils/async';
 import { useSheetState } from '../SheetState';
 import type { Action } from '../SheetState';
 import { Actions } from '../SheetState/contants';
 import { useSheetLiveID } from './index';
-import { convertEntityToInput, Mutex } from './helper';
+import { convertEntityToInput } from './helper';
 import {
   entityEventSubscription,
   entitySubscribeMutation,

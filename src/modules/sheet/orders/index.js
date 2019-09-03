@@ -9,7 +9,7 @@ import columns from './columns';
 import transformer from './transformer';
 import entityEventHandler from './handler';
 import mutate from './mutate';
-import { orderSheetQuery } from './query';
+import { ordersQuery } from './query';
 
 const OrderSheetModule = () => {
   const client = useApolloClient();
@@ -30,7 +30,7 @@ const OrderSheetModule = () => {
 
     client
       .query({
-        query: orderSheetQuery,
+        query: ordersQuery,
         variables: { page: 1, perPage: 20, filterBy: {}, sortBy: {} },
       })
       .then(({ data }) => {
@@ -57,7 +57,7 @@ const OrderSheetModule = () => {
         onLoadMore={() =>
           client
             .query({
-              query: orderSheetQuery,
+              query: ordersQuery,
               variables: { page: page.page + 1, perPage: 20, filterBy: {}, sortBy: {} },
             })
             .then(({ data }) => {
