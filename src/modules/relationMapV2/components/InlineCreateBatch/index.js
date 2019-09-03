@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Batch } from 'generated/graphql';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { orderItemFormQuery } from 'modules/orderItem/form/query';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
@@ -20,7 +21,7 @@ type Props = {|
     id: string,
   },
   isProcessing?: boolean,
-  onSuccess: string => void,
+  onSuccess: (string, Batch) => void,
 |};
 
 export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSuccess }: Props) {
@@ -45,7 +46,7 @@ export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSucc
   }, [isOpen, itemId, itemResult.loading, loadOrderItem]);
 
   React.useEffect(() => {
-    if (!isProcessing && !itemResult.loading && orderItem.id && orderItem.id === itemId) {
+    if (isOpen && !isProcessing && !itemResult.loading && orderItem.id && orderItem.id === itemId) {
       dispatch({
         type: 'CREATE_BATCH_START',
         payload: {},
@@ -68,16 +69,28 @@ export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSucc
         },
       });
     }
-  }, [createBatch, dispatch, isProcessing, itemId, itemResult.loading, orderItem, totalBatches]);
+  }, [
+    createBatch,
+    dispatch,
+    isOpen,
+    isProcessing,
+    itemId,
+    itemResult.loading,
+    orderItem,
+    totalBatches,
+  ]);
 
   React.useEffect(() => {
-    if (isProcessing) {
+    if (isProcessing && isOpen) {
       if (batchResult.data && batchResult.data) {
         dispatch({
           type: 'CREATE_BATCH_END',
           payload: batchResult.data,
         });
-        onSuccess(batchResult.data?.batchCreate?.orderItem?.order?.id);
+        onSuccess(
+          batchResult.data?.batchCreate?.orderItem?.order?.id,
+          batchResult.data?.batchCreate
+        );
         onSetBadge(batchResult.data?.batchCreate?.id, 'newItem');
       } else if (batchResult.error) {
         dispatch({
@@ -86,7 +99,7 @@ export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSucc
         });
       }
     }
-  }, [batchResult.data, batchResult.error, dispatch, isProcessing, onSetBadge, onSuccess]);
+  }, [batchResult.data, batchResult.error, dispatch, isOpen, isProcessing, onSetBadge, onSuccess]);
 
   return (
     <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>

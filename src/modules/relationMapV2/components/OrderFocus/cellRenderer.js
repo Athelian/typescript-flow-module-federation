@@ -688,7 +688,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
   return (
     <>
       <div className={ContentStyle} />
-      <div ref={drop} className={ContentStyle}>
+      <div ref={drop} id={`${ORDER}-${orderId}`} className={ContentStyle}>
         {isDragging ? (
           <div
             style={{
@@ -1067,7 +1067,7 @@ function BatchCell({
           />
         )}
       </div>
-      <div ref={drop} className={ContentStyle}>
+      <div ref={drop} className={ContentStyle} id={`${BATCH}-${batchId}`}>
         {isDragging ? (
           <div
             style={{

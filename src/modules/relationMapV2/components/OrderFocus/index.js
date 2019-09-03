@@ -6,6 +6,7 @@ import { VariableSizeList as List } from 'react-window';
 import { Query } from 'react-apollo';
 import { get, set, uniq } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
+import scrollIntoView from 'scroll-into-view-if-needed';
 import apolloClient from 'apollo';
 import usePrevious from 'hooks/usePrevious';
 import { uuid } from 'utils/id';
@@ -32,6 +33,7 @@ import Row from '../Row';
 import cellRenderer from './cellRenderer';
 import generateListData from './generateListData';
 import { reducer, initialState, RelationMapContext } from './store';
+import { cacheSorted } from './helpers';
 import { moveEntityMutation } from './mutation';
 import normalize from './normalize';
 
@@ -160,7 +162,13 @@ const loadMore = (
 
 export default function OrderFocus() {
   const uiContext = React.useContext(UIContext);
+  const listRef = React.createRef();
+  const scrollEntity = React.useRef({
+    type: '',
+    id: '',
+  });
   const [expandRows, setExpandRows] = React.useState([]);
+  const [scrollPosition, setScrollPosition] = React.useState(-1);
   const { initHits } = Hits.useContainer();
   const { initMapping } = Entities.useContainer();
   const { queryVariables } = SortAndFilter.useContainer();
@@ -170,6 +178,29 @@ export default function OrderFocus() {
       setExpandRows([]);
     }
   }, [lastQueryVariables, queryVariables]);
+
+  const scrollToRow = React.useCallback((position: number, entity: Object) => {
+    scrollEntity.current = entity;
+    setScrollPosition(position);
+  }, []);
+
+  React.useEffect(() => {
+    if (scrollPosition >= 0) {
+      listRef.current.scrollToItem(scrollPosition, 'center');
+      const node = document.querySelector(
+        `#${scrollEntity.current?.type}-${scrollEntity.current?.id}`
+      );
+      if (node) {
+        // on UI, found the DOM, then try to scroll the center position
+        scrollIntoView(node, {
+          behavior: 'smooth',
+          scrollMode: 'if-needed',
+        });
+      }
+      scrollToRow(-1, {});
+    }
+  }, [listRef, scrollPosition, scrollToRow]);
+
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const queryOrdersDetail = React.useCallback(
     (orderIds: Array<string>, isPreload: boolean = false) => {
@@ -268,6 +299,7 @@ export default function OrderFocus() {
                   {orders.length > 0 ? (
                     <>
                       <List
+                        ref={listRef}
                         itemData={ordersData}
                         className={ListStyle}
                         itemCount={rowCount}
@@ -333,8 +365,36 @@ export default function OrderFocus() {
                       <InlineCreateBatch
                         isProcessing={state.createBatch.isProcessing}
                         isOpen={state.createBatch.isOpen}
-                        onSuccess={orderId => {
-                          if (orderId) queryOrdersDetail([orderId]);
+                        onSuccess={(orderId, batch) => {
+                          if (orderId) {
+                            queryOrdersDetail([orderId]);
+                            const node = document.querySelector(`#${BATCH}-${batch?.id}`);
+                            if (node) {
+                              // on UI, found the DOM, then try to scroll the center position
+                              scrollIntoView(node, {
+                                behavior: 'smooth',
+                                scrollMode: 'if-needed',
+                              });
+                            } else {
+                              // need to find the position base on the order and batch
+                              // then use the react-window to navigate to the row
+                              // try to get from sort first, if not there, then try to use from entities
+                              let batches =
+                                cacheSorted?.[`${batch?.orderItem?.id}-batches`]?.entities ?? [];
+                              if (
+                                batches.length <
+                                (entities.orderItems?.[batch?.orderItem?.id]?.batches?.length ?? 0)
+                              ) {
+                                batches = entities.orderItems?.[batch?.orderItem?.id]?.batches;
+                              }
+                              const lastBatchId = batches[batches.length - 1];
+                              const indexPosition = ordersData.findIndex(row => {
+                                const [, , batchCell, , ,] = row;
+                                return Number(batchCell.cell?.data?.id) === Number(lastBatchId);
+                              });
+                              scrollToRow(indexPosition, { id: batch?.id, type: BATCH });
+                            }
+                          }
                         }}
                         {...state.createBatch.detail}
                       />

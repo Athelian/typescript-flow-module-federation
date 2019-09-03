@@ -60,6 +60,7 @@ export const RelationMapContext = createContext<ContextProps>({
 export function reducer(
   state: State,
   action: {
+    // prettier-ignore
     type: | 'FETCH_ORDER'
       | 'FETCH_ORDERS'
       | 'TARGET'
@@ -291,14 +292,6 @@ export function reducer(
         createBatch: {
           isOpen: { $set: false },
           isProcessing: { $set: false },
-          detail: {
-            $set: {
-              entity: {
-                id: '',
-                no: '',
-              },
-            },
-          },
         },
       });
     }
