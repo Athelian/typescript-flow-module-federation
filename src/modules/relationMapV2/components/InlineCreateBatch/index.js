@@ -9,6 +9,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
 import { generateBatchByOrderItem } from 'utils/batch';
 import { removeTypename } from 'utils/data';
+import { Entities } from 'modules/relationMapV2/store';
 import { DialogStyle, ConfirmMessageStyle } from './style';
 import { createBatchMutation } from './mutation';
 
@@ -23,14 +24,18 @@ type Props = {|
 |};
 
 export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSuccess }: Props) {
+  const { mapping, onSetBadge } = Entities.useContainer();
   const { dispatch } = React.useContext(RelationMapContext);
   const [createBatch, batchResult] = useMutation(createBatchMutation);
   const [loadOrderItem, itemResult] = useLazyQuery(orderItemFormQuery, {
+    // NOTE: there is a tricky part for fixing the inline create for the same item from 3rd times
+    // Even its said no cache but it only fires 1 time.
     fetchPolicy: 'no-cache',
   });
 
   const itemId = entity.id;
   const orderItem = itemResult.data?.orderItem ?? {};
+  const totalBatches = mapping.entities?.orderItems?.[itemId]?.batches?.length || 0;
   React.useEffect(() => {
     if (itemId && isOpen && !itemResult.loading) {
       loadOrderItem({
@@ -54,7 +59,7 @@ export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSucc
               {},
               {
                 ...batchInput,
-                no: `batch no ${(orderItem.batches?.length ?? 0) + 1}`,
+                no: `batch no ${totalBatches + 1}`,
                 archived: orderItem?.archived,
               },
               { inOrderForm: true }
@@ -63,7 +68,7 @@ export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSucc
         },
       });
     }
-  }, [createBatch, dispatch, isProcessing, itemId, itemResult.loading, orderItem]);
+  }, [createBatch, dispatch, isProcessing, itemId, itemResult.loading, orderItem, totalBatches]);
 
   React.useEffect(() => {
     if (isProcessing) {
@@ -73,6 +78,7 @@ export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSucc
           payload: batchResult.data,
         });
         onSuccess(batchResult.data?.batchCreate?.orderItem?.order?.id);
+        onSetBadge(batchResult.data?.batchCreate?.id, 'newItem');
       } else if (batchResult.error) {
         dispatch({
           type: 'CREATE_BATCH_END',
@@ -80,7 +86,7 @@ export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSucc
         });
       }
     }
-  }, [batchResult.data, batchResult.error, dispatch, isProcessing, onSuccess]);
+  }, [batchResult.data, batchResult.error, dispatch, isProcessing, onSetBadge, onSuccess]);
 
   return (
     <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>

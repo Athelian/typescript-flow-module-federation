@@ -27,6 +27,7 @@ import {
 } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { Hits, Entities } from 'modules/relationMapV2/store';
+import Badge from 'modules/relationMapV2/components/Badge';
 import type { CellRender, State } from './type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
 import RelationLine from '../RelationLine';
@@ -952,7 +953,7 @@ function BatchCell({
 }: CellProps & { order: OrderPayload }) {
   const batchId = getByPathWithDefault('', 'id', data);
   const { state, dispatch } = React.useContext(RelationMapContext);
-  const { mapping } = Entities.useContainer();
+  const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const [{ isOver, canDrop, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
@@ -1086,6 +1087,7 @@ function BatchCell({
             onClick={handleClick}
           >
             <div ref={drag} style={baseDragStyle}>
+              {badge[batchId] && <Badge label={badge[batchId]} />}
               <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
