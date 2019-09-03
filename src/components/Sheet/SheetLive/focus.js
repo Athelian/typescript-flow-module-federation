@@ -13,7 +13,7 @@ import {
   focusEventSubscription,
   focusMutation,
   focusSubscribeMutation,
-  focusUnsubscribeAllMutation,
+  focusUnsubscribeMutation,
 } from './query';
 
 export const useSheetLiveFocus = () => {
@@ -23,6 +23,7 @@ export const useSheetLiveFocus = () => {
 
   const { entities, focusedAt } = state;
   const focusedEntity = focusedAt ? focusedAt.cell.entity : null;
+  const entitiesRef = React.useRef([]);
 
   // Subscribe to focus events
   React.useEffect(() => {
@@ -59,28 +60,34 @@ export const useSheetLiveFocus = () => {
   // Get current foreign focuses
   React.useEffect(() => {
     if (!id || entities.length === 0) {
-      return;
+      return () => {};
     }
 
-    client
-      .query({
-        query: focusesQuery,
-        variables: {
-          id,
-          entities: entities.map(({ id: entityId, type: entityType }) =>
-            convertEntityToInput(entityId, entityType)
-          ),
-        },
-        fetchPolicy: 'network-only',
-      })
-      .then(({ data }) => {
-        const focuses = getByPathWithDefault([], 'focuses', data);
+    const handler = setTimeout(() => {
+      client
+        .query({
+          query: focusesQuery,
+          variables: {
+            id,
+            entities: entities.map(({ id: entityId, type: entityType }) =>
+              convertEntityToInput(entityId, entityType)
+            ),
+          },
+          fetchPolicy: 'network-only',
+        })
+        .then(({ data }) => {
+          const focuses = getByPathWithDefault([], 'focuses', data);
 
-        dispatch({
-          type: Actions.FOREIGN_FOCUSES,
-          payload: focuses,
+          dispatch({
+            type: Actions.FOREIGN_FOCUSES,
+            payload: focuses,
+          });
         });
-      });
+    }, 200);
+
+    return () => {
+      clearTimeout(handler);
+    };
   }, [id, entities, client, dispatch]);
 
   // Notify current user focus
@@ -112,29 +119,51 @@ export const useSheetLiveFocus = () => {
 
   // Ask which entities to listen for focuses
   React.useEffect(() => {
-    if (!id || entities.length === 0) {
-      return () => {};
+    if (!id) {
+      return;
     }
 
-    client.mutate({
-      mutation: focusSubscribeMutation,
-      variables: {
-        id,
-        input: {
-          entities: entities.map(({ id: entityId, type: entityType }) =>
-            convertEntityToInput(entityId, entityType)
-          ),
-        },
-      },
-    });
+    const toSubscribe = entities.filter(
+      entity =>
+        entitiesRef.current.findIndex(
+          previousEntity => previousEntity.id === entity.id && previousEntity.type === entity.type
+        ) === -1
+    );
+    const toUnsubscribe = entitiesRef.current.filter(
+      previousEntity =>
+        entities.findIndex(
+          entity => previousEntity.id === entity.id && previousEntity.type === entity.type
+        ) === -1
+    );
 
-    return () => {
+    entitiesRef.current = entities;
+
+    if (toSubscribe.length > 0) {
       client.mutate({
-        mutation: focusUnsubscribeAllMutation,
+        mutation: focusSubscribeMutation,
         variables: {
           id,
+          input: {
+            entities: toSubscribe.map(({ id: entityId, type: entityType }) =>
+              convertEntityToInput(entityId, entityType)
+            ),
+          },
         },
       });
-    };
+    }
+
+    if (toUnsubscribe.length > 0) {
+      client.mutate({
+        mutation: focusUnsubscribeMutation,
+        variables: {
+          id,
+          input: {
+            entities: toUnsubscribe.map(({ id: entityId, type: entityType }) =>
+              convertEntityToInput(entityId, entityType)
+            ),
+          },
+        },
+      });
+    }
   }, [id, entities, client]);
 };

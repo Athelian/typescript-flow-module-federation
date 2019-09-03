@@ -10,7 +10,7 @@ import { convertEntityToInput, Mutex } from './helper';
 import {
   entityEventSubscription,
   entitySubscribeMutation,
-  entityUnsubscribeAllMutation,
+  entityUnsubscribeMutation,
 } from './query';
 
 export type EntityEventChange = {
@@ -99,6 +99,7 @@ export const useSheetLiveEntity = (factory: ?EntityEventHandlerFactory) => {
   );
   const { entities, items } = state;
   const itemsRef = React.useRef(items);
+  const entitiesRef = React.useRef([]);
 
   React.useEffect(() => {
     itemsRef.current = items;
@@ -138,29 +139,51 @@ export const useSheetLiveEntity = (factory: ?EntityEventHandlerFactory) => {
 
   // Ask which entities to listen too
   React.useEffect(() => {
-    if (!id || entities.length === 0) {
-      return () => {};
+    if (!id) {
+      return;
     }
 
-    client.mutate({
-      mutation: entitySubscribeMutation,
-      variables: {
-        id,
-        input: {
-          entities: entities.map(({ id: entityId, type: entityType }) =>
-            convertEntityToInput(entityId, entityType)
-          ),
-        },
-      },
-    });
+    const toSubscribe = entities.filter(
+      entity =>
+        entitiesRef.current.findIndex(
+          previousEntity => previousEntity.id === entity.id && previousEntity.type === entity.type
+        ) === -1
+    );
+    const toUnsubscribe = entitiesRef.current.filter(
+      previousEntity =>
+        entities.findIndex(
+          entity => previousEntity.id === entity.id && previousEntity.type === entity.type
+        ) === -1
+    );
 
-    return () => {
+    entitiesRef.current = entities;
+
+    if (toSubscribe.length > 0) {
       client.mutate({
-        mutation: entityUnsubscribeAllMutation,
+        mutation: entitySubscribeMutation,
         variables: {
           id,
+          input: {
+            entities: toSubscribe.map(({ id: entityId, type: entityType }) =>
+              convertEntityToInput(entityId, entityType)
+            ),
+          },
         },
       });
-    };
+    }
+
+    if (toUnsubscribe.length > 0) {
+      client.mutate({
+        mutation: entityUnsubscribeMutation,
+        variables: {
+          id,
+          input: {
+            entities: toUnsubscribe.map(({ id: entityId, type: entityType }) =>
+              convertEntityToInput(entityId, entityType)
+            ),
+          },
+        },
+      });
+    }
   }, [id, entities, client]);
 };
