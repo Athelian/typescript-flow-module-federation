@@ -108,6 +108,69 @@ export const orderSheetQuery = gql`
   ${forbiddenFragment}
 `;
 
+export const orderItemByIDSheetQuery = gql`
+  query orderItemByIDSheetQuery($id: ID!) {
+    orderItem(id: $id) {
+      ...orderItemSheetFragment
+      ... on OrderItem {
+        sort
+        order {
+          ... on Order {
+            id
+          }
+        }
+        batches {
+          ...batchSheetFragment
+          ... on Batch {
+            container {
+              ...containerSheetFragment
+            }
+            shipment {
+              ...shipmentSheetFragment
+            }
+          }
+        }
+      }
+    }
+  }
+
+  ${orderItemSheetFragment}
+  ${batchSheetFragment}
+  ${shipmentSheetFragment}
+  ${containerSheetFragment}
+`;
+
+export const batchByIDSheetQuery = gql`
+  query batchByIDSheetQuery($id: ID!) {
+    batch(id: $id) {
+      ...batchSheetFragment
+      ... on Batch {
+        sort
+        orderItem {
+          ... on OrderItem {
+            id
+            order {
+              ... on Order {
+                id
+              }
+            }
+          }
+        }
+        container {
+          ...containerSheetFragment
+        }
+        shipment {
+          ...shipmentSheetFragment
+        }
+      }
+    }
+  }
+
+  ${batchSheetFragment}
+  ${shipmentSheetFragment}
+  ${containerSheetFragment}
+`;
+
 export const orderMutation = gql`
   mutation orderMutation($id: ID!, $input: OrderUpdateInput!) {
     orderUpdate(id: $id, input: $input) {

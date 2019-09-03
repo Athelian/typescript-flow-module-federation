@@ -1,6 +1,6 @@
 // @flow
 import { setIn } from 'utils/fp';
-import type { Action, CellValue, State, Position, ForeignFocus } from './index';
+import type { Action, CellValue, State, Position, ForeignFocus, RowKamoulox } from './index';
 import { Actions } from './contants';
 
 function getEntities(rows: Array<Array<CellValue>>): Array<{ id: string, type: string }> {
@@ -9,8 +9,7 @@ function getEntities(rows: Array<Array<CellValue>>): Array<{ id: string, type: s
       .map(row =>
         row
           .filter(cell => !!cell.entity)
-          // $FlowFixMe nullable cell.entity is already filtered
-          .map(cell => ({ id: cell.entity.id, type: cell.entity.type }))
+          .map(cell => ({ id: cell?.entity?.id, type: cell?.entity?.type }))
       )
       // $FlowFixMe flow doesn't support flat()
       .flat()
@@ -27,10 +26,9 @@ function getForeignFocusedAt(focus: Object, rows: Array<Array<CellValue>>): Arra
     .reduce((positions, row, x) => {
       row.forEach((cell, y) => {
         if (
-          cell.entity &&
-          cell.entity.id === focus.entity.id &&
-          cell.entity.type === focus.entity.__typename &&
-          cell.entity.field === focus.field
+          cell.entity?.id === focus.entity.id &&
+          cell.entity?.type === focus.entity.__typename &&
+          cell.entity?.field === focus.field
         ) {
           positions.push({ x, y });
         }
@@ -183,6 +181,8 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           foreignFocusedAt: [],
           erroredAt: null,
           weakErroredAt: [],
+          addedRows: [],
+          deletedRows: [],
         };
       }
       case Actions.APPEND: {
@@ -270,11 +270,10 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
                   row.filter(cell => {
                     return (
                       !cell.empty &&
-                      cell.entity &&
                       cell.data &&
-                      cell.entity.id === entity.id &&
-                      cell.entity.type === entity.type &&
-                      cell.entity.field === entity.field
+                      cell.entity?.id === entity.id &&
+                      cell.entity?.type === entity.type &&
+                      cell.entity?.field === entity.field
                     );
                   })
                 )
@@ -393,12 +392,11 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           ? state.rows.reduce((positions, row, x) => {
               row.forEach((cell, y) => {
                 if (
-                  // $FlowFixMe nullable targetCell is already checked
-                  targetCell.entity &&
+                  targetCell?.entity &&
                   cell.entity &&
-                  targetCell.entity.id === cell.entity.id &&
-                  targetCell.entity.type === cell.entity.type &&
-                  targetCell.entity.field === cell.entity.field
+                  targetCell?.entity?.id === cell.entity?.id &&
+                  targetCell?.entity?.type === cell.entity?.type &&
+                  targetCell?.entity?.field === cell.entity?.field
                 ) {
                   positions.push({ x, y });
                 }
@@ -422,7 +420,7 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           throw new Error('cell not found');
         }
 
-        if (state.focusedAt !== null && state.focusedAt.cell === targetCell) {
+        if (state.focusedAt?.cell === targetCell) {
           return state;
         }
 
@@ -434,12 +432,10 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           ? state.rows.reduce((positions, row, x) => {
               row.forEach((cell, y) => {
                 if (
-                  // $FlowFixMe nullable targetCell is already checked
-                  targetCell.entity &&
-                  cell.entity &&
-                  targetCell.entity.id === cell.entity.id &&
-                  targetCell.entity.type === cell.entity.type &&
-                  targetCell.entity.field === cell.entity.field
+                  targetCell?.entity &&
+                  targetCell?.entity?.id === cell.entity?.id &&
+                  targetCell?.entity?.type === cell.entity?.type &&
+                  targetCell?.entity?.field === cell.entity?.field
                 ) {
                   positions.push({ x, y });
                 }
@@ -571,6 +567,63 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           foreignFocusedAt: [...state.foreignFocusedAt.filter(ff => ff.id !== blur.id)],
         };
       }
+      case Actions.ADDED_ROWS_OF_ENTITY: {
+        if (!action.payload) {
+          throw new Error('invalid dispatch payload');
+        }
+
+        const { id, type } = action.payload;
+
+        let start = -1;
+        let end = -1;
+
+        state.rows.every((row, idx) => {
+          const cell: ?CellValue = row.find(c => c.entity?.id === id && c.entity?.type === type);
+          if (!cell) {
+            return true;
+          }
+
+          start = idx;
+          end = start + (cell.extended || 0);
+
+          return false;
+        });
+
+        if (start === -1) {
+          return state;
+        }
+
+        return {
+          ...state,
+          addedRows: [
+            ...state.addedRows,
+            {
+              start,
+              end,
+              entity: { id, type },
+            },
+          ],
+        };
+      }
+      case Actions.CLEAR_ADDED_ROWS: {
+        if (!action.payload) {
+          throw new Error('invalid dispatch payload');
+        }
+
+        const { id, type } = action.payload;
+
+        return {
+          ...state,
+          // $FlowFixMe ???
+          addedRows: state.addedRows.filter(
+            aen => aen.entity.id !== id && aen.entity.type !== type
+          ),
+        };
+      }
+      case Actions.DELETED_ROWS_ENTITY:
+        return state;
+      case Actions.CLEAR_DELETED_ROWS:
+        return state;
       default:
         throw new Error('invalid dispatch action');
     }
