@@ -17,7 +17,7 @@ const TextInput = React.forwardRef<Props, HTMLInputElement>(
       <div className={WrapperStyle}>
         <BaseTextInput
           inputRef={ref}
-          value={value}
+          value={value || ''}
           name="value"
           tabIndex="-1"
           readOnly={readonly}

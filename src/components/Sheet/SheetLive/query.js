@@ -82,6 +82,47 @@ export const entityEventSubscription = gql`
           ... on StringValue {
             string
           }
+          ... on IntValue {
+            int
+          }
+          ... on FloatValue {
+            float
+          }
+          ... on BooleanValue {
+            boolean
+          }
+          ... on DateTimeValue {
+            datetime
+          }
+          ... on MetricValueValue {
+            metricValue {
+              value
+              metric
+            }
+          }
+          ... on SizeValue {
+            size {
+              height {
+                value
+                metric
+              }
+              width {
+                value
+                metric
+              }
+              length {
+                value
+                metric
+              }
+            }
+          }
+          ... on EntityValue {
+            entity {
+              ... on Model {
+                id
+              }
+            }
+          }
         }
       }
     }

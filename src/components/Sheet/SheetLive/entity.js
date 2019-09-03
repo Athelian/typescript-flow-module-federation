@@ -2,23 +2,107 @@
 import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import logger from 'utils/logger';
-import { getByPathWithDefault } from 'utils/fp';
 import { useSheetState } from '../SheetState';
+import type { Action } from '../SheetState';
+import { Actions } from '../SheetState/contants';
 import { useSheetLiveID } from './index';
-import { convertEntityToInput } from './helper';
+import { convertEntityToInput, Mutex } from './helper';
 import {
   entityEventSubscription,
   entitySubscribeMutation,
   entityUnsubscribeAllMutation,
 } from './query';
-import { Actions } from '../SheetState/contants';
 
-export const useSheetLiveEntity = () => {
+export type EntityEventChange = {
+  field: string,
+  new: Object | null,
+  old: Object | null,
+};
+
+export type EntityEvent = {
+  lifeCycle: 'Create' | 'Update' | 'Delete',
+  entity: Object,
+  changes: Array<EntityEventChange>,
+};
+
+export type EntityEventHandler = (event: EntityEvent, items: Array<Object>) => Promise<void> | void;
+export type EntityEventHandlerFactory = (dispatch: (Action) => void) => EntityEventHandler;
+
+export const defaultEntityEventChangeTransformer = (
+  event: EntityEvent,
+  change: EntityEventChange
+) => {
+  let value = null;
+  switch (change.new?.__typename) {
+    case 'StringValue':
+      value = change.new?.string;
+      break;
+    case 'IntValue':
+      value = change.new?.int;
+      break;
+    case 'FloatValue':
+      value = change.new?.float;
+      break;
+    case 'BooleanValue':
+      value = change.new?.boolean;
+      break;
+    case 'DateTimeValue':
+      value = change.new?.datetime;
+      break;
+    case 'MetricValueValue':
+      value = change.new?.metricValue;
+      break;
+    case 'SizeValue':
+      value = change.new?.size;
+      break;
+    default:
+      value = null;
+      break;
+  }
+
+  return {
+    entity: {
+      id: event.entity.id,
+      type: event.entity.__typename,
+      field: change.field,
+    },
+    value,
+  };
+};
+
+export const defaultEntityEventHandlerFactory: EntityEventHandlerFactory = (
+  dispatch: Action => void
+): EntityEventHandler => {
+  return (event: EntityEvent) => {
+    if (event.lifeCycle !== 'Update') {
+      return;
+    }
+
+    if (event.changes.length > 0) {
+      dispatch({
+        type: Actions.CHANGE_VALUES,
+        payload: event.changes.map(change => {
+          return defaultEntityEventChangeTransformer(event, change);
+        }),
+      });
+    }
+  };
+};
+
+export const useSheetLiveEntity = (factory: ?EntityEventHandlerFactory) => {
   const id = useSheetLiveID();
   const client = useApolloClient();
   const { state, dispatch } = useSheetState();
+  const entityEventHandler: EntityEventHandler = React.useCallback(
+    (factory || defaultEntityEventHandlerFactory)(dispatch),
+    [dispatch, factory]
+  );
+  const { entities, items } = state;
+  const itemsRef = React.useRef(items);
 
-  const { entities } = state;
+  React.useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
 
   // Subscribe to entity events
   React.useEffect(() => {
@@ -26,6 +110,7 @@ export const useSheetLiveEntity = () => {
       return () => {};
     }
 
+    const mutex = new Mutex();
     const subscription = client
       .subscribe({
         query: entityEventSubscription,
@@ -36,53 +121,20 @@ export const useSheetLiveEntity = () => {
       })
       .subscribe({
         next(result) {
-          const entityEvent = getByPathWithDefault(null, 'data.data.entityEvent', result);
-          if (!entityEvent) {
-            return;
-          }
+          mutex.dispatch(() => {
+            const entityEvent = result.data?.data?.entityEvent;
+            if (!entityEvent) {
+              return null;
+            }
 
-          switch (entityEvent.lifeCycle) {
-            case 'Create':
-              // TODO: find and replace original item
-              break;
-            case 'Update':
-              dispatch({
-                type: Actions.CHANGE_VALUES,
-                payload: entityEvent.changes
-                  .map(change => {
-                    let value = null;
-                    switch (change.new.__typename) {
-                      case 'StringValue':
-                        value = change.new.string;
-                        break;
-                      default:
-                        return null;
-                    }
-
-                    return {
-                      entity: {
-                        id: entityEvent.entity.id,
-                        type: entityEvent.entity.__typename,
-                        field: change.field,
-                      },
-                      value,
-                    };
-                  })
-                  .filter(c => c !== null),
-              });
-              break;
-            case 'Delete':
-              // TODO: find and replace or delete original item
-              break;
-            default:
-              break;
-          }
+            return entityEventHandler(entityEvent, itemsRef.current);
+          });
         },
         error: logger.error,
       });
 
     return () => subscription.unsubscribe();
-  }, [client, dispatch, id]);
+  }, [client, entityEventHandler, id]);
 
   // Ask which entities to listen too
   React.useEffect(() => {

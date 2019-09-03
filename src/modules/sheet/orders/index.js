@@ -7,12 +7,16 @@ import { EntityIcon, NavBar } from 'components/NavBar';
 import { Sheet } from 'components/Sheet';
 import columns from './columns';
 import transformer from './transformer';
+import entityEventHandler from './handler';
 import mutate from './mutate';
 import { orderSheetQuery } from './query';
 
 const OrderSheetModule = () => {
   const client = useApolloClient();
   const memoizedMutate = React.useCallback(mutate(client), [client]);
+  const memoizedHandler = React.useCallback(dispatch => entityEventHandler(client, dispatch), [
+    client,
+  ]);
 
   const [initialOrders, setInitialOrders] = React.useState<Object>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -49,6 +53,7 @@ const OrderSheetModule = () => {
         hasMore={page.page < page.totalPage}
         transformItem={transformer}
         onMutate={memoizedMutate}
+        handleEntityEvent={memoizedHandler}
         onLoadMore={() =>
           client
             .query({

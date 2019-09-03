@@ -1,5 +1,6 @@
 // @flow
 import { print } from 'graphql/language/printer';
+import { stripIgnoredCharacters } from 'graphql/utilities';
 import { Operation } from 'apollo-link';
 import logger from './utils/logger';
 
@@ -8,11 +9,14 @@ export class SubscriptionSSE {
 
   subscribe(operation: Operation, handler: (data: any) => void) {
     const { query, variables, operationName } = operation;
+    const queryString = stripIgnoredCharacters(print(query));
+
     this.source = new EventSource(
       encodeURI(
-        `${process.env.ZENPORT_SERVER_URL || ''}/graphql?query=${print(
-          query
-        )}&operationName=${operationName}&variables=${JSON.stringify(variables)}`
+        `${process.env.ZENPORT_SERVER_URL ||
+          ''}/graphql?query=${queryString}&operationName=${operationName}&variables=${JSON.stringify(
+          variables
+        )}`
       ),
       { withCredentials: true }
     );

@@ -7,6 +7,8 @@ import { Actions } from '../SheetState/contants';
 import type { CellValue } from '../SheetState';
 import { useSheetState } from '../SheetState';
 import Cell from '../Cell';
+import Deleted from './Announcements/Deleted';
+import Added from './Announcements/Added';
 
 type Props = {
   style: Object,
@@ -70,9 +72,9 @@ const CellWrapper = React.memo<WrapperProps>(({ cell, columnIndex, rowIndex }: W
       focus={!!focusedAt && focusedAt.x === rowIndex && focusedAt.y === columnIndex}
       weakFocus={!!weakFocusedAt.find(f => f.x === rowIndex && f.y === columnIndex)}
       foreignFocuses={foreignFocuses}
-      readonly={cell.readonly || false}
+      readonly={cell.readonly || !(cell.entity && cell.entity.permissions(hasPermission))}
       forbidden={cell.forbidden || false}
-      disabled={cell.disabled || !(cell.entity && cell.entity.permissions(hasPermission))}
+      disabled={cell.disabled || false}
       isFirstRow={rowIndex === 0}
       extended={cell.extended || 0}
       errors={
@@ -90,8 +92,8 @@ const CellWrapper = React.memo<WrapperProps>(({ cell, columnIndex, rowIndex }: W
 });
 
 const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
-  const { state } = useSheetState();
-  const { rows } = state;
+  const { state, dispatch } = useSheetState();
+  const { items, rows, addedRows, deletedRows } = state;
 
   if (rowIndex >= rows.length) {
     return columnIndex === 0 ? (
@@ -101,14 +103,34 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
     ) : null;
   }
 
+  const addedRow = addedRows.find(row => row.start === rowIndex);
+  const deletedRow = deletedRows.find(row => row.start === rowIndex);
+
   const cell = rows[rowIndex][columnIndex];
-  if (cell.empty) {
-    return null;
-  }
 
   return (
     <div style={style}>
-      <CellWrapper cell={cell} columnIndex={columnIndex} rowIndex={rowIndex} />
+      {columnIndex === 0 &&
+        ((deletedRow && (
+          <Deleted
+            start={deletedRow.start}
+            end={deletedRow.end}
+            onClear={() => deletedRow.onClear(items)}
+          />
+        )) ||
+          (addedRow && (
+            <Added
+              start={addedRow.start}
+              end={addedRow.end}
+              onClear={() =>
+                dispatch({
+                  type: Actions.CLEAR_ADDED_ROWS,
+                  payload: addedRow.entity,
+                })
+              }
+            />
+          )))}
+      {!cell.empty && <CellWrapper cell={cell} columnIndex={columnIndex} rowIndex={rowIndex} />}
     </div>
   );
 };

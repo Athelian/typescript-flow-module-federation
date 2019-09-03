@@ -173,7 +173,6 @@ exports[`Cards render ProjectCard 1`] = `
 }
 
 .emotion-1 {
-  position: relative;
   font-size: 14px;
   min-height: 20px;
   line-height: 20px;
@@ -855,7 +854,6 @@ exports[`Cards render ProjectCard 2`] = `
 }
 
 .emotion-1 {
-  position: relative;
   font-size: 14px;
   min-height: 20px;
   line-height: 20px;

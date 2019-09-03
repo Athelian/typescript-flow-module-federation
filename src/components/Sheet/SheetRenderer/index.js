@@ -93,7 +93,7 @@ const SheetRenderer = ({
             {({ height, width }) => (
               <InfiniteLoader
                 isItemLoaded={index => index < rowCount || !hasMore}
-                itemCount={hasMore ? rowCount * 100 : rowCount}
+                itemCount={rowCount + hasMore}
                 loadMoreItems={() => {
                   if (!loading && !loadingMore) {
                     onThreshold();

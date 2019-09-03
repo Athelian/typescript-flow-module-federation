@@ -64,7 +64,9 @@ const Cell = ({
 
   React.useEffect(() => {
     if (focus && wrapperRef.current) {
-      wrapperRef.current.focus();
+      wrapperRef.current.focus({
+        preventScroll: true,
+      });
     }
   }, [focus]);
 
@@ -72,7 +74,9 @@ const Cell = ({
     switch (e.key) {
       case 'Enter':
         if (inputRef.current) {
-          inputRef.current.focus();
+          inputRef.current.focus({
+            preventScroll: true,
+          });
         }
         break;
       case 'Escape':
@@ -80,7 +84,9 @@ const Cell = ({
           inputRef.current.blur();
         }
         if (wrapperRef.current) {
-          wrapperRef.current.focus();
+          wrapperRef.current.focus({
+            preventScroll: true,
+          });
         }
         break;
       default:
@@ -150,7 +156,7 @@ const Cell = ({
       />
 
       {!errors && !weakError && foreignFocuses.length > 0 && (
-        <div id="focuses" className={FocusesWrapperStyle(isFirstRow)}>
+        <div id="focuses" className={FocusesWrapperStyle(isFirstRow, extended)}>
           {foreignFocuses.map(ff => (
             <span key={ff.id} className={FocusStyle(isFirstRow)}>
               <FormattedName firstName={ff.firstName} lastName={ff.lastName} />
@@ -160,7 +166,7 @@ const Cell = ({
       )}
 
       {errors !== null && errors.length > 0 && (
-        <div className={ErrorsWrapperStyle(isFirstRow)}>
+        <div className={ErrorsWrapperStyle(isFirstRow, extended)}>
           {errors.map(error => (
             <span key={error} className={ErrorStyle}>
               {error}
