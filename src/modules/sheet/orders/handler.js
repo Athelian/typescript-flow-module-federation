@@ -13,7 +13,7 @@ import { batchByIDQuery, containerByIDQuery, orderItemByIDQuery, shipmentByIDQue
 
 // $FlowFixMe not compatible with hook implementation
 function addOrderItemFactory(client: ApolloClient, dispatch: Action => void) {
-  return async (orderItemId: string, items: Array<Object>) => {
+  return async (orderItemId: string) => {
     await client
       .query({
         query: orderItemByIDQuery,
@@ -28,35 +28,41 @@ function addOrderItemFactory(client: ApolloClient, dispatch: Action => void) {
           return;
         }
 
-        const orderId = newOrderItem.order?.id;
-        if (!orderId) {
-          return;
-        }
-
-        const itemIdx = items.findIndex(item => item.id === orderId);
-        if (itemIdx === -1) {
-          return;
-        }
-
-        const orderItems = [...items[itemIdx].orderItems];
-        orderItems.splice(newOrderItem.sort, 0, newOrderItem);
-
-        dispatch({
-          type: Actions.REPLACE_ITEM,
-          payload: {
-            item: {
-              ...items[itemIdx],
-              orderItems,
-            },
-            index: itemIdx,
-          },
-        });
-
         dispatch({
           type: Actions.ADDED_ROWS_OF_ENTITY,
           payload: {
-            id: orderItemId,
-            type: 'OrderItem',
+            entity: {
+              id: orderItemId,
+              type: 'OrderItem',
+            },
+            onAdd: (d: Action => void, items: Array<Object>) => {
+              console.log('onAdd', 'orderItem');
+              const orderId = newOrderItem.order?.id;
+              if (!orderId) {
+                console.log('order id');
+                return;
+              }
+
+              const itemIdx = items.findIndex(item => item.id === orderId);
+              if (itemIdx === -1) {
+                console.log('order not found');
+                return;
+              }
+
+              const orderItems = [...items[itemIdx].orderItems];
+              orderItems.splice(newOrderItem.sort, 0, newOrderItem);
+
+              d({
+                type: Actions.REPLACE_ITEM,
+                payload: {
+                  item: {
+                    ...items[itemIdx],
+                    orderItems,
+                  },
+                  index: itemIdx,
+                },
+              });
+            },
           },
         });
       });
@@ -65,7 +71,7 @@ function addOrderItemFactory(client: ApolloClient, dispatch: Action => void) {
 
 // $FlowFixMe not compatible with hook implementation
 function addBatchFactory(client: ApolloClient, dispatch: Action => void) {
-  return async (batchId: string, items: Array<Object>) => {
+  return async (batchId: string) => {
     await client
       .query({
         query: batchByIDQuery,
@@ -80,48 +86,51 @@ function addBatchFactory(client: ApolloClient, dispatch: Action => void) {
           return;
         }
 
-        const orderItemId = newBatch.orderItem?.id;
-        const orderId = newBatch.orderItem?.order?.id;
-        if (!orderItemId || !orderId) {
-          return;
-        }
-
-        const itemIdx = items.findIndex(item => item.id === orderId);
-        if (itemIdx === -1) {
-          return;
-        }
-
-        const orderItemIdx = items[itemIdx].orderItems.findIndex(
-          orderItem => orderItem.id === orderItemId
-        );
-        if (orderItemIdx === -1) {
-          return;
-        }
-
-        const orderItems = [...items[itemIdx].orderItems];
-        const batches = [...orderItems[orderItemIdx].batches];
-        batches.splice(newBatch.sort, 0, newBatch);
-        orderItems[orderItemIdx] = {
-          ...orderItems[orderItemIdx],
-          batches,
-        };
-
-        dispatch({
-          type: Actions.REPLACE_ITEM,
-          payload: {
-            item: {
-              ...items[itemIdx],
-              orderItems,
-            },
-            index: itemIdx,
-          },
-        });
-
         dispatch({
           type: Actions.ADDED_ROWS_OF_ENTITY,
           payload: {
-            id: batchId,
-            type: 'Batch',
+            entity: {
+              id: batchId,
+              type: 'Batch',
+            },
+            onAdd: (d: Action => void, items: Array<Object>) => {
+              const orderItemId = newBatch.orderItem?.id;
+              const orderId = newBatch.orderItem?.order?.id;
+              if (!orderItemId || !orderId) {
+                return;
+              }
+
+              const itemIdx = items.findIndex(item => item.id === orderId);
+              if (itemIdx === -1) {
+                return;
+              }
+
+              const orderItemIdx = items[itemIdx].orderItems.findIndex(
+                orderItem => orderItem.id === orderItemId
+              );
+              if (orderItemIdx === -1) {
+                return;
+              }
+
+              const orderItems = [...items[itemIdx].orderItems];
+              const batches = [...orderItems[orderItemIdx].batches];
+              batches.splice(newBatch.sort, 0, newBatch);
+              orderItems[orderItemIdx] = {
+                ...orderItems[orderItemIdx],
+                batches,
+              };
+
+              d({
+                type: Actions.REPLACE_ITEM,
+                payload: {
+                  item: {
+                    ...items[itemIdx],
+                    orderItems,
+                  },
+                  index: itemIdx,
+                },
+              });
+            },
           },
         });
       });
@@ -252,6 +261,105 @@ function changeBatchShipmentFactory(client: ApolloClient, dispatch: Action => vo
   };
 }
 
+function removeOrderFactory(dispatch: Action => void) {
+  return function(orderId: string) {
+    dispatch({
+      type: Actions.REMOVED_ROWS_ENTITY,
+      payload: {
+        entity: {
+          id: orderId,
+          type: 'Order',
+        },
+        onClear: (d: Action => void, items: Array<Object>) => {
+          const itemIdx = items.findIndex(item => item.id === orderId);
+          if (itemIdx === -1) {
+            return;
+          }
+
+          d({
+            type: Actions.DELETE_ITEM,
+            payload: itemIdx,
+          });
+        },
+      },
+    });
+  };
+}
+
+function removeOrderItemFactory(dispatch: Action => void) {
+  return function(orderItemId: string) {
+    dispatch({
+      type: Actions.REMOVED_ROWS_ENTITY,
+      payload: {
+        entity: {
+          id: orderItemId,
+          type: 'OrderItem',
+        },
+        onClear: (d: Action => void, items: Array<Object>) => {
+          const itemIdx = items.findIndex(
+            item => !!item.orderItems.find(orderItem => orderItem.id === orderItemId)
+          );
+          if (itemIdx === -1) {
+            return;
+          }
+
+          d({
+            type: Actions.REPLACE_ITEM,
+            payload: {
+              item: {
+                ...items[itemIdx],
+                orderItems: items[itemIdx].orderItems.filter(
+                  orderItem => orderItem.id !== orderItemId
+                ),
+              },
+              index: itemIdx,
+            },
+          });
+        },
+      },
+    });
+  };
+}
+
+function removeBatchFactory(dispatch: Action => void) {
+  return function(batchId: string) {
+    dispatch({
+      type: Actions.REMOVED_ROWS_ENTITY,
+      payload: {
+        entity: {
+          id: batchId,
+          type: 'Batch',
+        },
+        onClear: (d: Action => void, items: Array<Object>) => {
+          const itemIdx = items.findIndex(
+            item =>
+              !!item.orderItems.find(
+                orderItem => !!orderItem.batches.find(batch => batch.id === batchId)
+              )
+          );
+          if (itemIdx === -1) {
+            return;
+          }
+
+          d({
+            type: Actions.REPLACE_ITEM,
+            payload: {
+              item: {
+                ...items[itemIdx],
+                orderItems: items[itemIdx].orderItems.map(orderItem => ({
+                  ...orderItem,
+                  batches: orderItem.batches.filter(batch => batch.id !== batchId),
+                })),
+              },
+              index: itemIdx,
+            },
+          });
+        },
+      },
+    });
+  };
+}
+
 export default function entityEventHandler(
   // $FlowFixMe not compatible with hook implementation
   client: ApolloClient,
@@ -261,17 +369,20 @@ export default function entityEventHandler(
   const addBatch = addBatchFactory(client, dispatch);
   const changeBatchContainer = changeBatchContainerFactory(client, dispatch);
   const changeBatchShipment = changeBatchShipmentFactory(client, dispatch);
+  const removeOrder = removeOrderFactory(dispatch);
+  const removeOrderItem = removeOrderItemFactory(dispatch);
+  const removeBatch = removeBatchFactory(dispatch);
 
   return async (event: EntityEvent, items: Array<Object>) => {
     switch (event.lifeCycle) {
       case 'Create':
         switch (event.entity.__typename) {
           case 'OrderItem': {
-            await addOrderItem(event.entity.id, items);
+            await addOrderItem(event.entity.id);
             break;
           }
           case 'Batch': {
-            await addBatch(event.entity.id, items);
+            await addBatch(event.entity.id);
             break;
           }
           default:
@@ -285,8 +396,8 @@ export default function entityEventHandler(
           case 'OrderItem': {
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               if (change.field === 'order') {
-                // todo: remove item from order
-                await addOrderItem(event.entity.id, items);
+                removeOrderItem(event.entity.id);
+                await addOrderItem(event.entity.id);
 
                 return false;
               }
@@ -298,8 +409,8 @@ export default function entityEventHandler(
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               switch (change.field) {
                 case 'orderItem':
-                  // todo: remove batch from order item
-                  await addBatch(event.entity.id, items);
+                  removeBatch(event.entity.id);
+                  await addBatch(event.entity.id);
                   return false;
                 case 'container':
                   await changeBatchContainer(
@@ -334,13 +445,13 @@ export default function entityEventHandler(
       case 'Delete':
         switch (event.entity.__typename) {
           case 'Order':
-            // todo: remove order
+            removeOrder(event.entity.id);
             break;
           case 'OrderItem':
-            // todo: remove item from order
+            removeOrderItem(event.entity.id);
             break;
           case 'Batch':
-            // todo: remove batch from order item
+            removeBatch(event.entity.id);
             break;
           default:
             break;
