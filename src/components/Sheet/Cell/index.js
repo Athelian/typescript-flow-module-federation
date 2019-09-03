@@ -64,7 +64,9 @@ const Cell = ({
 
   React.useEffect(() => {
     if (focus && wrapperRef.current) {
-      wrapperRef.current.focus();
+      wrapperRef.current.focus({
+        preventScroll: true,
+      });
     }
   }, [focus]);
 
@@ -72,7 +74,9 @@ const Cell = ({
     switch (e.key) {
       case 'Enter':
         if (inputRef.current) {
-          inputRef.current.focus();
+          inputRef.current.focus({
+            preventScroll: true,
+          });
         }
         break;
       case 'Escape':
@@ -80,7 +84,9 @@ const Cell = ({
           inputRef.current.blur();
         }
         if (wrapperRef.current) {
-          wrapperRef.current.focus();
+          wrapperRef.current.focus({
+            preventScroll: true,
+          });
         }
         break;
       default:
