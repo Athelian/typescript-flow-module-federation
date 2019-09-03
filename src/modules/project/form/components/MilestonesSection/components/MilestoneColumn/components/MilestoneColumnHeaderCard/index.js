@@ -108,14 +108,14 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
           : values.dueDate;
 
         const completedAtAndDueDateDiff =
-          values.completedAt && values.dueDate
-            ? differenceInCalendarDays(new Date(values.completedAt), new Date(values.dueDate))
+          values.completedAt && dueDate
+            ? differenceInCalendarDays(new Date(values.completedAt), new Date(dueDate))
             : 0;
 
         const estComplDate = estimatedCompletionDates[milestoneIndex];
         const estComplDateDiff =
-          estComplDate && values.dueDate
-            ? differenceInCalendarDays(new Date(estComplDate), new Date(values.dueDate))
+          estComplDate && dueDate
+            ? differenceInCalendarDays(new Date(estComplDate), new Date(dueDate))
             : 0;
 
         return (
