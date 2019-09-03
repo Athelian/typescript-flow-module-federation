@@ -17,6 +17,8 @@ import {
   DateInputFactory,
   TextAreaInputFactory,
   SelectInputFactory,
+  FieldItem,
+  Label,
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 
@@ -30,7 +32,7 @@ import {
   MILESTONE_SET_DUE_DATE,
   MILESTONE_SET_DESCRIPTION,
 } from 'modules/permission/constants/milestone';
-
+import DateBindingInput from '../DateBindingInput';
 import {
   CommonFormWrapperStyle,
   MilestoneSectionStyle,
@@ -108,6 +110,25 @@ const MilestoneSection = ({ intl }: Props) => {
                         />
                       )}
                     </FormField>
+
+                    <FieldItem
+                      label={
+                        <Label height="30px">
+                          <FormattedMessage
+                            id="modules.milestone.estCompletionDate"
+                            defaultMessage="Est. Completion Date"
+                          />
+                        </Label>
+                      }
+                      input={
+                        <DateBindingInput
+                          originalValues={originalValues}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={setFieldValue}
+                        />
+                      }
+                    />
 
                     <FormField
                       name="description"

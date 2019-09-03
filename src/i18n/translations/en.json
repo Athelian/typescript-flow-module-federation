@@ -754,7 +754,7 @@
   "modules.profile.passwordNotMatch": "Password don't match",
   "modules.Projects.removeMilestoneWarningMessage": "There are some Tasks in this Milestone. Would you like to remove them from the Project (and not delete them) or completely delete them along with this Milestone?",
   "modules.Projects.completeMilestoneWarningMessage": "There are {numOfTasksUncompletedOrInProgress}/{numOfTotalTasks} that are still Uncompleted or In Progress. Would you like to change their statuses?",
-  "modules.Milestones.addTask": "ADD TASK",
+  "modules.Milestones.addTask": "SELECT TASK",
   "modules.Milestones.name": "Name",
   "modules.Milestones.dueDate": "Due Date",
   "modules.Project.bindingEntities": "Binded Entities - Based on Entities binded to this Project",

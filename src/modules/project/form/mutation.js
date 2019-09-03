@@ -34,6 +34,7 @@ import {
   parseArrayOfIdsField,
   parseParentIdField,
   parseTaskField,
+  parseEnumField,
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 
@@ -83,6 +84,21 @@ const prepareParseMilestone = (originalValues: Object, newValues: Object): Objec
     'completedAt',
     getByPathWithDefault(null, 'completedAt', originalValues),
     newValues.completedAt
+  ),
+  ...parseDateField(
+    'estimatedCompletionDate',
+    originalValues?.estimatedCompletionDate,
+    newValues?.estimatedCompletionDate
+  ),
+  ...parseGenericField(
+    'estimatedCompletionDateInterval',
+    originalValues?.estimatedCompletionDateInterval,
+    newValues?.estimatedCompletionDateInterval
+  ),
+  ...parseEnumField(
+    'estimatedCompletionDateBinding',
+    originalValues?.estimatedCompletionDateBinding,
+    newValues?.estimatedCompletionDateBinding
   ),
   ...parseArrayOfChildrenField(
     'tasks',

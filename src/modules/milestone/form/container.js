@@ -9,6 +9,9 @@ type FormState = {
   description?: string,
   completedAt?: string,
   completedBy?: Object,
+  estimatedCompletionDate: string,
+  estimatedCompletionDateInterval: Object,
+  estimatedCompletionDateBinding: string,
 };
 
 const initValues = {
@@ -17,6 +20,9 @@ const initValues = {
   description: null,
   completedAt: null,
   completedBy: null,
+  estimatedCompletionDate: null,
+  estimatedCompletionDateInterval: null,
+  estimatedCompletionDateBinding: null,
 };
 
 export default class MilestoneStateContainer extends Container<FormState> {

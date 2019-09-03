@@ -1,8 +1,11 @@
 // @flow
+import React from 'react';
 import type { Task } from 'generated/graphql';
 import memoize from 'memoize-one';
 import { comparator, sort } from 'ramda';
 import { getByPathWithDefault } from 'utils/fp';
+
+export const EstimatedCompletionDateContext = React.createContext<Array<string>>([]);
 
 export type SortField =
   | 'default'

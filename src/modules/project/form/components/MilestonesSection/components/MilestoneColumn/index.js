@@ -7,7 +7,7 @@ import { colors } from 'styles/common';
 import sortBy from 'modules/project/form/helpers';
 import type { SortField, SortDirection } from 'modules/project/form/helpers';
 import { MilestoneColumnWrapperStyle } from './style';
-import MilestoneForm from './components/MilestoneForm';
+import MilestoneColumnHeaderCard from './components/MilestoneColumnHeaderCard';
 import TaskList from '../TaskList';
 
 type Props = {|
@@ -46,7 +46,11 @@ export default function MilestoneColumn({
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
-          <MilestoneForm milestoneId={id} isDragging={snapshot.isDragging} provided={provided} />
+          <MilestoneColumnHeaderCard
+            milestoneId={id}
+            isDragging={snapshot.isDragging}
+            provided={provided}
+          />
           <TaskList
             listId={id}
             onChangeTask={onChangeTask}

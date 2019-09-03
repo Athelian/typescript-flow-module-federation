@@ -14,6 +14,8 @@ import useSortAndFilter from 'hooks/useSortAndFilter';
 import messages from 'modules/task/messages';
 import { ProjectInfoContainer, ProjectMilestonesContainer } from 'modules/project/form/containers';
 import FilterToolBar from 'components/common/FilterToolBar';
+import { calculateMilestonesEstimatedCompletionDate } from 'utils/project';
+import { EstimatedCompletionDateContext } from 'modules/project/form/helpers';
 import Board from './components/Board';
 import { NavbarStyle } from './style';
 
@@ -87,27 +89,32 @@ function MilestonesSection({ intl }: Props) {
           { state: { dueDate } }
         ) => {
           const initial = createMilestoneColumnsData(milestones);
+          const estimatedCompletionDates = calculateMilestonesEstimatedCompletionDate({
+            milestones,
+          });
           return (
-            <Board
-              projectInfo={{
-                dueDate,
-                milestones: milestones.map(item => ({ id: item.id, dueDate: item.dueDate })),
-              }}
-              allowDragAndDrop={filterAndSort.sort.field === 'default'}
-              manualSort={filterAndSort.sort}
-              columns={initial}
-              ordered={Object.keys(initial)}
-              onChangeOrdering={changeMilestoneOrdering}
-              onChangeColumns={changeMilestones}
-              onChangeTask={updateTask}
-              onRemoveTask={removeTask}
-              editable={{
-                milestoneColumnEditable: hasPermission([PROJECT_UPDATE, PROJECT_SET_MILESTONES]),
-                milestoneRowEditable:
-                  hasPermission(PROJECT_UPDATE) ||
-                  (hasPermission(MILESTONE_SET_TASKS) && hasPermission(TASK_SET_MILESTONE)),
-              }}
-            />
+            <EstimatedCompletionDateContext.Provider value={estimatedCompletionDates}>
+              <Board
+                projectInfo={{
+                  dueDate,
+                  milestones: milestones.map(item => ({ id: item.id, dueDate: item.dueDate })),
+                }}
+                allowDragAndDrop={filterAndSort.sort.field === 'default'}
+                manualSort={filterAndSort.sort}
+                columns={initial}
+                ordered={Object.keys(initial)}
+                onChangeOrdering={changeMilestoneOrdering}
+                onChangeColumns={changeMilestones}
+                onChangeTask={updateTask}
+                onRemoveTask={removeTask}
+                editable={{
+                  milestoneColumnEditable: hasPermission([PROJECT_UPDATE, PROJECT_SET_MILESTONES]),
+                  milestoneRowEditable:
+                    hasPermission(PROJECT_UPDATE) ||
+                    (hasPermission(MILESTONE_SET_TASKS) && hasPermission(TASK_SET_MILESTONE)),
+                }}
+              />
+            </EstimatedCompletionDateContext.Provider>
           );
         }}
       </Subscribe>

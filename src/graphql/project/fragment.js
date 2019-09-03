@@ -95,6 +95,13 @@ export const projectFormQueryFragment = gql`
 
         name
         dueDate
+        estimatedCompletionDate
+        estimatedCompletionDateInterval {
+          months
+          weeks
+          days
+        }
+        estimatedCompletionDateBinding
         completedAt
         completedBy {
           ...userAvatarFragment
