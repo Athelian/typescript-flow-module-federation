@@ -19,7 +19,7 @@ type Props = OptionalProps & {
   query: DocumentNode,
   entityId: string,
   entityType: string,
-  render: (Object, boolean) => React.Node,
+  render: (result: Object, isOwner: boolean) => React.Node,
 };
 
 export default function QueryForm({ query, entityId, entityType, render, onCompleted }: Props) {

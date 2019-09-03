@@ -687,11 +687,10 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                       query={shipmentFormQuery}
                       entityId={shipmentId}
                       entityType="shipment"
-                      render={(shipment, { isLoading: loading, isOwner }) => (
+                      render={(shipment, loading) => (
                         <>
                           <ShipmentForm
                             loading={loading}
-                            isOwner={isOwner}
                             isClone={this.isClone()}
                             shipment={shipment}
                             anchor={anchor}
