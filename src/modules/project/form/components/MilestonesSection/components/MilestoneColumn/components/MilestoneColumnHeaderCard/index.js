@@ -8,6 +8,7 @@ import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
 import { formatToGraphql, startOfToday, differenceInCalendarDays } from 'utils/date';
 import { getByPathWithDefault } from 'utils/fp';
+import { calculateBindingDate } from 'utils/project';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import useHover from 'hooks/useHover';
@@ -21,7 +22,7 @@ import Icon from 'components/Icon';
 import { NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
 import { TextInputFactory, DateInputFactory } from 'components/Form';
-import { ProjectMilestonesContainer } from 'modules/project/form/containers';
+import { ProjectInfoContainer, ProjectMilestonesContainer } from 'modules/project/form/containers';
 import {
   MILESTONE_UPDATE,
   MILESTONE_SET_NAME,
@@ -67,19 +68,22 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
   // uuid will return '-' so that is the way to detect the milestone is new or from API
   const isNew = milestoneId.includes('-');
   return (
-    <Subscribe to={[ProjectMilestonesContainer]}>
-      {({
-        originalValues,
-        originalTasks,
-        state,
-        setMilestoneValue,
-        setDeepFieldValue,
-        excludeTaskIds,
-        excludeIds,
-        removeMilestone,
-        taskCountByMilestone,
-        completedMilestone,
-      }) => {
+    <Subscribe to={[ProjectInfoContainer, ProjectMilestonesContainer]}>
+      {(
+        { state: projectInfoState },
+        {
+          originalValues,
+          originalTasks,
+          state,
+          setMilestoneValue,
+          setDeepFieldValue,
+          excludeTaskIds,
+          excludeIds,
+          removeMilestone,
+          taskCountByMilestone,
+          completedMilestone,
+        }
+      ) => {
         const { milestones = [] } = { ...originalValues, ...state };
         const values = milestones.find(milestone => milestone.id === milestoneId) || {};
         const milestoneIndex = milestones.findIndex(milestone => milestone.id === milestoneId);
@@ -98,6 +102,10 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
             });
           }
         };
+
+        const dueDate = values.dueDateBinding
+          ? calculateBindingDate(projectInfoState.dueDate, values.dueDateInterval)
+          : values.dueDate;
 
         const completedAtAndDueDateDiff =
           values.completedAt && values.dueDate
@@ -124,6 +132,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                         ...values,
                         project: {
                           milestones,
+                          dueDate: projectInfoState.dueDate,
                         },
                       }}
                       onSave={newMilestone => {
@@ -212,35 +221,45 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                     </FormField>
                   </div>
                   <div role="presentation" onClick={e => e.stopPropagation()}>
-                    <FormField
-                      name={`${milestoneId}.dueDate`}
-                      initValue={values.dueDate}
-                      values={values}
-                      validator={validation}
-                      setFieldValue={onChangeValue}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <DateInputFactory
-                          name={name}
-                          {...inputHandlers}
-                          onBlur={evt => {
-                            inputHandlers.onBlur(evt);
-                            setTimeout(() => {
-                              emitter.emit('AUTO_DATE', name, inputHandlers.value);
-                            }, 200);
-                          }}
-                          isNew={isNew}
-                          originalValue={initialValues.dueDate}
-                          label={<FormattedMessage {...messages.dueDate} />}
-                          editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_DUE_DATE])}
-                          labelWidth="95px"
-                          labelHeight="20px"
-                          inputWidth="130px"
-                          inputHeight="20px"
-                          hideTooltip
-                        />
+                    <div className={DateInputWrapperStyle}>
+                      <FormField
+                        name={`${milestoneId}.dueDate`}
+                        initValue={dueDate}
+                        values={values}
+                        validator={validation}
+                        setFieldValue={onChangeValue}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <DateInputFactory
+                            name={name}
+                            {...inputHandlers}
+                            onBlur={evt => {
+                              inputHandlers.onBlur(evt);
+                              setTimeout(() => {
+                                emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                              }, 200);
+                            }}
+                            isNew={isNew}
+                            originalValue={initialValues.dueDate}
+                            label={<FormattedMessage {...messages.dueDate} />}
+                            editable={
+                              hasPermission([MILESTONE_UPDATE, MILESTONE_SET_DUE_DATE]) &&
+                              !values.dueDateBinding
+                            }
+                            labelWidth="95px"
+                            labelHeight="20px"
+                            inputWidth="130px"
+                            inputHeight="20px"
+                            hideTooltip
+                          />
+                        )}
+                      </FormField>
+                      {values.dueDateBinding && (
+                        <div className={AutoDateSyncIconStyle}>
+                          <Icon icon="SYNC" />
+                        </div>
                       )}
-                    </FormField>
+                    </div>
                   </div>
 
                   <div role="presentation" onClick={e => e.stopPropagation()}>
