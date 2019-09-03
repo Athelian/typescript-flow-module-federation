@@ -53,4 +53,23 @@ export const calculateMilestonesEstimatedCompletionDate: calculateMilestonesEsti
   return estimatedCompletionDates;
 };
 
-export default 1;
+export const injectProjectAndMilestoneDueDate = ({
+  tasks,
+  milestoneId,
+  projectInfo,
+}: {
+  tasks: Array<Task>,
+  milestoneId: string,
+  projectInfo: ProjectInfo,
+}): Array<Task> => {
+  const milestone = projectInfo.milestones.find(item => item.id === milestoneId);
+  return tasks.map(task => ({
+    ...task,
+    milestone: {
+      ...milestone,
+      project: {
+        dueDate: projectInfo.dueDate,
+      },
+    },
+  }));
+};
