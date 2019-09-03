@@ -12,3 +12,6 @@ export const MILESTONE_SET_PROJECT = 'task.milestones.setProject';
 export const MILESTONE_SET_TAGS = 'task.milestones.setTags';
 export const MILESTONE_SET_MILESTONES = 'task.milestones.setMilestones';
 export const MILESTONE_SET_COMPLETED = 'task.milestones.setCompleted';
+export const MILESTONE_SET_ESTIMATED_COMPLETION_DATE = 'task.milestones.setEstimatedCompletionDate';
+export const MILESTONE_SET_ESTIMATED_COMPLETION_DATE_BINDING =
+  'task.milestones.setEstimatedCompletionDateBinding';

@@ -18,14 +18,6 @@ export const orderFormTasksQuery = gql`
       ... on Order {
         id
         todo {
-          milestone {
-            ... on Milestone {
-              ...milestoneCardFragment
-              project {
-                ...projectCardFragment
-              }
-            }
-          }
           taskCount {
             ...taskCountFragment
           }

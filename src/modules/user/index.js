@@ -7,7 +7,6 @@ import { FullStoryAPI } from 'react-fullstory';
 import LoadingIcon from 'components/LoadingIcon';
 import { isAppInProduction } from 'utils/env';
 import { getByPathWithDefault } from 'utils/fp';
-import { PermissionProvider } from 'modules/permission';
 import query from './query';
 
 type ContextProps = {
@@ -17,7 +16,6 @@ type ContextProps = {
     firstName: string,
     lastName: string,
   },
-  permissions: Array<string>,
 };
 
 export const UserContext: React.Context<ContextProps> = React.createContext({
@@ -29,7 +27,6 @@ export const UserContext: React.Context<ContextProps> = React.createContext({
     firstName: '',
     lastName: '',
   },
-  permissions: [],
 });
 
 type Props = {
@@ -70,7 +67,6 @@ const UserProvider = ({ children }: Props) => (
               language: 'en',
               role: 'manager',
             },
-            permissions = [],
           } = getByPathWithDefault({}, 'viewer', data);
 
           const { email, id, firstName, lastName } = user;
@@ -100,11 +96,7 @@ const UserProvider = ({ children }: Props) => (
             });
           }
 
-          return (
-            <UserContext.Provider value={{ user, permissions }}>
-              <PermissionProvider permissions={permissions}>{children}</PermissionProvider>
-            </UserContext.Provider>
-          );
+          return <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>;
         }}
       </Query>
     )}

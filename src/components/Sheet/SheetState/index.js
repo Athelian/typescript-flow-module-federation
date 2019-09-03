@@ -10,7 +10,7 @@ export type CellValue = {
     id: string,
     type: string,
     field: string,
-    permissions: () => boolean,
+    permissions: ((string) => boolean) => boolean,
     ownedBy: string,
   } | null,
   data: {
@@ -48,6 +48,19 @@ type Error = {
   messages: Array<string>,
 } & Position;
 
+export type RowKamoulox = {
+  start: number,
+  end: number,
+  entity: {
+    id: string,
+    type: string,
+  },
+};
+
+type RowKamouloxWithCallback = {
+  onClear: (items: Array<Object>) => void,
+} & RowKamoulox;
+
 export type State = {
   initialized: boolean,
   items: Array<Object>,
@@ -60,11 +73,13 @@ export type State = {
   foreignFocusedAt: Array<ForeignFocus>,
   erroredAt: Error | null,
   weakErroredAt: Array<Position>,
+  addedRows: Array<RowKamoulox>,
+  deletedRows: Array<RowKamouloxWithCallback>,
 };
 
 export type Action = {
   type: string,
-  cell?: Position,
+  cell?: Position | null,
   payload?: any,
 };
 
@@ -86,6 +101,8 @@ const initialState: State = {
   foreignFocusedAt: [],
   erroredAt: null,
   weakErroredAt: [],
+  addedRows: [],
+  deletedRows: [],
 };
 
 type Context = {
@@ -213,13 +230,10 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
 
       onMutate({
         entity: {
-          // $FlowFixMe nullable entity is already checked
-          id: cellValue.entity.id,
-          // $FlowFixMe nullable entity is already checked
-          type: cellValue.entity.type,
+          id: cellValue?.entity?.id,
+          type: cellValue?.entity?.type,
         },
-        // $FlowFixMe nullable entity is already checked
-        field: cellValue.entity.field,
+        field: cellValue?.entity?.field ?? '',
         value,
       }).then(violations => {
         if (violations === null) {
@@ -229,8 +243,7 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
         dispatch({
           type: Actions.CELL_UPDATE,
           cell,
-          // $FlowFixMe nullable data is already checked
-          payload: cellValue.data.value,
+          payload: cellValue?.data?.value,
         });
 
         dispatch({
@@ -251,7 +264,6 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
     const handler = setTimeout(() => {
       dispatch({
         type: Actions.SET_ERRORS,
-        // $FlowFixMe nullable erroredAt is already checked
         cell: state.erroredAt,
         payload: null,
       });

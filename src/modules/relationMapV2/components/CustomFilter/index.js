@@ -34,7 +34,9 @@ const MatchesEntity = () => {
       )
     )
   ).length;
-  const matchedBatch = keys.filter(key => key.includes(`-${BATCH}`)).length;
+  const matchedBatch = keys.filter(
+    key => key.includes(`-${BATCH}`) && mapping.entities?.batches?.[matches.entity?.[key]?.id]
+  ).length;
   const matchedShipment = keys.filter(key => key.includes(`-${SHIPMENT}`)).length;
   const matchedContainer = 0; // TODO: API is not supported yet
   return (

@@ -88,8 +88,20 @@ export const projectFormQueryFragment = gql`
     milestones {
       ... on Milestone {
         id
+        updatedAt
+        updatedBy {
+          ...userAvatarFragment
+        }
+
         name
         dueDate
+        estimatedCompletionDate
+        estimatedCompletionDateInterval {
+          months
+          weeks
+          days
+        }
+        estimatedCompletionDateBinding
         completedAt
         completedBy {
           ...userAvatarFragment
@@ -101,88 +113,6 @@ export const projectFormQueryFragment = gql`
           ...taskWithParentInfoFragment
           ... on Task {
             milestoneSort
-            entity {
-              ... on Order {
-                todo {
-                  ... on Todo {
-                    milestone {
-                      ... on Milestone {
-                        id
-                        project {
-                          ... on Project {
-                            id
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-              ... on Product {
-                todo {
-                  ... on Todo {
-                    milestone {
-                      ... on Milestone {
-                        id
-                        project {
-                          ... on Project {
-                            id
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-              ... on OrderItem {
-                todo {
-                  ... on Todo {
-                    milestone {
-                      ... on Milestone {
-                        id
-                        project {
-                          ... on Project {
-                            id
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-              ... on Batch {
-                todo {
-                  ... on Todo {
-                    milestone {
-                      ... on Milestone {
-                        id
-                        project {
-                          ... on Project {
-                            id
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-              ... on Shipment {
-                todo {
-                  ... on Todo {
-                    milestone {
-                      ... on Milestone {
-                        id
-                        project {
-                          ... on Project {
-                            id
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
           }
         }
       }
@@ -208,6 +138,24 @@ export const projectFormFragment = gql`
     }
     tags {
       ...tagFragment
+    }
+  }
+`;
+
+export const milestoneFormFragment = gql`
+  fragment milestoneFormFragment on Milestone {
+    id
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+
+    name
+    description
+    dueDate
+    completedAt
+    completedBy {
+      ...userAvatarFragment
     }
   }
 `;

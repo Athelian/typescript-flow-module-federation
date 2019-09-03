@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { navigate } from '@reach/router';
-import { isEquals, getByPath } from 'utils/fp';
+import { getByPath } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import { SectionWrapper } from 'components/Form';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
@@ -20,7 +20,6 @@ type OptionalProps = {
   isNew: boolean,
   loading: boolean,
   isClone: boolean,
-  isOwner: boolean,
   order: Object,
 };
 
@@ -29,18 +28,12 @@ type Props = OptionalProps & {};
 const defaultProps = {
   isNew: false,
   isClone: false,
-  isOwner: true,
   loading: false,
   order: {},
 };
 
 export default class OrderForm extends React.Component<Props> {
   static defaultProps = defaultProps;
-
-  shouldComponentUpdate(nextProps: Props) {
-    const { order, isOwner } = this.props;
-    return !isEquals(order, nextProps.order) || nextProps.isOwner !== isOwner;
-  }
 
   onClone = () => {
     const { order } = this.props;

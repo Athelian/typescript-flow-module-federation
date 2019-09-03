@@ -17778,12 +17778,12 @@ export const AirportValues = Object.freeze({
 export type Airport = $Values<typeof AirportValues>;
 
 export type BadRequest = {
-  __typename?: 'BadRequest',
+   __typename?: 'BadRequest',
   violations: Array<Violation>,
 };
 
 export type Batch = Model & Owned & Package & Tagged & Customizable & Memorizable & Sortable & {
-  __typename?: 'Batch',
+   __typename?: 'Batch',
   archived: $ElementType<Scalars, 'Boolean'>,
   no: $ElementType<Scalars, 'String'>,
   orderItem: OrderItemPayload,
@@ -17853,7 +17853,7 @@ export type BatchEqualSplitInput = {
 };
 
 export type Batches = {
-  __typename?: 'Batches',
+   __typename?: 'Batches',
   batches: Array<Batch>,
 };
 
@@ -17883,7 +17883,7 @@ export type BatchFilterInput = {
 export type BatchPayload = Batch | BadRequest | Forbidden | NotFound;
 
 export type BatchPayloadPaginatedSearch = Paginated & {
-  __typename?: 'BatchPayloadPaginatedSearch',
+   __typename?: 'BatchPayloadPaginatedSearch',
   nodes: Array<BatchPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -17894,7 +17894,7 @@ export type BatchPayloadPaginatedSearch = Paginated & {
 };
 
 export type BatchQuantityRevision = Model & Owned & Sortable & Memorizable & {
-  __typename?: 'BatchQuantityRevision',
+   __typename?: 'BatchQuantityRevision',
   batch: BatchPayload,
   type: BatchQuantityRevisionType,
   quantity: $ElementType<Scalars, 'Float'>,
@@ -17990,13 +17990,13 @@ export type BatchUpdateWrapperInput = {
 };
 
 export type Blur = {
-  __typename?: 'Blur',
+   __typename?: 'Blur',
   id: $ElementType<Scalars, 'ID'>,
   user: UserPayload,
 };
 
 export type BooleanValue = {
-  __typename?: 'BooleanValue',
+   __typename?: 'BooleanValue',
   boolean: $ElementType<Scalars, 'Boolean'>,
 };
 
@@ -18006,14 +18006,14 @@ export type ChangePasswordInput = {
 };
 
 export type ChangeType = {
-  __typename?: 'ChangeType',
+   __typename?: 'ChangeType',
   old?: ?Value,
   new?: ?Value,
   field: $ElementType<Scalars, 'String'>,
 };
 
 export type Comment = Model & Owned & {
-  __typename?: 'Comment',
+   __typename?: 'Comment',
   entity: EntityPayload,
   content: $ElementType<Scalars, 'String'>,
   id: $ElementType<Scalars, 'ID'>,
@@ -18038,7 +18038,7 @@ export type CommentUpdateInput = {
 };
 
 export type Container = Model & Owned & Tagged & Sortable & Memorizable & {
-  __typename?: 'Container',
+   __typename?: 'Container',
   archived: $ElementType<Scalars, 'Boolean'>,
   no: $ElementType<Scalars, 'String'>,
   representativeBatch?: ?BatchPayload,
@@ -18150,7 +18150,7 @@ export type ContainerFilterInput = {
 };
 
 export type ContainerGroup = Model & Owned & Sortable & {
-  __typename?: 'ContainerGroup',
+   __typename?: 'ContainerGroup',
   customClearance: TimelineDatePayload,
   warehouseArrival: TimelineDatePayload,
   deliveryReady: TimelineDatePayload,
@@ -18188,7 +18188,7 @@ export type ContainerOption = $Values<typeof ContainerOptionValues>;
 export type ContainerPayload = Container | BadRequest | Forbidden | NotFound;
 
 export type ContainerPayloadPaginatedSearch = Paginated & {
-  __typename?: 'ContainerPayloadPaginatedSearch',
+   __typename?: 'ContainerPayloadPaginatedSearch',
   nodes: Array<ContainerPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -18207,7 +18207,7 @@ export type ContainerSortInput = {
 };
 
 export type ContainerTypeCount = {
-  __typename?: 'ContainerTypeCount',
+   __typename?: 'ContainerTypeCount',
   containerType: $ElementType<Scalars, 'String'>,
   count: $ElementType<Scalars, 'Float'>,
 };
@@ -19102,7 +19102,7 @@ export const CurrencyValues = Object.freeze({
 export type Currency = $Values<typeof CurrencyValues>;
 
 export type CustomFields = {
-  __typename?: 'CustomFields',
+   __typename?: 'CustomFields',
   mask?: ?MaskPayload,
   fieldValues: Array<FieldValuePayload>,
   fieldDefinitions: Array<FieldDefinitionPayload>,
@@ -19137,7 +19137,7 @@ export type DateRangeInput = {
 
 
 export type DateTimeValue = {
-  __typename?: 'DateTimeValue',
+   __typename?: 'DateTimeValue',
   datetime: $ElementType<Scalars, 'DateTime'>,
 };
 
@@ -19146,7 +19146,7 @@ export type Documented = {
 };
 
 export type Duration = {
-  __typename?: 'Duration',
+   __typename?: 'Duration',
   seconds: $ElementType<Scalars, 'Long'>,
   nanos: $ElementType<Scalars, 'Int'>,
 };
@@ -19159,7 +19159,7 @@ export type DurationInput = {
 export type EmptyPayload = BadRequest | Forbidden | NotFound;
 
 export type EntitiesMany = {
-  __typename?: 'EntitiesMany',
+   __typename?: 'EntitiesMany',
   products?: ?Array<?ProductPayload>,
   orders?: ?Array<?OrderPayload>,
   orderItems?: ?Array<?OrderItemPayload>,
@@ -19170,7 +19170,7 @@ export type EntitiesMany = {
 };
 
 export type EntityEvent = {
-  __typename?: 'EntityEvent',
+   __typename?: 'EntityEvent',
   lifeCycle: LifeCycle,
   entity: EntityPayload,
   reference: Reference,
@@ -19178,7 +19178,7 @@ export type EntityEvent = {
 };
 
 export type EntityHit = {
-  __typename?: 'EntityHit',
+   __typename?: 'EntityHit',
   field?: ?$ElementType<Scalars, 'String'>,
   entity: EntityPayload,
 };
@@ -19199,14 +19199,14 @@ export type EntityInput = {
 export type EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | BatchQuantityRevision | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | Milestone | BadRequest | Forbidden | NotFound;
 
 export type EntityValue = {
-  __typename?: 'EntityValue',
+   __typename?: 'EntityValue',
   entity?: ?EntityPayload,
 };
 
 export type Entry = Event | Comment | BadRequest | Forbidden | NotFound;
 
 export type EntryPaginatedList = Paginated & {
-  __typename?: 'EntryPaginatedList',
+   __typename?: 'EntryPaginatedList',
   nodes: Array<Entry>,
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
@@ -19216,7 +19216,7 @@ export type EntryPaginatedList = Paginated & {
 };
 
 export type Event = Model & Owned & {
-  __typename?: 'Event',
+   __typename?: 'Event',
   entity: EntityPayload,
   logs: Array<Log>,
   id: $ElementType<Scalars, 'ID'>,
@@ -19230,12 +19230,12 @@ export type Event = Model & Owned & {
 };
 
 export type Export = {
-  __typename?: 'Export',
+   __typename?: 'Export',
   id: $ElementType<Scalars, 'ID'>,
 };
 
 export type ExportExtension = {
-  __typename?: 'ExportExtension',
+   __typename?: 'ExportExtension',
   extension: $ElementType<Scalars, 'String'>,
 };
 
@@ -19244,7 +19244,7 @@ export type ExportExtensionPayload = ExportExtension | BadRequest | Forbidden | 
 export type ExportPayload = Export | BadRequest | Forbidden | NotFound;
 
 export type ExportTemplate = Model & {
-  __typename?: 'ExportTemplate',
+   __typename?: 'ExportTemplate',
   name: $ElementType<Scalars, 'String'>,
   types: Array<ExportType>,
   extension: $ElementType<Scalars, 'String'>,
@@ -19303,7 +19303,7 @@ export const ExportTypeValues = Object.freeze({
 export type ExportType = $Values<typeof ExportTypeValues>;
 
 export type FieldDefinition = Model & Owned & Sortable & {
-  __typename?: 'FieldDefinition',
+   __typename?: 'FieldDefinition',
   name: $ElementType<Scalars, 'String'>,
   entityType: CustomizableEntityType,
   id: $ElementType<Scalars, 'ID'>,
@@ -19325,7 +19325,7 @@ export type FieldDefinitionInput = {
 export type FieldDefinitionPayload = FieldDefinition | BadRequest | Forbidden | NotFound;
 
 export type FieldDefinitions = {
-  __typename?: 'FieldDefinitions',
+   __typename?: 'FieldDefinitions',
   fieldDefinitions: Array<FieldDefinition>,
 };
 
@@ -19337,7 +19337,7 @@ export type FieldDefinitionsInput = {
 export type FieldDefinitionsPayload = FieldDefinitions | BadRequest | Forbidden | NotFound;
 
 export type FieldValue = {
-  __typename?: 'FieldValue',
+   __typename?: 'FieldValue',
   value: Value,
   fieldDefinition: FieldDefinitionPayload,
   entity: EntityPayload,
@@ -19351,7 +19351,7 @@ export type FieldValueInput = {
 export type FieldValuePayload = FieldValue | BadRequest | Forbidden | NotFound;
 
 export type File = Model & Owned & Memorizable & {
-  __typename?: 'File',
+   __typename?: 'File',
   name: $ElementType<Scalars, 'String'>,
   type: FileType,
   status: FileStatus,
@@ -19399,7 +19399,7 @@ export type FileInput = {
 export type FilePayload = File | BadRequest | Forbidden | NotFound;
 
 export type FilePayloadPaginatedSearch = Paginated & {
-  __typename?: 'FilePayloadPaginatedSearch',
+   __typename?: 'FilePayloadPaginatedSearch',
   nodes: Array<FilePayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -19465,12 +19465,12 @@ export const FileTypeValues = Object.freeze({
 export type FileType = $Values<typeof FileTypeValues>;
 
 export type FloatValue = {
-  __typename?: 'FloatValue',
+   __typename?: 'FloatValue',
   float: $ElementType<Scalars, 'Float'>,
 };
 
 export type Focus = {
-  __typename?: 'Focus',
+   __typename?: 'Focus',
   id: $ElementType<Scalars, 'ID'>,
   user: UserPayload,
   entity: EntityPayload,
@@ -19487,24 +19487,24 @@ export type FocusingInput = {
 export type FocusPayload = Focus | BadRequest | Forbidden | NotFound;
 
 export type Forbidden = {
-  __typename?: 'Forbidden',
+   __typename?: 'Forbidden',
   reference?: ?Reference,
   reason?: ?$ElementType<Scalars, 'String'>,
 };
 
 export type Hit = {
-  __typename?: 'Hit',
+   __typename?: 'Hit',
   score: $ElementType<Scalars, 'Float'>,
   entityHits: Array<EntityHit>,
 };
 
 export type Import = {
-  __typename?: 'Import',
+   __typename?: 'Import',
   id: $ElementType<Scalars, 'ID'>,
 };
 
 export type ImportEvent = {
-  __typename?: 'ImportEvent',
+   __typename?: 'ImportEvent',
   lifecycle: ImportLifecycle,
   sheet?: ?$ElementType<Scalars, 'String'>,
   error?: ?$ElementType<Scalars, 'String'>,
@@ -19555,7 +19555,7 @@ export const IncotermValues = Object.freeze({
 export type Incoterm = $Values<typeof IncotermValues>;
 
 export type Integration = Model & Owned & {
-  __typename?: 'Integration',
+   __typename?: 'Integration',
   name: $ElementType<Scalars, 'String'>,
   service: $ElementType<Scalars, 'String'>,
   bot: UserPayload,
@@ -19571,7 +19571,7 @@ export type Integration = Model & Owned & {
 };
 
 export type IntegrationConfiguration = Model & Owned & {
-  __typename?: 'IntegrationConfiguration',
+   __typename?: 'IntegrationConfiguration',
   integration: IntegrationPayload,
   automated: $ElementType<Scalars, 'Boolean'>,
   interval: Duration,
@@ -19612,7 +19612,7 @@ export type IntegrationConfigurationFilterInput = {
 export type IntegrationConfigurationPayload = IntegrationConfiguration | BadRequest | Forbidden | NotFound;
 
 export type IntegrationConfigurationPayloadPaginatedSearch = Paginated & {
-  __typename?: 'IntegrationConfigurationPayloadPaginatedSearch',
+   __typename?: 'IntegrationConfigurationPayloadPaginatedSearch',
   nodes: Array<IntegrationConfigurationPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -19643,7 +19643,7 @@ export type IntegrationFilterInput = {
 };
 
 export type IntegrationLink = Model & Owned & {
-  __typename?: 'IntegrationLink',
+   __typename?: 'IntegrationLink',
   configuration: IntegrationConfigurationPayload,
   status: IntegrationLinkStatus,
   entity: EntityPayload,
@@ -19674,7 +19674,7 @@ export type IntegrationLinkCreateInput = {
 export type IntegrationLinkPayload = IntegrationLink | BadRequest | Forbidden | NotFound;
 
 export type IntegrationLinkPayloadPaginatedList = Paginated & {
-  __typename?: 'IntegrationLinkPayloadPaginatedList',
+   __typename?: 'IntegrationLinkPayloadPaginatedList',
   nodes: Array<IntegrationLinkPayload>,
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
@@ -19708,7 +19708,7 @@ export type IntegrationLinkUpdateInput = {
 export type IntegrationPayload = Integration | BadRequest | Forbidden | NotFound;
 
 export type IntegrationPayloadPaginatedSearch = Paginated & {
-  __typename?: 'IntegrationPayloadPaginatedSearch',
+   __typename?: 'IntegrationPayloadPaginatedSearch',
   nodes: Array<IntegrationPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -19725,7 +19725,7 @@ export type IntegrationSortInput = {
 };
 
 export type Interval = {
-  __typename?: 'Interval',
+   __typename?: 'Interval',
   years: $ElementType<Scalars, 'Int'>,
   months: $ElementType<Scalars, 'Int'>,
   weeks: $ElementType<Scalars, 'Int'>,
@@ -19748,12 +19748,12 @@ export type IntervalInput = {
 };
 
 export type IntervalValue = {
-  __typename?: 'IntervalValue',
+   __typename?: 'IntervalValue',
   interval: Interval,
 };
 
 export type IntValue = {
-  __typename?: 'IntValue',
+   __typename?: 'IntValue',
   int: $ElementType<Scalars, 'Int'>,
 };
 
@@ -20156,7 +20156,7 @@ export const LoadTypeValues = Object.freeze({
 export type LoadType = $Values<typeof LoadTypeValues>;
 
 export type Log = {
-  __typename?: 'Log',
+   __typename?: 'Log',
   id: $ElementType<Scalars, 'ID'>,
   entity: EntityPayload,
   translationKey: $ElementType<Scalars, 'String'>,
@@ -20165,7 +20165,7 @@ export type Log = {
 
 
 export type Mask = Model & Owned & Memorizable & {
-  __typename?: 'Mask',
+   __typename?: 'Mask',
   name: $ElementType<Scalars, 'String'>,
   entityType: CustomizableEntityType,
   fieldDefinitions: Array<FieldDefinitionPayload>,
@@ -20188,7 +20188,7 @@ export type MaskCreateInput = {
 };
 
 export type MaskEdit = Model & Owned & Memorizable & {
-  __typename?: 'MaskEdit',
+   __typename?: 'MaskEdit',
   name: $ElementType<Scalars, 'String'>,
   type: MaskEditType,
   fields: Array<$ElementType<Scalars, 'String'>>,
@@ -20221,7 +20221,7 @@ export type MaskEditFilterInput = {
 export type MaskEditPayload = MaskEdit | BadRequest | Forbidden | NotFound;
 
 export type MaskEditPayloadPaginatedSearch = Paginated & {
-  __typename?: 'MaskEditPayloadPaginatedSearch',
+   __typename?: 'MaskEditPayloadPaginatedSearch',
   nodes: Array<MaskEditPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -20263,7 +20263,7 @@ export type MaskFilterInput = {
 export type MaskPayload = Mask | BadRequest | Forbidden | NotFound;
 
 export type MaskPayloadPaginatedSearch = Paginated & {
-  __typename?: 'MaskPayloadPaginatedSearch',
+   __typename?: 'MaskPayloadPaginatedSearch',
   nodes: Array<MaskPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -20297,7 +20297,7 @@ export type MetricRangeInput = {
 };
 
 export type MetricValue = {
-  __typename?: 'MetricValue',
+   __typename?: 'MetricValue',
   value: $ElementType<Scalars, 'Float'>,
   metric: $ElementType<Scalars, 'String'>,
 };
@@ -20308,12 +20308,12 @@ export type MetricValueInput = {
 };
 
 export type MetricValueValue = {
-  __typename?: 'MetricValueValue',
+   __typename?: 'MetricValueValue',
   metricValue: MetricValue,
 };
 
 export type Milestone = Model & Owned & Sortable & {
-  __typename?: 'Milestone',
+   __typename?: 'Milestone',
   name: $ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   dueDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -20322,6 +20322,9 @@ export type Milestone = Model & Owned & Sortable & {
   project: ProjectPayload,
   completedBy?: ?UserPayload,
   completedAt?: ?$ElementType<Scalars, 'DateTime'>,
+  estimatedCompletionDate?: ?$ElementType<Scalars, 'DateTime'>,
+  estimatedCompletionDateInterval?: ?Interval,
+  estimatedCompletionDateBinding?: ?MilestoneDateBinding,
   entitiesCount: MilestoneEntitiesCount,
   entitiesRelatedCount: MilestoneEntitiesCount,
   taskCount: TaskCount,
@@ -20345,19 +20348,23 @@ export type MilestoneCreateInput = {
   dueDateBinding?: ?MilestoneDateBinding,
   completedById?: ?$ElementType<Scalars, 'ID'>,
   completedAt?: ?$ElementType<Scalars, 'DateTime'>,
+  estimatedCompletionDate?: ?$ElementType<Scalars, 'DateTime'>,
+  estimatedCompletionDateInterval?: ?IntervalInput,
+  estimatedCompletionDateBinding?: ?MilestoneDateBinding,
   tasks?: ?Array<MilestoneTaskInput>,
   projectId: $ElementType<Scalars, 'ID'>,
 };
 
 export const MilestoneDateBindingValues = Object.freeze({
-  ProjectDueDate: 'ProjectDueDate'
+  ProjectDueDate: 'ProjectDueDate', 
+  MilestoneCompleteDate: 'MilestoneCompleteDate'
 });
 
 
 export type MilestoneDateBinding = $Values<typeof MilestoneDateBindingValues>;
 
 export type MilestoneEntitiesCount = {
-  __typename?: 'MilestoneEntitiesCount',
+   __typename?: 'MilestoneEntitiesCount',
   products: $ElementType<Scalars, 'Int'>,
   productProviders: $ElementType<Scalars, 'Int'>,
   orders: $ElementType<Scalars, 'Int'>,
@@ -20405,6 +20412,9 @@ export type MilestoneUpdateInput = {
   dueDateBinding?: ?MilestoneDateBinding,
   completedById?: ?$ElementType<Scalars, 'ID'>,
   completedAt?: ?$ElementType<Scalars, 'DateTime'>,
+  estimatedCompletionDate?: ?$ElementType<Scalars, 'DateTime'>,
+  estimatedCompletionDateInterval?: ?IntervalInput,
+  estimatedCompletionDateBinding?: ?MilestoneDateBinding,
   tasks?: ?Array<MilestoneTaskInput>,
   id?: ?$ElementType<Scalars, 'ID'>,
   projectId?: ?$ElementType<Scalars, 'ID'>,
@@ -20421,7 +20431,7 @@ export type Model = {
 };
 
 export type Mutation = {
-  __typename?: 'Mutation',
+   __typename?: 'Mutation',
   login: TokenPayload,
   logout: $ElementType<Scalars, 'Boolean'>,
   changePassword?: ?EmptyPayload,
@@ -21024,12 +21034,12 @@ export type MutationFocusUnsubscribeAllArgs = {
 };
 
 export type NotFound = {
-  __typename?: 'NotFound',
+   __typename?: 'NotFound',
   reference?: ?Reference,
 };
 
 export type Notification = {
-  __typename?: 'Notification',
+   __typename?: 'Notification',
   id: $ElementType<Scalars, 'ID'>,
   sender: UserPayload,
   receiver: UserPayload,
@@ -21044,7 +21054,7 @@ export type Notification = {
 export type NotificationPayload = Notification | BadRequest | Forbidden | NotFound;
 
 export type NotificationPayloadPaginatedList = Paginated & {
-  __typename?: 'NotificationPayloadPaginatedList',
+   __typename?: 'NotificationPayloadPaginatedList',
   nodes: Array<NotificationPayload>,
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
@@ -21168,7 +21178,7 @@ export const NotificationTypeValues = Object.freeze({
 export type NotificationType = $Values<typeof NotificationTypeValues>;
 
 export type Order = Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable & {
-  __typename?: 'Order',
+   __typename?: 'Order',
   archived: $ElementType<Scalars, 'Boolean'>,
   importer: OrganizationPayload,
   exporter: OrganizationPayload,
@@ -21274,7 +21284,7 @@ export type OrderFilterInput = {
 };
 
 export type OrderItem = Model & Owned & Sortable & Tagged & Documented & Customizable & Memorizable & {
-  __typename?: 'OrderItem',
+   __typename?: 'OrderItem',
   order: OrderPayload,
   productProvider: ProductProviderPayload,
   archived: $ElementType<Scalars, 'Boolean'>,
@@ -21388,7 +21398,7 @@ export type OrderItemFilterInput = {
 export type OrderItemPayload = OrderItem | BadRequest | Forbidden | NotFound;
 
 export type OrderItemPayloadPaginatedSearch = Paginated & {
-  __typename?: 'OrderItemPayloadPaginatedSearch',
+   __typename?: 'OrderItemPayloadPaginatedSearch',
   nodes: Array<OrderItemPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -21458,7 +21468,7 @@ export type OrderOrderItemUpdateInput = {
 export type OrderPayload = Order | BadRequest | Forbidden | NotFound;
 
 export type OrderPayloadPaginatedSearch = Paginated & {
-  __typename?: 'OrderPayloadPaginatedSearch',
+   __typename?: 'OrderPayloadPaginatedSearch',
   nodes: Array<OrderPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -21506,7 +21516,7 @@ export type OrderUpdateWrapperInput = {
 };
 
 export type Organization = Model & {
-  __typename?: 'Organization',
+   __typename?: 'Organization',
   types: Array<OrganizationType>,
   name: $ElementType<Scalars, 'String'>,
   name2?: ?$ElementType<Scalars, 'String'>,
@@ -21588,13 +21598,13 @@ export type Paginated = {
 };
 
 export type Parameter = {
-  __typename?: 'Parameter',
+   __typename?: 'Parameter',
   key: $ElementType<Scalars, 'String'>,
   value?: ?Value,
 };
 
 export type Partner = Model & {
-  __typename?: 'Partner',
+   __typename?: 'Partner',
   organization: OrganizationPayload,
   types: Array<OrganizationType>,
   name?: ?$ElementType<Scalars, 'String'>,
@@ -21623,7 +21633,7 @@ export type PartnerFilterInput = {
 export type PartnerPayload = Partner | BadRequest | Forbidden | NotFound;
 
 export type PartnerPayloadPaginatedSearch = Paginated & {
-  __typename?: 'PartnerPayloadPaginatedSearch',
+   __typename?: 'PartnerPayloadPaginatedSearch',
   nodes: Array<PartnerPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -21634,7 +21644,7 @@ export type PartnerPayloadPaginatedSearch = Paginated & {
 };
 
 export type Partnership = Model & {
-  __typename?: 'Partnership',
+   __typename?: 'Partnership',
   confirmed: $ElementType<Scalars, 'Boolean'>,
   leftOrganization: OrganizationPayload,
   leftTypes: Array<OrganizationType>,
@@ -21660,7 +21670,7 @@ export type Partnership = Model & {
 export type PartnershipPayload = Partnership | BadRequest | Forbidden | NotFound;
 
 export type PartnershipPayloadPaginatedSearch = Paginated & {
-  __typename?: 'PartnershipPayloadPaginatedSearch',
+   __typename?: 'PartnershipPayloadPaginatedSearch',
   nodes: Array<PartnershipPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -21678,7 +21688,7 @@ export type PartnerSortInput = {
 };
 
 export type Port = {
-  __typename?: 'Port',
+   __typename?: 'Port',
   seaport?: ?Seaport,
   seaportName?: ?$ElementType<Scalars, 'String'>,
   airport?: ?Airport,
@@ -21691,7 +21701,7 @@ export type PortInput = {
 };
 
 export type Price = {
-  __typename?: 'Price',
+   __typename?: 'Price',
   amount: $ElementType<Scalars, 'Float'>,
   currency: Currency,
 };
@@ -21708,7 +21718,7 @@ export type PriceRangeInput = {
 };
 
 export type Product = Model & Owned & Tagged & Documented & Memorizable & Customizable & {
-  __typename?: 'Product',
+   __typename?: 'Product',
   archived: $ElementType<Scalars, 'Boolean'>,
   importer: OrganizationPayload,
   name: $ElementType<Scalars, 'String'>,
@@ -21809,7 +21819,7 @@ export type ProductFilterInput = {
 export type ProductPayload = Product | BadRequest | Forbidden | NotFound;
 
 export type ProductPayloadPaginatedSearch = Paginated & {
-  __typename?: 'ProductPayloadPaginatedSearch',
+   __typename?: 'ProductPayloadPaginatedSearch',
   nodes: Array<ProductPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -21820,7 +21830,7 @@ export type ProductPayloadPaginatedSearch = Paginated & {
 };
 
 export type ProductProvider = Model & Owned & Sortable & Documented & Customizable & Memorizable & {
-  __typename?: 'ProductProvider',
+   __typename?: 'ProductProvider',
   archived: $ElementType<Scalars, 'Boolean'>,
   /** Determined if the ProductProvider is referenced by at least one OrderItem or not */
   referenced: $ElementType<Scalars, 'Boolean'>,
@@ -21908,7 +21918,7 @@ export type ProductProviderFilterInput = {
 };
 
 export type ProductProviderPackage = Model & Owned & Sortable & {
-  __typename?: 'ProductProviderPackage',
+   __typename?: 'ProductProviderPackage',
   productProvider: ProductProviderPayload,
   name?: ?$ElementType<Scalars, 'String'>,
   grossWeight?: ?MetricValue,
@@ -21951,7 +21961,7 @@ export type ProductProviderPackageUpdateInput = {
 export type ProductProviderPayload = ProductProvider | BadRequest | Forbidden | NotFound;
 
 export type ProductProviderPayloadPaginatedSearch = Paginated & {
-  __typename?: 'ProductProviderPayloadPaginatedSearch',
+   __typename?: 'ProductProviderPayloadPaginatedSearch',
   nodes: Array<ProductProviderPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -22025,7 +22035,7 @@ export type ProductUpdateWrapperInput = {
 };
 
 export type Project = Model & Owned & Tagged & {
-  __typename?: 'Project',
+   __typename?: 'Project',
   name: $ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   dueDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -22067,6 +22077,9 @@ export type ProjectMilestoneCreateInput = {
   dueDateBinding?: ?MilestoneDateBinding,
   completedById?: ?$ElementType<Scalars, 'ID'>,
   completedAt?: ?$ElementType<Scalars, 'DateTime'>,
+  estimatedCompletionDate?: ?$ElementType<Scalars, 'DateTime'>,
+  estimatedCompletionDateInterval?: ?IntervalInput,
+  estimatedCompletionDateBinding?: ?MilestoneDateBinding,
   tasks?: ?Array<MilestoneTaskInput>,
 };
 
@@ -22078,6 +22091,9 @@ export type ProjectMilestoneUpdateInput = {
   dueDateBinding?: ?MilestoneDateBinding,
   completedById?: ?$ElementType<Scalars, 'ID'>,
   completedAt?: ?$ElementType<Scalars, 'DateTime'>,
+  estimatedCompletionDate?: ?$ElementType<Scalars, 'DateTime'>,
+  estimatedCompletionDateInterval?: ?IntervalInput,
+  estimatedCompletionDateBinding?: ?MilestoneDateBinding,
   tasks?: ?Array<MilestoneTaskInput>,
   id?: ?$ElementType<Scalars, 'ID'>,
 };
@@ -22085,7 +22101,7 @@ export type ProjectMilestoneUpdateInput = {
 export type ProjectPayload = Project | BadRequest | Forbidden | NotFound;
 
 export type ProjectPayloadPaginatedSearch = Paginated & {
-  __typename?: 'ProjectPayloadPaginatedSearch',
+   __typename?: 'ProjectPayloadPaginatedSearch',
   nodes: Array<ProjectPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -22111,7 +22127,7 @@ export type ProjectUpdateInput = {
 };
 
 export type Query = {
-  __typename?: 'Query',
+   __typename?: 'Query',
   viewer: Viewer,
   authenticated: $ElementType<Scalars, 'Boolean'>,
   user: UserPayload,
@@ -22718,7 +22734,7 @@ export type QueryFocusesArgs = {
 };
 
 export type Reference = {
-  __typename?: 'Reference',
+   __typename?: 'Reference',
   id: $ElementType<Scalars, 'ID'>,
   type: $ElementType<Scalars, 'String'>,
   service: $ElementType<Scalars, 'String'>,
@@ -22748,7 +22764,7 @@ export const ResizePresetValues = Object.freeze({
 export type ResizePreset = $Values<typeof ResizePresetValues>;
 
 export type Role = Model & Memorizable & {
-  __typename?: 'Role',
+   __typename?: 'Role',
   name: $ElementType<Scalars, 'String'>,
   parents: Array<RolePayload>,
   permissions: Array<$ElementType<Scalars, 'String'>>,
@@ -22776,7 +22792,7 @@ export type RoleCreateInput = {
 export type RolePayload = Role | BadRequest | Forbidden | NotFound;
 
 export type RolePayloadPaginatedList = Paginated & {
-  __typename?: 'RolePayloadPaginatedList',
+   __typename?: 'RolePayloadPaginatedList',
   nodes: Array<RolePayload>,
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
@@ -59818,7 +59834,7 @@ export const SeaportValues = Object.freeze({
 export type Seaport = $Values<typeof SeaportValues>;
 
 export type Shipment = Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable & {
-  __typename?: 'Shipment',
+   __typename?: 'Shipment',
   archived: $ElementType<Scalars, 'Boolean'>,
   importer: OrganizationPayload,
   exporter?: ?OrganizationPayload,
@@ -60005,7 +60021,7 @@ export type ShipmentFilterInput = {
 export type ShipmentPayload = Shipment | BadRequest | Forbidden | NotFound;
 
 export type ShipmentPayloadPaginatedSearch = Paginated & {
-  __typename?: 'ShipmentPayloadPaginatedSearch',
+   __typename?: 'ShipmentPayloadPaginatedSearch',
   nodes: Array<ShipmentPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -60069,7 +60085,7 @@ export type ShipmentUpdateWrapperInput = {
 };
 
 export type Size = {
-  __typename?: 'Size',
+   __typename?: 'Size',
   length: MetricValue,
   width: MetricValue,
   height: MetricValue,
@@ -60082,7 +60098,7 @@ export type SizeInput = {
 };
 
 export type SizeValue = {
-  __typename?: 'SizeValue',
+   __typename?: 'SizeValue',
   size: Size,
 };
 
@@ -60099,12 +60115,12 @@ export const SortOrderValues = Object.freeze({
 export type SortOrder = $Values<typeof SortOrderValues>;
 
 export type StringValue = {
-  __typename?: 'StringValue',
+   __typename?: 'StringValue',
   string: $ElementType<Scalars, 'String'>,
 };
 
 export type Subscription = {
-  __typename?: 'Subscription',
+   __typename?: 'Subscription',
   notificationNew: Notification,
   importEvent: ImportEvent,
   exportReady: File,
@@ -60141,7 +60157,7 @@ export type Supervised = {
 };
 
 export type Tag = Model & Owned & {
-  __typename?: 'Tag',
+   __typename?: 'Tag',
   name: $ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   color: $ElementType<Scalars, 'String'>,
@@ -60202,7 +60218,7 @@ export type Tagged = {
 export type TagPayload = Tag | BadRequest | Forbidden | NotFound;
 
 export type TagPayloadPaginatedSearch = Paginated & {
-  __typename?: 'TagPayloadPaginatedSearch',
+   __typename?: 'TagPayloadPaginatedSearch',
   nodes: Array<TagPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -60226,7 +60242,7 @@ export type TagUpdateInput = {
 };
 
 export type Task = Model & Owned & Sortable & Memorizable & Tagged & {
-  __typename?: 'Task',
+   __typename?: 'Task',
   name: $ElementType<Scalars, 'String'>,
   approvable: $ElementType<Scalars, 'Boolean'>,
   entity?: ?EntityPayload,
@@ -60267,7 +60283,7 @@ export type Task = Model & Owned & Sortable & Memorizable & Tagged & {
 };
 
 export type TaskCount = {
-  __typename?: 'TaskCount',
+   __typename?: 'TaskCount',
   count: $ElementType<Scalars, 'Int'>,
   remain: $ElementType<Scalars, 'Int'>,
   inProgress: $ElementType<Scalars, 'Int'>,
@@ -60353,7 +60369,7 @@ export type TaskFilterInput = {
 export type TaskPayload = Task | BadRequest | Forbidden | NotFound;
 
 export type TaskPayloadPaginatedSearch = Paginated & {
-  __typename?: 'TaskPayloadPaginatedSearch',
+   __typename?: 'TaskPayloadPaginatedSearch',
   nodes: Array<TaskPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -60373,7 +60389,7 @@ export type TaskSortInput = {
 };
 
 export type TaskTemplate = Model & Owned & {
-  __typename?: 'TaskTemplate',
+   __typename?: 'TaskTemplate',
   name: $ElementType<Scalars, 'String'>,
   entityType: TaskTemplateEntityType,
   description?: ?$ElementType<Scalars, 'String'>,
@@ -60426,7 +60442,7 @@ export type TaskTemplateFilterInput = {
 export type TaskTemplatePayload = TaskTemplate | BadRequest | Forbidden | NotFound;
 
 export type TaskTemplatePayloadPaginatedSearch = Paginated & {
-  __typename?: 'TaskTemplatePayloadPaginatedSearch',
+   __typename?: 'TaskTemplatePayloadPaginatedSearch',
   nodes: Array<TaskTemplatePayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -60537,7 +60553,7 @@ export type TaskUpdateWrapperInput = {
 };
 
 export type Timeline = {
-  __typename?: 'Timeline',
+   __typename?: 'Timeline',
   unreadCount: $ElementType<Scalars, 'Int'>,
   entries: EntryPaginatedList,
 };
@@ -60549,7 +60565,7 @@ export type TimelineEntriesArgs = {
 };
 
 export type TimelineDate = Model & Owned & Memorizable & {
-  __typename?: 'TimelineDate',
+   __typename?: 'TimelineDate',
   date?: ?$ElementType<Scalars, 'DateTime'>,
   latestDate?: ?$ElementType<Scalars, 'DateTime'>,
   latestReason?: ?TimelineDateRevisionType,
@@ -60579,7 +60595,7 @@ export type TimelineDateNestedInput = {
 export type TimelineDatePayload = TimelineDate | BadRequest | Forbidden | NotFound;
 
 export type TimelineDateRevision = Model & Owned & Sortable & Memorizable & {
-  __typename?: 'TimelineDateRevision',
+   __typename?: 'TimelineDateRevision',
   date: $ElementType<Scalars, 'DateTime'>,
   type: TimelineDateRevisionType,
   timelineDate: TimelineDatePayload,
@@ -60617,7 +60633,7 @@ export const TimelineDateRevisionTypeValues = Object.freeze({
 export type TimelineDateRevisionType = $Values<typeof TimelineDateRevisionTypeValues>;
 
 export type Todo = {
-  __typename?: 'Todo',
+   __typename?: 'Todo',
   taskCount: TaskCount,
   completedCount: $ElementType<Scalars, 'Int'>,
   inProgressCount: $ElementType<Scalars, 'Int'>,
@@ -60663,7 +60679,7 @@ export type TodoTaskInput = {
 };
 
 export type Token = {
-  __typename?: 'Token',
+   __typename?: 'Token',
   token: $ElementType<Scalars, 'String'>,
 };
 
@@ -60681,7 +60697,7 @@ export type TransportType = $Values<typeof TransportTypeValues>;
 
 
 export type User = Model & Tagged & Memorizable & {
-  __typename?: 'User',
+   __typename?: 'User',
   email: $ElementType<Scalars, 'String'>,
   organization?: ?OrganizationPayload,
   superAdmin: $ElementType<Scalars, 'Boolean'>,
@@ -60718,7 +60734,7 @@ export type UserFilterInput = {
 export type UserPayload = User | BadRequest | Forbidden | NotFound;
 
 export type UserPayloadPaginatedSearch = Paginated & {
-  __typename?: 'UserPayloadPaginatedSearch',
+   __typename?: 'UserPayloadPaginatedSearch',
   nodes: Array<UserPayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -60733,7 +60749,7 @@ export type UserRoleInput = {
 };
 
 export type UserRoles = {
-  __typename?: 'UserRoles',
+   __typename?: 'UserRoles',
   roles: Array<RolePayload>,
 };
 
@@ -60775,12 +60791,12 @@ export type ValueInput = {
 };
 
 export type Values = {
-  __typename?: 'Values',
+   __typename?: 'Values',
   values: Array<?Value>,
 };
 
 export type Viewer = {
-  __typename?: 'Viewer',
+   __typename?: 'Viewer',
   user: UserPayload,
   permissions: Array<$ElementType<Scalars, 'String'>>,
   permissionsForOrganization: Array<$ElementType<Scalars, 'String'>>,
@@ -60802,7 +60818,7 @@ export type ViewerNotificationsArgs = {
 };
 
 export type Violation = {
-  __typename?: 'Violation',
+   __typename?: 'Violation',
   message: $ElementType<Scalars, 'String'>,
   error: $ElementType<Scalars, 'String'>,
   code: $ElementType<Scalars, 'String'>,
@@ -60811,14 +60827,14 @@ export type Violation = {
 };
 
 export type ViolationParameter = {
-  __typename?: 'ViolationParameter',
+   __typename?: 'ViolationParameter',
   key: $ElementType<Scalars, 'String'>,
   value: $ElementType<Scalars, 'String'>,
 };
 
 
 export type Voyage = Model & Owned & Sortable & {
-  __typename?: 'Voyage',
+   __typename?: 'Voyage',
   vesselName?: ?$ElementType<Scalars, 'String'>,
   vesselCode?: ?$ElementType<Scalars, 'String'>,
   departurePort?: ?Port,
@@ -60850,7 +60866,7 @@ export type VoyageNestedInput = {
 export type VoyagePayload = Voyage | BadRequest | Forbidden | NotFound;
 
 export type Warehouse = Model & Owned & Supervised & Customizable & {
-  __typename?: 'Warehouse',
+   __typename?: 'Warehouse',
   archived: $ElementType<Scalars, 'Boolean'>,
   name: $ElementType<Scalars, 'String'>,
   no?: ?$ElementType<Scalars, 'String'>,
@@ -60898,7 +60914,7 @@ export type WarehouseFilterInput = {
 export type WarehousePayload = Warehouse | BadRequest | Forbidden | NotFound;
 
 export type WarehousePayloadPaginatedSearch = Paginated & {
-  __typename?: 'WarehousePayloadPaginatedSearch',
+   __typename?: 'WarehousePayloadPaginatedSearch',
   nodes: Array<WarehousePayload>,
   hits: Array<Hit>,
   page: $ElementType<Scalars, 'Int'>,
@@ -60956,6 +60972,7 @@ export type BatchFormFragmentFragment = (
       & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
         & ProjectCardFragmentFragment
        }
+      & MilestoneCardFragmentFragment
     ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, taskCount: { __typename?: 'TaskCount' }
       & TaskCountFragmentFragment
     , tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
@@ -61462,6 +61479,7 @@ export type ItemFormFragmentFragment = (
       & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
         & ProjectCardFragmentFragment
        }
+      & MilestoneCardFragmentFragment
     ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, taskCount: { __typename?: 'TaskCount' }
       & TaskCountFragmentFragment
     , tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
@@ -61648,6 +61666,7 @@ export type OrderFormFragmentFragment = (
       & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
         & ProjectCardFragmentFragment
        }
+      & MilestoneCardFragmentFragment
     ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, taskCount: { __typename?: 'TaskCount' }
       & TaskCountFragmentFragment
     , tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
@@ -61771,6 +61790,7 @@ export type ProductFormFragmentFragment = (
       & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
         & ProjectCardFragmentFragment
        }
+      & MilestoneCardFragmentFragment
     ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & TaskWithoutParentInfoFragmentFragment
     >, taskTemplate: ?({ __typename?: 'TaskTemplate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
@@ -61872,6 +61892,7 @@ export type ProductProviderFormFragmentFragment = (
       & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
         & ProjectCardFragmentFragment
        }
+      & MilestoneCardFragmentFragment
     ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & TaskWithoutParentInfoFragmentFragment
     >, taskTemplate: ?({ __typename?: 'TaskTemplate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
@@ -61887,6 +61908,8 @@ export type ProductProviderCardFragmentFragment = (
     & PartnerNameFragmentFragment
   , supplier: ?({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
     & PartnerNameFragmentFragment
+  , unitPrice: ?{ __typename?: 'Price' }
+    & PriceFragmentFragment
   , product: (
     { __typename?: 'Product' }
     & $Pick<Product, { id: *, name: *, serial: * }>
@@ -61922,6 +61945,27 @@ export type ProjectCardFragmentFragment = (
   > }
 );
 
+export type MilestoneFragmentFragment = (
+  { __typename?: 'Milestone' }
+  & $Pick<Milestone, { id: *, name: *, dueDate: *, completedAt: * }>
+  & { tasks: Array<(
+    { __typename?: 'Task' }
+    & $Pick<Task, { id: *, completedAt: * }>
+  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> }
+);
+
+export type ProjectCardNewFragmentFragment = (
+  { __typename?: 'Project' }
+  & $Pick<Project, { id: *, name: *, description: *, dueDate: * }>
+  & { milestones: Array<({ __typename?: 'Milestone' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & MilestoneFragmentFragment
+  >, taskCount: { __typename?: 'TaskCount' }
+    & TaskCountFragmentFragment
+  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & TagFragmentFragment
+  > }
+);
+
 export type MilestoneCardFragmentFragment = (
   { __typename?: 'Milestone' }
   & $Pick<Milestone, { id: *, name: *, description: *, dueDate: * }>
@@ -61943,8 +61987,10 @@ export type ProjectFormQueryFragmentFragment = (
     & TagFragmentFragment
   >, milestones: Array<(
     { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: *, name: *, dueDate: *, completedAt: * }>
-    & { completedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & $Pick<Milestone, { id: *, updatedAt: *, name: *, dueDate: *, completedAt: * }>
+    & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+      & UserAvatarFragmentFragment
+    , completedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & UserAvatarFragmentFragment
     , taskCount: { __typename?: 'TaskCount' }
       & TaskCountFragmentFragment
@@ -62019,13 +62065,7 @@ export type ProjectFormQueryFragmentFragment = (
       ) | { __typename?: 'Voyage' } | { __typename?: 'Container' } | { __typename?: 'ContainerGroup' } | { __typename?: 'TimelineDate' } | { __typename?: 'TimelineDateRevision' } | { __typename?: 'Warehouse' } | { __typename?: 'Tag' } | { __typename?: 'User' } | { __typename?: 'Organization' } | { __typename?: 'Partnership' } | { __typename?: 'Role' } | { __typename?: 'File' } | { __typename?: 'Task' } | { __typename?: 'TaskTemplate' } | { __typename?: 'Project' } | { __typename?: 'Milestone' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
     ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & TaskWithParentInfoFragmentFragment
-    >, entitiesCount: (
-      { __typename?: 'MilestoneEntitiesCount' }
-      & $Pick<MilestoneEntitiesCount, { products: *, productProviders: *, orders: *, orderItems: *, batches: *, shipments: *, containers: * }>
-    ), entitiesRelatedCount: (
-      { __typename?: 'MilestoneEntitiesCount' }
-      & $Pick<MilestoneEntitiesCount, { products: *, productProviders: *, orders: *, orderItems: *, batches: *, shipments: *, containers: * }>
-    ) }
+    > }
   ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> }
 );
 
@@ -62041,6 +62081,16 @@ export type ProjectFormFragmentFragment = (
   , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
     & TagFragmentFragment
   > }
+);
+
+export type MilestoneFormFragmentFragment = (
+  { __typename?: 'Milestone' }
+  & $Pick<Milestone, { id: *, updatedAt: *, name: *, description: *, dueDate: *, completedAt: * }>
+  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & UserAvatarFragmentFragment
+  , completedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & UserAvatarFragmentFragment
+   }
 );
 
 export type ShipmentFormQueryFragmentFragment = (
@@ -62081,6 +62131,7 @@ export type ShipmentFormFragmentFragment = (
       & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
         & ProjectCardFragmentFragment
        }
+      & MilestoneCardFragmentFragment
     ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & TaskWithoutParentInfoFragmentFragment
     >, taskTemplate: ?({ __typename?: 'TaskTemplate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
@@ -62519,6 +62570,7 @@ export type TaskWithoutParentInfoFragmentFragment = (
     & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & ProjectCardFragmentFragment
      }
+    & MilestoneCardFragmentFragment
   ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, approvers: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
     & UserAvatarFragmentFragment
   >, tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
@@ -62642,6 +62694,7 @@ export type TaskWithParentInfoFragmentFragment = (
   ) | (
     { __typename?: 'Order' }
     & $Pick<Order, { id: * }>
+    & OrderCardFragmentFragment
   ) | (
     { __typename?: 'OrderItem' }
     & $Pick<OrderItem, { id: * }>
@@ -62717,6 +62770,7 @@ export type TaskWithParentInfoFragmentFragment = (
   ) | (
     { __typename?: 'OrderItem' }
     & $Pick<OrderItem, { id: * }>
+    & ItemCardFragmentFragment
   ) | (
     { __typename?: 'Batch' }
     & $Pick<Batch, { id: * }>
@@ -62792,6 +62846,7 @@ export type TaskWithParentInfoFragmentFragment = (
   ) | (
     { __typename?: 'Batch' }
     & $Pick<Batch, { id: * }>
+    & BatchCardFragmentFragment
   ) | (
     { __typename?: 'BatchQuantityRevision' }
     & $Pick<BatchQuantityRevision, { id: * }>
@@ -62849,6 +62904,7 @@ export type TaskWithParentInfoFragmentFragment = (
   ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, product: ?(
     { __typename?: 'Product' }
     & $Pick<Product, { id: * }>
+    & ProductCardFragmentFragment
   ) | (
     { __typename?: 'ProductProvider' }
     & $Pick<ProductProvider, { id: * }>
@@ -62924,6 +62980,7 @@ export type TaskWithParentInfoFragmentFragment = (
   ) | (
     { __typename?: 'ProductProvider' }
     & $Pick<ProductProvider, { id: * }>
+    & ProductProviderCardFragmentFragment
   ) | (
     { __typename?: 'ProductProviderPackage' }
     & $Pick<ProductProviderPackage, { id: * }>
@@ -63014,6 +63071,7 @@ export type TaskWithParentInfoFragmentFragment = (
   ) | (
     { __typename?: 'Shipment' }
     & $Pick<Shipment, { id: * }>
+    & ShipmentCardFragmentFragment
   ) | (
     { __typename?: 'Voyage' }
     & $Pick<Voyage, { id: * }>
@@ -63067,6 +63125,7 @@ export type TaskWithParentInfoFragmentFragment = (
     & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & ProjectCardFragmentFragment
      }
+    & MilestoneCardFragmentFragment
   ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
 );
 
@@ -63090,7 +63149,10 @@ export type WarehouseFormFragmentFragment = (
   & $Pick<Warehouse, { id: *, archived: *, updatedAt: *, name: *, street: *, locality: *, region: *, postalCode: *, country: * }>
   & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
     & UserAvatarFragmentFragment
-  , ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+  , ownedBy: ((
+    { __typename?: 'Organization' }
+    & PartnerCardFragmentFragment
+  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
     & OwnedByFragmentFragment
   , inCharges: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
     & UserAvatarFragmentFragment

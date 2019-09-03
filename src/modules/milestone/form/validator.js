@@ -1,8 +1,6 @@
-// @flow
 import * as Yup from 'yup';
 
-const validator: Object = Yup.object().shape({
+const validator = Yup.object().shape({
   name: Yup.string().required(),
 });
-
 export default validator;

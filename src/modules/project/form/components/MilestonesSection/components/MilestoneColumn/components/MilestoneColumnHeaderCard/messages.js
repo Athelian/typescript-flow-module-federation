@@ -10,4 +10,12 @@ export default defineMessages({
     id: 'modules.Milestones.dueDate',
     defaultMessage: 'Due Date',
   },
+  completed: {
+    id: 'modules.Milestones.completed',
+    defaultMessage: 'Completed',
+  },
+  estCompl: {
+    id: 'modules.Milestones.estCompl',
+    defaultMessage: 'Est. Compl.',
+  },
 });

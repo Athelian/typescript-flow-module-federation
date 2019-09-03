@@ -41,14 +41,6 @@ export const batchFormFragment = gql`
       ...metricFragment
     }
     todo {
-      milestone {
-        ... on Milestone {
-          ...milestoneCardFragment
-          project {
-            ...projectCardFragment
-          }
-        }
-      }
       taskCount {
         ...taskCountFragment
       }

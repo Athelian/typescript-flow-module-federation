@@ -20,10 +20,11 @@ import {
   orderFullFocusDetailQuery,
 } from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { Hits, Entities } from 'modules/relationMapV2/store';
+import { Hits, Entities, SortAndFilter } from 'modules/relationMapV2/store';
 import { WrapperStyle, ListStyle, RowStyle, ActionsBackdropStyle } from './style';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
+import InlineCreateBatch from '../InlineCreateBatch';
 import SelectedEntity from '../SelectedEntity';
 import Actions from '../Actions';
 import Header from '../Header';
@@ -104,21 +105,9 @@ const innerElementType = React.forwardRef(
   )
 );
 
-type Props = {
-  filterBy: {
-    query: string,
-    archived: boolean,
-  },
-  sortBy: {
-    [field: string]: string,
-  },
-  perPage: number,
-  page: number,
-};
-
 const loadMore = (
   clientData: { fetchMore: Function, data: ?Object },
-  filtersAndSort: Object = {},
+  queryVariables: Object = {},
   selectedField: string = ''
 ) => {
   const { data = { [`${selectedField}`]: { page: 1, totalPage: 0 } }, fetchMore } = clientData;
@@ -129,10 +118,10 @@ const loadMore = (
   logger.warn('loadMore nextPage', nextPage);
   return fetchMore({
     variables: {
-      ...filtersAndSort,
-      filter: filtersAndSort.filter,
-      ...(filtersAndSort && filtersAndSort.sort
-        ? { sort: { [filtersAndSort.sort.field]: filtersAndSort.sort.direction } }
+      ...queryVariables,
+      filter: queryVariables.filter,
+      ...(queryVariables && queryVariables.sort
+        ? { sort: { [queryVariables.sort.field]: queryVariables.sort.direction } }
         : {}),
       page: nextPage,
     },
@@ -169,17 +158,18 @@ const loadMore = (
   }).catch(logger.warn);
 };
 
-export default function OrderFocus({ ...filtersAndSort }: Props) {
+export default function OrderFocus() {
   const uiContext = React.useContext(UIContext);
   const [expandRows, setExpandRows] = React.useState([]);
   const { initHits } = Hits.useContainer();
   const { initMapping } = Entities.useContainer();
-  const lastFiltersAndSort = usePrevious(filtersAndSort);
+  const { queryVariables } = SortAndFilter.useContainer();
+  const lastQueryVariables = usePrevious(queryVariables);
   React.useEffect(() => {
-    if (!isEquals(lastFiltersAndSort, filtersAndSort)) {
+    if (!isEquals(lastQueryVariables, queryVariables)) {
       setExpandRows([]);
     }
-  }, [lastFiltersAndSort, filtersAndSort]);
+  }, [lastQueryVariables, queryVariables]);
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const queryOrdersDetail = React.useCallback(
     (orderIds: Array<string>, isPreload: boolean = false) => {
@@ -231,7 +221,7 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
         <DndProvider backend={HTML5Backend}>
           <Query
             query={orderFocusedListQuery}
-            variables={filtersAndSort}
+            variables={queryVariables}
             fetchPolicy="network-only"
           >
             {({ loading, data, error, fetchMore }) => {
@@ -273,90 +263,111 @@ export default function OrderFocus({ ...filtersAndSort }: Props) {
                   queryPermission(organizationId);
                 }
               });
-              return orders.length > 0 ? (
+              return (
                 <RelationMapContext.Provider value={{ state, dispatch }}>
-                  <List
-                    itemData={ordersData}
-                    className={ListStyle}
-                    itemCount={rowCount}
-                    innerElementType={innerElementType}
-                    itemSize={() => 75}
-                    onItemsRendered={({ visibleStartIndex, visibleStopIndex }) => {
-                      const isLastCell = visibleStopIndex === rowCount - 1;
-                      if (hasMoreItems(data, 'orders') && isLastCell) {
-                        loadMore({ fetchMore, data }, filtersAndSort, 'orders');
-                      }
-                      const orderIds: Array<string> = [];
-                      for (let index = visibleStartIndex; index < visibleStopIndex; index += 1) {
-                        const [{ order }] = ordersData[index];
-                        const isLoadedData =
-                          getByPathWithDefault([], 'orderItems', order).length ===
-                          getByPathWithDefault(0, 'orderItemCount', order);
-                        if (!isLoadedData && getByPathWithDefault(0, 'orderItemCount', order) > 0) {
-                          orderIds.push(getByPathWithDefault('', 'id', order));
+                  {orders.length > 0 ? (
+                    <>
+                      <List
+                        itemData={ordersData}
+                        className={ListStyle}
+                        itemCount={rowCount}
+                        innerElementType={innerElementType}
+                        itemSize={() => 75}
+                        onItemsRendered={({ visibleStartIndex, visibleStopIndex }) => {
+                          const isLastCell = visibleStopIndex === rowCount - 1;
+                          if (hasMoreItems(data, 'orders') && isLastCell) {
+                            loadMore({ fetchMore, data }, queryVariables, 'orders');
+                          }
+                          const orderIds: Array<string> = [];
+                          for (
+                            let index = visibleStartIndex;
+                            index < visibleStopIndex;
+                            index += 1
+                          ) {
+                            const [{ order }] = ordersData[index];
+                            const isLoadedData =
+                              getByPathWithDefault([], 'orderItems', order).length ===
+                              getByPathWithDefault(0, 'orderItemCount', order);
+                            if (
+                              !isLoadedData &&
+                              getByPathWithDefault(0, 'orderItemCount', order) > 0
+                            ) {
+                              orderIds.push(getByPathWithDefault('', 'id', order));
+                            }
+                          }
+                          queryOrdersDetail(orderIds, true);
+                        }}
+                        height={window.innerHeight - 50}
+                        width={
+                          uiContext.isSideBarExpanded
+                            ? window.innerWidth - 200
+                            : window.innerWidth - 50
                         }
-                      }
-                      queryOrdersDetail(orderIds, true);
-                    }}
-                    height={window.innerHeight - 50}
-                    width={
-                      uiContext.isSideBarExpanded ? window.innerWidth - 200 : window.innerWidth - 50
-                    }
-                  >
-                    {Row}
-                  </List>
-                  <MoveEntityConfirm
-                    isProcessing={state.moveEntity.isProcessing}
-                    onCancel={() =>
-                      dispatch({
-                        type: 'CANCEL_MOVE',
-                        payload: {},
-                      })
-                    }
-                    onConfirm={async () => {
-                      dispatch({
-                        type: 'CONFIRM_MOVE_START',
-                        payload: {},
-                      });
+                      >
+                        {Row}
+                      </List>
+                      <MoveEntityConfirm
+                        isProcessing={state.moveEntity.isProcessing}
+                        onCancel={() =>
+                          dispatch({
+                            type: 'CANCEL_MOVE',
+                            payload: {},
+                          })
+                        }
+                        onConfirm={async () => {
+                          dispatch({
+                            type: 'CONFIRM_MOVE_START',
+                            payload: {},
+                          });
 
-                      const { orderIds = [] } = await moveEntityMutation(state, entities);
-                      dispatch({
-                        type: 'CONFIRM_MOVE_END',
-                        payload: { orderIds },
-                      });
-                      queryOrdersDetail(orderIds);
-                    }}
-                    isOpen={state.moveEntity.isOpen}
-                    {...state.moveEntity.detail}
-                  />
-                  <EditFormSlideView
-                    type={state.edit.type}
-                    selectedId={state.edit.selectedId}
-                    onClose={() => {
-                      if (state.edit.type === ORDER) {
-                        queryOrdersDetail([state.edit.selectedId]);
-                      } else if (state.edit.orderId) {
-                        queryOrdersDetail([state.edit.orderId]);
-                      } else if (state.edit.orderIds && state.edit.orderIds.length) {
-                        queryOrdersDetail(state.edit.orderIds);
-                      }
-                      dispatch({
-                        type: 'EDIT',
-                        payload: {
-                          type: '',
-                          selectedId: '',
-                        },
-                      });
-                    }}
-                  />
+                          const { orderIds = [] } = await moveEntityMutation(state, entities);
+                          dispatch({
+                            type: 'CONFIRM_MOVE_END',
+                            payload: { orderIds },
+                          });
+                          queryOrdersDetail(orderIds);
+                        }}
+                        isOpen={state.moveEntity.isOpen}
+                        {...state.moveEntity.detail}
+                      />
+                      <InlineCreateBatch
+                        isProcessing={state.createBatch.isProcessing}
+                        isOpen={state.createBatch.isOpen}
+                        onSuccess={orderId => {
+                          if (orderId) queryOrdersDetail([orderId]);
+                        }}
+                        {...state.createBatch.detail}
+                      />
+                      <EditFormSlideView
+                        type={state.edit.type}
+                        selectedId={state.edit.selectedId}
+                        onClose={() => {
+                          if (state.edit.type === ORDER) {
+                            queryOrdersDetail([state.edit.selectedId]);
+                          } else if (state.edit.orderId) {
+                            queryOrdersDetail([state.edit.orderId]);
+                          } else if (state.edit.orderIds && state.edit.orderIds.length) {
+                            queryOrdersDetail(state.edit.orderIds);
+                          }
+                          dispatch({
+                            type: 'EDIT',
+                            payload: {
+                              type: '',
+                              selectedId: '',
+                            },
+                          });
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <Display>
+                      <FormattedMessage
+                        id="modules.Orders.noOrderFound"
+                        defaultMessage="No orders found"
+                      />
+                    </Display>
+                  )}
                 </RelationMapContext.Provider>
-              ) : (
-                <Display>
-                  <FormattedMessage
-                    id="modules.Orders.noOrderFound"
-                    defaultMessage="No orders found"
-                  />
-                </Display>
               );
             }}
           </Query>

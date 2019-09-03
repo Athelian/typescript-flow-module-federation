@@ -31,7 +31,7 @@ const getInitFilter = () => {
   return state;
 };
 
-function OrderModule(props: Props) {
+function ContainerModule(props: Props) {
   const { intl } = props;
 
   const sortFields = [
@@ -78,4 +78,4 @@ function OrderModule(props: Props) {
   );
 }
 
-export default injectIntl(OrderModule);
+export default injectIntl(ContainerModule);

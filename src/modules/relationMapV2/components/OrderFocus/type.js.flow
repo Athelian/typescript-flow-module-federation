@@ -52,6 +52,16 @@ export type State = {|
       },
     },
   },
+  createBatch: {
+    isOpen: boolean,
+    isProcessing: boolean,
+    detail: {
+      entity: {
+        id: string,
+        no: string,
+      },
+    },
+  },
   edit: {
     type: string,
     selectedId: string,

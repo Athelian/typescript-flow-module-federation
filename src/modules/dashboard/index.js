@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Redirect } from '@reach/router';
 import {
   RM_ORDER_FOCUS_LIST,
   RM_PRODUCT_FOCUS_LIST,
@@ -7,8 +8,9 @@ import {
 import { ORDER_LIST } from 'modules/permission/constants/order';
 import { SHIPMENT_LIST } from 'modules/permission/constants/shipment';
 import { PRODUCT_LIST } from 'modules/permission/constants/product';
-import usePermission from 'hooks/usePermission';
-import { Redirect } from '@reach/router';
+import LoadingIcon from 'components/LoadingIcon';
+import { useHasPermissions, usePermissions } from 'components/Context/Permissions';
+import useUser from 'hooks/useUser';
 
 const findRedirectUrlBaseOnPermission = (hasPermission: string => boolean) => {
   if (hasPermission(RM_ORDER_FOCUS_LIST)) return 'relation-map/order';
@@ -20,8 +22,15 @@ const findRedirectUrlBaseOnPermission = (hasPermission: string => boolean) => {
 };
 
 const DashBoard = () => {
-  const { hasPermission } = usePermission();
-  return <Redirect to={findRedirectUrlBaseOnPermission(hasPermission)} noThrow />;
+  const { organization } = useUser();
+  const { loading } = usePermissions(organization?.id);
+  const hasPermission = useHasPermissions(organization?.id);
+
+  return loading ? (
+    <LoadingIcon />
+  ) : (
+    <Redirect to={findRedirectUrlBaseOnPermission(hasPermission)} noThrow />
+  );
 };
 
 export default DashBoard;

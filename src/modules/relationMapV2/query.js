@@ -203,8 +203,8 @@ export const orderCardOptimiseFragment = gql`
   }
 `;
 
-export const orderCardWithOptimiseFragment = gql`
-  fragment orderCardWithOptimiseFragment on Order {
+export const orderCardFullFragment = gql`
+  fragment orderCardFullFragment on Order {
     id
     currency
     exporter {
@@ -225,6 +225,8 @@ export const orderCardWithOptimiseFragment = gql`
     orderItems {
       ... on OrderItem {
         id
+        updatedAt
+        createdAt
         ownedBy {
           ...ownedByFragment
         }
@@ -232,9 +234,17 @@ export const orderCardWithOptimiseFragment = gql`
           ... on ProductProvider {
             id
             name
+            supplier {
+              ... on Organization {
+                id
+                name
+              }
+            }
             product {
               ... on Product {
                 id
+                name
+                serial
               }
             }
           }
@@ -257,6 +267,11 @@ export const orderCardWithOptimiseFragment = gql`
         batches {
           ... on Batch {
             id
+            updatedAt
+            createdAt
+            deliveredAt
+            expiredAt
+            desiredAt
             ownedBy {
               ...ownedByFragment
             }
@@ -312,6 +327,7 @@ export const orderCardWithOptimiseFragment = gql`
           }
         }
         archived
+        no
         blNo
         ownedBy {
           ...ownedByFragment
@@ -450,6 +466,7 @@ export const shipmentCardNewRMFragment = gql`
   }
 `;
 
+// TODO: consider to optimise the hits if no search or filter
 export const orderFocusedListQuery = gql`
   query orderFocusedListQuery(
     $page: Int!
@@ -488,11 +505,11 @@ export const orderFocusedListQuery = gql`
 export const orderFocusDetailQuery = gql`
   query orderFocusDetailQuery($ids: [ID!]!) {
     ordersByIDs(ids: $ids) {
-      ...orderCardWithOptimiseFragment
+      ...orderCardFullFragment
     }
   }
 
-  ${orderCardWithOptimiseFragment}
+  ${orderCardFullFragment}
   ${tagFragment}
   ${taskCountFragment}
   ${ownedByFragment}
@@ -502,12 +519,12 @@ export const orderFullFocusDetailQuery = gql`
   query orderFullFocusDetailQuery($ids: [ID!]!) {
     ordersByIDs(ids: $ids) {
       ...orderCardOptimiseFragment
-      ...orderCardWithOptimiseFragment
+      ...orderCardFullFragment
     }
   }
 
   ${orderCardOptimiseFragment}
-  ${orderCardWithOptimiseFragment}
+  ${orderCardFullFragment}
   ${tagFragment}
   ${taskCountFragment}
   ${ownedByFragment}

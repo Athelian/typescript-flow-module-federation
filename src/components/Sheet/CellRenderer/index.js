@@ -2,9 +2,13 @@
 import * as React from 'react';
 import { areEqual } from 'react-window';
 import LoadingIcon from 'components/LoadingIcon';
+import { useHasPermissions } from 'components/Context/Permissions';
+import { Actions } from '../SheetState/contants';
+import type { CellValue } from '../SheetState';
 import { useSheetState } from '../SheetState';
 import Cell from '../Cell';
-import { Actions } from '../SheetState/contants';
+import Deleted from './Announcements/Deleted';
+import Added from './Announcements/Added';
 
 type Props = {
   style: Object,
@@ -12,10 +16,17 @@ type Props = {
   rowIndex: number,
 };
 
-const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
+type WrapperProps = {
+  cell: CellValue,
+  columnIndex: number,
+  rowIndex: number,
+};
+
+const CellWrapper = React.memo<WrapperProps>(({ cell, columnIndex, rowIndex }: WrapperProps) => {
+  const hasPermission = useHasPermissions(cell?.entity?.ownedBy);
   const [foreignFocuses, setForeignFocuses] = React.useState<Array<Object>>([]);
   const { state, dispatch, mutate } = useSheetState();
-  const { rows, focusedAt, weakFocusedAt, foreignFocusedAt, erroredAt, weakErroredAt } = state;
+  const { focusedAt, weakFocusedAt, foreignFocusedAt, erroredAt, weakErroredAt } = state;
   const handleClick = React.useCallback(() => {
     dispatch({
       type: Actions.FOCUS,
@@ -54,6 +65,36 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
     );
   }, [foreignFocusedAt, columnIndex, rowIndex]);
 
+  return (
+    <Cell
+      value={cell.data ? cell.data.value : null}
+      type={cell.type}
+      focus={!!focusedAt && focusedAt.x === rowIndex && focusedAt.y === columnIndex}
+      weakFocus={!!weakFocusedAt.find(f => f.x === rowIndex && f.y === columnIndex)}
+      foreignFocuses={foreignFocuses}
+      readonly={cell.readonly || !(cell.entity && cell.entity.permissions(hasPermission))}
+      forbidden={cell.forbidden || false}
+      disabled={cell.disabled || false}
+      isFirstRow={rowIndex === 0}
+      extended={cell.extended || 0}
+      errors={
+        erroredAt && erroredAt.x === rowIndex && erroredAt.y === columnIndex
+          ? erroredAt.messages
+          : null
+      }
+      weakError={!!weakErroredAt.find(e => e.x === rowIndex && e.y === columnIndex)}
+      onClick={handleClick}
+      onFocusUp={handleFocusUp}
+      onFocusDown={handleFocusDown}
+      onUpdate={handleUpdate}
+    />
+  );
+});
+
+const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
+  const { state, dispatch } = useSheetState();
+  const { items, rows, addedRows, deletedRows } = state;
+
   if (rowIndex >= rows.length) {
     return columnIndex === 0 ? (
       <div style={style}>
@@ -62,35 +103,34 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
     ) : null;
   }
 
+  const addedRow = addedRows.find(row => row.start === rowIndex);
+  const deletedRow = deletedRows.find(row => row.start === rowIndex);
+
   const cell = rows[rowIndex][columnIndex];
-  if (cell.empty) {
-    return null;
-  }
 
   return (
     <div style={style}>
-      <Cell
-        value={cell.data ? cell.data.value : null}
-        type={cell.type}
-        focus={!!focusedAt && focusedAt.x === rowIndex && focusedAt.y === columnIndex}
-        weakFocus={!!weakFocusedAt.find(f => f.x === rowIndex && f.y === columnIndex)}
-        foreignFocuses={foreignFocuses}
-        readonly={cell.readonly || false}
-        forbidden={cell.forbidden || false}
-        disabled={cell.disabled || false} // TODO: use hasPermission thing
-        isFirstRow={rowIndex === 0}
-        extended={cell.extended || 0}
-        errors={
-          erroredAt && erroredAt.x === rowIndex && erroredAt.y === columnIndex
-            ? erroredAt.messages
-            : null
-        }
-        weakError={!!weakErroredAt.find(e => e.x === rowIndex && e.y === columnIndex)}
-        onClick={handleClick}
-        onFocusUp={handleFocusUp}
-        onFocusDown={handleFocusDown}
-        onUpdate={handleUpdate}
-      />
+      {columnIndex === 0 &&
+        ((deletedRow && (
+          <Deleted
+            start={deletedRow.start}
+            end={deletedRow.end}
+            onClear={() => deletedRow.onClear(items)}
+          />
+        )) ||
+          (addedRow && (
+            <Added
+              start={addedRow.start}
+              end={addedRow.end}
+              onClear={() =>
+                dispatch({
+                  type: Actions.CLEAR_ADDED_ROWS,
+                  payload: addedRow.entity,
+                })
+              }
+            />
+          )))}
+      {!cell.empty && <CellWrapper cell={cell} columnIndex={columnIndex} rowIndex={rowIndex} />}
     </div>
   );
 };

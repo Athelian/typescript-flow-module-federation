@@ -1,5 +1,5 @@
 // @flow
-import { omit, flatten } from 'lodash';
+import { omit, flatten, set, cloneDeep } from 'lodash';
 import { Container } from 'unstated';
 import update from 'immutability-helper';
 import type { User, Milestone, Task } from 'generated/graphql';
@@ -35,6 +35,13 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
   setFieldValue = (name: string, value: mixed) => {
     this.setState({
       [name]: value,
+    });
+  };
+
+  setDeepFieldValue = (path: string, value: any) => {
+    this.setState(prevState => {
+      const newState = set(cloneDeep(prevState), path, value);
+      return newState;
     });
   };
 

@@ -1,5 +1,4 @@
-# source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Aug 26 2019 10:26:59 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Aug 30 2019 14:47:04 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -29715,6 +29714,9 @@ type Milestone implements Model & Owned & Sortable {
   project: ProjectPayload!
   completedBy: UserPayload
   completedAt: DateTime
+  estimatedCompletionDate: DateTime
+  estimatedCompletionDateInterval: Interval
+  estimatedCompletionDateBinding: MilestoneDateBinding
   entitiesCount: MilestoneEntitiesCount!
   entitiesRelatedCount: MilestoneEntitiesCount!
   taskCount: TaskCount!
@@ -29738,12 +29740,16 @@ input MilestoneCreateInput {
   dueDateBinding: MilestoneDateBinding
   completedById: ID
   completedAt: DateTime
+  estimatedCompletionDate: DateTime
+  estimatedCompletionDateInterval: IntervalInput
+  estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
   projectId: ID!
 }
 
 enum MilestoneDateBinding {
   ProjectDueDate
+  MilestoneCompleteDate
 }
 
 type MilestoneEntitiesCount {
@@ -29794,6 +29800,9 @@ input MilestoneUpdateInput {
   dueDateBinding: MilestoneDateBinding
   completedById: ID
   completedAt: DateTime
+  estimatedCompletionDate: DateTime
+  estimatedCompletionDateInterval: IntervalInput
+  estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
   id: ID
   projectId: ID
@@ -30924,6 +30933,9 @@ input ProjectMilestoneCreateInput {
   dueDateBinding: MilestoneDateBinding
   completedById: ID
   completedAt: DateTime
+  estimatedCompletionDate: DateTime
+  estimatedCompletionDateInterval: IntervalInput
+  estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
 }
 
@@ -30935,6 +30947,9 @@ input ProjectMilestoneUpdateInput {
   dueDateBinding: MilestoneDateBinding
   completedById: ID
   completedAt: DateTime
+  estimatedCompletionDate: DateTime
+  estimatedCompletionDateInterval: IntervalInput
+  estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
   id: ID
 }
