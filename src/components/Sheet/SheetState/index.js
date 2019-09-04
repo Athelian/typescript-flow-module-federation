@@ -48,7 +48,13 @@ type Error = {
   messages: Array<string>,
 } & Position;
 
-export type RowKamoulox = {
+export type Action = {
+  type: string,
+  cell?: Position | null,
+  payload?: any,
+};
+
+export type RowChange = {
   start: number,
   end: number,
   entity: {
@@ -57,9 +63,9 @@ export type RowKamoulox = {
   },
 };
 
-type RowKamouloxWithCallback = {
-  onClear: (items: Array<Object>) => void,
-} & RowKamoulox;
+type RowChangeOnRemoved = {
+  onClear: ((Action) => void, items: Array<Object>) => void,
+} & RowChange;
 
 export type State = {
   initialized: boolean,
@@ -73,14 +79,8 @@ export type State = {
   foreignFocusedAt: Array<ForeignFocus>,
   erroredAt: Error | null,
   weakErroredAt: Array<Position>,
-  addedRows: Array<RowKamoulox>,
-  deletedRows: Array<RowKamouloxWithCallback>,
-};
-
-export type Action = {
-  type: string,
-  cell?: Position | null,
-  payload?: any,
+  addedRows: Array<RowChange>,
+  removedRows: Array<RowChangeOnRemoved>,
 };
 
 type Props = {
@@ -102,7 +102,7 @@ const initialState: State = {
   erroredAt: null,
   weakErroredAt: [],
   addedRows: [],
-  deletedRows: [],
+  removedRows: [],
 };
 
 type Context = {

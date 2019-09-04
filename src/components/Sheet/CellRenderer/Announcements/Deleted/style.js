@@ -14,6 +14,19 @@ export const DeletedStyle = (height: number, width: number) => css`
   padding-left: 50px;
   z-index: 10;
   overflow: hidden;
+
+  @keyframes appearing {
+    0% {
+      opacity: 0;
+      width: 0;
+    }
+    5% {
+      opacity: 1;
+      width: ${width}px;
+    }
+  }
+
+  animation: appearing 5s ease-out 1 forwards;
 `;
 
 export const LabelStyle = css`

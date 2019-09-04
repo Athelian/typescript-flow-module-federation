@@ -65,8 +65,8 @@ const containerSheetFragment = gql`
   }
 `;
 
-export const orderSheetQuery = gql`
-  query orderSheetQuery(
+export const ordersQuery = gql`
+  query ordersQuery(
     $page: Int!
     $perPage: Int!
     $filterBy: OrderFilterInput
@@ -108,8 +108,8 @@ export const orderSheetQuery = gql`
   ${forbiddenFragment}
 `;
 
-export const orderItemByIDSheetQuery = gql`
-  query orderItemByIDSheetQuery($id: ID!) {
+export const orderItemByIDQuery = gql`
+  query orderItemByIDQuery($id: ID!) {
     orderItem(id: $id) {
       ...orderItemSheetFragment
       ... on OrderItem {
@@ -140,8 +140,8 @@ export const orderItemByIDSheetQuery = gql`
   ${containerSheetFragment}
 `;
 
-export const batchByIDSheetQuery = gql`
-  query batchByIDSheetQuery($id: ID!) {
+export const batchByIDQuery = gql`
+  query batchByIDQuery($id: ID!) {
     batch(id: $id) {
       ...batchSheetFragment
       ... on Batch {
@@ -169,6 +169,26 @@ export const batchByIDSheetQuery = gql`
   ${batchSheetFragment}
   ${shipmentSheetFragment}
   ${containerSheetFragment}
+`;
+
+export const containerByIDQuery = gql`
+  query containerByIDQuery($id: ID!) {
+    container(id: $id) {
+      ...containerSheetFragment
+    }
+  }
+
+  ${containerSheetFragment}
+`;
+
+export const shipmentByIDQuery = gql`
+  query shipmentByIDQuery($id: ID!) {
+    shipment(id: $id) {
+      ...shipmentSheetFragment
+    }
+  }
+
+  ${shipmentSheetFragment}
 `;
 
 export const orderMutation = gql`

@@ -20,6 +20,6 @@ export const Actions = {
   FOREIGN_BLUR: 'foreign_blur',
   ADDED_ROWS_OF_ENTITY: 'added_rows_of_entity',
   CLEAR_ADDED_ROWS: 'clear_added_rows',
-  DELETED_ROWS_ENTITY: 'deleted_rows_of_entity',
-  CLEAR_DELETED_ROWS: 'clear_deleted_rows',
+  REMOVED_ROWS_ENTITY: 'removed_rows_of_entity',
+  CLEAR_REMOVED_ROWS: 'clear_removed_rows',
 };

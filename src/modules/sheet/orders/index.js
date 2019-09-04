@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
-import { getByPathWithDefault } from 'utils/fp';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar } from 'components/NavBar';
 import { Sheet } from 'components/Sheet';
@@ -9,7 +8,7 @@ import columns from './columns';
 import transformer from './transformer';
 import entityEventHandler from './handler';
 import mutate from './mutate';
-import { orderSheetQuery } from './query';
+import { ordersQuery } from './query';
 
 const OrderSheetModule = () => {
   const client = useApolloClient();
@@ -30,13 +29,13 @@ const OrderSheetModule = () => {
 
     client
       .query({
-        query: orderSheetQuery,
+        query: ordersQuery,
         variables: { page: 1, perPage: 20, filterBy: {}, sortBy: {} },
       })
       .then(({ data }) => {
         setLoading(false);
-        setPage({ page: 1, totalPage: getByPathWithDefault(1, 'orders.totalPage', data) });
-        setInitialOrders(getByPathWithDefault([], 'orders.nodes', data));
+        setPage({ page: 1, totalPage: data.orders?.totalPage ?? 1 });
+        setInitialOrders(data.orders?.nodes ?? []);
       });
   }, [client]);
 
@@ -57,7 +56,7 @@ const OrderSheetModule = () => {
         onLoadMore={() =>
           client
             .query({
-              query: orderSheetQuery,
+              query: ordersQuery,
               variables: { page: page.page + 1, perPage: 20, filterBy: {}, sortBy: {} },
             })
             .then(({ data }) => {
@@ -65,7 +64,7 @@ const OrderSheetModule = () => {
                 ...page,
                 page: page.page + 1,
               });
-              return getByPathWithDefault([], 'orders.nodes', data);
+              return data.orders?.nodes ?? [];
             })
         }
       />

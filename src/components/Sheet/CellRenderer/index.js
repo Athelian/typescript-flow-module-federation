@@ -93,7 +93,12 @@ const CellWrapper = React.memo<WrapperProps>(({ cell, columnIndex, rowIndex }: W
 
 const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
   const { state, dispatch } = useSheetState();
-  const { items, rows, addedRows, deletedRows } = state;
+  const { items, rows, addedRows, removedRows } = state;
+  const itemsRef = React.useRef(items);
+
+  React.useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
 
   if (rowIndex >= rows.length) {
     return columnIndex === 0 ? (
@@ -104,21 +109,34 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
   }
 
   const addedRow = addedRows.find(row => row.start === rowIndex);
-  const deletedRow = deletedRows.find(row => row.start === rowIndex);
+  const removedRow = removedRows.find(row => row.start === rowIndex);
 
   const cell = rows[rowIndex][columnIndex];
 
   return (
     <div style={style}>
-      {columnIndex === 0 &&
-        ((deletedRow && (
-          <Deleted
-            start={deletedRow.start}
-            end={deletedRow.end}
-            onClear={() => deletedRow.onClear(items)}
-          />
-        )) ||
-          (addedRow && (
+      {(() => {
+        if (columnIndex !== 0) {
+          return null;
+        }
+
+        if (removedRow) {
+          return (
+            <Deleted
+              start={removedRow.start}
+              end={removedRow.end}
+              onClear={() =>
+                dispatch({
+                  type: Actions.CLEAR_REMOVED_ROWS,
+                  payload: removedRow.entity,
+                })
+              }
+            />
+          );
+        }
+
+        if (addedRow) {
+          return (
             <Added
               start={addedRow.start}
               end={addedRow.end}
@@ -129,7 +147,11 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
                 })
               }
             />
-          )))}
+          );
+        }
+
+        return null;
+      })()}
       {!cell.empty && <CellWrapper cell={cell} columnIndex={columnIndex} rowIndex={rowIndex} />}
     </div>
   );

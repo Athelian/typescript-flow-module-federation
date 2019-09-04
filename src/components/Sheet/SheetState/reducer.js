@@ -182,7 +182,7 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           erroredAt: null,
           weakErroredAt: [],
           addedRows: [],
-          deletedRows: [],
+          removedRows: [],
         };
       }
       case Actions.APPEND: {
@@ -572,13 +572,88 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           throw new Error('invalid dispatch payload');
         }
 
+        const { entity, onAdd } = action.payload;
+
+        let newState = state;
+
+        onAdd(a => {
+          newState = reducer(newState, a);
+        }, newState.items);
+
+        let start = -1;
+        let end = -1;
+
+        newState.rows.every((row, idx) => {
+          const cell: ?CellValue = row.find(c => {
+            console.log(
+              c.entity,
+              entity,
+              c.entity?.id === entity.id && c.entity?.type === entity.type
+            );
+            return c.entity?.id === entity.id && c.entity?.type === entity.type;
+          });
+          if (!cell) {
+            return true;
+          }
+
+          const removedRow = newState.removedRows.find(
+            r => r.entity.id === entity.id && r.entity.type === entity.type
+          );
+          if (removedRow?.start === idx) {
+            return true;
+          }
+
+          start = idx;
+          end = start + (cell.extended || 0);
+
+          return false;
+        });
+
+        if (start === -1) {
+          return newState;
+        }
+
+        return {
+          ...newState,
+          addedRows: [
+            ...newState.addedRows,
+            {
+              start,
+              end,
+              entity,
+            },
+          ],
+        };
+      }
+      case Actions.CLEAR_ADDED_ROWS: {
+        if (!action.payload) {
+          throw new Error('invalid dispatch payload');
+        }
+
         const { id, type } = action.payload;
+
+        return {
+          ...state,
+          // $FlowFixMe ???
+          addedRows: state.addedRows.filter(
+            row => row.entity.id !== id && row.entity.type !== type
+          ),
+        };
+      }
+      case Actions.REMOVED_ROWS_ENTITY: {
+        if (!action.payload) {
+          throw new Error('invalid dispatch payload');
+        }
+
+        const { entity, onClear } = action.payload;
 
         let start = -1;
         let end = -1;
 
         state.rows.every((row, idx) => {
-          const cell: ?CellValue = row.find(c => c.entity?.id === id && c.entity?.type === type);
+          const cell: ?CellValue = row.find(
+            c => c.entity?.id === entity.id && c.entity?.type === entity.type
+          );
           if (!cell) {
             return true;
           }
@@ -595,35 +670,44 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
 
         return {
           ...state,
-          addedRows: [
-            ...state.addedRows,
+          removedRows: [
+            ...state.removedRows,
             {
               start,
               end,
-              entity: { id, type },
+              entity,
+              onClear,
             },
           ],
         };
       }
-      case Actions.CLEAR_ADDED_ROWS: {
+      case Actions.CLEAR_REMOVED_ROWS: {
         if (!action.payload) {
           throw new Error('invalid dispatch payload');
         }
 
         const { id, type } = action.payload;
+        const removedRow = state.removedRows.find(
+          row => row.entity.id === id && row.entity.type === type
+        );
+        if (!removedRow) {
+          return state;
+        }
+
+        let newState = state;
+
+        removedRow.onClear(a => {
+          newState = reducer(newState, a);
+        }, newState.items);
 
         return {
-          ...state,
+          ...newState,
           // $FlowFixMe ???
-          addedRows: state.addedRows.filter(
-            aen => aen.entity.id !== id && aen.entity.type !== type
+          removedRows: state.removedRows.filter(
+            row => row.entity.id !== id && row.entity.type !== type
           ),
         };
       }
-      case Actions.DELETED_ROWS_ENTITY:
-        return state;
-      case Actions.CLEAR_DELETED_ROWS:
-        return state;
       default:
         throw new Error('invalid dispatch action');
     }
