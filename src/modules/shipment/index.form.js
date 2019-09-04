@@ -6,7 +6,7 @@ import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import QueryFormV2 from 'components/common/QueryFormV2';
 import { navigate } from '@reach/router';
-import { UserConsumer } from 'modules/user';
+import { UserConsumer } from 'components/Context/Viewer';
 import { getByPath } from 'utils/fp';
 import { showToastError } from 'utils/errors';
 import { Content, SlideViewLayout } from 'components/Layout';
@@ -604,8 +604,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                   {apiError && <p>Error: Please try again.</p>}
                   {this.isNew() || !shipmentId ? (
                     <UserConsumer>
-                      {({ user }) => {
-                        const { organization } = user;
+                      {({ organization }) => {
                         const { types = [] } = organization;
                         const isImporter = types.includes('Importer');
                         const isExporter = types.includes('Exporter');

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { UserConsumer } from 'modules/user';
+import { UserConsumer } from 'components/Context/Viewer';
 import MilestoneStateContainer from 'modules/milestone/form/container';
 import validator from 'modules/tags/form/validator';
 import { FormField } from 'modules/form';

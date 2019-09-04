@@ -6,7 +6,7 @@ import { formatToGraphql } from 'utils/date';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
-import { UserConsumer } from 'modules/user';
+import { UserConsumer } from 'components/Context/Viewer';
 import {
   TaskStatusInputWrapperStyle,
   UserAvatarWrapperStyle,

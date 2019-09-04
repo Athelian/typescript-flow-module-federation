@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Query, Subscription } from 'react-apollo';
-import { UserConsumer } from 'modules/user';
+import { UserConsumer } from 'components/Context/Viewer';
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';

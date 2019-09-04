@@ -8,7 +8,7 @@ import { diff } from 'deep-object-diff';
 import { HotKeys, configure } from 'react-hotkeys';
 import { set, isEqual, cloneDeep } from 'lodash';
 import usePrevious from 'hooks/usePrevious';
-import { UserConsumer } from 'modules/user';
+import { UserConsumer } from 'components/Context/Viewer';
 import emitter from 'utils/emitter';
 import { trackingError } from 'utils/trackingError';
 import { getByPathWithDefault, getByPath } from 'utils/fp';

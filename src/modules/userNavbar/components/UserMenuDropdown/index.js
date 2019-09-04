@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import { Mutation } from 'react-apollo';
 import Icon from 'components/Icon';
 import LogoutDialog from 'components/Dialog/LogoutDialog';
-import { AuthenticationConsumer } from 'components/Context/Authenticated';
+import { AuthenticatedConsumer } from 'components/Context/Viewer';
 import { logOutMutation } from 'modules/userNavbar/mutation';
 import messages from 'modules/userNavbar/messages';
 import Import from 'modules/import';
@@ -83,7 +83,7 @@ const UserMenuDropdown = ({ isOpen, toggleUserMenu }: Props) => {
               </div>
             </button>
 
-            <AuthenticationConsumer>
+            <AuthenticatedConsumer>
               {({ setAuthenticated }) => (
                 <Mutation
                   mutation={logOutMutation}
@@ -110,7 +110,7 @@ const UserMenuDropdown = ({ isOpen, toggleUserMenu }: Props) => {
                   )}
                 </Mutation>
               )}
-            </AuthenticationConsumer>
+            </AuthenticatedConsumer>
           </>
         )}
       </BooleanValue>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'unstated';
 import '@testing-library/jest-dom';
 import { render, cleanup, fireEvent } from '@testing-library/react';
-import LanguageProvider from 'modules/language';
+import LanguageProvider from 'components/Context/Language';
 import LoginForm from '../index';
 
 afterEach(cleanup);

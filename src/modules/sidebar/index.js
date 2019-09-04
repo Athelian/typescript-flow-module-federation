@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { Location } from '@reach/router';
+import { FormattedMessage } from 'react-intl';
 import {
   RM_ORDER_FOCUS_LIST,
   RM_PRODUCT_FOCUS_LIST,
@@ -20,9 +21,9 @@ import { STAFF_LIST } from 'modules/permission/constants/staff';
 import { PROJECT_LIST } from 'modules/permission/constants/project';
 import { DOCUMENT_LIST } from 'modules/permission/constants/file';
 import { TASK_LIST, TASK_TEMPLATE_LIST } from 'modules/permission/constants/task';
-import usePermission from 'hooks/usePermission';
-import { FormattedMessage } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
+import { useViewer } from 'components/Context/Viewer';
+import { useHasPermissions } from 'components/Context/Permissions';
 import { isEnableBetaFeature } from 'utils/env';
 import { Logo, MenuItem, SubMenu } from './components';
 import { SideBarWrapperStyle, SideBarBodyStyle } from './style';
@@ -49,7 +50,9 @@ import {
 } from './constants';
 
 const SideBar = () => {
-  const { hasPermission } = usePermission();
+  const { organization } = useViewer();
+  const hasPermission = useHasPermissions(organization?.id);
+
   return (
     <Location>
       {({ location }) => {

@@ -3,8 +3,8 @@ import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import { intersection } from 'lodash';
 import { getByPathWithDefault } from 'utils/fp';
+import { useAuthenticated } from 'components/Context/Viewer';
 import { permissionsForOrganization } from './query';
-import { useAuthenticated } from '../Authenticated';
 
 type Permissions = {
   loading: boolean,
@@ -50,7 +50,7 @@ type State = {
   [string]: Permissions,
 };
 
-export const PermissionsProvider = ({ children }: Props) => {
+const PermissionsProvider = ({ children }: Props) => {
   const client = useApolloClient();
   const { authenticated } = useAuthenticated();
   const [permissions, setPermissions] = React.useState<State>({});
@@ -105,7 +105,7 @@ export const PermissionsProvider = ({ children }: Props) => {
 
       return permissions[organizationId];
     },
-    [client, permissions]
+    [client, permissions, setPermissions]
   );
 
   const hasPermissionsByOrganization = React.useCallback(
@@ -164,3 +164,5 @@ export const PermissionsProviderDev = ({ permissions, children }: DevProps) => {
     </PermissionsContext.Provider>
   );
 };
+
+export default PermissionsProvider;
