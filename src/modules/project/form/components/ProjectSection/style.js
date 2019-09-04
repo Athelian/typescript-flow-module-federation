@@ -12,7 +12,7 @@ import {
 
 export const ProjectSectionWrapperStyle = (isExpanded: boolean) => css`
   display: flex;
-  height: ${isExpanded ? '355px' : '0px'};
+  height: ${isExpanded ? '340px' : '0px'};
   overflow: hidden;
   width: 100%;
   max-width: 100%;
