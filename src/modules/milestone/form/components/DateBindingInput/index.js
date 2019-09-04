@@ -54,13 +54,13 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
 
     const { months, weeks, days } = values.estimatedCompletionDateInterval || {};
     if (months) {
-      if (months > 0) {
+      if (months > 0 && dateBindingSign === 'before') {
         setDateBindingSign('after');
       }
       dateBindingValue = Math.abs(months);
       dateBindingMetric = 'months';
     } else if (weeks) {
-      if (weeks > 0) {
+      if (weeks > 0 && dateBindingSign === 'before') {
         setDateBindingSign('after');
       }
       dateBindingValue = Math.abs(weeks);

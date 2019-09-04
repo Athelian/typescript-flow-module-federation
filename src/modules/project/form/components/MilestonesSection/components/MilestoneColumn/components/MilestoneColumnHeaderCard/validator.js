@@ -7,10 +7,12 @@ type Props = {
   name: string,
 };
 
-const validator = ({ name }: Props) =>
+const validator = ({ name }: Props): Object =>
   Yup.object().shape({
     [name]: Yup.string().required(
-      <FormattedMessage id="validation.name.required" defaultMessage="Name is a required field" />
+      ((
+        <FormattedMessage id="validation.name.required" defaultMessage="Name is a required field" />
+      ): any)
     ),
   });
 
