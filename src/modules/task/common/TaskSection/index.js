@@ -8,7 +8,9 @@ import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
-import { NewButton } from 'components/Buttons';
+import { BaseButton, NewButton } from 'components/Buttons';
+import { Tooltip } from 'components/Tooltip';
+import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
 import { SectionWrapper, SectionHeader, DashedPlusButton, Label } from 'components/Form';
 import { TemplateCard, GrayCard } from 'components/Cards';
 import type { TaskCardEditableProps } from 'components/Cards/TaskCard/type.js.flow';
@@ -508,6 +510,56 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                   }}
                 />
               )}
+
+              <BooleanValue>
+                {({ value: isOpen, set: toggleSlide }) => (
+                  <>
+                    <Tooltip
+                      message={
+                        <FormattedMessage
+                          id="modules.task.placeAllTasksInAProject"
+                          defaultMessage="Place all Tasks in a Project"
+                        />
+                      }
+                    >
+                      <div>
+                        <BaseButton
+                          icon="PROJECT"
+                          label={
+                            <FormattedMessage
+                              id="modules.task.setToProject"
+                              defaultMessage="SET TO PROJECT"
+                            />
+                          }
+                          onClick={() => toggleSlide(true)}
+                        />
+                      </div>
+                    </Tooltip>
+                    <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
+                      {isOpen && (
+                        <SelectProjectAndMilestone
+                          cacheKey="TaskInfoSectionSelectProjectAndMilestone"
+                          saveButtonMessage={
+                            <FormattedMessage id="modules.task.apply" defaultMessage="APPLY" />
+                          }
+                          onSelect={value => {
+                            setFieldValue(
+                              'todo.tasks',
+                              tasks.map(item => ({
+                                ...item,
+                                milestone: value,
+                              }))
+                            );
+                            setFieldTouched('tasks');
+                            toggleSlide(false);
+                          }}
+                          onCancel={() => toggleSlide(false)}
+                        />
+                      )}
+                    </SlideView>
+                  </>
+                )}
+              </BooleanValue>
             </SectionNavBar>
 
             <div className={TasksSectionStyle}>

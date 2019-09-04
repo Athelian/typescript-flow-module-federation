@@ -13,7 +13,7 @@ import { Content, SlideViewLayout } from 'components/Layout';
 import { currentSort } from 'components/common/FilterToolBar';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { Display } from 'components/Form';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { BaseButton, CancelButton } from 'components/Buttons';
 import BaseCard from 'components/Cards';
 import ProjectCardNew from 'components/Cards/ProjectCardNew';
 import messages from 'modules/project/messages';
@@ -24,13 +24,14 @@ import { ItemWrapperStyle, MilestoneWrapperStyle, MilestoneNameStyle } from './s
 
 type OptionalProps = {
   cacheKey: string,
+  milestone?: Milestone,
+  saveButtonMessage: Object,
 };
 
 type Props = OptionalProps & {
   onCancel: () => void,
   onSelect: (milestone: ?Milestone) => void,
   intl: IntlShape,
-  milestone: ?Milestone,
 };
 
 const projectsDefaultQueryVariables = {
@@ -58,11 +59,12 @@ function resetSelection({
 }
 
 function SelectProjectAndMilestone({
-  cacheKey = 'SelectProjectAndMilestone',
+  cacheKey,
   intl,
   onCancel,
   onSelect,
   milestone,
+  saveButtonMessage,
 }: Props) {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
@@ -129,12 +131,8 @@ function SelectProjectAndMilestone({
                 onCancel();
               }}
             />
-            <SaveButton
-              data-testid="btnSaveSelectProjectAndMilestone"
-              disabled={
-                getByPathWithDefault('', 'id', selectedMilestone) ===
-                getByPathWithDefault('', 'id', milestone)
-              }
+            <BaseButton
+              label={saveButtonMessage}
               onClick={() => {
                 if (selectedMilestone) {
                   onSelect({
@@ -151,6 +149,11 @@ function SelectProjectAndMilestone({
                   onSelect(null);
                 }
               }}
+              disabled={
+                getByPathWithDefault('', 'id', selectedMilestone) ===
+                getByPathWithDefault('', 'id', milestone)
+              }
+              data-testid="btnSaveSelectProjectAndMilestone"
             />
           </SlideViewNavBar>
 
@@ -285,5 +288,12 @@ function SelectProjectAndMilestone({
     </ObjectValue>
   );
 }
+
+SelectProjectAndMilestone.defaultProps = {
+  cacheKey: 'SelectProjectAndMilestone',
+  saveButtonMessage: (
+    <FormattedMessage id="providers.selectProjectAndMilestone.save" defaultMessage="SAVE" />
+  ),
+};
 
 export default injectIntl(SelectProjectAndMilestone);
