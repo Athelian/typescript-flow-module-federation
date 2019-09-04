@@ -1,6 +1,15 @@
 // @flow
 import { isNullOrUndefined } from 'utils/fp';
 import { isValid, addMonths, addWeeks, addDays, formatToDateInput } from 'utils/date';
+import type { Task } from 'generated/graphql';
+
+type ProjectInfo = {
+  dueDate: ?Date,
+  milestones: Array<{
+    id: string,
+    dueDate: ?Date,
+  }>,
+};
 
 export const calculateBindingDate = (date: string, dateInterval: Object): ?string => {
   const baseDate = date && isValid(new Date(date)) ? new Date(date) : null;

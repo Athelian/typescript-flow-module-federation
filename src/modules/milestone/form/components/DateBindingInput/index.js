@@ -58,12 +58,10 @@ const DateBindingInput = ({
   let bound = false;
   let dateBindingValue = 0;
   let dateBindingMetric = 'days';
-  let date = values[dateName];
+  const date = values[dateName];
 
   if (values[dateBinding]) {
     bound = true;
-
-    date = calculateBindingDate(baseDate, values[dateInterval]);
 
     const { months, weeks, days } = values[dateInterval] || {};
     if (months) {
@@ -99,6 +97,7 @@ const DateBindingInput = ({
           align="right"
           selected={!bound}
           onToggle={() => {
+            setFieldValue(dateName, date);
             setFieldValue(dateBinding, null);
             setFieldValue(dateInterval, null);
           }}
@@ -111,11 +110,11 @@ const DateBindingInput = ({
           align="right"
           selected={bound}
           onToggle={() => {
-            setFieldValue(dateName, date);
             setFieldValue(dateBinding, dateBindingItems[0]?.value);
             setFieldValue(dateInterval, {
               days: 0,
             });
+            setFieldValue(dateName, calculateBindingDate(baseDate, { days: 0 }));
             setDateBindingSign('before');
           }}
           editable={editable && !bound}
@@ -155,9 +154,11 @@ const DateBindingInput = ({
               }}
               setFieldValue={(field, newValue) => {
                 const { value, metric } = newValue;
+                const realValue = dateBindingSign === 'before' ? -Math.abs(value) : Math.abs(value);
                 setFieldValue(dateInterval, {
-                  [metric]: dateBindingSign === 'before' ? -Math.abs(value) : Math.abs(value),
+                  [metric]: realValue,
                 });
+                setFieldValue(dateName, calculateBindingDate(baseDate, { [metric]: realValue }));
               }}
             >
               {({ name, ...inputHandlers }) => (
@@ -178,10 +179,15 @@ const DateBindingInput = ({
               name="dateBindingSign"
               initValue={dateBindingSign}
               setFieldValue={(field, value) => {
+                const realValue =
+                  value === 'before' ? -Math.abs(dateBindingValue) : Math.abs(dateBindingValue);
                 setFieldValue(dateInterval, {
-                  [dateBindingMetric]:
-                    value === 'before' ? -Math.abs(dateBindingValue) : Math.abs(dateBindingValue),
+                  [dateBindingMetric]: realValue,
                 });
+                setFieldValue(
+                  dateName,
+                  calculateBindingDate(baseDate, { [dateBindingMetric]: realValue })
+                );
                 setDateBindingSign(value);
               }}
               saveOnChange

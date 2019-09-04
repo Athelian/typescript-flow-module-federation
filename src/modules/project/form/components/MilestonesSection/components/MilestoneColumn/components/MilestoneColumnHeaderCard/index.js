@@ -138,6 +138,9 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                       onSave={newMilestone => {
                         const { project, ...rest } = newMilestone;
                         setDeepFieldValue(`milestones.${milestoneIndex}`, rest);
+                        setTimeout(() => {
+                          emitter.emit('AUTO_DATE', `${rest.id}.dueDate`, rest.dueDate);
+                        }, 200);
                         toggleMilestoneForm(false);
                       }}
                     />
