@@ -7,7 +7,7 @@ import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
 import { formatToGraphql, startOfToday, differenceInCalendarDays } from 'utils/date';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { calculateBindingDate } from 'utils/project';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -225,22 +225,20 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                   </div>
                   <div role="presentation" onClick={e => e.stopPropagation()}>
                     <div className={DateInputWrapperStyle}>
-                      <FormField
-                        name={`${milestoneId}.dueDate`}
-                        initValue={dueDate}
-                        values={values}
-                        validator={validation}
-                        setFieldValue={onChangeValue}
-                      >
-                        {({ name, ...inputHandlers }) => (
+                      <FormField name={`${milestoneId}.dueDate`} initValue={dueDate}>
+                        {({ name, onBlur, ...inputHandlers }) => (
                           <DateInputFactory
                             name={name}
                             {...inputHandlers}
-                            onBlur={evt => {
-                              inputHandlers.onBlur(evt);
-                              setTimeout(() => {
-                                emitter.emit('AUTO_DATE', name, inputHandlers.value);
-                              }, 200);
+                            onBlur={e => {
+                              onBlur(e);
+                              const value = inputHandlers.value || null;
+                              if (!isEquals(value, dueDate)) {
+                                onChangeValue(name, value);
+                                setTimeout(() => {
+                                  emitter.emit('AUTO_DATE', name, value);
+                                }, 200);
+                              }
                             }}
                             isNew={isNew}
                             originalValue={initialValues.dueDate}
@@ -271,14 +269,18 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                         <FormField
                           name={`${milestoneId}.completedAt`}
                           initValue={values.completedAt}
-                          values={values}
-                          validator={validation}
-                          setFieldValue={onChangeValue}
                         >
-                          {({ name, ...inputHandlers }) => (
+                          {({ name, onBlur, ...inputHandlers }) => (
                             <DateInputFactory
                               name={name}
                               {...inputHandlers}
+                              onBlur={e => {
+                                onBlur(e);
+                                const value = inputHandlers.value || null;
+                                if (!isEquals(value, values.completeAt)) {
+                                  onChangeValue(name, value);
+                                }
+                              }}
                               originalValue={initialValues.completedAt}
                               label={<FormattedMessage {...messages.completed} />}
                               editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_COMPLETED])}
@@ -301,14 +303,18 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                         <FormField
                           name={`${milestoneId}.estimatedCompletionDate`}
                           initValue={estComplDate}
-                          values={values}
-                          validator={validation}
-                          setFieldValue={onChangeValue}
                         >
-                          {({ name, ...inputHandlers }) => (
+                          {({ name, onBlur, ...inputHandlers }) => (
                             <DateInputFactory
                               name={name}
                               {...inputHandlers}
+                              onBlur={e => {
+                                onBlur(e);
+                                const value = inputHandlers.value || null;
+                                if (!isEquals(value, estComplDate)) {
+                                  onChangeValue(name, value);
+                                }
+                              }}
                               isNew={isNew}
                               originalValue={initialValues.estimatedCompletionDate}
                               label={<FormattedMessage {...messages.estCompl} />}
