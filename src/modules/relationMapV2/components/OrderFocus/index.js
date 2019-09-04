@@ -321,6 +321,7 @@ export default function OrderFocus() {
                 <RelationMapContext.Provider value={{ state, dispatch }}>
                   {orders.length > 0 ? (
                     <>
+                      {/* $FlowIssue: doesn't match the flow type yet for ref */}
                       <List
                         ref={listRef}
                         itemData={ordersData}
@@ -388,13 +389,6 @@ export default function OrderFocus() {
                       <InlineCreateBatch
                         isProcessing={state.createBatch.isProcessing}
                         isOpen={state.createBatch.isOpen}
-                        onClose={() => {
-                          console.warn('close');
-                          dispatch({
-                            type: 'CREATE_BATCH_CLOSE',
-                            payload: {},
-                          });
-                        }}
                         onSuccess={(orderId, batch) => {
                           if (orderId) {
                             queryOrdersDetail([orderId]);
@@ -410,11 +404,14 @@ export default function OrderFocus() {
                               // then use the react-window to navigate to the row
                               // try to get from sort first, if not there, then try to use from entities
                               let batches =
+                                // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
                                 cacheSorted?.[`${batch?.orderItem?.id}-batches`]?.entities ?? [];
                               if (
                                 batches.length <
+                                // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
                                 (entities.orderItems?.[batch?.orderItem?.id]?.batches?.length ?? 0)
                               ) {
+                                // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
                                 batches = entities.orderItems?.[batch?.orderItem?.id]?.batches;
                               }
                               const lastBatchId = batches[batches.length - 1];

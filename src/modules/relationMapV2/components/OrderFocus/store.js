@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable no-param-reassign */
 import { createContext } from 'react';
-import type { Order, OrderItem } from 'generated/graphql';
+import type { Order, Batch, OrderItem } from 'generated/graphql';
 import { intersection } from 'lodash';
 import produce from 'immer';
 import update from 'immutability-helper';
@@ -85,6 +85,7 @@ export function reducer(
       targets?: Array<string>,
       orders?: Array<Order>,
       orderUpdate?: Order,
+      batch?: Batch,
       orderItemUpdate?: OrderItem,
       mapping?: Object,
       [string]: mixed,
@@ -289,7 +290,24 @@ export function reducer(
       });
     }
     case 'CREATE_BATCH_END': {
+      // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
+      const orderId = action.payload?.batch?.orderItem?.order?.id ?? '';
+      const { orderItem, ...batch } = action.payload?.batch ?? {};
+      // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
+      const orderItemId = action.payload?.batch?.orderItem?.id ?? '';
+      const itemIndex = state.order[orderId].orderItems.findIndex(item => item.id === orderItemId);
       return update(state, {
+        order: {
+          [orderId]: {
+            orderItems: {
+              [itemIndex]: {
+                batches: {
+                  $push: [batch],
+                },
+              },
+            },
+          },
+        },
         createBatch: {
           isProcessing: { $set: false },
           detail: {

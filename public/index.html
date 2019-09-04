@@ -30,7 +30,10 @@
     <meta name="msapplication-TileColor" content="#ffffff" />
     <meta name="msapplication-TileImage" content="%PUBLIC_URL%/icon/ms-icon-144x144.png" />
     <meta name="theme-color" content="#ffffff" />
-    <script src="https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver,Promise.prototype.finally"></script>
+    <script
+      crossOrigin="anonymous"
+      src="https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver%2CPromise.prototype.finally%2CObject.fromEntries%2CArray.prototype.flat%2CArray.prototype.flatMap%2CObject.entries%2CrequestIdleCallback"
+    />
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.

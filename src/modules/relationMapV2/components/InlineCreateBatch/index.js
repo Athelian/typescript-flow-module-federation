@@ -22,16 +22,9 @@ type Props = {|
   },
   isProcessing?: boolean,
   onSuccess: (string, Batch) => void,
-  onClose: () => void,
 |};
 
-export default function InlineCreateBatch({
-  isOpen,
-  isProcessing,
-  entity,
-  onSuccess,
-  onClose,
-}: Props) {
+export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSuccess }: Props) {
   const { mapping, onSetBadge } = Entities.useContainer();
   const { dispatch } = React.useContext(RelationMapContext);
   const [createBatch, batchResult] = useMutation(createBatchMutation);
@@ -92,7 +85,9 @@ export default function InlineCreateBatch({
       if (batchResult.data && batchResult.data) {
         dispatch({
           type: 'CREATE_BATCH_END',
-          payload: batchResult.data,
+          payload: {
+            batch: batchResult.data?.batchCreate ?? {},
+          },
         });
         onSuccess(
           batchResult.data?.batchCreate?.orderItem?.order?.id,
@@ -102,14 +97,16 @@ export default function InlineCreateBatch({
       } else if (batchResult.error) {
         dispatch({
           type: 'CREATE_BATCH_END',
-          payload: batchResult.error,
+          payload: {
+            error: batchResult.error,
+          },
         });
       }
     }
   }, [batchResult.data, batchResult.error, dispatch, isOpen, isProcessing, onSetBadge, onSuccess]);
 
   return (
-    <Dialog isOpen={isOpen} width="400px" onRequestClose={onClose}>
+    <Dialog isOpen={isOpen} width="400px">
       <div className={DialogStyle}>
         <h3 className={ConfirmMessageStyle}>
           Creating new <Icon icon="BATCH" /> from <Icon icon="ORDER_ITEM" /> {` ${entity.no}...`}
