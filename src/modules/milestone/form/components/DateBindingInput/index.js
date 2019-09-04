@@ -58,10 +58,11 @@ const DateBindingInput = ({
   let bound = false;
   let dateBindingValue = 0;
   let dateBindingMetric = 'days';
-  const date = values[dateName];
+  let date = values[dateName];
 
   if (values[dateBinding]) {
     bound = true;
+    date = calculateBindingDate(baseDate, values[dateInterval]);
 
     const { months, weeks, days } = values[dateInterval] || {};
     if (months) {
