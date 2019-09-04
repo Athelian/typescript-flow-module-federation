@@ -1,4 +1,5 @@
-# timestamp: Fri Aug 30 2019 14:47:04 GMT+0900 (Japan Standard Time)
+# source: https://graphql-staging.zenport.io/graphql
+# timestamp: Wed Sep 04 2019 11:19:47 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28394,6 +28395,10 @@ type Duration {
 input DurationInput {
   seconds: Long!
   nanos: Int
+}
+
+type DurationValue {
+  duration: Duration!
 }
 
 union EmptyPayload = BadRequest | Forbidden | NotFound
@@ -87580,7 +87585,7 @@ input UserUpdateInput {
   tagIds: [ID!]
 }
 
-union Value = StringValue | IntValue | FloatValue | BooleanValue | DateTimeValue | IntervalValue | Duration | MetricValueValue | SizeValue | EntityValue | Values
+union Value = StringValue | IntValue | FloatValue | BooleanValue | DateTimeValue | IntervalValue | DurationValue | MetricValueValue | SizeValue | EntityValue | Values
 
 input ValueInput {
   string: String

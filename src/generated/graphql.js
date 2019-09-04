@@ -19156,6 +19156,11 @@ export type DurationInput = {
   nanos?: ?$ElementType<Scalars, 'Int'>,
 };
 
+export type DurationValue = {
+   __typename?: 'DurationValue',
+  duration: Duration,
+};
+
 export type EmptyPayload = BadRequest | Forbidden | NotFound;
 
 export type EntitiesMany = {
@@ -60781,7 +60786,7 @@ export type UserUpdateInput = {
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 };
 
-export type Value = StringValue | IntValue | FloatValue | BooleanValue | DateTimeValue | IntervalValue | Duration | MetricValueValue | SizeValue | EntityValue | Values;
+export type Value = StringValue | IntValue | FloatValue | BooleanValue | DateTimeValue | IntervalValue | DurationValue | MetricValueValue | SizeValue | EntityValue | Values;
 
 export type ValueInput = {
   string?: ?$ElementType<Scalars, 'String'>,
@@ -60967,13 +60972,7 @@ export type BatchFormFragmentFragment = (
     & MetricFragmentFragment
   , todo: (
     { __typename?: 'Todo' }
-    & { milestone: ?(
-      { __typename?: 'Milestone' }
-      & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & ProjectCardFragmentFragment
-       }
-      & MilestoneCardFragmentFragment
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, taskCount: { __typename?: 'TaskCount' }
+    & { taskCount: { __typename?: 'TaskCount' }
       & TaskCountFragmentFragment
     , tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & TaskWithoutParentInfoFragmentFragment
@@ -61277,7 +61276,7 @@ export type FieldValuesFragmentFragment = (
   & { value: (
     { __typename?: 'StringValue' }
     & $Pick<StringValue, { string: * }>
-  ) | { __typename?: 'IntValue' } | { __typename?: 'FloatValue' } | { __typename?: 'BooleanValue' } | { __typename?: 'DateTimeValue' } | { __typename?: 'IntervalValue' } | { __typename?: 'Duration' } | { __typename?: 'MetricValueValue' } | { __typename?: 'SizeValue' } | { __typename?: 'EntityValue' } | { __typename?: 'Values' }, fieldDefinition: ({ __typename?: 'FieldDefinition' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+  ) | { __typename?: 'IntValue' } | { __typename?: 'FloatValue' } | { __typename?: 'BooleanValue' } | { __typename?: 'DateTimeValue' } | { __typename?: 'IntervalValue' } | { __typename?: 'DurationValue' } | { __typename?: 'MetricValueValue' } | { __typename?: 'SizeValue' } | { __typename?: 'EntityValue' } | { __typename?: 'Values' }, fieldDefinition: ({ __typename?: 'FieldDefinition' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
     & FieldDefinitionFragmentFragment
   , entity: { __typename?: 'Product' } | { __typename?: 'ProductProvider' } | { __typename?: 'ProductProviderPackage' } | { __typename?: 'Order' } | { __typename?: 'OrderItem' } | { __typename?: 'Batch' } | { __typename?: 'BatchQuantityRevision' } | { __typename?: 'Shipment' } | { __typename?: 'Voyage' } | { __typename?: 'Container' } | { __typename?: 'ContainerGroup' } | { __typename?: 'TimelineDate' } | { __typename?: 'TimelineDateRevision' } | { __typename?: 'Warehouse' } | { __typename?: 'Tag' } | { __typename?: 'User' } | { __typename?: 'Organization' } | { __typename?: 'Partnership' } | { __typename?: 'Role' } | { __typename?: 'File' } | { __typename?: 'Task' } | { __typename?: 'TaskTemplate' } | { __typename?: 'Project' } | { __typename?: 'Milestone' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
 );
@@ -61474,13 +61473,7 @@ export type ItemFormFragmentFragment = (
     & TagFragmentFragment
   >, todo: (
     { __typename?: 'Todo' }
-    & { milestone: ?(
-      { __typename?: 'Milestone' }
-      & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & ProjectCardFragmentFragment
-       }
-      & MilestoneCardFragmentFragment
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, taskCount: { __typename?: 'TaskCount' }
+    & { taskCount: { __typename?: 'TaskCount' }
       & TaskCountFragmentFragment
     , tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & TaskWithoutParentInfoFragmentFragment
@@ -61661,13 +61654,7 @@ export type OrderFormFragmentFragment = (
     & TagFragmentFragment
   >, todo: (
     { __typename?: 'Todo' }
-    & { milestone: ?(
-      { __typename?: 'Milestone' }
-      & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & ProjectCardFragmentFragment
-       }
-      & MilestoneCardFragmentFragment
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, taskCount: { __typename?: 'TaskCount' }
+    & { taskCount: { __typename?: 'TaskCount' }
       & TaskCountFragmentFragment
     , tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & TaskWithoutParentInfoFragmentFragment
@@ -61785,13 +61772,7 @@ export type ProductFormFragmentFragment = (
     & OwnedByFragmentFragment
   , todo: (
     { __typename?: 'Todo' }
-    & { milestone: ?(
-      { __typename?: 'Milestone' }
-      & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & ProjectCardFragmentFragment
-       }
-      & MilestoneCardFragmentFragment
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & { tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & TaskWithoutParentInfoFragmentFragment
     >, taskTemplate: ?({ __typename?: 'TaskTemplate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & TaskTemplateCardFragmentFragment
@@ -61887,13 +61868,7 @@ export type ProductProviderFormFragmentFragment = (
     & ForbiddenFragmentFragment
   >, todo: (
     { __typename?: 'Todo' }
-    & { milestone: ?(
-      { __typename?: 'Milestone' }
-      & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & ProjectCardFragmentFragment
-       }
-      & MilestoneCardFragmentFragment
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & { tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & TaskWithoutParentInfoFragmentFragment
     >, taskTemplate: ?({ __typename?: 'TaskTemplate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & TaskTemplateCardFragmentFragment
@@ -61987,82 +61962,19 @@ export type ProjectFormQueryFragmentFragment = (
     & TagFragmentFragment
   >, milestones: Array<(
     { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: *, updatedAt: *, name: *, dueDate: *, completedAt: * }>
+    & $Pick<Milestone, { id: *, updatedAt: *, name: *, dueDate: *, estimatedCompletionDate: *, estimatedCompletionDateBinding: *, completedAt: * }>
     & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & UserAvatarFragmentFragment
-    , completedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    , estimatedCompletionDateInterval: ?(
+      { __typename?: 'Interval' }
+      & $Pick<Interval, { months: *, weeks: *, days: * }>
+    ), completedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & UserAvatarFragmentFragment
     , taskCount: { __typename?: 'TaskCount' }
       & TaskCountFragmentFragment
     , tasks: Array<((
       { __typename?: 'Task' }
       & $Pick<Task, { milestoneSort: * }>
-      & { entity: ?(
-        { __typename?: 'Product' }
-        & { todo: (
-          { __typename?: 'Todo' }
-          & { milestone: ?(
-            { __typename?: 'Milestone' }
-            & $Pick<Milestone, { id: * }>
-            & { project: (
-              { __typename?: 'Project' }
-              & $Pick<Project, { id: * }>
-            ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-          ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-        ) }
-      ) | { __typename?: 'ProductProvider' } | { __typename?: 'ProductProviderPackage' } | (
-        { __typename?: 'Order' }
-        & { todo: (
-          { __typename?: 'Todo' }
-          & { milestone: ?(
-            { __typename?: 'Milestone' }
-            & $Pick<Milestone, { id: * }>
-            & { project: (
-              { __typename?: 'Project' }
-              & $Pick<Project, { id: * }>
-            ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-          ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-        ) }
-      ) | (
-        { __typename?: 'OrderItem' }
-        & { todo: (
-          { __typename?: 'Todo' }
-          & { milestone: ?(
-            { __typename?: 'Milestone' }
-            & $Pick<Milestone, { id: * }>
-            & { project: (
-              { __typename?: 'Project' }
-              & $Pick<Project, { id: * }>
-            ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-          ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-        ) }
-      ) | (
-        { __typename?: 'Batch' }
-        & { todo: (
-          { __typename?: 'Todo' }
-          & { milestone: ?(
-            { __typename?: 'Milestone' }
-            & $Pick<Milestone, { id: * }>
-            & { project: (
-              { __typename?: 'Project' }
-              & $Pick<Project, { id: * }>
-            ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-          ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-        ) }
-      ) | { __typename?: 'BatchQuantityRevision' } | (
-        { __typename?: 'Shipment' }
-        & { todo: (
-          { __typename?: 'Todo' }
-          & { milestone: ?(
-            { __typename?: 'Milestone' }
-            & $Pick<Milestone, { id: * }>
-            & { project: (
-              { __typename?: 'Project' }
-              & $Pick<Project, { id: * }>
-            ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-          ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-        ) }
-      ) | { __typename?: 'Voyage' } | { __typename?: 'Container' } | { __typename?: 'ContainerGroup' } | { __typename?: 'TimelineDate' } | { __typename?: 'TimelineDateRevision' } | { __typename?: 'Warehouse' } | { __typename?: 'Tag' } | { __typename?: 'User' } | { __typename?: 'Organization' } | { __typename?: 'Partnership' } | { __typename?: 'Role' } | { __typename?: 'File' } | { __typename?: 'Task' } | { __typename?: 'TaskTemplate' } | { __typename?: 'Project' } | { __typename?: 'Milestone' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
     ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & TaskWithParentInfoFragmentFragment
     > }
@@ -62126,13 +62038,7 @@ export type ShipmentFormFragmentFragment = (
     & OwnedByFragmentFragment
   , todo: (
     { __typename?: 'Todo' }
-    & { milestone: ?(
-      { __typename?: 'Milestone' }
-      & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & ProjectCardFragmentFragment
-       }
-      & MilestoneCardFragmentFragment
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & { tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & TaskWithoutParentInfoFragmentFragment
     >, taskTemplate: ?({ __typename?: 'TaskTemplate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & TaskTemplateCardFragmentFragment
@@ -63788,7 +63694,7 @@ export type WarehouseCardFragmentFragment = (
             "name": "IntervalValue"
           },
           {
-            "name": "Duration"
+            "name": "DurationValue"
           },
           {
             "name": "MetricValueValue"
