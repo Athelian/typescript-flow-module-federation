@@ -45,6 +45,10 @@ export const initialState: State = {
       },
     },
   },
+  clone: {
+    isOpen: false,
+    isProcessing: false,
+  },
   edit: {
     type: '',
     selectedId: '',
@@ -79,6 +83,10 @@ export function reducer(
       | 'CREATE_BATCH_START'
       | 'CREATE_BATCH_END'
       | 'CREATE_BATCH_CLOSE'
+      | 'CLONE'
+      | 'CLONE_START'
+      | 'CLONE_END'
+      | 'CLONE_CLOSE'
       | 'EDIT',
     payload: {
       entity?: string,
@@ -324,6 +332,18 @@ export function reducer(
       return update(state, {
         createBatch: {
           isOpen: { $set: false },
+        },
+      });
+    }
+    case 'CLONE': {
+      console.warn({
+        action,
+        state,
+      });
+      return update(state, {
+        clone: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
         },
       });
     }

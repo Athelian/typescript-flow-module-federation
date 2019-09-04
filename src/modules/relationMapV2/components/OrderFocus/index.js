@@ -25,6 +25,7 @@ import { Hits, Entities, SortAndFilter } from 'modules/relationMapV2/store';
 import { WrapperStyle, ListStyle, RowStyle, ActionsBackdropStyle } from './style';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
+import CloneEntities from '../CloneEntities';
 import InlineCreateBatch from '../InlineCreateBatch';
 import SelectedEntity from '../SelectedEntity';
 import Actions from '../Actions';
@@ -386,9 +387,8 @@ export default function OrderFocus() {
                         isOpen={state.moveEntity.isOpen}
                         {...state.moveEntity.detail}
                       />
+                      <CloneEntities onSuccess={console.warn} />
                       <InlineCreateBatch
-                        isProcessing={state.createBatch.isProcessing}
-                        isOpen={state.createBatch.isOpen}
                         onSuccess={(orderId, batch) => {
                           if (orderId) {
                             queryOrdersDetail([orderId]);
@@ -423,7 +423,6 @@ export default function OrderFocus() {
                             }
                           }
                         }}
-                        {...state.createBatch.detail}
                       />
                       <EditFormSlideView
                         type={state.edit.type}
@@ -445,6 +444,13 @@ export default function OrderFocus() {
                           });
                         }}
                       />
+                      {state.targets.length > 0 && (
+                        <>
+                          <div className={ActionsBackdropStyle} />
+                          <SelectedEntity targets={state.targets} />
+                          <Actions targets={state.targets} />
+                        </>
+                      )}
                     </>
                   ) : (
                     <Display>
@@ -460,13 +466,6 @@ export default function OrderFocus() {
           </Query>
         </DndProvider>
       </div>
-      {state.targets.length > 0 && (
-        <>
-          <div className={ActionsBackdropStyle} />
-          <SelectedEntity targets={state.targets} />
-          <Actions targets={state.targets} />
-        </>
-      )}
     </>
   );
 }

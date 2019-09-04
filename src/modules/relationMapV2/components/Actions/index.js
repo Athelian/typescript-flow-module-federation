@@ -4,6 +4,7 @@ import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import logger from 'utils/logger';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
+import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import ActionButton from './components/ActionButton';
 import ActionSubMenu from './components/ActionSubMenu';
 import ActionLabel from './components/ActionLabel';
@@ -21,7 +22,7 @@ const ALL = 'all';
 
 export default function Actions({ targets }: Props) {
   const [currentMenu, setCurrentMenu] = React.useState(null);
-
+  const { dispatch } = React.useContext(RelationMapContext);
   const orderIsDisabled = getEntityCount(targets, ORDER) === 0;
   const itemIsDisabled = getEntityCount(targets, ORDER_ITEM) === 0;
   const batchIsDisabled = getEntityCount(targets, BATCH) === 0;
@@ -32,7 +33,6 @@ export default function Actions({ targets }: Props) {
     <OutsideClickHandler
       onOutsideClick={() => setCurrentMenu(null)}
       ignoreClick={currentMenu === null}
-      // ignoreElements={buttonRef.current ? [buttonRef.current] : []}
     >
       <div className={ActionsWrapperStyle}>
         <ActionButton
@@ -43,7 +43,15 @@ export default function Actions({ targets }: Props) {
         >
           ALL
           <ActionSubMenu isCollapsed={currentMenu !== ALL}>
-            <ActionButton onClick={() => logger.warn('CLONE')}>
+            <ActionButton
+              onClick={() => {
+                logger.warn('CLONE');
+                dispatch({
+                  type: 'CLONE',
+                  payload: {},
+                });
+              }}
+            >
               <Icon icon="CLONE" />
               <ActionLabel>CLONE</ActionLabel>
             </ActionButton>

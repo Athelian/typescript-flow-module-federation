@@ -15,18 +15,17 @@ import { DialogStyle, ConfirmMessageStyle } from './style';
 import { createBatchMutation } from './mutation';
 
 type Props = {|
-  isOpen: boolean,
-  entity: {
-    no: string,
-    id: string,
-  },
-  isProcessing?: boolean,
   onSuccess: (string, Batch) => void,
 |};
 
-export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSuccess }: Props) {
+export default function InlineCreateBatch({ onSuccess }: Props) {
   const { mapping, onSetBadge } = Entities.useContainer();
-  const { dispatch } = React.useContext(RelationMapContext);
+  const { dispatch, state } = React.useContext(RelationMapContext);
+  const {
+    isOpen,
+    isProcessing,
+    detail: { entity },
+  } = state.createBatch;
   const [createBatch, batchResult] = useMutation(createBatchMutation);
   const [loadOrderItem, itemResult] = useLazyQuery(orderItemFormQuery, {
     // NOTE: there is a tricky part for fixing the inline create for the same item from 3rd times
