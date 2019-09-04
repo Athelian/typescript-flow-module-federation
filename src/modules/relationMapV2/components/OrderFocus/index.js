@@ -388,7 +388,7 @@ export default function OrderFocus() {
                                 batches = entities.orderItems?.[batch?.orderItem?.id]?.batches;
                               }
                               const lastBatchId = batches[batches.length - 1];
-                              const indexPosition = ordersData.findIndex(row => {
+                              const indexPosition = ordersData.findIndex((row: Array<any>) => {
                                 const [, , batchCell, , ,] = row;
                                 return Number(batchCell.cell?.data?.id) === Number(lastBatchId);
                               });

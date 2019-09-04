@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Batch } from 'generated/graphql';
+import type { Batch } from 'generated/graphql';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { orderItemFormQuery } from 'modules/orderItem/form/query';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
@@ -22,9 +22,16 @@ type Props = {|
   },
   isProcessing?: boolean,
   onSuccess: (string, Batch) => void,
+  onRequestClose: () => void,
 |};
 
-export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSuccess }: Props) {
+export default function InlineCreateBatch({
+  isOpen,
+  isProcessing,
+  entity,
+  onSuccess,
+  onRequestClose,
+}: Props) {
   const { mapping, onSetBadge } = Entities.useContainer();
   const { dispatch } = React.useContext(RelationMapContext);
   const [createBatch, batchResult] = useMutation(createBatchMutation);
@@ -102,7 +109,7 @@ export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSucc
   }, [batchResult.data, batchResult.error, dispatch, isOpen, isProcessing, onSetBadge, onSuccess]);
 
   return (
-    <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>
+    <Dialog isOpen={isOpen} width="400px" onRequestClose={onRequestClose}>
       <div className={DialogStyle}>
         <h3 className={ConfirmMessageStyle}>
           Creating new <Icon icon="BATCH" /> from <Icon icon="ORDER_ITEM" /> {` ${entity.no}...`}
