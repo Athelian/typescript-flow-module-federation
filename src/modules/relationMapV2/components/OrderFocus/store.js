@@ -343,6 +343,21 @@ export function reducer(
         },
       });
     }
+    case 'CLONE_START': {
+      return update(state, {
+        clone: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'CLONE_END': {
+      return update(state, {
+        clone: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
     default:
       return state;
   }

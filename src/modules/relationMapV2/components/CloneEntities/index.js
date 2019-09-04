@@ -1,22 +1,31 @@
 // @flow
 import * as React from 'react';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+import { useMutation } from '@apollo/react-hooks';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
+import { cloneBatchMutation } from './mutation';
 import { DialogStyle, ConfirmMessageStyle } from './style';
 
 type Props = {|
-  onSuccess: (string, Array<Object>) => void,
+  onSuccess: (Array<{ id: string, type: string }>, Array<Object>) => void,
 |};
 
 export default function CloneEntities({ onSuccess }: Props) {
   const { dispatch, state } = React.useContext(RelationMapContext);
+  const [cloneBatch] = useMutation(cloneBatchMutation);
   const {
     targets,
     clone: { isOpen, isProcessing },
   } = state;
+
+  const totalOrders = targets.filter(target => target.includes(`${ORDER}-`)).length;
+  const totalOrderItems = targets.filter(target => target.includes(`${ORDER_ITEM}-`)).length;
+  const totalBatches = targets.filter(target => target.includes(`${BATCH}-`)).length;
+  const totalContainers = targets.filter(target => target.includes(`${CONTAINER}-`)).length;
+  const totalShipments = targets.filter(target => target.includes(`${SHIPMENT}-`)).length;
 
   React.useEffect(() => {
     if (isOpen && !isProcessing) {
@@ -28,35 +37,57 @@ export default function CloneEntities({ onSuccess }: Props) {
   }, [dispatch, isOpen, isProcessing]);
 
   React.useEffect(() => {
-    if (isProcessing && isOpen) {
-      // if (batchResult.data && batchResult.data) {
-      //   dispatch({
-      //     type: 'CLONE_END',
-      //     payload: {
-      //       batch: batchResult.data?.batchCreate ?? {},
-      //     },
-      //   });
-      //   onSuccess(
-      //     batchResult.data?.batchCreate?.orderItem?.order?.id,
-      //     batchResult.data?.batchCreate
-      //   );
-      //   onSetBadge(batchResult.data?.batchCreate?.id, 'newItem');
-      // } else if (batchResult.error) {
-      //   dispatch({
-      //     type: 'CLONE_END',
-      //     payload: {
-      //       error: batchResult.error,
-      //     },
-      //   });
-      // }
+    async function doMutations() {
+      const actions = [];
+      const sources = [];
+      if (totalBatches) {
+        const batchIds = targets.filter(target => target.includes(`${BATCH}-`));
+        batchIds.forEach(target => {
+          const [, batchId] = target.split('-');
+          sources.push({
+            type: BATCH,
+            id: batchId,
+          });
+          actions.push(
+            cloneBatch({
+              variables: {
+                id: batchId,
+                input: {
+                  deliveredAt: null,
+                  desiredAt: null,
+                  expiredAt: null,
+                  customFields: null,
+                  producedAt: null,
+                  batchQuantityRevisions: [],
+                },
+              },
+            })
+          );
+        });
+      }
+      try {
+        const entities = await Promise.all(actions);
+        dispatch({
+          type: 'CLONE_END',
+          payload: {
+            sources,
+            entities,
+          },
+        });
+        onSuccess(sources, entities);
+      } catch (error) {
+        dispatch({
+          type: 'CLONE_END',
+          payload: {
+            error,
+          },
+        });
+      }
     }
-  }, [dispatch, isOpen, isProcessing, onSuccess]);
-
-  const totalOrders = targets.filter(target => target.includes(`${ORDER}-`)).length;
-  const totalOrderItems = targets.filter(target => target.includes(`${ORDER_ITEM}-`)).length;
-  const totalBatches = targets.filter(target => target.includes(`${BATCH}-`)).length;
-  const totalContainers = targets.filter(target => target.includes(`${CONTAINER}-`)).length;
-  const totalShipments = targets.filter(target => target.includes(`${SHIPMENT}-`)).length;
+    if (isProcessing && isOpen) {
+      doMutations();
+    }
+  }, [cloneBatch, dispatch, isOpen, isProcessing, onSuccess, targets, totalBatches]);
 
   return (
     <Dialog isOpen={isOpen} width="400px">
