@@ -22,7 +22,6 @@ build
 .vscode
 
 # flow
-flow-typed/npm
 flow-coverage
 
 # emotion
