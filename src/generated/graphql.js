@@ -20476,6 +20476,7 @@ export type Mutation = {
   containerCreate: ContainerPayload,
   containerUpdate: ContainerPayload,
   containerDelete?: ?EmptyPayload,
+  containerClone: ContainerPayload,
   warehouseCreate: WarehousePayload,
   warehouseUpdate: WarehousePayload,
   warehouseUpdateMany: Array<?WarehousePayload>,
@@ -20530,7 +20531,7 @@ export type Mutation = {
   entitySubscribe: $ElementType<Scalars, 'Void'>,
   entityUnsubscribe: $ElementType<Scalars, 'Void'>,
   entityUnsubscribeAll: $ElementType<Scalars, 'Void'>,
-  focusSubscribe: $ElementType<Scalars, 'Void'>,
+  focusSubscribe: Array<FocusPayload>,
   focusUnsubscribe: $ElementType<Scalars, 'Void'>,
   focusUnsubscribeAll: $ElementType<Scalars, 'Void'>,
 };
@@ -20738,6 +20739,12 @@ export type MutationContainerUpdateArgs = {
 
 export type MutationContainerDeleteArgs = {
   id: $ElementType<Scalars, 'ID'>
+};
+
+
+export type MutationContainerCloneArgs = {
+  id: $ElementType<Scalars, 'ID'>,
+  input: ContainerUpdateInput
 };
 
 

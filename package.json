@@ -92,7 +92,7 @@
     "cy:open": "npx cypress open",
     "cy:install": "npx cypress install",
     "cy:record": "npx cypress run --record --key 5fa121a7-1994-41fc-963a-9c4fbe7ab112",
-    "post:install": "npm run flow-typed && npm run apollo-fragments",
+    "post:install": "npm run apollo-fragments",
     "flow": "flow",
     "flow:coverage": "flow-coverage-report -i 'src/**/*.{js,jsx}' -t html -t json -t text --threshold 80",
     "lint": "eslint 'src/**/*.{js,jsx}'",

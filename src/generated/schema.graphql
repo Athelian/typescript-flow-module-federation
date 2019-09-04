@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Sep 04 2019 11:19:47 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Sep 04 2019 19:04:46 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -29863,6 +29863,7 @@ type Mutation {
   containerCreate(input: ContainerCreateInput!): ContainerPayload!
   containerUpdate(id: ID!, input: ContainerUpdateInput!): ContainerPayload!
   containerDelete(id: ID!): EmptyPayload
+  containerClone(id: ID!, input: ContainerUpdateInput!): ContainerPayload!
   warehouseCreate(input: WarehouseCreateInput!): WarehousePayload!
   warehouseUpdate(id: ID!, input: WarehouseUpdateInput!): WarehousePayload!
   warehouseUpdateMany(warehouses: [WarehouseUpdateWrapperInput!]!): [WarehousePayload]!
@@ -29917,7 +29918,7 @@ type Mutation {
   entitySubscribe(id: ID!, input: SubscriptionInput!): Void!
   entityUnsubscribe(id: ID!, input: SubscriptionInput!): Void!
   entityUnsubscribeAll(id: ID!): Void!
-  focusSubscribe(id: ID!, input: SubscriptionInput!): Void!
+  focusSubscribe(id: ID!, input: SubscriptionInput!): [FocusPayload!]!
   focusUnsubscribe(id: ID!, input: SubscriptionInput!): Void!
   focusUnsubscribeAll(id: ID!): Void!
 }
