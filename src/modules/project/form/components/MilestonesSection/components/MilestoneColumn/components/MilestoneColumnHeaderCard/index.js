@@ -225,7 +225,11 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                   </div>
                   <div role="presentation" onClick={e => e.stopPropagation()}>
                     <div className={DateInputWrapperStyle}>
-                      <FormField name={`${milestoneId}.dueDate`} initValue={dueDate}>
+                      <FormField
+                        name={`${milestoneId}.dueDate`}
+                        initValue={dueDate}
+                        values={values}
+                      >
                         {({ name, onBlur, ...inputHandlers }) => (
                           <DateInputFactory
                             name={name}
@@ -269,6 +273,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                         <FormField
                           name={`${milestoneId}.completedAt`}
                           initValue={values.completedAt}
+                          values={values}
                         >
                           {({ name, onBlur, ...inputHandlers }) => (
                             <DateInputFactory
@@ -303,6 +308,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                         <FormField
                           name={`${milestoneId}.estimatedCompletionDate`}
                           initValue={estComplDate}
+                          values={values}
                         >
                           {({ name, onBlur, ...inputHandlers }) => (
                             <DateInputFactory
