@@ -9,6 +9,7 @@ import transformer from './transformer';
 import entityEventHandler from './handler';
 import mutate from './mutate';
 import { ordersQuery } from './query';
+import ColumnConfigModal from './ColumnConfigModal';
 
 const OrderSheetModule = () => {
   const client = useApolloClient();
@@ -43,6 +44,8 @@ const OrderSheetModule = () => {
     <Content>
       <NavBar>
         <EntityIcon icon="SHEET" color="SHEET" />
+
+        <ColumnConfigModal />
       </NavBar>
 
       <Sheet
