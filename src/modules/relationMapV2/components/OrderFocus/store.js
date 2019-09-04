@@ -78,6 +78,7 @@ export function reducer(
       | 'CREATE_BATCH'
       | 'CREATE_BATCH_START'
       | 'CREATE_BATCH_END'
+      | 'CREATE_BATCH_CLOSE'
       | 'EDIT',
     payload: {
       entity?: string,
@@ -290,8 +291,21 @@ export function reducer(
     case 'CREATE_BATCH_END': {
       return update(state, {
         createBatch: {
-          isOpen: { $set: false },
           isProcessing: { $set: false },
+          detail: {
+            entity: {
+              $merge: {
+                id: '',
+              },
+            },
+          },
+        },
+      });
+    }
+    case 'CREATE_BATCH_CLOSE': {
+      return update(state, {
+        createBatch: {
+          isOpen: { $set: false },
         },
       });
     }

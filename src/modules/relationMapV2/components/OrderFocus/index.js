@@ -179,14 +179,37 @@ export default function OrderFocus() {
     }
   }, [lastQueryVariables, queryVariables]);
 
-  const scrollToRow = React.useCallback((position: number, entity: Object) => {
-    scrollEntity.current = entity;
-    setScrollPosition(position);
-  }, []);
+  const scrollToRow = React.useCallback(
+    (position: number, entity: { id: string, type: string, dispatch?: Function }) => {
+      const { id, type, dispatch } = entity;
+      scrollEntity.current = {
+        id,
+        type,
+      };
+      setScrollPosition(position);
+      if (dispatch) {
+        // refer https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback
+        // set the close to lower priority task which allow to our application to scroll to element
+        // then close dialog
+        window.requestIdleCallback(
+          () => {
+            dispatch({
+              type: 'CREATE_BATCH_CLOSE',
+              payload: {},
+            });
+          },
+          {
+            timeout: 250,
+          }
+        );
+      }
+    },
+    []
+  );
 
   React.useEffect(() => {
     if (scrollPosition >= 0) {
-      listRef.current.scrollToItem(scrollPosition, 'center');
+      if (listRef.current) listRef.current.scrollToItem(scrollPosition, 'center');
       const node = document.querySelector(
         `#${scrollEntity.current?.type}-${scrollEntity.current?.id}`
       );
@@ -365,6 +388,13 @@ export default function OrderFocus() {
                       <InlineCreateBatch
                         isProcessing={state.createBatch.isProcessing}
                         isOpen={state.createBatch.isOpen}
+                        onClose={() => {
+                          console.warn('close');
+                          dispatch({
+                            type: 'CREATE_BATCH_CLOSE',
+                            payload: {},
+                          });
+                        }}
                         onSuccess={(orderId, batch) => {
                           if (orderId) {
                             queryOrdersDetail([orderId]);
@@ -392,7 +422,7 @@ export default function OrderFocus() {
                                 const [, , batchCell, , ,] = row;
                                 return Number(batchCell.cell?.data?.id) === Number(lastBatchId);
                               });
-                              scrollToRow(indexPosition, { id: batch?.id, type: BATCH });
+                              scrollToRow(indexPosition, { dispatch, id: batch?.id, type: BATCH });
                             }
                           }
                         }}
