@@ -16,7 +16,7 @@ type OptionalProps = {
   rootElementId: string,
   width: string,
   showCancelButton: boolean,
-  onRequestClose: (evt: Event) => void,
+  onRequestClose: Function,
 };
 
 type Props = OptionalProps & {
