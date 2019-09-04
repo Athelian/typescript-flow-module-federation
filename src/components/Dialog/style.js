@@ -11,13 +11,14 @@ const BackdropStyle: string = css`
   background-color: rgba(0, 0, 0, 0.3);
   overflow-y: overlay;
   overflow-x: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   ${scrollbars.MAIN};
   z-index: 10000;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
+  padding: 100px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const BackdropFadeInStyle: string = css`
@@ -53,10 +54,16 @@ export const BackdropFadeOutStyle: string = css`
   animation-fill-mode: forwards;
 `;
 
-export const DialogFadeInStyle = (width: string): string => css`
+const DialogStyle = (width: string): string => css`
   position: relative;
   ${presets.BOX};
   width: ${width};
+  flex-shrink: 0;
+  margin: auto 0;
+`;
+
+export const DialogFadeInStyle = (width: string): string => css`
+  ${DialogStyle(width)};
   z-index: 10001;
 
   @keyframes fadeIn {
@@ -72,9 +79,8 @@ export const DialogFadeInStyle = (width: string): string => css`
 `;
 
 export const DialogFadeOutStyle = (width: string): string => css`
-  position: relative;
-  ${presets.BOX};
-  width: ${width};
+  ${DialogStyle(width)};
+
   @keyframes fadeAway {
     to {
       transform: translateY(100px);
