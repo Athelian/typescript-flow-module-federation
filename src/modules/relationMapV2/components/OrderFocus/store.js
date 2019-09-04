@@ -336,10 +336,6 @@ export function reducer(
       });
     }
     case 'CLONE': {
-      console.warn({
-        action,
-        state,
-      });
       return update(state, {
         clone: {
           isOpen: { $set: true },

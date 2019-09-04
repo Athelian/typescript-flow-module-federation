@@ -44,6 +44,7 @@ import {
   ContainerCard,
   HeaderCard,
   handleClickAndDoubleClick,
+  cacheSorted,
 } from './helpers';
 import { RelationMapContext } from './store';
 
@@ -2086,20 +2087,24 @@ function DuplicateOrderItemCell({
     order
   );
   const batchPosition = getByPathWithDefault(0, 'batchPosition', data);
-  const batches = getByPathWithDefault(
-    '',
-    `orderItems.${getByPathWithDefault(0, 'itemPosition', data)}.batches`,
-    order
-  );
+  const batches =
+    cacheSorted?.[`${itemId}-batches`]?.entities ??
+    getByPathWithDefault(
+      [],
+      `orderItems.${getByPathWithDefault(0, 'itemPosition', data)}.batches`,
+      order
+    ).map(batch => batch.id);
+
   let foundPosition = -1;
   for (let index = batches.length - 1; index > 0; index -= 1) {
-    const isTargetedBatch = state.targets.includes(`${BATCH}-${batches[index].id}`);
+    const isTargetedBatch = state.targets.includes(`${BATCH}-${batches[index]}`);
     if (isTargetedBatch) {
       foundPosition = index;
       break;
     }
   }
   const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${itemId}`);
+
   const connector = {
     isTargeted: isTargetedItem && foundPosition >= batchPosition,
     hasRelation: false,
