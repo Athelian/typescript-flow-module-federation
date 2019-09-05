@@ -34,6 +34,10 @@ const Cell = ({
   const wrapperRef = React.useRef(null);
   const [inputFocus, setInputFocus] = React.useState(false);
 
+  const isReadonly = cell.readonly || false;
+  const isDisabled = cell.disabled || !(cell.entity && cell.entity.permissions(hasPermission));
+  const isInputFocusable = !isReadonly && !isDisabled && !cell.forbidden && !!cell.entity;
+
   React.useEffect(() => {
     if (focus) {
       if (wrapperRef.current) {
@@ -45,35 +49,6 @@ const Cell = ({
       setInputFocus(false);
     }
   }, [focus]);
-
-  const handleClick = React.useCallback(() => {
-    if (!focus) {
-      dispatch({
-        type: Actions.FOCUS,
-        cell: { x: rowIndex, y: columnIndex },
-      });
-    }
-  }, [focus, dispatch, rowIndex, columnIndex]);
-  const handleKeyDown = React.useCallback(
-    (e: SyntheticKeyboardEvent<HTMLDivElement>) => {
-      switch (e.key) {
-        case 'Enter':
-          setInputFocus(true);
-          break;
-        case 'Escape':
-          setInputFocus(false);
-          if (wrapperRef.current) {
-            wrapperRef.current.focus({
-              preventScroll: true,
-            });
-          }
-          break;
-        default:
-          break;
-      }
-    },
-    [setInputFocus]
-  );
 
   const handleFocusUp = React.useCallback(() => {
     dispatch({
@@ -95,15 +70,45 @@ const Cell = ({
     [mutate, columnIndex, rowIndex]
   );
 
+  const handleClick = React.useCallback(() => {
+    if (!focus) {
+      dispatch({
+        type: Actions.FOCUS,
+        cell: { x: rowIndex, y: columnIndex },
+      });
+    }
+  }, [focus, dispatch, rowIndex, columnIndex]);
+  const handleKeyDown = React.useCallback(
+    (e: SyntheticKeyboardEvent<HTMLDivElement>) => {
+      switch (e.key) {
+        case 'Enter':
+          if (isInputFocusable) {
+            setInputFocus(true);
+          } else {
+            handleFocusDown();
+          }
+          break;
+        case 'Escape':
+          setInputFocus(false);
+          if (wrapperRef.current) {
+            wrapperRef.current.focus({
+              preventScroll: true,
+            });
+          }
+          break;
+        default:
+          break;
+      }
+    },
+    [handleFocusDown, isInputFocusable]
+  );
+
   const handleInputFocus = () => {
     setInputFocus(true);
   };
   const handleInputBlur = () => {
     setInputFocus(false);
   };
-
-  const isReadonly = cell.readonly || false;
-  const isDisabled = cell.disabled || !(cell.entity && cell.entity.permissions(hasPermission));
 
   return (
     <div
