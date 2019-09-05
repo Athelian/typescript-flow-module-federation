@@ -3,9 +3,10 @@ import { omit, flatten, set, cloneDeep } from 'lodash';
 import { Container } from 'unstated';
 import update from 'immutability-helper';
 import type { User, Milestone, Task } from 'generated/graphql';
-import { isEquals, getByPathWithDefault } from 'utils/fp';
+import { isEquals, getByPathWithDefault, getByPath } from 'utils/fp';
 import { uuid } from 'utils/id';
 import { calculateTasks, setToSkipTask, setToComplete } from 'utils/task';
+import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
 
 type FormState = {
   milestones: Array<Milestone>,
@@ -15,6 +16,54 @@ type FormState = {
 export const initValues: FormState = {
   milestones: [],
   ignoreTaskIds: [],
+};
+
+const generateTask = (task: Object, bindingSource: Object) => {
+  const mappingFields = {
+    MilestoneDueDate: 'milestone.dueDate',
+  };
+
+  const {
+    startDate,
+    startDateBinding,
+    startDateInterval,
+    dueDate,
+    dueDateBinding,
+    dueDateInterval,
+  } = task;
+
+  let newStartDate = startDate;
+  let newDueDate = dueDate;
+
+  if (startDateBinding) {
+    const { months, weeks, days } = startDateInterval || {};
+    const path = mappingFields[startDateBinding];
+    if (path) {
+      newStartDate = calculateDate({
+        date: getByPath(path, bindingSource),
+        duration: findDuration({ months, weeks }),
+        offset: months || weeks || days,
+      });
+    }
+  }
+
+  if (dueDateBinding) {
+    const { months, weeks, days } = dueDateInterval || {};
+    const path = mappingFields[dueDateBinding];
+    if (path) {
+      newDueDate = calculateDate({
+        date: getByPath(path, bindingSource),
+        duration: findDuration({ months, weeks }),
+        offset: months || weeks || days,
+      });
+    }
+  }
+
+  return {
+    ...task,
+    startDate: newStartDate,
+    dueDate: newDueDate,
+  };
 };
 
 export default class ProjectMilestonesContainer extends Container<FormState> {
@@ -289,10 +338,16 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
   changeMilestones = (columns: Object) => {
     const ordering = Object.keys(columns);
     this.setState(prevState => ({
-      milestones: ordering.map(id => ({
-        ...prevState.milestones.find(item => item.id === id),
-        tasks: columns[id].map((task, milestoneSort) => ({ ...task, milestoneSort })),
-      })),
+      milestones: ordering.map(id => {
+        const milestone = prevState.milestones.find(item => item.id === id);
+        return {
+          ...milestone,
+          tasks: columns[id].map((task, milestoneSort) => ({
+            ...generateTask(task, { milestone }),
+            milestoneSort,
+          })),
+        };
+      }),
     }));
   };
 
