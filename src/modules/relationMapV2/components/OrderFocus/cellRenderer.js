@@ -2020,25 +2020,27 @@ function ShipmentSummaryCell({
 
 function DuplicateOrderCell({
   data,
+  // $FlowIssue: doesn't support to access to child yet
   order,
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload }) {
   const { state } = React.useContext(RelationMapContext);
-  const itemPosition = getByPathWithDefault(0, 'itemPosition', data);
-  const batchPosition = getByPathWithDefault(0, 'batchPosition', data);
-  const items = getByPathWithDefault('', 'orderItems', order);
+  const orderId = order?.id;
+  const itemPosition = data?.itemPosition ?? 0;
+  const batchPosition = data?.batchPosition ?? 0;
+  const items =
+    cacheSorted?.[`${orderId}-orderItems`]?.entities ??
+    (order?.orderItems ?? []).map(item => item?.id);
   let foundPosition = -1;
   for (let index = items.length - 1; index > 0; index -= 1) {
-    const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${items[index].id}`);
+    const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${items[index]}`);
     if (isTargetedItem) {
       foundPosition = index;
       break;
     }
   }
-  const isTargetedOrder = state.targets.includes(
-    `${ORDER}-${getByPathWithDefault('', 'id', order)}`
-  );
+  const isTargetedOrder = state.targets.includes(`${ORDER}-${orderId}`);
 
   const connector = {
     isTargeted:
