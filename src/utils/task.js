@@ -648,4 +648,7 @@ export const getParentInfo = (
   return {};
 };
 
-export default parseGroupIds;
+export const START_DATE = 'TaskStartDate';
+export const DUE_DATE = 'TaskDueDate';
+export const PROJECT_DUE_DATE = 'ProjectDueDate';
+export const MILESTONE_DUE_DATE = 'MilestoneDueDate';

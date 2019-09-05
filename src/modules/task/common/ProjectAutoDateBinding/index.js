@@ -3,8 +3,8 @@ import * as React from 'react';
 import type { Task } from 'generated/graphql';
 import emitter from 'utils/emitter';
 import { getByPath, setIn } from 'utils/fp';
-import { START_DATE, DUE_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
-import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
+import { START_DATE, DUE_DATE } from 'utils/task';
+import { calculateDate, findDuration } from 'utils/date';
 
 type Props = {
   tasks: Array<Object>,

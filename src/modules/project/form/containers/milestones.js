@@ -6,7 +6,7 @@ import type { User, Milestone, Task } from 'generated/graphql';
 import { isEquals, getByPathWithDefault, getByPath } from 'utils/fp';
 import { uuid } from 'utils/id';
 import { calculateTasks, setToSkipTask, setToComplete } from 'utils/task';
-import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
+import { calculateDate, findDuration } from 'utils/date';
 
 type FormState = {
   milestones: Array<Milestone>,
