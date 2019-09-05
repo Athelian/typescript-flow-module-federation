@@ -92,7 +92,7 @@ const CellWrapper = React.memo<WrapperProps>(({ cell, columnIndex, rowIndex }: W
 });
 
 const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
-  const { state, dispatch } = useSheetState();
+  const { state } = useSheetState();
   const { items, rows, addedRows, removedRows } = state;
   const itemsRef = React.useRef(items);
 
@@ -121,33 +121,11 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
         }
 
         if (removedRow) {
-          return (
-            <Deleted
-              start={removedRow.start}
-              end={removedRow.end}
-              onClear={() =>
-                dispatch({
-                  type: Actions.CLEAR_REMOVED_ROWS,
-                  payload: removedRow.entity,
-                })
-              }
-            />
-          );
+          return <Deleted start={removedRow.start} end={removedRow.end} />;
         }
 
         if (addedRow) {
-          return (
-            <Added
-              start={addedRow.start}
-              end={addedRow.end}
-              onClear={() =>
-                dispatch({
-                  type: Actions.CLEAR_ADDED_ROWS,
-                  payload: addedRow.entity,
-                })
-              }
-            />
-          );
+          return <Added start={addedRow.start} end={addedRow.end} />;
         }
 
         return null;

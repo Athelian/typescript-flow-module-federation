@@ -121,28 +121,33 @@ export const useSheetState = (): Context => React.useContext(SheetStateContext);
 
 export const useSheetStateInitializer = (columns: Array<ColumnConfig>, items: Array<Object>) => {
   const { state, dispatch } = useSheetState();
+  const columnKeysRef = React.useRef([]);
+
+  React.useEffect(() => {
+    const columnKeys = columns.map(c => c.key);
+    const needRearrange =
+      columnKeys.length !== columnKeysRef.current.length ||
+      columnKeys.every((value, index) => value !== columnKeysRef.current[index]);
+
+    if (state.initialized && needRearrange) {
+      dispatch({
+        type: Actions.REARRANGE,
+        payload: columns.map(c => c.key),
+      });
+    }
+
+    columnKeysRef.current = columnKeys;
+  }, [columns, dispatch, state.initialized]);
 
   React.useEffect(() => {
     dispatch({
       type: Actions.INIT,
       payload: {
         items,
-        columns: columns.map(c => c.key),
+        columns: columnKeysRef.current,
       },
     });
-  }, [columns, dispatch, items]);
-
-  React.useEffect(() => {
-    if (!state.initialized) {
-      return;
-    }
-
-    dispatch({
-      type: Actions.REARRANGE,
-      payload: columns.map(c => c.key),
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columns, dispatch]);
+  }, [dispatch, items]);
 };
 
 export const useSheetStateLoadMore = (onLoadMore: () => Promise<Array<Object>>) => {
@@ -215,6 +220,8 @@ export const useSheetKeyNavigation = () => {
 export const SheetState = ({ transformItem, onMutate, children }: Props) => {
   const memoizedReducer = React.useCallback(cellReducer(transformItem), [transformItem]);
   const [state, dispatch] = React.useReducer<State, Action>(memoizedReducer, initialState);
+  const addedRowsRef = React.useRef([]);
+  const removedRowsRef = React.useRef([]);
   const memoizedMutate = React.useCallback(
     ({ cell, value }) => {
       const cellValue = state.rows[cell.x][cell.y];
@@ -273,6 +280,44 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
       clearTimeout(handler);
     };
   }, [state.erroredAt, dispatch]);
+
+  React.useEffect(() => {
+    const toTimeout = state.addedRows.filter(
+      addedRow =>
+        addedRowsRef.current.findIndex(previousAddedRow => previousAddedRow === addedRow) === -1
+    );
+
+    toTimeout.forEach(addedRow => {
+      setTimeout(() => {
+        dispatch({
+          type: Actions.POST_ADD_ENTITY,
+          payload: addedRow.entity,
+        });
+      }, 5000);
+    });
+
+    addedRowsRef.current = state.addedRows;
+  }, [state.addedRows, dispatch]);
+
+  React.useEffect(() => {
+    const toTimeout = state.removedRows.filter(
+      removedRow =>
+        removedRowsRef.current.findIndex(
+          previousRemovedRow => previousRemovedRow === removedRow
+        ) === -1
+    );
+
+    toTimeout.forEach(removedRow => {
+      setTimeout(() => {
+        dispatch({
+          type: Actions.POST_REMOVE_ENTITY,
+          payload: removedRow.entity,
+        });
+      }, 5000);
+    });
+
+    removedRowsRef.current = state.removedRows;
+  }, [state.removedRows, dispatch]);
 
   return (
     <SheetStateContext.Provider value={{ state, dispatch, mutate: memoizedMutate }}>
