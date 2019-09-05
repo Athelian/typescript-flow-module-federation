@@ -10,7 +10,7 @@ import { ORDER_FORM } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
-import { UserConsumer } from 'modules/user';
+import { UserConsumer } from 'components/Context/Viewer';
 import { isNotFound, isForbidden } from 'utils/data';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';

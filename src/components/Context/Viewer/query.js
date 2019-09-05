@@ -1,8 +1,8 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const userDetailQuery = gql`
-  query userDetailQuery {
+export const viewerQuery = gql`
+  query viewerQuery {
     viewer {
       user {
         ... on User {
@@ -15,7 +15,6 @@ export const userDetailQuery = gql`
           organization {
             ... on Organization {
               id
-              types
               name
               name2
               types
@@ -27,4 +26,8 @@ export const userDetailQuery = gql`
   }
 `;
 
-export default userDetailQuery;
+export const authenticationQuery = gql`
+  query authenticationQuery {
+    authenticated
+  }
+`;

@@ -1,10 +1,8 @@
 // @flow
-import { useContext } from 'react';
-import { UserContext } from 'modules/user';
+import { useAuthorizedViewer } from 'components/Context/Viewer';
 
 const useUser = () => {
-  const { user } = useContext(UserContext);
-  const { organization } = user;
+  const { user, organization } = useAuthorizedViewer();
 
   return {
     user,

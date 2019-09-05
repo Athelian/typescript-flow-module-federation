@@ -3,9 +3,8 @@ import React, { lazy, Suspense } from 'react';
 import type { ComponentType, StatelessFunctionalComponent } from 'react';
 import { hot } from 'react-hot-loader';
 import { Router } from '@reach/router';
-import UserProvider from 'modules/user';
-import { AuthenticationConsumer } from 'components/Context/Authenticated';
 import { UIConsumer } from 'modules/ui';
+import { useAuthenticated } from './components/Context/Viewer';
 import { Layout } from './components/Layout';
 import LoadingIcon from './components/LoadingIcon';
 import PageNotFound from './components/PageNotFound';
@@ -39,59 +38,56 @@ const AsyncDocument = lazy(() => import('./modules/document'));
 const AsyncGlobalView = lazy(() => import('./modules/globalView'));
 const AsyncSheet = lazy(() => import('./modules/sheet'));
 
-const Routes: StatelessFunctionalComponent<{}> = () => (
-  <UIConsumer>
-    {uiState => (
-      <>
-        <AuthenticationConsumer>
-          {({ authenticated }) =>
-            authenticated && (
-              <UserProvider>
-                <SideBar />
-              </UserProvider>
-            )
-          }
-        </AuthenticationConsumer>
-        <Suspense fallback={<LoadingIcon />}>
-          <Router>
-            <Authorized path="/">
-              <Layout {...uiState} path="/">
-                <DashBoard path="/" />
-                <AsyncOrder path="order/*" />
-                <AsyncOrderItem path="order-item/*" />
-                <AsyncBatch path="batch/*" />
-                <AsyncShipment path="shipment/*" />
-                <AsyncContainer path="container/*" />
-                <AsyncProduct path="product/*" />
-                <AsyncWarehouse path="warehouse/*" />
-                <AsyncPartner path="partner/*" />
-                <AsyncStaff path="staff/*" />
-                <AsyncProject path="project/*" />
-                <AsyncTask path="task/*" />
-                <AsyncRelationMap path="relation-map/*" />
-                <AsyncRelationMapV2 path="relation-map-beta/*" />
-                <AsyncNotifications path="notifications/*" />
-                <AsyncTags path="tags/*" />
-                <AsyncMetadata path="templates/metadata/*" />
-                <AsyncTableTemplate path="templates/table-template/*" />
-                <AsyncTaskTemplate path="templates/task-template/*" />
-                <AsyncProfile path="profile/*" />
-                <AsyncDocument path="document/*" />
-                <AsyncGlobalView path="global-view" />
-                <AsyncSheet path="sheet/*" />
-                <PageNotFound default />
-              </Layout>
-            </Authorized>
-            <AsyncLogin path="/login" />
-            <AsyncForgotPassword path="/forgot-password" />
-            <AsyncResetPassword path="/reset-password/:token" />
-            <PageNotFound path="/403" />
-            <PageNotFound default />
-          </Router>
-        </Suspense>
-      </>
-    )}
-  </UIConsumer>
-);
+const Routes: StatelessFunctionalComponent<{}> = () => {
+  const { authenticated } = useAuthenticated();
+
+  return (
+    <UIConsumer>
+      {uiState => (
+        <>
+          {authenticated && <SideBar />}
+          <Suspense fallback={<LoadingIcon />}>
+            <Router>
+              <Authorized path="/">
+                <Layout {...uiState} path="/">
+                  <DashBoard path="/" />
+                  <AsyncOrder path="order/*" />
+                  <AsyncOrderItem path="order-item/*" />
+                  <AsyncBatch path="batch/*" />
+                  <AsyncShipment path="shipment/*" />
+                  <AsyncContainer path="container/*" />
+                  <AsyncProduct path="product/*" />
+                  <AsyncWarehouse path="warehouse/*" />
+                  <AsyncPartner path="partner/*" />
+                  <AsyncStaff path="staff/*" />
+                  <AsyncProject path="project/*" />
+                  <AsyncTask path="task/*" />
+                  <AsyncRelationMap path="relation-map/*" />
+                  <AsyncRelationMapV2 path="relation-map-beta/*" />
+                  <AsyncNotifications path="notifications/*" />
+                  <AsyncTags path="tags/*" />
+                  <AsyncMetadata path="templates/metadata/*" />
+                  <AsyncTableTemplate path="templates/table-template/*" />
+                  <AsyncTaskTemplate path="templates/task-template/*" />
+                  <AsyncProfile path="profile/*" />
+                  <AsyncDocument path="document/*" />
+                  <AsyncGlobalView path="global-view" />
+                  <AsyncSheet path="sheet/*" />
+                  <PageNotFound default />
+                </Layout>
+              </Authorized>
+              <AsyncLogin path="/login" />
+              <AsyncForgotPassword path="/forgot-password" />
+              <AsyncResetPassword path="/reset-password/:token" />
+              <PageNotFound path="/403" />
+              <PageNotFound default />
+            </Router>
+          </Suspense>
+        </>
+      )}
+    </UIConsumer>
+  );
+};
+
 const HotReloadRoutes: ComponentType<any> = hot(module)(Routes);
 export default HotReloadRoutes;
