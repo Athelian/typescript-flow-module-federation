@@ -19,7 +19,7 @@ type Props = {|
 |};
 
 export default function InlineCreateBatch({ onSuccess }: Props) {
-  const { mapping, onSetBadge } = Entities.useContainer();
+  const { mapping, onSetBadges } = Entities.useContainer();
   const { dispatch, state } = React.useContext(RelationMapContext);
   const {
     isOpen,
@@ -92,7 +92,7 @@ export default function InlineCreateBatch({ onSuccess }: Props) {
           batchResult.data?.batchCreate?.orderItem?.order?.id,
           batchResult.data?.batchCreate
         );
-        onSetBadge(batchResult.data?.batchCreate?.id, 'newItem');
+        onSetBadges([{ entity: 'batch', id: batchResult.data?.batchCreate?.id, type: 'newItem' }]);
       } else if (batchResult.error) {
         dispatch({
           type: 'CREATE_BATCH_END',
@@ -102,7 +102,7 @@ export default function InlineCreateBatch({ onSuccess }: Props) {
         });
       }
     }
-  }, [batchResult.data, batchResult.error, dispatch, isOpen, isProcessing, onSetBadge, onSuccess]);
+  }, [batchResult.data, batchResult.error, dispatch, isOpen, isProcessing, onSetBadges, onSuccess]);
 
   return (
     <Dialog isOpen={isOpen} width="400px">

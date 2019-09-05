@@ -1088,7 +1088,7 @@ function BatchCell({
             onClick={handleClick}
           >
             <div ref={drag} style={baseDragStyle}>
-              {badge[batchId] && <Badge label={badge[batchId]} />}
+              {badge.batch[batchId] && <Badge label={badge.batch[batchId]} />}
               <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (

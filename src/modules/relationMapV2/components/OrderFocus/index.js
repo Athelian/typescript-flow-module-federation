@@ -387,7 +387,16 @@ export default function OrderFocus() {
                         isOpen={state.moveEntity.isOpen}
                         {...state.moveEntity.detail}
                       />
-                      <CloneEntities onSuccess={console.warn} />
+                      <CloneEntities
+                        onSuccess={({ sources, orderIds, cloneEntities }) => {
+                          console.warn({
+                            sources,
+                            orderIds,
+                            cloneEntities,
+                          });
+                          queryOrdersDetail(orderIds);
+                        }}
+                      />
                       <InlineCreateBatch
                         onSuccess={(orderId, batch) => {
                           if (orderId) {

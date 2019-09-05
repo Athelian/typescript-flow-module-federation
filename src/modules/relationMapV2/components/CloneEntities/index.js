@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import { findKey } from 'lodash';
+import { Entities } from 'modules/relationMapV2/store';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import { useMutation } from '@apollo/react-hooks';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
@@ -10,11 +12,16 @@ import { cloneBatchMutation } from './mutation';
 import { DialogStyle, ConfirmMessageStyle } from './style';
 
 type Props = {|
-  onSuccess: (Array<{ id: string, type: string }>, Array<Object>) => void,
+  onSuccess: ({|
+    orderIds: Array<string>,
+    sources: Array<{ id: string, type: string }>,
+    cloneEntities: Array<Object>,
+  |}) => void,
 |};
 
 export default function CloneEntities({ onSuccess }: Props) {
   const { dispatch, state } = React.useContext(RelationMapContext);
+  const { mapping } = Entities.useContainer();
   const [cloneBatch] = useMutation(cloneBatchMutation);
   const {
     targets,
@@ -40,10 +47,22 @@ export default function CloneEntities({ onSuccess }: Props) {
     async function doMutations() {
       const actions = [];
       const sources = [];
+      const orderIds = [];
       if (totalBatches) {
         const batchIds = targets.filter(target => target.includes(`${BATCH}-`));
         batchIds.forEach(target => {
           const [, batchId] = target.split('-');
+          const parentOrderPosition = findKey(mapping.orders, order => {
+            return order.orderItems.some(orderItem =>
+              orderItem.batches.map(batch => batch.id).includes(batchId)
+            );
+          });
+          if (
+            mapping.orders?.[parentOrderPosition]?.id &&
+            !orderIds.includes(mapping.orders?.[parentOrderPosition]?.id)
+          ) {
+            orderIds.push(mapping.orders?.[parentOrderPosition]?.id);
+          }
           sources.push({
             type: BATCH,
             id: batchId,
@@ -66,15 +85,15 @@ export default function CloneEntities({ onSuccess }: Props) {
         });
       }
       try {
-        const entities = await Promise.all(actions);
+        const cloneEntities = await Promise.all(actions);
         dispatch({
           type: 'CLONE_END',
           payload: {
             sources,
-            entities,
+            cloneEntities,
           },
         });
-        onSuccess(sources, entities);
+        onSuccess({ sources, cloneEntities, orderIds });
       } catch (error) {
         dispatch({
           type: 'CLONE_END',
@@ -87,7 +106,7 @@ export default function CloneEntities({ onSuccess }: Props) {
     if (isProcessing && isOpen) {
       doMutations();
     }
-  }, [cloneBatch, dispatch, isOpen, isProcessing, onSuccess, targets, totalBatches]);
+  }, [cloneBatch, dispatch, isOpen, isProcessing, mapping, onSuccess, targets, totalBatches]);
 
   return (
     <Dialog isOpen={isOpen} width="400px">

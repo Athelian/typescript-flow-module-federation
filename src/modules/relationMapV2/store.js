@@ -37,14 +37,19 @@ function useEntities(
   }
 ) {
   const [mapping, setMapping] = useState<RelationMapEntities>(initialState);
-  const [badge, setBadge] = useState<{}>({});
-  const onSetBadge = (id: string, type: string) => {
+  const [badge, setBadge] = useState<{}>({
+    batch: {},
+  });
+  const onSetBadges = (entities: Array<{ id: string, type: string, entity: string }>) => {
     setBadge(
       produce(badge, draft => {
-        draft[id] = type;
+        entities.forEach(({ id, entity, type }) => {
+          draft[entity][id] = type;
+        });
       })
     );
   };
+
   const initMapping = (newMapping: RelationMapEntities) => {
     if (!isEquals(newMapping, mapping)) {
       setMapping(newMapping);
@@ -115,7 +120,7 @@ function useEntities(
         break;
     }
   };
-  return { mapping, initMapping, checkRemoveEntities, badge, onSetBadge };
+  return { mapping, initMapping, checkRemoveEntities, badge, onSetBadges };
 }
 
 export const Entities = createContainer(useEntities);
