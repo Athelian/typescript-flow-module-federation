@@ -2,9 +2,9 @@
 import gql from 'graphql-tag';
 import { badRequestFragment, forbiddenFragment } from 'graphql';
 
-export const cloneBatchMutation = gql`
-  mutation batchClone($id: ID!, $input: BatchUpdateInput!) {
-    batchClone(id: $id, input: $input) {
+export const cloneBatchesMutation = gql`
+  mutation batchCloneMany($batches: [BatchUpdateWrapperInput!]!) {
+    batchCloneMany(batches: $batches) {
       ... on Batch {
         id
       }
@@ -17,9 +17,9 @@ export const cloneBatchMutation = gql`
   ${forbiddenFragment}
 `;
 
-export const cloneContainerMutation = gql`
-  mutation containerClone($id: ID!, $input: BatchUpdateInput!) {
-    containerClone(id: $id, input: $input) {
+export const cloneContainersMutation = gql`
+  mutation containerCloneMany($containers: [ContainerUpdateWrapperInput!]!) {
+    containerCloneMany(containers: $containers) {
       ... on Container {
         id
       }
@@ -32,9 +32,9 @@ export const cloneContainerMutation = gql`
   ${forbiddenFragment}
 `;
 
-export const cloneShipmentMutation = gql`
-  mutation shipmentClone($id: ID!, $input: ShipmentUpdateInput!) {
-    shipmentClone(id: $id, input: $input) {
+export const cloneShipmentsMutation = gql`
+  mutation shipmentCloneMany($shipments: [ShipmentUpdateWrapperInput!]!) {
+    shipmentCloneMany(shipments: $shipments) {
       ... on Shipment {
         id
       }
@@ -47,9 +47,9 @@ export const cloneShipmentMutation = gql`
   ${badRequestFragment}
 `;
 
-export const cloneOrderItemMutation = gql`
-  mutation orderItemClone($id: ID!, $input: OrderItemUpdateInput!) {
-    orderItemClone(id: $id, input: $input) {
+export const cloneOrderItemsMutation = gql`
+  mutation orderItemCloneMany($orderItems: [OrderItemUpdateWrapperInput!]!) {
+    orderItemCloneMany(orderItems: $orderItems) {
       ... on OrderItem {
         id
       }
@@ -62,9 +62,9 @@ export const cloneOrderItemMutation = gql`
   ${forbiddenFragment}
 `;
 
-export const cloneOrderMutation = gql`
-  mutation orderClone($id: ID!, $input: OrderUpdateInput!) {
-    orderClone(id: $id, input: $input) {
+export const cloneOrdersMutation = gql`
+  mutation orderCloneMany($orders: [OrderUpdateWrapperInput!]!) {
+    orderCloneMany(orders: $orders) {
       ... on Order {
         id
       }

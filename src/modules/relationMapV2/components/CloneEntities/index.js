@@ -8,7 +8,7 @@ import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationM
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
-import { cloneBatchMutation } from './mutation';
+import { cloneBatchesMutation } from './mutation';
 import { DialogStyle, ConfirmMessageStyle } from './style';
 
 type Props = {|
@@ -22,7 +22,7 @@ type Props = {|
 export default function CloneEntities({ onSuccess }: Props) {
   const { dispatch, state } = React.useContext(RelationMapContext);
   const { mapping } = Entities.useContainer();
-  const [cloneBatch] = useMutation(cloneBatchMutation);
+  const [cloneBatches] = useMutation(cloneBatchesMutation);
   const {
     targets,
     clone: { isOpen, isProcessing },
@@ -50,11 +50,12 @@ export default function CloneEntities({ onSuccess }: Props) {
       const orderIds = [];
       if (totalBatches) {
         const batchIds = targets.filter(target => target.includes(`${BATCH}-`));
+        const batches = [];
         batchIds.forEach(target => {
           const [, batchId] = target.split('-');
           const parentOrderPosition = findKey(mapping.orders, order => {
-            return order.orderItems.some(orderItem =>
-              orderItem.batches.map(batch => batch.id).includes(batchId)
+            return (order?.orderItems ?? []).some(orderItem =>
+              (orderItem?.batches ?? []).map(batch => batch.id).includes(batchId)
             );
           });
           if (
@@ -67,22 +68,27 @@ export default function CloneEntities({ onSuccess }: Props) {
             type: BATCH,
             id: batchId,
           });
-          actions.push(
-            cloneBatch({
-              variables: {
-                id: batchId,
-                input: {
-                  deliveredAt: null,
-                  desiredAt: null,
-                  expiredAt: null,
-                  customFields: null,
-                  producedAt: null,
-                  batchQuantityRevisions: [],
-                },
-              },
-            })
-          );
+
+          batches.push({
+            id: batchId,
+            input: {
+              deliveredAt: null,
+              desiredAt: null,
+              expiredAt: null,
+              customFields: null,
+              producedAt: null,
+              batchQuantityRevisions: [],
+            },
+          });
         });
+
+        actions.push(
+          cloneBatches({
+            variables: {
+              batches,
+            },
+          })
+        );
       }
       try {
         const cloneEntities = await Promise.all(actions);
@@ -106,7 +112,16 @@ export default function CloneEntities({ onSuccess }: Props) {
     if (isProcessing && isOpen) {
       doMutations();
     }
-  }, [cloneBatch, dispatch, isOpen, isProcessing, mapping, onSuccess, targets, totalBatches]);
+  }, [
+    cloneBatches,
+    dispatch,
+    isOpen,
+    isProcessing,
+    mapping.orders,
+    onSuccess,
+    targets,
+    totalBatches,
+  ]);
 
   return (
     <Dialog isOpen={isOpen} width="400px">

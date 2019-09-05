@@ -171,7 +171,7 @@ export default function OrderFocus() {
   const [expandRows, setExpandRows] = React.useState([]);
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const { initHits } = Hits.useContainer();
-  const { initMapping } = Entities.useContainer();
+  const { initMapping, onSetBadges } = Entities.useContainer();
   const { queryVariables } = SortAndFilter.useContainer();
   const lastQueryVariables = usePrevious(queryVariables);
   React.useEffect(() => {
@@ -395,6 +395,21 @@ export default function OrderFocus() {
                             cloneEntities,
                           });
                           queryOrdersDetail(orderIds);
+                          const cloneBadges = [];
+                          cloneEntities.forEach(cloneResult => {
+                            if (cloneResult?.data?.batchCloneMany?.length ?? 0) {
+                              cloneBadges.push(
+                                ...(cloneResult?.data?.batchCloneMany ?? []).map(item => {
+                                  return {
+                                    id: item?.id,
+                                    type: 'clone',
+                                    entity: 'batch',
+                                  };
+                                })
+                              );
+                            }
+                          });
+                          onSetBadges(cloneBadges);
                         }}
                       />
                       <InlineCreateBatch
