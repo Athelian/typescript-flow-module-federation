@@ -36,6 +36,8 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
   const totalBatches = targets.filter(target => target.includes(`${BATCH}-`)).length;
   const totalContainers = targets.filter(target => target.includes(`${CONTAINER}-`)).length;
   const totalShipments = targets.filter(target => target.includes(`${SHIPMENT}-`)).length;
+  const actualCloneItems = React.useRef(0);
+  const actualCloneBatches = React.useRef(0);
 
   React.useEffect(() => {
     if (isOpen && !isProcessing) {
@@ -54,6 +56,7 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
       const processOrderIds = [];
       if (totalBatches && source === BATCH) {
         const batchIds = targets.filter(target => target.includes(`${BATCH}-`));
+        actualCloneBatches.current = batchIds.length;
         const batches = [];
         batchIds.forEach(target => {
           const [, batchId] = target.split('-');
@@ -98,6 +101,7 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
       }
       if (totalOrderItems && source === ORDER_ITEM) {
         const orderItemIds = targets.filter(target => target.includes(`${ORDER_ITEM}-`));
+        actualCloneItems.current = orderItemIds.length;
         const orderItems = [];
         orderItemIds.forEach(target => {
           const [, orderItemId] = target.split('-');
@@ -127,6 +131,11 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
             },
           });
         });
+
+        const processBatchesIds = flattenDeep(
+          orderItems.map(item => item.input.batches.map(batch => batch.id))
+        );
+        actualCloneBatches.current = processBatchesIds.length;
 
         actions.push(
           cloneOrderItems({
@@ -211,6 +220,15 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
           }
         });
 
+        actualCloneItems.current = flattenDeep(
+          orders.map(order => order.input.orderItems.map((item: any) => item?.id)).filter(Boolean)
+        ).length;
+        actualCloneBatches.current = flattenDeep(
+          orders.map(order =>
+            order.input.orderItems.map(item => item.batches.map(batch => batch.id))
+          )
+        ).length;
+
         actions.push(
           cloneOrders({
             variables: {
@@ -265,19 +283,19 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
       <div className={DialogStyle}>
         <h3 className={ConfirmMessageStyle}>
           Cloning{' '}
-          {totalOrders > 0 && (
+          {totalOrders > 0 && source === ORDER && (
             <>
               {totalOrders} <Icon icon="ORDER" />
             </>
           )}{' '}
-          {totalOrderItems > 0 && (
+          {actualCloneItems.current > 0 && [ORDER, ORDER_ITEM].includes(source) && (
             <>
-              {totalOrderItems} <Icon icon="ORDER_ITEM" />
+              {actualCloneItems.current} <Icon icon="ORDER_ITEM" />
             </>
           )}{' '}
-          {totalBatches > 0 && (
+          {actualCloneBatches.current > 0 && (
             <>
-              {totalBatches} <Icon icon="BATCH" />
+              {actualCloneBatches.current} <Icon icon="BATCH" />
             </>
           )}{' '}
           {viewer === 'SHIPMENT_FOCUS' && (
