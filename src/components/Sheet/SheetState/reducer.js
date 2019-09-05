@@ -272,16 +272,28 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           // $FlowFixMe flow doesn't support flat()
           .flat();
 
-        return {
+        let newState = {
           ...state,
           columns,
           rows,
-          focusedAt: null,
-          weakFocusedAt: [],
           foreignFocusedAt,
           erroredAt: null,
           weakErroredAt: [],
         };
+
+        if (newState.focusedAt) {
+          const toFocus = findEquivalentCell(newState.rows, newState.focusedAt.cell);
+          newState = toFocus
+            ? reducer(newState, {
+                type: Actions.FOCUS,
+                cell: toFocus,
+              })
+            : reducer(newState, {
+                type: Actions.BLUR,
+              });
+        }
+
+        return newState;
       }
       case Actions.CELL_UPDATE:
         if (!targetCell) {

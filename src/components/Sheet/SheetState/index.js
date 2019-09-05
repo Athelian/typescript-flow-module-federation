@@ -121,28 +121,33 @@ export const useSheetState = (): Context => React.useContext(SheetStateContext);
 
 export const useSheetStateInitializer = (columns: Array<ColumnConfig>, items: Array<Object>) => {
   const { state, dispatch } = useSheetState();
+  const columnKeysRef = React.useRef([]);
+
+  React.useEffect(() => {
+    const columnKeys = columns.map(c => c.key);
+    const needRearrange =
+      columnKeys.length !== columnKeysRef.current.length ||
+      columnKeys.every((value, index) => value !== columnKeysRef.current[index]);
+
+    if (state.initialized && needRearrange) {
+      dispatch({
+        type: Actions.REARRANGE,
+        payload: columns.map(c => c.key),
+      });
+    }
+
+    columnKeysRef.current = columnKeys;
+  }, [columns, dispatch, state.initialized]);
 
   React.useEffect(() => {
     dispatch({
       type: Actions.INIT,
       payload: {
         items,
-        columns: columns.map(c => c.key),
+        columns: columnKeysRef.current,
       },
     });
-  }, [columns, dispatch, items]);
-
-  React.useEffect(() => {
-    if (!state.initialized) {
-      return;
-    }
-
-    dispatch({
-      type: Actions.REARRANGE,
-      payload: columns.map(c => c.key),
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columns, dispatch]);
+  }, [dispatch, items]);
 };
 
 export const useSheetStateLoadMore = (onLoadMore: () => Promise<Array<Object>>) => {
