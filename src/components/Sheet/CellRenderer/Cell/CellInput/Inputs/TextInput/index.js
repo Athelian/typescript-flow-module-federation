@@ -6,23 +6,27 @@ import { WrapperStyle } from './style';
 type Props = {
   value: string | null,
   onChange: string => void,
+  focus: boolean,
+  onFocus: () => void,
   onBlur: () => void,
   onKeyDown: () => void,
   readonly: boolean,
 };
 
 const TextInput = React.forwardRef<Props, HTMLInputElement>(
-  ({ value, onChange, onBlur, onKeyDown, readonly }: Props, ref) => {
+  ({ value, focus, onChange, onFocus, onBlur, onKeyDown, readonly }: Props, ref) => {
     return (
       <div className={WrapperStyle}>
         <BaseTextInput
           inputRef={ref}
           value={value || ''}
+          focus={focus}
           name="value"
           tabIndex="-1"
           readOnly={readonly}
           readOnlyHeight="30px"
           onChange={onChange}
+          onFocus={onFocus}
           onBlur={onBlur}
           onKeyDown={onKeyDown}
         />
