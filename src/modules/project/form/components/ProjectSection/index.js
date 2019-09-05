@@ -14,7 +14,6 @@ import validator from 'modules/project/form/validator';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import GridRow from 'components/GridRow';
-import MilestonesTimeline from 'components/MilestonesTimeline';
 import {
   FieldItem,
   Label,
@@ -44,8 +43,10 @@ import {
   MilestonesTimelineWrapperStyle,
   TasksInfoWrapperStyle,
   ExpandWrapperStyle,
+  ProjectCardBodyStyle,
 } from './style';
 import TaskStatus from './components/TaskStatus';
+import MilestoneTimelineItem from '../MilestoneTimelineItem';
 
 type Props = {
   isNew: boolean,
@@ -194,8 +195,12 @@ const ProjectSection = ({ isNew }: Props) => {
 
                   <div className={MilestonesTimelineWrapperStyle}>
                     <Subscribe to={[ProjectMilestonesContainer]}>
-                      {({ milestoneStatus }) => (
-                        <MilestonesTimeline milestones={milestoneStatus()} />
+                      {({ state: { milestones } }) => (
+                        <div className={ProjectCardBodyStyle(milestones.length)}>
+                          {milestones.map(milestone => (
+                            <MilestoneTimelineItem key={milestone.id} milestone={milestone} />
+                          ))}
+                        </div>
                       )}
                     </Subscribe>
                   </div>

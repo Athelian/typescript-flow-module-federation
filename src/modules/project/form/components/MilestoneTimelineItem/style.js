@@ -3,7 +3,7 @@ import { css } from 'react-emotion';
 
 import { colors, borderRadiuses, presets, fontSizes } from 'styles/common';
 
-export const TimelineStyle: string = css`
+export const TimelineItemStyle: string = css`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -89,30 +89,4 @@ export const TaskIconStyle: string = css`
   color: ${colors.TASK};
   width: 20px;
   height: 20px;
-`;
-
-export const MilestoneDatesWrapperStyle: string = css`
-  display: flex;
-  flex-direction: column;
-  height: 20px;
-  margin: 5px 0 0 0;
-`;
-
-export const MilestoneDateWrapperStyle: string = css`
-  position: relative;
-  display: flex;
-`;
-
-export const MilestoneDateStyle = (hasDate: boolean): string => css`
-  ${presets.ELLIPSIS};
-  color: ${hasDate ? colors.BLACK : colors.GRAY_LIGHT};
-  font-weight: bold;
-  ${fontSizes.SMALL};
-  line-height: 20px;
-`;
-
-export const MilestoneDiffDateStyle = (diff: number): string => css`
-  position: absolute;
-  left: calc(100% + 5px);
-  color: ${diff > 0 ? colors.RED : colors.TEAL};
 `;

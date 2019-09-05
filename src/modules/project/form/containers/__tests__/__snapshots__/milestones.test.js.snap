@@ -78,29 +78,3 @@ Object {
   ],
 }
 `;
-
-exports[`milestones container should return milestone status 1`] = `
-Array [
-  Object {
-    "completed": 0,
-    "dueDate": null,
-    "isCompleted": false,
-    "name": "a",
-    "total": 1,
-  },
-  Object {
-    "completed": 0,
-    "dueDate": null,
-    "isCompleted": false,
-    "name": "b",
-    "total": 0,
-  },
-  Object {
-    "completed": 0,
-    "dueDate": null,
-    "isCompleted": false,
-    "name": "c",
-    "total": 0,
-  },
-]
-`;
