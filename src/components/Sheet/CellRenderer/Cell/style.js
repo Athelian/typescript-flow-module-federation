@@ -1,8 +1,13 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, colors, fontSizes } from 'styles/common';
+import { shadows, layout, colors } from 'styles/common';
 
-export const CellStyle = (readonly: boolean, disabled: boolean, extended: number) => {
+export const CellStyle = (
+  focus: boolean,
+  readonly: boolean,
+  disabled: boolean,
+  extended: number
+) => {
   let backgroundColor = colors.WHITE;
   if (disabled) {
     backgroundColor = 'rgba(0, 0, 0, 0.1)';
@@ -14,8 +19,8 @@ export const CellStyle = (readonly: boolean, disabled: boolean, extended: number
     position: relative;
     width: 100%;
     height: ${extended > 0 ? `${(extended + 1) * 30}px` : '100%'};
+    ${focus && 'z-index: 1'};
     ${extended && 'z-index: 2'};
-    box-sizing: border-box;
     background-color: ${backgroundColor};
 
     &:hover {
@@ -30,6 +35,7 @@ export const CellBorderStyle = (
   focus: boolean,
   foreignFocus: boolean,
   weakFocus: boolean,
+  inputFocus: boolean,
   error: boolean,
   weakError: boolean
 ) => {
@@ -37,6 +43,7 @@ export const CellBorderStyle = (
     border-right: 0.5px solid rgba(0, 0, 0, 0.1);
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
   `;
+
   if (focus) {
     border = `border: 2px solid ${colors.TEAL};`;
   } else if (weakFocus) {
@@ -46,7 +53,7 @@ export const CellBorderStyle = (
   } else if (weakError) {
     border = `border: 2px solid rgba(239, 72, 72, 0.5);`;
   } else if (foreignFocus) {
-    border = `border: 2px solid ${colors.BLUE};`;
+    border = `border: 2px solid ${colors.ORANGE};`;
   }
 
   return css`
@@ -56,6 +63,7 @@ export const CellBorderStyle = (
     left: 0;
     right: 0;
     ${border};
+    ${inputFocus && shadows.INPUT};
 
     &:hover {
       ${!focus &&
@@ -68,42 +76,14 @@ export const CellBorderStyle = (
   `;
 };
 
-export const InputWrapperStyle = (focus: boolean) => css`
-  ${focus && `position: relative`};
-`;
-
-export const FocusesWrapperStyle = (onFirstRow: boolean, extended: number) => css`
-  ${layout.HORIZONTAL};
-  display: none;
-  position: absolute;
-  ${onFirstRow ? `top: ${(extended + 1) * 30}px;` : `bottom: ${(extended + 1) * 30}px;`}
-  left: 0px;
-  z-index: 4;
-`;
-
-export const FocusStyle = (onFirstRow: boolean) => css`
-  background-color: ${colors.BLUE};
-  border-radius: ${onFirstRow ? '0px 0px 5px 5px' : '5px 5px 0px 0px'};
-  color: ${colors.WHITE};
-  ${fontSizes.SMALL};
-  line-height: 15px;
-  padding: 0 5px;
-`;
-
-export const ErrorsWrapperStyle = (onFirstRow: boolean, extended: number) => css`
-  ${layout.VERTICAL};
-  align-items: flex-start;
-  position: absolute;
-  ${onFirstRow ? `top: ${(extended + 1) * 30}px;` : `bottom: ${(extended + 1) * 30}px;`}
-  left: 0px;
-  z-index: 4;
-`;
-
-export const ErrorStyle = css`
-  background-color: ${colors.RED};
-  color: ${colors.WHITE};
-  ${fontSizes.SMALL};
-  line-height: 15px;
-  padding: 0 5px;
-  white-space: nowrap;
+export const CellPlaceholderStyle = css`
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.03),
+    rgba(0, 0, 0, 0.03) 5px,
+    #fff 5px,
+    #fff 10px
+  );
 `;
