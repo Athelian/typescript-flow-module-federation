@@ -17,9 +17,10 @@ type Props = {|
     sources: Array<{ id: string, type: string }>,
     cloneEntities: Array<Object>,
   |}) => void,
+  viewer?: 'ORDER_FOCUS' | 'SHIPMENT_FOCUS',
 |};
 
-export default function CloneEntities({ onSuccess }: Props) {
+export default function CloneEntities({ onSuccess, viewer }: Props) {
   const { dispatch, state } = React.useContext(RelationMapContext);
   const { mapping } = Entities.useContainer();
   const [cloneBatches] = useMutation(cloneBatchesMutation);
@@ -73,6 +74,8 @@ export default function CloneEntities({ onSuccess }: Props) {
           batches.push({
             id: batchId,
             input: {
+              shipmentId: null,
+              containerId: null,
               deliveredAt: null,
               desiredAt: null,
               expiredAt: null,
@@ -159,7 +162,9 @@ export default function CloneEntities({ onSuccess }: Props) {
     onSuccess,
     targets,
     totalBatches,
+    totalContainers,
     totalOrderItems,
+    viewer,
   ]);
 
   return (
@@ -182,16 +187,20 @@ export default function CloneEntities({ onSuccess }: Props) {
               {totalBatches} <Icon icon="BATCH" />
             </>
           )}{' '}
-          {totalContainers > 0 && (
+          {viewer === 'SHIPMENT_FOCUS' && (
             <>
-              {totalContainers} <Icon icon="CONTAINER" />
+              {totalContainers > 0 && (
+                <>
+                  {totalContainers} <Icon icon="CONTAINER" />
+                </>
+              )}{' '}
+              {totalShipments > 0 && (
+                <>
+                  {totalShipments} <Icon icon="SHIPMENT" />
+                </>
+              )}{' '}
             </>
-          )}{' '}
-          {totalShipments > 0 && (
-            <>
-              {totalShipments} <Icon icon="SHIPMENT" />
-            </>
-          )}{' '}
+          )}
           {`...`}
         </h3>
         <LoadingIcon />
