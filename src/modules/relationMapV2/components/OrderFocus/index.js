@@ -398,18 +398,29 @@ export default function OrderFocus() {
                           const newOrderIds = [];
                           cloneEntities.forEach(cloneResult => {
                             if (cloneResult?.data?.orderCloneMany?.length ?? 0) {
-                              newOrderIds.push(
-                                ...(cloneResult?.data?.orderCloneMany ?? []).map(item => item?.id)
-                              );
-                              cloneBadges.push(
-                                ...(cloneResult?.data?.orderCloneMany ?? []).map(item => {
-                                  return {
+                              const ordersClone = cloneResult?.data?.orderCloneMany ?? [];
+                              newOrderIds.push(...ordersClone.map(item => item?.id));
+                              ordersClone.forEach(order => {
+                                cloneBadges.push({
+                                  id: order?.id,
+                                  type: 'cloned',
+                                  entity: 'order',
+                                });
+                                order.orderItems.forEach(item => {
+                                  cloneBadges.push({
                                     id: item?.id,
                                     type: 'cloned',
-                                    entity: 'order',
-                                  };
-                                })
-                              );
+                                    entity: 'orderItem',
+                                  });
+                                  cloneBadges.push(
+                                    ...(item?.batches ?? []).map(batch => ({
+                                      id: batch?.id,
+                                      type: 'cloned',
+                                      entity: 'batch',
+                                    }))
+                                  );
+                                });
+                              });
                             }
                           });
                           queryOrdersDetail([...orderIds, ...newOrderIds]);

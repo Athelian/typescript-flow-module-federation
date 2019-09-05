@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { findKey } from 'lodash';
+import { findKey, flattenDeep } from 'lodash';
 import { Entities } from 'modules/relationMapV2/store';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import { useMutation } from '@apollo/react-hooks';
@@ -51,6 +51,7 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
       const actions = [];
       const sources = [];
       const orderIds = [];
+      const processOrderIds = [];
       if (totalBatches && source === BATCH) {
         const batchIds = targets.filter(target => target.includes(`${BATCH}-`));
         const batches = [];
@@ -146,10 +147,10 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
           });
 
           // clone order item along with batches has been targeted
+          processOrderIds.push(orderId);
           orders.push({
             id: orderId,
             input: {
-              poNo: `[cloned] ${mapping.entities?.orders?.[orderId]?.poNo}`,
               orderItems: (mapping.entities?.orders?.[orderId]?.orderItems ?? [])
                 .filter(itemId => targets.includes(`${ORDER_ITEM}-${itemId}`))
                 .map(orderItemId => ({
@@ -162,6 +163,52 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
                 })),
             },
           });
+        });
+        // create new item when there is a batch without parent
+        const processBatchesIds = flattenDeep(
+          orders.map(order =>
+            order.input.orderItems.map(item => item.batches.map(batch => batch.id))
+          )
+        );
+
+        const batchIds = targets.filter(target => target.includes(`${BATCH}-`));
+        batchIds.forEach(target => {
+          const [, batchId] = target.split('-');
+          const parentOrderPosition = findKey(mapping.orders, order => {
+            return (order?.orderItems ?? []).some(orderItem =>
+              (orderItem?.batches ?? []).map(batch => batch.id).includes(batchId)
+            );
+          });
+          const parentOrder = mapping.orders[parentOrderPosition];
+          const batch = mapping.entities?.batches[batchId];
+          if (processOrderIds.includes(parentOrder?.id) && !processBatchesIds.includes(batchId)) {
+            const orderItemId = findKey(mapping.entities?.orderItems, orderItem => {
+              return (orderItem.batches || []).includes(batchId);
+            });
+
+            const parentItem = mapping.entities?.orderItems?.[orderItemId] ?? {
+              no: 'N/A',
+              price: {
+                amount: 0,
+                currency: parentOrder.currency,
+              },
+            };
+
+            orders.push({
+              id: parentOrder?.id,
+              input: {
+                orderItems: [
+                  {
+                    productProviderId: parentItem?.productProvider?.id,
+                    no: `[auto] ${parentItem?.no}`,
+                    quantity: batch.latestQuantity,
+                    price: { amount: parentItem.price.amount, currency: parentItem.price.currency },
+                    batches: [{ id: batchId }],
+                  },
+                ],
+              },
+            });
+          }
         });
 
         actions.push(
