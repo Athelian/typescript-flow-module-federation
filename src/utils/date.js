@@ -90,3 +90,21 @@ export const findDuration = ({ months, weeks }: { months: number, weeks: number 
   }
   return duration;
 };
+
+export const calculateNewDate = ({
+  date,
+  months,
+  weeks,
+  days,
+}: {
+  date: ?string,
+  months: number,
+  weeks: number,
+  days: number,
+}) => {
+  return calculateDate({
+    date,
+    duration: findDuration({ months, weeks }),
+    offset: months || weeks || days,
+  });
+};
