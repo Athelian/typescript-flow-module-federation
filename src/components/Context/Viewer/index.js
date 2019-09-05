@@ -126,10 +126,6 @@ const ViewerProvider = ({ children }: Props) => {
         window.smartlook('identify', 'anonymize');
       }
 
-      if (window && window.LogRocket) {
-        window.LogRocket.identify();
-      }
-
       if (isAppInProduction) {
         FullStoryAPI('identify', false);
       }
@@ -144,13 +140,6 @@ const ViewerProvider = ({ children }: Props) => {
 
     if (window && window.smartlook) {
       window.smartlook('identify', id, {
-        email,
-        name: `${lastName} ${firstName}`,
-      });
-    }
-
-    if (window && window.LogRocket) {
-      window.LogRocket.identify(id, {
         email,
         name: `${lastName} ${firstName}`,
       });
