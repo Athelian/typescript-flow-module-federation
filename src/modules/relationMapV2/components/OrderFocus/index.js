@@ -394,8 +394,25 @@ export default function OrderFocus() {
                             orderIds,
                             cloneEntities,
                           });
-                          queryOrdersDetail(orderIds);
                           const cloneBadges = [];
+                          const newOrderIds = [];
+                          cloneEntities.forEach(cloneResult => {
+                            if (cloneResult?.data?.orderCloneMany?.length ?? 0) {
+                              newOrderIds.push(
+                                ...(cloneResult?.data?.orderCloneMany ?? []).map(item => item?.id)
+                              );
+                              cloneBadges.push(
+                                ...(cloneResult?.data?.orderCloneMany ?? []).map(item => {
+                                  return {
+                                    id: item?.id,
+                                    type: 'cloned',
+                                    entity: 'order',
+                                  };
+                                })
+                              );
+                            }
+                          });
+                          queryOrdersDetail([...orderIds, ...newOrderIds]);
                           cloneEntities.forEach(cloneResult => {
                             if (cloneResult?.data?.batchCloneMany?.length ?? 0) {
                               cloneBadges.push(

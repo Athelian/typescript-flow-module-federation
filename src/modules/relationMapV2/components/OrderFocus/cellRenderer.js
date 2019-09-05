@@ -559,7 +559,7 @@ const shipmentDropMessage = ({
 
 function OrderCell({ data, afterConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
-  const { mapping } = Entities.useContainer();
+  const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const orderId = getByPathWithDefault('', 'id', data);
   const [{ isOver, canDrop, dropMessage, isSameItem }, drop] = useDrop({
@@ -709,6 +709,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
             onClick={handleClick}
           >
             <div ref={drag}>
+              <Badge label={badge.order?.[orderId] ?? ''} />
               <OrderCard>{getByPathWithDefault('', 'poNo', data)}</OrderCard>
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
@@ -2078,6 +2079,7 @@ function DuplicateOrderCell({
   );
 }
 
+// FIXME: hight light color for sort item vs batch
 function DuplicateOrderItemCell({
   data,
   order,

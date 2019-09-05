@@ -8,7 +8,7 @@ import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationM
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
-import { cloneBatchesMutation, cloneOrderItemsMutation } from './mutation';
+import { cloneBatchesMutation, cloneOrderItemsMutation, cloneOrdersMutation } from './mutation';
 import { DialogStyle, ConfirmMessageStyle } from './style';
 
 type Props = {|
@@ -25,6 +25,7 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
   const { mapping } = Entities.useContainer();
   const [cloneBatches] = useMutation(cloneBatchesMutation);
   const [cloneOrderItems] = useMutation(cloneOrderItemsMutation);
+  const [cloneOrders] = useMutation(cloneOrdersMutation);
   const {
     targets,
     clone: { isOpen, isProcessing, source },
@@ -134,6 +135,43 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
           })
         );
       }
+      if (totalOrders && source === ORDER) {
+        const orderInputIds = targets.filter(target => target.includes(`${ORDER}-`));
+        const orders = [];
+        orderInputIds.forEach(target => {
+          const [, orderId] = target.split('-');
+          sources.push({
+            type: ORDER_ITEM,
+            id: orderId,
+          });
+
+          // clone order item along with batches has been targeted
+          orders.push({
+            id: orderId,
+            input: {
+              poNo: `[cloned] ${mapping.entities?.orders?.[orderId]?.poNo}`,
+              orderItems: (mapping.entities?.orders?.[orderId]?.orderItems ?? [])
+                .filter(itemId => targets.includes(`${ORDER_ITEM}-${itemId}`))
+                .map(orderItemId => ({
+                  id: orderItemId,
+                  batches: (mapping.entities?.orderItems?.[orderItemId]?.batches ?? [])
+                    .filter(batchId => targets.includes(`${BATCH}-${batchId}`))
+                    .map(id => ({
+                      id,
+                    })),
+                })),
+            },
+          });
+        });
+
+        actions.push(
+          cloneOrders({
+            variables: {
+              orders,
+            },
+          })
+        );
+      }
       try {
         const cloneEntities = await Promise.all(actions);
         dispatch({
@@ -159,6 +197,7 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
   }, [
     cloneBatches,
     cloneOrderItems,
+    cloneOrders,
     dispatch,
     isOpen,
     isProcessing,
@@ -170,6 +209,7 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
     totalBatches,
     totalContainers,
     totalOrderItems,
+    totalOrders,
     viewer,
   ]);
 
