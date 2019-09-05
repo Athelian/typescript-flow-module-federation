@@ -152,7 +152,9 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                   {...provided.dragHandleProps}
                   role="presentation"
                   onClick={() => {
-                    toggleMilestoneForm(true);
+                    // This is using for fixing a edge case when on blur doesn't fire on inline edit for task card
+                    if (document.activeElement) document.activeElement.blur();
+                    setTimeout(() => toggleMilestoneForm(true), 200);
                   }}
                 >
                   <BooleanValue>
@@ -294,6 +296,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                               inputWidth="130px"
                               inputHeight="20px"
                               hideTooltip
+                              required
                               diff={completedAtAndDueDateDiff}
                             />
                           )}

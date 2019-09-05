@@ -115,7 +115,7 @@ const MilestoneSection = ({ intl }: Props) => {
                           dateBindingItems={[
                             {
                               value: 'ProjectDueDate',
-                              label: 'Project Due DueDate',
+                              label: 'Project Due Date',
                             },
                           ]}
                           originalValues={originalValues}
