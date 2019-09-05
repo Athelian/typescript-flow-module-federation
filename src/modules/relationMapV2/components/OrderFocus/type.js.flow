@@ -63,6 +63,7 @@ export type State = {|
     },
   },
   clone: {
+    source: string,
     isOpen: boolean,
     isProcessing: boolean,
   },

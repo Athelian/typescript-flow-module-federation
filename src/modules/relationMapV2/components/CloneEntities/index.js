@@ -27,7 +27,7 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
   const [cloneOrderItems] = useMutation(cloneOrderItemsMutation);
   const {
     targets,
-    clone: { isOpen, isProcessing },
+    clone: { isOpen, isProcessing, source },
   } = state;
 
   const totalOrders = targets.filter(target => target.includes(`${ORDER}-`)).length;
@@ -50,7 +50,7 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
       const actions = [];
       const sources = [];
       const orderIds = [];
-      if (totalBatches) {
+      if (totalBatches && source === BATCH) {
         const batchIds = targets.filter(target => target.includes(`${BATCH}-`));
         const batches = [];
         batchIds.forEach(target => {
@@ -94,7 +94,7 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
           })
         );
       }
-      if (totalOrderItems) {
+      if (totalOrderItems && source === ORDER_ITEM) {
         const orderItemIds = targets.filter(target => target.includes(`${ORDER_ITEM}-`));
         const orderItems = [];
         orderItemIds.forEach(target => {
@@ -113,10 +113,15 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
             id: orderItemId,
           });
 
+          // clone order item along with batches has been targeted
           orderItems.push({
             id: orderItemId,
             input: {
-              batches: [],
+              batches: (mapping.entities?.orderItems?.[orderItemId]?.batches ?? [])
+                .filter(batchId => targets.includes(`${BATCH}-${batchId}`))
+                .map(id => ({
+                  id,
+                })),
             },
           });
         });
@@ -160,6 +165,7 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
     mapping.entities,
     mapping.orders,
     onSuccess,
+    source,
     targets,
     totalBatches,
     totalContainers,

@@ -52,6 +52,11 @@ export const cloneOrderItemsMutation = gql`
     orderItemCloneMany(orderItems: $orderItems) {
       ... on OrderItem {
         id
+        batches {
+          ... on Batch {
+            id
+          }
+        }
       }
       ...badRequestFragment
       ...forbiddenFragment

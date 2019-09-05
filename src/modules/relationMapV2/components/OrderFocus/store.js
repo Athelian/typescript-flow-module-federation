@@ -46,6 +46,7 @@ export const initialState: State = {
     },
   },
   clone: {
+    source: '',
     isOpen: false,
     isProcessing: false,
   },
@@ -96,6 +97,7 @@ export function reducer(
       batch?: Batch,
       orderItemUpdate?: OrderItem,
       mapping?: Object,
+      source?: string,
       [string]: mixed,
     },
   }
@@ -340,6 +342,7 @@ export function reducer(
         clone: {
           isOpen: { $set: true },
           isProcessing: { $set: false },
+          source: { $set: action.payload?.source ?? '' },
         },
       });
     }

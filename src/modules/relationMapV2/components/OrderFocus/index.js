@@ -402,7 +402,7 @@ export default function OrderFocus() {
                                 ...(cloneResult?.data?.batchCloneMany ?? []).map(item => {
                                   return {
                                     id: item?.id,
-                                    type: 'clone',
+                                    type: 'cloned',
                                     entity: 'batch',
                                   };
                                 })
@@ -411,15 +411,21 @@ export default function OrderFocus() {
                           });
                           cloneEntities.forEach(cloneResult => {
                             if (cloneResult?.data?.orderItemCloneMany?.length ?? 0) {
-                              cloneBadges.push(
-                                ...(cloneResult?.data?.orderItemCloneMany ?? []).map(item => {
-                                  return {
-                                    id: item?.id,
-                                    type: 'clone',
-                                    entity: 'orderItem',
-                                  };
-                                })
-                              );
+                              const itemsClone = cloneResult?.data?.orderItemCloneMany ?? [];
+                              itemsClone.forEach(item => {
+                                cloneBadges.push({
+                                  id: item?.id,
+                                  type: 'cloned',
+                                  entity: 'orderItem',
+                                });
+                                cloneBadges.push(
+                                  ...(item?.batches ?? []).map(batch => ({
+                                    id: batch?.id,
+                                    type: 'cloned',
+                                    entity: 'batch',
+                                  }))
+                                );
+                              });
                             }
                           });
                           onSetBadges(cloneBadges);

@@ -901,7 +901,7 @@ function OrderItemCell({
             onClick={handleClick}
           >
             <div ref={drag}>
-              {badge.orderItem[itemId] && <Badge label={badge.orderItem[itemId]} />}
+              <Badge label={badge.orderItem?.[itemId] ?? ''} />
               <OrderItemCard
                 no={data?.no ?? 'N/A'}
                 onCreateBatch={evt => {
@@ -1090,7 +1090,7 @@ function BatchCell({
             onClick={handleClick}
           >
             <div ref={drag} style={baseDragStyle}>
-              {badge.batch[batchId] && <Badge label={badge.batch[batchId]} />}
+              <Badge label={badge.batch?.[batchId] ?? ''} />
               <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
