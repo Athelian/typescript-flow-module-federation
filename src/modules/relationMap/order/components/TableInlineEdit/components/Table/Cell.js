@@ -256,7 +256,7 @@ function Cell(props: Props) {
   } = props;
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const { user } = useUser();
+  const { user, organization } = useUser();
   if (!values) return null;
 
   if (type === 'customFields') {
@@ -279,7 +279,10 @@ function Cell(props: Props) {
           values,
           editData,
           hasPermission,
-          user,
+          user: {
+            ...user,
+            organization,
+          },
         })
       }
     </FormField>

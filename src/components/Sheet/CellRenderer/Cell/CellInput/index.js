@@ -58,12 +58,13 @@ const CellInput = ({
   };
 
   const handleBlur = () => {
+    onBlur();
+
     if (dirtyValue === value) {
       return;
     }
 
     onUpdate(dirtyValue);
-    onBlur();
   };
 
   const handleKeyDown = (e: SyntheticKeyboardEvent<HTMLDivElement>) => {
