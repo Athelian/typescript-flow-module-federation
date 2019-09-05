@@ -43,9 +43,10 @@ import {
   MilestonesTimelineWrapperStyle,
   TasksInfoWrapperStyle,
   ExpandWrapperStyle,
+  ProjectCardBodyStyle,
 } from './style';
 import TaskStatus from './components/TaskStatus';
-import MilestoneTimelineChart from '../MilestoneTimelineChart';
+import MilestoneTimelineItem from '../MilestoneTimelineItem';
 
 type Props = {
   isNew: boolean,
@@ -195,7 +196,11 @@ const ProjectSection = ({ isNew }: Props) => {
                   <div className={MilestonesTimelineWrapperStyle}>
                     <Subscribe to={[ProjectMilestonesContainer]}>
                       {({ state: { milestones } }) => (
-                        <MilestoneTimelineChart milestones={milestones} />
+                        <div className={ProjectCardBodyStyle(milestones.length)}>
+                          {milestones.map(milestone => (
+                            <MilestoneTimelineItem key={milestone.id} milestone={milestone} />
+                          ))}
+                        </div>
                       )}
                     </Subscribe>
                   </div>

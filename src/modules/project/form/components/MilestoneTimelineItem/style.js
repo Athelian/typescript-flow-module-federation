@@ -3,7 +3,7 @@ import { css } from 'react-emotion';
 
 import { colors, borderRadiuses, presets, fontSizes } from 'styles/common';
 
-export const TimelineStyle: string = css`
+export const TimelineItemStyle: string = css`
   display: flex;
   flex-direction: column;
   align-items: flex-end;

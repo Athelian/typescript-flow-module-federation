@@ -10,7 +10,7 @@ import { isNullOrUndefined } from 'utils/fp';
 import { differenceInCalendarDays } from 'utils/date';
 import MilestoneDueDateToolTip from '../MilestoneDueDateToolTip';
 import {
-  TimelineStyle,
+  TimelineItemStyle,
   MilestoneNameStyle,
   ProgressBarStyle,
   BarStyle,
@@ -29,8 +29,7 @@ type Props = {
   milestone: Object,
 };
 
-const MilestoneBlock = ({ milestone }: Props) => {
-  // TODO: Replace estCompletedAt with real data
+const MilestoneTimelineItem = ({ milestone }: Props) => {
   const { name, dueDate, estCompletedAt, completedAt, tasks = [] } = milestone;
 
   const isCompleted = !isNullOrUndefined(completedAt);
@@ -45,7 +44,7 @@ const MilestoneBlock = ({ milestone }: Props) => {
   }
 
   return (
-    <div className={TimelineStyle}>
+    <div className={TimelineItemStyle}>
       <div className={MilestoneNameStyle}>{name}</div>
 
       <div className={ProgressBarStyle}>
@@ -121,4 +120,4 @@ const MilestoneBlock = ({ milestone }: Props) => {
   );
 };
 
-export default MilestoneBlock;
+export default MilestoneTimelineItem;

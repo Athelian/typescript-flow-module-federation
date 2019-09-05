@@ -4,7 +4,7 @@ import Icon from 'components/Icon';
 import { calculatePercentage } from 'utils/ui';
 import { isNullOrUndefined } from 'utils/fp';
 import {
-  TimelineStyle,
+  TimelineItemStyle,
   MilestoneNameStyle,
   ProgressBarStyle,
   BarStyle,
@@ -19,7 +19,7 @@ type Props = {
   milestone: Object,
 };
 
-const TimeLineBlock = ({ milestone }: Props) => {
+const MilestoneTimelineItem = ({ milestone }: Props) => {
   const { name, completedAt, tasks = [] } = milestone;
 
   const isCompleted = !isNullOrUndefined(completedAt);
@@ -27,7 +27,7 @@ const TimeLineBlock = ({ milestone }: Props) => {
   const completed = tasks.filter(item => !isNullOrUndefined(item.completedAt)).length;
 
   return (
-    <div className={TimelineStyle}>
+    <div className={TimelineItemStyle}>
       <div className={MilestoneNameStyle}>{name}</div>
 
       <div className={ProgressBarStyle}>
@@ -48,4 +48,4 @@ const TimeLineBlock = ({ milestone }: Props) => {
   );
 };
 
-export default TimeLineBlock;
+export default MilestoneTimelineItem;
