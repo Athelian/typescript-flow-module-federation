@@ -20330,8 +20330,6 @@ export type Milestone = Model & Owned & Sortable & {
   estimatedCompletionDate?: ?$ElementType<Scalars, 'DateTime'>,
   estimatedCompletionDateInterval?: ?Interval,
   estimatedCompletionDateBinding?: ?MilestoneDateBinding,
-  entitiesCount: MilestoneEntitiesCount,
-  entitiesRelatedCount: MilestoneEntitiesCount,
   taskCount: TaskCount,
   tasks: Array<TaskPayload>,
   id: $ElementType<Scalars, 'ID'>,
@@ -20367,17 +20365,6 @@ export const MilestoneDateBindingValues = Object.freeze({
 
 
 export type MilestoneDateBinding = $Values<typeof MilestoneDateBindingValues>;
-
-export type MilestoneEntitiesCount = {
-   __typename?: 'MilestoneEntitiesCount',
-  products: $ElementType<Scalars, 'Int'>,
-  productProviders: $ElementType<Scalars, 'Int'>,
-  orders: $ElementType<Scalars, 'Int'>,
-  orderItems: $ElementType<Scalars, 'Int'>,
-  batches: $ElementType<Scalars, 'Int'>,
-  shipments: $ElementType<Scalars, 'Int'>,
-  containers: $ElementType<Scalars, 'Int'>,
-};
 
 export type MilestonePayload = Milestone | BadRequest | Forbidden | NotFound;
 
@@ -20454,11 +20441,13 @@ export type Mutation = {
   orderUpdateMany: Array<?OrderPayload>,
   orderDelete?: ?EmptyPayload,
   orderClone: OrderPayload,
+  orderCloneMany: Array<?OrderPayload>,
   orderItemCreate: OrderItemPayload,
   orderItemUpdate: OrderItemPayload,
   orderItemUpdateMany: Array<?OrderItemPayload>,
   orderItemDelete?: ?EmptyPayload,
   orderItemClone: OrderItemPayload,
+  orderItemCloneMany: Array<?OrderItemPayload>,
   batchCreate: BatchPayload,
   batchUpdate: BatchPayload,
   batchUpdateMany: Array<?BatchPayload>,
@@ -20468,15 +20457,18 @@ export type Mutation = {
   batchBalanceSplit: BatchesPayload,
   batchBalanceSplitMany: Array<?BatchesPayload>,
   batchClone: BatchPayload,
+  batchCloneMany: Array<?BatchPayload>,
   shipmentCreate: ShipmentPayload,
   shipmentUpdate: ShipmentPayload,
   shipmentUpdateMany: Array<?ShipmentPayload>,
   shipmentDelete?: ?EmptyPayload,
   shipmentClone: ShipmentPayload,
+  shipmentCloneMany: Array<?ShipmentPayload>,
   containerCreate: ContainerPayload,
   containerUpdate: ContainerPayload,
   containerDelete?: ?EmptyPayload,
   containerClone: ContainerPayload,
+  containerCloneMany: Array<?ContainerPayload>,
   warehouseCreate: WarehousePayload,
   warehouseUpdate: WarehousePayload,
   warehouseUpdateMany: Array<?WarehousePayload>,
@@ -20623,6 +20615,11 @@ export type MutationOrderCloneArgs = {
 };
 
 
+export type MutationOrderCloneManyArgs = {
+  orders: Array<OrderUpdateWrapperInput>
+};
+
+
 export type MutationOrderItemCreateArgs = {
   input: OrderItemCreateInput
 };
@@ -20647,6 +20644,11 @@ export type MutationOrderItemDeleteArgs = {
 export type MutationOrderItemCloneArgs = {
   id: $ElementType<Scalars, 'ID'>,
   input: OrderItemUpdateInput
+};
+
+
+export type MutationOrderItemCloneManyArgs = {
+  orderItems: Array<OrderItemUpdateWrapperInput>
 };
 
 
@@ -20699,6 +20701,11 @@ export type MutationBatchCloneArgs = {
 };
 
 
+export type MutationBatchCloneManyArgs = {
+  batches: Array<BatchUpdateWrapperInput>
+};
+
+
 export type MutationShipmentCreateArgs = {
   input: ShipmentCreateInput
 };
@@ -20726,6 +20733,11 @@ export type MutationShipmentCloneArgs = {
 };
 
 
+export type MutationShipmentCloneManyArgs = {
+  shipments: Array<ShipmentUpdateWrapperInput>
+};
+
+
 export type MutationContainerCreateArgs = {
   input: ContainerCreateInput
 };
@@ -20745,6 +20757,11 @@ export type MutationContainerDeleteArgs = {
 export type MutationContainerCloneArgs = {
   id: $ElementType<Scalars, 'ID'>,
   input: ContainerUpdateInput
+};
+
+
+export type MutationContainerCloneManyArgs = {
+  containers: Array<ContainerUpdateWrapperInput>
 };
 
 
@@ -60652,13 +60669,11 @@ export type Todo = {
   remainingCount: $ElementType<Scalars, 'Int'>,
   tasks: Array<TaskPayload>,
   taskTemplate?: ?TaskTemplatePayload,
-  milestone?: ?MilestonePayload,
 };
 
 export type TodoInput = {
   tasks?: ?Array<TodoTaskInput>,
   taskTemplateId?: ?$ElementType<Scalars, 'ID'>,
-  milestoneId?: ?$ElementType<Scalars, 'ID'>,
 };
 
 export type TodoTaskInput = {
@@ -60687,7 +60702,6 @@ export type TodoTaskInput = {
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   id?: ?$ElementType<Scalars, 'ID'>,
   taskTemplateId?: ?$ElementType<Scalars, 'ID'>,
-  milestoneId?: ?$ElementType<Scalars, 'ID'>,
 };
 
 export type Token = {
@@ -61969,10 +61983,13 @@ export type ProjectFormQueryFragmentFragment = (
     & TagFragmentFragment
   >, milestones: Array<(
     { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: *, updatedAt: *, name: *, dueDate: *, estimatedCompletionDate: *, estimatedCompletionDateBinding: *, completedAt: * }>
+    & $Pick<Milestone, { id: *, updatedAt: *, name: *, dueDate: *, dueDateBinding: *, estimatedCompletionDate: *, estimatedCompletionDateBinding: *, completedAt: * }>
     & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & UserAvatarFragmentFragment
-    , estimatedCompletionDateInterval: ?(
+    , dueDateInterval: ?(
+      { __typename?: 'Interval' }
+      & $Pick<Interval, { months: *, weeks: *, days: * }>
+    ), estimatedCompletionDateInterval: ?(
       { __typename?: 'Interval' }
       & $Pick<Interval, { months: *, weeks: *, days: * }>
     ), completedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })

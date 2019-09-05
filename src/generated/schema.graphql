@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Sep 04 2019 19:04:46 GMT+0900 (Japan Standard Time)
+# timestamp: Thu Sep 05 2019 11:56:37 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -29722,8 +29722,6 @@ type Milestone implements Model & Owned & Sortable {
   estimatedCompletionDate: DateTime
   estimatedCompletionDateInterval: Interval
   estimatedCompletionDateBinding: MilestoneDateBinding
-  entitiesCount: MilestoneEntitiesCount!
-  entitiesRelatedCount: MilestoneEntitiesCount!
   taskCount: TaskCount!
   tasks: [TaskPayload!]!
   id: ID!
@@ -29755,16 +29753,6 @@ input MilestoneCreateInput {
 enum MilestoneDateBinding {
   ProjectDueDate
   MilestoneCompleteDate
-}
-
-type MilestoneEntitiesCount {
-  products: Int!
-  productProviders: Int!
-  orders: Int!
-  orderItems: Int!
-  batches: Int!
-  shipments: Int!
-  containers: Int!
 }
 
 union MilestonePayload = Milestone | BadRequest | Forbidden | NotFound
@@ -29841,11 +29829,13 @@ type Mutation {
   orderUpdateMany(orders: [OrderUpdateWrapperInput!]!): [OrderPayload]!
   orderDelete(id: ID!): EmptyPayload
   orderClone(id: ID!, input: OrderUpdateInput!): OrderPayload!
+  orderCloneMany(orders: [OrderUpdateWrapperInput!]!): [OrderPayload]!
   orderItemCreate(input: OrderItemCreateInput!): OrderItemPayload!
   orderItemUpdate(id: ID!, input: OrderItemUpdateInput!): OrderItemPayload!
   orderItemUpdateMany(orderItems: [OrderItemUpdateWrapperInput!]!): [OrderItemPayload]!
   orderItemDelete(id: ID!): EmptyPayload
   orderItemClone(id: ID!, input: OrderItemUpdateInput!): OrderItemPayload!
+  orderItemCloneMany(orderItems: [OrderItemUpdateWrapperInput!]!): [OrderItemPayload]!
   batchCreate(input: BatchCreateInput!): BatchPayload!
   batchUpdate(id: ID!, input: BatchUpdateInput!): BatchPayload!
   batchUpdateMany(batches: [BatchUpdateWrapperInput!]!): [BatchPayload]!
@@ -29855,15 +29845,18 @@ type Mutation {
   batchBalanceSplit(orderItemId: ID!): BatchesPayload!
   batchBalanceSplitMany(orderItemIds: [ID!]!): [BatchesPayload]!
   batchClone(id: ID!, input: BatchUpdateInput!): BatchPayload!
+  batchCloneMany(batches: [BatchUpdateWrapperInput!]!): [BatchPayload]!
   shipmentCreate(input: ShipmentCreateInput!): ShipmentPayload!
   shipmentUpdate(id: ID!, input: ShipmentUpdateInput!): ShipmentPayload!
   shipmentUpdateMany(shipments: [ShipmentUpdateWrapperInput!]!): [ShipmentPayload]!
   shipmentDelete(id: ID!): EmptyPayload
   shipmentClone(id: ID!, input: ShipmentUpdateInput!): ShipmentPayload!
+  shipmentCloneMany(shipments: [ShipmentUpdateWrapperInput!]!): [ShipmentPayload]!
   containerCreate(input: ContainerCreateInput!): ContainerPayload!
   containerUpdate(id: ID!, input: ContainerUpdateInput!): ContainerPayload!
   containerDelete(id: ID!): EmptyPayload
   containerClone(id: ID!, input: ContainerUpdateInput!): ContainerPayload!
+  containerCloneMany(containers: [ContainerUpdateWrapperInput!]!): [ContainerPayload]!
   warehouseCreate(input: WarehouseCreateInput!): WarehousePayload!
   warehouseUpdate(id: ID!, input: WarehouseUpdateInput!): WarehousePayload!
   warehouseUpdateMany(warehouses: [WarehouseUpdateWrapperInput!]!): [WarehousePayload]!
@@ -87446,13 +87439,11 @@ type Todo {
   remainingCount: Int! @deprecated(reason: "Use `taskCount.remain` instead")
   tasks: [TaskPayload!]!
   taskTemplate: TaskTemplatePayload
-  milestone: MilestonePayload
 }
 
 input TodoInput {
   tasks: [TodoTaskInput!]
   taskTemplateId: ID
-  milestoneId: ID
 }
 
 input TodoTaskInput {
@@ -87481,7 +87472,6 @@ input TodoTaskInput {
   tagIds: [ID!]
   id: ID
   taskTemplateId: ID
-  milestoneId: ID
 }
 
 type Token {
