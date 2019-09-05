@@ -6,17 +6,10 @@ import { AddedStyle, LabelStyle } from './style';
 type Props = {
   start: number,
   end: number,
-  onClear: () => void,
 };
 
-const Added = ({ start, end, onClear }: Props) => {
+const Added = ({ start, end }: Props) => {
   const { columns } = useSheetColumns();
-
-  React.useEffect(() => {
-    const handler = setTimeout(onClear, 5000);
-
-    return () => clearTimeout(handler);
-  }, [onClear]);
 
   const height = Math.max(1, end + 1 - start) * 30;
   const width = columns.reduce((total, col) => total + col.width, 0);

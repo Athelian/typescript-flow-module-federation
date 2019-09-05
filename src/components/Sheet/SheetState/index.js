@@ -215,6 +215,8 @@ export const useSheetKeyNavigation = () => {
 export const SheetState = ({ transformItem, onMutate, children }: Props) => {
   const memoizedReducer = React.useCallback(cellReducer(transformItem), [transformItem]);
   const [state, dispatch] = React.useReducer<State, Action>(memoizedReducer, initialState);
+  const addedRowsRef = React.useRef([]);
+  const removedRowsRef = React.useRef([]);
   const memoizedMutate = React.useCallback(
     ({ cell, value }) => {
       const cellValue = state.rows[cell.x][cell.y];
@@ -273,6 +275,44 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
       clearTimeout(handler);
     };
   }, [state.erroredAt, dispatch]);
+
+  React.useEffect(() => {
+    const toTimeout = state.addedRows.filter(
+      addedRow =>
+        addedRowsRef.current.findIndex(previousAddedRow => previousAddedRow === addedRow) === -1
+    );
+
+    toTimeout.forEach(addedRow => {
+      setTimeout(() => {
+        dispatch({
+          type: Actions.POST_ADD_ENTITY,
+          payload: addedRow.entity,
+        });
+      }, 5000);
+    });
+
+    addedRowsRef.current = state.addedRows;
+  }, [state.addedRows, dispatch]);
+
+  React.useEffect(() => {
+    const toTimeout = state.removedRows.filter(
+      removedRow =>
+        removedRowsRef.current.findIndex(
+          previousRemovedRow => previousRemovedRow === removedRow
+        ) === -1
+    );
+
+    toTimeout.forEach(removedRow => {
+      setTimeout(() => {
+        dispatch({
+          type: Actions.POST_REMOVE_ENTITY,
+          payload: removedRow.entity,
+        });
+      }, 5000);
+    });
+
+    removedRowsRef.current = state.removedRows;
+  }, [state.removedRows, dispatch]);
 
   return (
     <SheetStateContext.Provider value={{ state, dispatch, mutate: memoizedMutate }}>

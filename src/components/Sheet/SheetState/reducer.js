@@ -21,26 +21,34 @@ function getEntities(rows: Array<Array<CellValue>>): Array<{ id: string, type: s
   );
 }
 
-function getForeignFocusedAt(focus: Object, rows: Array<Array<CellValue>>): Array<ForeignFocus> {
-  return rows
-    .reduce((positions, row, x) => {
-      row.forEach((cell, y) => {
-        if (
-          cell.entity?.id === focus.entity.id &&
-          cell.entity?.type === focus.entity.__typename &&
-          cell.entity?.field === focus.field
-        ) {
-          positions.push({ x, y });
-        }
-      });
+function findPositionsByEntityField(
+  rows: Array<Array<CellValue>>,
+  id: string,
+  type: string,
+  field: string
+): Array<Position> {
+  return rows.reduce((positions, row, x) => {
+    row.forEach((cell, y) => {
+      if (cell.entity?.id === id && cell.entity?.type === type && cell.entity?.field === field) {
+        positions.push({ x, y });
+      }
+    });
 
-      return positions;
-    }, [])
-    .map(pos => ({
-      id: focus.id,
-      user: focus.user,
-      ...pos,
-    }));
+    return positions;
+  }, []);
+}
+
+function getForeignFocusedAt(focus: Object, rows: Array<Array<CellValue>>): Array<ForeignFocus> {
+  return findPositionsByEntityField(
+    rows,
+    focus.entity.id,
+    focus.entity.__typename,
+    focus.field
+  ).map(pos => ({
+    id: focus.id,
+    user: focus.user,
+    ...pos,
+  }));
 }
 
 function extendParentCells(rows: Array<Array<CellValue>>): Array<Array<CellValue>> {
@@ -151,8 +159,52 @@ function getNextFocusable(
   return current;
 }
 
+function findPositionBy(
+  rows: Array<Array<CellValue>>,
+  callback: CellValue => boolean
+): Position | null {
+  let pos = null;
+
+  rows.every((row, x) =>
+    row.every((cell, y) => {
+      if (callback(cell)) {
+        pos = { x, y };
+        return false;
+      }
+      return true;
+    })
+  );
+
+  return pos;
+}
+
+function findEquivalentCell(rows: Array<Array<CellValue>>, cell: CellValue): Position | null {
+  if (!cell.entity || !cell.data) {
+    return null;
+  }
+
+  return (
+    findPositionBy(
+      rows,
+      c =>
+        c.data?.path === cell.data?.path &&
+        c.entity?.id === cell.entity?.id &&
+        c.entity?.type === cell.entity?.type &&
+        c.entity?.field === cell.entity?.field
+    ) ||
+    findPositionBy(
+      rows,
+      c =>
+        c.entity?.id === cell.entity?.id &&
+        c.entity?.type === cell.entity?.type &&
+        c.entity?.field === cell.entity?.field
+    )
+  );
+}
+
 export function cellReducer(transformer: (number, Object) => Array<Array<CellValue>>) {
   function reducer(state: State, action: Action) {
+    console.log(action);
     let targetCell: CellValue | null = null;
     if (action.cell) {
       targetCell = state.rows[action.cell.x][action.cell.y];
@@ -332,18 +384,34 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
         const rows = extendParentCells(transformItems(0, items, state.columns, transformer));
         const entities = getEntities(rows);
 
-        const newState = {
-          ...state,
-          items,
-          rows,
-          entities,
-        };
+        let newState = reducer(
+          {
+            ...state,
+            items,
+            rows,
+            entities,
+          },
+          {
+            type: Actions.SET_FOREIGN_FOCUSES,
+            payload: state.foreignFocuses.filter(
+              ff =>
+                !!entities.find(
+                  entity => entity.id === ff.entity.id && entity.type === ff.entity.__typename
+                )
+            ),
+          }
+        );
 
         if (newState.focusedAt) {
-          return reducer(newState, {
-            type: Actions.FOCUS,
-            cell: getSafePosition(newState.focusedAt, newState.rows),
-          });
+          const toFocus = findEquivalentCell(newState.rows, newState.focusedAt.cell);
+          newState = toFocus
+            ? reducer(newState, {
+                type: Actions.FOCUS,
+                cell: toFocus,
+              })
+            : reducer(newState, {
+                type: Actions.BLUR,
+              });
         }
 
         return newState;
@@ -359,7 +427,7 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
         const rows = extendParentCells(transformItems(0, items, state.columns, transformer));
         const entities = getEntities(rows);
 
-        const newState = {
+        let newState = {
           ...state,
           items,
           rows,
@@ -367,10 +435,15 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
         };
 
         if (newState.focusedAt) {
-          return reducer(newState, {
-            type: Actions.FOCUS,
-            cell: getSafePosition(newState.focusedAt, newState.rows),
-          });
+          const toFocus = findEquivalentCell(newState.rows, newState.focusedAt.cell);
+          newState = toFocus
+            ? reducer(newState, {
+                type: Actions.FOCUS,
+                cell: toFocus,
+              })
+            : reducer(newState, {
+                type: Actions.BLUR,
+              });
         }
 
         return newState;
@@ -388,23 +461,15 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           };
         }
 
-        const weakErroredAt = targetCell.duplicatable
-          ? state.rows.reduce((positions, row, x) => {
-              row.forEach((cell, y) => {
-                if (
-                  targetCell?.entity &&
-                  cell.entity &&
-                  targetCell?.entity?.id === cell.entity?.id &&
-                  targetCell?.entity?.type === cell.entity?.type &&
-                  targetCell?.entity?.field === cell.entity?.field
-                ) {
-                  positions.push({ x, y });
-                }
-              });
-
-              return positions;
-            }, [])
-          : [];
+        const weakErroredAt =
+          targetCell.duplicatable && targetCell.entity
+            ? findPositionsByEntityField(
+                state.rows,
+                targetCell.entity.id,
+                targetCell.entity.type,
+                targetCell.entity.field
+              )
+            : [];
 
         return {
           ...state,
@@ -428,22 +493,15 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           return reducer(state, { type: 'blur' });
         }
 
-        const weakFocusedAt = targetCell.duplicatable
-          ? state.rows.reduce((positions, row, x) => {
-              row.forEach((cell, y) => {
-                if (
-                  targetCell?.entity &&
-                  targetCell?.entity?.id === cell.entity?.id &&
-                  targetCell?.entity?.type === cell.entity?.type &&
-                  targetCell?.entity?.field === cell.entity?.field
-                ) {
-                  positions.push({ x, y });
-                }
-              });
-
-              return positions;
-            }, [])
-          : [];
+        const weakFocusedAt =
+          targetCell.duplicatable && targetCell.entity
+            ? findPositionsByEntityField(
+                state.rows,
+                targetCell.entity.id,
+                targetCell.entity.type,
+                targetCell.entity.field
+              )
+            : [];
 
         return {
           ...state,
@@ -521,7 +579,7 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           ),
         });
       }
-      case Actions.FOREIGN_FOCUSES: {
+      case Actions.SET_FOREIGN_FOCUSES: {
         if (!action.payload) {
           throw new Error('invalid dispatch payload');
         }
@@ -536,6 +594,23 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           foreignFocuses: action.payload,
           foreignFocusedAt,
         };
+      }
+      case Actions.APPEND_FOREIGN_FOCUSES: {
+        if (!action.payload) {
+          throw new Error('invalid dispatch payload');
+        }
+
+        const foreignFocuses: Array<Object> = action.payload;
+
+        return reducer(state, {
+          type: Actions.SET_FOREIGN_FOCUSES,
+          payload: [
+            ...state.foreignFocuses.filter(
+              ff => foreignFocuses.findIndex(focus => focus.id === ff.id) === -1
+            ),
+            ...foreignFocuses,
+          ],
+        });
       }
       case Actions.FOREIGN_FOCUS: {
         if (!action.payload) {
@@ -567,7 +642,7 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           foreignFocusedAt: [...state.foreignFocusedAt.filter(ff => ff.id !== blur.id)],
         };
       }
-      case Actions.ADDED_ROWS_OF_ENTITY: {
+      case Actions.PRE_ADD_ENTITY: {
         if (!action.payload) {
           throw new Error('invalid dispatch payload');
         }
@@ -584,14 +659,9 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
         let end = -1;
 
         newState.rows.every((row, idx) => {
-          const cell: ?CellValue = row.find(c => {
-            console.log(
-              c.entity,
-              entity,
-              c.entity?.id === entity.id && c.entity?.type === entity.type
-            );
-            return c.entity?.id === entity.id && c.entity?.type === entity.type;
-          });
+          const cell: ?CellValue = row.find(
+            c => c.entity?.id === entity.id && c.entity?.type === entity.type
+          );
           if (!cell) {
             return true;
           }
@@ -625,7 +695,7 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           ],
         };
       }
-      case Actions.CLEAR_ADDED_ROWS: {
+      case Actions.POST_ADD_ENTITY: {
         if (!action.payload) {
           throw new Error('invalid dispatch payload');
         }
@@ -640,7 +710,7 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           ),
         };
       }
-      case Actions.REMOVED_ROWS_ENTITY: {
+      case Actions.PRE_REMOVE_ENTITY: {
         if (!action.payload) {
           throw new Error('invalid dispatch payload');
         }
@@ -681,7 +751,7 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           ],
         };
       }
-      case Actions.CLEAR_REMOVED_ROWS: {
+      case Actions.POST_REMOVE_ENTITY: {
         if (!action.payload) {
           throw new Error('invalid dispatch payload');
         }
@@ -703,8 +773,8 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
         return {
           ...newState,
           // $FlowFixMe ???
-          removedRows: state.removedRows.filter(
-            row => row.entity.id !== id && row.entity.type !== type
+          removedRows: newState.removedRows.filter(
+            row => row.entity.id !== id || row.entity.type !== type
           ),
         };
       }

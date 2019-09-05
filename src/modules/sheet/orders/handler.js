@@ -29,7 +29,7 @@ function addOrderItemFactory(client: ApolloClient, dispatch: Action => void) {
         }
 
         dispatch({
-          type: Actions.ADDED_ROWS_OF_ENTITY,
+          type: Actions.PRE_ADD_ENTITY,
           payload: {
             entity: {
               id: orderItemId,
@@ -87,7 +87,7 @@ function addBatchFactory(client: ApolloClient, dispatch: Action => void) {
         }
 
         dispatch({
-          type: Actions.ADDED_ROWS_OF_ENTITY,
+          type: Actions.PRE_ADD_ENTITY,
           payload: {
             entity: {
               id: batchId,
@@ -264,7 +264,7 @@ function changeBatchShipmentFactory(client: ApolloClient, dispatch: Action => vo
 function removeOrderFactory(dispatch: Action => void) {
   return function(orderId: string) {
     dispatch({
-      type: Actions.REMOVED_ROWS_ENTITY,
+      type: Actions.PRE_REMOVE_ENTITY,
       payload: {
         entity: {
           id: orderId,
@@ -289,7 +289,7 @@ function removeOrderFactory(dispatch: Action => void) {
 function removeOrderItemFactory(dispatch: Action => void) {
   return function(orderItemId: string) {
     dispatch({
-      type: Actions.REMOVED_ROWS_ENTITY,
+      type: Actions.PRE_REMOVE_ENTITY,
       payload: {
         entity: {
           id: orderItemId,
@@ -324,7 +324,7 @@ function removeOrderItemFactory(dispatch: Action => void) {
 function removeBatchFactory(dispatch: Action => void) {
   return function(batchId: string) {
     dispatch({
-      type: Actions.REMOVED_ROWS_ENTITY,
+      type: Actions.PRE_REMOVE_ENTITY,
       payload: {
         entity: {
           id: batchId,

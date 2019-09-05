@@ -57,8 +57,12 @@ export const blurMutation = gql`
 
 export const focusSubscribeMutation = gql`
   mutation focusSubscribe($id: ID!, $input: SubscriptionInput!) {
-    focusSubscribe(id: $id, input: $input)
+    focusSubscribe(id: $id, input: $input) {
+      ...focusFragment
+    }
   }
+
+  ${focusFragment}
 `;
 
 export const focusUnsubscribeMutation = gql`
