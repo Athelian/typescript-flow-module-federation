@@ -8,7 +8,7 @@ import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationM
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
-import { cloneBatchesMutation } from './mutation';
+import { cloneBatchesMutation, cloneOrderItemsMutation } from './mutation';
 import { DialogStyle, ConfirmMessageStyle } from './style';
 
 type Props = {|
@@ -23,6 +23,7 @@ export default function CloneEntities({ onSuccess }: Props) {
   const { dispatch, state } = React.useContext(RelationMapContext);
   const { mapping } = Entities.useContainer();
   const [cloneBatches] = useMutation(cloneBatchesMutation);
+  const [cloneOrderItems] = useMutation(cloneOrderItemsMutation);
   const {
     targets,
     clone: { isOpen, isProcessing },
@@ -90,6 +91,41 @@ export default function CloneEntities({ onSuccess }: Props) {
           })
         );
       }
+      if (totalOrderItems) {
+        const orderItemIds = targets.filter(target => target.includes(`${ORDER_ITEM}-`));
+        const orderItems = [];
+        orderItemIds.forEach(target => {
+          const [, orderItemId] = target.split('-');
+          const parentOrderPosition = findKey(mapping.orders, order => {
+            return (order?.orderItems ?? []).some(orderItem => orderItem?.id === orderItemId);
+          });
+          if (
+            mapping.orders?.[parentOrderPosition]?.id &&
+            !orderIds.includes(mapping.orders?.[parentOrderPosition]?.id)
+          ) {
+            orderIds.push(mapping.orders?.[parentOrderPosition]?.id);
+          }
+          sources.push({
+            type: ORDER_ITEM,
+            id: orderItemId,
+          });
+
+          orderItems.push({
+            id: orderItemId,
+            input: {
+              batches: [],
+            },
+          });
+        });
+
+        actions.push(
+          cloneOrderItems({
+            variables: {
+              orderItems,
+            },
+          })
+        );
+      }
       try {
         const cloneEntities = await Promise.all(actions);
         dispatch({
@@ -114,13 +150,16 @@ export default function CloneEntities({ onSuccess }: Props) {
     }
   }, [
     cloneBatches,
+    cloneOrderItems,
     dispatch,
     isOpen,
     isProcessing,
+    mapping.entities,
     mapping.orders,
     onSuccess,
     targets,
     totalBatches,
+    totalOrderItems,
   ]);
 
   return (

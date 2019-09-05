@@ -744,6 +744,7 @@ function OrderItemCell({
   order,
 }: CellProps & { order: OrderPayload }) {
   const { state, dispatch } = React.useContext(RelationMapContext);
+  const { badge } = Entities.useContainer();
   const orderId = getByPathWithDefault('', 'id', order);
   const itemId = getByPathWithDefault('', 'id', data);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
@@ -900,6 +901,7 @@ function OrderItemCell({
             onClick={handleClick}
           >
             <div ref={drag}>
+              {badge.orderItem[itemId] && <Badge label={badge.orderItem[itemId]} />}
               <OrderItemCard
                 no={data?.no ?? 'N/A'}
                 onCreateBatch={evt => {

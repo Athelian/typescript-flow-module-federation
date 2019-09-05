@@ -409,6 +409,19 @@ export default function OrderFocus() {
                               );
                             }
                           });
+                          cloneEntities.forEach(cloneResult => {
+                            if (cloneResult?.data?.orderItemCloneMany?.length ?? 0) {
+                              cloneBadges.push(
+                                ...(cloneResult?.data?.orderItemCloneMany ?? []).map(item => {
+                                  return {
+                                    id: item?.id,
+                                    type: 'clone',
+                                    entity: 'orderItem',
+                                  };
+                                })
+                              );
+                            }
+                          });
                           onSetBadges(cloneBadges);
                         }}
                       />

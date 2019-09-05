@@ -39,6 +39,7 @@ function useEntities(
   const [mapping, setMapping] = useState<RelationMapEntities>(initialState);
   const [badge, setBadge] = useState<{}>({
     batch: {},
+    orderItem: {},
   });
   const onSetBadges = (entities: Array<{ id: string, type: string, entity: string }>) => {
     setBadge(
