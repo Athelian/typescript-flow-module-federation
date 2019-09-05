@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import { intersection } from 'lodash';
 import { getByPathWithDefault } from 'utils/fp';
-import { useAuthenticated } from 'components/Context/Viewer';
+import { useAuthenticated, useAuthorizedViewer } from 'components/Context/Viewer';
 import { permissionsForOrganization } from './query';
 
 type Permissions = {
@@ -11,11 +11,11 @@ type Permissions = {
   permissions: Array<string>,
 };
 
+type HasPermissions = (permissionKey: string | Array<string>) => boolean;
+
 type Context = {
   getPermissionsByOrganization: (organizationId: ?string) => Permissions,
-  hasPermissionsByOrganization: (
-    organizationId: ?string
-  ) => (permissionKey: string | Array<string>) => boolean,
+  hasPermissionsByOrganization: (organizationId: ?string) => HasPermissions,
 };
 
 export const PermissionsContext = React.createContext<Context>({
@@ -31,15 +31,33 @@ export const usePermissions = (organizationId: ?string): Permissions => {
   return getPermissionsByOrganization(organizationId);
 };
 
-export const useHasPermissions = (
-  organizationId: ?string
-): ((permissionKey: string | Array<string>) => boolean) => {
+export const useHasPermissions = (organizationId: ?string): HasPermissions => {
   const { hasPermissionsByOrganization } = usePermissionContext();
 
   return React.useCallback(hasPermissionsByOrganization(organizationId), [
     organizationId,
     hasPermissionsByOrganization,
   ]);
+};
+
+export const useViewerPermissions = (): Permissions => {
+  const { organization } = useAuthorizedViewer();
+
+  return usePermissions(organization.id);
+};
+
+export const useViewerHasPermissions = (): HasPermissions => {
+  const { organization } = useAuthorizedViewer();
+
+  return useHasPermissions(organization.id);
+};
+
+export const useEntityPermissions = (entity: ?Object): Permissions => {
+  return usePermissions(entity?.ownedBy?.id);
+};
+
+export const useEntityHasPermissions = (entity: ?Object): HasPermissions => {
+  return useHasPermissions(entity?.ownedBy?.id);
 };
 
 type Props = {

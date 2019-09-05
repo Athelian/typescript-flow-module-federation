@@ -1,13 +1,11 @@
 // @flow
-import { useHasPermissions } from 'components/Context/Permissions';
-import useUser from 'hooks/useUser';
+import { useViewerHasPermissions } from 'components/Context/Permissions';
 
 /**
- * @deprecated Use instead hook useHasPermissions
+ * @deprecated Use instead hook useViewerHasPermissions
  */
 const PermissionConsumer = ({ children }: { children: Function }) => {
-  const { organization } = useUser();
-  const hasPermission = useHasPermissions(organization?.id);
+  const hasPermission = useViewerHasPermissions();
 
   return children(hasPermission);
 };

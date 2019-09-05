@@ -22,8 +22,7 @@ import { PROJECT_LIST } from 'modules/permission/constants/project';
 import { DOCUMENT_LIST } from 'modules/permission/constants/file';
 import { TASK_LIST, TASK_TEMPLATE_LIST } from 'modules/permission/constants/task';
 import { UIConsumer } from 'modules/ui';
-import { useViewer } from 'components/Context/Viewer';
-import { useHasPermissions } from 'components/Context/Permissions';
+import { useViewerHasPermissions } from 'components/Context/Permissions';
 import { isEnableBetaFeature } from 'utils/env';
 import { Logo, MenuItem, SubMenu } from './components';
 import { SideBarWrapperStyle, SideBarBodyStyle } from './style';
@@ -50,8 +49,7 @@ import {
 } from './constants';
 
 const SideBar = () => {
-  const { organization } = useViewer();
-  const hasPermission = useHasPermissions(organization?.id);
+  const hasPermission = useViewerHasPermissions();
 
   return (
     <Location>
