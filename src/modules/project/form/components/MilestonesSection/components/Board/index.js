@@ -5,6 +5,7 @@ import type { Task } from 'generated/graphql';
 import type { DropResult, DroppableProvided } from 'react-beautiful-dnd';
 import { ProjectMilestonesContainer } from 'modules/project/form/containers';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { injectProjectAndMilestoneDueDate } from 'utils/project';
 import MilestoneColumn from '../MilestoneColumn';
 import NewButtonColumn from '../NewButtonColumn';
 import { MilestonesSectionWrapperStyle } from './style';
@@ -76,27 +77,6 @@ const reorderMilestoneMap = ({ milestoneMap, source, destination }: Object): Obj
   return {
     milestoneMap: result,
   };
-};
-
-export const injectProjectAndMilestoneDueDate = ({
-  tasks,
-  milestoneId,
-  projectInfo,
-}: {
-  tasks: Array<Task>,
-  milestoneId: string,
-  projectInfo: ProjectInfo,
-}): Array<Task> => {
-  const milestone = projectInfo.milestones.find(item => item.id === milestoneId);
-  return tasks.map(task => ({
-    ...task,
-    milestone: {
-      ...milestone,
-      project: {
-        dueDate: projectInfo.dueDate,
-      },
-    },
-  }));
 };
 
 export default class Board extends Component<Props> {

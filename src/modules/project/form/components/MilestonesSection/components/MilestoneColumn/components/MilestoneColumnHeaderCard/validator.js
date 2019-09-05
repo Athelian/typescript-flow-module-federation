@@ -12,7 +12,7 @@ const validator = ({ name }: Props): Object =>
     [name]: Yup.string().required(
       ((
         <FormattedMessage id="validation.name.required" defaultMessage="Name is a required field" />
-      ): any)
+      ): Object)
     ),
   });
 
