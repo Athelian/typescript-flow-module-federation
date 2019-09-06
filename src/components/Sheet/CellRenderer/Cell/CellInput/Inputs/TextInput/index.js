@@ -30,7 +30,8 @@ const TextInput = ({ value, focus, onChange, onFocus, onBlur, onKeyDown, readonl
         inputRef.current.blur();
       }
     }
-  }, [focus, value]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focus]);
 
   return (
     <div className={WrapperStyle}>

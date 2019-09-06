@@ -10,7 +10,7 @@ export const ColumnStyle = (color: string, width: number) => css`
   min-width: ${width}px;
   max-width: ${width}px;
   padding: 5px 15px;
-  border-top: 5px solid ${color};
+  border-top: 4px solid ${color};
 `;
 
 export const TitleStyle = css`

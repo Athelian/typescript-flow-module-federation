@@ -3,16 +3,16 @@ import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar } from 'components/NavBar';
-import { Sheet } from 'components/Sheet';
+import { Sheet, ColumnsConfig } from 'components/Sheet';
 import columns from './columns';
 import transformer from './transformer';
 import entityEventHandler from './handler';
 import mutate from './mutate';
 import { ordersQuery } from './query';
-import ColumnConfigModal from './ColumnConfigModal';
 
 const OrderSheetModule = () => {
   const client = useApolloClient();
+  const [currentColumns, setCurrentColumns] = React.useState(columns);
   const memoizedMutate = React.useCallback(mutate(client), [client]);
   const memoizedHandler = React.useCallback(dispatch => entityEventHandler(client, dispatch), [
     client,
@@ -45,11 +45,11 @@ const OrderSheetModule = () => {
       <NavBar>
         <EntityIcon icon="SHEET" color="SHEET" />
 
-        <ColumnConfigModal />
+        <ColumnsConfig columns={columns} onChange={setCurrentColumns} />
       </NavBar>
 
       <Sheet
-        columns={columns}
+        columns={currentColumns}
         loading={loading}
         items={initialOrders}
         hasMore={page.page < page.totalPage}

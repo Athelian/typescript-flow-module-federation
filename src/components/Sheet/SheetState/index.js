@@ -127,7 +127,7 @@ export const useSheetStateInitializer = (columns: Array<ColumnConfig>, items: Ar
     const columnKeys = columns.map(c => c.key);
     const needRearrange =
       columnKeys.length !== columnKeysRef.current.length ||
-      columnKeys.every((value, index) => value !== columnKeysRef.current[index]);
+      !columnKeys.every((value, index) => value !== columnKeysRef.current[index]);
 
     if (state.initialized && needRearrange) {
       dispatch({

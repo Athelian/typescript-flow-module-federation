@@ -80,7 +80,7 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
             <Added start={addedRow?.start ?? 0} end={addedRow?.end ?? 0} />
           )}
 
-          {!cell.empty && (
+          {cell && !cell.empty && (
             <Cell
               cell={cell}
               columnIndex={columnIndex}
