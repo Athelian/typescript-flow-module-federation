@@ -151,7 +151,7 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
         orderInputIds.forEach(target => {
           const [, orderId] = target.split('-');
           sources.push({
-            type: ORDER_ITEM,
+            type: ORDER,
             id: orderId,
           });
 
@@ -203,20 +203,17 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
               },
             };
 
-            orders.push({
-              id: parentOrder?.id,
-              input: {
-                orderItems: [
-                  {
-                    productProviderId: parentItem?.productProvider?.id,
-                    no: `[auto] ${parentItem?.no}`,
-                    quantity: batch.latestQuantity,
-                    price: { amount: parentItem.price.amount, currency: parentItem.price.currency },
-                    batches: [{ id: batchId }],
-                  },
-                ],
-              },
-            });
+            const orderMutationInput = orders.find(order => order.id === parentOrder?.id);
+            if (orderMutationInput) {
+              orderMutationInput.input.orderItems.push({
+                id: parentItem.id,
+                productProviderId: parentItem?.productProvider?.id,
+                no: `[auto] ${parentItem?.no}`,
+                quantity: batch.latestQuantity,
+                price: { amount: parentItem.price.amount, currency: parentItem.price.currency },
+                batches: [{ id: batchId }],
+              });
+            }
           }
         });
 

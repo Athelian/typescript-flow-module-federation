@@ -1,6 +1,6 @@
 // @flow
 /* eslint-disable no-param-reassign */
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import type { Hit, Order, OrderItem } from 'generated/graphql';
 import { intersection } from 'lodash';
 // $FlowFixMe missing define for partialRight
@@ -9,6 +9,7 @@ import { createContainer } from 'unstated-next';
 import produce from 'immer';
 import { isEquals } from 'utils/fp';
 import usePersistFilter from 'hooks/usePersistFilter';
+import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMapV2/constants';
 import { normalizeEntity } from 'modules/relationMapV2/components/OrderFocus/normalize';
 
 const defaultState = [];
@@ -37,16 +38,69 @@ function useEntities(
   }
 ) {
   const [mapping, setMapping] = useState<RelationMapEntities>(initialState);
-  const [badge, setBadge] = useState<{}>({
+  const [badge, setBadge] = useState<{ order: Object, orderItem: Object, batch: Object }>({
     order: {},
     orderItem: {},
     batch: {},
   });
+  const [related, setRelated] = useState<{ order: Object, orderItem: Object, batch: Object }>({
+    order: {},
+    orderItem: {},
+    batch: {},
+  });
+
   const onSetBadges = (entities: Array<{ id: string, type: string, entity: string }>) => {
     setBadge(
       produce(badge, draft => {
         entities.forEach(({ id, entity, type }) => {
           draft[entity][id] = type;
+        });
+      })
+    );
+  };
+
+  const onSetRelated = (
+    sources: Array<{ id: string, type: string }>,
+    cloneEntities: Array<Object>
+  ) => {
+    console.warn({
+      sources,
+      cloneEntities,
+    });
+    setRelated(
+      produce(related, draft => {
+        const batches = sources.filter(item => item.type === BATCH);
+        const cloneBatches =
+          cloneEntities.find(item => item.data.batchCloneMany)?.data?.batchCloneMany ?? [];
+        batches.forEach((batch, index) => {
+          if (!related.batch[batch.id]) {
+            draft.batch[batch.id] = [cloneBatches?.[index]?.id];
+          } else {
+            draft.batch[batch.id] = [...related.batch[batch.id], cloneBatches?.[index]?.id];
+          }
+        });
+        const orderItems = sources.filter(item => item.type === ORDER_ITEM);
+        const cloneOrderItems =
+          cloneEntities.find(item => item.data.orderItemCloneMany)?.data?.orderItemCloneMany ?? [];
+        orderItems.forEach((orderItem, index) => {
+          if (!related.orderItem[orderItem.id]) {
+            draft.orderItem[orderItem.id] = [cloneOrderItems?.[index]?.id];
+          } else {
+            draft.orderItem[orderItem.id] = [
+              ...related.orderItem[orderItem.id],
+              cloneOrderItems?.[index]?.id,
+            ];
+          }
+        });
+        const orders = sources.filter(item => item.type === ORDER);
+        const cloneOrders =
+          cloneEntities.find(item => item.data.orderCloneMany)?.data?.orderCloneMany ?? [];
+        orders.forEach((order, index) => {
+          if (!related.order[order.id]) {
+            draft.order[order.id] = [cloneOrders?.[index]?.id];
+          } else {
+            draft.order[order.id] = [...related.order[order.id], cloneOrders?.[index]?.id];
+          }
         });
       })
     );
@@ -122,7 +176,7 @@ function useEntities(
         break;
     }
   };
-  return { mapping, initMapping, checkRemoveEntities, badge, onSetBadges };
+  return { mapping, initMapping, checkRemoveEntities, badge, onSetBadges, related, onSetRelated };
 }
 
 export const Entities = createContainer(useEntities);
@@ -157,6 +211,8 @@ function useClientSorts(
 ) {
   const cacheKey = 'NRMLocalSorts';
   const localFilter = window.localStorage.getItem(cacheKey);
+  const orderItemsSort = useRef({});
+  const batchesSort = useRef({});
   const initialFilter = localFilter
     ? {
         ...initSorts,
@@ -172,7 +228,15 @@ function useClientSorts(
         draft[type] = newFilter;
       })
     );
+    // TODO: trigger the local sort
   }, []);
+
+  const getItemsSortByOrderId = (orderId: string): Array<string> => {
+    return orderItemsSort.current?.[orderId] ?? [];
+  };
+  const getBatchesSortByItemId = (itemId: string): Array<string> => {
+    return batchesSort.current?.[itemId] ?? [];
+  };
 
   useEffect(() => {
     if (window.localStorage) {
@@ -183,6 +247,8 @@ function useClientSorts(
   return {
     filterAndSort,
     onChangeFilter,
+    getItemsSortByOrderId,
+    getBatchesSortByItemId,
   };
 }
 
