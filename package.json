@@ -111,22 +111,24 @@
     "gql-gen": "graphql-codegen --config codegen.yml"
   },
   "lint-staged": {
-    "ignore": [
-      "**/generated/**/*.{js,json}"
-    ],
-    "src/**/*.{js,jsx,json}": [
-      "eslint --fix",
-      "prettier-eslint --write",
-      "git add"
-    ],
-    "*.md": [
-      "prettier-eslint --write",
-      "git add"
-    ],
-    "src/**/*.{css}": [
-      "stylelint --fix",
-      "git add"
-    ]
+    "linters": {
+      "ignore": [
+        "**/generated/**/*.{js,json}"
+      ],
+      "src/**/*.{js,jsx,json}": [
+        "eslint --fix",
+        "prettier-eslint --write",
+        "git add"
+      ],
+      "*.md": [
+        "prettier-eslint --write",
+        "git add"
+      ],
+      "src/**/*.{css}": [
+        "stylelint --fix",
+        "git add"
+      ]
+    }
   },
   "jest": {
     "collectCoverageFrom": [
