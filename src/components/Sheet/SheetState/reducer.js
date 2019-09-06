@@ -718,7 +718,7 @@ export function cellReducer(transformer: (number, Object) => Array<Array<CellVal
           ...state,
           // $FlowFixMe ???
           addedRows: state.addedRows.filter(
-            row => row.entity.id !== id && row.entity.type !== type
+            row => row.entity.id !== id || row.entity.type !== type
           ),
         };
       }
