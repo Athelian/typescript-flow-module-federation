@@ -65,7 +65,6 @@ and install all the dependencies.
 
 ```sh
 yarn install
-yarn post:install
 ```
 
 ## Unit tests

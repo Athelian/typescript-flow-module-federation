@@ -60702,6 +60702,7 @@ export type TodoTaskInput = {
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   id?: ?$ElementType<Scalars, 'ID'>,
   taskTemplateId?: ?$ElementType<Scalars, 'ID'>,
+  milestoneId?: ?$ElementType<Scalars, 'ID'>,
 };
 
 export type Token = {
