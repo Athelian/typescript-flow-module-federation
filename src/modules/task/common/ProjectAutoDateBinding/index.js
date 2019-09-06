@@ -2,10 +2,9 @@
 import * as React from 'react';
 import type { Task } from 'generated/graphql';
 import emitter from 'utils/emitter';
-import logger from 'utils/logger';
 import { getByPath, setIn } from 'utils/fp';
-import { START_DATE, DUE_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
-import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
+import { START_DATE, DUE_DATE } from 'utils/task';
+import { calculateDate, findDuration } from 'utils/date';
 
 type Props = {
   tasks: Array<Object>,
@@ -14,13 +13,6 @@ type Props = {
 
 const updateDateInput = ({ field, value, task }: { field: string, value: mixed, task: Task }) => {
   const [milestoneId, fieldName] = field.split('.') || [];
-  logger.warn({
-    milestoneId,
-    fieldName,
-    field,
-    value,
-    task,
-  });
 
   // if file name exist which means that is come from milestone due date
   if (fieldName) {
@@ -43,7 +35,6 @@ export default function ProjectAutoDateBinding({ tasks, setTaskValue }: Props) {
       MilestoneDueDate: 'milestone.dueDate',
     };
     emitter.addListener('AUTO_DATE', (field: mixed, value: mixed) => {
-      logger.warn('auto calculate binding data for project', field, value, tasks);
       setTaskValue(
         tasks.map(task => {
           const {
@@ -62,16 +53,6 @@ export default function ProjectAutoDateBinding({ tasks, setTaskValue }: Props) {
                 task,
               })
             : task;
-
-          logger.warn('project', {
-            latestValues,
-            startDate,
-            startDateBinding,
-            startDateInterval,
-            dueDate,
-            dueDateBinding,
-            dueDateInterval,
-          });
 
           let newStartDate = startDate;
           let newDueDate = dueDate;
@@ -140,10 +121,6 @@ export default function ProjectAutoDateBinding({ tasks, setTaskValue }: Props) {
             }
           }
 
-          logger.warn({
-            newStartDate,
-            newDueDate,
-          });
           return {
             ...task,
             startDate: newStartDate,

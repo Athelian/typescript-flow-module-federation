@@ -22,7 +22,7 @@ import { ORDER_FORM } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_FORM } from 'modules/permission/constants/orderItem';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
-import { UserConsumer } from 'modules/user';
+import { UserConsumer } from 'components/Context/Viewer';
 import {
   Label,
   Display,

@@ -12,7 +12,7 @@ import {
 
 export const ProjectSectionWrapperStyle = (isExpanded: boolean) => css`
   display: flex;
-  height: ${isExpanded ? '355px' : '0px'};
+  height: ${isExpanded ? '340px' : '0px'};
   overflow: hidden;
   width: 100%;
   max-width: 100%;
@@ -81,5 +81,22 @@ export const ExpandWrapperStyle = css`
   &:hover,
   :focus {
     background-color: ${colors.GRAY_DARK};
+  }
+`;
+
+export const ProjectCardBodyStyle = (numOfColumns: number): string => css`
+  display: grid;
+  grid-template-columns: repeat(${numOfColumns}, minmax(143.75px, 1fr)) 35px;
+  width: 100%;
+  height: 100%;
+  overflow-y: hidden;
+  overflow-x: overlay;
+  padding: 10px 0 10px 20px;
+  ${scrollbars.SMALL};
+  &::after {
+    content: '';
+    display: block;
+    width: 35px;
+    height: 100%;
   }
 `;

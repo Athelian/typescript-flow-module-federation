@@ -7,7 +7,7 @@ import { Display, Label } from 'components/Form';
 import { Tooltip } from 'components/Tooltip';
 import { differenceInCalendarDays } from 'utils/date';
 import ProjectDueDateDiffToolTip from './components/ProjectDueDateDiffToolTip';
-import MilestoneBlock from './components/MilestoneBlock';
+import MilestoneTimelineItem from './components/MilestoneTimelineItem';
 import BaseCard from '../BaseCard';
 import {
   ProjectCardStyle,
@@ -101,7 +101,7 @@ const ProjectCardNew = ({ project, onClick, ...rest }: Props) => {
 
         <div className={ProjectCardBodyStyle(milestones.length)}>
           {milestones.map(milestone => (
-            <MilestoneBlock key={milestone.id} milestone={milestone} />
+            <MilestoneTimelineItem key={milestone.id} milestone={milestone} />
           ))}
         </div>
       </div>

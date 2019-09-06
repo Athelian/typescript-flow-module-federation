@@ -140,9 +140,9 @@ function containerCell(batch: BatchPayload): ?CellRender {
   return null;
 }
 
-const cacheSorted = {};
+export const cacheSorted = {};
 
-function lastSorting({
+export function lastSorting({
   sourceEntities,
   sortHandler,
   sort,

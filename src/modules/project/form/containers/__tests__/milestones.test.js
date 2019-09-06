@@ -97,6 +97,10 @@ describe('milestones container', () => {
           {
             id: 4,
             milestoneSort: 0,
+            milestone: {
+              id: '3',
+              tasks: [],
+            },
           },
         ],
       },
@@ -131,32 +135,6 @@ describe('milestones container', () => {
       },
     ];
     await container.initDetailValues(milestones);
-    const result = await container.milestoneStatus();
-
-    expect(result).toMatchSnapshot();
-    expect(result).toEqual([
-      {
-        completed: 0,
-        dueDate: null,
-        isCompleted: false,
-        name: 'a',
-        total: 1,
-      },
-      {
-        completed: 0,
-        dueDate: null,
-        isCompleted: false,
-        name: 'b',
-        total: 0,
-      },
-      {
-        completed: 0,
-        dueDate: null,
-        isCompleted: false,
-        name: 'c',
-        total: 0,
-      },
-    ]);
   });
 
   it('should change the milestone name', async () => {

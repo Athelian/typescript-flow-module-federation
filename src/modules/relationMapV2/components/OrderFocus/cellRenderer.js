@@ -44,6 +44,7 @@ import {
   ContainerCard,
   HeaderCard,
   handleClickAndDoubleClick,
+  cacheSorted,
 } from './helpers';
 import { RelationMapContext } from './store';
 
@@ -558,7 +559,7 @@ const shipmentDropMessage = ({
 
 function OrderCell({ data, afterConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
-  const { mapping } = Entities.useContainer();
+  const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const orderId = getByPathWithDefault('', 'id', data);
   const [{ isOver, canDrop, dropMessage, isSameItem }, drop] = useDrop({
@@ -688,7 +689,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
   return (
     <>
       <div className={ContentStyle} />
-      <div ref={drop} className={ContentStyle}>
+      <div ref={drop} id={`${ORDER}-${orderId}`} className={ContentStyle}>
         {isDragging ? (
           <div
             style={{
@@ -708,6 +709,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
             onClick={handleClick}
           >
             <div ref={drag}>
+              <Badge label={badge.order?.[orderId] ?? ''} />
               <OrderCard>{getByPathWithDefault('', 'poNo', data)}</OrderCard>
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
@@ -743,6 +745,7 @@ function OrderItemCell({
   order,
 }: CellProps & { order: OrderPayload }) {
   const { state, dispatch } = React.useContext(RelationMapContext);
+  const { badge } = Entities.useContainer();
   const orderId = getByPathWithDefault('', 'id', order);
   const itemId = getByPathWithDefault('', 'id', data);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
@@ -899,6 +902,7 @@ function OrderItemCell({
             onClick={handleClick}
           >
             <div ref={drag}>
+              <Badge label={badge.orderItem?.[itemId] ?? ''} />
               <OrderItemCard
                 no={data?.no ?? 'N/A'}
                 onCreateBatch={evt => {
@@ -1067,7 +1071,7 @@ function BatchCell({
           />
         )}
       </div>
-      <div ref={drop} className={ContentStyle}>
+      <div ref={drop} className={ContentStyle} id={`${BATCH}-${batchId}`}>
         {isDragging ? (
           <div
             style={{
@@ -1087,7 +1091,7 @@ function BatchCell({
             onClick={handleClick}
           >
             <div ref={drag} style={baseDragStyle}>
-              {badge[batchId] && <Badge label={badge[batchId]} />}
+              <Badge label={badge.batch?.[batchId] ?? ''} />
               <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
@@ -2017,25 +2021,27 @@ function ShipmentSummaryCell({
 
 function DuplicateOrderCell({
   data,
+  // $FlowIssue: doesn't support to access to child yet
   order,
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload }) {
   const { state } = React.useContext(RelationMapContext);
-  const itemPosition = getByPathWithDefault(0, 'itemPosition', data);
-  const batchPosition = getByPathWithDefault(0, 'batchPosition', data);
-  const items = getByPathWithDefault('', 'orderItems', order);
+  const orderId = order?.id;
+  const itemPosition = data?.itemPosition ?? 0;
+  const batchPosition = data?.batchPosition ?? 0;
+  const items =
+    cacheSorted?.[`${orderId}-orderItems`]?.entities ??
+    (order?.orderItems ?? []).map(item => item?.id);
   let foundPosition = -1;
   for (let index = items.length - 1; index > 0; index -= 1) {
-    const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${items[index].id}`);
+    const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${items[index]}`);
     if (isTargetedItem) {
       foundPosition = index;
       break;
     }
   }
-  const isTargetedOrder = state.targets.includes(
-    `${ORDER}-${getByPathWithDefault('', 'id', order)}`
-  );
+  const isTargetedOrder = state.targets.includes(`${ORDER}-${orderId}`);
 
   const connector = {
     isTargeted:
@@ -2073,6 +2079,7 @@ function DuplicateOrderCell({
   );
 }
 
+// FIXME: hight light color for sort item vs batch
 function DuplicateOrderItemCell({
   data,
   order,
@@ -2086,20 +2093,24 @@ function DuplicateOrderItemCell({
     order
   );
   const batchPosition = getByPathWithDefault(0, 'batchPosition', data);
-  const batches = getByPathWithDefault(
-    '',
-    `orderItems.${getByPathWithDefault(0, 'itemPosition', data)}.batches`,
-    order
-  );
+  const batches =
+    cacheSorted?.[`${itemId}-batches`]?.entities ??
+    getByPathWithDefault(
+      [],
+      `orderItems.${getByPathWithDefault(0, 'itemPosition', data)}.batches`,
+      order
+    ).map(batch => batch.id);
+
   let foundPosition = -1;
   for (let index = batches.length - 1; index > 0; index -= 1) {
-    const isTargetedBatch = state.targets.includes(`${BATCH}-${batches[index].id}`);
+    const isTargetedBatch = state.targets.includes(`${BATCH}-${batches[index]}`);
     if (isTargetedBatch) {
       foundPosition = index;
       break;
     }
   }
   const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${itemId}`);
+
   const connector = {
     isTargeted: isTargetedItem && foundPosition >= batchPosition,
     hasRelation: false,

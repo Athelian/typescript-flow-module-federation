@@ -1,6 +1,6 @@
 // @flow
 import * as Yup from 'yup';
-import { START_DATE, DUE_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
+import { START_DATE, DUE_DATE } from 'utils/task';
 
 const startDateBinding = {
   startDateBinding: Yup.string()

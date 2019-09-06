@@ -5,7 +5,7 @@ export const BadgeWrapperStyle = css`
   position: absolute;
   top: -10px;
   left: -10px;
-  z-index: 2;
+  z-index: 1;
   padding: 1px 2px 1px 4px;
   ${borderRadiuses.MAIN};
   background-color: ${colors.TEAL_VERY_DARK};

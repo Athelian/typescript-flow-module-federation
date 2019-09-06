@@ -48,6 +48,7 @@ export default class ShipmentTasksContainer extends Container<FormState> {
 
   applyTemplate = (template: Object) => {
     const {
+      // $FlowFixMe: need to check again the schema
       todo: { milestone },
     } = this.state;
     const nonTemplateTasks = this.state.todo.tasks.filter(task => !getByPath('taskTemplate', task));

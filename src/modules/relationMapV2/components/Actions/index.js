@@ -4,6 +4,7 @@ import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import logger from 'utils/logger';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
+import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import ActionButton from './components/ActionButton';
 import ActionSubMenu from './components/ActionSubMenu';
 import ActionLabel from './components/ActionLabel';
@@ -17,11 +18,9 @@ function getEntityCount(targets: Array<string>, entityConstant: string) {
   return targets.filter(item => item.includes(`${entityConstant}-`)).length;
 }
 
-const ALL = 'all';
-
 export default function Actions({ targets }: Props) {
   const [currentMenu, setCurrentMenu] = React.useState(null);
-
+  const { dispatch } = React.useContext(RelationMapContext);
   const orderIsDisabled = getEntityCount(targets, ORDER) === 0;
   const itemIsDisabled = getEntityCount(targets, ORDER_ITEM) === 0;
   const batchIsDisabled = getEntityCount(targets, BATCH) === 0;
@@ -32,18 +31,28 @@ export default function Actions({ targets }: Props) {
     <OutsideClickHandler
       onOutsideClick={() => setCurrentMenu(null)}
       ignoreClick={currentMenu === null}
-      // ignoreElements={buttonRef.current ? [buttonRef.current] : []}
     >
       <div className={ActionsWrapperStyle}>
         <ActionButton
+          isDisabled={orderIsDisabled}
           onClick={() => {
-            if (currentMenu === ALL) setCurrentMenu(null);
-            else setCurrentMenu(ALL);
+            if (currentMenu === ORDER) setCurrentMenu(null);
+            else setCurrentMenu(ORDER);
           }}
         >
-          ALL
-          <ActionSubMenu isCollapsed={currentMenu !== ALL}>
-            <ActionButton onClick={() => logger.warn('CLONE')}>
+          <Icon icon="ORDER" />
+          <ActionSubMenu isCollapsed={currentMenu !== ORDER}>
+            <ActionButton
+              onClick={() => {
+                logger.warn('CLONE');
+                dispatch({
+                  type: 'CLONE',
+                  payload: {
+                    source: ORDER,
+                  },
+                });
+              }}
+            >
               <Icon icon="CLONE" />
               <ActionLabel>CLONE</ActionLabel>
             </ActionButton>
@@ -56,16 +65,6 @@ export default function Actions({ targets }: Props) {
         </ActionButton>
 
         <ActionButton
-          isDisabled={orderIsDisabled}
-          onClick={() => {
-            if (currentMenu === ORDER) setCurrentMenu(null);
-            else setCurrentMenu(ORDER);
-          }}
-        >
-          <Icon icon="ORDER" />
-        </ActionButton>
-
-        <ActionButton
           isDisabled={itemIsDisabled}
           onClick={() => {
             if (currentMenu === ORDER_ITEM) setCurrentMenu(null);
@@ -73,6 +72,27 @@ export default function Actions({ targets }: Props) {
           }}
         >
           <Icon icon="ORDER_ITEM" />
+          <ActionSubMenu isCollapsed={currentMenu !== ORDER_ITEM}>
+            <ActionButton
+              onClick={() => {
+                logger.warn('CLONE');
+                dispatch({
+                  type: 'CLONE',
+                  payload: {
+                    source: ORDER_ITEM,
+                  },
+                });
+              }}
+            >
+              <Icon icon="CLONE" />
+              <ActionLabel>CLONE</ActionLabel>
+            </ActionButton>
+
+            <ActionButton onClick={() => logger.warn('ADD TAGS')}>
+              <Icon icon="TAG" />
+              <ActionLabel>ADD TAGS</ActionLabel>
+            </ActionButton>
+          </ActionSubMenu>
         </ActionButton>
 
         <ActionButton
@@ -83,6 +103,27 @@ export default function Actions({ targets }: Props) {
           }}
         >
           <Icon icon="BATCH" />
+          <ActionSubMenu isCollapsed={currentMenu !== BATCH}>
+            <ActionButton
+              onClick={() => {
+                logger.warn('CLONE');
+                dispatch({
+                  type: 'CLONE',
+                  payload: {
+                    source: BATCH,
+                  },
+                });
+              }}
+            >
+              <Icon icon="CLONE" />
+              <ActionLabel>CLONE</ActionLabel>
+            </ActionButton>
+
+            <ActionButton onClick={() => logger.warn('ADD TAGS')}>
+              <Icon icon="TAG" />
+              <ActionLabel>ADD TAGS</ActionLabel>
+            </ActionButton>
+          </ActionSubMenu>
         </ActionButton>
 
         <ActionButton

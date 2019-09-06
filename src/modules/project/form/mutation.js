@@ -70,21 +70,13 @@ export const prepareParsedTaskInput = (originalValues: ?Task, values: Task) => (
 
 const prepareParseMilestone = (originalValues: Object, newValues: Object): Object => ({
   ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
-  ...parseDateField(
-    'dueDate',
-    getByPathWithDefault(null, 'dueDate', originalValues),
-    newValues.dueDate
+  ...parseDateField('dueDate', originalValues?.dueDate, newValues?.dueDate),
+  ...parseGenericField(
+    'dueDateInterval',
+    originalValues?.dueDateInterval,
+    newValues?.dueDateInterval
   ),
-  ...parseParentIdField(
-    'completedById',
-    getByPathWithDefault(null, 'completedBy', originalValues),
-    newValues.completedBy
-  ),
-  ...parseDateField(
-    'completedAt',
-    getByPathWithDefault(null, 'completedAt', originalValues),
-    newValues.completedAt
-  ),
+  ...parseEnumField('dueDateBinding', originalValues?.dueDateBinding, newValues?.dueDateBinding),
   ...parseDateField(
     'estimatedCompletionDate',
     originalValues?.estimatedCompletionDate,
@@ -99,6 +91,16 @@ const prepareParseMilestone = (originalValues: Object, newValues: Object): Objec
     'estimatedCompletionDateBinding',
     originalValues?.estimatedCompletionDateBinding,
     newValues?.estimatedCompletionDateBinding
+  ),
+  ...parseParentIdField(
+    'completedById',
+    getByPathWithDefault(null, 'completedBy', originalValues),
+    newValues.completedBy
+  ),
+  ...parseDateField(
+    'completedAt',
+    getByPathWithDefault(null, 'completedAt', originalValues),
+    newValues.completedAt
   ),
   ...parseArrayOfChildrenField(
     'tasks',

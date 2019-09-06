@@ -11,7 +11,7 @@ import {
   Display,
 } from 'components/Form';
 import { FormField } from 'modules/form';
-import { calculateMilestonesEstimatedCompletionDate, calculateBindingDate } from 'utils/project';
+import { calculateBindingDate } from 'utils/project';
 import {
   AutoDateBackgroundStyle,
   RadioWrapperStyle,
@@ -20,39 +20,51 @@ import {
   AutoDateSyncIconStyle,
 } from './style';
 
-type Props = {
+type OptionalProps = {
+  editable: boolean,
+};
+
+type Props = OptionalProps & {
+  dateName: string,
+  dateBinding: string,
+  dateBindingItems: Array<Object>,
+  dateInterval: string,
+  baseDate: string,
   originalValues: Object,
   values: Object,
   validator: any,
   setFieldValue: Function,
 };
 
-const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: Props) => {
-  const editable = true;
+const defaultProps = {
+  editable: false,
+};
 
-  let dateBinding = false;
+// only used at milestone form
+const DateBindingInput = ({
+  dateName,
+  dateBinding,
+  dateBindingItems,
+  dateInterval,
+  baseDate,
+  originalValues,
+  values,
+  validator,
+  setFieldValue,
+  editable,
+}: Props) => {
+  const [dateBindingSign, setDateBindingSign] = React.useState('before');
+
+  let bound = false;
   let dateBindingValue = 0;
   let dateBindingMetric = 'days';
-  const [dateBindingSign, setDateBindingSign] = React.useState('before');
-  let { estimatedCompletionDate } = values;
+  let date = values[dateName];
 
-  if (values.estimatedCompletionDateBinding) {
-    dateBinding = true;
+  if (values[dateBinding]) {
+    bound = true;
+    date = calculateBindingDate(baseDate, values[dateInterval]);
 
-    const {
-      project: { milestones },
-    } = values;
-    const milestoneIndex = milestones.findIndex(item => item.id === values.id);
-    const estimatedCompletionDates = calculateMilestonesEstimatedCompletionDate({ milestones });
-    estimatedCompletionDate =
-      milestoneIndex === 0
-        ? ''
-        : calculateBindingDate(
-            estimatedCompletionDates[milestoneIndex - 1],
-            values.estimatedCompletionDateInterval
-          );
-
-    const { months, weeks, days } = values.estimatedCompletionDateInterval || {};
+    const { months, weeks, days } = values[dateInterval] || {};
     if (months) {
       if (months > 0 && dateBindingSign === 'before') {
         setDateBindingSign('after');
@@ -79,39 +91,40 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
 
   return (
     <GridColumn gap="10px">
-      <div className={AutoDateBackgroundStyle(dateBinding ? 'bottom' : 'top')} />
+      <div className={AutoDateBackgroundStyle(bound ? 'bottom' : 'top')} />
 
       <div className={RadioWrapperStyle('top')}>
         <RadioInput
           align="right"
-          selected={!dateBinding}
+          selected={!bound}
           onToggle={() => {
-            setFieldValue('estimatedCompletionDateBinding', null);
-            setFieldValue('estimatedCompletionDateInterval', null);
+            setFieldValue(dateName, date);
+            setFieldValue(dateBinding, null);
+            setFieldValue(dateInterval, null);
           }}
-          editable={editable && dateBinding}
+          editable={editable && bound}
         />
       </div>
 
       <div className={RadioWrapperStyle('bottom')}>
         <RadioInput
           align="right"
-          selected={dateBinding}
+          selected={bound}
           onToggle={() => {
-            setFieldValue('estimatedCompletionDate', estimatedCompletionDate);
-            setFieldValue('estimatedCompletionDateBinding', 'MilestoneCompleteDate');
-            setFieldValue('estimatedCompletionDateInterval', {
+            setFieldValue(dateBinding, dateBindingItems[0]?.value);
+            setFieldValue(dateInterval, {
               days: 0,
             });
+            setFieldValue(dateName, calculateBindingDate(baseDate, { days: 0 }));
             setDateBindingSign('before');
           }}
-          editable={editable && !dateBinding}
+          editable={editable && !bound}
         />
       </div>
 
       <FormField
-        name="estimatedCompletionDate"
-        initValue={estimatedCompletionDate}
+        name={dateName}
+        initValue={date}
         values={values}
         validator={validator}
         setFieldValue={setFieldValue}
@@ -121,13 +134,13 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
             name={name}
             {...inputHandlers}
             originalValue={originalValues[name]}
-            editable={editable && !dateBinding}
-            hideTooltip={dateBinding}
+            editable={editable && !bound}
+            hideTooltip={bound}
           />
         )}
       </FormField>
 
-      {dateBinding ? (
+      {bound ? (
         <div className={AutoDateWrapperStyle}>
           <div className={AutoDateSyncIconStyle}>
             <Icon icon="SYNC" />
@@ -135,16 +148,18 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
 
           <div className={dateBindingSignWrapperStyle}>
             <FormField
-              name="autoDueDateDuration"
+              name={dateInterval}
               initValue={{
                 metric: dateBindingMetric,
                 value: dateBindingValue,
               }}
               setFieldValue={(field, newValue) => {
                 const { value, metric } = newValue;
-                setFieldValue('estimatedCompletionDateInterval', {
-                  [metric]: dateBindingSign === 'before' ? -Math.abs(value) : Math.abs(value),
+                const realValue = dateBindingSign === 'before' ? -Math.abs(value) : Math.abs(value);
+                setFieldValue(dateInterval, {
+                  [metric]: realValue,
                 });
+                setFieldValue(dateName, calculateBindingDate(baseDate, { [metric]: realValue }));
               }}
             >
               {({ name, ...inputHandlers }) => (
@@ -165,10 +180,15 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
               name="dateBindingSign"
               initValue={dateBindingSign}
               setFieldValue={(field, value) => {
-                setFieldValue('estimatedCompletionDateInterval', {
-                  [dateBindingMetric]:
-                    value === 'before' ? -Math.abs(dateBindingValue) : Math.abs(dateBindingValue),
+                const realValue =
+                  value === 'before' ? -Math.abs(dateBindingValue) : Math.abs(dateBindingValue);
+                setFieldValue(dateInterval, {
+                  [dateBindingMetric]: realValue,
                 });
+                setFieldValue(
+                  dateName,
+                  calculateBindingDate(baseDate, { [dateBindingMetric]: realValue })
+                );
                 setDateBindingSign(value);
               }}
               saveOnChange
@@ -194,20 +214,15 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
           </div>
 
           <FormField
-            name="estimatedCompletionDateBinding"
-            initValue={values.estimatedCompletionDateBinding}
+            name={dateBinding}
+            initValue={values[dateBinding]}
             setFieldValue={setFieldValue}
             saveOnChange
           >
             {({ ...inputHandlers }) => (
               <SelectInputFactory
                 {...inputHandlers}
-                items={[
-                  {
-                    value: 'MilestoneCompleteDate',
-                    label: "Prev. Milestone's Est. / Compl.",
-                  },
-                ]}
+                items={dateBindingItems}
                 editable={editable}
                 required
                 hideTooltip
@@ -233,5 +248,7 @@ const DateBindingInput = ({ originalValues, values, validator, setFieldValue }: 
     </GridColumn>
   );
 };
+
+DateBindingInput.defaultProps = defaultProps;
 
 export default DateBindingInput;

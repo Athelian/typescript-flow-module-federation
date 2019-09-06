@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { Batch } from 'generated/graphql';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { orderItemFormQuery } from 'modules/orderItem/form/query';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
@@ -14,18 +15,17 @@ import { DialogStyle, ConfirmMessageStyle } from './style';
 import { createBatchMutation } from './mutation';
 
 type Props = {|
-  isOpen: boolean,
-  entity: {
-    no: string,
-    id: string,
-  },
-  isProcessing?: boolean,
-  onSuccess: string => void,
+  onSuccess: (string, Batch) => void,
 |};
 
-export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSuccess }: Props) {
-  const { mapping, onSetBadge } = Entities.useContainer();
-  const { dispatch } = React.useContext(RelationMapContext);
+export default function InlineCreateBatch({ onSuccess }: Props) {
+  const { mapping, onSetBadges } = Entities.useContainer();
+  const { dispatch, state } = React.useContext(RelationMapContext);
+  const {
+    isOpen,
+    isProcessing,
+    detail: { entity },
+  } = state.createBatch;
   const [createBatch, batchResult] = useMutation(createBatchMutation);
   const [loadOrderItem, itemResult] = useLazyQuery(orderItemFormQuery, {
     // NOTE: there is a tricky part for fixing the inline create for the same item from 3rd times
@@ -45,7 +45,7 @@ export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSucc
   }, [isOpen, itemId, itemResult.loading, loadOrderItem]);
 
   React.useEffect(() => {
-    if (!isProcessing && !itemResult.loading && orderItem.id && orderItem.id === itemId) {
+    if (isOpen && !isProcessing && !itemResult.loading && orderItem.id && orderItem.id === itemId) {
       dispatch({
         type: 'CREATE_BATCH_START',
         payload: {},
@@ -68,28 +68,44 @@ export default function InlineCreateBatch({ isOpen, isProcessing, entity, onSucc
         },
       });
     }
-  }, [createBatch, dispatch, isProcessing, itemId, itemResult.loading, orderItem, totalBatches]);
+  }, [
+    createBatch,
+    dispatch,
+    isOpen,
+    isProcessing,
+    itemId,
+    itemResult.loading,
+    orderItem,
+    totalBatches,
+  ]);
 
   React.useEffect(() => {
-    if (isProcessing) {
+    if (isProcessing && isOpen) {
       if (batchResult.data && batchResult.data) {
         dispatch({
           type: 'CREATE_BATCH_END',
-          payload: batchResult.data,
+          payload: {
+            batch: batchResult.data?.batchCreate ?? {},
+          },
         });
-        onSuccess(batchResult.data?.batchCreate?.orderItem?.order?.id);
-        onSetBadge(batchResult.data?.batchCreate?.id, 'newItem');
+        onSuccess(
+          batchResult.data?.batchCreate?.orderItem?.order?.id,
+          batchResult.data?.batchCreate
+        );
+        onSetBadges([{ entity: 'batch', id: batchResult.data?.batchCreate?.id, type: 'newItem' }]);
       } else if (batchResult.error) {
         dispatch({
           type: 'CREATE_BATCH_END',
-          payload: batchResult.error,
+          payload: {
+            error: batchResult.error,
+          },
         });
       }
     }
-  }, [batchResult.data, batchResult.error, dispatch, isProcessing, onSetBadge, onSuccess]);
+  }, [batchResult.data, batchResult.error, dispatch, isOpen, isProcessing, onSetBadges, onSuccess]);
 
   return (
-    <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>
+    <Dialog isOpen={isOpen} width="400px">
       <div className={DialogStyle}>
         <h3 className={ConfirmMessageStyle}>
           Creating new <Icon icon="BATCH" /> from <Icon icon="ORDER_ITEM" /> {` ${entity.no}...`}

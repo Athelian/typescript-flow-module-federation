@@ -9,7 +9,7 @@ import { showToastError } from 'utils/errors';
 import { Content, SlideViewLayout } from 'components/Layout';
 import { getByPath } from 'utils/fp';
 import { FormContainer } from 'modules/form';
-import { UserConsumer } from 'modules/user';
+import { UserConsumer } from 'components/Context/Viewer';
 import Timeline from 'modules/timeline/components/Timeline';
 import QueryFormV2 from 'components/common/QueryFormV2';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
@@ -495,8 +495,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                 {apiError && <p>Error: Please try again.</p>}
                 {this.isNew() || !orderId ? (
                   <UserConsumer>
-                    {({ user }) => {
-                      const { organization } = user;
+                    {({ organization }) => {
                       const { types = [] } = organization;
                       const isImporter = types.includes('Importer');
                       return (

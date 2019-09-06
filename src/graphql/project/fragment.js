@@ -95,6 +95,12 @@ export const projectFormQueryFragment = gql`
 
         name
         dueDate
+        dueDateInterval {
+          months
+          weeks
+          days
+        }
+        dueDateBinding
         estimatedCompletionDate
         estimatedCompletionDateInterval {
           months

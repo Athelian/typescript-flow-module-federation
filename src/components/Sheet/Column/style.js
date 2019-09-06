@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { fontSizes, layout, colors } from 'styles/common';
 
-export const ColumnStyle = (width: number) => css`
+export const ColumnStyle = (color: string, width: number) => css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   position: relative;
@@ -10,15 +10,7 @@ export const ColumnStyle = (width: number) => css`
   min-width: ${width}px;
   max-width: ${width}px;
   padding: 5px 15px;
-  border-right: 0.5px solid rgba(0, 0, 0, 0.1);
-
-  &:hover {
-    border: none;
-
-    & > div {
-      display: block;
-    }
-  }
+  border-top: 4px solid ${color};
 `;
 
 export const TitleStyle = css`
@@ -35,14 +27,11 @@ export const DragHandleStyle = (dragging: boolean) => css`
   top: 0;
   right: 0;
   bottom: 0;
-  display: none;
-  background-color: rgba(0, 0, 0, 0.1);
-  width: 4px;
+  border-right: ${dragging ? 4 : 1}px solid rgba(0, 0, 0, 0.1);
   cursor: col-resize;
   z-index: 3;
 
-  ${dragging &&
-    `
-    display: block;
-  `}
+  div:hover > & {
+    border-right: 4px solid rgba(0, 0, 0, 0.1);
+  }
 `;

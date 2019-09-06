@@ -49,3 +49,59 @@ export const startOfToday = (): Date => zonedTimeToUtc(startOfDay(new Date()), u
 
 export const todayForDateInput = (): string =>
   formatToDateInput(zonedTimeToUtc(startOfDay(new Date()), utcTimeZone));
+
+// --- date binding utils ---
+const DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z";
+export const calculateDate = ({
+  date: selectedDate,
+  duration,
+  offset = 0,
+}: {
+  date: ?Date | ?string,
+  duration: 'days' | 'weeks' | 'months',
+  offset: number,
+}) => {
+  if (!selectedDate) return null;
+
+  const date = new Date(selectedDate);
+
+  if (!isValid(date)) {
+    return null;
+  }
+
+  switch (duration) {
+    case 'weeks':
+      return format(startOfDay(addWeeks(date, offset)), DATE_FORMAT);
+
+    case 'months':
+      return format(startOfDay(addMonths(date, offset)), DATE_FORMAT);
+
+    default:
+      return format(startOfDay(addDays(date, offset)), DATE_FORMAT);
+  }
+};
+
+export const findDuration = ({ months, weeks }: { months: number, weeks: number }) => {
+  let duration = 'days';
+  if (Math.abs(months) > 0) {
+    duration = 'months';
+  } else if (Math.abs(weeks) > 0) {
+    duration = 'weeks';
+  }
+  return duration;
+};
+
+export const calculateNewDate = ({
+  date,
+  dateInterval,
+}: {
+  date: ?string,
+  dateInterval?: Object,
+}) => {
+  const { months, weeks, days } = dateInterval || {};
+  return calculateDate({
+    date,
+    duration: findDuration({ months, weeks }),
+    offset: months || weeks || days,
+  });
+};

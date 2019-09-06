@@ -9,8 +9,7 @@ import { ORDER_LIST } from 'modules/permission/constants/order';
 import { SHIPMENT_LIST } from 'modules/permission/constants/shipment';
 import { PRODUCT_LIST } from 'modules/permission/constants/product';
 import LoadingIcon from 'components/LoadingIcon';
-import { useHasPermissions, usePermissions } from 'components/Context/Permissions';
-import useUser from 'hooks/useUser';
+import { useViewerHasPermissions, useViewerPermissions } from 'components/Context/Permissions';
 
 const findRedirectUrlBaseOnPermission = (hasPermission: string => boolean) => {
   if (hasPermission(RM_ORDER_FOCUS_LIST)) return 'relation-map/order';
@@ -22,9 +21,8 @@ const findRedirectUrlBaseOnPermission = (hasPermission: string => boolean) => {
 };
 
 const DashBoard = () => {
-  const { organization } = useUser();
-  const { loading } = usePermissions(organization?.id);
-  const hasPermission = useHasPermissions(organization?.id);
+  const { loading } = useViewerPermissions();
+  const hasPermission = useViewerHasPermissions();
 
   return loading ? (
     <LoadingIcon />

@@ -1,6 +1,5 @@
 // @flow
 import ApolloClient from 'apollo-client';
-import { getByPathWithDefault } from 'utils/fp';
 import {
   batchMutation,
   containerMutation,
@@ -46,17 +45,14 @@ export default function(client: ApolloClient) {
         },
       })
       .then(({ data }) => {
-        const result = getByPathWithDefault(
-          null,
-          `${entity.type.charAt(0).toLowerCase() + entity.type.slice(1)}Update`,
-          data
-        );
+        const result =
+          data?.[`${entity.type.charAt(0).toLowerCase() + entity.type.slice(1)}Update`];
 
-        switch (result.__typename) {
+        switch (result?.__typename) {
           case 'Forbidden':
             return [{ message: 'Forbidden' }];
           case 'BadRequest':
-            return result.violations;
+            return result?.violations;
           default:
             return null;
         }

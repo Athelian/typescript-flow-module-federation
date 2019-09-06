@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable no-param-reassign */
 import { createContext } from 'react';
-import type { Order, OrderItem } from 'generated/graphql';
+import type { Order, Batch, OrderItem } from 'generated/graphql';
 import { intersection } from 'lodash';
 import produce from 'immer';
 import update from 'immutability-helper';
@@ -45,6 +45,11 @@ export const initialState: State = {
       },
     },
   },
+  clone: {
+    source: '',
+    isOpen: false,
+    isProcessing: false,
+  },
   edit: {
     type: '',
     selectedId: '',
@@ -60,6 +65,7 @@ export const RelationMapContext = createContext<ContextProps>({
 export function reducer(
   state: State,
   action: {
+    // prettier-ignore
     type: | 'FETCH_ORDER'
       | 'FETCH_ORDERS'
       | 'TARGET'
@@ -77,14 +83,21 @@ export function reducer(
       | 'CREATE_BATCH'
       | 'CREATE_BATCH_START'
       | 'CREATE_BATCH_END'
+      | 'CREATE_BATCH_CLOSE'
+      | 'CLONE'
+      | 'CLONE_START'
+      | 'CLONE_END'
+      | 'CLONE_CLOSE'
       | 'EDIT',
     payload: {
       entity?: string,
       targets?: Array<string>,
       orders?: Array<Order>,
       orderUpdate?: Order,
+      batch?: Batch,
       orderItemUpdate?: OrderItem,
       mapping?: Object,
+      source?: string,
       [string]: mixed,
     },
   }
@@ -287,18 +300,64 @@ export function reducer(
       });
     }
     case 'CREATE_BATCH_END': {
+      // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
+      const orderId = action.payload?.batch?.orderItem?.order?.id ?? '';
+      const { orderItem, ...batch } = action.payload?.batch ?? {};
+      // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
+      const orderItemId = action.payload?.batch?.orderItem?.id ?? '';
+      const itemIndex = state.order[orderId].orderItems.findIndex(item => item.id === orderItemId);
       return update(state, {
-        createBatch: {
-          isOpen: { $set: false },
-          isProcessing: { $set: false },
-          detail: {
-            $set: {
-              entity: {
-                id: '',
-                no: '',
+        order: {
+          [orderId]: {
+            orderItems: {
+              [itemIndex]: {
+                batches: {
+                  $push: [batch],
+                },
               },
             },
           },
+        },
+        createBatch: {
+          isProcessing: { $set: false },
+          detail: {
+            entity: {
+              $merge: {
+                id: '',
+              },
+            },
+          },
+        },
+      });
+    }
+    case 'CREATE_BATCH_CLOSE': {
+      return update(state, {
+        createBatch: {
+          isOpen: { $set: false },
+        },
+      });
+    }
+    case 'CLONE': {
+      return update(state, {
+        clone: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          source: { $set: action.payload?.source ?? '' },
+        },
+      });
+    }
+    case 'CLONE_START': {
+      return update(state, {
+        clone: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'CLONE_END': {
+      return update(state, {
+        clone: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
         },
       });
     }

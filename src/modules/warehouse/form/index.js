@@ -8,7 +8,7 @@ import { WarehouseFormWrapperStyle } from './style';
 type OptionalProps = {
   isNew: boolean,
   isClone: boolean,
-  isLoading: Boolean,
+  isLoading: boolean,
   warehouse: Object,
 };
 

@@ -45,7 +45,7 @@ import { renderPartners } from './helpers';
 type Props = {
   isNew: boolean,
   isClone: boolean,
-  isLoading: Boolean,
+  isLoading: boolean,
 };
 
 const WarehouseSection = ({ isNew, isClone, isLoading }: Props) => {

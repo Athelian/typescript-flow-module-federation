@@ -4,6 +4,8 @@ import type { CellValue } from 'components/Sheet/SheetState';
 import {
   ORDER_SET_CURRENCY,
   ORDER_SET_PO_NO,
+  ORDER_SET_PI_NO,
+  ORDER_SET_DELIVERY_PLACE,
   ORDER_UPDATE,
 } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_SET_NO, ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
@@ -26,6 +28,18 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
       ),
     },
     {
+      columnKey: 'order.piNo',
+      type: 'text',
+      empty: !order,
+      parent: true,
+      ...transformField(
+        basePath,
+        order,
+        'piNo',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_PI_NO)
+      ),
+    },
+    {
       columnKey: 'order.currency',
       type: 'text',
       empty: !order,
@@ -35,6 +49,18 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
         order,
         'currency',
         hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_CURRENCY)
+      ),
+    },
+    {
+      columnKey: 'order.deliveryPlace',
+      type: 'text',
+      empty: !order,
+      parent: true,
+      ...transformField(
+        basePath,
+        order,
+        'deliveryPlace',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_DELIVERY_PLACE)
       ),
     },
   ];

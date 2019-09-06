@@ -1,5 +1,5 @@
 // @flow
-import React, { useContext, memo } from 'react';
+import React, { memo } from 'react';
 // $FlowFixMe: not have flow type yet
 import { areEqual } from 'react-window';
 import { capitalize } from 'lodash';
@@ -14,7 +14,7 @@ import { PRODUCT_UPDATE, PRODUCT_PROVIDER_UPDATE } from 'modules/permission/cons
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import { UserContext } from 'modules/user';
+import useUser from 'hooks/useUser';
 import {
   InlineTextInput,
   InlineNumberInput,
@@ -256,7 +256,7 @@ function Cell(props: Props) {
   } = props;
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const { user } = useContext(UserContext);
+  const { user, organization } = useUser();
   if (!values) return null;
 
   if (type === 'customFields') {
@@ -279,7 +279,10 @@ function Cell(props: Props) {
           values,
           editData,
           hasPermission,
-          user,
+          user: {
+            ...user,
+            organization,
+          },
         })
       }
     </FormField>

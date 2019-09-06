@@ -62,6 +62,11 @@ export type State = {|
       },
     },
   },
+  clone: {
+    source: string,
+    isOpen: boolean,
+    isProcessing: boolean,
+  },
   edit: {
     type: string,
     selectedId: string,

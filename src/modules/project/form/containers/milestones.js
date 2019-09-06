@@ -3,9 +3,10 @@ import { omit, flatten, set, cloneDeep } from 'lodash';
 import { Container } from 'unstated';
 import update from 'immutability-helper';
 import type { User, Milestone, Task } from 'generated/graphql';
-import { isEquals, getByPathWithDefault } from 'utils/fp';
+import { isEquals, getByPathWithDefault, getByPath } from 'utils/fp';
 import { uuid } from 'utils/id';
-import { calculateTasks, setToSkipTask, setToComplete } from 'utils/task';
+import { calculateTasks, setToSkipTask, setToComplete, START_DATE, DUE_DATE } from 'utils/task';
+import { calculateNewDate } from 'utils/date';
 
 type FormState = {
   milestones: Array<Milestone>,
@@ -15,6 +16,96 @@ type FormState = {
 export const initValues: FormState = {
   milestones: [],
   ignoreTaskIds: [],
+};
+
+const generateTask = (task: Object) => {
+  const defaultMappingFields = {
+    MilestoneDueDate: 'milestone.dueDate',
+  };
+
+  const {
+    startDate,
+    startDateBinding,
+    startDateInterval,
+    dueDate,
+    dueDateBinding,
+    dueDateInterval,
+  } = task;
+
+  let newStartDate = startDate;
+  let newDueDate = dueDate;
+
+  if (startDateBinding === DUE_DATE) {
+    // calculate dueDate -> calculate startDate
+    if (dueDateBinding) {
+      const path = defaultMappingFields[dueDateBinding];
+      if (path) {
+        newDueDate = calculateNewDate({
+          date: getByPath(path, task),
+          dateInterval: dueDateInterval,
+        });
+      }
+    }
+    newStartDate = calculateNewDate({
+      date: newDueDate,
+      dateInterval: startDateInterval,
+    });
+
+    return {
+      ...task,
+      startDate: newStartDate,
+      dueDate: newDueDate,
+    };
+  }
+
+  if (dueDateBinding === START_DATE) {
+    // calculate startDate -> calculate dueDate
+    if (startDateBinding) {
+      const path = defaultMappingFields[startDateBinding];
+      if (path) {
+        newStartDate = calculateNewDate({
+          date: getByPath(path, task),
+          dateInterval: startDateInterval,
+        });
+      }
+    }
+
+    newDueDate = calculateNewDate({
+      date: newStartDate,
+      dateInterval: dueDateInterval,
+    });
+    return {
+      ...task,
+      startDate: newStartDate,
+      dueDate: newDueDate,
+    };
+  }
+
+  if (startDateBinding) {
+    const path = defaultMappingFields[startDateBinding];
+    if (path) {
+      newStartDate = calculateNewDate({
+        date: getByPath(path, task),
+        dateInterval: startDateInterval,
+      });
+    }
+  }
+
+  if (dueDateBinding) {
+    const path = defaultMappingFields[dueDateBinding];
+    if (path) {
+      newDueDate = calculateNewDate({
+        date: getByPath(path, task),
+        dateInterval: dueDateInterval,
+      });
+    }
+  }
+
+  return {
+    ...task,
+    startDate: newStartDate,
+    dueDate: newDueDate,
+  };
 };
 
 export default class ProjectMilestonesContainer extends Container<FormState> {
@@ -280,24 +371,6 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     );
   };
 
-  milestoneStatus = () => {
-    return (this.state.milestones.map(milestone => ({
-      name: milestone.name,
-      dueDate: milestone.dueDate,
-      isCompleted: !!milestone.completedBy,
-      total: (milestone.tasks || []).length,
-      completed: (milestone.tasks || []).filter(
-        task => !!getByPathWithDefault('', 'completedBy', task)
-      ).length,
-    })): Array<{
-      name: string,
-      dueDate: ?Date,
-      isCompleted: boolean,
-      total: number,
-      completed: number,
-    }>);
-  };
-
   changeMilestoneOrdering = (ordering: Array<string>) => {
     this.setState(prevState => ({
       milestones: ordering.map(id => prevState.milestones.find(item => item.id === id)),
@@ -307,10 +380,19 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
   changeMilestones = (columns: Object) => {
     const ordering = Object.keys(columns);
     this.setState(prevState => ({
-      milestones: ordering.map(id => ({
-        ...prevState.milestones.find(item => item.id === id),
-        tasks: columns[id].map((task, milestoneSort) => ({ ...task, milestoneSort })),
-      })),
+      milestones: ordering.map(id => {
+        const milestone = prevState.milestones.find(item => item.id === id);
+        return {
+          ...milestone,
+          tasks: columns[id].map((task, milestoneSort) => ({
+            ...generateTask({
+              ...task,
+              milestone,
+            }),
+            milestoneSort,
+          })),
+        };
+      }),
     }));
   };
 

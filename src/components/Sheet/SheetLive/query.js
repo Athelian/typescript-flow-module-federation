@@ -57,13 +57,17 @@ export const blurMutation = gql`
 
 export const focusSubscribeMutation = gql`
   mutation focusSubscribe($id: ID!, $input: SubscriptionInput!) {
-    focusSubscribe(id: $id, input: $input)
+    focusSubscribe(id: $id, input: $input) {
+      ...focusFragment
+    }
   }
+
+  ${focusFragment}
 `;
 
-export const focusUnsubscribeAllMutation = gql`
-  mutation focusUnsubscribeAll($id: ID!) {
-    focusUnsubscribeAll(id: $id)
+export const focusUnsubscribeMutation = gql`
+  mutation focusUnsubscribe($id: ID!, $input: SubscriptionInput!) {
+    focusUnsubscribe(id: $id, input: $input)
   }
 `;
 
@@ -135,8 +139,8 @@ export const entitySubscribeMutation = gql`
   }
 `;
 
-export const entityUnsubscribeAllMutation = gql`
-  mutation entityUnsubscribeAll($id: ID!) {
-    entityUnsubscribeAll(id: $id)
+export const entityUnsubscribeMutation = gql`
+  mutation entityUnsubscribe($id: ID!, $input: SubscriptionInput!) {
+    entityUnsubscribe(id: $id, input: $input)
   }
 `;

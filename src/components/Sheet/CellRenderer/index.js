@@ -2,13 +2,12 @@
 import * as React from 'react';
 import { areEqual } from 'react-window';
 import LoadingIcon from 'components/LoadingIcon';
-import { useHasPermissions } from 'components/Context/Permissions';
-import { Actions } from '../SheetState/contants';
-import type { CellValue } from '../SheetState';
 import { useSheetState } from '../SheetState';
-import Cell from '../Cell';
 import Deleted from './Announcements/Deleted';
 import Added from './Announcements/Added';
+import Users from './Users';
+import Errors from './Errors';
+import Cell from './Cell';
 
 type Props = {
   style: Object,
@@ -16,45 +15,22 @@ type Props = {
   rowIndex: number,
 };
 
-type WrapperProps = {
-  cell: CellValue,
-  columnIndex: number,
-  rowIndex: number,
-};
-
-const CellWrapper = React.memo<WrapperProps>(({ cell, columnIndex, rowIndex }: WrapperProps) => {
-  const hasPermission = useHasPermissions(cell?.entity?.ownedBy);
-  const [foreignFocuses, setForeignFocuses] = React.useState<Array<Object>>([]);
-  const { state, dispatch, mutate } = useSheetState();
-  const { focusedAt, weakFocusedAt, foreignFocusedAt, erroredAt, weakErroredAt } = state;
-  const handleClick = React.useCallback(() => {
-    dispatch({
-      type: Actions.FOCUS,
-      cell: { x: rowIndex, y: columnIndex },
-    });
-  }, [dispatch, columnIndex, rowIndex]);
-  const handleFocusUp = React.useCallback(() => {
-    dispatch({
-      type: Actions.FOCUS_UP,
-    });
-  }, [dispatch]);
-  const handleFocusDown = React.useCallback(() => {
-    dispatch({
-      type: Actions.FOCUS_DOWN,
-    });
-  }, [dispatch]);
-  const handleUpdate = React.useCallback(
-    value => {
-      mutate({
-        cell: { x: rowIndex, y: columnIndex },
-        value,
-      });
-    },
-    [mutate, columnIndex, rowIndex]
-  );
+const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
+  const { state } = useSheetState();
+  const {
+    rows,
+    addedRows,
+    removedRows,
+    focusedAt,
+    weakFocusedAt,
+    foreignFocusedAt,
+    erroredAt,
+    weakErroredAt,
+  } = state;
+  const [users, setUsers] = React.useState<Array<Object>>([]);
 
   React.useEffect(() => {
-    setForeignFocuses(
+    setUsers(
       foreignFocusedAt
         .filter(f => f.x === rowIndex && f.y === columnIndex)
         .map(f => ({
@@ -65,72 +41,59 @@ const CellWrapper = React.memo<WrapperProps>(({ cell, columnIndex, rowIndex }: W
     );
   }, [foreignFocusedAt, columnIndex, rowIndex]);
 
-  return (
-    <Cell
-      value={cell.data ? cell.data.value : null}
-      type={cell.type}
-      focus={!!focusedAt && focusedAt.x === rowIndex && focusedAt.y === columnIndex}
-      weakFocus={!!weakFocusedAt.find(f => f.x === rowIndex && f.y === columnIndex)}
-      foreignFocuses={foreignFocuses}
-      readonly={cell.readonly || !(cell.entity && cell.entity.permissions(hasPermission))}
-      forbidden={cell.forbidden || false}
-      disabled={cell.disabled || false}
-      isFirstRow={rowIndex === 0}
-      extended={cell.extended || 0}
-      errors={
-        erroredAt && erroredAt.x === rowIndex && erroredAt.y === columnIndex
-          ? erroredAt.messages
-          : null
-      }
-      weakError={!!weakErroredAt.find(e => e.x === rowIndex && e.y === columnIndex)}
-      onClick={handleClick}
-      onFocusUp={handleFocusUp}
-      onFocusDown={handleFocusDown}
-      onUpdate={handleUpdate}
-    />
-  );
-});
-
-const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
-  const { state, dispatch } = useSheetState();
-  const { items, rows, addedRows, deletedRows } = state;
-
-  if (rowIndex >= rows.length) {
-    return columnIndex === 0 ? (
-      <div style={style}>
-        <LoadingIcon size={10} />
-      </div>
-    ) : null;
-  }
-
-  const addedRow = addedRows.find(row => row.start === rowIndex);
-  const deletedRow = deletedRows.find(row => row.start === rowIndex);
-
   const cell = rows[rowIndex][columnIndex];
+  const addedRow = addedRows.find(row => row.start === rowIndex);
+  const removedRow = removedRows.find(row => row.start === rowIndex);
+  const isFirstRow = rowIndex === 0;
+  const hasUserFocuses = users.length > 0;
+  const hasError =
+    !!erroredAt &&
+    erroredAt.messages.length > 0 &&
+    erroredAt.x === rowIndex &&
+    erroredAt.y === columnIndex;
+  const hasRemovedRow = columnIndex === 0 && removedRow;
+  const hasAddedRow = columnIndex === 0 && addedRow;
+  const isFocus = !!focusedAt && focusedAt.x === rowIndex && focusedAt.y === columnIndex;
+  const isWeakFocus = !!weakFocusedAt.find(f => f.x === rowIndex && f.y === columnIndex);
+  const isWeakError = !!weakErroredAt.find(e => e.x === rowIndex && e.y === columnIndex);
 
   return (
     <div style={style}>
-      {columnIndex === 0 &&
-        ((deletedRow && (
-          <Deleted
-            start={deletedRow.start}
-            end={deletedRow.end}
-            onClear={() => deletedRow.onClear(items)}
-          />
-        )) ||
-          (addedRow && (
-            <Added
-              start={addedRow.start}
-              end={addedRow.end}
-              onClear={() =>
-                dispatch({
-                  type: Actions.CLEAR_ADDED_ROWS,
-                  payload: addedRow.entity,
-                })
-              }
+      {rowIndex >= rows.length ? (
+        <LoadingIcon size={10} />
+      ) : (
+        <>
+          {!hasError && hasUserFocuses && (
+            <Users users={users} isFirstRow={isFirstRow} extended={cell.extended || 0} />
+          )}
+
+          {hasError && (
+            <Errors
+              errors={erroredAt?.messages ?? []}
+              isFirstRow={isFirstRow}
+              extended={cell.extended || 0}
             />
-          )))}
-      {!cell.empty && <CellWrapper cell={cell} columnIndex={columnIndex} rowIndex={rowIndex} />}
+          )}
+
+          {hasRemovedRow && <Deleted start={removedRow?.start ?? 0} end={removedRow?.end ?? 0} />}
+          {!hasRemovedRow && hasAddedRow && (
+            <Added start={addedRow?.start ?? 0} end={addedRow?.end ?? 0} />
+          )}
+
+          {cell && !cell.empty && (
+            <Cell
+              cell={cell}
+              columnIndex={columnIndex}
+              rowIndex={rowIndex}
+              focus={isFocus}
+              weakFocus={isWeakFocus}
+              foreignFocus={hasUserFocuses}
+              error={hasError}
+              weakError={isWeakError}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 };

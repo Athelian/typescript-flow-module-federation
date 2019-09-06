@@ -2,18 +2,16 @@
 import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import logger from 'utils/logger';
-import { getByPathWithDefault } from 'utils/fp';
 import { useSheetState } from '../SheetState';
 import { Actions } from '../SheetState/contants';
 import { useSheetLiveID } from './index';
 import { convertEntityToInput } from './helper';
 import {
   blurMutation,
-  focusesQuery,
   focusEventSubscription,
   focusMutation,
   focusSubscribeMutation,
-  focusUnsubscribeAllMutation,
+  focusUnsubscribeMutation,
 } from './query';
 
 export const useSheetLiveFocus = () => {
@@ -23,6 +21,7 @@ export const useSheetLiveFocus = () => {
 
   const { entities, focusedAt } = state;
   const focusedEntity = focusedAt ? focusedAt.cell.entity : null;
+  const entitiesRef = React.useRef([]);
 
   // Subscribe to focus events
   React.useEffect(() => {
@@ -40,7 +39,7 @@ export const useSheetLiveFocus = () => {
       })
       .subscribe({
         next(result) {
-          const focusEvent = getByPathWithDefault(null, 'data.data.focusEvent', result);
+          const focusEvent = result?.data?.data?.focusEvent;
           if (!focusEvent) {
             return;
           }
@@ -55,33 +54,6 @@ export const useSheetLiveFocus = () => {
 
     return () => subscription.unsubscribe();
   }, [client, dispatch, id]);
-
-  // Get current foreign focuses
-  React.useEffect(() => {
-    if (!id || entities.length === 0) {
-      return;
-    }
-
-    client
-      .query({
-        query: focusesQuery,
-        variables: {
-          id,
-          entities: entities.map(({ id: entityId, type: entityType }) =>
-            convertEntityToInput(entityId, entityType)
-          ),
-        },
-        fetchPolicy: 'network-only',
-      })
-      .then(({ data }) => {
-        const focuses = getByPathWithDefault([], 'focuses', data);
-
-        dispatch({
-          type: Actions.FOREIGN_FOCUSES,
-          payload: focuses,
-        });
-      });
-  }, [id, entities, client, dispatch]);
 
   // Notify current user focus
   React.useEffect(() => {
@@ -112,29 +84,58 @@ export const useSheetLiveFocus = () => {
 
   // Ask which entities to listen for focuses
   React.useEffect(() => {
-    if (!id || entities.length === 0) {
-      return () => {};
+    if (!id) {
+      return;
     }
 
-    client.mutate({
-      mutation: focusSubscribeMutation,
-      variables: {
-        id,
-        input: {
-          entities: entities.map(({ id: entityId, type: entityType }) =>
-            convertEntityToInput(entityId, entityType)
-          ),
-        },
-      },
-    });
+    const toSubscribe = entities.filter(
+      entity =>
+        entitiesRef.current.findIndex(
+          previousEntity => previousEntity.id === entity.id && previousEntity.type === entity.type
+        ) === -1
+    );
+    const toUnsubscribe = entitiesRef.current.filter(
+      previousEntity =>
+        entities.findIndex(
+          entity => previousEntity.id === entity.id && previousEntity.type === entity.type
+        ) === -1
+    );
 
-    return () => {
+    entitiesRef.current = entities;
+
+    if (toSubscribe.length > 0) {
+      client
+        .mutate({
+          mutation: focusSubscribeMutation,
+          variables: {
+            id,
+            input: {
+              entities: toSubscribe.map(({ id: entityId, type: entityType }) =>
+                convertEntityToInput(entityId, entityType)
+              ),
+            },
+          },
+        })
+        .then(({ data }) => {
+          dispatch({
+            type: Actions.APPEND_FOREIGN_FOCUSES,
+            payload: data?.focusSubscribe ?? [],
+          });
+        });
+    }
+
+    if (toUnsubscribe.length > 0) {
       client.mutate({
-        mutation: focusUnsubscribeAllMutation,
+        mutation: focusUnsubscribeMutation,
         variables: {
           id,
+          input: {
+            entities: toUnsubscribe.map(({ id: entityId, type: entityType }) =>
+              convertEntityToInput(entityId, entityType)
+            ),
+          },
         },
       });
-    };
-  }, [id, entities, client]);
+    }
+  }, [id, entities, client, dispatch]);
 };

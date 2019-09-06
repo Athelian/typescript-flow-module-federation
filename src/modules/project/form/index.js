@@ -5,12 +5,12 @@ import memoize from 'memoize-one';
 import { flattenDeep } from 'lodash';
 import { Subscribe } from 'unstated';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
+import { calculateBindingDate, injectProjectAndMilestoneDueDate } from 'utils/project';
 import ProjectAutoDateBinding from 'modules/task/common/ProjectAutoDateBinding';
 import { ProjectInfoContainer, ProjectMilestonesContainer } from 'modules/project/form/containers';
 import ProjectSection from './components/ProjectSection';
 import MilestonesSection from './components/MilestonesSection';
 import { ProjectFormWrapperStyle } from './style';
-import { injectProjectAndMilestoneDueDate } from './components/MilestonesSection/components/Board';
 
 type OptionalProps = {
   isNew: boolean,
@@ -38,7 +38,16 @@ const generateTasks = memoize((milestones: Array<Milestone>, info: Object) => {
         tasks: getByPathWithDefault([], 'tasks', milestone),
         projectInfo: {
           ...info,
-          milestones: milestones.map(item => ({ id: item.id, dueDate: item.dueDate })),
+          milestones: milestones.map(item => {
+            const { dueDate: projectDueDate } = info;
+            const { dueDate, dueDateBinding, dueDateInterval } = item;
+            return {
+              id: item.id,
+              dueDate: dueDateBinding
+                ? calculateBindingDate(projectDueDate, dueDateInterval)
+                : dueDate,
+            };
+          }),
         },
       })
     )

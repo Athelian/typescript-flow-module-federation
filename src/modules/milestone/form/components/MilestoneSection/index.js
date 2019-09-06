@@ -3,7 +3,7 @@ import * as React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { UserConsumer } from 'modules/user';
+import { UserConsumer } from 'components/Context/Viewer';
 import MilestoneStateContainer from 'modules/milestone/form/container';
 import validator from 'modules/tags/form/validator';
 import { FormField } from 'modules/form';
@@ -23,14 +23,16 @@ import {
 import GridColumn from 'components/GridColumn';
 
 import { todayForDateInput } from 'utils/date';
+import { calculateMilestonesEstimatedCompletionDate } from 'utils/project';
 import usePermission from 'hooks/usePermission';
 import {
   MILESTONE_CREATE,
   MILESTONE_UPDATE,
   MILESTONE_SET_NAME,
+  MILESTONE_SET_DESCRIPTION,
   MILESTONE_SET_COMPLETED,
   MILESTONE_SET_DUE_DATE,
-  MILESTONE_SET_DESCRIPTION,
+  MILESTONE_SET_ESTIMATED_COMPLETION_DATE,
 } from 'modules/permission/constants/milestone';
 import DateBindingInput from '../DateBindingInput';
 import {
@@ -58,6 +60,11 @@ const MilestoneSection = ({ intl }: Props) => {
         const { updatedAt, updatedBy } = originalValues;
         const { completedAt, completedBy } = values;
         const milestoneStatus = values.completedAt ? 'completed' : 'uncompleted';
+
+        const { milestones = [] } = values?.project ?? {};
+
+        const milestoneIndex = milestones.findIndex(item => item.id === values.id);
+        const estimatedCompletionDates = calculateMilestonesEstimatedCompletionDate({ milestones });
 
         return (
           <div className={CommonFormWrapperStyle}>
@@ -93,23 +100,32 @@ const MilestoneSection = ({ intl }: Props) => {
                       )}
                     </FormField>
 
-                    <FormField
-                      name="dueDate"
-                      initValue={values.dueDate}
-                      values={values}
-                      validator={validator}
-                      setFieldValue={setFieldValue}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <DateInputFactory
-                          name={name}
-                          {...inputHandlers}
-                          originalValue={originalValues[name]}
-                          label={<FormattedMessage id="common.dueDate" defaultMessage="DUE DATE" />}
+                    <FieldItem
+                      label={
+                        <Label height="30px">
+                          <FormattedMessage id="common.dueDate" defaultMessage="DUE DATE" />
+                        </Label>
+                      }
+                      input={
+                        <DateBindingInput
+                          dateName="dueDate"
+                          dateBinding="dueDateBinding"
+                          dateInterval="dueDateInterval"
+                          baseDate={values?.project?.dueDate}
+                          dateBindingItems={[
+                            {
+                              value: 'ProjectDueDate',
+                              label: 'Project Due Date',
+                            },
+                          ]}
+                          originalValues={originalValues}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={setFieldValue}
                           editable={canCreateOrUpdate || hasPermission(MILESTONE_SET_DUE_DATE)}
                         />
-                      )}
-                    </FormField>
+                      }
+                    />
 
                     <FieldItem
                       label={
@@ -122,10 +138,24 @@ const MilestoneSection = ({ intl }: Props) => {
                       }
                       input={
                         <DateBindingInput
+                          dateName="estimatedCompletionDate"
+                          dateBinding="estimatedCompletionDateBinding"
+                          dateInterval="estimatedCompletionDateInterval"
+                          baseDate={estimatedCompletionDates[milestoneIndex - 1] || ''}
+                          dateBindingItems={[
+                            {
+                              value: 'MilestoneCompleteDate',
+                              label: "Prev. Milestone's Est. / Compl.",
+                            },
+                          ]}
                           originalValues={originalValues}
                           values={values}
                           validator={validator}
                           setFieldValue={setFieldValue}
+                          editable={
+                            canCreateOrUpdate ||
+                            hasPermission(MILESTONE_SET_ESTIMATED_COMPLETION_DATE)
+                          }
                         />
                       }
                     />

@@ -4,10 +4,8 @@ import { Location, Redirect } from '@reach/router';
 import { Provider } from 'unstated';
 import { Mutation } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
-import Icon from 'components/Icon';
 import GradientContainer from 'components/GradientContainer';
-import { LanguageConsumer } from 'modules/language';
-import { AuthenticationConsumer } from 'components/Context/Authenticated';
+import { AuthenticatedConsumer } from 'components/Context/Viewer';
 import loginIcon from 'media/icon_white.png';
 import loginIconName from 'media/logo_white.png';
 import LoadingIcon from 'components/LoadingIcon';
@@ -29,7 +27,7 @@ type Props = {
 };
 
 const Login = ({ redirectUrl = '/' }: Props) => (
-  <AuthenticationConsumer>
+  <AuthenticatedConsumer>
     {({ authenticated, setAuthenticated }) =>
       authenticated ? (
         <Location>
@@ -75,17 +73,12 @@ const Login = ({ redirectUrl = '/' }: Props) => (
             )}
           </Mutation>
           <footer className={LoginCopyrightStyle}>
-            <span>
-              © {new Date().getFullYear()} Zenport Inc.{' '}
-              <LanguageConsumer>
-                {({ changeLocale }) => <Icon icon="LANGUAGE" onClick={changeLocale} />}
-              </LanguageConsumer>
-            </span>
+            <span>© {new Date().getFullYear()} Zenport Inc.</span>
           </footer>
         </GradientContainer>
       )
     }
-  </AuthenticationConsumer>
+  </AuthenticatedConsumer>
 );
 
 export default Login;

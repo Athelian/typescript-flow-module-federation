@@ -8,8 +8,6 @@ import GradientContainer from 'components/GradientContainer';
 import { PasswordInputFactory } from 'components/Form';
 import { BaseButton } from 'components/Buttons';
 import GridColumn from 'components/GridColumn';
-import Icon from 'components/Icon';
-import { LanguageConsumer } from 'modules/language';
 import { FormContainer, FormField } from 'modules/form';
 import { BoxStyle, ContainerStyle, CopyrightStyle, FormWrapperStyle, LinkStyle } from './style';
 import { resetPasswordMutation } from './mutation';
@@ -149,12 +147,7 @@ export default function ResetPasswordModule({ token }: Props) {
         </div>
       </div>
       <footer className={CopyrightStyle}>
-        <span>
-          © {new Date().getFullYear()} Zenport Inc.{' '}
-          <LanguageConsumer>
-            {({ changeLocale }) => <Icon icon="LANGUAGE" onClick={changeLocale} />}
-          </LanguageConsumer>
-        </span>
+        <span>© {new Date().getFullYear()} Zenport Inc.</span>
       </footer>
     </GradientContainer>
   );

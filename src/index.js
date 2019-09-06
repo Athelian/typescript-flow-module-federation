@@ -10,9 +10,9 @@ import UNSTATED from 'unstated-debug';
 import FullStory from 'react-fullstory';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AuthenticatedProvider from './components/Context/Authenticated';
-import { PermissionsProvider } from './components/Context/Permissions';
-import LanguageProvider from './modules/language';
+import PermissionsProvider from './components/Context/Permissions';
+import LanguageProvider from './components/Context/Language';
+import ViewerProvider from './components/Context/Viewer';
 import UIProvider from './modules/ui';
 import apolloClient from './apollo';
 import Routes from './routes';
@@ -45,7 +45,7 @@ const renderApp = (Component, renderFn) => {
           {isAppInProduction && <FullStory org={process.env.ZENPORT_FULLSTORY_ID} />}
           <ApolloHookProvider client={apolloClient}>
             <ApolloProvider client={apolloClient}>
-              <AuthenticatedProvider>
+              <ViewerProvider>
                 <PermissionsProvider>
                   <LanguageProvider>
                     <>
@@ -67,12 +67,12 @@ const renderApp = (Component, renderFn) => {
                     </>
                   </LanguageProvider>
                 </PermissionsProvider>
-              </AuthenticatedProvider>
+              </ViewerProvider>
             </ApolloProvider>
           </ApolloHookProvider>
 
           <ToastContainer />
-        </div>{' '}
+        </div>
       </Profiler>,
       container
     )
