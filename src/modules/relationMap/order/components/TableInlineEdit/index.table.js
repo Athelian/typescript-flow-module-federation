@@ -414,7 +414,6 @@ const TableInlineEdit = ({ allId, targetIds, intl, entities, ...dataSource }: Pr
     templateColumns,
     fields: productColumnFields,
   });
-  console.warn('!!!', templateColumns);
   return (
     <QueryForAllCustomFields
       onCompleted={customFields => {
