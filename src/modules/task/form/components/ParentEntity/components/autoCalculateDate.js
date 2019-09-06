@@ -1,6 +1,6 @@
 // @flow
-import { START_DATE, DUE_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
-import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
+import { START_DATE, DUE_DATE } from 'utils/task';
+import { calculateDate, findDuration } from 'utils/date';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import type { Task } from 'generated/graphql';

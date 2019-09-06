@@ -7,7 +7,7 @@ import { colors } from 'styles/common';
 import sortBy from 'modules/project/form/helpers';
 import type { SortField, SortDirection } from 'modules/project/form/helpers';
 import { MilestoneColumnWrapperStyle } from './style';
-import MilestoneColumnHeaderCard from './components/MilestoneColumnHeaderCard';
+import MilestoneColumnHeaderCard from '../MilestoneColumnHeaderCard';
 import TaskList from '../TaskList';
 
 type Props = {|
