@@ -1,5 +1,4 @@
 // @flow
-import { isNullOrUndefined } from 'utils/fp';
 import { isValid, addMonths, addWeeks, addDays, formatToDateInput } from 'utils/date';
 import type { Task } from 'generated/graphql';
 
@@ -36,26 +35,22 @@ export const calculateMilestonesEstimatedCompletionDate: calculateMilestonesEsti
   const estimatedCompletionDates = Array(milestones.length).fill(null);
 
   milestones.forEach((milestone, index) => {
-    if (index === 0) {
-      if (milestone.completedAt) {
-        estimatedCompletionDates[index] = milestone.completedAt;
-      } else if (isNullOrUndefined(milestone.estimatedCompletionDateBinding)) {
-        estimatedCompletionDates[index] = milestone.estimatedCompletionDate;
-      } else {
+    if (milestone.completedAt) {
+      estimatedCompletionDates[index] = milestone.completedAt;
+    } else if (index === 0) {
+      if (milestone.estimatedCompletionDateBinding) {
         estimatedCompletionDates[index] = null;
-      }
-    } else if (isNullOrUndefined(milestone.estimatedCompletionDateBinding)) {
-      if (milestone.completedAt) {
-        estimatedCompletionDates[index] = milestone.completedAt;
       } else {
-        estimatedCompletionDates[index] = milestone.estimatedCompletionDate;
+        estimatedCompletionDates[index] = milestone.estimatedCompletionDate || null;
       }
-    } else {
+    } else if (milestone.estimatedCompletionDateBinding) {
       const baseDate = estimatedCompletionDates[index - 1];
       estimatedCompletionDates[index] = calculateBindingDate(
         baseDate,
         milestone.estimatedCompletionDateInterval
       );
+    } else {
+      estimatedCompletionDates[index] = milestone.estimatedCompletionDate || null;
     }
   });
 
