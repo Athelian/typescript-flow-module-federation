@@ -42,13 +42,13 @@ const generateTask = (task: Object) => {
       if (path) {
         newDueDate = calculateNewDate({
           date: getByPath(path, task),
-          dueDateInterval,
+          dateInterval: dueDateInterval,
         });
       }
     }
     newStartDate = calculateNewDate({
       date: newDueDate,
-      startDateInterval,
+      dateInterval: startDateInterval,
     });
 
     return {
@@ -65,14 +65,14 @@ const generateTask = (task: Object) => {
       if (path) {
         newStartDate = calculateNewDate({
           date: getByPath(path, task),
-          startDateInterval,
+          dateInterval: startDateInterval,
         });
       }
     }
 
     newDueDate = calculateNewDate({
       date: newStartDate,
-      dueDateInterval,
+      dateInterval: dueDateInterval,
     });
     return {
       ...task,
@@ -86,7 +86,7 @@ const generateTask = (task: Object) => {
     if (path) {
       newStartDate = calculateNewDate({
         date: getByPath(path, task),
-        startDateInterval,
+        dateInterval: startDateInterval,
       });
     }
   }
@@ -96,7 +96,7 @@ const generateTask = (task: Object) => {
     if (path) {
       newDueDate = calculateNewDate({
         date: getByPath(path, task),
-        dueDateInterval,
+        dateInterval: dueDateInterval,
       });
     }
   }
