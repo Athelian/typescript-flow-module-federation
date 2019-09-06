@@ -93,15 +93,12 @@ export const findDuration = ({ months, weeks }: { months: number, weeks: number 
 
 export const calculateNewDate = ({
   date,
-  months,
-  weeks,
-  days,
+  dateInterval,
 }: {
   date: ?string,
-  months: number,
-  weeks: number,
-  days: number,
+  dateInterval?: Object,
 }) => {
+  const { months, weeks, days } = dateInterval || {};
   return calculateDate({
     date,
     duration: findDuration({ months, weeks }),

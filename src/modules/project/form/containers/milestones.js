@@ -7,10 +7,6 @@ import { isEquals, getByPathWithDefault, getByPath } from 'utils/fp';
 import { uuid } from 'utils/id';
 import { calculateTasks, setToSkipTask, setToComplete, START_DATE, DUE_DATE } from 'utils/task';
 import { calculateNewDate } from 'utils/date';
-import { MappingFields as OrderMappingField } from 'modules/task/form/components/ParentEntity/components/OrderValueSpy';
-import { MappingFields as OrderItemMappingField } from 'modules/task/form/components/ParentEntity/components/OrderItemValueSpy';
-import { MappingFields as BatchMappingField } from 'modules/task/form/components/ParentEntity/components/BatchValueSpy';
-import { findMappingFields } from 'modules/task/form/components/ParentEntity/components/ShipmentValueSpy';
 
 type FormState = {
   milestones: Array<Milestone>,
@@ -24,17 +20,7 @@ export const initValues: FormState = {
 
 const generateTask = (task: Object) => {
   const defaultMappingFields = {
-    ProjectDueDate: 'milestone.project.dueDate',
     MilestoneDueDate: 'milestone.dueDate',
-  };
-
-  const mappingFields = {
-    Order: OrderMappingField,
-    OrderItem: OrderItemMappingField,
-    Batch: BatchMappingField,
-    Shipment: findMappingFields(task.voyages || []),
-    Product: defaultMappingFields,
-    ProductProvider: defaultMappingFields,
   };
 
   const {
@@ -51,68 +37,67 @@ const generateTask = (task: Object) => {
 
   if (startDateBinding === DUE_DATE) {
     // calculate dueDate -> calculate startDate
-    if (dueDateBinding && dueDateBinding === 'MilestoneDueDate') {
-      const { months, weeks, days } = dueDateInterval || {};
-      newDueDate = calculateNewDate({
-        date: getByPath(defaultMappingFields.MilestoneDueDate, task),
-        months,
-        weeks,
-        days,
-      });
-    }
-
-    const { months, weeks, days } = startDateInterval || {};
-    newStartDate = calculateNewDate({
-      date: newDueDate,
-      months,
-      weeks,
-      days,
-    });
-  } else if (dueDateBinding === START_DATE) {
-    // calculate startDate -> calculate dueDate
-    if (startDateBinding && startDateBinding === 'MilestoneDueDate') {
-      const { months, weeks, days } = startDateInterval || {};
-
-      newStartDate = calculateNewDate({
-        date: getByPath(defaultMappingFields.MilestoneDueDate, task),
-        months,
-        weeks,
-        days,
-      });
-    }
-
-    const { months, weeks, days } = dueDateInterval || {};
-    newDueDate = calculateNewDate({
-      date: newStartDate,
-      months,
-      weeks,
-      days,
-    });
-  } else {
-    if (startDateBinding) {
-      const { months, weeks, days } = startDateInterval || {};
-      const path = mappingFields[startDateBinding];
-      if (path) {
-        newStartDate = calculateNewDate({
-          date: getByPath(path, task),
-          months,
-          weeks,
-          days,
-        });
-      }
-    }
-
     if (dueDateBinding) {
-      const { months, weeks, days } = dueDateInterval || {};
-      const path = mappingFields[dueDateBinding];
+      const path = defaultMappingFields[dueDateBinding];
       if (path) {
         newDueDate = calculateNewDate({
           date: getByPath(path, task),
-          months,
-          weeks,
-          days,
+          dueDateInterval,
         });
       }
+    }
+    newStartDate = calculateNewDate({
+      date: newDueDate,
+      startDateInterval,
+    });
+
+    return {
+      ...task,
+      startDate: newStartDate,
+      dueDate: newDueDate,
+    };
+  }
+
+  if (dueDateBinding === START_DATE) {
+    // calculate startDate -> calculate dueDate
+    if (startDateBinding) {
+      const path = defaultMappingFields[startDateBinding];
+      if (path) {
+        newStartDate = calculateNewDate({
+          date: getByPath(path, task),
+          startDateInterval,
+        });
+      }
+    }
+
+    newDueDate = calculateNewDate({
+      date: newStartDate,
+      dueDateInterval,
+    });
+    return {
+      ...task,
+      startDate: newStartDate,
+      dueDate: newDueDate,
+    };
+  }
+
+  if (startDateBinding) {
+    const path = defaultMappingFields[startDateBinding];
+    if (path) {
+      newStartDate = calculateNewDate({
+        date: getByPath(path, task),
+        startDateInterval,
+      });
+    }
+  }
+
+  if (dueDateBinding) {
+    const path = defaultMappingFields[dueDateBinding];
+    if (path) {
+      newDueDate = calculateNewDate({
+        date: getByPath(path, task),
+        dueDateInterval,
+      });
     }
   }
 

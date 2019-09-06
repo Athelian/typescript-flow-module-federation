@@ -97,6 +97,10 @@ describe('milestones container', () => {
           {
             id: 4,
             milestoneSort: 0,
+            milestone: {
+              id: '3',
+              tasks: [],
+            },
           },
         ],
       },
