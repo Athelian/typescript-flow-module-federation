@@ -414,47 +414,51 @@ const TableInlineEdit = ({ allId, targetIds, intl, entities, ...dataSource }: Pr
     templateColumns,
     fields: productColumnFields,
   });
+  console.warn('!!!', templateColumns);
   return (
     <QueryForAllCustomFields
       onCompleted={customFields => {
+        // *Note: Apollo's onCompleted gets called every render, so don't trust it and use own state for it to prevent calling this function over and over
         if (!isReady) {
           setIsReady(true);
-        }
-        const orderCustomFieldIds = getByPathWithDefault([], 'order', customFields).map(
-          customField => `customFields.${customField.id}`
-        );
-        const orderItemCustomFieldIds = getByPathWithDefault([], 'orderItem', customFields).map(
-          customField => `customFields.${customField.id}`
-        );
-        const batchCustomFieldIds = getByPathWithDefault([], 'batch', customFields).map(
-          customField => `customFields.${customField.id}`
-        );
-        const shipmentCustomFieldIds = getByPathWithDefault([], 'shipment', customFields).map(
-          customField => `customFields.${customField.id}`
-        );
-        const productCustomFieldIds = getByPathWithDefault([], 'product', customFields).map(
-          customField => `customFields.${customField.id}`
-        );
-        const allCustomColumnIds = [
-          ...orderCustomFieldIds,
-          ...orderItemCustomFieldIds,
-          ...batchCustomFieldIds,
-          ...shipmentCustomFieldIds,
-          ...productCustomFieldIds,
-        ];
-        const haveCustomFields =
-          orderCustomFieldIds.length > 0 ||
-          orderItemCustomFieldIds.length > 0 ||
-          batchCustomFieldIds.length > 0 ||
-          shipmentCustomFieldIds.length > 0 ||
-          productCustomFieldIds.length > 0;
-        logger.warn({
-          haveCustomFields,
-          templateColumns,
-          allColumnIds,
-        });
-        if (haveCustomFields && templateColumns.length === allColumnIds.length) {
-          setTemplateColumns([...new Set([...templateColumns, ...allCustomColumnIds])]);
+
+          const orderCustomFieldIds = getByPathWithDefault([], 'order', customFields).map(
+            customField => `customFields.${customField.id}`
+          );
+          const orderItemCustomFieldIds = getByPathWithDefault([], 'orderItem', customFields).map(
+            customField => `customFields.${customField.id}`
+          );
+          const batchCustomFieldIds = getByPathWithDefault([], 'batch', customFields).map(
+            customField => `customFields.${customField.id}`
+          );
+          const shipmentCustomFieldIds = getByPathWithDefault([], 'shipment', customFields).map(
+            customField => `customFields.${customField.id}`
+          );
+          const productCustomFieldIds = getByPathWithDefault([], 'product', customFields).map(
+            customField => `customFields.${customField.id}`
+          );
+          const allCustomColumnIds = [
+            ...orderCustomFieldIds,
+            ...orderItemCustomFieldIds,
+            ...batchCustomFieldIds,
+            ...shipmentCustomFieldIds,
+            ...productCustomFieldIds,
+          ];
+          const haveCustomFields =
+            orderCustomFieldIds.length > 0 ||
+            orderItemCustomFieldIds.length > 0 ||
+            batchCustomFieldIds.length > 0 ||
+            shipmentCustomFieldIds.length > 0 ||
+            productCustomFieldIds.length > 0;
+          logger.warn({
+            haveCustomFields,
+            templateColumns,
+            allColumnIds,
+          });
+
+          if (haveCustomFields && templateColumns.length === allColumnIds.length) {
+            setTemplateColumns([...new Set([...templateColumns, ...allCustomColumnIds])]);
+          }
         }
       }}
       render={({
