@@ -13,26 +13,41 @@ type Props = {
   readonly: boolean,
 };
 
-const TextInput = React.forwardRef<Props, HTMLInputElement>(
-  ({ value, focus, onChange, onFocus, onBlur, onKeyDown, readonly }: Props, ref) => {
-    return (
-      <div className={WrapperStyle}>
-        <BaseTextInput
-          inputRef={ref}
-          value={value || ''}
-          focus={focus}
-          name="value"
-          tabIndex="-1"
-          readOnly={readonly}
-          readOnlyHeight="30px"
-          onChange={onChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          onKeyDown={onKeyDown}
-        />
-      </div>
-    );
-  }
-);
+const TextInput = ({ value, focus, onChange, onFocus, onBlur, onKeyDown, readonly }: Props) => {
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
+  React.useEffect(() => {
+    if (inputRef.current) {
+      if (focus) {
+        // $FlowIssue: Flow doesn't know focus options
+        inputRef.current.focus({
+          preventScroll: true,
+        });
+        if (value) {
+          // $FlowFixMe: Already checked
+          inputRef.current.setSelectionRange(0, value.length);
+        }
+      } else {
+        inputRef.current.blur();
+      }
+    }
+  }, [focus, value]);
+
+  return (
+    <div className={WrapperStyle}>
+      <BaseTextInput
+        inputRef={inputRef}
+        value={value || ''}
+        name="value"
+        tabIndex="-1"
+        readOnly={readonly}
+        readOnlyHeight="30px"
+        onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        onKeyDown={onKeyDown}
+      />
+    </div>
+  );
+};
 
 export default TextInput;

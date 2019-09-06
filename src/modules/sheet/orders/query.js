@@ -6,7 +6,9 @@ const orderSheetFragment = gql`
   fragment orderSheetFragment on Order {
     id
     poNo
+    piNo
     currency
+    deliveryPlace
     ownedBy {
       ... on Organization {
         id

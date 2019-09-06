@@ -35,19 +35,6 @@ const CellInput = ({
   onUpdate,
 }: Props) => {
   const [dirtyValue, setDirtyValue] = React.useState<any>(value);
-  const inputRef = React.useRef(null);
-
-  React.useEffect(() => {
-    if (inputRef.current) {
-      if (inputFocus) {
-        inputRef.current.focus({
-          preventScroll: true,
-        });
-      } else {
-        inputRef.current.blur();
-      }
-    }
-  }, [inputFocus]);
 
   React.useEffect(() => {
     setDirtyValue(value);
@@ -76,15 +63,11 @@ const CellInput = ({
         e.stopPropagation();
         break;
       case 'Tab':
-        if (inputRef.current) {
-          inputRef.current.blur();
-        }
+        onBlur();
         break;
       case 'Enter':
         e.stopPropagation();
-        if (inputRef.current) {
-          inputRef.current.blur();
-        }
+        onBlur();
 
         if (e.shiftKey) {
           onUp();
@@ -100,7 +83,6 @@ const CellInput = ({
   return (
     <div className={WrapperStyle(focus)}>
       {React.createElement(inputs[type], {
-        ref: inputRef,
         value: dirtyValue,
         readonly: readonly || disabled,
         focus: inputFocus,

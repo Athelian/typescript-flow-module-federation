@@ -11,7 +11,9 @@ import { ColumnsWrapperStyle, ContentStyle, WrapperStyle } from './style';
 export type ColumnConfig = {
   key: string,
   title: any,
+  color: string,
   width: number,
+  minWidth?: number,
   hidden?: boolean,
 };
 
@@ -80,7 +82,9 @@ const SheetRenderer = ({
           <Column
             key={column.key}
             title={column.title}
+            color={column.color}
             width={column.width}
+            minWidth={column.minWidth}
             onResize={width => onColumnResize(column.key, width)}
           />
         ))}
