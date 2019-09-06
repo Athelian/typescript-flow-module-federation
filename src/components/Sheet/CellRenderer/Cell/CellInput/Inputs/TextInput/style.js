@@ -17,5 +17,9 @@ export const WrapperStyle = css`
     ${fontSizes.MAIN};
     line-height: 18px;
     font-weight: 600;
+
+    &::placeholder {
+      color: ${colors.GRAY_LIGHT};
+    }
   }
 `;

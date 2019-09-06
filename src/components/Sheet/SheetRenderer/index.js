@@ -11,6 +11,7 @@ import { ColumnsWrapperStyle, ContentStyle, WrapperStyle } from './style';
 export type ColumnConfig = {
   key: string,
   title: any,
+  icon: string,
   color: string,
   width: number,
   minWidth?: number,

@@ -96,6 +96,8 @@ import {
   faThList as TH_LIST,
   faSitemap as RELATED,
   faForward as SKIPPED,
+  faUndo as UNDO,
+  faBringForward as BRING_FORWARD,
   // Shipment Timeline
   faBoxCheck as CARGO_READY,
   faAnchor as PORT,
@@ -208,6 +210,8 @@ export default {
   SPLIT,
   RELATED,
   SKIPPED,
+  UNDO,
+  BRING_FORWARD,
 
   BRANCH,
   ACTIVE,

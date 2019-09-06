@@ -93,7 +93,7 @@ const ViewerProvider = ({ children }: Props) => {
         setLoadingViewer(data?.authenticated ?? false);
         setLoadingAuth(false);
       });
-  }, [setAuthenticated, setLoadingAuth]);
+  }, [client, setAuthenticated, setLoadingAuth]);
 
   React.useEffect(() => {
     if (!authenticated) {
@@ -118,7 +118,7 @@ const ViewerProvider = ({ children }: Props) => {
         });
         setLoadingViewer(false);
       });
-  }, [authenticated, setViewer, setLoadingViewer]);
+  }, [client, authenticated, setViewer, setLoadingViewer]);
 
   React.useEffect(() => {
     if (!viewer.user) {
