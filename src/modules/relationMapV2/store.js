@@ -108,6 +108,31 @@ function useEntities(
       setMapping(newMapping);
     }
   };
+
+  const findRelateIds = useCallback(
+    (relatedIds: Array<string>, type: string) => {
+      const ids = [];
+      relatedIds.forEach(id => {
+        if (related?.[type]?.[id]?.length) {
+          ids.push(id, ...findRelateIds(related?.[type]?.[id] ?? [], type));
+        } else {
+          ids.push(id);
+        }
+      });
+      return ids;
+    },
+    [related]
+  );
+
+  const getRelatedBy = (type: 'batch' | 'orderItem' | 'order', id: string) => {
+    if (!related?.[type]?.[id]) {
+      return [];
+    }
+
+    const relatedIds = related?.[type]?.[id] ?? [];
+    return findRelateIds(relatedIds, type);
+  };
+
   const checkRemoveEntities = (entity: Order | OrderItem) => {
     switch (entity.__typename) {
       case 'Order': {
@@ -173,7 +198,15 @@ function useEntities(
         break;
     }
   };
-  return { mapping, initMapping, checkRemoveEntities, badge, onSetBadges, related, onSetRelated };
+  return {
+    mapping,
+    initMapping,
+    checkRemoveEntities,
+    badge,
+    onSetBadges,
+    getRelatedBy,
+    onSetRelated,
+  };
 }
 
 export const Entities = createContainer(useEntities);

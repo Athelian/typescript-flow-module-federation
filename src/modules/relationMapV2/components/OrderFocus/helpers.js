@@ -6,7 +6,7 @@ import memoize from 'memoize-one';
 import styled from 'react-emotion';
 import { getByPathWithDefault } from 'utils/fp';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { ClientSorts } from 'modules/relationMapV2/store';
+import { ClientSorts, Entities } from 'modules/relationMapV2/store';
 import type { CellRender, Entity } from './type.js.flow';
 
 const DELAY = 200; // 0.2 second
@@ -150,6 +150,7 @@ export const orderCoordinates = memoize(
     isLoadedData?: boolean,
   }): Array<?CellRender> => {
     const { getItemsSortByOrderId, getBatchesSortByItemId } = ClientSorts.useContainer();
+    const { getRelatedBy } = Entities.useContainer();
     const orderItems = order?.orderItems ?? [];
     const orderItemCount = order?.orderItemCount ?? 0;
     const orderItemChildlessCount = order?.orderItemChildlessCount ?? 0;
@@ -282,17 +283,37 @@ export const orderCoordinates = memoize(
         const batches = item?.batches ?? [];
         if (batches.length) {
           const batchesList = [];
+          const processBatchesId = [];
           const batchesSorted = getBatchesSortByItemId(item.id, batches);
-          // TODO: place the clone result on below the original
-          // should support recursion
+          // console.warn({
+          //   batchesSorted,
+          // });
           batchesSorted.forEach(batchId => {
-            const batch = batches.find(batchItem => batchItem?.id === batchId);
-            if (batch) {
-              batchesList.push(batch);
+            if (!processBatchesId.includes(batchId)) {
+              const batch = batches.find(batchItem => batchItem?.id === batchId);
+              if (batch) {
+                batchesList.push(batch);
+                processBatchesId.push(batch.id);
+                const relatedBatches = getRelatedBy('batch', batch.id);
+                if (relatedBatches.length)
+                  console.warn({
+                    id: batch.id,
+                    relatedBatches,
+                  });
+                relatedBatches
+                  .filter(id => !batchesSorted.includes(id))
+                  .forEach(relateId => {
+                    const relatedBatch = batches.find(batchItem => batchItem?.id === relateId);
+                    if (relatedBatch) {
+                      batchesList.push(relatedBatch);
+                      processBatchesId.push(relatedBatch.id);
+                    }
+                  });
+              }
             }
           });
           batches
-            .filter(batch => !batchesSorted.includes(batch?.id))
+            .filter(batch => !processBatchesId.includes(batch?.id))
             .forEach(batch => batchesList.push(batch));
 
           batchesList.forEach((batch, position) => {
