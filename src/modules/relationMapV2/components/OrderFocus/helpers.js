@@ -7,7 +7,6 @@ import styled from 'react-emotion';
 import { getByPathWithDefault } from 'utils/fp';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { ClientSorts } from 'modules/relationMapV2/store';
-import { sortOrderItemBy, sortBatchBy } from 'modules/relationMapV2/sort';
 import type { CellRender, Entity } from './type.js.flow';
 
 const DELAY = 200; // 0.2 second
@@ -140,34 +139,6 @@ function containerCell(batch: BatchPayload): ?CellRender {
   return null;
 }
 
-export const cacheSorted = {};
-
-export function lastSorting({
-  sourceEntities,
-  sortHandler,
-  sort,
-  id,
-}: {|
-  id: string,
-  sourceEntities: Array<Object>,
-  sortHandler: (Array<Object>, sortOption: Object) => Array<Object>,
-  sort: { field: string, direction: string },
-|}): Array<string> {
-  if (
-    cacheSorted?.[id]?.sort?.field === sort.field &&
-    cacheSorted?.[id]?.sort?.direction === sort.direction
-  )
-    return cacheSorted[id].entities;
-
-  cacheSorted[id] = {
-    entities: sortHandler(sourceEntities, sort)
-      .map(item => item?.id)
-      .filter(Boolean),
-    sort,
-  };
-  return cacheSorted[id].entities;
-}
-
 export const orderCoordinates = memoize(
   ({
     isExpand,
@@ -178,7 +149,7 @@ export const orderCoordinates = memoize(
     order: Object,
     isLoadedData?: boolean,
   }): Array<?CellRender> => {
-    const clientSorts = ClientSorts.useContainer();
+    const { getItemsSortByOrderId, getBatchesSortByItemId } = ClientSorts.useContainer();
     const orderItems = order?.orderItems ?? [];
     const orderItemCount = order?.orderItemCount ?? 0;
     const orderItemChildlessCount = order?.orderItemChildlessCount ?? 0;
@@ -229,15 +200,6 @@ export const orderCoordinates = memoize(
             null,
           ];
     }
-    const orderItemsSort = lastSorting({
-      id: `${order?.id}-orderItems`,
-      sourceEntities: orderItems,
-      sortHandler: sortOrderItemBy,
-      sort: clientSorts?.filterAndSort?.orderItem?.sort ?? {
-        field: 'updatedAt',
-        direction: 'DESCENDING',
-      },
-    });
     const result = [
       null,
       {
@@ -305,37 +267,32 @@ export const orderCoordinates = memoize(
     }
     if (orderItemCount > 0) {
       const itemsList = [];
-      orderItemsSort.forEach(itemId => {
+      const orderItemSorted = getItemsSortByOrderId(order.id);
+      orderItemSorted.forEach(itemId => {
         const item = orderItems.find(orderItem => orderItem?.id === itemId);
         if (item) {
           itemsList.push(item);
         }
       });
       orderItems
-        .filter(item => !orderItemsSort.includes(item?.id))
+        .filter(item => !orderItemSorted.includes(item?.id))
         .forEach(item => itemsList.push(item));
 
       itemsList.forEach((item, index) => {
         const batches = item?.batches ?? [];
-        const bachesSort = lastSorting({
-          id: `${item?.id}-batches`,
-          sourceEntities: batches,
-          sortHandler: sortBatchBy,
-          sort: clientSorts?.filterAndSort?.batch?.sort ?? {
-            field: 'updatedAt',
-            direction: 'DESCENDING',
-          },
-        });
         if (batches.length) {
           const batchesList = [];
-          bachesSort.forEach(batchId => {
+          const batchesSorted = getBatchesSortByItemId(item.id);
+          // TODO: place the clone result on below the original
+          // should support recursion
+          batchesSorted.forEach(batchId => {
             const batch = batches.find(batchItem => batchItem?.id === batchId);
             if (batch) {
               batchesList.push(batch);
             }
           });
           batches
-            .filter(batch => !bachesSort.includes(batch?.id))
+            .filter(batch => !batchesSorted.includes(batch?.id))
             .forEach(batch => batchesList.push(batch));
 
           batchesList.forEach((batch, position) => {

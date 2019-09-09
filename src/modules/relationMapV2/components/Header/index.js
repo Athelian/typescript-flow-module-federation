@@ -164,14 +164,18 @@ const Header = React.memo<{ style?: Object }>(
               ascending={clientSorts?.filterAndSort?.orderItem?.sort?.direction !== 'DESCENDING'}
               fields={itemSort}
               sortable
-              onChange={({ field: { value }, ascending }) =>
-                clientSorts.onChangeFilter('orderItem', {
-                  sort: {
-                    field: value,
-                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
+              onChange={({ field: { value }, ascending }) => {
+                clientSorts.onChangeFilter({
+                  mapping,
+                  type: 'orderItem',
+                  newFilter: {
+                    sort: {
+                      field: value,
+                      direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                    },
                   },
-                })
-              }
+                });
+              }}
             />
           </div>
         </div>
@@ -219,14 +223,18 @@ const Header = React.memo<{ style?: Object }>(
               ascending={clientSorts?.filterAndSort?.batch?.sort?.direction !== 'DESCENDING'}
               fields={batchSort}
               sortable
-              onChange={({ field: { value }, ascending }) =>
-                clientSorts.onChangeFilter('batch', {
-                  sort: {
-                    field: value,
-                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
+              onChange={({ field: { value }, ascending }) => {
+                clientSorts.onChangeFilter({
+                  mapping,
+                  type: 'batch',
+                  newFilter: {
+                    sort: {
+                      field: value,
+                      direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                    },
                   },
-                })
-              }
+                });
+              }}
             />
           </div>
         </div>

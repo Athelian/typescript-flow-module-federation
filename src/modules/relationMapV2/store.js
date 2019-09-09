@@ -11,6 +11,7 @@ import { isEquals } from 'utils/fp';
 import usePersistFilter from 'hooks/usePersistFilter';
 import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMapV2/constants';
 import { normalizeEntity } from 'modules/relationMapV2/components/OrderFocus/normalize';
+import { sortOrderItemBy, sortBatchBy } from './sort';
 
 const defaultState = [];
 function useHits(initialState: Object = defaultState) {
@@ -63,10 +64,6 @@ function useEntities(
     sources: Array<{ id: string, type: string }>,
     cloneEntities: Array<Object>
   ) => {
-    console.warn({
-      sources,
-      cloneEntities,
-    });
     setRelated(
       produce(related, draft => {
         const batches = sources.filter(item => item.type === BATCH);
@@ -222,14 +219,48 @@ function useClientSorts(
 
   const [filterAndSort, changeFilterAndSort] = useState(initialFilter);
 
-  const onChangeFilter = useCallback((type: string, newFilter: Object) => {
-    changeFilterAndSort(prevState =>
-      produce(prevState, draft => {
-        draft[type] = newFilter;
-      })
-    );
-    // TODO: trigger the local sort
-  }, []);
+  const onLocalSort = useCallback(
+    (mapping: { orders: Array<Order> }, type: string) => {
+      const { orders } = mapping;
+      orders.forEach(order => {
+        if (type === 'orderItem') {
+          orderItemsSort.current[order.id] = sortOrderItemBy(
+            order?.orderItems ?? [],
+            filterAndSort.orderItem.sort
+          ).map(item => item?.id ?? '');
+        }
+        if (type === 'batch') {
+          (order?.orderItems ?? []).forEach(orderItem => {
+            batchesSort.current[orderItem.id] = sortBatchBy(
+              orderItem?.batches ?? [],
+              filterAndSort.batch.sort
+            ).map(batch => batch?.id ?? '');
+          });
+        }
+      });
+    },
+    [filterAndSort.batch.sort, filterAndSort.orderItem.sort]
+  );
+
+  const onChangeFilter = useCallback(
+    ({
+      type,
+      newFilter,
+      mapping,
+    }: {
+      type: string,
+      newFilter: Object,
+      mapping: { orders: Array<Order> },
+    }) => {
+      changeFilterAndSort(prevState =>
+        produce(prevState, draft => {
+          draft[type] = newFilter;
+        })
+      );
+      onLocalSort(mapping, type);
+    },
+    [onLocalSort]
+  );
 
   const getItemsSortByOrderId = (orderId: string): Array<string> => {
     return orderItemsSort.current?.[orderId] ?? [];
@@ -249,6 +280,7 @@ function useClientSorts(
     onChangeFilter,
     getItemsSortByOrderId,
     getBatchesSortByItemId,
+    onLocalSort,
   };
 }
 

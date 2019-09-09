@@ -34,7 +34,6 @@ import Row from '../Row';
 import cellRenderer from './cellRenderer';
 import generateListData from './generateListData';
 import { reducer, initialState, RelationMapContext } from './store';
-import { cacheSorted } from './helpers';
 import { moveEntityMutation } from './mutation';
 import normalize from './normalize';
 
@@ -248,6 +247,7 @@ export default function OrderFocus() {
     },
     []
   );
+  // TODO: migrate to new permission
   const queryPermission = React.useCallback((organizationId: string) => {
     apolloClient
       .query({
@@ -470,17 +470,8 @@ export default function OrderFocus() {
                               // need to find the position base on the order and batch
                               // then use the react-window to navigate to the row
                               // try to get from sort first, if not there, then try to use from entities
-                              let batches =
-                                // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
-                                cacheSorted?.[`${batch?.orderItem?.id}-batches`]?.entities ?? [];
-                              if (
-                                batches.length <
-                                // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
-                                (entities.orderItems?.[batch?.orderItem?.id]?.batches?.length ?? 0)
-                              ) {
-                                // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
-                                batches = entities.orderItems?.[batch?.orderItem?.id]?.batches;
-                              }
+                              // $FlowIgnore this doesn't support yet
+                              const batches = entities.orderItems?.[batch?.orderItem?.id]?.batches;
                               const lastBatchId = batches[batches.length - 1];
                               const indexPosition = ordersData.findIndex((row: Array<any>) => {
                                 const [, , batchCell, , ,] = row;
