@@ -2,7 +2,8 @@
 import gql from 'graphql-tag';
 import {
   milestoneCardFragment,
-  projectCardFragment,
+  projectCardNewFragment,
+  milestoneFragment,
   taskTemplateCardFragment,
   taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
@@ -35,7 +36,8 @@ export const orderFormTasksQuery = gql`
   }
 
   ${milestoneCardFragment}
-  ${projectCardFragment}
+  ${projectCardNewFragment}
+  ${milestoneFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${taskWithoutParentInfoFragment}

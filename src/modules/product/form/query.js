@@ -17,7 +17,8 @@ import {
   documentFragment,
   ownedByFragment,
   milestoneCardFragment,
-  projectCardFragment,
+  projectCardNewFragment,
+  milestoneFragment,
   taskCountFragment,
   taskTemplateCardFragment,
   taskWithoutParentInfoFragment,
@@ -50,7 +51,8 @@ export const productFormQuery = gql`
   ${documentFragment}
   ${ownedByFragment}
   ${milestoneCardFragment}
-  ${projectCardFragment}
+  ${projectCardNewFragment}
+  ${milestoneFragment}
   ${taskCountFragment}
   ${taskTemplateCardFragment}
   ${taskWithoutParentInfoFragment}

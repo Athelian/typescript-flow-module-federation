@@ -18,7 +18,8 @@ import {
   badRequestFragment,
   ownedByFragment,
   milestoneCardFragment,
-  projectCardFragment,
+  projectCardNewFragment,
+  milestoneFragment,
   taskCountFragment,
   taskTemplateCardFragment,
   taskWithoutParentInfoFragment,
@@ -81,7 +82,8 @@ export const updateProductMutation: Object = gql`
   ${fieldDefinitionFragment}
   ${ownedByFragment}
   ${milestoneCardFragment}
-  ${projectCardFragment}
+  ${projectCardNewFragment}
+  ${milestoneFragment}
   ${taskCountFragment}
   ${taskTemplateCardFragment}
   ${taskWithoutParentInfoFragment}

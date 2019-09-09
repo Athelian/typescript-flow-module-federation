@@ -3,7 +3,8 @@ import gql from 'graphql-tag';
 import {
   taskWithParentInfoFragment,
   milestoneCardFragment,
-  projectCardFragment,
+  projectCardNewFragment,
+  milestoneFragment,
   userAvatarFragment,
   tagFragment,
   productCardFragment,
@@ -36,7 +37,8 @@ export const taskUpdateManyMutation = gql`
   }
   ${taskWithParentInfoFragment}
   ${milestoneCardFragment}
-  ${projectCardFragment}
+  ${projectCardNewFragment}
+  ${milestoneFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${orderCardFragment}
