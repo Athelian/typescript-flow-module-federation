@@ -14,6 +14,7 @@ import { DialogStyle, ConfirmMessageStyle } from './style';
 type Props = {|
   onSuccess: ({|
     orderIds: Array<string>,
+    newOrderItemPositions: Object,
     sources: Array<{ id: string, type: string }>,
     cloneEntities: Array<Object>,
   |}) => void,
@@ -53,6 +54,7 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
       const actions = [];
       const sources = [];
       const orderIds = [];
+      const newOrderItemPositions = {};
       const processOrderIds = [];
       if (totalBatches && source === BATCH) {
         const batchIds = targets.filter(target => target.includes(`${BATCH}-`));
@@ -204,7 +206,15 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
             };
 
             const orderMutationInput = orders.find(order => order.id === parentOrder?.id);
+            const orderPosition = orders.findIndex(order => order.id === parentOrder?.id);
             if (orderMutationInput) {
+              if (!newOrderItemPositions[orderPosition]) {
+                newOrderItemPositions[orderPosition] = [orderMutationInput.input.orderItems.length];
+              } else {
+                newOrderItemPositions[orderPosition].push(
+                  orderMutationInput.input.orderItems.length
+                );
+              }
               orderMutationInput.input.orderItems.push({
                 id: parentItem.id,
                 productProviderId: parentItem?.productProvider?.id,
@@ -243,7 +253,7 @@ export default function CloneEntities({ onSuccess, viewer }: Props) {
             cloneEntities,
           },
         });
-        onSuccess({ sources, cloneEntities, orderIds });
+        onSuccess({ sources, cloneEntities, orderIds, newOrderItemPositions });
       } catch (error) {
         dispatch({
           type: 'CLONE_END',

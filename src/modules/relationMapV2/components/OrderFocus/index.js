@@ -409,10 +409,15 @@ export default function OrderFocus() {
                         {...state.moveEntity.detail}
                       />
                       <CloneEntities
-                        onSuccess={({ sources, orderIds, cloneEntities }) => {
+                        onSuccess={({
+                          sources,
+                          orderIds,
+                          cloneEntities,
+                          newOrderItemPositions,
+                        }) => {
                           const cloneBadges = [];
                           const newOrderIds = [];
-                          cloneEntities.forEach(cloneResult => {
+                          cloneEntities.forEach((cloneResult, orderPosition) => {
                             if (cloneResult?.data?.orderCloneMany?.length ?? 0) {
                               const ordersClone = cloneResult?.data?.orderCloneMany ?? [];
                               newOrderIds.push(...ordersClone.map(item => item?.id));
@@ -422,11 +427,14 @@ export default function OrderFocus() {
                                   type: 'cloned',
                                   entity: 'order',
                                 });
-                                order.orderItems.forEach(item => {
-                                  // TODO: need to detect new item or cloned item
+                                order.orderItems.forEach((item, position) => {
                                   cloneBadges.push({
                                     id: item?.id,
-                                    type: 'cloned',
+                                    type: (newOrderItemPositions?.[orderPosition] ?? []).includes(
+                                      position
+                                    )
+                                      ? 'newItem'
+                                      : 'cloned',
                                     entity: 'orderItem',
                                   });
                                   cloneBadges.push(
