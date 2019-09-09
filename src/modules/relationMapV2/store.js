@@ -332,13 +332,6 @@ function useClientSorts(
   };
 
   useEffect(() => {
-    console.warn({
-      orderItemsSort,
-      batchesSort,
-    });
-  });
-
-  useEffect(() => {
     if (window.localStorage) {
       window.localStorage.setItem(cacheKey, JSON.stringify(filterAndSort));
     }

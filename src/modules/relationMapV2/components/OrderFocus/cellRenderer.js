@@ -26,7 +26,7 @@ import {
   SHIPMENT_WIDTH,
 } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
-import { Hits, Entities } from 'modules/relationMapV2/store';
+import { Hits, Entities, ClientSorts } from 'modules/relationMapV2/store';
 import Badge from 'modules/relationMapV2/components/Badge';
 import type { CellRender, State } from './type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
@@ -900,7 +900,7 @@ function OrderItemCell({
             )}
             onClick={handleClick}
           >
-            <div ref={drag}>
+            <div ref={drag} id={`${ORDER_ITEM}-${itemId}`}>
               <Badge label={badge.orderItem?.[itemId] ?? ''} />
               <OrderItemCard
                 no={data?.no ?? 'N/A'}
@@ -2026,13 +2026,26 @@ function DuplicateOrderCell({
   afterConnector,
 }: CellProps & { order: OrderPayload }) {
   const { state } = React.useContext(RelationMapContext);
+  const { getRelatedBy } = Entities.useContainer();
+  const { getItemsSortByOrderId } = ClientSorts.useContainer();
   const orderId = order?.id;
   const itemPosition = data?.itemPosition ?? 0;
   const batchPosition = data?.batchPosition ?? 0;
-  const items = (order?.orderItems ?? []).map(item => item?.id);
+  const originalItems = order?.orderItems ?? [];
+  const items = getItemsSortByOrderId(orderId, originalItems);
+  const itemList = [];
+  items.forEach(itemId => {
+    if (!itemList.includes(itemId)) {
+      const relatedItems = getRelatedBy('orderItem', itemId);
+      itemList.push(itemId);
+      if (relatedItems.length) {
+        itemList.push(...relatedItems);
+      }
+    }
+  });
   let foundPosition = -1;
-  for (let index = items.length - 1; index > 0; index -= 1) {
-    const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${items[index]}`);
+  for (let index = itemList.length - 1; index > 0; index -= 1) {
+    const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${itemList[index]}`);
     if (isTargetedItem) {
       foundPosition = index;
       break;
@@ -2076,34 +2089,63 @@ function DuplicateOrderCell({
   );
 }
 
-// FIXME: hight light color for sort item vs batch
 function DuplicateOrderItemCell({
   data,
+  // $FlowIssue: doesn't support to access to child yet
   order,
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload }) {
   const { state } = React.useContext(RelationMapContext);
-  const itemId = getByPathWithDefault(
-    '',
-    `orderItems.${getByPathWithDefault(0, 'itemPosition', data)}.id`,
-    order
-  );
-  const batchPosition = getByPathWithDefault(0, 'batchPosition', data);
-  const batches = getByPathWithDefault(
+  const { getRelatedBy } = Entities.useContainer();
+  const { getBatchesSortByItemId, getItemsSortByOrderId } = ClientSorts.useContainer();
+  const itemPosition = data?.itemPosition ?? 0;
+  const batchPosition = data?.batchPosition ?? 0;
+  const originalItems = order?.orderItems ?? [];
+  const items = getItemsSortByOrderId(order?.id, originalItems);
+  const itemList = [];
+  items.forEach(itemId => {
+    if (!itemList.includes(itemId)) {
+      const relatedItems = getRelatedBy('orderItem', itemId);
+      itemList.push(itemId);
+      if (relatedItems.length) {
+        itemList.push(...relatedItems);
+      }
+    }
+  });
+
+  const itemId = itemList[itemPosition];
+  const originalBatches = getByPathWithDefault(
     [],
     `orderItems.${getByPathWithDefault(0, 'itemPosition', data)}.batches`,
     order
-  ).map(batch => batch.id);
+  );
+  const batches = getBatchesSortByItemId(itemId, originalBatches);
+
+  const batchList = [];
+  if (originalBatches.length !== batches.length) {
+    batches.forEach(batchId => {
+      if (!batchList.includes(batchId)) {
+        const relatedBatches = getRelatedBy('batch', batchId);
+        batchList.push(batchId);
+        if (relatedBatches.length) {
+          batchList.push(...relatedBatches);
+        }
+      }
+    });
+  } else {
+    batchList.push(...batches);
+  }
 
   let foundPosition = -1;
-  for (let index = batches.length - 1; index > 0; index -= 1) {
-    const isTargetedBatch = state.targets.includes(`${BATCH}-${batches[index]}`);
+  for (let index = batchList.length - 1; index > 0; index -= 1) {
+    const isTargetedBatch = state.targets.includes(`${BATCH}-${batchList[index]}`);
     if (isTargetedBatch) {
       foundPosition = index;
       break;
     }
   }
+
   const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${itemId}`);
 
   const connector = {

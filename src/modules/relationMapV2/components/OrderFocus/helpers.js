@@ -271,20 +271,22 @@ export const orderCoordinates = memoize(
       const processItemsId = [];
       const orderItemSorted = getItemsSortByOrderId(order.id, orderItems);
       orderItemSorted.forEach(itemId => {
-        const item = orderItems.find(orderItem => orderItem?.id === itemId);
-        if (item) {
-          processItemsId.push(itemId);
-          itemsList.push(item);
-          const relatedItems = getRelatedBy('orderItem', item.id);
-          relatedItems
-            .filter(id => !orderItemSorted.includes(id))
-            .forEach(relateId => {
-              const relatedItem = orderItems.find(orderItem => orderItem?.id === relateId);
-              if (relatedItem) {
-                itemsList.push(relatedItem);
-                processItemsId.push(relatedItem.id);
-              }
-            });
+        if (!processItemsId.includes(itemId)) {
+          const item = orderItems.find(orderItem => orderItem?.id === itemId);
+          if (item) {
+            processItemsId.push(itemId);
+            itemsList.push(item);
+            const relatedItems = getRelatedBy('orderItem', item.id);
+            relatedItems
+              .filter(id => !processItemsId.includes(id))
+              .forEach(relateId => {
+                const relatedItem = orderItems.find(orderItem => orderItem?.id === relateId);
+                if (relatedItem) {
+                  itemsList.push(relatedItem);
+                  processItemsId.push(relatedItem.id);
+                }
+              });
+          }
         }
       });
       orderItems
