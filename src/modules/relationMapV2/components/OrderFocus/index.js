@@ -170,7 +170,7 @@ export default function OrderFocus() {
   const [expandRows, setExpandRows] = React.useState([]);
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const { initHits } = Hits.useContainer();
-  const { initMapping, onSetBadges, onSetRelated } = Entities.useContainer();
+  const { initMapping, onSetBadges, onSetRelated, getRelatedBy } = Entities.useContainer();
   const { queryVariables } = SortAndFilter.useContainer();
   const lastQueryVariables = usePrevious(queryVariables);
   React.useEffect(() => {
@@ -293,7 +293,8 @@ export default function OrderFocus() {
                 );
               }
 
-              const orders = getByPathWithDefault([], 'orders.nodes', data).map(order =>
+              const processOrderIds = [];
+              const baseOrders = getByPathWithDefault([], 'orders.nodes', data).map(order =>
                 state.order[getByPathWithDefault('', 'id', order)]
                   ? {
                       ...order,
@@ -301,6 +302,26 @@ export default function OrderFocus() {
                     }
                   : order
               );
+              const loadedOrders = Object.values(state.order || {});
+              const orders = [];
+              baseOrders.forEach(order => {
+                if (!processOrderIds.includes(order.id)) {
+                  processOrderIds.push(order.id);
+                  orders.push(order);
+                  const relatedOrders = getRelatedBy('order', order.id);
+                  relatedOrders
+                    .filter(id => !baseOrders.map(currentOrder => currentOrder.id).includes(id))
+                    .forEach(relateId => {
+                      const relatedOrder: Object = loadedOrders.find(
+                        (currentOrder: ?Object) => currentOrder?.id === relateId
+                      );
+                      if (relatedOrder) {
+                        orders.push(relatedOrder);
+                        processOrderIds.push(relatedOrder.id);
+                      }
+                    });
+                }
+              });
               initHits(getByPathWithDefault([], 'orders.hits', data));
               const ordersData = generateListData({
                 orders,
@@ -402,6 +423,7 @@ export default function OrderFocus() {
                                   entity: 'order',
                                 });
                                 order.orderItems.forEach(item => {
+                                  // TODO: need to detect new item or cloned item
                                   cloneBadges.push({
                                     id: item?.id,
                                     type: 'cloned',
