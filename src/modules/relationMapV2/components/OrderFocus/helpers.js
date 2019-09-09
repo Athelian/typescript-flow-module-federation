@@ -267,7 +267,7 @@ export const orderCoordinates = memoize(
     }
     if (orderItemCount > 0) {
       const itemsList = [];
-      const orderItemSorted = getItemsSortByOrderId(order.id);
+      const orderItemSorted = getItemsSortByOrderId(order.id, orderItems);
       orderItemSorted.forEach(itemId => {
         const item = orderItems.find(orderItem => orderItem?.id === itemId);
         if (item) {
@@ -282,7 +282,7 @@ export const orderCoordinates = memoize(
         const batches = item?.batches ?? [];
         if (batches.length) {
           const batchesList = [];
-          const batchesSorted = getBatchesSortByItemId(item.id);
+          const batchesSorted = getBatchesSortByItemId(item.id, batches);
           // TODO: place the clone result on below the original
           // should support recursion
           batchesSorted.forEach(batchId => {

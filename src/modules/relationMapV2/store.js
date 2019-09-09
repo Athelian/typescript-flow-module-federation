@@ -210,36 +210,51 @@ function useClientSorts(
   const localFilter = window.localStorage.getItem(cacheKey);
   const orderItemsSort = useRef({});
   const batchesSort = useRef({});
-  const initialFilter = localFilter
-    ? {
-        ...initSorts,
-        ...JSON.parse(localFilter),
-      }
-    : initSorts;
+  let initialFilter;
+  try {
+    initialFilter = localFilter
+      ? {
+          ...initSorts,
+          ...JSON.parse(localFilter),
+        }
+      : initSorts;
+  } catch {
+    initialFilter = initSorts;
+  }
 
   const [filterAndSort, changeFilterAndSort] = useState(initialFilter);
 
   const onLocalSort = useCallback(
-    (mapping: { orders: Array<Order> }, type: string) => {
+    (mapping: { orders: Array<Order> }, { type, filters }: { type: string, filters: Object }) => {
       const { orders } = mapping;
-      orders.forEach(order => {
+      orders.forEach((order: Object) => {
         if (type === 'orderItem') {
           orderItemsSort.current[order.id] = sortOrderItemBy(
             order?.orderItems ?? [],
-            filterAndSort.orderItem.sort
-          ).map(item => item?.id ?? '');
+            filters.orderItem?.sort ?? {
+              field: 'updatedAt',
+              direction: 'DESCENDING',
+            }
+          )
+            .map((item: Object) => item?.id ?? '')
+            .filter(Boolean);
         }
         if (type === 'batch') {
           (order?.orderItems ?? []).forEach(orderItem => {
             batchesSort.current[orderItem.id] = sortBatchBy(
               orderItem?.batches ?? [],
-              filterAndSort.batch.sort
-            ).map(batch => batch?.id ?? '');
+              filters.batch?.sort ?? {
+                field: 'updatedAt',
+                direction: 'DESCENDING',
+              }
+            )
+              .map((batch: Object) => batch?.id ?? '')
+              .filter(Boolean);
           });
         }
       });
     },
-    [filterAndSort.batch.sort, filterAndSort.orderItem.sort]
+    []
   );
 
   const onChangeFilter = useCallback(
@@ -252,22 +267,43 @@ function useClientSorts(
       newFilter: Object,
       mapping: { orders: Array<Order> },
     }) => {
-      changeFilterAndSort(prevState =>
-        produce(prevState, draft => {
+      changeFilterAndSort(prevState => {
+        const nextState = produce(prevState, draft => {
           draft[type] = newFilter;
-        })
-      );
-      onLocalSort(mapping, type);
+        });
+
+        onLocalSort(mapping, { type, filters: nextState });
+        return nextState;
+      });
     },
     [onLocalSort]
   );
 
-  const getItemsSortByOrderId = (orderId: string): Array<string> => {
+  const getItemsSortByOrderId = (orderId: string, orderItems: Array<Object>): Array<string> => {
+    if (!orderItemsSort.current[orderId]) {
+      orderItemsSort.current[orderId] = sortOrderItemBy(orderItems, filterAndSort.orderItem.sort)
+        .map((item: Object) => item?.id ?? '')
+        .filter(Boolean);
+    }
+
     return orderItemsSort.current?.[orderId] ?? [];
   };
-  const getBatchesSortByItemId = (itemId: string): Array<string> => {
+  const getBatchesSortByItemId = (itemId: string, batches: Array<Object>): Array<string> => {
+    if (!batchesSort.current?.[itemId]) {
+      batchesSort.current[itemId] = sortBatchBy(batches, filterAndSort.batch.sort)
+        .map((batch: Object) => batch?.id ?? '')
+        .filter(Boolean);
+    }
+
     return batchesSort.current?.[itemId] ?? [];
   };
+
+  useEffect(() => {
+    console.warn({
+      orderItemsSort,
+      batchesSort,
+    });
+  });
 
   useEffect(() => {
     if (window.localStorage) {
