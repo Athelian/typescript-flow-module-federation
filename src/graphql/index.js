@@ -42,7 +42,7 @@ import {
   milestoneFragment,
   milestoneCardFragment,
   milestoneFormFragment,
-  projectCardNewFragment,
+  projectCardFragment,
   projectFormQueryFragment,
   projectFormFragment,
 } from './project/fragment';
@@ -135,7 +135,7 @@ export {
   notFoundFragment,
   forbiddenFragment,
   ownedByFragment,
-  projectCardNewFragment,
+  projectCardFragment,
   milestoneFragment,
   milestoneFormFragment,
   milestoneCardFragment,

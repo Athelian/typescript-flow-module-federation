@@ -15,7 +15,7 @@ import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/
 import { Display } from 'components/Form';
 import { BaseButton, CancelButton } from 'components/Buttons';
 import BaseCard from 'components/Cards';
-import ProjectCardNew from 'components/Cards/ProjectCardNew';
+import ProjectCard from 'components/Cards/ProjectCard';
 import messages from 'modules/project/messages';
 import useFilter from 'hooks/useFilter';
 import SelectMilestone from './SelectMilestone';
@@ -208,7 +208,7 @@ function SelectProjectAndMilestone({
                                     </div>
                                   )}
 
-                                <ProjectCardNew
+                                <ProjectCard
                                   key={item.id}
                                   project={item}
                                   onClick={() => {

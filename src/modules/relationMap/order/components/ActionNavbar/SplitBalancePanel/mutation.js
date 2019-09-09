@@ -6,7 +6,7 @@ import {
   metricFragment,
   tagFragment,
   milestoneCardFragment,
-  projectCardNewFragment,
+  projectCardFragment,
   milestoneFragment,
   taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
@@ -36,7 +36,7 @@ export const batchBalanceSplitManyMutation = gql`
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
   ${milestoneCardFragment}
-  ${projectCardNewFragment}
+  ${projectCardFragment}
   ${milestoneFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}

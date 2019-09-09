@@ -23,7 +23,7 @@ import {
   fieldDefinitionFragment,
   ownedByFragment,
   milestoneCardFragment,
-  projectCardNewFragment,
+  projectCardFragment,
   milestoneFragment,
   taskWithoutParentInfoFragment,
   taskCountFragment,
@@ -118,7 +118,7 @@ export const shipmentFormTimelineAndCargoQuery = gql`
   ${fieldDefinitionFragment}
   ${ownedByFragment}
   ${milestoneCardFragment}
-  ${projectCardNewFragment}
+  ${projectCardFragment}
   ${milestoneFragment}
   ${taskWithoutParentInfoFragment}
   ${taskCountFragment}

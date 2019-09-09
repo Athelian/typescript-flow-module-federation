@@ -5,7 +5,7 @@ import {
   metricFragment,
   tagFragment,
   milestoneCardFragment,
-  projectCardNewFragment,
+  projectCardFragment,
   milestoneFragment,
   taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
@@ -33,7 +33,7 @@ export const batchSimpleSplitMutation = gql`
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
   ${milestoneCardFragment}
-  ${projectCardNewFragment}
+  ${projectCardFragment}
   ${milestoneFragment}
   ${taskWithoutParentInfoFragment}
   ${taskCountFragment}
@@ -58,7 +58,7 @@ export const batchEqualSplitMutation = gql`
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
   ${milestoneCardFragment}
-  ${projectCardNewFragment}
+  ${projectCardFragment}
   ${milestoneFragment}
   ${taskWithoutParentInfoFragment}
   ${taskCountFragment}

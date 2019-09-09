@@ -20,7 +20,7 @@ import {
   fieldDefinitionFragment,
   ownedByFragment,
   milestoneCardFragment,
-  projectCardNewFragment,
+  projectCardFragment,
   milestoneFragment,
   taskCountFragment,
   taskWithoutParentInfoFragment,
@@ -55,7 +55,7 @@ export const batchFormQuery = gql`
   ${fieldDefinitionFragment}
   ${ownedByFragment}
   ${milestoneCardFragment}
-  ${projectCardNewFragment}
+  ${projectCardFragment}
   ${milestoneFragment}
   ${taskCountFragment}
   ${taskWithoutParentInfoFragment}

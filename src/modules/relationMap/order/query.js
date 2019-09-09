@@ -7,7 +7,7 @@ import {
   metricFragment,
   priceFragment,
   milestoneCardFragment,
-  projectCardNewFragment,
+  projectCardFragment,
   milestoneFragment,
   taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
@@ -317,7 +317,7 @@ export const orderDetailQuery = gql`
   ${priceFragment}
   ${taskFormInTemplateFragment}
   ${milestoneCardFragment}
-  ${projectCardNewFragment}
+  ${projectCardFragment}
   ${milestoneFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
@@ -371,7 +371,7 @@ export const orderFocusedListQuery = gql`
   ${priceFragment}
   ${taskFormInTemplateFragment}
   ${milestoneCardFragment}
-  ${projectCardNewFragment}
+  ${projectCardFragment}
   ${milestoneFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}

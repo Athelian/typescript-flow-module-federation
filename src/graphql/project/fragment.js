@@ -16,8 +16,8 @@ export const milestoneFragment = gql`
   }
 `;
 
-export const projectCardNewFragment = gql`
-  fragment projectCardNewFragment on Project {
+export const projectCardFragment = gql`
+  fragment projectCardFragment on Project {
     id
     name
     description

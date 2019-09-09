@@ -22,7 +22,7 @@ import {
   fieldDefinitionFragment,
   ownedByFragment,
   milestoneCardFragment,
-  projectCardNewFragment,
+  projectCardFragment,
   milestoneFragment,
   taskWithoutParentInfoFragment,
   taskCountFragment,
@@ -59,7 +59,7 @@ export const containerFormQuery = gql`
   ${fieldDefinitionFragment}
   ${ownedByFragment}
   ${milestoneCardFragment}
-  ${projectCardNewFragment}
+  ${projectCardFragment}
   ${milestoneFragment}
   ${taskWithoutParentInfoFragment}
   ${taskCountFragment}

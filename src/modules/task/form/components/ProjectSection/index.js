@@ -6,7 +6,7 @@ import { BooleanValue } from 'react-values';
 import { SectionHeader, SectionWrapper, DashedPlusButton } from 'components/Form';
 import { SectionNavBar } from 'components/NavBar';
 import { MilestoneCard, GrayCard } from 'components/Cards';
-import ProjectCardNew from 'components/Cards/ProjectCardNew';
+import ProjectCard from 'components/Cards/ProjectCard';
 import SlideView from 'components/SlideView';
 import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -58,7 +58,7 @@ const ProjectSection = ({ parentEntity }: Props) => {
                   <>
                     {milestone ? (
                       <div className={ProjectSectionStyle}>
-                        <ProjectCardNew
+                        <ProjectCard
                           project={milestone.project}
                           onClick={() => {
                             if (editable.milestone) {

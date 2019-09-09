@@ -23,7 +23,7 @@ import {
   badRequestFragment,
   ownedByFragment,
   milestoneCardFragment,
-  projectCardNewFragment,
+  projectCardFragment,
   milestoneFragment,
   taskCountFragment,
   taskWithoutParentInfoFragment,
@@ -95,7 +95,7 @@ export const updateOrderMutation = gql`
   ${fieldDefinitionFragment}
   ${ownedByFragment}
   ${milestoneCardFragment}
-  ${projectCardNewFragment}
+  ${projectCardFragment}
   ${milestoneFragment}
   ${taskCountFragment}
   ${taskWithoutParentInfoFragment}

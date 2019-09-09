@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 import {
   milestoneFragment,
-  projectCardNewFragment,
+  projectCardFragment,
   taskCountFragment,
   tagFragment,
   notFoundFragment,
@@ -19,7 +19,7 @@ export const projectListQuery = gql`
   ) {
     projects(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...projectCardNewFragment
+        ...projectCardFragment
         ...notFoundFragment
         ...badRequestFragment
         ...forbiddenFragment
@@ -29,7 +29,7 @@ export const projectListQuery = gql`
     }
   }
   ${milestoneFragment}
-  ${projectCardNewFragment}
+  ${projectCardFragment}
   ${taskCountFragment}
   ${tagFragment}
   ${notFoundFragment}

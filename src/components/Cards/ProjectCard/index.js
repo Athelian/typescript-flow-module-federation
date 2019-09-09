@@ -28,7 +28,7 @@ type Props = OptionalProps & {
   project: Object,
 };
 
-const ProjectCardNew = ({ project, onClick, ...rest }: Props) => {
+const ProjectCard = ({ project, onClick, ...rest }: Props) => {
   const { name, dueDate, tags = [], milestones = [] } = project;
 
   // TODO: Handle if milestones is empty array
@@ -109,4 +109,4 @@ const ProjectCardNew = ({ project, onClick, ...rest }: Props) => {
   );
 };
 
-export default ProjectCardNew;
+export default ProjectCard;

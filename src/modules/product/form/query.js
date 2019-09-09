@@ -17,7 +17,7 @@ import {
   documentFragment,
   ownedByFragment,
   milestoneCardFragment,
-  projectCardNewFragment,
+  projectCardFragment,
   milestoneFragment,
   taskCountFragment,
   taskTemplateCardFragment,
@@ -51,7 +51,7 @@ export const productFormQuery = gql`
   ${documentFragment}
   ${ownedByFragment}
   ${milestoneCardFragment}
-  ${projectCardNewFragment}
+  ${projectCardFragment}
   ${milestoneFragment}
   ${taskCountFragment}
   ${taskTemplateCardFragment}

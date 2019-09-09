@@ -4,7 +4,7 @@ import {
   projectFormQueryFragment,
   taskWithParentInfoFragment,
   milestoneCardFragment,
-  projectCardNewFragment,
+  projectCardFragment,
   milestoneFragment,
   userAvatarFragment,
   tagFragment,
@@ -131,7 +131,7 @@ export const updateProjectMutation = gql`
   ${ownedByFragment}
   ${taskWithParentInfoFragment}
   ${milestoneCardFragment}
-  ${projectCardNewFragment}
+  ${projectCardFragment}
   ${milestoneFragment}
   ${orderCardFragment}
   ${productCardFragment}

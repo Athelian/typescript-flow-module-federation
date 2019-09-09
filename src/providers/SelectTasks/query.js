@@ -5,7 +5,7 @@ import {
   userAvatarFragment,
   tagFragment,
   milestoneCardFragment,
-  projectCardNewFragment,
+  projectCardFragment,
   milestoneFragment,
   productCardFragment,
   productProviderCardFragment,
@@ -52,7 +52,7 @@ export const selectTaskListQuery = gql`
   ${forbiddenFragment}
   ${taskWithParentInfoFragment}
   ${milestoneCardFragment}
-  ${projectCardNewFragment}
+  ${projectCardFragment}
   ${milestoneFragment}
   ${userAvatarFragment}
   ${tagFragment}
