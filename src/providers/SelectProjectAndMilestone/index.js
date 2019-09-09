@@ -139,10 +139,7 @@ function SelectProjectAndMilestone({
                     ...selectedMilestone,
                     project: {
                       ...selectedProject,
-                      milestones: selectedProject.milestones.map(item => ({
-                        id: item.id,
-                        __typename: 'Milestone',
-                      })),
+                      milestones: selectedProject.milestones,
                     },
                   });
                 } else {

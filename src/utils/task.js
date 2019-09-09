@@ -1,7 +1,7 @@
 // @flow
 import type { User, Task } from 'generated/graphql';
 import { sumBy } from 'lodash';
-import { isBefore } from 'utils/date';
+import { isBefore, findDuration } from 'utils/date';
 import { encodeId } from 'utils/id';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
@@ -123,6 +123,8 @@ import {
   SHIPMENT_TASK_SET_TAGS,
   SHIPMENT_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/shipment';
+
+import emitter from 'utils/emitter';
 
 export type TaskEditableProps = {
   name: boolean,
@@ -647,6 +649,53 @@ export const getParentInfo = (
   }
   return {};
 };
+
+export function triggerAutoBinding({
+  manualSettings,
+  values,
+  entity,
+  hasCircleBindingError,
+  task,
+}: {|
+  manualSettings: Object,
+  values: Object,
+  entity: string,
+  hasCircleBindingError: boolean,
+  task: Task,
+|}) {
+  if (!manualSettings.dueDate || !manualSettings.startDate) {
+    setTimeout(() => {
+      if (!manualSettings.dueDate) {
+        const { months = 0, weeks = 0, days = 0 } = values.dueDateInterval || {};
+        emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+          hasCircleBindingError,
+          selectedField: 'dueDate',
+          field: values.dueDateBinding,
+          entityId: getByPath('entity.id', task),
+          autoDateDuration: {
+            metric: findDuration({ months, weeks }),
+            value: months || weeks || days,
+          },
+          autoDateOffset: -(months || weeks || days) > 0 ? 'before' : 'after',
+        });
+      }
+      if (!manualSettings.startDate) {
+        const { months = 0, weeks = 0, days = 0 } = values.startDateInterval || {};
+        emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+          hasCircleBindingError,
+          selectedField: 'startDate',
+          field: values.startDateBinding,
+          entityId: getByPath('entity.id', task),
+          autoDateDuration: {
+            metric: findDuration({ months, weeks }),
+            value: months || weeks || days,
+          },
+          autoDateOffset: -(months || weeks || days) > 0 ? 'before' : 'after',
+        });
+      }
+    }, 200);
+  }
+}
 
 export const START_DATE = 'TaskStartDate';
 export const DUE_DATE = 'TaskDueDate';

@@ -5,7 +5,8 @@ import {
   forbiddenFragment,
   taskWithParentInfoFragment,
   milestoneCardFragment,
-  projectCardFragment,
+  projectCardNewFragment,
+  milestoneFragment,
   userAvatarFragment,
   tagFragment,
   orderCardFragment,
@@ -40,7 +41,8 @@ export const updateTaskMutation = gql`
   ${forbiddenFragment}
   ${taskWithParentInfoFragment}
   ${milestoneCardFragment}
-  ${projectCardFragment}
+  ${projectCardNewFragment}
+  ${milestoneFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${orderCardFragment}
