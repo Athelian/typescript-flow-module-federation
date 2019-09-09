@@ -11,6 +11,12 @@ export const ProjectSectionStyle: string = css`
   grid-gap: 20px;
 `;
 
+export const ProjectSectionPlusButtonWrapperStyle: string = css`
+  ${presets.BOX};
+  width: 880px;
+  padding: 40px 10px;
+`;
+
 export const ProjectSectionWrapperStyle: string = css`
   position: relative;
   ${presets.BOX};

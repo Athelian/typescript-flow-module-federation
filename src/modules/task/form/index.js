@@ -5,6 +5,7 @@ import TaskInfoSection from './components/TaskInfoSection';
 import ProjectSection from './components/ProjectSection';
 import ParentEntity from './components/ParentEntity';
 import { TaskFormWrapperStyle } from './style';
+import EntitySection from './components/EntitySection';
 
 type Props = {|
   groupIds: Array<string>,
@@ -50,7 +51,10 @@ export default class TaskForm extends React.Component<Props> {
           task={task}
         />
 
-        <ProjectSection />
+        {!isInProject && <ProjectSection />}
+
+        {!inParentEntityForm && <EntitySection task={task} entity={entity} />}
+
         <ParentEntity inParentEntityForm={inParentEntityForm} entity={entity} />
       </div>
     );

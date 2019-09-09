@@ -93,15 +93,33 @@ class TaskFormModule extends React.Component<Props> {
           {(saveTask, { loading: isLoading, error }) => (
             <Subscribe to={[TaskContainer, FormContainer]}>
               {({ initDetailValues, originalValues, state, isDirty }, form) => {
+                // const entityTypename = state.entity?.__typename;
                 return (
                   <>
                     <NavBar>
                       <EntityIcon icon="TASK" color="TASK" />
                       <JumpToSection>
                         <SectionTabs
-                          link="task_taskSection"
-                          label={<FormattedMessage id="modules.Tasks.task" defaultMessage="TASK" />}
+                          link="task_task_section"
+                          label={<FormattedMessage id="modules.task.task" defaultMessage="TASK" />}
                           icon="TASK"
+                        />
+                        <SectionTabs
+                          link="task_project_section"
+                          label={
+                            <FormattedMessage
+                              id="modules.task.project"
+                              defaultMessage="`PROJECT`"
+                            />
+                          }
+                          icon="PROJECT"
+                        />
+                        <SectionTabs
+                          link="task_entity_section"
+                          label={
+                            <FormattedMessage id="modules.task.related" defaultMessage="RELATED" />
+                          }
+                          icon="RELATED"
                         />
                       </JumpToSection>
 
@@ -189,6 +207,7 @@ class TaskFormModule extends React.Component<Props> {
                           <TaskForm
                             inParentEntityForm={false}
                             groupIds={parseGroupIds(task)}
+                            entity={task.entity}
                             task={task}
                             onFormReady={() => initDetailValues(task)}
                           />

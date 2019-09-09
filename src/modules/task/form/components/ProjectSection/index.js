@@ -16,7 +16,11 @@ import { circleValidator } from 'modules/task/form/validator';
 import { checkEditableFromEntity, triggerAutoBinding } from 'utils/task';
 import { getByPathWithDefault } from 'utils/fp';
 
-import { ProjectSectionWrapperStyle, ProjectSectionStyle } from './style';
+import {
+  ProjectSectionWrapperStyle,
+  ProjectSectionStyle,
+  ProjectSectionPlusButtonWrapperStyle,
+} from './style';
 
 type Props = {
   parentEntity?: string,
@@ -53,13 +57,7 @@ const ProjectSection = ({ parentEntity }: Props) => {
                 {({ value: opened, set: toggleSlide }) => (
                   <>
                     {milestone ? (
-                      <div
-                        className={ProjectSectionStyle}
-                        // role="presentation"
-                        // onClick={() => {
-                        //   toggleSlide(true);
-                        // }}
-                      >
+                      <div className={ProjectSectionStyle}>
                         <ProjectCardNew
                           project={milestone.project}
                           onClick={() => {
@@ -68,18 +66,25 @@ const ProjectSection = ({ parentEntity }: Props) => {
                             }
                           }}
                         />
-                        <MilestoneCard milestone={milestone} />
+                        <MilestoneCard
+                          milestone={milestone}
+                          onClick={() => {
+                            if (editable.milestone) {
+                              toggleSlide(true);
+                            }
+                          }}
+                        />
                       </div>
                     ) : (
-                      <div>
+                      <div className={ProjectSectionPlusButtonWrapperStyle}>
                         {editable.milestone ? (
                           <DashedPlusButton
-                            width="640px"
+                            width="860px"
                             height="150px"
                             onClick={() => toggleSlide(true)}
                           />
                         ) : (
-                          <GrayCard width="640px" height="150px" />
+                          <GrayCard width="860px" height="150px" />
                         )}
                       </div>
                     )}

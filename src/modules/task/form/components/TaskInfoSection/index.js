@@ -2,19 +2,12 @@
 import React from 'react';
 
 import { type IntlShape, injectIntl, FormattedMessage } from 'react-intl';
-import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
 import { ObjectValue, BooleanValue } from 'react-values';
 import { TAG_LIST } from 'modules/permission/constants/tag';
-import { ORDER_FORM } from 'modules/permission/constants/order';
-import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
-import { PRODUCT_FORM } from 'modules/permission/constants/product';
-import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import { UserConsumer } from 'components/Context/Viewer';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
-import { encodeId } from 'utils/id';
 import emitter from 'utils/emitter';
-import { spreadOrderItem } from 'utils/item';
 import {
   triggerAutoBinding,
   checkEditableFromEntity,
@@ -24,14 +17,6 @@ import {
   MILESTONE_DUE_DATE,
 } from 'utils/task';
 import { formatToGraphql, isBefore, calculateDate, findDuration } from 'utils/date';
-import {
-  ShipmentCard,
-  OrderCard,
-  ItemCard,
-  BatchCard,
-  ProductCard,
-  OrderProductProviderCard,
-} from 'components/Cards';
 
 import {
   SectionWrapper,
@@ -127,14 +112,11 @@ const TaskInfoSection = ({
   groupIds,
   task,
   isInTemplate,
-  hideParentInfo,
+
   parentEntity,
 }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-
-  const canViewOrderForm = hasPermission(ORDER_FORM);
-  const canViewProductForm = hasPermission(PRODUCT_FORM);
 
   const initDuration = {};
   let isBeforeStartDate = true;
@@ -298,7 +280,7 @@ const TaskInfoSection = ({
   });
 
   return (
-    <SectionWrapper id="task_taskSection">
+    <SectionWrapper id="task_task_section">
       <SectionHeader
         icon="TASK"
         title={<FormattedMessage id="modules.Tasks.task" defaultMessage="TASK" />}
@@ -325,24 +307,6 @@ const TaskInfoSection = ({
           const hasCircleBindingError = !circleValidator.isValidSync(values);
           return (
             <div className={TaskSectionWrapperStyle}>
-              {!hideParentInfo &&
-                getByPathWithDefault('', 'entity.__typename', task) === 'Shipment' && (
-                  <FieldItem
-                    label={
-                      <Label>
-                        <FormattedMessage id="modules.Tasks.shipment" defaultMessage="SHIPMENT" />
-                      </Label>
-                    }
-                    vertical
-                    input={
-                      <ShipmentCard
-                        shipment={task.shipment}
-                        onClick={() => navigate(`/shipment/${encodeId(task.shipment.id)}`)}
-                      />
-                    }
-                  />
-                )}
-
               <div className={MainFieldsWrapperStyle}>
                 <GridColumn>
                   <FormField
@@ -983,139 +947,7 @@ const TaskInfoSection = ({
                   )}
                 </GridColumn>
 
-                <GridColumn>
-                  {!hideParentInfo &&
-                    getByPathWithDefault('', 'entity.__typename', task) === 'Order' && (
-                      <FieldItem
-                        label={
-                          <Label>
-                            <FormattedMessage id="modules.Tasks.order" defaultMessage="ORDER" />
-                          </Label>
-                        }
-                        vertical
-                        input={
-                          <OrderCard
-                            order={task.order}
-                            onClick={() => {
-                              if (canViewOrderForm) {
-                                navigate(`/order/${encodeId(task.order.id)}`);
-                              }
-                            }}
-                          />
-                        }
-                      />
-                    )}
-
-                  {!hideParentInfo &&
-                    getByPathWithDefault('', 'entity.__typename', task) === 'OrderItem' &&
-                    (() => {
-                      const { orderItem, productProvider, product, order } = spreadOrderItem(
-                        task.orderItem
-                      );
-
-                      const viewable = {
-                        price: hasPermission(ORDER_ITEMS_GET_PRICE),
-                      };
-
-                      const navigable = {
-                        order: canViewOrderForm,
-                        product: canViewProductForm,
-                      };
-
-                      const config = {
-                        hideOrder: false,
-                      };
-                      return (
-                        <FieldItem
-                          label={
-                            <Label>
-                              <FormattedMessage id="modules.Tasks.item" defaultMessage="ITEM" />
-                            </Label>
-                          }
-                          vertical
-                          input={
-                            <ItemCard
-                              orderItem={orderItem}
-                              productProvider={productProvider}
-                              product={product}
-                              order={order}
-                              viewable={viewable}
-                              navigable={navigable}
-                              config={config}
-                              onClick={() => navigate(`/order-item/${encodeId(orderItem.id)}`)}
-                            />
-                          }
-                        />
-                      );
-                    })()}
-
-                  {!hideParentInfo &&
-                    getByPathWithDefault('', 'entity.__typename', task) === 'Product' && (
-                      <FieldItem
-                        label={
-                          <Label>
-                            <FormattedMessage id="modules.Tasks.product" defaultMessage="PRODUCT" />
-                          </Label>
-                        }
-                        vertical
-                        input={
-                          <PartnerPermissionsWrapper data={task.product}>
-                            {permissions => (
-                              <ProductCard
-                                product={task.product}
-                                onClick={() => {
-                                  if (permissions.includes(PRODUCT_FORM)) {
-                                    navigate(`/product/${encodeId(task.product.id)}`);
-                                  }
-                                }}
-                              />
-                            )}
-                          </PartnerPermissionsWrapper>
-                        }
-                      />
-                    )}
-
-                  {!hideParentInfo &&
-                    getByPathWithDefault('', 'entity.__typename', task) === 'ProductProvider' && (
-                      <FieldItem
-                        label={
-                          <Label>
-                            <FormattedMessage
-                              id="modules.Tasks.endProduct"
-                              defaultMessage="END PRODUCT"
-                            />
-                          </Label>
-                        }
-                        vertical
-                        input={
-                          <OrderProductProviderCard
-                            productProvider={task.productProvider}
-                            onClick={() =>
-                              navigate(`/product/${encodeId(task.productProvider.product.id)}`)
-                            }
-                          />
-                        }
-                      />
-                    )}
-
-                  {!hideParentInfo &&
-                    getByPathWithDefault('', 'entity.__typename', task) === 'Batch' && (
-                      <FieldItem
-                        label={
-                          <Label>
-                            <FormattedMessage id="modules.Tasks.batch" defaultMessage="BATCH" />
-                          </Label>
-                        }
-                        vertical
-                        input={
-                          <BatchCard
-                            batch={task.batch}
-                            onClick={() => navigate(`/batch/${encodeId(task.batch.id)}`)}
-                          />
-                        }
-                      />
-                    )}
-                </GridColumn>
+                {/* <GridColumn></GridColumn> */}
               </div>
 
               <div className={TaskStatusWrapperStyle}>
