@@ -1,26 +1,7 @@
 // @flow
-import { clone } from 'utils/fp';
+import { clone, setIn } from 'utils/fp';
 import type { CellValue, State } from '../types';
 import { refresh } from './global';
-
-/**
- * `setIn` from "utils/fp" or `set` from "lodash" doesn't work for unknown reasons.
- */
-function set(subject: any, path: string, value: any): any {
-  let cursor = subject;
-
-  const keys = path.split('.');
-
-  keys.forEach((key, index) => {
-    if (index < keys.length - 1) {
-      cursor = cursor[key];
-    } else {
-      cursor[key] = value;
-    }
-  });
-
-  return subject;
-}
 
 export function changeValues(
   state: State,
@@ -65,7 +46,7 @@ export function changeValues(
   let items = clone(state.items);
   cellsToUpdate.forEach(({ cells, value }) => {
     cells.forEach(cell => {
-      items = set(items, cell.data.path, value);
+      items = setIn(cell.data.path, value, items);
     });
   });
 

@@ -28,7 +28,7 @@ describe('Functional helper', () => {
         {
           c: 2,
           d: {
-            e: 3,
+            eee: 3,
           },
         },
       ],
@@ -39,7 +39,7 @@ describe('Functional helper', () => {
         {
           c: 2,
           d: {
-            e: 3,
+            eee: 3,
           },
         },
       ],
@@ -51,18 +51,18 @@ describe('Functional helper', () => {
         {
           c: 3,
           d: {
-            e: 3,
+            eee: 3,
           },
         },
       ],
     });
-    expect(setIn('b.0.d.e', 4, testObj)).toEqual({
+    expect(setIn('b.0.d.eee', 4, testObj)).toEqual({
       a: 1,
       b: [
         {
           c: 2,
           d: {
-            e: 4,
+            eee: 4,
           },
         },
       ],
@@ -76,14 +76,14 @@ describe('Functional helper', () => {
         {
           c: 2,
           d: {
-            e: 3,
+            eee: 3,
           },
         },
       ],
     }));
 
-    const result = setIn('78.b.0.d.e', 4, subject);
+    const result = setIn('78.b.0.d.eee', 4, subject);
 
-    expect(result[78].b[0].d.e).toEqual(4);
+    expect(result[78].b[0].d.eee).toEqual(4);
   });
 });
