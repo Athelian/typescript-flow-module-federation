@@ -6,6 +6,7 @@ import { ToggleButtonStyle, ToggleInputStyle } from './style';
 type OptionalProps = {
   onToggle: Function,
   editable: boolean,
+  align: 'left' | 'right',
 };
 
 type Props = OptionalProps & {
@@ -16,11 +17,12 @@ type Props = OptionalProps & {
 const defaultProps = {
   editable: true,
   onToggle: () => {},
+  align: 'left',
 };
 
-const ToggleInput = ({ toggled, onToggle, children, editable, ...rest }: Props) => (
+const ToggleInput = ({ toggled, onToggle, align, children, editable, ...rest }: Props) => (
   <div className={ToggleInputStyle}>
-    {children}
+    {align === 'left' && <>{children}</>}
     <button
       type="button"
       className={ToggleButtonStyle(toggled, editable)}
@@ -30,6 +32,7 @@ const ToggleInput = ({ toggled, onToggle, children, editable, ...rest }: Props) 
     >
       {toggled ? <Icon icon="TOGGLE_ON" /> : <Icon icon="TOGGLE_OFF" />}
     </button>
+    {align === 'right' && <>{children}</>}
   </div>
 );
 

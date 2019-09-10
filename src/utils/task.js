@@ -697,7 +697,7 @@ export function triggerAutoBinding({
   }
 }
 
-type prepareStatusType = ({
+type prepareTaskStatusType = ({
   task: Object,
   editable: Object,
 }) => {
@@ -708,7 +708,7 @@ type prepareStatusType = ({
   editable: boolean,
 };
 
-export const prepareStatus: prepareStatusType = ({ task, editable }) => {
+export const prepareTaskStatus: prepareTaskStatusType = ({ task, editable }) => {
   const { completedAt, completedBy, inProgressAt, inProgressBy, skippedAt, skippedBy } = task;
   if (completedAt) {
     return {
@@ -743,6 +743,40 @@ export const prepareStatus: prepareStatusType = ({ task, editable }) => {
     backgroundColor: 'GRAY_SUPER_LIGHT',
     account: null,
     editable: editable.inProgress,
+  };
+};
+
+type prepareApprovalStatusType = ({
+  approvedBy: Object,
+  rejectedBy: Object,
+}) => {
+  status: string,
+  account: Object | null,
+  color: string,
+  backgroundColor: string,
+};
+export const prepareApprovalStatus: prepareApprovalStatusType = ({ approvedBy, rejectedBy }) => {
+  if (approvedBy) {
+    return {
+      status: 'approved',
+      account: approvedBy,
+      color: 'WHITE',
+      backgroundColor: 'BLUE',
+    };
+  }
+  if (rejectedBy) {
+    return {
+      status: 'rejected',
+      account: rejectedBy,
+      color: 'WHITE',
+      backgroundColor: 'RED',
+    };
+  }
+  return {
+    status: 'unapproved',
+    account: null,
+    color: 'GRAY_LIGHT',
+    backgroundColor: 'GRAY_SUPER_LIGHT',
   };
 };
 
