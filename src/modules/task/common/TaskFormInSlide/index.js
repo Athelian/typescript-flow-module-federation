@@ -72,7 +72,7 @@ const TaskFormInSlide = ({
                   />
                 </JumpToSection>
 
-                {!task.isNew && (
+                {!task.isNew && !isInTemplate && (
                   <BooleanValue>
                     {({ value: opened, set: slideToggle }) => (
                       <>

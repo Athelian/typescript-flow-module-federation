@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets } from 'styles/common';
+import { presets, colors } from 'styles/common';
 
 export const EntitySectionWrapperStyle: string = css`
   position: relative;
@@ -12,4 +12,5 @@ export const EntitySectionWrapperStyle: string = css`
 export const EntitySectionStyle: string = css`
   width: 880px;
   padding: 30px 10px;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
 `;
