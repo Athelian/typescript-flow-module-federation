@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
 import GridView from 'components/GridView';
-import ProjectCardNew from 'components/Cards/ProjectCardNew';
+import ProjectCard from 'components/Cards/ProjectCard';
 
 type Props = {
   items: Array<Object>,
@@ -26,7 +26,7 @@ const ProjectGridView = ({ items, onLoadMore, hasMore, isLoading }: Props) => {
       itemWidth="645px"
     >
       {items.map(item => (
-        <ProjectCardNew
+        <ProjectCard
           key={item.id}
           project={item}
           onClick={() => navigate(`/project/${encodeId(item.id)}`)}

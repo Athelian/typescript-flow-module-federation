@@ -2,12 +2,6 @@
 import { css } from 'react-emotion';
 import { layout, presets, borderRadiuses, colors, fontSizes } from 'styles/common';
 
-export const TaskFormWrapperStyle: string = css`
-  ${layout.GRID_VERTICAL};
-  grid-gap: 40px;
-  padding: 50px 0;
-`;
-
 export const TaskSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;

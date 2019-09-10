@@ -1,58 +1,100 @@
+import * as React from 'react';
 /* eslint-disable import/no-extraneous-dependencies */
-import React from 'react';
 import { storiesOf } from '@storybook/react';
+// action
+// import { action } from '@storybook/addon-actions';
 import ProjectCard from './index';
 
-storiesOf('Card', module).add('Project Card', () => (
-    <div
-      style={{
-        display: 'grid',
-        gridGap: 5,
+const milestone = {
+  id: 1,
+  name: 'Milestone A',
+  isCompleted: false,
+  completed: 0,
+  total: 2,
+  dueDate: '2020/04/05',
+  estDate: '2020/04/25',
+  completedAt: null,
+};
+
+const milestones = [
+  {
+    id: 2,
+    name: 'milestone 1',
+    isCompleted: true,
+    completed: 2,
+    total: 2,
+    dueDate: '2020/01/05',
+    completedAt: '2020/01/09',
+  },
+  {
+    id: 3,
+    name: 'milestone 2',
+    isCompleted: false,
+    completed: 1,
+    total: 2,
+    dueDate: '2020/02/05',
+    completedAt: null,
+    estData: '2020/02/02',
+  },
+  {
+    id: 4,
+    name: 'milestone 3',
+    isCompleted: false,
+    completed: 0,
+    total: 2,
+    dueDate: '2020/01/05',
+    completedAt: '2020/01/03',
+  },
+  {
+    id: 5,
+    name: 'milestone 4',
+    isCompleted: false,
+    completed: 0,
+    total: 2,
+    dueDate: '2020/04/05',
+    estDate: '2020/04/25',
+  },
+];
+
+const project = {
+  name: 'Project A',
+  dueDate: '2020/04/20',
+  tags: [
+    {
+      id: 1,
+      name: 'Tag A',
+      color: '#AAAAAA',
+    },
+    {
+      id: 2,
+      name: 'Tag B',
+      color: '#EF4848',
+    },
+  ],
+};
+
+storiesOf('Card/ProjectCard', module)
+  .add('1 Milestone', () => (
+    <ProjectCard
+      project={{
+        ...project,
+        milestones: [milestone],
       }}
-    >
-      <div>
-        <ProjectCard
-          project={{
-            name: 'PROJECT TITLE',
-            dueDate: '2019-6-30',
-            taskCount: {
-              count: 20,
-              remain: 1,
-              inProgress: 2,
-              completed: 2,
-              rejected: 2,
-              approved: 2,
-              delayed: 2,
-            },
-            tags: [
-              { id: 1, name: 'tag1', color: '#123456' },
-              { id: 2, name: 'tag2', color: '#FF00FF' },
-              { id: 3, name: 'tag2', color: '#FF00FF' },
-              { id: 4, name: 'tag2', color: '#FF00FF' },
-              { id: 5, name: 'tag2', color: '#FF00FF' },
-            ],
-          }}
-        />
-      </div>
-
-      <div>
-        <ProjectCard
-          project={{
-            name: 'PROJECT long long long long title',
-            dueDate: '2019-6-30',
-            taskCount: {
-              taskCount: {
-                count: 20,
-                remain: 1,
-                inProgress: 2,
-                completed: 2,
-                delayed: 2,
-              },
-            },
-            tags: [],
-          }}
-        />
-      </div>
-    </div>
-
-));
+    />
+  ))
+  .add('4 Milestones', () => (
+    <ProjectCard
+      project={{
+        ...project,
+        milestones,
+      }}
+    />
+  ))
+  .add('5 Milestones', () => (
+    <ProjectCard
+      project={{
+        ...project,
+        milestones: [...milestones, milestone],
+      }}
+    />
+  ));

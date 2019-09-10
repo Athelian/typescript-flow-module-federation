@@ -61929,19 +61929,6 @@ export type ProductProviderCardFragmentFragment = (
   ) }
 );
 
-export type ProjectCardFragmentFragment = (
-  { __typename?: 'Project' }
-  & $Pick<Project, { id: *, name: *, description: *, dueDate: * }>
-  & { milestones: Array<(
-    { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, taskCount: { __typename?: 'TaskCount' }
-    & TaskCountFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  > }
-);
-
 export type MilestoneFragmentFragment = (
   { __typename?: 'Milestone' }
   & $Pick<Milestone, { id: *, name: *, dueDate: *, completedAt: * }>
@@ -61951,7 +61938,7 @@ export type MilestoneFragmentFragment = (
   ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> }
 );
 
-export type ProjectCardNewFragmentFragment = (
+export type ProjectCardFragmentFragment = (
   { __typename?: 'Project' }
   & $Pick<Project, { id: *, name: *, description: *, dueDate: * }>
   & { milestones: Array<({ __typename?: 'Milestone' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })

@@ -3,15 +3,15 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { diffDueDate } from 'utils/ui';
 import FormattedDate from 'components/FormattedDate';
-import { TooltipGridStyle, ToolTipDiffDateStyle } from 'components/Cards/ProjectCardNew/style';
+import { TooltipGridStyle, ToolTipDiffDateStyle } from 'components/Cards/ProjectCard/style';
 
 type Props = {
   dueDate: string,
-  completedAt: ?string,
   estDate: ?string,
+  completedAt: ?string,
 };
 
-const MilestoneDueDateDiffToolTip = ({ dueDate, completedAt, estDate }: Props) => {
+const ProjectDueDateDiffToolTip = ({ dueDate, estDate, completedAt }: Props) => {
   const diffDueDateAndEstDate = diffDueDate({ dueDate, date: estDate });
   const diffDueDateAndCompletedAt = diffDueDate({ dueDate, date: completedAt });
 
@@ -26,14 +26,22 @@ const MilestoneDueDateDiffToolTip = ({ dueDate, completedAt, estDate }: Props) =
           <FormattedMessage id="components.card.diffWDue" defaultMessage="Diff. w/Due" />
         </div>
         <div>
-          <FormattedMessage id="components.card.estComplDate" defaultMessage="Est. Compl. Date" />
+          <FormattedMessage
+            id="components.card.lastMilestoneEst"
+            defaultMessage="Last Milestone's Est. Compl. Date"
+          />
         </div>
         <div>{estDate ? <FormattedDate value={estDate} /> : 'N/A'}</div>
         <div className={ToolTipDiffDateStyle(diffDueDateAndEstDate.color)}>
           {diffDueDateAndEstDate.value}
         </div>
         <div>
-          {<FormattedMessage id="components.cards.completedDate" defaultMessage="Completed Date" />}
+          {
+            <FormattedMessage
+              id="components.cards.lastMilestoneCompletedDate"
+              defaultMessage="Last Milestone's Completed Date"
+            />
+          }
         </div>
         <div>{completedAt ? <FormattedDate value={completedAt} /> : 'N/A'}</div>
         <div className={ToolTipDiffDateStyle(diffDueDateAndCompletedAt.color)}>
@@ -44,4 +52,4 @@ const MilestoneDueDateDiffToolTip = ({ dueDate, completedAt, estDate }: Props) =
   );
 };
 
-export default MilestoneDueDateDiffToolTip;
+export default ProjectDueDateDiffToolTip;
