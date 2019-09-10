@@ -697,6 +697,55 @@ export function triggerAutoBinding({
   }
 }
 
+type prepareStatusType = ({
+  task: Object,
+  editable: Object,
+}) => {
+  status: string,
+  color: string,
+  backgroundColor: string,
+  account: Object | null,
+  editable: boolean,
+};
+
+export const prepareStatus: prepareStatusType = ({ task, editable }) => {
+  const { completedAt, completedBy, inProgressAt, inProgressBy, skippedAt, skippedBy } = task;
+  if (completedAt) {
+    return {
+      status: 'completed',
+      color: 'WHITE',
+      backgroundColor: 'TEAL',
+      account: completedBy,
+      editable: editable.completed,
+    };
+  }
+  if (inProgressAt) {
+    return {
+      status: 'inProgress',
+      color: 'TEAL',
+      backgroundColor: 'WHITE',
+      account: inProgressBy,
+      editable: editable.inProgress,
+    };
+  }
+  if (skippedAt) {
+    return {
+      status: 'skipped',
+      color: 'BLACK',
+      backgroundColor: 'GRAY_LIGHT',
+      account: skippedBy,
+      editable: editable.skipped,
+    };
+  }
+  return {
+    status: 'uncompleted',
+    color: 'GRAY_LIGHT',
+    backgroundColor: 'GRAY_SUPER_LIGHT',
+    account: null,
+    editable: editable.inProgress,
+  };
+};
+
 export const START_DATE = 'TaskStartDate';
 export const DUE_DATE = 'TaskDueDate';
 export const PROJECT_DUE_DATE = 'ProjectDueDate';

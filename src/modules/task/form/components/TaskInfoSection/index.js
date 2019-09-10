@@ -15,8 +15,15 @@ import {
   DUE_DATE,
   PROJECT_DUE_DATE,
   MILESTONE_DUE_DATE,
+  prepareStatus,
 } from 'utils/task';
-import { formatToGraphql, isBefore, calculateDate, findDuration } from 'utils/date';
+import {
+  formatToGraphql,
+  isBefore,
+  calculateDate,
+  findDuration,
+  todayForDateInput,
+} from 'utils/date';
 
 import {
   SectionWrapper,
@@ -29,7 +36,6 @@ import {
   Label,
   TagsInput,
   Display,
-  TaskStatusInput,
   ToggleInput,
   ApproveRejectMenu,
   TaskApprovalStatusInput,
@@ -39,7 +45,6 @@ import {
   UserAssignmentInputFactory,
   FormTooltip,
 } from 'components/Form';
-import Divider from 'components/Divider';
 import Icon from 'components/Icon';
 import GridColumn from 'components/GridColumn';
 import { FormField, FormContainer } from 'modules/form';
@@ -47,7 +52,7 @@ import TaskContainer from 'modules/task/form/container';
 import validator, { circleValidator } from 'modules/task/form/validator';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-
+import UserAvatar from 'components/UserAvatar';
 import { convertBindingToSelection, getFieldsByEntity } from './helpers';
 import {
   TaskSectionWrapperStyle,
@@ -61,6 +66,9 @@ import {
   AutoDateOffsetWrapperStyle,
   AutoDateSyncIconStyle,
   UnapprovedButtonStyle,
+  StatusWrapperStyle,
+  StatusColorStyle,
+  CompletedAvatarStyle,
 } from './style';
 
 type Props = {|
@@ -305,6 +313,27 @@ const TaskInfoSection = ({
           const entity = getByPathWithDefault(parentEntity, 'entity.__typename', task);
           const editable = checkEditableFromEntity(entity, hasPermission);
           const hasCircleBindingError = !circleValidator.isValidSync(values);
+
+          const {
+            completedAt,
+            completedBy,
+            inProgressAt,
+            inProgressBy,
+            skippedAt,
+            skippedBy,
+          } = values;
+
+          const {
+            status,
+            color,
+            backgroundColor,
+            account,
+            editable: statusEditable,
+          } = prepareStatus({
+            task: { completedAt, completedBy, inProgressAt, inProgressBy, skippedAt, skippedBy },
+            editable,
+          });
+
           return (
             <div className={TaskSectionWrapperStyle}>
               <div className={MainFieldsWrapperStyle}>
@@ -907,137 +936,223 @@ const TaskInfoSection = ({
                   />
                 </GridColumn>
 
-                {/* <GridColumn></GridColumn> */}
+                <UserConsumer>
+                  {({ user }) => (
+                    <GridColumn>
+                      <div className={StatusWrapperStyle}>
+                        {isInTemplate ? (
+                          <Display color="GRAY_LIGHT">
+                            <FormattedMessage
+                              id="modules.Tasks.statusDisabled"
+                              defaultMessage="Status will be displayed here"
+                            />
+                          </Display>
+                        ) : (
+                          <>
+                            <FormField name="status" initValue={status} values={values}>
+                              {({ name, ...inputHandlers }) => (
+                                <span className={StatusColorStyle({ color, backgroundColor })}>
+                                  <SelectInputFactory
+                                    {...inputHandlers}
+                                    items={[
+                                      {
+                                        value: 'uncompleted',
+                                        label: intl.formatMessage({
+                                          id: 'modules.milestone.uncompleted',
+                                          defaultMessage: 'Uncompleted',
+                                        }),
+                                      },
+                                      {
+                                        value: 'inProgress',
+                                        label: intl.formatMessage({
+                                          id: 'modules.milestone.inProgress',
+                                          defaultMessage: 'In Progress',
+                                        }),
+                                      },
+                                      {
+                                        value: 'completed',
+                                        label: intl.formatMessage({
+                                          id: 'modules.milestone.completed',
+                                          defaultMessage: 'Completed',
+                                        }),
+                                      },
+                                      {
+                                        value: 'skipped',
+                                        label: intl.formatMessage({
+                                          id: 'modules.milestone.skipped',
+                                          defaultMessage: 'Skipped',
+                                        }),
+                                      },
+                                    ]}
+                                    onChange={event => {
+                                      const { value } = event.target;
+
+                                      if (value === 'completed') {
+                                        const newTask = {
+                                          ...values,
+                                          skippedAt: null,
+                                          skippedBy: null,
+                                          completedAt: todayForDateInput(),
+                                          completedBy: user,
+                                        };
+                                        setFieldValues(newTask);
+                                      } else if (value === 'inProgress') {
+                                        const newTask = {
+                                          ...values,
+                                          completedAt: null,
+                                          completedBy: null,
+                                          skippedAt: null,
+                                          skippedBy: null,
+                                          inProgressAt: todayForDateInput(),
+                                          inProgressBy: user,
+                                        };
+                                        setFieldValues(newTask);
+                                      } else if (value === 'skipped') {
+                                        const newTask = {
+                                          ...values,
+                                          completedAt: null,
+                                          completedBy: null,
+                                          inProgressAt: null,
+                                          inProgressBy: null,
+                                          skippedAt: todayForDateInput(),
+                                          skippedBy: user,
+                                        };
+                                        setFieldValues(newTask);
+                                      } else {
+                                        setFieldValues({
+                                          ...values,
+                                          completedAt: null,
+                                          completedBy: null,
+                                          inProgressAt: null,
+                                          inProgressBy: null,
+                                          skippedAt: null,
+                                          skippedBy: null,
+                                        });
+                                      }
+                                    }}
+                                    required
+                                    hideTooltip
+                                    vertical
+                                    label={
+                                      <FormattedMessage
+                                        id="modules.milestone.status"
+                                        defaultMessage="STATUS"
+                                      />
+                                    }
+                                    editable={statusEditable}
+                                  />
+                                </span>
+                              )}
+                            </FormField>
+                            {account && (
+                              <div className={CompletedAvatarStyle}>
+                                <UserAvatar
+                                  firstName={account.firstName}
+                                  lastName={account.lastName}
+                                />
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </div>
+
+                      <UserAssignmentInputFactory
+                        cacheKey="TaskUserSelect"
+                        name="assignedTo"
+                        label={
+                          <FormattedMessage
+                            id="modules.Tasks.assignedToComplete"
+                            defaultMessage="ASSIGNED TO COMPLETE"
+                          />
+                        }
+                        groupIds={groupIds}
+                        values={values.assignedTo}
+                        onChange={setFieldValue}
+                        editable={editable.assignedTo}
+                      />
+
+                      {inProgressAt && (
+                        <FormField
+                          name="inProgressAt"
+                          initValue={inProgressAt}
+                          values={values}
+                          setFieldValue={setFieldValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              originalValue={originalValues[name]}
+                              label={
+                                <FormattedMessage
+                                  id="common.inProgressDate"
+                                  defaultMessage="IN PROGRESS DATE"
+                                />
+                              }
+                              vertical
+                              required
+                              editable={editable.inProgress}
+                            />
+                          )}
+                        </FormField>
+                      )}
+                      {skippedAt && (
+                        <FormField
+                          name="skippedAt"
+                          initValue={skippedAt}
+                          values={values}
+                          setFieldValue={setFieldValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              originalValue={originalValues[name]}
+                              label={
+                                <FormattedMessage
+                                  id="common.skippedDate"
+                                  defaultMessage="SKIPPED DATE"
+                                />
+                              }
+                              vertical
+                              required
+                              editable={editable.inProgress}
+                            />
+                          )}
+                        </FormField>
+                      )}
+                      {completedAt && (
+                        <FormField
+                          name="completedAt"
+                          initValue={completedAt}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={setFieldValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              originalValue={originalValues[name]}
+                              label={
+                                <FormattedMessage
+                                  id="common.completedDate"
+                                  defaultMessage="COMPLETED DATE"
+                                />
+                              }
+                              vertical
+                              required
+                              editable={editable.completed}
+                            />
+                          )}
+                        </FormField>
+                      )}
+                    </GridColumn>
+                  )}
+                </UserConsumer>
               </div>
 
               <div className={TaskStatusWrapperStyle}>
-                <div className={AssignedToStyle}>
-                  <GridColumn gap="5px">
-                    <UserAssignmentInputFactory
-                      cacheKey="TaskUserSelect"
-                      name="assignedTo"
-                      label={
-                        <FormattedMessage
-                          id="modules.Tasks.assignedToComplete"
-                          defaultMessage="ASSIGNED TO COMPLETE"
-                        />
-                      }
-                      groupIds={groupIds}
-                      values={values.assignedTo}
-                      onChange={setFieldValue}
-                      editable={editable.assignedTo}
-                    />
-                  </GridColumn>
-
-                  <GridColumn gap="5px">
-                    <Label height="30px" align="right">
-                      <FormattedMessage id="modules.Tasks.status" defaultMessage="STATUS" />
-                    </Label>
-
-                    {isInTemplate ? (
-                      <Display color="GRAY_LIGHT">
-                        <FormattedMessage
-                          id="modules.Tasks.statusDisabled"
-                          defaultMessage="Status will be displayed here"
-                        />
-                      </Display>
-                    ) : (
-                      <TaskStatusInput
-                        task={values}
-                        update={newTask => setFieldValues(newTask)}
-                        editable={editable}
-                      />
-                    )}
-                  </GridColumn>
-                </div>
-
-                {(() => {
-                  if (values.completedAt) {
-                    return (
-                      <FormField
-                        name="completedAt"
-                        initValue={values.completedAt}
-                        values={values}
-                        validator={validator}
-                        setFieldValue={setFieldValue}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <DateInputFactory
-                            name={name}
-                            {...inputHandlers}
-                            required
-                            originalValue={originalValues[name]}
-                            label={
-                              <FormattedMessage
-                                id="modules.Tasks.completedAt"
-                                defaultMessage="DATE COMPLETED"
-                              />
-                            }
-                            editable={editable.completed}
-                          />
-                        )}
-                      </FormField>
-                    );
-                  }
-                  if (values.skippedAt) {
-                    return (
-                      <FormField
-                        name="skippedAt"
-                        initValue={values.skippedAt}
-                        values={values}
-                        validator={validator}
-                        setFieldValue={setFieldValue}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <DateInputFactory
-                            name={name}
-                            {...inputHandlers}
-                            required
-                            originalValue={originalValues[name]}
-                            label={
-                              <FormattedMessage
-                                id="modules.Tasks.skippedAt"
-                                defaultMessage="DATE SKIPPED"
-                              />
-                            }
-                            editable={editable.skipped}
-                          />
-                        )}
-                      </FormField>
-                    );
-                  }
-                  if (values.inProgressAt) {
-                    return (
-                      <FormField
-                        name="inProgressAt"
-                        initValue={values.inProgressAt}
-                        values={values}
-                        validator={validator}
-                        setFieldValue={setFieldValue}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <DateInputFactory
-                            name={name}
-                            {...inputHandlers}
-                            required
-                            originalValue={originalValues[name]}
-                            label={
-                              <FormattedMessage
-                                id="modules.Tasks.inProgressAt"
-                                defaultMessage="DATE INPROGRESS"
-                              />
-                            }
-                            editable={editable.inProgress}
-                          />
-                        )}
-                      </FormField>
-                    );
-                  }
-                  return null;
-                })()}
-
-                <Divider />
-
                 <div className={ApprovalToggleWrapperStyle}>
                   <Icon icon="CONFIRM" />
                   <Label align="right" width="min-content">

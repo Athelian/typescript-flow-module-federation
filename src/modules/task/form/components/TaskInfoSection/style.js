@@ -100,3 +100,33 @@ export const UnapprovedButtonStyle = (editable: boolean): string => css`
     cursor: inherit;
   `}
 `;
+
+export const StatusWrapperStyle: string = css`
+  position: relative;
+`;
+
+export const StatusColorStyle = ({
+  color,
+  backgroundColor,
+}: {
+  color: string,
+  backgroundColor: string,
+}) => {
+  return css`
+    & > div {
+      & > div {
+        & > div {
+          background-color: ${colors[color]} & > input {
+            color: ${colors[backgroundColor]};
+          }
+        }
+      }
+    }
+  `;
+};
+
+export const CompletedAvatarStyle: string = css`
+  position: absolute;
+  right: -40px;
+  top: 35px;
+`;

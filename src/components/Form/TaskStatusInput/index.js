@@ -1,4 +1,5 @@
 // @flow
+// FIXME: only be used once, should change folder.
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { getByPath } from 'utils/fp';
