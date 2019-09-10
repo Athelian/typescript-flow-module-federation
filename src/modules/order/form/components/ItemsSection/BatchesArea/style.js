@@ -96,7 +96,6 @@ export const BatchesGridStyle: string = css`
   ${scrollbars.SMALL};
   height: 100%;
   width: 100%;
-  padding: 30px 20px;
 `;
 
 export const BatchesFooterWrapperStyle: string = css`
