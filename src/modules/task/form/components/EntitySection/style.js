@@ -10,7 +10,6 @@ export const EntitySectionWrapperStyle: string = css`
 `;
 
 export const EntitySectionStyle: string = css`
-  ${presets.BOX};
   width: 880px;
-  padding: 40px 10px;
+  padding: 30px 10px;
 `;

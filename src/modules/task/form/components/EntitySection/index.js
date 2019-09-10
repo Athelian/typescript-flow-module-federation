@@ -15,7 +15,7 @@ import {
   ProductCard,
   OrderProductProviderCard,
 } from 'components/Cards';
-// FIXME:
+// FIXME: migrate to latest permission, remove old code.
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -97,84 +97,87 @@ const EntitySection = ({ entity, task }: Props) => {
         <SectionNavBar>
           <div id="sortsandfilterswip" />
         </SectionNavBar>
-      </div>
-      <div className={EntitySectionStyle}>
-        {entity?.__typename === 'Order' && (
-          <OrderCard
-            order={task.order}
-            onClick={() => {
-              if (canViewOrderForm) {
-                navigate(`/order/${encodeId(task.order.id)}`);
-              }
-            }}
-          />
-        )}
 
-        {entity.__typename === 'OrderItem' &&
-          (() => {
-            const { orderItem, productProvider, product, order } = spreadOrderItem(task.orderItem);
+        <div className={EntitySectionStyle}>
+          {entity?.__typename === 'Order' && (
+            <OrderCard
+              order={task.order}
+              onClick={() => {
+                if (canViewOrderForm) {
+                  navigate(`/order/${encodeId(task.order.id)}`);
+                }
+              }}
+            />
+          )}
 
-            const viewable = {
-              price: hasPermission(ORDER_ITEMS_GET_PRICE),
-            };
+          {entity.__typename === 'OrderItem' &&
+            (() => {
+              const { orderItem, productProvider, product, order } = spreadOrderItem(
+                task.orderItem
+              );
 
-            const navigable = {
-              order: canViewOrderForm,
-              product: canViewProductForm,
-            };
+              const viewable = {
+                price: hasPermission(ORDER_ITEMS_GET_PRICE),
+              };
 
-            const config = {
-              hideOrder: false,
-            };
-            return (
-              <ItemCard
-                orderItem={orderItem}
-                productProvider={productProvider}
-                product={product}
-                order={order}
-                viewable={viewable}
-                navigable={navigable}
-                config={config}
-                onClick={() => navigate(`/order-item/${encodeId(orderItem.id)}`)}
-              />
-            );
-          })()}
+              const navigable = {
+                order: canViewOrderForm,
+                product: canViewProductForm,
+              };
 
-        {entity.__typename === 'Batch' && (
-          <BatchCard
-            batch={task.batch}
-            onClick={() => navigate(`/batch/${encodeId(task.batch.id)}`)}
-          />
-        )}
+              const config = {
+                hideOrder: false,
+              };
+              return (
+                <ItemCard
+                  orderItem={orderItem}
+                  productProvider={productProvider}
+                  product={product}
+                  order={order}
+                  viewable={viewable}
+                  navigable={navigable}
+                  config={config}
+                  onClick={() => navigate(`/order-item/${encodeId(orderItem.id)}`)}
+                />
+              );
+            })()}
 
-        {entity.__typename === 'Shipment' && (
-          <ShipmentCard
-            shipment={task.shipment}
-            onClick={() => navigate(`/shipment/${encodeId(task.shipment.id)}`)}
-          />
-        )}
+          {entity.__typename === 'Batch' && (
+            <BatchCard
+              batch={task.batch}
+              onClick={() => navigate(`/batch/${encodeId(task.batch.id)}`)}
+            />
+          )}
 
-        {entity.__typename === 'Product' && (
-          <PartnerPermissionsWrapper data={task.product}>
-            {permissions => (
-              <ProductCard
-                product={task.product}
-                onClick={() => {
-                  if (permissions.includes(PRODUCT_FORM)) {
-                    navigate(`/product/${encodeId(task.product.id)}`);
-                  }
-                }}
-              />
-            )}
-          </PartnerPermissionsWrapper>
-        )}
+          {entity.__typename === 'Shipment' && (
+            <ShipmentCard
+              shipment={task.shipment}
+              onClick={() => navigate(`/shipment/${encodeId(task.shipment.id)}`)}
+            />
+          )}
 
-        {entity.__typename === 'ProductProvider' && (
-          <OrderProductProviderCard
-            productProvider={task.productProvider}
-            onClick={() => navigate(`/product/${encodeId(task.productProvider.product.id)}`)}
-          />
-        )}
+          {entity.__typename === 'Product' && (
+            <PartnerPermissionsWrapper data={task.product}>
+              {permissions => (
+                <ProductCard
+                  product={task.product}
+                  onClick={() => {
+                    if (permissions.includes(PRODUCT_FORM)) {
+                      navigate(`/product/${encodeId(task.product.id)}`);
+                    }
+                  }}
+                />
+              )}
+            </PartnerPermissionsWrapper>
+          )}
+
+          {entity.__typename === 'ProductProvider' && (
+            <OrderProductProviderCard
+              productProvider={task.productProvider}
+              onClick={() => navigate(`/product/${encodeId(task.productProvider.product.id)}`)}
+            />
+          )}
+        </div>
       </div>
     </SectionWrapper>
   );

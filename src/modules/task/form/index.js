@@ -51,9 +51,9 @@ export default class TaskForm extends React.Component<Props> {
           task={task}
         />
 
-        {!isInProject && <ProjectSection />}
+        {!isInTemplate && !isInProject && <ProjectSection />}
 
-        {!inParentEntityForm && <EntitySection task={task} entity={entity} />}
+        {!isInTemplate && !inParentEntityForm && <EntitySection task={task} entity={entity} />}
 
         <ParentEntity inParentEntityForm={inParentEntityForm} entity={entity} />
       </div>
