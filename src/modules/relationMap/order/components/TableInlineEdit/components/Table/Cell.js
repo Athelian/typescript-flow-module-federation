@@ -1,7 +1,7 @@
 // @flow
 import React, { memo } from 'react';
 // $FlowFixMe: not have flow type yet
-import { areEqual } from 'react-window';
+import isDeepEqual from 'react-fast-compare';
 import { capitalize } from 'lodash';
 import { getByPath, getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import { FormField } from 'modules/form';
@@ -289,4 +289,4 @@ function Cell(props: Props) {
   );
 }
 
-export default memo<Props>(Cell, areEqual);
+export default memo<Props>(Cell, isDeepEqual);

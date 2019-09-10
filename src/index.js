@@ -1,5 +1,4 @@
 // @flow
-// $FlowIssue Profiler is not have typed yet
 import React, { Profiler } from 'react';
 import { unstable_trace as trace } from 'scheduler/tracing';
 import NP from 'number-precision';

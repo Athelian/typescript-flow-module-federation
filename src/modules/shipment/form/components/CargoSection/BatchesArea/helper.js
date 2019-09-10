@@ -1,6 +1,6 @@
 // @flow
 import type { BatchPayload } from 'generated/graphql';
-import isDeepEqual from 'lodash.isequal';
+import isDeepEqual from 'react-fast-compare';
 import Fuse from 'fuse.js';
 import memoize from 'memoize-one';
 import { comparator, sort } from 'ramda';

@@ -1,6 +1,6 @@
 import { normalize, schema } from 'normalizr';
 import memoize from 'memoize-one';
-import isDeepEqual from 'lodash.isequal';
+import isDeepEqual from 'react-fast-compare';
 
 const batch = new schema.Entity('batches');
 const container = new schema.Entity('containers');
