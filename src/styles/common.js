@@ -171,6 +171,7 @@ export const scrollbars = {
       background-color: ${colors.GRAY_LIGHT};
       border: 7px solid transparent;
       background-clip: content-box;
+      min-height: 40px;
       &:hover {
         background-color: ${colors.GRAY};
       }

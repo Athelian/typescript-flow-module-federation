@@ -6,7 +6,13 @@ import InfiniteLoader from 'react-window-infinite-loader';
 import LoadingIcon from 'components/LoadingIcon';
 import type { Area } from '../SheetState/types';
 import Column from '../Column';
-import { ColumnsWrapperStyle, ContentStyle, WrapperStyle } from './style';
+import {
+  ColumnFillerStyle,
+  ColumnsWrapperStyle,
+  ContentStyle,
+  GridStyle,
+  WrapperStyle,
+} from './style';
 
 export type ColumnConfig = {
   key: string,
@@ -89,6 +95,9 @@ const SheetRenderer = ({
             onResize={width => onColumnResize(column.key, width)}
           />
         ))}
+        {columns.length > 0 && (
+          <div className={ColumnFillerStyle(columns[columns.length - 1].color)} />
+        )}
       </div>
       <div className={ContentStyle}>
         {loading ? (
@@ -136,6 +145,7 @@ const SheetRenderer = ({
                         ref(r);
                         setGridRef(r);
                       }}
+                      className={GridStyle}
                       width={width}
                       height={height}
                       columnCount={columns.length}

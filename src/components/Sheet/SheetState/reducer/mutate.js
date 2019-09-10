@@ -1,7 +1,26 @@
 // @flow
-import { setIn } from 'utils/fp';
+import { clone } from 'utils/fp';
 import type { CellValue, State } from '../types';
 import { refresh } from './global';
+
+/**
+ * `setIn` from "utils/fp" or `set` from "lodash" doesn't work for unknown reasons.
+ */
+function set(subject: any, path: string, value: any): any {
+  let cursor = subject;
+
+  const keys = path.split('.');
+
+  keys.forEach((key, index) => {
+    if (index < keys.length - 1) {
+      cursor = cursor[key];
+    } else {
+      cursor[key] = value;
+    }
+  });
+
+  return subject;
+}
 
 export function changeValues(
   state: State,
@@ -43,12 +62,20 @@ export function changeValues(
     })
     .filter(change => change.cells.length > 0);
 
-  const items = [...state.items];
+  let items = clone(state.items);
   cellsToUpdate.forEach(({ cells, value }) => {
     cells.forEach(cell => {
-      setIn(cell.data.path, value, items);
+      items = set(items, cell.data.path, value);
     });
   });
+
+  const clearError =
+    state.errorAt &&
+    cellsToUpdate
+      .map(({ cells }) => cells)
+      // $FlowFixMe flow doesn't support flat()
+      .flat()
+      .find(cell => state.errorAt?.cell === cell);
 
   return {
     ...state,
@@ -77,6 +104,8 @@ export function changeValues(
         };
       })
     ),
+    errorAt: clearError ? null : state.errorAt,
+    weakErrorAt: clearError ? [] : state.weakErrorAt,
   };
 }
 

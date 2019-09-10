@@ -4,6 +4,7 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar } from 'components/NavBar';
 import { Sheet, ColumnsConfig } from 'components/Sheet';
+import { clone } from 'utils/fp';
 import columns from './columns';
 import transformer from './transformer';
 import entityEventHandler from './handler';
@@ -36,7 +37,7 @@ const OrderSheetModule = () => {
       .then(({ data }) => {
         setLoading(false);
         setPage({ page: 1, totalPage: data.orders?.totalPage ?? 1 });
-        setInitialOrders(data.orders?.nodes ?? []);
+        setInitialOrders(clone(data.orders?.nodes ?? []));
       });
   }, [client]);
 
@@ -67,7 +68,7 @@ const OrderSheetModule = () => {
                 ...page,
                 page: page.page + 1,
               });
-              return data.orders?.nodes ?? [];
+              return clone(data.orders?.nodes ?? []);
             })
         }
       />

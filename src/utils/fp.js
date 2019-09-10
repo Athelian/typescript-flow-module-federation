@@ -15,13 +15,15 @@ import {
   either,
   map,
   isNil,
-  lens,
-  assocPath,
   set,
   pick,
+  lensProp,
+  lensIndex,
+  compose as compose2,
 } from 'ramda';
 
 export {
+  clone,
   pipe,
   when,
   reject,
@@ -76,10 +78,14 @@ export const getByPathWithDefault = useWith(pathOr, [identity, split('.')]);
 export const isValuable = (val: any) => val != null;
 export const isValuables = (...arr: Array<any>) => arr.every(val => val != null);
 
-export const setIn = (propPath: string, value: any, onObject: any): any => {
-  const pathToArray = propPath.split('.');
-  const propLens = lens(path(pathToArray), assocPath(pathToArray));
-  return set(propLens, value, onObject);
+export const setIn = (propPath: string, value: any, subject: any): any => {
+  const lens = compose2(
+    ...propPath
+      .split('.')
+      .map(key => (!Number.isNaN(parseFloat(key)) ? lensIndex(parseFloat(key)) : lensProp(key)))
+  );
+
+  return set(lens, value, subject);
 };
 
 export const arrayToObject = (inputArray: Array<Object>, keyField: string) =>

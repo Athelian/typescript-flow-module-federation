@@ -1,6 +1,10 @@
 // @flow
-import type { Area, CellValue, RowChange, State } from '../types';
+import type { Area, CellValue, State } from '../types';
 import { replaceItem } from './mutate';
+
+function isOverlap(a: Area, b: Area) {
+  return a.from.x <= b.from.x && a.from.y <= b.from.y && a.to.x >= b.to.x && a.to.y >= b.to.y;
+}
 
 export function preAddEntity(transformer: (number, Object) => Array<Array<CellValue>>) {
   return (
@@ -35,26 +39,22 @@ export function preAddEntity(transformer: (number, Object) => Array<Array<CellVa
           return true;
         }
 
-        const cellArea = cell.merged || { from: { x, y }, to: { x, y } };
+        /**
+         * We copy the copy cell area and set `to` to the end right of the sheet.
+         * This is for correctly detect overlapping announcements.
+         */
+        const cellArea = {
+          from: { x, y, ...(cell.merged?.from ?? {}) },
+          to: { x, y, ...(cell.merged?.to ?? {}) },
+        };
+        cellArea.to.y = newState.rows.length - 1;
 
-        const biggerAdd = newState.addedRows.find(
-          (a: RowChange) =>
-            a.from.x <= cellArea.from.x &&
-            a.from.y <= cellArea.from.y &&
-            a.to.x >= cellArea.to.x &&
-            a.to.y >= cellArea.to.y
-        );
+        const biggerAdd = newState.addedRows.find(rc => isOverlap(rc, cellArea));
         if (biggerAdd) {
           return false;
         }
 
-        const remove = newState.removedRows.find(
-          (a: RowChange) =>
-            a.from.x <= cellArea.from.x &&
-            a.from.y <= cellArea.from.y &&
-            a.to.x >= cellArea.to.x &&
-            a.to.y >= cellArea.to.y
-        );
+        const remove = newState.removedRows.find(rc => isOverlap(rc, cellArea));
         if (remove) {
           return false;
         }
@@ -77,13 +77,7 @@ export function preAddEntity(transformer: (number, Object) => Array<Array<CellVa
     return {
       ...newState,
       addedRows: [
-        ...newState.addedRows.filter(
-          (a: RowChange) =>
-            a.from.x >= area.from.x &&
-            a.from.y >= area.from.y &&
-            a.to.x <= area.to.x &&
-            a.to.y <= area.to.y
-        ),
+        ...newState.addedRows.filter(rc => !isOverlap(area, rc)),
         {
           ...area,
           entity,
@@ -132,15 +126,17 @@ export function preRemoveEntity(
         return true;
       }
 
-      const cellArea = cell.merged || { from: { x, y }, to: { x, y } };
+      /**
+       * We copy the copy cell area and set `to` to the end right of the sheet.
+       * This is for correctly detect overlapping announcements.
+       */
+      const cellArea = {
+        from: { x, y, ...(cell.merged?.from ?? {}) },
+        to: { x, y, ...(cell.merged?.to ?? {}) },
+      };
+      cellArea.to.y = state.rows.length - 1;
 
-      const biggerRemove = state.removedRows.find(
-        (a: RowChange) =>
-          a.from.x <= cellArea.from.x &&
-          a.from.y <= cellArea.from.y &&
-          a.to.x >= cellArea.to.x &&
-          a.to.y >= cellArea.to.y
-      );
+      const biggerRemove = state.removedRows.find(rc => isOverlap(rc, cellArea));
       if (!biggerRemove) {
         result = cellArea;
       }
@@ -162,13 +158,7 @@ export function preRemoveEntity(
   return {
     ...state,
     removedRows: [
-      ...state.removedRows.filter(
-        (a: RowChange) =>
-          a.from.x >= area?.from.x &&
-          a.from.y >= area?.from.y &&
-          a.to.x <= area?.to.x &&
-          a.to.y <= area?.to.y
-      ),
+      ...state.removedRows.filter(rc => !isOverlap(area, rc)),
       {
         ...area,
         entity,
