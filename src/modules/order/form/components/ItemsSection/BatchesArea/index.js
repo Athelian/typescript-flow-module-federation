@@ -44,8 +44,8 @@ import {
   TitleStyle,
   AutofillButtonWrapperStyle,
   NoBatchesFoundStyle,
-  BatchesGridStyle,
   BatchesFooterWrapperStyle,
+  BatchesGridStyle,
 } from './style';
 
 type Props = {
@@ -310,39 +310,38 @@ function BatchesArea({
         </div>
 
         {batches.length > 0 ? (
-          <div className={BatchesGridStyle}>
-            <AutoSizer>
-              {({ height }) => (
-                <Grid
-                  itemData={{
-                    order,
-                    batches,
-                    orderItems,
-                    focusedItemIndex,
-                    hasPermission,
-                    setFieldValue,
-                    columnCount: itemsIsExpanded ? 1 : 3,
-                    editable: {
-                      clone: allowCloneBatch,
-                      delete: allowDeleteBatch,
-                      no: allowUpdateBatchNo,
-                      quantity: allowUpdateBatchQuantity,
-                      deliveredAt: allowUpdateBatchDelivery,
-                      desiredAt: allowUpdateBatchDesired,
-                    },
-                  }}
-                  columnCount={itemsIsExpanded ? 1 : 3}
-                  columnWidth={195 + GUTTER_SIZE}
-                  height={height}
-                  rowCount={Math.ceil(batches.length / (itemsIsExpanded ? 1 : 3))}
-                  rowHeight={291 + GUTTER_SIZE * 3}
-                  width={625}
-                >
-                  {Cell}
-                </Grid>
-              )}
-            </AutoSizer>
-          </div>
+          <AutoSizer>
+            {({ height, width }) => (
+              <Grid
+                itemData={{
+                  order,
+                  batches,
+                  orderItems,
+                  focusedItemIndex,
+                  hasPermission,
+                  setFieldValue,
+                  columnCount: itemsIsExpanded ? 1 : 3,
+                  editable: {
+                    clone: allowCloneBatch,
+                    delete: allowDeleteBatch,
+                    no: allowUpdateBatchNo,
+                    quantity: allowUpdateBatchQuantity,
+                    deliveredAt: allowUpdateBatchDelivery,
+                    desiredAt: allowUpdateBatchDesired,
+                  },
+                }}
+                className={BatchesGridStyle}
+                columnCount={itemsIsExpanded ? 1 : 3}
+                columnWidth={195 + GUTTER_SIZE}
+                rowCount={Math.ceil(batches.length / (itemsIsExpanded ? 1 : 3))}
+                rowHeight={291 + GUTTER_SIZE * 3}
+                height={height}
+                width={width}
+              >
+                {Cell}
+              </Grid>
+            )}
+          </AutoSizer>
         ) : (
           <div className={NoBatchesFoundStyle}>
             <Display align="center">

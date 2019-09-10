@@ -91,11 +91,6 @@ export const NoBatchesFoundStyle: string = css`
 `;
 
 export const BatchesGridStyle: string = css`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 195px);
-  grid-auto-rows: auto;
-  grid-column-gap: 10px;
-  grid-row-gap: 30px;
   overflow-x: hidden;
   overflow-y: overlay;
   ${scrollbars.SMALL};
