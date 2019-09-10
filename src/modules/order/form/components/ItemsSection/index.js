@@ -43,6 +43,8 @@ const ItemsSection = ({ isNew, orderIsArchived, isLoading, entityId }: Props) =>
               }}
             >
               {() => {
+                if (!isNew && !hasCalledItemsApiYet) return <ListCardPlaceHolder />;
+
                 return (
                   <>
                     <SectionHeader
