@@ -73,7 +73,7 @@ function useEntities(
           if (!related.batch[batch.id]) {
             draft.batch[batch.id] = [cloneBatches?.[index]?.id];
           } else {
-            draft.batch[batch.id] = [...related.batch[batch.id], cloneBatches?.[index]?.id];
+            draft.batch[batch.id] = [cloneBatches?.[index]?.id, ...related.batch[batch.id]];
           }
         });
         const orderItems = sources.filter(item => item.type === ORDER_ITEM);
@@ -84,8 +84,8 @@ function useEntities(
             draft.orderItem[orderItem.id] = [cloneOrderItems?.[index]?.id];
           } else {
             draft.orderItem[orderItem.id] = [
-              ...related.orderItem[orderItem.id],
               cloneOrderItems?.[index]?.id,
+              ...related.orderItem[orderItem.id],
             ];
           }
         });
@@ -96,7 +96,7 @@ function useEntities(
           if (!related.order[order.id]) {
             draft.order[order.id] = [cloneOrders?.[index]?.id];
           } else {
-            draft.order[order.id] = [...related.order[order.id], cloneOrders?.[index]?.id];
+            draft.order[order.id] = [cloneOrders?.[index]?.id, ...related.order[order.id]];
           }
         });
       })
