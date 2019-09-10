@@ -905,46 +905,6 @@ const TaskInfoSection = ({
                       />
                     }
                   />
-
-                  {isInTemplate ? (
-                    <FieldItem
-                      vertical
-                      label={
-                        <Label>
-                          <FormattedMessage id="modules.Tasks.memo" defaultMessage="MEMO" />
-                        </Label>
-                      }
-                      input={
-                        <Display color="GRAY_LIGHT">
-                          <FormattedMessage
-                            id="modules.Tasks.memoPlaceholder"
-                            defaultMessage="Value will be entered here"
-                          />
-                        </Display>
-                      }
-                    />
-                  ) : (
-                    <FormField
-                      name="memo"
-                      initValue={values.memo}
-                      values={values}
-                      validator={validator}
-                      setFieldValue={setFieldValue}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <TextAreaInputFactory
-                          name={name}
-                          {...inputHandlers}
-                          originalValue={originalValues[name]}
-                          label={<FormattedMessage id="modules.Tasks.memo" defaultMessage="MEMO" />}
-                          vertical
-                          inputWidth="400px"
-                          inputHeight="120px"
-                          editable={editable.memo}
-                        />
-                      )}
-                    </FormField>
-                  )}
                 </GridColumn>
 
                 {/* <GridColumn></GridColumn> */}
