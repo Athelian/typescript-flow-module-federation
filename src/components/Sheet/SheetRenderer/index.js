@@ -4,7 +4,7 @@ import { VariableSizeGrid } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
 import LoadingIcon from 'components/LoadingIcon';
-import type { Position } from '../SheetState';
+import type { Area } from '../SheetState/types';
 import Column from '../Column';
 import { ColumnsWrapperStyle, ContentStyle, WrapperStyle } from './style';
 
@@ -24,7 +24,7 @@ type Props = {
   loading: boolean,
   loadingMore: boolean,
   hasMore: boolean,
-  focusedAt: Position | null,
+  focusAt: Area | null,
   onThreshold: () => void,
   onColumnResize: (key: string, width: number) => void,
   children: React.ComponentType<any>,
@@ -36,7 +36,7 @@ const SheetRenderer = ({
   loading,
   loadingMore,
   hasMore,
-  focusedAt,
+  focusAt,
   onThreshold,
   onColumnResize,
   children,
@@ -48,16 +48,16 @@ const SheetRenderer = ({
   }, []);
 
   React.useEffect(() => {
-    if (!gridRef.current || !focusedAt) {
+    if (!gridRef.current || !focusAt) {
       return;
     }
 
     gridRef.current.scrollToItem({
       align: 'auto',
-      rowIndex: focusedAt.x,
-      columnIndex: focusedAt.y,
+      rowIndex: focusAt.from.x,
+      columnIndex: focusAt.from.y,
     });
-  }, [focusedAt]);
+  }, [focusAt]);
 
   React.useEffect(() => {
     if (!gridRef.current) {

@@ -27,15 +27,17 @@ export const transformField = (
         entity: {
           id: entity.id,
           type: entity.__typename,
-          field,
-          permissions,
-          ownedBy: entity.ownedBy.id,
         },
         data: {
           value: entity[field],
           path: `${basePath}.${field}`,
+          field,
+          permissions,
+          ownedBy: entity.ownedBy.id,
         },
         forbidden: false,
       };
   }
 };
+
+export default transformField;

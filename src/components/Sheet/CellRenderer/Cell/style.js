@@ -1,13 +1,8 @@
 // @flow
 import { css } from 'react-emotion';
-import { shadows, layout, colors } from 'styles/common';
+import { shadows, colors } from 'styles/common';
 
-export const CellStyle = (
-  focus: boolean,
-  readonly: boolean,
-  disabled: boolean,
-  extended: number
-) => {
+export const CellStyle = (focus: boolean, readonly: boolean, disabled: boolean) => {
   let backgroundColor = colors.WHITE;
   if (disabled) {
     backgroundColor = 'rgba(0, 0, 0, 0.1)';
@@ -18,24 +13,19 @@ export const CellStyle = (
   return css`
     position: relative;
     width: 100%;
-    height: ${extended > 0 ? `${(extended + 1) * 30}px` : '100%'};
+    height: 100%;
     ${focus && 'z-index: 1'};
-    ${extended && 'z-index: 2'};
     background-color: ${backgroundColor};
-
-    &:hover {
-      & > div#focuses {
-        ${layout.LAYOUT};
-      }
-    }
   `;
 };
 
 export const CellBorderStyle = (
+  isTop: boolean,
+  isBottom: boolean,
+  hover: boolean,
   focus: boolean,
   foreignFocus: boolean,
   weakFocus: boolean,
-  inputFocus: boolean,
   error: boolean,
   weakError: boolean
 ) => {
@@ -54,6 +44,8 @@ export const CellBorderStyle = (
     border = `border: 2px solid rgba(239, 72, 72, 0.5);`;
   } else if (foreignFocus) {
     border = `border: 2px solid ${colors.ORANGE};`;
+  } else if (hover) {
+    border = `border: 2px solid rgba(0, 0, 0, 0.1);`;
   }
 
   return css`
@@ -63,18 +55,19 @@ export const CellBorderStyle = (
     left: 0;
     right: 0;
     ${border};
-    ${inputFocus && shadows.INPUT};
-
-    &:hover {
-      ${!focus &&
-        !foreignFocus &&
-        !weakFocus &&
-        !error &&
-        !weakError &&
-        'border: 2px solid rgba(0, 0, 0, 0.1);'}
-    }
+    ${!isTop && `border-top: none`};
+    ${!isBottom && `border-bottom: none`};
   `;
 };
+
+export const CellShadowStyle = (size: number) => css`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: ${-(size - 1) * 30}px;
+  ${shadows.INPUT};
+`;
 
 export const CellPlaceholderStyle = css`
   width: 100%;

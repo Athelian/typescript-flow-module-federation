@@ -6,3 +6,5 @@ export const WrapperStyle = (focus: boolean) => {
     ${focus && `position: relative`};
   `;
 };
+
+export default WrapperStyle;

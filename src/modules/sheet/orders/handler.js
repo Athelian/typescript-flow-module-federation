@@ -1,7 +1,7 @@
 // @flow
 import ApolloClient from 'apollo-client';
 import { filterAsync } from 'utils/async';
-import type { Action } from 'components/Sheet/SheetState';
+import type { Action } from 'components/Sheet/SheetState/types';
 import { Actions } from 'components/Sheet/SheetState/contants';
 import type {
   EntityEvent,
@@ -35,33 +35,27 @@ function addOrderItemFactory(client: ApolloClient, dispatch: Action => void) {
               id: orderItemId,
               type: 'OrderItem',
             },
-            onAdd: (d: Action => void, items: Array<Object>) => {
-              console.log('onAdd', 'orderItem');
+            callback: (items: Array<Object>) => {
               const orderId = newOrderItem.order?.id;
               if (!orderId) {
-                console.log('order id');
-                return;
+                return null;
               }
 
               const itemIdx = items.findIndex(item => item.id === orderId);
               if (itemIdx === -1) {
-                console.log('order not found');
-                return;
+                return null;
               }
 
               const orderItems = [...items[itemIdx].orderItems];
               orderItems.splice(newOrderItem.sort, 0, newOrderItem);
 
-              d({
-                type: Actions.REPLACE_ITEM,
-                payload: {
-                  item: {
-                    ...items[itemIdx],
-                    orderItems,
-                  },
-                  index: itemIdx,
+              return {
+                item: {
+                  ...items[itemIdx],
+                  orderItems,
                 },
-              });
+                index: itemIdx,
+              };
             },
           },
         });
@@ -93,23 +87,23 @@ function addBatchFactory(client: ApolloClient, dispatch: Action => void) {
               id: batchId,
               type: 'Batch',
             },
-            onAdd: (d: Action => void, items: Array<Object>) => {
+            callback: (items: Array<Object>) => {
               const orderItemId = newBatch.orderItem?.id;
               const orderId = newBatch.orderItem?.order?.id;
               if (!orderItemId || !orderId) {
-                return;
+                return null;
               }
 
               const itemIdx = items.findIndex(item => item.id === orderId);
               if (itemIdx === -1) {
-                return;
+                return null;
               }
 
               const orderItemIdx = items[itemIdx].orderItems.findIndex(
                 orderItem => orderItem.id === orderItemId
               );
               if (orderItemIdx === -1) {
-                return;
+                return null;
               }
 
               const orderItems = [...items[itemIdx].orderItems];
@@ -120,16 +114,13 @@ function addBatchFactory(client: ApolloClient, dispatch: Action => void) {
                 batches,
               };
 
-              d({
-                type: Actions.REPLACE_ITEM,
-                payload: {
-                  item: {
-                    ...items[itemIdx],
-                    orderItems,
-                  },
-                  index: itemIdx,
+              return {
+                item: {
+                  ...items[itemIdx],
+                  orderItems,
                 },
-              });
+                index: itemIdx,
+              };
             },
           },
         });
@@ -261,31 +252,6 @@ function changeBatchShipmentFactory(client: ApolloClient, dispatch: Action => vo
   };
 }
 
-function removeOrderFactory(dispatch: Action => void) {
-  return function(orderId: string) {
-    dispatch({
-      type: Actions.PRE_REMOVE_ENTITY,
-      payload: {
-        entity: {
-          id: orderId,
-          type: 'Order',
-        },
-        onClear: (d: Action => void, items: Array<Object>) => {
-          const itemIdx = items.findIndex(item => item.id === orderId);
-          if (itemIdx === -1) {
-            return;
-          }
-
-          d({
-            type: Actions.DELETE_ITEM,
-            payload: itemIdx,
-          });
-        },
-      },
-    });
-  };
-}
-
 function removeOrderItemFactory(dispatch: Action => void) {
   return function(orderItemId: string) {
     dispatch({
@@ -295,26 +261,23 @@ function removeOrderItemFactory(dispatch: Action => void) {
           id: orderItemId,
           type: 'OrderItem',
         },
-        onClear: (d: Action => void, items: Array<Object>) => {
+        callback: (items: Array<Object>) => {
           const itemIdx = items.findIndex(
             item => !!item.orderItems.find(orderItem => orderItem.id === orderItemId)
           );
           if (itemIdx === -1) {
-            return;
+            return null;
           }
 
-          d({
-            type: Actions.REPLACE_ITEM,
-            payload: {
-              item: {
-                ...items[itemIdx],
-                orderItems: items[itemIdx].orderItems.filter(
-                  orderItem => orderItem.id !== orderItemId
-                ),
-              },
-              index: itemIdx,
+          return {
+            item: {
+              ...items[itemIdx],
+              orderItems: items[itemIdx].orderItems.filter(
+                orderItem => orderItem.id !== orderItemId
+              ),
             },
-          });
+            index: itemIdx,
+          };
         },
       },
     });
@@ -330,7 +293,7 @@ function removeBatchFactory(dispatch: Action => void) {
           id: batchId,
           type: 'Batch',
         },
-        onClear: (d: Action => void, items: Array<Object>) => {
+        callback: (items: Array<Object>) => {
           const itemIdx = items.findIndex(
             item =>
               !!item.orderItems.find(
@@ -338,22 +301,19 @@ function removeBatchFactory(dispatch: Action => void) {
               )
           );
           if (itemIdx === -1) {
-            return;
+            return null;
           }
 
-          d({
-            type: Actions.REPLACE_ITEM,
-            payload: {
-              item: {
-                ...items[itemIdx],
-                orderItems: items[itemIdx].orderItems.map(orderItem => ({
-                  ...orderItem,
-                  batches: orderItem.batches.filter(batch => batch.id !== batchId),
-                })),
-              },
-              index: itemIdx,
+          return {
+            item: {
+              ...items[itemIdx],
+              orderItems: items[itemIdx].orderItems.map(orderItem => ({
+                ...orderItem,
+                batches: orderItem.batches.filter(batch => batch.id !== batchId),
+              })),
             },
-          });
+            index: itemIdx,
+          };
         },
       },
     });
@@ -369,7 +329,6 @@ export default function entityEventHandler(
   const addBatch = addBatchFactory(client, dispatch);
   const changeBatchContainer = changeBatchContainerFactory(client, dispatch);
   const changeBatchShipment = changeBatchShipmentFactory(client, dispatch);
-  const removeOrder = removeOrderFactory(dispatch);
   const removeOrderItem = removeOrderItemFactory(dispatch);
   const removeBatch = removeBatchFactory(dispatch);
 
@@ -435,18 +394,17 @@ export default function entityEventHandler(
         if (changes.length > 0) {
           dispatch({
             type: Actions.CHANGE_VALUES,
-            payload: changes.map(change => {
-              return defaultEntityEventChangeTransformer(event, change);
-            }),
+            payload: {
+              changes: changes.map(change => {
+                return defaultEntityEventChangeTransformer(event, change);
+              }),
+            },
           });
         }
         break;
       }
       case 'Delete':
         switch (event.entity.__typename) {
-          case 'Order':
-            removeOrder(event.entity.id);
-            break;
           case 'OrderItem':
             removeOrderItem(event.entity.id);
             break;

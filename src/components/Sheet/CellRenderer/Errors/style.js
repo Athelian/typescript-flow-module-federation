@@ -6,7 +6,7 @@ export const WrapperStyle = (onFirstRow: boolean, extended: number) => css`
   ${layout.VERTICAL};
   align-items: flex-start;
   position: absolute;
-  ${onFirstRow ? `top: ${(extended + 1) * 30}px;` : `bottom: ${(extended + 1) * 30}px;`}
+  ${onFirstRow ? `top: ${extended * 30}px;` : `bottom: ${extended * 30}px;`}
   left: 0px;
   z-index: 4;
 `;

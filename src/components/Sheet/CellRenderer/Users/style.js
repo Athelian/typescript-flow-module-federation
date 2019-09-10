@@ -3,16 +3,12 @@ import { css } from 'react-emotion';
 import { layout, colors, fontSizes } from 'styles/common';
 
 export const WrapperStyle = (onFirstRow: boolean, extended: number) => css`
+  ${layout.LAYOUT};
   ${layout.HORIZONTAL};
-  display: none;
   position: absolute;
-  ${onFirstRow ? `top: ${(extended + 1) * 30}px;` : `bottom: ${(extended + 1) * 30}px;`}
+  ${onFirstRow ? `top: ${extended * 30}px;` : `bottom: ${extended * 30}px;`}
   left: 0px;
   z-index: 4;
-
-  div:hover > & {
-    ${layout.LAYOUT};
-  }
 `;
 
 export const UserStyle = (onFirstRow: boolean) => css`

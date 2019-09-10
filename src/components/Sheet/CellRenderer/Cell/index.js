@@ -2,16 +2,17 @@
 import * as React from 'react';
 import { useHasPermissions } from 'components/Context/Permissions';
 import { Blackout } from 'components/Form';
-import type { CellValue } from '../../SheetState';
-import { useSheetState } from '../../SheetState';
+import type { CellValue } from '../../SheetState/types';
+import { useCell, useSheetState } from '../../SheetState';
 import { Actions } from '../../SheetState/contants';
 import CellInput from './CellInput';
-import { CellStyle, CellBorderStyle, CellPlaceholderStyle } from './style';
+import { CellStyle, CellBorderStyle, CellPlaceholderStyle, CellShadowStyle } from './style';
 
 type Props = {
   cell: CellValue,
   columnIndex: number,
   rowIndex: number,
+  hover: boolean,
   focus: boolean,
   weakFocus: boolean,
   foreignFocus: boolean,
@@ -23,23 +24,31 @@ const Cell = ({
   cell,
   columnIndex,
   rowIndex,
+  hover,
   focus,
   weakFocus,
   foreignFocus,
   error,
   weakError,
 }: Props) => {
-  const hasPermission = useHasPermissions(cell?.entity?.ownedBy);
+  const parentCell = useCell(cell.merged ? cell.merged.from : { x: rowIndex, y: columnIndex });
+  const hasPermission = useHasPermissions(parentCell.data?.ownedBy);
   const { dispatch, mutate } = useSheetState();
   const wrapperRef = React.useRef(null);
   const [inputFocus, setInputFocus] = React.useState(false);
 
-  const isReadonly = cell.readonly || false;
-  const isDisabled = cell.disabled || !(cell.entity && cell.entity.permissions(hasPermission));
+  const isReadonly = parentCell.readonly || false;
+  const isDisabled =
+    parentCell.disabled || !(parentCell.data && parentCell.data.permissions(hasPermission));
   const isInputFocusable = !isReadonly && !isDisabled && !cell.forbidden && !!cell.entity;
 
+  const isTop = !cell.merged || cell.merged.from.x === rowIndex;
+  const isBottom = !cell.merged || cell.merged.to.x === rowIndex;
+
+  const size = cell.merged ? cell.merged.to.x - cell.merged.from.x + 1 : 1;
+
   React.useEffect(() => {
-    if (focus) {
+    if (focus && isTop) {
       if (wrapperRef.current) {
         wrapperRef.current.focus({
           preventScroll: true,
@@ -48,7 +57,7 @@ const Cell = ({
     } else {
       setInputFocus(false);
     }
-  }, [focus]);
+  }, [focus, isTop]);
 
   const handleFocusUp = React.useCallback(() => {
     dispatch({
@@ -78,6 +87,20 @@ const Cell = ({
       });
     }
   }, [focus, dispatch, rowIndex, columnIndex]);
+  const handleMouseDown = React.useCallback(
+    (e: SyntheticEvent<HTMLDivElement>) => {
+      if (!isTop) {
+        e.preventDefault();
+      }
+    },
+    [isTop]
+  );
+  const handleMouseEnter = React.useCallback(() => {
+    dispatch({
+      type: Actions.HOVER,
+      cell: { x: rowIndex, y: columnIndex },
+    });
+  }, [dispatch, rowIndex, columnIndex]);
   const handleKeyDown = React.useCallback(
     (e: SyntheticKeyboardEvent<HTMLDivElement>) => {
       switch (e.key) {
@@ -103,32 +126,48 @@ const Cell = ({
     [handleFocusDown, isInputFocusable]
   );
 
-  const handleInputFocus = () => {
+  const handleInputFocus = React.useCallback(() => {
     setInputFocus(true);
-  };
-  const handleInputBlur = () => {
+  }, []);
+  const handleInputBlur = React.useCallback(() => {
     setInputFocus(false);
-  };
+  }, []);
 
   return (
     <div
       ref={wrapperRef}
       className={CellStyle(
         focus,
-        !!cell.entity && isReadonly,
-        !!cell.entity && isDisabled,
-        cell.extended || 0
+        !!parentCell.entity && isReadonly,
+        !!parentCell.entity && isDisabled
       )}
       role="presentation"
       tabIndex="-1"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      onMouseDown={handleMouseDown}
+      onMouseEnter={handleMouseEnter}
     >
       <div
-        className={CellBorderStyle(focus, foreignFocus, weakFocus, inputFocus, error, weakError)}
+        className={CellBorderStyle(
+          isTop,
+          isBottom,
+          hover,
+          focus,
+          foreignFocus,
+          weakFocus,
+          error,
+          weakError
+        )}
       />
 
+      {isTop && inputFocus && <div className={CellShadowStyle(size)} />}
+
       {(() => {
+        if (cell.empty) {
+          return null;
+        }
+
         if (cell.forbidden) {
           return <Blackout width="100%" height="100%" />;
         }

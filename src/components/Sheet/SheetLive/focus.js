@@ -18,10 +18,37 @@ export const useSheetLiveFocus = () => {
   const id = useSheetLiveID();
   const client = useApolloClient();
   const { state, dispatch } = useSheetState();
+  const [focusedEntity, setFocusedEntity] = React.useState(null);
 
-  const { entities, focusedAt } = state;
-  const focusedEntity = focusedAt ? focusedAt.cell.entity : null;
+  const { entities, focusAt } = state;
   const entitiesRef = React.useRef([]);
+
+  React.useEffect(() => {
+    let entity = null;
+    let field = null;
+
+    if (focusAt) {
+      if (focusAt.cell.entity && focusAt.cell.data) {
+        entity = focusAt.cell.entity;
+        field = focusAt.cell.data.field;
+      } else if (focusAt.cell.merged) {
+        const parentCell = state.rows[focusAt.cell.merged.from.x][focusAt.cell.merged.from.y];
+        if (parentCell.entity && parentCell.data) {
+          entity = parentCell.entity;
+          field = parentCell.data.field;
+        }
+      }
+    }
+
+    if (entity && field) {
+      setFocusedEntity({
+        ...entity,
+        field,
+      });
+    } else {
+      setFocusedEntity(null);
+    }
+  }, [focusAt, state.rows]);
 
   // Subscribe to focus events
   React.useEffect(() => {
@@ -44,15 +71,40 @@ export const useSheetLiveFocus = () => {
             return;
           }
 
-          dispatch({
-            type: focusEvent.__typename === 'Focus' ? Actions.FOREIGN_FOCUS : Actions.FOREIGN_BLUR,
-            payload: focusEvent,
-          });
+          switch (focusEvent.__typename) {
+            case 'Focus':
+              dispatch({
+                type: Actions.FOREIGN_FOCUS,
+                payload: {
+                  focus: focusEvent,
+                },
+              });
+              break;
+            case 'Blur':
+              dispatch({
+                type: Actions.FOREIGN_BLUR,
+                payload: {
+                  blur: focusEvent,
+                },
+              });
+              break;
+            default:
+              break;
+          }
         },
         error: logger.error,
       });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      client.mutate({
+        mutation: blurMutation,
+        variables: {
+          id,
+        },
+      });
+
+      subscription.unsubscribe();
+    };
   }, [client, dispatch, id]);
 
   // Notify current user focus
@@ -119,7 +171,9 @@ export const useSheetLiveFocus = () => {
         .then(({ data }) => {
           dispatch({
             type: Actions.APPEND_FOREIGN_FOCUSES,
-            payload: data?.focusSubscribe ?? [],
+            payload: {
+              foreignFocuses: data?.focusSubscribe ?? [],
+            },
           });
         });
     }

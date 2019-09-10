@@ -4,13 +4,13 @@ import { ErrorStyle, WrapperStyle } from './style';
 
 type Props = {
   isFirstRow: boolean,
-  extended: number,
+  size: number,
   errors: Array<string>,
 };
 
-const Errors = ({ isFirstRow, extended, errors }: Props) => {
+const Errors = ({ isFirstRow, size, errors }: Props) => {
   return (
-    <div className={WrapperStyle(isFirstRow, extended)}>
+    <div className={WrapperStyle(isFirstRow, size)}>
       {errors.map(error => (
         <span key={error} className={ErrorStyle}>
           {error}

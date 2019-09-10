@@ -1,6 +1,6 @@
 // @flow
 import { transformField } from 'components/Sheet';
-import type { CellValue } from 'components/Sheet/SheetState';
+import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
   ORDER_SET_CURRENCY,
   ORDER_SET_PO_NO,

@@ -23,3 +23,5 @@ export const WrapperStyle = css`
     }
   }
 `;
+
+export default WrapperStyle;
