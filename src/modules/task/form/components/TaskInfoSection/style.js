@@ -16,20 +16,13 @@ export const MainFieldsWrapperStyle: string = css`
   padding: 0 90px;
 `;
 
-export const AutoDateBackgroundStyle = (position: 'top' | 'bottom'): string => css`
+export const BindingToggleButtonStyle = css`
   position: absolute;
-  width: 235px;
-  height: ${position === 'top' ? '40px' : '80px'};
-  top: ${position === 'top' ? '-5px' : '35px'};
-  right: -30px;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
-  border-radius: 7.5px;
-`;
-
-export const RadioWrapperStyle = (position: 'top' | 'bottom'): string => css`
-  position: absolute;
-  right: -25px;
-  top: ${position === 'top' ? '5px' : '45px'};
+  right: -50px;
+  top: 5px;
+  & > div > svg {
+    color: ${colors.GRAY_VERY_LIGHT};
+  }
 `;
 
 export const AutoDateWrapperStyle: string = css`

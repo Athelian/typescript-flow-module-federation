@@ -32,7 +32,6 @@ import {
   TagsInput,
   Display,
   ToggleInput,
-  RadioInput,
   MetricInputFactory,
   SelectInputFactory,
   UserAssignmentInputFactory,
@@ -50,8 +49,6 @@ import { convertBindingToSelection, getFieldsByEntity } from './helpers';
 import {
   TaskSectionWrapperStyle,
   MainFieldsWrapperStyle,
-  AutoDateBackgroundStyle,
-  RadioWrapperStyle,
   AutoDateWrapperStyle,
   AutoDateOffsetWrapperStyle,
   AutoDateSyncIconStyle,
@@ -59,6 +56,7 @@ import {
   StatusColorStyle,
   CompletedAvatarStyle,
   ApprovalToggleStyle,
+  BindingToggleButtonStyle,
 } from './style';
 
 type Props = {|
@@ -292,11 +290,6 @@ const TaskInfoSection = ({
         ) => {
           const isCompleted = !!values.completedBy;
 
-          const manualSettings = {
-            startDate: !values.startDateBinding,
-            dueDate: !values.dueDateBinding,
-          };
-
           const entity = getByPathWithDefault(parentEntity, 'entity.__typename', task);
           const editable = checkEditableFromEntity(entity, hasPermission);
           const hasCircleBindingError = !circleValidator.isValidSync(values);
@@ -312,6 +305,8 @@ const TaskInfoSection = ({
             approvedBy,
             rejectedAt,
             rejectedBy,
+            dueDateBinding,
+            startDateBinding,
           } = values;
 
           const {
@@ -375,55 +370,8 @@ const TaskInfoSection = ({
                     }
                     input={
                       <GridColumn gap="10px">
-                        <div
-                          className={AutoDateBackgroundStyle(
-                            manualSettings.dueDate ? 'top' : 'bottom'
-                          )}
-                        />
-
-                        <div className={RadioWrapperStyle('top')}>
-                          <RadioInput
-                            align="right"
-                            selected={manualSettings.dueDate}
-                            onToggle={() =>
-                              !manualSettings.dueDate
-                                ? onChangeBinding({
-                                    type: entity,
-                                    field: 'dueDate',
-                                    isManual: true,
-                                    onChange: setFieldValues,
-                                    hasCircleBindingError: false,
-                                  })
-                                : () => {}
-                            }
-                            editable={editable.dueDate}
-                          />
-                        </div>
-
-                        <div className={RadioWrapperStyle('bottom')}>
-                          <RadioInput
-                            align="right"
-                            selected={!manualSettings.dueDate}
-                            onToggle={() =>
-                              manualSettings.dueDate
-                                ? onChangeBinding({
-                                    type: entity,
-                                    field: 'dueDate',
-                                    isManual: false,
-                                    onChange: setFieldValues,
-                                    hasCircleBindingError: values.startDateBinding === DUE_DATE,
-                                  })
-                                : () => {}
-                            }
-                            editable={editable.dueDate}
-                          />
-                        </div>
-
                         {isInTemplate ? (
-                          <Display
-                            color={manualSettings.dueDate ? 'GRAY' : 'GRAY_LIGHT'}
-                            height="30px"
-                          >
+                          <Display color={dueDateBinding ? 'GRAY' : 'GRAY_LIGHT'} height="30px">
                             <FormattedMessage
                               id="modules.Tasks.datePlaceholder"
                               defaultMessage="yyyy/mm/dd"
@@ -451,7 +399,10 @@ const TaskInfoSection = ({
                                 onBlur={evt => {
                                   inputHandlers.onBlur(evt);
                                   triggerAutoBinding({
-                                    manualSettings,
+                                    manualSettings: {
+                                      dueDate: !dueDateBinding,
+                                      startDate: !startDateBinding,
+                                    },
                                     values,
                                     entity,
                                     hasCircleBindingError,
@@ -459,14 +410,33 @@ const TaskInfoSection = ({
                                   });
                                 }}
                                 originalValue={originalValues[name]}
-                                editable={editable.dueDate && manualSettings.dueDate}
-                                hideTooltip={!manualSettings.dueDate}
+                                editable={editable.dueDate && !dueDateBinding}
+                                hideTooltip={dueDateBinding}
                               />
                             )}
                           </FormField>
                         )}
+                        <div className={BindingToggleButtonStyle}>
+                          <ToggleInput
+                            toggled={dueDateBinding}
+                            onToggle={() => {
+                              onChangeBinding({
+                                type: entity,
+                                field: 'dueDate',
+                                isManual: dueDateBinding,
+                                onChange: setFieldValues,
+                                hasCircleBindingError: dueDateBinding
+                                  ? values.startDateBinding === DUE_DATE
+                                  : false,
+                              });
+                            }}
+                            editable={editable.dueDate}
+                          >
+                            <Icon icon={dueDateBinding ? 'BINDED' : 'UNBINDED'} />
+                          </ToggleInput>
+                        </div>
 
-                        {!manualSettings.dueDate ? (
+                        {dueDateBinding ? (
                           <ObjectValue
                             value={{
                               autoDateField: values.dueDateBinding,
@@ -476,7 +446,7 @@ const TaskInfoSection = ({
                             }}
                             onChange={({
                               autoDateField,
-                              startDateBinding,
+                              startDateBinding: newStartDateBinding,
                               autoDateOffset,
                               autoDateDuration,
                             }) => {
@@ -499,7 +469,7 @@ const TaskInfoSection = ({
                                 },
                                 autoDateOffset,
                                 hasCircleBindingError:
-                                  autoDateField === START_DATE && startDateBinding === DUE_DATE,
+                                  autoDateField === START_DATE && newStartDateBinding === DUE_DATE,
                               });
                             }}
                           >
@@ -636,55 +606,8 @@ const TaskInfoSection = ({
                     }
                     input={
                       <GridColumn gap="10px">
-                        <div
-                          className={AutoDateBackgroundStyle(
-                            manualSettings.startDate ? 'top' : 'bottom'
-                          )}
-                        />
-
-                        <div className={RadioWrapperStyle('top')}>
-                          <RadioInput
-                            align="right"
-                            selected={manualSettings.startDate}
-                            onToggle={() =>
-                              !manualSettings.startDate
-                                ? onChangeBinding({
-                                    type: entity,
-                                    field: 'startDate',
-                                    isManual: true,
-                                    onChange: setFieldValues,
-                                    hasCircleBindingError: false,
-                                  })
-                                : () => {}
-                            }
-                            editable={editable.startDate}
-                          />
-                        </div>
-
-                        <div className={RadioWrapperStyle('bottom')}>
-                          <RadioInput
-                            align="right"
-                            selected={!manualSettings.startDate}
-                            onToggle={() =>
-                              manualSettings.startDate
-                                ? onChangeBinding({
-                                    type: entity,
-                                    field: 'startDate',
-                                    isManual: false,
-                                    onChange: setFieldValues,
-                                    hasCircleBindingError: values.dueDateBinding === START_DATE,
-                                  })
-                                : () => {}
-                            }
-                            editable={editable.startDate}
-                          />
-                        </div>
-
                         {isInTemplate ? (
-                          <Display
-                            color={manualSettings.startDate ? 'GRAY' : 'GRAY_LIGHT'}
-                            height="30px"
-                          >
+                          <Display color={startDateBinding ? 'GRAY' : 'GRAY_LIGHT'} height="30px">
                             <FormattedMessage
                               id="modules.Tasks.datePlaceholder"
                               defaultMessage="yyyy/mm/dd"
@@ -698,7 +621,7 @@ const TaskInfoSection = ({
                             validator={validator}
                             setFieldValue={(field, value) => {
                               setFieldValue(field, value);
-                              if (!manualSettings.dueDate && values.dueDateBinding === START_DATE) {
+                              if (startDateBinding && values.dueDateBinding === START_DATE) {
                                 const { weeks, months, days } = values.dueDateInterval || {};
                                 setFieldValue(
                                   'dueDate',
@@ -718,7 +641,10 @@ const TaskInfoSection = ({
                                 onBlur={evt => {
                                   inputHandlers.onBlur(evt);
                                   triggerAutoBinding({
-                                    manualSettings,
+                                    manualSettings: {
+                                      dueDate: !dueDateBinding,
+                                      startDate: !startDateBinding,
+                                    },
                                     values,
                                     entity,
                                     hasCircleBindingError,
@@ -726,14 +652,34 @@ const TaskInfoSection = ({
                                   });
                                 }}
                                 originalValue={originalValues[name]}
-                                editable={editable.startDate && manualSettings.startDate}
-                                hideTooltip={!manualSettings.startDate}
+                                editable={editable.startDate && !startDateBinding}
+                                hideTooltip={startDateBinding}
                               />
                             )}
                           </FormField>
                         )}
 
-                        {!manualSettings.startDate ? (
+                        <div className={BindingToggleButtonStyle}>
+                          <ToggleInput
+                            toggled={startDateBinding}
+                            onToggle={() => {
+                              onChangeBinding({
+                                type: entity,
+                                field: 'startDate',
+                                isManual: startDateBinding,
+                                onChange: setFieldValues,
+                                hasCircleBindingError: startDateBinding
+                                  ? values.dueDateBinding === START_DATE
+                                  : false,
+                              });
+                            }}
+                            editable={editable.startDate}
+                          >
+                            <Icon icon={startDateBinding ? 'BINDED' : 'UNBINDED'} />
+                          </ToggleInput>
+                        </div>
+
+                        {startDateBinding ? (
                           <ObjectValue
                             value={{
                               autoDateField: values.startDateBinding,
@@ -743,7 +689,7 @@ const TaskInfoSection = ({
                             }}
                             onChange={({
                               autoDateField,
-                              dueDateBinding,
+                              dueDateBinding: newDueDateBinding,
                               autoDateOffset,
                               autoDateDuration,
                             }) => {
@@ -766,7 +712,7 @@ const TaskInfoSection = ({
                                 },
                                 autoDateOffset,
                                 hasCircleBindingError:
-                                  autoDateField === DUE_DATE && dueDateBinding === START_DATE,
+                                  autoDateField === DUE_DATE && newDueDateBinding === START_DATE,
                               });
                             }}
                           >
