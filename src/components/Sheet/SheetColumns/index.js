@@ -17,6 +17,7 @@ export type ColumnConfig = {
     name: string,
     // TODO: handle default sort
     direction?: SortDirection,
+    secondary?: boolean,
   },
 };
 
@@ -60,18 +61,7 @@ export const SheetColumns = ({ columns, children }: Props) => {
   const [configuredColumns, setConfiguredColumns] = React.useState<Array<ColumnConfig>>([]);
 
   React.useEffect(() => {
-    const latestSorts: Array<ColumnSort> = (Object.values(
-      sorts.reduce((first, sort) => {
-        if (first[sort.group]) {
-          return first;
-        }
-
-        return {
-          ...first,
-          [sort.group]: sort,
-        };
-      }, {})
-    ): any);
+    const availableSorts = sorts.filter(s => !!columns.find(c => c.key === s.key));
 
     setConfiguredColumns(
       columns.map(column => {
@@ -82,15 +72,20 @@ export const SheetColumns = ({ columns, children }: Props) => {
           configuredColumn = { ...configuredColumn, width: width.width };
         }
 
-        const sort = latestSorts.find(cs => cs.key === column.key);
-        if (sort) {
-          configuredColumn = {
-            ...configuredColumn,
-            sort: {
-              ...(configuredColumn.sort || {}),
-              direction: sort.direction,
-            },
-          };
+        if (column.sort) {
+          const sortIdx = availableSorts
+            .filter(s => s.group === column.sort.group)
+            .findIndex(s => s.key === column.key);
+          if (sortIdx > -1) {
+            configuredColumn = {
+              ...configuredColumn,
+              sort: {
+                ...(configuredColumn.sort || {}),
+                direction: availableSorts[sortIdx].direction,
+                secondary: sortIdx > 0,
+              },
+            };
+          }
         }
 
         return configuredColumn;

@@ -84,6 +84,7 @@ const SheetRenderer = ({
             title={column.title}
             sortable={!!column.sort}
             direction={column.sort?.direction}
+            secondary={column.sort?.secondary}
             onSortToggle={() => {
               onSortToggle(column.key);
             }}
