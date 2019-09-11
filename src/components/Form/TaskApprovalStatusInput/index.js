@@ -1,4 +1,5 @@
 // @flow
+// FIXME: only use once, should change folder
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';

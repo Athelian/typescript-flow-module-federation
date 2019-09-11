@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, presets, borderRadiuses, colors, fontSizes } from 'styles/common';
+import { layout, presets, colors, fontSizes } from 'styles/common';
 
 export const TaskSectionWrapperStyle: string = css`
   ${presets.BOX};
@@ -14,30 +14,6 @@ export const MainFieldsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   justify-content: space-between;
   padding: 0 90px;
-`;
-
-export const TaskStatusWrapperStyle: string = css`
-  ${borderRadiuses.MAIN};
-  background-color: ${colors.GRAY_SUPER_LIGHT};
-  width: 680px;
-  margin: 0 90px;
-  padding: 20px;
-  ${layout.GRID_VERTICAL};
-  grid-gap: 20px;
-`;
-
-export const AssignedToStyle: string = css`
-  display: flex;
-  justify-content: space-between;
-`;
-
-export const ApprovalToggleWrapperStyle: string = css`
-  display: flex;
-  width: 100%;
-  ${fontSizes.SMALL};
-  color: ${colors.GRAY_DARK};
-  justify-content: flex-end;
-  align-items: center;
 `;
 
 export const AutoDateBackgroundStyle = (position: 'top' | 'bottom'): string => css`
@@ -80,23 +56,38 @@ export const AutoDateSyncIconStyle: string = css`
   color: ${colors.GRAY_LIGHT};
 `;
 
-export const UnapprovedButtonStyle = (editable: boolean): string => css`
-  ${presets.BUTTON};
-  height: 40px;
-  width: 200px;
-  ${borderRadiuses.BUTTON};
-  ${fontSizes.SMALL};
-  letter-spacing: 2px;
-  color: ${colors.GRAY_DARK};
-  background-color: ${colors.GRAY_LIGHT};
-  ${editable
-    ? `
-    &:hover,
-    :focus {
-      background-color: ${colors.GRAY_VERY_LIGHT};
+export const StatusWrapperStyle: string = css`
+  position: relative;
+`;
+
+export const StatusColorStyle = ({
+  color,
+  backgroundColor,
+}: {
+  color: string,
+  backgroundColor: string,
+}) => {
+  return css`
+    & > div {
+      & > div {
+        & > div {
+          background-color: ${colors[backgroundColor]};
+          & > input {
+            color: ${colors[color]};
+          }
+        }
+      }
     }
-  `
-    : `
-    cursor: inherit;
-  `}
+  `;
+};
+
+export const CompletedAvatarStyle: string = css`
+  position: absolute;
+  right: -40px;
+  top: 35px;
+`;
+
+export const ApprovalToggleStyle = (on: boolean) => css`
+  margin-left: 8px;
+  color: ${on ? colors.TEAL : colors.GRAY_DARK};
 `;
