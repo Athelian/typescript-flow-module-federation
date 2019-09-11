@@ -4,11 +4,11 @@ import { Query } from 'react-apollo';
 import { ObjectValue } from 'react-values';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
-import { Content, SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { tableTemplateQuery } from 'modules/tableTemplate/list/query';
 import TableTemplateGridView from 'modules/tableTemplate/list/TableTemplateGridView';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
+import { EntityIcon } from 'components/NavBar';
 import { TemplateCard } from 'components/Cards';
 
 type Props = {

@@ -1,7 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, colors, shadows, transitions } from 'styles/common';
-import { NavBarStyle } from '../style';
+import { borderRadiuses, colors, shadows, transitions, layout } from 'styles/common';
 
 export const SectionNavBarStyle = (upsideDown: boolean): string => css`
   position: relative;
@@ -27,5 +26,9 @@ export const SectionNavBarStyle = (upsideDown: boolean): string => css`
 `;
 
 export const SectionNavBarChildrenWrapperStyle: string = css`
-  ${NavBarStyle};
+  ${layout.GRID_HORIZONTAL};
+  grid-template-rows: 50px;
+  grid-gap: 20px;
+  align-items: center;
+  width: 100%;
 `;

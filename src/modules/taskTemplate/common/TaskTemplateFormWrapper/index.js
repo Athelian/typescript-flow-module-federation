@@ -16,8 +16,8 @@ import {
   prepareParsedTaskTemplate,
 } from 'modules/taskTemplate/form/mutation';
 import { FormContainer, resetFormState } from 'modules/form';
-import { Content, SlideViewLayout } from 'components/Layout';
-import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
+import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
+import { EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import { removeTypename } from 'utils/data';
 import { getByPathWithDefault, isEquals } from 'utils/fp';

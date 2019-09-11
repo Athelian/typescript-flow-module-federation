@@ -1,6 +1,5 @@
 // @flow
 import NavBar from './NavBar';
-import SlideViewNavBar from './SlideViewNavBar';
 import SectionNavBar from './SectionNavBar';
 import GenericNavBar from './GenericNavBar';
 import EntityIcon from './components/EntityIcon';
@@ -23,6 +22,5 @@ export {
   StatusToggleTabs,
   Tabs,
   SectionNavBar,
-  SlideViewNavBar,
   LogsButton,
 };

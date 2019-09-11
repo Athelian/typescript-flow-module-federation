@@ -10,9 +10,9 @@ import { decodeId } from 'utils/id';
 import { getByPath } from 'utils/fp';
 import { parseGroupIds } from 'utils/task';
 import { removeTypename } from 'utils/data';
-import { Content, SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import SlideView from 'components/SlideView';
-import { NavBar, EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
+import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import { ExportButton, ResetButton, SaveButton } from 'components/Buttons';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -93,7 +93,6 @@ class TaskFormModule extends React.Component<Props> {
           {(saveTask, { loading: isLoading, error }) => (
             <Subscribe to={[TaskContainer, FormContainer]}>
               {({ initDetailValues, originalValues, state, isDirty }, form) => {
-                // const entityTypename = state.entity?.__typename;
                 return (
                   <>
                     <NavBar>

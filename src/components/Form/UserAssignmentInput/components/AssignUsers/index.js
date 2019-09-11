@@ -8,8 +8,8 @@ import { isEquals, getByPathWithDefault } from 'utils/fp';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { usersQuery } from 'graphql/staff/query';
-import { Content, SlideViewLayout } from 'components/Layout';
-import { SlideViewNavBar } from 'components/NavBar';
+import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
+
 import FilterToolBar from 'components/common/FilterToolBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import StaffGridView from 'modules/staff/list/StaffGridView';
