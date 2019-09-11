@@ -13,9 +13,9 @@ import emitter from 'utils/emitter';
 import { trackingError } from 'utils/trackingError';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
 import { calculatePackageQuantity, getBatchLatestQuantity } from 'utils/batch';
-import { Content, SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import SlideView from 'components/SlideView';
-import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
+import { EntityIcon } from 'components/NavBar';
 import {
   SaveButton,
   ResetButton,

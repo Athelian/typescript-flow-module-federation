@@ -3,20 +3,17 @@ import * as React from 'react';
 import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
-import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { QueryForm } from 'components/common';
 import { getByPath } from 'utils/fp';
 import { showToastError } from 'utils/errors';
 import { UserConsumer } from 'components/Context/Viewer';
 import { FormContainer, resetFormState } from 'modules/form';
-import { Content, SlideViewLayout } from 'components/Layout';
-import { NavBar, EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
+import { NavBar, EntityIcon } from 'components/NavBar';
+import { Content } from 'components/Layout';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import JumpToSection from 'components/JumpToSection';
-import SlideView from 'components/SlideView';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import Timeline from 'modules/timeline/components/Timeline';
 import { encodeId, decodeId, uuid } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import {
@@ -34,7 +31,7 @@ import {
   updateProductMutation,
   prepareParsedProductInput,
 } from './form/mutation';
-import { productTimelineQuery, productExportQuery } from './query';
+import { productExportQuery } from './query';
 
 type OptionalProps = {
   path: string,
@@ -307,43 +304,6 @@ class ProductFormModule extends React.Component<Props> {
                   icon="RELATED"
                 />
               </JumpToSection>
-              <BooleanValue>
-                {({ value: opened, set: slideToggle }) =>
-                  !isNewOrClone && (
-                    <>
-                      <LogsButton
-                        entityType="product"
-                        entityId={productId}
-                        onClick={() => slideToggle(true)}
-                      />
-                      <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                        <SlideViewLayout>
-                          {productId && opened && (
-                            <>
-                              <SlideViewNavBar>
-                                <EntityIcon icon="LOGS" color="LOGS" />
-                              </SlideViewNavBar>
-
-                              <Content>
-                                <Timeline
-                                  query={productTimelineQuery}
-                                  queryField="product"
-                                  variables={{
-                                    id: decodeId(productId),
-                                  }}
-                                  entity={{
-                                    productId: decodeId(productId),
-                                  }}
-                                />
-                              </Content>
-                            </>
-                          )}
-                        </SlideViewLayout>
-                      </SlideView>
-                    </>
-                  )
-                }
-              </BooleanValue>
 
               <Subscribe
                 to={[
