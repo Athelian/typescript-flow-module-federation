@@ -913,6 +913,7 @@ function OrderItemCell({
             <div ref={drag} id={`${ORDER_ITEM}-${itemId}`}>
               <Badge label={badge.orderItem?.[itemId] ?? ''} />
               <OrderItemCard
+                organizationId={data?.ownedBy?.id}
                 no={data?.no ?? 'N/A'}
                 onCreateBatch={evt => {
                   evt.stopPropagation();
