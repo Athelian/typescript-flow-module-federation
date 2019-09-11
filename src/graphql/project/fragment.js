@@ -11,6 +11,7 @@ export const milestoneFragment = gql`
       ... on Task {
         id
         completedAt
+        skippedAt
       }
     }
   }
