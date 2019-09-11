@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
 import Dropzone from 'react-dropzone';
 import type { FilePayload } from 'generated/graphql';
 import { pick } from 'lodash/fp';
@@ -9,13 +8,7 @@ import { uuid } from 'utils/id';
 import { upload } from 'utils/fs';
 import { isEquals } from 'utils/fp';
 import logger from 'utils/logger';
-import {
-  AddImageStyle,
-  ProgressStyle,
-  UploadWrapperStyle,
-  DocumentsDragAndDropWrapperStyle,
-  DocumentsDragAndDropLabelStyle,
-} from './style';
+import { AddImageStyle, ProgressStyle, UploadWrapperStyle } from './style';
 
 type UploadFileState = {
   id: string,
@@ -142,29 +135,28 @@ class ImagesUploadInput extends React.Component<Props, State> {
     const { filesState } = this.state;
     return (
       <>
-        <div className={UploadWrapperStyle}>
-          {filesState &&
-            filesState
-              .filter(file => file.uploading)
-              .map(file => (
-                <div key={file.id} className={ProgressStyle}>{`${file.progress}%`}</div>
-              ))}
-
-          <label className={AddImageStyle({ width, height })}>
-            <Icon icon="PHOTO" />
-            <Icon icon="ADD" />
-            <input value="" type="file" accept="*" hidden multiple onChange={this.handleChange} />
-          </label>
-        </div>
         <Dropzone onDrop={this.handleChange}>
           {({ getRootProps, isDragActive }) => (
-            <div {...getRootProps()} className={AddImageStyle({ width, height })}>
-              <div className={DocumentsDragAndDropWrapperStyle(isDragActive)}>
-                <div className={DocumentsDragAndDropLabelStyle}>
-                  <FormattedMessage id="component.form.uploadImage" defaultMessage="" />
-                  <Icon icon="ADD" />
-                </div>
-              </div>
+            <div {...getRootProps()} className={UploadWrapperStyle}>
+              {filesState &&
+                filesState
+                  .filter(file => file.uploading)
+                  .map(file => (
+                    <div key={file.id} className={ProgressStyle}>{`${file.progress}%`}</div>
+                  ))}
+
+              <label className={AddImageStyle({ width, height, isDragActive })}>
+                <Icon icon="PHOTO" />
+                <Icon icon="ADD" />
+                <input
+                  value=""
+                  type="file"
+                  accept="*"
+                  hidden
+                  multiple
+                  onChange={this.handleChange}
+                />
+              </label>
             </div>
           )}
         </Dropzone>
