@@ -32,10 +32,10 @@ export {
 export const formatToDateInput = (date: string): string =>
   isValid(new Date(date)) ? format(new Date(date), 'yyyy-MM-dd') : '';
 
-export const formatToGraphql = (date: Date): string => format(date, "yyyy-MM-dd'T'HH:mm:ssxxx");
-
 export const formatToDateTimeInput = (time: string): string =>
-  format(new Date(time), "yyyy-MM-dd'T'HH:mm");
+  isValid(new Date(time)) ? format(new Date(time), "yyyy-MM-dd'T'HH:mm") : '';
+
+export const formatToGraphql = (date: Date): string => format(date, "yyyy-MM-dd'T'HH:mm:ssxxx");
 
 export const formatToDateLabel = (date: string): string => format(new Date(date), 'dd/MM/yyyy');
 // We need to convert to UTC timezone for backend
