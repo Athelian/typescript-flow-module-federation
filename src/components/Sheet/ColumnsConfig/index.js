@@ -3,17 +3,13 @@ import * as React from 'react';
 import Dialog from 'components/Dialog';
 import { SaveButton, ResetButton, BaseButton } from 'components/Buttons';
 import type { ColumnConfig } from '../SheetRenderer';
-import { ButtonStyle, ModalWrapperStyle, GroupsWrapperStyle, ActionsWrapperStyle } from './style';
 import Group from './Group';
+import { ButtonStyle, ModalWrapperStyle, GroupsWrapperStyle, ActionsWrapperStyle } from './style';
+import type { ColumnState } from './types';
 
 type Props = {
   columns: Array<ColumnConfig>,
   onChange: (Array<ColumnConfig>) => void,
-};
-
-export type ColumnState = {
-  column: ColumnConfig,
-  hidden: boolean,
 };
 
 const ColumnsConfig = ({ columns, onChange }: Props) => {

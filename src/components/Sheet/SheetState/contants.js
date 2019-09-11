@@ -9,6 +9,8 @@ export const Actions = {
   REPLACE_ITEM: 'replace_item',
   DELETE_ITEM: 'delete_item',
   SET_ERRORS: 'set_errors',
+  HOVER: 'hover',
+  UNHOVER: 'unhover',
   FOCUS: 'focus',
   FOCUS_UP: 'focus_up',
   FOCUS_DOWN: 'focus_down',
@@ -24,3 +26,5 @@ export const Actions = {
   PRE_REMOVE_ENTITY: 'pre_remove_entity',
   POST_REMOVE_ENTITY: 'post_remove_entity',
 };
+
+export default Actions;

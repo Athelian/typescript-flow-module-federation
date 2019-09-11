@@ -20,6 +20,7 @@ export const TitleStyle = css`
   letter-spacing: 2px;
   text-transform: uppercase;
   white-space: nowrap;
+  user-select: none;
 `;
 
 export const DragHandleStyle = (dragging: boolean) => css`

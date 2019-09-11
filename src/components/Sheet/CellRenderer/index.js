@@ -3,6 +3,7 @@ import * as React from 'react';
 import isDeepEqual from 'react-fast-compare';
 import LoadingIcon from 'components/LoadingIcon';
 import { useSheetState } from '../SheetState';
+import type { Area } from '../SheetState/types';
 import Deleted from './Announcements/Deleted';
 import Added from './Announcements/Added';
 import Users from './Users';
@@ -15,83 +16,84 @@ type Props = {
   rowIndex: number,
 };
 
+function isInArea(area: Area, columnIndex: number, rowIndex: number): boolean {
+  return (
+    area.from.x <= rowIndex &&
+    area.to.x >= rowIndex &&
+    area.from.y <= columnIndex &&
+    area.to.y >= columnIndex
+  );
+}
+
 const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
   const { state } = useSheetState();
   const {
     rows,
     addedRows,
     removedRows,
-    focusedAt,
-    weakFocusedAt,
-    foreignFocusedAt,
-    erroredAt,
-    weakErroredAt,
+    hoverAt,
+    focusAt,
+    weakFocusAt,
+    foreignFocusesAt,
+    errorAt,
+    weakErrorAt,
   } = state;
   const [users, setUsers] = React.useState<Array<Object>>([]);
 
   React.useEffect(() => {
     setUsers(
-      foreignFocusedAt
-        .filter(f => f.x === rowIndex && f.y === columnIndex)
+      foreignFocusesAt
+        .filter(f => isInArea(f, columnIndex, rowIndex))
         .map(f => ({
           id: f.id,
           firstName: f.user.firstName,
           lastName: f.user.lastName,
         }))
     );
-  }, [foreignFocusedAt, columnIndex, rowIndex]);
+  }, [foreignFocusesAt, columnIndex, rowIndex]);
 
   const cell = rows[rowIndex][columnIndex];
-  const addedRow = addedRows.find(row => row.start === rowIndex);
-  const removedRow = removedRows.find(row => row.start === rowIndex);
-  const isFirstRow = rowIndex === 0;
+  const isTop = cell && (!cell.merged || cell.merged.from.x === rowIndex);
+  const addedRow = addedRows.find(row => row.from.x === rowIndex && row.from.y === columnIndex);
+  const removedRow = removedRows.find(row => row.from.x === rowIndex && row.from.y === columnIndex);
+  const onFirstRow = rowIndex === 0;
   const hasUserFocuses = users.length > 0;
-  const hasError =
-    !!erroredAt &&
-    erroredAt.messages.length > 0 &&
-    erroredAt.x === rowIndex &&
-    erroredAt.y === columnIndex;
-  const hasRemovedRow = columnIndex === 0 && removedRow;
-  const hasAddedRow = columnIndex === 0 && addedRow;
-  const isFocus = !!focusedAt && focusedAt.x === rowIndex && focusedAt.y === columnIndex;
-  const isWeakFocus = !!weakFocusedAt.find(f => f.x === rowIndex && f.y === columnIndex);
-  const isWeakError = !!weakErroredAt.find(e => e.x === rowIndex && e.y === columnIndex);
+  const isErrored =
+    !!errorAt && errorAt.messages.length > 0 && isInArea(errorAt, columnIndex, rowIndex);
+  const isFocused = !!focusAt && isInArea(focusAt, columnIndex, rowIndex);
+  const ishovered = !!hoverAt && isInArea(hoverAt, columnIndex, rowIndex);
+  const isWeakFocused = !!weakFocusAt.find(f => isInArea(f, columnIndex, rowIndex));
+  const isWeakErrored = !!weakErrorAt.find(e => isInArea(e, columnIndex, rowIndex));
+  const size = cell && cell.merged ? cell.merged.to.x - cell.merged.from.x + 1 : 1;
 
   return (
     <div style={style}>
-      {rowIndex >= rows.length ? (
+      {rowIndex >= rows.length || !cell ? (
         <LoadingIcon size={10} />
       ) : (
         <>
-          {!hasError && hasUserFocuses && (
-            <Users users={users} isFirstRow={isFirstRow} extended={cell.extended || 0} />
+          {isTop && !isErrored && hasUserFocuses && ishovered && (
+            <Users users={users} isFirstRow={onFirstRow} size={size} />
           )}
 
-          {hasError && (
-            <Errors
-              errors={erroredAt?.messages ?? []}
-              isFirstRow={isFirstRow}
-              extended={cell.extended || 0}
-            />
+          {isTop && isErrored && (
+            <Errors errors={errorAt?.messages ?? []} isFirstRow={onFirstRow} size={size} />
           )}
 
-          {hasRemovedRow && <Deleted start={removedRow?.start ?? 0} end={removedRow?.end ?? 0} />}
-          {!hasRemovedRow && hasAddedRow && (
-            <Added start={addedRow?.start ?? 0} end={addedRow?.end ?? 0} />
-          )}
+          {removedRow && <Deleted area={removedRow} />}
+          {!removedRow && addedRow && <Added area={addedRow} />}
 
-          {cell && !cell.empty && (
-            <Cell
-              cell={cell}
-              columnIndex={columnIndex}
-              rowIndex={rowIndex}
-              focus={isFocus}
-              weakFocus={isWeakFocus}
-              foreignFocus={hasUserFocuses}
-              error={hasError}
-              weakError={isWeakError}
-            />
-          )}
+          <Cell
+            cell={cell}
+            columnIndex={columnIndex}
+            rowIndex={rowIndex}
+            hover={ishovered}
+            focus={isFocused}
+            weakFocus={isWeakFocused}
+            foreignFocus={hasUserFocuses}
+            error={isErrored}
+            weakError={isWeakErrored}
+          />
         </>
       )}
     </div>

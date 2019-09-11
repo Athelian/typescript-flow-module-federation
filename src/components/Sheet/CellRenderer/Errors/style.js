@@ -2,11 +2,11 @@
 import { css } from 'react-emotion';
 import { layout, colors, fontSizes } from 'styles/common';
 
-export const WrapperStyle = (onFirstRow: boolean, extended: number) => css`
+export const WrapperStyle = (onFirstRow: boolean, size: number) => css`
   ${layout.VERTICAL};
   align-items: flex-start;
   position: absolute;
-  ${onFirstRow ? `top: ${(extended + 1) * 30}px;` : `bottom: ${(extended + 1) * 30}px;`}
+  ${onFirstRow ? `top: ${size * 30}px;` : `bottom: 30px;`}
   left: 0px;
   z-index: 4;
 `;

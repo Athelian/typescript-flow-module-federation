@@ -46,3 +46,5 @@ export const convertEntityToInput = (id: string, type: string): Object => {
       throw new Error('unsupported entity type');
   }
 };
+
+export default convertEntityToInput;
