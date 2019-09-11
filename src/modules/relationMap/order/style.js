@@ -44,7 +44,7 @@ const getHighlightColor = (
   if (isFocused) {
     return colors.HIGHLIGHT;
   }
-  return colors.GRAY_QUITE_LIGHT;
+  return colors.GRAY_VERY_LIGHT;
 };
 
 export const TotalCardWrapperStyle = css`

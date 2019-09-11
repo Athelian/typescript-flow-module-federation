@@ -1,23 +1,20 @@
 // @flow
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import GridColumn from 'components/GridColumn';
 import {
   DateInputFactory,
-  RadioInput,
   MetricInputFactory,
   SelectInputFactory,
-  Display,
+  ToggleInput,
 } from 'components/Form';
 import { FormField } from 'modules/form';
 import { calculateBindingDate } from 'utils/project';
 import {
-  AutoDateBackgroundStyle,
-  RadioWrapperStyle,
   AutoDateWrapperStyle,
-  dateBindingSignWrapperStyle,
-  AutoDateSyncIconStyle,
+  DateBindingSignWrapperStyle,
+  BindingToggleButtonStyle,
+  IconStyle,
 } from './style';
 
 type OptionalProps = {
@@ -91,35 +88,29 @@ const DateBindingInput = ({
 
   return (
     <GridColumn gap="10px">
-      <div className={AutoDateBackgroundStyle(bound ? 'bottom' : 'top')} />
-
-      <div className={RadioWrapperStyle('top')}>
-        <RadioInput
-          align="right"
-          selected={!bound}
+      <div className={BindingToggleButtonStyle}>
+        <ToggleInput
+          toggled={bound}
           onToggle={() => {
-            setFieldValue(dateName, date);
-            setFieldValue(dateBinding, null);
-            setFieldValue(dateInterval, null);
+            if (bound) {
+              setFieldValue(dateName, date);
+              setFieldValue(dateBinding, null);
+              setFieldValue(dateInterval, null);
+            } else {
+              setFieldValue(dateBinding, dateBindingItems[0]?.value);
+              setFieldValue(dateInterval, {
+                days: 0,
+              });
+              setFieldValue(dateName, calculateBindingDate(baseDate, { days: 0 }));
+              setDateBindingSign('before');
+            }
           }}
-          editable={editable && bound}
-        />
-      </div>
-
-      <div className={RadioWrapperStyle('bottom')}>
-        <RadioInput
-          align="right"
-          selected={bound}
-          onToggle={() => {
-            setFieldValue(dateBinding, dateBindingItems[0]?.value);
-            setFieldValue(dateInterval, {
-              days: 0,
-            });
-            setFieldValue(dateName, calculateBindingDate(baseDate, { days: 0 }));
-            setDateBindingSign('before');
-          }}
-          editable={editable && !bound}
-        />
+          editable={editable}
+        >
+          <div className={IconStyle}>
+            <Icon icon={bound ? 'BINDED' : 'UNBINDED'} />
+          </div>
+        </ToggleInput>
       </div>
 
       <FormField
@@ -140,13 +131,9 @@ const DateBindingInput = ({
         )}
       </FormField>
 
-      {bound ? (
+      {bound && (
         <div className={AutoDateWrapperStyle}>
-          <div className={AutoDateSyncIconStyle}>
-            <Icon icon="SYNC" />
-          </div>
-
-          <div className={dateBindingSignWrapperStyle}>
+          <div className={DateBindingSignWrapperStyle}>
             <FormField
               name={dateInterval}
               initValue={{
@@ -230,20 +217,6 @@ const DateBindingInput = ({
             )}
           </FormField>
         </div>
-      ) : (
-        <Display color="GRAY_LIGHT" width="200px" height="30px">
-          {editable ? (
-            <FormattedMessage
-              id="modules.milestone.chooseDataBinding"
-              defaultMessage="Choose data to sync from"
-            />
-          ) : (
-            <FormattedMessage
-              id="modules.milestone.noEventBindingChosen"
-              defaultMessage="No event binding chosen"
-            />
-          )}
-        </Display>
       )}
     </GridColumn>
   );

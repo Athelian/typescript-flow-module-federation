@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { fontSizes, colors, presets } from 'styles/common';
 
-const getBorderColor = (isFocused: boolean) => (isFocused ? colors.TEAL : colors.GRAY_QUITE_LIGHT);
+const getBorderColor = (isFocused: boolean) => (isFocused ? colors.TEAL : colors.GRAY_VERY_LIGHT);
 
 export const OrderListItemWrapperStyle = (isFocused: boolean) => css`
   box-shadow: none !important;
