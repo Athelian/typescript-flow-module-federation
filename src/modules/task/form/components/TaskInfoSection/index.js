@@ -56,6 +56,7 @@ import {
   CompletedAvatarStyle,
   ApprovalToggleStyle,
   BindingToggleButtonStyle,
+  IconStyle,
 } from './style';
 
 type Props = {|
@@ -431,7 +432,9 @@ const TaskInfoSection = ({
                             }}
                             editable={editable.dueDate}
                           >
-                            <Icon icon={dueDateBinding ? 'BINDED' : 'UNBINDED'} />
+                            <div className={IconStyle}>
+                              <Icon icon={dueDateBinding ? 'BINDED' : 'UNBINDED'} />
+                            </div>
                           </ToggleInput>
                         </div>
 
@@ -656,7 +659,9 @@ const TaskInfoSection = ({
                             }}
                             editable={editable.startDate}
                           >
-                            <Icon icon={startDateBinding ? 'BINDED' : 'UNBINDED'} />
+                            <div className={IconStyle}>
+                              <Icon icon={startDateBinding ? 'BINDED' : 'UNBINDED'} />
+                            </div>
                           </ToggleInput>
                         </div>
 
@@ -808,7 +813,7 @@ const TaskInfoSection = ({
                           />
                         }
                         inputHeight="100px"
-                        inputWidth="200px"
+                        inputWidth="400px"
                         editable={editable.description}
                       />
                     )}

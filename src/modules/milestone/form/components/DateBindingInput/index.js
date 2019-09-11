@@ -14,6 +14,7 @@ import {
   AutoDateWrapperStyle,
   DateBindingSignWrapperStyle,
   BindingToggleButtonStyle,
+  IconStyle,
 } from './style';
 
 type OptionalProps = {
@@ -106,7 +107,9 @@ const DateBindingInput = ({
           }}
           editable={editable}
         >
-          <Icon icon={bound ? 'BINDED' : 'UNBINDED'} />
+          <div className={IconStyle}>
+            <Icon icon={bound ? 'BINDED' : 'UNBINDED'} />
+          </div>
         </ToggleInput>
       </div>
 

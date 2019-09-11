@@ -18,9 +18,8 @@ export const MainFieldsWrapperStyle: string = css`
 
 export const BindingToggleButtonStyle = css`
   position: absolute;
-  right: -50px;
-  top: 5px;
-  & > div > svg {
+  right: -60px;
+  & > div > div > svg {
     color: ${colors.GRAY_VERY_LIGHT};
   }
 `;
@@ -70,4 +69,11 @@ export const CompletedAvatarStyle: string = css`
 export const ApprovalToggleStyle = (on: boolean) => css`
   margin-left: 8px;
   color: ${on ? colors.TEAL : colors.GRAY_DARK};
+`;
+
+export const IconStyle: string = css`
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
 `;

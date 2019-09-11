@@ -15,9 +15,15 @@ export const DateBindingSignWrapperStyle: string = css`
 
 export const BindingToggleButtonStyle = css`
   position: absolute;
-  right: -50px;
-  top: 5px;
-  & > div > svg {
+  right: -60px;
+  & > div > div > svg {
     color: ${colors.GRAY_VERY_LIGHT};
   }
+`;
+
+export const IconStyle: string = css`
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
 `;
