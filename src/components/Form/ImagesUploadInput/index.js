@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import Dropzone from 'react-dropzone';
 import type { FilePayload } from 'generated/graphql';
 import { pick } from 'lodash/fp';
 import Icon from 'components/Icon';
@@ -133,18 +134,33 @@ class ImagesUploadInput extends React.Component<Props, State> {
     const { width, height } = this.props;
     const { filesState } = this.state;
     return (
-      <div className={UploadWrapperStyle}>
-        {filesState &&
-          filesState
-            .filter(file => file.uploading)
-            .map(file => <div key={file.id} className={ProgressStyle}>{`${file.progress}%`}</div>)}
+      <>
+        <Dropzone onDrop={this.handleChange}>
+          {({ getRootProps, isDragActive }) => (
+            <div {...getRootProps()} className={UploadWrapperStyle}>
+              {filesState &&
+                filesState
+                  .filter(file => file.uploading)
+                  .map(file => (
+                    <div key={file.id} className={ProgressStyle}>{`${file.progress}%`}</div>
+                  ))}
 
-        <label className={AddImageStyle({ width, height })}>
-          <Icon icon="PHOTO" />
-          <Icon icon="ADD" />
-          <input value="" type="file" accept="*" hidden multiple onChange={this.handleChange} />
-        </label>
-      </div>
+              <label className={AddImageStyle({ width, height, isDragActive })}>
+                <Icon icon="PHOTO" />
+                <Icon icon="ADD" />
+                <input
+                  value=""
+                  type="file"
+                  accept="*"
+                  hidden
+                  multiple
+                  onChange={this.handleChange}
+                />
+              </label>
+            </div>
+          )}
+        </Dropzone>
+      </>
     );
   }
 }

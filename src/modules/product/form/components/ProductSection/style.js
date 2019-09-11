@@ -13,7 +13,7 @@ import {
 export const ProductSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;
-  padding: 40px 100px;
+  padding: 0 0 40px 0;
   ${layout.GRID_VERTICAL};
   grid-gap: 20px;
 `;
@@ -21,32 +21,23 @@ export const ProductSectionWrapperStyle: string = css`
 export const MainFieldsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   justify-content: space-between;
+  padding: 0 100px;
 `;
 
 export const ProductImagesWrapperStyle = (numOfFiles: number): string => css`
   position: relative;
   width: 100%;
-  height: 220px;
   ${layout.GRID_HORIZONTAL};
-  ${numOfFiles > 0 && numOfFiles < 4
-    ? `
-    padding: 20px 20px 20px 140px
-  `
-    : `
-    padding: 20px
-  `};
+  padding: 40px;
   ${numOfFiles < 4 && 'justify-content: center'};
   grid-gap: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   ${borderRadiuses.MAIN};
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  overflow: hidden;
   ${scrollbars.SMALL};
-  &:hover {
-    overflow-y: hidden;
-    overflow-x: auto;
-  }
+  overflow-y: hidden;
+  overflow-x: overlay;
 `;
 
 export const ProductImageWrapperStyle: string = css`
@@ -130,12 +121,5 @@ export const SwapImageButtonStyle = (position: 'left' | 'right'): string => css`
 `;
 
 export const ScrollFixStyle: string = css`
-  width: 1px;
-`;
-
-export const DividerStyle: string = css`
-  margin: 40px 0;
-  height: 1px;
-  background-color: ${colors.GRAY_VERY_LIGHT};
-  width: 100%;
+  width: 20px;
 `;

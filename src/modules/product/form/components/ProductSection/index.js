@@ -64,7 +64,6 @@ import {
   DeleteImageButtonStyle,
   SwapImageButtonStyle,
   ScrollFixStyle,
-  DividerStyle,
 } from './style';
 
 type Props = {
@@ -225,7 +224,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                                   files={files}
                                   onSave={updateFiles => changeFiles('files', updateFiles)}
                                   height="180px"
-                                  width={files.length > 0 ? '120px' : '180px'}
+                                  width="180px"
                                 />
                               )}
                               {files.length > 3 && <div className={ScrollFixStyle} />}
@@ -426,7 +425,6 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                   />
                 </GridColumn>
               </div>
-              <div className={DividerStyle} />
             </div>
           );
         }}
