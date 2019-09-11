@@ -13,6 +13,17 @@ const DELAY = 200; // 0.2 second
 const timer = {};
 const isTimeoutRunning = {};
 
+export const targetedIds = (
+  targets: Array<string>,
+  type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT
+) => {
+  const ids = targets.filter(item => item.includes(`${type}-`));
+  return (ids.map(orderItem => {
+    const [, id] = orderItem.split('-');
+    return id;
+  }): Array<string>);
+};
+
 export const handleClickAndDoubleClick = ({
   clickId,
   onClick,

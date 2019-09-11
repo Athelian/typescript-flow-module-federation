@@ -3,8 +3,16 @@ import * as React from 'react';
 import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import logger from 'utils/logger';
+import { PermissionsContext } from 'components/Context/Permissions';
+import { Entities } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
+import { ORDER_CREATE } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
+import { BATCH_CREATE } from 'modules/permission/constants/batch';
+import { CONTAINER_CREATE } from 'modules/permission/constants/container';
+import { SHIPMENT_CREATE } from 'modules/permission/constants/shipment';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
 import ActionButton from './components/ActionButton';
 import ActionSubMenu from './components/ActionSubMenu';
 import ActionLabel from './components/ActionLabel';
@@ -18,14 +26,59 @@ function getEntityCount(targets: Array<string>, entityConstant: string) {
   return targets.filter(item => item.includes(`${entityConstant}-`)).length;
 }
 
+function hasPermissionToClone(
+  hasPermissions: Function,
+  type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT
+) {
+  switch (type) {
+    case ORDER:
+      return hasPermissions(ORDER_CREATE);
+
+    case ORDER_ITEM:
+      return hasPermissions(ORDER_ITEMS_CREATE);
+
+    case BATCH:
+      return hasPermissions(BATCH_CREATE);
+
+    case CONTAINER:
+      return hasPermissions(CONTAINER_CREATE);
+
+    case SHIPMENT:
+      return hasPermissions(SHIPMENT_CREATE);
+
+    default:
+      return false;
+  }
+}
+
 export default function Actions({ targets }: Props) {
   const [currentMenu, setCurrentMenu] = React.useState(null);
   const { dispatch } = React.useContext(RelationMapContext);
+  const { mapping } = Entities.useContainer();
   const orderIsDisabled = getEntityCount(targets, ORDER) === 0;
   const itemIsDisabled = getEntityCount(targets, ORDER_ITEM) === 0;
   const batchIsDisabled = getEntityCount(targets, BATCH) === 0;
   const containerIsDisabled = getEntityCount(targets, CONTAINER) === 0;
   const shipmentIsDisabled = getEntityCount(targets, SHIPMENT) === 0;
+  const { hasPermissionsByOrganization } = React.useContext(PermissionsContext);
+  const allowToCloneOrders = targetedIds(targets, ORDER).every(id =>
+    hasPermissionToClone(
+      hasPermissionsByOrganization(mapping.entities?.orders?.[id]?.ownedBy),
+      ORDER
+    )
+  );
+  const allowToCloneOrderItems = targetedIds(targets, ORDER_ITEM).every(id =>
+    hasPermissionToClone(
+      hasPermissionsByOrganization(mapping.entities?.orderItems?.[id]?.ownedBy),
+      ORDER_ITEM
+    )
+  );
+  const allowToCloneBatches = targetedIds(targets, BATCH).every(id =>
+    hasPermissionToClone(
+      hasPermissionsByOrganization(mapping.entities?.batches?.[id]?.ownedBy),
+      BATCH
+    )
+  );
 
   return (
     <OutsideClickHandler
@@ -52,6 +105,7 @@ export default function Actions({ targets }: Props) {
                   },
                 });
               }}
+              isDisabled={!allowToCloneOrders}
             >
               <Icon icon="CLONE" />
               <ActionLabel>CLONE</ActionLabel>
@@ -83,6 +137,7 @@ export default function Actions({ targets }: Props) {
                   },
                 });
               }}
+              isDisabled={!allowToCloneOrderItems}
             >
               <Icon icon="CLONE" />
               <ActionLabel>CLONE</ActionLabel>
@@ -114,6 +169,7 @@ export default function Actions({ targets }: Props) {
                   },
                 });
               }}
+              isDisabled={!allowToCloneBatches}
             >
               <Icon icon="CLONE" />
               <ActionLabel>CLONE</ActionLabel>
