@@ -955,9 +955,10 @@ function BatchCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload }) {
-  const batchId = getByPathWithDefault('', 'id', data);
+  const hasPermissions = useEntityHasPermissions(data);
   const { state, dispatch } = React.useContext(RelationMapContext);
   const { mapping, badge } = Entities.useContainer();
+  const batchId = getByPathWithDefault('', 'id', data);
   const { entities } = mapping;
   const [{ isOver, canDrop, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
@@ -977,10 +978,7 @@ function BatchCell({
       });
     },
     canDrag: () => {
-      const entity = getByPathWithDefault({}, `batches.${batchId}`, entities);
-      const organizationId = getByPathWithDefault('', 'ownedBy', entity);
-      const permissions = getByPathWithDefault([], `permission.${organizationId}`, state);
-      return permissions.includes(BATCH_UPDATE) || permissions.includes(BATCH_SET_ORDER_ITEM);
+      return hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
     },
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
@@ -2037,15 +2035,31 @@ function DuplicateOrderCell({
   const originalItems = order?.orderItems ?? [];
   const items = getItemsSortByOrderId(orderId, originalItems);
   const itemList = [];
-  items.forEach(itemId => {
-    if (!itemList.includes(itemId)) {
-      const relatedItems = getRelatedBy('orderItem', itemId);
-      itemList.push(itemId);
-      if (relatedItems.length) {
-        itemList.push(...relatedItems);
+  if (items.length !== originalItems.length) {
+    items.forEach(itemId => {
+      if (!itemList.includes(itemId)) {
+        const relatedItems = getRelatedBy('orderItem', itemId);
+        itemList.push(itemId);
+        if (relatedItems.length) {
+          itemList.push(...relatedItems);
+        }
       }
-    }
-  });
+    });
+    originalItems
+      .map(item => item.id)
+      .forEach(itemId => {
+        if (!itemList.includes(itemId)) {
+          const relatedItems = getRelatedBy('orderItem', itemId);
+          itemList.push(itemId);
+          if (relatedItems.length) {
+            itemList.push(...relatedItems);
+          }
+        }
+      });
+  } else {
+    itemList.push(...items);
+  }
+
   let foundPosition = -1;
   for (let index = itemList.length - 1; index > 0; index -= 1) {
     const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${itemList[index]}`);
