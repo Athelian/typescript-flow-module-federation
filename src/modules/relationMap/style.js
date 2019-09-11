@@ -10,7 +10,7 @@ import {
   shadows,
 } from 'styles/common';
 
-const getBorderColor = (isFocused: boolean) => (isFocused ? colors.TEAL : colors.GRAY_QUITE_LIGHT);
+const getBorderColor = (isFocused: boolean) => (isFocused ? colors.TEAL : colors.GRAY_VERY_LIGHT);
 
 export const ResetContentWrapperStyle: string = css`
   display: flex;
