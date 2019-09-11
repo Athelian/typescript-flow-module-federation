@@ -51,7 +51,6 @@ import {
   MainFieldsWrapperStyle,
   AutoDateWrapperStyle,
   AutoDateOffsetWrapperStyle,
-  AutoDateSyncIconStyle,
   StatusWrapperStyle,
   StatusColorStyle,
   CompletedAvatarStyle,
@@ -426,8 +425,8 @@ const TaskInfoSection = ({
                                 isManual: dueDateBinding,
                                 onChange: setFieldValues,
                                 hasCircleBindingError: dueDateBinding
-                                  ? values.startDateBinding === DUE_DATE
-                                  : false,
+                                  ? false
+                                  : values.startDateBinding === DUE_DATE,
                               });
                             }}
                             editable={editable.dueDate}
@@ -436,7 +435,7 @@ const TaskInfoSection = ({
                           </ToggleInput>
                         </div>
 
-                        {dueDateBinding ? (
+                        {dueDateBinding && (
                           <ObjectValue
                             value={{
                               autoDateField: values.dueDateBinding,
@@ -478,10 +477,6 @@ const TaskInfoSection = ({
                               set,
                             }) => (
                               <div className={AutoDateWrapperStyle}>
-                                <div className={AutoDateSyncIconStyle}>
-                                  <Icon icon="SYNC" />
-                                </div>
-
                                 <div className={AutoDateOffsetWrapperStyle}>
                                   <FormField
                                     name="autoDueDateDuration"
@@ -564,20 +559,6 @@ const TaskInfoSection = ({
                               </div>
                             )}
                           </ObjectValue>
-                        ) : (
-                          <Display color="GRAY_LIGHT" width="200px" height="30px">
-                            {editable.dueDateBinding ? (
-                              <FormattedMessage
-                                id="modules.Tasks.chooseDataBinding"
-                                defaultMessage="Choose data to sync from"
-                              />
-                            ) : (
-                              <FormattedMessage
-                                id="modules.Tasks.noEventBindingChosen"
-                                defaultMessage="No event binding chosen"
-                              />
-                            )}
-                          </Display>
                         )}
                       </GridColumn>
                     }
@@ -669,8 +650,8 @@ const TaskInfoSection = ({
                                 isManual: startDateBinding,
                                 onChange: setFieldValues,
                                 hasCircleBindingError: startDateBinding
-                                  ? values.dueDateBinding === START_DATE
-                                  : false,
+                                  ? false
+                                  : values.dueDateBinding === START_DATE,
                               });
                             }}
                             editable={editable.startDate}
@@ -679,7 +660,7 @@ const TaskInfoSection = ({
                           </ToggleInput>
                         </div>
 
-                        {startDateBinding ? (
+                        {startDateBinding && (
                           <ObjectValue
                             value={{
                               autoDateField: values.startDateBinding,
@@ -721,10 +702,6 @@ const TaskInfoSection = ({
                               set,
                             }) => (
                               <div className={AutoDateWrapperStyle}>
-                                <div className={AutoDateSyncIconStyle}>
-                                  <Icon icon="SYNC" />
-                                </div>
-
                                 <div className={AutoDateOffsetWrapperStyle}>
                                   <FormField
                                     name="autoStateDateDuration"
@@ -807,20 +784,6 @@ const TaskInfoSection = ({
                               </div>
                             )}
                           </ObjectValue>
-                        ) : (
-                          <Display color="GRAY_LIGHT" width="200px" height="30px">
-                            {editable.startDateBinding ? (
-                              <FormattedMessage
-                                id="modules.Tasks.chooseDataBinding"
-                                defaultMessage="Choose data to sync from"
-                              />
-                            ) : (
-                              <FormattedMessage
-                                id="modules.Tasks.noEventBindingChosen"
-                                defaultMessage="No event binding chosen"
-                              />
-                            )}
-                          </Display>
                         )}
                       </GridColumn>
                     }

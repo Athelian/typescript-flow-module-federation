@@ -1,20 +1,17 @@
 // @flow
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import GridColumn from 'components/GridColumn';
 import {
   DateInputFactory,
   MetricInputFactory,
   SelectInputFactory,
-  Display,
   ToggleInput,
 } from 'components/Form';
 import { FormField } from 'modules/form';
 import { calculateBindingDate } from 'utils/project';
 import {
   AutoDateWrapperStyle,
-  AutoDateSyncIconStyle,
   DateBindingSignWrapperStyle,
   BindingToggleButtonStyle,
 } from './style';
@@ -131,12 +128,8 @@ const DateBindingInput = ({
         )}
       </FormField>
 
-      {bound ? (
+      {bound && (
         <div className={AutoDateWrapperStyle}>
-          <div className={AutoDateSyncIconStyle}>
-            <Icon icon="SYNC" />
-          </div>
-
           <div className={DateBindingSignWrapperStyle}>
             <FormField
               name={dateInterval}
@@ -221,20 +214,6 @@ const DateBindingInput = ({
             )}
           </FormField>
         </div>
-      ) : (
-        <Display color="GRAY_LIGHT" width="200px" height="30px">
-          {editable ? (
-            <FormattedMessage
-              id="modules.milestone.chooseDataBinding"
-              defaultMessage="Choose data to sync from"
-            />
-          ) : (
-            <FormattedMessage
-              id="modules.milestone.noEventBindingChosen"
-              defaultMessage="No event binding chosen"
-            />
-          )}
-        </Display>
       )}
     </GridColumn>
   );

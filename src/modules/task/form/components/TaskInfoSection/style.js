@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, presets, colors, fontSizes } from 'styles/common';
+import { layout, presets, colors } from 'styles/common';
 
 export const TaskSectionWrapperStyle: string = css`
   ${presets.BOX};
@@ -34,19 +34,6 @@ export const AutoDateWrapperStyle: string = css`
 export const AutoDateOffsetWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 10px;
-`;
-
-export const AutoDateSyncIconStyle: string = css`
-  position: absolute;
-  bottom: 5px;
-  right: -25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  ${fontSizes.SMALL};
-  color: ${colors.GRAY_LIGHT};
 `;
 
 export const StatusWrapperStyle: string = css`
