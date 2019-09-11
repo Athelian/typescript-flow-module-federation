@@ -6,7 +6,6 @@ import Icon from 'components/Icon';
 import { Label } from 'components/Form';
 import { Tooltip } from 'components/Tooltip';
 import { calculatePercentage } from 'utils/ui';
-import { isNullOrUndefined } from 'utils/fp';
 import { differenceInCalendarDays } from 'utils/date';
 import MilestoneDueDateToolTip from '../MilestoneDueDateToolTip';
 import {
@@ -32,9 +31,9 @@ type Props = {
 const MilestoneTimelineItem = ({ milestone }: Props) => {
   const { name, dueDate, estCompletedAt, completedAt, tasks = [] } = milestone;
 
-  const isCompleted = !isNullOrUndefined(completedAt);
+  const isCompleted = completedAt;
   const total = tasks.length;
-  const completed = tasks.filter(item => !isNullOrUndefined(item.completedAt)).length;
+  const completedOrSkippedCount = tasks.filter(item => item.completedAt || item.skippedAt).length;
 
   let dueDateDiff = 0;
   if (dueDate && completedAt) {
@@ -48,14 +47,16 @@ const MilestoneTimelineItem = ({ milestone }: Props) => {
       <div className={MilestoneNameStyle}>{name}</div>
 
       <div className={ProgressBarStyle}>
-        <div className={BarStyle(calculatePercentage(total, completed))} />
+        <div className={BarStyle(calculatePercentage(total, completedOrSkippedCount))} />
         <div className={MilestoneTickStyle(isCompleted)}>
           <Icon icon="CONFIRM" />
         </div>
       </div>
 
       <div className={TasksWrapperStyle}>
-        <div className={CompletedTasksStyle(completed)}>{completed}</div>
+        <div className={CompletedTasksStyle(completedOrSkippedCount)}>
+          {completedOrSkippedCount}
+        </div>
         <div className={TotalTasksStyle}>{`\u00A0/ ${total}`}</div>
         <div className={TaskIconStyle}>
           <Icon icon="TASK" />
