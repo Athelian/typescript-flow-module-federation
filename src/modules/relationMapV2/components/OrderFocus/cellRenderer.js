@@ -2102,7 +2102,6 @@ function DuplicateOrderItemCell({
   const { state } = React.useContext(RelationMapContext);
   const { getRelatedBy } = Entities.useContainer();
   const { getBatchesSortByItemId, getItemsSortByOrderId } = ClientSorts.useContainer();
-  const itemPosition = data?.itemPosition ?? 0;
   const batchPosition = data?.batchPosition ?? 0;
   const originalItems = order?.orderItems ?? [];
   const items = getItemsSortByOrderId(order?.id, originalItems);
@@ -2117,12 +2116,9 @@ function DuplicateOrderItemCell({
     }
   });
 
-  const itemId = itemList[itemPosition];
-  const originalBatches = getByPathWithDefault(
-    [],
-    `orderItems.${getByPathWithDefault(0, 'itemPosition', data)}.batches`,
-    order
-  );
+  const itemId = data.item?.id;
+
+  const originalBatches = data.item?.batches ?? [];
   const batches = getBatchesSortByItemId(itemId, originalBatches);
 
   const batchList = [];
@@ -2136,6 +2132,17 @@ function DuplicateOrderItemCell({
         }
       }
     });
+    originalBatches
+      .map(batch => batch.id)
+      .forEach(batchId => {
+        if (!batchList.includes(batchId)) {
+          const relatedBatches = getRelatedBy('batch', batchId);
+          batchList.push(batchId);
+          if (relatedBatches.length) {
+            batchList.push(...relatedBatches);
+          }
+        }
+      });
   } else {
     batchList.push(...batches);
   }

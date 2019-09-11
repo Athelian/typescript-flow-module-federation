@@ -342,7 +342,8 @@ export const orderCoordinates = memoize(
                       type: 'duplicateOrderItem',
                       data: {
                         order,
-                        itemPosition: index,
+                        item,
+                        batch,
                         batchPosition: position,
                       },
                       afterConnector: 'VERTICAL',
