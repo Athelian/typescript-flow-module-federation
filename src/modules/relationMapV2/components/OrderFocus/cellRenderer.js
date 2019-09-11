@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import { flatten, findKey } from 'lodash';
 import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
-import { useEntityHasPermissions } from 'components/Context/Permissions';
+import { useEntityHasPermissions, useHasPermissions } from 'components/Context/Permissions';
 import { Tooltip } from 'components/Tooltip';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
@@ -27,6 +27,8 @@ import {
   SHIPMENT_WIDTH,
 } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
+import { CONTAINER_BATCHES_ADD } from 'modules/permission/constants/container';
+import { SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH } from 'modules/permission/constants/shipment';
 import { Hits, Entities, ClientSorts } from 'modules/relationMapV2/store';
 import Badge from 'modules/relationMapV2/components/Badge';
 import type { CellRender, State } from './type.js.flow';
@@ -214,17 +216,22 @@ const getIdentifier = ({
   }
 };
 
-// TODO: check permission for drag and drop
+// NOTE: only support for drag and drop a batch
 const hasPermissionToMove = ({
   type,
-  hasPermission,
+  hasPermissions,
 }: {|
-  hasPermission: (Array<string> | string) => boolean,
+  hasPermissions: (Array<string> | string) => boolean,
   type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT,
 |}) => {
   switch (type) {
     case BATCH: {
-      return hasPermission([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
+      // move a batch to order item or order
+      return hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
+    }
+
+    case SHIPMENT: {
+      return hasPermissions([CONTAINER_BATCHES_ADD, SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH]);
     }
 
     default:
@@ -236,12 +243,12 @@ const orderDropMessage = ({
   orderId,
   state,
   entities,
-  hasPermission,
+  hasPermissions,
   item,
 }: {|
   state: State,
   entities: Object,
-  hasPermission: Function,
+  hasPermissions: Function,
   orderId: string,
   item: ?{
     type: string,
@@ -291,8 +298,8 @@ const orderDropMessage = ({
         );
 
       const noPermission = !hasPermissionToMove({
-        hasPermission,
-        type: ORDER,
+        hasPermissions,
+        type: BATCH,
       });
       if (noPermission)
         return (
@@ -317,13 +324,13 @@ const orderDropMessage = ({
 
 const orderItemDropMessage = ({
   itemId,
-  hasPermission,
+  hasPermissions,
   order,
   state,
   item,
 }: {|
   state: State,
-  hasPermission: Function,
+  hasPermissions: Function,
   itemId: string,
   order: OrderPayload,
   item: {
@@ -379,8 +386,8 @@ const orderItemDropMessage = ({
         );
 
       const noPermission = !hasPermissionToMove({
-        hasPermission,
-        type: ORDER_ITEM,
+        hasPermissions,
+        type: BATCH,
       });
       if (noPermission)
         return (
@@ -403,9 +410,9 @@ const containerDropMessage = ({
   entities,
   state,
   item,
-  hasPermission,
+  hasPermissions,
 }: {|
-  hasPermission: Function,
+  hasPermissions: Function,
   state: State,
   entities: Object,
   containerId: string,
@@ -461,7 +468,7 @@ const containerDropMessage = ({
           </div>
         );
 
-      const noPermission = !hasPermissionToMove({ hasPermission, type: CONTAINER });
+      const noPermission = !hasPermissionToMove({ hasPermissions, type: SHIPMENT });
       if (noPermission)
         return (
           <div>
@@ -483,9 +490,9 @@ const shipmentDropMessage = ({
   entities,
   state,
   item,
-  hasPermission,
+  hasPermissions,
 }: {|
-  hasPermission: Function,
+  hasPermissions: Function,
   state: State,
   entities: Object,
   shipmentId: string,
@@ -540,7 +547,7 @@ const shipmentDropMessage = ({
           </div>
         );
 
-      const noPermission = !hasPermissionToMove({ hasPermission, type: SHIPMENT });
+      const noPermission = !hasPermissionToMove({ hasPermissions, type: SHIPMENT });
       if (noPermission)
         return (
           <div>
@@ -561,12 +568,13 @@ function OrderCell({ data, afterConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
-  const hasPermission = useEntityHasPermissions(data);
+  const hasPermissions = useEntityHasPermissions(data);
   const orderId = getByPathWithDefault('', 'id', data);
   const [{ isOver, canDrop, dropMessage, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
     canDrop: item => {
-      switch (item.type) {
+      const { type } = item;
+      switch (type) {
         case BATCH: {
           const batchId = item.id;
           const parentOrderId = findKey(state.order, order => {
@@ -583,8 +591,8 @@ function OrderCell({ data, afterConnector }: CellProps) {
             getByPathWithDefault('', 'exporter.id', entities.orders[orderId]) !==
             getByPathWithDefault('', 'exporter.id', entities.orders[parentOrderId]);
           const noPermission = !hasPermissionToMove({
-            hasPermission,
-            type: ORDER,
+            hasPermissions,
+            type,
           });
           return !isOwnOrder && !isDifferentImporter && !isDifferentExporter && !noPermission;
         }
@@ -599,7 +607,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
       canDrop: !!monitor.canDrop(),
       isSameItem: monitor.getItem() && monitor.getItem().id === orderId,
       dropMessage: orderDropMessage({
-        hasPermission,
+        hasPermissions,
         state,
         entities,
         orderId,
@@ -747,13 +755,14 @@ function OrderItemCell({
 }: CellProps & { order: OrderPayload }) {
   const { state, dispatch } = React.useContext(RelationMapContext);
   const { badge } = Entities.useContainer();
-  const hasPermission = useEntityHasPermissions(data);
+  const hasPermissions = useEntityHasPermissions(data);
   const orderId = getByPathWithDefault('', 'id', order);
   const itemId = getByPathWithDefault('', 'id', data);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
     accept: BATCH,
     canDrop: item => {
-      switch (item.type) {
+      const { type } = item;
+      switch (type) {
         case BATCH: {
           const batchId = item.id;
           const parentOrderId = findKey(state.order, currentOrder => {
@@ -776,8 +785,8 @@ function OrderItemCell({
             getByPathWithDefault('', 'exporter.id', order) !==
             getByPathWithDefault('', 'exporter.id', state.order[parentOrderId]);
           const noPermission = !hasPermissionToMove({
-            hasPermission,
-            type: ORDER_ITEM,
+            hasPermissions,
+            type,
           });
           return !isOwnItem && !isDifferentImporter && !isDifferentExporter && !noPermission;
         }
@@ -792,7 +801,7 @@ function OrderItemCell({
       canDrop: !!monitor.canDrop(),
       isSameItem: monitor.getItem() && monitor.getItem().id === itemId,
       dropMessage: orderItemDropMessage({
-        hasPermission,
+        hasPermissions,
         state,
         order,
         itemId,
@@ -1122,14 +1131,16 @@ function BatchCell({
 function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
   const { mapping } = Entities.useContainer();
-  const hasPermission = useEntityHasPermissions(data);
   const { entities } = mapping;
-  const containerId = getByPathWithDefault('', 'id', data);
+  const containerId = data?.id;
+  const container = entities.containers?.[containerId] ?? { id: containerId };
+  const hasPermissions = useHasPermissions(container.ownedBy);
   const shipmentId = getByPathWithDefault('', 'relatedBatch.shipment.id', data);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
     accept: BATCH,
     canDrop: item => {
-      switch (item.type) {
+      const { type } = item;
+      switch (type) {
         case BATCH: {
           const batchId = item.id;
           const parentOrderId = findKey(state.order, currentOrder => {
@@ -1141,7 +1152,6 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
           const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
-          const container = getByPathWithDefault({}, `containers.${containerId}`, entities);
           const shipment = getByPathWithDefault({}, `shipments.${container.shipment}`, entities);
           const isOwnContainer = batch.container === containerId;
           const isDifferentImporter =
@@ -1152,8 +1162,8 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             getByPathWithDefault('', 'exporter.id', shipment) !==
               getByPathWithDefault('', 'exporter.id', order);
           const noPermission = !hasPermissionToMove({
-            hasPermission,
-            type: CONTAINER,
+            hasPermissions,
+            type: SHIPMENT,
           });
           return !isOwnContainer && !isDifferentImporter && !isDifferentExporter && !noPermission;
         }
@@ -1168,7 +1178,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
       canDrop: !!monitor.canDrop(),
       isSameItem: monitor.getItem() && monitor.getItem().id === containerId,
       dropMessage: containerDropMessage({
-        hasPermission,
+        hasPermissions,
         state,
         entities,
         containerId,
@@ -1314,13 +1324,15 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
 function ShipmentCell({ data, beforeConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
   const { mapping } = Entities.useContainer();
-  const hasPermission = useEntityHasPermissions(data);
   const { entities } = mapping;
-  const shipmentId = getByPathWithDefault('', 'id', data);
+  const shipmentId = data?.id;
+  const shipment = entities.shipments?.[shipmentId] ?? { id: shipmentId };
+  const hasPermissions = useHasPermissions(shipment.ownedBy);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
     accept: BATCH,
     canDrop: item => {
-      switch (item.type) {
+      const { type } = item;
+      switch (type) {
         case BATCH: {
           const batchId = item.id;
           const parentOrderId = findKey(state.order, currentOrder => {
@@ -1339,7 +1351,6 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
           const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
-          const shipment = getByPathWithDefault({}, `shipments.${shipmentId}`, entities);
           const isOwnShipment = batch.shipment === shipmentId;
           const isDifferentImporter =
             getByPathWithDefault('', 'importer.id', shipment) !==
@@ -1349,8 +1360,8 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
             getByPathWithDefault('', 'exporter.id', shipment) !==
               getByPathWithDefault('', 'exporter.id', order);
           const noPermission = !hasPermissionToMove({
+            hasPermissions,
             type: SHIPMENT,
-            hasPermission,
           });
           return !isOwnShipment && !isDifferentImporter && !isDifferentExporter && !noPermission;
         }
@@ -1365,7 +1376,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
       canDrop: !!monitor.canDrop(),
       isSameItem: monitor.getItem() && monitor.getItem().id === shipmentId,
       dropMessage: shipmentDropMessage({
-        hasPermission,
+        hasPermissions,
         state,
         entities,
         shipmentId,
