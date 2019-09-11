@@ -1,5 +1,6 @@
 // @flow
 import { clone, setIn } from 'utils/fp';
+import type { ColumnSort } from '../../SheetColumns';
 import type { CellValue, State } from '../types';
 import { refresh } from './global';
 
@@ -107,28 +108,34 @@ export function cellUpdate(state: State, payload: { value: any }, target: CellVa
   });
 }
 
-export function replaceItem(transformer: (number, Object) => Array<Array<CellValue>>) {
+export function replaceItem(
+  transformer: (number, Object) => Array<Array<CellValue>>,
+  sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
+) {
   return (state: State, payload: { item: Object, index: number }): State => {
     const { item, index } = payload;
 
     const items = [...state.items];
     items[index] = item;
 
-    return refresh(transformer)(state, {
+    return refresh(transformer, sorter)(state, {
       items,
       columns: state.columns,
     });
   };
 }
 
-export function deleteItem(transformer: (number, Object) => Array<Array<CellValue>>) {
+export function deleteItem(
+  transformer: (number, Object) => Array<Array<CellValue>>,
+  sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
+) {
   return (state: State, payload: { index: number }): State => {
     const { index } = payload;
 
     const items = [...state.items];
     items.splice(index, 1);
 
-    return refresh(transformer)(state, {
+    return refresh(transformer, sorter)(state, {
       items,
       columns: state.columns,
     });

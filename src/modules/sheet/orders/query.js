@@ -22,6 +22,7 @@ const orderItemSheetFragment = gql`
     id
     no
     quantity
+    sort
     ownedBy {
       ... on Organization {
         id
@@ -35,6 +36,7 @@ const batchSheetFragment = gql`
     id
     no
     quantity
+    sort
     ownedBy {
       ... on Organization {
         id

@@ -14,7 +14,7 @@ export const ColumnsWrapperStyle = css`
 
   overflow: hidden;
   background: ${colors.WHITE};
-  height: 40px;
+  height: 44px;
   z-index: 2;
 `;
 

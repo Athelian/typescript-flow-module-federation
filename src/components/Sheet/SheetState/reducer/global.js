@@ -1,8 +1,9 @@
 // @flow
+import type { ColumnSort } from '../../SheetColumns';
 import type { CellValue, State } from '../types';
 import { setForeignFocuses } from './foreign-focus';
-import { reFocus } from './focus';
-import { reError } from './error';
+import { reFocus, blur } from './focus';
+import { clearError, reError } from './error';
 
 function computeMergedCells(rows: Array<Array<CellValue>>): Array<Array<CellValue>> {
   const mergedCells = rows.reduce((list, row, x) => {
@@ -86,10 +87,15 @@ function resolveEntities(rows: Array<Array<CellValue>>): Array<{ id: string, typ
   );
 }
 
-export function init(transformer: (number, Object) => Array<Array<CellValue>>) {
+export function init(
+  transformer: (number, Object) => Array<Array<CellValue>>,
+  sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
+) {
   return function(state: State, payload: { items: Array<Object>, columns: Array<string> }): State {
     const { items, columns } = payload;
-    const rows = computeMergedCells(transformItems(transformer)(0, items, columns));
+    const rows = computeMergedCells(
+      transformItems(transformer)(0, sorter(items, state.sorts), columns)
+    );
     const entities = resolveEntities(rows);
 
     return {
@@ -99,6 +105,7 @@ export function init(transformer: (number, Object) => Array<Array<CellValue>>) {
       columns,
       rows,
       entities,
+      hoverAt: null,
       focusAt: null,
       weakFocusAt: [],
       foreignFocuses: [],
@@ -111,9 +118,12 @@ export function init(transformer: (number, Object) => Array<Array<CellValue>>) {
   };
 }
 
-export function refresh(transformer: (number, Object) => Array<Array<CellValue>>) {
+export function refresh(
+  transformer: (number, Object) => Array<Array<CellValue>>,
+  sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
+) {
   return function(state: State, payload: { items: Array<Object>, columns: Array<string> }): State {
-    let newState = init(transformer)(state, payload);
+    let newState = init(transformer, sorter)(state, payload);
 
     if (state.foreignFocuses.length > 0) {
       newState = setForeignFocuses(newState, {
@@ -139,11 +149,14 @@ export function refresh(transformer: (number, Object) => Array<Array<CellValue>>
   };
 }
 
-export function append(transformer: (number, Object) => Array<Array<CellValue>>) {
+export function append(
+  transformer: (number, Object) => Array<Array<CellValue>>,
+  sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
+) {
   return function(state: State, payload: { items: Array<Object> }): State {
     const { items } = payload;
     const rows = computeMergedCells(
-      transformItems(transformer)(state.items.length, items, state.columns)
+      transformItems(transformer)(state.items.length, sorter(items, state.sorts), state.columns)
     );
     const entities = resolveEntities(rows);
 
@@ -161,13 +174,36 @@ export function append(transformer: (number, Object) => Array<Array<CellValue>>)
   };
 }
 
-export function rearrange(transformer: (number, Object) => Array<Array<CellValue>>) {
+export function rearrange(
+  transformer: (number, Object) => Array<Array<CellValue>>,
+  sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
+) {
   return function(state: State, payload: { columns: Array<string> }): State {
     const { columns } = payload;
 
-    return refresh(transformer)(state, {
+    return refresh(transformer, sorter)(state, {
       items: state.items,
       columns,
     });
+  };
+}
+
+export function sort(
+  transformer: (number, Object) => Array<Array<CellValue>>,
+  sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
+) {
+  return function(state: State, payload: { sorts: Array<ColumnSort> }): State {
+    const { sorts } = payload;
+
+    return refresh(transformer, sorter)(
+      {
+        ...clearError(blur(state)),
+        sorts,
+      },
+      {
+        items: sorter(state.items, sorts),
+        columns: state.columns,
+      }
+    );
   };
 }

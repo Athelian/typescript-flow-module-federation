@@ -2,20 +2,12 @@
 import type { CellValue, State, Position } from '../types';
 import { findEquivalentCellPosition, resolveAreasBy } from './helper';
 
-export function setErrors(
+export function setError(
   state: State,
-  payload: { messages: Array<string> } | null,
+  payload: { messages: Array<string> },
   target: CellValue,
   position: Position
 ): State {
-  if (!payload) {
-    return {
-      ...state,
-      errorAt: null,
-      weakErrorAt: [],
-    };
-  }
-
   const area = target.merged || { from: position, to: position };
 
   const { messages } = payload;
@@ -42,6 +34,14 @@ export function setErrors(
   };
 }
 
+export function clearError(state: State): State {
+  return {
+    ...state,
+    errorAt: null,
+    weakErrorAt: [],
+  };
+}
+
 export function reError(
   state: State,
   payload: { messages: Array<string>, cell: CellValue }
@@ -49,13 +49,7 @@ export function reError(
   const { cell, messages } = payload;
   const pos = findEquivalentCellPosition(state.rows, cell);
 
-  return pos
-    ? setErrors(state, { messages }, state.rows[pos.x][pos.y], pos)
-    : {
-        ...state,
-        errorAt: null,
-        weakErrorAt: [],
-      };
+  return pos ? setError(state, { messages }, state.rows[pos.x][pos.y], pos) : clearError(state);
 }
 
-export default setErrors;
+export default setError;

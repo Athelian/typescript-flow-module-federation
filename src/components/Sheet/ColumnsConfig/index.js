@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Dialog from 'components/Dialog';
 import { SaveButton, ResetButton, BaseButton } from 'components/Buttons';
-import type { ColumnConfig } from '../SheetRenderer';
+import type { ColumnConfig } from '../SheetColumns';
 import Group from './Group';
 import { ButtonStyle, ModalWrapperStyle, GroupsWrapperStyle, ActionsWrapperStyle } from './style';
 import type { ColumnState } from './types';
