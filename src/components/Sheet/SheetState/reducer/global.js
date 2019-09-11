@@ -2,8 +2,8 @@
 import type { ColumnSort } from '../../SheetColumns';
 import type { CellValue, State } from '../types';
 import { setForeignFocuses } from './foreign-focus';
-import { reFocus, blur } from './focus';
-import { clearError, reError } from './error';
+import { reFocus } from './focus';
+import { reError } from './error';
 
 function computeMergedCells(rows: Array<Array<CellValue>>): Array<Array<CellValue>> {
   const mergedCells = rows.reduce((list, row, x) => {
@@ -197,7 +197,7 @@ export function sort(
 
     return refresh(transformer, sorter)(
       {
-        ...clearError(blur(state)),
+        ...state,
         sorts,
       },
       {
