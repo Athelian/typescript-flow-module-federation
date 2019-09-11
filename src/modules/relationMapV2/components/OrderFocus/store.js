@@ -54,7 +54,6 @@ export const initialState: State = {
     type: '',
     selectedId: '',
   },
-  permission: {},
 };
 
 export const RelationMapContext = createContext<ContextProps>({
@@ -79,7 +78,6 @@ export function reducer(
       | 'CONFIRM_MOVE'
       | 'CONFIRM_MOVE_START'
       | 'CONFIRM_MOVE_END'
-      | 'FETCH_PERMISSION'
       | 'CREATE_BATCH'
       | 'CREATE_BATCH_START'
       | 'CREATE_BATCH_END'
@@ -135,12 +133,6 @@ export function reducer(
         ...state,
         isDragging: false,
       };
-    case 'FETCH_PERMISSION':
-      return update(state, {
-        permission: {
-          $merge: action.payload,
-        },
-      });
     case 'TARGET':
       return produce(state, draft => {
         if (draft.targets.includes(action.payload.entity)) {

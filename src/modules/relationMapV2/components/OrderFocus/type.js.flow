@@ -73,5 +73,4 @@ export type State = {|
     orderId?: string,
     orderIds?: Array<string>,
   },
-  permission: Object,
 |};

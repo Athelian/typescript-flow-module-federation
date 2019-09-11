@@ -7,6 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import { flatten, findKey } from 'lodash';
 import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
+import { useEntityHasPermissions } from 'components/Context/Permissions';
 import { Tooltip } from 'components/Tooltip';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
@@ -213,21 +214,17 @@ const getIdentifier = ({
   }
 };
 
-// NOTE: this is setup for future permission. It is not ready yet.
+// TODO: check permission for drag and drop
 const hasPermissionToMove = ({
-  state,
-  entity,
   type,
+  hasPermission,
 }: {|
-  state: State,
-  entity: Object,
+  hasPermission: (Array<string> | string) => boolean,
   type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT,
 |}) => {
-  const organizationId = getByPathWithDefault('', 'ownedBy', entity);
-  const permissions = getByPathWithDefault([], `permission.${organizationId}`, state);
   switch (type) {
     case BATCH: {
-      return permissions.includes(BATCH_UPDATE) || permissions.includes(BATCH_SET_ORDER_ITEM);
+      return hasPermission([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
     }
 
     default:
@@ -239,10 +236,12 @@ const orderDropMessage = ({
   orderId,
   state,
   entities,
+  hasPermission,
   item,
 }: {|
   state: State,
   entities: Object,
+  hasPermission: Function,
   orderId: string,
   item: ?{
     type: string,
@@ -292,9 +291,8 @@ const orderDropMessage = ({
         );
 
       const noPermission = !hasPermissionToMove({
-        entity: state.order[orderId],
+        hasPermission,
         type: ORDER,
-        state,
       });
       if (noPermission)
         return (
@@ -319,11 +317,13 @@ const orderDropMessage = ({
 
 const orderItemDropMessage = ({
   itemId,
+  hasPermission,
   order,
   state,
   item,
 }: {|
   state: State,
+  hasPermission: Function,
   itemId: string,
   order: OrderPayload,
   item: {
@@ -379,11 +379,8 @@ const orderItemDropMessage = ({
         );
 
       const noPermission = !hasPermissionToMove({
-        entity: getByPathWithDefault([], 'orderItems', order).find(
-          orderItem => orderItem.id === itemId
-        ),
+        hasPermission,
         type: ORDER_ITEM,
-        state,
       });
       if (noPermission)
         return (
@@ -406,7 +403,9 @@ const containerDropMessage = ({
   entities,
   state,
   item,
+  hasPermission,
 }: {|
+  hasPermission: Function,
   state: State,
   entities: Object,
   containerId: string,
@@ -462,7 +461,7 @@ const containerDropMessage = ({
           </div>
         );
 
-      const noPermission = !hasPermissionToMove({ entity: container, type: CONTAINER, state });
+      const noPermission = !hasPermissionToMove({ hasPermission, type: CONTAINER });
       if (noPermission)
         return (
           <div>
@@ -484,7 +483,9 @@ const shipmentDropMessage = ({
   entities,
   state,
   item,
+  hasPermission,
 }: {|
+  hasPermission: Function,
   state: State,
   entities: Object,
   shipmentId: string,
@@ -539,7 +540,7 @@ const shipmentDropMessage = ({
           </div>
         );
 
-      const noPermission = !hasPermissionToMove({ entity: shipment, type: SHIPMENT, state });
+      const noPermission = !hasPermissionToMove({ hasPermission, type: SHIPMENT });
       if (noPermission)
         return (
           <div>
@@ -560,6 +561,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
+  const hasPermission = useEntityHasPermissions(data);
   const orderId = getByPathWithDefault('', 'id', data);
   const [{ isOver, canDrop, dropMessage, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
@@ -581,9 +583,8 @@ function OrderCell({ data, afterConnector }: CellProps) {
             getByPathWithDefault('', 'exporter.id', entities.orders[orderId]) !==
             getByPathWithDefault('', 'exporter.id', entities.orders[parentOrderId]);
           const noPermission = !hasPermissionToMove({
-            entity: entities.orders[orderId],
+            hasPermission,
             type: ORDER,
-            state,
           });
           return !isOwnOrder && !isDifferentImporter && !isDifferentExporter && !noPermission;
         }
@@ -598,6 +599,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
       canDrop: !!monitor.canDrop(),
       isSameItem: monitor.getItem() && monitor.getItem().id === orderId,
       dropMessage: orderDropMessage({
+        hasPermission,
         state,
         entities,
         orderId,
@@ -745,6 +747,7 @@ function OrderItemCell({
 }: CellProps & { order: OrderPayload }) {
   const { state, dispatch } = React.useContext(RelationMapContext);
   const { badge } = Entities.useContainer();
+  const hasPermission = useEntityHasPermissions(data);
   const orderId = getByPathWithDefault('', 'id', order);
   const itemId = getByPathWithDefault('', 'id', data);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
@@ -773,11 +776,8 @@ function OrderItemCell({
             getByPathWithDefault('', 'exporter.id', order) !==
             getByPathWithDefault('', 'exporter.id', state.order[parentOrderId]);
           const noPermission = !hasPermissionToMove({
-            entity: getByPathWithDefault([], 'orderItems', order).find(
-              orderItem => orderItem.id === itemId
-            ),
+            hasPermission,
             type: ORDER_ITEM,
-            state,
           });
           return !isOwnItem && !isDifferentImporter && !isDifferentExporter && !noPermission;
         }
@@ -792,6 +792,7 @@ function OrderItemCell({
       canDrop: !!monitor.canDrop(),
       isSameItem: monitor.getItem() && monitor.getItem().id === itemId,
       dropMessage: orderItemDropMessage({
+        hasPermission,
         state,
         order,
         itemId,
@@ -1123,6 +1124,7 @@ function BatchCell({
 function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
   const { mapping } = Entities.useContainer();
+  const hasPermission = useEntityHasPermissions(data);
   const { entities } = mapping;
   const containerId = getByPathWithDefault('', 'id', data);
   const shipmentId = getByPathWithDefault('', 'relatedBatch.shipment.id', data);
@@ -1152,9 +1154,8 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             getByPathWithDefault('', 'exporter.id', shipment) !==
               getByPathWithDefault('', 'exporter.id', order);
           const noPermission = !hasPermissionToMove({
-            entity: container,
+            hasPermission,
             type: CONTAINER,
-            state,
           });
           return !isOwnContainer && !isDifferentImporter && !isDifferentExporter && !noPermission;
         }
@@ -1169,6 +1170,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
       canDrop: !!monitor.canDrop(),
       isSameItem: monitor.getItem() && monitor.getItem().id === containerId,
       dropMessage: containerDropMessage({
+        hasPermission,
         state,
         entities,
         containerId,
@@ -1314,6 +1316,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
 function ShipmentCell({ data, beforeConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
   const { mapping } = Entities.useContainer();
+  const hasPermission = useEntityHasPermissions(data);
   const { entities } = mapping;
   const shipmentId = getByPathWithDefault('', 'id', data);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
@@ -1348,9 +1351,8 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
             getByPathWithDefault('', 'exporter.id', shipment) !==
               getByPathWithDefault('', 'exporter.id', order);
           const noPermission = !hasPermissionToMove({
-            entity: shipment,
             type: SHIPMENT,
-            state,
+            hasPermission,
           });
           return !isOwnShipment && !isDifferentImporter && !isDifferentExporter && !noPermission;
         }
@@ -1365,6 +1367,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
       canDrop: !!monitor.canDrop(),
       isSameItem: monitor.getItem() && monitor.getItem().id === shipmentId,
       dropMessage: shipmentDropMessage({
+        hasPermission,
         state,
         entities,
         shipmentId,

@@ -13,7 +13,6 @@ import { uuid } from 'utils/id';
 import logger from 'utils/logger';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { UIContext } from 'modules/ui';
-import { partnerPermissionQuery } from 'components/common/QueryForm/query';
 import { Display } from 'components/Form';
 import {
   orderFocusedListQuery,
@@ -247,28 +246,6 @@ export default function OrderFocus() {
     },
     []
   );
-  // TODO: migrate to new permission
-  const queryPermission = React.useCallback((organizationId: string) => {
-    apolloClient
-      .query({
-        query: partnerPermissionQuery,
-        variables: {
-          organizationId,
-        },
-      })
-      .then(result => {
-        dispatch({
-          type: 'FETCH_PERMISSION',
-          payload: {
-            [organizationId]: getByPathWithDefault(
-              [],
-              'data.viewer.permissionsForOrganization',
-              result
-            ),
-          },
-        });
-      });
-  }, []);
 
   return (
     <>
@@ -333,11 +310,6 @@ export default function OrderFocus() {
               initMapping({
                 orders,
                 entities,
-              });
-              Object.keys(entities.organizations || {}).forEach(organizationId => {
-                if (!state.permission[organizationId]) {
-                  queryPermission(organizationId);
-                }
               });
               return (
                 <RelationMapContext.Provider value={{ state, dispatch }}>
