@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { navigate } from '@reach/router';
-import { BooleanValue, StringValue } from 'react-values';
+import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { encodeId } from 'utils/id';
 import { getByPath } from 'utils/fp';
@@ -13,7 +13,6 @@ import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolde
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import emitter from 'utils/emitter';
-import { spanWithColor } from 'utils/color';
 import {
   OrderInfoContainer,
   OrderTagsContainer,
@@ -61,13 +60,11 @@ import SelectExporter from 'modules/order/common/SelectExporter';
 import { PartnerCard, GrayCard } from 'components/Cards';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import OrderSummary from './components/OrderSummary';
-import PriceDialog from './components/PriceDialog';
 import {
   OrderSectionWrapperStyle,
   MainFieldsWrapperStyle,
   QuantitySummaryStyle,
   DividerStyle,
-  DialogLineStyle,
 } from './style';
 
 type Props = {
@@ -226,112 +223,49 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                       )}
                     </Subscribe>
 
-                    <BooleanValue>
-                      {({ value: isOpen, set: setPriceDialog }) => (
-                        <Subscribe to={[OrderItemsContainer]}>
-                          {({
-                            state: { orderItems, hasCalledItemsApiYet },
-                            resetAmountWithNewCurrency,
-                          }) => (
-                            <StringValue>
-                              {({ value: currentCurrency, set: changeCurrency }) => (
-                                <>
-                                  <PriceDialog
-                                    isOpen={isOpen}
-                                    onRequestClose={() => {
-                                      setFieldValue(
-                                        'currency',
-                                        currentCurrency || initialValues.currency
-                                      );
-                                      setPriceDialog(false);
-                                    }}
-                                    onConfirm={() => {
-                                      resetAmountWithNewCurrency(values.currency);
-                                      changeCurrency(values.currency);
-                                      setPriceDialog(false);
-                                    }}
-                                    onCancel={() => {
-                                      setFieldValue(
-                                        'currency',
-                                        currentCurrency || initialValues.currency
-                                      );
-                                      setPriceDialog(false);
-                                    }}
-                                    onDeny={() => {
-                                      resetAmountWithNewCurrency(values.currency, false);
-                                      changeCurrency(values.currency);
-                                      setPriceDialog(false);
-                                    }}
-                                    message={
-                                      <>
-                                        <div className={DialogLineStyle}>
-                                          <FormattedMessage
-                                            {...messages.detectPriceChanged}
-                                            values={{
-                                              items: spanWithColor(
-                                                <FormattedMessage {...messages.sectionItems} />,
-                                                'ORDER_ITEM'
-                                              ),
-                                            }}
-                                          />
-                                        </div>
-                                        <div className={DialogLineStyle}>
-                                          <FormattedMessage
-                                            {...messages.changePrice}
-                                            values={{
-                                              items: spanWithColor(
-                                                <FormattedMessage {...messages.sectionItems} />,
-                                                'ORDER_ITEM'
-                                              ),
-                                            }}
-                                          />
-                                        </div>
-                                        <div className={DialogLineStyle}>
-                                          <FormattedMessage {...messages.resetPrice} />
-                                        </div>
-                                      </>
-                                    }
-                                  />
-
-                                  <FormField
-                                    name="currency"
-                                    initValue={values.currency}
-                                    values={values}
-                                    validator={validator}
-                                    setFieldValue={setFieldValue}
-                                  >
-                                    {({ name, onBlur, ...inputHandlers }) => (
-                                      <EnumSearchSelectInputFactory
-                                        name={name}
-                                        {...inputHandlers}
-                                        isNew={isNew}
-                                        originalValue={initialValues[name]}
-                                        label={<FormattedMessage {...messages.currency} />}
-                                        editable={hasPermission([ORDER_UPDATE, ORDER_SET_CURRENCY])}
-                                        enumType="Currency"
-                                        required
-                                        onBlur={value => {
-                                          onBlur();
-                                          if (
-                                            value !== values.currency &&
-                                            ((hasCalledItemsApiYet && orderItems.length) ||
-                                              (!hasCalledItemsApiYet && values.orderItemCount))
-                                          ) {
-                                            setPriceDialog(true);
-                                          } else {
-                                            changeCurrency(value);
-                                          }
-                                        }}
-                                      />
-                                    )}
-                                  </FormField>
-                                </>
-                              )}
-                            </StringValue>
+                    <Subscribe to={[OrderItemsContainer]}>
+                      {({
+                        state: { orderItems, hasCalledItemsApiYet },
+                        resetAmountWithNewCurrency,
+                      }) => (
+                        <FormField
+                          name="currency"
+                          initValue={values.currency}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={setFieldValue}
+                        >
+                          {({ name, onBlur, ...inputHandlers }) => (
+                            <EnumSearchSelectInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              isNew={isNew}
+                              originalValue={initialValues[name]}
+                              label={<FormattedMessage {...messages.currency} />}
+                              editable={hasPermission([ORDER_UPDATE, ORDER_SET_CURRENCY])}
+                              enumType="Currency"
+                              required
+                              onBlur={value => {
+                                onBlur();
+                                if (
+                                  value !== values.currency &&
+                                  ((hasCalledItemsApiYet && orderItems.length) ||
+                                    (!hasCalledItemsApiYet && values.orderItemCount))
+                                ) {
+                                  resetAmountWithNewCurrency(values.currency);
+                                }
+                              }}
+                              infoMessage={
+                                <FormattedMessage
+                                  id="modules.Orders.currencyTooltipMsg"
+                                  defaultMessage="Changing the currency will change the currency of all the Items in this Order. The actual price values of all the Items will stay the same, so please revise them."
+                                />
+                              }
+                            />
                           )}
-                        </Subscribe>
+                        </FormField>
                       )}
-                    </BooleanValue>
+                    </Subscribe>
 
                     <FormField
                       name="incoterm"
