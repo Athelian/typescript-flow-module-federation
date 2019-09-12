@@ -3,6 +3,7 @@ import * as React from 'react';
 import { flatten, flattenDeep } from 'lodash';
 import type { IntlShape } from 'react-intl';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import { useViewerHasPermissions } from 'components/Context/Permissions';
 import {
   ORDER,
   ORDER_ITEM,
@@ -15,6 +16,7 @@ import {
   CONTAINER_WIDTH,
   SHIPMENT_WIDTH,
 } from 'modules/relationMapV2/constants';
+import { ORDER_CREATE } from 'modules/permission/constants/order';
 import Icon from 'components/Icon';
 import orderMessages from 'modules/order/messages';
 import orderItemMessages from 'modules/orderItem/messages';
@@ -45,6 +47,7 @@ const Header = React.memo<{ style?: Object }>(
     const { mapping } = Entities.useContainer();
     const { filterAndSort, onChangeFilter } = SortAndFilter.useContainer();
     const clientSorts = ClientSorts.useContainer();
+    const hasPermissions = useViewerHasPermissions();
     const { orders, entities } = mapping;
     const orderSort = [
       { title: intl.formatMessage(orderMessages.updatedAt), value: 'updatedAt' },
@@ -90,24 +93,26 @@ const Header = React.memo<{ style?: Object }>(
           <div>
             <span>
               Orders ({Object.keys(entities.orders || {}).length})
-              <button
-                type="button"
-                onClick={() => {
-                  dispatch({
-                    type: 'EDIT',
-                    payload: {
-                      type: 'NEW_ORDER',
-                      selectedId: Date.now(),
-                    },
-                  });
-                }}
-                style={{
-                  color: '#fff',
-                  cursor: 'pointer',
-                }}
-              >
-                <Icon icon="ADD" />
-              </button>
+              {hasPermissions(ORDER_CREATE) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    dispatch({
+                      type: 'EDIT',
+                      payload: {
+                        type: 'NEW_ORDER',
+                        selectedId: Date.now(),
+                      },
+                    });
+                  }}
+                  style={{
+                    color: '#fff',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <Icon icon="ADD" />
+                </button>
+              )}
             </span>
             <button
               type="button"
