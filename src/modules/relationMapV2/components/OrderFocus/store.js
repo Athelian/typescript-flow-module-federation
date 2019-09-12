@@ -106,7 +106,7 @@ export function reducer(
     case 'NEW_ORDER':
       return update(state, {
         newOrders: {
-          $push: [action.payload.orderId],
+          $set: [action.payload.orderId, ...state.newOrders],
         },
       });
     case 'RESET_NEW_ORDERS':
