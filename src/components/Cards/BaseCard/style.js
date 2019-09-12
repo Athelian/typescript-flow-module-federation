@@ -39,11 +39,12 @@ export const SelectableCardStyle = (selected: boolean): string => css`
 
 export const BadgeStyle = css`
   position: absolute;
-  top: -4px;
-  right: -4px;
-  width: 10px;
-  height: 10px;
+  top: -5px;
+  right: -5px;
+  width: 14px;
+  height: 14px;
   background-color: ${colors.RED};
   ${borderRadiuses.CIRCLE};
+  border: 2px solid ${colors.GRAY_SUPER_LIGHT};
   z-index: 1;
 `;
