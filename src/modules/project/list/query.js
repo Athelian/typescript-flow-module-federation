@@ -19,7 +19,15 @@ export const projectListQuery = gql`
   ) {
     projects(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...projectCardFragment
+        ... on Project {
+          ...projectCardFragment
+          timeline {
+            ... on Timeline {
+              unreadCount
+            }
+          }
+        }
+
         ...notFoundFragment
         ...badRequestFragment
         ...forbiddenFragment

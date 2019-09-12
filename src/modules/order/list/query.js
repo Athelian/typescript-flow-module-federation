@@ -19,6 +19,11 @@ export const orderListQuery = gql`
           ...orderCardWithOwnedFragment
           batchCount
           batchShippedCount
+          timeline {
+            ... on Timeline {
+              unreadCount
+            }
+          }
         }
         ...forbiddenFragment
       }

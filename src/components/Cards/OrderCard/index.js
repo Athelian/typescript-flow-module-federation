@@ -57,7 +57,14 @@ const OrderCard = ({ order, actions, onClick, ...rest }: Props) => {
   } = order;
 
   return (
-    <BaseCard icon="ORDER" color="ORDER" actions={actions} isArchived={archived} {...rest}>
+    <BaseCard
+      showBadge={order.timeline?.unreadCount > 0}
+      icon="ORDER"
+      color="ORDER"
+      actions={actions}
+      isArchived={archived}
+      {...rest}
+    >
       <div className={OrderCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={OrderInfoWrapperStyle}>
           <div className={PONoWrapperStyle}>

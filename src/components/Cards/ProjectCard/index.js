@@ -48,7 +48,13 @@ const ProjectCard = ({ project, onClick, ...rest }: Props) => {
   }
 
   return (
-    <BaseCard icon="PROJECT" color="PROJECT" onClick={onClick} {...rest}>
+    <BaseCard
+      showBadge={project.timeline?.unreadCount > 0}
+      icon="PROJECT"
+      color="PROJECT"
+      onClick={onClick}
+      {...rest}
+    >
       <div className={ProjectCardStyle}>
         <div className={ProjectCardHeaderStyle}>
           <Display width="200px" height="20px">

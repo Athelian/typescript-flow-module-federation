@@ -3,7 +3,7 @@ import type { OrderItemPayload, ShipmentPayload, ContainerPayload } from 'genera
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import update from 'immutability-helper';
-import { isEquals, getByPathWithDefault } from 'utils/fp';
+import { isEquals, getByPathWithDefault, getByPath } from 'utils/fp';
 
 type FormState = {|
   orderItems: Array<OrderItemPayload>,
@@ -97,7 +97,7 @@ export default class OrderItemsContainer extends Container<FormState> {
       orderItems: orderItems.map(orderItem => ({
         ...orderItem,
         price: {
-          amount: orderItem.price?.amount,
+          amount: getByPath('price.amount', orderItem),
           currency,
         },
       })),

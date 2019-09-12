@@ -15,7 +15,14 @@ export const orderItemListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: OrderItemFilterInput, $sortBy: OrderItemSortInput) {
     orderItems(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...itemCardWithOwnedFragment
+        ... on OrderItem {
+          ...itemCardWithOwnedFragment
+          timeline {
+            ... on Timeline {
+              unreadCount
+            }
+          }
+        }
         ...forbiddenFragment
       }
       page
