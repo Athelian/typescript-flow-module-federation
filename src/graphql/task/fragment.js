@@ -63,6 +63,8 @@ export const taskCardFragment = gql`
       ...userAvatarFragment
     }
     approvedAt
+    startDateBinding
+    dueDateBinding
     tags {
       ...tagFragment
     }

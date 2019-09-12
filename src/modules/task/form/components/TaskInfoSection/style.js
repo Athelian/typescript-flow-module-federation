@@ -1,19 +1,13 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, presets, colors } from 'styles/common';
+import { layout, presets, colors, fontSizes } from 'styles/common';
 
 export const TaskSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;
-  padding: 40px 10px;
-  ${layout.GRID_VERTICAL};
-  grid-gap: 20px;
-`;
-
-export const MainFieldsWrapperStyle: string = css`
+  padding: 40px 70px;
   ${layout.GRID_HORIZONTAL};
   justify-content: space-between;
-  padding: 0 90px;
 `;
 
 export const BindingToggleButtonStyle = css`
@@ -64,8 +58,10 @@ export const CompletedAvatarStyle: string = css`
 `;
 
 export const ApprovalToggleStyle = (on: boolean) => css`
-  margin-left: 8px;
+  margin-left: 10px;
   color: ${on ? colors.TEAL : colors.GRAY_DARK};
+  ${fontSizes.MAIN};
+  font-weight: bold;
 `;
 
 export const IconStyle: string = css`
