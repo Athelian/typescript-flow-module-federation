@@ -21,15 +21,19 @@ const OrderSheetModule = () => {
   ]);
 
   const [initialOrders, setInitialOrders] = React.useState<Object>([]);
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(true);
   const [page, setPage] = React.useState<{ page: number, totalPage: number }>({
     page: 1,
     totalPage: 1,
   });
-  const [sortBy, setSortBy] = React.useState<{ [string]: 'ASCENDING' | 'DESCENDING' }>({});
+  const [sortBy, setSortBy] = React.useState<{ [string]: 'ASCENDING' | 'DESCENDING' }>({
+    updatedAt: 'DESCENDING',
+  });
 
   React.useEffect(() => {
     setLoading(true);
+    setInitialOrders([]);
+    setPage({ page: 1, totalPage: 1 });
 
     client
       .query({
@@ -37,9 +41,9 @@ const OrderSheetModule = () => {
         variables: { page: 1, perPage: 20, filterBy: {}, sortBy },
       })
       .then(({ data }) => {
-        setLoading(false);
         setPage({ page: 1, totalPage: data.orders?.totalPage ?? 1 });
         setInitialOrders(clone(data.orders?.nodes ?? []));
+        setLoading(false);
       });
   }, [client, sortBy]);
 

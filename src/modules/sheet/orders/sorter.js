@@ -5,6 +5,10 @@ function stringSort(a: string, b: string): number {
   return a.localeCompare(b);
 }
 
+function dateSort(a: Date, b: Date): number {
+  return a - b;
+}
+
 function defaultSort(a: Object, b: Object): number {
   return a.sort - b.sort;
 }
@@ -14,14 +18,8 @@ function setDirection(result, direction: SortDirection): number {
 }
 
 export default function sorter(items: Array<Object>, sorts: Array<ColumnSort>): Array<Object> {
-  const itemSorts = [
-    ...sorts,
-    { key: '', local: true, group: 'orderItem', name: 'sort', direction: 'ASCENDING' },
-  ].filter(s => s.group === 'orderItem');
-  const batchSorts = [
-    ...sorts,
-    { key: '', local: true, group: 'batch', name: 'sort', direction: 'ASCENDING' },
-  ].filter(s => s.group === 'batch');
+  const itemSorts = sorts.filter(s => s.group === 'orderItem');
+  const batchSorts = sorts.filter(s => s.group === 'batch');
 
   return items.map(order => ({
     ...order,
@@ -31,11 +29,14 @@ export default function sorter(items: Array<Object>, sorts: Array<ColumnSort>): 
 
         itemSorts.every(sort => {
           switch (sort.name) {
-            case 'orderItemNo':
+            case 'no':
               result = setDirection(stringSort(a.no, b.no), sort.direction);
               break;
-            case 'sort':
+            case 'createdAt':
               result = setDirection(defaultSort(a, b), sort.direction);
+              break;
+            case 'updatedAt':
+              result = setDirection(dateSort(a.updatedAt, b.updatedAt), sort.direction);
               break;
             default:
               break;
@@ -53,7 +54,7 @@ export default function sorter(items: Array<Object>, sorts: Array<ColumnSort>): 
 
           batchSorts.every(sort => {
             switch (sort.name) {
-              case 'batchNo':
+              case 'no':
                 result = setDirection(stringSort(a.no, b.no), sort.direction);
                 break;
               case 'containerNo':
@@ -68,8 +69,11 @@ export default function sorter(items: Array<Object>, sorts: Array<ColumnSort>): 
                   sort.direction
                 );
                 break;
-              case 'sort':
+              case 'createdAt':
                 result = setDirection(defaultSort(a, b), sort.direction);
+                break;
+              case 'updatedAt':
+                result = setDirection(dateSort(a.updatedAt, b.updatedAt), sort.direction);
                 break;
               default:
                 break;

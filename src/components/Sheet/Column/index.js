@@ -9,7 +9,6 @@ type Props = {
   color: string,
   sortable: boolean,
   direction?: 'ASCENDING' | 'DESCENDING',
-  secondary?: boolean,
   onSortToggle: () => void,
   width: number,
   minWidth: number,
@@ -21,7 +20,6 @@ const Column = ({
   color,
   sortable,
   direction,
-  secondary,
   onSortToggle,
   minWidth,
   width: initialWidth,
@@ -34,11 +32,7 @@ const Column = ({
     <div className={ColumnStyle(color, width)}>
       <span className={TitleStyle}>{title}</span>
       {sortable && (
-        <button
-          type="button"
-          className={SortButtonStyle(!!direction, secondary)}
-          onClick={onSortToggle}
-        >
+        <button type="button" className={SortButtonStyle(!!direction)} onClick={onSortToggle}>
           <Icon icon={direction === 'ASCENDING' ? 'SORT_ASC' : 'SORT_DESC'} />
         </button>
       )}

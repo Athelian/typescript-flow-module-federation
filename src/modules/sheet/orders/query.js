@@ -1,6 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-import { badRequestFragment, forbiddenFragment } from 'graphql';
+import { badRequestFragment, forbiddenFragment, userAvatarFragment } from 'graphql';
 
 const orderSheetFragment = gql`
   fragment orderSheetFragment on Order {
@@ -9,6 +9,14 @@ const orderSheetFragment = gql`
     piNo
     currency
     deliveryPlace
+    createdAt
+    updatedAt
+    createdBy {
+      ...userAvatarFragment
+    }
+    updatedBy {
+      ...userAvatarFragment
+    }
     ownedBy {
       ... on Organization {
         id
@@ -23,6 +31,14 @@ const orderItemSheetFragment = gql`
     no
     quantity
     sort
+    createdAt
+    updatedAt
+    createdBy {
+      ...userAvatarFragment
+    }
+    updatedBy {
+      ...userAvatarFragment
+    }
     ownedBy {
       ... on Organization {
         id
@@ -37,6 +53,14 @@ const batchSheetFragment = gql`
     no
     quantity
     sort
+    createdAt
+    updatedAt
+    createdBy {
+      ...userAvatarFragment
+    }
+    updatedBy {
+      ...userAvatarFragment
+    }
     ownedBy {
       ... on Organization {
         id
@@ -109,6 +133,7 @@ export const ordersQuery = gql`
   ${batchSheetFragment}
   ${shipmentSheetFragment}
   ${containerSheetFragment}
+  ${userAvatarFragment}
   ${forbiddenFragment}
 `;
 
@@ -142,6 +167,7 @@ export const orderItemByIDQuery = gql`
   ${batchSheetFragment}
   ${shipmentSheetFragment}
   ${containerSheetFragment}
+  ${userAvatarFragment}
 `;
 
 export const batchByIDQuery = gql`
@@ -173,6 +199,7 @@ export const batchByIDQuery = gql`
   ${batchSheetFragment}
   ${shipmentSheetFragment}
   ${containerSheetFragment}
+  ${userAvatarFragment}
 `;
 
 export const containerByIDQuery = gql`

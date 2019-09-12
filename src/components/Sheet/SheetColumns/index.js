@@ -3,31 +3,34 @@ import * as React from 'react';
 
 export type SortDirection = 'ASCENDING' | 'DESCENDING';
 
-export type ColumnConfig = {
+export type ColumnSortConfig = {
+  local?: boolean,
+  group: string,
+  name: string,
+  default?: boolean,
+};
+
+type Column = {
   key: string,
   title: any,
   icon: string,
   color: string,
   width: number,
   minWidth?: number,
-  hidden?: boolean,
-  sort?: {
-    local: boolean,
-    group: string,
-    name: string,
-    // TODO: handle default sort
-    direction?: SortDirection,
-    secondary?: boolean,
-  },
 };
+
+export type ColumnConfig = {
+  sort?: ColumnSortConfig,
+} & Column;
 
 export type ColumnSort = {
   key: string,
-  local: boolean,
-  group: string,
-  name: string,
   direction: SortDirection,
-};
+} & ColumnSortConfig;
+
+export type ColumnState = {
+  sort?: ColumnSort,
+} & Column;
 
 type ColumnWidth = {
   key: string,
@@ -35,8 +38,7 @@ type ColumnWidth = {
 };
 
 type Context = {
-  columns: Array<ColumnConfig>,
-  sorts: Array<ColumnSort>,
+  columns: Array<ColumnState>,
   onColumnSortToggle: (key: string) => void,
   onColumnResize: (key: string, width: number) => void,
 };
@@ -48,7 +50,6 @@ type Props = {
 
 export const SheetColumnsContext = React.createContext<Context>({
   columns: [],
-  sorts: [],
   onColumnSortToggle: () => {},
   onColumnResize: () => {},
 });
@@ -58,40 +59,76 @@ export const useSheetColumns = (): Context => React.useContext(SheetColumnsConte
 export const SheetColumns = ({ columns, children }: Props) => {
   const [sorts, setSorts] = React.useState<Array<ColumnSort>>([]);
   const [widths, setWidths] = React.useState<Array<ColumnWidth>>([]);
-  const [configuredColumns, setConfiguredColumns] = React.useState<Array<ColumnConfig>>([]);
+  const [columnStates, setColumnStates] = React.useState<Array<ColumnState>>([]);
 
+  /**
+   * This effect ensure an active for each column sort group.
+   * If a sort is missing for a group, it will try get the default or pick the first of the group.
+   */
+  React.useEffect(() => {
+    const validSorts = sorts.filter(s => !!columns.find(c => c.key === s.key));
+
+    const sortGroups = new Set(validSorts.map(s => s.group));
+    const columnGroups = new Set(columns.filter(c => !!c.sort).map(c => c.sort?.group));
+    if (sortGroups.size === columnGroups.size) {
+      return;
+    }
+
+    sortGroups.forEach(g => columnGroups.delete(g));
+
+    console.log('missing', columnGroups);
+
+    columnGroups.forEach(g => {
+      const defaultColumn = columns.find(c => c.sort?.group === g && c.sort?.default);
+      if (defaultColumn) {
+        console.log('add default', g, defaultColumn.key);
+        validSorts.push({ ...defaultColumn.sort, key: defaultColumn.key, direction: 'DESCENDING' });
+        return;
+      }
+
+      const firstColumn = columns.find(c => c.sort?.group === g);
+      if (firstColumn) {
+        console.log('add first', g, firstColumn.key);
+        validSorts.push({ ...firstColumn.sort, key: firstColumn.key, direction: 'DESCENDING' });
+      }
+    });
+
+    setSorts(validSorts);
+  }, [columns, sorts, setSorts]);
+
+  /**
+   * This compute the actual sheet columns state.
+   */
   React.useEffect(() => {
     const availableSorts = sorts.filter(s => !!columns.find(c => c.key === s.key));
 
-    setConfiguredColumns(
-      columns.map(column => {
-        let configuredColumn = column;
+    setColumnStates(
+      columns.map(({ sort: sortConfig, ...column }) => {
+        let columnState: ColumnState = {
+          ...column,
+        };
 
         const width = widths.find(cw => cw.key === column.key);
         if (width) {
-          configuredColumn = { ...configuredColumn, width: width.width };
+          columnState = { ...columnState, width: width.width };
         }
 
-        if (column.sort) {
-          const sortIdx = availableSorts
-            .filter(s => s.group === column.sort.group)
-            .findIndex(s => s.key === column.key);
-          if (sortIdx > -1) {
-            configuredColumn = {
-              ...configuredColumn,
-              sort: {
-                ...(configuredColumn.sort || {}),
-                direction: availableSorts[sortIdx].direction,
-                secondary: sortIdx > 0,
-              },
+        if (sortConfig) {
+          const sort = availableSorts
+            .filter(s => s.group === sortConfig?.group)
+            .find(s => s.key === column.key);
+          if (sort) {
+            columnState = {
+              ...columnState,
+              sort,
             };
           }
         }
 
-        return configuredColumn;
+        return columnState;
       })
     );
-  }, [columns, sorts, widths, setConfiguredColumns]);
+  }, [columns, sorts, widths, setColumnStates]);
 
   const onColumnResize = React.useCallback(
     (key: string, width: number) => {
@@ -111,25 +148,23 @@ export const SheetColumns = ({ columns, children }: Props) => {
         return;
       }
 
-      let newSorts = [...sorts];
-      const previousSort = sorts.find(c => c.key === key);
-      if (previousSort) {
-        newSorts = newSorts.filter(c => c.key !== key);
-        if (previousSort.direction === 'DESCENDING') {
-          newSorts.unshift({ ...column.sort, key, direction: 'ASCENDING' });
-        }
-      } else {
-        newSorts.unshift({ ...column.sort, key, direction: 'DESCENDING' });
-      }
+      const previousSort = sorts.find(s => s.key === key);
 
-      setSorts(newSorts);
+      setSorts([
+        ...sorts.filter(s => s.group !== column.sort?.group),
+        {
+          ...column.sort,
+          key,
+          direction: previousSort?.direction === 'DESCENDING' ? 'ASCENDING' : 'DESCENDING',
+        },
+      ]);
     },
     [columns, sorts, setSorts]
   );
 
   return (
     <SheetColumnsContext.Provider
-      value={{ columns: configuredColumns, sorts, onColumnResize, onColumnSortToggle }}
+      value={{ columns: columnStates, onColumnResize, onColumnSortToggle }}
     >
       {children}
     </SheetColumnsContext.Provider>

@@ -5,7 +5,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
 import LoadingIcon from 'components/LoadingIcon';
 import type { Area } from '../SheetState/types';
-import type { ColumnConfig } from '../SheetColumns';
+import type { ColumnState } from '../SheetColumns';
 import Column from '../Column';
 import {
   ColumnFillerStyle,
@@ -16,7 +16,7 @@ import {
 } from './style';
 
 type Props = {
-  columns: Array<ColumnConfig>,
+  columns: Array<ColumnState>,
   rowCount: number,
   loading: boolean,
   loadingMore: boolean,
@@ -84,7 +84,6 @@ const SheetRenderer = ({
             title={column.title}
             sortable={!!column.sort}
             direction={column.sort?.direction}
-            secondary={column.sort?.secondary}
             onSortToggle={() => {
               onSortToggle(column.key);
             }}

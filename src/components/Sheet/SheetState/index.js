@@ -51,7 +51,7 @@ export const useSheetStateInitializer = (
   onRemoteSort: (sorts: Array<ColumnSort>) => void
 ) => {
   const { state, dispatch } = useSheetState();
-  const { columns, sorts } = useSheetColumns();
+  const { columns } = useSheetColumns();
   const columnKeysRef = React.useRef<Array<string>>([]);
   const remoteSortsRef = React.useRef<Array<ColumnSort>>([]);
   const localSortsRef = React.useRef<Array<ColumnSort>>([]);
@@ -85,9 +85,9 @@ export const useSheetStateInitializer = (
   }, [dispatch, items]);
 
   React.useEffect(() => {
-    const availableSorts = sorts.filter(s => !!columns.find(c => c.key === s.key));
-    const localSorts = availableSorts.filter(s => s.local);
-    const remoteSorts = availableSorts.filter(s => !s.local);
+    const sorts = columns.filter(c => !!c.sort).map(c => c.sort);
+    const localSorts = sorts.filter(s => s?.local);
+    const remoteSorts = sorts.filter(s => !s?.local);
 
     if (!equals(localSorts, localSortsRef.current)) {
       localSortsRef.current = localSorts;
@@ -105,7 +105,7 @@ export const useSheetStateInitializer = (
 
       onRemoteSort(remoteSorts);
     }
-  }, [columns, sorts, onRemoteSort, dispatch]);
+  }, [columns, onRemoteSort, dispatch]);
 };
 
 export const useSheetStateLoadMore = (onLoadMore: () => Promise<Array<Object>>) => {

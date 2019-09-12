@@ -27,15 +27,14 @@ export function changeValues(
       return {
         cells: state.rows
           .map(row =>
-            row.filter(cell => {
-              return (
+            row.filter(
+              cell =>
                 cell.entity &&
                 cell.data &&
                 cell.entity?.id === entity.id &&
                 cell.entity?.type === entity.type &&
                 cell.data?.field === field
-              );
-            })
+            )
           )
           // $FlowFixMe flow doesn't support flat()
           .flat(),
@@ -65,12 +64,10 @@ export function changeValues(
     rows: state.rows.map(row =>
       row.map(cell => {
         const update = cellsToUpdate
-          .map(({ cells, value }) => {
-            return {
-              cell: cells.find(c => c === cell),
-              value,
-            };
-          })
+          .map(({ cells, value }) => ({
+            cell: cells.find(c => c === cell),
+            value,
+          }))
           .find(c => !!c.cell);
 
         if (!update) {

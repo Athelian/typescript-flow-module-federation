@@ -1,10 +1,11 @@
 // @flow
 
 export const transformField = (
-  basePath: string,
   entity: Object | null,
+  path: string,
   field: string,
-  permissions: ((string) => boolean) => boolean
+  value: any,
+  permissions: ((string) => boolean) => boolean = () => true
 ) => {
   if (entity === null) {
     return {
@@ -29,8 +30,8 @@ export const transformField = (
           type: entity.__typename,
         },
         data: {
-          value: entity[field],
-          path: `${basePath}.${field}`,
+          value,
+          path,
           field,
           permissions,
           ownedBy: entity.ownedBy.id,
@@ -40,4 +41,21 @@ export const transformField = (
   }
 };
 
-export default transformField;
+export const transformValueField = (
+  basePath: string,
+  entity: Object | null,
+  field: string,
+  permissions: ((string) => boolean) => boolean
+) => transformField(entity, `${basePath}.${field}`, field, entity?.[field], permissions);
+
+export const transformReadonlyField = (
+  basePath: string,
+  entity: Object | null,
+  field: string,
+  value: any
+) => ({
+  ...transformField(entity, `${basePath}.${field}`, field, value),
+  readonly: true,
+});
+
+export default transformValueField;

@@ -26,25 +26,19 @@ export const TitleStyle = css`
   flex: 1;
 `;
 
-export const SortButtonStyle = (active: boolean, secondary: boolean) => {
-  let color = 'rgba(0, 0, 0, 0.1)';
-  if (active) {
-    color = secondary ? colors.BLUE : colors.TEAL;
-  }
-
-  return css`
+export const SortButtonStyle = (active: boolean) =>
+  css`
     ${presets.BUTTON};
     ${borderRadiuses.MAIN};
     ${fontSizes.MAIN};
     width: 30px;
     height: 30px;
-    color: ${color};
+    color: ${active ? colors.TEAL : 'rgba(0, 0, 0, 0.1)'};
 
     &:hover {
       background-color: rgba(0, 0, 0, 0.05);
     }
   `;
-};
 
 export const DragHandleStyle = (dragging: boolean) => css`
   position: absolute;
