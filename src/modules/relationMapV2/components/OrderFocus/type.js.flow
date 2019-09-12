@@ -62,6 +62,15 @@ export type State = {|
       },
     },
   },
+  createItem: {
+    isOpen: boolean,
+    isProcessing: boolean,
+    detail: {
+      entity: {
+        id: string,
+      },
+    },
+  },
   clone: {
     source: string,
     isOpen: boolean,

@@ -25,6 +25,7 @@ import { WrapperStyle, ListStyle, RowStyle, ActionsBackdropStyle } from './style
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import CloneEntities from '../CloneEntities';
+import InlineCreateItem from '../InlineCreateItem';
 import InlineCreateBatch from '../InlineCreateBatch';
 import SelectedEntity from '../SelectedEntity';
 import Actions from '../Actions';
@@ -169,7 +170,7 @@ export default function OrderFocus() {
   const [expandRows, setExpandRows] = React.useState([]);
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const { initHits } = Hits.useContainer();
-  const { getBatchesSortByItemId } = ClientSorts.useContainer();
+  const { getBatchesSortByItemId, getItemsSortByOrderId } = ClientSorts.useContainer();
   const { initMapping, onSetBadges, onSetRelated, getRelatedBy } = Entities.useContainer();
   const { queryVariables } = SortAndFilter.useContainer();
   const lastQueryVariables = usePrevious(queryVariables);
@@ -196,6 +197,18 @@ export default function OrderFocus() {
             () => {
               dispatch({
                 type: 'CREATE_BATCH_CLOSE',
+                payload: {},
+              });
+            },
+            {
+              timeout: 250,
+            }
+          );
+        if (type === ORDER_ITEM)
+          window.requestIdleCallback(
+            () => {
+              dispatch({
+                type: 'CREATE_ITEM_END',
                 payload: {},
               });
             },
@@ -457,6 +470,62 @@ export default function OrderFocus() {
                           });
                           onSetBadges(cloneBadges);
                           onSetRelated(sources, cloneEntities);
+                        }}
+                      />
+                      <InlineCreateItem
+                        onSuccess={(orderId, items) => {
+                          if (orderId) {
+                            queryOrdersDetail([orderId]);
+                            onSetBadges(
+                              items.map(item => ({
+                                id: item?.id ?? '',
+                                type: 'newItem',
+                                entity: 'orderItem',
+                              }))
+                            );
+                            const originalItems =
+                              // $FlowIgnore this doesn't support yet
+                              entities.orders?.[orderId]?.orderItems ?? [];
+                            const orderItems = getItemsSortByOrderId(orderId, originalItems);
+                            const itemList = [];
+                            if (originalItems.length !== orderItems.length) {
+                              orderItems.forEach(itemId => {
+                                if (!itemList.includes(itemId)) {
+                                  const relatedItems = getRelatedBy('orderItem', itemId);
+                                  itemList.push(itemId);
+                                  if (relatedItems.length) {
+                                    itemList.push(...relatedItems);
+                                  }
+                                }
+                              });
+                              originalItems.forEach(itemId => {
+                                if (!itemList.includes(itemId)) {
+                                  const relatedItems = getRelatedBy('orderItem', itemId);
+                                  itemList.push(itemId);
+                                  if (relatedItems.length) {
+                                    itemList.push(...relatedItems);
+                                  }
+                                }
+                              });
+                            } else {
+                              itemList.push(...orderItems);
+                            }
+                            const lastItemId = itemList[itemList.length - 1];
+                            const indexPosition = ordersData.findIndex((row: Array<any>) => {
+                              const [, itemCell, , , ,] = row;
+                              return Number(itemCell.cell?.data?.id) === Number(lastItemId);
+                            });
+                            const batches = entities.orderItems?.[lastItemId]?.batches ?? [];
+                            console.warn({
+                              lastItemId,
+                              indexPosition,
+                            });
+                            scrollToRow(indexPosition + batches.length - 1, {
+                              dispatch,
+                              id: orderId,
+                              type: ORDER_ITEM,
+                            });
+                          }
                         }}
                       />
                       <InlineCreateBatch

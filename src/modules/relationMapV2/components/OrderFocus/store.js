@@ -45,6 +45,15 @@ export const initialState: State = {
       },
     },
   },
+  createItem: {
+    isOpen: false,
+    isProcessing: false,
+    detail: {
+      entity: {
+        id: '',
+      },
+    },
+  },
   clone: {
     source: '',
     isOpen: false,
@@ -84,6 +93,10 @@ export function reducer(
       | 'CREATE_BATCH_START'
       | 'CREATE_BATCH_END'
       | 'CREATE_BATCH_CLOSE'
+      | 'CREATE_ITEM'
+      | 'CREATE_ITEM_START'
+      | 'CREATE_ITEM_END'
+      | 'CREATE_ITEM_CLOSE'
       | 'CLONE'
       | 'CLONE_START'
       | 'CLONE_END'
@@ -356,6 +369,30 @@ export function reducer(
     case 'CLONE_END': {
       return update(state, {
         clone: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'CREATE_ITEM': {
+      return update(state, {
+        createItem: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          detail: { $set: action.payload },
+        },
+      });
+    }
+    case 'CREATE_ITEM_START': {
+      return update(state, {
+        createItem: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'CREATE_ITEM_END': {
+      return update(state, {
+        createItem: {
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },
