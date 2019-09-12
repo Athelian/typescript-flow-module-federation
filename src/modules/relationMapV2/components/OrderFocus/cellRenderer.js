@@ -34,13 +34,13 @@ import Badge from 'modules/relationMapV2/components/Badge';
 import type { CellRender, State } from './type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
 import RelationLine from '../RelationLine';
+import OrderCard from '../OrderCard';
 import OrderItemCard from '../OrderItemCard';
 import { ContentStyle, MatchedStyle } from './style';
 import {
   getColorByEntity,
   getIconByEntity,
   getCardByEntity,
-  OrderCard,
   ItemCard,
   BatchCard,
   ShipmentCard,
@@ -719,7 +719,21 @@ function OrderCell({ data, afterConnector }: CellProps) {
           >
             <div ref={drag}>
               <Badge label={badge.order?.[orderId] ?? ''} />
-              <OrderCard>{getByPathWithDefault('', 'poNo', data)}</OrderCard>
+              <OrderCard
+                organizationId={data?.ownedBy?.id}
+                poNo={data?.poNo ?? 'N/A'}
+                onCreateItem={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'CREATE_ITEM',
+                    payload: {
+                      entity: {
+                        id: orderId,
+                      },
+                    },
+                  });
+                }}
+              />
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
