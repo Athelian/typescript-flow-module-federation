@@ -13,7 +13,7 @@ function defaultSort(a: Object, b: Object): number {
   return a.sort - b.sort;
 }
 
-function setDirection(result, direction: SortDirection): number {
+function setDirection(result, direction?: SortDirection): number {
   return direction === 'DESCENDING' ? -result : result;
 }
 

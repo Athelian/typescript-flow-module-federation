@@ -85,7 +85,7 @@ export const useSheetStateInitializer = (
   }, [dispatch, items]);
 
   React.useEffect(() => {
-    const sorts = columns.filter(c => !!c.sort).map(c => c.sort);
+    const sorts = columns.filter(c => !!c.sort?.direction).map(c => c.sort);
     const localSorts = sorts.filter(s => s?.local);
     const remoteSorts = sorts.filter(s => !s?.local);
 

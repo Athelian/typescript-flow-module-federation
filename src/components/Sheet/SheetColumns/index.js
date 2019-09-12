@@ -25,7 +25,7 @@ export type ColumnConfig = {
 
 export type ColumnSort = {
   key: string,
-  direction: SortDirection,
+  direction?: SortDirection,
 } & ColumnSortConfig;
 
 export type ColumnState = {
@@ -103,9 +103,16 @@ export const SheetColumns = ({ columns, children }: Props) => {
     const availableSorts = sorts.filter(s => !!columns.find(c => c.key === s.key));
 
     setColumnStates(
-      columns.map(({ sort: sortConfig, ...column }) => {
+      columns.map(column => {
+        // $FlowFixMe: mendo
         let columnState: ColumnState = {
           ...column,
+          sort: column.sort
+            ? {
+                ...column.sort,
+                key: column.key,
+              }
+            : undefined,
         };
 
         const width = widths.find(cw => cw.key === column.key);
@@ -113,9 +120,9 @@ export const SheetColumns = ({ columns, children }: Props) => {
           columnState = { ...columnState, width: width.width };
         }
 
-        if (sortConfig) {
+        if (column.sort) {
           const sort = availableSorts
-            .filter(s => s.group === sortConfig?.group)
+            .filter(s => s.group === column.sort?.group)
             .find(s => s.key === column.key);
           if (sort) {
             columnState = {

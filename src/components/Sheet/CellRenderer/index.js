@@ -52,7 +52,7 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
     );
   }, [foreignFocusesAt, columnIndex, rowIndex]);
 
-  const cell = rows[rowIndex][columnIndex];
+  const cell = rows[rowIndex]?.[columnIndex];
   const isTop = cell && (!cell.merged || cell.merged.from.x === rowIndex);
   const addedRow = addedRows.find(row => row.from.x === rowIndex && row.from.y === columnIndex);
   const removedRow = removedRows.find(row => row.from.x === rowIndex && row.from.y === columnIndex);
