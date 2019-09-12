@@ -15,6 +15,7 @@ import {
   CONTAINER_WIDTH,
   SHIPMENT_WIDTH,
 } from 'modules/relationMapV2/constants';
+import Icon from 'components/Icon';
 import orderMessages from 'modules/order/messages';
 import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
@@ -87,7 +88,27 @@ const Header = React.memo<{ style?: Object }>(
           }}
         >
           <div>
-            Orders ({Object.keys(entities.orders || {}).length})
+            <span>
+              Orders ({Object.keys(entities.orders || {}).length})
+              <button
+                type="button"
+                onClick={() => {
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: 'NEW_ORDER',
+                      selectedId: Date.now(),
+                    },
+                  });
+                }}
+                style={{
+                  color: '#fff',
+                  cursor: 'pointer',
+                }}
+              >
+                <Icon icon="ADD" />
+              </button>
+            </span>
             <button
               type="button"
               className={ButtonStyle}
@@ -112,15 +133,19 @@ const Header = React.memo<{ style?: Object }>(
               ascending={filterAndSort.sort.direction !== 'DESCENDING'}
               fields={orderSort}
               sortable
-              onChange={({ field: { value }, ascending }) =>
+              onChange={({ field: { value }, ascending }) => {
                 onChangeFilter({
                   ...filterAndSort,
                   sort: {
                     field: value,
                     direction: ascending ? 'ASCENDING' : 'DESCENDING',
                   },
-                })
-              }
+                });
+                dispatch({
+                  type: 'RESET_NEW_ORDERS',
+                  payload: {},
+                });
+              }}
             />
           </div>
         </div>

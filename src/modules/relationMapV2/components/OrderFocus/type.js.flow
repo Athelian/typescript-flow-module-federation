@@ -73,4 +73,5 @@ export type State = {|
     orderId?: string,
     orderIds?: Array<string>,
   },
+  newOrders: Array<string>,
 |};

@@ -11,7 +11,18 @@ type State = {
   },
 };
 
-function usePersistFilter(state: State, cacheKey: string) {
+function usePersistFilter(
+  state: State = {
+    filter: {},
+    sort: {
+      field: 'updatedAt',
+      direction: 'DESCENDING',
+    },
+    perPage: 10,
+    page: 1,
+  },
+  cacheKey: string
+) {
   const localFilter = window.localStorage.getItem(cacheKey);
   const initialFilter = localFilter
     ? {
@@ -39,10 +50,12 @@ function usePersistFilter(state: State, cacheKey: string) {
   return {
     filterAndSort,
     queryVariables: {
-      page: filterAndSort.page,
-      perPage: filterAndSort.perPage,
-      filterBy: filterAndSort.filter,
-      sortBy: { [filterAndSort.sort.field]: filterAndSort.sort.direction },
+      page: filterAndSort?.page ?? 1,
+      perPage: filterAndSort?.perPage ?? 10,
+      filterBy: filterAndSort?.filter ?? {},
+      sortBy: {
+        [filterAndSort?.sort?.field ?? 'updatedAt']: filterAndSort?.sort?.direction ?? 'DESCENDING',
+      },
     },
     onChangeFilter,
   };

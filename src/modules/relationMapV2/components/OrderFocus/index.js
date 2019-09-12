@@ -20,7 +20,7 @@ import {
   orderFullFocusDetailQuery,
 } from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { Hits, Entities, SortAndFilter } from 'modules/relationMapV2/store';
+import { Hits, Entities, SortAndFilter, ClientSorts } from 'modules/relationMapV2/store';
 import { WrapperStyle, ListStyle, RowStyle, ActionsBackdropStyle } from './style';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
@@ -169,6 +169,7 @@ export default function OrderFocus() {
   const [expandRows, setExpandRows] = React.useState([]);
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const { initHits } = Hits.useContainer();
+  const { getBatchesSortByItemId } = ClientSorts.useContainer();
   const { initMapping, onSetBadges, onSetRelated, getRelatedBy } = Entities.useContainer();
   const { queryVariables } = SortAndFilter.useContainer();
   const lastQueryVariables = usePrevious(queryVariables);
@@ -190,17 +191,18 @@ export default function OrderFocus() {
         // refer https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback
         // set the close to lower priority task which allow to our application to scroll to element
         // then close dialog
-        window.requestIdleCallback(
-          () => {
-            dispatch({
-              type: 'CREATE_BATCH_CLOSE',
-              payload: {},
-            });
-          },
-          {
-            timeout: 250,
-          }
-        );
+        if (type === BATCH)
+          window.requestIdleCallback(
+            () => {
+              dispatch({
+                type: 'CREATE_BATCH_CLOSE',
+                payload: {},
+              });
+            },
+            {
+              timeout: 250,
+            }
+          );
       }
     },
     []
@@ -280,7 +282,7 @@ export default function OrderFocus() {
                   : order
               );
               const loadedOrders = Object.values(state.order || {});
-              const orders = [];
+              const orders = state.newOrders.map(orderId => state.order[orderId]);
               baseOrders.forEach(order => {
                 if (!processOrderIds.includes(order.id)) {
                   processOrderIds.push(order.id);
@@ -472,9 +474,38 @@ export default function OrderFocus() {
                               // need to find the position base on the order and batch
                               // then use the react-window to navigate to the row
                               // try to get from sort first, if not there, then try to use from entities
-                              // $FlowIgnore this doesn't support yet
-                              const batches = entities.orderItems?.[batch?.orderItem?.id]?.batches;
-                              const lastBatchId = batches[batches.length - 1];
+                              const originalBatches =
+                                // $FlowIgnore this doesn't support yet
+                                entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? [];
+                              const batches = getBatchesSortByItemId(
+                                // $FlowIgnore this doesn't support yet
+                                batch?.orderItem?.id,
+                                originalBatches
+                              );
+                              const batchList = [];
+                              if (originalBatches.length !== batches.length) {
+                                batches.forEach(batchId => {
+                                  if (!batchList.includes(batchId)) {
+                                    const relatedBatches = getRelatedBy('batch', batchId);
+                                    batchList.push(batchId);
+                                    if (relatedBatches.length) {
+                                      batchList.push(...relatedBatches);
+                                    }
+                                  }
+                                });
+                                originalBatches.forEach(batchId => {
+                                  if (!batchList.includes(batchId)) {
+                                    const relatedBatches = getRelatedBy('batch', batchId);
+                                    batchList.push(batchId);
+                                    if (relatedBatches.length) {
+                                      batchList.push(...relatedBatches);
+                                    }
+                                  }
+                                });
+                              } else {
+                                batchList.push(...batches);
+                              }
+                              const lastBatchId = batchList[batchList.length - 1];
                               const indexPosition = ordersData.findIndex((row: Array<any>) => {
                                 const [, , batchCell, , ,] = row;
                                 return Number(batchCell.cell?.data?.id) === Number(lastBatchId);
@@ -487,13 +518,21 @@ export default function OrderFocus() {
                       <EditFormSlideView
                         type={state.edit.type}
                         selectedId={state.edit.selectedId}
-                        onClose={() => {
+                        onClose={result => {
                           if (state.edit.type === ORDER) {
                             queryOrdersDetail([state.edit.selectedId]);
                           } else if (state.edit.orderId) {
                             queryOrdersDetail([state.edit.orderId]);
                           } else if (state.edit.orderIds && state.edit.orderIds.length) {
                             queryOrdersDetail(state.edit.orderIds);
+                          }
+                          if (result?.moveToTop) {
+                            queryOrdersDetail([result?.id ?? ''].filter(Boolean));
+                            scrollToRow(0, {
+                              dispatch,
+                              id: result?.id ?? '',
+                              type: result?.type ?? '',
+                            });
                           }
                           dispatch({
                             type: 'EDIT',

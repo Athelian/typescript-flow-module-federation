@@ -54,6 +54,7 @@ export const initialState: State = {
     type: '',
     selectedId: '',
   },
+  newOrders: [],
 };
 
 export const RelationMapContext = createContext<ContextProps>({
@@ -65,7 +66,8 @@ export function reducer(
   state: State,
   action: {
     // prettier-ignore
-    type: | 'FETCH_ORDER'
+    type: | 'NEW_ORDER'
+      | 'RESET_NEW_ORDERS'
       | 'FETCH_ORDERS'
       | 'TARGET'
       | 'TARGET_ALL'
@@ -101,10 +103,16 @@ export function reducer(
   }
 ) {
   switch (action.type) {
-    case 'FETCH_ORDER':
+    case 'NEW_ORDER':
       return update(state, {
-        order: {
-          $merge: action.payload,
+        newOrders: {
+          $push: [action.payload.orderId],
+        },
+      });
+    case 'RESET_NEW_ORDERS':
+      return update(state, {
+        newOrders: {
+          $set: [],
         },
       });
     case 'FETCH_ORDERS': {
