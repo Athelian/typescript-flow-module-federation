@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import TextInput from './Inputs/TextInput';
+import DateInput from './Inputs/DateInput';
 import { WrapperStyle } from './style';
 
 type Props = {
@@ -8,7 +9,6 @@ type Props = {
   type: string,
   focus: boolean,
   inputFocus: boolean,
-  readonly: boolean,
   disabled: boolean,
   onFocus: () => void,
   onBlur: () => void,
@@ -19,6 +19,7 @@ type Props = {
 
 const inputs = {
   text: TextInput,
+  date: DateInput,
 };
 
 const CellInput = ({
@@ -26,7 +27,6 @@ const CellInput = ({
   type,
   focus,
   inputFocus,
-  readonly,
   disabled,
   onFocus,
   onBlur,
@@ -84,7 +84,7 @@ const CellInput = ({
     <div className={WrapperStyle(focus)}>
       {React.createElement(inputs[type], {
         value: dirtyValue,
-        readonly: readonly || disabled,
+        readonly: disabled,
         focus: inputFocus,
         onFocus,
         onBlur: handleBlur,

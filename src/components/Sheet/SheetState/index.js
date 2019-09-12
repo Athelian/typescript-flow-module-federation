@@ -1,12 +1,15 @@
 // @flow
 import * as React from 'react';
-import type { ColumnConfig } from '../SheetRenderer';
+import { equals, clone } from 'ramda';
+import { useSheetColumns } from '../SheetColumns';
+import type { ColumnSort } from '../SheetColumns';
 import cellReducer from './reducer';
 import { Actions } from './contants';
 import type { Action, CellValue, State, Position } from './types';
 
 type Props = {
   transformItem: (index: number, item: Object) => Array<Array<CellValue>>,
+  onLocalSort: (Array<Object>, Array<ColumnSort>) => Array<Object>,
   onMutate: ({ entity: Object, field: string, value: any }) => Promise<Array<Object> | null>,
   children: React.Node,
 };
@@ -17,6 +20,7 @@ const initialState: State = {
   rows: [],
   columns: [],
   entities: [],
+  sorts: [],
   hoverAt: null,
   focusAt: null,
   weakFocusAt: [],
@@ -42,9 +46,15 @@ export const SheetStateContext = React.createContext<Context>({
 
 export const useSheetState = (): Context => React.useContext(SheetStateContext);
 
-export const useSheetStateInitializer = (columns: Array<ColumnConfig>, items: Array<Object>) => {
+export const useSheetStateInitializer = (
+  items: Array<Object>,
+  onRemoteSort: (sorts: Array<ColumnSort>) => void
+) => {
   const { state, dispatch } = useSheetState();
-  const columnKeysRef = React.useRef([]);
+  const { columns } = useSheetColumns();
+  const columnKeysRef = React.useRef<Array<string>>([]);
+  const remoteSortsRef = React.useRef<Array<ColumnSort>>([]);
+  const localSortsRef = React.useRef<Array<ColumnSort>>([]);
 
   React.useEffect(() => {
     const columnKeys = columns.map(c => c.key);
@@ -73,13 +83,36 @@ export const useSheetStateInitializer = (columns: Array<ColumnConfig>, items: Ar
       },
     });
   }, [dispatch, items]);
+
+  React.useEffect(() => {
+    const sorts = columns.filter(c => !!c.sort?.direction).map(c => c.sort);
+    const localSorts = sorts.filter(s => s?.local);
+    const remoteSorts = sorts.filter(s => !s?.local);
+
+    if (!equals(localSorts, localSortsRef.current)) {
+      localSortsRef.current = localSorts;
+
+      dispatch({
+        type: Actions.SORT,
+        payload: {
+          sorts: localSorts,
+        },
+      });
+    }
+
+    if (!equals(remoteSorts, remoteSortsRef.current)) {
+      remoteSortsRef.current = clone(remoteSorts);
+
+      onRemoteSort(remoteSorts);
+    }
+  }, [columns, onRemoteSort, dispatch]);
 };
 
 export const useSheetStateLoadMore = (onLoadMore: () => Promise<Array<Object>>) => {
   const [loadingMore, setLoadingMore] = React.useState<boolean>(false);
   const { dispatch } = useSheetState();
 
-  function handleThreshold() {
+  const handleThreshold = React.useCallback(() => {
     setLoadingMore(true);
 
     onLoadMore()
@@ -92,7 +125,7 @@ export const useSheetStateLoadMore = (onLoadMore: () => Promise<Array<Object>>) 
         })
       )
       .then(() => setLoadingMore(false));
-  }
+  }, [setLoadingMore, onLoadMore, dispatch]);
 
   return [loadingMore, handleThreshold];
 };
@@ -153,8 +186,10 @@ export const useCell = (position: Position): CellValue => {
   return state.rows[position.x][position.y];
 };
 
-export const SheetState = ({ transformItem, onMutate, children }: Props) => {
-  const memoizedReducer = React.useCallback(cellReducer(transformItem), [transformItem]);
+export const SheetState = ({ transformItem, onMutate, onLocalSort, children }: Props) => {
+  const memoizedReducer = React.useCallback(cellReducer(transformItem, onLocalSort), [
+    transformItem,
+  ]);
   const [state, dispatch] = React.useReducer<State, Action>(memoizedReducer, initialState);
   const addedRowsRef = React.useRef([]);
   const removedRowsRef = React.useRef([]);
@@ -194,7 +229,7 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
         });
 
         dispatch({
-          type: Actions.SET_ERRORS,
+          type: Actions.SET_ERROR,
           cell,
           payload: {
             messages: violations.map(v => v.message),
@@ -212,9 +247,7 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
 
     const handler = setTimeout(() => {
       dispatch({
-        type: Actions.SET_ERRORS,
-        cell: state.errorAt?.from,
-        payload: null,
+        type: Actions.CLEAR_ERROR,
       });
     }, 8000);
 

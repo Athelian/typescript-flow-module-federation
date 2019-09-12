@@ -5,6 +5,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
 import LoadingIcon from 'components/LoadingIcon';
 import type { Area } from '../SheetState/types';
+import type { ColumnState } from '../SheetColumns';
 import Column from '../Column';
 import {
   ColumnFillerStyle,
@@ -14,23 +15,14 @@ import {
   WrapperStyle,
 } from './style';
 
-export type ColumnConfig = {
-  key: string,
-  title: any,
-  icon: string,
-  color: string,
-  width: number,
-  minWidth?: number,
-  hidden?: boolean,
-};
-
 type Props = {
-  columns: Array<ColumnConfig>,
+  columns: Array<ColumnState>,
   rowCount: number,
   loading: boolean,
   loadingMore: boolean,
   hasMore: boolean,
   focusAt: Area | null,
+  onSortToggle: string => void,
   onThreshold: () => void,
   onColumnResize: (key: string, width: number) => void,
   children: React.ComponentType<any>,
@@ -43,6 +35,7 @@ const SheetRenderer = ({
   loadingMore,
   hasMore,
   focusAt,
+  onSortToggle,
   onThreshold,
   onColumnResize,
   children,
@@ -89,6 +82,11 @@ const SheetRenderer = ({
           <Column
             key={column.key}
             title={column.title}
+            sortable={!!column.sort}
+            direction={column.sort?.direction}
+            onSortToggle={() => {
+              onSortToggle(column.key);
+            }}
             color={column.color}
             width={column.width}
             minWidth={column.minWidth}
@@ -169,4 +167,4 @@ const SheetRenderer = ({
   );
 };
 
-export default SheetRenderer;
+export default React.memo<Props>(SheetRenderer);

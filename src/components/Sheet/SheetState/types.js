@@ -1,5 +1,7 @@
 // @flow
 
+import type { ColumnSort } from '../SheetColumns';
+
 export type Position = {
   x: number,
   y: number,
@@ -78,6 +80,7 @@ export type State = {
   rows: Array<Array<CellValue>>,
   columns: Array<string>,
   entities: Array<{ id: string, type: string }>,
+  sorts: Array<ColumnSort>,
   hoverAt: Area | null,
   focusAt: Focus | null,
   weakFocusAt: Array<Area>,

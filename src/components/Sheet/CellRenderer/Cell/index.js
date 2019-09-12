@@ -6,6 +6,7 @@ import type { CellValue } from '../../SheetState/types';
 import { useCell, useSheetState } from '../../SheetState';
 import { Actions } from '../../SheetState/contants';
 import CellInput from './CellInput';
+import CellDisplay from './CellDisplay';
 import { CellStyle, CellBorderStyle, CellPlaceholderStyle, CellShadowStyle } from './style';
 
 type Props = {
@@ -174,6 +175,10 @@ const Cell = ({
 
         if (!cell.entity) {
           return <div className={CellPlaceholderStyle} />;
+        }
+
+        if (isReadonly) {
+          return <CellDisplay value={cell.data?.value || null} type={cell.type} />;
         }
 
         return (

@@ -1,15 +1,16 @@
 // @flow
 import logger from 'utils/logger';
+import type { ColumnSort } from '../../SheetColumns';
 import type { Action, CellValue, State, Position } from '../types';
 import { Actions } from '../contants';
-import { init, append, rearrange } from './global';
+import { init, append, rearrange, sort } from './global';
 import {
   appendForeignFocuses,
   foreignBlur,
   foreignFocus,
   setForeignFocuses,
 } from './foreign-focus';
-import { setErrors } from './error';
+import { clearError, setError } from './error';
 import { focus, blur, focusUp, focusDown, focusRight, focusLeft } from './focus';
 import { cellUpdate, changeValues, deleteItem, replaceItem } from './mutate';
 import { postAddEntity, postRemoveEntity, preAddEntity, preRemoveEntity } from './announcement';
@@ -41,32 +42,34 @@ function getTarget(state: State, action: Action) {
   return state.rows[pos.x][pos.y];
 }
 
-export default function cellReducer(transformer: (number, Object) => Array<Array<CellValue>>) {
+export default function cellReducer(
+  transformer: (number, Object) => Array<Array<CellValue>>,
+  sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
+) {
   function reducer(state: State, action: Action) {
     logger.info('Sheet state reducer', action);
 
     switch (action.type) {
       case Actions.INIT:
-        return init(transformer)(state, getPayload(action));
+        return init(transformer, sorter)(state, getPayload(action));
       case Actions.APPEND:
-        return append(transformer)(state, getPayload(action));
+        return append(transformer, sorter)(state, getPayload(action));
       case Actions.REARRANGE:
-        return rearrange(transformer)(state, getPayload(action));
+        return rearrange(transformer, sorter)(state, getPayload(action));
+      case Actions.SORT:
+        return sort(transformer, sorter)(state, getPayload(action));
       case Actions.CELL_UPDATE:
         return cellUpdate(state, getPayload(action), getTarget(state, action));
       case Actions.CHANGE_VALUES:
         return changeValues(state, getPayload(action));
       case Actions.REPLACE_ITEM:
-        return replaceItem(transformer)(state, getPayload(action));
+        return replaceItem(transformer, sorter)(state, getPayload(action));
       case Actions.DELETE_ITEM:
-        return deleteItem(transformer)(state, getPayload(action));
-      case Actions.SET_ERRORS:
-        return setErrors(
-          state,
-          action.payload || null,
-          getTarget(state, action),
-          getPosition(action)
-        );
+        return deleteItem(transformer, sorter)(state, getPayload(action));
+      case Actions.SET_ERROR:
+        return setError(state, getPayload(action), getTarget(state, action), getPosition(action));
+      case Actions.CLEAR_ERROR:
+        return clearError(state);
       case Actions.HOVER:
         return hover(state, getTarget(state, action), getPosition(action));
       case Actions.UNHOVER:
@@ -92,13 +95,13 @@ export default function cellReducer(transformer: (number, Object) => Array<Array
       case Actions.FOREIGN_BLUR:
         return foreignBlur(state, getPayload(action));
       case Actions.PRE_ADD_ENTITY:
-        return preAddEntity(transformer)(state, getPayload(action));
+        return preAddEntity(transformer, sorter)(state, getPayload(action));
       case Actions.POST_ADD_ENTITY:
         return postAddEntity(state, getPayload(action));
       case Actions.PRE_REMOVE_ENTITY:
         return preRemoveEntity(state, getPayload(action));
       case Actions.POST_REMOVE_ENTITY:
-        return postRemoveEntity(transformer)(state, getPayload(action));
+        return postRemoveEntity(transformer, sorter)(state, getPayload(action));
       default:
         throw InvalidAction;
     }

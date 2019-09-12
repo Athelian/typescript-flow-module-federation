@@ -1,4 +1,5 @@
 // @flow
+import type { ColumnSort } from '../../SheetColumns';
 import type { Area, CellValue, State } from '../types';
 import { replaceItem } from './mutate';
 
@@ -6,7 +7,10 @@ function isOverlap(a: Area, b: Area) {
   return a.from.x <= b.from.x && a.from.y <= b.from.y && a.to.x >= b.to.x && a.to.y >= b.to.y;
 }
 
-export function preAddEntity(transformer: (number, Object) => Array<Array<CellValue>>) {
+export function preAddEntity(
+  transformer: (number, Object) => Array<Array<CellValue>>,
+  sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
+) {
   return (
     state: State,
     payload: {
@@ -29,7 +33,7 @@ export function preAddEntity(transformer: (number, Object) => Array<Array<CellVa
       return state;
     }
 
-    const newState = replaceItem(transformer)(state, item);
+    const newState = replaceItem(transformer, sorter)(state, item);
 
     let result = null;
 
@@ -168,7 +172,10 @@ export function preRemoveEntity(
   };
 }
 
-export function postRemoveEntity(transformer: (number, Object) => Array<Array<CellValue>>) {
+export function postRemoveEntity(
+  transformer: (number, Object) => Array<Array<CellValue>>,
+  sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
+) {
   return (state: State, payload: { entity: { id: string, type: string } }): State => {
     const { entity } = payload;
 
@@ -184,7 +191,7 @@ export function postRemoveEntity(transformer: (number, Object) => Array<Array<Ce
       return state;
     }
 
-    const newState = replaceItem(transformer)(state, item);
+    const newState = replaceItem(transformer, sorter)(state, item);
 
     return {
       ...newState,

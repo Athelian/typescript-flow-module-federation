@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { SheetColumns, useSheetColumns } from '../SheetColumns';
+import type { ColumnConfig, ColumnSort } from '../SheetColumns';
 import {
   useSheetStateLoadMore,
   useSheetStateInitializer,
@@ -12,7 +13,6 @@ import type { CellValue } from '../SheetState/types';
 import { Actions } from '../SheetState/contants';
 import SheetRenderer from '../SheetRenderer';
 import CellRenderer from '../CellRenderer';
-import type { ColumnConfig } from '../SheetRenderer';
 import { SheetLiveID } from '../SheetLive';
 import { useSheetLiveFocus } from '../SheetLive/focus';
 import { useSheetLiveEntity } from '../SheetLive/entity';
@@ -24,18 +24,27 @@ type ImplProps = {
   loading: boolean,
   hasMore: boolean,
   onLoadMore: () => Promise<Array<Object>>,
+  onRemoteSort: (sorts: Array<ColumnSort>) => void,
   handleEntityEvent: ?EntityEventHandlerFactory,
 };
 
 type Props = {
   columns: Array<ColumnConfig>,
+  onLocalSort: (items: Array<Object>, sorts: Array<ColumnSort>) => Array<Object>,
   transformItem: Object => Array<Array<CellValue>>,
   onMutate: ({ entity: Object, field: string, value: any }) => Promise<Array<Object> | null>,
 } & ImplProps;
 
-const SheetImpl = ({ items, loading, hasMore, onLoadMore, handleEntityEvent }: ImplProps) => {
-  const { columns, onColumnResize } = useSheetColumns();
-  useSheetStateInitializer(columns, items);
+const SheetImpl = ({
+  items,
+  loading,
+  hasMore,
+  onLoadMore,
+  onRemoteSort,
+  handleEntityEvent,
+}: ImplProps) => {
+  const { columns, onColumnResize, onColumnSortToggle } = useSheetColumns();
+  useSheetStateInitializer(items, onRemoteSort);
   const [loadingMore, handleThreshold] = useSheetStateLoadMore(onLoadMore);
   const { state, dispatch } = useSheetState();
   useSheetKeyNavigation();
@@ -57,6 +66,7 @@ const SheetImpl = ({ items, loading, hasMore, onLoadMore, handleEntityEvent }: I
         loadingMore={loadingMore}
         focusAt={state.focusAt}
         hasMore={hasMore}
+        onSortToggle={onColumnSortToggle}
         onThreshold={handleThreshold}
         onColumnResize={onColumnResize}
       >
@@ -69,6 +79,8 @@ const SheetImpl = ({ items, loading, hasMore, onLoadMore, handleEntityEvent }: I
 const Sheet = ({
   transformItem,
   onMutate,
+  onLocalSort,
+  onRemoteSort,
   columns,
   items,
   loading,
@@ -77,13 +89,14 @@ const Sheet = ({
   handleEntityEvent,
 }: Props) => (
   <SheetColumns columns={columns}>
-    <SheetState transformItem={transformItem} onMutate={onMutate}>
+    <SheetState transformItem={transformItem} onMutate={onMutate} onLocalSort={onLocalSort}>
       <SheetLiveID>
         <SheetImpl
           items={items}
           loading={loading}
           hasMore={hasMore}
           onLoadMore={onLoadMore}
+          onRemoteSort={onRemoteSort}
           handleEntityEvent={handleEntityEvent}
         />
       </SheetLiveID>

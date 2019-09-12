@@ -8,6 +8,7 @@ import { clone } from 'utils/fp';
 import columns from './columns';
 import transformer from './transformer';
 import entityEventHandler from './handler';
+import sorter from './sorter';
 import mutate from './mutate';
 import { ordersQuery } from './query';
 
@@ -20,26 +21,31 @@ const OrderSheetModule = () => {
   ]);
 
   const [initialOrders, setInitialOrders] = React.useState<Object>([]);
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(true);
   const [page, setPage] = React.useState<{ page: number, totalPage: number }>({
     page: 1,
     totalPage: 1,
   });
+  const [sortBy, setSortBy] = React.useState<{ [string]: 'ASCENDING' | 'DESCENDING' }>({
+    updatedAt: 'DESCENDING',
+  });
 
   React.useEffect(() => {
     setLoading(true);
+    setInitialOrders([]);
+    setPage({ page: 1, totalPage: 1 });
 
     client
       .query({
         query: ordersQuery,
-        variables: { page: 1, perPage: 20, filterBy: {}, sortBy: {} },
+        variables: { page: 1, perPage: 20, filterBy: {}, sortBy },
       })
       .then(({ data }) => {
-        setLoading(false);
         setPage({ page: 1, totalPage: data.orders?.totalPage ?? 1 });
         setInitialOrders(clone(data.orders?.nodes ?? []));
+        setLoading(false);
       });
-  }, [client]);
+  }, [client, sortBy]);
 
   return (
     <Content>
@@ -57,11 +63,22 @@ const OrderSheetModule = () => {
         transformItem={transformer}
         onMutate={memoizedMutate}
         handleEntityEvent={memoizedHandler}
+        onLocalSort={sorter}
+        onRemoteSort={sorts =>
+          setSortBy(
+            sorts.reduce((remote, sort) => {
+              return {
+                ...remote,
+                [sort.name]: sort.direction,
+              };
+            }, {})
+          )
+        }
         onLoadMore={() =>
           client
             .query({
               query: ordersQuery,
-              variables: { page: page.page + 1, perPage: 20, filterBy: {}, sortBy: {} },
+              variables: { page: page.page + 1, perPage: 20, filterBy: {}, sortBy },
             })
             .then(({ data }) => {
               setPage({

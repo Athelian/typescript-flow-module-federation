@@ -65,8 +65,8 @@ export const defaultEntityEventChangeTransformer = (
     entity: {
       id: event.entity.id,
       type: event.entity.__typename,
-      field: change.field,
     },
+    field: change.field,
     value,
   };
 };
