@@ -1,5 +1,4 @@
 // @flow
-
 import * as React from 'react';
 import type { DraggableProvided } from 'react-beautiful-dnd';
 import { Subscribe } from 'unstated';
@@ -131,6 +130,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
           [`${milestoneId}.dueDate`]: dueDate,
           [`${milestoneId}.completedAt`]: completedAt,
           [`${milestoneId}.estimatedCompletionDate`]: estimatedCompletionDate,
+          ...currentMilestone,
         };
 
         return (
