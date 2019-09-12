@@ -15,12 +15,7 @@ import TaskContainer from 'modules/task/form/container';
 import { circleValidator } from 'modules/task/form/validator';
 import { checkEditableFromEntity, triggerAutoBinding } from 'utils/task';
 import { getByPathWithDefault } from 'utils/fp';
-
-import {
-  ProjectSectionWrapperStyle,
-  ProjectSectionStyle,
-  ProjectSectionPlusButtonWrapperStyle,
-} from './style';
+import { ProjectSectionWrapperStyle, ProjectSectionStyle } from './style';
 
 type Props = {
   parentEntity?: string,
@@ -55,9 +50,9 @@ const ProjectSection = ({ parentEntity }: Props) => {
             return (
               <BooleanValue>
                 {({ value: opened, set: toggleSlide }) => (
-                  <>
+                  <div className={ProjectSectionStyle}>
                     {milestone ? (
-                      <div className={ProjectSectionStyle}>
+                      <>
                         <ProjectCard
                           project={milestone.project}
                           onClick={() => {
@@ -74,9 +69,9 @@ const ProjectSection = ({ parentEntity }: Props) => {
                             }
                           }}
                         />
-                      </div>
+                      </>
                     ) : (
-                      <div className={ProjectSectionPlusButtonWrapperStyle}>
+                      <>
                         {editable.milestone ? (
                           <DashedPlusButton
                             width="860px"
@@ -86,7 +81,7 @@ const ProjectSection = ({ parentEntity }: Props) => {
                         ) : (
                           <GrayCard width="860px" height="150px" />
                         )}
-                      </div>
+                      </>
                     )}
 
                     <SlideView isOpen={opened} onRequestClose={() => toggleSlide(false)}>
@@ -112,7 +107,7 @@ const ProjectSection = ({ parentEntity }: Props) => {
                         />
                       )}
                     </SlideView>
-                  </>
+                  </div>
                 )}
               </BooleanValue>
             );

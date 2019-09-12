@@ -278,7 +278,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                       </FormField>
                       {dueDateBinding && (
                         <div className={AutoDateSyncIconStyle}>
-                          <Icon icon="SYNC" />
+                          <Icon icon="BINDED" />
                         </div>
                       )}
                     </div>
@@ -358,7 +358,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                         </FormField>
                         {estimatedCompletionDateBinding && (
                           <div className={AutoDateSyncIconStyle}>
-                            <Icon icon="SYNC" />
+                            <Icon icon="BINDED" />
                           </div>
                         )}
                         <div className={DiffDateStyle(estimatedCompletionDateDiff)}>

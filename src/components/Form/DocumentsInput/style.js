@@ -15,6 +15,7 @@ export const DocumentsSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;
   height: min-content;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
 `;
 
 export const DocumentsDragAndDropBodyWrapperStyle: string = css`
@@ -27,10 +28,6 @@ export const DocumentsSectionBodyStyle: string = css`
   position: relative;
   display: flex;
   flex-direction: column;
-  ${borderRadiuses.MAIN};
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
   height: 500px;
   overflow-x: hidden;
   overflow-y: overlay;

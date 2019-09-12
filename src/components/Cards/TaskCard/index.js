@@ -317,7 +317,7 @@ const TaskCard = ({
 
           {dueDateBinding && (
             <div className={AutoDateSyncIconStyle}>
-              <Icon icon="SYNC" />
+              <Icon icon="BINDED" />
             </div>
           )}
         </div>
@@ -367,7 +367,7 @@ const TaskCard = ({
 
           {startDateBinding && (
             <div className={AutoDateSyncIconStyle}>
-              <Icon icon="SYNC" />
+              <Icon icon="BINDED" />
             </div>
           )}
         </div>
