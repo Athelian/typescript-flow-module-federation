@@ -34,15 +34,6 @@ export default function OrderValueSpy({ values, task, inParentEntityForm, setTas
       const autoDateDuration: Duration = getByPath('autoDateDuration', bindingData);
       const autoDateOffset: Offset = getByPath('autoDateOffset', bindingData);
       const hasCircleBindingError: boolean = getByPath('hasCircleBindingError', bindingData);
-      logger.warn({
-        field,
-        entityId,
-        selectedField,
-        autoDateDuration,
-        autoDateOffset,
-        inParentEntityForm,
-        hasCircleBindingError,
-      });
 
       if (hasCircleBindingError) {
         setTaskValue('dueDate', '');

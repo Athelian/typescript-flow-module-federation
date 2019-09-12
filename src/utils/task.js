@@ -1,7 +1,7 @@
 // @flow
 import type { User, Task } from 'generated/graphql';
 import { sumBy } from 'lodash';
-import { isBefore, findDuration } from 'utils/date';
+import { isBefore, calculateDate, findDuration } from 'utils/date';
 import { encodeId } from 'utils/id';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
@@ -125,6 +125,11 @@ import {
 } from 'modules/permission/constants/shipment';
 
 import emitter from 'utils/emitter';
+
+export const START_DATE = 'TaskStartDate';
+export const DUE_DATE = 'TaskDueDate';
+export const PROJECT_DUE_DATE = 'ProjectDueDate';
+export const MILESTONE_DUE_DATE = 'MilestoneDueDate';
 
 export type TaskEditableProps = {
   name: boolean,
@@ -780,7 +785,92 @@ export const prepareApprovalStatus: prepareApprovalStatusType = ({ approvedBy, r
   };
 };
 
-export const START_DATE = 'TaskStartDate';
-export const DUE_DATE = 'TaskDueDate';
-export const PROJECT_DUE_DATE = 'ProjectDueDate';
-export const MILESTONE_DUE_DATE = 'MilestoneDueDate';
+// only for milestone or project changed
+export const recalculateTaskBindingDate = (task: Object) => {
+  const {
+    startDate,
+    startDateBinding,
+    startDateInterval,
+    dueDate,
+    dueDateBinding,
+    dueDateInterval,
+  } = task;
+
+  const mappingFields = {
+    ProjectDueDate: 'milestone.project.dueDate',
+    MilestoneDueDate: 'milestone.dueDate',
+  };
+
+  let newStartDate = startDate;
+  let newDueDate = dueDate;
+
+  if (startDateBinding === DUE_DATE) {
+    // do the due date first
+    if (dueDateBinding) {
+      const { months, weeks, days } = dueDateInterval || {};
+      const path = mappingFields[dueDateBinding];
+      if (path) {
+        newDueDate = calculateDate({
+          date: getByPath(path, task),
+          duration: findDuration({ months, weeks }),
+          offset: months || weeks || days,
+        });
+      }
+    }
+    const { months, weeks, days } = startDateInterval || {};
+    newStartDate = calculateDate({
+      date: newDueDate,
+      duration: findDuration({ months, weeks }),
+      offset: months || weeks || days,
+    });
+  } else if (dueDateBinding === START_DATE) {
+    // do the start date first
+    if (startDateBinding) {
+      const { months, weeks, days } = startDateInterval || {};
+      const path = mappingFields[startDateBinding];
+      if (path) {
+        newStartDate = calculateDate({
+          date: getByPath(path, task),
+          duration: findDuration({ months, weeks }),
+          offset: months || weeks || days,
+        });
+      }
+    }
+    const { months, weeks, days } = dueDateInterval || {};
+    newDueDate = calculateDate({
+      date: newStartDate,
+      duration: findDuration({ months, weeks }),
+      offset: months || weeks || days,
+    });
+  } else {
+    if (startDateBinding) {
+      const { months, weeks, days } = startDateInterval || {};
+      const path = mappingFields[startDateBinding];
+      if (path) {
+        newStartDate = calculateDate({
+          date: getByPath(path, task),
+          duration: findDuration({ months, weeks }),
+          offset: months || weeks || days,
+        });
+      }
+    }
+
+    if (dueDateBinding) {
+      const { months, weeks, days } = dueDateInterval || {};
+      const path = mappingFields[dueDateBinding];
+      if (path) {
+        newDueDate = calculateDate({
+          date: getByPath(path, task),
+          duration: findDuration({ months, weeks }),
+          offset: months || weeks || days,
+        });
+      }
+    }
+  }
+
+  return {
+    ...task,
+    startDate: newStartDate,
+    dueDate: newDueDate,
+  };
+};
