@@ -7,8 +7,15 @@ import {
   ORDER_SET_PI_NO,
   ORDER_SET_DELIVERY_PLACE,
   ORDER_UPDATE,
+  ORDER_SET_DELIVERY_DATE,
+  ORDER_SET_ISSUE_AT,
+  ORDER_SET_INCOTERM,
 } from 'modules/permission/constants/order';
-import { ORDER_ITEMS_SET_NO, ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
+import {
+  ORDER_ITEMS_SET_NO,
+  ORDER_ITEMS_SET_QUANTITY,
+  ORDER_ITEMS_UPDATE,
+} from 'modules/permission/constants/orderItem';
 import { BATCH_SET_NO, BATCH_UPDATE } from 'modules/permission/constants/batch';
 import { CONTAINER_SET_NO, CONTAINER_UPDATE } from 'modules/permission/constants/container';
 import { SHIPMENT_SET_NO, SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
@@ -25,6 +32,18 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
         order,
         'poNo',
         hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_PO_NO)
+      ),
+    },
+    {
+      columnKey: 'order.issuedAt',
+      type: 'date',
+      empty: !order,
+      parent: true,
+      ...transformValueField(
+        basePath,
+        order,
+        'issuedAt',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_ISSUE_AT)
       ),
     },
     {
@@ -52,6 +71,18 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
       ),
     },
     {
+      columnKey: 'order.incoterm',
+      type: 'text',
+      empty: !order,
+      parent: true,
+      ...transformValueField(
+        basePath,
+        order,
+        'incoterm',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_INCOTERM)
+      ),
+    },
+    {
       columnKey: 'order.deliveryPlace',
       type: 'text',
       empty: !order,
@@ -61,6 +92,18 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
         order,
         'deliveryPlace',
         hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_DELIVERY_PLACE)
+      ),
+    },
+    {
+      columnKey: 'order.deliveryDate',
+      type: 'date',
+      empty: !order,
+      parent: true,
+      ...transformValueField(
+        basePath,
+        order,
+        'deliveryDate',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_DELIVERY_DATE)
       ),
     },
     {
@@ -97,6 +140,27 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
           : null
       ),
     },
+    {
+      columnKey: 'order.totalOrdered',
+      type: 'number',
+      empty: !order,
+      parent: true,
+      ...transformReadonlyField(basePath, order, 'totalOrdered', order?.totalOrdered ?? 0),
+    },
+    {
+      columnKey: 'order.totalBatched',
+      type: 'number',
+      empty: !order,
+      parent: true,
+      ...transformReadonlyField(basePath, order, 'totalBatched', order?.totalBatched ?? 0),
+    },
+    {
+      columnKey: 'order.totalShipped',
+      type: 'number',
+      empty: !order,
+      parent: true,
+      ...transformReadonlyField(basePath, order, 'totalShipped', order?.totalShipped ?? 0),
+    },
   ];
 }
 
@@ -119,14 +183,20 @@ const transformOrderItem = (
         hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_NO)
       ),
     },
-    /* {
+    {
       columnKey: 'order.orderItem.quantity',
       type: 'number',
       disabled: !hasItems && !orderItem,
       empty: hasItems && !orderItem,
       parent: true,
-      ...transformValueField(basePath, orderItem, 'quantity', () => true),
-    }, */
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'quantity',
+        hasPermission =>
+          hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_QUANTITY)
+      ),
+    },
     {
       columnKey: 'order.orderItem.created',
       type: 'date_user',

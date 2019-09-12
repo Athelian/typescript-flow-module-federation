@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react';
-import BaseDateInput from 'components/Form/Inputs/DateInput';
+import BaseNumberInput from 'components/Form/Inputs/NumberInput';
 import InputWrapper from '../InputWrapper';
 
 type Props = {
-  value: Date | string | null,
+  value: number | null,
   onChange: string => void,
   focus: boolean,
   onFocus: () => void,
@@ -13,14 +13,15 @@ type Props = {
   readonly: boolean,
 };
 
-const DateInput = ({ value, focus, onChange, onFocus, onBlur, onKeyDown, readonly }: Props) => (
+const NumberInput = ({ value, focus, onChange, onFocus, onBlur, onKeyDown, readonly }: Props) => (
   <InputWrapper focus={focus}>
     {({ ref }) => (
-      <BaseDateInput
+      <BaseNumberInput
         inputRef={ref}
         value={value}
         name="value"
         tabIndex="-1"
+        nullable={false}
         readOnly={readonly}
         readOnlyHeight="30px"
         onChange={onChange}
@@ -32,4 +33,4 @@ const DateInput = ({ value, focus, onChange, onFocus, onBlur, onKeyDown, readonl
   </InputWrapper>
 );
 
-export default DateInput;
+export default NumberInput;

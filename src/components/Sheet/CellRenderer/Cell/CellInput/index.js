@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import TextInput from './Inputs/TextInput';
+import NumberInput from './Inputs/NumberInput';
 import DateInput from './Inputs/DateInput';
 import { WrapperStyle } from './style';
 
@@ -19,6 +20,7 @@ type Props = {
 
 const inputs = {
   text: TextInput,
+  number: NumberInput,
   date: DateInput,
 };
 

@@ -22,6 +22,7 @@ const DateInput = ({
   readOnlyHeight,
   placeholder,
   color,
+  inputRef,
   ...rest
 }: Props) => {
   return readOnly ? (
@@ -30,6 +31,7 @@ const DateInput = ({
     </Display>
   ) : (
     <input
+      ref={inputRef}
       value={value ? formatToDateInput(value) : ''}
       style={{ textAlign: align, color }}
       placeholder={

@@ -4,6 +4,29 @@ import type { ColumnConfig } from 'components/Sheet';
 
 const orderColumns: Array<ColumnConfig> = [
   {
+    key: 'order.created',
+    title: 'Date Created',
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+    sort: {
+      name: 'createdAt',
+      group: 'order',
+    },
+  },
+  {
+    key: 'order.updated',
+    title: 'Last Modified',
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+    sort: {
+      default: true,
+      name: 'updatedAt',
+      group: 'order',
+    },
+  },
+  {
     key: 'order.poNo',
     title: 'PO No',
     icon: 'ORDER',
@@ -26,6 +49,20 @@ const orderColumns: Array<ColumnConfig> = [
     },
   },
   {
+    key: 'order.issuedAt',
+    title: 'PO Date',
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
+  {
+    key: 'order.deliveryDate',
+    title: 'Contract Delivery Date',
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
+  {
     key: 'order.currency',
     title: 'Currency',
     icon: 'ORDER',
@@ -37,6 +74,13 @@ const orderColumns: Array<ColumnConfig> = [
     },
   },
   {
+    key: 'order.incoterm',
+    title: 'Incoterms',
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 100,
+  },
+  {
     key: 'order.deliveryPlace',
     title: 'Place Of Delivery',
     icon: 'ORDER',
@@ -44,27 +88,25 @@ const orderColumns: Array<ColumnConfig> = [
     width: 200,
   },
   {
-    key: 'order.created',
-    title: 'Created',
+    key: 'order.totalOrdered',
+    title: 'Total Item quantity',
     icon: 'ORDER',
     color: colors.ORDER,
     width: 200,
-    sort: {
-      name: 'createdAt',
-      group: 'order',
-    },
   },
   {
-    key: 'order.updated',
-    title: 'Updated',
+    key: 'order.totalBatched',
+    title: 'Total Batch quantity',
     icon: 'ORDER',
     color: colors.ORDER,
     width: 200,
-    sort: {
-      default: true,
-      name: 'updatedAt',
-      group: 'order',
-    },
+  },
+  {
+    key: 'order.totalShipped',
+    title: 'Total Shipped Quantity',
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
   },
 ];
 
@@ -78,6 +120,18 @@ const orderItemColumns: Array<ColumnConfig> = [
     sort: {
       local: true,
       name: 'no',
+      group: 'orderItem',
+    },
+  },
+  {
+    key: 'order.orderItem.quantity',
+    title: 'Quantity',
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+    sort: {
+      local: true,
+      name: 'quantity',
       group: 'orderItem',
     },
   },

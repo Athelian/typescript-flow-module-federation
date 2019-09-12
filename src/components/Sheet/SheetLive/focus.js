@@ -169,12 +169,16 @@ export const useSheetLiveFocus = () => {
           },
         })
         .then(({ data }) => {
-          dispatch({
-            type: Actions.APPEND_FOREIGN_FOCUSES,
-            payload: {
-              foreignFocuses: data?.focusSubscribe ?? [],
-            },
-          });
+          const foreignFocuses = data?.focusSubscribe ?? [];
+
+          if (foreignFocuses.length > 0) {
+            dispatch({
+              type: Actions.APPEND_FOREIGN_FOCUSES,
+              payload: {
+                foreignFocuses,
+              },
+            });
+          }
         });
     }
 

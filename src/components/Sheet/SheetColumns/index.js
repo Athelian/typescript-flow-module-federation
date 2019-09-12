@@ -76,19 +76,15 @@ export const SheetColumns = ({ columns, children }: Props) => {
 
     sortGroups.forEach(g => columnGroups.delete(g));
 
-    console.log('missing', columnGroups);
-
     columnGroups.forEach(g => {
       const defaultColumn = columns.find(c => c.sort?.group === g && c.sort?.default);
       if (defaultColumn) {
-        console.log('add default', g, defaultColumn.key);
         validSorts.push({ ...defaultColumn.sort, key: defaultColumn.key, direction: 'DESCENDING' });
         return;
       }
 
       const firstColumn = columns.find(c => c.sort?.group === g);
       if (firstColumn) {
-        console.log('add first', g, firstColumn.key);
         validSorts.push({ ...firstColumn.sort, key: firstColumn.key, direction: 'DESCENDING' });
       }
     });

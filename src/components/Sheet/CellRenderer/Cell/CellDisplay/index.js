@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import DateUser from './Displays/DateUser';
+import DateUser from './Displays/DateUserDisplay';
+import NumberDisplay from './Displays/NumberDisplay';
 
 type Props = {
   value: any,
@@ -9,12 +10,12 @@ type Props = {
 
 const displays = {
   date_user: DateUser,
+  number: NumberDisplay,
 };
 
-const CellDisplay = ({ value, type }: Props) => {
-  return React.createElement(displays[type], {
+const CellDisplay = ({ value, type }: Props) =>
+  React.createElement(displays[type], {
     value,
   });
-};
 
 export default CellDisplay;
