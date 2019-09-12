@@ -43,6 +43,7 @@ const ProjectSection = ({ parentEntity }: Props) => {
               dueDate: !dueDateBinding,
             };
             const entity = getByPathWithDefault(parentEntity, 'entity.__typename', values);
+            console.debug({ parentEntity, a: values });
 
             const hasCircleBindingError = !circleValidator.isValidSync(values);
             const editable = checkEditableFromEntity(entity, hasPermission);
