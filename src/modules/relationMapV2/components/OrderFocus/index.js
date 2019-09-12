@@ -13,7 +13,6 @@ import { uuid } from 'utils/id';
 import logger from 'utils/logger';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { UIContext } from 'modules/ui';
-import { partnerPermissionQuery } from 'components/common/QueryForm/query';
 import { Display } from 'components/Form';
 import {
   orderFocusedListQuery,
@@ -21,7 +20,7 @@ import {
   orderFullFocusDetailQuery,
 } from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { Hits, Entities, SortAndFilter } from 'modules/relationMapV2/store';
+import { Hits, Entities, SortAndFilter, ClientSorts } from 'modules/relationMapV2/store';
 import { WrapperStyle, ListStyle, RowStyle, ActionsBackdropStyle } from './style';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
@@ -34,7 +33,6 @@ import Row from '../Row';
 import cellRenderer from './cellRenderer';
 import generateListData from './generateListData';
 import { reducer, initialState, RelationMapContext } from './store';
-import { cacheSorted } from './helpers';
 import { moveEntityMutation } from './mutation';
 import normalize from './normalize';
 
@@ -171,7 +169,8 @@ export default function OrderFocus() {
   const [expandRows, setExpandRows] = React.useState([]);
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const { initHits } = Hits.useContainer();
-  const { initMapping, onSetBadges } = Entities.useContainer();
+  const { getBatchesSortByItemId } = ClientSorts.useContainer();
+  const { initMapping, onSetBadges, onSetRelated, getRelatedBy } = Entities.useContainer();
   const { queryVariables } = SortAndFilter.useContainer();
   const lastQueryVariables = usePrevious(queryVariables);
   React.useEffect(() => {
@@ -192,17 +191,18 @@ export default function OrderFocus() {
         // refer https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback
         // set the close to lower priority task which allow to our application to scroll to element
         // then close dialog
-        window.requestIdleCallback(
-          () => {
-            dispatch({
-              type: 'CREATE_BATCH_CLOSE',
-              payload: {},
-            });
-          },
-          {
-            timeout: 250,
-          }
-        );
+        if (type === BATCH)
+          window.requestIdleCallback(
+            () => {
+              dispatch({
+                type: 'CREATE_BATCH_CLOSE',
+                payload: {},
+              });
+            },
+            {
+              timeout: 250,
+            }
+          );
       }
     },
     []
@@ -248,27 +248,6 @@ export default function OrderFocus() {
     },
     []
   );
-  const queryPermission = React.useCallback((organizationId: string) => {
-    apolloClient
-      .query({
-        query: partnerPermissionQuery,
-        variables: {
-          organizationId,
-        },
-      })
-      .then(result => {
-        dispatch({
-          type: 'FETCH_PERMISSION',
-          payload: {
-            [organizationId]: getByPathWithDefault(
-              [],
-              'data.viewer.permissionsForOrganization',
-              result
-            ),
-          },
-        });
-      });
-  }, []);
 
   return (
     <>
@@ -293,7 +272,8 @@ export default function OrderFocus() {
                 );
               }
 
-              const orders = getByPathWithDefault([], 'orders.nodes', data).map(order =>
+              const processOrderIds = [];
+              const baseOrders = getByPathWithDefault([], 'orders.nodes', data).map(order =>
                 state.order[getByPathWithDefault('', 'id', order)]
                   ? {
                       ...order,
@@ -301,6 +281,26 @@ export default function OrderFocus() {
                     }
                   : order
               );
+              const loadedOrders = Object.values(state.order || {});
+              const orders = state.newOrders.map(orderId => state.order[orderId]);
+              baseOrders.forEach(order => {
+                if (!processOrderIds.includes(order.id)) {
+                  processOrderIds.push(order.id);
+                  orders.push(order);
+                  const relatedOrders = getRelatedBy('order', order.id);
+                  relatedOrders
+                    .filter(id => !baseOrders.map(currentOrder => currentOrder.id).includes(id))
+                    .forEach(relateId => {
+                      const relatedOrder: Object = loadedOrders.find(
+                        (currentOrder: ?Object) => currentOrder?.id === relateId
+                      );
+                      if (relatedOrder) {
+                        orders.push(relatedOrder);
+                        processOrderIds.push(relatedOrder.id);
+                      }
+                    });
+                }
+              });
               initHits(getByPathWithDefault([], 'orders.hits', data));
               const ordersData = generateListData({
                 orders,
@@ -312,11 +312,6 @@ export default function OrderFocus() {
               initMapping({
                 orders,
                 entities,
-              });
-              Object.keys(entities.organizations || {}).forEach(organizationId => {
-                if (!state.permission[organizationId]) {
-                  queryPermission(organizationId);
-                }
               });
               return (
                 <RelationMapContext.Provider value={{ state, dispatch }}>
@@ -388,15 +383,15 @@ export default function OrderFocus() {
                         {...state.moveEntity.detail}
                       />
                       <CloneEntities
-                        onSuccess={({ sources, orderIds, cloneEntities }) => {
-                          console.warn({
-                            sources,
-                            orderIds,
-                            cloneEntities,
-                          });
+                        onSuccess={({
+                          sources,
+                          orderIds,
+                          cloneEntities,
+                          newOrderItemPositions,
+                        }) => {
                           const cloneBadges = [];
                           const newOrderIds = [];
-                          cloneEntities.forEach(cloneResult => {
+                          cloneEntities.forEach((cloneResult, orderPosition) => {
                             if (cloneResult?.data?.orderCloneMany?.length ?? 0) {
                               const ordersClone = cloneResult?.data?.orderCloneMany ?? [];
                               newOrderIds.push(...ordersClone.map(item => item?.id));
@@ -406,10 +401,14 @@ export default function OrderFocus() {
                                   type: 'cloned',
                                   entity: 'order',
                                 });
-                                order.orderItems.forEach(item => {
+                                order.orderItems.forEach((item, position) => {
                                   cloneBadges.push({
                                     id: item?.id,
-                                    type: 'cloned',
+                                    type: (newOrderItemPositions?.[orderPosition] ?? []).includes(
+                                      position
+                                    )
+                                      ? 'newItem'
+                                      : 'cloned',
                                     entity: 'orderItem',
                                   });
                                   cloneBadges.push(
@@ -457,6 +456,7 @@ export default function OrderFocus() {
                             }
                           });
                           onSetBadges(cloneBadges);
+                          onSetRelated(sources, cloneEntities);
                         }}
                       />
                       <InlineCreateBatch
@@ -474,18 +474,38 @@ export default function OrderFocus() {
                               // need to find the position base on the order and batch
                               // then use the react-window to navigate to the row
                               // try to get from sort first, if not there, then try to use from entities
-                              let batches =
-                                // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
-                                cacheSorted?.[`${batch?.orderItem?.id}-batches`]?.entities ?? [];
-                              if (
-                                batches.length <
-                                // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
-                                (entities.orderItems?.[batch?.orderItem?.id]?.batches?.length ?? 0)
-                              ) {
-                                // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
-                                batches = entities.orderItems?.[batch?.orderItem?.id]?.batches;
+                              const originalBatches =
+                                // $FlowIgnore this doesn't support yet
+                                entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? [];
+                              const batches = getBatchesSortByItemId(
+                                // $FlowIgnore this doesn't support yet
+                                batch?.orderItem?.id,
+                                originalBatches
+                              );
+                              const batchList = [];
+                              if (originalBatches.length !== batches.length) {
+                                batches.forEach(batchId => {
+                                  if (!batchList.includes(batchId)) {
+                                    const relatedBatches = getRelatedBy('batch', batchId);
+                                    batchList.push(batchId);
+                                    if (relatedBatches.length) {
+                                      batchList.push(...relatedBatches);
+                                    }
+                                  }
+                                });
+                                originalBatches.forEach(batchId => {
+                                  if (!batchList.includes(batchId)) {
+                                    const relatedBatches = getRelatedBy('batch', batchId);
+                                    batchList.push(batchId);
+                                    if (relatedBatches.length) {
+                                      batchList.push(...relatedBatches);
+                                    }
+                                  }
+                                });
+                              } else {
+                                batchList.push(...batches);
                               }
-                              const lastBatchId = batches[batches.length - 1];
+                              const lastBatchId = batchList[batchList.length - 1];
                               const indexPosition = ordersData.findIndex((row: Array<any>) => {
                                 const [, , batchCell, , ,] = row;
                                 return Number(batchCell.cell?.data?.id) === Number(lastBatchId);
@@ -498,13 +518,21 @@ export default function OrderFocus() {
                       <EditFormSlideView
                         type={state.edit.type}
                         selectedId={state.edit.selectedId}
-                        onClose={() => {
+                        onClose={result => {
                           if (state.edit.type === ORDER) {
                             queryOrdersDetail([state.edit.selectedId]);
                           } else if (state.edit.orderId) {
                             queryOrdersDetail([state.edit.orderId]);
                           } else if (state.edit.orderIds && state.edit.orderIds.length) {
                             queryOrdersDetail(state.edit.orderIds);
+                          }
+                          if (result?.moveToTop) {
+                            queryOrdersDetail([result?.id ?? ''].filter(Boolean));
+                            scrollToRow(0, {
+                              dispatch,
+                              id: result?.id ?? '',
+                              type: result?.type ?? '',
+                            });
                           }
                           dispatch({
                             type: 'EDIT',

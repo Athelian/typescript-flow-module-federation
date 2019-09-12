@@ -43,7 +43,6 @@ import {
   milestoneCardFragment,
   milestoneFormFragment,
   projectCardFragment,
-  projectCardNewFragment,
   projectFormQueryFragment,
   projectFormFragment,
 } from './project/fragment';
@@ -140,7 +139,6 @@ export {
   milestoneFragment,
   milestoneFormFragment,
   milestoneCardFragment,
-  projectCardNewFragment,
   projectFormQueryFragment,
   projectFormFragment,
   taskCardFragment,

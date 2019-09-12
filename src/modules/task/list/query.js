@@ -18,7 +18,15 @@ export const taskListQuery = gql`
   ) {
     tasks(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...taskCardFragment
+        ... on Task {
+          ...taskCardFragment
+          timeline {
+            ... on Timeline {
+              unreadCount
+            }
+          }
+        }
+
         ...notFoundFragment
         ...badRequestFragment
         ...forbiddenFragment

@@ -6,11 +6,11 @@ const borderBackground = (isTargeted: boolean) => {
   if (isTargeted) {
     return colors.TEAL;
   }
-  return colors.GRAY_QUITE_LIGHT;
+  return colors.GRAY_VERY_LIGHT;
 };
 
 const relatedBackground = (isTargeted: boolean, hasRelation: boolean) =>
-  hasRelation ? borderBackground(isTargeted) : colors.GRAY_QUITE_LIGHT;
+  hasRelation ? borderBackground(isTargeted) : colors.GRAY_VERY_LIGHT;
 
 export const RelationLineHorizontalStyle = (isTargeted: boolean, hasRelation: boolean) => css`
   position: relative;

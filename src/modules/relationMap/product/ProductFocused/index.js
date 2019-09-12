@@ -25,7 +25,9 @@ const ProductFocused = ({ items }: Props) => {
 
   return (items.map(item => {
     const batches = getByPathWithDefault([], 'batches.nodes', item);
-    batches.sort(sortBatchByArrivalDate);
+    if (batches.length > 1) {
+      batches.sort(sortBatchByArrivalDate);
+    }
     return (
       <Row key={item.id}>
         <ToggleSlide>

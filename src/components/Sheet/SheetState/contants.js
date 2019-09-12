@@ -4,11 +4,15 @@ export const Actions = {
   INIT: 'init',
   APPEND: 'append',
   REARRANGE: 'rearrange',
+  SORT: 'sort',
   CELL_UPDATE: 'cell_update',
   CHANGE_VALUES: 'change_values',
   REPLACE_ITEM: 'replace_item',
   DELETE_ITEM: 'delete_item',
-  SET_ERRORS: 'set_errors',
+  SET_ERROR: 'set_error',
+  CLEAR_ERROR: 'set_error',
+  HOVER: 'hover',
+  UNHOVER: 'unhover',
   FOCUS: 'focus',
   FOCUS_UP: 'focus_up',
   FOCUS_DOWN: 'focus_down',
@@ -24,3 +28,5 @@ export const Actions = {
   PRE_REMOVE_ENTITY: 'pre_remove_entity',
   POST_REMOVE_ENTITY: 'post_remove_entity',
 };
+
+export default Actions;

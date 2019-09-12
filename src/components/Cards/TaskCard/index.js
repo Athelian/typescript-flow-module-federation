@@ -200,6 +200,7 @@ const TaskCard = ({
 
   return (
     <BaseCard
+      showBadge={task.timeline?.unreadCount > 0}
       icon="TASK"
       color="TASK"
       showActionsOnHover
@@ -317,7 +318,7 @@ const TaskCard = ({
 
           {dueDateBinding && (
             <div className={AutoDateSyncIconStyle}>
-              <Icon icon="SYNC" />
+              <Icon icon="BINDED" />
             </div>
           )}
         </div>
@@ -367,7 +368,7 @@ const TaskCard = ({
 
           {startDateBinding && (
             <div className={AutoDateSyncIconStyle}>
-              <Icon icon="SYNC" />
+              <Icon icon="BINDED" />
             </div>
           )}
         </div>

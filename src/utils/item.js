@@ -73,6 +73,7 @@ export const spreadOrderItem = (item: Object): Object => {
     batchShippedCount,
     productProvider,
     order,
+    timeline,
   } = item;
   const compiledOrderItem = {
     id,
@@ -86,6 +87,7 @@ export const spreadOrderItem = (item: Object): Object => {
     totalShipped,
     batchCount,
     batchShippedCount,
+    timeline,
   };
 
   const { name: productProviderName, product } = productProvider || {};

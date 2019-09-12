@@ -6,6 +6,7 @@ import { lowerFirst } from 'lodash';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
+import { recalculateTaskBindingDate } from 'utils/task';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { BaseButton, NewButton } from 'components/Buttons';
@@ -545,10 +546,14 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                           onSelect={value => {
                             setFieldValue(
                               'todo.tasks',
-                              tasks.map(item => ({
-                                ...item,
-                                milestone: value,
-                              }))
+                              tasks.map(item => {
+                                const latestTask = {
+                                  ...item,
+                                  milestone: value,
+                                };
+
+                                return recalculateTaskBindingDate(latestTask);
+                              })
                             );
                             setFieldTouched('tasks');
                             toggleSlide(false);
@@ -570,7 +575,6 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                       <>
                         <div className={TemplateItemStyle}>
                           <Label height="30px">
-                            {' '}
                             <FormattedMessage
                               id="modules.Tasks.template"
                               defaultMessage="TEMPLATE"

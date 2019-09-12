@@ -3,8 +3,7 @@ import * as React from 'react';
 import type { Task } from 'generated/graphql';
 import emitter from 'utils/emitter';
 import { getByPath, setIn } from 'utils/fp';
-import { START_DATE, DUE_DATE } from 'utils/task';
-import { calculateDate, findDuration } from 'utils/date';
+import { recalculateTaskBindingDate } from 'utils/task';
 
 type Props = {
   tasks: Array<Object>,
@@ -30,23 +29,10 @@ const updateDateInput = ({ field, value, task }: { field: string, value: mixed, 
 // Project is the special case which is use only for project form
 export default function ProjectAutoDateBinding({ tasks, setTaskValue }: Props) {
   React.useEffect(() => {
-    const mappingFields = {
-      ProjectDueDate: 'milestone.project.dueDate',
-      MilestoneDueDate: 'milestone.dueDate',
-    };
     emitter.addListener('AUTO_DATE', (field: mixed, value: mixed) => {
       setTaskValue(
         tasks.map(task => {
-          const {
-            startDate,
-            startDateBinding,
-            startDateInterval,
-            dueDate,
-            dueDateBinding,
-            dueDateInterval,
-          } = task;
-
-          const latestValues = field
+          const latestTask = field
             ? updateDateInput({
                 field: String(field),
                 value,
@@ -54,78 +40,7 @@ export default function ProjectAutoDateBinding({ tasks, setTaskValue }: Props) {
               })
             : task;
 
-          let newStartDate = startDate;
-          let newDueDate = dueDate;
-
-          if (startDateBinding === DUE_DATE) {
-            // do the due date first
-            if (dueDateBinding) {
-              const { months, weeks, days } = dueDateInterval || {};
-              const path = mappingFields[dueDateBinding];
-              if (path) {
-                newDueDate = calculateDate({
-                  date: getByPath(path, latestValues),
-                  duration: findDuration({ months, weeks }),
-                  offset: months || weeks || days,
-                });
-              }
-            }
-            const { months, weeks, days } = startDateInterval || {};
-            newStartDate = calculateDate({
-              date: newDueDate,
-              duration: findDuration({ months, weeks }),
-              offset: months || weeks || days,
-            });
-          } else if (dueDateBinding === START_DATE) {
-            // do the start date first
-            if (startDateBinding) {
-              const { months, weeks, days } = startDateInterval || {};
-              const path = mappingFields[startDateBinding];
-              if (path) {
-                newStartDate = calculateDate({
-                  date: getByPath(path, latestValues),
-                  duration: findDuration({ months, weeks }),
-                  offset: months || weeks || days,
-                });
-              }
-            }
-            const { months, weeks, days } = dueDateInterval || {};
-            newDueDate = calculateDate({
-              date: newStartDate,
-              duration: findDuration({ months, weeks }),
-              offset: months || weeks || days,
-            });
-          } else {
-            if (startDateBinding) {
-              const { months, weeks, days } = startDateInterval || {};
-              const path = mappingFields[startDateBinding];
-              if (path) {
-                newStartDate = calculateDate({
-                  date: getByPath(path, latestValues),
-                  duration: findDuration({ months, weeks }),
-                  offset: months || weeks || days,
-                });
-              }
-            }
-
-            if (dueDateBinding) {
-              const { months, weeks, days } = dueDateInterval || {};
-              const path = mappingFields[dueDateBinding];
-              if (path) {
-                newDueDate = calculateDate({
-                  date: getByPath(path, latestValues),
-                  duration: findDuration({ months, weeks }),
-                  offset: months || weeks || days,
-                });
-              }
-            }
-          }
-
-          return {
-            ...task,
-            startDate: newStartDate,
-            dueDate: newDueDate,
-          };
+          return recalculateTaskBindingDate(latestTask);
         })
       );
     });

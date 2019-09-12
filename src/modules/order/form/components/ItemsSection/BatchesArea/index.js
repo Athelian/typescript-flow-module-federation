@@ -1,6 +1,9 @@
 // @flow
 import * as React from 'react';
-import type { Batch, OrderItem } from 'generated/graphql';
+import type { Order, Batch, OrderItem } from 'generated/graphql';
+import { FixedSizeGrid as Grid } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import isDeepEqual from 'react-fast-compare';
 import { FormattedMessage } from 'react-intl';
 import { flatten } from 'lodash';
 import { BooleanValue } from 'react-values';
@@ -41,8 +44,8 @@ import {
   TitleStyle,
   AutofillButtonWrapperStyle,
   NoBatchesFoundStyle,
-  BatchesGridStyle,
   BatchesFooterWrapperStyle,
+  BatchesGridStyle,
 } from './style';
 
 type Props = {
@@ -62,22 +65,130 @@ function findOrderItemPosition({
   batch,
 }: {
   focusedItemIndex: number,
-  orderItems: Array<Object>,
-  batches: Array<Object>,
-  batch: Object,
+  orderItems: Array<OrderItem>,
+  batches: Array<Batch>,
+  batch: Batch,
 }) {
   let orderItemPosition = focusedItemIndex;
-  let batchPosition = batches.findIndex(item => item.id === batch.id);
+  let batchPosition = batches.findIndex(item => item?.id === batch?.id);
   if (orderItemPosition === -1) {
-    orderItemPosition = orderItems.findIndex(orderItem =>
-      orderItem.batches.map(({ id }) => id).includes(batch.id)
+    orderItemPosition = orderItems.findIndex((orderItem: Object) =>
+      (orderItem?.batches ?? []).map(currentBatch => currentBatch?.id).includes(batch?.id)
     );
     if (orderItemPosition >= 0) {
-      batchPosition = orderItems[orderItemPosition].batches.findIndex(item => item.id === batch.id);
+      // $FlowIssue flow doesn't know this way yet
+      batchPosition = (orderItems?.[orderItemPosition]?.batches ?? []).findIndex(
+        item => item?.id === batch?.id
+      );
     }
   }
   return { orderItemPosition, batchPosition };
 }
+
+const GUTTER_SIZE = 10;
+
+const Cell = React.memo(
+  ({
+    columnIndex,
+    rowIndex,
+    style,
+    data,
+  }: {
+    data: {
+      batches: Array<Batch>,
+      order: Order,
+      columnCount: number,
+      focusedItemIndex: number,
+      orderItems: Array<OrderItem>,
+      editable: Object,
+      setFieldValue: Function,
+      hasPermission: Function,
+    },
+    columnIndex: number,
+    rowIndex: number,
+    style: Object,
+  }) => {
+    const {
+      setFieldValue,
+      hasPermission,
+      order,
+      orderItems,
+      batches,
+      focusedItemIndex,
+      columnCount,
+      editable,
+    } = data;
+    const batch = batches[rowIndex * columnCount + columnIndex];
+    if (!batch) return null;
+
+    const { orderItemPosition, batchPosition } = findOrderItemPosition({
+      focusedItemIndex,
+      batches,
+      orderItems,
+      batch,
+    });
+    return (
+      <BooleanValue key={batch.id}>
+        {({ value: opened, set: slideToggle }) => (
+          <div
+            style={{
+              ...style,
+              left: style.left + GUTTER_SIZE,
+              top: style.top + GUTTER_SIZE * 3,
+              width: style.width - GUTTER_SIZE,
+              height: style.height - GUTTER_SIZE,
+            }}
+          >
+            <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+              {opened && (
+                <BatchFormInSlide
+                  batch={batch}
+                  onSave={updatedBatch => {
+                    slideToggle(false);
+                    setFieldValue(
+                      `orderItems.${orderItemPosition}.batches.${batchPosition}`,
+                      updatedBatch
+                    );
+                  }}
+                  itemConfig={READONLY}
+                  shipmentConfig={NAVIGABLE}
+                  containerConfig={NAVIGABLE}
+                  orderConfig={HIDE}
+                />
+              )}
+            </SlideView>
+            <OrderBatchCard
+              price={orderItems[orderItemPosition].price}
+              editable={editable}
+              currency={order && order.currency}
+              batch={batch}
+              onClick={() => slideToggle(true)}
+              saveOnBlur={updatedBatch => {
+                setFieldValue(
+                  `orderItems.${orderItemPosition}.batches.${batchPosition}`,
+                  updatedBatch
+                );
+              }}
+              onRemove={() => {
+                const remainBatches = orderItems[orderItemPosition].batches.filter(
+                  (item: ?Object) => item?.id !== batch?.id
+                );
+                setFieldValue(`orderItems.${orderItemPosition}.batches`, remainBatches);
+              }}
+              onClone={newBatch => {
+                setFieldValue(`orderItems.${orderItemPosition}.batches`, [
+                  ...(orderItems[orderItemPosition].batches || []),
+                  generateCloneBatch(newBatch, hasPermission),
+                ]);
+              }}
+            />
+          </div>
+        )}
+      </BooleanValue>
+    );
+  },
+  isDeepEqual
+);
 
 function BatchesArea({
   itemsIsExpanded,
@@ -199,74 +310,46 @@ function BatchesArea({
         </div>
 
         {batches.length > 0 ? (
-          <div className={BatchesGridStyle}>
-            {batches.map(batch => {
-              const { orderItemPosition, batchPosition } = findOrderItemPosition({
-                focusedItemIndex,
-                batches,
-                orderItems,
-                batch,
-              });
-              return (
-                <BooleanValue key={batch.id}>
-                  {({ value: opened, set: slideToggle }) => (
-                    <>
-                      <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                        {opened && (
-                          <BatchFormInSlide
-                            batch={batch}
-                            onSave={updatedBatch => {
-                              slideToggle(false);
-                              setFieldValue(
-                                `orderItems.${orderItemPosition}.batches.${batchPosition}`,
-                                updatedBatch
-                              );
-                            }}
-                            itemConfig={READONLY}
-                            shipmentConfig={NAVIGABLE}
-                            containerConfig={NAVIGABLE}
-                            orderConfig={HIDE}
-                          />
-                        )}
-                      </SlideView>
-                      <OrderBatchCard
-                        price={orderItems[orderItemPosition].price}
-                        editable={{
-                          clone: allowCloneBatch,
-                          delete: allowDeleteBatch,
-                          no: allowUpdateBatchNo,
-                          quantity: allowUpdateBatchQuantity,
-                          deliveredAt: allowUpdateBatchDelivery,
-                          desiredAt: allowUpdateBatchDesired,
-                        }}
-                        currency={order && order.currency}
-                        batch={batch}
-                        onClick={() => slideToggle(true)}
-                        saveOnBlur={updatedBatch => {
-                          setFieldValue(
-                            `orderItems.${orderItemPosition}.batches.${batchPosition}`,
-                            updatedBatch
-                          );
-                        }}
-                        onRemove={() => {
-                          const remainBatches = orderItems[orderItemPosition].batches.filter(
-                            item => item.id !== batch.id
-                          );
-                          setFieldValue(`orderItems.${orderItemPosition}.batches`, remainBatches);
-                        }}
-                        onClone={newBatch => {
-                          setFieldValue(`orderItems.${orderItemPosition}.batches`, [
-                            ...(orderItems[orderItemPosition].batches || []),
-                            generateCloneBatch(newBatch, hasPermission),
-                          ]);
-                        }}
-                      />
-                    </>
-                  )}
-                </BooleanValue>
-              );
-            })}
-          </div>
+          (() => {
+            const COLUMN = 195;
+            const ROW = 291;
+            const BOTTOM = itemsIsExpanded ? 90 : 50;
+            const columnCount = itemsIsExpanded ? 1 : 3;
+            return (
+              <AutoSizer>
+                {({ height, width }) => (
+                  <Grid
+                    itemData={{
+                      order,
+                      batches,
+                      orderItems,
+                      focusedItemIndex,
+                      hasPermission,
+                      setFieldValue,
+                      columnCount,
+                      editable: {
+                        clone: allowCloneBatch,
+                        delete: allowDeleteBatch,
+                        no: allowUpdateBatchNo,
+                        quantity: allowUpdateBatchQuantity,
+                        deliveredAt: allowUpdateBatchDelivery,
+                        desiredAt: allowUpdateBatchDesired,
+                      },
+                    }}
+                    className={BatchesGridStyle}
+                    columnCount={columnCount}
+                    columnWidth={COLUMN + GUTTER_SIZE}
+                    rowCount={Math.ceil(batches.length / columnCount)}
+                    rowHeight={ROW + GUTTER_SIZE * 3}
+                    height={height - BOTTOM}
+                    width={width}
+                  >
+                    {Cell}
+                  </Grid>
+                )}
+              </AutoSizer>
+            );
+          })()
         ) : (
           <div className={NoBatchesFoundStyle}>
             <Display align="center">

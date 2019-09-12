@@ -180,6 +180,9 @@ export const orderCardOptimiseFragment = gql`
     batchCount
     containerCount
     shipmentCount
+    ownedBy {
+      ...ownedByFragment
+    }
     todo {
       taskCount {
         ...taskCountFragment
@@ -500,6 +503,7 @@ export const orderFocusedListQuery = gql`
   ${orderCardOptimiseFragment}
   ${tagFragment}
   ${taskCountFragment}
+  ${ownedByFragment}
 `;
 
 export const orderFocusDetailQuery = gql`

@@ -45,3 +45,11 @@ export const NavBarStyle: string = css`
     width: 100%;
   }
 `;
+
+export const SlideViewNavBarStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-template-rows: 50px;
+  grid-gap: 20px;
+  align-items: center;
+  width: 100%;
+`;

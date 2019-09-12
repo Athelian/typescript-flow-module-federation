@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Sep 05 2019 11:56:37 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Sep 06 2019 16:39:48 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -87472,6 +87472,7 @@ input TodoTaskInput {
   tagIds: [ID!]
   id: ID
   taskTemplateId: ID
+  milestoneId: ID
 }
 
 type Token {

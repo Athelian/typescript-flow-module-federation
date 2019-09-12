@@ -1,5 +1,4 @@
 // @flow
-
 import * as React from 'react';
 import type { DraggableProvided } from 'react-beautiful-dnd';
 import { Subscribe } from 'unstated';
@@ -7,7 +6,7 @@ import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
 import { formatToGraphql, startOfToday, differenceInCalendarDays } from 'utils/date';
-import { getByPathWithDefault, isEquals } from 'utils/fp';
+import { isEquals } from 'utils/fp';
 import { calculateBindingDate } from 'utils/project';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -72,9 +71,9 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
       {(
         { state: projectInfoState },
         {
-          originalValues,
+          originalValues: { milestones: originalMilestones },
           originalTasks,
-          state,
+          state: { milestones = [] },
           setMilestoneValue,
           setDeepFieldValue,
           excludeTaskIds,
@@ -84,11 +83,9 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
           completedMilestone,
         }
       ) => {
-        const { milestones = [] } = { ...originalValues, ...state };
-        const values = milestones.find(milestone => milestone.id === milestoneId) || {};
         const milestoneIndex = milestones.findIndex(milestone => milestone.id === milestoneId);
-        const initialValues =
-          (originalValues.milestones || []).find(milestone => milestone.id === milestoneId) || {};
+        const currentMilestone = milestones[milestoneIndex];
+        const originalValues = originalMilestones[milestoneIndex] || {};
 
         const validation = validator({
           name: `${milestoneId}.name`,
@@ -102,21 +99,39 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
             });
           }
         };
+        const {
+          name,
+          dueDateBinding,
+          dueDateInterval,
+          dueDate: rawDueDate,
+          completedAt,
+          completedBy,
+          estimatedCompletionDateBinding,
+          tasks,
+        } = currentMilestone;
 
-        const dueDate = values.dueDateBinding
-          ? calculateBindingDate(projectInfoState.dueDate, values.dueDateInterval)
-          : values.dueDate;
+        const dueDate = dueDateBinding
+          ? calculateBindingDate(projectInfoState.dueDate, dueDateInterval)
+          : rawDueDate;
 
         const completedAtAndDueDateDiff =
-          values.completedAt && dueDate
-            ? differenceInCalendarDays(new Date(values.completedAt), new Date(dueDate))
+          completedAt && dueDate
+            ? differenceInCalendarDays(new Date(completedAt), new Date(dueDate))
             : 0;
 
-        const estComplDate = estimatedCompletionDates[milestoneIndex];
-        const estComplDateDiff =
-          estComplDate && dueDate
-            ? differenceInCalendarDays(new Date(estComplDate), new Date(dueDate))
+        const estimatedCompletionDate = estimatedCompletionDates[milestoneIndex];
+        const estimatedCompletionDateDiff =
+          estimatedCompletionDate && dueDate
+            ? differenceInCalendarDays(new Date(estimatedCompletionDate), new Date(dueDate))
             : 0;
+
+        const values = {
+          [`${milestoneId}.name`]: name,
+          [`${milestoneId}.dueDate`]: dueDate,
+          [`${milestoneId}.completedAt`]: completedAt,
+          [`${milestoneId}.estimatedCompletionDate`]: estimatedCompletionDate,
+          ...currentMilestone,
+        };
 
         return (
           <BooleanValue>
@@ -129,7 +144,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                   {milestoneFormIsOpened && (
                     <MilestoneFormSlide
                       milestone={{
-                        ...values,
+                        ...currentMilestone,
                         project: {
                           milestones,
                           dueDate: projectInfoState.dueDate,
@@ -166,7 +181,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                             type="button"
                             onClick={event => {
                               event.stopPropagation();
-                              if (getByPathWithDefault([], 'tasks', values).length > 0) {
+                              if ((tasks || []).length > 0) {
                                 dialogToggle(true);
                               } else {
                                 removeMilestone(milestoneId);
@@ -205,18 +220,18 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                   <div role="presentation" onClick={e => e.stopPropagation()}>
                     <FormField
                       name={`${milestoneId}.name`}
-                      initValue={values.name}
+                      initValue={name}
                       values={values}
                       validator={validation}
                       setFieldValue={onChangeValue}
                     >
-                      {({ name, ...inputHandlers }) => (
+                      {({ name: fieldName, ...inputHandlers }) => (
                         <TextInputFactory
-                          name={name}
+                          name={fieldName}
+                          originalValue={originalValues.name}
                           {...inputHandlers}
                           isNew={isNew}
                           required
-                          originalValue={initialValues.name}
                           editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_NAME])}
                           vertical
                           inputWidth="225px"
@@ -232,26 +247,26 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                         initValue={dueDate}
                         values={values}
                       >
-                        {({ name, onBlur, ...inputHandlers }) => (
+                        {({ name: fieldName, onBlur, ...inputHandlers }) => (
                           <DateInputFactory
-                            name={name}
+                            name={fieldName}
+                            originalValue={originalValues.dueDate}
                             {...inputHandlers}
                             onBlur={e => {
                               onBlur(e);
                               const value = inputHandlers.value || null;
                               if (!isEquals(value, dueDate)) {
-                                onChangeValue(name, value);
+                                onChangeValue(fieldName, value);
                                 setTimeout(() => {
-                                  emitter.emit('AUTO_DATE', name, value);
+                                  emitter.emit('AUTO_DATE', fieldName, value);
                                 }, 200);
                               }
                             }}
                             isNew={isNew}
-                            originalValue={initialValues.dueDate}
                             label={<FormattedMessage {...messages.dueDate} />}
                             editable={
                               hasPermission([MILESTONE_UPDATE, MILESTONE_SET_DUE_DATE]) &&
-                              !values.dueDateBinding
+                              !dueDateBinding
                             }
                             labelWidth="95px"
                             labelHeight="20px"
@@ -261,34 +276,34 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                           />
                         )}
                       </FormField>
-                      {values.dueDateBinding && (
+                      {dueDateBinding && (
                         <div className={AutoDateSyncIconStyle}>
-                          <Icon icon="SYNC" />
+                          <Icon icon="BINDED" />
                         </div>
                       )}
                     </div>
                   </div>
 
                   <div role="presentation" onClick={e => e.stopPropagation()}>
-                    {values.completedAt ? (
+                    {completedAt ? (
                       <div className={DateInputWrapperStyle}>
                         <FormField
                           name={`${milestoneId}.completedAt`}
-                          initValue={values.completedAt}
+                          initValue={completedAt}
                           values={values}
                         >
-                          {({ name, onBlur, ...inputHandlers }) => (
+                          {({ name: fieldName, onBlur, ...inputHandlers }) => (
                             <DateInputFactory
-                              name={name}
+                              name={fieldName}
+                              originalValue={originalValues.completedAt}
                               {...inputHandlers}
                               onBlur={e => {
                                 onBlur(e);
                                 const value = inputHandlers.value || null;
-                                if (!isEquals(value, values.completeAt)) {
-                                  onChangeValue(name, value);
+                                if (!isEquals(value, completedAt)) {
+                                  onChangeValue(fieldName, value);
                                 }
                               }}
-                              originalValue={initialValues.completedAt}
                               label={<FormattedMessage {...messages.completed} />}
                               editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_COMPLETED])}
                               labelWidth="95px"
@@ -310,28 +325,28 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                       <div className={DateInputWrapperStyle}>
                         <FormField
                           name={`${milestoneId}.estimatedCompletionDate`}
-                          initValue={estComplDate}
+                          initValue={estimatedCompletionDate}
                           values={values}
                         >
-                          {({ name, onBlur, ...inputHandlers }) => (
+                          {({ name: fieldName, onBlur, ...inputHandlers }) => (
                             <DateInputFactory
-                              name={name}
+                              name={fieldName}
+                              originalValue={originalValues.estimatedCompletionDate}
                               {...inputHandlers}
                               onBlur={e => {
                                 onBlur(e);
                                 const value = inputHandlers.value || null;
-                                if (!isEquals(value, estComplDate)) {
-                                  onChangeValue(name, value);
+                                if (!isEquals(value, estimatedCompletionDate)) {
+                                  onChangeValue(fieldName, value);
                                 }
                               }}
                               isNew={isNew}
-                              originalValue={initialValues.estimatedCompletionDate}
                               label={<FormattedMessage {...messages.estCompl} />}
                               editable={
                                 hasPermission([
                                   MILESTONE_UPDATE,
                                   MILESTONE_SET_ESTIMATED_COMPLETION_DATE,
-                                ]) && !values.estimatedCompletionDateBinding
+                                ]) && !estimatedCompletionDateBinding
                               }
                               labelWidth="95px"
                               labelHeight="20px"
@@ -341,14 +356,14 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                             />
                           )}
                         </FormField>
-                        {values.estimatedCompletionDateBinding && (
+                        {estimatedCompletionDateBinding && (
                           <div className={AutoDateSyncIconStyle}>
-                            <Icon icon="SYNC" />
+                            <Icon icon="BINDED" />
                           </div>
                         )}
-                        <div className={DiffDateStyle(estComplDateDiff)}>
-                          {estComplDateDiff > 0 && '+'}
-                          {estComplDateDiff !== 0 && estComplDateDiff}
+                        <div className={DiffDateStyle(estimatedCompletionDateDiff)}>
+                          {estimatedCompletionDateDiff > 0 && '+'}
+                          {estimatedCompletionDateDiff !== 0 && estimatedCompletionDateDiff}
                         </div>
                       </div>
                     )}
@@ -380,8 +395,8 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                               action: 'leaveUnChange',
                             });
                           }}
-                          completedAt={values.completedAt}
-                          completedBy={values.completedBy}
+                          completedAt={completedAt}
+                          completedBy={completedBy}
                         />
                         <CompleteDialog
                           editable={{
@@ -468,13 +483,13 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                                 excludeIds: excludeIds(),
                                 hasMilestoneExceptIds: excludeTaskIds(),
                               }}
-                              selectedTasks={values.tasks || []}
+                              selectedTasks={tasks || []}
                               onSelect={selected => {
                                 selectTasksSlideToggle(false);
-                                const counter = getByPathWithDefault([], 'tasks', values).length;
+                                const counter = (tasks || []).length;
                                 originalTasks.push(...selected);
                                 onChangeValue(`${milestoneId}.tasks`, [
-                                  ...getByPathWithDefault([], 'tasks', values),
+                                  ...tasks,
                                   ...selected.map((task, index) => ({
                                     ...task,
                                     milestoneSort: counter + index,
@@ -490,7 +505,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                   </BooleanValue>
 
                   <div className={TaskRingWrapperStyle}>
-                    <TaskRing tasks={values.tasks || []} />
+                    <TaskRing tasks={tasks || []} />
                   </div>
                 </div>
               </>

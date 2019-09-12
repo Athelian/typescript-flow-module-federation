@@ -4,7 +4,7 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Icon from 'components/Icon';
 import { BaseButton } from 'components/Buttons';
 import CheckboxInput from 'components/Form/CheckboxInput';
-import type { ColumnState } from '../index';
+import type { ColumnState } from '../types';
 import {
   WrapperStyle,
   LeftWrapperStyle,

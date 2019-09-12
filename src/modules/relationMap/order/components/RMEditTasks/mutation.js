@@ -4,6 +4,7 @@ import {
   taskWithParentInfoFragment,
   milestoneCardFragment,
   projectCardFragment,
+  milestoneFragment,
   userAvatarFragment,
   tagFragment,
   productCardFragment,
@@ -37,6 +38,7 @@ export const taskUpdateManyMutation = gql`
   ${taskWithParentInfoFragment}
   ${milestoneCardFragment}
   ${projectCardFragment}
+  ${milestoneFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${orderCardFragment}

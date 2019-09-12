@@ -4,27 +4,25 @@ import { VariableSizeGrid } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
 import LoadingIcon from 'components/LoadingIcon';
-import type { Position } from '../SheetState';
+import type { Area } from '../SheetState/types';
+import type { ColumnState } from '../SheetColumns';
 import Column from '../Column';
-import { ColumnsWrapperStyle, ContentStyle, WrapperStyle } from './style';
-
-export type ColumnConfig = {
-  key: string,
-  title: any,
-  icon: string,
-  color: string,
-  width: number,
-  minWidth?: number,
-  hidden?: boolean,
-};
+import {
+  ColumnFillerStyle,
+  ColumnsWrapperStyle,
+  ContentStyle,
+  GridStyle,
+  WrapperStyle,
+} from './style';
 
 type Props = {
-  columns: Array<ColumnConfig>,
+  columns: Array<ColumnState>,
   rowCount: number,
   loading: boolean,
   loadingMore: boolean,
   hasMore: boolean,
-  focusedAt: Position | null,
+  focusAt: Area | null,
+  onSortToggle: string => void,
   onThreshold: () => void,
   onColumnResize: (key: string, width: number) => void,
   children: React.ComponentType<any>,
@@ -36,7 +34,8 @@ const SheetRenderer = ({
   loading,
   loadingMore,
   hasMore,
-  focusedAt,
+  focusAt,
+  onSortToggle,
   onThreshold,
   onColumnResize,
   children,
@@ -48,16 +47,16 @@ const SheetRenderer = ({
   }, []);
 
   React.useEffect(() => {
-    if (!gridRef.current || !focusedAt) {
+    if (!gridRef.current || !focusAt) {
       return;
     }
 
     gridRef.current.scrollToItem({
       align: 'auto',
-      rowIndex: focusedAt.x,
-      columnIndex: focusedAt.y,
+      rowIndex: focusAt.from.x,
+      columnIndex: focusAt.from.y,
     });
-  }, [focusedAt]);
+  }, [focusAt]);
 
   React.useEffect(() => {
     if (!gridRef.current) {
@@ -83,12 +82,20 @@ const SheetRenderer = ({
           <Column
             key={column.key}
             title={column.title}
+            sortable={!!column.sort}
+            direction={column.sort?.direction}
+            onSortToggle={() => {
+              onSortToggle(column.key);
+            }}
             color={column.color}
             width={column.width}
             minWidth={column.minWidth}
             onResize={width => onColumnResize(column.key, width)}
           />
         ))}
+        {columns.length > 0 && (
+          <div className={ColumnFillerStyle(columns[columns.length - 1].color)} />
+        )}
       </div>
       <div className={ContentStyle}>
         {loading ? (
@@ -136,6 +143,7 @@ const SheetRenderer = ({
                         ref(r);
                         setGridRef(r);
                       }}
+                      className={GridStyle}
                       width={width}
                       height={height}
                       columnCount={columns.length}
@@ -159,4 +167,4 @@ const SheetRenderer = ({
   );
 };
 
-export default SheetRenderer;
+export default React.memo<Props>(SheetRenderer);

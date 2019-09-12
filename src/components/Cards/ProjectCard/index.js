@@ -1,21 +1,23 @@
 // @flow
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { isForbidden, isNotFound } from 'utils/data';
-import { Display, FieldItem, Label } from 'components/Form';
-import FormattedDate from 'components/FormattedDate';
-import FormattedNumber from 'components/FormattedNumber';
-import Divider from 'components/Divider';
-import TaskStatusChart from 'components/TaskStatusChart';
-import withForbiddenCard from 'hoc/withForbiddenCard';
+import { FormattedMessage, FormattedDate } from 'react-intl';
+import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import { Display, Label } from 'components/Form';
+import { Tooltip } from 'components/Tooltip';
+import { differenceInCalendarDays } from 'utils/date';
+import ProjectDueDateDiffToolTip from './components/ProjectDueDateDiffToolTip';
+import MilestoneTimelineItem from './components/MilestoneTimelineItem';
 import BaseCard from '../BaseCard';
 import {
   ProjectCardStyle,
-  ProjectNameStyle,
-  CommonCardGridStyle,
-  TaskStatusChartStyle,
+  ProjectCardHeaderStyle,
+  ProjectDueDateStyle,
+  DiffDateStyle,
+  InfoIconStyle,
   TagsWrapperStyle,
+  DividerStyle,
+  ProjectCardBodyStyle,
 } from './style';
 
 type OptionalProps = {
@@ -23,113 +25,94 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  project: {
-    name: string,
-    dueDate: string,
-    milestones: Array<Object>,
-    taskCount: {
-      count: number,
-      remain: number,
-      inProgress: number,
-      skipped: number,
-      completed: number,
-      delayed: number,
-    },
-    tags: Array<Object>,
-  },
+  project: Object,
 };
 
 const ProjectCard = ({ project, onClick, ...rest }: Props) => {
-  const { name, dueDate, milestones = [], taskCount = {}, tags = [] } = project;
-  const { count, remain, inProgress, skipped, completed, delayed } = taskCount;
+  const { name, dueDate, tags = [], milestones = [] } = project;
+
+  // TODO: Handle if milestones is empty array
+  const lastMilestone = milestones[milestones.length - 1];
+  let lastMilestoneDiff = 0;
+  if (dueDate && lastMilestone.completedAt) {
+    lastMilestoneDiff = differenceInCalendarDays(
+      new Date(lastMilestone.completedAt),
+      new Date(dueDate)
+    );
+  } else if (dueDate && lastMilestone.estCompletedAt) {
+    // TODO: Replace estCompletedAt with real data
+    lastMilestoneDiff = differenceInCalendarDays(
+      new Date(lastMilestone.estCompletedAt),
+      new Date(dueDate)
+    );
+  }
 
   return (
-    <BaseCard icon="PROJECT" color="PROJECT" onClick={onClick} {...rest}>
+    <BaseCard
+      showBadge={project.timeline?.unreadCount > 0}
+      icon="PROJECT"
+      color="PROJECT"
+      onClick={onClick}
+      {...rest}
+    >
       <div className={ProjectCardStyle}>
-        <div className={CommonCardGridStyle}>
-          <div className={ProjectNameStyle}>
-            <Display align="left">{name}</Display>
-          </div>
+        <div className={ProjectCardHeaderStyle}>
+          <Display width="200px" height="20px">
+            {name}
+          </Display>
 
-          <FieldItem
-            label={
-              <Label>
-                <FormattedMessage id="components.cards.dueDate" defaultMessage="DUE DATE" />
-              </Label>
-            }
-            input={
-              <Display>
+          <div className={ProjectDueDateStyle}>
+            <Label width="40px" height="20px">
+              <FormattedMessage id="components.card.due" defaultMessage="DUE" />
+            </Label>
+
+            <Display width="80px" height="20px">
+              {dueDate ? (
                 <FormattedDate value={dueDate} />
-              </Display>
-            }
-          />
+              ) : (
+                <FormattedMessage id="component.cards.na" defaultMessage="N/A" />
+              )}
+            </Display>
 
-          <FieldItem
-            label={
-              <Label>
-                <FormattedMessage id="components.cards.milestones" defaultMessage="MILESTONES" />
-              </Label>
-            }
-            input={
-              <Display>
-                <FormattedNumber value={milestones.length} />
-              </Display>
-            }
-          />
+            <div className={DiffDateStyle(lastMilestoneDiff)}>
+              {lastMilestoneDiff > 0 && '+'}
+              {lastMilestoneDiff !== 0 && lastMilestoneDiff}
+            </div>
 
-          <Divider />
-
-          <FieldItem
-            label={
-              <Label>
-                <FormattedMessage id="components.cards.tasks" defaultMessage="TASKS" />
-              </Label>
-            }
-            input={
-              <Display>
-                <FormattedNumber value={count} />
-              </Display>
-            }
-          />
-
-          <FieldItem
-            label={
-              <Label>
-                <FormattedMessage id="components.cards.overdueTasks" defaultMessage="OVERDUE" />
-              </Label>
-            }
-            input={
-              <Display>
-                <FormattedNumber value={delayed} />
-              </Display>
-            }
-          />
-
-          <div className={TaskStatusChartStyle}>
-            <TaskStatusChart
-              completed={completed}
-              inProgress={inProgress}
-              skipped={skipped}
-              unCompleted={remain}
-            />
+            {lastMilestoneDiff !== 0 && (
+              <Tooltip
+                message={
+                  <ProjectDueDateDiffToolTip
+                    dueDate={dueDate}
+                    estDate={lastMilestone.estCompletedAt}
+                    completedAt={lastMilestone.completedAt}
+                  />
+                }
+              >
+                <div className={InfoIconStyle}>
+                  <Icon icon="INFO" />
+                </div>
+              </Tooltip>
+            )}
           </div>
 
           <div className={TagsWrapperStyle}>
-            {tags
-              .filter(item => !isForbidden(item) && !isNotFound(item))
-              .map(tag => (
-                <Tag key={tag.id} tag={tag} />
-              ))}
+            {tags.map(tag => (
+              <Tag key={tag.id} tag={tag} />
+            ))}
           </div>
+        </div>
+
+        <div className={DividerStyle} />
+
+        <div className={ProjectCardBodyStyle(milestones.length)}>
+          {milestones.map(milestone => (
+            <MilestoneTimelineItem key={milestone.id} milestone={milestone} />
+          ))}
         </div>
       </div>
     </BaseCard>
   );
 };
 
-export default withForbiddenCard(ProjectCard, 'project', {
-  width: '195px',
-  height: '214px',
-  entityIcon: 'PROJECT',
-  entityColor: 'PROJECT',
-});
+export default ProjectCard;

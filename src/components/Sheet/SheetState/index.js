@@ -1,90 +1,15 @@
 // @flow
 import * as React from 'react';
-import type { ColumnConfig } from '../SheetRenderer';
-import { cellReducer } from './reducer';
+import { equals, clone } from 'ramda';
+import { useSheetColumns } from '../SheetColumns';
+import type { ColumnSort } from '../SheetColumns';
+import cellReducer from './reducer';
 import { Actions } from './contants';
-
-export type CellValue = {
-  columnKey: string,
-  entity: {
-    id: string,
-    type: string,
-    field: string,
-    permissions: ((string) => boolean) => boolean,
-    ownedBy: string,
-  } | null,
-  data: {
-    value: any,
-    path: string,
-  } | null,
-  type: string,
-  readonly?: boolean,
-  disabled?: boolean,
-  empty?: boolean,
-  forbidden?: boolean,
-  duplicatable?: boolean,
-  parent?: boolean,
-  extended?: number,
-};
-
-export type Position = {
-  x: number,
-  y: number,
-};
-
-type Focus = {
-  cell: CellValue,
-} & Position;
-
-export type ForeignFocus = {
-  id: string,
-  user: {
-    firstName: string,
-    lastName: string,
-  },
-} & Position;
-
-type Error = {
-  messages: Array<string>,
-} & Position;
-
-export type Action = {
-  type: string,
-  cell?: Position | null,
-  payload?: any,
-};
-
-export type RowChange = {
-  start: number,
-  end: number,
-  entity: {
-    id: string,
-    type: string,
-  },
-};
-
-type RowChangeOnRemoved = {
-  onClear: ((Action) => void, items: Array<Object>) => void,
-} & RowChange;
-
-export type State = {
-  initialized: boolean,
-  items: Array<Object>,
-  rows: Array<Array<CellValue>>,
-  columns: Array<string>,
-  entities: Array<{ id: string, type: string }>,
-  focusedAt: Focus | null,
-  weakFocusedAt: Array<Position>,
-  foreignFocuses: Array<Object>,
-  foreignFocusedAt: Array<ForeignFocus>,
-  erroredAt: Error | null,
-  weakErroredAt: Array<Position>,
-  addedRows: Array<RowChange>,
-  removedRows: Array<RowChangeOnRemoved>,
-};
+import type { Action, CellValue, State, Position } from './types';
 
 type Props = {
   transformItem: (index: number, item: Object) => Array<Array<CellValue>>,
+  onLocalSort: (Array<Object>, Array<ColumnSort>) => Array<Object>,
   onMutate: ({ entity: Object, field: string, value: any }) => Promise<Array<Object> | null>,
   children: React.Node,
 };
@@ -95,12 +20,14 @@ const initialState: State = {
   rows: [],
   columns: [],
   entities: [],
-  focusedAt: null,
-  weakFocusedAt: [],
+  sorts: [],
+  hoverAt: null,
+  focusAt: null,
+  weakFocusAt: [],
   foreignFocuses: [],
-  foreignFocusedAt: [],
-  erroredAt: null,
-  weakErroredAt: [],
+  foreignFocusesAt: [],
+  errorAt: null,
+  weakErrorAt: [],
   addedRows: [],
   removedRows: [],
 };
@@ -119,20 +46,28 @@ export const SheetStateContext = React.createContext<Context>({
 
 export const useSheetState = (): Context => React.useContext(SheetStateContext);
 
-export const useSheetStateInitializer = (columns: Array<ColumnConfig>, items: Array<Object>) => {
+export const useSheetStateInitializer = (
+  items: Array<Object>,
+  onRemoteSort: (sorts: Array<ColumnSort>) => void
+) => {
   const { state, dispatch } = useSheetState();
-  const columnKeysRef = React.useRef([]);
+  const { columns } = useSheetColumns();
+  const columnKeysRef = React.useRef<Array<string>>([]);
+  const remoteSortsRef = React.useRef<Array<ColumnSort>>([]);
+  const localSortsRef = React.useRef<Array<ColumnSort>>([]);
 
   React.useEffect(() => {
     const columnKeys = columns.map(c => c.key);
     const needRearrange =
       columnKeys.length !== columnKeysRef.current.length ||
-      !columnKeys.every((value, index) => value !== columnKeysRef.current[index]);
+      !columnKeys.every((value, index) => value === columnKeysRef.current[index]);
 
     if (state.initialized && needRearrange) {
       dispatch({
         type: Actions.REARRANGE,
-        payload: columns.map(c => c.key),
+        payload: {
+          columns: columns.map(c => c.key),
+        },
       });
     }
 
@@ -148,24 +83,49 @@ export const useSheetStateInitializer = (columns: Array<ColumnConfig>, items: Ar
       },
     });
   }, [dispatch, items]);
+
+  React.useEffect(() => {
+    const sorts = columns.filter(c => !!c.sort?.direction).map(c => c.sort);
+    const localSorts = sorts.filter(s => s?.local);
+    const remoteSorts = sorts.filter(s => !s?.local);
+
+    if (!equals(localSorts, localSortsRef.current)) {
+      localSortsRef.current = localSorts;
+
+      dispatch({
+        type: Actions.SORT,
+        payload: {
+          sorts: localSorts,
+        },
+      });
+    }
+
+    if (!equals(remoteSorts, remoteSortsRef.current)) {
+      remoteSortsRef.current = clone(remoteSorts);
+
+      onRemoteSort(remoteSorts);
+    }
+  }, [columns, onRemoteSort, dispatch]);
 };
 
 export const useSheetStateLoadMore = (onLoadMore: () => Promise<Array<Object>>) => {
   const [loadingMore, setLoadingMore] = React.useState<boolean>(false);
   const { dispatch } = useSheetState();
 
-  function handleThreshold() {
+  const handleThreshold = React.useCallback(() => {
     setLoadingMore(true);
 
     onLoadMore()
       .then(newItems =>
         dispatch({
           type: Actions.APPEND,
-          payload: newItems,
+          payload: {
+            items: newItems,
+          },
         })
       )
       .then(() => setLoadingMore(false));
-  }
+  }, [setLoadingMore, onLoadMore, dispatch]);
 
   return [loadingMore, handleThreshold];
 };
@@ -173,42 +133,45 @@ export const useSheetStateLoadMore = (onLoadMore: () => Promise<Array<Object>>) 
 export const useSheetKeyNavigation = () => {
   const { dispatch } = useSheetState();
 
-  function handleKey(e: SyntheticKeyboardEvent<HTMLDivElement>) {
-    switch (e.key) {
-      case 'ArrowUp':
-        e.preventDefault();
-        dispatch({
-          type: Actions.FOCUS_UP,
-        });
-        break;
-      case 'ArrowDown':
-        e.preventDefault();
-        dispatch({
-          type: Actions.FOCUS_DOWN,
-        });
-        break;
-      case 'ArrowRight':
-        e.preventDefault();
-        dispatch({
-          type: Actions.FOCUS_RIGHT,
-        });
-        break;
-      case 'ArrowLeft':
-        e.preventDefault();
-        dispatch({
-          type: Actions.FOCUS_LEFT,
-        });
-        break;
-      case 'Tab':
-        e.preventDefault();
-        dispatch({
-          type: e.shiftKey ? Actions.FOCUS_LEFT : Actions.FOCUS_RIGHT,
-        });
-        break;
-      default:
-        break;
-    }
-  }
+  const handleKey = React.useCallback(
+    (e: SyntheticKeyboardEvent<HTMLDivElement>) => {
+      switch (e.key) {
+        case 'ArrowUp':
+          e.preventDefault();
+          dispatch({
+            type: Actions.FOCUS_UP,
+          });
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          dispatch({
+            type: Actions.FOCUS_DOWN,
+          });
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          dispatch({
+            type: Actions.FOCUS_RIGHT,
+          });
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          dispatch({
+            type: Actions.FOCUS_LEFT,
+          });
+          break;
+        case 'Tab':
+          e.preventDefault();
+          dispatch({
+            type: e.shiftKey ? Actions.FOCUS_LEFT : Actions.FOCUS_RIGHT,
+          });
+          break;
+        default:
+          break;
+      }
+    },
+    [dispatch]
+  );
 
   React.useEffect(() => {
     window.addEventListener('keydown', handleKey);
@@ -217,8 +180,16 @@ export const useSheetKeyNavigation = () => {
   }, [handleKey]);
 };
 
-export const SheetState = ({ transformItem, onMutate, children }: Props) => {
-  const memoizedReducer = React.useCallback(cellReducer(transformItem), [transformItem]);
+export const useCell = (position: Position): CellValue => {
+  const { state } = useSheetState();
+
+  return state.rows[position.x][position.y];
+};
+
+export const SheetState = ({ transformItem, onMutate, onLocalSort, children }: Props) => {
+  const memoizedReducer = React.useCallback(cellReducer(transformItem, onLocalSort), [
+    transformItem,
+  ]);
   const [state, dispatch] = React.useReducer<State, Action>(memoizedReducer, initialState);
   const addedRowsRef = React.useRef([]);
   const removedRowsRef = React.useRef([]);
@@ -232,7 +203,9 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
       dispatch({
         type: Actions.CELL_UPDATE,
         cell,
-        payload: value,
+        payload: {
+          value,
+        },
       });
 
       onMutate({
@@ -240,7 +213,7 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
           id: cellValue?.entity?.id,
           type: cellValue?.entity?.type,
         },
-        field: cellValue?.entity?.field ?? '',
+        field: cellValue?.data?.field ?? '',
         value,
       }).then(violations => {
         if (violations === null) {
@@ -250,13 +223,17 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
         dispatch({
           type: Actions.CELL_UPDATE,
           cell,
-          payload: cellValue?.data?.value,
+          payload: {
+            value: cellValue?.data?.value,
+          },
         });
 
         dispatch({
-          type: Actions.SET_ERRORS,
+          type: Actions.SET_ERROR,
           cell,
-          payload: violations.map(v => v.message),
+          payload: {
+            messages: violations.map(v => v.message),
+          },
         });
       });
     },
@@ -264,22 +241,20 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
   );
 
   React.useEffect(() => {
-    if (!state.erroredAt) {
+    if (!state.errorAt) {
       return () => {};
     }
 
     const handler = setTimeout(() => {
       dispatch({
-        type: Actions.SET_ERRORS,
-        cell: state.erroredAt,
-        payload: null,
+        type: Actions.CLEAR_ERROR,
       });
     }, 8000);
 
     return () => {
       clearTimeout(handler);
     };
-  }, [state.erroredAt, dispatch]);
+  }, [state.errorAt, dispatch]);
 
   React.useEffect(() => {
     const toTimeout = state.addedRows.filter(
@@ -291,7 +266,9 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
       setTimeout(() => {
         dispatch({
           type: Actions.POST_ADD_ENTITY,
-          payload: addedRow.entity,
+          payload: {
+            entity: addedRow.entity,
+          },
         });
       }, 5000);
     });
@@ -311,7 +288,9 @@ export const SheetState = ({ transformItem, onMutate, children }: Props) => {
       setTimeout(() => {
         dispatch({
           type: Actions.POST_REMOVE_ENTITY,
-          payload: removedRow.entity,
+          payload: {
+            entity: removedRow.entity,
+          },
         });
       }, 5000);
     });

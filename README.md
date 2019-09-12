@@ -18,10 +18,10 @@ What things you need to install the software and how to install them
 
     this helps us to manage different version of node on our machine easily.
 
-    Follow the instructions and install latest version of node.js (8.x.x)
+    Follow the instructions and install latest version of node.js (10.x.x)
 
     ```sh
-    nvm install 8
+    nvm install 10
     ```
 
   - git
@@ -65,7 +65,6 @@ and install all the dependencies.
 
 ```sh
 yarn install
-yarn post:install
 ```
 
 ## Unit tests

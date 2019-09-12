@@ -10,11 +10,11 @@ const getborderbackground = (isFocused: boolean, isTargeted: boolean) => {
   if (isFocused) {
     return colors.HIGHLIGHT;
   }
-  return colors.GRAY_QUITE_LIGHT;
+  return colors.GRAY_VERY_LIGHT;
 };
 
 const getrelatedbackground = (isFocus: boolean, isTargeted: boolean, hasRelation: boolean) =>
-  hasRelation ? getborderbackground(isFocus, isTargeted) : colors.GRAY_QUITE_LIGHT;
+  hasRelation ? getborderbackground(isFocus, isTargeted) : colors.GRAY_VERY_LIGHT;
 
 export const RelationLine0Style = (isFocus: boolean, isTargeted: boolean) => css`
   position: relative;

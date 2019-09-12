@@ -1,7 +1,7 @@
 // @flow
 import type { User, Task } from 'generated/graphql';
 import { sumBy } from 'lodash';
-import { isBefore } from 'utils/date';
+import { isBefore, calculateDate, findDuration } from 'utils/date';
 import { encodeId } from 'utils/id';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
@@ -123,6 +123,13 @@ import {
   SHIPMENT_TASK_SET_TAGS,
   SHIPMENT_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/shipment';
+
+import emitter from 'utils/emitter';
+
+export const START_DATE = 'TaskStartDate';
+export const DUE_DATE = 'TaskDueDate';
+export const PROJECT_DUE_DATE = 'ProjectDueDate';
+export const MILESTONE_DUE_DATE = 'MilestoneDueDate';
 
 export type TaskEditableProps = {
   name: boolean,
@@ -648,7 +655,222 @@ export const getParentInfo = (
   return {};
 };
 
-export const START_DATE = 'TaskStartDate';
-export const DUE_DATE = 'TaskDueDate';
-export const PROJECT_DUE_DATE = 'ProjectDueDate';
-export const MILESTONE_DUE_DATE = 'MilestoneDueDate';
+export function triggerAutoBinding({
+  manualSettings,
+  values,
+  entity,
+  hasCircleBindingError,
+  task,
+}: {|
+  manualSettings: Object,
+  values: Object,
+  entity: string,
+  hasCircleBindingError: boolean,
+  task: Task,
+|}) {
+  if (!manualSettings.dueDate || !manualSettings.startDate) {
+    setTimeout(() => {
+      if (!manualSettings.dueDate) {
+        const { months = 0, weeks = 0, days = 0 } = values.dueDateInterval || {};
+        emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+          hasCircleBindingError,
+          selectedField: 'dueDate',
+          field: values.dueDateBinding,
+          entityId: getByPath('entity.id', task),
+          autoDateDuration: {
+            metric: findDuration({ months, weeks }),
+            value: months || weeks || days,
+          },
+          autoDateOffset: -(months || weeks || days) > 0 ? 'before' : 'after',
+        });
+      }
+      if (!manualSettings.startDate) {
+        const { months = 0, weeks = 0, days = 0 } = values.startDateInterval || {};
+        emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+          hasCircleBindingError,
+          selectedField: 'startDate',
+          field: values.startDateBinding,
+          entityId: getByPath('entity.id', task),
+          autoDateDuration: {
+            metric: findDuration({ months, weeks }),
+            value: months || weeks || days,
+          },
+          autoDateOffset: -(months || weeks || days) > 0 ? 'before' : 'after',
+        });
+      }
+    }, 200);
+  }
+}
+
+type prepareTaskStatusType = ({
+  task: Object,
+  editable: Object,
+}) => {
+  status: string,
+  color: string,
+  backgroundColor: string,
+  account: Object | null,
+  editable: boolean,
+};
+
+export const prepareTaskStatus: prepareTaskStatusType = ({ task, editable }) => {
+  const { completedAt, completedBy, inProgressAt, inProgressBy, skippedAt, skippedBy } = task;
+  if (completedAt) {
+    return {
+      status: 'completed',
+      color: 'WHITE',
+      backgroundColor: 'TEAL',
+      account: completedBy,
+      editable: editable.completed,
+    };
+  }
+  if (inProgressAt) {
+    return {
+      status: 'inProgress',
+      color: 'TEAL',
+      backgroundColor: 'WHITE',
+      account: inProgressBy,
+      editable: editable.inProgress,
+    };
+  }
+  if (skippedAt) {
+    return {
+      status: 'skipped',
+      color: 'BLACK',
+      backgroundColor: 'GRAY_LIGHT',
+      account: skippedBy,
+      editable: editable.skipped,
+    };
+  }
+  return {
+    status: 'uncompleted',
+    color: 'GRAY_LIGHT',
+    backgroundColor: 'GRAY_SUPER_LIGHT',
+    account: null,
+    editable: editable.inProgress,
+  };
+};
+
+type prepareApprovalStatusType = ({
+  approvedBy: Object,
+  rejectedBy: Object,
+}) => {
+  status: string,
+  account: Object | null,
+  color: string,
+  backgroundColor: string,
+};
+export const prepareApprovalStatus: prepareApprovalStatusType = ({ approvedBy, rejectedBy }) => {
+  if (approvedBy) {
+    return {
+      status: 'approved',
+      account: approvedBy,
+      color: 'WHITE',
+      backgroundColor: 'BLUE',
+    };
+  }
+  if (rejectedBy) {
+    return {
+      status: 'rejected',
+      account: rejectedBy,
+      color: 'WHITE',
+      backgroundColor: 'RED',
+    };
+  }
+  return {
+    status: 'unapproved',
+    account: null,
+    color: 'GRAY_LIGHT',
+    backgroundColor: 'GRAY_SUPER_LIGHT',
+  };
+};
+
+// only for milestone or project changed
+export const recalculateTaskBindingDate = (task: Object) => {
+  const {
+    startDate,
+    startDateBinding,
+    startDateInterval,
+    dueDate,
+    dueDateBinding,
+    dueDateInterval,
+  } = task;
+
+  const mappingFields = {
+    ProjectDueDate: 'milestone.project.dueDate',
+    MilestoneDueDate: 'milestone.dueDate',
+  };
+
+  let newStartDate = startDate;
+  let newDueDate = dueDate;
+
+  if (startDateBinding === DUE_DATE) {
+    // do the due date first
+    if (dueDateBinding) {
+      const { months, weeks, days } = dueDateInterval || {};
+      const path = mappingFields[dueDateBinding];
+      if (path) {
+        newDueDate = calculateDate({
+          date: getByPath(path, task),
+          duration: findDuration({ months, weeks }),
+          offset: months || weeks || days,
+        });
+      }
+    }
+    const { months, weeks, days } = startDateInterval || {};
+    newStartDate = calculateDate({
+      date: newDueDate,
+      duration: findDuration({ months, weeks }),
+      offset: months || weeks || days,
+    });
+  } else if (dueDateBinding === START_DATE) {
+    // do the start date first
+    if (startDateBinding) {
+      const { months, weeks, days } = startDateInterval || {};
+      const path = mappingFields[startDateBinding];
+      if (path) {
+        newStartDate = calculateDate({
+          date: getByPath(path, task),
+          duration: findDuration({ months, weeks }),
+          offset: months || weeks || days,
+        });
+      }
+    }
+    const { months, weeks, days } = dueDateInterval || {};
+    newDueDate = calculateDate({
+      date: newStartDate,
+      duration: findDuration({ months, weeks }),
+      offset: months || weeks || days,
+    });
+  } else {
+    if (startDateBinding) {
+      const { months, weeks, days } = startDateInterval || {};
+      const path = mappingFields[startDateBinding];
+      if (path) {
+        newStartDate = calculateDate({
+          date: getByPath(path, task),
+          duration: findDuration({ months, weeks }),
+          offset: months || weeks || days,
+        });
+      }
+    }
+
+    if (dueDateBinding) {
+      const { months, weeks, days } = dueDateInterval || {};
+      const path = mappingFields[dueDateBinding];
+      if (path) {
+        newDueDate = calculateDate({
+          date: getByPath(path, task),
+          duration: findDuration({ months, weeks }),
+          offset: months || weeks || days,
+        });
+      }
+    }
+  }
+
+  return {
+    ...task,
+    startDate: newStartDate,
+    dueDate: newDueDate,
+  };
+};

@@ -10,9 +10,9 @@ import { decodeId } from 'utils/id';
 import { getByPath } from 'utils/fp';
 import { parseGroupIds } from 'utils/task';
 import { removeTypename } from 'utils/data';
-import { Content, SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import SlideView from 'components/SlideView';
-import { NavBar, EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
+import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import { ExportButton, ResetButton, SaveButton } from 'components/Buttons';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -99,9 +99,26 @@ class TaskFormModule extends React.Component<Props> {
                       <EntityIcon icon="TASK" color="TASK" />
                       <JumpToSection>
                         <SectionTabs
-                          link="task_taskSection"
-                          label={<FormattedMessage id="modules.Tasks.task" defaultMessage="TASK" />}
+                          link="task_task_section"
+                          label={<FormattedMessage id="modules.task.task" defaultMessage="TASK" />}
                           icon="TASK"
+                        />
+                        <SectionTabs
+                          link="task_project_section"
+                          label={
+                            <FormattedMessage
+                              id="modules.task.project"
+                              defaultMessage="`PROJECT`"
+                            />
+                          }
+                          icon="PROJECT"
+                        />
+                        <SectionTabs
+                          link="task_entity_section"
+                          label={
+                            <FormattedMessage id="modules.task.related" defaultMessage="RELATED" />
+                          }
+                          icon="RELATED"
                         />
                       </JumpToSection>
 
@@ -189,6 +206,7 @@ class TaskFormModule extends React.Component<Props> {
                           <TaskForm
                             inParentEntityForm={false}
                             groupIds={parseGroupIds(task)}
+                            entity={task.entity}
                             task={task}
                             onFormReady={() => initDetailValues(task)}
                           />

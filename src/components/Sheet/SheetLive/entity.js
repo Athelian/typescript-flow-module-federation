@@ -4,7 +4,7 @@ import { useApolloClient } from '@apollo/react-hooks';
 import logger from 'utils/logger';
 import { Mutex } from 'utils/async';
 import { useSheetState } from '../SheetState';
-import type { Action } from '../SheetState';
+import type { Action } from '../SheetState/types';
 import { Actions } from '../SheetState/contants';
 import { useSheetLiveID } from './index';
 import { convertEntityToInput } from './helper';
@@ -65,8 +65,8 @@ export const defaultEntityEventChangeTransformer = (
     entity: {
       id: event.entity.id,
       type: event.entity.__typename,
-      field: change.field,
     },
+    field: change.field,
     value,
   };
 };
@@ -82,9 +82,11 @@ export const defaultEntityEventHandlerFactory: EntityEventHandlerFactory = (
     if (event.changes.length > 0) {
       dispatch({
         type: Actions.CHANGE_VALUES,
-        payload: event.changes.map(change => {
-          return defaultEntityEventChangeTransformer(event, change);
-        }),
+        payload: {
+          changes: event.changes.map(change => {
+            return defaultEntityEventChangeTransformer(event, change);
+          }),
+        },
       });
     }
   };

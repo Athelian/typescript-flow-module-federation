@@ -18,9 +18,10 @@ export const BatchesAreaWrapperStyle = (itemsIsExpanded: boolean): string => css
   display: grid;
   grid-template-rows: 50px 1fr 50px;
   width: ${itemsIsExpanded ? '235px' : '645px'};
-  ${shadows.HEADER_RIGHT};
+  ${shadows.HEADER_LEFT};
   z-index: 2;
   ${transitions.EXPAND};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
 `;
 
 export const BatchesNavbarWrapperStyle: string = css`
@@ -40,7 +41,6 @@ export const BatchesBodyWrapperStyle: string = css`
   flex-direction: column;
   height: 100%;
   max-height: 65vh;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
 `;
 
 export const BatchesHeaderWrapperStyle = (itemsIsExpanded: boolean): string => css`
@@ -49,7 +49,6 @@ export const BatchesHeaderWrapperStyle = (itemsIsExpanded: boolean): string => c
   align-items: flex-end;
   justify-content: ${itemsIsExpanded ? 'flex-end' : 'space-between'};
   flex-shrink: 0;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
 `;
 
 export const BatchesTitleWrapperStyle: string = css`
@@ -91,17 +90,11 @@ export const NoBatchesFoundStyle: string = css`
 `;
 
 export const BatchesGridStyle: string = css`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 195px);
-  grid-auto-rows: auto;
-  grid-column-gap: 10px;
-  grid-row-gap: 30px;
   overflow-x: hidden;
   overflow-y: overlay;
   ${scrollbars.SMALL};
   height: 100%;
   width: 100%;
-  padding: 30px 20px;
 `;
 
 export const BatchesFooterWrapperStyle: string = css`

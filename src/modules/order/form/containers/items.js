@@ -3,7 +3,7 @@ import type { OrderItemPayload, ShipmentPayload, ContainerPayload } from 'genera
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import update from 'immutability-helper';
-import { isEquals, getByPath, getByPathWithDefault } from 'utils/fp';
+import { isEquals, getByPathWithDefault, getByPath } from 'utils/fp';
 
 type FormState = {|
   orderItems: Array<OrderItemPayload>,
@@ -74,14 +74,14 @@ export default class OrderItemsContainer extends Container<FormState> {
     }
   };
 
-  resetAmountWithNewCurrency = (currency: string, isReset: boolean = true) => {
+  resetAmountWithNewCurrency = (currency: string) => {
     let retry;
     if (this.state.hasCalledItemsApiYet) {
-      this.changeCurrency(isReset, currency);
+      this.changeCurrency(currency);
     } else {
       const waitForApiReady = () => {
         if (this.state.hasCalledItemsApiYet) {
-          this.changeCurrency(isReset, currency);
+          this.changeCurrency(currency);
           cancelAnimationFrame(retry);
         } else {
           retry = requestAnimationFrame(waitForApiReady);
@@ -91,14 +91,13 @@ export default class OrderItemsContainer extends Container<FormState> {
     }
   };
 
-  changeCurrency(isReset: boolean, currency: string) {
+  changeCurrency(currency: string) {
     const { orderItems } = this.state;
     this.setState({
       orderItems: orderItems.map(orderItem => ({
         ...orderItem,
         price: {
-          ...getByPath('price', orderItem),
-          ...(isReset ? { amount: 0 } : {}),
+          amount: getByPath('price.amount', orderItem),
           currency,
         },
       })),

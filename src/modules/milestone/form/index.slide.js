@@ -2,8 +2,8 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
-import { Content, SlideViewLayout } from 'components/Layout';
-import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
+import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
+import { EntityIcon } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { ResetButton, SaveButton } from 'components/Buttons';

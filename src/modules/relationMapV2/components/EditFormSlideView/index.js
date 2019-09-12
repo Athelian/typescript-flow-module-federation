@@ -13,15 +13,27 @@ import { encodeId } from 'utils/id';
 import emitter from 'utils/emitter';
 
 type Props = {|
-  type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof SHIPMENT | typeof CONTAINER,
+  // prettier-ignore
+  type: | typeof ORDER
+    | typeof ORDER_ITEM
+    | typeof BATCH
+    | typeof SHIPMENT
+    | typeof CONTAINER
+    | 'NEW_ORDER',
   selectedId: string,
-  onClose: () => void,
+  onClose: (
+    ?{
+      moveToTop: boolean,
+      id: string,
+      type: string,
+    }
+  ) => void,
 |};
 
 const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
   const isReady = React.useRef(true);
   const { dispatch } = React.useContext(RelationMapContext);
-  const { mapping, checkRemoveEntities } = Entities.useContainer();
+  const { mapping, checkRemoveEntities, onSetBadges } = Entities.useContainer();
   const onRequestClose = React.useCallback(() => {
     if (isReady.current) {
       onClose();
@@ -73,6 +85,40 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
     }
     case SHIPMENT: {
       form = <ShipmentForm shipmentId={encodeId(id)} isSlideView />;
+      break;
+    }
+    case 'NEW_ORDER': {
+      form = (
+        <OrderForm
+          path="new"
+          isSlideView
+          redirectAfterSuccess={false}
+          onSuccessCallback={data => {
+            console.warn({
+              data,
+            });
+            onSetBadges([
+              {
+                id: data.orderCreate.id,
+                type: 'newItem',
+                entity: 'order',
+              },
+            ]);
+            dispatch({
+              type: 'NEW_ORDER',
+              payload: {
+                orderId: data.orderCreate.id,
+              },
+            });
+            onClose({
+              moveToTop: true,
+              id: data.orderCreate.id,
+              type: ORDER,
+            });
+          }}
+          onCancel={onClose}
+        />
+      );
       break;
     }
     default: {

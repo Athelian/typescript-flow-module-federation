@@ -2,8 +2,8 @@
 import React from 'react';
 import { Provider, Subscribe } from 'unstated';
 import { earliest, latest } from 'utils/date';
-import { Content, SlideViewLayout } from 'components/Layout';
-import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
+import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
+import { EntityIcon } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import { resetFormState } from 'modules/form';
 import {

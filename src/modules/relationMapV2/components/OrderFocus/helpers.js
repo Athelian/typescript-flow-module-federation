@@ -6,13 +6,23 @@ import memoize from 'memoize-one';
 import styled from 'react-emotion';
 import { getByPathWithDefault } from 'utils/fp';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { ClientSorts } from 'modules/relationMapV2/store';
-import { sortOrderItemBy, sortBatchBy } from 'modules/relationMapV2/sort';
+import { ClientSorts, Entities } from 'modules/relationMapV2/store';
 import type { CellRender, Entity } from './type.js.flow';
 
 const DELAY = 200; // 0.2 second
 const timer = {};
 const isTimeoutRunning = {};
+
+export const targetedIds = (
+  targets: Array<string>,
+  type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT
+) => {
+  const ids = targets.filter(item => item.includes(`${type}-`));
+  return (ids.map(orderItem => {
+    const [, id] = orderItem.split('-');
+    return id;
+  }): Array<string>);
+};
 
 export const handleClickAndDoubleClick = ({
   clickId,
@@ -140,34 +150,6 @@ function containerCell(batch: BatchPayload): ?CellRender {
   return null;
 }
 
-export const cacheSorted = {};
-
-export function lastSorting({
-  sourceEntities,
-  sortHandler,
-  sort,
-  id,
-}: {|
-  id: string,
-  sourceEntities: Array<Object>,
-  sortHandler: (Array<Object>, sortOption: Object) => Array<Object>,
-  sort: { field: string, direction: string },
-|}): Array<string> {
-  if (
-    cacheSorted?.[id]?.sort?.field === sort.field &&
-    cacheSorted?.[id]?.sort?.direction === sort.direction
-  )
-    return cacheSorted[id].entities;
-
-  cacheSorted[id] = {
-    entities: sortHandler(sourceEntities, sort)
-      .map(item => item?.id)
-      .filter(Boolean),
-    sort,
-  };
-  return cacheSorted[id].entities;
-}
-
 export const orderCoordinates = memoize(
   ({
     isExpand,
@@ -178,7 +160,8 @@ export const orderCoordinates = memoize(
     order: Object,
     isLoadedData?: boolean,
   }): Array<?CellRender> => {
-    const clientSorts = ClientSorts.useContainer();
+    const { getItemsSortByOrderId, getBatchesSortByItemId } = ClientSorts.useContainer();
+    const { getRelatedBy } = Entities.useContainer();
     const orderItems = order?.orderItems ?? [];
     const orderItemCount = order?.orderItemCount ?? 0;
     const orderItemChildlessCount = order?.orderItemChildlessCount ?? 0;
@@ -229,15 +212,6 @@ export const orderCoordinates = memoize(
             null,
           ];
     }
-    const orderItemsSort = lastSorting({
-      id: `${order?.id}-orderItems`,
-      sourceEntities: orderItems,
-      sortHandler: sortOrderItemBy,
-      sort: clientSorts?.filterAndSort?.orderItem?.sort ?? {
-        field: 'updatedAt',
-        direction: 'DESCENDING',
-      },
-    });
     const result = [
       null,
       {
@@ -305,37 +279,58 @@ export const orderCoordinates = memoize(
     }
     if (orderItemCount > 0) {
       const itemsList = [];
-      orderItemsSort.forEach(itemId => {
-        const item = orderItems.find(orderItem => orderItem?.id === itemId);
-        if (item) {
-          itemsList.push(item);
+      const processItemsId = [];
+      const orderItemSorted = getItemsSortByOrderId(order.id, orderItems);
+      orderItemSorted.forEach(itemId => {
+        if (!processItemsId.includes(itemId)) {
+          const item = orderItems.find(orderItem => orderItem?.id === itemId);
+          if (item) {
+            processItemsId.push(itemId);
+            itemsList.push(item);
+            const relatedItems = getRelatedBy('orderItem', item.id);
+            relatedItems
+              .filter(id => !processItemsId.includes(id))
+              .forEach(relateId => {
+                const relatedItem = orderItems.find(orderItem => orderItem?.id === relateId);
+                if (relatedItem) {
+                  itemsList.push(relatedItem);
+                  processItemsId.push(relatedItem.id);
+                }
+              });
+          }
         }
       });
       orderItems
-        .filter(item => !orderItemsSort.includes(item?.id))
+        .filter(item => !processItemsId.includes(item?.id))
         .forEach(item => itemsList.push(item));
 
       itemsList.forEach((item, index) => {
         const batches = item?.batches ?? [];
-        const bachesSort = lastSorting({
-          id: `${item?.id}-batches`,
-          sourceEntities: batches,
-          sortHandler: sortBatchBy,
-          sort: clientSorts?.filterAndSort?.batch?.sort ?? {
-            field: 'updatedAt',
-            direction: 'DESCENDING',
-          },
-        });
         if (batches.length) {
           const batchesList = [];
-          bachesSort.forEach(batchId => {
-            const batch = batches.find(batchItem => batchItem?.id === batchId);
-            if (batch) {
-              batchesList.push(batch);
+          const processBatchesId = [];
+          const batchesSorted = getBatchesSortByItemId(item.id, batches);
+          batchesSorted.forEach(batchId => {
+            if (!processBatchesId.includes(batchId)) {
+              const batch = batches.find(batchItem => batchItem?.id === batchId);
+              if (batch) {
+                batchesList.push(batch);
+                processBatchesId.push(batch.id);
+                const relatedBatches = getRelatedBy('batch', batch.id);
+                relatedBatches
+                  .filter(id => !batchesSorted.includes(id))
+                  .forEach(relateId => {
+                    const relatedBatch = batches.find(batchItem => batchItem?.id === relateId);
+                    if (relatedBatch) {
+                      batchesList.push(relatedBatch);
+                      processBatchesId.push(relatedBatch.id);
+                    }
+                  });
+              }
             }
           });
           batches
-            .filter(batch => !bachesSort.includes(batch?.id))
+            .filter(batch => !processBatchesId.includes(batch?.id))
             .forEach(batch => batchesList.push(batch));
 
           batchesList.forEach((batch, position) => {
@@ -358,7 +353,8 @@ export const orderCoordinates = memoize(
                       type: 'duplicateOrderItem',
                       data: {
                         order,
-                        itemPosition: index,
+                        item,
+                        batch,
                         batchPosition: position,
                       },
                       afterConnector: 'VERTICAL',

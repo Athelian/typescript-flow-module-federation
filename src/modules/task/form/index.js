@@ -2,7 +2,10 @@
 import React from 'react';
 import { isEquals } from 'utils/fp';
 import TaskInfoSection from './components/TaskInfoSection';
+import ProjectSection from './components/ProjectSection';
 import ParentEntity from './components/ParentEntity';
+import { TaskFormWrapperStyle } from './style';
+import EntitySection from './components/EntitySection';
 
 type Props = {|
   groupIds: Array<string>,
@@ -39,7 +42,7 @@ export default class TaskForm extends React.Component<Props> {
       inParentEntityForm,
     } = this.props;
     return (
-      <>
+      <div className={TaskFormWrapperStyle}>
         <TaskInfoSection
           isInTemplate={isInTemplate}
           isInProject={isInProject}
@@ -47,8 +50,13 @@ export default class TaskForm extends React.Component<Props> {
           parentEntity={parentEntity}
           task={task}
         />
+
+        {!isInTemplate && !isInProject && <ProjectSection parentEntity={entity?.__typename} />}
+
+        {!isInTemplate && !inParentEntityForm && <EntitySection task={task} entity={entity} />}
+
         <ParentEntity inParentEntityForm={inParentEntityForm} entity={entity} />
-      </>
+      </div>
     );
   }
 }

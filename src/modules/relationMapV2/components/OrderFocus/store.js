@@ -54,7 +54,7 @@ export const initialState: State = {
     type: '',
     selectedId: '',
   },
-  permission: {},
+  newOrders: [],
 };
 
 export const RelationMapContext = createContext<ContextProps>({
@@ -66,7 +66,8 @@ export function reducer(
   state: State,
   action: {
     // prettier-ignore
-    type: | 'FETCH_ORDER'
+    type: | 'NEW_ORDER'
+      | 'RESET_NEW_ORDERS'
       | 'FETCH_ORDERS'
       | 'TARGET'
       | 'TARGET_ALL'
@@ -79,7 +80,6 @@ export function reducer(
       | 'CONFIRM_MOVE'
       | 'CONFIRM_MOVE_START'
       | 'CONFIRM_MOVE_END'
-      | 'FETCH_PERMISSION'
       | 'CREATE_BATCH'
       | 'CREATE_BATCH_START'
       | 'CREATE_BATCH_END'
@@ -103,10 +103,16 @@ export function reducer(
   }
 ) {
   switch (action.type) {
-    case 'FETCH_ORDER':
+    case 'NEW_ORDER':
       return update(state, {
-        order: {
-          $merge: action.payload,
+        newOrders: {
+          $set: [action.payload.orderId, ...state.newOrders],
+        },
+      });
+    case 'RESET_NEW_ORDERS':
+      return update(state, {
+        newOrders: {
+          $set: [],
         },
       });
     case 'FETCH_ORDERS': {
@@ -135,12 +141,6 @@ export function reducer(
         ...state,
         isDragging: false,
       };
-    case 'FETCH_PERMISSION':
-      return update(state, {
-        permission: {
-          $merge: action.payload,
-        },
-      });
     case 'TARGET':
       return produce(state, draft => {
         if (draft.targets.includes(action.payload.entity)) {

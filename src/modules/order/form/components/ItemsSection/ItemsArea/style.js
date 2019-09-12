@@ -21,6 +21,7 @@ export const ItemsAreaWrapperStyle = (itemsIsExpanded: boolean): string => css`
   ${shadows.HEADER_RIGHT};
   z-index: 2;
   ${transitions.EXPAND};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
 `;
 
 export const ItemsNavbarWrapperStyle: string = css`
@@ -40,7 +41,6 @@ export const ItemsBodyWrapperStyle: string = css`
   flex-direction: column;
   height: 100%;
   max-height: 65vh;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
 `;
 
 export const ItemsHeaderWrapperStyle: string = css`
@@ -49,7 +49,6 @@ export const ItemsHeaderWrapperStyle: string = css`
   align-items: flex-end;
   justify-content: space-between;
   flex-shrink: 0;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
 `;
 
 export const ItemsTitleWrapperStyle: string = css`

@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, colors, shadows } from 'styles/common';
+import { layout, colors, shadows, scrollbars } from 'styles/common';
 
 export const WrapperStyle = css`
   ${layout.VERTICAL}
@@ -14,8 +14,14 @@ export const ColumnsWrapperStyle = css`
 
   overflow: hidden;
   background: ${colors.WHITE};
-  height: 40px;
+  height: 44px;
   z-index: 2;
+`;
+
+export const ColumnFillerStyle = (color: string) => css`
+  min-width: 20px;
+  border-top: 4px solid ${color};
+  flex: 1;
 `;
 
 export const ContentStyle = css`
@@ -23,4 +29,8 @@ export const ContentStyle = css`
   height: 100%;
   background: ${colors.WHITE};
   z-index: 1;
+`;
+
+export const GridStyle = css`
+  ${scrollbars.MAIN};
 `;

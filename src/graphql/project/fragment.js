@@ -1,26 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const projectCardFragment = gql`
-  fragment projectCardFragment on Project {
-    id
-    name
-    description
-    dueDate
-    milestones {
-      ... on Milestone {
-        id
-      }
-    }
-    taskCount {
-      ...taskCountFragment
-    }
-    tags {
-      ...tagFragment
-    }
-  }
-`;
-
 export const milestoneFragment = gql`
   fragment milestoneFragment on Milestone {
     id
@@ -31,13 +11,14 @@ export const milestoneFragment = gql`
       ... on Task {
         id
         completedAt
+        skippedAt
       }
     }
   }
 `;
 
-export const projectCardNewFragment = gql`
-  fragment projectCardNewFragment on Project {
+export const projectCardFragment = gql`
+  fragment projectCardFragment on Project {
     id
     name
     description

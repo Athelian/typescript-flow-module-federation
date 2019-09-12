@@ -40,6 +40,7 @@ export default function QueryPlaceHolder({
 }: Props) {
   const ref = React.createRef();
   const isReady = useOnScreen(ref, { rootMargin: '0px', threshold: 0.2 });
+  const [isStored, setIsStore] = React.useState(false);
 
   return (
     <div ref={ref} className={className}>
@@ -54,7 +55,12 @@ export default function QueryPlaceHolder({
                 id: entityId,
               }}
               fetchPolicy={fetchPolicy}
-              onCompleted={onCompleted}
+              onCompleted={result => {
+                if (!isStored) {
+                  onCompleted(result);
+                  setIsStore(true);
+                }
+              }}
             >
               {({ loading, data, error }) => {
                 if (error) {
@@ -65,7 +71,7 @@ export default function QueryPlaceHolder({
                   return error.message;
                 }
 
-                if (loading) return <PlaceHolder />;
+                if (loading || !isStored) return <PlaceHolder />;
 
                 return children({ data });
               }}
