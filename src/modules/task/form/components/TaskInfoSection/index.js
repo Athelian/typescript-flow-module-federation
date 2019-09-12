@@ -796,31 +796,6 @@ const TaskInfoSection = ({
                   }
                 />
 
-                <FormField
-                  name="description"
-                  initValue={values.description}
-                  values={values}
-                  validator={validator}
-                  setFieldValue={setFieldValue}
-                >
-                  {({ name, ...inputHandlers }) => (
-                    <TextAreaInputFactory
-                      name={name}
-                      {...inputHandlers}
-                      originalValue={originalValues[name]}
-                      label={
-                        <FormattedMessage
-                          id="modules.Tasks.description"
-                          defaultMessage="DESCRIPTION"
-                        />
-                      }
-                      inputHeight="100px"
-                      inputWidth="400px"
-                      editable={editable.description}
-                    />
-                  )}
-                </FormField>
-
                 <FieldItem
                   vertical
                   label={
@@ -847,6 +822,31 @@ const TaskInfoSection = ({
                     />
                   }
                 />
+
+                <FormField
+                  name="description"
+                  initValue={values.description}
+                  values={values}
+                  validator={validator}
+                  setFieldValue={setFieldValue}
+                >
+                  {({ name, ...inputHandlers }) => (
+                    <TextAreaInputFactory
+                      name={name}
+                      {...inputHandlers}
+                      originalValue={originalValues[name]}
+                      label={
+                        <FormattedMessage
+                          id="modules.Tasks.description"
+                          defaultMessage="DESCRIPTION"
+                        />
+                      }
+                      inputHeight="100px"
+                      inputWidth="400px"
+                      editable={editable.description}
+                    />
+                  )}
+                </FormField>
               </GridColumn>
 
               <UserConsumer>

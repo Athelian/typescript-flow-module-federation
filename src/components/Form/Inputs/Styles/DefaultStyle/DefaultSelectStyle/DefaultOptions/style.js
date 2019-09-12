@@ -27,7 +27,7 @@ export const OptionWrapperStyle = ({
     margin: 0;
     padding: 0;
     overflow: hidden;
-    z-index: 1;
+    z-index: 2;
     ${shadows.INPUT};
     min-width: ${width};
     max-width: ${width};
