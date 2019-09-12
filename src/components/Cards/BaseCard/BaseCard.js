@@ -3,7 +3,7 @@ import * as React from 'react';
 import { cx } from 'react-emotion';
 import { omit } from 'utils/fp';
 import OutsideClickHandler from 'components/OutsideClickHandler';
-import { CardStyle, SelectableCardStyle } from './style';
+import { CardStyle, SelectableCardStyle, BadgeStyle } from './style';
 import Actions from './Actions';
 import CornerIcon from './CornerIcon';
 
@@ -22,6 +22,7 @@ type OptionalProps = {
   invertCornerIcon: boolean,
   wrapperClassName: string | Function,
   id: ?string,
+  showBadge: boolean,
 };
 
 type Props = OptionalProps & {
@@ -47,6 +48,7 @@ const defaultProps = {
   invertCornerIcon: false,
   wrapperClassName: '',
   id: '',
+  showBadge: false,
 };
 
 export default class BaseCard extends React.Component<Props, State> {
@@ -89,6 +91,7 @@ export default class BaseCard extends React.Component<Props, State> {
       wrapperClassName,
       children,
       id,
+      showBadge,
       ...rest
     } = this.props;
 
@@ -147,6 +150,7 @@ export default class BaseCard extends React.Component<Props, State> {
             invert={invert}
           />
         )}
+        {showBadge && <span className={BadgeStyle} />}
         {children}
         {!disabled && selectable && (
           <div className={SelectableCardStyle(!!selected)} onClick={onSelect} role="presentation" />

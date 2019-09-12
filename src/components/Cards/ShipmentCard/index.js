@@ -101,7 +101,14 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
   const totalContainerTypeCount = sortedContainerTypes.reduce((sum, { count }) => sum + count, 0);
 
   return (
-    <BaseCard icon="SHIPMENT" color="SHIPMENT" actions={actions} isArchived={archived} {...rest}>
+    <BaseCard
+      showBadge={shipment.timeline?.unreadCount > 0}
+      icon="SHIPMENT"
+      color="SHIPMENT"
+      actions={actions}
+      isArchived={archived}
+      {...rest}
+    >
       <div className={ShipmentCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={ShipmentInfoWrapperStyle}>
           <div className={ShipmentLeftWrapperStyle}>

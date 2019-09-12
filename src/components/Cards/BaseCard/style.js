@@ -36,3 +36,14 @@ export const SelectableCardStyle = (selected: boolean): string => css`
   ${borderRadiuses.MAIN};
   opacity: 0.5;
 `;
+
+export const BadgeStyle = css`
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 10px;
+  height: 10px;
+  background-color: ${colors.RED};
+  ${borderRadiuses.CIRCLE};
+  z-index: 1;
+`;

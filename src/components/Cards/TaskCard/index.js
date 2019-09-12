@@ -200,6 +200,7 @@ const TaskCard = ({
 
   return (
     <BaseCard
+      showBadge={task.timeline?.unreadCount > 0}
       icon="TASK"
       color="TASK"
       showActionsOnHover
