@@ -256,9 +256,9 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                               onBlur(e);
                               const value = inputHandlers.value || null;
                               if (!isEquals(value, dueDate)) {
-                                onChangeValue(name, value);
+                                onChangeValue(fieldName, value);
                                 setTimeout(() => {
-                                  emitter.emit('AUTO_DATE', name, value);
+                                  emitter.emit('AUTO_DATE', fieldName, value);
                                 }, 200);
                               }
                             }}
@@ -301,7 +301,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                                 onBlur(e);
                                 const value = inputHandlers.value || null;
                                 if (!isEquals(value, completedAt)) {
-                                  onChangeValue(name, value);
+                                  onChangeValue(fieldName, value);
                                 }
                               }}
                               label={<FormattedMessage {...messages.completed} />}
@@ -337,7 +337,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                                 onBlur(e);
                                 const value = inputHandlers.value || null;
                                 if (!isEquals(value, estimatedCompletionDate)) {
-                                  onChangeValue(name, value);
+                                  onChangeValue(fieldName, value);
                                 }
                               }}
                               isNew={isNew}
