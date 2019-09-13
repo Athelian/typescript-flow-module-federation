@@ -37,8 +37,8 @@ export const BatchIconsStyle = css`
 
 export const TrashIconsStyle = css`
   position: absolute;
-  right: -5px;
-  top: -5px;
+  right: -10px;
+  top: -10px;
   z-index: 2;
   background: #ffffff;
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);

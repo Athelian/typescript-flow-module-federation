@@ -52,7 +52,7 @@ export type State = {|
       },
     },
   },
-  createBatch: {
+  itemActions: {
     isOpen: boolean,
     isProcessing: boolean,
     detail: {
@@ -61,6 +61,7 @@ export type State = {|
         no: string,
       },
     },
+    type?: 'createBatch' | 'deleteItem',
   },
   createItem: {
     isOpen: boolean,
