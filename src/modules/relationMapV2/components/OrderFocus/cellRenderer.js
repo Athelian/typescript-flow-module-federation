@@ -929,6 +929,7 @@ function OrderItemCell({
               <OrderItemCard
                 organizationId={data?.ownedBy?.id}
                 no={data?.no ?? 'N/A'}
+                onDeleteItem={console.warn}
                 onCreateBatch={evt => {
                   evt.stopPropagation();
                   dispatch({
