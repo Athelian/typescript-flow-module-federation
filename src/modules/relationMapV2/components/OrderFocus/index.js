@@ -4,7 +4,7 @@ import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { VariableSizeList as List } from 'react-window';
 import { Query } from 'react-apollo';
-import { get, set, uniq } from 'lodash/fp';
+import { get, set, uniq, findKey } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import apolloClient from 'apollo';
@@ -181,42 +181,12 @@ export default function OrderFocus() {
   }, [lastQueryVariables, queryVariables]);
 
   const scrollToRow = React.useCallback(
-    (position: number, entity: { id: string, type: string, dispatch?: Function }) => {
-      const { id, type, dispatch } = entity;
+    ({ position, id, type }: { position: number, id: string, type: string }) => {
       scrollEntity.current = {
         id,
         type,
       };
       setScrollPosition(position);
-      if (dispatch) {
-        // refer https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback
-        // set the close to lower priority task which allow to our application to scroll to element
-        // then close dialog
-        if (type === BATCH)
-          window.requestIdleCallback(
-            () => {
-              dispatch({
-                type: 'CREATE_BATCH_CLOSE',
-                payload: {},
-              });
-            },
-            {
-              timeout: 250,
-            }
-          );
-        if (type === ORDER_ITEM)
-          window.requestIdleCallback(
-            () => {
-              dispatch({
-                type: 'CREATE_ITEM_END',
-                payload: {},
-              });
-            },
-            {
-              timeout: 250,
-            }
-          );
-      }
     },
     []
   );
@@ -234,7 +204,7 @@ export default function OrderFocus() {
           scrollMode: 'if-needed',
         });
       }
-      scrollToRow(-1, {});
+      scrollToRow({ position: -1, id: '', type: '' });
     }
   }, [listRef, scrollPosition, scrollToRow]);
 
@@ -501,11 +471,22 @@ export default function OrderFocus() {
                               return Number(itemCell.cell?.data?.id) === Number(lastItemId);
                             });
                             const batches = entities.orderItems?.[lastItemId]?.batches ?? [];
-                            scrollToRow(indexPosition + batches.length - 1, {
-                              dispatch,
-                              id: orderId,
+                            scrollToRow({
+                              position: indexPosition + batches.length - 1,
+                              id: lastItemId,
                               type: ORDER_ITEM,
                             });
+                            window.requestIdleCallback(
+                              () => {
+                                dispatch({
+                                  type: 'CREATE_ITEM_END',
+                                  payload: {},
+                                });
+                              },
+                              {
+                                timeout: 250,
+                              }
+                            );
                           }
                         }}
                       />
@@ -560,34 +541,50 @@ export default function OrderFocus() {
                                 const [, , batchCell, , ,] = row;
                                 return Number(batchCell.cell?.data?.id) === Number(lastBatchId);
                               });
-                              scrollToRow(indexPosition, {
-                                dispatch,
-                                id: batch?.id,
+                              scrollToRow({
+                                position: indexPosition,
+                                id: lastBatchId,
                                 type: BATCH,
                               });
+                              window.requestIdleCallback(
+                                () => {
+                                  dispatch({
+                                    type: 'CREATE_BATCH_CLOSE',
+                                    payload: {},
+                                  });
+                                },
+                                {
+                                  timeout: 250,
+                                }
+                              );
                             }
                           }
                         }}
                       />
                       <DeleteItemConfirm
-                        onSuccess={(orderId, itemId) => {
-                          if (orderId) {
-                            const node = document.querySelector(`#${ORDER_ITEM}-${itemId}`);
-                            queryOrdersDetail([orderId]);
-                            if (node) {
-                              // on UI, found the DOM, then try to scroll the center position
-                              scrollIntoView(node, {
-                                behavior: 'smooth',
-                                scrollMode: 'if-needed',
-                              });
-                            } else {
-                              // TODO: find the position to scroll
-                              scrollToRow(0, {
-                                dispatch,
-                                id: itemId,
-                                type: ORDER_ITEM,
-                              });
-                            }
+                        onSuccess={itemId => {
+                          console.warn({
+                            itemId,
+                          });
+                          const parentOrderId = findKey(currentOrder => {
+                            return (currentOrder.orderItems || []).includes(itemId);
+                          }, entities.orders);
+                          console.warn({
+                            parentOrderId,
+                          });
+                          if (parentOrderId) {
+                            queryOrdersDetail([parentOrderId]);
+                            window.requestIdleCallback(
+                              () => {
+                                dispatch({
+                                  type: 'DELETE_ITEM_CLOSE',
+                                  payload: {},
+                                });
+                              },
+                              {
+                                timeout: 250,
+                              }
+                            );
                           }
                         }}
                       />
@@ -604,8 +601,8 @@ export default function OrderFocus() {
                           }
                           if (result?.moveToTop) {
                             queryOrdersDetail([result?.id ?? ''].filter(Boolean));
-                            scrollToRow(0, {
-                              dispatch,
+                            scrollToRow({
+                              position: 0,
                               id: result?.id ?? '',
                               type: result?.type ?? '',
                             });

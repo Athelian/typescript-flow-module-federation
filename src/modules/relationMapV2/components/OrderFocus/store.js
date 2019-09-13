@@ -310,6 +310,17 @@ export function reducer(
         },
       });
     }
+    case 'DELETE_ITEM': {
+      return update(state, {
+        itemActions: {
+          type: { $set: 'deleteItem' },
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          detail: { $set: action.payload },
+        },
+      });
+    }
+    case 'DELETE_ITEM_START':
     case 'CREATE_BATCH_START': {
       return update(state, {
         itemActions: {
@@ -348,6 +359,7 @@ export function reducer(
         },
       });
     }
+    case 'DELETE_ITEM_CLOSE':
     case 'CREATE_BATCH_CLOSE': {
       return update(state, {
         itemActions: {

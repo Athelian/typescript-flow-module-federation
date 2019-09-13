@@ -3,10 +3,10 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { ObjectValue } from 'react-values';
 import { Entities, SortAndFilter, ClientSorts } from 'modules/relationMapV2/store';
-import MoveEntityConfirm from './index';
+import DeleteItemConfirm from './index';
 import { RelationMapContext, initialState } from '../OrderFocus/store';
 
-storiesOf('RelationMapV2', module).add('MoveEntityConfirm', () => (
+storiesOf('RelationMapV2', module).add('DeleteItemConfirm', () => (
   <ObjectValue defaultValue={initialState}>
     {({ value, set }) => (
       <RelationMapContext.Provider
@@ -14,19 +14,13 @@ storiesOf('RelationMapV2', module).add('MoveEntityConfirm', () => (
           state: value,
           dispatch: () => {
             set({
-              moveEntity: {
+              itemActions: {
                 isOpen: false,
                 isProcessing: false,
                 detail: {
-                  from: {
-                    id: '1',
-                    icon: 'BATCH',
-                    value: 'batch no1',
-                  },
-                  to: {
-                    id: '2',
-                    icon: 'ORDER',
-                    value: 'poNo 1',
+                  entity: {
+                    id: '',
+                    no: '',
                   },
                 },
               },
@@ -41,28 +35,22 @@ storiesOf('RelationMapV2', module).add('MoveEntityConfirm', () => (
                 type="button"
                 onClick={() => {
                   set({
-                    moveEntity: {
+                    itemActions: {
                       isOpen: true,
                       isProcessing: false,
                       detail: {
-                        from: {
+                        entity: {
                           id: '1',
-                          icon: 'BATCH',
-                          value: 'batch no1',
-                        },
-                        to: {
-                          id: '2',
-                          icon: 'ORDER',
-                          value: 'poNo 1',
+                          no: 'test',
                         },
                       },
                     },
                   });
                 }}
               >
-                Click to open the confirm dialog
+                Click to open the delete dialog
               </button>
-              <MoveEntityConfirm onSuccess={console.warn} />
+              <DeleteItemConfirm onSuccess={console.warn} />
             </ClientSorts.Provider>
           </Entities.Provider>
         </SortAndFilter.Provider>
