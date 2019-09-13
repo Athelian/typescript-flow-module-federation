@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, colors, fontSizes } from 'styles/common';
+import { layout, colors, fontSizes, presets } from 'styles/common';
 
 export const WrapperStyle = css`
   ${layout.HORIZONTAL};
@@ -10,11 +10,9 @@ export const WrapperStyle = css`
 
   & > input {
     width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     color: ${colors.BLACK};
     ${fontSizes.MAIN};
+    ${presets.ELLIPSIS};
     line-height: 18px;
     font-weight: 600;
 
