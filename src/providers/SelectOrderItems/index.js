@@ -17,10 +17,10 @@ import { EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import messages from 'modules/order/messages';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
-import orderItemsQuery from 'providers/OrderItemsList/query';
 import useFilter from 'hooks/useFilter';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
+import orderItemsQuery from './query';
 import { ItemWrapperStyle } from './style';
 
 type OptionalProps = {
