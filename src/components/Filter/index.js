@@ -176,8 +176,8 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
           {filterStates.map((state, index) => {
             const onEntityChange = entity => {
               setFilterStates(
-                filterStates.map(fs =>
-                  fs.field === state.field
+                filterStates.map((fs, i) =>
+                  i === index
                     ? {
                         entity,
                         field: null,
@@ -191,8 +191,8 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
 
             const onFieldChange = field => {
               setFilterStates(
-                filterStates.map(fs =>
-                  fs.field === state.field
+                filterStates.map((fs, i) =>
+                  i === index
                     ? {
                         ...fs,
                         field,
@@ -206,8 +206,8 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
 
             const onValueChange = value => {
               setFilterStates(
-                filterStates.map(fs =>
-                  fs.field === state.field
+                filterStates.map((fs, i) =>
+                  i === index
                     ? {
                         ...fs,
                         value,
