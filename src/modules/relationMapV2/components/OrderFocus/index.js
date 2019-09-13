@@ -26,6 +26,7 @@ import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import CloneEntities from '../CloneEntities';
 import InlineCreateItem from '../InlineCreateItem';
+import DeleteItemConfirm from '../DeleteItemConfirm';
 import InlineCreateBatch from '../InlineCreateBatch';
 import SelectedEntity from '../SelectedEntity';
 import Actions from '../Actions';
@@ -34,7 +35,6 @@ import Row from '../Row';
 import cellRenderer from './cellRenderer';
 import generateListData from './generateListData';
 import { reducer, initialState, RelationMapContext } from './store';
-import { moveEntityMutation } from './mutation';
 import normalize from './normalize';
 
 const LoadingPlaceHolder = React.memo(() => {
@@ -372,28 +372,13 @@ export default function OrderFocus() {
                         {Row}
                       </List>
                       <MoveEntityConfirm
-                        isProcessing={state.moveEntity.isProcessing}
-                        onCancel={() =>
-                          dispatch({
-                            type: 'CANCEL_MOVE',
-                            payload: {},
-                          })
-                        }
-                        onConfirm={async () => {
-                          dispatch({
-                            type: 'CONFIRM_MOVE_START',
-                            payload: {},
-                          });
-
-                          const { orderIds = [] } = await moveEntityMutation(state, entities);
+                        onSuccess={({ orderIds }) => {
+                          queryOrdersDetail(orderIds);
                           dispatch({
                             type: 'CONFIRM_MOVE_END',
                             payload: { orderIds },
                           });
-                          queryOrdersDetail(orderIds);
                         }}
-                        isOpen={state.moveEntity.isOpen}
-                        {...state.moveEntity.detail}
                       />
                       <CloneEntities
                         onSuccess={({
@@ -516,10 +501,6 @@ export default function OrderFocus() {
                               return Number(itemCell.cell?.data?.id) === Number(lastItemId);
                             });
                             const batches = entities.orderItems?.[lastItemId]?.batches ?? [];
-                            console.warn({
-                              lastItemId,
-                              indexPosition,
-                            });
                             scrollToRow(indexPosition + batches.length - 1, {
                               dispatch,
                               id: orderId,
@@ -579,7 +560,33 @@ export default function OrderFocus() {
                                 const [, , batchCell, , ,] = row;
                                 return Number(batchCell.cell?.data?.id) === Number(lastBatchId);
                               });
-                              scrollToRow(indexPosition, { dispatch, id: batch?.id, type: BATCH });
+                              scrollToRow(indexPosition, {
+                                dispatch,
+                                id: batch?.id,
+                                type: BATCH,
+                              });
+                            }
+                          }
+                        }}
+                      />
+                      <DeleteItemConfirm
+                        onSuccess={(orderId, itemId) => {
+                          if (orderId) {
+                            const node = document.querySelector(`#${ORDER_ITEM}-${itemId}`);
+                            queryOrdersDetail([orderId]);
+                            if (node) {
+                              // on UI, found the DOM, then try to scroll the center position
+                              scrollIntoView(node, {
+                                behavior: 'smooth',
+                                scrollMode: 'if-needed',
+                              });
+                            } else {
+                              // TODO: find the position to scroll
+                              scrollToRow(0, {
+                                dispatch,
+                                id: itemId,
+                                type: ORDER_ITEM,
+                              });
                             }
                           }
                         }}

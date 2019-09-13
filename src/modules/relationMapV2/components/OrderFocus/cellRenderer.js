@@ -929,7 +929,18 @@ function OrderItemCell({
               <OrderItemCard
                 organizationId={data?.ownedBy?.id}
                 no={data?.no ?? 'N/A'}
-                onDeleteItem={console.warn}
+                onDeleteItem={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'DELETE_ITEM',
+                    payload: {
+                      entity: {
+                        id: itemId,
+                        no: data?.no,
+                      },
+                    },
+                  });
+                }}
                 onCreateBatch={evt => {
                   evt.stopPropagation();
                   dispatch({
