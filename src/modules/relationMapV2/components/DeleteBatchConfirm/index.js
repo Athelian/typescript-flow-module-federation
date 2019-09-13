@@ -7,31 +7,31 @@ import LoadingIcon from 'components/LoadingIcon';
 import { CancelButton, YesButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
-import { deleteOrderItemMutation } from './mutation';
+import { deleteBatchMutation } from './mutation';
 
 type Props = {|
-  onSuccess: (itemId: string) => void,
+  onSuccess: (batchId: string) => void,
 |};
 
-export default function DeleteItemConfirm({ onSuccess }: Props) {
-  const [deleteItem] = useMutation(deleteOrderItemMutation);
+export default function DeleteBatchConfirm({ onSuccess }: Props) {
+  const [deleteItem] = useMutation(deleteBatchMutation);
   const { dispatch, state } = React.useContext(RelationMapContext);
   const {
     isProcessing,
     isOpen,
     type,
     detail: { entity },
-  } = state.itemActions;
-  const isDeleteItem = type === 'deleteItem';
+  } = state.batchActions;
+  const isDeleteItem = type === 'deleteBatch';
   const onCancel = () => {
     dispatch({
-      type: 'DELETE_ITEM_CLOSE',
+      type: 'DELETE_BATCH_CLOSE',
       payload: {},
     });
   };
   const onConfirm = () => {
     dispatch({
-      type: 'DELETE_ITEM_START',
+      type: 'DELETE_BATCH_START',
       payload: {},
     });
     deleteItem({
@@ -44,7 +44,7 @@ export default function DeleteItemConfirm({ onSuccess }: Props) {
       })
       .catch(() => {
         dispatch({
-          type: 'DELETE_ITEM_CLOSE',
+          type: 'DELETE_BATCH_CLOSE',
           payload: {},
         });
       });
@@ -56,15 +56,14 @@ export default function DeleteItemConfirm({ onSuccess }: Props) {
           <>
             <span>
               Deleting
-              <Icon icon="ORDER_ITEM" />
+              <Icon icon="BATCH" />
               {` ${entity.no}...`}
             </span>
             <LoadingIcon />
           </>
         ) : (
           <h3 className={ConfirmMessageStyle}>
-            Are you sure you want to delete <Icon icon="ORDER_ITEM" /> {` ${entity.no} ?`} All of
-            its Batches will be deleted as well
+            Are you sure you want to delete <Icon icon="BATCH" /> {` ${entity.no} ?`}
           </h3>
         )}
         <div className={ButtonsStyle}>

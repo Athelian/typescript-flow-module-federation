@@ -66,6 +66,10 @@ export const ItemCard = styled.div`
   width: 465px;
   height: 55px;
 `;
+export const BatchHeaderCard = styled.div`
+  width: 445px;
+  height: 55px;
+`;
 export const BatchCard = styled.div`
   width: 445px;
   height: 55px;

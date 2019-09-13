@@ -45,6 +45,16 @@ export const initialState: State = {
       },
     },
   },
+  batchActions: {
+    isOpen: false,
+    isProcessing: false,
+    detail: {
+      entity: {
+        id: '',
+        no: '',
+      },
+    },
+  },
   createItem: {
     isOpen: false,
     isProcessing: false,
@@ -93,6 +103,10 @@ export function reducer(
       | 'CREATE_BATCH_START'
       | 'CREATE_BATCH_END'
       | 'CREATE_BATCH_CLOSE'
+      | 'DELETE_BATCH'
+      | 'DELETE_BATCH_START'
+      | 'DELETE_BATCH_END'
+      | 'DELETE_BATCH_CLOSE'
       | 'DELETE_ITEM'
       | 'DELETE_ITEM_START'
       | 'DELETE_ITEM_END'
@@ -320,6 +334,22 @@ export function reducer(
         },
       });
     }
+    case 'DELETE_BATCH': {
+      return update(state, {
+        batchActions: {
+          type: { $set: 'deleteBatch' },
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          detail: { $set: action.payload },
+        },
+      });
+    }
+    case 'DELETE_BATCH_START':
+      return update(state, {
+        batchActions: {
+          isProcessing: { $set: true },
+        },
+      });
     case 'DELETE_ITEM_START':
     case 'CREATE_BATCH_START': {
       return update(state, {
@@ -359,6 +389,13 @@ export function reducer(
         },
       });
     }
+    case 'DELETE_BATCH_CLOSE':
+      return update(state, {
+        batchActions: {
+          type: { $set: '' },
+          isOpen: { $set: false },
+        },
+      });
     case 'DELETE_ITEM_CLOSE':
     case 'CREATE_BATCH_CLOSE': {
       return update(state, {

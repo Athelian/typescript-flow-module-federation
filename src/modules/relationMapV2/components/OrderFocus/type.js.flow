@@ -63,6 +63,17 @@ export type State = {|
     },
     type?: 'createBatch' | 'deleteItem',
   },
+  batchActions: {
+    isOpen: boolean,
+    isProcessing: boolean,
+    detail: {
+      entity: {
+        id: string,
+        no: string,
+      },
+    },
+    type?: 'createBatch' | 'deleteBatch',
+  },
   createItem: {
     isOpen: boolean,
     isProcessing: boolean,

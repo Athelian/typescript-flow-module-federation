@@ -28,6 +28,7 @@ import CloneEntities from '../CloneEntities';
 import InlineCreateItem from '../InlineCreateItem';
 import DeleteItemConfirm from '../DeleteItemConfirm';
 import InlineCreateBatch from '../InlineCreateBatch';
+import DeleteBatchConfirm from '../DeleteBatchConfirm';
 import SelectedEntity from '../SelectedEntity';
 import Actions from '../Actions';
 import Header from '../Header';
@@ -563,21 +564,42 @@ export default function OrderFocus() {
                       />
                       <DeleteItemConfirm
                         onSuccess={itemId => {
-                          console.warn({
-                            itemId,
-                          });
                           const parentOrderId = findKey(currentOrder => {
                             return (currentOrder.orderItems || []).includes(itemId);
                           }, entities.orders);
-                          console.warn({
-                            parentOrderId,
-                          });
                           if (parentOrderId) {
                             queryOrdersDetail([parentOrderId]);
                             window.requestIdleCallback(
                               () => {
                                 dispatch({
                                   type: 'DELETE_ITEM_CLOSE',
+                                  payload: {},
+                                });
+                              },
+                              {
+                                timeout: 250,
+                              }
+                            );
+                          }
+                        }}
+                      />
+                      <DeleteBatchConfirm
+                        onSuccess={batchId => {
+                          const parentOrderId = findKey(currentOrder => {
+                            return (currentOrder.orderItems || []).some(itemId =>
+                              getByPathWithDefault(
+                                [],
+                                `orderItems.${itemId}.batches`,
+                                entities
+                              ).includes(batchId)
+                            );
+                          }, entities.orders);
+                          if (parentOrderId) {
+                            queryOrdersDetail([parentOrderId]);
+                            window.requestIdleCallback(
+                              () => {
+                                dispatch({
+                                  type: 'DELETE_BATCH_CLOSE',
                                   payload: {},
                                 });
                               },

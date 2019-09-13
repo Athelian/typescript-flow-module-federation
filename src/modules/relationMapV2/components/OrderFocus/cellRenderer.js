@@ -36,13 +36,14 @@ import type { LINE_CONNECTOR } from '../RelationLine';
 import RelationLine from '../RelationLine';
 import OrderCard from '../OrderCard';
 import OrderItemCard from '../OrderItemCard';
+import BatchCard from '../BatchCard';
 import { ContentStyle, MatchedStyle } from './style';
 import {
   getColorByEntity,
   getIconByEntity,
   getCardByEntity,
+  BatchHeaderCard,
   ItemCard,
-  BatchCard,
   ShipmentCard,
   ContainerCard,
   HeaderCard,
@@ -1126,7 +1127,22 @@ function BatchCell({
           >
             <div ref={drag} style={baseDragStyle}>
               <Badge label={badge.batch?.[batchId] ?? ''} />
-              <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
+              <BatchCard
+                organizationId={data?.ownedBy?.id}
+                no={data?.no ?? 'N/A'}
+                onDeleteBatch={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'DELETE_BATCH',
+                    payload: {
+                      entity: {
+                        id: data?.id,
+                        no: data?.no,
+                      },
+                    },
+                  });
+                }}
+              />
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
@@ -1750,7 +1766,7 @@ function BatchSummaryCell({
                 }}
               />
             )}
-            <BatchCard>
+            <BatchHeaderCard>
               <p>Total: {getByPathWithDefault(0, 'batchCount', data)}</p>
               <button
                 type="button"
@@ -1768,7 +1784,7 @@ function BatchSummaryCell({
               >
                 <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
               </button>
-            </BatchCard>
+            </BatchHeaderCard>
           </HeaderCard>
         </div>
       ) : (
