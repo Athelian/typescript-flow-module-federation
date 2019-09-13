@@ -17,7 +17,7 @@ const defaultProps = {
   label: <FormattedMessage id="components.button.reset" defaultMessage="RESET" />,
 };
 
-const ResetButton = ({ disabled, onClick, label }: Props): React.Node => (
+const ResetButton = ({ disabled, onClick, label, ...rest }: Props): React.Node => (
   <BaseButton
     label={label}
     textColor="GRAY_DARK"
@@ -26,6 +26,7 @@ const ResetButton = ({ disabled, onClick, label }: Props): React.Node => (
     hoverBackgroundColor="GRAY_LIGHT"
     disabled={disabled}
     onClick={onClick}
+    {...rest}
   />
 );
 
