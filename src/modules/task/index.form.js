@@ -172,6 +172,7 @@ class TaskFormModule extends React.Component<Props> {
                             }
                           />
                           <SaveButton
+                            id="task_form_save_button"
                             disabled={!form.isReady(state, validator)}
                             isLoading={isLoading}
                             onClick={() =>

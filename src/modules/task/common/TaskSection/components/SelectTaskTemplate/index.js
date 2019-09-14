@@ -79,7 +79,11 @@ const SelectTaskTemplate = ({ intl, cacheKey, entityType, onCancel, onSelect }: 
                     canSearch
                   />
                   <CancelButton onClick={onCancel} />
-                  <ApplyButton disabled={!value} onClick={() => onSelect(value)} />
+                  <ApplyButton
+                    disabled={!value}
+                    onClick={() => onSelect(value)}
+                    id="select_task_template_apply_button"
+                  />
                 </SlideViewNavBar>
 
                 <Content>

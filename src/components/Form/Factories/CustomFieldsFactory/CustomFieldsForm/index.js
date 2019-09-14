@@ -153,9 +153,11 @@ class CustomFieldsForm extends React.Component<Props> {
                                   <SlideView
                                     isOpen={opened}
                                     onRequestClose={() => slideToggle(false)}
+                                    targetId="select_template_button"
                                   >
                                     {opened && (
                                       <CustomFieldsTemplateSelector
+                                        saveButtonId="select_template_button"
                                         entityType={entityType}
                                         selected={mask}
                                         onCancel={() => slideToggle(false)}

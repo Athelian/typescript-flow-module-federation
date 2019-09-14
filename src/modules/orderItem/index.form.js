@@ -257,6 +257,7 @@ class OrderItemFormModule extends React.Component<Props> {
                             }}
                           />
                           <SaveButton
+                            id="item_form_save_button"
                             disabled={
                               !formContainer.isReady(
                                 {

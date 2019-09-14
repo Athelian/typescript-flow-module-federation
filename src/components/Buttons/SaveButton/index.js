@@ -18,7 +18,7 @@ const defaultProps = {
   isLoading: false,
   onClick: () => {},
   label: <FormattedMessage id="components.button.save" defaultMessage="SAVE" />,
-  id: 'btn_save',
+  id: 'save_button',
 };
 
 const SaveButton = ({ disabled, isLoading, onClick, label, id, ...rest }: Props): React.Node => (

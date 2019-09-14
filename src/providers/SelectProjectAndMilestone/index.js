@@ -132,6 +132,7 @@ function SelectProjectAndMilestone({
               }}
             />
             <BaseButton
+              id="save_button"
               label={saveButtonMessage}
               onClick={() => {
                 if (selectedMilestone) {
@@ -225,6 +226,7 @@ function SelectProjectAndMilestone({
                                 {item.id ===
                                   getByPathWithDefault('', 'project.id', currentSelection) && (
                                   <SlideView
+                                    targetId="select_milestone_save_button"
                                     isOpen={isOpen}
                                     onRequestClose={() => {
                                       resetSelection({

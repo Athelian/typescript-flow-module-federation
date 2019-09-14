@@ -14,6 +14,7 @@ import { masksQuery } from 'modules/metadata/query';
 import { countMaskFieldDefinitions } from 'utils/customFields';
 
 type OptionalProps = {
+  saveButtonId: string,
   selected: ?{
     id: string,
     name: string,
@@ -33,7 +34,13 @@ const defaultProps = {
   },
 };
 
-const CustomFieldsTemplateSelector = ({ entityType, selected, onCancel, onSave }: Props) => (
+const CustomFieldsTemplateSelector = ({
+  entityType,
+  selected,
+  onCancel,
+  onSave,
+  saveButtonId,
+}: Props) => (
   <Query
     query={masksQuery}
     variables={{
@@ -60,6 +67,7 @@ const CustomFieldsTemplateSelector = ({ entityType, selected, onCancel, onSave }
                 <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
                 <CancelButton onClick={onCancel} />
                 <SaveButton
+                  id={saveButtonId}
                   data-testid="saveButtonOnSelectMask"
                   disabled={isEquals(value, selected)}
                   onClick={() => onSave(value)}

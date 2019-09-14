@@ -169,6 +169,7 @@ class BatchFormModule extends React.Component<Props> {
                             }}
                           />
                           <SaveButton
+                            id="batch_form_save_button"
                             disabled={
                               !formContainer.isReady(
                                 { ...batchInfoContainer.state, ...batchTasksContainer.state },

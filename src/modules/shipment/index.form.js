@@ -520,6 +520,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
 
                           {(isNewOrClone || isDirty) && (
                             <SaveButton
+                              id="shipment_form_save_button"
                               disabled={
                                 !formContainer.isReady(
                                   {

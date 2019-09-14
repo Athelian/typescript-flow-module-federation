@@ -139,7 +139,11 @@ const Cell = React.memo(
               height: style.height - GUTTER_SIZE,
             }}
           >
-            <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+            <SlideView
+              isOpen={opened}
+              onRequestClose={() => slideToggle(false)}
+              targetId="batch_form_save_button"
+            >
               {opened && (
                 <BatchFormInSlide
                   batch={batch}

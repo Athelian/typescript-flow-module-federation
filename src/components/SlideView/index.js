@@ -42,7 +42,7 @@ const defaultProps = {
     width: { initialValue: 80, step: 10, unit: 'vw' },
     minWidth: { initialValue: 1030, step: 50, unit: 'px' },
   },
-  targetId: 'btn_save',
+  targetId: 'save_button',
 };
 
 class SlideView extends React.Component<Props, State> {
@@ -163,7 +163,7 @@ class SlideView extends React.Component<Props, State> {
               message={
                 <FormattedMessage
                   id="components.form.confirmLeaveMessage"
-                  defaultMessage="Are you sure you want to leave this page? Your changes will not be saved."
+                  defaultMessage="Are you sure you want to close this view? Your changes will not be saved."
                 />
               }
             />
