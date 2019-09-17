@@ -3,10 +3,10 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { ObjectValue } from 'react-values';
 import { Entities, SortAndFilter, ClientSorts } from 'modules/relationMapV2/store';
-import DeleteItemConfirm from './index';
+import MoveBatch from './index';
 import { RelationMapContext, initialState } from '../OrderFocus/store';
 
-storiesOf('RelationMapV2', module).add('DeleteItemConfirm', () => (
+storiesOf('RelationMapV2', module).add('MoveBatch', () => (
   <ObjectValue defaultValue={initialState}>
     {({ value, set }) => (
       <RelationMapContext.Provider
@@ -14,17 +14,13 @@ storiesOf('RelationMapV2', module).add('DeleteItemConfirm', () => (
           state: value,
           dispatch: () => {
             set({
-              itemActions: {
+              batchActions: {
                 isOpen: false,
                 isProcessing: false,
                 detail: {
                   entity: {
                     id: '',
                     no: '',
-                  },
-                  from: {
-                    id: '',
-                    type: 'SHIPMENT',
                   },
                 },
               },
@@ -39,27 +35,23 @@ storiesOf('RelationMapV2', module).add('DeleteItemConfirm', () => (
                 type="button"
                 onClick={() => {
                   set({
-                    itemActions: {
+                    batchActions: {
                       isOpen: true,
                       isProcessing: false,
-                      type: 'deleteItem',
+                      type: 'moveBatches',
                       detail: {
                         entity: {
                           id: '1',
                           no: 'test',
-                        },
-                        from: {
-                          id: '',
-                          type: 'SHIPMENT',
                         },
                       },
                     },
                   });
                 }}
               >
-                Click to open the delete dialog
+                Click to open the move batch dialog
               </button>
-              <DeleteItemConfirm onSuccess={console.warn} />
+              <MoveBatch onSuccess={console.warn} />
             </ClientSorts.Provider>
           </Entities.Provider>
         </SortAndFilter.Provider>

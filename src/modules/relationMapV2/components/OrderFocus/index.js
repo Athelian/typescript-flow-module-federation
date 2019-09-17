@@ -38,6 +38,7 @@ import generateListData from './generateListData';
 import { reducer, initialState, RelationMapContext } from './store';
 import normalize from './normalize';
 import RemoveBatchConfirm from '../RemoveBatchConfirm';
+import MoveBatch from '../MoveBatch';
 
 const LoadingPlaceHolder = React.memo(() => {
   return (
@@ -492,6 +493,7 @@ export default function OrderFocus() {
                           }
                         }}
                       />
+                      <MoveBatch />
                       <InlineCreateBatch
                         onSuccess={(orderId, batch) => {
                           if (orderId) {

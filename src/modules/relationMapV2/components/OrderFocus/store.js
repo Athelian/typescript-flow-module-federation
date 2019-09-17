@@ -128,6 +128,10 @@ export function reducer(
       | 'REMOVE_BATCH_START'
       | 'REMOVE_BATCH_END'
       | 'REMOVE_BATCH_CLOSE'
+      | 'MOVE_BATCH'
+      | 'MOVE_BATCH_START'
+      | 'MOVE_BATCH_END'
+      | 'MOVE_BATCH_CLOSE'
       | 'EDIT',
     payload: {
       entity?: string,
@@ -360,6 +364,15 @@ export function reducer(
         },
       });
     }
+    case 'MOVE_BATCH': {
+      return update(state, {
+        batchActions: {
+          type: { $set: 'moveBatches' },
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+        },
+      });
+    }
     case 'DELETE_BATCH': {
       return update(state, {
         batchActions: {
@@ -416,6 +429,7 @@ export function reducer(
         },
       });
     }
+    case 'MOVE_BATCH_CLOSE':
     case 'REMOVE_BATCH_CLOSE':
     case 'DELETE_BATCH_CLOSE':
       return update(state, {

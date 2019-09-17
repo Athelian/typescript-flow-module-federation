@@ -159,6 +159,19 @@ export default function Actions({ targets }: Props) {
         >
           <Icon icon="BATCH" />
           <ActionSubMenu isCollapsed={currentMenu !== BATCH}>
+            {/* TODO: check permission to move */}
+            <ActionButton
+              onClick={() => {
+                logger.warn('MOVE');
+                dispatch({
+                  type: 'MOVE_BATCH',
+                  payload: {},
+                });
+              }}
+            >
+              <Icon icon="EXCHANGE" />
+              <ActionLabel>MOVE</ActionLabel>
+            </ActionButton>
             <ActionButton
               onClick={() => {
                 logger.warn('CLONE');
