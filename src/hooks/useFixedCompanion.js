@@ -7,7 +7,7 @@ export type Offset = {
 };
 
 export default function useFixedCompanion(
-  ref: React.Ref,
+  ref: { current: HTMLElement | null },
   side: 'bottom' | 'right' = 'bottom'
 ): Offset {
   const [offset, setOffset] = React.useState<Offset>({ top: 0, left: 0 });
@@ -18,7 +18,6 @@ export default function useFixedCompanion(
     }
 
     const viewportOffset: ClientRect = ref.current.getBoundingClientRect();
-    console.log(viewportOffset);
 
     switch (side) {
       case 'bottom':

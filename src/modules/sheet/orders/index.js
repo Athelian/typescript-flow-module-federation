@@ -2,9 +2,9 @@
 import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
-import { EntityIcon, NavBar } from 'components/NavBar';
+import { EntityIcon, NavBar, SearchInput } from 'components/NavBar';
 import { Sheet, ColumnsConfig } from 'components/Sheet';
-import Filter from 'components/Filter';
+import Filter from 'components/NavBar/components/Filter';
 import { clone } from 'utils/fp';
 import columns from './columns';
 import transformer from './transformer';
@@ -28,6 +28,7 @@ const OrderSheetModule = () => {
     totalPage: 1,
   });
   const [filterBy, setFilterBy] = React.useState<{ [string]: any }>({
+    query: '',
     archived: false,
   });
   const [sortBy, setSortBy] = React.useState<{ [string]: 'ASCENDING' | 'DESCENDING' }>({
@@ -51,6 +52,8 @@ const OrderSheetModule = () => {
       });
   }, [client, filterBy, sortBy]);
 
+  const { query, ...filters } = filterBy;
+
   return (
     <Content>
       <NavBar>
@@ -58,8 +61,29 @@ const OrderSheetModule = () => {
 
         <Filter
           config={[{ entity: 'ORDER', field: 'archived', type: 'archived', defaultValue: false }]}
-          filters={filterBy}
-          onChange={setFilterBy}
+          filters={filters}
+          onChange={value =>
+            setFilterBy({
+              ...value,
+              query,
+            })
+          }
+        />
+        <SearchInput
+          value={query}
+          name="search"
+          onClear={() =>
+            setFilterBy({
+              ...filterBy,
+              query: '',
+            })
+          }
+          onChange={value =>
+            setFilterBy({
+              ...filterBy,
+              query: value,
+            })
+          }
         />
         <ColumnsConfig columns={columns} onChange={setCurrentColumns} />
       </NavBar>
