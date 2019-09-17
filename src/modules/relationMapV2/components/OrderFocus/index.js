@@ -609,9 +609,34 @@ export default function OrderFocus() {
                           }, entities.orders);
                           if (parentOrderId) {
                             queryOrdersDetail([parentOrderId]);
-                            // TODO: check the relate shipment has any connections with other orders or not
+                            const batch = entities.batches?.[batchId] ?? {};
+                            const container = entities.containers?.[batch?.container];
+                            const shipment = entities.shipments?.[batch?.shipment];
+                            const removeTargets = [];
+                            const remainContainersCount = Object.values(entities.batches).filter(
+                              (currentBatch: Object) =>
+                                currentBatch.container && currentBatch.container === container?.id
+                            ).length;
+                            if (remainContainersCount === 1) {
+                              removeTargets.push(`${CONTAINER}-${container?.id}`);
+                            }
+                            const remainShipmentsCount = Object.values(entities.batches).filter(
+                              (currentBatch: Object) =>
+                                currentBatch.shipment && currentBatch.shipment === shipment?.id
+                            ).length;
+                            if (remainShipmentsCount === 1) {
+                              removeTargets.push(`${SHIPMENT}-${shipment?.id}`);
+                            }
                             window.requestIdleCallback(
                               () => {
+                                if (removeTargets.length) {
+                                  dispatch({
+                                    type: 'REMOVE_TARGETS',
+                                    payload: {
+                                      targets: removeTargets,
+                                    },
+                                  });
+                                }
                                 dispatch({
                                   type: 'REMOVE_BATCH_CLOSE',
                                   payload: {},
