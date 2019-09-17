@@ -4,7 +4,6 @@ import {
   taskWithParentInfoFragment,
   milestoneCardFragment,
   projectCardFragment,
-  milestoneFragment,
   userAvatarFragment,
   tagFragment,
   orderCardFragment,
@@ -44,7 +43,6 @@ const editableTaskListQuery = gql`
   ${taskWithParentInfoFragment}
   ${milestoneCardFragment}
   ${projectCardFragment}
-  ${milestoneFragment}
   ${tagFragment}
   ${userAvatarFragment}
   ${orderCardFragment}

@@ -1,7 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  milestoneFragment,
   projectCardFragment,
   taskCountFragment,
   tagFragment,
@@ -36,7 +35,6 @@ export const projectListQuery = gql`
       totalPage
     }
   }
-  ${milestoneFragment}
   ${projectCardFragment}
   ${taskCountFragment}
   ${tagFragment}

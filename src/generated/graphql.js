@@ -61929,12 +61929,12 @@ export type ProductProviderCardFragmentFragment = (
   ) }
 );
 
-export type MilestoneFragmentFragment = (
+export type MilestoneInProjectCardFragmentFragment = (
   { __typename?: 'Milestone' }
   & $Pick<Milestone, { id: *, name: *, dueDate: *, completedAt: * }>
   & { tasks: Array<(
     { __typename?: 'Task' }
-    & $Pick<Task, { id: *, completedAt: * }>
+    & $Pick<Task, { id: *, completedAt: *, skippedAt: * }>
   ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> }
 );
 
@@ -61942,7 +61942,7 @@ export type ProjectCardFragmentFragment = (
   { __typename?: 'Project' }
   & $Pick<Project, { id: *, name: *, description: *, dueDate: * }>
   & { milestones: Array<({ __typename?: 'Milestone' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & MilestoneFragmentFragment
+    & MilestoneInProjectCardFragmentFragment
   >, taskCount: { __typename?: 'TaskCount' }
     & TaskCountFragmentFragment
   , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
@@ -61988,7 +61988,7 @@ export type ProjectFormQueryFragmentFragment = (
       { __typename?: 'Task' }
       & $Pick<Task, { milestoneSort: * }>
     ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskWithParentInfoFragmentFragment
+      & TaskFormInProjectOrMilestoneFormFragmentFragment
     > }
   ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> }
 );
@@ -62250,263 +62250,16 @@ export type TagCardFragmentFragment = (
   & $Pick<Tag, { id: *, name: *, description: *, color: *, entityTypes: * }>
 );
 
-export type TaskCardFragmentFragment = (
+export type TaskInfoFragmentFragment = (
   { __typename?: 'Task' }
-  & $Pick<Task, { id: *, name: *, approvable: *, startDate: *, dueDate: *, inProgressAt: *, skippedAt: *, completedAt: *, rejectedAt: *, approvedAt: * }>
-  & { entity: ?(
-    { __typename?: 'Product' }
-    & $Pick<Product, { id: *, name: * }>
-  ) | (
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: *, name: * }>
-    & { product: (
-      { __typename?: 'Product' }
-      & $Pick<Product, { id: *, name: * }>
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | (
-    { __typename?: 'ProductProviderPackage' }
-    & $Pick<ProductProviderPackage, { id: * }>
-  ) | (
-    { __typename?: 'Order' }
-    & $Pick<Order, { id: *, poNo: * }>
-  ) | (
-    { __typename?: 'OrderItem' }
-    & $Pick<OrderItem, { id: *, no: * }>
-  ) | (
-    { __typename?: 'Batch' }
-    & $Pick<Batch, { id: *, no: * }>
-  ) | (
-    { __typename?: 'BatchQuantityRevision' }
-    & $Pick<BatchQuantityRevision, { id: * }>
-  ) | (
-    { __typename?: 'Shipment' }
-    & $Pick<Shipment, { id: *, no: * }>
-  ) | (
-    { __typename?: 'Voyage' }
-    & $Pick<Voyage, { id: * }>
-  ) | (
-    { __typename?: 'Container' }
-    & $Pick<Container, { id: * }>
-  ) | (
-    { __typename?: 'ContainerGroup' }
-    & $Pick<ContainerGroup, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDate' }
-    & $Pick<TimelineDate, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDateRevision' }
-    & $Pick<TimelineDateRevision, { id: * }>
-  ) | (
-    { __typename?: 'Warehouse' }
-    & $Pick<Warehouse, { id: * }>
-  ) | (
-    { __typename?: 'Tag' }
-    & $Pick<Tag, { id: * }>
-  ) | (
-    { __typename?: 'User' }
-    & $Pick<User, { id: * }>
-  ) | (
-    { __typename?: 'Organization' }
-    & $Pick<Organization, { id: * }>
-  ) | (
-    { __typename?: 'Partnership' }
-    & $Pick<Partnership, { id: * }>
-  ) | (
-    { __typename?: 'Role' }
-    & $Pick<Role, { id: * }>
-  ) | (
-    { __typename?: 'File' }
-    & $Pick<File, { id: * }>
-  ) | (
-    { __typename?: 'Task' }
-    & $Pick<Task, { id: * }>
-  ) | (
-    { __typename?: 'TaskTemplate' }
-    & $Pick<TaskTemplate, { id: * }>
-  ) | (
-    { __typename?: 'Project' }
-    & $Pick<Project, { id: * }>
-  ) | (
-    { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, assignedTo: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, approvers: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, inProgressBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , skippedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , completedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , rejectedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , approvedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, milestone: ?(
-    { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: *, name: * }>
-    & { project: (
-      { __typename?: 'Project' }
-      & $Pick<Project, { id: *, name: * }>
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
-
-export type TaskTemplateCardFragmentFragment = (
-  { __typename?: 'TaskTemplate' }
-  & $Pick<TaskTemplate, { id: *, updatedAt: *, name: *, description: *, entityType: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TaskFormInTemplateFragmentFragment
-  > }
-);
-
-export type TaskFormInTemplateFragmentFragment = (
-  { __typename?: 'Task' }
-  & $Pick<Task, { id: *, approvable: *, updatedAt: *, name: *, startDateBinding: *, dueDateBinding: *, description: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , startDateInterval: ?(
-    { __typename?: 'Interval' }
-    & $Pick<Interval, { months: *, weeks: *, days: * }>
-  ), dueDateInterval: ?(
-    { __typename?: 'Interval' }
-    & $Pick<Interval, { months: *, weeks: *, days: * }>
-  ), tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, assignedTo: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, approvers: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, taskTemplate: ?(
-    { __typename?: 'TaskTemplate' }
-    & $Pick<TaskTemplate, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
-
-export type TaskWithoutParentInfoFragmentFragment = (
-  { __typename?: 'Task' }
-  & $Pick<Task, { id: *, approvable: *, updatedAt: *, name: *, startDate: *, startDateBinding: *, dueDate: *, dueDateBinding: *, description: *, inProgressAt: *, completedAt: *, skippedAt: *, rejectedAt: *, approvedAt: *, memo: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , entity: ?(
-    { __typename?: 'Product' }
-    & $Pick<Product, { id: * }>
-  ) | (
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: * }>
-  ) | (
-    { __typename?: 'ProductProviderPackage' }
-    & $Pick<ProductProviderPackage, { id: * }>
-  ) | (
-    { __typename?: 'Order' }
-    & $Pick<Order, { id: * }>
-  ) | (
-    { __typename?: 'OrderItem' }
-    & $Pick<OrderItem, { id: * }>
-  ) | (
-    { __typename?: 'Batch' }
-    & $Pick<Batch, { id: * }>
-  ) | (
-    { __typename?: 'BatchQuantityRevision' }
-    & $Pick<BatchQuantityRevision, { id: * }>
-  ) | (
-    { __typename?: 'Shipment' }
-    & $Pick<Shipment, { id: * }>
-  ) | (
-    { __typename?: 'Voyage' }
-    & $Pick<Voyage, { id: * }>
-  ) | (
-    { __typename?: 'Container' }
-    & $Pick<Container, { id: * }>
-  ) | (
-    { __typename?: 'ContainerGroup' }
-    & $Pick<ContainerGroup, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDate' }
-    & $Pick<TimelineDate, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDateRevision' }
-    & $Pick<TimelineDateRevision, { id: * }>
-  ) | (
-    { __typename?: 'Warehouse' }
-    & $Pick<Warehouse, { id: * }>
-  ) | (
-    { __typename?: 'Tag' }
-    & $Pick<Tag, { id: * }>
-  ) | (
-    { __typename?: 'User' }
-    & $Pick<User, { id: * }>
-  ) | (
-    { __typename?: 'Organization' }
-    & $Pick<Organization, { id: * }>
-  ) | (
-    { __typename?: 'Partnership' }
-    & $Pick<Partnership, { id: * }>
-  ) | (
-    { __typename?: 'Role' }
-    & $Pick<Role, { id: * }>
-  ) | (
-    { __typename?: 'File' }
-    & $Pick<File, { id: * }>
-  ) | (
-    { __typename?: 'Task' }
-    & $Pick<Task, { id: * }>
-  ) | (
-    { __typename?: 'TaskTemplate' }
-    & $Pick<TaskTemplate, { id: * }>
-  ) | (
-    { __typename?: 'Project' }
-    & $Pick<Project, { id: * }>
-  ) | (
-    { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, startDateInterval: ?(
-    { __typename?: 'Interval' }
-    & $Pick<Interval, { months: *, weeks: *, days: * }>
-  ), dueDateInterval: ?(
-    { __typename?: 'Interval' }
-    & $Pick<Interval, { months: *, weeks: *, days: * }>
-  ), inProgressBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , completedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , skippedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , rejectedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , approvedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , assignedTo: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, milestone: ?(
-    { __typename?: 'Milestone' }
-    & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & ProjectCardFragmentFragment
-     }
-    & MilestoneCardFragmentFragment
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, approvers: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, taskTemplate: ?(
-    { __typename?: 'TaskTemplate' }
-    & $Pick<TaskTemplate, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
-
-export type TaskWithParentInfoFragmentFragment = (
-  { __typename?: 'Task' }
-  & $Pick<Task, { id: *, updatedAt: *, name: *, approvable: *, startDate: *, startDateBinding: *, dueDate: *, dueDateBinding: *, description: *, inProgressAt: *, skippedAt: *, completedAt: *, rejectedAt: *, approvedAt: *, memo: * }>
+  & $Pick<Task, { id: *, updatedAt: *, name: *, description: *, startDate: *, startDateBinding: *, dueDate: *, dueDateBinding: *, inProgressAt: *, skippedAt: *, completedAt: *, approvable: *, rejectedAt: *, approvedAt: * }>
   & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
     & UserAvatarFragmentFragment
   , ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
     & OwnedByFragmentFragment
-  , startDateInterval: ?(
+  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & TagFragmentFragment
+  >, startDateInterval: ?(
     { __typename?: 'Interval' }
     & $Pick<Interval, { months: *, weeks: *, days: * }>
   ), dueDateInterval: ?(
@@ -62518,17 +62271,20 @@ export type TaskWithParentInfoFragmentFragment = (
     & UserAvatarFragmentFragment
   , completedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
     & UserAvatarFragmentFragment
-  , rejectedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+  , assignedTo: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & UserAvatarFragmentFragment
+  >, rejectedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
     & UserAvatarFragmentFragment
   , approvedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
     & UserAvatarFragmentFragment
-  , assignedTo: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+  , approvers: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
     & UserAvatarFragmentFragment
-  >, approvers: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, entity: ?(
+  > }
+);
+
+export type TaskEntityCardFragmentFragment = (
+  { __typename?: 'Task' }
+  & { entity: ?(
     { __typename?: 'Product' }
     & $Pick<Product, { id: * }>
   ) | (
@@ -63038,14 +62794,181 @@ export type TaskWithParentInfoFragmentFragment = (
   ) | (
     { __typename?: 'Milestone' }
     & $Pick<Milestone, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, milestone: ?(
+  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
+);
+
+export type TaskCardFragmentFragment = (
+  { __typename?: 'Task' }
+  & $Pick<Task, { id: *, name: *, approvable: *, startDate: *, dueDate: *, inProgressAt: *, skippedAt: *, completedAt: *, rejectedAt: *, approvedAt: *, startDateBinding: *, dueDateBinding: * }>
+  & { entity: ?(
+    { __typename?: 'Product' }
+    & $Pick<Product, { id: *, name: * }>
+  ) | (
+    { __typename?: 'ProductProvider' }
+    & $Pick<ProductProvider, { id: *, name: * }>
+    & { product: (
+      { __typename?: 'Product' }
+      & $Pick<Product, { id: *, name: * }>
+    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
+  ) | (
+    { __typename?: 'ProductProviderPackage' }
+    & $Pick<ProductProviderPackage, { id: * }>
+  ) | (
+    { __typename?: 'Order' }
+    & $Pick<Order, { id: *, poNo: * }>
+  ) | (
+    { __typename?: 'OrderItem' }
+    & $Pick<OrderItem, { id: *, no: * }>
+  ) | (
+    { __typename?: 'Batch' }
+    & $Pick<Batch, { id: *, no: * }>
+  ) | (
+    { __typename?: 'BatchQuantityRevision' }
+    & $Pick<BatchQuantityRevision, { id: * }>
+  ) | (
+    { __typename?: 'Shipment' }
+    & $Pick<Shipment, { id: *, no: * }>
+  ) | (
+    { __typename?: 'Voyage' }
+    & $Pick<Voyage, { id: * }>
+  ) | (
+    { __typename?: 'Container' }
+    & $Pick<Container, { id: * }>
+  ) | (
+    { __typename?: 'ContainerGroup' }
+    & $Pick<ContainerGroup, { id: * }>
+  ) | (
+    { __typename?: 'TimelineDate' }
+    & $Pick<TimelineDate, { id: * }>
+  ) | (
+    { __typename?: 'TimelineDateRevision' }
+    & $Pick<TimelineDateRevision, { id: * }>
+  ) | (
+    { __typename?: 'Warehouse' }
+    & $Pick<Warehouse, { id: * }>
+  ) | (
+    { __typename?: 'Tag' }
+    & $Pick<Tag, { id: * }>
+  ) | (
+    { __typename?: 'User' }
+    & $Pick<User, { id: * }>
+  ) | (
+    { __typename?: 'Organization' }
+    & $Pick<Organization, { id: * }>
+  ) | (
+    { __typename?: 'Partnership' }
+    & $Pick<Partnership, { id: * }>
+  ) | (
+    { __typename?: 'Role' }
+    & $Pick<Role, { id: * }>
+  ) | (
+    { __typename?: 'File' }
+    & $Pick<File, { id: * }>
+  ) | (
+    { __typename?: 'Task' }
+    & $Pick<Task, { id: * }>
+  ) | (
+    { __typename?: 'TaskTemplate' }
+    & $Pick<TaskTemplate, { id: * }>
+  ) | (
+    { __typename?: 'Project' }
+    & $Pick<Project, { id: * }>
+  ) | (
+    { __typename?: 'Milestone' }
+    & $Pick<Milestone, { id: * }>
+  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, assignedTo: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & UserAvatarFragmentFragment
+  >, approvers: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & UserAvatarFragmentFragment
+  >, inProgressBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & UserAvatarFragmentFragment
+  , skippedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & UserAvatarFragmentFragment
+  , completedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & UserAvatarFragmentFragment
+  , rejectedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & UserAvatarFragmentFragment
+  , approvedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & UserAvatarFragmentFragment
+  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & TagFragmentFragment
+  >, milestone: ?(
+    { __typename?: 'Milestone' }
+    & $Pick<Milestone, { id: *, name: * }>
+    & { project: (
+      { __typename?: 'Project' }
+      & $Pick<Project, { id: *, name: * }>
+    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
+  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
+);
+
+export type TaskTemplateCardFragmentFragment = (
+  { __typename?: 'TaskTemplate' }
+  & $Pick<TaskTemplate, { id: *, updatedAt: *, name: *, description: *, entityType: * }>
+  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & UserAvatarFragmentFragment
+  , tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & TaskFormInTemplateFragmentFragment
+  > }
+);
+
+export type TaskFormInTemplateFragmentFragment = (
+  { __typename?: 'Task' }
+  & $Pick<Task, { id: *, approvable: *, updatedAt: *, name: *, startDateBinding: *, dueDateBinding: *, description: * }>
+  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & UserAvatarFragmentFragment
+  , startDateInterval: ?(
+    { __typename?: 'Interval' }
+    & $Pick<Interval, { months: *, weeks: *, days: * }>
+  ), dueDateInterval: ?(
+    { __typename?: 'Interval' }
+    & $Pick<Interval, { months: *, weeks: *, days: * }>
+  ), tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & TagFragmentFragment
+  >, assignedTo: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & UserAvatarFragmentFragment
+  >, approvers: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & UserAvatarFragmentFragment
+  >, taskTemplate: ?(
+    { __typename?: 'TaskTemplate' }
+    & $Pick<TaskTemplate, { id: * }>
+  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
+);
+
+export type TaskWithoutParentInfoFragmentFragment = (
+  { __typename?: 'Task' }
+  & { milestone: ?(
+    { __typename?: 'Milestone' }
+    & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+      & ProjectCardFragmentFragment
+     }
+    & MilestoneCardFragmentFragment
+  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, taskTemplate: ?(
+    { __typename?: 'TaskTemplate' }
+    & $Pick<TaskTemplate, { id: * }>
+  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
+)
+  & TaskInfoFragmentFragment
+;
+
+export type TaskFormInProjectOrMilestoneFormFragmentFragment = { __typename?: 'Task' }
+  & TaskInfoFragmentFragment
+  & TaskEntityCardFragmentFragment
+;
+
+export type TaskWithParentInfoFragmentFragment = (
+  { __typename?: 'Task' }
+  & { milestone: ?(
     { __typename?: 'Milestone' }
     & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
       & ProjectCardFragmentFragment
      }
     & MilestoneCardFragmentFragment
   ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
+)
+  & TaskInfoFragmentFragment
+  & TaskEntityCardFragmentFragment
+;
 
 export type TaskTemplateFormFragmentFragment = (
   { __typename?: 'TaskTemplate' }

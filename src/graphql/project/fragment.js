@@ -1,8 +1,10 @@
 // @flow
 import gql from 'graphql-tag';
+import { ownedByFragment, tagFragment, userAvatarFragment } from 'graphql/common/fragment';
+import { taskCountFragment, taskFormInProjectFragment } from 'graphql/task/fragment';
 
-export const milestoneFragment = gql`
-  fragment milestoneFragment on Milestone {
+const milestoneInProjectCardFragment = gql`
+  fragment milestoneInProjectCardFragment on Milestone {
     id
     name
     dueDate
@@ -24,7 +26,7 @@ export const projectCardFragment = gql`
     description
     dueDate
     milestones {
-      ...milestoneFragment
+      ...milestoneInProjectCardFragment
     }
     taskCount {
       ...taskCountFragment
@@ -33,6 +35,9 @@ export const projectCardFragment = gql`
       ...tagFragment
     }
   }
+  ${milestoneInProjectCardFragment}
+  ${taskCountFragment}
+  ${tagFragment}
 `;
 
 export const milestoneCardFragment = gql`
@@ -45,6 +50,7 @@ export const milestoneCardFragment = gql`
       ...taskCountFragment
     }
   }
+  ${taskCountFragment}
 `;
 
 export const projectFormQueryFragment = gql`
@@ -97,7 +103,7 @@ export const projectFormQueryFragment = gql`
           ...taskCountFragment
         }
         tasks {
-          ...taskWithParentInfoFragment
+          ...taskFormInProjectFragment
           ... on Task {
             milestoneSort
           }
@@ -105,44 +111,9 @@ export const projectFormQueryFragment = gql`
       }
     }
   }
-`;
-
-export const projectFormFragment = gql`
-  fragment projectFormFragment on Project {
-    id
-    name
-    description
-    dueDate
-    taskCount {
-      ...taskCountFragment
-    }
-    updatedAt
-    updatedBy {
-      ...userAvatarFragment
-    }
-    ownedBy {
-      ...ownedByFragment
-    }
-    tags {
-      ...tagFragment
-    }
-  }
-`;
-
-export const milestoneFormFragment = gql`
-  fragment milestoneFormFragment on Milestone {
-    id
-    updatedAt
-    updatedBy {
-      ...userAvatarFragment
-    }
-
-    name
-    description
-    dueDate
-    completedAt
-    completedBy {
-      ...userAvatarFragment
-    }
-  }
+  ${ownedByFragment}
+  ${tagFragment}
+  ${userAvatarFragment}
+  ${taskCountFragment}
+  ${taskFormInProjectFragment}
 `;
