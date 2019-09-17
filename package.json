@@ -112,24 +112,19 @@
     "gql-gen": "graphql-codegen --config codegen.yml"
   },
   "lint-staged": {
-    "linters": {
-      "ignore": [
-        "**/generated/**/*.{js,json}"
-      ],
-      "src/**/*.{js,jsx,json}": [
-        "eslint --fix",
-        "prettier-eslint --write",
-        "git add"
-      ],
-      "*.md": [
-        "prettier-eslint --write",
-        "git add"
-      ],
-      "src/**/*.{css}": [
-        "stylelint --fix",
-        "git add"
-      ]
-    }
+    "src/**/*.{js,jsx,json}": [
+      "eslint --fix",
+      "prettier-eslint --write",
+      "git add"
+    ],
+    "*.md": [
+      "prettier-eslint --write",
+      "git add"
+    ],
+    "src/**/*.{css}": [
+      "stylelint --fix",
+      "git add"
+    ]
   },
   "jest": {
     "collectCoverageFrom": [
@@ -257,7 +252,7 @@
     "jest-environment-jsdom-fourteen": "0.1.0",
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.0",
-    "lint-staged": "^8.2.1",
+    "lint-staged": "^9.2.5",
     "mini-css-extract-plugin": "0.8.0",
     "node-fetch": "^2.6.0",
     "npm-run-all": "^4.1.5",
