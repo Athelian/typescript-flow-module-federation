@@ -1307,7 +1307,44 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             isTargeted={isTargetedContainer && isTargetedBatch}
             hasRelation={isTargetedContainer && isTargetedBatch}
             type={beforeConnector}
-          />
+          >
+            <button
+              type="button"
+              onClick={() => {
+                dispatch({
+                  type: 'REMOVE_BATCH',
+                  payload: {
+                    entity: {
+                      id: data?.relatedBatch?.id,
+                      no: data?.relatedBatch?.no,
+                    },
+                    from: {
+                      type: 'CONTAINER',
+                      id: data?.relatedBatch?.container,
+                    },
+                  },
+                });
+              }}
+              style={{
+                cursor: 'pointer',
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'flex',
+                position: 'absolute',
+                height: 21,
+                left: '-10px',
+                top: 'calc(50% - 18px/2)',
+                fontSize: 14,
+                lineHeight: 14,
+                textAlign: 'center',
+                textTransform: 'uppercase',
+                color: '#EF4848',
+                border: '2px solid #EEEEEE',
+              }}
+            >
+              <Icon icon="REMOVE" />
+            </button>
+          </RelationLine>
         )}
       </div>
       <div ref={drop} className={ContentStyle}>
@@ -1516,7 +1553,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
           >
             <div ref={drag}>
               <ShipmentCard>
-                {getByPathWithDefault('', `shipments.${shipmentId}.blNo`, entities)}
+                {getByPathWithDefault('', `shipments.${shipmentId}.no`, entities)}
               </ShipmentCard>
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
