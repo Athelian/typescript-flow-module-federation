@@ -2,10 +2,6 @@
 import gql from 'graphql-tag';
 import {
   projectFormQueryFragment,
-  taskWithParentInfoFragment,
-  milestoneCardFragment,
-  projectCardFragment,
-  milestoneFragment,
   userAvatarFragment,
   tagFragment,
   productCardFragment,
@@ -27,6 +23,8 @@ import {
   forbiddenFragment,
   productProviderPackagingFragment,
 } from 'graphql';
+import { taskFormInProjectOrMilestoneFormFragment } from 'graphql/task/fragment';
+
 import type { Task, ProjectCreateInput } from 'generated/graphql';
 import {
   parseArrayOfChildrenField,
@@ -37,6 +35,7 @@ import {
   parseTaskField,
   parseEnumField,
 } from 'utils/data';
+
 import { getByPathWithDefault } from 'utils/fp';
 
 export const createProjectMutation = gql`
@@ -125,14 +124,10 @@ export const updateProjectMutation = gql`
     }
   }
   ${projectFormQueryFragment}
-  ${taskWithParentInfoFragment}
+  ${taskFormInProjectOrMilestoneFormFragment}
   ${taskCountFragment}
   ${tagFragment}
   ${ownedByFragment}
-  ${taskWithParentInfoFragment}
-  ${milestoneCardFragment}
-  ${projectCardFragment}
-  ${milestoneFragment}
   ${orderCardFragment}
   ${productCardFragment}
   ${productProviderCardFragment}

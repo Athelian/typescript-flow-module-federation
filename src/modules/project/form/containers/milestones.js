@@ -384,13 +384,16 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
         const milestone = prevState.milestones.find(item => item.id === id);
         return {
           ...milestone,
-          tasks: columns[id].map((task, milestoneSort) => ({
-            ...generateTask({
+          tasks: columns[id].map((task, milestoneSort) => {
+            const { milestone: unused, ...rest } = generateTask({
               ...task,
               milestone,
-            }),
-            milestoneSort,
-          })),
+            });
+            return {
+              ...rest,
+              milestoneSort,
+            };
+          }),
         };
       }),
     }));

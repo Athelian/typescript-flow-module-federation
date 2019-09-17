@@ -47,7 +47,6 @@ import {
   projectFormFragment,
 } from './project/fragment';
 import {
-  taskCardFragment,
   taskTemplateCardFragment,
   taskWithoutParentInfoFragment,
   taskWithParentInfoFragment,
@@ -141,7 +140,6 @@ export {
   milestoneCardFragment,
   projectFormQueryFragment,
   projectFormFragment,
-  taskCardFragment,
   taskTemplateCardFragment,
   taskCountFragment,
 };

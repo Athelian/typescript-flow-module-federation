@@ -97,7 +97,7 @@ export const projectFormQueryFragment = gql`
           ...taskCountFragment
         }
         tasks {
-          ...taskWithParentInfoFragment
+          ...taskFormInProjectOrMilestoneFormFragment
           ... on Task {
             milestoneSort
           }

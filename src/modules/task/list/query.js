@@ -1,13 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
-import {
-  taskCardFragment,
-  userAvatarFragment,
-  tagFragment,
-  notFoundFragment,
-  badRequestFragment,
-  forbiddenFragment,
-} from 'graphql';
+import { notFoundFragment, badRequestFragment, forbiddenFragment } from 'graphql';
+import { taskCardFragment } from 'graphql/task/fragment';
 
 export const taskListQuery = gql`
   query taskListQuery(
@@ -40,8 +34,6 @@ export const taskListQuery = gql`
   ${badRequestFragment}
   ${forbiddenFragment}
   ${taskCardFragment}
-  ${userAvatarFragment}
-  ${tagFragment}
 `;
 
 export default taskListQuery;

@@ -1,5 +1,130 @@
 // @flow
 import gql from 'graphql-tag';
+import { userAvatarFragment, tagFragment, ownedByFragment } from 'graphql/common/fragment';
+
+const taskInfoFragment = gql`
+  fragment taskInfoFragment on Task {
+    id
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    ownedBy {
+      ...ownedByFragment
+    }
+    name
+    description
+    tags {
+      ...tagFragment
+    }
+
+    startDate
+    startDateInterval {
+      months
+      weeks
+      days
+    }
+    startDateBinding
+    dueDate
+    dueDateInterval {
+      months
+      weeks
+      days
+    }
+    dueDateBinding
+
+    inProgressAt
+    inProgressBy {
+      ...userAvatarFragment
+    }
+    skippedAt
+    skippedBy {
+      ...userAvatarFragment
+    }
+    completedAt
+    completedBy {
+      ...userAvatarFragment
+    }
+    assignedTo {
+      ...userAvatarFragment
+    }
+
+    approvable
+    rejectedAt
+    rejectedBy {
+      ...userAvatarFragment
+    }
+    approvedAt
+    approvedBy {
+      ...userAvatarFragment
+    }
+
+    approvers {
+      ...userAvatarFragment
+    }
+  }
+  ${userAvatarFragment}
+  ${ownedByFragment}
+  ${tagFragment}
+`;
+
+const taskEntityCardFragment = gql`
+  fragment taskEntityCardFragment on Task {
+    entity {
+      ... on Model {
+        id
+      }
+    }
+    order: entity {
+      ... on Model {
+        id
+      }
+      ... on Order {
+        ...orderCardFragment
+      }
+    }
+    orderItem: entity {
+      ... on Model {
+        id
+      }
+      ... on OrderItem {
+        ...itemCardFragment
+      }
+    }
+    batch: entity {
+      ... on Model {
+        id
+      }
+      ... on Batch {
+        ...batchCardFragment
+      }
+    }
+    product: entity {
+      ... on Model {
+        id
+      }
+      ... on Product {
+        ...productCardFragment
+      }
+    }
+    productProvider: entity {
+      ... on Model {
+        id
+      }
+      ... on ProductProvider {
+        ...productProviderCardFragment
+      }
+    }
+    shipment: entity {
+      ... on Model {
+        id
+      }
+      ... on Shipment {
+        ...shipmentCardFragment
+      }
+    }
+  }
+`;
 
 export const taskCardFragment = gql`
   fragment taskCardFragment on Task {
@@ -81,6 +206,8 @@ export const taskCardFragment = gql`
       }
     }
   }
+  ${userAvatarFragment}
+  ${tagFragment}
 `;
 
 export const taskTemplateCardFragment = gql`
@@ -140,56 +267,7 @@ export const taskFormInTemplateFragment = gql`
 
 export const taskWithoutParentInfoFragment = gql`
   fragment taskWithoutParentInfoFragment on Task {
-    id
-    approvable
-    updatedAt
-    updatedBy {
-      ...userAvatarFragment
-    }
-    name
-    entity {
-      ... on Model {
-        id
-      }
-    }
-    startDate
-    startDateInterval {
-      months
-      weeks
-      days
-    }
-    startDateBinding
-    dueDate
-    dueDateInterval {
-      months
-      weeks
-      days
-    }
-    dueDateBinding
-    description
-    inProgressAt
-    inProgressBy {
-      ...userAvatarFragment
-    }
-    completedAt
-    completedBy {
-      ...userAvatarFragment
-    }
-    skippedAt
-    skippedBy {
-      ...userAvatarFragment
-    }
-    rejectedAt
-    rejectedBy {
-      ...userAvatarFragment
-    }
-    approvedAt
-    approvedBy {
-      ...userAvatarFragment
-    }
-    assignedTo {
-      ...userAvatarFragment
-    }
+    ...taskInfoFragment
     milestone {
       ... on Milestone {
         ...milestoneCardFragment
@@ -198,131 +276,30 @@ export const taskWithoutParentInfoFragment = gql`
         }
       }
     }
-    approvers {
-      ...userAvatarFragment
-    }
-    tags {
-      ...tagFragment
-    }
-    memo
+
     taskTemplate {
       ... on TaskTemplate {
         id
       }
     }
   }
+  ${taskInfoFragment}
+`;
+
+export const taskFormInProjectOrMilestoneFormFragment = gql`
+  fragment taskFormInProjectOrMilestoneFormFragment on Task {
+    ...taskInfoFragment
+    ...taskEntityCardFragment
+  }
+  ${taskInfoFragment}
+  ${taskEntityCardFragment}
 `;
 
 export const taskWithParentInfoFragment = gql`
   fragment taskWithParentInfoFragment on Task {
-    id
-    updatedAt
-    updatedBy {
-      ...userAvatarFragment
-    }
-    ownedBy {
-      ...ownedByFragment
-    }
-    name
-    approvable
-    startDate
-    startDateInterval {
-      months
-      weeks
-      days
-    }
-    startDateBinding
-    dueDate
-    dueDateInterval {
-      months
-      weeks
-      days
-    }
-    dueDateBinding
-    description
-    inProgressAt
-    inProgressBy {
-      ...userAvatarFragment
-    }
-    skippedAt
-    skippedBy {
-      ...userAvatarFragment
-    }
-    completedAt
-    completedBy {
-      ...userAvatarFragment
-    }
-    rejectedAt
-    rejectedBy {
-      ...userAvatarFragment
-    }
-    approvedAt
-    approvedBy {
-      ...userAvatarFragment
-    }
-    assignedTo {
-      ...userAvatarFragment
-    }
-    approvers {
-      ...userAvatarFragment
-    }
-    tags {
-      ...tagFragment
-    }
-    memo
-    entity {
-      ... on Model {
-        id
-      }
-    }
-    order: entity {
-      ... on Model {
-        id
-      }
-      ... on Order {
-        ...orderCardFragment
-      }
-    }
-    orderItem: entity {
-      ... on Model {
-        id
-      }
-      ... on OrderItem {
-        ...itemCardFragment
-      }
-    }
-    batch: entity {
-      ... on Model {
-        id
-      }
-      ... on Batch {
-        ...batchCardFragment
-      }
-    }
-    product: entity {
-      ... on Model {
-        id
-      }
-      ... on Product {
-        ...productCardFragment
-      }
-    }
-    productProvider: entity {
-      ... on Model {
-        id
-      }
-      ... on ProductProvider {
-        ...productProviderCardFragment
-      }
-    }
-    shipment: entity {
-      ... on Model {
-        id
-      }
-      ... on Shipment {
-        ...shipmentCardFragment
-      }
-    }
+    ...taskInfoFragment
+    ...taskEntityCardFragment
+
     milestone {
       ... on Milestone {
         ...milestoneCardFragment
@@ -332,6 +309,8 @@ export const taskWithParentInfoFragment = gql`
       }
     }
   }
+  ${taskInfoFragment}
+  ${taskEntityCardFragment}
 `;
 
 export const taskTemplateFormFragment = gql`
