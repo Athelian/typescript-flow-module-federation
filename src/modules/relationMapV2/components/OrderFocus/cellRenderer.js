@@ -1542,7 +1542,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
 }
 
 function NoContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
-  const { state } = React.useContext(RelationMapContext);
+  const { state, dispatch } = React.useContext(RelationMapContext);
   const isTargetedBatch = state.targets.includes(
     `${BATCH}-${getByPathWithDefault('', 'relatedBatch.id', data)}`
   );
@@ -1565,7 +1565,44 @@ function NoContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
           isTargeted={isTargetedBatch && isTargetedShipment}
           hasRelation={isTargetedBatch && isTargetedShipment}
           type="HORIZONTAL"
-        />
+        >
+          <button
+            type="button"
+            onClick={() => {
+              dispatch({
+                type: 'REMOVE_BATCH',
+                payload: {
+                  entity: {
+                    id: data?.relatedBatch?.id,
+                    no: data?.relatedBatch?.no,
+                  },
+                  from: {
+                    type: 'SHIPMENT',
+                    id: data?.relatedBatch?.shipment?.id,
+                  },
+                },
+              });
+            }}
+            style={{
+              cursor: 'pointer',
+              justifyContent: 'center',
+              alignItems: 'center',
+              display: 'flex',
+              position: 'absolute',
+              height: 21,
+              left: 'calc(50% - 15px/2)',
+              top: 'calc(50% - 15px/2)',
+              fontSize: 14,
+              lineHeight: 14,
+              textAlign: 'center',
+              textTransform: 'uppercase',
+              color: '#EF4848',
+              border: '2px solid #EEEEEE',
+            }}
+          >
+            <Icon icon="REMOVE" />
+          </button>
+        </RelationLine>
       </div>
       <div className={ContentStyle}>
         {afterConnector && (

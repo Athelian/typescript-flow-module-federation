@@ -71,6 +71,10 @@ export type State = {|
         id: string,
         no: string,
       },
+      from: {
+        id: string,
+        type: string,
+      },
     },
     type?: 'createBatch' | 'deleteBatch',
   },

@@ -37,6 +37,7 @@ import cellRenderer from './cellRenderer';
 import generateListData from './generateListData';
 import { reducer, initialState, RelationMapContext } from './store';
 import normalize from './normalize';
+import RemoveBatchConfirm from '../RemoveBatchConfirm';
 
 const LoadingPlaceHolder = React.memo(() => {
   return (
@@ -586,6 +587,34 @@ export default function OrderFocus() {
                                       ),
                                     ],
                                   },
+                                });
+                              },
+                              {
+                                timeout: 250,
+                              }
+                            );
+                          }
+                        }}
+                      />
+                      <RemoveBatchConfirm
+                        onSuccess={batchId => {
+                          const parentOrderId = findKey(currentOrder => {
+                            return (currentOrder.orderItems || []).some(itemId =>
+                              getByPathWithDefault(
+                                [],
+                                `orderItems.${itemId}.batches`,
+                                entities
+                              ).includes(batchId)
+                            );
+                          }, entities.orders);
+                          if (parentOrderId) {
+                            queryOrdersDetail([parentOrderId]);
+                            // TODO: check the relate shipment has any connections with other orders or not
+                            window.requestIdleCallback(
+                              () => {
+                                dispatch({
+                                  type: 'REMOVE_BATCH_CLOSE',
+                                  payload: {},
                                 });
                               },
                               {

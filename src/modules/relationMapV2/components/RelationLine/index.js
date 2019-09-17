@@ -14,14 +14,15 @@ type Props = {|
    */
   isTargeted?: boolean,
   type: LINE_CONNECTOR,
+  children?: React$Node,
 |};
 
-const RelationLine = ({ type, isTargeted, hasRelation }: Props) => {
+const RelationLine = ({ type, isTargeted, hasRelation, children }: Props) => {
   const className =
     type === 'VERTICAL'
       ? RelationLineVerticalStyle(Boolean(isTargeted))
       : RelationLineHorizontalStyle(Boolean(isTargeted), Boolean(hasRelation));
-  return <div className={className} />;
+  return <div className={className}>{children} </div>;
 };
 
 export default RelationLine;

@@ -53,6 +53,10 @@ export const initialState: State = {
         id: '',
         no: '',
       },
+      from: {
+        id: '',
+        type: 'SHIPMENT',
+      },
     },
   },
   createItem: {
@@ -120,6 +124,10 @@ export function reducer(
       | 'CLONE_START'
       | 'CLONE_END'
       | 'CLONE_CLOSE'
+      | 'REMOVE_BATCH'
+      | 'REMOVE_BATCH_START'
+      | 'REMOVE_BATCH_END'
+      | 'REMOVE_BATCH_CLOSE'
       | 'EDIT',
     payload: {
       entity?: string,
@@ -342,6 +350,16 @@ export function reducer(
         },
       });
     }
+    case 'REMOVE_BATCH': {
+      return update(state, {
+        batchActions: {
+          type: { $set: 'removeBatch' },
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          detail: { $set: action.payload },
+        },
+      });
+    }
     case 'DELETE_BATCH': {
       return update(state, {
         batchActions: {
@@ -352,6 +370,7 @@ export function reducer(
         },
       });
     }
+    case 'REMOVE_BATCH_START':
     case 'DELETE_BATCH_START':
       return update(state, {
         batchActions: {
@@ -397,6 +416,7 @@ export function reducer(
         },
       });
     }
+    case 'REMOVE_BATCH_CLOSE':
     case 'DELETE_BATCH_CLOSE':
       return update(state, {
         batchActions: {
