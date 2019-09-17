@@ -6,7 +6,6 @@ import {
   tagFragment,
   milestoneCardFragment,
   projectCardFragment,
-  milestoneFragment,
   taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
@@ -31,7 +30,6 @@ export const updateBatchMutation = gql`
   ${taskFormInTemplateFragment}
   ${milestoneCardFragment}
   ${projectCardFragment}
-  ${milestoneFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${taskCountFragment}

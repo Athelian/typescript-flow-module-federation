@@ -286,8 +286,8 @@ export const taskWithoutParentInfoFragment = gql`
   ${taskInfoFragment}
 `;
 
-export const taskFormInProjectOrMilestoneFormFragment = gql`
-  fragment taskFormInProjectOrMilestoneFormFragment on Task {
+export const taskFormInProjectFragment = gql`
+  fragment taskFormInProjectFragment on Task {
     ...taskInfoFragment
     ...taskEntityCardFragment
   }

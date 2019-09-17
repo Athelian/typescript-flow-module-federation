@@ -6,7 +6,6 @@ import {
   tagFragment,
   milestoneCardFragment,
   projectCardFragment,
-  milestoneFragment,
   productCardFragment,
   productProviderCardFragment,
   orderCardFragment,
@@ -53,7 +52,6 @@ export const selectTaskListQuery = gql`
   ${taskWithParentInfoFragment}
   ${milestoneCardFragment}
   ${projectCardFragment}
-  ${milestoneFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${ownedByFragment}

@@ -1,7 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  projectFormQueryFragment,
   userAvatarFragment,
   tagFragment,
   productCardFragment,
@@ -23,7 +22,7 @@ import {
   forbiddenFragment,
   productProviderPackagingFragment,
 } from 'graphql';
-import { taskFormInProjectOrMilestoneFormFragment } from 'graphql/task/fragment';
+import { projectFormQueryFragment } from 'graphql/project/fragment';
 
 import type { Task, ProjectCreateInput } from 'generated/graphql';
 import {
@@ -124,7 +123,7 @@ export const updateProjectMutation = gql`
     }
   }
   ${projectFormQueryFragment}
-  ${taskFormInProjectOrMilestoneFormFragment}
+
   ${taskCountFragment}
   ${tagFragment}
   ${ownedByFragment}
@@ -140,9 +139,7 @@ export const updateProjectMutation = gql`
   ${imageFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
-  ${taskCountFragment}
   ${sizeFragment}
-  ${taskCountFragment}
   ${tagFragment}
   ${userAvatarFragment}
   ${ownedByFragment}
