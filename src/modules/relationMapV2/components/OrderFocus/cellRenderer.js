@@ -1178,6 +1178,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
   const containerId = data?.id;
   const container = entities.containers?.[containerId] ?? { id: containerId };
   const hasPermissions = useHasPermissions(container.ownedBy);
+  const hasBatchPermissions = useHasPermissions(data?.relatedBatch?.ownedBy?.id);
   const shipmentId = getByPathWithDefault('', 'relatedBatch.shipment.id', data);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
     accept: BATCH,
@@ -1308,42 +1309,44 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             hasRelation={isTargetedContainer && isTargetedBatch}
             type={beforeConnector}
           >
-            <button
-              type="button"
-              onClick={() => {
-                dispatch({
-                  type: 'REMOVE_BATCH',
-                  payload: {
-                    entity: {
-                      id: data?.relatedBatch?.id,
-                      no: data?.relatedBatch?.no,
+            {hasBatchPermissions([BATCH_UPDATE]) && (
+              <button
+                type="button"
+                onClick={() => {
+                  dispatch({
+                    type: 'REMOVE_BATCH',
+                    payload: {
+                      entity: {
+                        id: data?.relatedBatch?.id,
+                        no: data?.relatedBatch?.no,
+                      },
+                      from: {
+                        type: 'CONTAINER',
+                        id: data?.relatedBatch?.container,
+                      },
                     },
-                    from: {
-                      type: 'CONTAINER',
-                      id: data?.relatedBatch?.container,
-                    },
-                  },
-                });
-              }}
-              style={{
-                cursor: 'pointer',
-                justifyContent: 'center',
-                alignItems: 'center',
-                display: 'flex',
-                position: 'absolute',
-                height: 21,
-                left: '-10px',
-                top: 'calc(50% - 18px/2)',
-                fontSize: 14,
-                lineHeight: 14,
-                textAlign: 'center',
-                textTransform: 'uppercase',
-                color: '#EF4848',
-                border: '2px solid #EEEEEE',
-              }}
-            >
-              <Icon icon="REMOVE" />
-            </button>
+                  });
+                }}
+                style={{
+                  cursor: 'pointer',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  display: 'flex',
+                  position: 'absolute',
+                  height: 21,
+                  left: '-10px',
+                  top: 'calc(50% - 18px/2)',
+                  fontSize: 14,
+                  lineHeight: 14,
+                  textAlign: 'center',
+                  textTransform: 'uppercase',
+                  color: '#EF4848',
+                  border: '2px solid #EEEEEE',
+                }}
+              >
+                <Icon icon="REMOVE" />
+              </button>
+            )}
           </RelationLine>
         )}
       </div>
@@ -1586,6 +1589,7 @@ function NoContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
   const isTargetedShipment = state.targets.includes(
     `${SHIPMENT}-${getByPathWithDefault('', 'relatedBatch.shipment.id', data)}`
   );
+  const hasBatchPermissions = useHasPermissions(data?.relatedBatch?.ownedBy?.id);
   return (
     <>
       <div className={ContentStyle}>
@@ -1603,42 +1607,44 @@ function NoContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
           hasRelation={isTargetedBatch && isTargetedShipment}
           type="HORIZONTAL"
         >
-          <button
-            type="button"
-            onClick={() => {
-              dispatch({
-                type: 'REMOVE_BATCH',
-                payload: {
-                  entity: {
-                    id: data?.relatedBatch?.id,
-                    no: data?.relatedBatch?.no,
+          {hasBatchPermissions([BATCH_UPDATE]) && (
+            <button
+              type="button"
+              onClick={() => {
+                dispatch({
+                  type: 'REMOVE_BATCH',
+                  payload: {
+                    entity: {
+                      id: data?.relatedBatch?.id,
+                      no: data?.relatedBatch?.no,
+                    },
+                    from: {
+                      type: 'SHIPMENT',
+                      id: data?.relatedBatch?.shipment?.id,
+                    },
                   },
-                  from: {
-                    type: 'SHIPMENT',
-                    id: data?.relatedBatch?.shipment?.id,
-                  },
-                },
-              });
-            }}
-            style={{
-              cursor: 'pointer',
-              justifyContent: 'center',
-              alignItems: 'center',
-              display: 'flex',
-              position: 'absolute',
-              height: 21,
-              left: 'calc(50% - 15px/2)',
-              top: 'calc(50% - 15px/2)',
-              fontSize: 14,
-              lineHeight: 14,
-              textAlign: 'center',
-              textTransform: 'uppercase',
-              color: '#EF4848',
-              border: '2px solid #EEEEEE',
-            }}
-          >
-            <Icon icon="REMOVE" />
-          </button>
+                });
+              }}
+              style={{
+                cursor: 'pointer',
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'flex',
+                position: 'absolute',
+                height: 21,
+                left: 'calc(50% - 15px/2)',
+                top: 'calc(50% - 15px/2)',
+                fontSize: 14,
+                lineHeight: 14,
+                textAlign: 'center',
+                textTransform: 'uppercase',
+                color: '#EF4848',
+                border: '2px solid #EEEEEE',
+              }}
+            >
+              <Icon icon="REMOVE" />
+            </button>
+          )}
         </RelationLine>
       </div>
       <div className={ContentStyle}>
