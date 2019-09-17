@@ -4,10 +4,14 @@ import type { Task } from 'generated/graphql';
 import emitter from 'utils/emitter';
 import { getByPath, setIn } from 'utils/fp';
 import { recalculateTaskBindingDate } from 'utils/task';
+import { calculateDate, findDuration } from 'utils/date';
 
 type Props = {
   tasks: Array<Object>,
   setTaskValue: (Array<Task>) => void,
+  project: Object,
+  milestones: Array<Object>,
+  updateMilestones: Function,
 };
 
 const updateDateInput = ({ field, value, task }: { field: string, value: mixed, task: Task }) => {
@@ -21,15 +25,41 @@ const updateDateInput = ({ field, value, task }: { field: string, value: mixed, 
     return task;
   }
 
-  if (['dueDate'].includes(field)) return setIn(`milestone.project.${field}`, value, task);
+  if (['dueDate'].includes(field)) {
+    return setIn(`milestone.project.${field}`, value, task);
+  }
 
   return task;
 };
 
 // Project is the special case which is use only for project form
-export default function ProjectAutoDateBinding({ tasks, setTaskValue }: Props) {
+export default function ProjectAutoDateBinding({
+  project,
+  milestones,
+  updateMilestones,
+  tasks,
+  setTaskValue,
+}: Props) {
   React.useEffect(() => {
     emitter.addListener('AUTO_DATE', (field: mixed, value: mixed) => {
+      updateMilestones(
+        'milestones',
+        milestones.map(item => {
+          const { dueDateBinding, dueDateInterval } = item;
+          const { months, weeks, days } = dueDateInterval || {};
+          if (dueDateBinding) {
+            return {
+              ...item,
+              dueDate: calculateDate({
+                date: project.dueDate,
+                duration: findDuration({ months, weeks }),
+                offset: months || weeks || days,
+              }),
+            };
+          }
+          return item;
+        })
+      );
       setTaskValue(
         tasks.map(task => {
           const latestTask = field
@@ -48,6 +78,6 @@ export default function ProjectAutoDateBinding({ tasks, setTaskValue }: Props) {
     return () => {
       emitter.removeAllListeners('AUTO_DATE');
     };
-  }, [tasks, setTaskValue]);
+  }, [project, milestones, updateMilestones, tasks, setTaskValue]);
   return null;
 }
