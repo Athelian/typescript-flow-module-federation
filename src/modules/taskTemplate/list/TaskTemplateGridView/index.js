@@ -37,7 +37,11 @@ const defaultRenderItem = (item: Object, hasPermission: Function) =>
               hasPermission([TASK_TEMPLATE_FORM]) ? toggleTaskTemplateForm(true) : null
             }
           />
-          <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskTemplateForm(false)}>
+          <SlideView
+            isOpen={isOpen}
+            onRequestClose={() => toggleTaskTemplateForm(false)}
+            targetId="task_template_form_save_button"
+          >
             {isOpen && (
               <TaskTemplateFormWrapper
                 template={item}

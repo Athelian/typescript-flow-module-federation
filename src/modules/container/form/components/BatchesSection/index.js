@@ -281,6 +281,7 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId, exporter
                               <SlideView
                                 isOpen={opened}
                                 onRequestClose={() => batchSlideToggle(false)}
+                                targetId="batch_form_save_button"
                               >
                                 {opened && (
                                   <BatchFormInSlide
