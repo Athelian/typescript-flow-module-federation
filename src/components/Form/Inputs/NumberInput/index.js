@@ -85,6 +85,7 @@ class NumberInput extends React.Component<Props> {
       nullable,
       onChange,
       onBlur,
+      inputRef,
       ...rest
     } = this.props;
 
@@ -95,7 +96,8 @@ class NumberInput extends React.Component<Props> {
       </Display>
     ) : (
       <input
-        value={value}
+        ref={inputRef}
+        value={value === null ? '' : value}
         style={{ textAlign: align }}
         placeholder={
           isNullOrUndefined(placeholder)

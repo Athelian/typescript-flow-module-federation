@@ -35,13 +35,36 @@ export const initialState: State = {
     isProcessing: false,
     detail: initMoveEntity,
   },
-  createBatch: {
+  itemActions: {
     isOpen: false,
     isProcessing: false,
     detail: {
       entity: {
         id: '',
         no: '',
+      },
+    },
+  },
+  batchActions: {
+    isOpen: false,
+    isProcessing: false,
+    detail: {
+      entity: {
+        id: '',
+        no: '',
+      },
+      from: {
+        id: '',
+        type: 'SHIPMENT',
+      },
+    },
+  },
+  createItem: {
+    isOpen: false,
+    isProcessing: false,
+    detail: {
+      entity: {
+        id: '',
       },
     },
   },
@@ -73,6 +96,7 @@ export function reducer(
       | 'TARGET_ALL'
       | 'TARGET_TREE'
       | 'RECHECK_TARGET'
+      | 'REMOVE_TARGETS'
       | 'DND'
       | 'START_DND'
       | 'END_DND'
@@ -84,10 +108,26 @@ export function reducer(
       | 'CREATE_BATCH_START'
       | 'CREATE_BATCH_END'
       | 'CREATE_BATCH_CLOSE'
+      | 'DELETE_BATCH'
+      | 'DELETE_BATCH_START'
+      | 'DELETE_BATCH_END'
+      | 'DELETE_BATCH_CLOSE'
+      | 'DELETE_ITEM'
+      | 'DELETE_ITEM_START'
+      | 'DELETE_ITEM_END'
+      | 'DELETE_ITEM_CLOSE'
+      | 'CREATE_ITEM'
+      | 'CREATE_ITEM_START'
+      | 'CREATE_ITEM_END'
+      | 'CREATE_ITEM_CLOSE'
       | 'CLONE'
       | 'CLONE_START'
       | 'CLONE_END'
       | 'CLONE_CLOSE'
+      | 'REMOVE_BATCH'
+      | 'REMOVE_BATCH_START'
+      | 'REMOVE_BATCH_END'
+      | 'REMOVE_BATCH_CLOSE'
       | 'EDIT',
     payload: {
       entity?: string,
@@ -148,6 +188,13 @@ export function reducer(
         } else {
           draft.targets.push(action.payload.entity || '');
         }
+      });
+    case 'REMOVE_TARGETS':
+      return produce(state, draft => {
+        const { targets = [] } = action.payload;
+        targets.forEach(entity => {
+          draft.targets = draft.targets.filter(item => item !== entity);
+        });
       });
     case 'TARGET_TREE': {
       return produce(state, draft => {
@@ -285,16 +332,55 @@ export function reducer(
     }
     case 'CREATE_BATCH': {
       return update(state, {
-        createBatch: {
+        itemActions: {
+          type: { $set: 'createBatch' },
           isOpen: { $set: true },
           isProcessing: { $set: false },
           detail: { $set: action.payload },
         },
       });
     }
+    case 'DELETE_ITEM': {
+      return update(state, {
+        itemActions: {
+          type: { $set: 'deleteItem' },
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          detail: { $set: action.payload },
+        },
+      });
+    }
+    case 'REMOVE_BATCH': {
+      return update(state, {
+        batchActions: {
+          type: { $set: 'removeBatch' },
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          detail: { $set: action.payload },
+        },
+      });
+    }
+    case 'DELETE_BATCH': {
+      return update(state, {
+        batchActions: {
+          type: { $set: 'deleteBatch' },
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          detail: { $set: action.payload },
+        },
+      });
+    }
+    case 'REMOVE_BATCH_START':
+    case 'DELETE_BATCH_START':
+      return update(state, {
+        batchActions: {
+          isProcessing: { $set: true },
+        },
+      });
+    case 'DELETE_ITEM_START':
     case 'CREATE_BATCH_START': {
       return update(state, {
-        createBatch: {
+        itemActions: {
           isProcessing: { $set: true },
         },
       });
@@ -318,7 +404,7 @@ export function reducer(
             },
           },
         },
-        createBatch: {
+        itemActions: {
           isProcessing: { $set: false },
           detail: {
             entity: {
@@ -330,9 +416,19 @@ export function reducer(
         },
       });
     }
+    case 'REMOVE_BATCH_CLOSE':
+    case 'DELETE_BATCH_CLOSE':
+      return update(state, {
+        batchActions: {
+          type: { $set: '' },
+          isOpen: { $set: false },
+        },
+      });
+    case 'DELETE_ITEM_CLOSE':
     case 'CREATE_BATCH_CLOSE': {
       return update(state, {
-        createBatch: {
+        itemActions: {
+          type: { $set: '' },
           isOpen: { $set: false },
         },
       });
@@ -356,6 +452,30 @@ export function reducer(
     case 'CLONE_END': {
       return update(state, {
         clone: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'CREATE_ITEM': {
+      return update(state, {
+        createItem: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          detail: { $set: action.payload },
+        },
+      });
+    }
+    case 'CREATE_ITEM_START': {
+      return update(state, {
+        createItem: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'CREATE_ITEM_END': {
+      return update(state, {
+        createItem: {
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },

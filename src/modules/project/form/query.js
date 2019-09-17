@@ -1,11 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  projectFormQueryFragment,
-  taskWithParentInfoFragment,
-  milestoneCardFragment,
-  projectCardFragment,
-  milestoneFragment,
   userAvatarFragment,
   tagFragment,
   productCardFragment,
@@ -22,9 +17,9 @@ import {
   portFragment,
   taskCountFragment,
   sizeFragment,
-  ownedByFragment,
   productProviderPackagingFragment,
 } from 'graphql';
+import { projectFormQueryFragment } from 'graphql/project/fragment';
 
 export const projectFormQuery = gql`
   query projectFormQuery($id: ID!) {
@@ -34,15 +29,9 @@ export const projectFormQuery = gql`
   }
 
   ${projectFormQueryFragment}
-  ${taskWithParentInfoFragment}
   ${taskCountFragment}
   ${tagFragment}
   ${userAvatarFragment}
-  ${ownedByFragment}
-  ${taskWithParentInfoFragment}
-  ${milestoneCardFragment}
-  ${projectCardFragment}
-  ${milestoneFragment}
   ${orderCardFragment}
   ${productCardFragment}
   ${productProviderCardFragment}

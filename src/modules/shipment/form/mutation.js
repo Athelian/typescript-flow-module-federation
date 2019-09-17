@@ -26,7 +26,6 @@ import {
   ownedByFragment,
   milestoneCardFragment,
   projectCardFragment,
-  milestoneFragment,
   taskCountFragment,
   taskWithoutParentInfoFragment,
   taskTemplateCardFragment,
@@ -116,7 +115,6 @@ export const updateShipmentMutation: Object = gql`
   ${ownedByFragment}
   ${milestoneCardFragment}
   ${projectCardFragment}
-  ${milestoneFragment}
   ${taskCountFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}

@@ -6,9 +6,15 @@ const orderSheetFragment = gql`
   fragment orderSheetFragment on Order {
     id
     poNo
+    issuedAt
     piNo
     currency
+    incoterm
     deliveryPlace
+    deliveryDate
+    totalOrdered
+    totalBatched
+    totalShipped
     createdAt
     updatedAt
     createdBy {

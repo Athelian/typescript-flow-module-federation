@@ -53,7 +53,7 @@ type UploadFileState = {
   type: string,
   status: string,
   memo: string,
-  entity: Object,
+  entity?: Object,
 };
 
 type State = {

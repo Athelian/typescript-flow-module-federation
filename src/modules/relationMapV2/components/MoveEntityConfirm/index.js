@@ -1,34 +1,46 @@
 // @flow
 import * as React from 'react';
+import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+import { Entities } from 'modules/relationMapV2/store';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import { CancelButton, MoveButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
+import { moveEntityMutation } from './mutation';
 
-type Props = {|
-  isOpen: boolean,
-  onConfirm: () => Promise<void>,
-  onCancel: () => void,
-  from: {
-    icon: string,
-    value: string,
-  },
-  to: {
-    icon: string,
-    value: string,
-  },
-  isProcessing?: boolean,
-|};
+type Props = {
+  onSuccess: ({ orderIds: Array<string> }) => void,
+};
 
-export default function MoveEntityConfirm({
-  isOpen,
-  isProcessing,
-  onCancel,
-  onConfirm,
-  from,
-  to,
-}: Props) {
+export default function MoveEntityConfirm({ onSuccess }: Props) {
+  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { mapping } = Entities.useContainer();
+  const {
+    isProcessing,
+    isOpen,
+    detail: { from, to },
+  } = state.moveEntity;
+  const onCancel = () => {
+    dispatch({
+      type: 'CANCEL_MOVE',
+      payload: {},
+    });
+  };
+  const onConfirm = () => {
+    dispatch({
+      type: 'CONFIRM_MOVE_START',
+      payload: {},
+    });
+    moveEntityMutation(state, mapping.entities)
+      .then(onSuccess)
+      .catch(() => {
+        dispatch({
+          type: 'CONFIRM_MOVE_END',
+          payload: {},
+        });
+      });
+  };
   return (
     <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>
       <div className={DialogStyle}>

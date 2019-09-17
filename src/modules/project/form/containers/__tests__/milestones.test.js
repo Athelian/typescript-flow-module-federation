@@ -96,11 +96,9 @@ describe('milestones container', () => {
         tasks: [
           {
             id: 4,
+            dueDate: undefined,
+            startDate: undefined,
             milestoneSort: 0,
-            milestone: {
-              id: '3',
-              tasks: [],
-            },
           },
         ],
       },

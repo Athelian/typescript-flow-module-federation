@@ -52,13 +52,38 @@ export type State = {|
       },
     },
   },
-  createBatch: {
+  itemActions: {
     isOpen: boolean,
     isProcessing: boolean,
     detail: {
       entity: {
         id: string,
         no: string,
+      },
+    },
+    type?: 'createBatch' | 'deleteItem',
+  },
+  batchActions: {
+    isOpen: boolean,
+    isProcessing: boolean,
+    detail: {
+      entity: {
+        id: string,
+        no: string,
+      },
+      from: {
+        id: string,
+        type: string,
+      },
+    },
+    type?: 'createBatch' | 'deleteBatch',
+  },
+  createItem: {
+    isOpen: boolean,
+    isProcessing: boolean,
+    detail: {
+      entity: {
+        id: string,
       },
     },
   },

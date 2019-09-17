@@ -6,7 +6,7 @@
     "node": ">=10.0.0"
   },
   "dependencies": {
-    "@apollo/react-hooks": "^3.1.0",
+    "@apollo/react-hooks": "^3.1.1",
     "@fortawesome/fontawesome-pro": "^5.10.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.22",
     "@fortawesome/free-solid-svg-icons": "^5.10.2",
@@ -24,16 +24,16 @@
     "apollo-link-error": "^1.1.12",
     "apollo-link-logger": "^1.2.3",
     "apollo-upload-client": "^11.0.0",
-    "date-fns": "^2.1.0",
+    "date-fns": "^2.2.1",
     "date-fns-tz": "^1.0.7",
     "deep-object-diff": "^1.1.0",
     "downshift": "^3.3.1",
     "emotion": "^9.2.12",
     "fbemitter": "^2.1.1",
-    "firebase": "^6.6.0",
+    "firebase": "^6.6.1",
     "fontfaceobserver": "^2.1.0",
     "fuse.js": "^3.4.5",
-    "graphql": "^14.5.4",
+    "graphql": "^14.5.6",
     "graphql-tag": "^2.10.1",
     "immer": "^4.0.0",
     "immutability-helper": "^3.0.1",
@@ -47,7 +47,7 @@
     "ramda": "^0.26.1",
     "randomcolor": "^0.5.4",
     "react": "^16.9.0",
-    "react-apollo": "^3.1.0",
+    "react-apollo": "^3.1.1",
     "react-beautiful-dnd": "^12.0.0-beta.1",
     "react-composition-input": "^1.1.1",
     "react-content-loader": "^4.2.2",
@@ -60,7 +60,7 @@
     "react-emotion": "^9.2.12",
     "react-fast-compare": "^2.0.4",
     "react-fullstory": "^1.3.0",
-    "react-hot-loader": "^4.12.12",
+    "react-hot-loader": "^4.12.13",
     "react-hotkeys": "^2.0.0",
     "react-infinite-scroller": "^1.2.4",
     "react-intl": "^2.9.0",
@@ -112,24 +112,19 @@
     "gql-gen": "graphql-codegen --config codegen.yml"
   },
   "lint-staged": {
-    "linters": {
-      "ignore": [
-        "**/generated/**/*.{js,json}"
-      ],
-      "src/**/*.{js,jsx,json}": [
-        "eslint --fix",
-        "prettier-eslint --write",
-        "git add"
-      ],
-      "*.md": [
-        "prettier-eslint --write",
-        "git add"
-      ],
-      "src/**/*.{css}": [
-        "stylelint --fix",
-        "git add"
-      ]
-    }
+    "src/**/*.{js,jsx,json}": [
+      "eslint --fix",
+      "prettier-eslint --write",
+      "git add"
+    ],
+    "*.md": [
+      "prettier-eslint --write",
+      "git add"
+    ],
+    "src/**/*.{css}": [
+      "stylelint --fix",
+      "git add"
+    ]
   },
   "jest": {
     "collectCoverageFrom": [
@@ -183,27 +178,27 @@
     "@babel/node": "^7.6.1",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4",
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
-    "@commitlint/cli": "^8.1.0",
-    "@commitlint/config-conventional": "^8.1.0",
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
     "@graphql-codegen/cli": "^1.7.0",
     "@graphql-codegen/flow": "1.7.0",
     "@graphql-codegen/flow-operations": "1.7.0",
     "@graphql-codegen/fragment-matcher": "1.7.0",
     "@graphql-codegen/introspection": "^1.7.0",
-    "@storybook/addon-a11y": "^5.1.11",
-    "@storybook/addon-actions": "^5.1.11",
+    "@storybook/addon-a11y": "^5.2.0",
+    "@storybook/addon-actions": "^5.2.0",
     "@storybook/addon-console": "^1.2.1",
-    "@storybook/addon-info": "^5.1.11",
-    "@storybook/addon-links": "^5.1.11",
-    "@storybook/addons": "^5.1.11",
-    "@storybook/react": "^5.1.11",
+    "@storybook/addon-info": "^5.2.0",
+    "@storybook/addon-links": "^5.2.0",
+    "@storybook/addons": "^5.2.0",
+    "@storybook/react": "^5.2.0",
     "@svgr/webpack": "4.3.2",
     "@testing-library/cypress": "^5.0.0",
     "@testing-library/jest-dom": "^4.1.0",
     "@testing-library/react": "^9.1.4",
     "@testing-library/react-hooks": "^2.0.1",
-    "@typescript-eslint/eslint-plugin": "2.2.0",
-    "@typescript-eslint/parser": "2.2.0",
+    "@typescript-eslint/eslint-plugin": "2.3.0",
+    "@typescript-eslint/parser": "2.3.0",
     "apollo-storybook-react": "^0.2.1",
     "babel-eslint": "10.0.3",
     "babel-jest": "^24.9.0",
@@ -212,7 +207,7 @@
     "babel-plugin-module-resolver": "^3.2.0",
     "babel-plugin-named-asset-import": "^0.3.3",
     "babel-plugin-ramda": "^2.0.0",
-    "babel-plugin-react-intl": "^4.1.16",
+    "babel-plugin-react-intl": "^4.1.18",
     "babel-plugin-react-remove-properties": "^0.3.0",
     "babel-plugin-react-require": "^3.1.1",
     "babel-preset-react-app": "^9.0.1",
@@ -226,7 +221,7 @@
     "cz-conventional-changelog": "^3.0.2",
     "dotenv": "8.1.0",
     "dotenv-expand": "5.1.0",
-    "eslint": "6.3.0",
+    "eslint": "6.4.0",
     "eslint-config-airbnb": "18.0.1",
     "eslint-config-prettier": "^6.3.0",
     "eslint-config-react-app": "^5.0.1",
@@ -257,7 +252,7 @@
     "jest-environment-jsdom-fourteen": "0.1.0",
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.0",
-    "lint-staged": "^8.2.1",
+    "lint-staged": "^9.2.5",
     "mini-css-extract-plugin": "0.8.0",
     "node-fetch": "^2.6.0",
     "npm-run-all": "^4.1.5",
@@ -283,14 +278,14 @@
     "sass-loader": "8.0.0",
     "semver": "6.3.0",
     "style-loader": "1.0.0",
-    "stylelint": "^10.1.0",
-    "stylelint-config-standard": "^18.3.0",
-    "terser-webpack-plugin": "2.0.1",
+    "stylelint": "^11.0.0",
+    "stylelint-config-standard": "^19.0.0",
+    "terser-webpack-plugin": "2.1.0",
     "ts-pnp": "1.1.4",
     "url-loader": "2.1.0",
-    "webpack": "4.39.3",
-    "webpack-bundle-analyzer": "^3.4.1",
-    "webpack-dev-server": "3.8.0",
+    "webpack": "4.40.2",
+    "webpack-bundle-analyzer": "^3.5.0",
+    "webpack-dev-server": "3.8.1",
     "webpack-manifest-plugin": "2.0.4",
     "workbox-webpack-plugin": "4.3.1"
   },

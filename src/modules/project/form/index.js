@@ -6,10 +6,10 @@ import { flattenDeep } from 'lodash';
 import { Subscribe } from 'unstated';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import { calculateBindingDate, injectProjectAndMilestoneDueDate } from 'utils/project';
-import ProjectAutoDateBinding from 'modules/task/common/ProjectAutoDateBinding';
 import { ProjectInfoContainer, ProjectMilestonesContainer } from 'modules/project/form/containers';
 import ProjectSection from './components/ProjectSection';
 import MilestonesSection from './components/MilestonesSection';
+import ProjectAutoDateBinding from './components/ProjectAutoDateBinding';
 import { ProjectFormWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -69,10 +69,14 @@ export default class ProjectForm extends React.Component<Props> {
       <div className={ProjectFormWrapperStyle}>
         <ProjectSection project={project} isNew={isNew} isClone={isClone} isLoading={loading} />
         <MilestonesSection />
+        {/* FIXME: project form is normal from, project > milestone > task, don't need this. if have time, refactor */}
         <Subscribe to={[ProjectInfoContainer, ProjectMilestonesContainer]}>
-          {({ state: info }, { state: { milestones }, updateTasks }) => (
+          {({ state: latestProject }, { state: { milestones }, setFieldValue, updateTasks }) => (
             <ProjectAutoDateBinding
-              tasks={generateTasks(milestones, info)}
+              project={latestProject}
+              milestones={milestones}
+              updateMilestones={setFieldValue}
+              tasks={generateTasks(milestones, latestProject)}
               setTaskValue={updateTasks}
             />
           )}

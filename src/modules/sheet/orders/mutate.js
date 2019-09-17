@@ -18,6 +18,18 @@ const mutations = {
 
 function normalizedInput(type: string, field: string, value: any): Object {
   switch (type) {
+    case 'Order':
+      switch (field) {
+        case 'deliveryDate':
+        case 'issuedAt':
+          return {
+            [field]: new Date(value),
+          };
+        default:
+          return {
+            [field]: value,
+          };
+      }
     default:
       return {
         [field]: value,

@@ -178,12 +178,12 @@ const Cell = ({
         }
 
         if (isReadonly) {
-          return <CellDisplay value={cell.data?.value || null} type={cell.type} />;
+          return <CellDisplay value={cell.data?.value ?? null} type={cell.type} />;
         }
 
         return (
           <CellInput
-            value={cell.data?.value || null}
+            value={cell.data?.value ?? null}
             type={cell.type}
             focus={focus}
             inputFocus={inputFocus}

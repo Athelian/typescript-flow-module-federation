@@ -94,9 +94,6 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
           isSlideView
           redirectAfterSuccess={false}
           onSuccessCallback={data => {
-            console.warn({
-              data,
-            });
             onSetBadges([
               {
                 id: data.orderCreate.id,

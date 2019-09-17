@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react';
 import BaseDateInput from 'components/Form/Inputs/DateInput';
-import { WrapperStyle } from './style';
+import InputWrapper from '../InputWrapper';
 
 type Props = {
-  value: string | null,
+  value: Date | string | null,
   onChange: string => void,
   focus: boolean,
   onFocus: () => void,
@@ -13,30 +13,11 @@ type Props = {
   readonly: boolean,
 };
 
-const DateInput = ({ value, focus, onChange, onFocus, onBlur, onKeyDown, readonly }: Props) => {
-  const inputRef = React.useRef<HTMLInputElement | null>(null);
-  React.useEffect(() => {
-    if (inputRef.current) {
-      if (focus) {
-        // $FlowIssue: Flow doesn't know focus options
-        inputRef.current.focus({
-          preventScroll: true,
-        });
-        if (value) {
-          // $FlowFixMe: Already checked
-          inputRef.current.setSelectionRange(0, value.length);
-        }
-      } else {
-        inputRef.current.blur();
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focus]);
-
-  return (
-    <div className={WrapperStyle}>
+const DateInput = ({ value, focus, onChange, onFocus, onBlur, onKeyDown, readonly }: Props) => (
+  <InputWrapper focus={focus}>
+    {({ ref }) => (
       <BaseDateInput
-        inputRef={inputRef}
+        inputRef={ref}
         value={value}
         name="value"
         tabIndex="-1"
@@ -47,8 +28,8 @@ const DateInput = ({ value, focus, onChange, onFocus, onBlur, onKeyDown, readonl
         onBlur={onBlur}
         onKeyDown={onKeyDown}
       />
-    </div>
-  );
-};
+    )}
+  </InputWrapper>
+);
 
 export default DateInput;

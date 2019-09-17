@@ -34,15 +34,16 @@ import Badge from 'modules/relationMapV2/components/Badge';
 import type { CellRender, State } from './type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
 import RelationLine from '../RelationLine';
+import OrderCard from '../OrderCard';
 import OrderItemCard from '../OrderItemCard';
+import BatchCard from '../BatchCard';
 import { ContentStyle, MatchedStyle } from './style';
 import {
   getColorByEntity,
   getIconByEntity,
   getCardByEntity,
-  OrderCard,
+  BatchHeaderCard,
   ItemCard,
-  BatchCard,
   ShipmentCard,
   ContainerCard,
   HeaderCard,
@@ -719,7 +720,21 @@ function OrderCell({ data, afterConnector }: CellProps) {
           >
             <div ref={drag}>
               <Badge label={badge.order?.[orderId] ?? ''} />
-              <OrderCard>{getByPathWithDefault('', 'poNo', data)}</OrderCard>
+              <OrderCard
+                organizationId={data?.ownedBy?.id}
+                poNo={data?.poNo ?? 'N/A'}
+                onCreateItem={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'CREATE_ITEM',
+                    payload: {
+                      entity: {
+                        id: orderId,
+                      },
+                    },
+                  });
+                }}
+              />
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
@@ -915,6 +930,18 @@ function OrderItemCell({
               <OrderItemCard
                 organizationId={data?.ownedBy?.id}
                 no={data?.no ?? 'N/A'}
+                onDeleteItem={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'DELETE_ITEM',
+                    payload: {
+                      entity: {
+                        id: itemId,
+                        no: data?.no,
+                      },
+                    },
+                  });
+                }}
                 onCreateBatch={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -1100,7 +1127,22 @@ function BatchCell({
           >
             <div ref={drag} style={baseDragStyle}>
               <Badge label={badge.batch?.[batchId] ?? ''} />
-              <BatchCard>{getByPathWithDefault('', 'no', data)}</BatchCard>
+              <BatchCard
+                organizationId={data?.ownedBy?.id}
+                no={data?.no ?? 'N/A'}
+                onDeleteBatch={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'DELETE_BATCH',
+                    payload: {
+                      entity: {
+                        id: data?.id,
+                        no: data?.no,
+                      },
+                    },
+                  });
+                }}
+              />
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
@@ -1136,6 +1178,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
   const containerId = data?.id;
   const container = entities.containers?.[containerId] ?? { id: containerId };
   const hasPermissions = useHasPermissions(container.ownedBy);
+  const hasBatchPermissions = useHasPermissions(data?.relatedBatch?.ownedBy?.id);
   const shipmentId = getByPathWithDefault('', 'relatedBatch.shipment.id', data);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
     accept: BATCH,
@@ -1265,7 +1308,46 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             isTargeted={isTargetedContainer && isTargetedBatch}
             hasRelation={isTargetedContainer && isTargetedBatch}
             type={beforeConnector}
-          />
+          >
+            {hasBatchPermissions([BATCH_UPDATE]) && (
+              <button
+                type="button"
+                onClick={() => {
+                  dispatch({
+                    type: 'REMOVE_BATCH',
+                    payload: {
+                      entity: {
+                        id: data?.relatedBatch?.id,
+                        no: data?.relatedBatch?.no,
+                      },
+                      from: {
+                        type: 'CONTAINER',
+                        id: data?.relatedBatch?.container,
+                      },
+                    },
+                  });
+                }}
+                style={{
+                  cursor: 'pointer',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  display: 'flex',
+                  position: 'absolute',
+                  height: 21,
+                  left: '-10px',
+                  top: 'calc(50% - 18px/2)',
+                  fontSize: 14,
+                  lineHeight: 14,
+                  textAlign: 'center',
+                  textTransform: 'uppercase',
+                  color: '#EF4848',
+                  border: '2px solid #EEEEEE',
+                }}
+              >
+                <Icon icon="REMOVE" />
+              </button>
+            )}
+          </RelationLine>
         )}
       </div>
       <div ref={drop} className={ContentStyle}>
@@ -1474,7 +1556,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
           >
             <div ref={drag}>
               <ShipmentCard>
-                {getByPathWithDefault('', `shipments.${shipmentId}.blNo`, entities)}
+                {getByPathWithDefault('', `shipments.${shipmentId}.no`, entities)}
               </ShipmentCard>
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
@@ -1500,13 +1582,14 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
 }
 
 function NoContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
-  const { state } = React.useContext(RelationMapContext);
+  const { state, dispatch } = React.useContext(RelationMapContext);
   const isTargetedBatch = state.targets.includes(
     `${BATCH}-${getByPathWithDefault('', 'relatedBatch.id', data)}`
   );
   const isTargetedShipment = state.targets.includes(
     `${SHIPMENT}-${getByPathWithDefault('', 'relatedBatch.shipment.id', data)}`
   );
+  const hasBatchPermissions = useHasPermissions(data?.relatedBatch?.ownedBy?.id);
   return (
     <>
       <div className={ContentStyle}>
@@ -1523,7 +1606,46 @@ function NoContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
           isTargeted={isTargetedBatch && isTargetedShipment}
           hasRelation={isTargetedBatch && isTargetedShipment}
           type="HORIZONTAL"
-        />
+        >
+          {hasBatchPermissions([BATCH_UPDATE]) && (
+            <button
+              type="button"
+              onClick={() => {
+                dispatch({
+                  type: 'REMOVE_BATCH',
+                  payload: {
+                    entity: {
+                      id: data?.relatedBatch?.id,
+                      no: data?.relatedBatch?.no,
+                    },
+                    from: {
+                      type: 'SHIPMENT',
+                      id: data?.relatedBatch?.shipment?.id,
+                    },
+                  },
+                });
+              }}
+              style={{
+                cursor: 'pointer',
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'flex',
+                position: 'absolute',
+                height: 21,
+                left: 'calc(50% - 15px/2)',
+                top: 'calc(50% - 15px/2)',
+                fontSize: 14,
+                lineHeight: 14,
+                textAlign: 'center',
+                textTransform: 'uppercase',
+                color: '#EF4848',
+                border: '2px solid #EEEEEE',
+              }}
+            >
+              <Icon icon="REMOVE" />
+            </button>
+          )}
+        </RelationLine>
       </div>
       <div className={ContentStyle}>
         {afterConnector && (
@@ -1724,7 +1846,7 @@ function BatchSummaryCell({
                 }}
               />
             )}
-            <BatchCard>
+            <BatchHeaderCard>
               <p>Total: {getByPathWithDefault(0, 'batchCount', data)}</p>
               <button
                 type="button"
@@ -1742,7 +1864,7 @@ function BatchSummaryCell({
               >
                 <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
               </button>
-            </BatchCard>
+            </BatchHeaderCard>
           </HeaderCard>
         </div>
       ) : (

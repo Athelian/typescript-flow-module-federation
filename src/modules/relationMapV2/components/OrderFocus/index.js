@@ -4,7 +4,7 @@ import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { VariableSizeList as List } from 'react-window';
 import { Query } from 'react-apollo';
-import { get, set, uniq } from 'lodash/fp';
+import { get, set, uniq, findKey } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import apolloClient from 'apollo';
@@ -25,7 +25,10 @@ import { WrapperStyle, ListStyle, RowStyle, ActionsBackdropStyle } from './style
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import CloneEntities from '../CloneEntities';
+import InlineCreateItem from '../InlineCreateItem';
+import DeleteItemConfirm from '../DeleteItemConfirm';
 import InlineCreateBatch from '../InlineCreateBatch';
+import DeleteBatchConfirm from '../DeleteBatchConfirm';
 import SelectedEntity from '../SelectedEntity';
 import Actions from '../Actions';
 import Header from '../Header';
@@ -33,8 +36,8 @@ import Row from '../Row';
 import cellRenderer from './cellRenderer';
 import generateListData from './generateListData';
 import { reducer, initialState, RelationMapContext } from './store';
-import { moveEntityMutation } from './mutation';
 import normalize from './normalize';
+import RemoveBatchConfirm from '../RemoveBatchConfirm';
 
 const LoadingPlaceHolder = React.memo(() => {
   return (
@@ -169,7 +172,7 @@ export default function OrderFocus() {
   const [expandRows, setExpandRows] = React.useState([]);
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const { initHits } = Hits.useContainer();
-  const { getBatchesSortByItemId } = ClientSorts.useContainer();
+  const { getBatchesSortByItemId, getItemsSortByOrderId } = ClientSorts.useContainer();
   const { initMapping, onSetBadges, onSetRelated, getRelatedBy } = Entities.useContainer();
   const { queryVariables } = SortAndFilter.useContainer();
   const lastQueryVariables = usePrevious(queryVariables);
@@ -180,30 +183,12 @@ export default function OrderFocus() {
   }, [lastQueryVariables, queryVariables]);
 
   const scrollToRow = React.useCallback(
-    (position: number, entity: { id: string, type: string, dispatch?: Function }) => {
-      const { id, type, dispatch } = entity;
+    ({ position, id, type }: { position: number, id: string, type: string }) => {
       scrollEntity.current = {
         id,
         type,
       };
       setScrollPosition(position);
-      if (dispatch) {
-        // refer https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback
-        // set the close to lower priority task which allow to our application to scroll to element
-        // then close dialog
-        if (type === BATCH)
-          window.requestIdleCallback(
-            () => {
-              dispatch({
-                type: 'CREATE_BATCH_CLOSE',
-                payload: {},
-              });
-            },
-            {
-              timeout: 250,
-            }
-          );
-      }
     },
     []
   );
@@ -221,7 +206,7 @@ export default function OrderFocus() {
           scrollMode: 'if-needed',
         });
       }
-      scrollToRow(-1, {});
+      scrollToRow({ position: -1, id: '', type: '' });
     }
   }, [listRef, scrollPosition, scrollToRow]);
 
@@ -359,28 +344,13 @@ export default function OrderFocus() {
                         {Row}
                       </List>
                       <MoveEntityConfirm
-                        isProcessing={state.moveEntity.isProcessing}
-                        onCancel={() =>
-                          dispatch({
-                            type: 'CANCEL_MOVE',
-                            payload: {},
-                          })
-                        }
-                        onConfirm={async () => {
-                          dispatch({
-                            type: 'CONFIRM_MOVE_START',
-                            payload: {},
-                          });
-
-                          const { orderIds = [] } = await moveEntityMutation(state, entities);
+                        onSuccess={({ orderIds }) => {
+                          queryOrdersDetail(orderIds);
                           dispatch({
                             type: 'CONFIRM_MOVE_END',
                             payload: { orderIds },
                           });
-                          queryOrdersDetail(orderIds);
                         }}
-                        isOpen={state.moveEntity.isOpen}
-                        {...state.moveEntity.detail}
                       />
                       <CloneEntities
                         onSuccess={({
@@ -459,6 +429,69 @@ export default function OrderFocus() {
                           onSetRelated(sources, cloneEntities);
                         }}
                       />
+                      <InlineCreateItem
+                        onSuccess={(orderId, items) => {
+                          if (orderId) {
+                            queryOrdersDetail([orderId]);
+                            onSetBadges(
+                              items.map(item => ({
+                                id: item?.id ?? '',
+                                type: 'newItem',
+                                entity: 'orderItem',
+                              }))
+                            );
+                            const originalItems =
+                              // $FlowIgnore this doesn't support yet
+                              entities.orders?.[orderId]?.orderItems ?? [];
+                            const orderItems = getItemsSortByOrderId(orderId, originalItems);
+                            const itemList = [];
+                            if (originalItems.length !== orderItems.length) {
+                              orderItems.forEach(itemId => {
+                                if (!itemList.includes(itemId)) {
+                                  const relatedItems = getRelatedBy('orderItem', itemId);
+                                  itemList.push(itemId);
+                                  if (relatedItems.length) {
+                                    itemList.push(...relatedItems);
+                                  }
+                                }
+                              });
+                              originalItems.forEach(itemId => {
+                                if (!itemList.includes(itemId)) {
+                                  const relatedItems = getRelatedBy('orderItem', itemId);
+                                  itemList.push(itemId);
+                                  if (relatedItems.length) {
+                                    itemList.push(...relatedItems);
+                                  }
+                                }
+                              });
+                            } else {
+                              itemList.push(...orderItems);
+                            }
+                            const lastItemId = itemList[itemList.length - 1];
+                            const indexPosition = ordersData.findIndex((row: Array<any>) => {
+                              const [, itemCell, , , ,] = row;
+                              return Number(itemCell.cell?.data?.id) === Number(lastItemId);
+                            });
+                            const batches = entities.orderItems?.[lastItemId]?.batches ?? [];
+                            scrollToRow({
+                              position: indexPosition + batches.length - 1,
+                              id: lastItemId,
+                              type: ORDER_ITEM,
+                            });
+                            window.requestIdleCallback(
+                              () => {
+                                dispatch({
+                                  type: 'CREATE_ITEM_END',
+                                  payload: {},
+                                });
+                              },
+                              {
+                                timeout: 250,
+                              }
+                            );
+                          }
+                        }}
+                      />
                       <InlineCreateBatch
                         onSuccess={(orderId, batch) => {
                           if (orderId) {
@@ -510,8 +543,142 @@ export default function OrderFocus() {
                                 const [, , batchCell, , ,] = row;
                                 return Number(batchCell.cell?.data?.id) === Number(lastBatchId);
                               });
-                              scrollToRow(indexPosition, { dispatch, id: batch?.id, type: BATCH });
+                              scrollToRow({
+                                position: indexPosition,
+                                id: lastBatchId,
+                                type: BATCH,
+                              });
+                              window.requestIdleCallback(
+                                () => {
+                                  dispatch({
+                                    type: 'CREATE_BATCH_CLOSE',
+                                    payload: {},
+                                  });
+                                },
+                                {
+                                  timeout: 250,
+                                }
+                              );
                             }
+                          }
+                        }}
+                      />
+                      <DeleteItemConfirm
+                        onSuccess={itemId => {
+                          const parentOrderId = findKey(currentOrder => {
+                            return (currentOrder.orderItems || []).includes(itemId);
+                          }, entities.orders);
+                          const item = entities?.orderItems[itemId];
+                          if (parentOrderId) {
+                            queryOrdersDetail([parentOrderId]);
+                            window.requestIdleCallback(
+                              () => {
+                                dispatch({
+                                  type: 'DELETE_ITEM_CLOSE',
+                                  payload: {},
+                                });
+                                dispatch({
+                                  type: 'REMOVE_TARGETS',
+                                  payload: {
+                                    targets: [
+                                      `${ORDER_ITEM}-${itemId}`,
+                                      ...(item?.batches ?? []).map(
+                                        batchId => `${BATCH}-${batchId}`
+                                      ),
+                                    ],
+                                  },
+                                });
+                              },
+                              {
+                                timeout: 250,
+                              }
+                            );
+                          }
+                        }}
+                      />
+                      <RemoveBatchConfirm
+                        onSuccess={batchId => {
+                          const parentOrderId = findKey(currentOrder => {
+                            return (currentOrder.orderItems || []).some(itemId =>
+                              getByPathWithDefault(
+                                [],
+                                `orderItems.${itemId}.batches`,
+                                entities
+                              ).includes(batchId)
+                            );
+                          }, entities.orders);
+                          if (parentOrderId) {
+                            queryOrdersDetail([parentOrderId]);
+                            const batch = entities.batches?.[batchId] ?? {};
+                            const container = entities.containers?.[batch?.container];
+                            const shipment = entities.shipments?.[batch?.shipment];
+                            const removeTargets = [];
+                            const remainContainersCount = Object.values(entities.batches).filter(
+                              (currentBatch: Object) =>
+                                currentBatch.container && currentBatch.container === container?.id
+                            ).length;
+                            if (remainContainersCount === 1) {
+                              removeTargets.push(`${CONTAINER}-${container?.id}`);
+                            }
+                            const remainShipmentsCount = Object.values(entities.batches).filter(
+                              (currentBatch: Object) =>
+                                currentBatch.shipment && currentBatch.shipment === shipment?.id
+                            ).length;
+                            if (remainShipmentsCount === 1) {
+                              removeTargets.push(`${SHIPMENT}-${shipment?.id}`);
+                            }
+                            window.requestIdleCallback(
+                              () => {
+                                if (removeTargets.length) {
+                                  dispatch({
+                                    type: 'REMOVE_TARGETS',
+                                    payload: {
+                                      targets: removeTargets,
+                                    },
+                                  });
+                                }
+                                dispatch({
+                                  type: 'REMOVE_BATCH_CLOSE',
+                                  payload: {},
+                                });
+                              },
+                              {
+                                timeout: 250,
+                              }
+                            );
+                          }
+                        }}
+                      />
+                      <DeleteBatchConfirm
+                        onSuccess={batchId => {
+                          const parentOrderId = findKey(currentOrder => {
+                            return (currentOrder.orderItems || []).some(itemId =>
+                              getByPathWithDefault(
+                                [],
+                                `orderItems.${itemId}.batches`,
+                                entities
+                              ).includes(batchId)
+                            );
+                          }, entities.orders);
+                          if (parentOrderId) {
+                            queryOrdersDetail([parentOrderId]);
+                            window.requestIdleCallback(
+                              () => {
+                                dispatch({
+                                  type: 'REMOVE_TARGETS',
+                                  payload: {
+                                    targets: [`${BATCH}-${batchId}`],
+                                  },
+                                });
+                                dispatch({
+                                  type: 'DELETE_BATCH_CLOSE',
+                                  payload: {},
+                                });
+                              },
+                              {
+                                timeout: 250,
+                              }
+                            );
                           }
                         }}
                       />
@@ -528,8 +695,8 @@ export default function OrderFocus() {
                           }
                           if (result?.moveToTop) {
                             queryOrdersDetail([result?.id ?? ''].filter(Boolean));
-                            scrollToRow(0, {
-                              dispatch,
+                            scrollToRow({
+                              position: 0,
                               id: result?.id ?? '',
                               type: result?.type ?? '',
                             });

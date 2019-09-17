@@ -2,8 +2,9 @@
 import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
-import { EntityIcon, NavBar } from 'components/NavBar';
+import { EntityIcon, NavBar, SearchInput } from 'components/NavBar';
 import { Sheet, ColumnsConfig } from 'components/Sheet';
+import Filter from 'components/NavBar/components/Filter';
 import { clone } from 'utils/fp';
 import columns from './columns';
 import transformer from './transformer';
@@ -26,6 +27,10 @@ const OrderSheetModule = () => {
     page: 1,
     totalPage: 1,
   });
+  const [filterBy, setFilterBy] = React.useState<{ [string]: any }>({
+    query: '',
+    archived: false,
+  });
   const [sortBy, setSortBy] = React.useState<{ [string]: 'ASCENDING' | 'DESCENDING' }>({
     updatedAt: 'DESCENDING',
   });
@@ -38,20 +43,48 @@ const OrderSheetModule = () => {
     client
       .query({
         query: ordersQuery,
-        variables: { page: 1, perPage: 20, filterBy: {}, sortBy },
+        variables: { page: 1, perPage: 20, filterBy, sortBy },
       })
       .then(({ data }) => {
         setPage({ page: 1, totalPage: data.orders?.totalPage ?? 1 });
         setInitialOrders(clone(data.orders?.nodes ?? []));
         setLoading(false);
       });
-  }, [client, sortBy]);
+  }, [client, filterBy, sortBy]);
+
+  const { query, ...filters } = filterBy;
 
   return (
     <Content>
       <NavBar>
         <EntityIcon icon="SHEET" color="SHEET" />
 
+        <Filter
+          config={[{ entity: 'ORDER', field: 'archived', type: 'archived', defaultValue: false }]}
+          filters={filters}
+          onChange={value =>
+            setFilterBy({
+              ...value,
+              query,
+            })
+          }
+        />
+        <SearchInput
+          value={query}
+          name="search"
+          onClear={() =>
+            setFilterBy({
+              ...filterBy,
+              query: '',
+            })
+          }
+          onChange={value =>
+            setFilterBy({
+              ...filterBy,
+              query: value,
+            })
+          }
+        />
         <ColumnsConfig columns={columns} onChange={setCurrentColumns} />
       </NavBar>
 
@@ -78,7 +111,7 @@ const OrderSheetModule = () => {
           client
             .query({
               query: ordersQuery,
-              variables: { page: page.page + 1, perPage: 20, filterBy: {}, sortBy },
+              variables: { page: page.page + 1, perPage: 20, filterBy, sortBy },
             })
             .then(({ data }) => {
               setPage({
