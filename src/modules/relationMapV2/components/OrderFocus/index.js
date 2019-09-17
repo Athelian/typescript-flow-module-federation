@@ -567,6 +567,7 @@ export default function OrderFocus() {
                           const parentOrderId = findKey(currentOrder => {
                             return (currentOrder.orderItems || []).includes(itemId);
                           }, entities.orders);
+                          const item = entities?.orderItems[itemId];
                           if (parentOrderId) {
                             queryOrdersDetail([parentOrderId]);
                             window.requestIdleCallback(
@@ -574,6 +575,17 @@ export default function OrderFocus() {
                                 dispatch({
                                   type: 'DELETE_ITEM_CLOSE',
                                   payload: {},
+                                });
+                                dispatch({
+                                  type: 'REMOVE_TARGETS',
+                                  payload: {
+                                    targets: [
+                                      `${ORDER_ITEM}-${itemId}`,
+                                      ...(item?.batches ?? []).map(
+                                        batchId => `${BATCH}-${batchId}`
+                                      ),
+                                    ],
+                                  },
                                 });
                               },
                               {
@@ -598,6 +610,12 @@ export default function OrderFocus() {
                             queryOrdersDetail([parentOrderId]);
                             window.requestIdleCallback(
                               () => {
+                                dispatch({
+                                  type: 'REMOVE_TARGETS',
+                                  payload: {
+                                    targets: [`${BATCH}-${batchId}`],
+                                  },
+                                });
                                 dispatch({
                                   type: 'DELETE_BATCH_CLOSE',
                                   payload: {},

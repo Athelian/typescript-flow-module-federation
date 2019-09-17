@@ -92,6 +92,7 @@ export function reducer(
       | 'TARGET_ALL'
       | 'TARGET_TREE'
       | 'RECHECK_TARGET'
+      | 'REMOVE_TARGETS'
       | 'DND'
       | 'START_DND'
       | 'END_DND'
@@ -179,6 +180,13 @@ export function reducer(
         } else {
           draft.targets.push(action.payload.entity || '');
         }
+      });
+    case 'REMOVE_TARGETS':
+      return produce(state, draft => {
+        const { targets = [] } = action.payload;
+        targets.forEach(entity => {
+          draft.targets = draft.targets.filter(item => item !== entity);
+        });
       });
     case 'TARGET_TREE': {
       return produce(state, draft => {
