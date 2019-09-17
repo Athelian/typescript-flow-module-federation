@@ -69,11 +69,15 @@ export const ResetActionStyle = css`
 export const FiltersListStyle = css`
   ${layout.GRID_VERTICAL};
   ${scrollbars.MAIN};
-  padding: 30px 20px 40px 20px;
+  padding: 30px 20px 0px 20px;
   grid-gap: 20px;
   background-color: ${colors.GRAY_SUPER_LIGHT};
   overflow: auto;
   max-height: 80vh;
+
+  & > *:last-child {
+    margin-bottom: 40px;
+  }
 `;
 
 export const FilterWrapperStyle = css`

@@ -85,7 +85,7 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
       ...states.reduce(
         (f, state) => ({
           ...f,
-          [state.field]: state.value,
+          [state.field || '']: state.value,
         }),
         {}
       ),
@@ -143,7 +143,7 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
                         Category
                       </Label>
                       <SelectInput
-                        value={staticFilterConfig.entity}
+                        value={staticFilterConfig?.entity}
                         name="entity"
                         itemToString={i => i}
                         itemToValue={i => i}
@@ -155,7 +155,7 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
                         Filter
                       </Label>
                       <SelectInput
-                        value={staticFilterConfig.field}
+                        value={staticFilterConfig?.field}
                         name="field"
                         itemToString={i => i}
                         itemToValue={i => i}
@@ -163,7 +163,8 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
                       />
                     </div>
                     <div>
-                      {React.createElement(inputs[staticFilterConfig.type], {
+                      {/* $FlowFixMe */}
+                      {React.createElement(inputs[(staticFilterConfig?.type)], {
                         value: staticFilters[field],
                         readonly: true,
                       })}
@@ -225,7 +226,7 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
 
             return (
               // eslint-disable-next-line
-              <div key={`${state.field}-${index}`} className={FilterWrapperStyle}>
+              <div key={`${state.field || ''}-${index}`} className={FilterWrapperStyle}>
                 <div className={InputsWrapperStyle}>
                   <div>
                     <Label height="30px" required>
