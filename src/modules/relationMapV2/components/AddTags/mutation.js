@@ -2,10 +2,10 @@
 import gql from 'graphql-tag';
 import { badRequestFragment, forbiddenFragment } from 'graphql';
 
-export const cloneBatchesMutation = gql`
-  mutation batchCloneMany($batches: [BatchUpdateWrapperInput!]!) {
-    batchCloneMany(batches: $batches) {
-      ... on Batch {
+export const orderUpdateManyMutation = gql`
+  mutation orderUpdateMany($orders: [OrderUpdateWrapperInput!]!) {
+    orderUpdateMany(orders: $orders) {
+      ... on Order {
         id
       }
       ...badRequestFragment

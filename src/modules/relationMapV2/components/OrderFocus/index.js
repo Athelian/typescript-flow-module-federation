@@ -354,7 +354,15 @@ export default function OrderFocus() {
                           });
                         }}
                       />
-                      <AddTags onSuccess={console.warn} />
+                      <AddTags
+                        onSuccess={({ orderIds }) => {
+                          queryOrdersDetail(orderIds);
+                          dispatch({
+                            type: 'TAGS_END',
+                            payload: { orderIds },
+                          });
+                        }}
+                      />
                       <CloneEntities
                         onSuccess={({
                           sources,
