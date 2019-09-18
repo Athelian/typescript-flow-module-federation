@@ -15,7 +15,7 @@ import {
   containersByIDsQuery,
   shipmentsByIDsQuery,
 } from './query';
-import { orderUpdateManyMutation, orderItemUpdateManyMutation } from './mutation';
+import { entitiesUpdateManyMutation } from './mutation';
 import { DialogStyle, ButtonsStyle, ConfirmMessageStyle } from './style';
 import { targetedIds } from '../OrderFocus/helpers';
 
@@ -28,11 +28,10 @@ export default function AddTags({ onSuccess }: Props) {
   const { dispatch, state } = React.useContext(RelationMapContext);
   const [loadOrders, ordersResult] = useLazyQuery(ordersByIDsQuery);
   const [loadOrderItems, orderItemsResult] = useLazyQuery(orderItemsByIDsQuery);
-  const [loadBatches] = useLazyQuery(batchesByIDsQuery);
-  const [loadContainers] = useLazyQuery(containersByIDsQuery);
-  const [loadShipments] = useLazyQuery(shipmentsByIDsQuery);
-  const [updateOrders] = useMutation(orderUpdateManyMutation);
-  const [updateOrderItems] = useMutation(orderItemUpdateManyMutation);
+  const [loadBatches, batchesResult] = useLazyQuery(batchesByIDsQuery);
+  const [loadContainers, containersResult] = useLazyQuery(containersByIDsQuery);
+  const [loadShipments, shipmentsResult] = useLazyQuery(shipmentsByIDsQuery);
+  const [updateEntities] = useMutation(entitiesUpdateManyMutation);
   const {
     targets,
     tags: { isOpen, isProcessing, source },
@@ -62,55 +61,103 @@ export default function AddTags({ onSuccess }: Props) {
   }, [dispatch]);
 
   React.useEffect(() => {
-    if (source === ORDER && isProcessing && ordersResult.called && !ordersResult.loading) {
+    const isLoaded = () => {
+      switch (source) {
+        case ORDER:
+          return ordersResult.called && !ordersResult.loading;
+        case ORDER_ITEM:
+          return orderItemsResult.called && !orderItemsResult.loading;
+        case BATCH:
+          return batchesResult.called && !batchesResult.loading;
+        case CONTAINER:
+          return containersResult.called && !containersResult.loading;
+        case SHIPMENT:
+          return shipmentsResult.called && !shipmentsResult.loading;
+
+        default:
+          return false;
+      }
+    };
+    if (isProcessing && isLoaded()) {
       const tagIds = tags.map(tag => tag.id);
-      const ordersInput = (ordersResult.data?.ordersByIDs ?? []).map(order => {
-        return {
-          id: order.id,
-          input: {
-            tagIds: [...new Set([...order.tags.map(tag => tag.id), ...tagIds])],
-          },
-        };
-      });
-      updateOrders({
+      const ordersInput =
+        source === ORDER
+          ? (ordersResult.data?.ordersByIDs ?? []).map(order => {
+              return {
+                id: order.id,
+                input: {
+                  tagIds: [...new Set([...order.tags.map(tag => tag.id), ...tagIds])],
+                },
+              };
+            })
+          : [];
+
+      const orderItemsInput =
+        source === ORDER_ITEM
+          ? (orderItemsResult.data?.orderItemsByIDs ?? []).map(item => {
+              return {
+                id: item.id,
+                input: {
+                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])],
+                },
+              };
+            })
+          : [];
+
+      const batchesInput =
+        source === BATCH
+          ? (batchesResult.data?.batchesByIDs ?? []).map(item => {
+              return {
+                id: item.id,
+                input: {
+                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])],
+                },
+              };
+            })
+          : [];
+      const containersInput =
+        source === CONTAINER
+          ? (containersResult.data?.containersByIDs ?? []).map(item => {
+              return {
+                id: item.id,
+                input: {
+                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])],
+                },
+              };
+            })
+          : [];
+      const shipmentsInput =
+        source === SHIPMENT
+          ? (shipmentsResult.data?.shipmentsByIDs ?? []).map(item => {
+              return {
+                id: item.id,
+                input: {
+                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])],
+                },
+              };
+            })
+          : [];
+      updateEntities({
         variables: {
           orders: ordersInput,
-        },
-      })
-        .then(orders => {
-          onSuccess((orders.data?.orderUpdateMany ?? []).map(order => order.id));
-        })
-        .catch(onCancel);
-    }
-  }, [isProcessing, onCancel, onSuccess, ordersResult, source, tags, updateOrders]);
-
-  React.useEffect(() => {
-    if (
-      source === ORDER_ITEM &&
-      isProcessing &&
-      orderItemsResult.called &&
-      !orderItemsResult.loading
-    ) {
-      const tagIds = tags.map(tag => tag.id);
-      const orderItemsInput = (orderItemsResult.data?.orderItemsByIDs ?? []).map(item => {
-        return {
-          id: item.id,
-          input: {
-            tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])],
-          },
-        };
-      });
-      updateOrderItems({
-        variables: {
           orderItems: orderItemsInput,
+          batches: batchesInput,
+          containers: containersInput,
+          shipments: shipmentsInput,
         },
       })
-        .then(orderItems => {
-          onSuccess((orderItems.data?.orderItemUpdateMany ?? []).map(item => item?.order?.id));
+        .then(result => {
+          onSuccess((result.data?.entitiesUpdateMany?.orders ?? []).map(order => order.id));
         })
         .catch(onCancel);
     }
   }, [
+    batchesResult.called,
+    batchesResult.data,
+    batchesResult.loading,
+    containersResult.called,
+    containersResult.data,
+    containersResult.loading,
     isProcessing,
     onCancel,
     onSuccess,
@@ -118,10 +165,12 @@ export default function AddTags({ onSuccess }: Props) {
     orderItemsResult.data,
     orderItemsResult.loading,
     ordersResult,
+    shipmentsResult.called,
+    shipmentsResult.data,
+    shipmentsResult.loading,
     source,
     tags,
-    updateOrderItems,
-    updateOrders,
+    updateEntities,
   ]);
 
   const onConfirm = () => {

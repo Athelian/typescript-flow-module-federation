@@ -2,37 +2,35 @@
 import gql from 'graphql-tag';
 import { badRequestFragment, forbiddenFragment } from 'graphql';
 
-export const orderUpdateManyMutation = gql`
-  mutation orderUpdateMany($orders: [OrderUpdateWrapperInput!]!) {
-    orderUpdateMany(orders: $orders) {
-      ... on Order {
-        id
-      }
-      ...badRequestFragment
-      ...forbiddenFragment
-    }
-  }
-
-  ${badRequestFragment}
-  ${forbiddenFragment}
-`;
-
-export const orderItemUpdateManyMutation = gql`
-  mutation orderItemUpdateMany($orderItems: [OrderItemUpdateWrapperInput!]!) {
-    orderItemUpdateMany(orderItems: $orderItems) {
-      ... on OrderItem {
-        id
-        order {
-          ... on Order {
-            id
-          }
+export const entitiesUpdateManyMutation = gql`
+  mutation entitiesUpdateMany(
+    $orders: [OrderUpdateWrapperInput!]
+    $shipments: [ShipmentUpdateWrapperInput!]
+    $products: [ProductUpdateWrapperInput!]
+    $batches: [BatchUpdateWrapperInput!]
+    $warehouses: [WarehouseUpdateWrapperInput!]
+    $containers: [ContainerUpdateWrapperInput!]
+  ) {
+    entitiesUpdateMany(
+      orders: $orders
+      shipments: $shipments
+      products: $products
+      batches: $batches
+      warehouses: $warehouses
+      containers: $containers
+    ) {
+      orders {
+        ... on Order {
+          id
         }
+        ...badRequestFragment
+        ...forbiddenFragment
       }
-      ...badRequestFragment
-      ...forbiddenFragment
     }
   }
 
   ${badRequestFragment}
   ${forbiddenFragment}
 `;
+
+export default entitiesUpdateManyMutation;
