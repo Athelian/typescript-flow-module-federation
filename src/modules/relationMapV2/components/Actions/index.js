@@ -2,7 +2,6 @@
 import * as React from 'react';
 import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
-import logger from 'utils/logger';
 import { PermissionsContext } from 'components/Context/Permissions';
 import { Entities } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
@@ -97,7 +96,6 @@ export default function Actions({ targets }: Props) {
           <ActionSubMenu isCollapsed={currentMenu !== ORDER}>
             <ActionButton
               onClick={() => {
-                logger.warn('CLONE');
                 dispatch({
                   type: 'CLONE',
                   payload: {
@@ -111,7 +109,16 @@ export default function Actions({ targets }: Props) {
               <ActionLabel>CLONE</ActionLabel>
             </ActionButton>
 
-            <ActionButton onClick={() => logger.warn('ADD TAGS')}>
+            <ActionButton
+              onClick={() => {
+                dispatch({
+                  type: 'TAGS',
+                  payload: {
+                    source: ORDER,
+                  },
+                });
+              }}
+            >
               <Icon icon="TAG" />
               <ActionLabel>ADD TAGS</ActionLabel>
             </ActionButton>
@@ -129,7 +136,6 @@ export default function Actions({ targets }: Props) {
           <ActionSubMenu isCollapsed={currentMenu !== ORDER_ITEM}>
             <ActionButton
               onClick={() => {
-                logger.warn('CLONE');
                 dispatch({
                   type: 'CLONE',
                   payload: {
@@ -143,7 +149,16 @@ export default function Actions({ targets }: Props) {
               <ActionLabel>CLONE</ActionLabel>
             </ActionButton>
 
-            <ActionButton onClick={() => logger.warn('ADD TAGS')}>
+            <ActionButton
+              onClick={() => {
+                dispatch({
+                  type: 'TAGS',
+                  payload: {
+                    source: ORDER_ITEM,
+                  },
+                });
+              }}
+            >
               <Icon icon="TAG" />
               <ActionLabel>ADD TAGS</ActionLabel>
             </ActionButton>
@@ -162,7 +177,6 @@ export default function Actions({ targets }: Props) {
             {/* TODO: check permission to move */}
             <ActionButton
               onClick={() => {
-                logger.warn('MOVE');
                 dispatch({
                   type: 'MOVE_BATCH',
                   payload: {},
@@ -174,7 +188,6 @@ export default function Actions({ targets }: Props) {
             </ActionButton>
             <ActionButton
               onClick={() => {
-                logger.warn('CLONE');
                 dispatch({
                   type: 'CLONE',
                   payload: {
@@ -188,7 +201,16 @@ export default function Actions({ targets }: Props) {
               <ActionLabel>CLONE</ActionLabel>
             </ActionButton>
 
-            <ActionButton onClick={() => logger.warn('ADD TAGS')}>
+            <ActionButton
+              onClick={() => {
+                dispatch({
+                  type: 'TAGS',
+                  payload: {
+                    source: BATCH,
+                  },
+                });
+              }}
+            >
               <Icon icon="TAG" />
               <ActionLabel>ADD TAGS</ActionLabel>
             </ActionButton>
@@ -203,6 +225,21 @@ export default function Actions({ targets }: Props) {
           }}
         >
           <Icon icon="CONTAINER" />
+          <ActionSubMenu isCollapsed={currentMenu !== CONTAINER}>
+            <ActionButton
+              onClick={() => {
+                dispatch({
+                  type: 'TAGS',
+                  payload: {
+                    source: CONTAINER,
+                  },
+                });
+              }}
+            >
+              <Icon icon="TAG" />
+              <ActionLabel>ADD TAGS</ActionLabel>
+            </ActionButton>
+          </ActionSubMenu>
         </ActionButton>
 
         <ActionButton
@@ -213,6 +250,21 @@ export default function Actions({ targets }: Props) {
           }}
         >
           <Icon icon="SHIPMENT" />
+          <ActionSubMenu isCollapsed={currentMenu !== SHIPMENT}>
+            <ActionButton
+              onClick={() => {
+                dispatch({
+                  type: 'TAGS',
+                  payload: {
+                    source: SHIPMENT,
+                  },
+                });
+              }}
+            >
+              <Icon icon="TAG" />
+              <ActionLabel>ADD TAGS</ActionLabel>
+            </ActionButton>
+          </ActionSubMenu>
         </ActionButton>
       </div>
     </OutsideClickHandler>

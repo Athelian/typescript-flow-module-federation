@@ -77,6 +77,11 @@ export const initialState: State = {
     isOpen: false,
     isProcessing: false,
   },
+  tags: {
+    source: '',
+    isOpen: false,
+    isProcessing: false,
+  },
   edit: {
     type: '',
     selectedId: '',
@@ -114,11 +119,9 @@ export function reducer(
       | 'CREATE_BATCH_CLOSE'
       | 'DELETE_BATCH'
       | 'DELETE_BATCH_START'
-      | 'DELETE_BATCH_END'
       | 'DELETE_BATCH_CLOSE'
       | 'DELETE_ITEM'
       | 'DELETE_ITEM_START'
-      | 'DELETE_ITEM_END'
       | 'DELETE_ITEM_CLOSE'
       | 'CREATE_ITEM'
       | 'CREATE_ITEM_START'
@@ -127,18 +130,17 @@ export function reducer(
       | 'CLONE'
       | 'CLONE_START'
       | 'CLONE_END'
-      | 'CLONE_CLOSE'
+      | 'TAGS'
+      | 'TAGS_START'
+      | 'TAGS_END'
       | 'REMOVE_BATCH'
       | 'REMOVE_BATCH_START'
-      | 'REMOVE_BATCH_END'
       | 'REMOVE_BATCH_CLOSE'
       | 'MOVE_BATCH'
       | 'MOVE_BATCH_START'
-      | 'MOVE_BATCH_END'
       | 'MOVE_BATCH_CLOSE'
       | 'MOVE_TO_ORDER'
       | 'MOVE_TO_ORDER_START'
-      | 'MOVE_TO_ORDER_END'
       | 'MOVE_TO_ORDER_CLOSE'
       | 'EDIT',
     payload: {
@@ -493,6 +495,30 @@ export function reducer(
     case 'CLONE_END': {
       return update(state, {
         clone: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'TAGS': {
+      return update(state, {
+        tags: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          source: { $set: action.payload?.source ?? '' },
+        },
+      });
+    }
+    case 'TAGS_START': {
+      return update(state, {
+        tags: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'TAGS_END': {
+      return update(state, {
+        tags: {
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },
