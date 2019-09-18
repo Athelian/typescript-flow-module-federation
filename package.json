@@ -56,7 +56,7 @@
     "react-dnd-html5-backend": "^9.3.4",
     "react-dom": "^16.9.0",
     "react-draggable": "^4.0.3",
-    "react-dropzone": "^10.1.8",
+    "react-dropzone": "^10.1.9",
     "react-emotion": "^9.2.12",
     "react-fast-compare": "^2.0.4",
     "react-fullstory": "^1.3.0",
