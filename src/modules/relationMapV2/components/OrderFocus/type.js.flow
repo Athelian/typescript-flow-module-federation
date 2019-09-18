@@ -78,6 +78,16 @@ export type State = {|
     },
     type?: 'createBatch' | 'deleteBatch',
   },
+  moveActions: {
+    isOpen: boolean,
+    isProcessing: boolean,
+    type?: | 'existOrder'
+      | 'newOrder'
+      | 'existContainer'
+      | 'newContainer'
+      | 'existShipment'
+      | 'newShipment',
+  },
   createItem: {
     isOpen: boolean,
     isProcessing: boolean,

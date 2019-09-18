@@ -6,6 +6,7 @@ import Dialog from 'components/Dialog';
 import { BaseButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
+import SelectOrderToMove from './components/SelectOrderToMove';
 
 export default function MoveBatch() {
   const { dispatch, state } = React.useContext(RelationMapContext);
@@ -29,7 +30,7 @@ export default function MoveBatch() {
     dispatch({
       type: 'MOVE_BATCH_START',
       payload: {
-        target,
+        type: target,
       },
     });
   };
@@ -72,6 +73,7 @@ export default function MoveBatch() {
           />
         </div>
       </div>
+      <SelectOrderToMove />
     </Dialog>
   );
 }

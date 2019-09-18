@@ -59,6 +59,10 @@ export const initialState: State = {
       },
     },
   },
+  moveActions: {
+    isOpen: false,
+    isProcessing: false,
+  },
   createItem: {
     isOpen: false,
     isProcessing: false,
@@ -132,6 +136,10 @@ export function reducer(
       | 'MOVE_BATCH_START'
       | 'MOVE_BATCH_END'
       | 'MOVE_BATCH_CLOSE'
+      | 'MOVE_TO_ORDER'
+      | 'MOVE_TO_ORDER_START'
+      | 'MOVE_TO_ORDER_END'
+      | 'MOVE_TO_ORDER_CLOSE'
       | 'EDIT',
     payload: {
       entity?: string,
@@ -388,6 +396,25 @@ export function reducer(
       return update(state, {
         batchActions: {
           isProcessing: { $set: true },
+        },
+      });
+    case 'MOVE_BATCH_START':
+      return update(state, {
+        batchActions: {
+          isOpen: { $set: false },
+        },
+        moveActions: {
+          isOpen: { $set: true },
+          type: { $set: action.payload.type },
+        },
+      });
+    case 'MOVE_TO_ORDER_CLOSE':
+      return update(state, {
+        batchActions: {
+          isOpen: { $set: true },
+        },
+        moveActions: {
+          isOpen: { $set: false },
         },
       });
     case 'DELETE_ITEM_START':
