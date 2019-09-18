@@ -206,7 +206,7 @@ export default function AddTags({ onSuccess }: Props) {
     <Dialog isOpen={isOpen} width="450px">
       <div className={DialogStyle}>
         <h3 className={ConfirmMessageStyle}>
-          Select tags to add to the{' '}
+          {isProcessing ? 'Adding Tags ' : 'Select tags to add to the'}
           {totalOrders > 0 && source === ORDER && (
             <>
               {totalOrders} <Icon icon="ORDER" />

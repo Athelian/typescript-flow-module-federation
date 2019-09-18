@@ -29,6 +29,7 @@ import InlineCreateItem from '../InlineCreateItem';
 import DeleteItemConfirm from '../DeleteItemConfirm';
 import InlineCreateBatch from '../InlineCreateBatch';
 import DeleteBatchConfirm from '../DeleteBatchConfirm';
+import StatusConfirm from '../StatusConfirm';
 import SelectedEntity from '../SelectedEntity';
 import Actions from '../Actions';
 import Header from '../Header';
@@ -350,6 +351,15 @@ export default function OrderFocus() {
                           queryOrdersDetail(orderIds);
                           dispatch({
                             type: 'CONFIRM_MOVE_END',
+                            payload: { orderIds },
+                          });
+                        }}
+                      />
+                      <StatusConfirm
+                        onSuccess={orderIds => {
+                          queryOrdersDetail(orderIds);
+                          dispatch({
+                            type: 'STATUS_END',
                             payload: { orderIds },
                           });
                         }}

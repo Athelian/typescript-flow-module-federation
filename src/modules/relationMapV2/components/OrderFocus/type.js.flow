@@ -102,6 +102,11 @@ export type State = {|
     isOpen: boolean,
     isProcessing: boolean,
   },
+  status: {
+    source: string,
+    isOpen: boolean,
+    isProcessing: boolean,
+  },
   tags: {
     source: string,
     isOpen: boolean,

@@ -122,6 +122,19 @@ export default function Actions({ targets }: Props) {
               <Icon icon="TAG" />
               <ActionLabel>ADD TAGS</ActionLabel>
             </ActionButton>
+            <ActionButton
+              onClick={() => {
+                dispatch({
+                  type: 'STATUS',
+                  payload: {
+                    source: ORDER,
+                  },
+                });
+              }}
+            >
+              <Icon icon="ACTIVE" /> / <Icon icon="ARCHIVE" />
+              <ActionLabel>Active/Archive</ActionLabel>
+            </ActionButton>
           </ActionSubMenu>
         </ActionButton>
 
@@ -263,6 +276,19 @@ export default function Actions({ targets }: Props) {
             >
               <Icon icon="TAG" />
               <ActionLabel>ADD TAGS</ActionLabel>
+            </ActionButton>
+            <ActionButton
+              onClick={() => {
+                dispatch({
+                  type: 'STATUS',
+                  payload: {
+                    source: SHIPMENT,
+                  },
+                });
+              }}
+            >
+              <Icon icon="ACTIVE" /> / <Icon icon="ARCHIVE" />
+              <ActionLabel>Active/Archive</ActionLabel>
             </ActionButton>
           </ActionSubMenu>
         </ActionButton>

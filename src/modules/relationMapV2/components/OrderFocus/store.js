@@ -5,7 +5,7 @@ import type { Order, Batch, OrderItem } from 'generated/graphql';
 import { intersection } from 'lodash';
 import produce from 'immer';
 import update from 'immutability-helper';
-import { ORDER_ITEM, BATCH } from 'modules/relationMapV2/constants';
+import { ORDER_ITEM, ORDER, BATCH } from 'modules/relationMapV2/constants';
 import type { State } from './type.js.flow';
 
 type ContextProps = {|
@@ -77,6 +77,11 @@ export const initialState: State = {
     isOpen: false,
     isProcessing: false,
   },
+  status: {
+    source: ORDER,
+    isOpen: false,
+    isProcessing: false,
+  },
   tags: {
     source: '',
     isOpen: false,
@@ -130,6 +135,9 @@ export function reducer(
       | 'CLONE'
       | 'CLONE_START'
       | 'CLONE_END'
+      | 'STATUS'
+      | 'STATUS_START'
+      | 'STATUS_END'
       | 'TAGS'
       | 'TAGS_START'
       | 'TAGS_END'
@@ -495,6 +503,30 @@ export function reducer(
     case 'CLONE_END': {
       return update(state, {
         clone: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'STATUS': {
+      return update(state, {
+        status: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          source: { $set: action.payload?.source ?? '' },
+        },
+      });
+    }
+    case 'STATUS_START': {
+      return update(state, {
+        status: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'STATUS_END': {
+      return update(state, {
+        status: {
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },
