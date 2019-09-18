@@ -51,27 +51,27 @@ const UserAssignmentInput = ({ cacheKey, users, name, groupIds, onChange, editab
     ))}
     {editable && users.length < MAX_USERS_ALLOWED && (
       <BooleanValue>
-        {({ value: isOpen, set: slideToggle }) => (
+        {({ value: isOpen, set: toggleSlide }) => (
           <>
             <button
               data-testid="addAssignerButton"
               className={AddAssignmentButtonStyle}
               type="button"
-              onClick={() => slideToggle(true)}
+              onClick={() => toggleSlide(true)}
             >
               <Icon icon="ADD" />
             </button>
-            <SlideView isOpen={isOpen} onRequestClose={() => slideToggle(false)}>
+            <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
               {isOpen && (
                 <AssignUsers
                   cacheKey={cacheKey}
                   filterBy={{ organizationIds: groupIds }}
                   selected={users}
                   onSelect={selected => {
-                    slideToggle(false);
+                    toggleSlide(false);
                     onChange(name, selected);
                   }}
-                  onCancel={() => slideToggle(false)}
+                  onCancel={() => toggleSlide(false)}
                 />
               )}
             </SlideView>

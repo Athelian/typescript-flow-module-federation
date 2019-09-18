@@ -23,3 +23,15 @@ export const diffDueDate = ({ dueDate, date }: { dueDate: ?string, date: ?string
   }
   return { value: 'N/A', color: 'GRAY' };
 };
+
+/**
+ * Is disable?
+ * @param {string} id element id
+ *
+ * Must use in UI Component
+ */
+export const isDisable = (id: string) => {
+  const button = document.getElementById(id);
+  // $FlowFixMe: Cannot get `button?.disabled` because property `disabled` is missing in  `HTMLElement` [1].Flow(InferError)
+  return !button || button?.disabled;
+};

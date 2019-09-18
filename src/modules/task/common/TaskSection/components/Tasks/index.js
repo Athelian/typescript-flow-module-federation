@@ -93,7 +93,11 @@ const Tasks = ({
                 ),
               ].filter(Boolean)}
             />
-            <SlideView isOpen={opened} onRequestClose={() => selectTaskSlideToggle(false)}>
+            <SlideView
+              isOpen={opened}
+              onRequestClose={() => selectTaskSlideToggle(false)}
+              targetId="task_form_save_button"
+            >
               {opened && (
                 <TaskFormInSlide
                   entity={{

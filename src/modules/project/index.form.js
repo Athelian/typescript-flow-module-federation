@@ -297,6 +297,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
 
                         {(isNew || isDirty) && (
                           <SaveButton
+                            id="project_form_save_button"
                             disabled={
                               !form.isReady(
                                 {

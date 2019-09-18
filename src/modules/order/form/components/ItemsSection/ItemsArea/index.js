@@ -325,7 +325,11 @@ function ItemsArea({
                   <BooleanValue key={item.id}>
                     {({ value: opened, set: itemSlideToggle }) => (
                       <>
-                        <SlideView isOpen={opened} onRequestClose={() => itemSlideToggle(false)}>
+                        <SlideView
+                          isOpen={opened}
+                          onRequestClose={() => itemSlideToggle(false)}
+                          targetId="item_form_save_button"
+                        >
                           {opened && (
                             <ItemFormInSlide
                               orderItem={{ ...item, order }}

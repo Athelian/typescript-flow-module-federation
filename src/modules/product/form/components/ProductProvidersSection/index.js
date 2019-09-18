@@ -52,7 +52,11 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                         onClick={() => slideToggle(true)}
                         data-testid="newProviderButton"
                       />
-                      <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                      <SlideView
+                        isOpen={opened}
+                        onRequestClose={() => slideToggle(false)}
+                        targetId="end_product_form_save_button"
+                      >
                         {opened && (
                           <ProductProviderFormWrapper
                             isAddedProvider
@@ -106,6 +110,7 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                             <SlideView
                               isOpen={updateFormOpened}
                               onRequestClose={() => slideToggle('updateFormOpened', false)}
+                              targetId="end_product_form_save_button"
                             >
                               {updateFormOpened && (
                                 <ProductProviderFormWrapper
@@ -124,6 +129,7 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                             <SlideView
                               isOpen={cloneFormOpened}
                               onRequestClose={() => slideToggle('cloneFormOpened', false)}
+                              targetId="end_product_form_save_button"
                             >
                               {cloneFormOpened && (
                                 <ProductProviderFormWrapper
