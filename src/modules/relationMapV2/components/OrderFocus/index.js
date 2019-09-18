@@ -39,6 +39,7 @@ import { reducer, initialState, RelationMapContext } from './store';
 import normalize from './normalize';
 import RemoveBatchConfirm from '../RemoveBatchConfirm';
 import MoveBatch from '../MoveBatch';
+import AddTags from '../AddTags';
 
 const LoadingPlaceHolder = React.memo(() => {
   return (
@@ -353,6 +354,7 @@ export default function OrderFocus() {
                           });
                         }}
                       />
+                      <AddTags onSuccess={console.warn} />
                       <CloneEntities
                         onSuccess={({
                           sources,
