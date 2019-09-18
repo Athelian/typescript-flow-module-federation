@@ -15,25 +15,24 @@ import {
   containersByIDsQuery,
   shipmentsByIDsQuery,
 } from './query';
-import { orderUpdateManyMutation } from './mutation';
+import { orderUpdateManyMutation, orderItemUpdateManyMutation } from './mutation';
 import { DialogStyle, ButtonsStyle, ConfirmMessageStyle } from './style';
 import { targetedIds } from '../OrderFocus/helpers';
 
 type Props = {|
-  onSuccess: ({|
-    orderIds: Array<string>,
-  |}) => void,
+  onSuccess: (orderIds: Array<string>) => void,
 |};
 
 export default function AddTags({ onSuccess }: Props) {
   const [tags, setTags] = React.useState([]);
   const { dispatch, state } = React.useContext(RelationMapContext);
   const [loadOrders, ordersResult] = useLazyQuery(ordersByIDsQuery);
-  const [loadOrderItems] = useLazyQuery(orderItemsByIDsQuery);
+  const [loadOrderItems, orderItemsResult] = useLazyQuery(orderItemsByIDsQuery);
   const [loadBatches] = useLazyQuery(batchesByIDsQuery);
   const [loadContainers] = useLazyQuery(containersByIDsQuery);
   const [loadShipments] = useLazyQuery(shipmentsByIDsQuery);
   const [updateOrders] = useMutation(orderUpdateManyMutation);
+  const [updateOrderItems] = useMutation(orderItemUpdateManyMutation);
   const {
     targets,
     tags: { isOpen, isProcessing, source },
@@ -84,6 +83,46 @@ export default function AddTags({ onSuccess }: Props) {
         .catch(onCancel);
     }
   }, [isProcessing, onCancel, onSuccess, ordersResult, source, tags, updateOrders]);
+
+  React.useEffect(() => {
+    if (
+      source === ORDER_ITEM &&
+      isProcessing &&
+      orderItemsResult.called &&
+      !orderItemsResult.loading
+    ) {
+      const tagIds = tags.map(tag => tag.id);
+      const orderItemsInput = (orderItemsResult.data?.orderItemsByIDs ?? []).map(item => {
+        return {
+          id: item.id,
+          input: {
+            tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])],
+          },
+        };
+      });
+      updateOrderItems({
+        variables: {
+          orderItems: orderItemsInput,
+        },
+      })
+        .then(orderItems => {
+          onSuccess((orderItems.data?.orderItemUpdateMany ?? []).map(item => item?.order?.id));
+        })
+        .catch(onCancel);
+    }
+  }, [
+    isProcessing,
+    onCancel,
+    onSuccess,
+    orderItemsResult.called,
+    orderItemsResult.data,
+    orderItemsResult.loading,
+    ordersResult,
+    source,
+    tags,
+    updateOrderItems,
+    updateOrders,
+  ]);
 
   const onConfirm = () => {
     dispatch({

@@ -355,7 +355,7 @@ export default function OrderFocus() {
                         }}
                       />
                       <AddTags
-                        onSuccess={({ orderIds }) => {
+                        onSuccess={orderIds => {
                           queryOrdersDetail(orderIds);
                           dispatch({
                             type: 'TAGS_END',

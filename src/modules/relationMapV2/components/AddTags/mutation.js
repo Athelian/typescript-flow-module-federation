@@ -17,69 +17,14 @@ export const orderUpdateManyMutation = gql`
   ${forbiddenFragment}
 `;
 
-export const cloneContainersMutation = gql`
-  mutation containerCloneMany($containers: [ContainerUpdateWrapperInput!]!) {
-    containerCloneMany(containers: $containers) {
-      ... on Container {
-        id
-      }
-      ...badRequestFragment
-      ...forbiddenFragment
-    }
-  }
-
-  ${badRequestFragment}
-  ${forbiddenFragment}
-`;
-
-export const cloneShipmentsMutation = gql`
-  mutation shipmentCloneMany($shipments: [ShipmentUpdateWrapperInput!]!) {
-    shipmentCloneMany(shipments: $shipments) {
-      ... on Shipment {
-        id
-      }
-      ...badRequestFragment
-      ...forbiddenFragment
-    }
-  }
-
-  ${forbiddenFragment}
-  ${badRequestFragment}
-`;
-
-export const cloneOrderItemsMutation = gql`
-  mutation orderItemCloneMany($orderItems: [OrderItemUpdateWrapperInput!]!) {
-    orderItemCloneMany(orderItems: $orderItems) {
+export const orderItemUpdateManyMutation = gql`
+  mutation orderItemUpdateMany($orderItems: [OrderItemUpdateWrapperInput!]!) {
+    orderItemUpdateMany(orderItems: $orderItems) {
       ... on OrderItem {
         id
-        batches {
-          ... on Batch {
+        order {
+          ... on Order {
             id
-          }
-        }
-      }
-      ...badRequestFragment
-      ...forbiddenFragment
-    }
-  }
-
-  ${badRequestFragment}
-  ${forbiddenFragment}
-`;
-
-export const cloneOrdersMutation = gql`
-  mutation orderCloneMany($orders: [OrderUpdateWrapperInput!]!) {
-    orderCloneMany(orders: $orders) {
-      ... on Order {
-        id
-        orderItems {
-          ... on OrderItem {
-            id
-            batches {
-              ... on Batch {
-                id
-              }
-            }
           }
         }
       }
