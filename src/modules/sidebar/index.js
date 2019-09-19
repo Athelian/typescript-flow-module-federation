@@ -20,7 +20,11 @@ import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { STAFF_LIST } from 'modules/permission/constants/staff';
 import { PROJECT_LIST } from 'modules/permission/constants/project';
 import { DOCUMENT_LIST } from 'modules/permission/constants/file';
-import { TASK_LIST, TASK_TEMPLATE_LIST } from 'modules/permission/constants/task';
+import {
+  TASK_LIST,
+  TASK_TEMPLATE_LIST,
+  PROJECT_TEMPLATE_LIST,
+} from 'modules/permission/constants/task';
 import { UIConsumer } from 'modules/ui';
 import { useViewerHasPermissions } from 'components/Context/Permissions';
 import { isEnableBetaFeature } from 'utils/env';
@@ -42,6 +46,7 @@ import {
   PATH_METADATA,
   PATH_TABLE_TEMPLATE,
   PATH_TASK_TEMPLATE,
+  PATH_PROJECT_TEMPLATE,
   PATH_TAG,
   PATH_PROJECT,
   PATH_DOCUMENT,
@@ -270,6 +275,19 @@ const SideBar = () => {
                             icon="TASK"
                             label={
                               <FormattedMessage id="modules.SideBar.task" defaultMessage="TASKS" />
+                            }
+                          />
+                        )}
+                        {hasPermission(PROJECT_TEMPLATE_LIST) && (
+                          <MenuItem
+                            path={`/templates/${PATH_PROJECT_TEMPLATE}`}
+                            isActive={pathnameSplit[2] === PATH_PROJECT_TEMPLATE}
+                            icon="PROJECT"
+                            label={
+                              <FormattedMessage
+                                id="modules.SideBar.projects"
+                                defaultMessage="projects"
+                              />
                             }
                           />
                         )}

@@ -34,6 +34,7 @@ import {
   MILESTONE_SET_DUE_DATE,
   MILESTONE_SET_ESTIMATED_COMPLETION_DATE,
 } from 'modules/permission/constants/milestone';
+import { FormContext } from 'modules/milestone/form/context';
 import DateBindingInput from '../DateBindingInput';
 import {
   CommonFormWrapperStyle,
@@ -52,6 +53,9 @@ const MilestoneSection = ({ intl }: Props) => {
   const { hasPermission } = usePermission();
   const canCreate = hasPermission(MILESTONE_CREATE);
   const canUpdate = hasPermission(MILESTONE_UPDATE);
+
+  const inTemplate = React.useContext(FormContext);
+
   const canCreateOrUpdate = canCreate || canUpdate;
 
   return (
@@ -122,7 +126,13 @@ const MilestoneSection = ({ intl }: Props) => {
                           values={values}
                           validator={validator}
                           setFieldValue={setFieldValue}
-                          editable={canCreateOrUpdate || hasPermission(MILESTONE_SET_DUE_DATE)}
+                          manualEditable={
+                            (canCreateOrUpdate || hasPermission(MILESTONE_SET_DUE_DATE)) &&
+                            !inTemplate
+                          }
+                          bindingEditable={
+                            canCreateOrUpdate || hasPermission(MILESTONE_SET_DUE_DATE)
+                          }
                         />
                       }
                     />
@@ -152,7 +162,12 @@ const MilestoneSection = ({ intl }: Props) => {
                           values={values}
                           validator={validator}
                           setFieldValue={setFieldValue}
-                          editable={
+                          manualEditable={
+                            (canCreateOrUpdate ||
+                              hasPermission(MILESTONE_SET_ESTIMATED_COMPLETION_DATE)) &&
+                            !inTemplate
+                          }
+                          bindingEditable={
                             canCreateOrUpdate ||
                             hasPermission(MILESTONE_SET_ESTIMATED_COMPLETION_DATE)
                           }
@@ -231,7 +246,8 @@ const MilestoneSection = ({ intl }: Props) => {
                                     />
                                   }
                                   editable={
-                                    canCreateOrUpdate || hasPermission(MILESTONE_SET_COMPLETED)
+                                    (canCreateOrUpdate || hasPermission(MILESTONE_SET_COMPLETED)) &&
+                                    !inTemplate
                                   }
                                 />
                               </span>

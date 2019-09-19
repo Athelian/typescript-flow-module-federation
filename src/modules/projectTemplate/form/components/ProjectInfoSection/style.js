@@ -18,5 +18,4 @@ export const TagsWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
   padding: 0 0 0 20px;
-  grid-template-columns: calc(100vw - 900px);
 `;

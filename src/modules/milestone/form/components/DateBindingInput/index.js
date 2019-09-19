@@ -18,7 +18,8 @@ import {
 } from './style';
 
 type OptionalProps = {
-  editable: boolean,
+  manualEditable: boolean,
+  bindingEditable: boolean,
 };
 
 type Props = OptionalProps & {
@@ -34,7 +35,8 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  editable: false,
+  manualEditable: false,
+  bindingEditable: false,
 };
 
 // only used at milestone form
@@ -48,7 +50,8 @@ const DateBindingInput = ({
   values,
   validator,
   setFieldValue,
-  editable,
+  manualEditable,
+  bindingEditable,
 }: Props) => {
   const [dateBindingSign, setDateBindingSign] = React.useState('before');
 
@@ -105,7 +108,8 @@ const DateBindingInput = ({
               setDateBindingSign('before');
             }
           }}
-          editable={editable}
+          // FIXME: confirm
+          editable
         >
           <div className={IconStyle}>
             <Icon icon={bound ? 'BINDED' : 'UNBINDED'} />
@@ -125,7 +129,7 @@ const DateBindingInput = ({
             name={name}
             {...inputHandlers}
             originalValue={originalValues[name]}
-            editable={editable && !bound}
+            editable={manualEditable && !bound}
             hideTooltip={bound}
           />
         )}
@@ -157,7 +161,7 @@ const DateBindingInput = ({
                   metricOptionWidth="65px"
                   inputWidth="135px"
                   {...inputHandlers}
-                  editable={editable}
+                  editable={bindingEditable}
                   hideTooltip
                 />
               )}
@@ -191,7 +195,7 @@ const DateBindingInput = ({
                   ]}
                   inputWidth="55px"
                   {...inputHandlers}
-                  editable={editable}
+                  editable={bindingEditable}
                   required
                   hideDropdownArrow
                   hideTooltip
@@ -210,7 +214,7 @@ const DateBindingInput = ({
               <SelectInputFactory
                 {...inputHandlers}
                 items={dateBindingItems}
-                editable={editable}
+                editable={bindingEditable}
                 required
                 hideTooltip
               />

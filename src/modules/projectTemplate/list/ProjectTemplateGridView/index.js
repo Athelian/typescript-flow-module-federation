@@ -1,15 +1,15 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import usePermission from 'hooks/usePermission';
+import { BooleanValue } from 'react-values';
+
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { TemplateCard } from 'components/Cards';
-import { BooleanValue } from 'react-values';
+
 import ProjectTemplateFormInSlide from 'modules/projectTemplate/form/index.slide';
-
-import { TASK_TEMPLATE_FORM } from 'modules/permission/constants/task';
-
+import { PROJECT_TEMPLATE_FORM } from 'modules/permission/constants/task';
+import usePermission from 'hooks/usePermission';
 import { isForbidden } from 'utils/data';
 
 type Props = {
@@ -38,14 +38,10 @@ const renderItem = (item: Object, canOpenForm: boolean) => {
               if (canOpenForm) {
                 toggleSlide(true);
               }
-              // FIXME: @tj
-              toggleSlide(true);
             }}
           />
           <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
-            {isOpen && (
-              <ProjectTemplateFormInSlide id={item.id} onCancel={() => toggleSlide(false)} />
-            )}
+            {isOpen && <ProjectTemplateFormInSlide id={item.id} />}
           </SlideView>
         </>
       )}
@@ -55,7 +51,7 @@ const renderItem = (item: Object, canOpenForm: boolean) => {
 
 const ProjectTemplateGridView = ({ items, onLoadMore, hasMore, isLoading }: Props) => {
   const { hasPermission } = usePermission();
-  const canOpenForm = hasPermission([TASK_TEMPLATE_FORM]);
+  const canOpenForm = hasPermission([PROJECT_TEMPLATE_FORM]);
 
   return (
     <GridView
@@ -66,7 +62,7 @@ const ProjectTemplateGridView = ({ items, onLoadMore, hasMore, isLoading }: Prop
       isEmpty={items.length === 0}
       emptyMessage={
         <FormattedMessage
-          id="modules.projectTemplate.noTemplate"
+          id="modules.projectTemplate.noTemplateFound"
           defaultMessage="No template found"
         />
       }

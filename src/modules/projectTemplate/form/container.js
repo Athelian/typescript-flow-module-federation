@@ -7,11 +7,15 @@ import { isEquals } from 'utils/fp';
 type FormState = {
   name?: string,
   description?: string,
-  project?: Object,
+  tags?: Array<Object>,
+  milestones: Array<Object>,
 };
 
 const initValues = {
-  project: {},
+  name: null,
+  description: null,
+  tags: [],
+  milestones: [],
 };
 
 export default class ProjectTemplateContainer extends Container<FormState> {

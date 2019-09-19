@@ -53,7 +53,7 @@ export const TaskRingWrapperStyle = css`
 
 export const AutoDateSyncIconStyle: string = css`
   position: absolute;
-  right: 25px;
+  right: 0px;
   top: 0;
   width: 20px;
   height: 20px;
@@ -62,10 +62,6 @@ export const AutoDateSyncIconStyle: string = css`
   align-items: center;
   justify-content: center;
   ${fontSizes.SMALL};
-`;
-
-export const DateInputWrapperStyle: string = css`
-  position: relative;
 `;
 
 export const DiffDateStyle = (diff: number): string => css`
@@ -80,4 +76,21 @@ export const DiffDateStyle = (diff: number): string => css`
   font-weight: bold;
   line-height: 20px;
   text-align: center;
+`;
+
+export const CompleteButtonStyle: string = css`
+  ${presets.BUTTON};
+  ${borderRadiuses.BUTTON};
+  height: 40px;
+  width: 160px;
+  border: 2px solid ${colors.TRANSPARENT};
+  margin: 5px 0;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  color: ${colors.GRAY_DARK};
+  ${fontSizes.SMALL};
+  letter-spacing: 2px;
+  user-select: none;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: default;
 `;

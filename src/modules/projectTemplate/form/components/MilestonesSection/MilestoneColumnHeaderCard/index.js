@@ -1,33 +1,34 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-
+import useHover from 'hooks/useHover';
 import SlideView from 'components/SlideView';
 import TaskRing from 'components/TaskRing';
 import Icon from 'components/Icon';
-
+import { BaseButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
-import { TextInputFactory } from 'components/Form';
+import { FieldItem, Label, Display, TextInputFactory } from 'components/Form';
 import ProjectTemplateContainer from 'modules/projectTemplate/form/container';
-import {
-  MILESTONE_UPDATE,
-  MILESTONE_SET_NAME,
-  // MILESTONE_SET_DUE_DATE,
-  // MILESTONE_SET_ESTIMATED_COMPLETION_DATE,
-  // MILESTONE_SET_COMPLETED,
-  // MILESTONE_SET_TASKS,
-  MILESTONE_DELETE,
-} from 'modules/permission/constants/milestone';
 import MilestoneFormSlide from 'modules/milestone/form/index.slide';
+import {
+  PROJECT_TEMPLATE_CREATE,
+  PROJECT_TEMPLATE_UPDATE,
+  PROJECT_TEMPLATE_SET_MILESTONES,
+} from 'modules/permission/constants/task';
 
 import validator from './validator';
 
-// import CompleteButton from '../CompleteButton';
-import { MilestoneHeaderWrapperStyle, TaskRingWrapperStyle, DateInputWrapperStyle } from './style';
+import {
+  MilestoneHeaderWrapperStyle,
+  TaskRingWrapperStyle,
+  AutoDateSyncIconStyle,
+  CompleteButtonStyle,
+  DeleteButtonStyle,
+} from './style';
 
 type Props = {|
   isDragging: boolean,
@@ -37,21 +38,16 @@ type Props = {|
 export default function MilestoneColumnHeaderCard({ milestoneIndex, isDragging }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const [hoverRef, isHovered] = useHover();
+  const canCreateOrUpdate = hasPermission([PROJECT_TEMPLATE_CREATE, PROJECT_TEMPLATE_UPDATE]);
 
   return (
     <Subscribe to={[ProjectTemplateContainer]}>
       {({
-        originalValues: {
-          project: { milestones: originalMilestones },
-        },
-
-        state: {
-          project: { milestones = [] },
-        },
-        setMilestoneValue,
+        originalValues: { milestones: originalMilestones },
+        state: { milestones = [] },
+        setFieldValue,
       }) => {
-        console.debug(milestones);
-
         const milestone = milestones[milestoneIndex];
         const originalValues = originalMilestones[milestoneIndex] || {};
 
@@ -59,58 +55,52 @@ export default function MilestoneColumnHeaderCard({ milestoneIndex, isDragging }
           name: `${milestone.id}.name`,
         });
 
-        const onChangeValue = (field, value) => {
-          const [id, fieldName] = field.split('.') || [];
-          if (id) {
-            setMilestoneValue(id, {
-              [fieldName]: value,
-            });
-          }
-        };
-
         const values = {
           [`${milestone.id}.name`]: milestone.name,
         };
 
         return (
           <BooleanValue>
-            {({ value: milestoneFormIsOpened, set: toggleMilestoneForm }) => (
+            {({ value: isOpen, set: toggleSlide }) => (
               <>
-                <SlideView
-                  isOpen={milestoneFormIsOpened}
-                  onRequestClose={() => toggleMilestoneForm(false)}
-                >
-                  {milestoneFormIsOpened && (
+                <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
+                  {isOpen && (
                     <MilestoneFormSlide
                       milestone={milestone}
-                      onSave={() => {
-                        console.debug('save milestone');
-                        toggleMilestoneForm(false);
+                      onSave={newMilestone => {
+                        setFieldValue(`milestones.${milestoneIndex}`, newMilestone);
+                        toggleSlide(false);
                       }}
+                      inTemplate
                     />
                   )}
                 </SlideView>
                 <div
-                  // ref={hoverRef}
+                  // FIXME: confirm again
+                  ref={hoverRef}
                   className={MilestoneHeaderWrapperStyle(isDragging)}
                   role="presentation"
                   onClick={() => {
                     // This is using for fixing a edge case when on blur doesn't fire on inline edit for task card
                     if (document.activeElement) document.activeElement.blur();
-                    setTimeout(() => toggleMilestoneForm(true), 200);
+                    setTimeout(toggleSlide, 200, true);
                   }}
                 >
-                  {hasPermission([MILESTONE_DELETE]) && milestones.length > 1 && (
-                    <button
-                      // className={DeleteButtonStyle(isHovered)}
-                      type="button"
-                      onClick={() => {
-                        console.debug('remove milestone');
-                      }}
-                    >
-                      <Icon icon="REMOVE" />
-                    </button>
-                  )}
+                  {(canCreateOrUpdate || hasPermission(PROJECT_TEMPLATE_SET_MILESTONES)) &&
+                    milestones.length > 1 && (
+                      <button
+                        className={DeleteButtonStyle(isHovered)}
+                        type="button"
+                        onClick={() => {
+                          setFieldValue(
+                            'milestones',
+                            milestones.filter(item => item.id !== milestone.id)
+                          );
+                        }}
+                      >
+                        <Icon icon="REMOVE" />
+                      </button>
+                    )}
 
                   <div role="presentation" onClick={e => e.stopPropagation()}>
                     <FormField
@@ -118,7 +108,9 @@ export default function MilestoneColumnHeaderCard({ milestoneIndex, isDragging }
                       initValue={milestone.name}
                       values={values}
                       validator={validation}
-                      setFieldValue={onChangeValue}
+                      setFieldValue={(field, value) => {
+                        setFieldValue(`milestones.${milestoneIndex}.name`, value);
+                      }}
                     >
                       {({ name: fieldName, ...inputHandlers }) => (
                         <TextInputFactory
@@ -126,39 +118,78 @@ export default function MilestoneColumnHeaderCard({ milestoneIndex, isDragging }
                           originalValue={originalValues.name}
                           {...inputHandlers}
                           required
-                          editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_NAME])}
+                          editable={
+                            canCreateOrUpdate || hasPermission(PROJECT_TEMPLATE_SET_MILESTONES)
+                          }
                           vertical
                           inputWidth="225px"
                           inputHeight="20px"
+                          hideTooltip
                         />
                       )}
                     </FormField>
                   </div>
-                  <div role="presentation" onClick={e => e.stopPropagation()}>
-                    <div className={DateInputWrapperStyle}>
-                      {/* due date */}
-                      {/* {dueDateBinding && (
-                        <div className={AutoDateSyncIconStyle}>
-                          <Icon icon="BINDED" />
-                        </div>
-                      )} */}
-                    </div>
+
+                  <FieldItem
+                    label={
+                      <Label>
+                        <FormattedMessage
+                          id="modules.projectTemplate.dueDate"
+                          defaultMessage="Due Date"
+                        />
+                      </Label>
+                    }
+                    input={
+                      <Display color="GRAY">
+                        <FormattedMessage id="common.datePlaceholder" defaultMessage="yyyy/mm/dd" />
+                        {milestone.dueDateBinding && (
+                          <div className={AutoDateSyncIconStyle}>
+                            <Icon icon="BINDED" />
+                          </div>
+                        )}
+                      </Display>
+                    }
+                  />
+
+                  <FieldItem
+                    label={
+                      <Label>
+                        <FormattedMessage
+                          id="modules.projectTemplate.est.compl"
+                          defaultMessage="est. compl."
+                        />
+                      </Label>
+                    }
+                    input={
+                      <Display color="GRAY">
+                        <FormattedMessage id="common.datePlaceholder" defaultMessage="yyyy/mm/dd" />
+                        {milestone.estimatedCompletionDateBinding && (
+                          <div className={AutoDateSyncIconStyle}>
+                            <Icon icon="BINDED" />
+                          </div>
+                        )}
+                      </Display>
+                    }
+                  />
+
+                  <div className={CompleteButtonStyle}>
+                    <FormattedMessage
+                      id="components.form.unCompleted"
+                      defaultMessage="UNCOMPLETED"
+                    />
                   </div>
 
-                  <div role="presentation" onClick={e => e.stopPropagation()}>
-                    <div className={DateInputWrapperStyle}>
-                      {/* data */}
-                      {/* date binding */}
-                      {/* {estimatedCompletionDateBinding && (
-                        <div className={AutoDateSyncIconStyle}>
-                          <Icon icon="BINDED" />
-                        </div>
-                      )} */}
-                    </div>
-                  </div>
-
-                  {/* FIXME: complete button */}
-                  {/* select task button */}
+                  <BaseButton
+                    icon="ADD"
+                    disabled
+                    label={
+                      <FormattedMessage
+                        id="modules.projectTemplate.selectTask"
+                        defaultMessage="SELECT TASK"
+                      />
+                    }
+                    backgroundColor="TEAL"
+                  />
 
                   <div className={TaskRingWrapperStyle}>
                     <TaskRing tasks={[]} />

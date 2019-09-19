@@ -10,6 +10,7 @@ import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { projectTemplateListQuery } from './query';
 import ProjectTemplateGridView from './ProjectTemplateGridView';
+import ProjectTemplateFormInSlide from '../form/index.slide';
 
 const initFilter = {
   filter: {},
@@ -22,7 +23,7 @@ const initFilter = {
 };
 
 const ProjectTemplateListPage = () => {
-  const { queryVariables } = useFilter(initFilter, `filterTaskTemplate`);
+  const { queryVariables } = useFilter(initFilter, `filterProjectTemplate`);
 
   const { loading, error, data, fetchMore } = useQuery(projectTemplateListQuery, {
     variables: queryVariables,
@@ -41,7 +42,7 @@ const ProjectTemplateListPage = () => {
             <>
               <NewButton onClick={() => toggleSlide(true)} />
               <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
-                {isOpen && 'form page'}
+                {isOpen && <ProjectTemplateFormInSlide onCancel={() => toggleSlide(false)} />}
               </SlideView>
             </>
           )}

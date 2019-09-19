@@ -15,14 +15,18 @@ import { validator } from 'modules/projectTemplate/form/validator';
 import { FormField } from 'modules/form';
 
 import usePermission from 'hooks/usePermission';
-import { TASK_TEMPLATE_UPDATE } from 'modules/permission/constants/task';
+import {
+  PROJECT_TEMPLATE_CREATE,
+  PROJECT_TEMPLATE_UPDATE,
+  PROJECT_TEMPLATE_SET_NAME,
+  PROJECT_TEMPLATE_SET_DESCRIPTION,
+} from 'modules/permission/constants/task';
 
 import { TemplateInfoSectionWrapperStyle } from './style';
 
 const TemplateInfoSection = () => {
   const { hasPermission } = usePermission();
-  // FIXME: @tj
-  const allowUpdate = hasPermission(TASK_TEMPLATE_UPDATE);
+  const canCreateOrUpdate = hasPermission([PROJECT_TEMPLATE_CREATE, PROJECT_TEMPLATE_UPDATE]);
 
   return (
     <Subscribe to={[ProjectTemplateContainer]}>
@@ -60,7 +64,7 @@ const TemplateInfoSection = () => {
                         originalValue={originalValues[name]}
                         label={<FormattedMessage id="common.name" defaultMessage="NAME" />}
                         required
-                        editable={allowUpdate}
+                        editable={canCreateOrUpdate || hasPermission(PROJECT_TEMPLATE_SET_NAME)}
                       />
                     )}
                   </FormField>
@@ -80,7 +84,9 @@ const TemplateInfoSection = () => {
                         label={
                           <FormattedMessage id="common.description" defaultMessage="DESCRIPTION" />
                         }
-                        editable={allowUpdate}
+                        editable={
+                          canCreateOrUpdate || hasPermission(PROJECT_TEMPLATE_SET_DESCRIPTION)
+                        }
                         vertical={false}
                         inputWidth="200px"
                         inputHeight="100px"
