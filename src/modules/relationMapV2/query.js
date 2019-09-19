@@ -304,6 +304,7 @@ export const orderCardFullFragment = gql`
       ... on Container {
         id
         no
+        archived
         ownedBy {
           ...ownedByFragment
         }
