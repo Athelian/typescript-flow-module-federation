@@ -30,6 +30,20 @@ function normalizedInput(type: string, field: string, value: any): Object {
             [field]: value,
           };
       }
+    case 'Batch':
+      switch (field) {
+        case 'desiredAt':
+        case 'expiredAt':
+        case 'deliveredAt':
+        case 'producedAt':
+          return {
+            [field]: new Date(value),
+          };
+        default:
+          return {
+            [field]: value,
+          };
+      }
     default:
       return {
         [field]: value,

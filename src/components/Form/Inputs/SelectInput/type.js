@@ -19,6 +19,7 @@ export type RenderSelectProps = {
   clearSelection: (cb?: Function) => mixed,
   toggle: () => mixed,
   selectedItem: any,
+  itemToString: any => string,
   getInputProps: Function,
 };
 
@@ -26,6 +27,9 @@ export type RenderOptionsProps = {
   highlightedIndex: ?number,
   selectedItem: any,
   getItemProps: Function,
+  items: Array<any>,
+  itemToValue: any => any,
+  itemToString: any => string,
 };
 
 export type SelectInputProps = OptionalProps & {

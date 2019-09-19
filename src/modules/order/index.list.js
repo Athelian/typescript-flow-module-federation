@@ -62,7 +62,7 @@ function OrderModule(props: Props) {
           canSearch
         />
         {hasPermission(ORDER_CREATE) && (
-          <Link to="new">
+          <Link to="/order/new">
             <NewButton />
           </Link>
         )}

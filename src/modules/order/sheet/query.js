@@ -37,6 +37,8 @@ const orderItemSheetFragment = gql`
     no
     quantity
     sort
+    totalBatched
+    totalShipped
     createdAt
     updatedAt
     createdBy {
@@ -58,6 +60,13 @@ const batchSheetFragment = gql`
     id
     no
     quantity
+    deliveredAt
+    desiredAt
+    expiredAt
+    producedAt
+    packageName
+    packageCapacity
+    packageQuantity
     sort
     createdAt
     updatedAt
@@ -79,6 +88,14 @@ const shipmentSheetFragment = gql`
   fragment shipmentSheetFragment on Shipment {
     id
     no
+    createdAt
+    updatedAt
+    createdBy {
+      ...userAvatarFragment
+    }
+    updatedBy {
+      ...userAvatarFragment
+    }
     ownedBy {
       ... on Organization {
         id
@@ -91,6 +108,22 @@ const containerSheetFragment = gql`
   fragment containerSheetFragment on Container {
     id
     no
+    warehouseArrivalAgreedDate
+    warehouseArrivalActualDate
+    freeTimeStartDate
+    yardName
+    departureDate
+    totalPackageQuantity
+    totalQuantity
+    orderItemCount
+    createdAt
+    updatedAt
+    createdBy {
+      ...userAvatarFragment
+    }
+    updatedBy {
+      ...userAvatarFragment
+    }
     ownedBy {
       ... on Organization {
         id
@@ -216,6 +249,7 @@ export const containerByIDQuery = gql`
   }
 
   ${containerSheetFragment}
+  ${userAvatarFragment}
 `;
 
 export const shipmentByIDQuery = gql`
@@ -226,6 +260,7 @@ export const shipmentByIDQuery = gql`
   }
 
   ${shipmentSheetFragment}
+  ${userAvatarFragment}
 `;
 
 export const orderMutation = gql`

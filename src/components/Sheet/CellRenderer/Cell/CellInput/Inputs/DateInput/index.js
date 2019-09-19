@@ -23,7 +23,7 @@ const DateInput = ({ value, focus, onChange, onFocus, onBlur, onKeyDown, readonl
         tabIndex="-1"
         readOnly={readonly}
         readOnlyHeight="30px"
-        onChange={onChange}
+        onChange={e => onChange(e.target.value)}
         onFocus={onFocus}
         onBlur={onBlur}
         onKeyDown={onKeyDown}

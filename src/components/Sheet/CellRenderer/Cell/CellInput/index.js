@@ -3,6 +3,8 @@ import * as React from 'react';
 import TextInput from './Inputs/TextInput';
 import NumberInput from './Inputs/NumberInput';
 import DateInput from './Inputs/DateInput';
+import DatetimeInput from './Inputs/DatetimeInput';
+import EnumInput from './Inputs/EnumInput';
 import { WrapperStyle } from './style';
 
 type Props = {
@@ -22,6 +24,9 @@ const inputs = {
   text: TextInput,
   number: NumberInput,
   date: DateInput,
+  datetime: DatetimeInput,
+  currency: EnumInput.Currency,
+  incoterm: EnumInput.Incoterm,
 };
 
 const CellInput = ({
@@ -42,8 +47,14 @@ const CellInput = ({
     setDirtyValue(value);
   }, [value, setDirtyValue]);
 
-  const handleChange = e => {
-    setDirtyValue(e.target.value);
+  const handleChange = newValue => {
+    if (newValue !== dirtyValue) {
+      setDirtyValue(newValue);
+
+      if (!inputFocus) {
+        onUpdate(newValue);
+      }
+    }
   };
 
   const handleBlur = () => {

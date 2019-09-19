@@ -1,6 +1,14 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, colors, fontSizes, layout, shadows, transitions } from 'styles/common';
+import {
+  borderRadiuses,
+  colors,
+  fontSizes,
+  layout,
+  presets,
+  shadows,
+  transitions,
+} from 'styles/common';
 
 export const WrapperStyle = (color: string): string => css`
   ${layout.HORIZONTAL};
@@ -71,7 +79,9 @@ export const ColumnStyle = (dragging: boolean) => css`
   }
 
   & > span {
+    ${presets.ELLIPSIS};
     margin-left: 10px;
+    flex: 1;
   }
 
   ${dragging &&

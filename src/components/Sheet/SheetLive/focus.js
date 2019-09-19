@@ -48,7 +48,8 @@ export const useSheetLiveFocus = () => {
     } else {
       setFocusedEntity(null);
     }
-  }, [focusAt, state.rows]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusAt]);
 
   // Subscribe to focus events
   React.useEffect(() => {
