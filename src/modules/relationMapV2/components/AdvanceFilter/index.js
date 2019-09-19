@@ -17,8 +17,8 @@ export default function AdvanceFilter() {
           onChangeFilter({
             ...filterAndSort,
             filter: {
-              ...filterAndSort.filter,
               ...filter,
+              query: filterAndSort.filter.query,
             },
           })
         }
