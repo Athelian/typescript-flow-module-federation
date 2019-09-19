@@ -1,8 +1,9 @@
 // @flow
 import { css } from 'react-emotion';
-import { transitions, fontSizes } from 'styles/common';
+import { transitions, fontSizes, colors, borderRadiuses } from 'styles/common';
 
 export const MenuItemStyle = (isActive: boolean): string => css`
+  position: relative;
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -45,4 +46,17 @@ export const IconStyle: string = css`
       transform: rotate(90deg);
     }
   }
+`;
+
+export const BetaStyle: string = css`
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: ${colors.WHITE};
+  ${fontSizes.SMALL};
+  ${borderRadiuses.BUTTON};
+  padding: 0 2px 0 4px;
+  letter-spacing: 2px;
+  opacity: 0.75;
 `;

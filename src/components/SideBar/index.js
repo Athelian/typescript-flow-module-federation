@@ -38,6 +38,7 @@ type MenuConfig = {
   path: string,
   permitted?: HasPermissions => boolean,
   hidden?: boolean,
+  beta?: boolean,
   submenu?: Array<{
     label: any,
     icon: string,
@@ -45,6 +46,7 @@ type MenuConfig = {
     overrideFullPath?: string,
     permitted?: HasPermissions => boolean,
     hidden?: boolean,
+    beta?: boolean,
   }>,
 };
 
@@ -77,6 +79,7 @@ const menu: Array<MenuConfig> = [
         label: <FormattedMessage {...messages.sheet} />,
         icon: 'SHEET',
         path: 'sheet',
+        beta: true,
       },
     ],
   },
@@ -259,6 +262,7 @@ const SideBar = () => {
                           isActive={pathnameSplit[1] === config.path}
                           icon={config.icon}
                           label={config.label}
+                          isBeta={config.beta}
                         />
                       );
                     }
@@ -302,6 +306,7 @@ const SideBar = () => {
                               }
                               icon={subConfig.icon}
                               label={subConfig.label}
+                              isBeta={subConfig.beta}
                             />
                           );
                         })}
