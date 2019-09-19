@@ -12,7 +12,7 @@ import { deleteContainerMutation, deleteOrderItemMutation } from './mutation';
 import { targetedIds } from '../OrderFocus/helpers';
 
 type Props = {|
-  onSuccess: (orderIds: Array<string>) => void,
+  onSuccess: ({ orderItemIds: Array<string>, containerIds: Array<string> }) => void,
 |};
 
 // TODO: check the permission
@@ -47,7 +47,10 @@ export default function DeleteConfirm({ onSuccess }: Props) {
         )
       )
         .then(() => {
-          onSuccess(orderItemIds);
+          onSuccess({
+            orderItemIds,
+            containerIds: [],
+          });
         })
         .catch(() => {
           dispatch({
@@ -65,11 +68,11 @@ export default function DeleteConfirm({ onSuccess }: Props) {
           })
         )
       )
-        .then(result => {
-          console.warn({
-            result,
+        .then(() => {
+          onSuccess({
+            orderItemIds: [],
+            containerIds,
           });
-          onSuccess(containerIds);
         })
         .catch(() => {
           dispatch({

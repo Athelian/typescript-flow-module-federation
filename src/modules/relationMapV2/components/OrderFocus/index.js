@@ -672,7 +672,24 @@ export default function OrderFocus() {
                           }
                         }}
                       />
-                      <DeleteConfirm onSuccess={console.warn} />
+                      <DeleteConfirm
+                        onSuccess={({ orderItemIds, containerIds }) => {
+                          console.warn({ orderItemIds, containerIds });
+                          const orderIds = [];
+                          queryOrdersDetail(orderIds);
+                          window.requestIdleCallback(
+                            () => {
+                              dispatch({
+                                type: 'DELETE_CLOSE',
+                                payload: {},
+                              });
+                            },
+                            {
+                              timeout: 250,
+                            }
+                          );
+                        }}
+                      />
                       <DeleteBatchConfirm
                         onSuccess={batchId => {
                           const parentOrderId = findKey(currentOrder => {
