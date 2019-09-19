@@ -138,6 +138,7 @@ export function reducer(
       | 'STATUS'
       | 'STATUS_START'
       | 'STATUS_END'
+      | 'STATUS_CLOSE'
       | 'TAGS'
       | 'TAGS_START'
       | 'TAGS_END'
@@ -529,6 +530,14 @@ export function reducer(
         status: {
           isOpen: { $set: false },
           isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'STATUS_CLOSE': {
+      return update(state, {
+        status: {
+          isOpen: { $set: false },
+          isProcessing: { set: false },
         },
       });
     }

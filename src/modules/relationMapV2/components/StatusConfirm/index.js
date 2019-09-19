@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+import { Entities } from 'modules/relationMapV2/store';
 import { ORDER, SHIPMENT } from 'modules/relationMapV2/constants';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
@@ -15,15 +16,27 @@ type Props = {|
   onSuccess: (orderIds: Array<string>) => void,
 |};
 
+// TODO: check the permission
 export default function StatusConfirm({ onSuccess }: Props) {
   const [isArchived, setIsArchived] = React.useState(false);
   const [updateOrders] = useMutation(updateOrdersMutation);
   const [updateShipments] = useMutation(updateShipmentMutation);
   const { dispatch, state } = React.useContext(RelationMapContext);
+  const { mapping } = Entities.useContainer();
   const { isProcessing, isOpen, source } = state.status;
   const orderIds = targetedIds(state.targets, ORDER);
   const shipmentIds = targetedIds(state.targets, SHIPMENT);
   const selectedEntities = source === ORDER ? orderIds.length : shipmentIds.length;
+
+  const isDisabled = (archived: boolean) => {
+    if (source === ORDER) {
+      return orderIds.every(orderId => mapping.entities?.orders?.[orderId]?.archived === archived);
+    }
+    return shipmentIds.every(
+      shipmentId => mapping.entities?.shipments?.[shipmentId]?.archived === archived
+    );
+  };
+
   const onCancel = () => {
     dispatch({
       type: 'STATUS_CLOSE',
@@ -97,14 +110,20 @@ export default function StatusConfirm({ onSuccess }: Props) {
           </>
         ) : (
           <h3 className={ConfirmMessageStyle}>
-            Are you sure you want to archive or activate ${selectedEntities} {source}{' '}
+            Are you sure you want to archive or activate {selectedEntities} {source}{' '}
             <Icon icon={source.toUpperCase()} /> ?
           </h3>
         )}
         <div className={ButtonsStyle}>
           <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          <ArchiveButton disabled={Boolean(isProcessing)} onClick={() => onConfirm(true)} />
-          <ActivateButton disabled={Boolean(isProcessing)} onClick={() => onConfirm(false)} />
+          <ArchiveButton
+            disabled={Boolean(isProcessing) || isDisabled(true)}
+            onClick={() => onConfirm(true)}
+          />
+          <ActivateButton
+            disabled={Boolean(isProcessing) || isDisabled(false)}
+            onClick={() => onConfirm(false)}
+          />
         </div>
       </div>
     </Dialog>
