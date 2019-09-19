@@ -1,52 +1,53 @@
 // @flow
 import * as React from 'react';
-import FilterToolBar from 'components/common/FilterToolBar';
+import Filter from 'components/NavBar/components/Filter';
+import { SearchInput } from 'components/NavBar';
 import { SortAndFilter } from 'modules/relationMapV2/store';
-import CustomFiler from '../CustomFilter';
+import MatchesEntities from './components/MatchesEntities';
 
 export default function AdvanceFilter() {
   const { filterAndSort, onChangeFilter } = SortAndFilter.useContainer();
-  const [isShow, setIsShow] = React.useState(false);
-  const sortFields = [];
   return (
     <>
-      <FilterToolBar
-        sortFields={sortFields}
-        filtersAndSort={filterAndSort}
-        onChange={onChangeFilter}
-        canSearch
-        canSort={false}
-      />
-      <label>
-        Advance filter:
-        <input
-          name="check"
-          type="checkbox"
-          checked={isShow}
-          onChange={() => {
-            setIsShow(!isShow);
-            onChangeFilter({
-              ...filterAndSort,
-              filter: {
-                query: filterAndSort.filter.query,
-              },
-            });
-          }}
-        />
-      </label>
-      <CustomFiler
-        filter={filterAndSort.filter}
-        isEnable={isShow}
-        onChange={newFilter => {
+      <Filter
+        // TODO: need to add more fields after the component is ready
+        config={[{ entity: 'ORDER', field: 'archived', type: 'archived', defaultValue: false }]}
+        filters={filterAndSort}
+        onChange={filter =>
           onChangeFilter({
             ...filterAndSort,
             filter: {
-              query: filterAndSort.filter.query,
-              ...newFilter,
+              ...filterAndSort.filter,
+              ...filter,
             },
-          });
-        }}
+          })
+        }
       />
+      <SearchInput
+        value={filterAndSort.query}
+        name="search"
+        onClear={() =>
+          onChangeFilter({
+            ...filterAndSort,
+            filter: {
+              ...filterAndSort.filter,
+              query: '',
+            },
+          })
+        }
+        onChange={query =>
+          onChangeFilter({
+            ...filterAndSort,
+            filter: {
+              ...filterAndSort.filter,
+              query,
+            },
+          })
+        }
+      />
+      {(filterAndSort.filter.query !== '' || Object.keys(filterAndSort.filter).length > 1) && (
+        <MatchesEntities />
+      )}
     </>
   );
 }
