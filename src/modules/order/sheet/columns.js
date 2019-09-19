@@ -14,7 +14,7 @@ const orderColumns: Array<ColumnConfig> = [
       group: 'order',
     },
   },
-  {
+  /* {
     key: 'order.updated',
     title: 'Last Modified',
     icon: 'ORDER',
@@ -25,7 +25,7 @@ const orderColumns: Array<ColumnConfig> = [
       name: 'updatedAt',
       group: 'order',
     },
-  },
+  }, */
   // status
   {
     key: 'order.poNo',
@@ -93,7 +93,7 @@ const orderColumns: Array<ColumnConfig> = [
   // tags
   // memo
   // in charge
-  {
+  /* {
     key: 'order.totalOrdered',
     title: 'Total Ordered quantity',
     icon: 'ORDER',
@@ -113,7 +113,7 @@ const orderColumns: Array<ColumnConfig> = [
     icon: 'ORDER',
     color: colors.ORDER,
     width: 200,
-  },
+  }, */
   // total price
   // documents
   // tasks
@@ -136,7 +136,7 @@ const orderItemColumns: Array<ColumnConfig> = [
       group: 'orderItem',
     },
   },
-  {
+  /* {
     key: 'order.orderItem.updated',
     title: 'Updated',
     icon: 'ORDER_ITEM',
@@ -147,7 +147,7 @@ const orderItemColumns: Array<ColumnConfig> = [
       name: 'updatedAt',
       group: 'orderItem',
     },
-  },
+  }, */
   // status
   {
     key: 'order.orderItem.no',
@@ -176,12 +176,17 @@ const orderItemColumns: Array<ColumnConfig> = [
   // price
   // tags
   // memo
-  {
+  /* {
     key: 'order.orderItem.totalBatched',
     title: 'Total Batched quantity',
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
+    sort: {
+      local: true,
+      name: 'totalBatched',
+      group: 'orderItem',
+    },
   },
   {
     key: 'order.orderItem.totalShipped',
@@ -189,7 +194,12 @@ const orderItemColumns: Array<ColumnConfig> = [
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
-  },
+    sort: {
+      local: true,
+      name: 'totalShipped',
+      group: 'orderItem',
+    },
+  }, */
   // total price
   // documents
   // tasks
@@ -212,7 +222,7 @@ const batchColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  {
+  /* {
     key: 'order.orderItem.batch.updated',
     title: 'Updated',
     icon: 'BATCH',
@@ -223,7 +233,7 @@ const batchColumns: Array<ColumnConfig> = [
       name: 'updatedAt',
       group: 'batch',
     },
-  },
+  }, */
   // status
   {
     key: 'order.orderItem.batch.no',
@@ -324,7 +334,7 @@ const batchColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  {
+  /* {
     key: 'order.orderItem.batch.packageQuantity',
     title: 'Package Quantity',
     icon: 'BATCH',
@@ -335,7 +345,7 @@ const batchColumns: Array<ColumnConfig> = [
       name: 'packageQuantity',
       group: 'batch',
     },
-  },
+  }, */
   // pkg auto qty
   // pkg weight
   // pkg vol
@@ -360,7 +370,7 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  {
+  /* {
     key: 'order.orderItem.batch.container.updated',
     title: 'Updated',
     icon: 'CONTAINER',
@@ -371,7 +381,7 @@ const containerColumns: Array<ColumnConfig> = [
       name: 'containerUpdatedAt',
       group: 'batch',
     },
-  },
+  }, */
   // status
   {
     key: 'order.orderItem.batch.container.no',
@@ -471,7 +481,7 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  {
+  /* {
     key: 'order.orderItem.batch.container.totalQuantity',
     title: 'Total Batched Quantity',
     icon: 'CONTAINER',
@@ -482,7 +492,7 @@ const containerColumns: Array<ColumnConfig> = [
       name: 'containerTotalQuantity',
       group: 'batch',
     },
-  },
+  }, */
   {
     key: 'order.orderItem.batch.container.orderItemCount',
     title: 'Total Items',
@@ -514,7 +524,7 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  {
+  /* {
     key: 'order.orderItem.batch.shipment.updated',
     title: 'Updated',
     icon: 'SHIPMENT',
@@ -525,7 +535,7 @@ const shipmentColumns: Array<ColumnConfig> = [
       name: 'shipmentUpdatedAt',
       group: 'batch',
     },
-  },
+  }, */
   {
     key: 'order.orderItem.batch.shipment.no',
     title: 'Shipment No',
