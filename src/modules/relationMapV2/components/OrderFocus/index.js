@@ -674,11 +674,54 @@ export default function OrderFocus() {
                       />
                       <DeleteConfirm
                         onSuccess={({ orderItemIds, containerIds }) => {
-                          console.warn({ orderItemIds, containerIds });
                           const orderIds = [];
+                          const batchIds = [];
+                          orderItemIds.forEach(itemId => {
+                            const parentOrderId = findKey(currentOrder => {
+                              return (currentOrder.orderItems || []).includes(itemId);
+                            }, entities.orders);
+                            if (parentOrderId) {
+                              orderIds.push(parentOrderId);
+                            }
+                            batchIds.push(...(entities.orderItems?.[itemId]?.batches ?? []));
+                          });
+
+                          containerIds.forEach(containerId => {
+                            const batchIdsOfContainer = Object.values(entities.batches)
+                              .filter((batch: ?Object) => batch?.container === containerId)
+                              .map((batch: ?Object) => batch?.id ?? '');
+                            batchIdsOfContainer.forEach(batchId => {
+                              if (batchId) {
+                                const parentOrderId = findKey(currentOrder => {
+                                  return (currentOrder.orderItems || []).some(itemId =>
+                                    getByPathWithDefault(
+                                      [],
+                                      `orderItems.${itemId}.batches`,
+                                      entities
+                                    ).includes(batchId)
+                                  );
+                                }, entities.orders);
+                                if (parentOrderId) {
+                                  orderIds.push(parentOrderId);
+                                }
+                              }
+                            });
+                          });
                           queryOrdersDetail(orderIds);
                           window.requestIdleCallback(
                             () => {
+                              dispatch({
+                                type: 'REMOVE_TARGETS',
+                                payload: {
+                                  targets: [
+                                    ...batchIds.map(batchId => `${BATCH}-${batchId}`),
+                                    ...orderItemIds.map(itemId => `${ORDER_ITEM}-${itemId}`),
+                                    ...containerIds.map(
+                                      containerId => `${CONTAINER}-${containerId}`
+                                    ),
+                                  ],
+                                },
+                              });
                               dispatch({
                                 type: 'DELETE_CLOSE',
                                 payload: {},
