@@ -72,7 +72,7 @@ export default function RemoveBatchConfirm({ onSuccess }: Props) {
               Removing Batch
               <Icon icon="BATCH" />
               {` ${entity.no}...`}
-              from <Icon icon={from.type} />
+              from <Icon icon={from?.type ?? 'CONTAINER'} />
               {` ${fromIdentifier}...`}
             </span>
             <LoadingIcon />
@@ -80,7 +80,7 @@ export default function RemoveBatchConfirm({ onSuccess }: Props) {
         ) : (
           <h3 className={ConfirmMessageStyle}>
             Are you sure you want to remove <Icon icon="BATCH" /> {` ${entity.no} from`}{' '}
-            <Icon icon={from.type} />
+            <Icon icon={from?.type ?? 'CONTAINER'} />
             {` ${fromIdentifier}?`}
           </h3>
         )}

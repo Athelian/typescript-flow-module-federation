@@ -82,6 +82,11 @@ export const initialState: State = {
     isOpen: false,
     isProcessing: false,
   },
+  delete: {
+    source: ORDER_ITEM,
+    isOpen: false,
+    isProcessing: false,
+  },
   tags: {
     source: '',
     isOpen: false,

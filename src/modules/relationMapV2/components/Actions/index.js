@@ -50,6 +50,7 @@ function hasPermissionToClone(
   }
 }
 
+// TODO: check the permission for all actions
 export default function Actions({ targets }: Props) {
   const [currentMenu, setCurrentMenu] = React.useState(null);
   const { dispatch } = React.useContext(RelationMapContext);
@@ -150,6 +151,19 @@ export default function Actions({ targets }: Props) {
             <ActionButton
               onClick={() => {
                 dispatch({
+                  type: 'DELETE',
+                  payload: {
+                    source: ORDER_ITEM,
+                  },
+                });
+              }}
+            >
+              <Icon icon="REMOVE" />
+              <ActionLabel>DELETE</ActionLabel>
+            </ActionButton>
+            <ActionButton
+              onClick={() => {
+                dispatch({
                   type: 'CLONE',
                   payload: {
                     source: ORDER_ITEM,
@@ -161,7 +175,6 @@ export default function Actions({ targets }: Props) {
               <Icon icon="CLONE" />
               <ActionLabel>CLONE</ActionLabel>
             </ActionButton>
-
             <ActionButton
               onClick={() => {
                 dispatch({
@@ -239,6 +252,19 @@ export default function Actions({ targets }: Props) {
         >
           <Icon icon="CONTAINER" />
           <ActionSubMenu isCollapsed={currentMenu !== CONTAINER}>
+            <ActionButton
+              onClick={() => {
+                dispatch({
+                  type: 'DELETE',
+                  payload: {
+                    source: CONTAINER,
+                  },
+                });
+              }}
+            >
+              <Icon icon="REMOVE" />
+              <ActionLabel>DELETE</ActionLabel>
+            </ActionButton>
             <ActionButton
               onClick={() => {
                 dispatch({

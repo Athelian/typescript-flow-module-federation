@@ -71,7 +71,7 @@ export type State = {|
         id: string,
         no: string,
       },
-      from: {
+      from?: {
         id: string,
         type: string,
       },
@@ -98,6 +98,11 @@ export type State = {|
     },
   },
   clone: {
+    source: string,
+    isOpen: boolean,
+    isProcessing: boolean,
+  },
+  delete: {
     source: string,
     isOpen: boolean,
     isProcessing: boolean,
