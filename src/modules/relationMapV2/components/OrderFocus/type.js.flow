@@ -102,7 +102,7 @@ export type State = {|
     isOpen: boolean,
     isProcessing: boolean,
   },
-  delete: {
+  deleteEntities: {
     source: string,
     isOpen: boolean,
     isProcessing: boolean,

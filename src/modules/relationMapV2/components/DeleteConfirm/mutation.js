@@ -2,9 +2,9 @@
 import gql from 'graphql-tag';
 import { badRequestFragment, forbiddenFragment } from 'graphql';
 
-export const updateOrdersMutation = gql`
-  mutation orderUpdateMany($orders: [OrderUpdateWrapperInput!]!) {
-    orderUpdateMany(orders: $orders) {
+export const deleteContainerMutation = gql`
+  mutation containerDelete($id: ID!) {
+    containerDelete(id: $id) {
       ...badRequestFragment
       ...forbiddenFragment
     }
@@ -13,27 +13,9 @@ export const updateOrdersMutation = gql`
   ${forbiddenFragment}
 `;
 
-export const updateShipmentMutation = gql`
-  mutation shipmentUpdateMany($shipments: [ShipmentUpdateWrapperInput!]!) {
-    shipmentUpdateMany(shipments: $shipments) {
-      ... on Shipment {
-        id
-        batches {
-          ... on Batch {
-            id
-            orderItem {
-              ... on OrderItem {
-                id
-                order {
-                  ... on Order {
-                    id
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+export const deleteOrderItemMutation = gql`
+  mutation orderItemDelete($id: ID!) {
+    orderItemDelete(id: $id) {
       ...badRequestFragment
       ...forbiddenFragment
     }

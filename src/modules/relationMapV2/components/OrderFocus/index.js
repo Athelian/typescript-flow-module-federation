@@ -41,6 +41,7 @@ import normalize from './normalize';
 import RemoveBatchConfirm from '../RemoveBatchConfirm';
 import MoveBatch from '../MoveBatch';
 import AddTags from '../AddTags';
+import DeleteConfirm from '../DeleteConfirm';
 
 const LoadingPlaceHolder = React.memo(() => {
   return (
@@ -671,6 +672,7 @@ export default function OrderFocus() {
                           }
                         }}
                       />
+                      <DeleteConfirm onSuccess={console.warn} />
                       <DeleteBatchConfirm
                         onSuccess={batchId => {
                           const parentOrderId = findKey(currentOrder => {

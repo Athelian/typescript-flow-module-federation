@@ -99,33 +99,35 @@ export default function StatusConfirm({ onSuccess }: Props) {
   };
   return (
     <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>
-      <div className={DialogStyle}>
-        {isProcessing ? (
-          <>
-            <span>
-              {isArchived ? 'Archiving' : 'Activating'}
-              <Icon icon={source.toUpperCase()} />
-            </span>
-            <LoadingIcon />
-          </>
-        ) : (
-          <h3 className={ConfirmMessageStyle}>
-            Are you sure you want to archive or activate {selectedEntities} {source}{' '}
-            <Icon icon={source.toUpperCase()} /> ?
-          </h3>
-        )}
-        <div className={ButtonsStyle}>
-          <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          <ArchiveButton
-            disabled={Boolean(isProcessing) || isDisabled(true)}
-            onClick={() => onConfirm(true)}
-          />
-          <ActivateButton
-            disabled={Boolean(isProcessing) || isDisabled(false)}
-            onClick={() => onConfirm(false)}
-          />
+      {isOpen && (
+        <div className={DialogStyle}>
+          {isProcessing ? (
+            <>
+              <span>
+                {isArchived ? 'Archiving' : 'Activating'}
+                <Icon icon={source.toUpperCase()} />
+              </span>
+              <LoadingIcon />
+            </>
+          ) : (
+            <h3 className={ConfirmMessageStyle}>
+              Are you sure you want to archive or activate {selectedEntities} {source}{' '}
+              <Icon icon={source.toUpperCase()} /> ?
+            </h3>
+          )}
+          <div className={ButtonsStyle}>
+            <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
+            <ArchiveButton
+              disabled={Boolean(isProcessing) || isDisabled(true)}
+              onClick={() => onConfirm(true)}
+            />
+            <ActivateButton
+              disabled={Boolean(isProcessing) || isDisabled(false)}
+              onClick={() => onConfirm(false)}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </Dialog>
   );
 }

@@ -43,17 +43,19 @@ export default function MoveEntityConfirm({ onSuccess }: Props) {
   };
   return (
     <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>
-      <div className={DialogStyle}>
-        <h3 className={ConfirmMessageStyle}>
-          Are you sure you want to move <Icon icon={from.icon} /> {` ${from.value} to `}{' '}
-          <Icon icon={to.icon} /> {` ${to.value}?`}
-        </h3>
-        {isProcessing && <LoadingIcon />}
-        <div className={ButtonsStyle}>
-          <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          <MoveButton disabled={Boolean(isProcessing)} onClick={onConfirm} />
+      {isOpen && (
+        <div className={DialogStyle}>
+          <h3 className={ConfirmMessageStyle}>
+            Are you sure you want to move <Icon icon={from.icon} /> {` ${from.value} to `}{' '}
+            <Icon icon={to.icon} /> {` ${to.value}?`}
+          </h3>
+          {isProcessing && <LoadingIcon />}
+          <div className={ButtonsStyle}>
+            <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
+            <MoveButton disabled={Boolean(isProcessing)} onClick={onConfirm} />
+          </div>
         </div>
-      </div>
+      )}
     </Dialog>
   );
 }

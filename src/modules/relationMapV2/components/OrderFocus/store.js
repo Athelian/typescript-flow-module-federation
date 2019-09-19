@@ -82,7 +82,7 @@ export const initialState: State = {
     isOpen: false,
     isProcessing: false,
   },
-  delete: {
+  deleteEntities: {
     source: ORDER_ITEM,
     isOpen: false,
     isProcessing: false,
@@ -144,6 +144,10 @@ export function reducer(
       | 'STATUS_START'
       | 'STATUS_END'
       | 'STATUS_CLOSE'
+      | 'DELETE'
+      | 'DELETE_START'
+      | 'DELETE_END'
+      | 'DELETE_CLOSE'
       | 'TAGS'
       | 'TAGS_START'
       | 'TAGS_END'
@@ -542,7 +546,39 @@ export function reducer(
       return update(state, {
         status: {
           isOpen: { $set: false },
-          isProcessing: { set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'DELETE': {
+      return update(state, {
+        deleteEntities: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          source: { $set: action.payload?.source ?? '' },
+        },
+      });
+    }
+    case 'DELETE_START': {
+      return update(state, {
+        deleteEntities: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'DELETE_END': {
+      return update(state, {
+        deleteEntities: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'DELETE_CLOSE': {
+      return update(state, {
+        deleteEntities: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
         },
       });
     }
