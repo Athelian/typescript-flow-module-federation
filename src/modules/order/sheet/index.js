@@ -14,7 +14,11 @@ import sorter from './sorter';
 import mutate from './mutate';
 import { ordersQuery } from './query';
 
-const OrderSheetModule = () => {
+type Props = {
+  orderIds?: Array<string>,
+};
+
+const OrderSheetModule = ({ orderIds }: Props) => {
   const client = useApolloClient();
   const [currentColumns, setCurrentColumns] = React.useState(columns);
   const memoizedMutate = React.useCallback(mutate(client), [client]);
@@ -54,6 +58,10 @@ const OrderSheetModule = () => {
   }, [client, filterBy, sortBy]);
 
   const { query, ...filters } = filterBy;
+
+  console.warn({
+    orderIds,
+  });
 
   return (
     <Content>

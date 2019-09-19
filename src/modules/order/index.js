@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Router } from '@reach/router';
+import { Router, Location } from '@reach/router';
 import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
 import { ORDER_CREATE, ORDER_LIST } from 'modules/permission/constants/order';
@@ -14,13 +14,17 @@ const OrderModuleListWrapper = withForbidden(OrderListModule, ORDER_LIST);
 const OrderSheetModuleWrapper = withForbidden(OrderSheetModule, ORDER_LIST);
 
 const OrderApp = () => (
-  <Router>
-    <OrderModuleListWrapper path="/list" />
-    <OrderSheetModuleWrapper path="/sheet" />
-    <OrderFormModuleCreationWrapper path="new" />
-    <OrderFormModuleCreationWrapper path="clone/:orderId" />
-    <OrderFormModuleWrapper path=":orderId" />
-  </Router>
+  <Location>
+    {({ location }) => (
+      <Router location={location}>
+        <OrderModuleListWrapper path="/list" />
+        <OrderSheetModuleWrapper path="/sheet" orderIds={location?.state?.orderIds ?? []} />
+        <OrderFormModuleCreationWrapper path="new" />
+        <OrderFormModuleCreationWrapper path="clone/:orderId" />
+        <OrderFormModuleWrapper path=":orderId" />
+      </Router>
+    )}
+  </Location>
 );
 
 export default OrderApp;

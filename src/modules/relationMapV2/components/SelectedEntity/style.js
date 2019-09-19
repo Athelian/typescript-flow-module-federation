@@ -7,7 +7,7 @@ export const WrapperStyle = css`
   position: absolute;
   bottom: 20px;
   right: 25%;
-  left: 35%;
+  left: 25%;
   line-height: 40px;
   height: 40px;
   width: 500px;

@@ -4,7 +4,7 @@ import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { VariableSizeList as List } from 'react-window';
 import { Query } from 'react-apollo';
-import { get, set, uniq, findKey } from 'lodash/fp';
+import { get, set, uniq } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import apolloClient from 'apollo';
@@ -22,6 +22,7 @@ import {
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { Hits, Entities, SortAndFilter, ClientSorts } from 'modules/relationMapV2/store';
 import { WrapperStyle, ListStyle, RowStyle, ActionsBackdropStyle } from './style';
+import { findOrderIdByOrderItem, findOrderIdByBatch } from './helpers';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import CloneEntities from '../CloneEntities';
@@ -588,9 +589,7 @@ export default function OrderFocus() {
                       />
                       <DeleteItemConfirm
                         onSuccess={itemId => {
-                          const parentOrderId = findKey(currentOrder => {
-                            return (currentOrder.orderItems || []).includes(itemId);
-                          }, entities.orders);
+                          const parentOrderId = findOrderIdByOrderItem(itemId, entities);
                           const item = entities?.orderItems[itemId];
                           if (parentOrderId) {
                             queryOrdersDetail([parentOrderId]);
@@ -621,15 +620,7 @@ export default function OrderFocus() {
                       />
                       <RemoveBatchConfirm
                         onSuccess={batchId => {
-                          const parentOrderId = findKey(currentOrder => {
-                            return (currentOrder.orderItems || []).some(itemId =>
-                              getByPathWithDefault(
-                                [],
-                                `orderItems.${itemId}.batches`,
-                                entities
-                              ).includes(batchId)
-                            );
-                          }, entities.orders);
+                          const parentOrderId = findOrderIdByBatch(batchId, entities);
                           if (parentOrderId) {
                             queryOrdersDetail([parentOrderId]);
                             const batch = entities.batches?.[batchId] ?? {};
@@ -677,9 +668,7 @@ export default function OrderFocus() {
                           const orderIds = [];
                           const batchIds = [];
                           orderItemIds.forEach(itemId => {
-                            const parentOrderId = findKey(currentOrder => {
-                              return (currentOrder.orderItems || []).includes(itemId);
-                            }, entities.orders);
+                            const parentOrderId = findOrderIdByOrderItem(itemId, entities);
                             if (parentOrderId) {
                               orderIds.push(parentOrderId);
                             }
@@ -692,15 +681,7 @@ export default function OrderFocus() {
                               .map((batch: ?Object) => batch?.id ?? '');
                             batchIdsOfContainer.forEach(batchId => {
                               if (batchId) {
-                                const parentOrderId = findKey(currentOrder => {
-                                  return (currentOrder.orderItems || []).some(itemId =>
-                                    getByPathWithDefault(
-                                      [],
-                                      `orderItems.${itemId}.batches`,
-                                      entities
-                                    ).includes(batchId)
-                                  );
-                                }, entities.orders);
+                                const parentOrderId = findOrderIdByBatch(batchId, entities);
                                 if (parentOrderId) {
                                   orderIds.push(parentOrderId);
                                 }
@@ -735,15 +716,7 @@ export default function OrderFocus() {
                       />
                       <DeleteBatchConfirm
                         onSuccess={batchId => {
-                          const parentOrderId = findKey(currentOrder => {
-                            return (currentOrder.orderItems || []).some(itemId =>
-                              getByPathWithDefault(
-                                [],
-                                `orderItems.${itemId}.batches`,
-                                entities
-                              ).includes(batchId)
-                            );
-                          }, entities.orders);
+                          const parentOrderId = findOrderIdByBatch(batchId, entities);
                           if (parentOrderId) {
                             queryOrdersDetail([parentOrderId]);
                             window.requestIdleCallback(
