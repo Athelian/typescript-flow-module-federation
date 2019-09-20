@@ -119,7 +119,7 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
   const isActive =
     Object.getOwnPropertyNames(filters || {}).length > 0 ||
     Object.getOwnPropertyNames(staticFilters || {}).length > 0;
-
+  const hasWeakFilter = !!filterStates.find(f => !f.entity || !f.field || !f.type);
   const availableConfig = config.filter(
     c => !filterStates.find(f => f.entity === c.entity && f.field === c.field && f.type === c.type)
   );
@@ -328,7 +328,7 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
             );
           })}
 
-          {availableConfig.length > 0 && (
+          {availableConfig.length > 0 && !hasWeakFilter && (
             <BaseButton
               icon="ADD"
               label={<FormattedMessage {...messages.addFilter} />}
