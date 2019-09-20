@@ -87,7 +87,14 @@ const ProjectListModule = (props: Props) => {
                       <ProjectTemplateSelector
                         onCancel={() => toggleSlide(false)}
                         onSave={template => {
-                          navigate('/project/new', { state: { template } });
+                          navigate('/project/new', {
+                            state: {
+                              template: {
+                                tags: template.tags,
+                                milestones: template.milestones,
+                              },
+                            },
+                          });
                           toggleSlide(false);
                         }}
                       />

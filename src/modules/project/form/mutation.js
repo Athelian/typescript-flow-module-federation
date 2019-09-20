@@ -103,8 +103,8 @@ const prepareParseMilestone = (originalValues: Object, newValues: Object): Objec
   ),
   ...parseArrayOfChildrenField(
     'tasks',
-    originalValues.tasks || [],
-    newValues.tasks || [],
+    originalValues?.tasks || [],
+    newValues?.tasks || [],
     (task: ?Object, newTask: Object) => ({
       ...(task ? { id: task.id } : {}),
       ...prepareParsedTaskInput(
