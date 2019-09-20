@@ -41,7 +41,11 @@ const ProjectTemplateListPage = () => {
           {({ value: isOpen, set: toggleSlide }) => (
             <>
               <NewButton onClick={() => toggleSlide(true)} />
-              <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
+              <SlideView
+                isOpen={isOpen}
+                onRequestClose={() => toggleSlide(false)}
+                targetId="project_template_form_save_button"
+              >
                 {isOpen && (
                   <ProjectTemplateFormInSlide
                     onCancel={() => toggleSlide(false)}

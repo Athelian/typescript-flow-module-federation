@@ -76,31 +76,48 @@ const ProjectTemplateFormHeader = ({
               />
             </JumpToSection>
 
-            {isNew ? (
-              <CancelButton onClick={onCancel} />
-            ) : (
-              <ResetButton
-                onClick={() => {
-                  resetFormState(container);
-                  formContainer.onReset();
-                }}
-              />
+            {isNew && (
+              <>
+                <CancelButton onClick={onCancel} />
+                <SaveButton
+                  id="project_template_form_save_button"
+                  disabled={
+                    !container.isDirty() || !formContainer.isReady(container.state, validator)
+                  }
+                  onClick={() => {
+                    const input = prepareParsedProjectTemplate(
+                      null,
+                      removeTypename(container.state)
+                    );
+                    createProjectTemplate({ variables: { input } });
+                    setTimeout(() => (onSave ? onSave() : null), 200);
+                  }}
+                />
+              </>
             )}
-            <SaveButton
-              disabled={!container.isDirty() || !formContainer.isReady(container.state, validator)}
-              onClick={() => {
-                const input = prepareParsedProjectTemplate(
-                  isNew ? null : removeTypename(container.originalValues),
-                  removeTypename(container.state)
-                );
-                if (isNew) {
-                  createProjectTemplate({ variables: { input } });
-                } else {
-                  updateProjectTemplate({ variables: { id, input } });
-                }
-                setTimeout(() => (onSave ? onSave() : null), 200);
-              }}
-            />
+
+            {!isNew && container.isDirty() && (
+              <>
+                <ResetButton
+                  onClick={() => {
+                    resetFormState(container);
+                    formContainer.onReset();
+                  }}
+                />
+                <SaveButton
+                  id="project_template_form_save_button"
+                  disabled={!formContainer.isReady(container.state, validator)}
+                  onClick={() => {
+                    const input = prepareParsedProjectTemplate(
+                      removeTypename(container.originalValues),
+                      removeTypename(container.state)
+                    );
+                    updateProjectTemplate({ variables: { id, input } });
+                    setTimeout(() => (onSave ? onSave() : null), 200);
+                  }}
+                />
+              </>
+            )}
           </SlideViewNavBar>
         );
       }}
