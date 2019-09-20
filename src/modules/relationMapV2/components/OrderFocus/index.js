@@ -303,6 +303,7 @@ export default function OrderFocus() {
                 orders,
                 entities,
               });
+              /* FIXME: define a hook under cause the warning from React  */
               return (
                 <RelationMapContext.Provider value={{ state, dispatch }}>
                   {orders.length > 0 ? (

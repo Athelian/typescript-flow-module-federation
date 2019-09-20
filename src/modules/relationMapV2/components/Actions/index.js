@@ -211,6 +211,32 @@ export default function Actions({ targets }: Props) {
               <ActionButton
                 onClick={() => {
                   dispatch({
+                    type: 'TAGS',
+                    payload: {
+                      source: ORDER_ITEM,
+                    },
+                  });
+                }}
+              >
+                <Icon icon="TAG" />
+                <ActionLabel>ADD TAGS</ActionLabel>
+              </ActionButton>
+              <ActionButton
+                onClick={() => {
+                  dispatch({
+                    type: 'AUTO_FILL',
+                    payload: {
+                      source: ORDER_ITEM,
+                    },
+                  });
+                }}
+              >
+                <Icon icon="QUANTITY_ADJUSTMENTS" />
+                <ActionLabel>AUTOFILL</ActionLabel>
+              </ActionButton>
+              <ActionButton
+                onClick={() => {
+                  dispatch({
                     type: 'CLONE',
                     payload: {
                       source: ORDER_ITEM,
@@ -221,19 +247,6 @@ export default function Actions({ targets }: Props) {
               >
                 <Icon icon="CLONE" />
                 <ActionLabel>CLONE</ActionLabel>
-              </ActionButton>
-              <ActionButton
-                onClick={() => {
-                  dispatch({
-                    type: 'TAGS',
-                    payload: {
-                      source: ORDER_ITEM,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="TAG" />
-                <ActionLabel>ADD TAGS</ActionLabel>
               </ActionButton>
             </ActionSubMenu>
           </ActionButton>

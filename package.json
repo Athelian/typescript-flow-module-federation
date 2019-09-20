@@ -97,7 +97,6 @@
     "flow:coverage": "flow-coverage-report -i 'src/**/*.{js,jsx}' -t html -t json -t text --threshold 80",
     "lint": "eslint 'src/**/*.{js,jsx}'",
     "format": "prettier-eslint --write 'src/**/*.{js,jsx}'",
-    "precommit": "lint-staged",
     "commit": "npx git-cz",
     "flow-typed": "rimraf flow-typed/npm && npx flow-typed install --ignoreDeps dev bundled peer",
     "analyze": "cross-env NODE_ENV=production ANALYZE=1 node scripts/build.js",

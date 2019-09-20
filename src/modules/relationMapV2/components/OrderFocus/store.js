@@ -77,6 +77,11 @@ export const initialState: State = {
     isOpen: false,
     isProcessing: false,
   },
+  autoFill: {
+    source: '',
+    isOpen: false,
+    isProcessing: false,
+  },
   status: {
     source: ORDER,
     isOpen: false,
@@ -140,6 +145,9 @@ export function reducer(
       | 'CLONE'
       | 'CLONE_START'
       | 'CLONE_END'
+      | 'AUTO_FILL'
+      | 'AUTO_FILL_START'
+      | 'AUTO_FILL_END'
       | 'STATUS'
       | 'STATUS_START'
       | 'STATUS_END'
@@ -513,6 +521,30 @@ export function reducer(
     case 'CLONE_END': {
       return update(state, {
         clone: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'AUTO_FILL': {
+      return update(state, {
+        autoFill: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          source: { $set: action.payload?.source ?? '' },
+        },
+      });
+    }
+    case 'AUTO_FILL_START': {
+      return update(state, {
+        autoFill: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'AUTO_FILL_END': {
+      return update(state, {
+        autoFill: {
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },
