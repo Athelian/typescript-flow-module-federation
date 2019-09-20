@@ -41,7 +41,9 @@ const renderItem = (item: Object, canOpenForm: boolean) => {
             }}
           />
           <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
-            {isOpen && <ProjectTemplateFormInSlide id={item.id} />}
+            {isOpen && (
+              <ProjectTemplateFormInSlide id={item.id} onSave={() => toggleSlide(false)} />
+            )}
           </SlideView>
         </>
       )}

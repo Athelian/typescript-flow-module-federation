@@ -22,6 +22,7 @@ type Props = {
   isNew: boolean,
   id?: string,
   onCancel?: Function,
+  onSave?: Function,
   formContainer: Object,
   initDetailValues: Function,
 };
@@ -30,6 +31,7 @@ const ProjectTemplateFormHeader = ({
   isNew,
   id,
   onCancel,
+  onSave,
   formContainer,
   initDetailValues,
 }: Props) => {
@@ -96,6 +98,7 @@ const ProjectTemplateFormHeader = ({
                 } else {
                   updateProjectTemplate({ variables: { id, input } });
                 }
+                setTimeout(() => (onSave ? onSave() : null), 200);
               }}
             />
           </SlideViewNavBar>

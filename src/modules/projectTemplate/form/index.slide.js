@@ -17,9 +17,10 @@ import { CommonFormWrapperStyle } from './style';
 type Props = {
   id?: string,
   onCancel?: Function,
+  onSave?: Function,
 };
 
-const ProjectTemplateFormInSlide = ({ id, onCancel }: Props) => {
+const ProjectTemplateFormInSlide = ({ id, onCancel, onSave }: Props) => {
   const isNew = !id;
   const [template, setTemplate] = useState({
     id: uuid(),
@@ -60,6 +61,7 @@ const ProjectTemplateFormInSlide = ({ id, onCancel }: Props) => {
               isNew={isNew}
               id={id}
               onCancel={onCancel}
+              onSave={onSave}
               formContainer={formContainer}
               initDetailValues={initDetailValues}
             />

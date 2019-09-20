@@ -42,7 +42,12 @@ const ProjectTemplateListPage = () => {
             <>
               <NewButton onClick={() => toggleSlide(true)} />
               <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
-                {isOpen && <ProjectTemplateFormInSlide onCancel={() => toggleSlide(false)} />}
+                {isOpen && (
+                  <ProjectTemplateFormInSlide
+                    onCancel={() => toggleSlide(false)}
+                    onSave={() => toggleSlide(false)}
+                  />
+                )}
               </SlideView>
             </>
           )}
