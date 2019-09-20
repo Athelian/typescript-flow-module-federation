@@ -1,11 +1,18 @@
 // @flow
+import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { colors } from 'styles/common';
 import type { ColumnConfig } from 'components/Sheet';
+import orderMessages from 'modules/order/messages';
+import orderItemMessages from 'modules/orderItem/messages';
+import batchMessages from 'modules/batch/messages';
+import containerMessages from 'modules/container/messages';
+import shipmentMessages from 'modules/shipment/messages';
 
 const orderColumns: Array<ColumnConfig> = [
   {
     key: 'order.created',
-    title: 'Date Created',
+    title: <FormattedMessage {...orderMessages.createdAt} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 110,
@@ -16,7 +23,7 @@ const orderColumns: Array<ColumnConfig> = [
   },
   /* {
     key: 'order.updated',
-    title: 'Last Modified',
+    title: <FormattedMessage {...orderMessages.updatedAt} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 110,
@@ -29,7 +36,7 @@ const orderColumns: Array<ColumnConfig> = [
   // status
   {
     key: 'order.poNo',
-    title: 'PO No',
+    title: <FormattedMessage {...orderMessages.PO} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 200,
@@ -42,7 +49,7 @@ const orderColumns: Array<ColumnConfig> = [
   // exporter
   {
     key: 'order.piNo',
-    title: 'PI No',
+    title: <FormattedMessage {...orderMessages.PI} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 200,
@@ -53,21 +60,21 @@ const orderColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.issuedAt',
-    title: 'PO Date',
+    title: <FormattedMessage {...orderMessages.date} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 140,
   },
   {
     key: 'order.deliveryDate',
-    title: 'Contract Delivery Date',
+    title: <FormattedMessage {...orderMessages.deliveryDate} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 140,
   },
   /* {
     key: 'order.currency',
-    title: 'Currency',
+    title: <FormattedMessage {...orderMessages.currency} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 100,
@@ -78,14 +85,14 @@ const orderColumns: Array<ColumnConfig> = [
   }, */
   /* {
     key: 'order.incoterm',
-    title: 'Incoterms',
+    title: <FormattedMessage {...orderMessages.incoterm} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 100,
   }, */
   {
     key: 'order.deliveryPlace',
-    title: 'Place Of Delivery',
+    title: <FormattedMessage {...orderMessages.deliveryPlace} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 200,
@@ -95,21 +102,21 @@ const orderColumns: Array<ColumnConfig> = [
   // in charge
   /* {
     key: 'order.totalOrdered',
-    title: 'Total Ordered quantity',
+    title: <FormattedMessage {...orderMessages.totalOrderedQuantity} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 200,
   },
   {
     key: 'order.totalBatched',
-    title: 'Total Batched quantity',
+    title: <FormattedMessage {...orderMessages.totalBatchedQuantity} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 200,
   },
   {
     key: 'order.totalShipped',
-    title: 'Total Shipped Quantity',
+    title: <FormattedMessage {...orderMessages.totalShippedQuantity} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 200,
@@ -125,7 +132,7 @@ const orderColumns: Array<ColumnConfig> = [
 const orderItemColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.created',
-    title: 'Created',
+    title: <FormattedMessage {...orderItemMessages.createdAt} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 110,
@@ -138,7 +145,7 @@ const orderItemColumns: Array<ColumnConfig> = [
   },
   /* {
     key: 'order.orderItem.updated',
-    title: 'Updated',
+    title: <FormattedMessage {...orderItemMessages.updatedAt} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 110,
@@ -211,7 +218,7 @@ const orderItemColumns: Array<ColumnConfig> = [
 const batchColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.batch.created',
-    title: 'Created',
+    title: <FormattedMessage {...batchMessages.createdAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 110,
@@ -224,7 +231,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   /* {
     key: 'order.orderItem.batch.updated',
-    title: 'Updated',
+    title: <FormattedMessage {...batchMessages.updatedAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 110,
@@ -237,7 +244,7 @@ const batchColumns: Array<ColumnConfig> = [
   // status
   {
     key: 'order.orderItem.batch.no',
-    title: 'Batch No',
+    title: <FormattedMessage {...batchMessages.batchNo} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
@@ -249,7 +256,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.batch.deliveredAt',
-    title: 'Delivery Date',
+    title: <FormattedMessage {...batchMessages.deliveredAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 140,
@@ -261,7 +268,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.batch.desiredAt',
-    title: 'Desired Date',
+    title: <FormattedMessage {...batchMessages.desiredAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 140,
@@ -273,7 +280,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.batch.expiredAt',
-    title: 'Expiry Date',
+    title: <FormattedMessage {...batchMessages.expiredAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 140,
@@ -285,7 +292,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.batch.producedAt',
-    title: 'Production Date',
+    title: <FormattedMessage {...batchMessages.producedAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 140,
@@ -299,7 +306,7 @@ const batchColumns: Array<ColumnConfig> = [
   // memo
   {
     key: 'order.orderItem.batch.quantity',
-    title: 'Quantity',
+    title: <FormattedMessage {...batchMessages.quantity} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
@@ -312,7 +319,7 @@ const batchColumns: Array<ColumnConfig> = [
   // revised quantities
   {
     key: 'order.orderItem.batch.packageName',
-    title: 'Package Name',
+    title: <FormattedMessage {...batchMessages.packageName} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
@@ -324,7 +331,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.batch.packageCapacity',
-    title: 'Package Capacity',
+    title: <FormattedMessage {...batchMessages.packageCapacity} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
@@ -336,7 +343,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   /* {
     key: 'order.orderItem.batch.packageQuantity',
-    title: 'Package Quantity',
+    title: <FormattedMessage {...batchMessages.packageQuantity} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
@@ -360,7 +367,7 @@ const batchColumns: Array<ColumnConfig> = [
 const containerColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.batch.container.created',
-    title: 'Created',
+    title: <FormattedMessage {...containerMessages.createdAt} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 110,
@@ -372,7 +379,7 @@ const containerColumns: Array<ColumnConfig> = [
   },
   /* {
     key: 'order.orderItem.batch.container.updated',
-    title: 'Updated',
+    title: <FormattedMessage {...containerMessages.updatedAt} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 110,
@@ -385,7 +392,7 @@ const containerColumns: Array<ColumnConfig> = [
   // status
   {
     key: 'order.orderItem.batch.container.no',
-    title: 'Container No',
+    title: <FormattedMessage {...containerMessages.containerNo} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 200,
@@ -399,7 +406,7 @@ const containerColumns: Array<ColumnConfig> = [
   // ctn option
   {
     key: 'order.orderItem.batch.container.warehouseArrivalAgreedDate',
-    title: 'Agreed Arrival Date',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDate} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 170,
@@ -413,7 +420,7 @@ const containerColumns: Array<ColumnConfig> = [
   // agreed arrival approval
   {
     key: 'order.orderItem.batch.container.warehouseArrivalActualDate',
-    title: 'Actual Arrival Date',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDate} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 170,
@@ -471,7 +478,7 @@ const containerColumns: Array<ColumnConfig> = [
   // memo
   {
     key: 'order.orderItem.batch.container.totalPackageQuantity',
-    title: 'Total Packages',
+    title: <FormattedMessage {...containerMessages.totalPackages} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 200,
@@ -483,7 +490,7 @@ const containerColumns: Array<ColumnConfig> = [
   },
   /* {
     key: 'order.orderItem.batch.container.totalQuantity',
-    title: 'Total Batched Quantity',
+    title: <FormattedMessage {...containerMessages.totalBatchQuantity} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 200,
@@ -495,7 +502,7 @@ const containerColumns: Array<ColumnConfig> = [
   }, */
   {
     key: 'order.orderItem.batch.container.orderItemCount',
-    title: 'Total Items',
+    title: <FormattedMessage {...containerMessages.totalUniqueItems} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 200,
@@ -514,7 +521,7 @@ const containerColumns: Array<ColumnConfig> = [
 const shipmentColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.batch.shipment.created',
-    title: 'Created',
+    title: <FormattedMessage {...shipmentMessages.createdAt} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 110,
@@ -526,7 +533,7 @@ const shipmentColumns: Array<ColumnConfig> = [
   },
   /* {
     key: 'order.orderItem.batch.shipment.updated',
-    title: 'Updated',
+    title: <FormattedMessage {...shipmentMessages.updatedAt} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 110,
@@ -538,7 +545,7 @@ const shipmentColumns: Array<ColumnConfig> = [
   }, */
   {
     key: 'order.orderItem.batch.shipment.no',
-    title: 'Shipment No',
+    title: <FormattedMessage {...shipmentMessages.shipmentId} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 200,

@@ -1,9 +1,11 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Icon from 'components/Icon';
 import { BaseButton } from 'components/Buttons';
 import CheckboxInput from 'components/Form/CheckboxInput';
+import messages from '../../messages';
 import type { ColumnState } from '../types';
 import {
   WrapperStyle,
@@ -77,7 +79,7 @@ const Group = ({ icon, columns, onChange, onReset }: Props) => {
         <div className={ActionsWrapperStyle}>
           <BaseButton
             onClick={handleGrouped}
-            label="GROUP"
+            label={<FormattedMessage {...messages.columnsConfigGroupButton} />}
             icon="BRING_FORWARD"
             textColor="TEAL"
             hoverTextColor="WHITE"
@@ -86,7 +88,7 @@ const Group = ({ icon, columns, onChange, onReset }: Props) => {
           />
           <BaseButton
             onClick={onReset}
-            label="DEFAULT"
+            label={<FormattedMessage {...messages.columnsConfigDefaultButton} />}
             icon="UNDO"
             textColor="GRAY_DARK"
             hoverTextColor="WHITE"
