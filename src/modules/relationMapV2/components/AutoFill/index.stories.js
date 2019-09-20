@@ -3,10 +3,10 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { ObjectValue } from 'react-values';
 import { Entities, SortAndFilter, ClientSorts } from 'modules/relationMapV2/store';
-import DeleteConfirm from './index';
+import AutoFill from './index';
 import { RelationMapContext, initialState } from '../OrderFocus/store';
 
-storiesOf('RelationMapV2', module).add('DeleteConfirm', () => (
+storiesOf('RelationMapV2', module).add('AutoFill', () => (
   <ObjectValue defaultValue={initialState}>
     {({ value, set }) => (
       <RelationMapContext.Provider
@@ -14,9 +14,19 @@ storiesOf('RelationMapV2', module).add('DeleteConfirm', () => (
           state: value,
           dispatch: () => {
             set({
-              deleteEntities: {
+              itemActions: {
                 isOpen: false,
                 isProcessing: false,
+                detail: {
+                  entity: {
+                    id: '',
+                    no: '',
+                  },
+                  from: {
+                    id: '',
+                    type: 'SHIPMENT',
+                  },
+                },
               },
             });
           },
@@ -29,17 +39,27 @@ storiesOf('RelationMapV2', module).add('DeleteConfirm', () => (
                 type="button"
                 onClick={() => {
                   set({
-                    deleteEntities: {
+                    itemActions: {
                       isOpen: true,
                       isProcessing: false,
-                      source: 'Order',
+                      type: 'deleteItem',
+                      detail: {
+                        entity: {
+                          id: '1',
+                          no: 'test',
+                        },
+                        from: {
+                          id: '',
+                          type: 'SHIPMENT',
+                        },
+                      },
                     },
                   });
                 }}
               >
                 Click to open the delete dialog
               </button>
-              <DeleteConfirm onSuccess={console.warn} />
+              <AutoFill onSuccess={console.warn} />
             </ClientSorts.Provider>
           </Entities.Provider>
         </SortAndFilter.Provider>

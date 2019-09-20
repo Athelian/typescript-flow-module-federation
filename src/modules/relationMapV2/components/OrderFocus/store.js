@@ -148,6 +148,7 @@ export function reducer(
       | 'AUTO_FILL'
       | 'AUTO_FILL_START'
       | 'AUTO_FILL_END'
+      | 'AUTO_FILL_CLOSE'
       | 'STATUS'
       | 'STATUS_START'
       | 'STATUS_END'
@@ -542,7 +543,8 @@ export function reducer(
         },
       });
     }
-    case 'AUTO_FILL_END': {
+    case 'AUTO_FILL_END':
+    case 'AUTO_FILL_CLOSE': {
       return update(state, {
         autoFill: {
           isOpen: { $set: false },

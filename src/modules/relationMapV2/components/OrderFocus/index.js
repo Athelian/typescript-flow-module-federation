@@ -28,6 +28,7 @@ import MoveEntityConfirm from '../MoveEntityConfirm';
 import CloneEntities from '../CloneEntities';
 import InlineCreateItem from '../InlineCreateItem';
 import DeleteItemConfirm from '../DeleteItemConfirm';
+import AutoFill from '../AutoFill';
 import InlineCreateBatch from '../InlineCreateBatch';
 import DeleteBatchConfirm from '../DeleteBatchConfirm';
 import StatusConfirm from '../StatusConfirm';
@@ -586,6 +587,25 @@ export default function OrderFocus() {
                               );
                             }
                           }
+                        }}
+                      />
+                      <AutoFill
+                        onSuccess={itemIds => {
+                          const orderIds = itemIds
+                            .map(itemId => findOrderIdByOrderItem(itemId, entities))
+                            .filter(Boolean);
+                          if (orderIds.length) queryOrdersDetail(orderIds);
+                          window.requestIdleCallback(
+                            () => {
+                              dispatch({
+                                type: 'AUTO_FILL_CLOSE',
+                                payload: {},
+                              });
+                            },
+                            {
+                              timeout: 250,
+                            }
+                          );
                         }}
                       />
                       <DeleteItemConfirm
