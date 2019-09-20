@@ -103,10 +103,10 @@ const prepareParseMilestone = (originalValues: Object, newValues: Object): Objec
   ),
   ...parseArrayOfChildrenField(
     'tasks',
-    getByPathWithDefault([], 'tasks', originalValues),
-    newValues.tasks,
+    originalValues.tasks || [],
+    newValues.tasks || [],
     (task: ?Object, newTask: Object) => ({
-      ...(!task ? {} : { id: task.id }),
+      ...(task ? { id: task.id } : {}),
       ...prepareParsedTaskInput(
         !task ? originalValues.originalTasks.find(item => item.id === newTask.id) : task,
         newTask
@@ -173,7 +173,7 @@ export const prepareParsedProjectInput = (
     getByPathWithDefault([], 'milestones', originalValues),
     newValues.milestones,
     (milestone: ?Object, newMilestone: Object) => ({
-      ...(!milestone ? {} : { id: milestone.id }),
+      ...(milestone ? { id: milestone.id } : {}),
       ...prepareParseMilestone(
         { ...milestone, originalTasks: (originalValues && originalValues.originalTasks) || [] },
         newMilestone

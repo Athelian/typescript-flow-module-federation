@@ -11,7 +11,7 @@ import { showToastError } from 'utils/errors';
 import type { ProjectPayload, Project, Tag, Milestone } from 'generated/graphql';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import logger from 'utils/logger';
-import { getByPath } from 'utils/fp';
+import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { FormContainer } from 'modules/form';
 import Timeline from 'modules/timeline/components/Timeline';
 import QueryForm from 'components/common/QueryForm';
@@ -196,7 +196,8 @@ class ProjectFormModule extends React.PureComponent<Props> {
   };
 
   render() {
-    const { projectId, isSlideView, onCancel } = this.props;
+    const { projectId, isSlideView, onCancel, ...rest } = this.props;
+
     const isNew = this.isNew();
     let mutationKey = {};
     if (projectId && !isNew) {
@@ -360,18 +361,22 @@ class ProjectFormModule extends React.PureComponent<Props> {
                     <Subscribe
                       to={[ProjectInfoContainer, ProjectTagsContainer, ProjectMilestonesContainer]}
                     >
-                      {(projectInfoState, projectTagsState, projectMilestonesState) =>
+                      {(projectInfoState, projectTagsState, projectMilestonesState) => {
+                        const initData = getByPathWithDefault(
+                          { id: uuid() },
+                          'location.state.template',
+                          rest
+                        );
                         this.onFormReady(
                           {
                             projectInfoState,
                             projectTagsState,
                             projectMilestonesState,
                           },
-                          {
-                            id: uuid(),
-                          }
-                        )
-                      }
+                          initData
+                        );
+                        return null;
+                      }}
                     </Subscribe>
                   </>
                 ) : (

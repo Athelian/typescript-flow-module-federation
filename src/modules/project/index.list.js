@@ -1,13 +1,16 @@
 // @flow
 import React from 'react';
-import { Link } from '@reach/router';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import { BooleanValue } from 'react-values';
+import { Link, navigate } from '@reach/router';
 import { Content } from 'components/Layout';
 import { NavBar } from 'components/NavBar';
-import { NewButton, ExportButton } from 'components/Buttons';
+import { NewButton, BaseButton, ExportButton } from 'components/Buttons';
 import { PROJECT_CREATE } from 'modules/permission/constants/project';
 import FilterToolBar from 'components/common/FilterToolBar';
+import SlideView from 'components/SlideView';
+import ProjectTemplateSelector from 'modules/projectTemplate/list/index.selector';
 import usePermission from 'hooks/usePermission';
 import useFilter from 'hooks/useFilter';
 import ProjectList from './list';
@@ -60,9 +63,40 @@ const ProjectListModule = (props: Props) => {
           canSearch
         />
         {hasPermission(PROJECT_CREATE) && (
-          <Link to="new">
-            <NewButton />
-          </Link>
+          <>
+            <Link to="new">
+              <NewButton />
+            </Link>
+            <BooleanValue>
+              {({ value: isOpen, set: toggleSlide }) => (
+                <>
+                  <BaseButton
+                    icon="ADD"
+                    label={
+                      <FormattedMessage
+                        id="modules.project.newFromTemplate"
+                        defaultMessage="FROM TEMPLATE"
+                      />
+                    }
+                    backgroundColor="TEAL"
+                    hoverBackgroundColor="TEAL_DARK"
+                    onClick={() => toggleSlide(true)}
+                  />
+                  <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
+                    {isOpen && (
+                      <ProjectTemplateSelector
+                        onCancel={() => toggleSlide(false)}
+                        onSave={template => {
+                          navigate('/project/new', { state: { template } });
+                          toggleSlide(false);
+                        }}
+                      />
+                    )}
+                  </SlideView>
+                </>
+              )}
+            </BooleanValue>
+          </>
         )}
         <ExportButton
           type="Projects"

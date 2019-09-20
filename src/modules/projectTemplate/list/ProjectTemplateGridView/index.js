@@ -16,9 +16,10 @@ type Props = {
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
+  renderItem?: Function,
 };
 
-const renderItem = (item: Object, canOpenForm: boolean) => {
+const defaultRenderItem = (item: Object, canOpenForm: boolean) => {
   return (
     <BooleanValue key={item.id}>
       {({ value: isOpen, set: toggleSlide }) => (
@@ -53,7 +54,13 @@ const renderItem = (item: Object, canOpenForm: boolean) => {
   );
 };
 
-const ProjectTemplateGridView = ({ items, onLoadMore, hasMore, isLoading }: Props) => {
+const ProjectTemplateGridView = ({
+  items,
+  onLoadMore,
+  hasMore,
+  isLoading,
+  renderItem = defaultRenderItem,
+}: Props) => {
   const { hasPermission } = usePermission();
   const canOpenForm = hasPermission([PROJECT_TEMPLATE_FORM]);
 
