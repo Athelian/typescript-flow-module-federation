@@ -5,7 +5,9 @@ import { BaseButton, SaveButton, ResetButton } from 'components/Buttons';
 import { DefaultOptions, DefaultSelect, SelectInput, Label, Display } from 'components/Form';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import useFixedCompanion from 'hooks/useFixedCompanion';
-import ArchivedFilterInput from './Inputs/ArchivedFilterInput';
+import { volumeMetrics, areaMetrics, distanceMetrics, weightMetrics } from 'utils/metric';
+import Archived from './Inputs/Archived';
+import DateRange from './Inputs/DateRange';
 import {
   ActionsStyle,
   ActiveStyle,
@@ -17,8 +19,9 @@ import {
   ResetActionStyle,
   WrapperStyle,
 } from './style';
+import MetricRange from './Inputs/MetricRange';
 
-type Config = {
+export type FilterConfig = {
   entity: string,
   field: string,
   type: string,
@@ -35,14 +38,19 @@ type FilterState = {
 type Filters = { [string]: any };
 
 type Props = {
-  config: Array<Config>,
+  config: Array<FilterConfig>,
   filters: Filters,
   staticFilters?: Filters,
   onChange: Filters => void,
 };
 
 const inputs = {
-  archived: ArchivedFilterInput,
+  archived: Archived,
+  date_range: DateRange,
+  volume_range: MetricRange(volumeMetrics),
+  area_range: MetricRange(areaMetrics),
+  distance_range: MetricRange(distanceMetrics),
+  weight_range: MetricRange(weightMetrics),
 };
 
 const intersectFilters = (a: Filters, b: Filters): Filters =>
@@ -53,7 +61,7 @@ const intersectFilters = (a: Filters, b: Filters): Filters =>
   }, b);
 
 const computeFilterStates = (
-  config: Array<Config>,
+  config: Array<FilterConfig>,
   filters: Filters,
   staticFilters: Filters
 ): Array<FilterState> => {
@@ -107,6 +115,10 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
   const isActive =
     Object.getOwnPropertyNames(filters || {}).length > 0 ||
     Object.getOwnPropertyNames(staticFilters || {}).length > 0;
+
+  const availableConfig = config.filter(
+    c => !filterStates.find(f => f.entity === c.entity && f.field === c.field && f.type === c.type)
+  );
 
   return (
     <OutsideClickHandler ignoreClick={!open} onOutsideClick={() => setOpen(false)}>
@@ -224,6 +236,18 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
               setFilterStates(newStates);
             };
 
+            const entities = new Set(availableConfig.map(c => c.entity));
+            if (state.entity) {
+              entities.add(state.entity);
+            }
+
+            const fields = new Set(
+              availableConfig.filter(c => c.entity === state.entity).map(c => c.field)
+            );
+            if (state.field) {
+              fields.add(state.field);
+            }
+
             return (
               // eslint-disable-next-line
               <div key={`${state.field || ''}-${index}`} className={FilterWrapperStyle}>
@@ -238,7 +262,7 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
                       name="entity"
                       itemToString={i => i}
                       itemToValue={i => i}
-                      items={[...new Set(config.map(c => c.entity))]}
+                      items={[...entities]}
                       renderSelect={({ ...rest }) => <DefaultSelect hideClearIcon {...rest} />}
                       renderOptions={({ ...rest }) => <DefaultOptions {...rest} width="200px" />}
                     />
@@ -256,11 +280,7 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
                         name="field"
                         itemToString={i => i}
                         itemToValue={i => i}
-                        items={[
-                          ...new Set(
-                            config.filter(c => c.entity === state.entity).map(c => c.field)
-                          ),
-                        ]}
+                        items={[...fields]}
                         renderSelect={({ ...rest }) => <DefaultSelect hideClearIcon {...rest} />}
                         renderOptions={({ ...rest }) => <DefaultOptions {...rest} width="200px" />}
                       />
@@ -289,18 +309,20 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
             );
           })}
 
-          <BaseButton
-            icon="ADD"
-            label="ADD FILTER"
-            backgroundColor="TEAL"
-            hoverBackgroundColor="TEAL_DARK"
-            onClick={() =>
-              setFilterStates([
-                ...filterStates,
-                { entity: null, field: null, type: null, value: null },
-              ])
-            }
-          />
+          {availableConfig.length > 0 && (
+            <BaseButton
+              icon="ADD"
+              label="ADD FILTER"
+              backgroundColor="TEAL"
+              hoverBackgroundColor="TEAL_DARK"
+              onClick={() =>
+                setFilterStates([
+                  ...filterStates,
+                  { entity: null, field: null, type: null, value: null },
+                ])
+              }
+            />
+          )}
         </div>
       </div>
     </OutsideClickHandler>

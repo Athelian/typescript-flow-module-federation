@@ -5,6 +5,7 @@ import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, SearchInput } from 'components/NavBar';
 import { Sheet, ColumnsConfig } from 'components/Sheet';
 import Filter from 'components/NavBar/components/Filter';
+import { OrderConfigFilter } from 'components/NavBar/components/Filter/configs';
 import { clone } from 'utils/fp';
 import columns from './columns';
 import transformer from './transformer';
@@ -60,7 +61,7 @@ const OrderSheetModule = () => {
         <EntityIcon icon="SHEET" color="SHEET" />
 
         <Filter
-          config={[{ entity: 'ORDER', field: 'archived', type: 'archived', defaultValue: false }]}
+          config={OrderConfigFilter}
           filters={filters}
           onChange={value =>
             setFilterBy({
