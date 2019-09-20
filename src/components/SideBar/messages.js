@@ -2,14 +2,6 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  pov: {
-    id: 'modules.SideBar.pov',
-    defaultMessage: 'POINT OF VIEW',
-  },
-  sales: {
-    id: 'modules.SideBar.sales',
-    defaultMessage: 'SALES',
-  },
   shipment: {
     id: 'modules.SideBar.shipment',
     defaultMessage: 'SHIPMENTS',
@@ -29,10 +21,6 @@ export default defineMessages({
   product: {
     id: 'modules.SideBar.product',
     defaultMessage: 'PRODUCTS',
-  },
-  request: {
-    id: 'modules.SideBar.request',
-    defaultMessage: 'REQUESTS',
   },
   relationMap: {
     id: 'modules.SideBar.relationMap',
@@ -89,5 +77,13 @@ export default defineMessages({
   documents: {
     id: 'modules.SideBar.documents',
     defaultMessage: 'DOCUMENTS',
+  },
+  list: {
+    id: 'modules.SideBar.list',
+    defaultMessage: 'LIST',
+  },
+  sheet: {
+    id: 'modules.SideBar.sheet',
+    defaultMessage: 'SHEET',
   },
 });

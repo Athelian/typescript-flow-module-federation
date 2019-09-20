@@ -6,24 +6,20 @@ import { OptionWrapperStyle, OptionStyle } from './style';
 
 type OptionalProps = {
   type: 'standard' | 'label',
+  align: 'left' | 'right' | 'center',
   width: string,
   height: string,
   dropDirection: 'down' | 'up',
 };
 
-type Props = OptionalProps &
-  RenderOptionsProps & {
-    items: Array<any>,
-    itemToValue: any => any,
-    itemToString: any => string,
-    align: 'left' | 'right' | 'center',
-  };
+type Props = OptionalProps & RenderOptionsProps;
 
 const defaultProps = {
   type: 'standard',
   width: '100%',
   height: '200px',
   dropDirection: 'down',
+  align: 'left',
 };
 
 const removePx = (size: string): number => {

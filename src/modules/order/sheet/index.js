@@ -46,8 +46,8 @@ const OrderSheetModule = () => {
         variables: { page: 1, perPage: 20, filterBy, sortBy },
       })
       .then(({ data }) => {
-        setPage({ page: 1, totalPage: data.orders?.totalPage ?? 1 });
-        setInitialOrders(clone(data.orders?.nodes ?? []));
+        setPage({ page: 1, totalPage: data?.orders?.totalPage ?? 1 });
+        setInitialOrders(clone(data?.orders?.nodes ?? []));
         setLoading(false);
       });
   }, [client, filterBy, sortBy]);
@@ -118,7 +118,7 @@ const OrderSheetModule = () => {
                 ...page,
                 page: page.page + 1,
               });
-              return clone(data.orders?.nodes ?? []);
+              return clone(data?.orders?.nodes ?? []);
             })
         }
       />

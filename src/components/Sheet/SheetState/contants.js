@@ -10,7 +10,7 @@ export const Actions = {
   REPLACE_ITEM: 'replace_item',
   DELETE_ITEM: 'delete_item',
   SET_ERROR: 'set_error',
-  CLEAR_ERROR: 'set_error',
+  CLEAR_ERROR: 'clear_error',
   HOVER: 'hover',
   UNHOVER: 'unhover',
   FOCUS: 'focus',

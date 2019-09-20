@@ -51,5 +51,3 @@ export function reError(
 
   return pos ? setError(state, { messages }, state.rows[pos.x][pos.y], pos) : clearError(state);
 }
-
-export default setError;

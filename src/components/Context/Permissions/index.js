@@ -11,7 +11,7 @@ type Permissions = {
   permissions: Array<string>,
 };
 
-type HasPermissions = (permissionKey: string | Array<string>) => boolean;
+export type HasPermissions = (permissionKey: string | Array<string>) => boolean;
 
 type Context = {
   getPermissionsByOrganization: (organizationId: ?string) => Permissions,

@@ -2,11 +2,7 @@
 import * as React from 'react';
 import { injectIntl, type IntlShape } from 'react-intl';
 import EnumProvider from 'providers/enum';
-import {
-  parseEnumDescriptionOrValue,
-  convertValueToFormFieldFormat,
-} from 'components/Form/Factories/helpers';
-import enumMessages from 'components/Form/Factories/messages';
+import { enumToString, convertValueToFormFieldFormat } from 'components/Form/Factories/helpers';
 import {
   FieldItem,
   Label,
@@ -89,15 +85,7 @@ const EnumSelectInputFactory = ({
   blackout,
   intl,
 }: Props): React.Node => {
-  const itemToString = enumMessages[enumType]
-    ? (enumValue: ?string | ?{ description: string, name: string }) => {
-        const selectedValue = parseEnumDescriptionOrValue(enumValue);
-        const messages = enumMessages[enumType];
-        return messages[selectedValue]
-          ? intl.formatMessage(messages[selectedValue])
-          : selectedValue;
-      }
-    : parseEnumDescriptionOrValue;
+  const itemToString = enumToString(enumType, intl);
 
   return (
     <EnumProvider enumType={enumType}>
