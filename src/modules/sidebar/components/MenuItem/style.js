@@ -7,6 +7,7 @@ export const MenuItemStyle = (isActive: boolean): string => css`
   align-items: center;
   flex-shrink: 0;
   white-space: nowrap;
+  text-transform: uppercase;
   color: #fff;
   width: 100%;
   height: 50px;

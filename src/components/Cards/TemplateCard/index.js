@@ -26,7 +26,7 @@ type Props = OptionalProps & {
     description: ?string,
     count: number,
   },
-  type: 'METADATA' | 'EDIT_TABLE' | 'TASK',
+  type: 'METADATA' | 'EDIT_TABLE' | 'TASK' | 'MILESTONE',
 };
 
 const defaultProps = {
