@@ -1,8 +1,10 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Dialog from 'components/Dialog';
 import { SaveButton, ResetButton, BaseButton } from 'components/Buttons';
 import type { ColumnConfig } from '../SheetColumns';
+import messages from '../messages';
 import Group from './Group';
 import { ButtonStyle, ModalWrapperStyle, GroupsWrapperStyle, ActionsWrapperStyle } from './style';
 import type { ColumnState } from './types';
@@ -69,7 +71,7 @@ const ColumnsConfig = ({ columns, onChange }: Props) => {
     <>
       <BaseButton
         className={ButtonStyle}
-        label="COLUMNS"
+        label={<FormattedMessage {...messages.columnsConfigButton} />}
         icon="SETTINGS"
         textColor="GRAY_DARK"
         hoverTextColor="WHITE"

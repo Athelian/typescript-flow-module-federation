@@ -1,7 +1,9 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { useSheetColumns } from 'components/Sheet/SheetColumns';
 import type { Area } from 'components/Sheet/SheetState/types';
+import messages from '../../../messages';
 import { DeletedStyle, LabelStyle } from './style';
 
 type Props = {
@@ -16,7 +18,9 @@ const Deleted = ({ area }: Props) => {
 
   return (
     <div className={DeletedStyle(height, width)}>
-      <span className={LabelStyle}>Deleted</span>
+      <span className={LabelStyle}>
+        <FormattedMessage {...messages.deletedAnnouncement} />
+      </span>
     </div>
   );
 };
