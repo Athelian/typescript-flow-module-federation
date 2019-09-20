@@ -7,18 +7,21 @@ import MatchesEntities from './components/MatchesEntities';
 
 export default function AdvanceFilter() {
   const { filterAndSort, onChangeFilter } = SortAndFilter.useContainer();
+  const {
+    filter: { query, ...filters },
+  } = filterAndSort;
   return (
     <>
       <Filter
         // TODO: need to add more fields after the component is ready
         config={[{ entity: 'ORDER', field: 'archived', type: 'archived', defaultValue: false }]}
-        filters={filterAndSort}
+        filters={filters}
         onChange={filter =>
           onChangeFilter({
             ...filterAndSort,
             filter: {
               ...filter,
-              query: filterAndSort.filter.query,
+              query,
             },
           })
         }
@@ -35,12 +38,12 @@ export default function AdvanceFilter() {
             },
           })
         }
-        onChange={query =>
+        onChange={newQuery =>
           onChangeFilter({
             ...filterAndSort,
             filter: {
               ...filterAndSort.filter,
-              query,
+              query: newQuery,
             },
           })
         }
