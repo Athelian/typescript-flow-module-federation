@@ -13,7 +13,7 @@ import { batchBalanceSplitManyMutation } from './mutation';
 import { targetedIds } from '../OrderFocus/helpers';
 
 type Props = {|
-  onSuccess: (itemIds: Array<string>) => void,
+  onSuccess: (itemIds: Array<string>, batchIds: Array<string>) => void,
 |};
 
 export default function AutoFill({ onSuccess }: Props) {
@@ -45,8 +45,12 @@ export default function AutoFill({ onSuccess }: Props) {
         orderItemIds: itemsWithHigherQuantity,
       },
     })
-      .then(() => {
-        onSuccess(itemsWithHigherQuantity);
+      .then(result => {
+        const batchIds = [];
+        (result.data?.batchBalanceSplitMany ?? []).forEach(({ batches = [] }) => {
+          batchIds.push(...batches.map(batch => batch.id));
+        });
+        onSuccess(itemsWithHigherQuantity, batchIds);
       })
       .catch(() => {
         dispatch({

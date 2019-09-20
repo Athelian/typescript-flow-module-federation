@@ -10,4 +10,8 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.cloned',
     defaultMessage: 'Cloned',
   },
+  autoFilled: {
+    id: 'modules.RelationMaps.label.autoFilled',
+    defaultMessage: 'Auto Filled',
+  },
 });

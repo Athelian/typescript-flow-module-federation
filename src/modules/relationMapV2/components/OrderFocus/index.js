@@ -590,11 +590,20 @@ export default function OrderFocus() {
                         }}
                       />
                       <AutoFill
-                        onSuccess={itemIds => {
+                        onSuccess={(itemIds, batchIds) => {
                           const orderIds = itemIds
                             .map(itemId => findOrderIdByOrderItem(itemId, entities))
                             .filter(Boolean);
                           if (orderIds.length) queryOrdersDetail(orderIds);
+                          if (batchIds.length) {
+                            onSetBadges(
+                              batchIds.map(batchId => ({
+                                id: batchId,
+                                type: 'autoFilled',
+                                entity: 'batch',
+                              }))
+                            );
+                          }
                           window.requestIdleCallback(
                             () => {
                               dispatch({
