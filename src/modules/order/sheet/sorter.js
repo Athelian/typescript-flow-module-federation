@@ -9,8 +9,8 @@ function numberSort(a: number, b: number): number {
   return a - b;
 }
 
-function dateSort(a: Date, b: Date): number {
-  return a - b;
+function dateSort(a: Date | string, b: Date | string): number {
+  return new Date(a) - new Date(b);
 }
 
 function defaultSort(a: Object, b: Object): number {
