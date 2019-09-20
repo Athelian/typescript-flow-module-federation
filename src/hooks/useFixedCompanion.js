@@ -39,9 +39,10 @@ export default function useFixedCompanion(
 
   React.useEffect(() => {
     computeOffset();
-    document.addEventListener('wheel', computeOffset);
+    const opts = { capture: false, passive: true };
+    document.addEventListener('wheel', computeOffset, opts);
 
-    return () => document.removeEventListener('wheel', computeOffset);
+    return () => document.removeEventListener('wheel', computeOffset, opts);
   }, [computeOffset]);
 
   return offset;

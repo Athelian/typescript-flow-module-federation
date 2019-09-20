@@ -23,8 +23,9 @@ type Props = {
   onSave: Function,
 };
 
+// FIXME: re confirm concept.
 const formContainer = new FormContainer();
-
+// FIXME: move into /form folder
 const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
   useEffect(() => {
     return () => formContainer.onReset();
@@ -108,6 +109,7 @@ const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
                       }}
                     />
                     <SaveButton
+                      id="item_form_save_button"
                       disabled={
                         !formContainer.isReady(
                           {

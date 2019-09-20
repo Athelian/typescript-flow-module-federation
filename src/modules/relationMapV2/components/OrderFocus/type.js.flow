@@ -71,12 +71,22 @@ export type State = {|
         id: string,
         no: string,
       },
-      from: {
+      from?: {
         id: string,
         type: string,
       },
     },
     type?: 'createBatch' | 'deleteBatch',
+  },
+  moveActions: {
+    isOpen: boolean,
+    isProcessing: boolean,
+    type?: | 'existOrder'
+      | 'newOrder'
+      | 'existContainer'
+      | 'newContainer'
+      | 'existShipment'
+      | 'newShipment',
   },
   createItem: {
     isOpen: boolean,
@@ -88,6 +98,26 @@ export type State = {|
     },
   },
   clone: {
+    source: string,
+    isOpen: boolean,
+    isProcessing: boolean,
+  },
+  autoFill: {
+    source: string,
+    isOpen: boolean,
+    isProcessing: boolean,
+  },
+  deleteEntities: {
+    source: string,
+    isOpen: boolean,
+    isProcessing: boolean,
+  },
+  status: {
+    source: string,
+    isOpen: boolean,
+    isProcessing: boolean,
+  },
+  tags: {
     source: string,
     isOpen: boolean,
     isProcessing: boolean,

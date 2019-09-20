@@ -9,7 +9,7 @@ import { Layout } from './components/Layout';
 import LoadingIcon from './components/LoadingIcon';
 import PageNotFound from './components/PageNotFound';
 import DashBoard from './modules/dashboard';
-import SideBar from './modules/sidebar';
+import SideBar from './components/SideBar';
 import Authorized from './components/Authorized';
 
 const AsyncLogin = lazy(() => import('./modules/login'));
@@ -33,9 +33,9 @@ const AsyncTableTemplate = lazy(() => import('./modules/tableTemplate'));
 const AsyncTask = lazy(() => import('./modules/task'));
 const AsyncProject = lazy(() => import('./modules/project'));
 const AsyncTaskTemplate = lazy(() => import('./modules/taskTemplate'));
+const AsyncProjectTemplate = lazy(() => import('./modules/projectTemplate'));
 const AsyncProfile = lazy(() => import('./modules/profile'));
 const AsyncDocument = lazy(() => import('./modules/document'));
-const AsyncSheet = lazy(() => import('./modules/sheet'));
 
 const Routes: StatelessFunctionalComponent<{}> = () => {
   const { authenticated } = useAuthenticated();
@@ -68,9 +68,9 @@ const Routes: StatelessFunctionalComponent<{}> = () => {
                   <AsyncMetadata path="templates/metadata/*" />
                   <AsyncTableTemplate path="templates/table-template/*" />
                   <AsyncTaskTemplate path="templates/task-template/*" />
+                  <AsyncProjectTemplate path="templates/project/*" />
                   <AsyncProfile path="profile/*" />
                   <AsyncDocument path="document/*" />
-                  <AsyncSheet path="sheet/*" />
                   <PageNotFound default />
                 </Layout>
               </Authorized>

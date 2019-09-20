@@ -10,4 +10,10 @@ export const ActionsWrapperStyle = css`
   right: 20px;
 `;
 
-export default ActionsWrapperStyle;
+export const LeftActionsWrapperStyle = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 10px;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+`;

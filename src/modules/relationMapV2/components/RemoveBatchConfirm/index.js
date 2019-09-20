@@ -27,7 +27,7 @@ export default function RemoveBatchConfirm({ onSuccess }: Props) {
   const batch = mapping.entities?.batches?.[entity.id] ?? {};
   const container = mapping.entities?.containers?.[batch?.container];
   const shipment = mapping.entities?.shipments?.[batch?.shipment];
-  const fromIdentifier = shipment?.no ?? container?.no;
+  const fromIdentifier = container?.no ?? shipment?.no;
   const isRemoveBatch = type === 'removeBatch';
   const onCancel = () => {
     dispatch({
@@ -65,30 +65,32 @@ export default function RemoveBatchConfirm({ onSuccess }: Props) {
 
   return (
     <Dialog isOpen={isOpen && isRemoveBatch} width="400px" onRequestClose={() => {}}>
-      <div className={DialogStyle}>
-        {isProcessing ? (
-          <>
-            <span>
-              Removing Batch
-              <Icon icon="BATCH" />
-              {` ${entity.no}...`}
-              from <Icon icon={from.type} />
-              {` ${fromIdentifier}...`}
-            </span>
-            <LoadingIcon />
-          </>
-        ) : (
-          <h3 className={ConfirmMessageStyle}>
-            Are you sure you want to remove <Icon icon="BATCH" /> {` ${entity.no} from`}{' '}
-            <Icon icon={from.type} />
-            {` ${fromIdentifier}?`}
-          </h3>
-        )}
-        <div className={ButtonsStyle}>
-          <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          <YesButton disabled={Boolean(isProcessing)} onClick={onConfirm} />
+      {isOpen && isRemoveBatch && (
+        <div className={DialogStyle}>
+          {isProcessing ? (
+            <>
+              <span>
+                Removing Batch
+                <Icon icon="BATCH" />
+                {` ${entity.no}...`}
+                from <Icon icon={from?.type ?? 'CONTAINER'} />
+                {` ${fromIdentifier}...`}
+              </span>
+              <LoadingIcon />
+            </>
+          ) : (
+            <h3 className={ConfirmMessageStyle}>
+              Are you sure you want to remove <Icon icon="BATCH" /> {` ${entity.no} from`}{' '}
+              <Icon icon={from?.type ?? 'CONTAINER'} />
+              {` ${fromIdentifier}?`}
+            </h3>
+          )}
+          <div className={ButtonsStyle}>
+            <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
+            <YesButton disabled={Boolean(isProcessing)} onClick={onConfirm} />
+          </div>
         </div>
-      </div>
+      )}
     </Dialog>
   );
 }

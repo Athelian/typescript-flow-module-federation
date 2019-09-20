@@ -158,6 +158,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
                     )}
                     {(isNew || taskTemplateContainer.isDirty()) && (
                       <SaveButton
+                        id="task_template_form_save_button"
                         disabled={!formContainer.isReady(taskTemplateContainer.state, validator)}
                         isLoading={isLoading}
                         data-testid="saveButtonOnTaskTemplate"

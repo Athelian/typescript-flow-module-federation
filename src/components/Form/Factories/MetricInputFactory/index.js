@@ -20,7 +20,7 @@ import { getMetrics, getDefaultMetric, getConvert, type MetricEnumType } from '.
 
 type InputProps = StandardInputProps & {
   customMetrics?: Array<string>,
-  customConvert?: (number, string, string) => any,
+  customConvert?: (value: number, from: string, to: string) => any,
   metricSelectWidth: string,
   metricOptionWidth: string,
 };

@@ -8,7 +8,7 @@ import MetricSelect from './MetricSelect';
 
 type OptionalProps = {
   metrics: Array<string>,
-  convert: (number, string, string) => any,
+  convert: (value: number, from: string, to: string) => any,
   metricSelectWidth: string,
   metricSelectHeight: string,
   metricOptionWidth: string,

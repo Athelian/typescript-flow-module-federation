@@ -4,7 +4,7 @@ import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { VariableSizeList as List } from 'react-window';
 import { Query } from 'react-apollo';
-import { get, set, uniq, findKey } from 'lodash/fp';
+import { get, set, uniq } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import apolloClient from 'apollo';
@@ -22,13 +22,16 @@ import {
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { Hits, Entities, SortAndFilter, ClientSorts } from 'modules/relationMapV2/store';
 import { WrapperStyle, ListStyle, RowStyle, ActionsBackdropStyle } from './style';
+import { findOrderIdByOrderItem, findOrderIdByBatch } from './helpers';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import CloneEntities from '../CloneEntities';
 import InlineCreateItem from '../InlineCreateItem';
 import DeleteItemConfirm from '../DeleteItemConfirm';
+import AutoFill from '../AutoFill';
 import InlineCreateBatch from '../InlineCreateBatch';
 import DeleteBatchConfirm from '../DeleteBatchConfirm';
+import StatusConfirm from '../StatusConfirm';
 import SelectedEntity from '../SelectedEntity';
 import Actions from '../Actions';
 import Header from '../Header';
@@ -38,6 +41,9 @@ import generateListData from './generateListData';
 import { reducer, initialState, RelationMapContext } from './store';
 import normalize from './normalize';
 import RemoveBatchConfirm from '../RemoveBatchConfirm';
+import MoveBatch from '../MoveBatch';
+import AddTags from '../AddTags';
+import DeleteConfirm from '../DeleteConfirm';
 
 const LoadingPlaceHolder = React.memo(() => {
   return (
@@ -298,6 +304,7 @@ export default function OrderFocus() {
                 orders,
                 entities,
               });
+              /* FIXME: define a hook under cause the warning from React  */
               return (
                 <RelationMapContext.Provider value={{ state, dispatch }}>
                   {orders.length > 0 ? (
@@ -348,6 +355,24 @@ export default function OrderFocus() {
                           queryOrdersDetail(orderIds);
                           dispatch({
                             type: 'CONFIRM_MOVE_END',
+                            payload: { orderIds },
+                          });
+                        }}
+                      />
+                      <StatusConfirm
+                        onSuccess={orderIds => {
+                          queryOrdersDetail(orderIds);
+                          dispatch({
+                            type: 'STATUS_END',
+                            payload: { orderIds },
+                          });
+                        }}
+                      />
+                      <AddTags
+                        onSuccess={orderIds => {
+                          queryOrdersDetail(orderIds);
+                          dispatch({
+                            type: 'TAGS_END',
                             payload: { orderIds },
                           });
                         }}
@@ -492,6 +517,7 @@ export default function OrderFocus() {
                           }
                         }}
                       />
+                      <MoveBatch />
                       <InlineCreateBatch
                         onSuccess={(orderId, batch) => {
                           if (orderId) {
@@ -563,11 +589,37 @@ export default function OrderFocus() {
                           }
                         }}
                       />
+                      <AutoFill
+                        onSuccess={(itemIds, batchIds) => {
+                          const orderIds = itemIds
+                            .map(itemId => findOrderIdByOrderItem(itemId, entities))
+                            .filter(Boolean);
+                          if (orderIds.length) queryOrdersDetail(orderIds);
+                          if (batchIds.length) {
+                            onSetBadges(
+                              batchIds.map(batchId => ({
+                                id: batchId,
+                                type: 'autoFilled',
+                                entity: 'batch',
+                              }))
+                            );
+                          }
+                          window.requestIdleCallback(
+                            () => {
+                              dispatch({
+                                type: 'AUTO_FILL_CLOSE',
+                                payload: {},
+                              });
+                            },
+                            {
+                              timeout: 250,
+                            }
+                          );
+                        }}
+                      />
                       <DeleteItemConfirm
                         onSuccess={itemId => {
-                          const parentOrderId = findKey(currentOrder => {
-                            return (currentOrder.orderItems || []).includes(itemId);
-                          }, entities.orders);
+                          const parentOrderId = findOrderIdByOrderItem(itemId, entities);
                           const item = entities?.orderItems[itemId];
                           if (parentOrderId) {
                             queryOrdersDetail([parentOrderId]);
@@ -598,15 +650,7 @@ export default function OrderFocus() {
                       />
                       <RemoveBatchConfirm
                         onSuccess={batchId => {
-                          const parentOrderId = findKey(currentOrder => {
-                            return (currentOrder.orderItems || []).some(itemId =>
-                              getByPathWithDefault(
-                                [],
-                                `orderItems.${itemId}.batches`,
-                                entities
-                              ).includes(batchId)
-                            );
-                          }, entities.orders);
+                          const parentOrderId = findOrderIdByBatch(batchId, entities);
                           if (parentOrderId) {
                             queryOrdersDetail([parentOrderId]);
                             const batch = entities.batches?.[batchId] ?? {};
@@ -649,17 +693,60 @@ export default function OrderFocus() {
                           }
                         }}
                       />
+                      <DeleteConfirm
+                        onSuccess={({ orderItemIds, containerIds }) => {
+                          const orderIds = [];
+                          const batchIds = [];
+                          orderItemIds.forEach(itemId => {
+                            const parentOrderId = findOrderIdByOrderItem(itemId, entities);
+                            if (parentOrderId) {
+                              orderIds.push(parentOrderId);
+                            }
+                            batchIds.push(...(entities.orderItems?.[itemId]?.batches ?? []));
+                          });
+
+                          containerIds.forEach(containerId => {
+                            const batchIdsOfContainer = Object.values(entities.batches)
+                              .filter((batch: ?Object) => batch?.container === containerId)
+                              .map((batch: ?Object) => batch?.id ?? '');
+                            batchIdsOfContainer.forEach(batchId => {
+                              if (batchId) {
+                                const parentOrderId = findOrderIdByBatch(batchId, entities);
+                                if (parentOrderId) {
+                                  orderIds.push(parentOrderId);
+                                }
+                              }
+                            });
+                          });
+                          queryOrdersDetail(orderIds);
+                          window.requestIdleCallback(
+                            () => {
+                              dispatch({
+                                type: 'REMOVE_TARGETS',
+                                payload: {
+                                  targets: [
+                                    ...batchIds.map(batchId => `${BATCH}-${batchId}`),
+                                    ...orderItemIds.map(itemId => `${ORDER_ITEM}-${itemId}`),
+                                    ...containerIds.map(
+                                      containerId => `${CONTAINER}-${containerId}`
+                                    ),
+                                  ],
+                                },
+                              });
+                              dispatch({
+                                type: 'DELETE_CLOSE',
+                                payload: {},
+                              });
+                            },
+                            {
+                              timeout: 250,
+                            }
+                          );
+                        }}
+                      />
                       <DeleteBatchConfirm
                         onSuccess={batchId => {
-                          const parentOrderId = findKey(currentOrder => {
-                            return (currentOrder.orderItems || []).some(itemId =>
-                              getByPathWithDefault(
-                                [],
-                                `orderItems.${itemId}.batches`,
-                                entities
-                              ).includes(batchId)
-                            );
-                          }, entities.orders);
+                          const parentOrderId = findOrderIdByBatch(batchId, entities);
                           if (parentOrderId) {
                             queryOrdersDetail([parentOrderId]);
                             window.requestIdleCallback(

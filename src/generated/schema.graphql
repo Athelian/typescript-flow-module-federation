@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Sep 06 2019 16:39:48 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Sep 18 2019 19:02:12 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -29785,6 +29785,27 @@ input MilestoneTaskInput {
   entity: EntityInput
 }
 
+type MilestoneTemplate implements Model & Owned & Sortable {
+  project: ProjectTemplatePayload!
+  name: String!
+  description: String
+  dueDateInterval: Interval
+  dueDateBinding: MilestoneDateBinding
+  estimatedCompletionDateInterval: Interval
+  estimatedCompletionDateBinding: MilestoneDateBinding
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: OrganizationPayload!
+  sort: Int!
+}
+
+union MilestoneTemplatePayload = MilestoneTemplate | BadRequest | Forbidden | NotFound
+
 input MilestoneUpdateInput {
   name: String
   description: String
@@ -29897,6 +29918,9 @@ type Mutation {
   milestoneCreate(input: MilestoneCreateInput!): MilestonePayload!
   milestoneUpdate(id: ID!, input: MilestoneUpdateInput!): MilestonePayload!
   milestoneDelete(id: ID!): EmptyPayload
+  projectTemplateCreate(input: ProjectTemplateCreateInput!): ProjectTemplatePayload!
+  projectTemplateUpdate(id: ID!, input: ProjectTemplateUpdateInput!): ProjectTemplatePayload!
+  projectTemplateDelete(id: ID!): EmptyPayload
   integrationConfigurationCreate(input: IntegrationConfigurationCreateInput!): IntegrationConfigurationPayload!
   integrationConfigurationUpdate(id: ID!, input: IntegrationConfigurationUpdateInput!): IntegrationConfigurationPayload!
   integrationConfigurationDelete(id: ID!): EmptyPayload
@@ -30972,6 +30996,79 @@ input ProjectSortInput {
   dueDate: SortOrder
 }
 
+type ProjectTemplate implements Model & Owned & Tagged {
+  name: String!
+  description: String
+  milestones: [MilestoneTemplatePayload!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: OrganizationPayload!
+  tags: [TagPayload!]!
+}
+
+input ProjectTemplateCreateInput {
+  name: String!
+  description: String
+  tagIds: [ID!]
+  milestones: [ProjectTemplateMilestoneCreateInput!]
+}
+
+input ProjectTemplateFilterInput {
+  query: String
+  excludeIds: [ID!]
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+}
+
+input ProjectTemplateMilestoneCreateInput {
+  name: String!
+  description: String
+  dueDateInterval: IntervalInput
+  dueDateBinding: MilestoneDateBinding
+  estimatedCompletionDateInterval: IntervalInput
+  estimatedCompletionDateBinding: MilestoneDateBinding
+}
+
+input ProjectTemplateMilestoneUpdateInput {
+  name: String
+  description: String
+  dueDateInterval: IntervalInput
+  dueDateBinding: MilestoneDateBinding
+  estimatedCompletionDateInterval: IntervalInput
+  estimatedCompletionDateBinding: MilestoneDateBinding
+  id: ID
+}
+
+union ProjectTemplatePayload = ProjectTemplate | BadRequest | Forbidden | NotFound
+
+type ProjectTemplatePayloadPaginatedSearch implements Paginated {
+  nodes: [ProjectTemplatePayload!]!
+  hits: [Hit!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input ProjectTemplateSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  name: SortOrder
+}
+
+input ProjectTemplateUpdateInput {
+  name: ID
+  description: String
+  tagIds: [ID!]
+  milestones: [ProjectTemplateMilestoneUpdateInput!]
+}
+
 input ProjectUpdateInput {
   name: ID
   description: String
@@ -31046,6 +31143,11 @@ type Query {
   projectsByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
   milestone(id: ID!): MilestonePayload!
   milestonesByIDs(ids: [ID!]!): [MilestonePayload!]!
+  projectTemplate(id: ID!): ProjectTemplatePayload!
+  projectTemplates(page: Int! = 1, perPage: Int! = 10, filterBy: ProjectTemplateFilterInput, sortBy: ProjectTemplateSortInput): ProjectTemplatePayloadPaginatedSearch!
+  projectTemplatesByIDs(ids: [ID!]!): [ProjectTemplatePayload!]!
+  milestoneTemplate(id: ID!): MilestoneTemplatePayload!
+  milestoneTemplatesByIDs(ids: [ID!]!): [MilestoneTemplatePayload!]!
   fieldDefinition(id: ID!): FieldDefinitionPayload!
   fieldDefinitions(entityType: CustomizableEntityType!): [FieldDefinitionPayload!]!
   mask(id: ID!): MaskPayload!

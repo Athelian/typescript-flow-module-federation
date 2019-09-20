@@ -196,7 +196,8 @@ class ProjectFormModule extends React.PureComponent<Props> {
   };
 
   render() {
-    const { projectId, isSlideView, onCancel } = this.props;
+    const { projectId, isSlideView, onCancel, ...rest } = this.props;
+
     const isNew = this.isNew();
     let mutationKey = {};
     if (projectId && !isNew) {
@@ -297,6 +298,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
 
                         {(isNew || isDirty) && (
                           <SaveButton
+                            id="project_form_save_button"
                             disabled={
                               !form.isReady(
                                 {
@@ -359,7 +361,8 @@ class ProjectFormModule extends React.PureComponent<Props> {
                     <Subscribe
                       to={[ProjectInfoContainer, ProjectTagsContainer, ProjectMilestonesContainer]}
                     >
-                      {(projectInfoState, projectTagsState, projectMilestonesState) =>
+                      {(projectInfoState, projectTagsState, projectMilestonesState) => {
+                        const template = getByPath('location.state.template', rest) || {};
                         this.onFormReady(
                           {
                             projectInfoState,
@@ -367,10 +370,12 @@ class ProjectFormModule extends React.PureComponent<Props> {
                             projectMilestonesState,
                           },
                           {
+                            ...template,
                             id: uuid(),
                           }
-                        )
-                      }
+                        );
+                        return null;
+                      }}
                     </Subscribe>
                   </>
                 ) : (

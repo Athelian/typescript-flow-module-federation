@@ -349,6 +349,7 @@ class ProductFormModule extends React.Component<Props> {
                         )}
 
                         <SaveButton
+                          id="product_form_save_button"
                           data-testid="saveButton"
                           disabled={
                             !form.isReady(

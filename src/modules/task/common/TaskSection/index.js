@@ -611,7 +611,11 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                           )}
                         </div>
 
-                        <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                        <SlideView
+                          isOpen={opened}
+                          onRequestClose={() => slideToggle(false)}
+                          targetId="select_task_template_apply_button"
+                        >
                           {opened && (
                             <SelectTaskTemplate
                               cacheKey={`${type}SelectTaskTemplate`}

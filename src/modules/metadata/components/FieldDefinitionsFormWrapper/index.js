@@ -69,6 +69,7 @@ const FieldDefinitionsFormWrapper = ({ entityType, intl }: Props) => (
 
                       {isDirty() && (
                         <SaveButton
+                          id="metadata_form_save_button"
                           onClick={async () => {
                             const formData = {
                               entityType,

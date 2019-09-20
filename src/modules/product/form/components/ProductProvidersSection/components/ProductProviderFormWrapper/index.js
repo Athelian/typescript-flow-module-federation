@@ -187,6 +187,7 @@ const ProductProviderFormWrapper = ({
                   <>
                     <CancelButton onClick={() => onCancel()} />
                     <SaveButton
+                      id="end_product_form_save_button"
                       data-testid="saveProviderButton"
                       disabled={disableSaveButton}
                       onClick={() =>
@@ -213,6 +214,7 @@ const ProductProviderFormWrapper = ({
                         }}
                       />
                       <SaveButton
+                        id="end_product_form_save_button"
                         data-testid="saveProviderButton"
                         disabled={disableSaveButton}
                         onClick={() =>

@@ -5,7 +5,7 @@ import type { Order, Batch, OrderItem } from 'generated/graphql';
 import { intersection } from 'lodash';
 import produce from 'immer';
 import update from 'immutability-helper';
-import { ORDER_ITEM, BATCH } from 'modules/relationMapV2/constants';
+import { ORDER_ITEM, ORDER, BATCH } from 'modules/relationMapV2/constants';
 import type { State } from './type.js.flow';
 
 type ContextProps = {|
@@ -59,6 +59,10 @@ export const initialState: State = {
       },
     },
   },
+  moveActions: {
+    isOpen: false,
+    isProcessing: false,
+  },
   createItem: {
     isOpen: false,
     isProcessing: false,
@@ -69,6 +73,26 @@ export const initialState: State = {
     },
   },
   clone: {
+    source: '',
+    isOpen: false,
+    isProcessing: false,
+  },
+  autoFill: {
+    source: '',
+    isOpen: false,
+    isProcessing: false,
+  },
+  status: {
+    source: ORDER,
+    isOpen: false,
+    isProcessing: false,
+  },
+  deleteEntities: {
+    source: ORDER_ITEM,
+    isOpen: false,
+    isProcessing: false,
+  },
+  tags: {
     source: '',
     isOpen: false,
     isProcessing: false,
@@ -110,11 +134,9 @@ export function reducer(
       | 'CREATE_BATCH_CLOSE'
       | 'DELETE_BATCH'
       | 'DELETE_BATCH_START'
-      | 'DELETE_BATCH_END'
       | 'DELETE_BATCH_CLOSE'
       | 'DELETE_ITEM'
       | 'DELETE_ITEM_START'
-      | 'DELETE_ITEM_END'
       | 'DELETE_ITEM_CLOSE'
       | 'CREATE_ITEM'
       | 'CREATE_ITEM_START'
@@ -123,11 +145,30 @@ export function reducer(
       | 'CLONE'
       | 'CLONE_START'
       | 'CLONE_END'
-      | 'CLONE_CLOSE'
+      | 'AUTO_FILL'
+      | 'AUTO_FILL_START'
+      | 'AUTO_FILL_END'
+      | 'AUTO_FILL_CLOSE'
+      | 'STATUS'
+      | 'STATUS_START'
+      | 'STATUS_END'
+      | 'STATUS_CLOSE'
+      | 'DELETE'
+      | 'DELETE_START'
+      | 'DELETE_END'
+      | 'DELETE_CLOSE'
+      | 'TAGS'
+      | 'TAGS_START'
+      | 'TAGS_END'
       | 'REMOVE_BATCH'
       | 'REMOVE_BATCH_START'
-      | 'REMOVE_BATCH_END'
       | 'REMOVE_BATCH_CLOSE'
+      | 'MOVE_BATCH'
+      | 'MOVE_BATCH_START'
+      | 'MOVE_BATCH_CLOSE'
+      | 'MOVE_TO_ORDER'
+      | 'MOVE_TO_ORDER_START'
+      | 'MOVE_TO_ORDER_CLOSE'
       | 'EDIT',
     payload: {
       entity?: string,
@@ -360,6 +401,15 @@ export function reducer(
         },
       });
     }
+    case 'MOVE_BATCH': {
+      return update(state, {
+        batchActions: {
+          type: { $set: 'moveBatches' },
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+        },
+      });
+    }
     case 'DELETE_BATCH': {
       return update(state, {
         batchActions: {
@@ -375,6 +425,25 @@ export function reducer(
       return update(state, {
         batchActions: {
           isProcessing: { $set: true },
+        },
+      });
+    case 'MOVE_BATCH_START':
+      return update(state, {
+        batchActions: {
+          isOpen: { $set: false },
+        },
+        moveActions: {
+          isOpen: { $set: true },
+          type: { $set: action.payload.type },
+        },
+      });
+    case 'MOVE_TO_ORDER_CLOSE':
+      return update(state, {
+        batchActions: {
+          isOpen: { $set: true },
+        },
+        moveActions: {
+          isOpen: { $set: false },
         },
       });
     case 'DELETE_ITEM_START':
@@ -416,6 +485,7 @@ export function reducer(
         },
       });
     }
+    case 'MOVE_BATCH_CLOSE':
     case 'REMOVE_BATCH_CLOSE':
     case 'DELETE_BATCH_CLOSE':
       return update(state, {
@@ -452,6 +522,119 @@ export function reducer(
     case 'CLONE_END': {
       return update(state, {
         clone: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'AUTO_FILL': {
+      return update(state, {
+        autoFill: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          source: { $set: action.payload?.source ?? '' },
+        },
+      });
+    }
+    case 'AUTO_FILL_START': {
+      return update(state, {
+        autoFill: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'AUTO_FILL_END':
+    case 'AUTO_FILL_CLOSE': {
+      return update(state, {
+        autoFill: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'STATUS': {
+      return update(state, {
+        status: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          source: { $set: action.payload?.source ?? '' },
+        },
+      });
+    }
+    case 'STATUS_START': {
+      return update(state, {
+        status: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'STATUS_END': {
+      return update(state, {
+        status: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'STATUS_CLOSE': {
+      return update(state, {
+        status: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'DELETE': {
+      return update(state, {
+        deleteEntities: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          source: { $set: action.payload?.source ?? '' },
+        },
+      });
+    }
+    case 'DELETE_START': {
+      return update(state, {
+        deleteEntities: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'DELETE_END': {
+      return update(state, {
+        deleteEntities: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'DELETE_CLOSE': {
+      return update(state, {
+        deleteEntities: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'TAGS': {
+      return update(state, {
+        tags: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          source: { $set: action.payload?.source ?? '' },
+        },
+      });
+    }
+    case 'TAGS_START': {
+      return update(state, {
+        tags: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'TAGS_END': {
+      return update(state, {
+        tags: {
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },

@@ -10,6 +10,18 @@ export const TASK_TEMPLATE_FORM = 'task.taskTemplates.form';
 export const TASK_TEMPLATE_CREATE = 'task.taskTemplates.create';
 export const TASK_TEMPLATE_UPDATE = 'task.taskTemplates.update';
 export const TASK_TEMPLATE_DELETE = 'task.taskTemplates.delete';
+// project template
+export const PROJECT_TEMPLATE_LIST = 'task.projectTemplates.list';
+export const PROJECT_TEMPLATE_FORM = 'task.projectTemplates.form';
+export const PROJECT_TEMPLATE_GET = 'task.projectTemplates.get';
+export const PROJECT_TEMPLATE_CREATE = 'task.projectTemplates.create';
+export const PROJECT_TEMPLATE_UPDATE = 'task.projectTemplates.update';
+export const PROJECT_TEMPLATE_DELETE = 'task.projectTemplates.delete';
+export const PROJECT_TEMPLATE_SET_NAME = 'task.projectTemplates.setName';
+export const PROJECT_TEMPLATE_SET_DESCRIPTION = 'task.projectTemplates.setDescription';
+export const PROJECT_TEMPLATE_SET_TAGS = 'task.projectTemplates.setTags';
+export const PROJECT_TEMPLATE_SET_MILESTONES = 'task.projectTemplates.setMilestones';
+
 export const TASK_SET_APPROVABLE = 'task.tasks.setApprovable';
 export const TASK_SET_APPROVED = 'task.tasks.setApproved';
 export const TASK_SET_APPROVERS = 'task.tasks.setApprovers';

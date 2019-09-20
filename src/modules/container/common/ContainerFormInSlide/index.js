@@ -81,6 +81,7 @@ class ContainerFormInSlide extends React.Component<Props> {
                       }}
                     />
                     <SaveButton
+                      id="container_form_save_button"
                       disabled={
                         !formContainer.isReady(
                           {

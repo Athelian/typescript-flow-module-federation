@@ -108,6 +108,7 @@ const BatchFormInSlide = ({ batch, onSave, ...rest }: Props) => {
                       }}
                     />
                     <SaveButton
+                      id="batch_form_save_button"
                       disabled={
                         !formContainer.isReady(
                           {

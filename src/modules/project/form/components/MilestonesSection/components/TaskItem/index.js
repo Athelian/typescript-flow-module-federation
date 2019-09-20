@@ -87,7 +87,11 @@ function TaskItem({ task, isDragging, provided, onChange, onRemove }: Props) {
                     setTimeout(() => toggleTaskForm(true), 200);
                   }}
                 />
-                <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskForm(false)}>
+                <SlideView
+                  isOpen={isOpen}
+                  onRequestClose={() => toggleTaskForm(false)}
+                  targetId="task_form_save_button"
+                >
                   {isOpen && (
                     <QueryFormPermissionContext.Provider
                       value={{

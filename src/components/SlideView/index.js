@@ -1,13 +1,17 @@
 // @flow
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { FormattedMessage } from 'react-intl';
+import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import logger from 'utils/logger';
+import { isDisable } from 'utils/ui';
 import SlideViewContext, { type SlideViewContextProps } from './context';
 import { BackdropStyle, SlideViewStyle, SlideViewContentStyle } from './style';
 
 type WrapperProps = {
   isOpen: boolean,
   onRequestClose: () => void,
+  targetId: string,
   children: React.Node,
   options: {
     width: {
@@ -29,6 +33,7 @@ type Props = WrapperProps & {
 
 type State = {
   neverOpened: boolean,
+  openedDialog: boolean,
 };
 
 const defaultProps = {
@@ -37,14 +42,19 @@ const defaultProps = {
     width: { initialValue: 80, step: 10, unit: 'vw' },
     minWidth: { initialValue: 1030, step: 50, unit: 'px' },
   },
+  targetId: 'save_button',
 };
 
 class SlideView extends React.Component<Props, State> {
-  state = {
-    neverOpened: true,
-  };
-
   slideViewContainer: HTMLElement = document.createElement('div');
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      neverOpened: true,
+      openedDialog: false,
+    };
+  }
 
   componentDidMount() {
     const {
@@ -94,9 +104,21 @@ class SlideView extends React.Component<Props, State> {
     };
   };
 
+  openDialog = () => {
+    this.setState({
+      openedDialog: true,
+    });
+  };
+
+  closeDialog = () => {
+    this.setState({
+      openedDialog: false,
+    });
+  };
+
   render() {
-    const { children, isOpen, onRequestClose } = this.props;
-    const { neverOpened } = this.state;
+    const { children, isOpen, onRequestClose, targetId } = this.props;
+    const { neverOpened, openedDialog } = this.state;
     const { width, minWidth, widthWithUnit, minWidthWithUnit } = this.getWidths();
 
     return (
@@ -109,7 +131,11 @@ class SlideView extends React.Component<Props, State> {
               className={BackdropStyle({ isOpen, neverOpened })}
               onClick={event => {
                 event.stopPropagation();
-                onRequestClose();
+                if (isDisable(targetId)) {
+                  onRequestClose();
+                } else {
+                  this.openDialog();
+                }
               }}
               role="presentation"
             >
@@ -126,6 +152,21 @@ class SlideView extends React.Component<Props, State> {
                 <div className={SlideViewContentStyle}>{children}</div>
               </div>
             </div>
+            <ConfirmDialog
+              isOpen={openedDialog}
+              onRequestClose={this.closeDialog}
+              onCancel={this.closeDialog}
+              onConfirm={() => {
+                this.closeDialog();
+                onRequestClose();
+              }}
+              message={
+                <FormattedMessage
+                  id="components.form.confirmLeaveMessage"
+                  defaultMessage="Are you sure you want to close this view? Your changes will not be saved."
+                />
+              }
+            />
           </SlideViewContext.Provider>,
           this.slideViewContainer
         )}

@@ -119,6 +119,7 @@ const TaskFormInSlide = ({
                       }}
                     />
                     <SaveButton
+                      id="task_form_save_button"
                       disabled={!formContainer.isReady(taskContainer.state, validator)}
                       onClick={() => onSave(taskContainer.state)}
                     />

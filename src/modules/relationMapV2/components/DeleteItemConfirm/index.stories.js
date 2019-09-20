@@ -22,6 +22,10 @@ storiesOf('RelationMapV2', module).add('DeleteItemConfirm', () => (
                     id: '',
                     no: '',
                   },
+                  from: {
+                    id: '',
+                    type: 'SHIPMENT',
+                  },
                 },
               },
             });
@@ -38,10 +42,15 @@ storiesOf('RelationMapV2', module).add('DeleteItemConfirm', () => (
                     itemActions: {
                       isOpen: true,
                       isProcessing: false,
+                      type: 'deleteItem',
                       detail: {
                         entity: {
                           id: '1',
                           no: 'test',
+                        },
+                        from: {
+                          id: '',
+                          type: 'SHIPMENT',
                         },
                       },
                     },

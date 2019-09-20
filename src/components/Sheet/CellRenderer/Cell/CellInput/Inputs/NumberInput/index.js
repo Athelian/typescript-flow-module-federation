@@ -24,7 +24,7 @@ const NumberInput = ({ value, focus, onChange, onFocus, onBlur, onKeyDown, reado
         nullable={false}
         readOnly={readonly}
         readOnlyHeight="30px"
-        onChange={onChange}
+        onChange={e => onChange(e.target.value)}
         onFocus={onFocus}
         onBlur={onBlur}
         onKeyDown={onKeyDown}

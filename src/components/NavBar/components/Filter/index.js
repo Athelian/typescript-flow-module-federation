@@ -1,11 +1,14 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage, injectIntl, type IntlShape, type MessageDescriptor } from 'react-intl';
 import Icon from 'components/Icon';
 import { BaseButton, SaveButton, ResetButton } from 'components/Buttons';
 import { DefaultOptions, DefaultSelect, SelectInput, Label, Display } from 'components/Form';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import useFixedCompanion from 'hooks/useFixedCompanion';
-import ArchivedFilterInput from './Inputs/ArchivedFilterInput';
+import { volumeMetrics, areaMetrics, distanceMetrics, weightMetrics } from 'utils/metric';
+import Archived from './Inputs/Archived';
+import DateRange from './Inputs/DateRange';
 import {
   ActionsStyle,
   ActiveStyle,
@@ -17,11 +20,14 @@ import {
   ResetActionStyle,
   WrapperStyle,
 } from './style';
+import MetricRange from './Inputs/MetricRange';
+import messages from './messages';
 
-type Config = {
+export type FilterConfig = {
   entity: string,
   field: string,
   type: string,
+  message: MessageDescriptor,
   defaultValue?: any,
 };
 
@@ -35,14 +41,20 @@ type FilterState = {
 type Filters = { [string]: any };
 
 type Props = {
-  config: Array<Config>,
+  config: Array<FilterConfig>,
   filters: Filters,
   staticFilters?: Filters,
   onChange: Filters => void,
+  intl: IntlShape,
 };
 
 const inputs = {
-  archived: ArchivedFilterInput,
+  archived: Archived,
+  date_range: DateRange,
+  volume_range: MetricRange(volumeMetrics),
+  area_range: MetricRange(areaMetrics),
+  distance_range: MetricRange(distanceMetrics),
+  weight_range: MetricRange(weightMetrics),
 };
 
 const intersectFilters = (a: Filters, b: Filters): Filters =>
@@ -53,7 +65,7 @@ const intersectFilters = (a: Filters, b: Filters): Filters =>
   }, b);
 
 const computeFilterStates = (
-  config: Array<Config>,
+  config: Array<FilterConfig>,
   filters: Filters,
   staticFilters: Filters
 ): Array<FilterState> => {
@@ -67,7 +79,7 @@ const computeFilterStates = (
   });
 };
 
-const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
+const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
   const buttonRef = React.useRef(null);
   const offset = useFixedCompanion(buttonRef, 'bottom');
   const [open, setOpen] = React.useState(false);
@@ -107,6 +119,10 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
   const isActive =
     Object.getOwnPropertyNames(filters || {}).length > 0 ||
     Object.getOwnPropertyNames(staticFilters || {}).length > 0;
+  const hasWeakFilter = !!filterStates.find(f => !f.entity || !f.field || !f.type);
+  const availableConfig = config.filter(
+    c => !filterStates.find(f => f.entity === c.entity && f.field === c.field && f.type === c.type)
+  );
 
   return (
     <OutsideClickHandler ignoreClick={!open} onOutsideClick={() => setOpen(false)}>
@@ -119,7 +135,7 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
         <div className={ActionsStyle}>
           <BaseButton
             icon="REMOVE"
-            label="CLEAR ALL"
+            label={<FormattedMessage {...messages.clearAll} />}
             textColor="GRAY_DARK"
             hoverTextColor="WHITE"
             backgroundColor="GRAY_SUPER_LIGHT"
@@ -140,7 +156,7 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
                   <div className={InputsWrapperStyle}>
                     <div>
                       <Label height="30px" required>
-                        Category
+                        <FormattedMessage {...messages.category} />
                       </Label>
                       <SelectInput
                         value={staticFilterConfig?.entity}
@@ -152,12 +168,15 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
                     </div>
                     <div>
                       <Label height="30px" required>
-                        Filter
+                        <FormattedMessage {...messages.filter} />
                       </Label>
                       <SelectInput
                         value={staticFilterConfig?.field}
                         name="field"
-                        itemToString={i => i}
+                        itemToString={i => {
+                          const message = staticFilterConfig?.message;
+                          return message ? intl.formatMessage(message) : i;
+                        }}
                         itemToValue={i => i}
                         readOnly
                       />
@@ -224,13 +243,25 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
               setFilterStates(newStates);
             };
 
+            const entities = new Set(availableConfig.map(c => c.entity));
+            if (state.entity) {
+              entities.add(state.entity);
+            }
+
+            const fields = new Set(
+              availableConfig.filter(c => c.entity === state.entity).map(c => c.field)
+            );
+            if (state.field) {
+              fields.add(state.field);
+            }
+
             return (
               // eslint-disable-next-line
               <div key={`${state.field || ''}-${index}`} className={FilterWrapperStyle}>
                 <div className={InputsWrapperStyle}>
                   <div>
                     <Label height="30px" required>
-                      Category
+                      <FormattedMessage {...messages.category} />
                     </Label>
                     <SelectInput
                       value={state.entity}
@@ -238,7 +269,7 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
                       name="entity"
                       itemToString={i => i}
                       itemToValue={i => i}
-                      items={[...new Set(config.map(c => c.entity))]}
+                      items={[...entities]}
                       renderSelect={({ ...rest }) => <DefaultSelect hideClearIcon {...rest} />}
                       renderOptions={({ ...rest }) => <DefaultOptions {...rest} width="200px" />}
                     />
@@ -246,7 +277,7 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
 
                   <div>
                     <Label height="30px" required>
-                      Filter
+                      <FormattedMessage {...messages.filter} />
                     </Label>
 
                     {state.entity ? (
@@ -254,18 +285,21 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
                         value={state.field}
                         onChange={onFieldChange}
                         name="field"
-                        itemToString={i => i}
+                        itemToString={i => {
+                          const message = config.find(
+                            c => c.entity === state.entity && c.field === i
+                          )?.message;
+                          return message ? intl.formatMessage(message) : i;
+                        }}
                         itemToValue={i => i}
-                        items={[
-                          ...new Set(
-                            config.filter(c => c.entity === state.entity).map(c => c.field)
-                          ),
-                        ]}
+                        items={[...fields]}
                         renderSelect={({ ...rest }) => <DefaultSelect hideClearIcon {...rest} />}
                         renderOptions={({ ...rest }) => <DefaultOptions {...rest} width="200px" />}
                       />
                     ) : (
-                      <Display>Please choose a category first</Display>
+                      <Display height="30px">
+                        <FormattedMessage {...messages.chooseCategory} />
+                      </Display>
                     )}
                   </div>
 
@@ -277,7 +311,12 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
                         readonly: false,
                       })
                     ) : (
-                      <Display>Please choose a filter first</Display>
+                      <>
+                        <Label height="30px" />
+                        <Display height="30px">
+                          <FormattedMessage {...messages.chooseFilter} />
+                        </Display>
+                      </>
                     )}
                   </div>
                 </div>
@@ -289,22 +328,24 @@ const Filter = ({ config, filters, staticFilters, onChange }: Props) => {
             );
           })}
 
-          <BaseButton
-            icon="ADD"
-            label="ADD FILTER"
-            backgroundColor="TEAL"
-            hoverBackgroundColor="TEAL_DARK"
-            onClick={() =>
-              setFilterStates([
-                ...filterStates,
-                { entity: null, field: null, type: null, value: null },
-              ])
-            }
-          />
+          {availableConfig.length > 0 && !hasWeakFilter && (
+            <BaseButton
+              icon="ADD"
+              label={<FormattedMessage {...messages.addFilter} />}
+              backgroundColor="TEAL"
+              hoverBackgroundColor="TEAL_DARK"
+              onClick={() =>
+                setFilterStates([
+                  ...filterStates,
+                  { entity: null, field: null, type: null, value: null },
+                ])
+              }
+            />
+          )}
         </div>
       </div>
     </OutsideClickHandler>
   );
 };
 
-export default Filter;
+export default injectIntl(Filter);
