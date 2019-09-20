@@ -86,6 +86,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   -ms-letter-spacing: 2px;
   letter-spacing: 2px;
   font-size: 12px;
+  text-transform: uppercase;
 }
 
 .emotion-12 {
@@ -437,7 +438,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
           type="submit"
         >
           <div
-            class="css-6tmki"
+            class="css-b2bx41"
           >
             LOGIN
           </div>
@@ -559,6 +560,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
   -ms-letter-spacing: 2px;
   letter-spacing: 2px;
   font-size: 12px;
+  text-transform: uppercase;
 }
 
 .emotion-12 {
