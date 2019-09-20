@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { Label, ToggleInput } from 'components/Form';
+import messages from '../../messages';
 import { StatusStyle } from './style';
 
 type Props = {
@@ -14,7 +15,9 @@ type Props = {
 const Archived = ({ value, readonly, onChange }: Props) => {
   return (
     <>
-      <Label height="30px">Status</Label>
+      <Label height="30px">
+        <FormattedMessage {...messages.status} />
+      </Label>
 
       <div className={StatusStyle(value)}>
         <ToggleInput
@@ -28,9 +31,9 @@ const Archived = ({ value, readonly, onChange }: Props) => {
         <Icon icon={value ? 'ARCHIVE' : 'ACTIVE'} />
 
         {value ? (
-          <FormattedMessage id="components.form.archived" defaultMessage="Archived" />
+          <FormattedMessage {...messages.archived} />
         ) : (
-          <FormattedMessage id="components.form.active" defaultMessage="Active" />
+          <FormattedMessage {...messages.active} />
         )}
       </div>
     </>

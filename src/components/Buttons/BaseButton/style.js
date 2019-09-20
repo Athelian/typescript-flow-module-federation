@@ -48,6 +48,7 @@ export const ButtonLabelStyle: string = css`
   ${presets.ELLIPSIS};
   letter-spacing: 2px;
   ${fontSizes.SMALL};
+  text-transform: uppercase;
 `;
 
 export const ButtonLoadingWrapperStyle: string = css`
