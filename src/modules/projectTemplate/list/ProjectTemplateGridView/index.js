@@ -10,7 +10,6 @@ import { TemplateCard } from 'components/Cards';
 import ProjectTemplateFormInSlide from 'modules/projectTemplate/form/index.slide';
 import { PROJECT_TEMPLATE_FORM } from 'modules/permission/constants/task';
 import usePermission from 'hooks/usePermission';
-import { isForbidden } from 'utils/data';
 
 type Props = {
   items: Array<Object>,
@@ -20,19 +19,18 @@ type Props = {
 };
 
 const renderItem = (item: Object, canOpenForm: boolean) => {
-  if (isForbidden(item)) {
-    return 'forbiddenCard';
-  }
   return (
     <BooleanValue key={item.id}>
       {({ value: isOpen, set: toggleSlide }) => (
         <>
           <TemplateCard
-            type="PROJECT"
+            type="MILESTONE"
             template={{
+              ...item,
               id: item.id,
               title: item.name,
               description: item.description,
+              count: item.milestones?.length || 0,
             }}
             onClick={() => {
               if (canOpenForm) {

@@ -108,8 +108,7 @@ const DateBindingInput = ({
               setDateBindingSign('before');
             }
           }}
-          // FIXME: confirm
-          editable
+          editable={bindingEditable}
         >
           <div className={IconStyle}>
             <Icon icon={bound ? 'BINDED' : 'UNBINDED'} />

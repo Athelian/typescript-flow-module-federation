@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 
-import { projectTemplateFormFragment } from 'graphql/projectTemplate/fragment';
+import { projectTemplateCardFragment } from 'graphql/projectTemplate/fragment';
 
 export const projectTemplateListQuery = gql`
   query projectTemplateListQuery(
@@ -12,14 +12,14 @@ export const projectTemplateListQuery = gql`
   ) {
     projectTemplates(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...projectTemplateFormFragment
+        ...projectTemplateCardFragment
       }
       page
       totalPage
     }
   }
 
-  ${projectTemplateFormFragment}
+  ${projectTemplateCardFragment}
 `;
 
 export default projectTemplateListQuery;

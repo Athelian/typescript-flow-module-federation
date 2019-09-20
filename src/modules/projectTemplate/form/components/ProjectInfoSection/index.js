@@ -35,7 +35,6 @@ const ProjectInfoSection = () => {
   return (
     <Subscribe to={[ProjectTemplateContainer]}>
       {({ state: values, setFieldValue }) => {
-        // const { milestones } = values;
         return (
           <SectionWrapper id="project_info_section">
             <SectionHeader
@@ -134,14 +133,6 @@ const ProjectInfoSection = () => {
                   </div>
                 </div>
               </GridColumn>
-              {/* FIXME: @tj */}
-              {/* <div className={MilestonesTimelineWrapperStyle}>
-                <div className={ProjectCardBodyStyle(milestones.length)}>
-                  {milestones.map(milestone => (
-                    <MilestoneTimelineItem key={milestone.id} milestone={milestone} />
-                  ))}
-                </div>
-              </div> */}
             </div>
           </SectionWrapper>
         );

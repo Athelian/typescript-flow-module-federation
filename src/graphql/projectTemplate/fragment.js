@@ -23,6 +23,29 @@ const milestoneTemplateFormFragment = gql`
   }
 `;
 
+export const projectTemplateCardFragment = gql`
+  fragment projectTemplateCardFragment on ProjectTemplate {
+    id
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+
+    name
+    description
+    tags {
+      ...tagFragment
+    }
+    milestones {
+      ... on MilestoneTemplate {
+        id
+      }
+    }
+  }
+  ${userAvatarFragment}
+  ${tagFragment}
+`;
+
 export const projectTemplateFormFragment = gql`
   fragment projectTemplateFormFragment on ProjectTemplate {
     id
@@ -44,5 +67,3 @@ export const projectTemplateFormFragment = gql`
   ${tagFragment}
   ${milestoneTemplateFormFragment}
 `;
-
-export default projectTemplateFormFragment;
