@@ -25,7 +25,7 @@ const initFilter = {
 const ProjectTemplateListPage = () => {
   const { queryVariables } = useFilter(initFilter, `filterProjectTemplate`);
 
-  const { loading, error, data, fetchMore } = useQuery(projectTemplateListQuery, {
+  const { loading, error, data, fetchMore, refetch } = useQuery(projectTemplateListQuery, {
     variables: queryVariables,
   });
 
@@ -45,7 +45,10 @@ const ProjectTemplateListPage = () => {
                 {isOpen && (
                   <ProjectTemplateFormInSlide
                     onCancel={() => toggleSlide(false)}
-                    onSave={() => toggleSlide(false)}
+                    onSave={() => {
+                      refetch();
+                      toggleSlide(false);
+                    }}
                   />
                 )}
               </SlideView>
