@@ -1,15 +1,15 @@
-name: "PR Checks"
+name: 'PR Checks'
 on:
   pull_request:
     branches:
       - develop
+      - hotfixes
 
 jobs:
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
     steps:
-
       - name: Check out code
         uses: actions/checkout@master
 
