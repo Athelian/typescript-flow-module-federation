@@ -107,7 +107,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
           completedAt,
           completedBy,
           estimatedCompletionDateBinding,
-          tasks,
+          tasks = [],
         } = currentMilestone;
 
         const dueDate = dueDateBinding
@@ -181,7 +181,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                             type="button"
                             onClick={event => {
                               event.stopPropagation();
-                              if ((tasks || []).length > 0) {
+                              if (tasks.length > 0) {
                                 dialogToggle(true);
                               } else {
                                 removeMilestone(milestoneId);
@@ -483,10 +483,10 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                                 excludeIds: excludeIds(),
                                 hasMilestoneExceptIds: excludeTaskIds(),
                               }}
-                              selectedTasks={tasks || []}
+                              selectedTasks={tasks}
                               onSelect={selected => {
                                 selectTasksSlideToggle(false);
-                                const counter = (tasks || []).length;
+                                const counter = tasks.length;
                                 originalTasks.push(...selected);
                                 onChangeValue(`${milestoneId}.tasks`, [
                                   ...tasks,
@@ -505,7 +505,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                   </BooleanValue>
 
                   <div className={TaskRingWrapperStyle}>
-                    <TaskRing tasks={tasks || []} />
+                    <TaskRing tasks={tasks} />
                   </div>
                 </div>
               </>
