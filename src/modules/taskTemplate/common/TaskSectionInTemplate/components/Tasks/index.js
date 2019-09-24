@@ -76,7 +76,11 @@ const Tasks = ({
                 ),
               ].filter(Boolean)}
             />
-            <SlideView isOpen={opened} onRequestClose={() => selectTaskSlideToggle(false)}>
+            <SlideView
+              isOpen={opened}
+              onRequestClose={() => selectTaskSlideToggle(false)}
+              shouldConfirm={() => document.getElementById('task_form_save_button')}
+            >
               {opened && (
                 <TaskFormInSlide
                   groupIds={parseGroupIds(task)}

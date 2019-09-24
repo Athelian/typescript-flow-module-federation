@@ -64,7 +64,14 @@ export default function MilestoneColumnHeaderCard({ milestoneIndex, isDragging, 
           <BooleanValue>
             {({ value: isOpen, set: toggleSlide }) => (
               <>
-                <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
+                <SlideView
+                  isOpen={isOpen}
+                  onRequestClose={() => toggleSlide(false)}
+                  shouldConfirm={() => {
+                    const button = document.getElementById('milestone_form_save_button');
+                    return button;
+                  }}
+                >
                   {isOpen && (
                     <MilestoneFormSlide
                       milestone={milestone}

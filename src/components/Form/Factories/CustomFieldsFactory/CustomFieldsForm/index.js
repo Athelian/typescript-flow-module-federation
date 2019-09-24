@@ -153,7 +153,12 @@ class CustomFieldsForm extends React.Component<Props> {
                                   <SlideView
                                     isOpen={opened}
                                     onRequestClose={() => slideToggle(false)}
-                                    targetId="select_template_button"
+                                    shouldConfirm={() => {
+                                      const button = document.getElementById(
+                                        'select_template_button'
+                                      );
+                                      return button && !button.disabled;
+                                    }}
                                   >
                                     {opened && (
                                       <CustomFieldsTemplateSelector

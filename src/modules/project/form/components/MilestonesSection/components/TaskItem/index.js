@@ -90,7 +90,7 @@ function TaskItem({ task, isDragging, provided, onChange, onRemove }: Props) {
                 <SlideView
                   isOpen={isOpen}
                   onRequestClose={() => toggleTaskForm(false)}
-                  targetId="task_form_save_button"
+                  shouldConfirm={() => document.getElementById('task_form_save_button')}
                 >
                   {isOpen && (
                     <QueryFormPermissionContext.Provider

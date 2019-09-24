@@ -128,7 +128,10 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
       isOpen={id !== ''}
       onRequestClose={onRequestClose}
       // FIXME: do the robust way, e.g check the dirty state
-      targetId="itShouldNotCheckBaseOnTheDOM"
+      shouldConfirm={() => {
+        const button = document.getElementById('itShouldNotCheckBaseOnTheDOM');
+        return button;
+      }}
     >
       {form}
     </SlideView>

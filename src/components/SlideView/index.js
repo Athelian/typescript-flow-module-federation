@@ -4,14 +4,13 @@ import * as ReactDOM from 'react-dom';
 import { FormattedMessage } from 'react-intl';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import logger from 'utils/logger';
-import { isDisable } from 'utils/ui';
 import SlideViewContext, { type SlideViewContextProps } from './context';
 import { BackdropStyle, SlideViewStyle, SlideViewContentStyle } from './style';
 
 type WrapperProps = {
   isOpen: boolean,
   onRequestClose: () => void,
-  targetId: string,
+  shouldConfirm: Function,
   children: React.Node,
   options: {
     width: {
@@ -42,7 +41,11 @@ const defaultProps = {
     width: { initialValue: 80, step: 10, unit: 'vw' },
     minWidth: { initialValue: 1030, step: 50, unit: 'px' },
   },
-  targetId: 'save_button',
+  shouldConfirm: () => {
+    const button = document.getElementById('save_button');
+    // $FlowFixMe: Cannot get button.disabled because property disabled is missing in HTMLElement [1].
+    return button && !button.disabled;
+  },
 };
 
 class SlideView extends React.Component<Props, State> {
@@ -117,7 +120,7 @@ class SlideView extends React.Component<Props, State> {
   };
 
   render() {
-    const { children, isOpen, onRequestClose, targetId } = this.props;
+    const { children, isOpen, onRequestClose, shouldConfirm } = this.props;
     const { neverOpened, openedDialog } = this.state;
     const { width, minWidth, widthWithUnit, minWidthWithUnit } = this.getWidths();
 
@@ -131,10 +134,10 @@ class SlideView extends React.Component<Props, State> {
               className={BackdropStyle({ isOpen, neverOpened })}
               onClick={event => {
                 event.stopPropagation();
-                if (isDisable(targetId)) {
-                  onRequestClose();
-                } else {
+                if (shouldConfirm()) {
                   this.openDialog();
+                } else {
+                  onRequestClose();
                 }
               }}
               role="presentation"

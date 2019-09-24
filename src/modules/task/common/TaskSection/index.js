@@ -614,7 +614,12 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                         <SlideView
                           isOpen={opened}
                           onRequestClose={() => slideToggle(false)}
-                          targetId="select_task_template_apply_button"
+                          shouldConfirm={() => {
+                            const button = document.getElementById(
+                              'select_task_template_apply_button'
+                            );
+                            return button;
+                          }}
                         >
                           {opened && (
                             <SelectTaskTemplate
