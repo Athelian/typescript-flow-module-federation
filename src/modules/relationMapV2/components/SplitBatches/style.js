@@ -20,3 +20,10 @@ export const ButtonsStyle: string = css`
   justify-content: center;
   grid-gap: 10px;
 `;
+
+export const BatchInputStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  padding: 20px 0 0 0;
+  justify-content: center;
+  grid-gap: 10px;
+`;
