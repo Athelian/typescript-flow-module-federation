@@ -33,9 +33,10 @@ import {
 type Props = {|
   isDragging: boolean,
   milestoneIndex: number,
+  provided: Object,
 |};
 
-export default function MilestoneColumnHeaderCard({ milestoneIndex, isDragging }: Props) {
+export default function MilestoneColumnHeaderCard({ milestoneIndex, isDragging, provided }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const [hoverRef, isHovered] = useHover();
@@ -79,6 +80,7 @@ export default function MilestoneColumnHeaderCard({ milestoneIndex, isDragging }
                   // FIXME: confirm again
                   ref={hoverRef}
                   className={MilestoneHeaderWrapperStyle(isDragging)}
+                  {...provided.dragHandleProps}
                   role="presentation"
                   onClick={() => {
                     // This is using for fixing a edge case when on blur doesn't fire on inline edit for task card
