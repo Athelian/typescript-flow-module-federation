@@ -306,7 +306,7 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     this.setState(prevState => ({
       milestones: prevState.milestones.map(milestone => ({
         ...milestone,
-        tasks: milestone.tasks.map(task => ({
+        tasks: (milestone.tasks || []).map(task => ({
           ...task,
           ...tasks.find(item => item.id === task.id),
         })),

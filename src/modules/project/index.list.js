@@ -91,7 +91,10 @@ const ProjectListModule = (props: Props) => {
                             state: {
                               template: {
                                 tags: template.tags,
-                                milestones: template.milestones,
+                                milestones: template.milestones.map(item => ({
+                                  ...item,
+                                  tasks: [],
+                                })),
                               },
                             },
                           });
