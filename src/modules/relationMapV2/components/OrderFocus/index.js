@@ -44,6 +44,7 @@ import RemoveBatchConfirm from '../RemoveBatchConfirm';
 import MoveBatch from '../MoveBatch';
 import AddTags from '../AddTags';
 import DeleteConfirm from '../DeleteConfirm';
+import SplitBatches from '../SplitBatches';
 
 const LoadingPlaceHolder = React.memo(() => {
   return (
@@ -518,6 +519,7 @@ export default function OrderFocus() {
                         }}
                       />
                       <MoveBatch />
+                      <SplitBatches onSuccess={console.warn} />
                       <InlineCreateBatch
                         onSuccess={(orderId, batch) => {
                           if (orderId) {
