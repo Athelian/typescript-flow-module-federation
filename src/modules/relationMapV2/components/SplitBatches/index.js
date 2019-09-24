@@ -9,13 +9,14 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import Dialog from 'components/Dialog';
 import Icon from 'components/Icon';
 import { FieldItem, DefaultStyle, Label, NumberInput, FormTooltip } from 'components/Form';
+import LoadingIcon from 'components/LoadingIcon';
 import { batchSimpleSplitMutation } from './mutation';
 import { DialogStyle, ButtonsStyle, ConfirmMessageStyle, BatchInputStyle } from './style';
 import validator from './validator';
 import { targetedIds } from '../OrderFocus/helpers';
 
 type Props = {|
-  onSuccess: (orderIds: Array<string>, batchIds: Array<string>) => void,
+  onSuccess: (orderIds: Array<string>, batchIds: Object) => void,
 |};
 
 function SplitBatch({
@@ -118,12 +119,14 @@ export default function SplitBatches({ onSuccess }: Props) {
     )
       .then(result => {
         const orderIds = [];
-        const batchesIds = [];
+        const batchesIds = {};
         result.forEach(({ data }) => {
-          (data?.batchSimpleSplit?.batches ?? []).forEach(batch => {
-            batchesIds.push(batch?.id);
+          const batchList = data?.batchSimpleSplit?.batches ?? [];
+          if (batchList.length) {
+            const [batch, newBatch] = batchList;
+            if (batch?.id ?? '') batchesIds[batch?.id ?? ''] = newBatch?.id;
             orderIds.push(batch?.orderItem?.order?.id);
-          });
+          }
         });
         onSuccess(orderIds, batchesIds);
       })
@@ -142,31 +145,44 @@ export default function SplitBatches({ onSuccess }: Props) {
     <Dialog isOpen={isOpen} width="500px">
       {isOpen && (
         <div className={DialogStyle}>
-          <h3 className={ConfirmMessageStyle}>
-            Split batches <Icon icon="BATCH" />
-          </h3>
-          {batchIds.map(batchId => (
-            <SplitBatch
-              key={batchId}
-              onChange={quantity =>
-                setBatches([
-                  ...batches.filter(batch => batch?.id !== batchId),
-                  { id: batchId, quantity },
-                ])
-              }
-              no={mapping.entities?.batches?.[batchId]?.no ?? ''}
-              latestQuantity={mapping.entities?.batches?.[batchId]?.latestQuantity ?? 0}
-              quantity={getQuantity(batchId)}
-            />
-          ))}
-          <div className={ButtonsStyle}>
-            <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-            <SaveButton
-              isLoading={Boolean(isProcessing)}
-              disabled={Boolean(isProcessing) || !isValid()}
-              onClick={onConfirm}
-            />
-          </div>
+          {isProcessing ? (
+            <>
+              <h3 className={ConfirmMessageStyle}>
+                Split {batchIds.length} batches <Icon icon="BATCH" /> ...
+              </h3>
+              <LoadingIcon />
+            </>
+          ) : (
+            <>
+              <h3 className={ConfirmMessageStyle}>
+                You hae selected {batchIds.length} batches <Icon icon="BATCH" />
+                Please enter the quantity you would like to split each Batch
+                <Icon icon="BATCH" /> into. (Splitting into 0 quantity will simply clone it)
+              </h3>
+              {batchIds.map(batchId => (
+                <SplitBatch
+                  key={batchId}
+                  onChange={quantity =>
+                    setBatches([
+                      ...batches.filter(batch => batch?.id !== batchId),
+                      { id: batchId, quantity },
+                    ])
+                  }
+                  no={mapping.entities?.batches?.[batchId]?.no ?? ''}
+                  latestQuantity={mapping.entities?.batches?.[batchId]?.latestQuantity ?? 0}
+                  quantity={getQuantity(batchId)}
+                />
+              ))}
+              <div className={ButtonsStyle}>
+                <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
+                <SaveButton
+                  isLoading={Boolean(isProcessing)}
+                  disabled={Boolean(isProcessing) || !isValid()}
+                  onClick={onConfirm}
+                />
+              </div>
+            </>
+          )}
         </div>
       )}
     </Dialog>

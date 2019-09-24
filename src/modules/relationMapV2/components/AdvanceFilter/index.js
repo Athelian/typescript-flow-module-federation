@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import Filter from 'components/NavBar/components/Filter';
+import { OrderConfigFilter } from 'components/NavBar/components/Filter/configs';
 import { SearchInput } from 'components/NavBar';
 import { SortAndFilter } from 'modules/relationMapV2/store';
 import MatchesEntities from './components/MatchesEntities';
@@ -13,8 +14,7 @@ export default function AdvanceFilter() {
   return (
     <>
       <Filter
-        // TODO: need to add more fields after the component is ready
-        config={[{ entity: 'ORDER', field: 'archived', type: 'archived', defaultValue: false }]}
+        config={OrderConfigFilter}
         filters={filters}
         onChange={filter =>
           onChangeFilter({
