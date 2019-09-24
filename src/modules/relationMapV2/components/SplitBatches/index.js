@@ -9,13 +9,13 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import Dialog from 'components/Dialog';
 import Icon from 'components/Icon';
 import { FieldItem, DefaultStyle, Label, NumberInput, FormTooltip } from 'components/Form';
-import { entitiesUpdateManyMutation } from './mutation';
+import { batchSimpleSplitMutation } from './mutation';
 import { DialogStyle, ButtonsStyle, ConfirmMessageStyle, BatchInputStyle } from './style';
 import validator from './validator';
 import { targetedIds } from '../OrderFocus/helpers';
 
 type Props = {|
-  onSuccess: (orderIds: Array<string>) => void,
+  onSuccess: (orderIds: Array<string>, batchIds: Array<string>) => void,
 |};
 
 function SplitBatch({
@@ -27,7 +27,7 @@ function SplitBatch({
   no: string,
   quantity: number,
   latestQuantity: number,
-  onChange: (qty: number) => void,
+  onChange: (quantity: number) => void,
 |}) {
   const validation = validator(0, latestQuantity);
   return (
@@ -77,16 +77,19 @@ function SplitBatch({
 export default function SplitBatches({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
   const { dispatch, state } = React.useContext(RelationMapContext);
-  const [updateEntities] = useMutation(entitiesUpdateManyMutation);
+  const [batchSimpleSplit] = useMutation(batchSimpleSplitMutation);
   const {
     targets,
     split: { isOpen, isProcessing },
   } = state;
   const batchIds = targetedIds(targets, BATCH);
-  const [batches, setBatches] = React.useState(batchIds.map(id => ({ id, qty: 0 })));
+  const DEFAULT_QTY = 0;
+  const [batches, setBatches] = React.useState(() =>
+    batchIds.map(id => ({ id, quantity: DEFAULT_QTY }))
+  );
   React.useEffect(() => {
     return () => {
-      if (isOpen) setBatches([]);
+      if (!isOpen) setBatches([]);
     };
   }, [isOpen]);
   const onCancel = React.useCallback(() => {
@@ -98,34 +101,39 @@ export default function SplitBatches({ onSuccess }: Props) {
 
   const getQuantity = (batchId: string) => {
     const findBatch = batches.find(batch => batch.id === batchId);
-    return findBatch?.qty ?? 0;
+    return findBatch?.quantity ?? DEFAULT_QTY;
   };
-
-  React.useEffect(() => {
-    if (isProcessing) {
-      updateEntities({
-        variables: {
-          batchIds,
-        },
-      })
-        .then(result => {
-          onSuccess((result.data?.entitiesUpdateMany?.orders ?? []).map(order => order.id));
-        })
-        .catch(onCancel);
-    }
-  }, [batchIds, isProcessing, onCancel, onSuccess, updateEntities]);
 
   const onConfirm = () => {
     dispatch({
       type: 'SPLIT_START',
       payload: {},
     });
+    Promise.all(
+      batches.map(({ id, quantity }) =>
+        batchSimpleSplit({
+          variables: { id, input: { quantity } },
+        })
+      )
+    )
+      .then(result => {
+        const orderIds = [];
+        const batchesIds = [];
+        result.forEach(({ data }) => {
+          (data?.batchSimpleSplit?.batches ?? []).forEach(batch => {
+            batchesIds.push(batch?.id);
+            orderIds.push(batch?.orderItem?.order?.id);
+          });
+        });
+        onSuccess(orderIds, batchesIds);
+      })
+      .catch(onCancel);
   };
 
   const isValid = () => {
-    return batches.every(({ id, qty }) =>
+    return batches.every(({ id, quantity }) =>
       validator(0, mapping.entities?.batches?.[id]?.latestQuantity ?? 0).isValidSync({
-        quantity: qty,
+        quantity,
       })
     );
   };
@@ -140,10 +148,10 @@ export default function SplitBatches({ onSuccess }: Props) {
           {batchIds.map(batchId => (
             <SplitBatch
               key={batchId}
-              onChange={qty =>
+              onChange={quantity =>
                 setBatches([
                   ...batches.filter(batch => batch?.id !== batchId),
-                  { id: batchId, qty },
+                  { id: batchId, quantity },
                 ])
               }
               no={mapping.entities?.batches?.[batchId]?.no ?? ''}

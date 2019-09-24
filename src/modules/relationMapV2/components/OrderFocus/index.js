@@ -519,7 +519,22 @@ export default function OrderFocus() {
                         }}
                       />
                       <MoveBatch />
-                      <SplitBatches onSuccess={console.warn} />
+                      <SplitBatches
+                        onSuccess={orderIds => {
+                          queryOrdersDetail(orderIds);
+                          window.requestIdleCallback(
+                            () => {
+                              dispatch({
+                                type: 'SPLIT_CLOSE',
+                                payload: {},
+                              });
+                            },
+                            {
+                              timeout: 250,
+                            }
+                          );
+                        }}
+                      />
                       <InlineCreateBatch
                         onSuccess={(orderId, batch) => {
                           if (orderId) {
