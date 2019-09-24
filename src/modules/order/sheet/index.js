@@ -3,10 +3,13 @@ import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, SearchInput } from 'components/NavBar';
+import { ExportButton } from 'components/Buttons';
 import { Sheet, ColumnsConfig } from 'components/Sheet';
 import Filter from 'components/NavBar/components/Filter';
 import { OrderConfigFilter } from 'components/NavBar/components/Filter/configs';
 import { clone } from 'utils/fp';
+import { isEnableBetaFeature } from 'utils/env';
+import { ordersExportQuery } from '../query';
 import columns from './columns';
 import transformer from './transformer';
 import entityEventHandler from './handler';
@@ -95,6 +98,16 @@ const OrderSheetModule = ({ orderIds }: Props) => {
           }
         />
         <ColumnsConfig columns={columns} onChange={setCurrentColumns} />
+        {isEnableBetaFeature && (
+          <ExportButton
+            type="Orders"
+            exportQuery={ordersExportQuery}
+            variables={{
+              filterBy,
+              sortBy,
+            }}
+          />
+        )}
       </NavBar>
 
       <Sheet

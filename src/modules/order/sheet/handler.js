@@ -24,7 +24,7 @@ function addOrderItemFactory(client: ApolloClient, dispatch: Action => void) {
       })
       .then(({ data }) => {
         const newOrderItem = data?.orderItem;
-        if (newOrderItem.__typename !== 'OrderItem') {
+        if (newOrderItem?.__typename !== 'OrderItem') {
           return;
         }
 
@@ -76,7 +76,7 @@ function addBatchFactory(client: ApolloClient, dispatch: Action => void) {
       })
       .then(({ data }) => {
         const newBatch = data?.batch;
-        if (newBatch.__typename !== 'Batch') {
+        if (newBatch?.__typename !== 'Batch') {
           return;
         }
 
@@ -178,7 +178,7 @@ function changeBatchContainerFactory(client: ApolloClient, dispatch: Action => v
         })
         .then(({ data }) => {
           const container = data?.container;
-          if (container.__typename !== 'Container') {
+          if (container?.__typename !== 'Container') {
             return;
           }
 
@@ -240,7 +240,7 @@ function changeBatchShipmentFactory(client: ApolloClient, dispatch: Action => vo
         })
         .then(({ data }) => {
           const shipment = data?.shipment;
-          if (shipment.__typename !== 'Shipment') {
+          if (shipment?.__typename !== 'Shipment') {
             return;
           }
 
