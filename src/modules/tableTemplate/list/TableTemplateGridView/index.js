@@ -32,7 +32,14 @@ const defaultRenderItem = (item: Object) => (
           actions={[]}
           showActionsOnHover
         />
-        <SlideView isOpen={isOpen} onRequestClose={() => toggle(false)}>
+        <SlideView
+          isOpen={isOpen}
+          onRequestClose={() => toggle(false)}
+          shouldConfirm={() => {
+            const button = document.getElementById('table_template_form_save_button');
+            return button;
+          }}
+        >
           {isOpen && <TemplateFormWrapper template={item} onCancel={() => toggle(false)} />}
         </SlideView>
       </>

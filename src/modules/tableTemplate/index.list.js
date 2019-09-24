@@ -73,7 +73,14 @@ const TableTemplateModule = (props: Props) => {
             {({ value: isOpen, set: toggle }) => (
               <>
                 {canCreate && <NewButton onClick={() => toggle(true)} />}
-                <SlideView isOpen={isOpen} onRequestClose={() => toggle(false)}>
+                <SlideView
+                  isOpen={isOpen}
+                  onRequestClose={() => toggle(false)}
+                  shouldConfirm={() => {
+                    const button = document.getElementById('table_template_form_save_button');
+                    return button && !button.disabled;
+                  }}
+                >
                   {isOpen && (
                     <TemplateFormWrapper template={{}} isNew onCancel={() => toggle(false)} />
                   )}
