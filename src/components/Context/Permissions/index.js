@@ -182,4 +182,15 @@ export const PermissionsProviderDev = ({ permissions, children }: DevProps) => {
   );
 };
 
+export const useAllHasPermission = (ids: Array<string> = []): HasPermissions => {
+  const { hasPermissionsByOrganization } = usePermissionContext();
+
+  return React.useCallback(
+    (permissionKey: string | Array<string> = []): boolean => {
+      return ids.every(id => hasPermissionsByOrganization(id)(permissionKey));
+    },
+    [ids, hasPermissionsByOrganization]
+  );
+};
+
 export default PermissionsProvider;
