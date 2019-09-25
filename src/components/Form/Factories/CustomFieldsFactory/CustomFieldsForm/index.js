@@ -157,6 +157,7 @@ class CustomFieldsForm extends React.Component<Props> {
                                       const button = document.getElementById(
                                         'select_template_button'
                                       );
+                                      // $FlowFixMe: Cannot get button.disabled because property disabled is missing in HTMLElement [1].
                                       return button && !button.disabled;
                                     }}
                                   >

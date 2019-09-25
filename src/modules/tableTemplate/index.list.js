@@ -69,25 +69,27 @@ const TableTemplateModule = (props: Props) => {
             canSearch
           />
 
-          <BooleanValue>
-            {({ value: isOpen, set: toggle }) => (
-              <>
-                {canCreate && <NewButton onClick={() => toggle(true)} />}
-                <SlideView
-                  isOpen={isOpen}
-                  onRequestClose={() => toggle(false)}
-                  shouldConfirm={() => {
-                    const button = document.getElementById('table_template_form_save_button');
-                    return button && !button.disabled;
-                  }}
-                >
-                  {isOpen && (
-                    <TemplateFormWrapper template={{}} isNew onCancel={() => toggle(false)} />
-                  )}
-                </SlideView>
-              </>
-            )}
-          </BooleanValue>
+          {canCreate && (
+            <BooleanValue>
+              {({ value: isOpen, set: toggle }) => (
+                <>
+                  <NewButton onClick={() => toggle(true)} />
+                  <SlideView
+                    isOpen={isOpen}
+                    onRequestClose={() => toggle(false)}
+                    shouldConfirm={() => {
+                      const button = document.getElementById('table_template_form_save_button');
+                      return button;
+                    }}
+                  >
+                    {isOpen && (
+                      <TemplateFormWrapper template={{}} isNew onCancel={() => toggle(false)} />
+                    )}
+                  </SlideView>
+                </>
+              )}
+            </BooleanValue>
+          )}
         </NavBar>
         <TableTemplateList {...queryVariables} />
       </Content>

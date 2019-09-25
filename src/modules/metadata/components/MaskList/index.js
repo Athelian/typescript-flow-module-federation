@@ -25,7 +25,7 @@ type Props = {
 const MaskList = ({ entityType, queryVariables }: Props) => (
   <PermissionConsumer>
     {hasPermission => {
-      const allowCreate = hasPermission(CUSTOM_FIELD_MASKS_CREATE);
+      const canCreate = hasPermission(CUSTOM_FIELD_MASKS_CREATE);
 
       return (
         <Query
@@ -49,7 +49,7 @@ const MaskList = ({ entityType, queryVariables }: Props) => (
                   <Label>
                     <FormattedMessage id="modules.metadata.templates" defaultMessage="TEMPLATES" />
                   </Label>
-                  {allowCreate && (
+                  {canCreate && (
                     <BooleanValue>
                       {({ value: isOpen, set: toggle }) => (
                         <>
@@ -61,7 +61,7 @@ const MaskList = ({ entityType, queryVariables }: Props) => (
                               const button = document.getElementById(
                                 'custom_fields_template_form_save_button'
                               );
-                              return button && !button.disabled;
+                              return button;
                             }}
                           >
                             {isOpen && (

@@ -30,6 +30,7 @@ const initFilter = {
 
 const TaskTemplateListModule = () => {
   const { hasPermission } = usePermission();
+  const canCreate = hasPermission(TASK_TEMPLATE_CREATE);
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     initFilter,
     `filterTaskTemplate`
@@ -122,26 +123,32 @@ const TaskTemplateListModule = () => {
             }}
           />
 
-          <BooleanValue>
-            {({ value: isOpen, set: toggleTaskTemplateForm }) => (
-              <>
-                {hasPermission(TASK_TEMPLATE_CREATE) && (
+          {canCreate && (
+            <BooleanValue>
+              {({ value: isOpen, set: toggleTaskTemplateForm }) => (
+                <>
                   <NewButton onClick={() => toggleTaskTemplateForm(true)} />
-                )}
-                <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskTemplateForm(false)}>
-                  {isOpen && (
-                    <TaskTemplateFormWrapper
-                      template={{
-                        entityType: activeType,
-                      }}
-                      isNew
-                      onCancel={() => toggleTaskTemplateForm(false)}
-                    />
-                  )}
-                </SlideView>
-              </>
-            )}
-          </BooleanValue>
+                  <SlideView
+                    isOpen={isOpen}
+                    onRequestClose={() => toggleTaskTemplateForm(false)}
+                    shouldConfirm={() => {
+                      return document.getElementById('task_template_form_save_button');
+                    }}
+                  >
+                    {isOpen && (
+                      <TaskTemplateFormWrapper
+                        template={{
+                          entityType: activeType,
+                        }}
+                        isNew
+                        onCancel={() => toggleTaskTemplateForm(false)}
+                      />
+                    )}
+                  </SlideView>
+                </>
+              )}
+            </BooleanValue>
+          )}
         </NavBar>
         <TaskTemplateList queryVariables={queryVariables} entityType={activeType} />
       </Content>
