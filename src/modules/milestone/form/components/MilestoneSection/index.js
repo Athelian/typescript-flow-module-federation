@@ -54,7 +54,7 @@ const MilestoneSection = ({ intl }: Props) => {
   const canCreate = hasPermission(MILESTONE_CREATE);
   const canUpdate = hasPermission(MILESTONE_UPDATE);
 
-  const inTemplate = React.useContext(FormContext);
+  const { inTemplate } = React.useContext(FormContext);
 
   const canCreateOrUpdate = canCreate || canUpdate;
 
