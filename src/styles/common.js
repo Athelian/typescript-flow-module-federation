@@ -4,9 +4,10 @@ export const colors = {
   BLACK: '#555555',
 
   BLUE: '#0b6ede',
+  BLUE_HALF: 'rgba(11, 110, 222, 0.5)',
   BLUE_DARK: '#0756af',
   TEAL: '#11d1a6',
-  TEAL_HALF: '#b9ece0',
+  TEAL_HALF: 'rgba(17, 209, 166, 0.5)',
   TEAL_VERY_DARK: '#08a380',
   TEAL_DARK: '#0bbc94',
   TEAL_QUITE_DARK: '#78c5b4',
