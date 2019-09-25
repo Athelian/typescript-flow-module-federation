@@ -11,7 +11,7 @@ import { HorizontalLayoutWrapperStyle } from './style';
 type Props = {|
   shipment: ShipmentPayload,
 |};
-
+// FIXME: move to shipment card folder
 const HorizontalLayout = ({ shipment }: Props) => {
   return (
     <PartnerPermissionsWrapper data={shipment}>
