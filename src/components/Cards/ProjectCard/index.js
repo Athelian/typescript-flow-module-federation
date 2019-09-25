@@ -31,7 +31,6 @@ type Props = OptionalProps & {
 const ProjectCard = ({ project, onClick, ...rest }: Props) => {
   const { name, dueDate, tags = [], milestones = [] } = project;
 
-  // TODO: Handle if milestones is empty array
   const lastMilestone = milestones[milestones.length - 1];
   let lastMilestoneDiff = 0;
   if (dueDate && lastMilestone.completedAt) {
@@ -39,10 +38,9 @@ const ProjectCard = ({ project, onClick, ...rest }: Props) => {
       new Date(lastMilestone.completedAt),
       new Date(dueDate)
     );
-  } else if (dueDate && lastMilestone.estCompletedAt) {
-    // TODO: Replace estCompletedAt with real data
+  } else if (dueDate && lastMilestone.estimatedCompletionDate) {
     lastMilestoneDiff = differenceInCalendarDays(
-      new Date(lastMilestone.estCompletedAt),
+      new Date(lastMilestone.estimatedCompletionDate),
       new Date(dueDate)
     );
   }

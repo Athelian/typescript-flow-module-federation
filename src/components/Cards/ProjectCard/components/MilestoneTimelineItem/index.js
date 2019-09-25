@@ -29,7 +29,7 @@ type Props = {
 };
 
 const MilestoneTimelineItem = ({ milestone }: Props) => {
-  const { name, dueDate, estCompletedAt, completedAt, tasks = [] } = milestone;
+  const { name, dueDate, estimatedCompletionDate, completedAt, tasks = [] } = milestone;
 
   const isCompleted = completedAt;
   const total = tasks.length;
@@ -38,8 +38,8 @@ const MilestoneTimelineItem = ({ milestone }: Props) => {
   let dueDateDiff = 0;
   if (dueDate && completedAt) {
     dueDateDiff = differenceInCalendarDays(new Date(completedAt), new Date(dueDate));
-  } else if (dueDate && estCompletedAt) {
-    dueDateDiff = differenceInCalendarDays(new Date(estCompletedAt), new Date(dueDate));
+  } else if (dueDate && estimatedCompletionDate) {
+    dueDateDiff = differenceInCalendarDays(new Date(estimatedCompletionDate), new Date(dueDate));
   }
 
   return (
@@ -67,7 +67,7 @@ const MilestoneTimelineItem = ({ milestone }: Props) => {
         message={
           <MilestoneDueDateToolTip
             dueDate={dueDate}
-            estDate={estCompletedAt}
+            estDate={estimatedCompletionDate}
             completedAt={completedAt}
           />
         }
@@ -101,8 +101,8 @@ const MilestoneTimelineItem = ({ milestone }: Props) => {
                 <FormattedDate value={completedAt} />
               ) : (
                 <>
-                  {estCompletedAt ? (
-                    <FormattedDate value={estCompletedAt} />
+                  {estimatedCompletionDate ? (
+                    <FormattedDate value={estimatedCompletionDate} />
                   ) : (
                     <FormattedMessage id="component.cards.na" defaultMessage="N/A" />
                   )}

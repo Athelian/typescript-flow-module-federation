@@ -9,6 +9,7 @@ const milestoneInProjectCardFragment = gql`
     name
     dueDate
     completedAt
+    estimatedCompletionDate
     tasks {
       ... on Task {
         id
