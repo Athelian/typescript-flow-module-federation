@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import useUser from 'hooks/useUser';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import { Entities } from 'modules/relationMapV2/store';
 import { BATCH } from 'modules/relationMapV2/constants';
@@ -9,11 +10,19 @@ import Dialog from 'components/Dialog';
 import { BaseButton, CancelButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { useAllHasPermission } from 'components/Context/Permissions';
+import { ORDER_CREATE } from 'modules/permission/constants/order';
+import { CONTAINER_CREATE } from 'modules/permission/constants/container';
+import {
+  SHIPMENT_UPDATE,
+  SHIPMENT_ADD_BATCH,
+  SHIPMENT_CREATE,
+} from 'modules/permission/constants/shipment';
 import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
 import SelectOrderToMove from './components/SelectOrderToMove';
 import { targetedIds, findOrderIdByBatch } from '../OrderFocus/helpers';
 
 export default function MoveBatch() {
+  const { isExporter } = useUser();
   const { mapping } = Entities.useContainer();
   const { dispatch, state } = React.useContext(RelationMapContext);
   const batchIds = targetedIds(state.targets, BATCH);
@@ -50,8 +59,7 @@ export default function MoveBatch() {
     batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.ownedBy).filter(Boolean)
   );
 
-  const hasPermissionMoveToExistOrder = () => {
-    // all selected Batches have same Importer && Exporter)
+  const isSamePartners = () => {
     const importerIds = [];
     const exportIds = [];
     orderIds.forEach(orderId => {
@@ -66,30 +74,57 @@ export default function MoveBatch() {
       }
     });
 
-    if (importerIds.length > 1 || exportIds.length > 1) return false;
+    return importerIds.length <= 1 && exportIds.length <= 1;
+  };
 
-    // check permission to move batch
-    return hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
+  const isSameImporter = () => {
+    const importerIds = [];
+    orderIds.forEach(orderId => {
+      const order = mapping.entities?.orders?.[orderId];
+      const importId = order?.importer?.id;
+      if (importId && !importerIds.includes(importId)) {
+        importerIds.push(importId);
+      }
+    });
+
+    return importerIds.length <= 1;
+  };
+
+  const hasPermissionMoveToExistOrder = () => {
+    return isSamePartners() && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
   };
 
   const hasPermissionMoveToExistContainer = () => {
-    return true;
+    return isSameImporter() && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
   };
 
   const hasPermissionMoveToExistShipment = () => {
-    return true;
+    return isSameImporter() && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
   };
 
   const hasPermissionMoveToNewOrder = () => {
-    return true;
+    return (
+      isSamePartners() &&
+      hasPermissions(ORDER_CREATE) &&
+      hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM])
+    );
   };
 
   const hasPermissionMoveToNewContainer = () => {
-    return true;
+    return (
+      isSameImporter() &&
+      hasPermissions(CONTAINER_CREATE) &&
+      hasPermissions([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH]) &&
+      hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM])
+    );
   };
 
   const hasPermissionMoveToNewShipment = () => {
-    return true;
+    return isExporter()
+      ? isSamePartners()
+      : isSameImporter() &&
+          hasPermissions(SHIPMENT_CREATE) &&
+          hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
   };
 
   const noPermission = () => {
