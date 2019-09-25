@@ -16,8 +16,8 @@
               "value": "nosniff"
             },
             {
-              "key": "Content-Security-Policy",
-              "value": "script-src 'self'"
+              "key": "Content-Security-Policy-Report-Only",
+              "value": "script-src 'self' https://polyfill.io;"
             },
             {
               "key": "Referrer-Policy",
@@ -80,10 +80,6 @@
               "value": "nosniff"
             },
             {
-              "key": "Content-Security-Policy",
-              "value": "script-src 'self'"
-            },
-            {
               "key": "Referrer-Policy",
               "value": "same-origin"
             },
@@ -142,10 +138,6 @@
             {
               "key": "X-Content-Type-Options",
               "value": "nosniff"
-            },
-            {
-              "key": "Content-Security-Policy",
-              "value": "script-src 'self'"
             },
             {
               "key": "Referrer-Policy",
