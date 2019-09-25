@@ -21,7 +21,6 @@ import {
 } from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { Hits, Entities, SortAndFilter, ClientSorts } from 'modules/relationMapV2/store';
-import { WrapperStyle, ListStyle, RowStyle, ActionsBackdropStyle } from './style';
 import { findOrderIdByOrderItem, findOrderIdByBatch } from './helpers';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
@@ -45,6 +44,13 @@ import MoveBatch from '../MoveBatch';
 import AddTags from '../AddTags';
 import DeleteConfirm from '../DeleteConfirm';
 import SplitBatches from '../SplitBatches';
+import {
+  WrapperStyle,
+  ListStyle,
+  RowStyle,
+  ActionsBackdropStyle,
+  NoOrdersFoundStyle,
+} from './style';
 
 const LoadingPlaceHolder = React.memo(() => {
   return (
@@ -110,7 +116,7 @@ const hasMoreItems = (data: Object, model: string = 'orders') => {
 const innerElementType = React.forwardRef(
   ({ children, ...rest }: { children: React.Node }, ref) => (
     <div ref={ref} {...rest}>
-      <Header style={{ top: 0, left: 0, width: '100%', zIndex: 2, position: 'sticky' }} />
+      <Header />
       {children}
     </div>
   )
@@ -835,12 +841,17 @@ export default function OrderFocus() {
                       )}
                     </>
                   ) : (
-                    <Display>
-                      <FormattedMessage
-                        id="modules.Orders.noOrderFound"
-                        defaultMessage="No orders found"
-                      />
-                    </Display>
+                    <>
+                      <Header />
+                      <div className={NoOrdersFoundStyle}>
+                        <Display>
+                          <FormattedMessage
+                            id="modules.Orders.noOrderFound"
+                            defaultMessage="No orders found"
+                          />
+                        </Display>
+                      </div>
+                    </>
                   )}
                 </RelationMapContext.Provider>
               );

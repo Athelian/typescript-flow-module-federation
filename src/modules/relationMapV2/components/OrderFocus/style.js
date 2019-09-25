@@ -59,3 +59,8 @@ export const ActionsBackdropStyle: string = css`
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #eee);
   pointer-events: none;
 `;
+
+export const NoOrdersFoundStyle: string = css`
+  height: calc(100vh - 100px);
+  padding: 20px;
+`;

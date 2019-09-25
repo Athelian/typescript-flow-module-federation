@@ -16,8 +16,9 @@ type Sort = {
 };
 
 type OptionalProps = {
-  borderRound: boolean,
   sortable: boolean,
+  invertColors: boolean,
+  width: string,
 };
 
 type Props = OptionalProps & {
@@ -30,11 +31,14 @@ type Props = OptionalProps & {
   onChange: ({ field: Sort, ascending: boolean }) => void,
 };
 
+const defaultProps = {
+  sortable: true,
+  invertColors: false,
+  width: '150px',
+};
+
 class SortInput extends React.Component<Props> {
-  static defaultProps = {
-    borderRound: true,
-    sortable: true,
-  };
+  static defaultProps = defaultProps;
 
   onFieldChange = (field: Sort) => {
     const { onChange } = this.props;
@@ -48,7 +52,7 @@ class SortInput extends React.Component<Props> {
   };
 
   render() {
-    const { sort, ascending, fields, borderRound, sortable } = this.props;
+    const { sort, ascending, fields, sortable, invertColors, width } = this.props;
     const itemToString = item => (item ? item.title : '');
     const itemToValue = item => (item ? item.value : '');
 
@@ -60,24 +64,30 @@ class SortInput extends React.Component<Props> {
         itemToString={itemToString}
         itemToValue={itemToValue}
         onChange={this.onFieldChange}
-        renderSelect={({ toggle, selectedItem, getInputProps }) => (
-          <div className={WrapperStyle(borderRound)}>
-            <input
-              readOnly
-              spellCheck={false}
-              className={InputStyle(sortable)}
-              onClick={toggle}
-              {...getInputProps({
-                value: itemToString(selectedItem),
-              })}
-            />
-            {sortable && (
-              <button type="button" className={ButtonStyle} onClick={this.onAscClick}>
-                <Icon icon={ascending ? 'SORT_ASC' : 'SORT_DESC'} />
-              </button>
-            )}
-          </div>
-        )}
+        renderSelect={({ toggle, selectedItem, getInputProps, isOpen }) => {
+          return (
+            <div className={WrapperStyle(isOpen, invertColors, width)}>
+              <input
+                readOnly
+                spellCheck={false}
+                className={InputStyle(sortable, invertColors)}
+                onClick={toggle}
+                {...getInputProps({
+                  value: itemToString(selectedItem),
+                })}
+              />
+              {sortable && (
+                <button
+                  type="button"
+                  className={ButtonStyle(invertColors)}
+                  onClick={this.onAscClick}
+                >
+                  <Icon icon={ascending ? 'SORT_ASC' : 'SORT_DESC'} />
+                </button>
+              )}
+            </div>
+          );
+        }}
         renderOptions={({ highlightedIndex, selectedItem, getItemProps }) => (
           <div className={OptionWrapperStyle}>
             {fields.map((item, index) => (
