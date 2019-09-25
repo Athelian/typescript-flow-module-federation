@@ -31,6 +31,7 @@ export const WrapperStyle: string = css`
   ${borderRadiuses.MAIN};
   ${shadows.DROPDOWN};
   background-color: ${colors.GRAY_SUPER_LIGHT};
+  min-height: 50vh;
 `;
 
 export const ActionsStyle = css`
