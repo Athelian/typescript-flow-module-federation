@@ -10,9 +10,8 @@ import {
   transitions,
 } from 'styles/common';
 
-export const WrapperStyle = (color: string): string => css`
+export const WrapperStyle: string = css`
   ${layout.HORIZONTAL};
-  border-left: 0px solid ${colors[color]};
 `;
 
 export const LeftWrapperStyle: string = css`

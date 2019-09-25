@@ -19,23 +19,6 @@ type Props = {
 };
 
 const Group = ({ icon, columns, onChange }: Props) => {
-  const handleGrouped = () => {
-    onChange(
-      columns.sort((a, b) => {
-        if (a.hidden && !b.hidden) {
-          return 1;
-        }
-
-        if (!a.hidden && b.hidden) {
-          return -1;
-        }
-
-        return 0;
-      })
-    );
-  };
-  console.log(handleGrouped);
-
   const handleReorder = result => {
     if (!result.destination) {
       return;
@@ -66,7 +49,7 @@ const Group = ({ icon, columns, onChange }: Props) => {
   };
 
   return (
-    <div className={WrapperStyle(icon)}>
+    <div className={WrapperStyle}>
       <div className={LeftWrapperStyle}>
         <div className={IconStyle(icon)}>
           <Icon icon={icon} />
