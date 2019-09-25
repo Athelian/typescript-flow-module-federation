@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors, fontSizes } from 'styles/common';
+import { presets, colors, fontSizes, transitions } from 'styles/common';
 
 type LabelWrapperType = {
   align: 'left' | 'right' | 'center',
@@ -24,6 +24,7 @@ export const LabelWrapperStyle = ({ align, height, width, color }: LabelWrapperT
   flex: 1;
   max-width: ${width};
   text-transform: uppercase;
+  ${transitions.MAIN};
 `;
 
 export default LabelWrapperStyle;

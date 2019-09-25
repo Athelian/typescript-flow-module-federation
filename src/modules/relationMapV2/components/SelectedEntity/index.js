@@ -158,7 +158,7 @@ export default function SelectedEntity({ targets }: Props) {
       <div className={TotalEntitiesStyle}>
         <Label color="TEAL" align="center">
           <FormattedNumber value={totalCount} />{' '}
-          <FormattedMessage id="modules.relationalMap.selected" defaultValue="SELECTED" />
+          <FormattedMessage id="modules.relationalMap.selected" defaultMessage="SELECTED" />
         </Label>
         <button
           className={ClearTotalButtonStyle}

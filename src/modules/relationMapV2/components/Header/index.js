@@ -3,6 +3,8 @@ import * as React from 'react';
 import { flatten, flattenDeep } from 'lodash';
 import type { IntlShape } from 'react-intl';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import { Label } from 'components/Form';
+import FormattedNumber from 'components/FormattedNumber';
 import { useViewerHasPermissions } from 'components/Context/Permissions';
 import {
   ORDER,
@@ -24,10 +26,20 @@ import batchMessages from 'modules/batch/messages';
 import { getByPathWithDefault } from 'utils/fp';
 import { Entities, SortAndFilter, ClientSorts } from 'modules/relationMapV2/store';
 import { SortInput } from 'components/NavBar';
-import { HeadingStyle, ButtonStyle, RowStyle } from './style';
+import {
+  EntitiesNavbarWrapperStyle,
+  EntityNavbarWrapperStyle,
+  EntityIconStyle,
+  TitleWrapperStyle,
+  OrderTitleWrapperStyle,
+  AddOrderButtonCollapsedStyle,
+  AddOrderButtonStyle,
+  SelectAllButtonStyle,
+  SortInputWrapperStyle,
+} from './style';
 import { RelationMapContext } from '../OrderFocus/store';
 
-type Props = { intl: IntlShape, style?: Object };
+type Props = { intl: IntlShape };
 
 function currentSort(
   fields: Array<Object>,
@@ -41,8 +53,8 @@ function currentSort(
   return fields[0];
 }
 
-const Header = React.memo<{ style?: Object }>(
-  injectIntl(({ style, intl }: Props) => {
+const Header = React.memo<>(
+  injectIntl(({ intl }: Props) => {
     const { state, dispatch } = React.useContext(RelationMapContext);
     const { mapping } = Entities.useContainer();
     const { filterAndSort, onChangeFilter } = SortAndFilter.useContainer();
@@ -81,42 +93,58 @@ const Header = React.memo<{ style?: Object }>(
       { title: intl.formatMessage(batchMessages.expiredAt), value: 'expiredAt' },
       { title: intl.formatMessage(batchMessages.producedAt), value: 'producedAt' },
     ];
+
+    const orderCount = Object.keys(entities.orders || {}).length;
+    const itemCount = Object.keys(entities.orderItems || {}).length;
+    const batchCount = Object.keys(entities.batches || {}).length;
+    const containerCount = Object.keys(entities.containers || {}).length;
+    const shipmentCount = Object.keys(entities.shipments || {}).length;
+
     return (
-      <div style={style} className={RowStyle}>
-        <div
-          className={HeadingStyle}
-          style={{
-            backgroundColor: '#ED5724',
-            width: ORDER_WIDTH,
-          }}
-        >
-          <div>
-            <span>
-              Orders ({Object.keys(entities.orders || {}).length})
+      <div className={EntitiesNavbarWrapperStyle}>
+        <div className={EntityNavbarWrapperStyle('ORDER', ORDER_WIDTH)}>
+          <div className={EntityIconStyle}>
+            <Icon icon="ORDER" />
+          </div>
+
+          <div className={TitleWrapperStyle}>
+            <div className={OrderTitleWrapperStyle}>
+              <Label color="WHITE">
+                <FormattedMessage id="modules.SideBar.order" />
+                {' ('}
+                <FormattedNumber value={orderCount} />
+                {')'}
+              </Label>
+
               {hasPermissions(ORDER_CREATE) && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    dispatch({
-                      type: 'EDIT',
-                      payload: {
-                        type: 'NEW_ORDER',
-                        selectedId: Date.now(),
-                      },
-                    });
-                  }}
-                  style={{
-                    color: '#fff',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <Icon icon="ADD" />
-                </button>
+                <>
+                  <div className={AddOrderButtonCollapsedStyle}>
+                    <Icon icon="ADD" />
+                  </div>
+
+                  <button
+                    className={AddOrderButtonStyle}
+                    onClick={() => {
+                      dispatch({
+                        type: 'EDIT',
+                        payload: {
+                          type: 'NEW_ORDER',
+                          selectedId: Date.now(),
+                        },
+                      });
+                    }}
+                    type="button"
+                  >
+                    NEW ORDER
+                    <Icon icon="ADD" />
+                  </button>
+                </>
               )}
-            </span>
+            </div>
+
             <button
               type="button"
-              className={ButtonStyle}
+              className={SelectAllButtonStyle}
               onClick={() => {
                 const targets = orders.map(
                   order => `${ORDER}-${getByPathWithDefault('', 'id', order)}`
@@ -130,10 +158,14 @@ const Header = React.memo<{ style?: Object }>(
               }}
             >
               <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              <Icon icon="CHECKED" />
             </button>
           </div>
-          <div>
+
+          <div className={SortInputWrapperStyle}>
             <SortInput
+              invertColors
+              width="125px"
               sort={currentSort(orderSort, filterAndSort.sort)}
               ascending={filterAndSort.sort.direction !== 'DESCENDING'}
               fields={orderSort}
@@ -154,18 +186,23 @@ const Header = React.memo<{ style?: Object }>(
             />
           </div>
         </div>
-        <div
-          className={HeadingStyle}
-          style={{
-            backgroundColor: '#FBAA1D',
-            width: ORDER_ITEM_WIDTH,
-          }}
-        >
-          <div>
-            Items ({Object.keys(entities.orderItems || {}).length})
+
+        <div className={EntityNavbarWrapperStyle('ORDER_ITEM', ORDER_ITEM_WIDTH)}>
+          <div className={EntityIconStyle}>
+            <Icon icon="ORDER_ITEM" />
+          </div>
+
+          <div className={TitleWrapperStyle}>
+            <Label color="WHITE">
+              <FormattedMessage id="modules.SideBar.orderItem" />
+              {' ('}
+              <FormattedNumber value={itemCount} />
+              {')'}
+            </Label>
+
             <button
               type="button"
-              className={ButtonStyle}
+              className={SelectAllButtonStyle}
               onClick={() => {
                 const orderItemIds = flatten(
                   orders.map(order =>
@@ -186,10 +223,13 @@ const Header = React.memo<{ style?: Object }>(
               }}
             >
               <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              <Icon icon="CHECKED" />
             </button>
           </div>
-          <div>
+
+          <div className={SortInputWrapperStyle}>
             <SortInput
+              invertColors
               sort={currentSort(itemSort, clientSorts?.filterAndSort?.orderItem?.sort)}
               ascending={clientSorts?.filterAndSort?.orderItem?.sort?.direction !== 'DESCENDING'}
               fields={itemSort}
@@ -209,18 +249,23 @@ const Header = React.memo<{ style?: Object }>(
             />
           </div>
         </div>
-        <div
-          className={HeadingStyle}
-          style={{
-            backgroundColor: '#12B937',
-            width: BATCH_WIDTH,
-          }}
-        >
-          <div>
-            Batches ({Object.keys(entities.batches || {}).length})
+
+        <div className={EntityNavbarWrapperStyle('BATCH', BATCH_WIDTH)}>
+          <div className={EntityIconStyle}>
+            <Icon icon="BATCH" />
+          </div>
+
+          <div className={TitleWrapperStyle}>
+            <Label color="WHITE">
+              <FormattedMessage id="modules.SideBar.batch" />
+              {' ('}
+              <FormattedNumber value={batchCount} />
+              {')'}
+            </Label>
+
             <button
               type="button"
-              className={ButtonStyle}
+              className={SelectAllButtonStyle}
               onClick={() => {
                 const batchIds = flattenDeep(
                   orders.map(order =>
@@ -245,10 +290,13 @@ const Header = React.memo<{ style?: Object }>(
               }}
             >
               <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              <Icon icon="CHECKED" />
             </button>
           </div>
-          <div>
+
+          <div className={SortInputWrapperStyle}>
             <SortInput
+              invertColors
               sort={currentSort(batchSort, clientSorts?.filterAndSort?.batch?.sort)}
               ascending={clientSorts?.filterAndSort?.batch?.sort?.direction !== 'DESCENDING'}
               fields={batchSort}
@@ -268,18 +316,23 @@ const Header = React.memo<{ style?: Object }>(
             />
           </div>
         </div>
-        <div
-          className={HeadingStyle}
-          style={{
-            backgroundColor: '#30A8E4',
-            width: CONTAINER_WIDTH,
-          }}
-        >
-          <div>
-            Containers ({Object.keys(entities.containers || {}).length})
+
+        <div className={EntityNavbarWrapperStyle('CONTAINER', CONTAINER_WIDTH)}>
+          <div className={EntityIconStyle}>
+            <Icon icon="CONTAINER" />
+          </div>
+
+          <div className={TitleWrapperStyle}>
+            <Label color="WHITE">
+              <FormattedMessage id="modules.SideBar.container" />
+              {' ('}
+              <FormattedNumber value={containerCount} />
+              {')'}
+            </Label>
+
             <button
               type="button"
-              className={ButtonStyle}
+              className={SelectAllButtonStyle}
               onClick={() => {
                 const containerIds = flattenDeep(
                   orders.map(order =>
@@ -304,22 +357,27 @@ const Header = React.memo<{ style?: Object }>(
               }}
             >
               <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              <Icon icon="CHECKED" />
             </button>
           </div>
-          <div />
         </div>
-        <div
-          className={HeadingStyle}
-          style={{
-            backgroundColor: '#0756AF',
-            width: SHIPMENT_WIDTH,
-          }}
-        >
-          <div>
-            Shipments ({Object.keys(entities.shipments || {}).length})
+
+        <div className={EntityNavbarWrapperStyle('SHIPMENT', SHIPMENT_WIDTH)}>
+          <div className={EntityIconStyle}>
+            <Icon icon="SHIPMENT" />
+          </div>
+
+          <div className={TitleWrapperStyle}>
+            <Label color="WHITE">
+              <FormattedMessage id="modules.SideBar.shipment" />
+              {' ('}
+              <FormattedNumber value={shipmentCount} />
+              {')'}
+            </Label>
+
             <button
               type="button"
-              className={ButtonStyle}
+              className={SelectAllButtonStyle}
               onClick={() => {
                 const shipmentIds = flattenDeep(
                   orders.map(order =>
@@ -344,9 +402,9 @@ const Header = React.memo<{ style?: Object }>(
               }}
             >
               <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              <Icon icon="CHECKED" />
             </button>
           </div>
-          <div />
         </div>
       </div>
     );

@@ -110,7 +110,7 @@ const hasMoreItems = (data: Object, model: string = 'orders') => {
 const innerElementType = React.forwardRef(
   ({ children, ...rest }: { children: React.Node }, ref) => (
     <div ref={ref} {...rest}>
-      <Header style={{ top: 0, left: 0, width: '100%', zIndex: 2, position: 'sticky' }} />
+      <Header />
       {children}
     </div>
   )
