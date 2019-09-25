@@ -28,6 +28,7 @@ import FormattedNumber from 'components/FormattedNumber';
 function DocumentsSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const canSetDocuments = hasPermission(ORDER_ITEMS_SET_DOCUMENTS);
 
   return (
     <SectionWrapper id="orderItem_documentsSection">
@@ -44,27 +45,34 @@ function DocumentsSection() {
               }
             />
             <DocumentsInput
-              removable={hasPermission([ORDER_ITEMS_DOCUMENT_DELETE, DOCUMENT_DELETE])}
-              uploadable={hasPermission([ORDER_ITEMS_DOCUMENT_CREATE, DOCUMENT_CREATE])}
+              removable={
+                canSetDocuments || hasPermission([ORDER_ITEMS_DOCUMENT_DELETE, DOCUMENT_DELETE])
+              }
+              uploadable={
+                canSetDocuments || hasPermission([ORDER_ITEMS_DOCUMENT_CREATE, DOCUMENT_CREATE])
+              }
               editable={{
-                status: hasPermission([
-                  DOCUMENT_SET_STATUS,
-                  ORDER_ITEMS_DOCUMENT_SET_STATUS,
-                  DOCUMENT_UPDATE,
-                  ORDER_ITEMS_SET_DOCUMENTS,
-                ]),
-                type: hasPermission([
-                  DOCUMENT_SET_TYPE,
-                  ORDER_ITEMS_DOCUMENT_SET_TYPE,
-                  DOCUMENT_UPDATE,
-                  ORDER_ITEMS_SET_DOCUMENTS,
-                ]),
-                memo: hasPermission([
-                  DOCUMENT_SET_MEMO,
-                  ORDER_ITEMS_DOCUMENT_SET_MEMO,
-                  DOCUMENT_UPDATE,
-                  ORDER_ITEMS_SET_DOCUMENTS,
-                ]),
+                status:
+                  canSetDocuments ||
+                  hasPermission([
+                    DOCUMENT_SET_STATUS,
+                    ORDER_ITEMS_DOCUMENT_SET_STATUS,
+                    DOCUMENT_UPDATE,
+                  ]),
+                type:
+                  canSetDocuments ||
+                  hasPermission([
+                    DOCUMENT_SET_TYPE,
+                    ORDER_ITEMS_DOCUMENT_SET_TYPE,
+                    DOCUMENT_UPDATE,
+                  ]),
+                memo:
+                  canSetDocuments ||
+                  hasPermission([
+                    DOCUMENT_SET_MEMO,
+                    ORDER_ITEMS_DOCUMENT_SET_MEMO,
+                    DOCUMENT_UPDATE,
+                  ]),
               }}
               downloadable={hasPermission(ORDER_ITEMS_DOWNLOAD_DOCUMENTS)}
               files={files}
