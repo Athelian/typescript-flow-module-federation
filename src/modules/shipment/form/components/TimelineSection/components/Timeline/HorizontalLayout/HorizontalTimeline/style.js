@@ -38,12 +38,13 @@ export const TooltipWrapperStyle: string = css`
 
 export const TooltipGirdStyle: string = css`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   color: ${colors.WHITE};
 `;
 
-export const TooltipLabelStyle: string = css`
+export const TooltipLabelStyle = (align: 'left' | 'center' = 'center') => css`
   ${presets.ELLIPSIS};
   ${fontSizes.MAIN};
-  text-align: left;
+  text-align: ${align};
+  width: 70px;
 `;

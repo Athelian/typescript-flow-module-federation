@@ -23,17 +23,31 @@ export default function WarehouseIconTooltipMessage({ containers }: Props) {
           <FormattedMessage id="components.Shipments.containers" defaultMessage="CONTAINERS" />
         </div>
         <div>
+          <FormattedMessage id="components.Shipments.type" defaultMessage="TYPE" />
+        </div>
+        <div>
+          <FormattedMessage id="components.Shipments.warehouse" defaultMessage="WAREHOUSE" />
+        </div>
+        <div>
+          <FormattedMessage id="components.Shipments.freeTime" defaultMessage="FREE TIME" />
+        </div>
+        <div>
           <FormattedMessage id="components.Shipments.agreedDateLabel" defaultMessage="AGREED" />
         </div>
         <div>
           <FormattedMessage id="components.Shipments.actualDateLabel" defaultMessage="ACTUAL" />
         </div>
         {containers.map(container => (
-          <Fragment key={container.id || ''}>
-            <div className={TooltipLabelStyle}>{container.no || ''}</div>
+          <Fragment key={container.id}>
+            <div className={TooltipLabelStyle('left')}>{container.no}</div>
+            <div className={TooltipLabelStyle()}>{container.containerType}</div>
+            <div className={TooltipLabelStyle()}>{container.warehouse?.name} </div>
+            {/* TODO: https://app.asana.com/0/1128234177716832/1139582947078153 */}
+            <div className={TooltipLabelStyle()} />
             <div>
               <TimelineDate
                 color="WHITE"
+                mode="datetime"
                 timelineDate={{
                   date: container.warehouseArrivalAgreedDate,
                   approvedAt: container.warehouseArrivalAgreedDateApprovedAt,
@@ -44,6 +58,7 @@ export default function WarehouseIconTooltipMessage({ containers }: Props) {
             <div>
               <TimelineDate
                 color="WHITE"
+                mode="datetime"
                 timelineDate={{
                   date: container.warehouseArrivalActualDate,
                   approvedAt: container.warehouseArrivalActualDateApprovedAt,
