@@ -44,6 +44,7 @@ import RemoveBatchConfirm from '../RemoveBatchConfirm';
 import MoveBatch from '../MoveBatch';
 import AddTags from '../AddTags';
 import DeleteConfirm from '../DeleteConfirm';
+import SplitBatches from '../SplitBatches';
 
 const LoadingPlaceHolder = React.memo(() => {
   return (
@@ -179,7 +180,13 @@ export default function OrderFocus() {
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const { initHits } = Hits.useContainer();
   const { getBatchesSortByItemId, getItemsSortByOrderId } = ClientSorts.useContainer();
-  const { initMapping, onSetBadges, onSetRelated, getRelatedBy } = Entities.useContainer();
+  const {
+    initMapping,
+    onSetBadges,
+    onSetCloneRelated,
+    onSetSplitBatchRelated,
+    getRelatedBy,
+  } = Entities.useContainer();
   const { queryVariables } = SortAndFilter.useContainer();
   const lastQueryVariables = usePrevious(queryVariables);
   React.useEffect(() => {
@@ -451,7 +458,7 @@ export default function OrderFocus() {
                             }
                           });
                           onSetBadges(cloneBadges);
-                          onSetRelated(sources, cloneEntities);
+                          onSetCloneRelated(sources, cloneEntities);
                         }}
                       />
                       <InlineCreateItem
@@ -465,9 +472,7 @@ export default function OrderFocus() {
                                 entity: 'orderItem',
                               }))
                             );
-                            const originalItems =
-                              // $FlowIgnore this doesn't support yet
-                              entities.orders?.[orderId]?.orderItems ?? [];
+                            const originalItems = entities.orders?.[orderId]?.orderItems ?? [];
                             const orderItems = getItemsSortByOrderId(orderId, originalItems);
                             const itemList = [];
                             if (originalItems.length !== orderItems.length) {
@@ -518,6 +523,30 @@ export default function OrderFocus() {
                         }}
                       />
                       <MoveBatch />
+                      <SplitBatches
+                        onSuccess={(orderIds, batchIds) => {
+                          onSetBadges(
+                            Object.keys(batchIds).map(id => ({
+                              id: batchIds[id],
+                              type: 'split',
+                              entity: 'batch',
+                            }))
+                          );
+                          onSetSplitBatchRelated(batchIds);
+                          queryOrdersDetail(orderIds);
+                          window.requestIdleCallback(
+                            () => {
+                              dispatch({
+                                type: 'SPLIT_CLOSE',
+                                payload: {},
+                              });
+                            },
+                            {
+                              timeout: 250,
+                            }
+                          );
+                        }}
+                      />
                       <InlineCreateBatch
                         onSuccess={(orderId, batch) => {
                           if (orderId) {

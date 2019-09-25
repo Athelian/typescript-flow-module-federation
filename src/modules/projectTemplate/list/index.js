@@ -44,7 +44,10 @@ const ProjectTemplateListPage = () => {
               <SlideView
                 isOpen={isOpen}
                 onRequestClose={() => toggleSlide(false)}
-                targetId="project_template_form_save_button"
+                shouldConfirm={() => {
+                  const button = document.getElementById('project_template_form_save_button');
+                  return button;
+                }}
               >
                 {isOpen && (
                   <ProjectTemplateFormInSlide

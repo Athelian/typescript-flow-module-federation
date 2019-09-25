@@ -140,6 +140,10 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                 <SlideView
                   isOpen={milestoneFormIsOpened}
                   onRequestClose={() => toggleMilestoneForm(false)}
+                  shouldConfirm={() => {
+                    const button = document.getElementById('milestone_form_save_button');
+                    return button;
+                  }}
                 >
                   {milestoneFormIsOpened && (
                     <MilestoneFormSlide

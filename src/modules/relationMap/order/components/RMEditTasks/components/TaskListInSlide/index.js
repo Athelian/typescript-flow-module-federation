@@ -59,7 +59,11 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
                     saveOnBlur={value => onChange(task.id, value)}
                     onClick={() => toggleTaskForm(true)}
                   />
-                  <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskForm(false)}>
+                  <SlideView
+                    isOpen={isOpen}
+                    onRequestClose={() => toggleTaskForm(false)}
+                    shouldConfirm={() => document.getElementById('task_form_save_button')}
+                  >
                     {isOpen && (
                       <QueryFormPermissionContext.Provider
                         value={{

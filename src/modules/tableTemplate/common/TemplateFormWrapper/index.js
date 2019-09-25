@@ -138,6 +138,7 @@ class TemplateFormWrapper extends React.Component<Props> {
 
                     {(isNew || formState.isDirty()) && (
                       <SaveButton
+                        id="table_template_form_save_button"
                         disabled={!formContainer.isReady(formState.state, validator)}
                         isLoading={isLoading}
                         data-testid="saveButtonOnTableTemplate"

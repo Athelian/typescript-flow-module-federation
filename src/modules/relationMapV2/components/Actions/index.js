@@ -260,6 +260,19 @@ export default function Actions({ targets }: Props) {
           >
             <Icon icon="BATCH" />
             <ActionSubMenu isCollapsed={currentMenu !== BATCH}>
+              <ActionButton
+                onClick={() => {
+                  dispatch({
+                    type: 'TAGS',
+                    payload: {
+                      source: BATCH,
+                    },
+                  });
+                }}
+              >
+                <Icon icon="TAG" />
+                <ActionLabel>ADD TAGS</ActionLabel>
+              </ActionButton>
               {/* TODO: check permission to move */}
               <ActionButton
                 onClick={() => {
@@ -275,6 +288,19 @@ export default function Actions({ targets }: Props) {
               <ActionButton
                 onClick={() => {
                   dispatch({
+                    type: 'SPLIT',
+                    payload: {
+                      source: BATCH,
+                    },
+                  });
+                }}
+              >
+                <Icon icon="SPLIT" />
+                <ActionLabel>SPLIT</ActionLabel>
+              </ActionButton>
+              <ActionButton
+                onClick={() => {
+                  dispatch({
                     type: 'CLONE',
                     payload: {
                       source: BATCH,
@@ -285,20 +311,6 @@ export default function Actions({ targets }: Props) {
               >
                 <Icon icon="CLONE" />
                 <ActionLabel>CLONE</ActionLabel>
-              </ActionButton>
-
-              <ActionButton
-                onClick={() => {
-                  dispatch({
-                    type: 'TAGS',
-                    payload: {
-                      source: BATCH,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="TAG" />
-                <ActionLabel>ADD TAGS</ActionLabel>
               </ActionButton>
             </ActionSubMenu>
           </ActionButton>

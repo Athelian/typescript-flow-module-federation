@@ -12,6 +12,7 @@ import shipmentMessages from 'modules/shipment/messages';
 const orderColumns: Array<ColumnConfig> = [
   {
     key: 'order.created',
+    exportKey: 'createdAt',
     title: <FormattedMessage {...orderMessages.createdAt} />,
     icon: 'ORDER',
     color: colors.ORDER,
@@ -36,6 +37,7 @@ const orderColumns: Array<ColumnConfig> = [
   // status
   {
     key: 'order.poNo',
+    exportKey: 'poNo',
     title: <FormattedMessage {...orderMessages.PO} />,
     icon: 'ORDER',
     color: colors.ORDER,
@@ -49,6 +51,7 @@ const orderColumns: Array<ColumnConfig> = [
   // exporter
   {
     key: 'order.piNo',
+    exportKey: 'piNo',
     title: <FormattedMessage {...orderMessages.PI} />,
     icon: 'ORDER',
     color: colors.ORDER,
@@ -60,6 +63,7 @@ const orderColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.issuedAt',
+    exportKey: 'issuedAt',
     title: <FormattedMessage {...orderMessages.date} />,
     icon: 'ORDER',
     color: colors.ORDER,
@@ -67,6 +71,7 @@ const orderColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.deliveryDate',
+    exportKey: 'deliveryDate',
     title: <FormattedMessage {...orderMessages.deliveryDate} />,
     icon: 'ORDER',
     color: colors.ORDER,
@@ -92,6 +97,7 @@ const orderColumns: Array<ColumnConfig> = [
   }, */
   {
     key: 'order.deliveryPlace',
+    exportKey: 'deliveryPlace',
     title: <FormattedMessage {...orderMessages.deliveryPlace} />,
     icon: 'ORDER',
     color: colors.ORDER,
@@ -132,6 +138,7 @@ const orderColumns: Array<ColumnConfig> = [
 const orderItemColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.created',
+    exportKey: 'orderItems.createdAt',
     title: <FormattedMessage {...orderItemMessages.createdAt} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
@@ -158,6 +165,7 @@ const orderItemColumns: Array<ColumnConfig> = [
   // status
   {
     key: 'order.orderItem.no',
+    exportKey: 'orderItems.no',
     title: 'Item No',
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
@@ -170,6 +178,7 @@ const orderItemColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.quantity',
+    exportKey: 'orderItems.quantity',
     title: 'Quantity',
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
@@ -218,6 +227,7 @@ const orderItemColumns: Array<ColumnConfig> = [
 const batchColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.batch.created',
+    exportKey: 'orderItems.batches.createdAt',
     title: <FormattedMessage {...batchMessages.createdAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
@@ -244,6 +254,7 @@ const batchColumns: Array<ColumnConfig> = [
   // status
   {
     key: 'order.orderItem.batch.no',
+    exportKey: 'orderItems.batches.no',
     title: <FormattedMessage {...batchMessages.batchNo} />,
     icon: 'BATCH',
     color: colors.BATCH,
@@ -256,6 +267,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.batch.deliveredAt',
+    exportKey: 'orderItems.batches.deliveredAt',
     title: <FormattedMessage {...batchMessages.deliveredAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
@@ -268,6 +280,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.batch.desiredAt',
+    exportKey: 'orderItems.batches.desiredAt',
     title: <FormattedMessage {...batchMessages.desiredAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
@@ -280,6 +293,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.batch.expiredAt',
+    exportKey: 'orderItems.batches.expiredAt',
     title: <FormattedMessage {...batchMessages.expiredAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
@@ -292,6 +306,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.batch.producedAt',
+    exportKey: 'orderItems.batches.producedAt',
     title: <FormattedMessage {...batchMessages.producedAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
@@ -306,6 +321,7 @@ const batchColumns: Array<ColumnConfig> = [
   // memo
   {
     key: 'order.orderItem.batch.quantity',
+    exportKey: 'orderItems.batches.quantity',
     title: <FormattedMessage {...batchMessages.quantity} />,
     icon: 'BATCH',
     color: colors.BATCH,
@@ -319,6 +335,7 @@ const batchColumns: Array<ColumnConfig> = [
   // revised quantities
   {
     key: 'order.orderItem.batch.packageName',
+    exportKey: 'orderItems.batches.packageName',
     title: <FormattedMessage {...batchMessages.packageName} />,
     icon: 'BATCH',
     color: colors.BATCH,
@@ -331,6 +348,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.batch.packageCapacity',
+    exportKey: 'orderItems.batches.packageCapacity',
     title: <FormattedMessage {...batchMessages.packageCapacity} />,
     icon: 'BATCH',
     color: colors.BATCH,
@@ -521,6 +539,7 @@ const containerColumns: Array<ColumnConfig> = [
 const shipmentColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.batch.shipment.created',
+    exportKey: 'orderItems.batches.shipment.createdAt',
     title: <FormattedMessage {...shipmentMessages.createdAt} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
@@ -545,6 +564,7 @@ const shipmentColumns: Array<ColumnConfig> = [
   }, */
   {
     key: 'order.orderItem.batch.shipment.no',
+    exportKey: 'orderItems.batches.shipment.no',
     title: <FormattedMessage {...shipmentMessages.shipmentId} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,

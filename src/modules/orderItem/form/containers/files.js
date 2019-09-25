@@ -30,6 +30,7 @@ export default class OrderItemFilesContainer extends Container<FormState> {
   };
 
   initDetailValues = (files: Array<FilePayload>) => {
+    // FIXME: find a bug, https://app.asana.com/0/1128234177716832/1141298576337241/f
     const parsedFiles = [...files.map(file => extractForbiddenId(file))];
     this.setState({ files: parsedFiles });
     this.originalValues = { files: parsedFiles };

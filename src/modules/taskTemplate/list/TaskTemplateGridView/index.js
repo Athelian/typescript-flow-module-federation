@@ -40,7 +40,10 @@ const defaultRenderItem = (item: Object, hasPermission: Function) =>
           <SlideView
             isOpen={isOpen}
             onRequestClose={() => toggleTaskTemplateForm(false)}
-            targetId="task_template_form_save_button"
+            shouldConfirm={() => {
+              const button = document.getElementById('task_template_form_save_button');
+              return button;
+            }}
           >
             {isOpen && (
               <TaskTemplateFormWrapper

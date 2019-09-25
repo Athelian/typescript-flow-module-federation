@@ -19,9 +19,12 @@ export default function MilestoneColumn({ id, index, draggable }: Props) {
           className={MilestoneColumnWrapperStyle}
           ref={provided.innerRef}
           {...provided.draggableProps}
-          {...provided.dragHandleProps}
         >
-          <MilestoneColumnHeaderCard milestoneIndex={index} isDragging={snapshot.isDragging} />
+          <MilestoneColumnHeaderCard
+            milestoneIndex={index}
+            isDragging={snapshot.isDragging}
+            provided={provided}
+          />
         </div>
       )}
     </Draggable>

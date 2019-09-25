@@ -5,11 +5,36 @@
       "public": "build",
       "headers": [
         {
+          "source": "**",
+          "headers": [
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Content-Security-Policy-Report-Only",
+              "value": "script-src 'self' https://polyfill.io;"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Feature-Policy",
+              "value": "vibrate 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; payment 'none' https://staging.zenport.io"
+            }
+          ]
+        },
+        {
           "source": "/service-worker.js",
           "headers": [
             {
               "key": "Cache-Control",
-              "value": "no-store"
+              "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
             }
           ]
         },
@@ -24,24 +49,52 @@
         }
       ],
       "rewrites": [
-        { "source": "/favicon.ico", "destination": "/favicon.ico" },
+        {
+          "source": "/favicon.ico",
+          "destination": "/favicon.ico"
+        },
         {
           "source": "**",
           "destination": "/index.html"
         }
       ],
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
     },
     {
       "target": "staging-hot",
       "public": "build",
       "headers": [
         {
+          "source": "**",
+          "headers": [
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Feature-Policy",
+              "value": "vibrate 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; payment 'none' https://staging-hot.zenport.io"
+            }
+          ]
+        },
+        {
           "source": "/service-worker.js",
           "headers": [
             {
               "key": "Cache-Control",
-              "value": "no-store"
+              "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
             }
           ]
         },
@@ -56,24 +109,52 @@
         }
       ],
       "rewrites": [
-        { "source": "/favicon.ico", "destination": "/favicon.ico" },
+        {
+          "source": "/favicon.ico",
+          "destination": "/favicon.ico"
+        },
         {
           "source": "**",
           "destination": "/index.html"
         }
       ],
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
     },
     {
       "target": "prod",
       "public": "build",
       "headers": [
         {
+          "source": "**",
+          "headers": [
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Feature-Policy",
+              "value": "vibrate 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; payment 'none' https://my.zenport.io"
+            }
+          ]
+        },
+        {
           "source": "/service-worker.js",
           "headers": [
             {
               "key": "Cache-Control",
-              "value": "no-store"
+              "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
             }
           ]
         },
@@ -88,13 +169,20 @@
         }
       ],
       "rewrites": [
-        { "source": "/favicon.ico", "destination": "/favicon.ico" },
+        {
+          "source": "/favicon.ico",
+          "destination": "/favicon.ico"
+        },
         {
           "source": "**",
           "destination": "/index.html"
         }
       ],
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
     }
   ]
 }

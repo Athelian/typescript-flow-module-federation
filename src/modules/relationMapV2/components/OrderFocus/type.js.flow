@@ -107,6 +107,11 @@ export type State = {|
     isOpen: boolean,
     isProcessing: boolean,
   },
+  split: {
+    source: string,
+    isOpen: boolean,
+    isProcessing: boolean,
+  },
   deleteEntities: {
     source: string,
     isOpen: boolean,

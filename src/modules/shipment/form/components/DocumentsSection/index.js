@@ -37,6 +37,8 @@ function DocumentsSection({ entityId, isLoading }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
+  const canSetDocuments = hasPermission(SHIPMENT_SET_DOCUMENTS);
+
   return (
     <Subscribe to={[ShipmentFilesContainer]}>
       {({ state: { files }, initDetailValues, setFieldValue }) => (
@@ -62,27 +64,34 @@ function DocumentsSection({ entityId, isLoading }: Props) {
                   }
                 />
                 <DocumentsInput
-                  uploadable={hasPermission([SHIPMENT_DOCUMENT_CREATE, DOCUMENT_CREATE])}
-                  removable={hasPermission([SHIPMENT_DOCUMENT_DELETE, DOCUMENT_DELETE])}
+                  uploadable={
+                    canSetDocuments || hasPermission([SHIPMENT_DOCUMENT_CREATE, DOCUMENT_CREATE])
+                  }
+                  removable={
+                    canSetDocuments || hasPermission([SHIPMENT_DOCUMENT_DELETE, DOCUMENT_DELETE])
+                  }
                   editable={{
-                    status: hasPermission([
-                      DOCUMENT_SET_STATUS,
-                      SHIPMENT_DOCUMENT_SET_STATUS,
-                      DOCUMENT_UPDATE,
-                      SHIPMENT_SET_DOCUMENTS,
-                    ]),
-                    type: hasPermission([
-                      DOCUMENT_SET_TYPE,
-                      SHIPMENT_DOCUMENT_SET_TYPE,
-                      DOCUMENT_UPDATE,
-                      SHIPMENT_SET_DOCUMENTS,
-                    ]),
-                    memo: hasPermission([
-                      DOCUMENT_SET_MEMO,
-                      SHIPMENT_DOCUMENT_SET_MEMO,
-                      DOCUMENT_UPDATE,
-                      SHIPMENT_SET_DOCUMENTS,
-                    ]),
+                    status:
+                      canSetDocuments ||
+                      hasPermission([
+                        DOCUMENT_SET_STATUS,
+                        SHIPMENT_DOCUMENT_SET_STATUS,
+                        DOCUMENT_UPDATE,
+                      ]),
+                    type:
+                      canSetDocuments ||
+                      hasPermission([
+                        DOCUMENT_SET_TYPE,
+                        SHIPMENT_DOCUMENT_SET_TYPE,
+                        DOCUMENT_UPDATE,
+                      ]),
+                    memo:
+                      canSetDocuments ||
+                      hasPermission([
+                        DOCUMENT_SET_MEMO,
+                        SHIPMENT_DOCUMENT_SET_MEMO,
+                        DOCUMENT_UPDATE,
+                      ]),
                   }}
                   downloadable={hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS)}
                   files={files}

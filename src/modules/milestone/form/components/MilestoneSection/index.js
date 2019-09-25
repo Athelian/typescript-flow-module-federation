@@ -5,7 +5,7 @@ import type { IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { UserConsumer } from 'components/Context/Viewer';
 import MilestoneStateContainer from 'modules/milestone/form/container';
-import validator from 'modules/tags/form/validator';
+import validator from 'modules/milestone/form/validator';
 import { FormField } from 'modules/form';
 
 import UserAvatar from 'components/UserAvatar';

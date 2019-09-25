@@ -28,32 +28,40 @@ type Props = {
 
 function DocumentsSection({ isOwner }: Props) {
   const { hasPermission } = usePermission(isOwner);
+  const canSetDocuments = hasPermission(PRODUCT_PROVIDER_SET_DOCUMENTS);
 
   return (
     <Subscribe to={[ProductProviderInfoContainer]}>
       {({ state: { files }, setFieldValue }) => (
         <DocumentsInput
-          uploadable={hasPermission([PRODUCT_PROVIDER_DOCUMENT_CREATE, DOCUMENT_CREATE])}
-          removable={hasPermission([PRODUCT_PROVIDER_DOCUMENT_DELETE, DOCUMENT_DELETE])}
+          uploadable={
+            canSetDocuments || hasPermission([PRODUCT_PROVIDER_DOCUMENT_CREATE, DOCUMENT_CREATE])
+          }
+          removable={
+            canSetDocuments || hasPermission([PRODUCT_PROVIDER_DOCUMENT_DELETE, DOCUMENT_DELETE])
+          }
           editable={{
-            status: hasPermission([
-              DOCUMENT_SET_STATUS,
-              PRODUCT_PROVIDER_DOCUMENT_SET_STATUS,
-              DOCUMENT_UPDATE,
-              PRODUCT_PROVIDER_SET_DOCUMENTS,
-            ]),
-            type: hasPermission([
-              DOCUMENT_SET_TYPE,
-              PRODUCT_PROVIDER_DOCUMENT_SET_TYPE,
-              DOCUMENT_UPDATE,
-              PRODUCT_PROVIDER_SET_DOCUMENTS,
-            ]),
-            memo: hasPermission([
-              DOCUMENT_SET_MEMO,
-              PRODUCT_PROVIDER_DOCUMENT_SET_MEMO,
-              DOCUMENT_UPDATE,
-              PRODUCT_PROVIDER_SET_DOCUMENTS,
-            ]),
+            status:
+              canSetDocuments ||
+              hasPermission([
+                DOCUMENT_SET_STATUS,
+                PRODUCT_PROVIDER_DOCUMENT_SET_STATUS,
+                DOCUMENT_UPDATE,
+              ]),
+            type:
+              canSetDocuments ||
+              hasPermission([
+                DOCUMENT_SET_TYPE,
+                PRODUCT_PROVIDER_DOCUMENT_SET_TYPE,
+                DOCUMENT_UPDATE,
+              ]),
+            memo:
+              canSetDocuments ||
+              hasPermission([
+                DOCUMENT_SET_MEMO,
+                PRODUCT_PROVIDER_DOCUMENT_SET_MEMO,
+                DOCUMENT_UPDATE,
+              ]),
           }}
           downloadable={hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS)}
           files={files}

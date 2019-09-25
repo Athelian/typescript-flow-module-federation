@@ -1,8 +1,15 @@
 // @flow
 import React from 'react';
-import { EntityIcon } from 'components/NavBar';
+import Icon from 'components/Icon';
+import FormattedNumber from 'components/FormattedNumber';
 import { Hits, Entities } from 'modules/relationMapV2/store';
 import { ORDER, BATCH, SHIPMENT, TAG, PRODUCT } from 'modules/relationMapV2/constants';
+import {
+  EntitiesWrapperStyle,
+  EntityWrapperStyle,
+  EntityIconStyle,
+  EntityCountStyle,
+} from './style';
 
 const MatchesEntities = () => {
   const { matches } = Hits.useContainer();
@@ -26,18 +33,53 @@ const MatchesEntities = () => {
   ).length;
   const matchedShipment = keys.filter(key => key.includes(`-${SHIPMENT}`)).length;
   const matchedContainer = 0; // TODO: API is not supported yet
+
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <EntityIcon icon="ORDER" color={matchedOrder || matchedOrderTags ? 'BLUE' : 'GRAY'} />
-      {matchedOrder + matchedOrderTags}
-      <EntityIcon icon="ORDER_ITEM" color={matchedOrderItem ? 'BLUE' : 'GRAY'} />
-      {matchedOrderItem}
-      <EntityIcon icon="BATCH" color={matchedBatch ? 'BLUE' : 'GRAY'} />
-      {matchedBatch}
-      <EntityIcon icon="CONTAINER" color={matchedContainer ? 'BLUE' : 'GRAY'} />
-      {matchedContainer}
-      <EntityIcon icon="SHIPMENT" color={matchedShipment ? 'BLUE' : 'GRAY'} />
-      {matchedShipment}
+    <div className={EntitiesWrapperStyle}>
+      <div className={EntityWrapperStyle(matchedOrder + matchedOrderTags)}>
+        <div className={EntityIconStyle}>
+          <Icon icon="ORDER" />
+        </div>
+        <div className={EntityCountStyle}>
+          <FormattedNumber value={matchedOrder + matchedOrderTags} />
+        </div>
+      </div>
+
+      <div className={EntityWrapperStyle(matchedOrderItem)}>
+        <div className={EntityIconStyle}>
+          <Icon icon="ORDER_ITEM" />
+        </div>
+        <div className={EntityCountStyle}>
+          <FormattedNumber value={matchedOrderItem} />
+        </div>
+      </div>
+
+      <div className={EntityWrapperStyle(matchedBatch)}>
+        <div className={EntityIconStyle}>
+          <Icon icon="BATCH" />
+        </div>
+        <div className={EntityCountStyle}>
+          <FormattedNumber value={matchedBatch} />
+        </div>
+      </div>
+
+      <div className={EntityWrapperStyle(matchedContainer)}>
+        <div className={EntityIconStyle}>
+          <Icon icon="CONTAINER" />
+        </div>
+        <div className={EntityCountStyle}>
+          <FormattedNumber value={matchedContainer} />
+        </div>
+      </div>
+
+      <div className={EntityWrapperStyle(matchedShipment)}>
+        <div className={EntityIconStyle}>
+          <Icon icon="SHIPMENT" />
+        </div>
+        <div className={EntityCountStyle}>
+          <FormattedNumber value={matchedShipment} />
+        </div>
+      </div>
     </div>
   );
 };

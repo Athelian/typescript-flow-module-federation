@@ -14,4 +14,8 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.autoFilled',
     defaultMessage: 'Auto Filled',
   },
+  split: {
+    id: 'modules.RelationMaps.label.split',
+    defaultMessage: 'Split',
+  },
 });

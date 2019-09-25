@@ -103,7 +103,7 @@ const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
                       onClick={() => {
                         resetFormState(orderItemInfoContainer);
                         resetFormState(orderItemBatchesContainer);
-                        resetFormState(orderItemFilesContainer);
+                        resetFormState(orderItemFilesContainer, 'files');
                         resetFormState(orderItemTasksContainer, 'todo');
                         formContainer.onReset();
                       }}

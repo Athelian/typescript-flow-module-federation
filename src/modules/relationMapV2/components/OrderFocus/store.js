@@ -82,6 +82,11 @@ export const initialState: State = {
     isOpen: false,
     isProcessing: false,
   },
+  split: {
+    source: '',
+    isOpen: false,
+    isProcessing: false,
+  },
   status: {
     source: ORDER,
     isOpen: false,
@@ -149,6 +154,10 @@ export function reducer(
       | 'AUTO_FILL_START'
       | 'AUTO_FILL_END'
       | 'AUTO_FILL_CLOSE'
+      | 'SPLIT'
+      | 'SPLIT_START'
+      | 'SPLIT_END'
+      | 'SPLIT_CLOSE'
       | 'STATUS'
       | 'STATUS_START'
       | 'STATUS_END'
@@ -522,6 +531,31 @@ export function reducer(
     case 'CLONE_END': {
       return update(state, {
         clone: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'SPLIT': {
+      return update(state, {
+        split: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          source: { $set: action.payload?.source ?? '' },
+        },
+      });
+    }
+    case 'SPLIT_START': {
+      return update(state, {
+        split: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'SPLIT_CLOSE':
+    case 'SPLIT_END': {
+      return update(state, {
+        split: {
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },

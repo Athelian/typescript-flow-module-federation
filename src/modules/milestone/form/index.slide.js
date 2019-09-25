@@ -29,17 +29,16 @@ const defaultProps = {
 };
 
 const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
-  const formContainer = new FormContainer();
   return (
     <FormContext.Provider
       value={{
         inTemplate,
       }}
     >
-      <Provider inject={[formContainer]}>
+      <Provider>
         <SlideViewLayout>
-          <Subscribe to={[MilestoneStateContainer]}>
-            {milestoneStateContainer => {
+          <Subscribe to={[MilestoneStateContainer, FormContainer]}>
+            {(milestoneStateContainer, formContainer) => {
               return (
                 <SlideViewNavBar>
                   <EntityIcon icon="MILESTONE" color="MILESTONE" />
@@ -60,6 +59,7 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
                         }}
                       />
                       <SaveButton
+                        id="milestone_form_save_button"
                         disabled={!formContainer.isReady(milestoneStateContainer.state, validator)}
                         onClick={() => onSave(milestoneStateContainer.state)}
                       />

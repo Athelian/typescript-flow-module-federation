@@ -12,7 +12,7 @@ const BackdropStyle: string = css`
   overflow-y: overlay;
   overflow-x: hidden;
   ${scrollbars.MAIN};
-  z-index: 10000;
+  z-index: 100;
   height: 100%;
   width: 100%;
   padding: 100px 0;
@@ -64,7 +64,7 @@ const DialogStyle = (width: string): string => css`
 
 export const DialogFadeInStyle = (width: string): string => css`
   ${DialogStyle(width)};
-  z-index: 10001;
+  z-index: 101;
 
   @keyframes fadeIn {
     from {

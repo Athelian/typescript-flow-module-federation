@@ -60,7 +60,21 @@ function useEntities(
     );
   };
 
-  const onSetRelated = (
+  const onSetSplitBatchRelated = (batchIds: Object) => {
+    setRelated(
+      produce(related, draft => {
+        Object.keys(batchIds).forEach(batchId => {
+          if (!related.batch[batchId]) {
+            draft.batch[batchId] = [batchIds[batchId]];
+          } else {
+            draft.batch[batchId] = [batchIds[batchId], ...related.batch[batchId]];
+          }
+        });
+      })
+    );
+  };
+
+  const onSetCloneRelated = (
     sources: Array<{ id: string, type: string }>,
     cloneEntities: Array<Object>
   ) => {
@@ -205,7 +219,8 @@ function useEntities(
     badge,
     onSetBadges,
     getRelatedBy,
-    onSetRelated,
+    onSetCloneRelated,
+    onSetSplitBatchRelated,
   };
 }
 

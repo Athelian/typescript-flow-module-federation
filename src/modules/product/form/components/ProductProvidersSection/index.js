@@ -55,7 +55,10 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                       <SlideView
                         isOpen={opened}
                         onRequestClose={() => slideToggle(false)}
-                        targetId="end_product_form_save_button"
+                        shouldConfirm={() => {
+                          const button = document.getElementById('end_product_form_save_button');
+                          return button;
+                        }}
                       >
                         {opened && (
                           <ProductProviderFormWrapper
@@ -110,7 +113,12 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                             <SlideView
                               isOpen={updateFormOpened}
                               onRequestClose={() => slideToggle('updateFormOpened', false)}
-                              targetId="end_product_form_save_button"
+                              shouldConfirm={() => {
+                                const button = document.getElementById(
+                                  'end_product_form_save_button'
+                                );
+                                return button;
+                              }}
                             >
                               {updateFormOpened && (
                                 <ProductProviderFormWrapper
@@ -129,7 +137,12 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                             <SlideView
                               isOpen={cloneFormOpened}
                               onRequestClose={() => slideToggle('cloneFormOpened', false)}
-                              targetId="end_product_form_save_button"
+                              shouldConfirm={() => {
+                                const button = document.getElementById(
+                                  'end_product_form_save_button'
+                                );
+                                return button;
+                              }}
                             >
                               {cloneFormOpened && (
                                 <ProductProviderFormWrapper
