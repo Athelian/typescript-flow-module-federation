@@ -96,7 +96,7 @@ const MilestoneTimelineItem = ({ milestone }: Props) => {
               )}
             </Label>
 
-            <div className={MilestoneDateStyle(completedAt)}>
+            <div className={MilestoneDateStyle(completedAt || estimatedCompletionDate)}>
               {isCompleted ? (
                 <FormattedDate value={completedAt} />
               ) : (
