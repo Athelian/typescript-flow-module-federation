@@ -528,7 +528,15 @@ export default function OrderFocus() {
                           }
                         }}
                       />
-                      <MoveBatch />
+                      <MoveBatch
+                        onSuccess={orderIds => {
+                          queryOrdersDetail(orderIds);
+                          dispatch({
+                            type: 'MOVE_TO_ORDER_END',
+                            payload: { orderIds },
+                          });
+                        }}
+                      />
                       <SplitBatches
                         onSuccess={(orderIds, batchIds) => {
                           onSetBadges(

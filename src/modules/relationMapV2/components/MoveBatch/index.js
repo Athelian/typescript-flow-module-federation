@@ -21,14 +21,20 @@ import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
 import SelectOrderToMove from './components/SelectOrderToMove';
 import { targetedIds, findOrderIdByBatch } from '../OrderFocus/helpers';
 
-export default function MoveBatch() {
+type Props = {
+  onSuccess: (orderIds: Array<string>) => void,
+};
+
+export default function MoveBatch({ onSuccess }: Props) {
   const { isExporter } = useUser();
   const { mapping } = Entities.useContainer();
   const { dispatch, state } = React.useContext(RelationMapContext);
   const batchIds = targetedIds(state.targets, BATCH);
-  const orderIds = batchIds
-    .map(batchId => findOrderIdByBatch(batchId, mapping.entities))
-    .filter(Boolean);
+  const orderIds = [
+    ...new Set(
+      batchIds.map(batchId => findOrderIdByBatch(batchId, mapping.entities)).filter(Boolean)
+    ),
+  ];
   const totalBatches = batchIds.length;
   const { isProcessing, isOpen, type } = state.batchActions;
   const isMoveBatches = type === 'moveBatches';
@@ -195,7 +201,7 @@ export default function MoveBatch() {
           </>
         )}
       </div>
-      <SelectOrderToMove />
+      <SelectOrderToMove onSuccess={onSuccess} />
     </Dialog>
   );
 }

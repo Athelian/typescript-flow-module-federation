@@ -180,6 +180,7 @@ export function reducer(
       | 'MOVE_BATCH_CLOSE'
       | 'MOVE_TO_ORDER'
       | 'MOVE_TO_ORDER_START'
+      | 'MOVE_TO_ORDER_END'
       | 'MOVE_TO_ORDER_CLOSE'
       | 'EDIT',
     payload: {
@@ -448,6 +449,12 @@ export function reducer(
           $merge: { ...action.payload, isOpen: true },
         },
       });
+    case 'MOVE_TO_ORDER_START':
+      return update(state, {
+        moveActions: {
+          isProcessing: { $set: true },
+        },
+      });
     case 'MOVE_TO_ORDER_CLOSE':
       return update(state, {
         batchActions: {
@@ -455,6 +462,17 @@ export function reducer(
         },
         moveActions: {
           isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    case 'MOVE_TO_ORDER_END':
+      return update(state, {
+        batchActions: {
+          isOpen: { $set: false },
+        },
+        moveActions: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
         },
       });
     case 'DELETE_ITEM_START':

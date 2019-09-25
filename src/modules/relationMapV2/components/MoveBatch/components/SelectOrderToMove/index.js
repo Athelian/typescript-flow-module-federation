@@ -7,6 +7,8 @@ import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { useEntityHasPermissions } from 'components/Context/Permissions';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+import { Entities } from 'modules/relationMapV2/store';
+import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
@@ -14,12 +16,15 @@ import FilterToolBar from 'components/common/FilterToolBar';
 import messages from 'modules/order/messages';
 import OrderGridView from 'modules/order/list/OrderGridView';
 import { OrderCard } from 'components/Cards';
-import { orderListQuery } from 'modules/order/list/query';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
+import { BATCH } from 'modules/relationMapV2/constants';
 import { OverlayStyle } from './style';
+import { orderListQuery } from './query';
+import { moveBatchesToOrder } from './mutation';
 
 type Props = {
   intl: IntlShape,
+  onSuccess: (orderIds: Array<string>) => void,
 };
 
 function OrderRenderer({
@@ -28,8 +33,8 @@ function OrderRenderer({
   setSelected,
 }: {
   order: Object,
-  selected: ?string,
-  setSelected: (?string) => void,
+  selected: ?Object,
+  setSelected: (?Object) => void,
 }) {
   const { state } = React.useContext(RelationMapContext);
   const { orderIds, importerIds, exporterIds } = state.moveActions;
@@ -74,34 +79,34 @@ function OrderRenderer({
 
     return null;
   };
-  return (
-    <>
-      {isInvalid && (
-        <div
-          style={{
-            width: 195,
-            height: 303,
-            position: 'relative',
-            backgroundColor: 'rgba(239, 72, 72, 0.25)',
-          }}
-        >
-          {msg()}
-        </div>
-      )}
-      <OrderCard
-        order={order}
-        selectable={order.id === selected}
-        selected={order.id === selected}
-        onClick={() => {
-          setSelected(order.id === selected ? null : order.id);
-        }}
-      />
-    </>
+
+  return isInvalid ? (
+    <div
+      style={{
+        width: 195,
+        height: 303,
+        position: 'relative',
+        backgroundColor: 'rgba(239, 72, 72, 0.25)',
+      }}
+    >
+      {msg()}
+    </div>
+  ) : (
+    <OrderCard
+      order={order}
+      selectable={order.id === selected?.id}
+      selected={order.id === selected?.id}
+      onClick={() => {
+        setSelected(order.id === selected ? null : order);
+      }}
+    />
   );
 }
 
-function SelectOrderToMove({ intl }: Props) {
+function SelectOrderToMove({ intl, onSuccess }: Props) {
   const { dispatch, state } = React.useContext(RelationMapContext);
+  const { mapping } = Entities.useContainer();
+  const batchIds = targetedIds(state.targets, BATCH);
   const [selected, setSelected] = React.useState(null);
   const { isProcessing, isOpen, type } = state.moveActions;
   React.useEffect(() => {
@@ -121,6 +126,13 @@ function SelectOrderToMove({ intl }: Props) {
       type: 'MOVE_TO_ORDER_START',
       payload: {},
     });
+    moveBatchesToOrder({
+      order: selected,
+      batchIds,
+      entities: mapping.entities,
+    })
+      .then(onSuccess)
+      .catch(onCancel);
   };
 
   const sortFields = [
@@ -152,9 +164,9 @@ function SelectOrderToMove({ intl }: Props) {
   if (!isOpen || !isMoveToOrder) return null;
   return (
     <SlideView
+      shouldConfirm={() => !!selected}
       isOpen={isOpen && isMoveToOrder}
       onRequestClose={onCancel}
-      targetId="shouldNotUseThisWay"
     >
       {isOpen && isMoveToOrder && (
         <SlideViewLayout>
