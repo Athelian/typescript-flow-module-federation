@@ -19,6 +19,7 @@ import {
 } from 'modules/permission/constants/shipment';
 import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
 import SelectOrderToMove from './components/SelectOrderToMove';
+import SelectContainerToMove from './components/SelectContainerToMove';
 import { targetedIds, findOrderIdByBatch } from '../OrderFocus/helpers';
 
 type Props = {
@@ -33,6 +34,11 @@ export default function MoveBatch({ onSuccess }: Props) {
   const orderIds = [
     ...new Set(
       batchIds.map(batchId => findOrderIdByBatch(batchId, mapping.entities)).filter(Boolean)
+    ),
+  ];
+  const containerIds = [
+    ...new Set(
+      batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.container).filter(Boolean)
     ),
   ];
   const totalBatches = batchIds.length;
@@ -134,6 +140,7 @@ export default function MoveBatch({ onSuccess }: Props) {
       payload: {
         type: target,
         orderIds,
+        containerIds,
         importerIds,
         exporterIds,
       },
@@ -202,6 +209,7 @@ export default function MoveBatch({ onSuccess }: Props) {
         )}
       </div>
       <SelectOrderToMove onSuccess={onSuccess} />
+      <SelectContainerToMove onSuccess={onSuccess} />
     </Dialog>
   );
 }

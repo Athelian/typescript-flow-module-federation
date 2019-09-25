@@ -63,6 +63,7 @@ export const initialState: State = {
     isOpen: false,
     isProcessing: false,
     orderIds: [],
+    containerIds: [],
     importerIds: [],
     exporterIds: [],
   },
@@ -178,10 +179,12 @@ export function reducer(
       | 'MOVE_BATCH'
       | 'MOVE_BATCH_START'
       | 'MOVE_BATCH_CLOSE'
-      | 'MOVE_TO_ORDER'
       | 'MOVE_TO_ORDER_START'
       | 'MOVE_TO_ORDER_END'
       | 'MOVE_TO_ORDER_CLOSE'
+      | 'MOVE_TO_CONTAINER_START'
+      | 'MOVE_TO_CONTAINER_END'
+      | 'MOVE_TO_CONTAINER_CLOSE'
       | 'EDIT',
     payload: {
       entity?: string,
@@ -289,6 +292,7 @@ export function reducer(
         });
       });
     case 'RECHECK_TARGET': {
+      // FIXME: there is an issue when it is removing the targeting batches from other order after move batches to order
       if (action.payload?.orderUpdate?.id) {
         return produce(state, draft => {
           const orderId = action.payload?.orderUpdate?.id ?? '';
@@ -450,12 +454,14 @@ export function reducer(
         },
       });
     case 'MOVE_TO_ORDER_START':
+    case 'MOVE_TO_CONTAINER_START':
       return update(state, {
         moveActions: {
           isProcessing: { $set: true },
         },
       });
     case 'MOVE_TO_ORDER_CLOSE':
+    case 'MOVE_TO_CONTAINER_CLOSE':
       return update(state, {
         batchActions: {
           isOpen: { $set: true },
@@ -466,6 +472,7 @@ export function reducer(
         },
       });
     case 'MOVE_TO_ORDER_END':
+    case 'MOVE_TO_CONTAINER_END':
       return update(state, {
         batchActions: {
           isOpen: { $set: false },

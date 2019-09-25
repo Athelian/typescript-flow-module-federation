@@ -13,13 +13,14 @@ import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import FilterToolBar from 'components/common/FilterToolBar';
-import messages from 'modules/order/messages';
-import OrderGridView from 'modules/order/list/OrderGridView';
-import { OrderCard } from 'components/Cards';
-import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
+import messages from 'modules/container/messages';
+import ContainerGridView from 'modules/container/list/ContainerGridView';
+import { ContainerCard } from 'components/Cards';
+import { BATCH_UPDATE } from 'modules/permission/constants/batch';
+import { CONTAINER_BATCHES_ADD } from 'modules/permission/constants/container';
 import { BATCH } from 'modules/relationMapV2/constants';
 import { OverlayStyle } from './style';
-import { orderListQuery } from './query';
+import { containerListQuery } from './query';
 import { moveBatchesToOrder } from './mutation';
 
 type Props = {
@@ -27,22 +28,23 @@ type Props = {
   onSuccess: (orderIds: Array<string>) => void,
 };
 
-function OrderRenderer({
-  order,
+function ContainerRenderer({
+  container,
   selected,
   setSelected,
 }: {
-  order: Object,
+  container: Object,
   selected: ?Object,
   setSelected: (?Object) => void,
 }) {
   const { state } = React.useContext(RelationMapContext);
-  const { orderIds, importerIds, exporterIds } = state.moveActions;
-  const hasPermissions = useEntityHasPermissions(order);
-  const isSameParent = orderIds.length === 1 && orderIds.includes(order.id);
-  const isDifferentImporter = !importerIds.includes(order?.importer?.id);
-  const isDifferentExporter = !exporterIds.includes(order?.exporter?.id);
-  const noPermission = !hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
+  const { containerIds, importerIds, exporterIds } = state.moveActions;
+  const isSameParent = containerIds.length === 1 && containerIds.includes(container.id);
+  const hasPermissions = useEntityHasPermissions(container);
+  const isDifferentImporter = !importerIds.includes(container?.shipment?.importer?.id);
+  const isDifferentExporter =
+    exporterIds.length === 1 && !exporterIds.includes(container?.shipment?.exporter?.id);
+  const noPermission = !hasPermissions([BATCH_UPDATE, CONTAINER_BATCHES_ADD]);
   const isInvalid = isSameParent || isDifferentImporter || isDifferentExporter || noPermission;
   const msg = () => {
     if (noPermission)
@@ -56,8 +58,8 @@ function OrderRenderer({
     if (isSameParent)
       return (
         <FormattedMessage
-          id="modules.RelationMap.move.sameParentOrder"
-          defaultMessage="Same parent order"
+          id="modules.RelationMap.move.sameParentContainer"
+          defaultMessage="Same parent container"
         />
       );
 
@@ -80,12 +82,11 @@ function OrderRenderer({
     return null;
   };
 
-  const isSelected = order.id === selected?.id;
   return isInvalid ? (
     <div
       style={{
         width: 195,
-        height: 303,
+        height: 448,
         position: 'relative',
         backgroundColor: 'rgba(239, 72, 72, 0.25)',
       }}
@@ -93,18 +94,18 @@ function OrderRenderer({
       {msg()}
     </div>
   ) : (
-    <OrderCard
-      order={order}
-      selectable={isSelected}
-      selected={isSelected}
+    <ContainerCard
+      container={container}
+      selectable={container.id === selected?.id}
+      selected={container.id === selected?.id}
       onClick={() => {
-        setSelected(isSelected ? null : order);
+        setSelected(container.id === selected?.id ? null : container);
       }}
     />
   );
 }
 
-function SelectOrderToMove({ intl, onSuccess }: Props) {
+function SelectContainerToMove({ intl, onSuccess }: Props) {
   const { dispatch, state } = React.useContext(RelationMapContext);
   const { mapping } = Entities.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
@@ -115,16 +116,16 @@ function SelectOrderToMove({ intl, onSuccess }: Props) {
       if (isOpen) setSelected(null);
     };
   }, [isOpen]);
-  const isMoveToOrder = type === 'existOrder';
+  const isMoveToContainer = type === 'existContainer';
   const onCancel = () => {
     dispatch({
-      type: 'MOVE_TO_ORDER_CLOSE',
+      type: 'MOVE_TO_CONTAINER_CLOSE',
       payload: {},
     });
   };
   const onConfirm = () => {
     dispatch({
-      type: 'MOVE_TO_ORDER_START',
+      type: 'MOVE_TO_CONTAINER_START',
       payload: {},
     });
     moveBatchesToOrder({
@@ -139,13 +140,15 @@ function SelectOrderToMove({ intl, onSuccess }: Props) {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-    { title: intl.formatMessage(messages.poSort), value: 'poNo' },
-    { title: intl.formatMessage(messages.piSort), value: 'piNo' },
-    { title: intl.formatMessage(messages.date), value: 'issuedAt' },
-    { title: intl.formatMessage(messages.exporterName), value: 'exporterName' },
-    { title: intl.formatMessage(messages.currency), value: 'currency' },
-    { title: intl.formatMessage(messages.incoterm), value: 'incoterm' },
-    { title: intl.formatMessage(messages.deliveryPlace), value: 'deliveryPlace' },
+    { title: intl.formatMessage(messages.warehouseName), value: 'warehouseName' },
+    {
+      title: intl.formatMessage(messages.warehouseArrivalActualDate),
+      value: 'warehouseArrivalActualDate',
+    },
+    {
+      title: intl.formatMessage(messages.warehouseArrivalAgreedDate),
+      value: 'warehouseArrivalAgreedDate',
+    },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     {
@@ -160,20 +163,20 @@ function SelectOrderToMove({ intl, onSuccess }: Props) {
       perPage: 10,
       page: 1,
     },
-    'filterOrderOnMoveNRM'
+    'filterContainerOnMoveNRM'
   );
-  if (!isOpen || !isMoveToOrder) return null;
+  if (!isOpen || !isMoveToContainer) return null;
   return (
     <SlideView
       shouldConfirm={() => !!selected}
-      isOpen={isOpen && isMoveToOrder}
+      isOpen={isOpen && isMoveToContainer}
       onRequestClose={onCancel}
     >
-      {isOpen && isMoveToOrder && (
+      {isOpen && isMoveToContainer && (
         <SlideViewLayout>
           <SlideViewNavBar>
             <FilterToolBar
-              icon="ORDER"
+              icon="CONTAINER"
               sortFields={sortFields}
               filtersAndSort={filterAndSort}
               onChange={onChangeFilter}
@@ -188,30 +191,30 @@ function SelectOrderToMove({ intl, onSuccess }: Props) {
             />
           </SlideViewNavBar>
           <Content>
-            <Query query={orderListQuery} variables={queryVariables} fetchPolicy="network-only">
+            <Query query={containerListQuery} variables={queryVariables} fetchPolicy="network-only">
               {({ loading, data, fetchMore, error }) => {
                 if (error) {
                   return error.message;
                 }
 
-                const nextPage = (data?.orders?.page ?? 0) + 1;
-                const totalPage = data?.orders?.totalPage ?? 1;
+                const nextPage = (data?.containers?.page ?? 0) + 1;
+                const totalPage = data?.containers?.totalPage ?? 1;
                 const hasMore = nextPage <= totalPage;
 
                 return (
                   <>
                     {isProcessing && <div className={OverlayStyle} />}
-                    <OrderGridView
-                      items={data?.orders?.nodes ?? []}
-                      onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'orders')}
+                    <ContainerGridView
+                      items={data?.containers?.nodes ?? []}
+                      onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'containers')}
                       hasMore={hasMore}
                       isLoading={loading}
-                      renderItem={order => (
-                        <OrderRenderer
-                          key={order?.id}
+                      renderItem={container => (
+                        <ContainerRenderer
+                          key={container?.id}
                           selected={selected}
                           setSelected={setSelected}
-                          order={order}
+                          container={container}
                         />
                       )}
                     />
@@ -226,4 +229,4 @@ function SelectOrderToMove({ intl, onSuccess }: Props) {
   );
 }
 
-export default injectIntl(SelectOrderToMove);
+export default injectIntl(SelectContainerToMove);

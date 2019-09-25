@@ -82,6 +82,7 @@ export type State = {|
     isOpen: boolean,
     isProcessing: boolean,
     orderIds: Array<string>,
+    containerIds: Array<string>,
     importerIds: Array<string>,
     exporterIds: Array<string>,
     type?: | 'existOrder'
