@@ -30,6 +30,10 @@ export default defineMessages({
     id: 'components.NavBar.Filter.addFilter',
     defaultMessage: 'add filter',
   },
+  disabledAddMessage: {
+    id: 'components.NavBar.Filter.disabledAddMessage',
+    defaultMessage: 'Please fill out the previous filter',
+  },
   to: {
     id: 'components.NavBar.Filter.to',
     defaultMessage: 'to',

@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label } from 'components/Form';
@@ -156,7 +157,8 @@ export default function SelectedEntity({ targets }: Props) {
 
       <div className={TotalEntitiesStyle}>
         <Label color="TEAL" align="center">
-          <FormattedNumber value={totalCount} /> SELECTED
+          <FormattedNumber value={totalCount} />{' '}
+          <FormattedMessage id="modules.relationalMap.selected" defaultValue="SELECTED" />
         </Label>
         <button
           className={ClearTotalButtonStyle}

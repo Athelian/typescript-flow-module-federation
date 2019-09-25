@@ -16,7 +16,7 @@ export const SideBarWrapperStyle = (isExpanded: boolean): string => css`
   }
   position: fixed;
   top: 0;
-  z-index: 9999;
+  z-index: 99;
   user-select: none;
   overflow: hidden;
   height: 100vh;

@@ -10,9 +10,8 @@ import {
   transitions,
 } from 'styles/common';
 
-export const WrapperStyle = (color: string): string => css`
+export const WrapperStyle: string = css`
   ${layout.HORIZONTAL};
-  border-left: 4px solid ${colors[color]};
 `;
 
 export const LeftWrapperStyle: string = css`
@@ -22,7 +21,7 @@ export const LeftWrapperStyle: string = css`
 
 export const IconStyle = (color: string): string => css`
   position: sticky;
-  top: -100px;
+  top: -50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,24 +32,10 @@ export const IconStyle = (color: string): string => css`
   opacity: 0.5;
 `;
 
-export const ActionsWrapperStyle: string = css`
-  position: sticky;
-  top: calc(100% - 30px);
-  ${layout.GRID_VERTICAL};
-  grid-gap: 10px;
-  width: 100%;
-  height: min-content;
-  padding: 40px 0 20px 0;
-  justify-items: center;
-  background: linear-gradient(to bottom, ${colors.TRANSPARENT}, ${colors.WHITE} 20%);
-  & > button {
-    width: 100px;
-  }
-`;
-
 export const ColumnsWrapperStyle: string = css`
-  padding: 40px 10px;
-  width: 220px;
+  padding: 40px 0;
+  margin: 0 150px 0 0;
+  width: 300px;
   border-bottom: 1px solid ${colors.GRAY_SUPER_LIGHT};
 `;
 
@@ -66,7 +51,6 @@ export const ColumnStyle = (dragging: boolean) => css`
   text-transform: uppercase;
   margin-bottom: 10px;
   user-select: none;
-
   & > i {
     ${layout.LAYOUT};
     ${layout.CENTER_CENTER};
@@ -77,13 +61,11 @@ export const ColumnStyle = (dragging: boolean) => css`
     height: 30px;
     ${transitions.MAIN};
   }
-
   & > span {
     ${presets.ELLIPSIS};
     margin-left: 10px;
     flex: 1;
   }
-
   ${dragging &&
     `
     ${shadows.INPUT};
@@ -92,10 +74,8 @@ export const ColumnStyle = (dragging: boolean) => css`
       opacity: 1;
     }
   `}
-
   &:hover {
     ${shadows.INPUT};
-
     & > i {
       opacity: 1;
     }
