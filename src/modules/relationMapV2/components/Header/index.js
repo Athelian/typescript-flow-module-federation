@@ -53,7 +53,7 @@ function currentSort(
   return fields[0];
 }
 
-const Header = React.memo<>(
+const Header = React.memo<Props>(
   injectIntl(({ intl }: Props) => {
     const { state, dispatch } = React.useContext(RelationMapContext);
     const { mapping } = Entities.useContainer();
@@ -99,6 +99,13 @@ const Header = React.memo<>(
     const batchCount = Object.keys(entities.batches || {}).length;
     const containerCount = Object.keys(entities.containers || {}).length;
     const shipmentCount = Object.keys(entities.shipments || {}).length;
+
+    // TODO: Replace with real numbers
+    const selectedOrdersCount = 0;
+    const selectedItemsCount = 0;
+    const selectedBatchesCount = 0;
+    const selectedContainersCount = 0;
+    const selectedShipmentsCount = 0;
 
     return (
       <div className={EntitiesNavbarWrapperStyle}>
@@ -157,7 +164,15 @@ const Header = React.memo<>(
                 });
               }}
             >
-              <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              {selectedOrdersCount === orderCount ? (
+                <FormattedMessage
+                  id="components.button.unselectAll"
+                  defaultMessage="UNSELECT ALL"
+                />
+              ) : (
+                <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              )}
+
               <Icon icon="CHECKED" />
             </button>
           </div>
@@ -222,7 +237,15 @@ const Header = React.memo<>(
                 });
               }}
             >
-              <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              {selectedItemsCount === itemCount ? (
+                <FormattedMessage
+                  id="components.button.unselectAll"
+                  defaultMessage="UNSELECT ALL"
+                />
+              ) : (
+                <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              )}
+
               <Icon icon="CHECKED" />
             </button>
           </div>
@@ -289,7 +312,15 @@ const Header = React.memo<>(
                 });
               }}
             >
-              <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              {selectedBatchesCount === batchCount ? (
+                <FormattedMessage
+                  id="components.button.unselectAll"
+                  defaultMessage="UNSELECT ALL"
+                />
+              ) : (
+                <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              )}
+
               <Icon icon="CHECKED" />
             </button>
           </div>
@@ -356,7 +387,15 @@ const Header = React.memo<>(
                 });
               }}
             >
-              <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              {selectedContainersCount === containerCount ? (
+                <FormattedMessage
+                  id="components.button.unselectAll"
+                  defaultMessage="UNSELECT ALL"
+                />
+              ) : (
+                <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              )}
+
               <Icon icon="CHECKED" />
             </button>
           </div>
@@ -401,7 +440,15 @@ const Header = React.memo<>(
                 });
               }}
             >
-              <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              {selectedShipmentsCount === shipmentCount ? (
+                <FormattedMessage
+                  id="components.button.unselectAll"
+                  defaultMessage="UNSELECT ALL"
+                />
+              ) : (
+                <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+              )}
+
               <Icon icon="CHECKED" />
             </button>
           </div>

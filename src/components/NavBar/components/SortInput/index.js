@@ -18,7 +18,7 @@ type Sort = {
 type OptionalProps = {
   sortable: boolean,
   invertColors: boolean,
-  width: String,
+  width: string,
 };
 
 type Props = OptionalProps & {
