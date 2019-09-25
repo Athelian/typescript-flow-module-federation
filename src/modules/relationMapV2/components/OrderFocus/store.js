@@ -62,6 +62,9 @@ export const initialState: State = {
   moveActions: {
     isOpen: false,
     isProcessing: false,
+    orderIds: [],
+    importerIds: [],
+    exporterIds: [],
   },
   createItem: {
     isOpen: false,
@@ -442,8 +445,7 @@ export function reducer(
           isOpen: { $set: false },
         },
         moveActions: {
-          isOpen: { $set: true },
-          type: { $set: action.payload.type },
+          $merge: { ...action.payload, isOpen: true },
         },
       });
     case 'MOVE_TO_ORDER_CLOSE':

@@ -32,26 +32,11 @@ export default function MoveBatch() {
   const totalBatches = batchIds.length;
   const { isProcessing, isOpen, type } = state.batchActions;
   const isMoveBatches = type === 'moveBatches';
+
   const onCancel = () => {
     dispatch({
       type: 'MOVE_BATCH_CLOSE',
       payload: {},
-    });
-  };
-  const onConfirm = (
-    // prettier-ignore
-    target: | 'existOrder'
-      | 'newOrder'
-      | 'existContainer'
-      | 'newContainer'
-      | 'existShipment'
-      | 'newShipment'
-  ) => {
-    dispatch({
-      type: 'MOVE_BATCH_START',
-      payload: {
-        type: target,
-      },
     });
   };
 
@@ -59,34 +44,25 @@ export default function MoveBatch() {
     batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.ownedBy).filter(Boolean)
   );
 
-  const isSamePartners = () => {
-    const importerIds = [];
-    const exportIds = [];
-    orderIds.forEach(orderId => {
-      const order = mapping.entities?.orders?.[orderId];
-      const importId = order?.importer?.id;
-      const exportId = order?.exporter?.id;
-      if (importId && !importerIds.includes(importId)) {
-        importerIds.push(importId);
-      }
-      if (exportId && !exportIds.includes(exportId)) {
-        exportIds.push(exportId);
-      }
-    });
+  const importerIds = [];
+  const exporterIds = [];
+  orderIds.forEach(orderId => {
+    const order = mapping.entities?.orders?.[orderId];
+    const importId = order?.importer?.id;
+    const exporterId = order?.exporter?.id;
+    if (importId && !importerIds.includes(importId)) {
+      importerIds.push(importId);
+    }
+    if (exporterId && !exporterIds.includes(exporterId)) {
+      exporterIds.push(exporterId);
+    }
+  });
 
-    return importerIds.length <= 1 && exportIds.length <= 1;
+  const isSamePartners = () => {
+    return importerIds.length <= 1 && exporterIds.length <= 1;
   };
 
   const isSameImporter = () => {
-    const importerIds = [];
-    orderIds.forEach(orderId => {
-      const order = mapping.entities?.orders?.[orderId];
-      const importId = order?.importer?.id;
-      if (importId && !importerIds.includes(importId)) {
-        importerIds.push(importId);
-      }
-    });
-
     return importerIds.length <= 1;
   };
 
@@ -137,6 +113,27 @@ export default function MoveBatch() {
       !hasPermissionMoveToNewShipment()
     );
   };
+
+  const onConfirm = (
+    // prettier-ignore
+    target: | 'existOrder'
+      | 'newOrder'
+      | 'existContainer'
+      | 'newContainer'
+      | 'existShipment'
+      | 'newShipment'
+  ) => {
+    dispatch({
+      type: 'MOVE_BATCH_START',
+      payload: {
+        type: target,
+        orderIds,
+        importerIds,
+        exporterIds,
+      },
+    });
+  };
+
   return (
     <Dialog isOpen={isOpen && isMoveBatches} width="660px" onRequestClose={onCancel}>
       <div className={DialogStyle}>

@@ -1,10 +1,11 @@
 // @flow
 import * as React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
+import { useEntityHasPermissions } from 'components/Context/Permissions';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -14,11 +15,90 @@ import messages from 'modules/order/messages';
 import OrderGridView from 'modules/order/list/OrderGridView';
 import { OrderCard } from 'components/Cards';
 import { orderListQuery } from 'modules/order/list/query';
+import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { OverlayStyle } from './style';
 
 type Props = {
   intl: IntlShape,
 };
+
+function OrderRenderer({
+  order,
+  selected,
+  setSelected,
+}: {
+  order: Object,
+  selected: ?string,
+  setSelected: (?string) => void,
+}) {
+  const { state } = React.useContext(RelationMapContext);
+  const { orderIds, importerIds, exporterIds } = state.moveActions;
+  const hasPermissions = useEntityHasPermissions(order);
+  const isSameOrderParent = orderIds.length === 1 && orderIds.includes(order.id);
+  const isDifferentImporter = !importerIds.includes(order?.importer?.id);
+  const isDifferentExporter = !exporterIds.includes(order?.exporter?.id);
+  const noPermission = !hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
+  const isInvalid = isSameOrderParent || isDifferentImporter || isDifferentExporter || noPermission;
+  const msg = () => {
+    if (noPermission)
+      return (
+        <FormattedMessage
+          id="modules.RelationMap.move.noPermission"
+          defaultMessage="No permission"
+        />
+      );
+
+    if (isSameOrderParent)
+      return (
+        <FormattedMessage
+          id="modules.RelationMap.move.sameParentOrder"
+          defaultMessage="Same parent order"
+        />
+      );
+
+    if (isDifferentImporter)
+      return (
+        <FormattedMessage
+          id="modules.RelationMap.move.isDifferentImporter"
+          defaultMessage="Different importer"
+        />
+      );
+
+    if (isDifferentExporter)
+      return (
+        <FormattedMessage
+          id="modules.RelationMap.move.isDifferentExporter"
+          defaultMessage="Different exporter"
+        />
+      );
+
+    return null;
+  };
+  return (
+    <>
+      {isInvalid && (
+        <div
+          style={{
+            width: 195,
+            height: 303,
+            position: 'relative',
+            backgroundColor: 'rgba(239, 72, 72, 0.25)',
+          }}
+        >
+          {msg()}
+        </div>
+      )}
+      <OrderCard
+        order={order}
+        selectable={order.id === selected}
+        selected={order.id === selected}
+        onClick={() => {
+          setSelected(order.id === selected ? null : order.id);
+        }}
+      />
+    </>
+  );
+}
 
 function SelectOrderToMove({ intl }: Props) {
   const { dispatch, state } = React.useContext(RelationMapContext);
@@ -71,7 +151,11 @@ function SelectOrderToMove({ intl }: Props) {
   );
   if (!isOpen || !isMoveToOrder) return null;
   return (
-    <SlideView isOpen={isOpen && isMoveToOrder} onRequestClose={onCancel}>
+    <SlideView
+      isOpen={isOpen && isMoveToOrder}
+      onRequestClose={onCancel}
+      targetId="shouldNotUseThisWay"
+    >
       {isOpen && isMoveToOrder && (
         <SlideViewLayout>
           <SlideViewNavBar>
@@ -109,19 +193,14 @@ function SelectOrderToMove({ intl }: Props) {
                       onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'orders')}
                       hasMore={hasMore}
                       isLoading={loading}
-                      renderItem={order => {
-                        return (
-                          <OrderCard
-                            key={order.id}
-                            order={order}
-                            selectable={order.id === selected}
-                            selected={order.id === selected}
-                            onClick={() => {
-                              setSelected(order.id);
-                            }}
-                          />
-                        );
-                      }}
+                      renderItem={order => (
+                        <OrderRenderer
+                          key={order?.id}
+                          selected={selected}
+                          setSelected={setSelected}
+                          order={order}
+                        />
+                      )}
                     />
                   </>
                 );

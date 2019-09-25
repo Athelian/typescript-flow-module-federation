@@ -81,6 +81,9 @@ export type State = {|
   moveActions: {
     isOpen: boolean,
     isProcessing: boolean,
+    orderIds: Array<string>,
+    importerIds: Array<string>,
+    exporterIds: Array<string>,
     type?: | 'existOrder'
       | 'newOrder'
       | 'existContainer'
