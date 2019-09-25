@@ -142,7 +142,10 @@ const Cell = React.memo(
             <SlideView
               isOpen={opened}
               onRequestClose={() => slideToggle(false)}
-              targetId="batch_form_save_button"
+              shouldConfirm={() => {
+                const button = document.getElementById('batch_form_save_button');
+                return button;
+              }}
             >
               {opened && (
                 <BatchFormInSlide

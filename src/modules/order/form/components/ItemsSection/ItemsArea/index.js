@@ -328,7 +328,10 @@ function ItemsArea({
                         <SlideView
                           isOpen={opened}
                           onRequestClose={() => itemSlideToggle(false)}
-                          targetId="item_form_save_button"
+                          shouldConfirm={() => {
+                            const button = document.getElementById('item_form_save_button');
+                            return button;
+                          }}
                         >
                           {opened && (
                             <ItemFormInSlide

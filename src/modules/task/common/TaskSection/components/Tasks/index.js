@@ -96,7 +96,7 @@ const Tasks = ({
             <SlideView
               isOpen={opened}
               onRequestClose={() => selectTaskSlideToggle(false)}
-              targetId="task_form_save_button"
+              shouldConfirm={() => document.getElementById('task_form_save_button')}
             >
               {opened && (
                 <TaskFormInSlide

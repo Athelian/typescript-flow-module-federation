@@ -25,7 +25,7 @@ type Props = {
 const MaskList = ({ entityType, queryVariables }: Props) => (
   <PermissionConsumer>
     {hasPermission => {
-      const allowCreate = hasPermission(CUSTOM_FIELD_MASKS_CREATE);
+      const canCreate = hasPermission(CUSTOM_FIELD_MASKS_CREATE);
 
       return (
         <Query
@@ -49,12 +49,21 @@ const MaskList = ({ entityType, queryVariables }: Props) => (
                   <Label>
                     <FormattedMessage id="modules.metadata.templates" defaultMessage="TEMPLATES" />
                   </Label>
-                  {allowCreate && (
+                  {canCreate && (
                     <BooleanValue>
                       {({ value: isOpen, set: toggle }) => (
                         <>
                           <NewButton onClick={() => toggle(true)} disabled={loading} />
-                          <SlideView isOpen={isOpen} onRequestClose={() => toggle(false)}>
+                          <SlideView
+                            isOpen={isOpen}
+                            onRequestClose={() => toggle(false)}
+                            shouldConfirm={() => {
+                              const button = document.getElementById(
+                                'custom_fields_template_form_save_button'
+                              );
+                              return button;
+                            }}
+                          >
                             {isOpen && (
                               <MaskFormWrapper
                                 entityType={entityType}
@@ -95,7 +104,15 @@ const MaskList = ({ entityType, queryVariables }: Props) => (
                                 toggle(true);
                               }}
                             />
-                            <SlideView isOpen={isOpen} onRequestClose={() => toggle(false)}>
+                            <SlideView
+                              isOpen={isOpen}
+                              onRequestClose={() => toggle(false)}
+                              shouldConfirm={() => {
+                                return document.getElementById(
+                                  'custom_fields_template_form_save_button'
+                                );
+                              }}
+                            >
                               {isOpen && (
                                 <MaskFormWrapper
                                   entityType={entityType}

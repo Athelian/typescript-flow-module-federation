@@ -226,7 +226,12 @@ function SelectProjectAndMilestone({
                                 {item.id ===
                                   getByPathWithDefault('', 'project.id', currentSelection) && (
                                   <SlideView
-                                    targetId="select_milestone_save_button"
+                                    shouldConfirm={() => {
+                                      const button = document.getElementById(
+                                        'select_milestone_save_button'
+                                      );
+                                      return button;
+                                    }}
                                     isOpen={isOpen}
                                     onRequestClose={() => {
                                       resetSelection({

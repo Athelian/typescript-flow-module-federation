@@ -59,6 +59,7 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
                         }}
                       />
                       <SaveButton
+                        id="milestone_form_save_button"
                         disabled={!formContainer.isReady(milestoneStateContainer.state, validator)}
                         onClick={() => onSave(milestoneStateContainer.state)}
                       />

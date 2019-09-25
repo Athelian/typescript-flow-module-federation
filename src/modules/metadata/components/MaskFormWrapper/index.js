@@ -161,6 +161,7 @@ class MaskFormWrapper extends React.Component<Props> {
 
                             {(isNew || maskContainer.isDirty()) && (
                               <SaveButton
+                                id="custom_fields_template_form_save_button"
                                 disabled={!formContainer.isReady(maskContainer.state, validator)}
                                 onClick={() => {
                                   this.onSave(

@@ -532,7 +532,12 @@ function ContainersArea({
                                     <SlideView
                                       isOpen={isOpenContainerForm}
                                       onRequestClose={() => toggleContainerForm(false)}
-                                      targetId="container_form_save_button"
+                                      shouldConfirm={() => {
+                                        const button = document.getElementById(
+                                          'container_form_save_button'
+                                        );
+                                        return button;
+                                      }}
                                     >
                                       {isOpenContainerForm && (
                                         <ContainerFormInSlide
