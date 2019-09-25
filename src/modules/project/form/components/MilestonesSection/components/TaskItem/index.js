@@ -27,17 +27,17 @@ type Props = {|
 
 function TaskItem({ task, isDragging, provided, onChange, onRemove }: Props) {
   return (
-    <div
-      className={TaskItemWrapperStyle(isDragging)}
-      ref={provided.innerRef}
-      {...provided.draggableProps}
-      {...provided.dragHandleProps}
-    >
-      <PartnerPermissionsWrapper data={task} key={task.id}>
-        {(permissions, isOwner) => (
-          <BooleanValue>
-            {({ value: isOpen, set: toggleTaskForm }) => (
-              <>
+    <PartnerPermissionsWrapper data={task} key={task.id}>
+      {(permissions, isOwner) => (
+        <BooleanValue>
+          {({ value: isOpen, set: toggleTaskForm }) => (
+            <>
+              <div
+                className={TaskItemWrapperStyle(isDragging)}
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+              >
                 <TaskCard
                   hideProjectInfo
                   entity={{
@@ -87,38 +87,39 @@ function TaskItem({ task, isDragging, provided, onChange, onRemove }: Props) {
                     setTimeout(() => toggleTaskForm(true), 200);
                   }}
                 />
-                <SlideView
-                  isOpen={isOpen}
-                  onRequestClose={() => toggleTaskForm(false)}
-                  shouldConfirm={() => document.getElementById('task_form_save_button')}
-                >
-                  {isOpen && (
-                    <QueryFormPermissionContext.Provider
-                      value={{
-                        isOwner,
-                        permissions,
+              </div>
+
+              <SlideView
+                isOpen={isOpen}
+                onRequestClose={() => toggleTaskForm(false)}
+                shouldConfirm={() => document.getElementById('task_form_save_button')}
+              >
+                {isOpen && (
+                  <QueryFormPermissionContext.Provider
+                    value={{
+                      isOwner,
+                      permissions,
+                    }}
+                  >
+                    <TaskFormInSlide
+                      inParentEntityForm={false}
+                      isInProject
+                      groupIds={parseGroupIds(task)}
+                      entity={task.entity}
+                      task={{ ...task, sort: task.milestoneSort + 1 }}
+                      onSave={value => {
+                        onChange(task.id, value);
+                        toggleTaskForm(false);
                       }}
-                    >
-                      <TaskFormInSlide
-                        inParentEntityForm={false}
-                        isInProject
-                        groupIds={parseGroupIds(task)}
-                        entity={task.entity}
-                        task={{ ...task, sort: task.milestoneSort + 1 }}
-                        onSave={value => {
-                          onChange(task.id, value);
-                          toggleTaskForm(false);
-                        }}
-                      />
-                    </QueryFormPermissionContext.Provider>
-                  )}
-                </SlideView>
-              </>
-            )}
-          </BooleanValue>
-        )}
-      </PartnerPermissionsWrapper>
-    </div>
+                    />
+                  </QueryFormPermissionContext.Provider>
+                )}
+              </SlideView>
+            </>
+          )}
+        </BooleanValue>
+      )}
+    </PartnerPermissionsWrapper>
   );
 }
 
