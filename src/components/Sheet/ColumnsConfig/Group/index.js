@@ -1,18 +1,14 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Icon from 'components/Icon';
-import { BaseButton } from 'components/Buttons';
 import CheckboxInput from 'components/Form/CheckboxInput';
-import messages from '../../messages';
 import type { ColumnState } from '../types';
 import {
   WrapperStyle,
   LeftWrapperStyle,
   IconStyle,
   ColumnsWrapperStyle,
-  ActionsWrapperStyle,
   ColumnStyle,
 } from './style';
 
@@ -20,10 +16,9 @@ type Props = {
   icon: string,
   columns: Array<ColumnState>,
   onChange: (Array<ColumnState>) => void,
-  onReset: () => void,
 };
 
-const Group = ({ icon, columns, onChange, onReset }: Props) => {
+const Group = ({ icon, columns, onChange }: Props) => {
   const handleGrouped = () => {
     onChange(
       columns.sort((a, b) => {
@@ -39,6 +34,7 @@ const Group = ({ icon, columns, onChange, onReset }: Props) => {
       })
     );
   };
+  console.log(handleGrouped);
 
   const handleReorder = result => {
     if (!result.destination) {
@@ -74,27 +70,6 @@ const Group = ({ icon, columns, onChange, onReset }: Props) => {
       <div className={LeftWrapperStyle}>
         <div className={IconStyle(icon)}>
           <Icon icon={icon} />
-        </div>
-
-        <div className={ActionsWrapperStyle}>
-          <BaseButton
-            onClick={handleGrouped}
-            label={<FormattedMessage {...messages.columnsConfigGroupButton} />}
-            icon="BRING_FORWARD"
-            textColor="TEAL"
-            hoverTextColor="WHITE"
-            backgroundColor="GRAY_SUPER_LIGHT"
-            hoverBackgroundColor="TEAL"
-          />
-          <BaseButton
-            onClick={onReset}
-            label={<FormattedMessage {...messages.columnsConfigDefaultButton} />}
-            icon="UNDO"
-            textColor="GRAY_DARK"
-            hoverTextColor="WHITE"
-            backgroundColor="GRAY_SUPER_LIGHT"
-            hoverBackgroundColor="GRAY_LIGHT"
-          />
         </div>
       </div>
 
