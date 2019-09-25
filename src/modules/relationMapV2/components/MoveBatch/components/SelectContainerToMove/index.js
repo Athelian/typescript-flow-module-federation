@@ -43,9 +43,10 @@ function ContainerRenderer({
   const hasPermissions = useEntityHasPermissions(container);
   const isDifferentImporter = !importerIds.includes(container?.shipment?.importer?.id);
   const isDifferentExporter =
-    exporterIds.length === 1 &&
-    !exporterIds.includes(container?.shipment?.exporter?.id) &&
-    container?.shipment?.exporter?.id;
+    (exporterIds.length === 1 &&
+      !exporterIds.includes(container?.shipment?.exporter?.id) &&
+      container?.shipment?.exporter?.id) ||
+    (exporterIds.length > 1 && container?.shipment?.exporter?.id);
   const noPermission = !hasPermissions([BATCH_UPDATE, CONTAINER_BATCHES_ADD]);
   const isInvalid = isSameParent || isDifferentImporter || isDifferentExporter || noPermission;
   const msg = () => {
