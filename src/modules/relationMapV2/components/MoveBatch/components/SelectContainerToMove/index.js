@@ -21,7 +21,7 @@ import { CONTAINER_BATCHES_ADD } from 'modules/permission/constants/container';
 import { BATCH } from 'modules/relationMapV2/constants';
 import { OverlayStyle } from './style';
 import { containerListQuery } from './query';
-import { moveBatchesToOrder } from './mutation';
+import { moveBatchesToContainer } from './mutation';
 
 type Props = {
   intl: IntlShape,
@@ -43,7 +43,9 @@ function ContainerRenderer({
   const hasPermissions = useEntityHasPermissions(container);
   const isDifferentImporter = !importerIds.includes(container?.shipment?.importer?.id);
   const isDifferentExporter =
-    exporterIds.length === 1 && !exporterIds.includes(container?.shipment?.exporter?.id);
+    exporterIds.length === 1 &&
+    !exporterIds.includes(container?.shipment?.exporter?.id) &&
+    container?.shipment?.exporter?.id;
   const noPermission = !hasPermissions([BATCH_UPDATE, CONTAINER_BATCHES_ADD]);
   const isInvalid = isSameParent || isDifferentImporter || isDifferentExporter || noPermission;
   const msg = () => {
@@ -110,7 +112,7 @@ function SelectContainerToMove({ intl, onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
   const [selected, setSelected] = React.useState(null);
-  const { isProcessing, isOpen, type } = state.moveActions;
+  const { isProcessing, isOpen, type, orderIds } = state.moveActions;
   React.useEffect(() => {
     return () => {
       if (isOpen) setSelected(null);
@@ -128,9 +130,10 @@ function SelectContainerToMove({ intl, onSuccess }: Props) {
       type: 'MOVE_TO_CONTAINER_START',
       payload: {},
     });
-    moveBatchesToOrder({
-      order: selected,
+    moveBatchesToContainer({
+      container: selected,
       batchIds,
+      orderIds,
       entities: mapping.entities,
     })
       .then(onSuccess)

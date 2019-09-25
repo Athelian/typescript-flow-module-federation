@@ -53,7 +53,7 @@ function currentSort(
   return fields[0];
 }
 
-const Header = React.memo<Props>(
+const Header = React.memo<any>(
   injectIntl(({ intl }: Props) => {
     const { state, dispatch } = React.useContext(RelationMapContext);
     const { mapping } = Entities.useContainer();

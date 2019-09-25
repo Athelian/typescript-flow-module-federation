@@ -25,7 +25,7 @@ export const WrapperStyle = (isOpen: boolean, invertColors: boolean, width: stri
     ? `
       border: 1px solid ${isOpen ? colors.WHITE : colors.TRANSPARENT};
       background-color: rgba(255, 255, 255, 0.2);
-      ${isOpen && 'background-color: rgba(255, 255, 255, 0.3)'};
+      ${isOpen ? 'background-color: rgba(255, 255, 255, 0.3)' : ''};
       &:hover {
         background-color: rgba(255, 255, 255, 0.3);
       }
@@ -33,7 +33,7 @@ export const WrapperStyle = (isOpen: boolean, invertColors: boolean, width: stri
     : `
       border: 1px solid ${isOpen ? colors.TEAL : 'rgba(0, 0, 0, 0.1)'};
       background-color: ${colors.WHITE};
-      ${isOpen && shadows.INPUT};
+      ${isOpen ? shadows.INPUT : ''};
       &:hover {
         ${shadows.INPUT};
       }
@@ -51,12 +51,12 @@ export const InputStyle = (sortable: boolean, invertColors: boolean): string => 
   outline: none;
   ${invertColors
     ? `
-      ${sortable && `border-right: 1px solid rgba(255, 255, 255, 0.2)`};
+      ${sortable ? `border-right: 1px solid rgba(255, 255, 255, 0.2)` : ''};
       background-color: ${colors.TRANSPARENT};
       color: ${colors.WHITE};
     `
     : `
-      ${sortable && `border-right: 1px solid ${colors.GRAY_VERY_LIGHT}`};
+      ${sortable ? `border-right: 1px solid ${colors.GRAY_VERY_LIGHT}` : ''};
       color: ${colors.BLACK};
     `};
   padding: 0 4px;
