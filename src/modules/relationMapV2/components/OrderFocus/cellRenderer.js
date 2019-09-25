@@ -58,7 +58,7 @@ type CellProps = {
 };
 
 function isMatchedEntity(matches: Object, entity: Object) {
-  if (!matches?.entity) return false;
+  if (!matches?.entity || !entity) return false;
 
   if (entity.__typename === ORDER_ITEM) {
     return matches?.entity[`${entity.productProvider?.product?.id}-${PRODUCT}`];
