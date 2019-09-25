@@ -12,6 +12,7 @@ export type ColumnSortConfig = {
 
 type Column = {
   key: string,
+  exportKey?: string,
   title: any,
   icon: string,
   color: string,

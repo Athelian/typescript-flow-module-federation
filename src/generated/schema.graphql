@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Sep 18 2019 19:02:12 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Sep 25 2019 14:02:48 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28697,6 +28697,12 @@ enum FileType {
   """ShipmentInspectionApplication"""
   ShipmentInspectionApplication
 
+  """ShipmentWarehouseArrivalReport"""
+  ShipmentWarehouseArrivalReport
+
+  """ShipmentWarehouseInspectionReport"""
+  ShipmentWarehouseInspectionReport
+
   """ProductSpec"""
   ProductSpec
 
@@ -31087,18 +31093,18 @@ type Query {
   product(id: ID!): ProductPayload!
   products(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPayloadPaginatedSearch!
   productsByIDs(ids: [ID!]!): [ProductPayload!]!
-  productExport(id: ID!, templateId: ID!): ExportPayload!
-  productsExport(templateId: ID!, filterBy: ProductFilterInput, sortBy: ProductSortInput): ExportPayload!
-  productsByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
+  productExport(id: ID!, templateId: ID!, columns: [String!]): ExportPayload!
+  productsExport(templateId: ID!, columns: [String!], filterBy: ProductFilterInput, sortBy: ProductSortInput): ExportPayload!
+  productsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!]): ExportPayload!
   productProvider(id: ID!): ProductProviderPayload!
   productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPayloadPaginatedSearch!
   productProvidersByIDs(ids: [ID!]!): [ProductProviderPayload!]!
   order(id: ID!): OrderPayload!
   orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPaginatedSearch!
   ordersByIDs(ids: [ID!]!): [OrderPayload!]!
-  orderExport(id: ID!, templateId: ID!): ExportPayload!
-  ordersExport(templateId: ID!, filterBy: OrderFilterInput, sortBy: OrderSortInput): ExportPayload!
-  ordersByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
+  orderExport(id: ID!, templateId: ID!, columns: [String!]): ExportPayload!
+  ordersExport(templateId: ID!, columns: [String!], filterBy: OrderFilterInput, sortBy: OrderSortInput): ExportPayload!
+  ordersByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!]): ExportPayload!
   orderItem(id: ID!): OrderItemPayload!
   orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPaginatedSearch!
   orderItemsByIDs(ids: [ID!]!): [OrderItemPayload!]!
@@ -31109,38 +31115,38 @@ type Query {
   shipment(id: ID!): ShipmentPayload!
   shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPaginatedSearch!
   shipmentsByIDs(ids: [ID!]!): [ShipmentPayload!]!
-  shipmentExport(id: ID!, templateId: ID!): ExportPayload!
-  shipmentsExport(templateId: ID!, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ExportPayload!
-  shipmentsByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
+  shipmentExport(id: ID!, templateId: ID!, columns: [String!]): ExportPayload!
+  shipmentsExport(templateId: ID!, columns: [String!], filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ExportPayload!
+  shipmentsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!]): ExportPayload!
   container(id: ID!): ContainerPayload!
   containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPaginatedSearch!
   containersByIDs(ids: [ID!]!): [ContainerPayload!]!
-  containerExport(id: ID!, templateId: ID!): ExportPayload!
-  containersExport(templateId: ID!, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ExportPayload!
-  containersByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
+  containerExport(id: ID!, templateId: ID!, columns: [String!]): ExportPayload!
+  containersExport(templateId: ID!, columns: [String!], filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ExportPayload!
+  containersByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!]): ExportPayload!
   warehouse(id: ID!): WarehousePayload!
   warehouses(page: Int! = 1, perPage: Int! = 10, filterBy: WarehouseFilterInput, sortBy: WarehouseSortInput): WarehousePayloadPaginatedSearch!
   warehousesByIDs(ids: [ID!]!): [WarehousePayload!]!
   tag(id: ID!): TagPayload!
   tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPayloadPaginatedSearch!
-  tagExport(id: ID!, templateId: ID!): ExportPayload!
-  tagsExport(templateId: ID!, filterBy: TagFilterInput, sortBy: TagSortInput): ExportPayload!
-  tagsByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
+  tagExport(id: ID!, templateId: ID!, columns: [String!]): ExportPayload!
+  tagsExport(templateId: ID!, columns: [String!], filterBy: TagFilterInput, sortBy: TagSortInput): ExportPayload!
+  tagsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!]): ExportPayload!
   task(id: ID!): TaskPayload!
   tasks(page: Int! = 1, perPage: Int! = 10, filterBy: TaskFilterInput, sortBy: TaskSortInput): TaskPayloadPaginatedSearch!
   tasksByIDs(ids: [ID!]!): [TaskPayload!]!
-  taskExport(id: ID!, templateId: ID!): ExportPayload!
-  tasksExport(templateId: ID!, filterBy: TaskFilterInput, sortBy: TaskSortInput): ExportPayload!
-  tasksByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
+  taskExport(id: ID!, templateId: ID!, columns: [String!]): ExportPayload!
+  tasksExport(templateId: ID!, columns: [String!], filterBy: TaskFilterInput, sortBy: TaskSortInput): ExportPayload!
+  tasksByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!]): ExportPayload!
   taskTemplate(id: ID!): TaskTemplatePayload!
   taskTemplates(page: Int! = 1, perPage: Int! = 10, filterBy: TaskTemplateFilterInput, sortBy: TaskTemplateSortInput): TaskTemplatePayloadPaginatedSearch!
   taskTemplatesByIDs(ids: [ID!]!): [TaskTemplatePayload!]!
   project(id: ID!): ProjectPayload!
   projects(page: Int! = 1, perPage: Int! = 10, filterBy: ProjectFilterInput, sortBy: ProjectSortInput): ProjectPayloadPaginatedSearch!
   projectsByIDs(ids: [ID!]!): [ProjectPayload!]!
-  projectExport(id: ID!, templateId: ID!): ExportPayload!
-  projectsExport(templateId: ID!, filterBy: ProjectFilterInput, sortBy: ProjectSortInput): ExportPayload!
-  projectsByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
+  projectExport(id: ID!, templateId: ID!, columns: [String!]): ExportPayload!
+  projectsExport(templateId: ID!, columns: [String!], filterBy: ProjectFilterInput, sortBy: ProjectSortInput): ExportPayload!
+  projectsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!]): ExportPayload!
   milestone(id: ID!): MilestonePayload!
   milestonesByIDs(ids: [ID!]!): [MilestonePayload!]!
   projectTemplate(id: ID!): ProjectTemplatePayload!
