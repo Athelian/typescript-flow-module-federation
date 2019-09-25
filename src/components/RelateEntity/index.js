@@ -6,28 +6,28 @@ import { Display } from 'components/Form';
 import { WrapperStyle, IconColorStyle } from './style';
 
 type Props = {|
-  entity: | 'ORDER'
-    | 'BATCH'
-    | 'SHIPMENT'
-    | 'CONTAINER'
-    | 'ORDER_ITEM'
-    | 'PRODUCT'
-    | 'PRODUCT_PROVIDER'
-    | 'PROJECT'
-    | 'MILESTONE'
-    | 'WAREHOUSE',
+  entity: string,
   value: React$Node,
   blackout?: boolean,
   link?: string,
+  width?: string,
 |};
 
-export default function RelateEntity({ entity, value, blackout, link }: Props) {
+const defaultProps = {
+  width: '145px',
+};
+
+export default function RelateEntity({ entity, value, blackout, link, width }: Props) {
   const isNotAvailable = blackout || !value;
+
+  let entityColor = entity;
+  if (entity === 'IMPORTER' || entity === 'EXPORTER') entityColor = 'PARTNER';
+
   return (
-    <div className={WrapperStyle}>
+    <div className={WrapperStyle(width)}>
       {link && !isNotAvailable ? (
         <Link
-          className={IconColorStyle(entity, isNotAvailable)}
+          className={IconColorStyle(entityColor, isNotAvailable)}
           to={link}
           onClick={evt => {
             evt.stopPropagation();
@@ -36,7 +36,7 @@ export default function RelateEntity({ entity, value, blackout, link }: Props) {
           <Icon icon={entity} />
         </Link>
       ) : (
-        <div className={IconColorStyle(entity, isNotAvailable)}>
+        <div className={IconColorStyle(entityColor, isNotAvailable)}>
           <Icon icon={entity} />
         </div>
       )}
@@ -46,3 +46,5 @@ export default function RelateEntity({ entity, value, blackout, link }: Props) {
     </div>
   );
 }
+
+RelateEntity.defaultProps = defaultProps;

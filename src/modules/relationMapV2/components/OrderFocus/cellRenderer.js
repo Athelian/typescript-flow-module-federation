@@ -722,7 +722,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
               <Badge label={badge.order?.[orderId] ?? ''} />
               <OrderCard
                 organizationId={data?.ownedBy?.id}
-                poNo={data?.poNo ?? 'N/A'}
+                order={data}
                 onCreateItem={evt => {
                   evt.stopPropagation();
                   dispatch({
