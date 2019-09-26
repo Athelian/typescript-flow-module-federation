@@ -143,6 +143,7 @@ export default function MoveBatch({ onSuccess }: Props) {
   ) => {
     switch (target) {
       case 'newOrder':
+      case 'newShipment':
         dispatch({
           type: 'MOVE_BATCH_TO_NEW_ORDER',
           payload: {

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useLazyQuery } from 'react-apollo';
 import { findKey } from 'lodash';
 import usePrevious from 'hooks/usePrevious';
+import useUser from 'hooks/useUser';
 import SlideView from 'components/SlideView';
 import LoadingIcon from 'components/LoadingIcon';
 import OrderForm from 'modules/order/index.form';
@@ -30,6 +31,7 @@ type Props = {|
 |};
 
 const EditFormSlideView = ({ onClose }: Props) => {
+  const { isExporter } = useUser();
   const isReady = React.useRef(true);
   const { dispatch, state } = React.useContext(RelationMapContext);
   const [fetchOrdersAndShipments, fetchResult] = useLazyQuery(ordersAndShipmentsQuery);
@@ -117,6 +119,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
       const newOrderItems = [];
       const newContainers = [];
       const newShipments = [];
+      const newBatches = [];
       if (
         fetchResult.called &&
         isEquals(lastQueryVariables, {
@@ -136,6 +139,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
           const parentItem = parentOrder.orderItems.find(item => item.id === orderItemId);
           const batch = parentItem.batches.find(currentBatch => currentBatch.id === batchId);
           if (batch && parentItem) {
+            newBatches.push(batch);
             const { id: itemId, ...item } = parentItem;
             if (batch.container && !newContainers.includes(batch.container)) {
               newContainers.push(batch.container);
@@ -159,53 +163,97 @@ const EditFormSlideView = ({ onClose }: Props) => {
         });
       }
       const { importer, exporter } = fetchResult.data?.ordersByIDs?.[0] ?? {};
-      form = fetchResult.loading ? (
-        <LoadingIcon />
-      ) : (
-        <OrderForm
-          path="new"
-          isSlideView
-          redirectAfterSuccess={false}
-          originalDataForSlideView={{
-            orderItems: newOrderItems.map(item => ({
-              id: item.id,
-              isNew: true,
-              batches: item.batches.map(batch => ({
-                ...batch,
-                isNew: true,
-              })),
-            })),
-          }}
-          initDataForSlideView={{
-            importer,
-            exporter,
-            orderItems: newOrderItems,
-            containers: newContainers,
-            shipments: newShipments,
-          }}
-          onSuccessCallback={data => {
-            onSetBadges([
-              {
-                id: data.orderCreate.id,
-                type: 'newItem',
-                entity: 'order',
-              },
-            ]);
-            dispatch({
-              type: 'NEW_ORDER',
-              payload: {
-                orderId: data.orderCreate.id,
-              },
-            });
-            onClose({
-              moveToTop: true,
-              id: data.orderCreate.id,
-              type: ORDER,
-            });
-          }}
-          onCancel={onClose}
-        />
-      );
+      if (fetchResult.loading) {
+        form = <LoadingIcon />;
+      } else {
+        switch (id) {
+          case 'newOrder':
+            form = (
+              <OrderForm
+                path="new"
+                isSlideView
+                redirectAfterSuccess={false}
+                originalDataForSlideView={{
+                  orderItems: newOrderItems.map(item => ({
+                    id: item.id,
+                    isNew: true,
+                    batches: item.batches.map(batch => ({
+                      ...batch,
+                      isNew: true,
+                    })),
+                  })),
+                }}
+                initDataForSlideView={{
+                  importer,
+                  exporter,
+                  orderItems: newOrderItems,
+                  containers: newContainers,
+                  shipments: newShipments,
+                }}
+                onSuccessCallback={data => {
+                  onSetBadges([
+                    {
+                      id: data.orderCreate.id,
+                      type: 'newItem',
+                      entity: 'order',
+                    },
+                  ]);
+                  dispatch({
+                    type: 'NEW_ORDER',
+                    payload: {
+                      orderId: data.orderCreate.id,
+                    },
+                  });
+                  onClose({
+                    moveToTop: true,
+                    id: data.orderCreate.id,
+                    type: ORDER,
+                  });
+                }}
+                onCancel={onClose}
+              />
+            );
+            break;
+          case 'newShipment':
+            form = (
+              <ShipmentForm
+                path="new"
+                isSlideView
+                redirectAfterSuccess={false}
+                initDataForSlideView={{
+                  importer,
+                  exporter: isExporter() ? exporter : null,
+                  batches: newBatches,
+                  containers: newContainers,
+                }}
+                onSuccessCallback={data => {
+                  onSetBadges([
+                    {
+                      id: data.shipmentCreate.id,
+                      type: 'newItem',
+                      entity: 'shipment',
+                    },
+                  ]);
+                  dispatch({
+                    type: 'NEW_SHIPMENT',
+                    payload: {
+                      orderId: data.shipmentCreate.id,
+                    },
+                  });
+                  onClose({
+                    moveToTop: true,
+                    id: data.shipmentCreate.id,
+                    type: SHIPMENT,
+                  });
+                }}
+                onCancel={onClose}
+              />
+            );
+            break;
+          default:
+            break;
+        }
+      }
       break;
     }
     case 'NEW_ORDER': {

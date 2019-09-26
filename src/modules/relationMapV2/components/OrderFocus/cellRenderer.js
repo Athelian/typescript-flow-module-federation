@@ -1410,7 +1410,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
 
 function ShipmentCell({ data, beforeConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
-  const { mapping } = Entities.useContainer();
+  const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const shipmentId = data?.id;
   const shipment = entities.shipments?.[shipmentId] ?? { id: shipmentId };
@@ -1560,6 +1560,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
             flattenCornerIcon
           >
             <div ref={drag}>
+              <Badge label={badge.shipment?.[shipmentId] ?? ''} />
               <ShipmentCard shipment={data} />
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (

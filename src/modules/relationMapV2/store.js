@@ -39,15 +39,27 @@ function useEntities(
   }
 ) {
   const [mapping, setMapping] = useState<RelationMapEntities>(initialState);
-  const [badge, setBadge] = useState<{ order: Object, orderItem: Object, batch: Object }>({
+  const [badge, setBadge] = useState<{
+    order: Object,
+    orderItem: Object,
+    batch: Object,
+    shipment: Object,
+  }>({
     order: {},
     orderItem: {},
     batch: {},
+    shipment: {},
   });
-  const [related, setRelated] = useState<{ order: Object, orderItem: Object, batch: Object }>({
+  const [related, setRelated] = useState<{
+    order: Object,
+    orderItem: Object,
+    batch: Object,
+    shipment: Object,
+  }>({
     order: {},
     orderItem: {},
     batch: {},
+    shipment: {},
   });
 
   const onSetBadges = (entities: Array<{ id: string, type: string, entity: string }>) => {
