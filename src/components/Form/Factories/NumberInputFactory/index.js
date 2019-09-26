@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import Icon from 'components/Icon';
 import {
   FieldItem,
   Label,
@@ -14,8 +15,8 @@ import type {
   InputWrapperProps,
   InputProps as StandardInputProps,
 } from 'components/Form/Factories/type';
-import { CalculatorButton, ExtraToggleButton } from 'components/Form/Factories/components';
-import { SuffixStyle } from './style';
+import { ExtraToggleButton } from 'components/Form/Factories/components';
+import { SuffixStyle, CalculatorIconStyle } from './style';
 
 type InputProps = StandardInputProps & {
   nullable?: boolean,
@@ -28,8 +29,7 @@ type Props = LabelProps &
     vertical: boolean,
     isTouched: boolean,
     label?: React.Node,
-    showCalculator: boolean,
-    onCalculate?: Function,
+
     showExtraToggleButton: boolean,
     onToggleAutoCalculate?: Function,
     autoCalculateIsToggled: boolean,
@@ -59,7 +59,6 @@ const defaultProps = {
   blackout: false,
   suffix: null,
   vertical: false,
-  showCalculator: false,
   showExtraToggleButton: false,
   autoCalculateIsToggled: true,
 };
@@ -68,8 +67,6 @@ const NumberInputFactory = ({
   vertical,
   isTouched,
   label,
-  showCalculator,
-  onCalculate,
   showExtraToggleButton,
   onToggleAutoCalculate,
   autoCalculateIsToggled,
@@ -152,9 +149,6 @@ const NumberInputFactory = ({
               <NumberInput {...inputConfig} />
               {suffix && <div className={SuffixStyle}>{suffix}</div>}
             </DefaultStyle>
-            {showCalculator && (
-              <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
-            )}
           </>
         ) : (
           <NumberInput
@@ -166,12 +160,17 @@ const NumberInputFactory = ({
         )}
 
         {showExtraToggleButton && (
-          <ExtraToggleButton
-            editable={editable}
-            toggled={autoCalculateIsToggled}
-            onClick={onToggleAutoCalculate}
-            toggleMessages={autoCalculateToggleMessages}
-          />
+          <div>
+            <div className={CalculatorIconStyle}>
+              <Icon icon="CALCULATOR" />
+            </div>
+            <ExtraToggleButton
+              editable={editable}
+              toggled={autoCalculateIsToggled}
+              onClick={onToggleAutoCalculate}
+              toggleMessages={autoCalculateToggleMessages}
+            />
+          </div>
         )}
       </>
     );

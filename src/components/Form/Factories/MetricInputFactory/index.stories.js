@@ -55,7 +55,7 @@ storiesOf('Form/Inputs/Metric Input', module).add('Metric Input Factory', () => 
     <ObjectValue
       defaultValue={{
         isNew: false,
-        showCalculator: false,
+
         metricType: 'distance',
         initialValues: {
           inputTwo: {
@@ -81,7 +81,7 @@ storiesOf('Form/Inputs/Metric Input', module).add('Metric Input Factory', () => 
       {({
         value: {
           isNew,
-          showCalculator,
+
           metricType,
           initialValues,
           values,
@@ -122,10 +122,6 @@ storiesOf('Form/Inputs/Metric Input', module).add('Metric Input Factory', () => 
                   editable={editable}
                   placeholder="Please input a value"
                   metricType={metricType}
-                  showCalculator={showCalculator}
-                  onCalculate={() =>
-                    set('values', { ...values, inputTwo: { ...values.inputTwo, value: 999 } })
-                  }
                 />
                 <ToggleInput
                   toggled={editable}
@@ -141,12 +137,7 @@ storiesOf('Form/Inputs/Metric Input', module).add('Metric Input Factory', () => 
                 <ToggleInput toggled={isNew} onToggle={() => set('isNew', !isNew)}>
                   <Label>IS NEW</Label>
                 </ToggleInput>
-                <ToggleInput
-                  toggled={showCalculator}
-                  onToggle={() => set('showCalculator', !showCalculator)}
-                >
-                  <Label>CALCULATOR</Label>
-                </ToggleInput>
+
                 <ToggleInput
                   toggled={metricType === 'distance'}
                   onToggle={() => set('metricType', 'distance')}

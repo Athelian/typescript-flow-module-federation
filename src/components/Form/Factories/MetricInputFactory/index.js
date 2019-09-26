@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import Icon from 'components/Icon';
 import {
   FieldItem,
   Label,
@@ -15,8 +16,9 @@ import type {
   InputProps as StandardInputProps,
 } from 'components/Form/Factories/type';
 import { convertValueToFormFieldFormat } from 'components/Form/Factories/helpers';
-import { CalculatorButton, ExtraToggleButton } from 'components/Form/Factories/components';
+import { ExtraToggleButton } from 'components/Form/Factories/components';
 import { getMetrics, getDefaultMetric, getConvert, type MetricEnumType } from './helpers';
+import { CalculatorIconStyle } from '../NumberInputFactory/style';
 
 type InputProps = StandardInputProps & {
   customMetrics?: Array<string>,
@@ -33,8 +35,7 @@ type Props = LabelProps &
     isTouched: boolean,
     label?: React.Node,
     metricType?: MetricEnumType,
-    showCalculator: boolean,
-    onCalculate?: Function,
+
     showExtraToggleButton: boolean,
     onToggleAutoCalculate?: Function,
     autoCalculateIsToggled: boolean,
@@ -64,7 +65,7 @@ const defaultProps = {
   editable: false,
   blackout: false,
   vertical: false,
-  showCalculator: false,
+
   showExtraToggleButton: false,
   autoCalculateIsToggled: true,
 };
@@ -74,12 +75,12 @@ const MetricInputFactory = ({
   isTouched,
   label,
   metricType,
-  showCalculator,
+
   showExtraToggleButton,
   onToggleAutoCalculate,
   autoCalculateIsToggled,
   autoCalculateToggleMessages,
-  onCalculate,
+
   required,
   labelAlign,
   labelWidth,
@@ -170,18 +171,22 @@ const MetricInputFactory = ({
             <DefaultStyle {...inputWrapperConfig}>
               <MetricInput {...inputConfig} />
             </DefaultStyle>
-            {showCalculator && <CalculatorButton onClick={onCalculate} />}
           </>
         ) : (
           <MetricInput {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
         )}
         {showExtraToggleButton && (
-          <ExtraToggleButton
-            editable={editable}
-            toggled={autoCalculateIsToggled}
-            onClick={onToggleAutoCalculate}
-            toggleMessages={autoCalculateToggleMessages}
-          />
+          <div>
+            <div className={CalculatorIconStyle}>
+              <Icon icon="CALCULATOR" />
+            </div>
+            <ExtraToggleButton
+              editable={editable}
+              toggled={autoCalculateIsToggled}
+              onClick={onToggleAutoCalculate}
+              toggleMessages={autoCalculateToggleMessages}
+            />
+          </div>
         )}
       </>
     );
