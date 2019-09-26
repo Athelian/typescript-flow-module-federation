@@ -361,18 +361,6 @@ export const orderCardFullFragment = gql`
             container {
               ... on Container {
                 id
-                no
-                tags {
-                  ...tagFragment
-                }
-                warehouse {
-                  ... on Warehouse {
-                    id
-                    name
-                  }
-                }
-                warehouseArrivalAgreedDate
-                warehouseArrivalActualDate
               }
             }
             todo {
@@ -389,6 +377,17 @@ export const orderCardFullFragment = gql`
         id
         no
         archived
+        tags {
+          ...tagFragment
+        }
+        warehouse {
+          ... on Warehouse {
+            id
+            name
+          }
+        }
+        warehouseArrivalAgreedDate
+        warehouseArrivalActualDate
         ownedBy {
           ...ownedByFragment
         }

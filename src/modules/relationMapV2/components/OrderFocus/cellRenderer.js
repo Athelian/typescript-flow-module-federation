@@ -1376,7 +1376,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             flattenCornerIcon
           >
             <div ref={drag}>
-              <ContainerCard container={data} />
+              <ContainerCard container={container} />
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
