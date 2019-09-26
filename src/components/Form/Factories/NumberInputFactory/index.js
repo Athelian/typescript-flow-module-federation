@@ -129,9 +129,10 @@ const NumberInputFactory = ({
     onBlur,
     onFocus,
     align: inputAlign,
-    readOnly: !editable,
+
     nullable,
   };
+  const inputReadOnly = !editable || autoCalculateIsToggled;
 
   const blackoutConfig = {
     width: inputWidth,
@@ -143,20 +144,21 @@ const NumberInputFactory = ({
   if (!blackout) {
     renderedInput = (
       <>
-        {editable ? (
+        {inputReadOnly ? (
+          <NumberInput
+            {...inputConfig}
+            readOnlyWidth={inputWidth}
+            readOnlyHeight={inputHeight}
+            readOnlySuffix={suffix}
+            readOnly
+          />
+        ) : (
           <>
             <DefaultStyle {...inputWrapperConfig}>
               <NumberInput {...inputConfig} />
               {suffix && <div className={SuffixStyle}>{suffix}</div>}
             </DefaultStyle>
           </>
-        ) : (
-          <NumberInput
-            {...inputConfig}
-            readOnlyWidth={inputWidth}
-            readOnlyHeight={inputHeight}
-            readOnlySuffix={suffix}
-          />
         )}
 
         {showExtraToggleButton && (
