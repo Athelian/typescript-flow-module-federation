@@ -46,5 +46,4 @@ export const TooltipLabelStyle = (align: 'left' | 'center' = 'center') => css`
   ${presets.ELLIPSIS};
   ${fontSizes.MAIN};
   text-align: ${align};
-  width: 70px;
 `;
