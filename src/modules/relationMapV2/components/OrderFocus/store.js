@@ -187,7 +187,7 @@ export function reducer(
       | 'MOVE_TO_CONTAINER_CLOSE'
       | 'MOVE_TO_SHIPMENT_START'
       | 'MOVE_TO_SHIPMENT_CLOSE'
-      | 'MOVE_BATCH_TO_NEW_ORDER'
+      | 'MOVE_BATCH_TO_NEW_ENTITY'
       | 'EDIT',
     payload: {
       entity?: string,
@@ -476,7 +476,7 @@ export function reducer(
           isProcessing: { $set: false },
         },
       });
-    case 'MOVE_BATCH_TO_NEW_ORDER':
+    case 'MOVE_BATCH_TO_NEW_ENTITY':
       return update(state, {
         edit: {
           $merge: action.payload,
