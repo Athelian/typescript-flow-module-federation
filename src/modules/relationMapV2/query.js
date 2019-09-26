@@ -287,6 +287,10 @@ export const orderCardFullFragment = gql`
             archived
             no
             latestQuantity
+            totalVolume {
+              value
+              metric
+            }
             shipment {
               ... on Shipment {
                 id

@@ -1132,7 +1132,7 @@ function BatchCell({
               <Badge label={badge.batch?.[batchId] ?? ''} />
               <BatchCard
                 organizationId={data?.ownedBy?.id}
-                no={data?.no ?? 'N/A'}
+                batch={data}
                 onDeleteBatch={evt => {
                   evt.stopPropagation();
                   dispatch({
