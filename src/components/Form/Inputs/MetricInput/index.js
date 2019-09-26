@@ -125,8 +125,6 @@ export default class MetricInput extends React.Component<Props> {
       height: inputHeight,
     };
 
-    console.debug({ valueReadOnly, metricReadOnly });
-
     const input = (
       <NumberInput
         {...rest}
@@ -175,10 +173,10 @@ export default class MetricInput extends React.Component<Props> {
       <>
         {valueReadOnly ? (
           <>
-            <Display style={{ textAlign: align }}>
+            <Display align={align} height="30px">
               <FormattedNumber value={value} />
             </Display>
-            <DefaultStyle width="36px"> {select}</DefaultStyle>
+            <DefaultStyle width="30px"> {select}</DefaultStyle>
           </>
         ) : (
           <>

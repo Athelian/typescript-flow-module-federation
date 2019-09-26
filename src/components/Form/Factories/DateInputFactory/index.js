@@ -151,7 +151,7 @@ const DateInputFactory = ({
           </DefaultStyle>
         )}
         {showExtraToggle && (
-          <div>
+          <>
             <div className={ShipmentIconStyle}>
               <Icon icon="SHIPMENT" />
             </div>
@@ -161,7 +161,7 @@ const DateInputFactory = ({
               onClick={onToggle}
               toggleMessages={toggleMessages}
             />
-          </div>
+          </>
         )}
       </>
     );

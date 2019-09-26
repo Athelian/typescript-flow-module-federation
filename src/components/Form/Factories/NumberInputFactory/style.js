@@ -20,4 +20,5 @@ export const CalculatorIconStyle: string = css`
   color: ${colors.GRAY_LIGHT};
   background-color: ${colors.WHITE};
   ${fontSizes.MAIN};
+  text-align: center;
 `;
