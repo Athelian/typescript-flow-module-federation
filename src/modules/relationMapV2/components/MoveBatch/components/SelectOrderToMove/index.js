@@ -81,26 +81,40 @@ function OrderRenderer({
   };
 
   const isSelected = order.id === selected?.id;
-  return isInvalid ? (
+  return (
     <div
       style={{
         width: 195,
         height: 303,
         position: 'relative',
-        backgroundColor: 'rgba(239, 72, 72, 0.25)',
       }}
     >
-      {msg()}
+      {isInvalid && (
+        <div
+          style={{
+            position: 'absolute',
+            zIndex: 2,
+            width: 195,
+            height: 303,
+            backgroundColor: 'rgba(239, 72, 72, 0.25)',
+            display: 'flex',
+            justifyContent: 'center',
+            textAlign: 'center',
+            alignItems: 'center',
+          }}
+        >
+          {msg()}
+        </div>
+      )}
+      <OrderCard
+        order={order}
+        selectable={isSelected}
+        selected={isSelected}
+        onClick={() => {
+          setSelected(isSelected ? null : order);
+        }}
+      />
     </div>
-  ) : (
-    <OrderCard
-      order={order}
-      selectable={isSelected}
-      selected={isSelected}
-      onClick={() => {
-        setSelected(isSelected ? null : order);
-      }}
-    />
   );
 }
 

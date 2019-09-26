@@ -85,26 +85,40 @@ function ContainerRenderer({
     return null;
   };
 
-  return isInvalid ? (
+  return (
     <div
       style={{
         width: 195,
         height: 448,
         position: 'relative',
-        backgroundColor: 'rgba(239, 72, 72, 0.25)',
       }}
     >
-      {msg()}
+      {isInvalid && (
+        <div
+          style={{
+            position: 'absolute',
+            zIndex: 2,
+            width: 195,
+            height: 448,
+            backgroundColor: 'rgba(239, 72, 72, 0.25)',
+            display: 'flex',
+            justifyContent: 'center',
+            textAlign: 'center',
+            alignItems: 'center',
+          }}
+        >
+          {msg()}
+        </div>
+      )}
+      <ContainerCard
+        container={container}
+        selectable={container.id === selected?.id}
+        selected={container.id === selected?.id}
+        onClick={() => {
+          setSelected(container.id === selected?.id ? null : container);
+        }}
+      />
     </div>
-  ) : (
-    <ContainerCard
-      container={container}
-      selectable={container.id === selected?.id}
-      selected={container.id === selected?.id}
-      onClick={() => {
-        setSelected(container.id === selected?.id ? null : container);
-      }}
-    />
   );
 }
 

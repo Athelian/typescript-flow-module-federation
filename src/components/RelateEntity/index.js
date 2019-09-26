@@ -5,19 +5,17 @@ import Icon from 'components/Icon';
 import { Display } from 'components/Form';
 import { WrapperStyle, IconColorStyle } from './style';
 
-type OptionalProps = {
-  width: string,
-};
-
-type Props = OptionalProps & {|
+type Props = {|
   entity: string,
   value: React$Node,
   blackout?: boolean,
-  link?: string,
+  link: string,
+  width: string,
 |};
 
 const defaultProps = {
   width: '145px',
+  link: '',
 };
 
 export default function RelateEntity({ entity, value, blackout, link, width }: Props) {

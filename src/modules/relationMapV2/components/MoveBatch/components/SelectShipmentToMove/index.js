@@ -85,26 +85,40 @@ function ShipmentRenderer({
     return null;
   };
 
-  return isInvalid ? (
+  return (
     <div
       style={{
         width: 860,
         height: 164,
         position: 'relative',
-        backgroundColor: 'rgba(239, 72, 72, 0.25)',
       }}
     >
-      {msg()}
+      {isInvalid && (
+        <div
+          style={{
+            position: 'absolute',
+            zIndex: 2,
+            width: 860,
+            height: 164,
+            backgroundColor: 'rgba(239, 72, 72, 0.25)',
+            display: 'flex',
+            justifyContent: 'center',
+            textAlign: 'center',
+            alignItems: 'center',
+          }}
+        >
+          {msg()}
+        </div>
+      )}
+      <ShipmentCard
+        shipment={shipment}
+        selectable={shipment.id === selected?.id}
+        selected={shipment.id === selected?.id}
+        onClick={() => {
+          setSelected(shipment.id === selected?.id ? null : shipment);
+        }}
+      />
     </div>
-  ) : (
-    <ShipmentCard
-      shipment={shipment}
-      selectable={shipment.id === selected?.id}
-      selected={shipment.id === selected?.id}
-      onClick={() => {
-        setSelected(shipment.id === selected?.id ? null : shipment);
-      }}
-    />
   );
 }
 

@@ -49,7 +49,7 @@ export default function OrderItemCard({
   const productImageUrl = productProvider?.product?.files?.[0]?.pathSmall ?? FALLBACK_IMAGE;
   const productId = productProvider?.product?.id;
   const productLink =
-    productId && allowToNavigateToProductForm ? `/product/${encodeId(productId)}` : null;
+    productId && allowToNavigateToProductForm ? `/product/${encodeId(productId)}` : '';
   const productName = productProvider?.product?.name;
   const productSerial = productProvider?.product?.serial;
 
