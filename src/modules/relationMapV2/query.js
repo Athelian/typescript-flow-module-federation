@@ -1,6 +1,15 @@
 import gql from 'graphql-tag';
 import { tagFragment, taskCountFragment, ownedByFragment } from 'graphql';
 
+const timelineDateFragment = gql`
+  fragment timelineDateFragment on TimelineDate {
+    id
+    date
+    latestDate
+    approvedAt
+  }
+`;
+
 export const productProviderNewRMFragment = gql`
   fragment productProviderNewRMFragment on ProductProvider {
     id
@@ -294,6 +303,59 @@ export const orderCardFullFragment = gql`
             shipment {
               ... on Shipment {
                 id
+                no
+                tags {
+                  ...tagFragment
+                }
+                transportType
+                cargoReady {
+                  ...timelineDateFragment
+                }
+                voyages {
+                  ... on Voyage {
+                    id
+                    departurePort {
+                      seaportName
+                      airportName
+                    }
+                    arrivalPort {
+                      seaportName
+                      airportName
+                    }
+                    departure {
+                      ...timelineDateFragment
+                    }
+                    arrival {
+                      ...timelineDateFragment
+                    }
+                  }
+                }
+                containerGroups {
+                  ... on ContainerGroup {
+                    id
+                    warehouse {
+                      ... on Warehouse {
+                        id
+                        name
+                      }
+                    }
+                    customClearance {
+                      ...timelineDateFragment
+                    }
+                    warehouseArrival {
+                      ...timelineDateFragment
+                    }
+                    deliveryReady {
+                      ...timelineDateFragment
+                    }
+                  }
+                }
+                containers {
+                  ... on Container {
+                    id
+                    warehouseArrivalActualDateApprovedAt
+                  }
+                }
               }
             }
             container {
@@ -540,6 +602,7 @@ export const orderFocusDetailQuery = gql`
   ${tagFragment}
   ${taskCountFragment}
   ${ownedByFragment}
+  ${timelineDateFragment}
 `;
 
 export const orderFullFocusDetailQuery = gql`
@@ -555,4 +618,5 @@ export const orderFullFocusDetailQuery = gql`
   ${tagFragment}
   ${taskCountFragment}
   ${ownedByFragment}
+  ${timelineDateFragment}
 `;
