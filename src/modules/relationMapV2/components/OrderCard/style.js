@@ -1,9 +1,13 @@
 // @flow
 import { css } from 'react-emotion';
+import { layout, borderRadiuses } from 'styles/common';
 
-export const WrapperStyle = css`
+export const OrderCardWrapperStyle = css`
+  display: flex;
+  flex-direction: column;
   width: 285px;
   height: 55px;
+
   position: relative;
   > :last-child {
     opacity: 0;
@@ -11,6 +15,29 @@ export const WrapperStyle = css`
   &:hover > :last-child {
     opacity: 1;
   }
+`;
+
+export const TopRowWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 125px 125px;
+  grid-template-rows: 20px;
+  grid-gap: 5px;
+  padding: 5px;
+`;
+
+export const TagsWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  ${borderRadiuses.MAIN};
+  grid-gap: 5px;
+  overflow: hidden;
+`;
+
+export const BottomRowWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 125px 125px 20px;
+  grid-template-rows: 20px;
+  grid-gap: 5px;
+  padding: 0 0 5px 5px;
 `;
 
 export const ItemIconsStyle = css`

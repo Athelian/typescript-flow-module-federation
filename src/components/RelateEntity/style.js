@@ -2,9 +2,9 @@
 import { css } from 'react-emotion';
 import { layout, colors } from 'styles/common';
 
-export const WrapperStyle: string = css`
+export const WrapperStyle = (width: string): string => css`
   ${layout.GRID_HORIZONTAL};
-  grid-template-columns: 20px 145px;
+  grid-template-columns: 20px ${width};
   grid-gap: 5px;
   width: fit-content;
 `;

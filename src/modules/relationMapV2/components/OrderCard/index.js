@@ -1,22 +1,73 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
+import Tag from 'components/Tag';
+import RelateEntity from 'components/RelateEntity';
+import TaskRing from 'components/TaskRing';
+import { Display, Blackout } from 'components/Form';
 import { useHasPermissions } from 'components/Context/Permissions';
 import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
-import { WrapperStyle, ItemIconsStyle } from './style';
+import {
+  OrderCardWrapperStyle,
+  TopRowWrapperStyle,
+  TagsWrapperStyle,
+  BottomRowWrapperStyle,
+  ItemIconsStyle,
+} from './style';
 
 type Props = {|
-  poNo: string,
+  order: Object,
   onCreateItem: Event => void,
   organizationId: string,
 |};
 
-export default function OrderCard({ poNo, onCreateItem, organizationId }: Props) {
+export default function OrderCard({ order, onCreateItem, organizationId }: Props) {
+  const { poNo, tags = [], importer, exporter, todo = {} } = order;
+
   const hasPermissions = useHasPermissions(organizationId);
   const allowToCreateItem = hasPermissions(ORDER_ITEMS_CREATE);
+
+  // TODO: Replace with real permissions
+  const canViewPoNo = true;
+  const canViewTags = true;
+  const canViewImporter = true;
+  const canViewExporter = true;
+  const canViewTasks = true;
+
   return (
-    <div className={WrapperStyle}>
-      {poNo}
+    <div className={OrderCardWrapperStyle}>
+      <div className={TopRowWrapperStyle}>
+        <Display blackout={!canViewPoNo}>{poNo}</Display>
+
+        {canViewTags ? (
+          <div className={TagsWrapperStyle}>
+            {tags.map(tag => (
+              <Tag key={tag.id} tag={tag} />
+            ))}
+          </div>
+        ) : (
+          <Blackout />
+        )}
+      </div>
+
+      <div className={BottomRowWrapperStyle}>
+        <RelateEntity
+          blackout={!canViewImporter}
+          entity="IMPORTER"
+          value={importer?.name}
+          width="100px"
+        />
+
+        <RelateEntity
+          blackout={!canViewExporter}
+          entity="EXPORTER"
+          value={exporter?.name}
+          width="100px"
+        />
+
+        <TaskRing blackout={!canViewTasks} {...todo} />
+      </div>
+
       {allowToCreateItem && (
         <div onClick={onCreateItem} role="presentation" className={ItemIconsStyle}>
           <Icon icon="ORDER_ITEM" />
