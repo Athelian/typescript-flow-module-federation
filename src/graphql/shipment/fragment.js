@@ -239,6 +239,8 @@ export const shipmentCardFragment = gql`
       ... on Container {
         id
         no
+        freeTimeStartDate
+        freeTimeDuration
         containerType
         warehouseArrivalAgreedDate
         warehouseArrivalAgreedDateApprovedAt
