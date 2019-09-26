@@ -64,6 +64,7 @@ export const initialState: State = {
     isProcessing: false,
     orderIds: [],
     containerIds: [],
+    shipmentIds: [],
     importerIds: [],
     exporterIds: [],
   },
@@ -179,12 +180,13 @@ export function reducer(
       | 'MOVE_BATCH'
       | 'MOVE_BATCH_START'
       | 'MOVE_BATCH_CLOSE'
+      | 'MOVE_BATCH_END'
       | 'MOVE_TO_ORDER_START'
-      | 'MOVE_TO_ORDER_END'
       | 'MOVE_TO_ORDER_CLOSE'
       | 'MOVE_TO_CONTAINER_START'
-      | 'MOVE_TO_CONTAINER_END'
       | 'MOVE_TO_CONTAINER_CLOSE'
+      | 'MOVE_TO_SHIPMENT_START'
+      | 'MOVE_TO_SHIPMENT_CLOSE'
       | 'EDIT',
     payload: {
       entity?: string,
@@ -455,6 +457,7 @@ export function reducer(
       });
     case 'MOVE_TO_ORDER_START':
     case 'MOVE_TO_CONTAINER_START':
+    case 'MOVE_TO_SHIPMENT_START':
       return update(state, {
         moveActions: {
           isProcessing: { $set: true },
@@ -462,6 +465,7 @@ export function reducer(
       });
     case 'MOVE_TO_ORDER_CLOSE':
     case 'MOVE_TO_CONTAINER_CLOSE':
+    case 'MOVE_TO_SHIPMENT_CLOSE':
       return update(state, {
         batchActions: {
           isOpen: { $set: true },
@@ -471,8 +475,7 @@ export function reducer(
           isProcessing: { $set: false },
         },
       });
-    case 'MOVE_TO_ORDER_END':
-    case 'MOVE_TO_CONTAINER_END':
+    case 'MOVE_BATCH_END':
       return update(state, {
         batchActions: {
           isOpen: { $set: false },

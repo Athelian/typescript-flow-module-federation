@@ -545,7 +545,7 @@ export default function OrderFocus() {
                           window.requestIdleCallback(
                             () => {
                               dispatch({
-                                type: 'MOVE_TO_ORDER_END',
+                                type: 'MOVE_BATCH_END',
                                 payload: {},
                               });
                             },
