@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { layout, borderRadiuses, presets, colors, shadows, fontSizes } from 'styles/common';
 
-export const OrderCardWrapperStyle = css`
+export const OrderCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   width: 285px;
@@ -38,7 +38,7 @@ export const BottomRowWrapperStyle: string = css`
   padding: 0 0 5px 5px;
 `;
 
-export const CreateItemButtonStyle = css`
+export const CreateItemButtonStyle: string = css`
   opacity: 0;
   position: absolute;
   bottom: -10px;

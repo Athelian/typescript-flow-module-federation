@@ -38,6 +38,7 @@ import OrderCard from '../OrderCard';
 import OrderItemCard from '../OrderItemCard';
 import BatchCard from '../BatchCard';
 import ContainerCard from '../ContainerCard';
+import ShipmentCard from '../ShipmentCard';
 import { ContentStyle, MatchedStyle } from './style';
 import {
   getColorByEntity,
@@ -45,7 +46,7 @@ import {
   getCardByEntity,
   BatchHeaderCard,
   ItemCard,
-  ShipmentCard,
+  ShipmentCard as ShipmentSummaryCard,
   ContainerCard as ContainerSummaryCard,
   HeaderCard,
   handleClickAndDoubleClick,
@@ -1559,9 +1560,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
             flattenCornerIcon
           >
             <div ref={drag}>
-              <ShipmentCard>
-                {getByPathWithDefault('', `shipments.${shipmentId}.no`, entities)}
-              </ShipmentCard>
+              <ShipmentCard shipment={data} />
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
@@ -2122,7 +2121,7 @@ function ShipmentSummaryCell({
                     }}
                   />
                 )}
-                <ShipmentCard>
+                <ShipmentSummaryCard>
                   <p>Total {getByPathWithDefault(0, 'shipmentCount', data)}</p>
                   <button
                     type="button"
@@ -2143,7 +2142,7 @@ function ShipmentSummaryCell({
                       defaultMessage="SELECT ALL"
                     />
                   </button>
-                </ShipmentCard>
+                </ShipmentSummaryCard>
               </HeaderCard>
             </div>
           );

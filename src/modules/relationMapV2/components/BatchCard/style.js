@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { layout, borderRadiuses, fontSizes, colors, presets, shadows } from 'styles/common';
 
-export const BatchCardWrapperStyle = css`
+export const BatchCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   width: 445px;

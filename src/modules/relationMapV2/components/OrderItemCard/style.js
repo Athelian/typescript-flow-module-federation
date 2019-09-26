@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { layout, borderRadiuses, fontSizes, colors, presets, shadows } from 'styles/common';
 
-export const ItemCardWrapperStyle = css`
+export const ItemCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   width: 465px;
@@ -57,7 +57,7 @@ export const ProductSerialStyle: string = css`
   width: 100%;
 `;
 
-export const DeleteItemButtonStyle = css`
+export const DeleteItemButtonStyle: string = css`
   opacity: 0;
   position: absolute;
   top: -10px;
@@ -77,7 +77,7 @@ export const DeleteItemButtonStyle = css`
   }
 `;
 
-export const CreateBatchButtonStyle = css`
+export const CreateBatchButtonStyle: string = css`
   opacity: 0;
   position: absolute;
   bottom: -10px;

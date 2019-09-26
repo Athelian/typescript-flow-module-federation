@@ -16,7 +16,7 @@ type Props = {|
   container: Object,
 |};
 
-export default function ContainerCard({ container = {} }: Props) {
+export default function ContainerCard({ container }: Props) {
   const {
     no,
     tags = [],

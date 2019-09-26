@@ -452,6 +452,9 @@ const Header = React.memo<any>(
               <Icon icon="CHECKED" />
             </button>
           </div>
+
+          {/* TODO: Shipment card ui changer */}
+          <div>Change timeline</div>
         </div>
       </div>
     );
