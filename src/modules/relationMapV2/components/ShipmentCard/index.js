@@ -27,12 +27,12 @@ export default function ShipmentCard({ shipment }: Props) {
   const date = '';
 
   // TODO: Replace with real permissions
-  const canViewNo = false;
-  const canViewTags = false;
-  const canViewPlace = false;
-  const canViewTimeline = false;
-  const canViewDate = false;
-  const canViewTasks = false;
+  const canViewNo = true;
+  const canViewTags = true;
+  const canViewPlace = true;
+  const canViewTimeline = true;
+  const canViewDate = true;
+  const canViewTasks = true;
 
   return (
     <div className={ShipmentCardWrapperStyle}>
