@@ -86,7 +86,8 @@ export type State = {|
     shipmentIds: Array<string>,
     importerIds: Array<string>,
     exporterIds: Array<string>,
-    type?: | 'existOrder'
+    type?:
+      | 'existOrder'
       | 'newOrder'
       | 'existContainer'
       | 'newContainer'
@@ -137,6 +138,10 @@ export type State = {|
     selectedId: string,
     orderId?: string,
     orderIds?: Array<string>,
+    shipmentIds?: Array<string>,
+    containerIds?: Array<string>,
+    exporterIds?: Array<string>,
+    importerIds?: Array<string>,
   },
   newOrders: Array<string>,
 |};

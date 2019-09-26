@@ -22,7 +22,7 @@ type Props = {|
 |};
 
 export default function OrderCard({ order, onCreateItem, organizationId }: Props) {
-  const { poNo, tags = [], importer, exporter, todo = {} } = order;
+  const { poNo, tags = [], importer, exporter, todo = {} } = order || {};
 
   const hasPermissions = useHasPermissions(organizationId);
   const allowToCreateItem = hasPermissions(ORDER_ITEMS_CREATE);

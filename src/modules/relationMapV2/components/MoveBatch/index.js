@@ -147,7 +147,7 @@ export default function MoveBatch({ onSuccess }: Props) {
           type: 'MOVE_BATCH_TO_NEW_ORDER',
           payload: {
             type: 'MOVE_BATCHES',
-            selectedId: 'newOrder',
+            selectedId: target,
             orderIds,
             containerIds,
             shipmentIds,

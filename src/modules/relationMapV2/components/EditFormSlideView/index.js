@@ -1,6 +1,10 @@
 // @flow
 import * as React from 'react';
+import { useLazyQuery } from 'react-apollo';
+import { findKey } from 'lodash';
+import usePrevious from 'hooks/usePrevious';
 import SlideView from 'components/SlideView';
+import LoadingIcon from 'components/LoadingIcon';
 import OrderForm from 'modules/order/index.form';
 import ItemForm from 'modules/orderItem/index.form';
 import BatchForm from 'modules/batch/index.form';
@@ -9,19 +13,13 @@ import ShipmentForm from 'modules/shipment/index.form';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
 import { Entities } from 'modules/relationMapV2/store';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
-import { encodeId } from 'utils/id';
+import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
+import { encodeId, uuid } from 'utils/id';
 import emitter from 'utils/emitter';
+import { isEquals } from 'utils/fp';
+import { ordersAndShipmentsQuery } from './query';
 
 type Props = {|
-  // prettier-ignore
-  type: | typeof ORDER
-    | typeof ORDER_ITEM
-    | typeof BATCH
-    | typeof SHIPMENT
-    | typeof CONTAINER
-    | 'MOVE_BATCHES'
-    | 'NEW_ORDER',
-  selectedId: string,
   onClose: (
     ?{
       moveToTop: boolean,
@@ -31,9 +29,11 @@ type Props = {|
   ) => void,
 |};
 
-const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
+const EditFormSlideView = ({ onClose }: Props) => {
   const isReady = React.useRef(true);
-  const { dispatch } = React.useContext(RelationMapContext);
+  const { dispatch, state } = React.useContext(RelationMapContext);
+  const [fetchOrdersAndShipments, fetchResult] = useLazyQuery(ordersAndShipmentsQuery);
+  const { type, selectedId: id } = state.edit;
   const { mapping, checkRemoveEntities, onSetBadges } = Entities.useContainer();
   const onRequestClose = React.useCallback(() => {
     if (isReady.current) {
@@ -66,6 +66,30 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
     };
   }, [checkRemoveEntities, dispatch, orderItems, orders]);
 
+  const orderIds = state.edit.orderIds || [];
+  const shipmentIds = state.edit.shipmentIds || [];
+  const lastQueryVariables = usePrevious({
+    orderIds,
+    shipmentIds,
+  });
+  React.useEffect(() => {
+    if (
+      type === 'MOVE_BATCHES' &&
+      id !== '' &&
+      !isEquals(lastQueryVariables, {
+        orderIds,
+        shipmentIds,
+      })
+    ) {
+      fetchOrdersAndShipments({
+        variables: {
+          orderIds,
+          shipmentIds,
+        },
+      });
+    }
+  }, [fetchOrdersAndShipments, id, lastQueryVariables, orderIds, shipmentIds, type]);
+
   let form = null;
   switch (type) {
     case ORDER: {
@@ -89,11 +113,76 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
       break;
     }
     case 'MOVE_BATCHES': {
-      form = (
+      const batchIds = targetedIds(state.targets, BATCH);
+      const newOrderItems = [];
+      const newContainers = [];
+      const newShipments = [];
+      if (
+        fetchResult.called &&
+        isEquals(lastQueryVariables, {
+          orderIds,
+          shipmentIds,
+        }) &&
+        !fetchResult.loading
+      ) {
+        const { ordersByIDs } = fetchResult.data;
+        batchIds.forEach(batchId => {
+          const orderItemId = findKey(mapping.entities?.orderItems, orderItem => {
+            return (orderItem.batches || []).includes(batchId);
+          });
+          const parentOrder = ordersByIDs.find(order =>
+            order.orderItems.map(item => item.id).includes(orderItemId)
+          );
+          const parentItem = parentOrder.orderItems.find(item => item.id === orderItemId);
+          const batch = parentItem.batches.find(currentBatch => currentBatch.id === batchId);
+          if (batch && parentItem) {
+            const { id: itemId, ...item } = parentItem;
+            if (batch.container && !newContainers.includes(batch.container)) {
+              newContainers.push(batch.container);
+            }
+            if (batch.shipment && !newShipments.includes(batch.shipment)) {
+              newShipments.push(batch.shipment);
+            }
+            newOrderItems.push({
+              ...item,
+              isNew: true,
+              id: uuid(),
+              customFields: {
+                mask: null,
+                fieldValues: [],
+              },
+              tags: [],
+              files: [],
+              batches: [batch],
+            });
+          }
+        });
+      }
+      const { importer, exporter } = fetchResult.data?.ordersByIDs?.[0] ?? {};
+      form = fetchResult.loading ? (
+        <LoadingIcon />
+      ) : (
         <OrderForm
           path="new"
           isSlideView
           redirectAfterSuccess={false}
+          originalDataForSlideView={{
+            orderItems: newOrderItems.map(item => ({
+              id: item.id,
+              isNew: true,
+              batches: item.batches.map(batch => ({
+                ...batch,
+                isNew: true,
+              })),
+            })),
+          }}
+          initDataForSlideView={{
+            importer,
+            exporter,
+            orderItems: newOrderItems,
+            containers: newContainers,
+            shipments: newShipments,
+          }}
           onSuccessCallback={data => {
             onSetBadges([
               {
@@ -161,8 +250,7 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
       onRequestClose={onRequestClose}
       // FIXME: do the robust way, e.g check the dirty state
       shouldConfirm={() => {
-        const button = document.getElementById('itShouldNotCheckBaseOnTheDOM');
-        return button;
+        return false;
       }}
     >
       {form}

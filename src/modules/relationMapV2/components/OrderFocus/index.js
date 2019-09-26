@@ -831,8 +831,6 @@ export default function OrderFocus() {
                         }}
                       />
                       <EditFormSlideView
-                        type={state.edit.type}
-                        selectedId={state.edit.selectedId}
                         onClose={result => {
                           if (state.edit.type === ORDER) {
                             queryOrdersDetail([state.edit.selectedId]);

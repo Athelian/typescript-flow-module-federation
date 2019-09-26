@@ -41,6 +41,7 @@ type OptionalProps = {
   onSuccessCallback: ?Function,
   onCancel?: Function,
   initDataForSlideView: Object,
+  originalDataForSlideView: Object,
 };
 
 type Props = OptionalProps & {
@@ -54,6 +55,7 @@ const defaultProps = {
   onSuccessCallback: null,
   redirectAfterSuccess: true,
   initDataForSlideView: {},
+  originalDataForSlideView: {},
 };
 
 type CreateOrderResponse = {|
@@ -107,11 +109,11 @@ class OrderFormModule extends React.PureComponent<Props> {
     onSuccess: Object => void,
     onErrors: Function = () => {}
   ) => {
-    const { orderId, onSuccessCallback } = this.props;
+    const { orderId, onSuccessCallback, originalDataForSlideView } = this.props;
 
     const isNewOrClone = this.isNewOrClone();
     const input = prepareParsedOrderInput(
-      isNewOrClone ? null : removeTypename(originalValues),
+      isNewOrClone ? removeTypename(originalDataForSlideView) : removeTypename(originalValues),
       removeTypename(formData)
     );
 
