@@ -141,17 +141,35 @@ export default function MoveBatch({ onSuccess }: Props) {
       | 'existShipment'
       | 'newShipment'
   ) => {
-    dispatch({
-      type: 'MOVE_BATCH_START',
-      payload: {
-        type: target,
-        orderIds,
-        containerIds,
-        shipmentIds,
-        importerIds,
-        exporterIds,
-      },
-    });
+    switch (target) {
+      case 'newOrder':
+        dispatch({
+          type: 'MOVE_BATCH_TO_NEW_ORDER',
+          payload: {
+            type: 'MOVE_BATCHES',
+            selectedId: 'newOrder',
+            orderIds,
+            containerIds,
+            shipmentIds,
+            importerIds,
+            exporterIds,
+          },
+        });
+        break;
+
+      default:
+        dispatch({
+          type: 'MOVE_BATCH_START',
+          payload: {
+            type: target,
+            orderIds,
+            containerIds,
+            shipmentIds,
+            importerIds,
+            exporterIds,
+          },
+        });
+    }
   };
 
   return (

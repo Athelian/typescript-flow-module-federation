@@ -19,6 +19,7 @@ type Props = {|
     | typeof BATCH
     | typeof SHIPMENT
     | typeof CONTAINER
+    | 'MOVE_BATCHES'
     | 'NEW_ORDER',
   selectedId: string,
   onClose: (
@@ -85,6 +86,37 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
     }
     case SHIPMENT: {
       form = <ShipmentForm shipmentId={encodeId(id)} isSlideView />;
+      break;
+    }
+    case 'MOVE_BATCHES': {
+      form = (
+        <OrderForm
+          path="new"
+          isSlideView
+          redirectAfterSuccess={false}
+          onSuccessCallback={data => {
+            onSetBadges([
+              {
+                id: data.orderCreate.id,
+                type: 'newItem',
+                entity: 'order',
+              },
+            ]);
+            dispatch({
+              type: 'NEW_ORDER',
+              payload: {
+                orderId: data.orderCreate.id,
+              },
+            });
+            onClose({
+              moveToTop: true,
+              id: data.orderCreate.id,
+              type: ORDER,
+            });
+          }}
+          onCancel={onClose}
+        />
+      );
       break;
     }
     case 'NEW_ORDER': {
