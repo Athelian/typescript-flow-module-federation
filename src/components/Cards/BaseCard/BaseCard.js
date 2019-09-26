@@ -23,6 +23,7 @@ type OptionalProps = {
   wrapperClassName: string | Function,
   id: ?string,
   showBadge: boolean,
+  flattenCornerIcon: boolean,
 };
 
 type Props = OptionalProps & {
@@ -49,6 +50,7 @@ const defaultProps = {
   wrapperClassName: '',
   id: '',
   showBadge: false,
+  flattenCornerIcon: false,
 };
 
 export default class BaseCard extends React.Component<Props, State> {
@@ -92,6 +94,7 @@ export default class BaseCard extends React.Component<Props, State> {
       children,
       id,
       showBadge,
+      flattenCornerIcon,
       ...rest
     } = this.props;
 
@@ -148,6 +151,7 @@ export default class BaseCard extends React.Component<Props, State> {
             selected={selected}
             onClick={this.toggleActions}
             invert={invert}
+            flatten={flattenCornerIcon}
           />
         )}
         {showBadge && <span className={BadgeStyle} />}

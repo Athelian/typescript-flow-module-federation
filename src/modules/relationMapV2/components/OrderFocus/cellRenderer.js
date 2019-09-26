@@ -717,6 +717,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
             selected={state.targets.includes(`${ORDER}-${getByPathWithDefault('', 'id', data)}`)}
             selectable={state.targets.includes(`${ORDER}-${getByPathWithDefault('', 'id', data)}`)}
             onClick={handleClick}
+            flattenCornerIcon
           >
             <div ref={drag}>
               <Badge label={badge.order?.[orderId] ?? ''} />
@@ -924,12 +925,13 @@ function OrderItemCell({
               `${ORDER_ITEM}-${getByPathWithDefault('', 'id', data)}`
             )}
             onClick={handleClick}
+            flattenCornerIcon
           >
             <div ref={drag} id={`${ORDER_ITEM}-${itemId}`}>
               <Badge label={badge.orderItem?.[itemId] ?? ''} />
               <OrderItemCard
                 organizationId={data?.ownedBy?.id}
-                no={data?.no ?? 'N/A'}
+                orderItem={data}
                 onDeleteItem={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -1124,6 +1126,7 @@ function BatchCell({
             selected={state.targets.includes(`${BATCH}-${getByPathWithDefault('', 'id', data)}`)}
             selectable={state.targets.includes(`${BATCH}-${getByPathWithDefault('', 'id', data)}`)}
             onClick={handleClick}
+            flattenCornerIcon
           >
             <div ref={drag} style={baseDragStyle}>
               <Badge label={badge.batch?.[batchId] ?? ''} />
@@ -1368,6 +1371,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             selected={state.targets.includes(`${CONTAINER}-${containerId}`)}
             selectable={state.targets.includes(`${CONTAINER}-${containerId}`)}
             onClick={handleClick}
+            flattenCornerIcon
           >
             <div ref={drag}>
               <ContainerCard>
@@ -1553,6 +1557,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
             selected={state.targets.includes(`${SHIPMENT}-${shipmentId}`)}
             selectable={state.targets.includes(`${SHIPMENT}-${shipmentId}`)}
             onClick={handleClick}
+            flattenCornerIcon
           >
             <div ref={drag}>
               <ShipmentCard>
