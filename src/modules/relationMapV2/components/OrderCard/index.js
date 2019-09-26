@@ -12,7 +12,7 @@ import {
   TopRowWrapperStyle,
   TagsWrapperStyle,
   BottomRowWrapperStyle,
-  ItemIconsStyle,
+  CreateItemButtonStyle,
 } from './style';
 
 type Props = {|
@@ -69,10 +69,9 @@ export default function OrderCard({ order, onCreateItem, organizationId }: Props
       </div>
 
       {allowToCreateItem && (
-        <div onClick={onCreateItem} role="presentation" className={ItemIconsStyle}>
-          <Icon icon="ORDER_ITEM" />
+        <button onClick={onCreateItem} className={CreateItemButtonStyle} type="button">
           <Icon icon="ADD" />
-        </div>
+        </button>
       )}
     </div>
   );

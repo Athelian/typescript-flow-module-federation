@@ -9,6 +9,7 @@ type OptionalProps = {
   selectable: boolean,
   selected: boolean,
   invert: boolean,
+  flatten: boolean,
 };
 
 type Props = OptionalProps & {
@@ -23,6 +24,7 @@ const defaultProps = {
   selectable: false,
   selected: false,
   invert: false,
+  flatten: false,
 };
 
 const getIcon = (disabled, selectable, selected, icon) => {
@@ -34,12 +36,15 @@ const getIcon = (disabled, selectable, selected, icon) => {
 
 // $FlowFixMe it is an open issue on flow https://github.com/facebook/flow/issues/6103
 const CornerIcon = React.forwardRef(
-  ({ icon, color, disabled, readOnly, selectable, selected, onClick, invert }: Props, ref) => {
+  (
+    { icon, color, disabled, readOnly, selectable, selected, onClick, invert, flatten }: Props,
+    ref
+  ) => {
     const iconToShow = getIcon(disabled, selectable, selected, icon);
 
     return (
       <button
-        className={IconStyle(color, disabled, readOnly, invert)}
+        className={IconStyle(color, disabled, readOnly, invert, flatten)}
         type="button"
         onClick={onClick}
         ref={ref}

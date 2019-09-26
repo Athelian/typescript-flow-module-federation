@@ -5,12 +5,15 @@ import Icon from 'components/Icon';
 import { Display } from 'components/Form';
 import { WrapperStyle, IconColorStyle } from './style';
 
-type Props = {|
+type OptionalProps = {
+  width: string,
+};
+
+type Props = OptionalProps & {|
   entity: string,
   value: React$Node,
   blackout?: boolean,
   link?: string,
-  width?: string,
 |};
 
 const defaultProps = {
