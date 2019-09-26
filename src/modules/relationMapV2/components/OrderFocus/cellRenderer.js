@@ -37,6 +37,7 @@ import RelationLine from '../RelationLine';
 import OrderCard from '../OrderCard';
 import OrderItemCard from '../OrderItemCard';
 import BatchCard from '../BatchCard';
+import ContainerCard from '../ContainerCard';
 import { ContentStyle, MatchedStyle } from './style';
 import {
   getColorByEntity,
@@ -45,7 +46,7 @@ import {
   BatchHeaderCard,
   ItemCard,
   ShipmentCard,
-  ContainerCard,
+  ContainerCard as ContainerSummaryCard,
   HeaderCard,
   handleClickAndDoubleClick,
 } from './helpers';
@@ -1374,9 +1375,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             flattenCornerIcon
           >
             <div ref={drag}>
-              <ContainerCard>
-                {getByPathWithDefault('', `containers.${containerId}.no`, entities)}
-              </ContainerCard>
+              <ContainerCard container={data} />
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
@@ -1984,7 +1983,7 @@ function ContainerSummaryCell({
                     }}
                   />
                 )}
-                <ContainerCard>
+                <ContainerSummaryCard>
                   <p>Total: {getByPathWithDefault(0, 'containerCount', data)}</p>
                   <button
                     type="button"
@@ -2005,7 +2004,7 @@ function ContainerSummaryCell({
                       defaultMessage="SELECT ALL"
                     />
                   </button>
-                </ContainerCard>
+                </ContainerSummaryCard>
               </HeaderCard>
             </div>
           );
