@@ -1,14 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import {
-  FieldItem,
-  Label,
-  FormTooltip,
-  DefaultStyle,
-  MetricInput,
-  Blackout,
-} from 'components/Form';
+import { FieldItem, Label, FormTooltip, MetricInput, Blackout } from 'components/Form';
 import type {
   LabelProps,
   TooltipProps,
@@ -65,9 +58,8 @@ const defaultProps = {
   editable: false,
   blackout: false,
   vertical: false,
-
   showExtraToggleButton: false,
-  autoCalculateIsToggled: true,
+  autoCalculateIsToggled: false,
 };
 
 const MetricInputFactory = ({
@@ -91,9 +83,6 @@ const MetricInputFactory = ({
   warningMessage,
   infoMessage,
   originalValue,
-  isFocused,
-  disabled,
-  forceHoverStyle,
   inputWidth,
   inputHeight,
   value,
@@ -123,39 +112,6 @@ const MetricInputFactory = ({
     },
   };
 
-  const inputWrapperConfig = {
-    type: 'number',
-    isFocused,
-    hasError: !!(isTouched && errorMessage),
-    disabled,
-    forceHoverStyle,
-    width: inputWidth,
-    height: inputHeight,
-  };
-
-  const inputConfig = {
-    value,
-    name,
-    placeholder,
-    onChange,
-    onBlur,
-    onFocus: () => {
-      if (onFocus) {
-        onFocus();
-      }
-      if (onChange && !value) {
-        onChange(convertValueToFormFieldFormat({ metric: getDefaultMetric(metricType), value: 0 }));
-      }
-    },
-    align: inputAlign,
-    readOnly: !editable,
-    metrics: customMetrics || getMetrics(metricType),
-    convert: customConvert || getConvert(metricType),
-    metricSelectWidth,
-    metricSelectHeight: inputHeight,
-    metricOptionWidth,
-  };
-
   const blackoutConfig = {
     width: inputWidth,
     height: inputHeight,
@@ -164,17 +120,43 @@ const MetricInputFactory = ({
   let renderedInput = <Blackout {...blackoutConfig} />;
 
   if (!blackout) {
+    const inputConfig = {
+      value,
+      name,
+      placeholder,
+      onChange,
+      onBlur,
+      onFocus: () => {
+        if (onFocus) {
+          onFocus();
+        }
+        if (onChange && !value) {
+          onChange(
+            convertValueToFormFieldFormat({ metric: getDefaultMetric(metricType), value: 0 })
+          );
+        }
+      },
+      align: inputAlign,
+
+      metrics: customMetrics || getMetrics(metricType),
+      convert: customConvert || getConvert(metricType),
+      metricSelectWidth,
+      metricSelectHeight: inputHeight,
+      metricOptionWidth,
+    };
+    const valueReadOnly = !editable || autoCalculateIsToggled;
+    const metricReadOnly = !editable;
+
     renderedInput = (
       <>
-        {editable ? (
-          <>
-            <DefaultStyle {...inputWrapperConfig}>
-              <MetricInput {...inputConfig} />
-            </DefaultStyle>
-          </>
-        ) : (
-          <MetricInput {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
-        )}
+        <MetricInput
+          {...inputConfig}
+          valueReadOnly={valueReadOnly}
+          metricReadOnly={metricReadOnly}
+          inputWidth={inputWidth}
+          inputHeight={inputHeight}
+        />
+
         {showExtraToggleButton && (
           <div>
             <div className={CalculatorIconStyle}>

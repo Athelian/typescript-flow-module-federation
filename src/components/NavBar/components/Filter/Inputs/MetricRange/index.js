@@ -27,7 +27,8 @@ const MetricRange = (metrics: Array<string>) => ({ value, readonly, onChange }: 
               metric: e.target?.value.metric ?? value.metric,
             });
           }}
-          readOnly={readonly}
+          valueReadOnly={readonly}
+          metricReadOnly={readonly}
         />
       </DefaultStyle>
 
@@ -45,7 +46,8 @@ const MetricRange = (metrics: Array<string>) => ({ value, readonly, onChange }: 
               metric: e.target?.value.metric ?? value.metric,
             });
           }}
-          readOnly={readonly}
+          valueReadOnly={readonly}
+          metricReadOnly={readonly}
         />
       </DefaultStyle>
     </>

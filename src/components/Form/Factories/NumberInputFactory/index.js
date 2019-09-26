@@ -60,7 +60,7 @@ const defaultProps = {
   suffix: null,
   vertical: false,
   showExtraToggleButton: false,
-  autoCalculateIsToggled: true,
+  autoCalculateIsToggled: false,
 };
 
 const NumberInputFactory = ({
