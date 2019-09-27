@@ -55,7 +55,7 @@ const defaultProps = {
   onSuccessCallback: null,
   redirectAfterSuccess: true,
   initDataForSlideView: {},
-  originalDataForSlideView: {},
+  originalDataForSlideView: null,
 };
 
 type CreateOrderResponse = {|

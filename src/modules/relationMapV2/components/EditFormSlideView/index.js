@@ -181,6 +181,16 @@ const EditFormSlideView = ({ onClose }: Props) => {
                   orderItems: newOrderItems.map(item => ({
                     id: item.id,
                     isNew: true,
+                    customFields: {
+                      mask: null,
+                      fieldValues: [],
+                    },
+                    todo: {
+                      tasks: [],
+                    },
+                    tags: [],
+                    files: [],
+                    memo: '',
                     batches: item.batches.map(batch => ({
                       ...batch,
                       isNew: true,
@@ -190,7 +200,20 @@ const EditFormSlideView = ({ onClose }: Props) => {
                 initDataForSlideView={{
                   importer,
                   exporter,
-                  orderItems: newOrderItems,
+                  orderItems: newOrderItems.map(item => ({
+                    ...item,
+                    quantity: 0,
+                    customFields: {
+                      mask: null,
+                      fieldValues: [],
+                    },
+                    todo: {
+                      tasks: [],
+                    },
+                    tags: [],
+                    files: [],
+                    memo: '',
+                  })),
                   containers: newContainers,
                   shipments: newShipments,
                 }}
