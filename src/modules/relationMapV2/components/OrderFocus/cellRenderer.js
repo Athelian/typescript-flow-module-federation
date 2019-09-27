@@ -1178,7 +1178,7 @@ function BatchCell({
 
 function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
-  const { mapping } = Entities.useContainer();
+  const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const containerId = data?.id;
   const container = entities.containers?.[containerId] ?? { id: containerId };
@@ -1376,6 +1376,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             flattenCornerIcon
           >
             <div ref={drag}>
+              <Badge label={badge.container?.[containerId] ?? ''} />
               <ContainerCard container={container} />
               <MatchedResult entity={data} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (

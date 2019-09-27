@@ -44,10 +44,12 @@ function useEntities(
     orderItem: Object,
     batch: Object,
     shipment: Object,
+    container: Object,
   }>({
     order: {},
-    orderItem: {},
     batch: {},
+    orderItem: {},
+    container: {},
     shipment: {},
   });
   const [related, setRelated] = useState<{
@@ -55,10 +57,12 @@ function useEntities(
     orderItem: Object,
     batch: Object,
     shipment: Object,
+    container: Object,
   }>({
     order: {},
     orderItem: {},
     batch: {},
+    container: {},
     shipment: {},
   });
 
