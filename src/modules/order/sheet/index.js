@@ -5,7 +5,7 @@ import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, SearchInput } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
 import { Sheet, ColumnsConfig } from 'components/Sheet';
-import type { ColumnConfig } from 'components/Sheet';
+import type { ColumnConfig, ColumnSort, SortDirection } from 'components/Sheet';
 import Filter from 'components/NavBar/components/Filter';
 import { OrderConfigFilter } from 'components/NavBar/components/Filter/configs';
 import { clone } from 'utils/fp';
@@ -43,6 +43,22 @@ const OrderSheetModule = ({ orderIds }: Props) => {
   const [sortBy, setSortBy] = React.useState<{ [string]: 'ASCENDING' | 'DESCENDING' }>({
     updatedAt: 'DESCENDING',
   });
+  const [localSortBy, setLocalSortBy] = React.useState<
+    Array<{ field: string, direction: SortDirection }>
+  >([]);
+  const sorterProxy = React.useCallback(
+    (items: Array<Object>, sorts: Array<ColumnSort>): Array<Object> => {
+      setLocalSortBy(
+        sorts.map(s => ({
+          field: `${s.group}_${s.name}`,
+          direction: s.direction,
+        }))
+      );
+
+      return sorter(items, sorts);
+    },
+    [setLocalSortBy]
+  );
 
   React.useEffect(() => {
     setLoading(true);
@@ -106,6 +122,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
             variables={{
               filterBy,
               sortBy,
+              localSortBy,
               columns: currentColumns.filter(c => !!c.exportKey).map(c => c.exportKey),
             }}
           />
@@ -120,7 +137,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
         transformItem={transformer}
         onMutate={memoizedMutate}
         handleEntityEvent={memoizedHandler}
-        onLocalSort={sorter}
+        onLocalSort={sorterProxy}
         onRemoteSort={sorts =>
           setSortBy(
             sorts.reduce((remote, sort) => {
