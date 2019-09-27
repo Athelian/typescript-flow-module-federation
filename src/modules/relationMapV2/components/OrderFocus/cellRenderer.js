@@ -39,13 +39,13 @@ import OrderItemCard from '../OrderItemCard';
 import BatchCard from '../BatchCard';
 import ContainerCard from '../ContainerCard';
 import ShipmentCard from '../ShipmentCard';
+import OrderItemHeading from '../OrderItemHeading';
 import { ContentStyle, MatchedStyle } from './style';
 import {
   getColorByEntity,
   getIconByEntity,
   getCardByEntity,
   BatchHeaderCard,
-  ItemCard,
   ShipmentCard as ShipmentSummaryCard,
   ContainerCard as ContainerSummaryCard,
   HeaderCard,
@@ -1708,49 +1708,30 @@ function ItemSummaryCell({
         )}
       </div>
       <div className={ContentStyle} role="presentation">
-        <HeaderCard
-          isMatched={isMatched}
-          isExpand={isExpand}
-          selected={!isExpand && selected}
+        <OrderItemHeading
+          orderItems={data?.orderItems ?? []}
+          hasSelectedChildren={selected}
+          hasFilterHits={isMatched}
+          isExpanded={isExpand}
           onClick={onClick}
-        >
-          {isMatched && !isExpand && (
-            <div
-              style={{
-                position: 'absolute',
-                top: '-6px',
-                right: '-8px',
-                border: '4px solid rgba(11, 110, 222, 0.5)',
-                height: '60px',
-                width: ORDER_ITEM_WIDTH - 13,
-                borderRadius: '9px',
-              }}
-            />
-          )}
-          <ItemCard>
-            <p>Total: {getByPathWithDefault(0, 'orderItemCount', data)}</p>
-            <button
-              type="button"
-              onClick={evt => {
-                evt.stopPropagation();
-                const itemIds = flatten(
-                  getByPathWithDefault([], `order.${orderId}.orderItems`, state).map(item =>
-                    getByPathWithDefault('', 'id', item)
-                  )
-                ).filter(Boolean);
-                const targets = itemIds.map(id => `${ORDER_ITEM}-${id}`);
-                dispatch({
-                  type: 'TARGET_ALL',
-                  payload: {
-                    targets,
-                  },
-                });
-              }}
-            >
-              <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
-            </button>
-          </ItemCard>
-        </HeaderCard>
+          total={data?.orderItemCount || 0}
+          onSelectAll={() => {
+            const itemIds = flatten(
+              getByPathWithDefault([], `order.${orderId}.orderItems`, state).map(item =>
+                getByPathWithDefault('', 'id', item)
+              )
+            ).filter(Boolean);
+
+            const targets = itemIds.map(id => `${ORDER_ITEM}-${id}`);
+
+            dispatch({
+              type: 'TARGET_ALL',
+              payload: {
+                targets,
+              },
+            });
+          }}
+        />
       </div>
       <div className={ContentStyle}>
         {afterConnector && (

@@ -27,7 +27,6 @@ export const NumberStyle = (color: string, align: string): string => css`
 
 export const GraphWrapperStyle: string = css`
   margin: 2px 0 0 0;
-  background-color: ${colors.WHITE};
   height: 6px;
   ${borderRadiuses.BUTTON};
 `;
@@ -36,7 +35,7 @@ export const ProgressBarBackgroundStyle: string = css`
   width: 100%;
   height: 100%;
   position: relative;
-  background-color: ${colors.GRAY_VERY_LIGHT};
+  background-color: rgba(0, 0, 0, 0.1);
   ${borderRadiuses.BUTTON};
   opacity: 0.5;
 `;
