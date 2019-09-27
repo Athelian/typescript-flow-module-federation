@@ -12,24 +12,19 @@ type Props = {
   size: number,
 };
 
-const percent = ({ completed, inProgress, remain, skipped }: TaskRingDataProps) => {
-  const total = completed + inProgress + remain + skipped;
-
-  if (total > 0) {
-    return (completed * 100) / total;
-  }
-  return 0;
-};
+const percent = (current: number, total: number): number =>
+  total > 0 ? (current * 100) / total : 0;
 
 const BasicTaskRing = ({ taskCount, size }: Props) => {
   const { completed, inProgress, remain, skipped } = taskCount;
+  const total = completed + inProgress + remain + skipped;
 
   return (
     <Tooltip className={TooltipStyle} message={<TaskRingTooltipMessage {...taskCount} />}>
       <div className={TaskRingStyle(size)}>
-        <Ring percent={percent(taskCount)} size={size} color="TEAL" />
+        <Ring percent={percent(completed + skipped, total)} size={size} color="TEAL" />
         <div className={NumberStyle(size - 4)}>
-          <FormattedNumber value={completed + inProgress + remain + skipped} />
+          <FormattedNumber value={total} />
         </div>
       </div>
     </Tooltip>
