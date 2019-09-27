@@ -23,8 +23,14 @@ import Icon from 'components/Icon';
 import orderMessages from 'modules/order/messages';
 import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
+import MiniShipmentTimeline from 'modules/relationMapV2/components/MiniShipmentTimeline';
 import { getByPathWithDefault } from 'utils/fp';
-import { Entities, SortAndFilter, ClientSorts } from 'modules/relationMapV2/store';
+import {
+  Entities,
+  SortAndFilter,
+  ClientSorts,
+  GlobalShipmentPoint,
+} from 'modules/relationMapV2/store';
 import { SortInput } from 'components/NavBar';
 import {
   EntitiesNavbarWrapperStyle,
@@ -36,6 +42,7 @@ import {
   AddOrderButtonStyle,
   SelectAllButtonStyle,
   SortInputWrapperStyle,
+  ShipmentTimelineWrapperStyle,
 } from './style';
 import { RelationMapContext } from '../OrderFocus/store';
 
@@ -59,6 +66,7 @@ const Header = React.memo<any>(
     const { mapping } = Entities.useContainer();
     const { filterAndSort, onChangeFilter } = SortAndFilter.useContainer();
     const clientSorts = ClientSorts.useContainer();
+    const { globalShipmentPoint, setGlobalShipmentPoint } = GlobalShipmentPoint.useContainer();
     const hasPermissions = useViewerHasPermissions();
     const { orders, entities } = mapping;
     const orderSort = [
@@ -453,8 +461,17 @@ const Header = React.memo<any>(
             </button>
           </div>
 
-          {/* TODO: Shipment card ui changer */}
-          <div>Change timeline</div>
+          <div className={ShipmentTimelineWrapperStyle}>
+            <Label align="center" height="15px" color="TEAL">
+              <FormattedMessage id={`modules.Shipments.${globalShipmentPoint}`} />
+            </Label>
+
+            <MiniShipmentTimeline
+              shipment={{ voyages: [{}, {}, {}] }}
+              activePoint={globalShipmentPoint}
+              onChangeActivePoint={point => setGlobalShipmentPoint(point)}
+            />
+          </div>
         </div>
       </div>
     );
