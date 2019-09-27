@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import FormattedNumber from 'components/FormattedNumber';
-import { NumberInput, SelectInput, DefaultOptions, Display } from 'components/Form';
+import { NumberInput, SelectInput, DefaultOptions, Display, DefaultStyle } from 'components/Form';
 import { toFloat, toFloatNullable } from 'utils/number';
 import { type NumberInputProps, defaultNumberInputProps } from 'components/Form/Inputs/NumberInput';
 import MetricSelect from './MetricSelect';
@@ -12,6 +12,10 @@ type OptionalProps = {
   metricSelectWidth: string,
   metricSelectHeight: string,
   metricOptionWidth: string,
+  valueReadOnly: boolean,
+  metricReadOnly: boolean,
+  inputWidth: string,
+  inputHeight: string,
 };
 
 type Props = OptionalProps & NumberInputProps;
@@ -23,6 +27,10 @@ const defaultProps = {
   metricSelectWidth: '30px',
   metricSelectHeight: '30px',
   metricOptionWidth: '35px',
+  valueReadOnly: false,
+  metricReadOnly: false,
+  inputWidth: '200px',
+  inputHeight: '30px',
 };
 
 export default class MetricInput extends React.Component<Props> {
@@ -96,9 +104,10 @@ export default class MetricInput extends React.Component<Props> {
     const {
       value: { value, metric },
       align,
-      readOnly,
-      readOnlyWidth,
-      readOnlyHeight,
+      valueReadOnly,
+      metricReadOnly,
+      inputWidth,
+      inputHeight,
       metrics,
       convert,
       onChange,
@@ -110,40 +119,72 @@ export default class MetricInput extends React.Component<Props> {
       ...rest
     } = this.props;
 
-    return readOnly ? (
-      <Display style={{ textAlign: align }} width={readOnlyWidth} height={readOnlyHeight}>
-        <FormattedNumber value={value} suffix={metric} />
-      </Display>
-    ) : (
+    const inputWrapperConfig = {
+      type: 'number',
+      width: inputWidth,
+      height: inputHeight,
+    };
+
+    const input = (
+      <NumberInput
+        {...rest}
+        nullable={nullable}
+        value={value}
+        onChange={this.handleChangeInput}
+        onBlur={this.handleBlurInput}
+        align={align}
+        readOnly={valueReadOnly}
+      />
+    );
+
+    const select = (
+      <SelectInput
+        {...rest}
+        readOnly={metricReadOnly}
+        value={metric}
+        onChange={this.handleChangeMetric}
+        onBlur={this.handleBlurMetric}
+        items={metrics}
+        itemToValue={v => v || null}
+        itemToString={v => v || ''}
+        renderSelect={({ ...selectProps }) => (
+          <MetricSelect
+            {...selectProps}
+            width={metricSelectWidth}
+            height={metricSelectHeight}
+            align={align}
+          />
+        )}
+        renderOptions={({ ...optionsProps }) => (
+          <DefaultOptions {...optionsProps} width={metricOptionWidth} align={align} />
+        )}
+      />
+    );
+
+    if (valueReadOnly && metricReadOnly) {
+      return (
+        <Display style={{ textAlign: align }} width={inputWidth} height={inputHeight}>
+          <FormattedNumber value={value} suffix={metric} />
+        </Display>
+      );
+    }
+
+    return (
       <>
-        <NumberInput
-          {...rest}
-          nullable={nullable}
-          value={value}
-          onChange={this.handleChangeInput}
-          onBlur={this.handleBlurInput}
-          align={align}
-        />
-        <SelectInput
-          {...rest}
-          value={metric}
-          onChange={this.handleChangeMetric}
-          onBlur={this.handleBlurMetric}
-          items={metrics}
-          itemToValue={v => v || null}
-          itemToString={v => v || ''}
-          renderSelect={({ ...selectProps }) => (
-            <MetricSelect
-              {...selectProps}
-              width={metricSelectWidth}
-              height={metricSelectHeight}
-              align={align}
-            />
-          )}
-          renderOptions={({ ...optionsProps }) => (
-            <DefaultOptions {...optionsProps} width={metricOptionWidth} align={align} />
-          )}
-        />
+        {valueReadOnly ? (
+          <>
+            <Display align={align} height="30px">
+              <FormattedNumber value={value} />
+            </Display>
+            <DefaultStyle width="30px"> {select}</DefaultStyle>
+          </>
+        ) : (
+          <>
+            <DefaultStyle {...inputWrapperConfig}>
+              {input} {select}
+            </DefaultStyle>
+          </>
+        )}
       </>
     );
   }

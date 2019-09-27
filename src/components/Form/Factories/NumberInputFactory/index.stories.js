@@ -9,7 +9,7 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input Factory', () => 
     defaultValue={{
       isNew: false,
       nullable: false,
-      showCalculator: false,
+
       showExtraToggleButton: false,
       initialValues: {
         inputTwo: 200,
@@ -30,7 +30,7 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input Factory', () => 
       value: {
         isNew,
         nullable,
-        showCalculator,
+
         showExtraToggleButton,
         initialValues,
         values,
@@ -71,8 +71,6 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input Factory', () => 
                 editable={editable}
                 placeholder="Please input a value"
                 nullable={nullable}
-                showCalculator={showCalculator}
-                onCalculate={() => set('values', { ...values, inputTwo: 999 })}
                 showExtraToggleButton={showExtraToggleButton}
                 onToggleAutoCalculate={() => {}}
                 autoCalculateIsToggled={false}
@@ -94,12 +92,7 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input Factory', () => 
               <ToggleInput toggled={nullable} onToggle={() => set('nullable', !nullable)}>
                 <Label>NULLABLE</Label>
               </ToggleInput>
-              <ToggleInput
-                toggled={showCalculator}
-                onToggle={() => set('showCalculator', !showCalculator)}
-              >
-                <Label>CALCULATOR</Label>
-              </ToggleInput>
+
               <ToggleInput
                 toggled={showExtraToggleButton}
                 onToggle={() => set('showExtraToggleButton', !showExtraToggleButton)}

@@ -44,10 +44,10 @@ storiesOf('Form/Inputs/Metric Input', module).add('Metric Input', () => (
 
           <FieldItem
             label={<Label>{INPUT_2}</Label>}
-            input={<MetricInput value={{ value: 124, metric: 'm' }} readOnly />}
+            input={<MetricInput value={{ value: 124, metric: 'm' }} />}
           />
 
-          <FieldItem label={<Label>{INPUT_3}</Label>} input={<MetricInput readOnly />} />
+          <FieldItem label={<Label>{INPUT_3}</Label>} input={<MetricInput />} />
         </>
       );
     }}

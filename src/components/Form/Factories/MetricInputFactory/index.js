@@ -1,13 +1,7 @@
 // @flow
 import * as React from 'react';
-import {
-  FieldItem,
-  Label,
-  FormTooltip,
-  DefaultStyle,
-  MetricInput,
-  Blackout,
-} from 'components/Form';
+import Icon from 'components/Icon';
+import { FieldItem, Label, FormTooltip, MetricInput, Blackout } from 'components/Form';
 import type {
   LabelProps,
   TooltipProps,
@@ -15,8 +9,9 @@ import type {
   InputProps as StandardInputProps,
 } from 'components/Form/Factories/type';
 import { convertValueToFormFieldFormat } from 'components/Form/Factories/helpers';
-import { CalculatorButton, ExtraToggleButton } from 'components/Form/Factories/components';
+import { ExtraToggleButton } from 'components/Form/Factories/components';
 import { getMetrics, getDefaultMetric, getConvert, type MetricEnumType } from './helpers';
+import { CalculatorIconStyle } from '../NumberInputFactory/style';
 
 type InputProps = StandardInputProps & {
   customMetrics?: Array<string>,
@@ -33,8 +28,7 @@ type Props = LabelProps &
     isTouched: boolean,
     label?: React.Node,
     metricType?: MetricEnumType,
-    showCalculator: boolean,
-    onCalculate?: Function,
+
     showExtraToggleButton: boolean,
     onToggleAutoCalculate?: Function,
     autoCalculateIsToggled: boolean,
@@ -64,9 +58,8 @@ const defaultProps = {
   editable: false,
   blackout: false,
   vertical: false,
-  showCalculator: false,
   showExtraToggleButton: false,
-  autoCalculateIsToggled: true,
+  autoCalculateIsToggled: false,
 };
 
 const MetricInputFactory = ({
@@ -74,12 +67,12 @@ const MetricInputFactory = ({
   isTouched,
   label,
   metricType,
-  showCalculator,
+
   showExtraToggleButton,
   onToggleAutoCalculate,
   autoCalculateIsToggled,
   autoCalculateToggleMessages,
-  onCalculate,
+
   required,
   labelAlign,
   labelWidth,
@@ -90,9 +83,6 @@ const MetricInputFactory = ({
   warningMessage,
   infoMessage,
   originalValue,
-  isFocused,
-  disabled,
-  forceHoverStyle,
   inputWidth,
   inputHeight,
   value,
@@ -122,39 +112,6 @@ const MetricInputFactory = ({
     },
   };
 
-  const inputWrapperConfig = {
-    type: 'number',
-    isFocused,
-    hasError: !!(isTouched && errorMessage),
-    disabled,
-    forceHoverStyle,
-    width: inputWidth,
-    height: inputHeight,
-  };
-
-  const inputConfig = {
-    value,
-    name,
-    placeholder,
-    onChange,
-    onBlur,
-    onFocus: () => {
-      if (onFocus) {
-        onFocus();
-      }
-      if (onChange && !value) {
-        onChange(convertValueToFormFieldFormat({ metric: getDefaultMetric(metricType), value: 0 }));
-      }
-    },
-    align: inputAlign,
-    readOnly: !editable,
-    metrics: customMetrics || getMetrics(metricType),
-    convert: customConvert || getConvert(metricType),
-    metricSelectWidth,
-    metricSelectHeight: inputHeight,
-    metricOptionWidth,
-  };
-
   const blackoutConfig = {
     width: inputWidth,
     height: inputHeight,
@@ -163,25 +120,55 @@ const MetricInputFactory = ({
   let renderedInput = <Blackout {...blackoutConfig} />;
 
   if (!blackout) {
+    const inputConfig = {
+      value,
+      name,
+      placeholder,
+      onChange,
+      onBlur,
+      onFocus: () => {
+        if (onFocus) {
+          onFocus();
+        }
+        if (onChange && !value) {
+          onChange(
+            convertValueToFormFieldFormat({ metric: getDefaultMetric(metricType), value: 0 })
+          );
+        }
+      },
+      align: inputAlign,
+
+      metrics: customMetrics || getMetrics(metricType),
+      convert: customConvert || getConvert(metricType),
+      metricSelectWidth,
+      metricSelectHeight: inputHeight,
+      metricOptionWidth,
+    };
+    const valueReadOnly = !editable || autoCalculateIsToggled;
+    const metricReadOnly = !editable;
+
     renderedInput = (
       <>
-        {editable ? (
-          <>
-            <DefaultStyle {...inputWrapperConfig}>
-              <MetricInput {...inputConfig} />
-            </DefaultStyle>
-            {showCalculator && <CalculatorButton onClick={onCalculate} />}
-          </>
-        ) : (
-          <MetricInput {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
-        )}
+        <MetricInput
+          {...inputConfig}
+          valueReadOnly={valueReadOnly}
+          metricReadOnly={metricReadOnly}
+          inputWidth={inputWidth}
+          inputHeight={inputHeight}
+        />
+
         {showExtraToggleButton && (
-          <ExtraToggleButton
-            editable={editable}
-            toggled={autoCalculateIsToggled}
-            onClick={onToggleAutoCalculate}
-            toggleMessages={autoCalculateToggleMessages}
-          />
+          <div>
+            <div className={CalculatorIconStyle}>
+              <Icon icon="CALCULATOR" />
+            </div>
+            <ExtraToggleButton
+              editable={editable}
+              toggled={autoCalculateIsToggled}
+              onClick={onToggleAutoCalculate}
+              toggleMessages={autoCalculateToggleMessages}
+            />
+          </div>
         )}
       </>
     );

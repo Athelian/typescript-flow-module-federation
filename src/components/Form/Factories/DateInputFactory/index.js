@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import Icon from 'components/Icon';
 import { FieldItem, Label, FormTooltip, DefaultStyle, DateInput, Blackout } from 'components/Form';
 import type {
   LabelProps,
@@ -9,6 +10,8 @@ import type {
 } from 'components/Form/Factories/type';
 import { colors } from 'styles/common';
 import { ExtraToggleButton } from '../components';
+
+import { ShipmentIconStyle } from './style';
 
 type Props = LabelProps &
   TooltipProps &
@@ -46,7 +49,7 @@ const defaultProps = {
   blackout: false,
   vertical: false,
   showExtraToggle: false,
-  toggled: true,
+  toggled: false,
 };
 
 const DateInputFactory = ({
@@ -114,7 +117,6 @@ const DateInputFactory = ({
     onBlur,
     onFocus,
     align: inputAlign,
-    readOnly: !editable,
     required,
     ...(inputColor
       ? {
@@ -122,6 +124,8 @@ const DateInputFactory = ({
         }
       : {}),
   };
+
+  const inputReadOnly = !editable || toggled;
 
   const blackoutConfig = {
     width: inputWidth,
@@ -133,25 +137,31 @@ const DateInputFactory = ({
   if (!blackout) {
     renderedInput = (
       <>
-        {editable ? (
-          <DefaultStyle {...inputWrapperConfig}>
-            <DateInput {...inputConfig} />
-          </DefaultStyle>
-        ) : (
+        {inputReadOnly ? (
           <DateInput
             {...inputConfig}
+            readOnly
             color={inputColor}
             readOnlyWidth={inputWidth}
             readOnlyHeight={inputHeight}
           />
+        ) : (
+          <DefaultStyle {...inputWrapperConfig}>
+            <DateInput {...inputConfig} />
+          </DefaultStyle>
         )}
         {showExtraToggle && (
-          <ExtraToggleButton
-            editable={editable}
-            toggled={toggled}
-            onClick={onToggle}
-            toggleMessages={toggleMessages}
-          />
+          <>
+            <div className={ShipmentIconStyle}>
+              <Icon icon="SHIPMENT" />
+            </div>
+            <ExtraToggleButton
+              editable={editable}
+              toggled={toggled}
+              onClick={onToggle}
+              toggleMessages={toggleMessages}
+            />
+          </>
         )}
       </>
     );

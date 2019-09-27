@@ -2,14 +2,7 @@
 import { css } from 'react-emotion';
 import { colors, fontSizes } from 'styles/common';
 
-export const SuffixStyle: string = css`
-  ${fontSizes.MAIN};
-  color: ${colors.BLACK};
-  font-weight: bold;
-  padding: 0 5px 0 0;
-`;
-
-export const CalculatorIconStyle: string = css`
+export const ShipmentIconStyle: string = css`
   position: absolute;
   top: 0;
   right: -40px;
