@@ -48,10 +48,14 @@ class ContainersSlideView extends React.Component<Props> {
             } = containersInSlideViewContainer;
             const agreedArrivalDates = getAgreedArrivalDates(containers);
             const actualArrivalDates = getActualArrivalDates(containers);
-            const agreedArrivalDateFrom = earliest(agreedArrivalDates);
-            const agreedArrivalDateTo = latest(agreedArrivalDates);
-            const actualArrivalDateFrom = earliest(actualArrivalDates);
-            const actualArrivalDateTo = latest(actualArrivalDates);
+            const agreedArrivalDateFrom =
+              agreedArrivalDates.length > 0 ? earliest(agreedArrivalDates) : null;
+            const agreedArrivalDateTo =
+              agreedArrivalDates.length > 0 ? latest(agreedArrivalDates) : null;
+            const actualArrivalDateFrom =
+              actualArrivalDates.length > 0 ? earliest(actualArrivalDates) : null;
+            const actualArrivalDateTo =
+              actualArrivalDates.length > 0 ? latest(actualArrivalDates) : null;
             const numOfContainers = containers.length;
             const numOfApprovedAgreed = numAgreedArrivalDateApproved(containers);
             const numOfApprovedActual = numActualArrivalDateApproved(containers);
