@@ -26,6 +26,7 @@ import { moveBatchesToShipment } from './mutation';
 type Props = {
   intl: IntlShape,
   onSuccess: (orderIds: Array<string>) => void,
+  onNewContainer: (shipment: Object) => void,
 };
 
 function ShipmentRenderer({
@@ -122,7 +123,7 @@ function ShipmentRenderer({
   );
 }
 
-function SelectShipmentToMove({ intl, onSuccess }: Props) {
+function SelectShipmentToMove({ intl, onSuccess, onNewContainer }: Props) {
   const { dispatch, state } = React.useContext(RelationMapContext);
   const { mapping } = Entities.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
@@ -134,6 +135,7 @@ function SelectShipmentToMove({ intl, onSuccess }: Props) {
     };
   }, [isOpen]);
   const isMoveToShipment = type === 'existShipment';
+  const isMoveToContainer = type === 'newContainer';
   const onCancel = () => {
     dispatch({
       type: 'MOVE_TO_SHIPMENT_CLOSE',
@@ -141,18 +143,22 @@ function SelectShipmentToMove({ intl, onSuccess }: Props) {
     });
   };
   const onConfirm = () => {
-    dispatch({
-      type: 'MOVE_TO_SHIPMENT_START',
-      payload: {},
-    });
-    moveBatchesToShipment({
-      shipment: selected,
-      batchIds,
-      orderIds,
-      entities: mapping.entities,
-    })
-      .then(onSuccess)
-      .catch(onCancel);
+    if (isMoveToContainer) {
+      onNewContainer(selected);
+    } else {
+      dispatch({
+        type: 'MOVE_TO_SHIPMENT_START',
+        payload: {},
+      });
+      moveBatchesToShipment({
+        shipment: selected,
+        batchIds,
+        orderIds,
+        entities: mapping.entities,
+      })
+        .then(onSuccess)
+        .catch(onCancel);
+    }
   };
 
   const sortFields = [
@@ -211,14 +217,15 @@ function SelectShipmentToMove({ intl, onSuccess }: Props) {
     },
     'filterShipmentOnMoveNRM'
   );
-  if (!isOpen || !isMoveToShipment) return null;
+  const isValid = isMoveToContainer || isMoveToShipment;
+  if (!isOpen || !isValid) return null;
   return (
     <SlideView
       shouldConfirm={() => !!selected}
-      isOpen={isOpen && isMoveToShipment}
+      isOpen={isOpen && isValid}
       onRequestClose={onCancel}
     >
-      {isOpen && isMoveToShipment && (
+      {isOpen && isValid && (
         <SlideViewLayout>
           <SlideViewNavBar>
             <FilterToolBar

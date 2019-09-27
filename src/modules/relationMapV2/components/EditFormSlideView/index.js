@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { useLazyQuery } from 'react-apollo';
+import { useLazyQuery, useMutation } from 'react-apollo';
 import { findKey } from 'lodash';
 import usePrevious from 'hooks/usePrevious';
 import useUser from 'hooks/useUser';
@@ -10,6 +10,8 @@ import OrderForm from 'modules/order/index.form';
 import ItemForm from 'modules/orderItem/index.form';
 import BatchForm from 'modules/batch/index.form';
 import ContainerForm from 'modules/container/index.form';
+import ContainerFormInSlide from 'modules/container/common/ContainerFormInSlide';
+import { prepareParsedContainerInput } from 'modules/container/form/mutation';
 import ShipmentForm from 'modules/shipment/index.form';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
 import { Entities } from 'modules/relationMapV2/store';
@@ -19,6 +21,7 @@ import { encodeId, uuid } from 'utils/id';
 import emitter from 'utils/emitter';
 import { isEquals } from 'utils/fp';
 import { ordersAndShipmentsQuery } from './query';
+import { createContainerMutation } from './mutation';
 
 type Props = {|
   onClose: (
@@ -34,6 +37,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
   const { isExporter } = useUser();
   const isReady = React.useRef(true);
   const { dispatch, state } = React.useContext(RelationMapContext);
+  const [createContainer] = useMutation(createContainerMutation);
   const [fetchOrdersAndShipments, fetchResult] = useLazyQuery(ordersAndShipmentsQuery);
   const { type, selectedId: id } = state.edit;
   const { mapping, checkRemoveEntities, onSetBadges } = Entities.useContainer();
@@ -251,6 +255,58 @@ const EditFormSlideView = ({ onClose }: Props) => {
             );
             break;
           default:
+            form = (
+              <ContainerFormInSlide
+                container={{
+                  importer,
+                  exporter: isExporter() ? exporter : null,
+                  batches: newBatches.map(batch => ({
+                    ...batch,
+                    shipment: state.edit.shipment,
+                  })),
+                  shipment: state.edit.shipment,
+                }}
+                onSave={container => {
+                  createContainer({
+                    variables: {
+                      input: {
+                        ...prepareParsedContainerInput({
+                          originalValues: null,
+                          existingBatches: newBatches,
+                          newValues: container,
+                          location: {
+                            inContainerForm: true,
+                            inShipmentForm: false,
+                          },
+                        }),
+                        shipmentId: Number(state.edit.shipment?.id ?? ''),
+                      },
+                    },
+                  })
+                    .then(({ data }) => {
+                      onSetBadges([
+                        {
+                          id: data.containerCreate.id,
+                          type: 'newItem',
+                          entity: 'container',
+                        },
+                      ]);
+                      dispatch({
+                        type: 'NEW_CONTAINER',
+                        payload: {
+                          orderId: data.containerCreate.id,
+                        },
+                      });
+                      onClose({
+                        moveToTop: true,
+                        id: data.containerCreate.id,
+                        type: CONTAINER,
+                      });
+                    })
+                    .catch(console.error);
+                }}
+              />
+            );
             break;
         }
       }

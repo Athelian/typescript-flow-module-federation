@@ -132,6 +132,22 @@ export default function MoveBatch({ onSuccess }: Props) {
     );
   };
 
+  const onNewContainer = (shipment: Object) => {
+    dispatch({
+      type: 'MOVE_BATCH_TO_NEW_ENTITY',
+      payload: {
+        type: 'MOVE_BATCHES',
+        selectedId: 'newContainer',
+        shipment,
+        orderIds,
+        containerIds,
+        shipmentIds,
+        importerIds,
+        exporterIds,
+      },
+    });
+  };
+
   const onConfirm = (
     // prettier-ignore
     target: | 'existOrder'
@@ -235,7 +251,7 @@ export default function MoveBatch({ onSuccess }: Props) {
         )}
       </div>
       <SelectOrderToMove onSuccess={onSuccess} />
-      <SelectShipmentToMove onSuccess={onSuccess} />
+      <SelectShipmentToMove onSuccess={onSuccess} onNewContainer={onNewContainer} />
       <SelectContainerToMove onSuccess={onSuccess} />
     </Dialog>
   );
