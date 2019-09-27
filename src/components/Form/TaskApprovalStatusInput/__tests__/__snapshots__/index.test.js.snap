@@ -106,9 +106,7 @@ exports[`TaskApprovalStatusInput approved, showUser, showDate 1`] = `
       class="emotion-0"
       tabindex="-1"
     >
-      <span>
-        T
-      </span>
+      T
     </div>
   </div>
   <div
@@ -117,16 +115,12 @@ exports[`TaskApprovalStatusInput approved, showUser, showDate 1`] = `
     <div
       class="emotion-2"
     >
-      <span>
-        APPROVED
-      </span>
+      APPROVED
     </div>
     <div
       class="emotion-2"
     >
-      <span>
-        4/24/2019
-      </span>
+      4/24/2019
     </div>
   </div>
   <svg
@@ -214,9 +208,7 @@ exports[`TaskApprovalStatusInput rejected 1`] = `
     <div
       class="emotion-0"
     >
-      <span>
-        REJECTED
-      </span>
+      REJECTED
     </div>
   </div>
   <svg
