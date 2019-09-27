@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, borderRadiuses } from 'styles/common';
+import { colors, borderRadiuses, presets, transitions } from 'styles/common';
 
 export const MiniShipmentTimelineWrapperStyle: string = css`
   display: flex;
@@ -8,17 +8,96 @@ export const MiniShipmentTimelineWrapperStyle: string = css`
   align-items: center;
 `;
 
-export const TimelinePointStyle = (color: string): string => css`
+export const TimelinePointWrapperStyle: string = css`
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  &:hover {
+    & div {
+      opacity: 1;
+    }
+  }
+`;
+
+export const TimelinePointActiveStyle = (isActive: boolean): string => css`
+  ${transitions.MAIN};
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 20px;
+  height: 3px;
+  background-color: ${isActive ? colors.TEAL : 'rgba(255, 255, 255, 0.5)'};
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  opacity: ${isActive ? 1 : 0};
+`;
+
+export const TimelinePointStyle = (color: string, isActive: boolean): string => css`
+  position: relative;
+  ${presets.BUTTON};
   color: ${colors[color]};
   border: 2px solid ${colors[color]};
   font-size: 10px;
   height: 20px;
   width: 20px;
   ${borderRadiuses.CIRCLE};
+  background-color: ${colors.WHITE};
+  ${isActive
+    ? `
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  `
+    : `
+    &:hover {
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+  `};
+`;
+
+export const TransitPointWrapperStyle: string = css`
+  position: relative;
+`;
+
+export const TransitHalfWrapperStyle = (side: string, isActive: boolean): string => css`
+  position: absolute;
+  top: 0;
+  ${presets.BUTTON};
+  height: 20px;
+  width: 10px;
+  border-radius: 20px;
+  ${side === 'left'
+    ? `
+    left: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  `
+    : `
+    right: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  `};
+  ${isActive
+    ? `
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  `
+    : `
+    &:hover {
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      & div {
+        opacity: 1;
+      }
+    }
+  `};
+`;
+
+export const TransitPointActiveStyle = (isActive: boolean): string => css`
+  ${transitions.MAIN};
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 10px;
+  height: 3px;
+  background-color: ${isActive ? colors.TEAL : colors.GRAY_VERY_LIGHT};
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  opacity: ${isActive ? 1 : 0};
 `;
 
 export const TimelineLineStyle = (color: string): string => css`

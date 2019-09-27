@@ -9,7 +9,7 @@ import { createContainer } from 'unstated-next';
 import produce from 'immer';
 import { isEquals } from 'utils/fp';
 import usePersistFilter from 'hooks/usePersistFilter';
-import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMapV2/constants';
+import { ORDER, ORDER_ITEM, BATCH, CARGO_READY } from 'modules/relationMapV2/constants';
 import { normalizeEntity } from 'modules/relationMapV2/components/OrderFocus/normalize';
 import { sortOrderItemBy, sortBatchBy } from './sort';
 
@@ -362,3 +362,11 @@ function useClientSorts(
 }
 
 export const ClientSorts = createContainer(useClientSorts);
+
+function useGlobalShipmentPoint(initialState = CARGO_READY) {
+  const [globalShipmentPoint, setGlobalShipmentPoint] = useState(initialState);
+
+  return { globalShipmentPoint, setGlobalShipmentPoint };
+}
+
+export const GlobalShipmentPoint = createContainer(useGlobalShipmentPoint);

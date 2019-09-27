@@ -97,3 +97,14 @@ export const SortInputWrapperStyle: string = css`
   margin-left: auto;
   padding: 0 10px 0 0;
 `;
+
+export const ShipmentTimelineWrapperStyle: string = css`
+  display: flex;
+  flex-direction: column;
+  background-color: ${colors.WHITE};
+  ${borderRadiuses.MAIN};
+  color: ${colors.BLACK};
+  padding: 0 5px;
+  height: 40px;
+  margin: 0 5px 0 auto;
+`;
