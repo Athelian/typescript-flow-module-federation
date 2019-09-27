@@ -11,6 +11,8 @@ import ItemForm from 'modules/orderItem/index.form';
 import BatchForm from 'modules/batch/index.form';
 import ContainerForm from 'modules/container/index.form';
 import ContainerFormInSlide from 'modules/container/common/ContainerFormInSlide';
+// FIXME: binding date is not working yet
+import RMEditTasks from 'modules/relationMap/order/components/RMEditTasks';
 import { prepareParsedContainerInput } from 'modules/container/form/mutation';
 import ShipmentForm from 'modules/shipment/index.form';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
@@ -116,6 +118,17 @@ const EditFormSlideView = ({ onClose }: Props) => {
     }
     case SHIPMENT: {
       form = <ShipmentForm shipmentId={encodeId(id)} isSlideView />;
+      break;
+    }
+    case 'TASKS': {
+      form = (
+        <RMEditTasks
+          orderIds={targetedIds(state.targets, ORDER)}
+          orderItemIds={targetedIds(state.targets, ORDER_ITEM)}
+          batchIds={targetedIds(state.targets, BATCH)}
+          shipmentIds={targetedIds(state.targets, SHIPMENT)}
+        />
+      );
       break;
     }
     case 'MOVE_BATCHES': {

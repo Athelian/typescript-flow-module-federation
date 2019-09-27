@@ -114,8 +114,10 @@ export default function Actions({ targets }: Props) {
         <ActionButton
           onClick={() => {
             dispatch({
-              type: 'TASK',
+              type: 'EDIT',
               payload: {
+                type: 'TASKS',
+                selectedId: 'tasks',
                 orderIds,
                 orderItemIds,
                 batchIds,

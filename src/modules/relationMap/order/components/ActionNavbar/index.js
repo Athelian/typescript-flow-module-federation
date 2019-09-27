@@ -201,7 +201,14 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           toggleTaskList(false);
                         }}
                       >
-                        {isOpen && <RMEditTasks />}
+                        {isOpen && (
+                          <RMEditTasks
+                            orderIds={uiSelectors.targetedOrderIds()}
+                            orderItemIds={uiSelectors.targetedOrderItemIds()}
+                            batchIds={uiSelectors.targetedBatchIds()}
+                            shipmentIds={uiSelectors.targetedShipmentIds()}
+                          />
+                        )}
                       </SlideView>
                     </>
                   )}
