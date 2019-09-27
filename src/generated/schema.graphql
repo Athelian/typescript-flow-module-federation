@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Sep 26 2019 18:00:08 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Sep 27 2019 17:19:51 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -29721,7 +29721,7 @@ type MetricValueValue {
   metricValue: MetricValue!
 }
 
-type Milestone implements Model & Owned & Sortable {
+type Milestone implements Model & Owned & Documented & Sortable {
   name: String!
   description: String
   dueDate: DateTime
@@ -29743,6 +29743,7 @@ type Milestone implements Model & Owned & Sortable {
   updatedBy: UserPayload
   deletedBy: UserPayload
   ownedBy: OrganizationPayload!
+  files: [FilePayload!]!
   sort: Int!
 }
 
@@ -29758,6 +29759,7 @@ input MilestoneCreateInput {
   estimatedCompletionDateInterval: IntervalInput
   estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
+  files: [FileInput!]
   projectId: ID!
 }
 
@@ -29829,6 +29831,7 @@ input MilestoneUpdateInput {
   estimatedCompletionDateInterval: IntervalInput
   estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
+  files: [FileInput!]
   id: ID
   projectId: ID
 }
@@ -30196,7 +30199,7 @@ input OrderCreateInput {
   memo: String
   tagIds: [ID!]
   inChargeIds: [ID!]
-  orderItems: [OrderOrderItemCreateInput!]
+  orderItems: [OrderOrderItemInput!]
   files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -30254,6 +30257,7 @@ type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Custo
   no: String!
   price: Price!
   quantity: Float!
+  deliveryDate: DateTime
   totalPrice: Price!
   totalBatched: Float!
   totalShipped: Float!
@@ -30279,31 +30283,7 @@ type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Custo
   memo: String
 }
 
-input OrderItemBatchCreateInput {
-  no: String!
-  quantity: Float!
-  producedAt: DateTime
-  deliveredAt: DateTime
-  expiredAt: DateTime
-  desiredAt: DateTime
-  packageQuantity: Float
-  autoCalculatePackageQuantity: Boolean
-  packageName: String
-  packageGrossWeight: MetricValueInput
-  packageVolume: MetricValueInput
-  autoCalculatePackageVolume: Boolean
-  packageSize: SizeInput
-  packageCapacity: Float
-  memo: String
-  tagIds: [ID!]
-  customFields: CustomFieldsInput
-  batchQuantityRevisions: [BatchQuantityRevisionCreateInput!]
-  todo: TodoInput
-  shipmentId: ID
-  containerId: ID
-}
-
-input OrderItemBatchUpdateInput {
+input OrderItemBatchInput {
   no: String
   quantity: Float
   producedAt: DateTime
@@ -30333,9 +30313,10 @@ input OrderItemCreateInput {
   no: String!
   price: PriceInput!
   quantity: Float!
+  deliveryDate: DateTime
   memo: String
   tagIds: [ID!]
-  batches: [OrderItemBatchCreateInput!]
+  batches: [OrderItemBatchInput!]
   files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -30386,9 +30367,10 @@ input OrderItemUpdateInput {
   no: String
   price: PriceInput
   quantity: Float
+  deliveryDate: DateTime
   memo: String
   tagIds: [ID!]
-  batches: [OrderItemBatchUpdateInput!]
+  batches: [OrderItemBatchInput!]
   files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -30400,27 +30382,15 @@ input OrderItemUpdateWrapperInput {
   input: OrderItemUpdateInput!
 }
 
-input OrderOrderItemCreateInput {
-  productProviderId: ID!
-  no: String!
-  price: PriceInput!
-  quantity: Float!
-  memo: String
-  tagIds: [ID!]
-  batches: [OrderItemBatchCreateInput!]
-  files: [FileInput!]
-  customFields: CustomFieldsInput
-  todo: TodoInput
-}
-
-input OrderOrderItemUpdateInput {
+input OrderOrderItemInput {
   productProviderId: ID
   no: String
   price: PriceInput
   quantity: Float
+  deliveryDate: DateTime
   memo: String
   tagIds: [ID!]
-  batches: [OrderItemBatchUpdateInput!]
+  batches: [OrderItemBatchInput!]
   files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -30465,7 +30435,7 @@ input OrderUpdateInput {
   memo: String
   tagIds: [ID!]
   inChargeIds: [ID!]
-  orderItems: [OrderOrderItemUpdateInput!]
+  orderItems: [OrderOrderItemInput!]
   files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -30971,6 +30941,7 @@ input ProjectMilestoneCreateInput {
   estimatedCompletionDateInterval: IntervalInput
   estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
+  files: [FileInput!]
 }
 
 input ProjectMilestoneUpdateInput {
@@ -30985,6 +30956,7 @@ input ProjectMilestoneUpdateInput {
   estimatedCompletionDateInterval: IntervalInput
   estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
+  files: [FileInput!]
   id: ID
 }
 
