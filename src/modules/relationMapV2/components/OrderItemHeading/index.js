@@ -2,21 +2,10 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
-import FormattedNumber from 'components/FormattedNumber';
-import { Display, Blackout, Label } from 'components/Form';
+import { Blackout, Label } from 'components/Form';
 import QuantityGraph from 'modules/relationMapV2/components/QuantityGraph';
-import {
-  ItemHeadingWrapperStyle,
-  LeftWrapperStyle,
-  TotalWrapperStyle,
-  SelectAllButtonStyle,
-  RightWrapperStyle,
-  QuantityIconsWrapperStyle,
-  QuantityLabelStyle,
-  ExpandedIconWrapperStyle,
-  ItemHeadingFilteredStyle,
-  ItemHeadingSelectedStyle,
-} from './style';
+import Heading from 'modules/relationMapV2/components/Heading';
+import { RightWrapperStyle, QuantityIconsWrapperStyle, QuantityLabelStyle } from './style';
 
 type Props = {|
   orderItems: Array<Object>,
@@ -38,76 +27,34 @@ export default function OrderItemHeading({
   onSelectAll,
 }: Props) {
   // TODO: Replace with real permissions
-  const allowToSelectOrUnselectAll = true;
-  const canViewTotal = true;
   const canViewQuantityGraph = true;
 
-  // TODO: Replace with real numbers
-  const selectedItemsCount = 0;
-
   return (
-    <div className={ItemHeadingWrapperStyle(isExpanded)} onClick={onClick} role="presentation">
-      <div className={LeftWrapperStyle}>
-        <div className={TotalWrapperStyle}>
-          <Label width="55px">
-            <FormattedMessage id="components.button.total" defaultMessage="TOTAL" />
-          </Label>
-          <Display width="70px" blackout={!canViewTotal}>
-            <FormattedNumber value={total} />
-          </Display>
-        </div>
+    <Heading
+      width="465px"
+      hasSelectedChildren={hasSelectedChildren}
+      hasFilterHits={hasFilterHits}
+      isExpanded={isExpanded}
+      onClick={onClick}
+      total={total}
+      onSelectAll={onSelectAll}
+      renderRightSide={() => (
+        <div className={RightWrapperStyle}>
+          <div className={QuantityIconsWrapperStyle}>
+            <Icon icon="SHIPMENT" />
+            <Icon icon="BATCH" />
+            <Icon icon="ORDER_ITEM" />
+          </div>
 
-        {allowToSelectOrUnselectAll && (
-          <button
-            onClick={event => {
-              event.stopPropagation();
-              onSelectAll();
-            }}
-            className={SelectAllButtonStyle}
-            type="button"
-          >
+          {canViewQuantityGraph ? <QuantityGraph orderItems={orderItems} /> : <Blackout />}
+
+          <div className={QuantityLabelStyle}>
             <Label>
-              {selectedItemsCount === total ? (
-                <FormattedMessage
-                  id="components.button.unselectAll"
-                  defaultMessage="UNSELECT ALL"
-                />
-              ) : (
-                <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
-              )}
+              <FormattedMessage id="components.cards.qty" />
             </Label>
-            <Icon icon="CHECKED" />
-          </button>
-        )}
-      </div>
-
-      <div className={RightWrapperStyle}>
-        <div className={QuantityIconsWrapperStyle}>
-          <Icon icon="SHIPMENT" />
-          <Icon icon="BATCH" />
-          <Icon icon="ORDER_ITEM" />
+          </div>
         </div>
-
-        {canViewQuantityGraph ? <QuantityGraph orderItems={orderItems} /> : <Blackout />}
-
-        <div className={QuantityLabelStyle}>
-          <Label>
-            <FormattedMessage id="components.cards.qty" />
-          </Label>
-        </div>
-      </div>
-
-      <div className={ExpandedIconWrapperStyle(isExpanded)}>
-        <Icon icon="CHEVRON_DOWN" />
-      </div>
-
-      <span className={ExpandedIconWrapperStyle(isExpanded)}>
-        <Icon icon="CHEVRON_DOWN" />
-      </span>
-
-      <div className={ItemHeadingFilteredStyle(!isExpanded && hasFilterHits)} />
-
-      <div className={ItemHeadingSelectedStyle(!isExpanded && hasSelectedChildren)} />
-    </div>
+      )}
+    />
   );
 }
