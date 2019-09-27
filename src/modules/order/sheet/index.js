@@ -49,9 +49,9 @@ const OrderSheetModule = ({ orderIds }: Props) => {
   const sorterProxy = React.useCallback(
     (items: Array<Object>, sorts: Array<ColumnSort>): Array<Object> => {
       setLocalSortBy(
-        sorts.map(s => ({
-          field: `${s.group}_${s.name}`,
-          direction: s.direction,
+        sorts.map(({ group, name, direction }: any) => ({
+          direction,
+          field: `${group}_${name}`,
         }))
       );
 

@@ -102,6 +102,11 @@ export const initialState: State = {
     isOpen: false,
     isProcessing: false,
   },
+  deleteBatches: {
+    isRemove: false,
+    isOpen: false,
+    isProcessing: false,
+  },
   tags: {
     source: '',
     isOpen: false,
@@ -145,6 +150,9 @@ export function reducer(
       | 'DELETE_BATCH'
       | 'DELETE_BATCH_START'
       | 'DELETE_BATCH_CLOSE'
+      | 'DELETE_BATCHES'
+      | 'DELETE_BATCHES_START'
+      | 'DELETE_BATCHES_CLOSE'
       | 'DELETE_ITEM'
       | 'DELETE_ITEM_START'
       | 'DELETE_ITEM_CLOSE'
@@ -657,6 +665,29 @@ export function reducer(
     case 'STATUS_CLOSE': {
       return update(state, {
         status: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'DELETE_BATCHES': {
+      return update(state, {
+        deleteBatches: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'DELETE_BATCHES_START': {
+      return update(state, {
+        deleteBatches: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'DELETE_BATCHES_CLOSE': {
+      return update(state, {
+        deleteBatches: {
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },

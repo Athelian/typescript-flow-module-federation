@@ -40,6 +40,7 @@ import generateListData from './generateListData';
 import { reducer, initialState, RelationMapContext } from './store';
 import normalize from './normalize';
 import RemoveBatchConfirm from '../RemoveBatchConfirm';
+import DeleteBatchesConfirm from '../DeleteBatchesConfirm';
 import MoveBatch from '../MoveBatch';
 import AddTags from '../AddTags';
 import DeleteConfirm from '../DeleteConfirm';
@@ -805,6 +806,7 @@ export default function OrderFocus() {
                           );
                         }}
                       />
+                      <DeleteBatchesConfirm onSuccess={console.warn} />
                       <DeleteBatchConfirm
                         onSuccess={batchId => {
                           const parentOrderId = findOrderIdByBatch(batchId, entities);

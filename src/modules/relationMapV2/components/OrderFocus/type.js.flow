@@ -122,6 +122,11 @@ export type State = {|
     isOpen: boolean,
     isProcessing: boolean,
   },
+  deleteBatches: {
+    isRemove: boolean,
+    isOpen: boolean,
+    isProcessing: boolean,
+  },
   status: {
     source: string,
     isOpen: boolean,

@@ -155,7 +155,7 @@ export default function SplitBatches({ onSuccess }: Props) {
           ) : (
             <>
               <h3 className={ConfirmMessageStyle}>
-                You hae selected {batchIds.length} batches <Icon icon="BATCH" />
+                You have selected {batchIds.length} batches <Icon icon="BATCH" />
                 Please enter the quantity you would like to split each Batch
                 <Icon icon="BATCH" /> into. (Splitting into 0 quantity will simply clone it)
               </h3>

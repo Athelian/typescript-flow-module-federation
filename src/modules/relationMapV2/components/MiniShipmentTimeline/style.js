@@ -30,7 +30,7 @@ export const TimelinePointActiveStyle = (isActive: boolean): string => css`
   opacity: ${isActive ? 1 : 0};
 `;
 
-export const TimelinePointStyle = (color: string, isActive: boolean): string => css`
+export const TimelinePointStyle = (color: string, isActive?: boolean): string => css`
   position: relative;
   ${presets.BUTTON};
   color: ${colors[color]};

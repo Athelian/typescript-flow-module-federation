@@ -14,7 +14,7 @@ type Props = {|
 |};
 
 export default function DeleteBatchConfirm({ onSuccess }: Props) {
-  const [deleteItem] = useMutation(deleteBatchMutation);
+  const [deleteBatch] = useMutation(deleteBatchMutation);
   const { dispatch, state } = React.useContext(RelationMapContext);
   const {
     isProcessing,
@@ -34,7 +34,7 @@ export default function DeleteBatchConfirm({ onSuccess }: Props) {
       type: 'DELETE_BATCH_START',
       payload: {},
     });
-    deleteItem({
+    deleteBatch({
       variables: {
         id: entity.id,
       },

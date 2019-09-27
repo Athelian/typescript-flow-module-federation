@@ -265,6 +265,19 @@ export default function Actions({ targets }: Props) {
               <ActionButton
                 onClick={() => {
                   dispatch({
+                    type: 'DELETE_BATCHES',
+                    payload: {
+                      source: BATCH,
+                    },
+                  });
+                }}
+              >
+                <Icon icon="REMOVE" /> / <Icon icon="CLEAR" />
+                <ActionLabel>DELETE / REMOVE</ActionLabel>
+              </ActionButton>
+              <ActionButton
+                onClick={() => {
+                  dispatch({
                     type: 'TAGS',
                     payload: {
                       source: BATCH,
