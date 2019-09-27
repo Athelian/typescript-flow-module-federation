@@ -48,32 +48,31 @@ const defaultProps = {
 };
 
 const BatchCard = ({ batch, onClick, ...rest }: Props) => {
-  const archived = getByPathWithDefault(false, 'archived', batch);
-  const no = getByPathWithDefault('', 'no', batch);
-  const latestQuantity = getByPathWithDefault(0, 'latestQuantity', batch);
-  const deliveredAt = getByPathWithDefault('', 'deliveredAt', batch);
-  const desiredAt = getByPathWithDefault('', 'desiredAt', batch);
-  const packageQuantity = getByPathWithDefault(0, 'packageQuantity', batch);
-  const packageVolume = getByPathWithDefault(
-    {
-      metric: defaultVolumeMetric,
-      value: 0,
-    },
-    'desiredAt',
-    batch
-  );
+  const {
+    no,
+    archived,
+    latestQuantity = 0,
+    deliveredAt,
+    desiredAt,
+    packageQuantity = 0,
+    tags = [],
+    shipment,
+    container,
 
-  const tags = getByPathWithDefault([], 'tags', batch);
+    todo,
+  } = batch;
+
+  const packageVolume = batch.packageVolume || {
+    metric: defaultVolumeMetric,
+    value: 0,
+  };
   const order = getByPathWithDefault({}, 'orderItem.order', batch);
   const price = getByPathWithDefault(null, 'orderItem.price', batch);
   const currency = getByPathWithDefault(null, 'orderItem.currency', batch);
   const product = getByPathWithDefault(null, 'orderItem.productProvider.product', batch);
   const productProviderName = getByPathWithDefault('', 'orderItem.productProvider.name', batch);
-  const shipment = getByPathWithDefault(null, 'shipment', batch);
-  const container = getByPathWithDefault(null, 'container', batch);
-  const importer = getByPathWithDefault(null, 'importer', order);
-  const exporter = getByPathWithDefault(null, 'exporter', order);
-  const todo = getByPathWithDefault(null, 'todo', batch);
+  const importer = getByPathWithDefault(null, 'orderItem.order.importer', batch);
+  const exporter = getByPathWithDefault(null, 'orderItem.order.exporter', batch);
 
   return (
     <BaseCard icon="BATCH" color="BATCH" isArchived={archived} {...rest}>
