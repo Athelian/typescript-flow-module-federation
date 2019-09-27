@@ -40,12 +40,12 @@ import BatchCard from '../BatchCard';
 import ContainerCard from '../ContainerCard';
 import ShipmentCard from '../ShipmentCard';
 import OrderItemHeading from '../OrderItemHeading';
+import BatchHeading from '../BatchHeading';
 import { ContentStyle, MatchedStyle } from './style';
 import {
   getColorByEntity,
   getIconByEntity,
   getCardByEntity,
-  BatchHeaderCard,
   ShipmentCard as ShipmentSummaryCard,
   ContainerCard as ContainerSummaryCard,
   HeaderCard,
@@ -1812,44 +1812,26 @@ function BatchSummaryCell({
       </div>
       {total ? (
         <div className={ContentStyle}>
-          <HeaderCard
-            isExpand={isExpand}
-            selected={!isExpand && isTargetedAnyBatches}
+          <BatchHeading
+            batches={data?.orderItems?.flatMap(orderItem => orderItem?.batches) || []}
+            hasSelectedChildren={isTargetedAnyBatches}
+            hasFilterHits={isMatched}
+            isExpanded={isExpand}
             onClick={onClick}
-          >
-            {isMatched && !isExpand && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '-6px',
-                  right: '-8px',
-                  border: '4px solid rgba(11,110,222,0.5)',
-                  height: 60,
-                  width: BATCH_WIDTH - 13,
-                  borderRadius: '9px',
-                }}
-              />
-            )}
-            <BatchHeaderCard>
-              <p>Total: {getByPathWithDefault(0, 'batchCount', data)}</p>
-              <button
-                type="button"
-                onClick={evt => {
-                  evt.stopPropagation();
-                  const targets = [];
-                  batchIds.forEach(id => targets.push(`${BATCH}-${id}`));
-                  dispatch({
-                    type: 'TARGET_ALL',
-                    payload: {
-                      targets,
-                    },
-                  });
-                }}
-              >
-                <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
-              </button>
-            </BatchHeaderCard>
-          </HeaderCard>
+            total={data?.batchCount || 0}
+            onSelectAll={() => {
+              const targets = [];
+
+              batchIds.forEach(id => targets.push(`${BATCH}-${id}`));
+
+              dispatch({
+                type: 'TARGET_ALL',
+                payload: {
+                  targets,
+                },
+              });
+            }}
+          />
         </div>
       ) : (
         <div
