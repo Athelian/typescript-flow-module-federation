@@ -1,26 +1,44 @@
 // @flow
 import * as React from 'react';
+import { useLazyQuery, useMutation } from 'react-apollo';
+import { findKey } from 'lodash';
+import usePrevious from 'hooks/usePrevious';
+import useUser from 'hooks/useUser';
 import SlideView from 'components/SlideView';
+import LoadingIcon from 'components/LoadingIcon';
 import OrderForm from 'modules/order/index.form';
 import ItemForm from 'modules/orderItem/index.form';
 import BatchForm from 'modules/batch/index.form';
 import ContainerForm from 'modules/container/index.form';
+import ContainerFormInSlide from 'modules/container/common/ContainerFormInSlide';
+// FIXME: binding date is not working yet
+import RMEditTasks from 'modules/relationMap/order/components/RMEditTasks';
+import { prepareParsedContainerInput } from 'modules/container/form/mutation';
 import ShipmentForm from 'modules/shipment/index.form';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
 import { Entities } from 'modules/relationMapV2/store';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
-import { encodeId } from 'utils/id';
+import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
+import { encodeId, uuid } from 'utils/id';
 import emitter from 'utils/emitter';
+import { isEquals } from 'utils/fp';
+import { ordersAndShipmentsQuery } from './query';
+import { createContainerMutation } from './mutation';
+
+const defaultItemValues = {
+  customFields: {
+    mask: null,
+    fieldValues: [],
+  },
+  todo: {
+    tasks: [],
+  },
+  tags: [],
+  files: [],
+  memo: '',
+};
 
 type Props = {|
-  // prettier-ignore
-  type: | typeof ORDER
-    | typeof ORDER_ITEM
-    | typeof BATCH
-    | typeof SHIPMENT
-    | typeof CONTAINER
-    | 'NEW_ORDER',
-  selectedId: string,
   onClose: (
     ?{
       moveToTop: boolean,
@@ -30,9 +48,13 @@ type Props = {|
   ) => void,
 |};
 
-const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
+const EditFormSlideView = ({ onClose }: Props) => {
+  const { isExporter } = useUser();
   const isReady = React.useRef(true);
-  const { dispatch } = React.useContext(RelationMapContext);
+  const { dispatch, state } = React.useContext(RelationMapContext);
+  const [createContainer] = useMutation(createContainerMutation);
+  const [fetchOrdersAndShipments, fetchResult] = useLazyQuery(ordersAndShipmentsQuery);
+  const { type, selectedId: id } = state.edit;
   const { mapping, checkRemoveEntities, onSetBadges } = Entities.useContainer();
   const onRequestClose = React.useCallback(() => {
     if (isReady.current) {
@@ -65,6 +87,30 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
     };
   }, [checkRemoveEntities, dispatch, orderItems, orders]);
 
+  const orderIds = state.edit.orderIds || [];
+  const shipmentIds = state.edit.shipmentIds || [];
+  const lastQueryVariables = usePrevious({
+    orderIds,
+    shipmentIds,
+  });
+  React.useEffect(() => {
+    if (
+      type === 'MOVE_BATCHES' &&
+      id !== '' &&
+      !isEquals(lastQueryVariables, {
+        orderIds,
+        shipmentIds,
+      })
+    ) {
+      fetchOrdersAndShipments({
+        variables: {
+          orderIds,
+          shipmentIds,
+        },
+      });
+    }
+  }, [fetchOrdersAndShipments, id, lastQueryVariables, orderIds, shipmentIds, type]);
+
   let form = null;
   switch (type) {
     case ORDER: {
@@ -85,6 +131,214 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
     }
     case SHIPMENT: {
       form = <ShipmentForm shipmentId={encodeId(id)} isSlideView />;
+      break;
+    }
+    case 'TASKS': {
+      form = (
+        <RMEditTasks
+          orderIds={targetedIds(state.targets, ORDER)}
+          orderItemIds={targetedIds(state.targets, ORDER_ITEM)}
+          batchIds={targetedIds(state.targets, BATCH)}
+          shipmentIds={targetedIds(state.targets, SHIPMENT)}
+        />
+      );
+      break;
+    }
+    case 'MOVE_BATCHES': {
+      const batchIds = targetedIds(state.targets, BATCH);
+      const newOrderItems = [];
+      const newContainers = [];
+      const newShipments = [];
+      const newBatches = [];
+      if (
+        fetchResult.called &&
+        isEquals(lastQueryVariables, {
+          orderIds,
+          shipmentIds,
+        }) &&
+        !fetchResult.loading
+      ) {
+        const { ordersByIDs } = fetchResult.data;
+        batchIds.forEach(batchId => {
+          const orderItemId = findKey(mapping.entities?.orderItems, orderItem => {
+            return (orderItem.batches || []).includes(batchId);
+          });
+          const parentOrder = ordersByIDs.find(order =>
+            order.orderItems.map(item => item.id).includes(orderItemId)
+          );
+          const parentItem = parentOrder.orderItems.find(item => item.id === orderItemId);
+          const batch = parentItem.batches.find(currentBatch => currentBatch.id === batchId);
+          if (batch && parentItem) {
+            newBatches.push(batch);
+            const { id: itemId, ...item } = parentItem;
+            if (batch.container && !newContainers.includes(batch.container)) {
+              newContainers.push(batch.container);
+            }
+            if (batch.shipment && !newShipments.includes(batch.shipment)) {
+              newShipments.push(batch.shipment);
+            }
+            newOrderItems.push({
+              ...item,
+              ...defaultItemValues,
+              no: `[auto] ${item.no}`,
+              quantity: 0,
+              isNew: true,
+              id: uuid(),
+              batches: [batch],
+            });
+          }
+        });
+      }
+      const { importer, exporter } = fetchResult.data?.ordersByIDs?.[0] ?? {};
+      if (fetchResult.loading) {
+        form = <LoadingIcon />;
+      } else {
+        switch (id) {
+          case 'newOrder':
+            form = (
+              <OrderForm
+                path="new"
+                isSlideView
+                redirectAfterSuccess={false}
+                originalDataForSlideView={{
+                  orderItems: newOrderItems.map(item => ({
+                    ...defaultItemValues,
+                    id: item.id,
+                    isNew: true,
+                    batches: item.batches.map(batch => ({
+                      ...batch,
+                      isNew: true,
+                    })),
+                  })),
+                }}
+                initDataForSlideView={{
+                  importer,
+                  exporter,
+                  orderItems: newOrderItems.map(item => ({
+                    ...item,
+                    ...defaultItemValues,
+                    no: `[auto] ${item.no}`,
+                    quantity: 0,
+                  })),
+                  containers: newContainers,
+                  shipments: newShipments,
+                }}
+                onSuccessCallback={data => {
+                  onSetBadges([
+                    {
+                      id: data.orderCreate.id,
+                      type: 'newItem',
+                      entity: 'order',
+                    },
+                  ]);
+                  dispatch({
+                    type: 'NEW_ORDER',
+                    payload: {
+                      orderId: data.orderCreate.id,
+                    },
+                  });
+                  onClose({
+                    moveToTop: true,
+                    id: data.orderCreate.id,
+                    type: ORDER,
+                  });
+                }}
+                onCancel={onClose}
+              />
+            );
+            break;
+          case 'newShipment':
+            form = (
+              <ShipmentForm
+                path="new"
+                isSlideView
+                redirectAfterSuccess={false}
+                initDataForSlideView={{
+                  importer,
+                  exporter: isExporter() ? exporter : null,
+                  batches: newBatches,
+                  containers: newContainers,
+                }}
+                onSuccessCallback={data => {
+                  onSetBadges([
+                    {
+                      id: data.shipmentCreate.id,
+                      type: 'newItem',
+                      entity: 'shipment',
+                    },
+                  ]);
+                  dispatch({
+                    type: 'NEW_SHIPMENT',
+                    payload: {
+                      orderId: data.shipmentCreate.id,
+                    },
+                  });
+                  onClose({
+                    moveToTop: true,
+                    id: data.shipmentCreate.id,
+                    type: SHIPMENT,
+                  });
+                }}
+                onCancel={onClose}
+              />
+            );
+            break;
+          default:
+            form = (
+              <ContainerFormInSlide
+                container={{
+                  importer,
+                  exporter: isExporter() ? exporter : null,
+                  batches: newBatches.map(batch => ({
+                    ...batch,
+                    shipment: state.edit.shipment,
+                  })),
+                  shipment: state.edit.shipment,
+                }}
+                onSave={container => {
+                  createContainer({
+                    variables: {
+                      input: {
+                        ...prepareParsedContainerInput({
+                          originalValues: null,
+                          existingBatches: newBatches,
+                          newValues: container,
+                          location: {
+                            inContainerForm: true,
+                            inShipmentForm: false,
+                          },
+                        }),
+                        shipmentId: Number(state.edit.shipment?.id ?? ''),
+                      },
+                    },
+                  })
+                    .then(({ data }) => {
+                      onSetBadges([
+                        {
+                          id: data.containerCreate.id,
+                          type: 'newItem',
+                          entity: 'container',
+                        },
+                      ]);
+                      dispatch({
+                        type: 'NEW_CONTAINER',
+                        payload: {
+                          orderId: data.containerCreate.id,
+                        },
+                      });
+                      onClose({
+                        moveToTop: true,
+                        id: data.containerCreate.id,
+                        type: CONTAINER,
+                      });
+                    })
+                    .catch(onClose);
+                }}
+              />
+            );
+            break;
+        }
+      }
       break;
     }
     case 'NEW_ORDER': {
@@ -129,8 +383,7 @@ const EditFormSlideView = ({ type, selectedId: id, onClose }: Props) => {
       onRequestClose={onRequestClose}
       // FIXME: do the robust way, e.g check the dirty state
       shouldConfirm={() => {
-        const button = document.getElementById('itShouldNotCheckBaseOnTheDOM');
-        return button;
+        return false;
       }}
     >
       {form}

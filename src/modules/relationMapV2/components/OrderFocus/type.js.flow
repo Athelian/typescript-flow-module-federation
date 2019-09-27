@@ -81,6 +81,11 @@ export type State = {|
   moveActions: {
     isOpen: boolean,
     isProcessing: boolean,
+    orderIds: Array<string>,
+    containerIds: Array<string>,
+    shipmentIds: Array<string>,
+    importerIds: Array<string>,
+    exporterIds: Array<string>,
     type?: | 'existOrder'
       | 'newOrder'
       | 'existContainer'
@@ -132,6 +137,11 @@ export type State = {|
     selectedId: string,
     orderId?: string,
     orderIds?: Array<string>,
+    shipmentIds?: Array<string>,
+    containerIds?: Array<string>,
+    exporterIds?: Array<string>,
+    importerIds?: Array<string>,
+    shipment?: Object,
   },
   newOrders: Array<string>,
 |};

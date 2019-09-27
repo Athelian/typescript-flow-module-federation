@@ -10,7 +10,7 @@ import { Label } from 'components/Form';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { HorizontalLayout } from 'modules/shipment/form/components/TimelineSection/components/Timeline';
 import { Tooltip } from 'components/Tooltip';
-import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
+import { CONTAINER_TYPE_ITEMS, CONTAINER_TYPE_MAP } from 'modules/container/constants';
 import { getUniqueExporters } from 'utils/shipment';
 import BaseCard from '../BaseCard';
 import {
@@ -196,14 +196,10 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
                     </div>
 
                     {sortedContainerTypes.map(({ containerType, count }) => {
-                      const foundType = CONTAINER_TYPE_ITEMS.find(
-                        ({ value }) => value === containerType
-                      );
-
                       return (
                         <div className={ContainerTypeWrapperStyle} key={containerType}>
                           <div className={ContainerTypeLabelStyle}>
-                            {foundType ? foundType.label : ''}
+                            {CONTAINER_TYPE_MAP[containerType]}
                           </div>
                           <div className={ContainerTypeCountStyle}>
                             <FormattedNumber value={count} />

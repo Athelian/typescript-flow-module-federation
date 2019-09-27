@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Sep 25 2019 14:02:48 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Sep 27 2019 17:19:51 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28738,6 +28738,11 @@ type Forbidden {
   reason: String
 }
 
+input GenericSortInput {
+  field: String!
+  direction: SortOrder!
+}
+
 type Hit {
   score: Float!
   entityHits: [EntityHit!]!
@@ -29716,7 +29721,7 @@ type MetricValueValue {
   metricValue: MetricValue!
 }
 
-type Milestone implements Model & Owned & Sortable {
+type Milestone implements Model & Owned & Documented & Sortable {
   name: String!
   description: String
   dueDate: DateTime
@@ -29738,6 +29743,7 @@ type Milestone implements Model & Owned & Sortable {
   updatedBy: UserPayload
   deletedBy: UserPayload
   ownedBy: OrganizationPayload!
+  files: [FilePayload!]!
   sort: Int!
 }
 
@@ -29753,6 +29759,7 @@ input MilestoneCreateInput {
   estimatedCompletionDateInterval: IntervalInput
   estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
+  files: [FileInput!]
   projectId: ID!
 }
 
@@ -29824,6 +29831,7 @@ input MilestoneUpdateInput {
   estimatedCompletionDateInterval: IntervalInput
   estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
+  files: [FileInput!]
   id: ID
   projectId: ID
 }
@@ -30191,7 +30199,7 @@ input OrderCreateInput {
   memo: String
   tagIds: [ID!]
   inChargeIds: [ID!]
-  orderItems: [OrderOrderItemCreateInput!]
+  orderItems: [OrderOrderItemInput!]
   files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -30249,6 +30257,7 @@ type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Custo
   no: String!
   price: Price!
   quantity: Float!
+  deliveryDate: DateTime
   totalPrice: Price!
   totalBatched: Float!
   totalShipped: Float!
@@ -30274,31 +30283,7 @@ type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Custo
   memo: String
 }
 
-input OrderItemBatchCreateInput {
-  no: String!
-  quantity: Float!
-  producedAt: DateTime
-  deliveredAt: DateTime
-  expiredAt: DateTime
-  desiredAt: DateTime
-  packageQuantity: Float
-  autoCalculatePackageQuantity: Boolean
-  packageName: String
-  packageGrossWeight: MetricValueInput
-  packageVolume: MetricValueInput
-  autoCalculatePackageVolume: Boolean
-  packageSize: SizeInput
-  packageCapacity: Float
-  memo: String
-  tagIds: [ID!]
-  customFields: CustomFieldsInput
-  batchQuantityRevisions: [BatchQuantityRevisionCreateInput!]
-  todo: TodoInput
-  shipmentId: ID
-  containerId: ID
-}
-
-input OrderItemBatchUpdateInput {
+input OrderItemBatchInput {
   no: String
   quantity: Float
   producedAt: DateTime
@@ -30328,9 +30313,10 @@ input OrderItemCreateInput {
   no: String!
   price: PriceInput!
   quantity: Float!
+  deliveryDate: DateTime
   memo: String
   tagIds: [ID!]
-  batches: [OrderItemBatchCreateInput!]
+  batches: [OrderItemBatchInput!]
   files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -30381,9 +30367,10 @@ input OrderItemUpdateInput {
   no: String
   price: PriceInput
   quantity: Float
+  deliveryDate: DateTime
   memo: String
   tagIds: [ID!]
-  batches: [OrderItemBatchUpdateInput!]
+  batches: [OrderItemBatchInput!]
   files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -30395,27 +30382,15 @@ input OrderItemUpdateWrapperInput {
   input: OrderItemUpdateInput!
 }
 
-input OrderOrderItemCreateInput {
-  productProviderId: ID!
-  no: String!
-  price: PriceInput!
-  quantity: Float!
-  memo: String
-  tagIds: [ID!]
-  batches: [OrderItemBatchCreateInput!]
-  files: [FileInput!]
-  customFields: CustomFieldsInput
-  todo: TodoInput
-}
-
-input OrderOrderItemUpdateInput {
+input OrderOrderItemInput {
   productProviderId: ID
   no: String
   price: PriceInput
   quantity: Float
+  deliveryDate: DateTime
   memo: String
   tagIds: [ID!]
-  batches: [OrderItemBatchUpdateInput!]
+  batches: [OrderItemBatchInput!]
   files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -30460,7 +30435,7 @@ input OrderUpdateInput {
   memo: String
   tagIds: [ID!]
   inChargeIds: [ID!]
-  orderItems: [OrderOrderItemUpdateInput!]
+  orderItems: [OrderOrderItemInput!]
   files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -30966,6 +30941,7 @@ input ProjectMilestoneCreateInput {
   estimatedCompletionDateInterval: IntervalInput
   estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
+  files: [FileInput!]
 }
 
 input ProjectMilestoneUpdateInput {
@@ -30980,6 +30956,7 @@ input ProjectMilestoneUpdateInput {
   estimatedCompletionDateInterval: IntervalInput
   estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
+  files: [FileInput!]
   id: ID
 }
 
@@ -31093,18 +31070,18 @@ type Query {
   product(id: ID!): ProductPayload!
   products(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPayloadPaginatedSearch!
   productsByIDs(ids: [ID!]!): [ProductPayload!]!
-  productExport(id: ID!, templateId: ID!, columns: [String!]): ExportPayload!
-  productsExport(templateId: ID!, columns: [String!], filterBy: ProductFilterInput, sortBy: ProductSortInput): ExportPayload!
-  productsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!]): ExportPayload!
+  productExport(id: ID!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
+  productsExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: ProductFilterInput, sortBy: ProductSortInput): ExportPayload!
+  productsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   productProvider(id: ID!): ProductProviderPayload!
   productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPayloadPaginatedSearch!
   productProvidersByIDs(ids: [ID!]!): [ProductProviderPayload!]!
   order(id: ID!): OrderPayload!
   orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPaginatedSearch!
   ordersByIDs(ids: [ID!]!): [OrderPayload!]!
-  orderExport(id: ID!, templateId: ID!, columns: [String!]): ExportPayload!
-  ordersExport(templateId: ID!, columns: [String!], filterBy: OrderFilterInput, sortBy: OrderSortInput): ExportPayload!
-  ordersByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!]): ExportPayload!
+  orderExport(id: ID!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
+  ordersExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: OrderFilterInput, sortBy: OrderSortInput): ExportPayload!
+  ordersByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   orderItem(id: ID!): OrderItemPayload!
   orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPaginatedSearch!
   orderItemsByIDs(ids: [ID!]!): [OrderItemPayload!]!
@@ -31115,38 +31092,38 @@ type Query {
   shipment(id: ID!): ShipmentPayload!
   shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPaginatedSearch!
   shipmentsByIDs(ids: [ID!]!): [ShipmentPayload!]!
-  shipmentExport(id: ID!, templateId: ID!, columns: [String!]): ExportPayload!
-  shipmentsExport(templateId: ID!, columns: [String!], filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ExportPayload!
-  shipmentsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!]): ExportPayload!
+  shipmentExport(id: ID!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
+  shipmentsExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ExportPayload!
+  shipmentsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   container(id: ID!): ContainerPayload!
   containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPaginatedSearch!
   containersByIDs(ids: [ID!]!): [ContainerPayload!]!
-  containerExport(id: ID!, templateId: ID!, columns: [String!]): ExportPayload!
-  containersExport(templateId: ID!, columns: [String!], filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ExportPayload!
-  containersByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!]): ExportPayload!
+  containerExport(id: ID!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
+  containersExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ExportPayload!
+  containersByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   warehouse(id: ID!): WarehousePayload!
   warehouses(page: Int! = 1, perPage: Int! = 10, filterBy: WarehouseFilterInput, sortBy: WarehouseSortInput): WarehousePayloadPaginatedSearch!
   warehousesByIDs(ids: [ID!]!): [WarehousePayload!]!
   tag(id: ID!): TagPayload!
   tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPayloadPaginatedSearch!
-  tagExport(id: ID!, templateId: ID!, columns: [String!]): ExportPayload!
-  tagsExport(templateId: ID!, columns: [String!], filterBy: TagFilterInput, sortBy: TagSortInput): ExportPayload!
-  tagsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!]): ExportPayload!
+  tagExport(id: ID!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
+  tagsExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: TagFilterInput, sortBy: TagSortInput): ExportPayload!
+  tagsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   task(id: ID!): TaskPayload!
   tasks(page: Int! = 1, perPage: Int! = 10, filterBy: TaskFilterInput, sortBy: TaskSortInput): TaskPayloadPaginatedSearch!
   tasksByIDs(ids: [ID!]!): [TaskPayload!]!
-  taskExport(id: ID!, templateId: ID!, columns: [String!]): ExportPayload!
-  tasksExport(templateId: ID!, columns: [String!], filterBy: TaskFilterInput, sortBy: TaskSortInput): ExportPayload!
-  tasksByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!]): ExportPayload!
+  taskExport(id: ID!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
+  tasksExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: TaskFilterInput, sortBy: TaskSortInput): ExportPayload!
+  tasksByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   taskTemplate(id: ID!): TaskTemplatePayload!
   taskTemplates(page: Int! = 1, perPage: Int! = 10, filterBy: TaskTemplateFilterInput, sortBy: TaskTemplateSortInput): TaskTemplatePayloadPaginatedSearch!
   taskTemplatesByIDs(ids: [ID!]!): [TaskTemplatePayload!]!
   project(id: ID!): ProjectPayload!
   projects(page: Int! = 1, perPage: Int! = 10, filterBy: ProjectFilterInput, sortBy: ProjectSortInput): ProjectPayloadPaginatedSearch!
   projectsByIDs(ids: [ID!]!): [ProjectPayload!]!
-  projectExport(id: ID!, templateId: ID!, columns: [String!]): ExportPayload!
-  projectsExport(templateId: ID!, columns: [String!], filterBy: ProjectFilterInput, sortBy: ProjectSortInput): ExportPayload!
-  projectsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!]): ExportPayload!
+  projectExport(id: ID!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
+  projectsExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: ProjectFilterInput, sortBy: ProjectSortInput): ExportPayload!
+  projectsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   milestone(id: ID!): MilestonePayload!
   milestonesByIDs(ids: [ID!]!): [MilestonePayload!]!
   projectTemplate(id: ID!): ProjectTemplatePayload!
@@ -86803,7 +86780,16 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   containerGroups: [ContainerGroupPayload!]!
   forwarders: [OrganizationPayload!]!
   totalVolume: MetricValue!
+  totalVolumeOverride: MetricValue
+  totalVolumeOverriding: Boolean!
+  totalVolumeDisplayMetric: String!
+  totalWeight: MetricValue!
+  totalWeightOverride: MetricValue
+  totalWeightOverriding: Boolean!
+  totalWeightDisplayMetric: String!
   totalPackageQuantity: Float!
+  totalPackageQuantityOverride: Float
+  totalPackageQuantityOverriding: Boolean!
   orderCount: Int!
   orderItemCount: Int!
   batchCount: Int!
@@ -86932,6 +86918,14 @@ input ShipmentCreateInput {
   containers: [ShipmentContainerCreateInput!]
   files: [FileInput!]
   memo: String
+  totalVolumeOverride: MetricValueInput
+  totalVolumeOverriding: Boolean
+  totalVolumeDisplayMetric: String
+  totalWeightOverride: MetricValueInput
+  totalWeightOverriding: Boolean
+  totalWeightDisplayMetric: String
+  totalPackageQuantityOverride: Float
+  totalPackageQuantityOverriding: Boolean
   customFields: CustomFieldsInput
   todo: TodoInput
 }
@@ -87022,6 +87016,14 @@ input ShipmentUpdateInput {
   containers: [ShipmentContainerUpdateInput!]
   files: [FileInput!]
   memo: String
+  totalVolumeOverride: MetricValueInput
+  totalVolumeOverriding: Boolean
+  totalVolumeDisplayMetric: String
+  totalWeightOverride: MetricValueInput
+  totalWeightOverriding: Boolean
+  totalWeightDisplayMetric: String
+  totalPackageQuantityOverride: Float
+  totalPackageQuantityOverriding: Boolean
   customFields: CustomFieldsInput
   todo: TodoInput
 }

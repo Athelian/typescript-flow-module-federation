@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { isNullOrUndefined, getByPathWithDefault, getByPath } from 'utils/fp';
-import { startOfToday, differenceInCalendarDays } from 'utils/date';
 import FormattedDate from 'components/FormattedDate';
 import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
 import {
@@ -55,7 +54,7 @@ import { ContainerInfoContainer } from 'modules/container/form/containers';
 import validator from 'modules/container/form/validator';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { getLatestDate } from 'utils/shipment';
-import { calculateDueDate } from 'modules/container/utils';
+import { startOfToday, differenceInCalendarDays, calculateDueDate } from 'utils/date';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import ContainerSummary from './ContainerSummary';
 import {

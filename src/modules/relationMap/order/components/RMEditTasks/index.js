@@ -6,8 +6,6 @@ import { Mutation } from 'react-apollo';
 import { useQuery } from '@apollo/react-hooks';
 import { Subscribe } from 'unstated';
 import { getByPathWithDefault } from 'utils/fp';
-import ActionDispatch from 'modules/relationMap/order/provider';
-import { selectors } from 'modules/relationMap/order/store';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import useFilter from 'hooks/useFilter';
 import { FilterToolBar } from 'components/common';
@@ -20,9 +18,13 @@ import RMEditTasksContainer from './container';
 import editableTaskListQuery from './query';
 import { taskUpdateManyMutation, prepareTasksForUpdateMany } from './mutation';
 
-type Props = {
+type Props = {|
   intl: IntlShape,
-};
+  orderIds: Array<string>,
+  orderItemIds: Array<string>,
+  batchIds: Array<string>,
+  shipmentIds: Array<string>,
+|};
 
 const getInitFilter = () => {
   const state = {
@@ -61,14 +63,7 @@ const onSave = async (
   }
 };
 
-const RMEditTasks = (props: Props) => {
-  const { intl } = props;
-  const { state } = React.useContext(ActionDispatch);
-  const uiSelectors = selectors(state);
-  const orderIds = uiSelectors.targetedOrderIds();
-  const orderItemIds = uiSelectors.targetedOrderItemIds();
-  const batchIds = uiSelectors.targetedBatchIds();
-  const shipmentIds = uiSelectors.targetedShipmentIds();
+const RMEditTasks = ({ intl, orderIds, orderItemIds, shipmentIds, batchIds }: Props) => {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },

@@ -161,7 +161,7 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
     getByPathWithDefault([], 'orderItems', originalValues),
     newValues.orderItems,
     (oldItem: ?Object, newItem: Object) => ({
-      ...(!oldItem ? {} : { id: oldItem.id }),
+      ...(!oldItem || oldItem?.isNew ? {} : { id: oldItem.id }),
       ...parseGenericField('price', getByPathWithDefault(null, 'price', oldItem), {
         amount: newItem.price.amount,
         currency: newValues.currency,

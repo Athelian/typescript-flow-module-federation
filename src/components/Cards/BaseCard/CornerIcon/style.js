@@ -6,7 +6,8 @@ export const IconStyle = (
   color: string,
   disabled: boolean,
   readOnly: boolean,
-  invert: boolean
+  invert: boolean,
+  flatten: boolean
 ): string => {
   let iconColor = '#fff';
   if (disabled) {
@@ -27,7 +28,7 @@ export const IconStyle = (
     background: ${invert ? '#fff' : colors[color]};
     cursor: ${readOnly ? 'default' : 'pointer'};
     ${disabled && 'cursor: not-allowed'};
-    z-index: 1;
+    z-index: ${flatten ? 0 : 1};
     box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.15);
     border-radius: 0 5px 0 5px;
     &:hover,

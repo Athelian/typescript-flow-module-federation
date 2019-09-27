@@ -1,36 +1,57 @@
 // @flow
 import { css } from 'react-emotion';
+import { layout, borderRadiuses, presets, colors, shadows, fontSizes } from 'styles/common';
 
-export const WrapperStyle = css`
+export const OrderCardWrapperStyle: string = css`
+  display: flex;
+  flex-direction: column;
   width: 285px;
   height: 55px;
   position: relative;
-  > :last-child {
-    opacity: 0;
-  }
-  &:hover > :last-child {
-    opacity: 1;
+  &:hover {
+    & > button {
+      opacity: 1;
+    }
   }
 `;
 
-export const ItemIconsStyle = css`
+export const TopRowWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 125px 125px;
+  grid-template-rows: 20px;
+  grid-gap: 5px;
+  padding: 5px;
+`;
+
+export const TagsWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  ${borderRadiuses.MAIN};
+  grid-gap: 5px;
+  overflow: hidden;
+`;
+
+export const BottomRowWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 125px 125px 20px;
+  grid-template-rows: 20px;
+  grid-gap: 5px;
+  padding: 0 0 5px 5px;
+`;
+
+export const CreateItemButtonStyle: string = css`
+  opacity: 0;
   position: absolute;
-  right: -10px;
   bottom: -10px;
-  background: #fbaa1d;
-  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
-  border-radius: 20px;
-  font-size: 12px;
-  line-height: 12px;
-  padding-left: 5px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  text-transform: uppercase;
-  width: 40px;
+  right: -10px;
+  ${presets.BUTTON};
+  width: 20px;
   height: 20px;
-  color: #fff;
+  background-color: ${colors.ORDER_ITEM};
+  color: ${colors.WHITE};
+  ${fontSizes.SMALL};
+  ${borderRadiuses.CIRCLE};
   &:hover {
-    cursor: pointer;
+    opacity: 1;
+    ${shadows.INPUT};
   }
 `;

@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { isNullOrUndefined } from 'utils/fp';
 import { Label, Display } from 'components/Form';
 import FormattedDate from 'components/FormattedDate';
 import { ContainerDatesSummaryStyle, ColumnWrapperStyle } from './style';
@@ -42,22 +41,22 @@ const ContainersDatesSummary = ({
       <Label>
         <FormattedMessage id="modules.Shipments.from" defaultMessage="FROM" />
       </Label>
-      {isNullOrUndefined(agreedArrivalDateFrom) ? (
-        <Display color="GRAY_LIGHT" align="left">
-          <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
-        </Display>
-      ) : (
+      {agreedArrivalDateFrom ? (
         <Display color="BLUE" align="left">
           <FormattedDate mode="datetime" value={agreedArrivalDateFrom} />
         </Display>
-      )}
-      {isNullOrUndefined(actualArrivalDateFrom) ? (
+      ) : (
         <Display color="GRAY_LIGHT" align="left">
           <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
         </Display>
-      ) : (
+      )}
+      {actualArrivalDateFrom ? (
         <Display color="TEAL" align="left">
           <FormattedDate mode="datetime" value={actualArrivalDateFrom} />
+        </Display>
+      ) : (
+        <Display color="GRAY_LIGHT" align="left">
+          <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
         </Display>
       )}
     </div>
@@ -66,22 +65,22 @@ const ContainersDatesSummary = ({
       <Label>
         <FormattedMessage id="modules.Shipments.to" defaultMessage="TO" />
       </Label>
-      {isNullOrUndefined(agreedArrivalDateTo) ? (
-        <Display color="GRAY_LIGHT" align="left">
-          <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
-        </Display>
-      ) : (
+      {agreedArrivalDateTo ? (
         <Display color="BLUE" align="left">
           <FormattedDate mode="datetime" value={agreedArrivalDateTo} />
         </Display>
-      )}
-      {isNullOrUndefined(actualArrivalDateTo) ? (
+      ) : (
         <Display color="GRAY_LIGHT" align="left">
           <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
         </Display>
-      ) : (
+      )}
+      {actualArrivalDateTo ? (
         <Display color="TEAL" align="left">
           <FormattedDate mode="datetime" value={actualArrivalDateTo} />
+        </Display>
+      ) : (
+        <Display color="GRAY_LIGHT" align="left">
+          <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
         </Display>
       )}
     </div>

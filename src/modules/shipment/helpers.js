@@ -41,21 +41,21 @@ export const getBatchesInPool = (batches: Array<Object>): Array<Object> =>
 export const getAgreedArrivalDates = (containers: Array<Object>): Array<Object> =>
   containers
     .map(({ warehouseArrivalAgreedDate }) => warehouseArrivalAgreedDate)
-    .filter(item => !isNullOrUndefined(item))
+    .filter(Boolean)
     .map(item => new Date(item));
 
 export const getActualArrivalDates = (containers: Array<Object>): Array<Object> =>
   containers
     .map(({ warehouseArrivalActualDate }) => warehouseArrivalActualDate)
-    .filter(item => !isNullOrUndefined(item))
+    .filter(Boolean)
     .map(item => new Date(item));
 
 export const numAgreedArrivalDateApproved = (containers: Array<Object>): number =>
   containers
     .map(({ warehouseArrivalAgreedDateApprovedBy }) => warehouseArrivalAgreedDateApprovedBy)
-    .filter(item => !isNullOrUndefined(item)).length;
+    .filter(Boolean).length;
 
 export const numActualArrivalDateApproved = (containers: Array<Object>): number =>
   containers
     .map(({ warehouseArrivalActualDateApprovedBy }) => warehouseArrivalActualDateApprovedBy)
-    .filter(item => !isNullOrUndefined(item)).length;
+    .filter(Boolean).length;

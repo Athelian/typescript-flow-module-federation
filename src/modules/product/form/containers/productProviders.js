@@ -22,7 +22,6 @@ type FormState = {
     unitVolume: Metric,
     unitWeight: Metric,
     unitPrice: Price,
-    inspectionFee: Price,
     packageGrossWeight: Metric,
     packageVolume: Metric,
     packageSize: {

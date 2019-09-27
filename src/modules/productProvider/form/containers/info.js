@@ -13,13 +13,13 @@ type FormState = {
   exporter?: ?Object,
   supplier?: ?Object,
   origin: ?string,
-  productionLeadTime?: number,
+
   unitType: ?string,
   unitVolume: MetricValue,
   unitWeight: MetricValue,
   unitPrice: Price,
   unitSize: Size,
-  inspectionFee: Price,
+
   autoCalculateUnitVolume: boolean,
   customFields: Object,
   memo: ?string,
@@ -31,7 +31,7 @@ export const initValues: FormState = {
   origin: null,
   name: null,
   unitType: null,
-  productionLeadTime: 0,
+
   unitVolume: {
     metric: defaultVolumeMetric,
     value: 0,
@@ -58,10 +58,7 @@ export const initValues: FormState = {
     currency: 'USD',
     amount: 0,
   },
-  inspectionFee: {
-    currency: 'USD',
-    amount: 0,
-  },
+
   autoCalculateUnitVolume: true,
   customFields: {
     mask: null,

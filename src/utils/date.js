@@ -105,3 +105,6 @@ export const calculateNewDate = ({
     offset: months || weeks || days,
   });
 };
+
+export const calculateDueDate = (freeTimeStartDate: string, freeTimeDuration: number = 0) =>
+  addDays(new Date(freeTimeStartDate), freeTimeDuration);

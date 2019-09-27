@@ -30,15 +30,11 @@ export const productProviderFormFragment = gql`
     }
     referenced
     origin
-    productionLeadTime
     exporter {
       ...partnerCardFragment
     }
     supplier {
       ...partnerCardFragment
-    }
-    inspectionFee {
-      ...priceFragment
     }
     unitType
     unitPrice {

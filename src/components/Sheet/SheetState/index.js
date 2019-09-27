@@ -189,6 +189,7 @@ export const useCell = (position: Position): CellValue => {
 export const SheetState = ({ transformItem, onMutate, onLocalSort, children }: Props) => {
   const memoizedReducer = React.useCallback(cellReducer(transformItem, onLocalSort), [
     transformItem,
+    onLocalSort,
   ]);
   const [state, dispatch] = React.useReducer<State, Action>(memoizedReducer, initialState);
   const addedRowsRef = React.useRef([]);

@@ -19458,6 +19458,10 @@ export const FileTypeValues = Object.freeze({
   ShipmentImportDeclaration: 'ShipmentImportDeclaration', 
   /** ShipmentInspectionApplication */
   ShipmentInspectionApplication: 'ShipmentInspectionApplication', 
+  /** ShipmentWarehouseArrivalReport */
+  ShipmentWarehouseArrivalReport: 'ShipmentWarehouseArrivalReport', 
+  /** ShipmentWarehouseInspectionReport */
+  ShipmentWarehouseInspectionReport: 'ShipmentWarehouseInspectionReport', 
   /** ProductSpec */
   ProductSpec: 'ProductSpec', 
   /** ProductAnalysisCert */
@@ -19495,6 +19499,11 @@ export type Forbidden = {
    __typename?: 'Forbidden',
   reference?: ?Reference,
   reason?: ?$ElementType<Scalars, 'String'>,
+};
+
+export type GenericSortInput = {
+  field: $ElementType<Scalars, 'String'>,
+  direction: SortOrder,
 };
 
 export type Hit = {
@@ -20396,6 +20405,28 @@ export type MilestoneTaskInput = {
   entity?: ?EntityInput,
 };
 
+export type MilestoneTemplate = Model & Owned & Sortable & {
+   __typename?: 'MilestoneTemplate',
+  project: ProjectTemplatePayload,
+  name: $ElementType<Scalars, 'String'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  dueDateInterval?: ?Interval,
+  dueDateBinding?: ?MilestoneDateBinding,
+  estimatedCompletionDateInterval?: ?Interval,
+  estimatedCompletionDateBinding?: ?MilestoneDateBinding,
+  id: $ElementType<Scalars, 'ID'>,
+  createdAt: $ElementType<Scalars, 'DateTime'>,
+  updatedAt: $ElementType<Scalars, 'DateTime'>,
+  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+  createdBy?: ?UserPayload,
+  updatedBy?: ?UserPayload,
+  deletedBy?: ?UserPayload,
+  ownedBy: OrganizationPayload,
+  sort: $ElementType<Scalars, 'Int'>,
+};
+
+export type MilestoneTemplatePayload = MilestoneTemplate | BadRequest | Forbidden | NotFound;
+
 export type MilestoneUpdateInput = {
   name?: ?$ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
@@ -20509,6 +20540,9 @@ export type Mutation = {
   milestoneCreate: MilestonePayload,
   milestoneUpdate: MilestonePayload,
   milestoneDelete?: ?EmptyPayload,
+  projectTemplateCreate: ProjectTemplatePayload,
+  projectTemplateUpdate: ProjectTemplatePayload,
+  projectTemplateDelete?: ?EmptyPayload,
   integrationConfigurationCreate: IntegrationConfigurationPayload,
   integrationConfigurationUpdate: IntegrationConfigurationPayload,
   integrationConfigurationDelete?: ?EmptyPayload,
@@ -20971,6 +21005,22 @@ export type MutationMilestoneDeleteArgs = {
 };
 
 
+export type MutationProjectTemplateCreateArgs = {
+  input: ProjectTemplateCreateInput
+};
+
+
+export type MutationProjectTemplateUpdateArgs = {
+  id: $ElementType<Scalars, 'ID'>,
+  input: ProjectTemplateUpdateInput
+};
+
+
+export type MutationProjectTemplateDeleteArgs = {
+  id: $ElementType<Scalars, 'ID'>
+};
+
+
 export type MutationIntegrationConfigurationCreateArgs = {
   input: IntegrationConfigurationCreateInput
 };
@@ -21261,7 +21311,7 @@ export type OrderCreateInput = {
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  orderItems?: ?Array<OrderOrderItemCreateInput>,
+  orderItems?: ?Array<OrderOrderItemInput>,
   files?: ?Array<FileInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
@@ -21320,6 +21370,7 @@ export type OrderItem = Model & Owned & Sortable & Tagged & Documented & Customi
   no: $ElementType<Scalars, 'String'>,
   price: Price,
   quantity: $ElementType<Scalars, 'Float'>,
+  deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
   totalPrice: Price,
   totalBatched: $ElementType<Scalars, 'Float'>,
   totalShipped: $ElementType<Scalars, 'Float'>,
@@ -21345,31 +21396,7 @@ export type OrderItem = Model & Owned & Sortable & Tagged & Documented & Customi
   memo?: ?$ElementType<Scalars, 'String'>,
 };
 
-export type OrderItemBatchCreateInput = {
-  no: $ElementType<Scalars, 'String'>,
-  quantity: $ElementType<Scalars, 'Float'>,
-  producedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  deliveredAt?: ?$ElementType<Scalars, 'DateTime'>,
-  expiredAt?: ?$ElementType<Scalars, 'DateTime'>,
-  desiredAt?: ?$ElementType<Scalars, 'DateTime'>,
-  packageQuantity?: ?$ElementType<Scalars, 'Float'>,
-  autoCalculatePackageQuantity?: ?$ElementType<Scalars, 'Boolean'>,
-  packageName?: ?$ElementType<Scalars, 'String'>,
-  packageGrossWeight?: ?MetricValueInput,
-  packageVolume?: ?MetricValueInput,
-  autoCalculatePackageVolume?: ?$ElementType<Scalars, 'Boolean'>,
-  packageSize?: ?SizeInput,
-  packageCapacity?: ?$ElementType<Scalars, 'Float'>,
-  memo?: ?$ElementType<Scalars, 'String'>,
-  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  customFields?: ?CustomFieldsInput,
-  batchQuantityRevisions?: ?Array<BatchQuantityRevisionCreateInput>,
-  todo?: ?TodoInput,
-  shipmentId?: ?$ElementType<Scalars, 'ID'>,
-  containerId?: ?$ElementType<Scalars, 'ID'>,
-};
-
-export type OrderItemBatchUpdateInput = {
+export type OrderItemBatchInput = {
   no?: ?$ElementType<Scalars, 'String'>,
   quantity?: ?$ElementType<Scalars, 'Float'>,
   producedAt?: ?$ElementType<Scalars, 'DateTime'>,
@@ -21399,9 +21426,10 @@ export type OrderItemCreateInput = {
   no: $ElementType<Scalars, 'String'>,
   price: PriceInput,
   quantity: $ElementType<Scalars, 'Float'>,
+  deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  batches?: ?Array<OrderItemBatchCreateInput>,
+  batches?: ?Array<OrderItemBatchInput>,
   files?: ?Array<FileInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
@@ -21453,9 +21481,10 @@ export type OrderItemUpdateInput = {
   no?: ?$ElementType<Scalars, 'String'>,
   price?: ?PriceInput,
   quantity?: ?$ElementType<Scalars, 'Float'>,
+  deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  batches?: ?Array<OrderItemBatchUpdateInput>,
+  batches?: ?Array<OrderItemBatchInput>,
   files?: ?Array<FileInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
@@ -21467,27 +21496,15 @@ export type OrderItemUpdateWrapperInput = {
   input: OrderItemUpdateInput,
 };
 
-export type OrderOrderItemCreateInput = {
-  productProviderId: $ElementType<Scalars, 'ID'>,
-  no: $ElementType<Scalars, 'String'>,
-  price: PriceInput,
-  quantity: $ElementType<Scalars, 'Float'>,
-  memo?: ?$ElementType<Scalars, 'String'>,
-  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  batches?: ?Array<OrderItemBatchCreateInput>,
-  files?: ?Array<FileInput>,
-  customFields?: ?CustomFieldsInput,
-  todo?: ?TodoInput,
-};
-
-export type OrderOrderItemUpdateInput = {
+export type OrderOrderItemInput = {
   productProviderId?: ?$ElementType<Scalars, 'ID'>,
   no?: ?$ElementType<Scalars, 'String'>,
   price?: ?PriceInput,
   quantity?: ?$ElementType<Scalars, 'Float'>,
+  deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  batches?: ?Array<OrderItemBatchUpdateInput>,
+  batches?: ?Array<OrderItemBatchInput>,
   files?: ?Array<FileInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
@@ -21533,7 +21550,7 @@ export type OrderUpdateInput = {
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  orderItems?: ?Array<OrderOrderItemUpdateInput>,
+  orderItems?: ?Array<OrderOrderItemInput>,
   files?: ?Array<FileInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
@@ -22147,6 +22164,81 @@ export type ProjectSortInput = {
   dueDate?: ?SortOrder,
 };
 
+export type ProjectTemplate = Model & Owned & Tagged & {
+   __typename?: 'ProjectTemplate',
+  name: $ElementType<Scalars, 'String'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  milestones: Array<MilestoneTemplatePayload>,
+  id: $ElementType<Scalars, 'ID'>,
+  createdAt: $ElementType<Scalars, 'DateTime'>,
+  updatedAt: $ElementType<Scalars, 'DateTime'>,
+  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+  createdBy?: ?UserPayload,
+  updatedBy?: ?UserPayload,
+  deletedBy?: ?UserPayload,
+  ownedBy: OrganizationPayload,
+  tags: Array<TagPayload>,
+};
+
+export type ProjectTemplateCreateInput = {
+  name: $ElementType<Scalars, 'String'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  milestones?: ?Array<ProjectTemplateMilestoneCreateInput>,
+};
+
+export type ProjectTemplateFilterInput = {
+  query?: ?$ElementType<Scalars, 'String'>,
+  excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  createdAt?: ?DateRangeInput,
+  updatedAt?: ?DateRangeInput,
+};
+
+export type ProjectTemplateMilestoneCreateInput = {
+  name: $ElementType<Scalars, 'String'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  dueDateInterval?: ?IntervalInput,
+  dueDateBinding?: ?MilestoneDateBinding,
+  estimatedCompletionDateInterval?: ?IntervalInput,
+  estimatedCompletionDateBinding?: ?MilestoneDateBinding,
+};
+
+export type ProjectTemplateMilestoneUpdateInput = {
+  name?: ?$ElementType<Scalars, 'String'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  dueDateInterval?: ?IntervalInput,
+  dueDateBinding?: ?MilestoneDateBinding,
+  estimatedCompletionDateInterval?: ?IntervalInput,
+  estimatedCompletionDateBinding?: ?MilestoneDateBinding,
+  id?: ?$ElementType<Scalars, 'ID'>,
+};
+
+export type ProjectTemplatePayload = ProjectTemplate | BadRequest | Forbidden | NotFound;
+
+export type ProjectTemplatePayloadPaginatedSearch = Paginated & {
+   __typename?: 'ProjectTemplatePayloadPaginatedSearch',
+  nodes: Array<ProjectTemplatePayload>,
+  hits: Array<Hit>,
+  page: $ElementType<Scalars, 'Int'>,
+  perPage: $ElementType<Scalars, 'Int'>,
+  totalPage: $ElementType<Scalars, 'Int'>,
+  count: $ElementType<Scalars, 'Int'>,
+  totalCount: $ElementType<Scalars, 'Int'>,
+};
+
+export type ProjectTemplateSortInput = {
+  createdAt?: ?SortOrder,
+  updatedAt?: ?SortOrder,
+  name?: ?SortOrder,
+};
+
+export type ProjectTemplateUpdateInput = {
+  name?: ?$ElementType<Scalars, 'ID'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  milestones?: ?Array<ProjectTemplateMilestoneUpdateInput>,
+};
+
 export type ProjectUpdateInput = {
   name?: ?$ElementType<Scalars, 'ID'>,
   description?: ?$ElementType<Scalars, 'String'>,
@@ -22222,6 +22314,11 @@ export type Query = {
   projectsByIDsExport: ExportPayload,
   milestone: MilestonePayload,
   milestonesByIDs: Array<MilestonePayload>,
+  projectTemplate: ProjectTemplatePayload,
+  projectTemplates: ProjectTemplatePayloadPaginatedSearch,
+  projectTemplatesByIDs: Array<ProjectTemplatePayload>,
+  milestoneTemplate: MilestoneTemplatePayload,
+  milestoneTemplatesByIDs: Array<MilestoneTemplatePayload>,
   fieldDefinition: FieldDefinitionPayload,
   fieldDefinitions: Array<FieldDefinitionPayload>,
   mask: MaskPayload,
@@ -22295,12 +22392,16 @@ export type QueryProductsByIDsArgs = {
 
 export type QueryProductExportArgs = {
   id: $ElementType<Scalars, 'ID'>,
-  templateId: $ElementType<Scalars, 'ID'>
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
 };
 
 
 export type QueryProductsExportArgs = {
   templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>,
   filterBy?: ?ProductFilterInput,
   sortBy?: ?ProductSortInput
 };
@@ -22308,7 +22409,9 @@ export type QueryProductsExportArgs = {
 
 export type QueryProductsByIDsExportArgs = {
   ids: Array<$ElementType<Scalars, 'ID'>>,
-  templateId: $ElementType<Scalars, 'ID'>
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
 };
 
 
@@ -22350,12 +22453,16 @@ export type QueryOrdersByIDsArgs = {
 
 export type QueryOrderExportArgs = {
   id: $ElementType<Scalars, 'ID'>,
-  templateId: $ElementType<Scalars, 'ID'>
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
 };
 
 
 export type QueryOrdersExportArgs = {
   templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>,
   filterBy?: ?OrderFilterInput,
   sortBy?: ?OrderSortInput
 };
@@ -22363,7 +22470,9 @@ export type QueryOrdersExportArgs = {
 
 export type QueryOrdersByIDsExportArgs = {
   ids: Array<$ElementType<Scalars, 'ID'>>,
-  templateId: $ElementType<Scalars, 'ID'>
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
 };
 
 
@@ -22428,12 +22537,16 @@ export type QueryShipmentsByIDsArgs = {
 
 export type QueryShipmentExportArgs = {
   id: $ElementType<Scalars, 'ID'>,
-  templateId: $ElementType<Scalars, 'ID'>
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
 };
 
 
 export type QueryShipmentsExportArgs = {
   templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>,
   filterBy?: ?ShipmentFilterInput,
   sortBy?: ?ShipmentSortInput
 };
@@ -22441,7 +22554,9 @@ export type QueryShipmentsExportArgs = {
 
 export type QueryShipmentsByIDsExportArgs = {
   ids: Array<$ElementType<Scalars, 'ID'>>,
-  templateId: $ElementType<Scalars, 'ID'>
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
 };
 
 
@@ -22465,12 +22580,16 @@ export type QueryContainersByIDsArgs = {
 
 export type QueryContainerExportArgs = {
   id: $ElementType<Scalars, 'ID'>,
-  templateId: $ElementType<Scalars, 'ID'>
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
 };
 
 
 export type QueryContainersExportArgs = {
   templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>,
   filterBy?: ?ContainerFilterInput,
   sortBy?: ?ContainerSortInput
 };
@@ -22478,7 +22597,9 @@ export type QueryContainersExportArgs = {
 
 export type QueryContainersByIDsExportArgs = {
   ids: Array<$ElementType<Scalars, 'ID'>>,
-  templateId: $ElementType<Scalars, 'ID'>
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
 };
 
 
@@ -22515,12 +22636,16 @@ export type QueryTagsArgs = {
 
 export type QueryTagExportArgs = {
   id: $ElementType<Scalars, 'ID'>,
-  templateId: $ElementType<Scalars, 'ID'>
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
 };
 
 
 export type QueryTagsExportArgs = {
   templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>,
   filterBy?: ?TagFilterInput,
   sortBy?: ?TagSortInput
 };
@@ -22528,7 +22653,9 @@ export type QueryTagsExportArgs = {
 
 export type QueryTagsByIDsExportArgs = {
   ids: Array<$ElementType<Scalars, 'ID'>>,
-  templateId: $ElementType<Scalars, 'ID'>
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
 };
 
 
@@ -22552,12 +22679,16 @@ export type QueryTasksByIDsArgs = {
 
 export type QueryTaskExportArgs = {
   id: $ElementType<Scalars, 'ID'>,
-  templateId: $ElementType<Scalars, 'ID'>
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
 };
 
 
 export type QueryTasksExportArgs = {
   templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>,
   filterBy?: ?TaskFilterInput,
   sortBy?: ?TaskSortInput
 };
@@ -22565,7 +22696,9 @@ export type QueryTasksExportArgs = {
 
 export type QueryTasksByIDsExportArgs = {
   ids: Array<$ElementType<Scalars, 'ID'>>,
-  templateId: $ElementType<Scalars, 'ID'>
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
 };
 
 
@@ -22607,12 +22740,16 @@ export type QueryProjectsByIDsArgs = {
 
 export type QueryProjectExportArgs = {
   id: $ElementType<Scalars, 'ID'>,
-  templateId: $ElementType<Scalars, 'ID'>
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
 };
 
 
 export type QueryProjectsExportArgs = {
   templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>,
   filterBy?: ?ProjectFilterInput,
   sortBy?: ?ProjectSortInput
 };
@@ -22620,7 +22757,9 @@ export type QueryProjectsExportArgs = {
 
 export type QueryProjectsByIDsExportArgs = {
   ids: Array<$ElementType<Scalars, 'ID'>>,
-  templateId: $ElementType<Scalars, 'ID'>
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
 };
 
 
@@ -22630,6 +22769,34 @@ export type QueryMilestoneArgs = {
 
 
 export type QueryMilestonesByIDsArgs = {
+  ids: Array<$ElementType<Scalars, 'ID'>>
+};
+
+
+export type QueryProjectTemplateArgs = {
+  id: $ElementType<Scalars, 'ID'>
+};
+
+
+export type QueryProjectTemplatesArgs = {
+  page: $ElementType<Scalars, 'Int'>,
+  perPage: $ElementType<Scalars, 'Int'>,
+  filterBy?: ?ProjectTemplateFilterInput,
+  sortBy?: ?ProjectTemplateSortInput
+};
+
+
+export type QueryProjectTemplatesByIDsArgs = {
+  ids: Array<$ElementType<Scalars, 'ID'>>
+};
+
+
+export type QueryMilestoneTemplateArgs = {
+  id: $ElementType<Scalars, 'ID'>
+};
+
+
+export type QueryMilestoneTemplatesByIDsArgs = {
   ids: Array<$ElementType<Scalars, 'ID'>>
 };
 
@@ -59884,7 +60051,16 @@ export type Shipment = Model & Owned & Tagged & Supervised & Documented & Custom
   containerGroups: Array<ContainerGroupPayload>,
   forwarders: Array<OrganizationPayload>,
   totalVolume: MetricValue,
+  totalVolumeOverride?: ?MetricValue,
+  totalVolumeOverriding: $ElementType<Scalars, 'Boolean'>,
+  totalVolumeDisplayMetric: $ElementType<Scalars, 'String'>,
+  totalWeight: MetricValue,
+  totalWeightOverride?: ?MetricValue,
+  totalWeightOverriding: $ElementType<Scalars, 'Boolean'>,
+  totalWeightDisplayMetric: $ElementType<Scalars, 'String'>,
   totalPackageQuantity: $ElementType<Scalars, 'Float'>,
+  totalPackageQuantityOverride?: ?$ElementType<Scalars, 'Float'>,
+  totalPackageQuantityOverriding: $ElementType<Scalars, 'Boolean'>,
   orderCount: $ElementType<Scalars, 'Int'>,
   orderItemCount: $ElementType<Scalars, 'Int'>,
   batchCount: $ElementType<Scalars, 'Int'>,
@@ -60013,6 +60189,14 @@ export type ShipmentCreateInput = {
   containers?: ?Array<ShipmentContainerCreateInput>,
   files?: ?Array<FileInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  totalVolumeOverride?: ?MetricValueInput,
+  totalVolumeOverriding?: ?$ElementType<Scalars, 'Boolean'>,
+  totalVolumeDisplayMetric?: ?$ElementType<Scalars, 'String'>,
+  totalWeightOverride?: ?MetricValueInput,
+  totalWeightOverriding?: ?$ElementType<Scalars, 'Boolean'>,
+  totalWeightDisplayMetric?: ?$ElementType<Scalars, 'String'>,
+  totalPackageQuantityOverride?: ?$ElementType<Scalars, 'Float'>,
+  totalPackageQuantityOverriding?: ?$ElementType<Scalars, 'Boolean'>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
 };
@@ -60104,6 +60288,14 @@ export type ShipmentUpdateInput = {
   containers?: ?Array<ShipmentContainerUpdateInput>,
   files?: ?Array<FileInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  totalVolumeOverride?: ?MetricValueInput,
+  totalVolumeOverriding?: ?$ElementType<Scalars, 'Boolean'>,
+  totalVolumeDisplayMetric?: ?$ElementType<Scalars, 'String'>,
+  totalWeightOverride?: ?MetricValueInput,
+  totalWeightOverriding?: ?$ElementType<Scalars, 'Boolean'>,
+  totalWeightDisplayMetric?: ?$ElementType<Scalars, 'String'>,
+  totalPackageQuantityOverride?: ?$ElementType<Scalars, 'Float'>,
+  totalPackageQuantityOverriding?: ?$ElementType<Scalars, 'Boolean'>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
 };
@@ -61931,7 +62123,7 @@ export type ProductProviderCardFragmentFragment = (
 
 export type MilestoneInProjectCardFragmentFragment = (
   { __typename?: 'Milestone' }
-  & $Pick<Milestone, { id: *, name: *, dueDate: *, completedAt: * }>
+  & $Pick<Milestone, { id: *, name: *, dueDate: *, completedAt: *, estimatedCompletionDate: * }>
   & { tasks: Array<(
     { __typename?: 'Task' }
     & $Pick<Task, { id: *, completedAt: *, skippedAt: * }>
@@ -61988,33 +62180,46 @@ export type ProjectFormQueryFragmentFragment = (
       { __typename?: 'Task' }
       & $Pick<Task, { milestoneSort: * }>
     ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskFormInProjectOrMilestoneFormFragmentFragment
+      & TaskFormInProjectFragmentFragment
     > }
   ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> }
 );
 
-export type ProjectFormFragmentFragment = (
-  { __typename?: 'Project' }
-  & $Pick<Project, { id: *, name: *, description: *, dueDate: *, updatedAt: * }>
-  & { taskCount: { __typename?: 'TaskCount' }
-    & TaskCountFragmentFragment
-  , updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  > }
+export type MilestoneTemplateFormFragmentFragment = (
+  { __typename?: 'MilestoneTemplate' }
+  & $Pick<MilestoneTemplate, { id: *, name: *, description: *, dueDateBinding: *, estimatedCompletionDateBinding: *, sort: * }>
+  & { dueDateInterval: ?(
+    { __typename?: 'Interval' }
+    & $Pick<Interval, { months: *, weeks: *, days: * }>
+  ), estimatedCompletionDateInterval: ?(
+    { __typename?: 'Interval' }
+    & $Pick<Interval, { months: *, weeks: *, days: * }>
+  ) }
 );
 
-export type MilestoneFormFragmentFragment = (
-  { __typename?: 'Milestone' }
-  & $Pick<Milestone, { id: *, updatedAt: *, name: *, description: *, dueDate: *, completedAt: * }>
+export type ProjectTemplateCardFragmentFragment = (
+  { __typename?: 'ProjectTemplate' }
+  & $Pick<ProjectTemplate, { id: *, updatedAt: *, name: *, description: * }>
   & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
     & UserAvatarFragmentFragment
-  , completedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & TagFragmentFragment
+  >, milestones: Array<(
+    { __typename?: 'MilestoneTemplate' }
+    & $Pick<MilestoneTemplate, { id: * }>
+  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> }
+);
+
+export type ProjectTemplateFormFragmentFragment = (
+  { __typename?: 'ProjectTemplate' }
+  & $Pick<ProjectTemplate, { id: *, updatedAt: *, name: *, description: * }>
+  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
     & UserAvatarFragmentFragment
-   }
+  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & TagFragmentFragment
+  >, milestones: Array<({ __typename?: 'MilestoneTemplate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
+    & MilestoneTemplateFormFragmentFragment
+  > }
 );
 
 export type ShipmentFormQueryFragmentFragment = (
@@ -62157,7 +62362,7 @@ export type ShipmentCardFragmentFragment = (
     ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
   ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, containers: Array<(
     { __typename?: 'Container' }
-    & $Pick<Container, { id: *, no: *, warehouseArrivalAgreedDate: *, warehouseArrivalAgreedDateApprovedAt: *, warehouseArrivalActualDate: *, warehouseArrivalActualDateApprovedAt: * }>
+    & $Pick<Container, { id: *, no: *, freeTimeStartDate: *, freeTimeDuration: *, containerType: *, warehouseArrivalAgreedDate: *, warehouseArrivalAgreedDateApprovedAt: *, warehouseArrivalActualDate: *, warehouseArrivalActualDateApprovedAt: * }>
     & { warehouse: ?(
       { __typename?: 'Warehouse' }
       & $Pick<Warehouse, { id: *, name: * }>
@@ -62951,7 +63156,7 @@ export type TaskWithoutParentInfoFragmentFragment = (
   & TaskInfoFragmentFragment
 ;
 
-export type TaskFormInProjectOrMilestoneFormFragmentFragment = { __typename?: 'Task' }
+export type TaskFormInProjectFragmentFragment = { __typename?: 'Task' }
   & TaskInfoFragmentFragment
   & TaskEntityCardFragmentFragment
 ;
@@ -63137,6 +63342,12 @@ export type WarehouseCardFragmentFragment = (
             "name": "Partner"
           },
           {
+            "name": "ProjectTemplate"
+          },
+          {
+            "name": "MilestoneTemplate"
+          },
+          {
             "name": "MaskEdit"
           },
           {
@@ -63174,6 +63385,9 @@ export type WarehouseCardFragmentFragment = (
           },
           {
             "name": "Container"
+          },
+          {
+            "name": "ProjectTemplate"
           }
         ]
       },
@@ -63279,6 +63493,12 @@ export type WarehouseCardFragmentFragment = (
           },
           {
             "name": "BatchQuantityRevision"
+          },
+          {
+            "name": "ProjectTemplate"
+          },
+          {
+            "name": "MilestoneTemplate"
           },
           {
             "name": "MaskEdit"
@@ -63585,6 +63805,9 @@ export type WarehouseCardFragmentFragment = (
           },
           {
             "name": "BatchQuantityRevision"
+          },
+          {
+            "name": "MilestoneTemplate"
           }
         ]
       },
@@ -63756,6 +63979,9 @@ export type WarehouseCardFragmentFragment = (
           },
           {
             "name": "ProjectPayloadPaginatedSearch"
+          },
+          {
+            "name": "ProjectTemplatePayloadPaginatedSearch"
           },
           {
             "name": "MaskPayloadPaginatedSearch"
@@ -64224,6 +64450,42 @@ export type WarehouseCardFragmentFragment = (
         "possibleTypes": [
           {
             "name": "Export"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "ProjectTemplatePayload",
+        "possibleTypes": [
+          {
+            "name": "ProjectTemplate"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "MilestoneTemplatePayload",
+        "possibleTypes": [
+          {
+            "name": "MilestoneTemplate"
           },
           {
             "name": "BadRequest"

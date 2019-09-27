@@ -1,37 +1,68 @@
 // @flow
 import { css } from 'react-emotion';
+import { layout, borderRadiuses, fontSizes, colors, presets, shadows } from 'styles/common';
 
-export const WrapperStyle = css`
+export const BatchCardWrapperStyle: string = css`
+  display: flex;
+  flex-direction: column;
   width: 445px;
   height: 55px;
   position: relative;
-  > .icons {
-    opacity: 0;
-  }
-  &:hover > .icons {
-    opacity: 1;
+  &:hover {
+    & button {
+      opacity: 1;
+    }
   }
 `;
 
-export const TrashIconsStyle = css`
+export const TopRowWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 125px 285px;
+  grid-template-rows: 20px;
+  grid-gap: 5px;
+  padding: 5px;
+`;
+
+export const TagsAndDeliveryWrapperStyle: string = css`
+  display: flex;
+`;
+
+export const TagsWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  ${borderRadiuses.MAIN};
+  grid-gap: 5px;
+  overflow: hidden;
+  flex: 1;
+`;
+
+export const BottomRowWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 415px 20px;
+  grid-template-rows: 20px;
+  grid-gap: 5px;
+  padding: 0 0 5px 5px;
+`;
+
+export const QuantityVolumeDesiredWrapperStyle: string = css`
+  display: flex;
+`;
+
+export const DeleteBatchButtonStyle = css`
+  opacity: 0;
   position: absolute;
-  right: -10px;
   top: -10px;
-  z-index: 2;
-  background: #ffffff;
-  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
-  border-radius: 20px;
-  font-size: 12px;
-  line-height: 12px;
+  right: -10px;
+  ${presets.BUTTON};
   width: 20px;
   height: 20px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  text-transform: uppercase;
-  color: #cccccc;
+  background-color: ${colors.WHITE};
+  color: ${colors.GRAY_LIGHT};
+  ${fontSizes.SMALL};
+  ${borderRadiuses.CIRCLE};
+  z-index: 2;
   &:hover {
-    cursor: pointer;
+    opacity: 1;
+    ${shadows.INPUT};
+    color: ${colors.RED};
   }
 `;

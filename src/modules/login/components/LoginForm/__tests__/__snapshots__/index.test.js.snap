@@ -165,6 +165,8 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   flex: 1;
   max-width: 100%;
   text-transform: uppercase;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
 }
 
 .emotion-3 {
@@ -381,7 +383,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
               class="css-1i7oahi"
             />
             <div
-              class="css-1ylc0ub"
+              class="css-cxlada"
             >
               EMAIL
             </div>
@@ -409,7 +411,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
               class="css-1i7oahi"
             />
             <div
-              class="css-1ylc0ub"
+              class="css-cxlada"
             >
               PASSWORD
             </div>
@@ -639,6 +641,8 @@ exports[`<LoginForm /> should render without crash 1`] = `
   flex: 1;
   max-width: 100%;
   text-transform: uppercase;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
 }
 
 .emotion-3 {

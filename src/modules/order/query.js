@@ -40,9 +40,16 @@ export const ordersExportQuery = gql`
     $templateId: ID!
     $filterBy: OrderFilterInput
     $sortBy: OrderSortInput
+    $localSortBy: [GenericSortInput!]
     $columns: [String!]
   ) {
-    ordersExport(templateId: $templateId, columns: $columns, filterBy: $filterBy, sortBy: $sortBy) {
+    ordersExport(
+      templateId: $templateId
+      columns: $columns
+      filterBy: $filterBy
+      sortBy: $sortBy
+      localSortBy: $localSortBy
+    ) {
       ... on Export {
         id
       }

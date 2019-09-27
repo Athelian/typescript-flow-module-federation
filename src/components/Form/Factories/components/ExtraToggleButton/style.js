@@ -7,7 +7,7 @@ export const ExtraToggleButtonStyle: string = css`
   justify-content: center;
   position: absolute;
   top: 0;
-  right: -40px;
+  right: -70px;
   height: 30px;
   width: 30px;
   flex-shrink: 0;

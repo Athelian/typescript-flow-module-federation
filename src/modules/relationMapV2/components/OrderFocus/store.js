@@ -62,6 +62,11 @@ export const initialState: State = {
   moveActions: {
     isOpen: false,
     isProcessing: false,
+    orderIds: [],
+    containerIds: [],
+    shipmentIds: [],
+    importerIds: [],
+    exporterIds: [],
   },
   createItem: {
     isOpen: false,
@@ -175,9 +180,14 @@ export function reducer(
       | 'MOVE_BATCH'
       | 'MOVE_BATCH_START'
       | 'MOVE_BATCH_CLOSE'
-      | 'MOVE_TO_ORDER'
+      | 'MOVE_BATCH_END'
       | 'MOVE_TO_ORDER_START'
       | 'MOVE_TO_ORDER_CLOSE'
+      | 'MOVE_TO_CONTAINER_START'
+      | 'MOVE_TO_CONTAINER_CLOSE'
+      | 'MOVE_TO_SHIPMENT_START'
+      | 'MOVE_TO_SHIPMENT_CLOSE'
+      | 'MOVE_BATCH_TO_NEW_ENTITY'
       | 'EDIT',
     payload: {
       entity?: string,
@@ -285,6 +295,7 @@ export function reducer(
         });
       });
     case 'RECHECK_TARGET': {
+      // FIXME: there is an issue when it is removing the targeting batches from other order after move batches to order
       if (action.payload?.orderUpdate?.id) {
         return produce(state, draft => {
           const orderId = action.payload?.orderUpdate?.id ?? '';
@@ -442,17 +453,50 @@ export function reducer(
           isOpen: { $set: false },
         },
         moveActions: {
-          isOpen: { $set: true },
-          type: { $set: action.payload.type },
+          $merge: { ...action.payload, isOpen: true },
+        },
+      });
+    case 'MOVE_TO_ORDER_START':
+    case 'MOVE_TO_CONTAINER_START':
+    case 'MOVE_TO_SHIPMENT_START':
+      return update(state, {
+        moveActions: {
+          isProcessing: { $set: true },
         },
       });
     case 'MOVE_TO_ORDER_CLOSE':
+    case 'MOVE_TO_CONTAINER_CLOSE':
+    case 'MOVE_TO_SHIPMENT_CLOSE':
       return update(state, {
         batchActions: {
           isOpen: { $set: true },
         },
         moveActions: {
           isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    case 'MOVE_BATCH_TO_NEW_ENTITY':
+      return update(state, {
+        edit: {
+          $merge: action.payload,
+        },
+        batchActions: {
+          isOpen: { $set: false },
+        },
+        moveActions: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    case 'MOVE_BATCH_END':
+      return update(state, {
+        batchActions: {
+          isOpen: { $set: false },
+        },
+        moveActions: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
         },
       });
     case 'DELETE_ITEM_START':
