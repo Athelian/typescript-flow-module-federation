@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   FormattedDate as FormattedDateIntl,
-  FormattedRelative,
+  FormattedRelativeTime,
   FormattedTime,
   FormattedMessage,
 } from 'react-intl';
@@ -27,7 +27,7 @@ const FormattedDate = ({ value, mode = 'date' }: Props) => {
         />
       );
     case 'relative':
-      return <FormattedRelative value={isDataType(Date, value) ? value : new Date(value)} />;
+      return <FormattedRelativeTime value={isDataType(Date, value) ? value : new Date(value)} />;
     case 'datetime':
       return (
         <>
@@ -42,7 +42,7 @@ const FormattedDate = ({ value, mode = 'date' }: Props) => {
         <>
           <FormattedTime value={isDataType(Date, value) ? value : new Date(value)} />
           {` (`}
-          <FormattedRelative value={isDataType(Date, value) ? value : new Date(value)} />
+          <FormattedRelativeTime value={isDataType(Date, value) ? value : new Date(value)} />
           {`)`}
         </>
       );
