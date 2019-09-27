@@ -83,17 +83,6 @@ export const extractForbiddenId = (data: Object): Object => {
   return data;
 };
 
-export const getSelectLabel = (value: ?string, items: Array<{ value: string, label: string }>) => {
-  if (value) {
-    const foundItem = items.find(item => item.value === value);
-    if (foundItem) {
-      return foundItem.label;
-    }
-    return '';
-  }
-  return '';
-};
-
 // For String and Number fields. Can be used for Object in certain situations.
 export const parseGenericField = (key: string, originalValue: ?any, newValue: ?any): Object => {
   if (!isEquals(originalValue, newValue)) return { [key]: newValue };

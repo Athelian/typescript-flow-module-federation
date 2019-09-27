@@ -21,24 +21,26 @@ export const PrefixIconStyle: string = css`
 type DateProps = {
   color: string,
   vertical: boolean,
+  showTime: boolean,
 };
 
-export const DateStyle = ({ color, vertical }: DateProps): string => css`
-  color: ${colors[color]};
-  ${presets.ELLIPSIS};
-  font-weight: bold;
-  ${vertical
-    ? `
-    ${fontSizes.MAIN};
-    width: 70px;
-    text-align: left;
-  `
-    : `
-    ${fontSizes.SMALL};
-    width: 58px;
-    text-align: right;
-  `};
-`;
+export const DateStyle = ({ color, vertical, showTime = false }: DateProps): string => {
+  let width = '58px';
+  if (vertical) {
+    width = '70px';
+  } else if (showTime) {
+    width = '100px';
+  }
+
+  return css`
+    color: ${colors[color]};
+    ${presets.ELLIPSIS};
+    font-weight: bold;
+    ${vertical ? fontSizes.MAIN : fontSizes.SMALL};
+    ${vertical ? `text-align: left;` : `text-align: right;`}
+    width: ${width};
+  `;
+};
 
 type DelayProps = {
   delayAmount: number,

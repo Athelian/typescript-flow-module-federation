@@ -4,8 +4,8 @@ import type { ContainerPayload } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { encodeId } from 'utils/id';
 import { defaultVolumeMetric } from 'utils/metric';
-import { getSelectLabel, isForbidden } from 'utils/data';
-import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
+import { isForbidden } from 'utils/data';
+import { getByPathWithDefault } from 'utils/fp';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import ProductImage from 'components/ProductImage';
@@ -15,9 +15,9 @@ import FormattedDate from 'components/FormattedDate';
 import RelateEntity from 'components/RelateEntity';
 import { Label, Display } from 'components/Form';
 import withForbiddenCard from 'hoc/withForbiddenCard';
-import { calculateDueDate } from 'modules/container/utils';
+import { calculateDueDate } from 'utils/date';
 import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
-import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
+import { CONTAINER_TYPE_MAP } from 'modules/container/constants';
 import BaseCard from '../BaseCard';
 import {
   CardWrapperStyle,
@@ -119,7 +119,7 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
           </div>
 
           <div className={ContainerTypeWrapperStyle}>
-            <Display align="left">{getSelectLabel(containerType, CONTAINER_TYPE_ITEMS)}</Display>
+            <Display align="left">{CONTAINER_TYPE_MAP[containerType]}</Display>
             <Display align="left">{containerOption}</Display>
           </div>
 
@@ -203,12 +203,10 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
           </div>
           <div className={InputIconStyle}>
             <Display align="left">
-              {isNullOrUndefined(freeTimeStartDate) ||
-              freeTimeStartDate === '' ||
-              isNullOrUndefined(freeTimeDuration) ? (
-                <FormattedMessage id="components.cards.na" defaultMessage="N/A" />
-              ) : (
+              {freeTimeStartDate && freeTimeDuration ? (
                 <FormattedDate value={calculateDueDate(freeTimeStartDate, freeTimeDuration)} />
+              ) : (
+                <FormattedMessage id="components.cards.na" defaultMessage="N/A" />
               )}
             </Display>
           </div>

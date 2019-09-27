@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment } from 'react';
+import React from 'react';
 import type {
   ShipmentPayload,
   UserPayload,
@@ -16,7 +16,6 @@ import {
   TimelineIcon,
   TimelineTransitIcon,
   TimelineLine,
-  TimelineDate,
   TimelineVoyage,
   TimelineWarehouseContainerIcon,
   TimelineContainerIcon,
@@ -32,10 +31,9 @@ import {
   ContainerIconWrapperStyle,
   WarehouseContainerWrapperStyle,
   TooltipWrapperStyle,
-  TooltipGirdStyle,
   TooltipTitleStyle,
-  TooltipLabelStyle,
 } from './style';
+import WarehouseIconTooltipMessage from './components/WarehouseTooltipMessage';
 
 type Props = {|
   shipment: ShipmentPayload,
@@ -294,81 +292,7 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
             <div className={ContainerIconWrapperStyle}>
               <TimelineContainerIcon />
             </div>
-            <Tooltip
-              message={
-                <div>
-                  <div className={TooltipTitleStyle}>
-                    <FormattedMessage
-                      id="components.Shipments.warehouseArrival"
-                      defaultMessage="WAREHOUSE ARRIVAL"
-                    />
-                  </div>
-                  <div className={TooltipGirdStyle}>
-                    <div>
-                      <FormattedMessage
-                        id="components.Shipments.containers"
-                        defaultMessage="CONTAINERS"
-                      />
-                    </div>
-                    <div>
-                      <FormattedMessage
-                        id="components.Shipments.agreedDateLabel"
-                        defaultMessage="AGREED"
-                      />
-                    </div>
-                    <div>
-                      <FormattedMessage
-                        id="components.Shipments.actualDateLabel"
-                        defaultMessage="ACTUAL"
-                      />
-                    </div>
-                    {containers.map(container => (
-                      <Fragment key={getByPathWithDefault('', 'id', container)}>
-                        <div className={TooltipLabelStyle}>
-                          {getByPathWithDefault('', 'no', container)}
-                        </div>
-                        <div>
-                          <TimelineDate
-                            color="WHITE"
-                            timelineDate={{
-                              date: getByPathWithDefault(
-                                null,
-                                'warehouseArrivalAgreedDate',
-                                container
-                              ),
-                              approvedAt: getByPathWithDefault(
-                                null,
-                                'warehouseArrivalAgreedDateApprovedAt',
-                                container
-                              ),
-                              timelineDateRevisions: [],
-                            }}
-                          />
-                        </div>
-                        <div>
-                          <TimelineDate
-                            color="WHITE"
-                            timelineDate={{
-                              date: getByPathWithDefault(
-                                null,
-                                'warehouseArrivalActualDate',
-                                container
-                              ),
-                              approvedAt: getByPathWithDefault(
-                                null,
-                                'warehouseArrivalActualDateApprovedAt',
-                                container
-                              ),
-                              timelineDateRevisions: [],
-                            }}
-                          />
-                        </div>
-                      </Fragment>
-                    ))}
-                  </div>
-                </div>
-              }
-            >
+            <Tooltip message={<WarehouseIconTooltipMessage containers={containers} />}>
               <div>
                 <TimelineWarehouseContainerIcon
                   containers={containers}

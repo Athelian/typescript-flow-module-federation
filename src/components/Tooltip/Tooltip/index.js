@@ -25,6 +25,7 @@ export default function Tooltip({ message, children, delay, ...rest }: Props) {
       distance={10}
       interactive
       ignoreAttributes
+      maxWidth={1000}
       {...rest}
     >
       {children}
