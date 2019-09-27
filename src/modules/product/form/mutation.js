@@ -163,16 +163,6 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
         getByPathWithDefault(null, 'origin', oldProductProvider),
         getByPathWithDefault(null, 'origin', newProductProvider)
       ),
-      ...parseGenericField(
-        'productionLeadTime',
-        getByPathWithDefault(null, 'productionLeadTime', oldProductProvider),
-        getByPathWithDefault(null, 'productionLeadTime', newProductProvider)
-      ),
-      ...parseGenericField(
-        'inspectionFee',
-        getByPathWithDefault(null, 'inspectionFee', oldProductProvider),
-        getByPathWithDefault(null, 'inspectionFee', newProductProvider)
-      ),
       ...parseCustomFieldsField(
         'customFields',
         getByPathWithDefault(null, 'customFields', oldProductProvider),

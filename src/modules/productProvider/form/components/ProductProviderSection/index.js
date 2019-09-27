@@ -23,9 +23,7 @@ import {
   Label,
   DashedPlusButton,
   EnumSearchSelectInputFactory,
-  NumberInputFactory,
   CustomFieldsFactory,
-  DayInputFactory,
   TextInputFactory,
   TextAreaInputFactory,
 } from 'components/Form';
@@ -36,8 +34,6 @@ import {
   PRODUCT_PROVIDER_SET_SUPPLIER,
   PRODUCT_PROVIDER_SET_NAME,
   PRODUCT_PROVIDER_SET_ORIGIN,
-  PRODUCT_PROVIDER_SET_PRODUCTION_LEAD_TIME,
-  PRODUCT_PROVIDER_SET_INSPECTION_FEE,
   PRODUCT_PROVIDER_SET_CUSTOM_FIELDS,
   PRODUCT_PROVIDER_SET_CUSTOM_FIELDS_MASK,
   PRODUCT_PROVIDER_SET_MEMO,
@@ -300,89 +296,6 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                 )}
               </FormField>
 
-              <FormField
-                name="productionLeadTime"
-                initValue={values.productionLeadTime}
-                setFieldValue={setFieldValue}
-                values={values}
-                validator={validator}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <DayInputFactory
-                    name={name}
-                    {...inputHandlers}
-                    isNew={isNew}
-                    originalValue={originalValues[name]}
-                    label={
-                      <FormattedMessage
-                        id="modules.ProductProviders.productionLeadTime"
-                        defaultMessage="PRODUCTION LEAD TIME"
-                      />
-                    }
-                    editable={hasPermission([
-                      PRODUCT_PROVIDER_UPDATE,
-                      PRODUCT_PROVIDER_SET_PRODUCTION_LEAD_TIME,
-                    ])}
-                  />
-                )}
-              </FormField>
-
-              <FormField
-                name="inspectionFee.amount"
-                initValue={getByPath('inspectionFee.amount', values)}
-                setFieldValue={setFieldValue}
-                values={values}
-                validator={validator}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <NumberInputFactory
-                    name={name}
-                    {...inputHandlers}
-                    isNew={isNew}
-                    originalValue={getByPath('inspectionFee.amount', originalValues)}
-                    label={
-                      <FormattedMessage
-                        id="modules.ProductProviders.inspectionFee"
-                        defaultMessage="INSPECTION FEE"
-                      />
-                    }
-                    editable={hasPermission([
-                      PRODUCT_PROVIDER_UPDATE,
-                      PRODUCT_PROVIDER_SET_INSPECTION_FEE,
-                    ])}
-                  />
-                )}
-              </FormField>
-
-              <FormField
-                name="inspectionFee.currency"
-                initValue={getByPath('inspectionFee.currency', values)}
-                setFieldValue={setFieldValue}
-                values={values}
-                validator={validator}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <EnumSearchSelectInputFactory
-                    name={name}
-                    required
-                    {...inputHandlers}
-                    isNew={isNew}
-                    originalValue={getByPath('inspectionFee.currency', originalValues)}
-                    label={
-                      <FormattedMessage
-                        id="modules.ProductProviders.inspectionFeeCurrency"
-                        defaultMessage="INSPECTION FEE CCY"
-                      />
-                    }
-                    editable={hasPermission([
-                      PRODUCT_PROVIDER_UPDATE,
-                      PRODUCT_PROVIDER_SET_INSPECTION_FEE,
-                    ])}
-                    enumType="Currency"
-                    hideClearButton
-                  />
-                )}
-              </FormField>
               <CustomFieldsFactory
                 entityType="ProductProvider"
                 customFields={values.customFields}
