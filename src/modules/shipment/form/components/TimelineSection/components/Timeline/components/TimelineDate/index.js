@@ -43,6 +43,7 @@ const defaultProps = {
 };
 
 const TimelineDate = ({ timelineDate, prefixIcon, mode, vertical, color }: Props) => {
+  const showTime = mode === 'datetime';
   const { date, timelineDateRevisions: rawRevisions, approvedAt } = timelineDate;
 
   const timelineDateRevisions = compact(rawRevisions);
@@ -61,11 +62,11 @@ const TimelineDate = ({ timelineDate, prefixIcon, mode, vertical, color }: Props
         <div className={PrefixIconStyle}>{prefixIcon && <Icon icon={prefixIcon} />}</div>
       )}
       {shownDate ? (
-        <div className={DateStyle({ color, vertical, showTime: true })}>
+        <div className={DateStyle({ color, vertical, showTime })}>
           <FormattedDate mode={mode} value={new Date(shownDate)} />
         </div>
       ) : (
-        <div className={DateStyle({ color: 'GRAY_LIGHT', vertical, showTime: false })}>
+        <div className={DateStyle({ color: 'GRAY_LIGHT', vertical, showTime })}>
           <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
         </div>
       )}
