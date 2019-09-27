@@ -1815,8 +1815,7 @@ function BatchSummaryCell({
       {total ? (
         <div className={ContentStyle}>
           <BatchHeading
-            // TODO: Polyfill for flatMap
-            batches={data?.orderItems?.flatMap(orderItem => orderItem?.batches) || []}
+            batches={(data?.orderItems ?? []).flatMap(orderItem => orderItem?.batches) || []}
             hasSelectedChildren={isTargetedAnyBatches}
             hasFilterHits={isMatched}
             isExpanded={isExpand}

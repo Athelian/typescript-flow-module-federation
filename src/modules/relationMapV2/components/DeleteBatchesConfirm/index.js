@@ -9,19 +9,21 @@ import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/
 import { BATCH } from 'modules/relationMapV2/constants';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
-import { CancelButton, YesButton } from 'components/Buttons';
+import { CancelButton, BaseButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
 import { targetedIds } from '../OrderFocus/helpers';
 import { deleteBatchMutation } from '../DeleteBatchConfirm/mutation';
+import { entitiesUpdateManyMutation } from '../AddTags/mutation';
 
 type Props = {|
-  onSuccess: (batchIds: Array<string>) => void,
+  onSuccess: (batchIds: Array<string>, isRemoveTargeting: boolean) => void,
 |};
 
 export default function DeleteBatchesConfirm({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
   const [deleteBatch] = useMutation(deleteBatchMutation);
+  const [updateEntities] = useMutation(entitiesUpdateManyMutation);
   const { dispatch, state } = React.useContext(RelationMapContext);
   const { isProcessing, isRemove, isOpen } = state.deleteBatches;
   const batchIds = targetedIds(state.targets, BATCH);
@@ -36,29 +38,100 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
       payload: {},
     });
   };
-  const onConfirm = () => {
+  const onConfirm = (type: 'delete' | 'remove' | 'removeLocally') => {
     dispatch({
       type: 'DELETE_BATCHES_START',
-      payload: {},
+      payload: {
+        isRemove: type.includes('remove'),
+      },
     });
-    Promise.all(
-      batchIds.map(id =>
-        deleteBatch({
+    switch (type) {
+      case 'delete':
+        Promise.all(
+          batchIds.map(id =>
+            deleteBatch({
+              variables: {
+                id,
+              },
+            })
+          )
+        )
+          .then(() => {
+            onSuccess(batchIds, !isRemove);
+          })
+          .catch(() => {
+            dispatch({
+              type: 'DELETE_BATCHES_CLOSE',
+              payload: {},
+            });
+          });
+        break;
+
+      case 'removeLocally': {
+        const batchesInput = batchIds.map(id =>
+          mapping.entities.batches?.[id]?.container
+            ? {
+                id,
+                input: {
+                  containerId: null,
+                },
+              }
+            : {
+                id,
+                input: {
+                  shipmentId: null,
+                },
+              }
+        );
+        updateEntities({
           variables: {
-            id,
+            orders: [],
+            orderItems: [],
+            batches: batchesInput,
+            containers: [],
+            shipments: [],
           },
         })
-      )
-    )
-      .then(() => {
-        onSuccess(batchIds);
-      })
-      .catch(() => {
-        dispatch({
-          type: 'DELETE_BATCHES_CLOSE',
-          payload: {},
-        });
-      });
+          .then(() => {
+            onSuccess(batchIds, !isRemove);
+          })
+          .catch(() => {
+            dispatch({
+              type: 'DELETE_BATCHES_CLOSE',
+              payload: {},
+            });
+          });
+        break;
+      }
+
+      default: {
+        const batchesInput = batchIds.map(id => ({
+          id,
+          input: {
+            containerId: null,
+            shipmentId: null,
+          },
+        }));
+        updateEntities({
+          variables: {
+            orders: [],
+            orderItems: [],
+            batches: batchesInput,
+            containers: [],
+            shipments: [],
+          },
+        })
+          .then(() => {
+            onSuccess(batchIds, !isRemove);
+          })
+          .catch(() => {
+            dispatch({
+              type: 'DELETE_BATCHES_CLOSE',
+              payload: {},
+            });
+          });
+      }
+    }
   };
 
   const allowToDeleteBatches = hasPermissions([BATCH_DELETE]);
@@ -126,10 +199,25 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
         )}
         <div className={ButtonsStyle}>
           <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          <YesButton
-            disabled={Boolean(isProcessing)}
-            isLoading={Boolean(isProcessing)}
-            onClick={onConfirm}
+          <BaseButton
+            label={<FormattedMessage id="components.button.delete" defaultMessage="DELETE" />}
+            disabled={Boolean(isProcessing) || !allowToDeleteBatches}
+            onClick={() => onConfirm('delete')}
+          />
+          <BaseButton
+            label={
+              <FormattedMessage
+                id="components.button.removeLocally"
+                defaultMessage="REMOVE LOCALLY"
+              />
+            }
+            disabled={Boolean(isProcessing) || !allowToUpdateBatches}
+            onClick={() => onConfirm('removeLocally')}
+          />
+          <BaseButton
+            label={<FormattedMessage id="components.button.remove" defaultMessage="REMOVE" />}
+            disabled={Boolean(isProcessing) || !allowToUpdateBatches}
+            onClick={() => onConfirm('remove')}
           />
         </div>
       </div>

@@ -806,7 +806,33 @@ export default function OrderFocus() {
                           );
                         }}
                       />
-                      <DeleteBatchesConfirm onSuccess={console.warn} />
+                      <DeleteBatchesConfirm
+                        onSuccess={(batchIds, isRemoveTargeting) => {
+                          const orderIds = batchIds
+                            .map(batchId => findOrderIdByBatch(batchId, entities))
+                            .filter(Boolean);
+                          queryOrdersDetail(orderIds);
+                          window.requestIdleCallback(
+                            () => {
+                              if (isRemoveTargeting) {
+                                dispatch({
+                                  type: 'REMOVE_TARGETS',
+                                  payload: {
+                                    targets: batchIds.map(batchId => `${BATCH}-${batchId}`),
+                                  },
+                                });
+                              }
+                              dispatch({
+                                type: 'DELETE_BATCHES_CLOSE',
+                                payload: {},
+                              });
+                            },
+                            {
+                              timeout: 250,
+                            }
+                          );
+                        }}
+                      />
                       <DeleteBatchConfirm
                         onSuccess={batchId => {
                           const parentOrderId = findOrderIdByBatch(batchId, entities);

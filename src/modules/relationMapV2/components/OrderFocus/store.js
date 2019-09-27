@@ -681,7 +681,10 @@ export function reducer(
     case 'DELETE_BATCHES_START': {
       return update(state, {
         deleteBatches: {
-          isProcessing: { $set: true },
+          $merge: {
+            ...action.payload,
+            isProcessing: true,
+          },
         },
       });
     }
