@@ -25,6 +25,19 @@ import { isEquals } from 'utils/fp';
 import { ordersAndShipmentsQuery } from './query';
 import { createContainerMutation } from './mutation';
 
+const defaultItemValues = {
+  customFields: {
+    mask: null,
+    fieldValues: [],
+  },
+  todo: {
+    tasks: [],
+  },
+  tags: [],
+  files: [],
+  memo: '',
+};
+
 type Props = {|
   onClose: (
     ?{
@@ -166,14 +179,11 @@ const EditFormSlideView = ({ onClose }: Props) => {
             }
             newOrderItems.push({
               ...item,
+              ...defaultItemValues,
+              no: `[auto] ${item.no}`,
+              quantity: 0,
               isNew: true,
               id: uuid(),
-              customFields: {
-                mask: null,
-                fieldValues: [],
-              },
-              tags: [],
-              files: [],
               batches: [batch],
             });
           }
@@ -192,18 +202,9 @@ const EditFormSlideView = ({ onClose }: Props) => {
                 redirectAfterSuccess={false}
                 originalDataForSlideView={{
                   orderItems: newOrderItems.map(item => ({
+                    ...defaultItemValues,
                     id: item.id,
                     isNew: true,
-                    customFields: {
-                      mask: null,
-                      fieldValues: [],
-                    },
-                    todo: {
-                      tasks: [],
-                    },
-                    tags: [],
-                    files: [],
-                    memo: '',
                     batches: item.batches.map(batch => ({
                       ...batch,
                       isNew: true,
@@ -215,17 +216,9 @@ const EditFormSlideView = ({ onClose }: Props) => {
                   exporter,
                   orderItems: newOrderItems.map(item => ({
                     ...item,
+                    ...defaultItemValues,
+                    no: `[auto] ${item.no}`,
                     quantity: 0,
-                    customFields: {
-                      mask: null,
-                      fieldValues: [],
-                    },
-                    todo: {
-                      tasks: [],
-                    },
-                    tags: [],
-                    files: [],
-                    memo: '',
                   })),
                   containers: newContainers,
                   shipments: newShipments,
@@ -339,7 +332,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
                         type: CONTAINER,
                       });
                     })
-                    .catch(console.error);
+                    .catch(onClose);
                 }}
               />
             );
