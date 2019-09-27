@@ -4,7 +4,7 @@ import type { ContainerPayload } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { encodeId } from 'utils/id';
 import { defaultVolumeMetric } from 'utils/metric';
-import { getSelectLabel, isForbidden } from 'utils/data';
+import { isForbidden } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -17,7 +17,7 @@ import { Label, Display } from 'components/Form';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { calculateDueDate } from 'utils/date';
 import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
-import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
+import { CONTAINER_TYPE_MAP } from 'modules/container/constants';
 import BaseCard from '../BaseCard';
 import {
   CardWrapperStyle,
@@ -119,7 +119,7 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
           </div>
 
           <div className={ContainerTypeWrapperStyle}>
-            <Display align="left">{getSelectLabel(containerType, CONTAINER_TYPE_ITEMS)}</Display>
+            <Display align="left">{CONTAINER_TYPE_MAP[containerType]}</Display>
             <Display align="left">{containerOption}</Display>
           </div>
 

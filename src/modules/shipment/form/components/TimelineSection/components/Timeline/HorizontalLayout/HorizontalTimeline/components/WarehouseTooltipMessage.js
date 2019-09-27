@@ -1,8 +1,9 @@
 // @flow
 import React, { Fragment } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { TimelineDate } from 'modules/shipment/form/components/TimelineSection/components/Timeline/components';
 import FormattedDate from 'components/FormattedDate';
+import { TimelineDate } from 'modules/shipment/form/components/TimelineSection/components/Timeline/components';
+import { CONTAINER_TYPE_MAP } from 'modules/container/constants';
 import { calculateDueDate } from 'utils/date';
 
 import { TooltipTitleStyle, TooltipGirdStyle, TooltipLabelStyle } from '../style';
@@ -31,7 +32,7 @@ export default function WarehouseIconTooltipMessage({ containers }: Props) {
           <FormattedMessage id="components.Shipments.warehouse" defaultMessage="WAREHOUSE" />
         </div>
         <div>
-          <FormattedMessage id="components.Shipments.freeTime" defaultMessage="FREE TIME" />
+          <FormattedMessage id="components.Shipments.dueDate" defaultMessage="DUE DATE" />
         </div>
         <div>
           <FormattedMessage id="components.Shipments.agreedDateLabel" defaultMessage="AGREED" />
@@ -44,7 +45,9 @@ export default function WarehouseIconTooltipMessage({ containers }: Props) {
           return (
             <Fragment key={container.id}>
               <div className={TooltipLabelStyle('left')}>{container.no}</div>
-              <div className={TooltipLabelStyle()}>{container.containerType}</div>
+              <div className={TooltipLabelStyle()}>
+                {CONTAINER_TYPE_MAP[container.containerType]}
+              </div>
               <div className={TooltipLabelStyle()}>{container.warehouse?.name} </div>
 
               <div className={TooltipLabelStyle()}>
