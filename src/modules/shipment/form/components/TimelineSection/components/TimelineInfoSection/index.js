@@ -14,6 +14,7 @@ import {
 } from 'modules/permission/constants/shipment';
 import GridColumn from 'components/GridColumn';
 import { injectUid } from 'utils/id';
+import { Tooltip } from 'components/Tooltip';
 import { NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
 import { todayForDateInput } from 'utils/date';
@@ -105,25 +106,50 @@ const TimelineInfoSection = (props: Props) => {
         <GridColumn gap="10px" data-testid={`${sourceName}_DateRevisions`}>
           <div className={AddDateButtonWrapperStyle}>
             {hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_REVISE_TIMELINE_DATE]) && (
-              <NewButton
-                data-testid={`${sourceName}_addDateButton`}
-                label={
-                  <FormattedMessage id="modules.Shipments.newDate" defaultMessage="NEW DATE" />
-                }
-                onClick={() => {
-                  setFieldDeepValue(
-                    `${sourceName}.timelineDateRevisions[${timelineDateRevisions.length}]`,
-                    injectUid({
-                      isNew: true,
-                      type: 'Other',
-                      date: date || todayForDateInput(),
-                      memo: null,
-                      updatedAt: new Date(),
-                      updatedBy: user,
-                    })
-                  );
-                }}
-              />
+              <>
+                {timelineDateRevisions.length < 5 ? (
+                  <NewButton
+                    data-testid={`${sourceName}_addDateButton`}
+                    label={
+                      <FormattedMessage id="modules.Shipments.newDate" defaultMessage="NEW DATE" />
+                    }
+                    onClick={() => {
+                      setFieldDeepValue(
+                        `${sourceName}.timelineDateRevisions[${timelineDateRevisions.length}]`,
+                        injectUid({
+                          isNew: true,
+                          type: 'Other',
+                          date: date || todayForDateInput(),
+                          memo: null,
+                          updatedAt: new Date(),
+                          updatedBy: user,
+                        })
+                      );
+                    }}
+                  />
+                ) : (
+                  <Tooltip
+                    message={
+                      <FormattedMessage
+                        id="modules.shipment.max5"
+                        defaultMessage="Only a maximum of 5 date revisions is allowed"
+                      />
+                    }
+                  >
+                    <div>
+                      <NewButton
+                        label={
+                          <FormattedMessage
+                            id="modules.Shipments.newDate"
+                            defaultMessage="NEW DATE"
+                          />
+                        }
+                        disabled
+                      />
+                    </div>
+                  </Tooltip>
+                )}
+              </>
             )}
           </div>
           {timelineDateRevisions
