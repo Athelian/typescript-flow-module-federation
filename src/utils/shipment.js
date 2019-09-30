@@ -55,3 +55,15 @@ export const getUniqueExporters = (batches: Array<Object> = []) => {
 
   return uniqueExporters;
 };
+
+export const getPort = (transportType: ?string, port: Object = {}): string => {
+  if (transportType) {
+    if (transportType === 'Air') {
+      return port.airportName || '';
+    }
+    if (transportType === 'Sea') {
+      return port.seaportName || '';
+    }
+  }
+  return '';
+};

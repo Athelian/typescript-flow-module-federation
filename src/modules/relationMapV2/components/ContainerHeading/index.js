@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import FormattedDate from 'components/FormattedDate';
 import { Display, Label } from 'components/Form';
-import { isBefore, isAfter, differenceInCalendarDays } from 'utils/date';
+import { isBefore, isAfter, differenceInMinutes } from 'utils/date';
 import Heading from 'modules/relationMapV2/components/Heading';
 import { RightWrapperStyle, DatesWrapperStyle, DashStyle } from './style';
 
@@ -80,8 +80,7 @@ export default function ContainerHeading({
             {canViewDelivery &&
               oldestDelivery &&
               newestDelivery &&
-              differenceInCalendarDays(new Date(oldestDelivery), new Date(newestDelivery)) !==
-                0 && (
+              differenceInMinutes(new Date(oldestDelivery), new Date(newestDelivery)) !== 0 && (
                 <>
                   <div className={DashStyle}>-</div>
                   <Display>

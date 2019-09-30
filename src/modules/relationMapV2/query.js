@@ -266,6 +266,55 @@ export const orderCardFullFragment = gql`
             name
           }
         }
+        transportType
+        cargoReady {
+          ...timelineDateFragment
+        }
+        voyages {
+          ... on Voyage {
+            id
+            departurePort {
+              seaportName
+              airportName
+            }
+            arrivalPort {
+              seaportName
+              airportName
+            }
+            departure {
+              ...timelineDateFragment
+            }
+            arrival {
+              ...timelineDateFragment
+            }
+          }
+        }
+        containerGroups {
+          ... on ContainerGroup {
+            id
+            warehouse {
+              ... on Warehouse {
+                id
+                name
+              }
+            }
+            customClearance {
+              ...timelineDateFragment
+            }
+            warehouseArrival {
+              ...timelineDateFragment
+            }
+            deliveryReady {
+              ...timelineDateFragment
+            }
+          }
+        }
+        containers {
+          ... on Container {
+            id
+            warehouseArrivalActualDateApprovedAt
+          }
+        }
       }
     }
   }
