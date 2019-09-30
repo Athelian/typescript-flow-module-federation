@@ -108,7 +108,7 @@ export const initialState: State = {
     isProcessing: false,
   },
   tags: {
-    source: '',
+    source: 'Order',
     isOpen: false,
     isProcessing: false,
   },

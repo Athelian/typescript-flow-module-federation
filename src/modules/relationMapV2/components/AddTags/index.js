@@ -16,6 +16,7 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import Dialog from 'components/Dialog';
 import Icon from 'components/Icon';
 import { FieldItem, Label, TagsInput } from 'components/Form';
+import { parseIcon } from 'utils/entity';
 import {
   ordersByIDsQuery,
   orderItemsByIDsQuery,
@@ -272,7 +273,7 @@ export default function AddTags({ onSuccess }: Props) {
               defaultMessage="At least one {source} {entity} selected does not allow you to add tags.Please reselect and try again."
               values={{
                 source,
-                entity: <Icon icon={source.toUpperCase()} />,
+                entity: <Icon icon={parseIcon(source)} />,
               }}
             />
           </h3>

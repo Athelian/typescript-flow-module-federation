@@ -7,7 +7,7 @@ import { usePermissions } from 'components/Context/Permissions';
 import useUser from 'hooks/useUser';
 import { decodeId } from 'utils/id';
 import logger from 'utils/logger';
-import { parseRoute } from 'utils/route';
+import { parseRoute } from 'utils/entity';
 import QueryFormPermissionContext from '../QueryForm/context';
 
 type OptionalProps = {
