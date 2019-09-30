@@ -19,11 +19,17 @@ export const EntityNavbarWrapperStyle = (color: string, width: number): string =
   height: 50px;
   background-color: ${colors[color]};
   width: ${width}px;
+  padding: 0 0 0 15px;
+  overflow: hidden;
 `;
 
 export const EntityIconStyle: string = css`
-  font-size: 24px;
+  position: absolute;
+  width: 50px;
+  left: -25px;
+  font-size: 20px;
   color: rgba(255, 255, 255, 0.2);
+  text-align: center;
 `;
 
 export const TitleWrapperStyle: string = css`

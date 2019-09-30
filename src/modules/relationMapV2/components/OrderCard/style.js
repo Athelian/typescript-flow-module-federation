@@ -50,6 +50,7 @@ export const CreateItemButtonStyle: string = css`
   color: ${colors.WHITE};
   ${fontSizes.SMALL};
   ${borderRadiuses.CIRCLE};
+  z-index: 2;
   &:hover {
     opacity: 1;
     ${shadows.INPUT};

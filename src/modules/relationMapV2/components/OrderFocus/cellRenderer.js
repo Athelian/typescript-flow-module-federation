@@ -33,6 +33,7 @@ import Badge from 'modules/relationMapV2/components/Badge';
 import type { CellRender, State } from './type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
 import RelationLine from '../RelationLine';
+import FilterHitBorder from '../FilterHitBorder';
 import OrderCard from '../OrderCard';
 import OrderItemCard from '../OrderItemCard';
 import BatchCard from '../BatchCard';
@@ -42,7 +43,7 @@ import OrderItemHeading from '../OrderItemHeading';
 import BatchHeading from '../BatchHeading';
 import ContainerHeading from '../ContainerHeading';
 import ShipmentHeading from '../ShipmentHeading';
-import { ContentStyle, MatchedStyle } from './style';
+import { ContentStyle } from './style';
 import {
   getColorByEntity,
   getIconByEntity,
@@ -57,27 +58,22 @@ type CellProps = {
   afterConnector?: ?LINE_CONNECTOR,
 };
 
-function isMatchedEntity(matches: Object, entity: Object) {
-  if (!matches?.entity || !entity) return false;
+function isMatchedEntity(matches: Object, data: Object) {
+  if (!matches?.entity || !data) return false;
 
-  if (entity.__typename === ORDER_ITEM) {
-    return matches?.entity[`${entity.productProvider?.product?.id}-${PRODUCT}`];
+  if (data.__typename === ORDER_ITEM) {
+    return matches?.entity[`${data.productProvider?.product?.id}-${PRODUCT}`];
   }
 
-  if (entity.__typename === ORDER) {
+  if (data.__typename === ORDER) {
     return (
-      matches?.entity[`${entity.id}-${entity.__typename}`] ||
-      (entity?.tags ?? []).some(tag => matches?.entity[`${tag?.id}-${TAG}`])
+      matches?.entity[`${data.id}-${data.__typename}`] ||
+      (data?.tags ?? []).some(tag => matches?.entity[`${tag?.id}-${TAG}`])
     );
   }
 
-  return matches?.entity[`${entity.id}-${entity.__typename}`];
+  return matches?.entity[`${data.id}-${data.__typename}`];
 }
-
-export const MatchedResult = ({ entity }: { entity: Object }) => {
-  const { matches } = Hits.useContainer();
-  return <div className={MatchedStyle(isMatchedEntity(matches, entity))} />;
-};
 
 export const Overlay = ({
   color,
@@ -569,6 +565,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
+  const { matches } = Hits.useContainer();
   const hasPermissions = useEntityHasPermissions(data);
   const orderId = getByPathWithDefault('', 'id', data);
   const [{ isOver, canDrop, dropMessage, isSameItem }, drop] = useDrop({
@@ -736,7 +733,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
                   });
                 }}
               />
-              <MatchedResult entity={data} />
+              <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
@@ -771,6 +768,7 @@ function OrderItemCell({
 }: CellProps & { order: OrderPayload }) {
   const { state, dispatch } = React.useContext(RelationMapContext);
   const { badge } = Entities.useContainer();
+  const { matches } = Hits.useContainer();
   const hasPermissions = useEntityHasPermissions(data);
   const orderId = getByPathWithDefault('', 'id', order);
   const itemId = getByPathWithDefault('', 'id', data);
@@ -957,7 +955,7 @@ function OrderItemCell({
                   });
                 }}
               />
-              <MatchedResult entity={data} />
+              <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
@@ -997,6 +995,7 @@ function BatchCell({
   const hasPermissions = useEntityHasPermissions(data);
   const { state, dispatch } = React.useContext(RelationMapContext);
   const { mapping, badge } = Entities.useContainer();
+  const { matches } = Hits.useContainer();
   const batchId = getByPathWithDefault('', 'id', data);
   const { entities } = mapping;
   const [{ isOver, canDrop, isSameItem }, drop] = useDrop({
@@ -1146,7 +1145,7 @@ function BatchCell({
                   });
                 }}
               />
-              <MatchedResult entity={data} />
+              <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
@@ -1178,6 +1177,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
+  const { matches } = Hits.useContainer();
   const containerId = data?.id;
   const container = entities.containers?.[containerId] ?? { id: containerId };
   const hasPermissions = useHasPermissions(container.ownedBy);
@@ -1376,7 +1376,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             <div ref={drag}>
               <Badge label={badge.container?.[containerId] ?? ''} />
               <ContainerCard container={container} />
-              <MatchedResult entity={data} />
+              <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
@@ -1411,6 +1411,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
   const { state, dispatch } = React.useContext(RelationMapContext);
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
+  const { matches } = Hits.useContainer();
   const shipmentId = data?.id;
   const shipment = entities.shipments?.[shipmentId] ?? { id: shipmentId };
   const hasPermissions = useHasPermissions(shipment.ownedBy);
@@ -1561,7 +1562,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
             <div ref={drag}>
               <Badge label={badge.shipment?.[shipmentId] ?? ''} />
               <ShipmentCard shipment={data} />
-              <MatchedResult entity={data} />
+              <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}

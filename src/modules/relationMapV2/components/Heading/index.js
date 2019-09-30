@@ -4,13 +4,13 @@ import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import { Display, Label } from 'components/Form';
+import FilterHitBorder from 'modules/relationMapV2/components/FilterHitBorder';
 import {
   HeadingWrapperStyle,
   LeftWrapperStyle,
   TotalWrapperStyle,
   SelectAllButtonStyle,
   ExpandedIconWrapperStyle,
-  ItemHeadingFilteredStyle,
   ItemHeadingSelectedStyle,
 } from './style';
 
@@ -88,7 +88,7 @@ export default function Heading({
         <Icon icon="CHEVRON_DOWN" />
       </span>
 
-      <div className={ItemHeadingFilteredStyle(!isExpanded && hasFilterHits)} />
+      <FilterHitBorder hasFilterHits={!isExpanded && hasFilterHits} />
 
       <div className={ItemHeadingSelectedStyle(!isExpanded && hasSelectedChildren)} />
     </div>
