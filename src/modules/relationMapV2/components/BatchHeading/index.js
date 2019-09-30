@@ -95,13 +95,15 @@ export default function BatchHeading({
             <Display blackout={!canViewDelivery}>
               <FormattedDate value={oldestDelivery} />
 
-              {differenceInCalendarDays(new Date(oldestDelivery), new Date(newestDelivery)) !==
-                0 && (
-                <>
-                  {' - '}
-                  <FormattedDate value={newestDelivery} />
-                </>
-              )}
+              {oldestDelivery &&
+                newestDelivery &&
+                differenceInCalendarDays(new Date(oldestDelivery), new Date(newestDelivery)) !==
+                  0 && (
+                  <>
+                    {' - '}
+                    <FormattedDate value={newestDelivery} />
+                  </>
+                )}
             </Display>
           </div>
 
@@ -113,12 +115,15 @@ export default function BatchHeading({
             <Display blackout={!canViewDesired}>
               <FormattedDate value={oldestDesired} />
 
-              {differenceInCalendarDays(new Date(oldestDesired), new Date(newestDesired)) !== 0 && (
-                <>
-                  {' - '}
-                  <FormattedDate value={newestDesired} />
-                </>
-              )}
+              {oldestDesired &&
+                newestDesired &&
+                differenceInCalendarDays(new Date(oldestDesired), new Date(newestDesired)) !==
+                  0 && (
+                  <>
+                    {' - '}
+                    <FormattedDate value={newestDesired} />
+                  </>
+                )}
             </Display>
           </div>
         </div>

@@ -78,6 +78,8 @@ export default function ContainerHeading({
             </Display>
 
             {canViewDelivery &&
+              oldestDelivery &&
+              newestDelivery &&
               differenceInCalendarDays(new Date(oldestDelivery), new Date(newestDelivery)) !==
                 0 && (
                 <>
