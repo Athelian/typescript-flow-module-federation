@@ -55,6 +55,7 @@ export const ProductSerialStyle: string = css`
   ${colors.BLACK};
   ${presets.ELLIPSIS};
   width: 100%;
+  line-height: 20px;
 `;
 
 export const DeleteItemButtonStyle: string = css`

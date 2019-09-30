@@ -38,11 +38,14 @@ import {
   faFileSpreadsheet as TEMPLATE,
   faClipboardCheck as TASK,
   faTable as EDIT_TABLE,
+  faTable as TABLE,
   faShieldAlt as SECURITY,
   faKey as PASSWORD,
   faRedo as FORGOT,
   faFileImport as IMPORT,
   faTh as SHEET,
+  faThLarge as CARDS,
+  faThList as PROJECT,
   // Common UI
   faFolderOpen as ACTIVE,
   faArchive as ARCHIVE,
@@ -95,6 +98,7 @@ import {
   faClock as CLOCK,
   faThList as TH_LIST,
   faSitemap as RELATED,
+  faProjectDiagram as MAP,
   faForward as SKIPPED,
   faUndo as UNDO,
   faBringForward as BRING_FORWARD,
@@ -134,7 +138,6 @@ import {
   faWarehouse as WAREHOUSER,
   faCube as PRODUCT_PROVIDER,
   // Common UI
-  faThList as TABLE,
   faList as LIST,
   faCheckCircle as UNCHECKED,
   faEye as EYE,
@@ -212,6 +215,8 @@ export default {
   SKIPPED,
   UNDO,
   BRING_FORWARD,
+  CARDS,
+  PROJECT,
 
   BRANCH,
   ACTIVE,
@@ -270,6 +275,7 @@ export default {
   INVISIBLE,
   RELOAD,
   CLOCK,
+  MAP,
 
   TIMELINE,
   CARGO_READY,
