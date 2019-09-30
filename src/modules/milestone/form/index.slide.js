@@ -57,7 +57,7 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
                       <ResetButton
                         onClick={() => {
                           resetFormState(milestoneStateContainer);
-                          resetFormState(filesContainer);
+                          resetFormState(filesContainer, 'files');
                           formContainer.onReset();
                         }}
                       />
