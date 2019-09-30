@@ -6,8 +6,8 @@ export const RightWrapperStyle: string = css`
   display: grid;
   grid-template-rows: 20px 20px;
   grid-gap: 5px;
-  padding: 5px 25px 5px 0;
-  width: 230px;
+  padding: 5px 20px 5px 0;
+  width: 255px;
 `;
 
 export const DatesWrapperStyle: string = css`

@@ -41,13 +41,13 @@ import ContainerCard from '../ContainerCard';
 import ShipmentCard from '../ShipmentCard';
 import OrderItemHeading from '../OrderItemHeading';
 import BatchHeading from '../BatchHeading';
+import ContainerHeading from '../ContainerHeading';
 import { ContentStyle, MatchedStyle } from './style';
 import {
   getColorByEntity,
   getIconByEntity,
   getCardByEntity,
   ShipmentCard as ShipmentSummaryCard,
-  ContainerCard as ContainerSummaryCard,
   HeaderCard,
   handleClickAndDoubleClick,
 } from './helpers';
@@ -1929,47 +1929,26 @@ function ContainerSummaryCell({
         if (total) {
           return (
             <div className={ContentStyle}>
-              <HeaderCard
-                isExpand={isExpand}
-                selected={!isExpand && isTargetedAnyContainers}
+              <ContainerHeading
+                containers={data?.containers || []}
+                hasSelectedChildren={isTargetedAnyContainers}
+                hasFilterHits={isMatched}
+                isExpanded={isExpand}
                 onClick={onClick}
-              >
-                {isMatched && !isExpand && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '-6px',
-                      right: '-8px',
-                      border: '4px solid rgba(11,110,222,0.5)',
-                      height: 60,
-                      width: CONTAINER_WIDTH - 13,
-                      borderRadius: '9px',
-                    }}
-                  />
-                )}
-                <ContainerSummaryCard>
-                  <p>Total: {getByPathWithDefault(0, 'containerCount', data)}</p>
-                  <button
-                    type="button"
-                    onClick={evt => {
-                      evt.stopPropagation();
-                      const targets = [];
-                      containerIds.forEach(id => targets.push(`${CONTAINER}-${id}`));
-                      dispatch({
-                        type: 'TARGET_ALL',
-                        payload: {
-                          targets,
-                        },
-                      });
-                    }}
-                  >
-                    <FormattedMessage
-                      id="components.button.SelectAll"
-                      defaultMessage="SELECT ALL"
-                    />
-                  </button>
-                </ContainerSummaryCard>
-              </HeaderCard>
+                total={data?.containerCount || 0}
+                onSelectAll={() => {
+                  const targets = [];
+
+                  containerIds.forEach(id => targets.push(`${CONTAINER}-${id}`));
+
+                  dispatch({
+                    type: 'TARGET_ALL',
+                    payload: {
+                      targets,
+                    },
+                  });
+                }}
+              />
             </div>
           );
         }
