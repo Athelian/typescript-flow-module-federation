@@ -386,3 +386,14 @@ function useGlobalShipmentPoint(initialState = CARGO_READY) {
 }
 
 export const GlobalShipmentPoint = createContainer(useGlobalShipmentPoint);
+
+function useExpandRow() {
+  const [expandRows, setExpandRows] = useState([]);
+
+  return {
+    expandRows,
+    setExpandRows,
+  };
+}
+
+export const ExpandRows = createContainer(useExpandRow);

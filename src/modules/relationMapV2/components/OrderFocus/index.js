@@ -20,7 +20,13 @@ import {
   orderFullFocusDetailQuery,
 } from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { Hits, Entities, SortAndFilter, ClientSorts } from 'modules/relationMapV2/store';
+import {
+  Hits,
+  Entities,
+  SortAndFilter,
+  ClientSorts,
+  ExpandRows,
+} from 'modules/relationMapV2/store';
 import { findOrderIdByOrderItem, findOrderIdByBatch } from './helpers';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
@@ -183,7 +189,7 @@ export default function OrderFocus() {
     type: '',
     id: '',
   });
-  const [expandRows, setExpandRows] = React.useState([]);
+  const { expandRows, setExpandRows } = ExpandRows.useContainer();
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const { initHits } = Hits.useContainer();
   const { getBatchesSortByItemId, getItemsSortByOrderId } = ClientSorts.useContainer();
@@ -200,7 +206,7 @@ export default function OrderFocus() {
     if (!isEquals(lastQueryVariables, queryVariables)) {
       setExpandRows([]);
     }
-  }, [lastQueryVariables, queryVariables]);
+  }, [lastQueryVariables, queryVariables, setExpandRows]);
 
   const scrollToRow = React.useCallback(
     ({ position, id, type }: { position: number, id: string, type: string }) => {
