@@ -86,7 +86,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
   return (
     <Content>
       <NavBar>
-        <EntityIcon icon="SHEET" color="SHEET" />
+        <EntityIcon icon="ORDER" color="ORDER" subIcon="TABLE" />
 
         <Filter
           config={OrderConfigFilter}

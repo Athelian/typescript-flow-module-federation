@@ -5,6 +5,7 @@ import { getByPath } from 'utils/fp';
 
 type OptionalProps = {
   icon?: string,
+  subIcon?: string,
   renderIcon: Function,
   canArchive: boolean,
   canSearch: boolean,
@@ -29,7 +30,8 @@ const defaultProps = {
   canArchive: false,
   canSearch: false,
   canSort: true,
-  renderIcon: icon => (icon ? <EntityIcon icon={icon} color={icon} /> : null),
+  renderIcon: (icon: string, subIcon?: string) =>
+    icon ? <EntityIcon icon={icon} color={icon} subIcon={subIcon} /> : null,
 };
 
 export function currentSort(
@@ -46,6 +48,7 @@ export function currentSort(
 
 export default function FilterToolBar({
   icon,
+  subIcon,
   renderIcon,
   sortFields,
   filtersAndSort,
@@ -56,7 +59,7 @@ export default function FilterToolBar({
 }: Props) {
   return (
     <>
-      {renderIcon(icon)}
+      {renderIcon(icon, subIcon)}
       {canArchive && (
         <StatusToggleTabs
           activeIndex={getByPath('filter.archived', filtersAndSort) ? 1 : 0}

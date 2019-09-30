@@ -27,7 +27,7 @@ const RelationMap = () => {
               }}
             >
               <NavBar>
-                <EntityIcon icon="RELATION_MAP" color="RELATION_MAP" />
+                <EntityIcon icon="ORDER" color="ORDER" subIcon="MAP" />
                 <AdvanceFilter />
               </NavBar>
               <Content>

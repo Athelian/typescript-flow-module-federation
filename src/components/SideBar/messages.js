@@ -78,12 +78,16 @@ export default defineMessages({
     id: 'modules.SideBar.documents',
     defaultMessage: 'DOCUMENTS',
   },
-  list: {
-    id: 'modules.SideBar.list',
-    defaultMessage: 'LIST',
+  cards: {
+    id: 'modules.SideBar.cards',
+    defaultMessage: 'CARDS',
   },
-  sheet: {
-    id: 'modules.SideBar.sheet',
-    defaultMessage: 'SHEET',
+  table: {
+    id: 'modules.SideBar.table',
+    defaultMessage: 'TABLE',
+  },
+  map: {
+    id: 'modules.SideBar.map',
+    defaultMessage: 'MAP',
   },
 });

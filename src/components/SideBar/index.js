@@ -27,7 +27,6 @@ import {
 } from 'modules/permission/constants/task';
 import { UIConsumer } from 'modules/ui';
 import { useViewerHasPermissions, type HasPermissions } from 'components/Context/Permissions';
-import { isEnableBetaFeature } from 'utils/env';
 import { Logo, MenuItem, SubMenu } from './components';
 import { SideBarWrapperStyle, SideBarBodyStyle } from './style';
 import messages from './messages';
@@ -53,12 +52,6 @@ type MenuConfig = {
 const menu: Array<MenuConfig> = [
   {
     label: <FormattedMessage {...messages.relationMap} />,
-    icon: 'UNKNOWN',
-    path: 'relation-map-beta',
-    hidden: !isEnableBetaFeature,
-  },
-  {
-    label: <FormattedMessage {...messages.relationMap} />,
     icon: 'RELATION_MAP',
     path: 'relation-map',
     permitted: hasPermissions =>
@@ -71,14 +64,20 @@ const menu: Array<MenuConfig> = [
     permitted: hasPermissions => hasPermissions(ORDER_LIST),
     submenu: [
       {
-        label: <FormattedMessage {...messages.list} />,
-        icon: 'LIST',
-        path: 'list',
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
       },
       {
-        label: <FormattedMessage {...messages.sheet} />,
-        icon: 'SHEET',
-        path: 'sheet',
+        label: <FormattedMessage {...messages.table} />,
+        icon: 'TABLE',
+        path: 'table',
+        beta: true,
+      },
+      {
+        label: <FormattedMessage {...messages.map} />,
+        icon: 'MAP',
+        path: 'map',
         beta: true,
       },
     ],

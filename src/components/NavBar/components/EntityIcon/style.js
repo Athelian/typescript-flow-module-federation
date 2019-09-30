@@ -1,10 +1,11 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, layout, fontSizes } from 'styles/common';
+import { colors, layout, fontSizes, borderRadiuses } from 'styles/common';
 
 export const IconStyle = (color: string, invert: boolean): string => css`
-  background: ${invert ? '#fff' : colors[color]};
-  color: ${invert ? colors[color] : '#fff'};
+  position: relative;
+  background: ${invert ? colors.WHITE : colors[color]};
+  color: ${invert ? colors[color] : colors.WHITE};
   display: flex;
   ${layout.CENTER_CENTER};
   width: 50px;
@@ -12,4 +13,17 @@ export const IconStyle = (color: string, invert: boolean): string => css`
   ${fontSizes.HUGE};
 `;
 
-export default IconStyle;
+export const SubIconStyle = (color: string): string => css`
+  position: absolute;
+  bottom: 5px;
+  right: -10px;
+  color: rgba(255, 255, 255, 0.75);
+  background-color: ${colors[color]};
+  ${fontSizes.SMALL};
+  width: 22px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  ${borderRadiuses.MAIN};
+`;
