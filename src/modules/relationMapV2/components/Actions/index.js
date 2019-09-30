@@ -17,6 +17,7 @@ import {
   findOrderIdByBatch,
   findOrderIdByOrderItem,
 } from 'modules/relationMapV2/components/OrderFocus/helpers';
+import { FormattedMessage } from 'react-intl';
 import ActionButton from './components/ActionButton';
 import ActionSubMenu from './components/ActionSubMenu';
 import ActionLabel from './components/ActionLabel';
@@ -51,7 +52,6 @@ function hasPermissionToClone(
   }
 }
 
-// TODO: check the permission for all actions
 export default function Actions({ targets }: Props) {
   const [currentMenu, setCurrentMenu] = React.useState(null);
   const { dispatch } = React.useContext(RelationMapContext);
@@ -156,7 +156,9 @@ export default function Actions({ targets }: Props) {
                 isDisabled={!allowToCloneOrders}
               >
                 <Icon icon="CLONE" />
-                <ActionLabel>CLONE</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />
+                </ActionLabel>
               </ActionButton>
 
               <ActionButton
@@ -170,7 +172,12 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="TAG" />
-                <ActionLabel>ADD TAGS</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.addTags"
+                    defaultMessage="ADD TAGS"
+                  />
+                </ActionLabel>
               </ActionButton>
               <ActionButton
                 onClick={() => {
@@ -183,7 +190,12 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="ACTIVE" /> / <Icon icon="ARCHIVE" />
-                <ActionLabel>Active/Archive</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.ActiveOrArchive"
+                    defaultMessage="ACTIVE/ARCHIVE"
+                  />
+                </ActionLabel>
               </ActionButton>
             </ActionSubMenu>
           </ActionButton>
@@ -208,7 +220,9 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="REMOVE" />
-                <ActionLabel>DELETE</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
+                </ActionLabel>
               </ActionButton>
               <ActionButton
                 onClick={() => {
@@ -221,7 +235,12 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="TAG" />
-                <ActionLabel>ADD TAGS</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.addTags"
+                    defaultMessage="ADD TAGS"
+                  />
+                </ActionLabel>
               </ActionButton>
               <ActionButton
                 onClick={() => {
@@ -234,7 +253,12 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="QUANTITY_ADJUSTMENTS" />
-                <ActionLabel>AUTOFILL</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.autoFill"
+                    defaultMessage="AUTOFILL"
+                  />
+                </ActionLabel>
               </ActionButton>
               <ActionButton
                 onClick={() => {
@@ -248,7 +272,9 @@ export default function Actions({ targets }: Props) {
                 isDisabled={!allowToCloneOrderItems}
               >
                 <Icon icon="CLONE" />
-                <ActionLabel>CLONE</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />
+                </ActionLabel>
               </ActionButton>
             </ActionSubMenu>
           </ActionButton>
@@ -273,7 +299,11 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="REMOVE" /> / <Icon icon="CLEAR" />
-                <ActionLabel>DELETE / REMOVE</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
+                  /
+                  <FormattedMessage id="components.button.remove" defaultMessage="REMOVE" />
+                </ActionLabel>
               </ActionButton>
               <ActionButton
                 onClick={() => {
@@ -286,9 +316,13 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="TAG" />
-                <ActionLabel>ADD TAGS</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.addTags"
+                    defaultMessage="ADD TAGS"
+                  />
+                </ActionLabel>
               </ActionButton>
-              {/* TODO: check permission to move */}
               <ActionButton
                 onClick={() => {
                   dispatch({
@@ -298,7 +332,9 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="EXCHANGE" />
-                <ActionLabel>MOVE</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage id="components.button.move" defaultMessage="MOVE" />
+                </ActionLabel>
               </ActionButton>
               <ActionButton
                 onClick={() => {
@@ -311,7 +347,9 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="SPLIT" />
-                <ActionLabel>SPLIT</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage id="components.button.split" defaultMessage="SPLIT" />
+                </ActionLabel>
               </ActionButton>
               <ActionButton
                 onClick={() => {
@@ -325,7 +363,9 @@ export default function Actions({ targets }: Props) {
                 isDisabled={!allowToCloneBatches}
               >
                 <Icon icon="CLONE" />
-                <ActionLabel>CLONE</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />
+                </ActionLabel>
               </ActionButton>
             </ActionSubMenu>
           </ActionButton>
@@ -350,7 +390,9 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="REMOVE" />
-                <ActionLabel>DELETE</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
+                </ActionLabel>
               </ActionButton>
               <ActionButton
                 onClick={() => {
@@ -363,7 +405,12 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="TAG" />
-                <ActionLabel>ADD TAGS</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.addTags"
+                    defaultMessage="ADD TAGS"
+                  />
+                </ActionLabel>
               </ActionButton>
             </ActionSubMenu>
           </ActionButton>
@@ -388,7 +435,12 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="TAG" />
-                <ActionLabel>ADD TAGS</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.addTags"
+                    defaultMessage="ADD TAGS"
+                  />
+                </ActionLabel>
               </ActionButton>
               <ActionButton
                 onClick={() => {
@@ -401,7 +453,12 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="ACTIVE" /> / <Icon icon="ARCHIVE" />
-                <ActionLabel>Active/Archive</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.ActiveOrArchive"
+                    defaultMessage="ACTIVE/ARCHIVE"
+                  />
+                </ActionLabel>
               </ActionButton>
             </ActionSubMenu>
           </ActionButton>

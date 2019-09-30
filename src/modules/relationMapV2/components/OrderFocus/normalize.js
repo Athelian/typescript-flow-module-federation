@@ -12,7 +12,6 @@ const hit = new schema.Entity('hits');
 const entity = new schema.Entity(
   'entity',
   {},
-  // eslint-disable-next-line no-underscore-dangle
   { idAttribute: value => `${value.id}-${value.__typename}` }
 );
 const entityHit = new schema.Entity('entityHits');
@@ -22,8 +21,6 @@ entityHit.define({
 hit.define({
   entityHits: [entityHit],
 });
-
-// TODO: try to define a mapping key on schema
 
 batch.define({
   shipment,

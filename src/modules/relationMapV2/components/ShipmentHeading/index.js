@@ -23,7 +23,7 @@ import {
 import { GlobalShipmentPoint } from 'modules/relationMapV2/store';
 import { RightWrapperStyle, PlaceWrapperStyle, DatesWrapperStyle } from './style';
 
-const allocateDate = ({ place, date, data }) => {
+const allocateDate = ({ place, date, data }: { place?: string, date: Date, data: Object }) => {
   const { places } = data;
   let { oldestDate, newestDate } = data;
 
