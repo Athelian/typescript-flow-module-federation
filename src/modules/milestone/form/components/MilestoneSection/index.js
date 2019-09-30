@@ -4,7 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { UserConsumer } from 'components/Context/Viewer';
-import MilestoneStateContainer from 'modules/milestone/form/container';
+import { MilestoneBaseContainer } from 'modules/milestone/form/containers';
 import validator from 'modules/milestone/form/validator';
 import { FormField } from 'modules/form';
 
@@ -59,7 +59,7 @@ const MilestoneSection = ({ intl }: Props) => {
   const canCreateOrUpdate = canCreate || canUpdate;
 
   return (
-    <Subscribe to={[MilestoneStateContainer]}>
+    <Subscribe to={[MilestoneBaseContainer]}>
       {({ originalValues, state: values, setFieldValue }) => {
         const { updatedAt, updatedBy } = originalValues;
         const { completedAt, completedBy } = values;
