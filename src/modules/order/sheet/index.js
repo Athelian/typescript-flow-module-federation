@@ -7,7 +7,7 @@ import { ExportButton } from 'components/Buttons';
 import { Sheet, ColumnsConfig } from 'components/Sheet';
 import type { ColumnConfig, ColumnSort, SortDirection } from 'components/Sheet';
 import Filter from 'components/NavBar/components/Filter';
-import { OrderConfigFilter } from 'components/NavBar/components/Filter/configs';
+import { OrderFilterConfig } from 'components/NavBar/components/Filter/configs';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
 import columns from './columns';
@@ -60,6 +60,15 @@ const OrderSheetModule = ({ orderIds }: Props) => {
   );
 
   React.useEffect(() => {
+    if (orderIds) {
+      setFilterBy({
+        ...filterBy,
+        ids: orderIds,
+      });
+    }
+  }, [orderIds]);
+
+  React.useEffect(() => {
     setLoading(true);
     setInitialOrders([]);
     setPage({ page: 1, totalPage: 1 });
@@ -78,17 +87,13 @@ const OrderSheetModule = ({ orderIds }: Props) => {
 
   const { query, ...filters } = filterBy;
 
-  console.warn({
-    orderIds,
-  });
-
   return (
     <Content>
       <NavBar>
         <EntityIcon icon="ORDER" color="ORDER" subIcon="TABLE" />
 
         <Filter
-          config={OrderConfigFilter}
+          config={OrderFilterConfig}
           filters={filters}
           onChange={value =>
             setFilterBy({

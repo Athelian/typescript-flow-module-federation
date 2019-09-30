@@ -50,4 +50,8 @@ export default defineMessages({
     id: 'components.NavBar.Filter.archived',
     defaultMessage: 'Archived',
   },
+  orders: {
+    id: 'components.NavBar.Filter.orders',
+    defaultMessage: 'Orders',
+  },
 });

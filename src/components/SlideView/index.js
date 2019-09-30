@@ -32,13 +32,13 @@ const defaultProps = {
 };
 
 type Context = {
-  width: null | number,
-  minWidth: null | number,
+  width: number,
+  minWidth: number,
 };
 
 const SlideViewContext = React.createContext<Context>({
-  width: null,
-  minWidth: null,
+  width: StartWidth + WidthStep,
+  minWidth: StartMinWidth + MinWidthStep,
 });
 
 const ANIMATION_FINISHED = 300; // 0.3s
@@ -50,8 +50,8 @@ const SlideViewRender = ({ isOpen, onRequestClose, shouldConfirm, children }: Pr
 
   const handleCloseConfirmDialog = () => setConfirmDialogOpen(false);
 
-  const width = parentContext?.width ? parentContext?.width - WidthStep : StartWidth;
-  const minWidth = parentContext?.minWidth ? parentContext?.minWidth - MinWidthStep : StartMinWidth;
+  const width = parentContext.width - WidthStep;
+  const minWidth = parentContext.minWidth - MinWidthStep;
 
   return ReactDOM.createPortal(
     <SlideViewContext.Provider value={{ width, minWidth }}>
