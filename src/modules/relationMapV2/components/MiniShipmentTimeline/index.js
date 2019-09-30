@@ -118,7 +118,7 @@ export default function MiniShipmentTimeline({
 
       {voyages.length > 1 &&
         voyages.slice(1).map((voyage, index) => (
-          <React.Fragment key={voyage?.id}>
+          <React.Fragment key={voyage?.id || `mini-shipment-timeline-${index}`}>
             <div className={TransitPointWrapperStyle}>
               <div className={TimelinePointStyle(coloring[index * 2 + 2])}>
                 <Icon icon="TRANSIT" />
