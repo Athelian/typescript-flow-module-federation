@@ -292,7 +292,10 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
             <div className={ContainerIconWrapperStyle}>
               <TimelineContainerIcon />
             </div>
-            <Tooltip message={<WarehouseIconTooltipMessage containers={containers} />}>
+            <Tooltip
+              maxWidth={800}
+              message={<WarehouseIconTooltipMessage containers={containers} />}
+            >
               <div>
                 <TimelineWarehouseContainerIcon
                   containers={containers}

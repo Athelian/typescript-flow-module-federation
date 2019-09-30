@@ -4,6 +4,7 @@ import Tippy from '@tippy.js/react';
 
 type OptionalProps = {
   delay: number,
+  maxWidth?: number,
 };
 
 type Props = OptionalProps & {
@@ -15,7 +16,7 @@ const defaultProps = {
   delay: 200,
 };
 
-export default function Tooltip({ message, children, delay, ...rest }: Props) {
+export default function Tooltip({ message, children, delay, maxWidth, ...rest }: Props) {
   return (
     <Tippy
       content={message}
@@ -25,7 +26,7 @@ export default function Tooltip({ message, children, delay, ...rest }: Props) {
       distance={10}
       interactive
       ignoreAttributes
-      maxWidth={1000}
+      {...(maxWidth ? { maxWidth } : {})}
       {...rest}
     >
       {children}
