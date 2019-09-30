@@ -26,4 +26,5 @@ export const SubIconStyle = (color: string): string => css`
   align-items: center;
   justify-content: center;
   ${borderRadiuses.MAIN};
+  z-index: 2;
 `;
