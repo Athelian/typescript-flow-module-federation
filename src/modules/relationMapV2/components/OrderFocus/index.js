@@ -893,7 +893,7 @@ export default function OrderFocus() {
                       {state.targets.length > 0 && (
                         <>
                           <div className={ActionsBackdropStyle} />
-                          <SelectedEntity targets={state.targets} />
+                          <SelectedEntity />
                           <Actions targets={state.targets} />
                         </>
                       )}
