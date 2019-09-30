@@ -3,7 +3,6 @@
 import * as React from 'react';
 import type { OrderPayload } from 'generated/graphql';
 import { useDrop, useDrag } from 'react-dnd';
-import { FormattedMessage } from 'react-intl';
 import { flatten, findKey } from 'lodash';
 import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
@@ -42,13 +41,12 @@ import ShipmentCard from '../ShipmentCard';
 import OrderItemHeading from '../OrderItemHeading';
 import BatchHeading from '../BatchHeading';
 import ContainerHeading from '../ContainerHeading';
+import ShipmentHeading from '../ShipmentHeading';
 import { ContentStyle, MatchedStyle } from './style';
 import {
   getColorByEntity,
   getIconByEntity,
   getCardByEntity,
-  ShipmentCard as ShipmentSummaryCard,
-  HeaderCard,
   handleClickAndDoubleClick,
 } from './helpers';
 import { RelationMapContext } from './store';
@@ -2046,48 +2044,26 @@ function ShipmentSummaryCell({
         if (total) {
           return (
             <div className={ContentStyle} role="presentation">
-              <HeaderCard
-                isExpand={isExpand}
-                selected={!isExpand && isTargetedAnyShipments}
-                selectable
+              <ShipmentHeading
+                shipments={data?.shipments || []}
+                hasSelectedChildren={isTargetedAnyShipments}
+                hasFilterHits={isMatched}
+                isExpanded={isExpand}
                 onClick={onClick}
-              >
-                {isMatched && !isExpand && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '-6px',
-                      right: '-8px',
-                      border: '4px solid rgba(11,110,222,0.5)',
-                      height: 60,
-                      width: SHIPMENT_WIDTH - 13,
-                      borderRadius: '9px',
-                    }}
-                  />
-                )}
-                <ShipmentSummaryCard>
-                  <p>Total {getByPathWithDefault(0, 'shipmentCount', data)}</p>
-                  <button
-                    type="button"
-                    onClick={evt => {
-                      evt.stopPropagation();
-                      const targets = [];
-                      shipmentIds.forEach(id => targets.push(`${SHIPMENT}-${id}`));
-                      dispatch({
-                        type: 'TARGET_ALL',
-                        payload: {
-                          targets,
-                        },
-                      });
-                    }}
-                  >
-                    <FormattedMessage
-                      id="components.button.SelectAll"
-                      defaultMessage="SELECT ALL"
-                    />
-                  </button>
-                </ShipmentSummaryCard>
-              </HeaderCard>
+                total={data?.shipmentCount || 0}
+                onSelectAll={() => {
+                  const targets = [];
+
+                  shipmentIds.forEach(id => targets.push(`${SHIPMENT}-${id}`));
+
+                  dispatch({
+                    type: 'TARGET_ALL',
+                    payload: {
+                      targets,
+                    },
+                  });
+                }}
+              />
             </div>
           );
         }
