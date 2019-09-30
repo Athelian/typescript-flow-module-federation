@@ -7,7 +7,7 @@ import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { ProductInfoContainer } from 'modules/product/form/containers';
-import { ProductProviderInfoContainer, ProductProviderTasksContainer } from './containers';
+import { ProductProviderTasksContainer } from './containers';
 import { PackagingSection, ProductProviderSection, SpecificationsSection } from './components';
 import { ProductProviderFormWrapperStyle } from './style';
 
@@ -81,26 +81,7 @@ class ProductProviderForm extends React.Component<Props> {
 
           <PackagingSection />
 
-          <SectionWrapper id="productProvider_documentsSection">
-            <Subscribe to={[ProductProviderInfoContainer]}>
-              {({ state: { files } }) => (
-                <SectionHeader
-                  icon="DOCUMENT"
-                  title={
-                    <>
-                      <FormattedMessage
-                        id="modules.productProvider.documents"
-                        defaultMessage="DOCUMENTS"
-                      />{' '}
-                      ({files.length})
-                    </>
-                  }
-                />
-              )}
-            </Subscribe>
-
-            <AsyncDocumentsSection isOwner={isOwner} />
-          </SectionWrapper>
+          <AsyncDocumentsSection />
 
           <Subscribe to={[ProductInfoContainer]}>
             {({ state }) => (
