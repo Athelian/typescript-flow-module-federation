@@ -1,11 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
+import { ORDER_WIDTH } from 'modules/relationMapV2/constants';
 import { layout, borderRadiuses, presets, colors, shadows, fontSizes } from 'styles/common';
 
 export const OrderCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
-  width: 285px;
+  width: ${ORDER_WIDTH}px;
   height: 55px;
   position: relative;
   &:hover {

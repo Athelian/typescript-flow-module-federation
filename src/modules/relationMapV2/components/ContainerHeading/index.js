@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import FormattedDate from 'components/FormattedDate';
 import { Display, Label } from 'components/Form';
+import { CONTAINER_WIDTH } from 'modules/relationMapV2/constants';
 import { isBefore, isAfter, differenceInMinutes } from 'utils/date';
 import Heading from 'modules/relationMapV2/components/Heading';
 import { RightWrapperStyle, DatesWrapperStyle, DashStyle } from './style';
@@ -59,7 +60,7 @@ export default function ContainerHeading({
 
   return (
     <Heading
-      width="375px"
+      width={`${CONTAINER_WIDTH}px`}
       hasSelectedChildren={hasSelectedChildren}
       hasFilterHits={hasFilterHits}
       isExpanded={isExpanded}

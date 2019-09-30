@@ -1,11 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
+import { ORDER_ITEM_WIDTH } from 'modules/relationMapV2/constants';
 import { layout, borderRadiuses, fontSizes, colors, presets, shadows } from 'styles/common';
 
 export const ItemCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
-  width: 465px;
+  width: ${ORDER_ITEM_WIDTH}px;
   height: 55px;
   position: relative;
   &:hover {

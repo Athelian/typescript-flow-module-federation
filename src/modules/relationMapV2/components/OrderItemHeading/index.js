@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { Blackout, Label } from 'components/Form';
+import { ORDER_ITEM_WIDTH } from 'modules/relationMapV2/constants';
 import QuantityGraph from 'modules/relationMapV2/components/QuantityGraph';
 import Heading from 'modules/relationMapV2/components/Heading';
 import { RightWrapperStyle, QuantityIconsWrapperStyle, QuantityLabelStyle } from './style';
@@ -31,7 +32,7 @@ export default function OrderItemHeading({
 
   return (
     <Heading
-      width="465px"
+      width={`${ORDER_ITEM_WIDTH}px`}
       hasSelectedChildren={hasSelectedChildren}
       hasFilterHits={hasFilterHits}
       isExpanded={isExpanded}

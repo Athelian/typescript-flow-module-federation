@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import FormattedDate from 'components/FormattedDate';
 import { Display, Label } from 'components/Form';
+import { BATCH_WIDTH } from 'modules/relationMapV2/constants';
 import { isBefore, isAfter, differenceInCalendarDays } from 'utils/date';
 import Heading from 'modules/relationMapV2/components/Heading';
 import { RightWrapperStyle, DatesWrapperStyle } from './style';
@@ -78,7 +79,7 @@ export default function BatchHeading({
 
   return (
     <Heading
-      width="445px"
+      width={`${BATCH_WIDTH}px`}
       hasSelectedChildren={hasSelectedChildren}
       hasFilterHits={hasFilterHits}
       isExpanded={isExpanded}

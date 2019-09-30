@@ -1,11 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
+import { SHIPMENT_WIDTH } from 'modules/relationMapV2/constants';
 import { layout, borderRadiuses, fontSizes, colors, presets } from 'styles/common';
 
 export const ShipmentCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
-  width: 515px;
+  width: ${SHIPMENT_WIDTH}px;
   height: 55px;
 `;
 

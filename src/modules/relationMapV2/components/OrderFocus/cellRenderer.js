@@ -34,6 +34,7 @@ import type { CellRender, State } from './type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
 import RelationLine from '../RelationLine';
 import FilterHitBorder from '../FilterHitBorder';
+import CellWrapper from '../CellWrapper';
 import OrderCard from '../OrderCard';
 import OrderItemCard from '../OrderItemCard';
 import BatchCard from '../BatchCard';
@@ -696,7 +697,8 @@ function OrderCell({ data, afterConnector }: CellProps) {
   return (
     <>
       <div className={ContentStyle} />
-      <div ref={drop} id={`${ORDER}-${orderId}`} className={ContentStyle}>
+
+      <CellWrapper ref={drop}>
         {isDragging ? (
           <div
             style={{
@@ -716,8 +718,8 @@ function OrderCell({ data, afterConnector }: CellProps) {
             onClick={handleClick}
             flattenCornerIcon
           >
-            <div ref={drag}>
-              <Badge label={badge.order?.[orderId] ?? ''} />
+            <div ref={drag} id={`${ORDER}-${orderId}`}>
+              <Badge label={badge.order?.[orderId] || ''} />
               <OrderCard
                 organizationId={data?.ownedBy?.id}
                 order={data}
@@ -750,7 +752,8 @@ function OrderCell({ data, afterConnector }: CellProps) {
             </div>
           </BaseCard>
         )}
-      </div>
+      </CellWrapper>
+
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine isTargeted={isTargeted} hasRelation={hasRelation} type={afterConnector} />
@@ -901,7 +904,8 @@ function OrderItemCell({
           />
         )}
       </div>
-      <div ref={drop} className={ContentStyle}>
+
+      <CellWrapper ref={drop}>
         {isDragging ? (
           <div
             style={{
@@ -926,7 +930,7 @@ function OrderItemCell({
             flattenCornerIcon
           >
             <div ref={drag} id={`${ORDER_ITEM}-${itemId}`}>
-              <Badge label={badge.orderItem?.[itemId] ?? ''} />
+              <Badge label={badge.orderItem?.[itemId] || ''} />
               <OrderItemCard
                 organizationId={data?.ownedBy?.id}
                 orderItem={data}
@@ -972,7 +976,8 @@ function OrderItemCell({
             </div>
           </BaseCard>
         )}
-      </div>
+      </CellWrapper>
+
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine
@@ -1107,7 +1112,8 @@ function BatchCell({
           />
         )}
       </div>
-      <div ref={drop} className={ContentStyle} id={`${BATCH}-${batchId}`}>
+
+      <CellWrapper ref={drop}>
         {isDragging ? (
           <div
             style={{
@@ -1127,8 +1133,8 @@ function BatchCell({
             onClick={handleClick}
             flattenCornerIcon
           >
-            <div ref={drag} style={baseDragStyle}>
-              <Badge label={badge.batch?.[batchId] ?? ''} />
+            <div ref={drag} id={`${BATCH}-${batchId}`} style={baseDragStyle}>
+              <Badge label={badge.batch?.[batchId] || ''} />
               <BatchCard
                 organizationId={data?.ownedBy?.id}
                 batch={data}
@@ -1158,7 +1164,7 @@ function BatchCell({
             </div>
           </BaseCard>
         )}
-      </div>
+      </CellWrapper>
 
       <div className={ContentStyle}>
         {afterConnector && (
@@ -1353,7 +1359,8 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
           </RelationLine>
         )}
       </div>
-      <div ref={drop} className={ContentStyle}>
+
+      <CellWrapper ref={drop}>
         {isDragging ? (
           <div
             style={{
@@ -1374,7 +1381,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             flattenCornerIcon
           >
             <div ref={drag}>
-              <Badge label={badge.container?.[containerId] ?? ''} />
+              <Badge label={badge.container?.[containerId] || ''} />
               <ContainerCard container={container} />
               <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
@@ -1393,7 +1400,8 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             </div>
           </BaseCard>
         )}
-      </div>
+      </CellWrapper>
+
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine
@@ -1539,7 +1547,8 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
           />
         )}
       </div>
-      <div ref={drop} className={ContentStyle}>
+
+      <CellWrapper ref={drop}>
         {isDragging ? (
           <div
             style={{
@@ -1560,7 +1569,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
             flattenCornerIcon
           >
             <div ref={drag}>
-              <Badge label={badge.shipment?.[shipmentId] ?? ''} />
+              <Badge label={badge.shipment?.[shipmentId] || ''} />
               <ShipmentCard shipment={data} />
               <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
@@ -1579,7 +1588,8 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
             </div>
           </BaseCard>
         )}
-      </div>
+      </CellWrapper>
+
       <div className={ContentStyle} />
     </>
   );
@@ -1605,7 +1615,8 @@ function NoContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
           />
         )}
       </div>
-      <div style={{ width: CONTAINER_WIDTH - 20 }} className={ContentStyle}>
+
+      <div style={{ width: CONTAINER_WIDTH + 20 }} className={ContentStyle}>
         <RelationLine
           isTargeted={isTargetedBatch && isTargetedShipment}
           hasRelation={isTargetedBatch && isTargetedShipment}
@@ -1651,6 +1662,7 @@ function NoContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
           )}
         </RelationLine>
       </div>
+
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine
@@ -1708,9 +1720,10 @@ function ItemSummaryCell({
           />
         )}
       </div>
-      <div className={ContentStyle} role="presentation">
+
+      <CellWrapper isExpandedHeading={isExpand}>
         <OrderItemHeading
-          orderItems={data?.orderItems ?? []}
+          orderItems={data?.orderItems || []}
           hasSelectedChildren={selected}
           hasFilterHits={isMatched}
           isExpanded={isExpand}
@@ -1722,9 +1735,7 @@ function ItemSummaryCell({
                 getByPathWithDefault('', 'id', item)
               )
             ).filter(Boolean);
-
             const targets = itemIds.map(id => `${ORDER_ITEM}-${id}`);
-
             dispatch({
               type: 'TARGET_ALL',
               payload: {
@@ -1733,7 +1744,8 @@ function ItemSummaryCell({
             });
           }}
         />
-      </div>
+      </CellWrapper>
+
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine
@@ -1811,10 +1823,11 @@ function BatchSummaryCell({
           />
         )}
       </div>
+
       {total ? (
-        <div className={ContentStyle}>
+        <CellWrapper isExpandedHeading={isExpand}>
           <BatchHeading
-            batches={(data?.orderItems ?? []).flatMap(orderItem => orderItem?.batches) || []}
+            batches={(data?.orderItems || []).flatMap(orderItem => orderItem?.batches) || []}
             hasSelectedChildren={isTargetedAnyBatches}
             hasFilterHits={isMatched}
             isExpanded={isExpand}
@@ -1822,9 +1835,7 @@ function BatchSummaryCell({
             total={data?.batchCount || 0}
             onSelectAll={() => {
               const targets = [];
-
               batchIds.forEach(id => targets.push(`${BATCH}-${id}`));
-
               dispatch({
                 type: 'TARGET_ALL',
                 payload: {
@@ -1833,15 +1844,16 @@ function BatchSummaryCell({
               });
             }}
           />
-        </div>
+        </CellWrapper>
       ) : (
         <div
           style={{
-            width: BATCH_WIDTH - 20,
+            width: BATCH_WIDTH,
           }}
           className={ContentStyle}
         />
       )}
+
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine
@@ -1922,12 +1934,13 @@ function ContainerSummaryCell({
           />
         )}
       </div>
+
       {(() => {
         const total = getByPathWithDefault(0, 'containerCount', data);
         const shipmentCount = getByPathWithDefault(0, 'shipmentCount', data);
         if (total) {
           return (
-            <div className={ContentStyle}>
+            <CellWrapper isExpandedHeading={isExpand}>
               <ContainerHeading
                 containers={data?.containers || []}
                 hasSelectedChildren={isTargetedAnyContainers}
@@ -1948,13 +1961,13 @@ function ContainerSummaryCell({
                   });
                 }}
               />
-            </div>
+            </CellWrapper>
           );
         }
 
         if (shipmentCount) {
           return (
-            <div style={{ width: CONTAINER_WIDTH - 20 }} className={ContentStyle}>
+            <div style={{ width: CONTAINER_WIDTH }} className={ContentStyle}>
               <RelationLine
                 isTargeted={isTargetedAnyShipments && isTargetedAnyBatches}
                 hasRelation={isTargetedAnyShipments && isTargetedAnyBatches}
@@ -1964,7 +1977,7 @@ function ContainerSummaryCell({
           );
         }
 
-        return <div style={{ width: CONTAINER_WIDTH - 20 }} className={ContentStyle} />;
+        return <div style={{ width: CONTAINER_WIDTH }} className={ContentStyle} />;
       })()}
 
       <div className={ContentStyle}>
@@ -2040,11 +2053,12 @@ function ShipmentSummaryCell({
           />
         )}
       </div>
+
       {(() => {
         const total = getByPathWithDefault(0, 'shipmentCount', data);
         if (total) {
           return (
-            <div className={ContentStyle} role="presentation">
+            <CellWrapper isExpandedHeading={isExpand}>
               <ShipmentHeading
                 shipments={data?.shipments || []}
                 hasSelectedChildren={isTargetedAnyShipments}
@@ -2065,11 +2079,11 @@ function ShipmentSummaryCell({
                   });
                 }}
               />
-            </div>
+            </CellWrapper>
           );
         }
 
-        return <div style={{ width: SHIPMENT_WIDTH - 20 }} className={ContentStyle} />;
+        return <div style={{ width: SHIPMENT_WIDTH }} className={ContentStyle} />;
       })()}
 
       <div className={ContentStyle} />
@@ -2145,12 +2159,14 @@ function DuplicateOrderCell({
           />
         )}
       </div>
+
       <div
         style={{
-          width: ORDER_WIDTH - 20,
+          width: ORDER_WIDTH,
         }}
         className={ContentStyle}
       />
+
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine
@@ -2245,12 +2261,14 @@ function DuplicateOrderItemCell({
           />
         )}
       </div>
+
       <div
         style={{
-          width: ORDER_ITEM_WIDTH - 20,
+          width: ORDER_ITEM_WIDTH,
         }}
         className={ContentStyle}
       />
+
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine
@@ -2281,7 +2299,7 @@ const cellRenderer = (
       <div
         style={{
           display: 'flex',
-          width: ORDER_WIDTH,
+          width: ORDER_WIDTH + 20,
         }}
         key={uuid()}
       >
@@ -2440,7 +2458,7 @@ const cellRenderer = (
       break;
     }
     default:
-      content = <div className={ContentStyle}>{type} </div>;
+      content = <div className={ContentStyle}>{type}</div>;
   }
   return (
     <div
