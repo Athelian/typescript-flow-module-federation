@@ -64,6 +64,7 @@ function DocumentsSection({ entityId, isLoading }: Props) {
                   }
                 />
                 <DocumentsInput
+                  entity="Shipment"
                   uploadable={
                     canSetDocuments || hasPermission([SHIPMENT_DOCUMENT_CREATE, DOCUMENT_CREATE])
                   }
@@ -96,7 +97,6 @@ function DocumentsSection({ entityId, isLoading }: Props) {
                   downloadable={hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS)}
                   files={files}
                   onSave={updateFiles => setFieldValue('files', updateFiles)}
-                  entity="Shipment"
                 />
               </>
             );
