@@ -36,7 +36,7 @@ const RelationMap = () => {
                 }}
               >
                 <NavBar>
-                  <EntityIcon icon="RELATION_MAP" color="RELATION_MAP" subIcon="MAP" />
+                  <EntityIcon icon="ORDER" color="ORDER" subIcon="MAP" />
                   <AdvanceFilter />
                   <ExpandButton />
                 </NavBar>
