@@ -356,7 +356,7 @@ export default function CloneEntities({ onSuccess }: Props) {
             <div className={DialogStyle}>
               <h3 className={ConfirmMessageStyle}>
                 <FormattedMessage
-                  id="modules.RelationMap.clone.noPermission"
+                  id="modules.RelationMap.clone.noOrderPermission"
                   defaultMessage="At least one {source} {entity}, Item {itemIcon}, Batch {batchIcon} selected does not allow you to clone.Please reselect and try again."
                   values={{
                     source,
@@ -378,7 +378,7 @@ export default function CloneEntities({ onSuccess }: Props) {
             <div className={DialogStyle}>
               <h3 className={ConfirmMessageStyle}>
                 <FormattedMessage
-                  id="modules.RelationMap.clone.noPermission"
+                  id="modules.RelationMap.clone.noItemPermission"
                   defaultMessage="At least one {source} {entity}, Batch {batchIcon} selected does not allow you to clone.Please reselect and try again."
                   values={{
                     source,
