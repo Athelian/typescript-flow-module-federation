@@ -32,6 +32,7 @@ import { Hits, Entities, ClientSorts } from 'modules/relationMapV2/store';
 import Badge from 'modules/relationMapV2/components/Badge';
 import type { CellRender, State } from './type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
+import RemoveButton from '../RemoveButton';
 import RelationLine from '../RelationLine';
 import FilterHitBorder from '../FilterHitBorder';
 import CellWrapper from '../CellWrapper';
@@ -1319,8 +1320,8 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             type={beforeConnector}
           >
             {hasBatchPermissions([BATCH_UPDATE]) && (
-              <button
-                type="button"
+              <RemoveButton
+                offset
                 onClick={() => {
                   dispatch({
                     type: 'REMOVE_BATCH',
@@ -1336,25 +1337,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
                     },
                   });
                 }}
-                style={{
-                  cursor: 'pointer',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  display: 'flex',
-                  position: 'absolute',
-                  height: 21,
-                  left: '-10px',
-                  top: 'calc(50% - 18px/2)',
-                  fontSize: 14,
-                  lineHeight: 14,
-                  textAlign: 'center',
-                  textTransform: 'uppercase',
-                  color: '#EF4848',
-                  border: '2px solid #EEEEEE',
-                }}
-              >
-                <Icon icon="REMOVE" />
-              </button>
+              />
             )}
           </RelationLine>
         )}
@@ -1616,15 +1599,14 @@ function NoContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
         )}
       </div>
 
-      <div style={{ width: CONTAINER_WIDTH + 20 }} className={ContentStyle}>
+      <div style={{ width: CONTAINER_WIDTH }} className={ContentStyle}>
         <RelationLine
           isTargeted={isTargetedBatch && isTargetedShipment}
           hasRelation={isTargetedBatch && isTargetedShipment}
           type="HORIZONTAL"
         >
           {hasBatchPermissions([BATCH_UPDATE]) && (
-            <button
-              type="button"
+            <RemoveButton
               onClick={() => {
                 dispatch({
                   type: 'REMOVE_BATCH',
@@ -1640,25 +1622,7 @@ function NoContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
                   },
                 });
               }}
-              style={{
-                cursor: 'pointer',
-                justifyContent: 'center',
-                alignItems: 'center',
-                display: 'flex',
-                position: 'absolute',
-                height: 21,
-                left: 'calc(50% - 15px/2)',
-                top: 'calc(50% - 15px/2)',
-                fontSize: 14,
-                lineHeight: 14,
-                textAlign: 'center',
-                textTransform: 'uppercase',
-                color: '#EF4848',
-                border: '2px solid #EEEEEE',
-              }}
-            >
-              <Icon icon="REMOVE" />
-            </button>
+            />
           )}
         </RelationLine>
       </div>

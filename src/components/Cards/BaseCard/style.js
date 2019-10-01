@@ -26,7 +26,7 @@ export const CardStyle = ({ disabled, readOnly, isArchived }: CardProps): string
   `};
 `;
 
-export const SelectableCardStyle = (selected: boolean): string => css`
+export const SelectableCardStyle = (selected: boolean, flattenCornerIcon: boolean): string => css`
   position: absolute;
   top: 0;
   left: 0;
@@ -35,6 +35,7 @@ export const SelectableCardStyle = (selected: boolean): string => css`
   border: 4px solid ${selected ? colors.TEAL : colors.TRANSPARENT};
   ${borderRadiuses.MAIN};
   opacity: 0.5;
+  ${flattenCornerIcon && 'pointer-events: none'};
 `;
 
 export const BadgeStyle = css`
