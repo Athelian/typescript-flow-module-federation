@@ -6,6 +6,7 @@ export const WrapperStyle = css`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   ${scrollbars.MAIN};

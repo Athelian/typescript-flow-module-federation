@@ -20,15 +20,24 @@ export const EntityNavbarWrapperStyle = (color: string, width: number): string =
   background-color: ${colors[color]};
   width: ${width + 20}px;
   padding: 0 0 0 15px;
+`;
+
+export const EntityIconWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  width: 30px;
+  height: 50px;
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.2);
   overflow: hidden;
 `;
 
 export const EntityIconStyle: string = css`
   position: absolute;
-  width: 50px;
-  left: -25px;
-  font-size: 20px;
-  color: rgba(255, 255, 255, 0.2);
+  left: -15px;
+  width: 30px;
   text-align: center;
 `;
 

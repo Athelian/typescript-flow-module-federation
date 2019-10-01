@@ -9,7 +9,6 @@ import { FormattedMessage } from 'react-intl';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import apolloClient from 'apollo';
 import usePrevious from 'hooks/usePrevious';
-import { uuid } from 'utils/id';
 import logger from 'utils/logger';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { Display } from 'components/Form';
@@ -36,7 +35,6 @@ import SelectedEntity from '../SelectedEntity';
 import Actions from '../Actions';
 import Header from '../Header';
 import Row from '../Row';
-import cellRenderer from './cellRenderer';
 import generateListData from './generateListData';
 import { reducer, initialState, RelationMapContext } from './store';
 import normalize from './normalize';
@@ -46,68 +44,8 @@ import MoveBatch from '../MoveBatch';
 import AddTags from '../AddTags';
 import DeleteConfirm from '../DeleteConfirm';
 import SplitBatches from '../SplitBatches';
-import {
-  WrapperStyle,
-  ListStyle,
-  RowStyle,
-  ActionsBackdropStyle,
-  NoOrdersFoundStyle,
-} from './style';
-
-const LoadingPlaceHolder = React.memo(() => {
-  return (
-    <div className={RowStyle} style={{ overflow: 'hidden', height: window.innerHeight - 120 }}>
-      {[
-        {
-          type: 'placeholder',
-          entity: ORDER,
-          data: {
-            id: uuid(),
-          },
-        },
-        {
-          type: 'placeholder',
-          entity: ORDER_ITEM,
-          data: {
-            id: uuid(),
-          },
-        },
-        {
-          type: 'placeholder',
-          entity: BATCH,
-          data: {
-            id: uuid(),
-          },
-        },
-        {
-          type: 'placeholder',
-          entity: CONTAINER,
-          data: {
-            id: uuid(),
-          },
-        },
-        {
-          type: 'placeholder',
-          entity: SHIPMENT,
-          data: {
-            id: uuid(),
-          },
-        },
-      ].map(cell =>
-        cellRenderer(cell, {
-          onClick: () => {},
-          dispatch: () => {},
-          isExpand: false,
-          order: {},
-          state: {
-            order: {},
-            targets: [],
-          },
-        })
-      )}
-    </div>
-  );
-});
+import InitLoadingPlaceholder from '../InitLoadingPlaceholder';
+import { WrapperStyle, ListStyle, ActionsBackdropStyle, NoOrdersFoundStyle } from './style';
 
 const hasMoreItems = (data: Object, model: string = 'orders') => {
   const nextPage = getByPathWithDefault(1, `${model}.page`, data) + 1;
@@ -269,7 +207,7 @@ export default function OrderFocus() {
                 return (
                   <>
                     <Header />
-                    <LoadingPlaceHolder />
+                    <InitLoadingPlaceholder />
                   </>
                 );
               }

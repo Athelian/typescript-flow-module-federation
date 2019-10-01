@@ -35,6 +35,7 @@ import { SortInput } from 'components/NavBar';
 import {
   EntitiesNavbarWrapperStyle,
   EntityNavbarWrapperStyle,
+  EntityIconWrapperStyle,
   EntityIconStyle,
   TitleWrapperStyle,
   OrderTitleWrapperStyle,
@@ -118,8 +119,10 @@ const Header = React.memo<any>(
     return (
       <div className={EntitiesNavbarWrapperStyle}>
         <div className={EntityNavbarWrapperStyle('ORDER', ORDER_WIDTH)}>
-          <div className={EntityIconStyle}>
-            <Icon icon="ORDER" />
+          <div className={EntityIconWrapperStyle}>
+            <div className={EntityIconStyle}>
+              <Icon icon="ORDER" />
+            </div>
           </div>
 
           <div className={TitleWrapperStyle}>
@@ -211,8 +214,10 @@ const Header = React.memo<any>(
         </div>
 
         <div className={EntityNavbarWrapperStyle('ORDER_ITEM', ORDER_ITEM_WIDTH)}>
-          <div className={EntityIconStyle}>
-            <Icon icon="ORDER_ITEM" />
+          <div className={EntityIconWrapperStyle}>
+            <div className={EntityIconStyle}>
+              <Icon icon="ORDER_ITEM" />
+            </div>
           </div>
 
           <div className={TitleWrapperStyle}>
@@ -282,8 +287,10 @@ const Header = React.memo<any>(
         </div>
 
         <div className={EntityNavbarWrapperStyle('BATCH', BATCH_WIDTH)}>
-          <div className={EntityIconStyle}>
-            <Icon icon="BATCH" />
+          <div className={EntityIconWrapperStyle}>
+            <div className={EntityIconStyle}>
+              <Icon icon="BATCH" />
+            </div>
           </div>
 
           <div className={TitleWrapperStyle}>
@@ -357,8 +364,10 @@ const Header = React.memo<any>(
         </div>
 
         <div className={EntityNavbarWrapperStyle('CONTAINER', CONTAINER_WIDTH)}>
-          <div className={EntityIconStyle}>
-            <Icon icon="CONTAINER" />
+          <div className={EntityIconWrapperStyle}>
+            <div className={EntityIconStyle}>
+              <Icon icon="CONTAINER" />
+            </div>
           </div>
 
           <div className={TitleWrapperStyle}>
@@ -410,8 +419,10 @@ const Header = React.memo<any>(
         </div>
 
         <div className={EntityNavbarWrapperStyle('SHIPMENT', SHIPMENT_WIDTH)}>
-          <div className={EntityIconStyle}>
-            <Icon icon="SHIPMENT" />
+          <div className={EntityIconWrapperStyle}>
+            <div className={EntityIconStyle}>
+              <Icon icon="SHIPMENT" />
+            </div>
           </div>
 
           <div className={TitleWrapperStyle}>
