@@ -82,6 +82,7 @@ export const itemFormFragment = gql`
     price {
       ...priceFragment
     }
+    deliveryDate
     customFields {
       ...customFieldsFragment
     }

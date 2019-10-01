@@ -30,7 +30,7 @@ export type State = {
   no?: ?string,
   quantity: number,
   price: Price,
-
+  deliveryDate: string,
   customFields: ?Object,
   tags?: Array<Object>,
   memo?: string,
@@ -45,6 +45,7 @@ export const initValues = {
     currency: 'USD',
     amount: 0,
   },
+  deliveryDate: null,
   customFields: {
     mask: null,
     fieldValues: [],
