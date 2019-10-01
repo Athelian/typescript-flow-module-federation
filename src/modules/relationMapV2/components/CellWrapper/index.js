@@ -7,12 +7,14 @@ type Props = {|
   children: React.Node,
 |};
 
-const CellWrapper = React.forwardRef(({ isExpandedHeading, children, ...rest }: Props, ref) => {
-  return (
-    <div ref={ref} className={CellWrapperStyle(isExpandedHeading)} {...rest}>
-      {children}
-    </div>
-  );
-});
+const CellWrapper = React.forwardRef<Props, HTMLElement>(
+  ({ isExpandedHeading, children, ...rest }: Props, ref) => {
+    return (
+      <div ref={ref} className={CellWrapperStyle(Boolean(isExpandedHeading))} {...rest}>
+        {children}
+      </div>
+    );
+  }
+);
 
 export default CellWrapper;

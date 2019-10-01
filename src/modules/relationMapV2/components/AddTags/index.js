@@ -14,6 +14,7 @@ import { CONTAINER_UPDATE, CONTAINER_SET_TAGS } from 'modules/permission/constan
 import { SHIPMENT_UPDATE, SHIPMENT_SET_TAGS } from 'modules/permission/constants/shipment';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import Dialog from 'components/Dialog';
+import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
 import { FieldItem, Label, TagsInput } from 'components/Form';
 import { parseIcon } from 'utils/entity';
@@ -290,41 +291,44 @@ export default function AddTags({ onSuccess }: Props) {
       <div className={DialogStyle}>
         <h3 className={ConfirmMessageStyle}>
           {isProcessing ? (
-            <FormattedMessage
-              id="modules.RelationMap.tags.add"
-              defaultMessage="Adding tags to add to the {source} that you have selected."
-              values={{
-                source: (
-                  <>
-                    {totalOrders > 0 && source === ORDER && (
-                      <>
-                        {totalOrders} <Icon icon="ORDER" />
-                      </>
-                    )}
-                    {totalOrderItems > 0 && source === ORDER_ITEM && (
-                      <>
-                        {totalOrderItems} <Icon icon="ORDER_ITEM" />
-                      </>
-                    )}
-                    {totalBatches > 0 && source === BATCH && (
-                      <>
-                        {totalBatches} <Icon icon="BATCH" />
-                      </>
-                    )}
-                    {totalContainers > 0 && source === CONTAINER && (
-                      <>
-                        {totalContainers} <Icon icon="CONTAINER" />
-                      </>
-                    )}
-                    {totalShipments > 0 && source === SHIPMENT && (
-                      <>
-                        {totalShipments} <Icon icon="SHIPMENT" />
-                      </>
-                    )}
-                  </>
-                ),
-              }}
-            />
+            <>
+              <FormattedMessage
+                id="modules.RelationMap.tags.add"
+                defaultMessage="Adding tags to add to the {source} that you have selected."
+                values={{
+                  source: (
+                    <>
+                      {totalOrders > 0 && source === ORDER && (
+                        <>
+                          {totalOrders} <Icon icon="ORDER" />
+                        </>
+                      )}
+                      {totalOrderItems > 0 && source === ORDER_ITEM && (
+                        <>
+                          {totalOrderItems} <Icon icon="ORDER_ITEM" />
+                        </>
+                      )}
+                      {totalBatches > 0 && source === BATCH && (
+                        <>
+                          {totalBatches} <Icon icon="BATCH" />
+                        </>
+                      )}
+                      {totalContainers > 0 && source === CONTAINER && (
+                        <>
+                          {totalContainers} <Icon icon="CONTAINER" />
+                        </>
+                      )}
+                      {totalShipments > 0 && source === SHIPMENT && (
+                        <>
+                          {totalShipments} <Icon icon="SHIPMENT" />
+                        </>
+                      )}
+                    </>
+                  ),
+                }}
+              />
+              <LoadingIcon />
+            </>
           ) : (
             <FormattedMessage
               id="modules.RelationMap.tags.guideline"
