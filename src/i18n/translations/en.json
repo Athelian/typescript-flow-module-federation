@@ -998,7 +998,7 @@
   "modules.RelationMaps.lastUsed": "LAST USED TEMPLATE:",
   "modules.RelationMaps.showAll": "SHOW ALL",
   "modules.RelationMaps.label.addTags": "ADD TAGS",
-  "modules.RelationMaps.label.ActiveOrArchive": "ACTIVE/ARCHIVE",
+  "modules.RelationMaps.label.ActiveOrArchive": "ACTIVATE/ARCHIVE",
   "components.button.delete": "DELETE",
   "components.button.remove": "REMOVE",
   "components.button.split": "SPLIT",

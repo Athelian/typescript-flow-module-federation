@@ -92,20 +92,24 @@ export default function Actions({ targets }: Props) {
             }}
           >
             <Icon icon="ORDER" />
+
             <ActionSubMenu isCollapsed={currentMenu !== ORDER}>
               <ActionButton
                 onClick={() => {
                   dispatch({
-                    type: 'CLONE',
+                    type: 'STATUS',
                     payload: {
                       source: ORDER,
                     },
                   });
                 }}
               >
-                <Icon icon="CLONE" />
+                <Icon icon="ACTIVE" /> / <Icon icon="ARCHIVE" />
                 <ActionLabel>
-                  <FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.ActiveOrArchive"
+                    defaultMessage="ACTIVATE/ARCHIVE"
+                  />
                 </ActionLabel>
               </ActionButton>
 
@@ -127,22 +131,20 @@ export default function Actions({ targets }: Props) {
                   />
                 </ActionLabel>
               </ActionButton>
+
               <ActionButton
                 onClick={() => {
                   dispatch({
-                    type: 'STATUS',
+                    type: 'CLONE',
                     payload: {
                       source: ORDER,
                     },
                   });
                 }}
               >
-                <Icon icon="ACTIVE" /> / <Icon icon="ARCHIVE" />
+                <Icon icon="CLONE" />
                 <ActionLabel>
-                  <FormattedMessage
-                    id="modules.RelationMaps.label.ActiveOrArchive"
-                    defaultMessage="ACTIVE/ARCHIVE"
-                  />
+                  <FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />
                 </ActionLabel>
               </ActionButton>
             </ActionSubMenu>
@@ -373,24 +375,6 @@ export default function Actions({ targets }: Props) {
               <ActionButton
                 onClick={() => {
                   dispatch({
-                    type: 'TAGS',
-                    payload: {
-                      source: SHIPMENT,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="TAG" />
-                <ActionLabel>
-                  <FormattedMessage
-                    id="modules.RelationMaps.label.addTags"
-                    defaultMessage="ADD TAGS"
-                  />
-                </ActionLabel>
-              </ActionButton>
-              <ActionButton
-                onClick={() => {
-                  dispatch({
                     type: 'STATUS',
                     payload: {
                       source: SHIPMENT,
@@ -403,6 +387,25 @@ export default function Actions({ targets }: Props) {
                   <FormattedMessage
                     id="modules.RelationMaps.label.ActiveOrArchive"
                     defaultMessage="ACTIVE/ARCHIVE"
+                  />
+                </ActionLabel>
+              </ActionButton>
+
+              <ActionButton
+                onClick={() => {
+                  dispatch({
+                    type: 'TAGS',
+                    payload: {
+                      source: SHIPMENT,
+                    },
+                  });
+                }}
+              >
+                <Icon icon="TAG" />
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.addTags"
+                    defaultMessage="ADD TAGS"
                   />
                 </ActionLabel>
               </ActionButton>
