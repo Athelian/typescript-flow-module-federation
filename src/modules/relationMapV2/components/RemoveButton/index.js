@@ -3,10 +3,17 @@ import * as React from 'react';
 import Icon from 'components/Icon';
 import { RemoveButtonStyle, DashedLineStyle } from './style';
 
-type Props = {|
+type OptionalProps = {
+  offset: boolean,
+};
+
+type Props = OptionalProps & {
   onClick: Function,
-  offset?: boolean,
-|};
+};
+
+const defaultProps = {
+  offset: false,
+};
 
 export default function RemoveButton({ onClick, offset }: Props) {
   return (
@@ -16,3 +23,5 @@ export default function RemoveButton({ onClick, offset }: Props) {
     </button>
   );
 }
+
+RemoveButton.defaultProps = defaultProps;
