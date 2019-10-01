@@ -39,17 +39,20 @@ export const TitleWrapperStyle: string = css`
   width: 125px;
 `;
 
-export const OrderTitleWrapperStyle: string = css`
+export const OrderTitleWrapperStyle = (canAdd: boolean) => css`
   position: relative;
   height: 20px;
-  &:hover {
-    & > button {
-      opacity: 1;
+  ${canAdd &&
+    `
+    &:hover {
+      & > button {
+        opacity: 1;
+      }
+      & > div {
+        opacity: 0;
+      }
     }
-    & > div {
-      opacity: 0;
-    }
-  }
+  `}
 `;
 
 export const AddOrderButtonCollapsedStyle: string = css`

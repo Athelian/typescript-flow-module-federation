@@ -123,7 +123,7 @@ const Header = React.memo<any>(
           </div>
 
           <div className={TitleWrapperStyle}>
-            <div className={OrderTitleWrapperStyle}>
+            <div className={OrderTitleWrapperStyle(hasPermissions(ORDER_CREATE))}>
               <Label color="WHITE">
                 <FormattedMessage id="modules.SideBar.order" />
                 {' ('}
