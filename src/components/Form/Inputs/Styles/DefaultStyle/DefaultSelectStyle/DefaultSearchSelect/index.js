@@ -90,7 +90,7 @@ function DefaultSearchSelect({
             type="button"
             onClick={() => {
               toggle();
-              if (inputRef?.current) {
+              if (inputRef.current) {
                 inputRef.current.focus();
               }
             }}
@@ -129,7 +129,7 @@ function DefaultSearchSelect({
             type="button"
             onClick={() => {
               toggle();
-              if (inputRef?.current) {
+              if (inputRef.current) {
                 inputRef.current.focus();
               }
             }}

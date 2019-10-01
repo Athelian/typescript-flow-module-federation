@@ -21,6 +21,7 @@ export default function Tooltip({ message, children, delay, maxWidth, ...rest }:
     <Tippy
       content={message}
       arrow
+      arrowType="round"
       delay={delay}
       distance={10}
       interactive

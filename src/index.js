@@ -9,7 +9,6 @@ import UNSTATED from 'unstated-debug';
 import FullStory from 'react-fullstory';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import 'tippy.js/dist/tippy.css';
 import PermissionsProvider from './components/Context/Permissions';
 import LanguageProvider from './components/Context/Language';
 import ViewerProvider from './components/Context/Viewer';
