@@ -23,6 +23,13 @@ export const findOrderIdByBatch = (batchId: string, entities: Object) => {
   return parentOrderId;
 };
 
+export const findItemIdByBatch = (batchId: string, entities: Object) => {
+  const parentIemId = findKey(currentItem => {
+    return (currentItem.batches || []).includes(batchId);
+  }, entities.orderItems);
+  return parentIemId;
+};
+
 export const findOrderIdByOrderItem = (itemId: string, entities: Object) => {
   const parentOrderId = findKey(currentOrder => {
     return (currentOrder.orderItems || []).includes(itemId);

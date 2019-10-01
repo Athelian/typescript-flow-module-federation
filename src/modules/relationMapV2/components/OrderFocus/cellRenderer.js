@@ -2,8 +2,9 @@
 // @flow
 import * as React from 'react';
 import type { OrderPayload } from 'generated/graphql';
+import { FormattedMessage } from 'react-intl';
 import { useDrop, useDrag } from 'react-dnd';
-import { flatten, findKey } from 'lodash';
+import { flatten } from 'lodash';
 import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import { useEntityHasPermissions, useHasPermissions } from 'components/Context/Permissions';
@@ -30,7 +31,7 @@ import { CONTAINER_BATCHES_ADD } from 'modules/permission/constants/container';
 import { SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH } from 'modules/permission/constants/shipment';
 import { Hits, Entities, ClientSorts } from 'modules/relationMapV2/store';
 import Badge from 'modules/relationMapV2/components/Badge';
-import type { CellRender, State } from './type.js.flow';
+import type { CellRender } from './type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
 import RemoveButton from '../RemoveButton';
 import RelationLine from '../RelationLine';
@@ -51,6 +52,8 @@ import {
   getIconByEntity,
   getCardByEntity,
   handleClickAndDoubleClick,
+  findOrderIdByBatch,
+  findItemIdByBatch,
 } from './helpers';
 import { RelationMapContext } from './store';
 
@@ -240,12 +243,10 @@ const hasPermissionToMove = ({
 
 const orderDropMessage = ({
   orderId,
-  state,
   entities,
   hasPermissions,
   item,
 }: {|
-  state: State,
   entities: Object,
   hasPermissions: Function,
   orderId: string,
@@ -254,23 +255,24 @@ const orderDropMessage = ({
     id: string,
   },
 |}) => {
-  const type = (item && item.type) || '';
+  const type = item?.type ?? '';
   switch (type) {
     case BATCH: {
-      const batchId = item && item.id;
-      const parentOrderId = findKey(state.order, order => {
-        return order.orderItems.some(orderItem =>
-          orderItem.batches.map(batch => batch.id).includes(batchId)
-        );
-      });
+      const batchId = item?.id ?? '';
+      const parentOrderId = findOrderIdByBatch(batchId, entities);
       if (!parentOrderId) return '';
 
       const isOwnOrder = orderId === parentOrderId;
       if (isOwnOrder)
         return (
           <div>
-            CANNOT MOVE TO ORDER <br />
-            (SAME ORDER)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noOrderPermission"
+              defaultMessage="CANNOT MOVE TO ORDER"
+            />
+            <br />
+            (<FormattedMessage id="modules.RelationMap.dnd.sameOrder" defaultMessage="SAME ORDER" />
+            )
           </div>
         );
 
@@ -280,8 +282,17 @@ const orderDropMessage = ({
       if (isDifferentImporter)
         return (
           <div>
-            CANNOT MOVE TO ORDER <br />
-            (IMPORTER MISMATCHED)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noOrderPermission"
+              defaultMessage="CANNOT MOVE TO ORDER"
+            />
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.importerMismatch"
+              defaultMessage="IMPORTER MISMATCHED"
+            />
+            )
           </div>
         );
 
@@ -291,8 +302,17 @@ const orderDropMessage = ({
       if (isDifferentExporter)
         return (
           <div>
-            CANNOT MOVE TO ORDER <br />
-            (EXPORTER MISMATCHED)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noOrderPermission"
+              defaultMessage="CANNOT MOVE TO ORDER"
+            />
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.exporterMismatch"
+              defaultMessage="EXPORTER MISMATCHED"
+            />
+            )
           </div>
         );
 
@@ -303,15 +323,33 @@ const orderDropMessage = ({
       if (noPermission)
         return (
           <div>
-            CANNOT MOVE TO ORDER <br />
-            (NO PERMISSION)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noOrderPermission"
+              defaultMessage="CANNOT MOVE TO ORDER"
+            />
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noPermission"
+              defaultMessage="NO PERMISSION"
+            />
+            )
           </div>
         );
 
       return (
         <div>
-          MOVE TO ORDER <br />
-          (ITEM WILL BE GENERATED)
+          <FormattedMessage
+            id="modules.RelationMap.dnd.moveToOrder"
+            defaultMessage="MOVE TO ORDER"
+          />
+          <br />
+          (
+          <FormattedMessage
+            id="modules.RelationMap.dnd.itemGenerated"
+            defaultMessage="ITEM WILL BE GENERATED"
+          />
+          )
         </div>
       );
     }
@@ -325,10 +363,10 @@ const orderItemDropMessage = ({
   itemId,
   hasPermissions,
   order,
-  state,
+  entities,
   item,
 }: {|
-  state: State,
+  entities: Object,
   hasPermissions: Function,
   itemId: string,
   order: OrderPayload,
@@ -337,50 +375,66 @@ const orderItemDropMessage = ({
     id: string,
   },
 |}) => {
-  const type = (item && item.type) || '';
+  const type = item?.type ?? '';
   switch (type) {
     case BATCH: {
       const batchId = item && item.id;
-      const parentOrderId = findKey(state.order, currentOrder => {
-        return currentOrder.orderItems.some(orderItem =>
-          orderItem.batches.map(batch => batch.id).includes(batchId)
-        );
-      });
+      const parentOrderId = findOrderIdByBatch(batchId, entities);
       if (!parentOrderId) return '';
 
-      const parentItem = getByPathWithDefault([], 'orderItems', state.order[parentOrderId]).find(
-        orderItem => orderItem.batches.map(batch => batch.id).includes(batchId)
-      );
-      if (!parentItem) return '';
+      const parentItemId = findItemIdByBatch(batchId, entities);
+      if (!parentItemId) return '';
 
-      const isOwnItem = parentItem.id === itemId;
+      const isOwnItem = parentItemId === itemId;
       if (isOwnItem)
         return (
           <div>
-            CANNOT MOVE TO ITEM <br />
-            (SAME ITEM)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noItemPermission"
+              defaultMessage="CANNOT MOVE TO ITEM"
+            />{' '}
+            <br />
+            (<FormattedMessage id="modules.RelationMap.dnd.sameItem" defaultMessage="SAME ITEM" />)
           </div>
         );
 
       const isDifferentImporter =
         getByPathWithDefault('', 'importer.id', order) !==
-        getByPathWithDefault('', 'importer.id', state.order[parentOrderId]);
+        getByPathWithDefault('', 'importer.id', entities.orders[parentOrderId]);
       if (isDifferentImporter)
         return (
           <div>
-            CANNOT MOVE TO ITEM <br />
-            (IMPORTER MISMATCHED)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noItemPermission"
+              defaultMessage="CANNOT MOVE TO ITEM"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.importerMismatch"
+              defaultMessage="IMPORTER MISMATCHED"
+            />
+            )
           </div>
         );
 
       const isDifferentExporter =
         getByPathWithDefault('', 'exporter.id', order) !==
-        getByPathWithDefault('', 'exporter.id', state.order[parentOrderId]);
+        getByPathWithDefault('', 'exporter.id', entities.orders[parentOrderId]);
       if (isDifferentExporter)
         return (
           <div>
-            CANNOT MOVE TO ITEM <br />
-            (EXPORTER MISMATCHED)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noItemPermission"
+              defaultMessage="CANNOT MOVE TO ITEM"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.exporterMismatch"
+              defaultMessage="EXPORTER MISMATCHED"
+            />
+            )
           </div>
         );
 
@@ -391,12 +445,25 @@ const orderItemDropMessage = ({
       if (noPermission)
         return (
           <div>
-            CANNOT MOVE TO ITEM <br />
-            (NO PERMISSION)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noItemPermission"
+              defaultMessage="CANNOT MOVE TO ITEM"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noPermission"
+              defaultMessage="NO PERMISSION"
+            />
+            )
           </div>
         );
 
-      return <div>MOVE TO ITEM</div>;
+      return (
+        <div>
+          <FormattedMessage id="modules.RelationMap.dnd.moveItem" defaultMessage="MOVE TO ITEM" />
+        </div>
+      );
     }
 
     default:
@@ -407,12 +474,10 @@ const orderItemDropMessage = ({
 const containerDropMessage = ({
   containerId,
   entities,
-  state,
   item,
   hasPermissions,
 }: {|
   hasPermissions: Function,
-  state: State,
   entities: Object,
   containerId: string,
   item: ?{
@@ -420,23 +485,28 @@ const containerDropMessage = ({
     id: string,
   },
 |}) => {
-  const type = (item && item.type) || '';
+  const type = item?.type ?? '';
   switch (type) {
     case BATCH: {
-      const batchId = (item && item.id) || 0;
-      const parentOrderId = findKey(state.order, currentOrder => {
-        return currentOrder.orderItems.some(orderItem =>
-          orderItem.batches.map(batch => batch.id).includes(batchId)
-        );
-      });
+      const batchId = item?.id ?? '';
+      const parentOrderId = findOrderIdByBatch(batchId, entities);
       if (!parentOrderId) return '';
       const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
       const isOwnContainer = batch.container === containerId;
       if (isOwnContainer)
         return (
           <div>
-            CANNOT MOVE TO CONTAINER <br />
-            (SAME CONTAINER)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noContainerPermission"
+              defaultMessage="CANNOT MOVE TO CONTAINER"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.sameContainer"
+              defaultMessage="SAME CONTAINER"
+            />
+            )
           </div>
         );
 
@@ -450,8 +520,17 @@ const containerDropMessage = ({
       if (isDifferentImporter)
         return (
           <div>
-            CANNOT MOVE TO CONTAINER <br />
-            (IMPORTER MISMATCHED)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noContainerPermission"
+              defaultMessage="CANNOT MOVE TO CONTAINER"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.importerMismatch"
+              defaultMessage="IMPORTER MISMATCHED"
+            />
+            )
           </div>
         );
 
@@ -462,8 +541,17 @@ const containerDropMessage = ({
       if (isDifferentExporter)
         return (
           <div>
-            CANNOT MOVE TO CONTAINER <br />
-            (EXPORTER MISMATCHED)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noContainerPermission"
+              defaultMessage="CANNOT MOVE TO CONTAINER"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.exporterMismatch"
+              defaultMessage="EXPORTER MISMATCHED"
+            />
+            )
           </div>
         );
 
@@ -471,12 +559,28 @@ const containerDropMessage = ({
       if (noPermission)
         return (
           <div>
-            CANNOT MOVE TO CONTAINER <br />
-            (NO PERMISSION)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noContainerPermission"
+              defaultMessage="CANNOT MOVE TO CONTAINER"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noPermission"
+              defaultMessage="NO PERMISSION"
+            />
+            )
           </div>
         );
 
-      return <div>MOVE TO CONTAINER</div>;
+      return (
+        <div>
+          <FormattedMessage
+            id="modules.RelationMap.dnd.moveContainer"
+            defaultMessage="MOVE TO CONTAINER"
+          />
+        </div>
+      );
     }
 
     default:
@@ -487,12 +591,10 @@ const containerDropMessage = ({
 const shipmentDropMessage = ({
   shipmentId,
   entities,
-  state,
   item,
   hasPermissions,
 }: {|
   hasPermissions: Function,
-  state: State,
   entities: Object,
   shipmentId: string,
   item: ?{
@@ -500,23 +602,28 @@ const shipmentDropMessage = ({
     id: string,
   },
 |}) => {
-  const type = (item && item.type) || '';
+  const type = item?.type ?? '';
   switch (type) {
     case BATCH: {
-      const batchId = (item && item.id) || 0;
-      const parentOrderId = findKey(state.order, currentOrder => {
-        return currentOrder.orderItems.some(orderItem =>
-          orderItem.batches.map(batch => batch.id).includes(batchId)
-        );
-      });
+      const batchId = item?.id ?? '';
+      const parentOrderId = findOrderIdByBatch(batchId, entities);
       if (!parentOrderId) return '';
       const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
       const isOwnShipment = batch.shipment === shipmentId;
       if (isOwnShipment)
         return (
           <div>
-            CANNOT MOVE TO SHIPMENT <br />
-            (SAME SHIPMENT)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noShipmentPermission"
+              defaultMessage="CANNOT MOVE TO SHIPMENT"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.sameShipment"
+              defaultMessage="SAME SHIPMENT"
+            />
+            )
           </div>
         );
 
@@ -529,8 +636,17 @@ const shipmentDropMessage = ({
       if (isDifferentImporter)
         return (
           <div>
-            CANNOT MOVE TO SHIPMENT <br />
-            (IMPORTER MISMATCHED)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noShipmentPermission"
+              defaultMessage="CANNOT MOVE TO SHIPMENT"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.importerMismatch"
+              defaultMessage="IMPORTER MISMATCHED"
+            />
+            )
           </div>
         );
 
@@ -541,8 +657,17 @@ const shipmentDropMessage = ({
       if (isDifferentExporter)
         return (
           <div>
-            CANNOT MOVE TO SHIPMENT <br />
-            (EXPORTER MISMATCHED)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noShipmentPermission"
+              defaultMessage="CANNOT MOVE TO SHIPMENT"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.exporterMismatch"
+              defaultMessage="EXPORTER MISMATCHED"
+            />
+            )
           </div>
         );
 
@@ -550,12 +675,28 @@ const shipmentDropMessage = ({
       if (noPermission)
         return (
           <div>
-            CANNOT MOVE TO SHIPMENT <br />
-            (NO PERMISSION)
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noShipmentPermission"
+              defaultMessage="CANNOT MOVE TO SHIPMENT"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noPermission"
+              defaultMessage="NO PERMISSION"
+            />
+            )
           </div>
         );
 
-      return <div>MOVE TO SHIPMENT</div>;
+      return (
+        <div>
+          <FormattedMessage
+            id="modules.RelationMap.dnd.moveShipment"
+            defaultMessage="MOVE TO SHIPMENT"
+          />
+        </div>
+      );
     }
 
     default:
@@ -577,11 +718,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findKey(state.order, order => {
-            return order.orderItems.some(orderItem =>
-              orderItem.batches.map(batch => batch.id).includes(batchId)
-            );
-          });
+          const parentOrderId = findOrderIdByBatch(batchId, entities);
           if (!parentOrderId) return false;
           const isOwnOrder = orderId === parentOrderId;
           const isDifferentImporter =
@@ -608,7 +745,6 @@ function OrderCell({ data, afterConnector }: CellProps) {
       isSameItem: monitor.getItem() && monitor.getItem().id === orderId,
       dropMessage: orderDropMessage({
         hasPermissions,
-        state,
         entities,
         orderId,
         item: monitor.getItem(),
@@ -771,7 +907,8 @@ function OrderItemCell({
   order,
 }: CellProps & { order: OrderPayload }) {
   const { state, dispatch } = React.useContext(RelationMapContext);
-  const { badge } = Entities.useContainer();
+  const { mapping, badge } = Entities.useContainer();
+  const { entities } = mapping;
   const { matches } = Hits.useContainer();
   const hasPermissions = useEntityHasPermissions(data);
   const orderId = getByPathWithDefault('', 'id', order);
@@ -783,25 +920,19 @@ function OrderItemCell({
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findKey(state.order, currentOrder => {
-            return currentOrder.orderItems.some(orderItem =>
-              orderItem.batches.map(batch => batch.id).includes(batchId)
-            );
-          });
+          const parentOrderId = findOrderIdByBatch(batchId, entities);
           if (!parentOrderId) return false;
-          const parentItem = getByPathWithDefault(
-            [],
-            'orderItems',
-            state.order[parentOrderId]
-          ).find(orderItem => orderItem.batches.map(batch => batch.id).includes(batchId));
-          if (!parentItem) return true;
-          const isOwnItem = parentItem.id === itemId;
+          const parentOrder = entities.orders?.[parentOrderId];
+
+          const parentItemId = findItemIdByBatch(batchId, entities);
+          if (!parentItemId) return true;
+          const isOwnItem = parentItemId === itemId;
           const isDifferentImporter =
             getByPathWithDefault('', 'importer.id', order) !==
-            getByPathWithDefault('', 'importer.id', state.order[parentOrderId]);
+            getByPathWithDefault('', 'importer.id', parentOrder);
           const isDifferentExporter =
             getByPathWithDefault('', 'exporter.id', order) !==
-            getByPathWithDefault('', 'exporter.id', state.order[parentOrderId]);
+            getByPathWithDefault('', 'exporter.id', parentOrder);
           const noPermission = !hasPermissionToMove({
             hasPermissions,
             type,
@@ -820,7 +951,7 @@ function OrderItemCell({
       isSameItem: monitor.getItem() && monitor.getItem().id === itemId,
       dropMessage: orderItemDropMessage({
         hasPermissions,
-        state,
+        entities,
         order,
         itemId,
         item: monitor.getItem(),
@@ -1197,11 +1328,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findKey(state.order, currentOrder => {
-            return currentOrder.orderItems.some(orderItem =>
-              orderItem.batches.map(batch => batch.id).includes(batchId)
-            );
-          });
+          const parentOrderId = findOrderIdByBatch(batchId, entities);
           if (!parentOrderId) return false;
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
@@ -1233,7 +1360,6 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
       isSameItem: monitor.getItem() && monitor.getItem().id === containerId,
       dropMessage: containerDropMessage({
         hasPermissions,
-        state,
         entities,
         containerId,
         item: monitor.getItem(),
@@ -1413,19 +1539,11 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findKey(state.order, currentOrder => {
-            return currentOrder.orderItems.some(orderItem =>
-              orderItem.batches.map(batch => batch.id).includes(batchId)
-            );
-          });
+          const parentOrderId = findOrderIdByBatch(batchId, entities);
           if (!parentOrderId) return false;
 
-          const parentItem = getByPathWithDefault(
-            [],
-            'orderItems',
-            state.order[parentOrderId]
-          ).find(orderItem => orderItem.batches.map(batch => batch.id).includes(batchId));
-          if (!parentItem) return true;
+          const parentItemId = findItemIdByBatch(batchId, entities);
+          if (!parentItemId) return true;
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
           const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
@@ -1455,7 +1573,6 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
       isSameItem: monitor.getItem() && monitor.getItem().id === shipmentId,
       dropMessage: shipmentDropMessage({
         hasPermissions,
-        state,
         entities,
         shipmentId,
         item: monitor.getItem(),
