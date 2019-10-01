@@ -107,7 +107,7 @@ export default function Actions({ targets }: Props) {
                 <Icon icon="ACTIVE" /> / <Icon icon="ARCHIVE" />
                 <ActionLabel>
                   <FormattedMessage
-                    id="modules.RelationMaps.label.ActiveOrArchive"
+                    id="modules.RelationMaps.label.ACTIVATE"
                     defaultMessage="ACTIVATE/ARCHIVE"
                   />
                 </ActionLabel>

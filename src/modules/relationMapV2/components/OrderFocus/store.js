@@ -516,24 +516,7 @@ export function reducer(
       });
     }
     case 'CREATE_BATCH_END': {
-      // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
-      const orderId = action.payload?.batch?.orderItem?.order?.id ?? '';
-      const { orderItem, ...batch } = action.payload?.batch ?? {};
-      // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
-      const orderItemId = action.payload?.batch?.orderItem?.id ?? '';
-      const itemIndex = state.order[orderId].orderItems.findIndex(item => item.id === orderItemId);
       return update(state, {
-        order: {
-          [orderId]: {
-            orderItems: {
-              [itemIndex]: {
-                batches: {
-                  $push: [batch],
-                },
-              },
-            },
-          },
-        },
         itemActions: {
           isProcessing: { $set: false },
           detail: {
