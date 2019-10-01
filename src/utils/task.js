@@ -652,6 +652,14 @@ export const getParentInfo = (
       link: `/product/${encodeId(getByPath('product.id', parent))}`,
     };
   }
+  if (__typename === 'Milestone') {
+    return {
+      parentType: 'milestone',
+      parentIcon: 'MILESTONE',
+      parentData: parent.name,
+      link: `/project/${encodeId(getByPath('project.id', parent))}`,
+    };
+  }
   return {};
 };
 
