@@ -66,6 +66,8 @@ function DefaultSearchSelect({
   placeholder,
   ...rest
 }: Props) {
+  const inputRef = React.useRef(null);
+
   return (
     <div
       className={DefaultStyleWrapperStyle({
@@ -84,11 +86,21 @@ function DefaultSearchSelect({
             <Icon icon="CLEAR" />
           </button>
         ) : (
-          <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
+          <button
+            type="button"
+            onClick={() => {
+              toggle();
+              if (inputRef?.current) {
+                inputRef.current.focus();
+              }
+            }}
+            className={ArrowDownStyle(isOpen)}
+          >
             <Icon icon="CHEVRON_DOWN" />
           </button>
         ))}
       <DebounceInput
+        inputRef={inputRef}
         onClick={e => {
           e.target.select();
           toggle();
@@ -113,7 +125,16 @@ function DefaultSearchSelect({
             <Icon icon="CLEAR" />
           </button>
         ) : (
-          <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
+          <button
+            type="button"
+            onClick={() => {
+              toggle();
+              if (inputRef?.current) {
+                inputRef.current.focus();
+              }
+            }}
+            className={ArrowDownStyle(isOpen)}
+          >
             <Icon icon="CHEVRON_DOWN" />
           </button>
         ))}
