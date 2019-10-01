@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
-import { FormattedRelative } from 'react-intl';
+import { FormattedRelativeTime } from 'react-intl';
 import { Link } from '@reach/router';
 import { getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';
@@ -54,7 +54,7 @@ const NotificationItem = ({ notification }: Props) => (
           <div className={InfoWrapper}>
             {notification.body}
             <div className="data">
-              <FormattedRelative value={new Date(notification.createdAt)} />
+              <FormattedRelativeTime value={new Date(notification.createdAt)} />
             </div>
           </div>
         </Link>
