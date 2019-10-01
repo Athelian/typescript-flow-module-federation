@@ -18,6 +18,9 @@ export const ContentStyle = css`
 
 export const ListStyle = css`
   ${scrollbars.MAIN};
+  padding: 0 0 75px 0;
+  width: 100%;
+  height: 100%;
 `;
 
 export const RowStyle = css`
