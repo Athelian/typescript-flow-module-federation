@@ -123,7 +123,7 @@ import {
   faFileWord as WORD,
   faLink as BINDED,
   faUnlink as UNBINDED,
-  faBezierCurve as SPLIT,
+  faScalpelPath as SPLIT,
   faBezierCurve as ENTITY,
   faMagic as MAGIC,
   faCodeBranch as BRANCH,
