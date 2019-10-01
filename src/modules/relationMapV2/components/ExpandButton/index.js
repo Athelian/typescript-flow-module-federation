@@ -9,8 +9,11 @@ import { ExpandButtonStyle } from './style';
 export default function ExpandButton() {
   const { expandRows, setExpandRows } = ExpandRows.useContainer();
   const { mapping } = Entities.useContainer();
+  const orderIds = Object.keys(mapping.entities?.orders ?? {}).filter(
+    id => mapping.entities?.orders?.[id]?.orderItemCount
+  );
 
-  const allIsExpanded = expandRows.length === mapping.orders.length;
+  const allIsExpanded = expandRows.length === orderIds.length;
 
   return (
     <Tooltip
@@ -34,7 +37,7 @@ export default function ExpandButton() {
           if (allIsExpanded) {
             setExpandRows([]);
           } else {
-            setExpandRows(Object.keys(mapping.entities?.orders || {}));
+            setExpandRows(orderIds);
           }
         }}
         className={ExpandButtonStyle(allIsExpanded)}
