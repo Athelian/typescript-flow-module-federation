@@ -5,8 +5,6 @@ import { Subscribe } from 'unstated';
 import { DocumentsInput, SectionWrapper, SectionHeader } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 
-import { CommonFormWrapperStyle } from './style';
-
 type Props = {
   sectionId: string,
   entityType: string,
@@ -34,7 +32,7 @@ export default function DocumentsSection({
     <Subscribe to={[container]}>
       {({ state: { files = [] }, setFieldValue }) => {
         return (
-          <div className={CommonFormWrapperStyle}>
+          <div>
             <SectionWrapper id={sectionId}>
               <SectionHeader
                 icon="DOCUMENT"
