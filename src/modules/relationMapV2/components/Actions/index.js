@@ -98,7 +98,7 @@ export default function Actions({ targets }: Props) {
         ids.push(findOrderIdByBatch(batch.id, mapping.entities));
       }
     });
-    navigate('/order/sheet', {
+    navigate('/order/table', {
       state: {
         orderIds: [...new Set(ids)],
       },
