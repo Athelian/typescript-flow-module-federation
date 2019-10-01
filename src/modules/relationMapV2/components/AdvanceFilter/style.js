@@ -7,10 +7,6 @@ export const FilterWrapperStyle = (hasFilter: boolean): string => css`
   align-items: center;
   border-radius: 25px;
   background-color: ${hasFilter ? colors.GRAY_SUPER_LIGHT : colors.TRANSPARENT};
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  position: absolute;
-  left: 50px;
   z-index: 1;
   padding: 0 0 0 11px;
   height: 50px;

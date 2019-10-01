@@ -12,7 +12,6 @@ import usePrevious from 'hooks/usePrevious';
 import { uuid } from 'utils/id';
 import logger from 'utils/logger';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
-import { UIContext } from 'modules/ui';
 import { Display } from 'components/Form';
 import {
   orderFocusedListQuery,
@@ -183,7 +182,6 @@ const loadMore = (
 };
 
 export default function OrderFocus() {
-  const uiContext = React.useContext(UIContext);
   const listRef = React.createRef();
   const scrollEntity = React.useRef({
     type: '',
@@ -365,11 +363,8 @@ export default function OrderFocus() {
                           queryOrdersDetail(orderIds, true);
                         }}
                         height={window.innerHeight - 50}
-                        width={
-                          uiContext.isSideBarExpanded
-                            ? window.innerWidth - 200
-                            : window.innerWidth - 50
-                        }
+                        width="100%"
+                        overscanCount={5}
                       >
                         {Row}
                       </List>
