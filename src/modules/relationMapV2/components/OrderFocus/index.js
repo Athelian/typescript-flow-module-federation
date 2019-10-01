@@ -13,11 +13,7 @@ import { uuid } from 'utils/id';
 import logger from 'utils/logger';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { Display } from 'components/Form';
-import {
-  orderFocusedListQuery,
-  orderFocusDetailQuery,
-  orderFullFocusDetailQuery,
-} from 'modules/relationMapV2/query';
+import { orderFocusedListQuery, orderFullFocusDetailQuery } from 'modules/relationMapV2/query';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import {
   Hits,
@@ -235,28 +231,25 @@ export default function OrderFocus() {
   }, [listRef, scrollPosition, scrollToRow]);
 
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const queryOrdersDetail = React.useCallback(
-    (orderIds: Array<string>, isPreload: boolean = false) => {
-      if (orderIds.length) {
-        apolloClient
-          .query({
-            query: isPreload ? orderFocusDetailQuery : orderFullFocusDetailQuery,
-            variables: {
-              ids: orderIds,
+  const queryOrdersDetail = React.useCallback((orderIds: Array<string>) => {
+    if (orderIds.length) {
+      apolloClient
+        .query({
+          query: orderFullFocusDetailQuery,
+          variables: {
+            ids: orderIds,
+          },
+        })
+        .then(result => {
+          dispatch({
+            type: 'FETCH_ORDERS',
+            payload: {
+              orders: result.data.ordersByIDs,
             },
-          })
-          .then(result => {
-            dispatch({
-              type: 'FETCH_ORDERS',
-              payload: {
-                orders: result.data.ordersByIDs,
-              },
-            });
           });
-      }
-    },
-    []
-  );
+        });
+    }
+  }, []);
 
   return (
     <>
@@ -360,7 +353,7 @@ export default function OrderFocus() {
                               orderIds.push(getByPathWithDefault('', 'id', order));
                             }
                           }
-                          queryOrdersDetail(orderIds, true);
+                          queryOrdersDetail(orderIds);
                         }}
                         height={window.innerHeight - 50}
                         width="100%"

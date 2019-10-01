@@ -331,6 +331,7 @@ export const orderFocusedListQuery = gql`
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...orderCardOptimiseFragment
+        ...orderCardFullFragment
       }
       hits {
         ... on Hit {
@@ -352,18 +353,6 @@ export const orderFocusedListQuery = gql`
   }
 
   ${orderCardOptimiseFragment}
-  ${tagFragment}
-  ${taskCountFragment}
-  ${ownedByFragment}
-`;
-
-export const orderFocusDetailQuery = gql`
-  query orderFocusDetailQuery($ids: [ID!]!) {
-    ordersByIDs(ids: $ids) {
-      ...orderCardFullFragment
-    }
-  }
-
   ${orderCardFullFragment}
   ${tagFragment}
   ${taskCountFragment}

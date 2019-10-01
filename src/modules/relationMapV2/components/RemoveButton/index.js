@@ -10,7 +10,7 @@ type Props = {|
 
 export default function RemoveButton({ onClick, offset }: Props) {
   return (
-    <button onClick={onClick} className={RemoveButtonStyle(offset)} type="button">
+    <button onClick={onClick} className={RemoveButtonStyle(Boolean(offset))} type="button">
       <div className={DashedLineStyle} />
       <Icon icon="CLEAR" />
     </button>
