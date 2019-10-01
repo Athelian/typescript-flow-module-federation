@@ -42,7 +42,7 @@ function SplitBatch({
               id="components.cards.splitQuantityForBatch"
               defaultMessage="QTY FOR BATCH"
             />
-            <Icon icon="BATCH" /> {no}
+            <Icon icon="BATCH" /> {no} ({latestQuantity})
           </Label>
         }
         input={
@@ -90,9 +90,7 @@ export default function SplitBatches({ onSuccess }: Props) {
     batchIds.map(id => mapping.entities?.batches?.[id]?.ownedBy).filter(Boolean)
   );
   const DEFAULT_QTY = 0;
-  const [batches, setBatches] = React.useState(() =>
-    batchIds.map(id => ({ id, quantity: DEFAULT_QTY }))
-  );
+  const [batches, setBatches] = React.useState(batchIds.map(id => ({ id, quantity: DEFAULT_QTY })));
   React.useEffect(() => {
     return () => {
       if (!isOpen) setBatches([]);
@@ -139,10 +137,13 @@ export default function SplitBatches({ onSuccess }: Props) {
   };
 
   const isValid = () => {
-    return batches.every(({ id, quantity }) =>
-      validator(0, mapping.entities?.batches?.[id]?.latestQuantity ?? 0).isValidSync({
-        quantity,
-      })
+    return (
+      batches.length > 0 &&
+      batches.every(({ id, quantity }) =>
+        validator(1, mapping.entities?.batches?.[id]?.latestQuantity ?? 0).isValidSync({
+          quantity,
+        })
+      )
     );
   };
 
@@ -181,16 +182,28 @@ export default function SplitBatches({ onSuccess }: Props) {
           {isProcessing ? (
             <>
               <h3 className={ConfirmMessageStyle}>
-                Split {batchIds.length} batches <Icon icon="BATCH" /> ...
+                <FormattedMessage
+                  id="modules.RelationMap.split.process"
+                  defaultMessage="Splitting {total} {source} Batches ..."
+                  values={{
+                    total: batchIds.length,
+                    source: <Icon icon="BATCH" />,
+                  }}
+                />
+                <LoadingIcon />
               </h3>
-              <LoadingIcon />
             </>
           ) : (
             <>
               <h3 className={ConfirmMessageStyle}>
-                You have selected {batchIds.length} batches <Icon icon="BATCH" />
-                Please enter the quantity you would like to split each Batch
-                <Icon icon="BATCH" /> into.
+                <FormattedMessage
+                  id="modules.RelationMap.split.process"
+                  defaultMessage="You have selected {total} Batches {source}. Please enter the quantity you would like to split each Batch {source} into."
+                  values={{
+                    total: batchIds.length,
+                    source: <Icon icon="BATCH" />,
+                  }}
+                />
               </h3>
               {batchIds.map(batchId => (
                 <SplitBatch
