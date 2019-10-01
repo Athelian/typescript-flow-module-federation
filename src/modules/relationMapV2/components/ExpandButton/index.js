@@ -13,7 +13,8 @@ export default function ExpandButton() {
     id => mapping.entities?.orders?.[id]?.orderItemCount
   );
 
-  const allIsExpanded = expandRows.length === orderIds.length;
+  const allIsExpanded =
+    expandRows.length > 0 && orderIds.length > 0 && expandRows.length === orderIds.length;
 
   return (
     <Tooltip
