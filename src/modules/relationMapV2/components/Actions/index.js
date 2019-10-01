@@ -3,14 +3,8 @@ import * as React from 'react';
 import { navigate } from '@reach/router';
 import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
-import { PermissionsContext } from 'components/Context/Permissions';
 import { Entities } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { ORDER_CREATE } from 'modules/permission/constants/order';
-import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
-import { BATCH_CREATE } from 'modules/permission/constants/batch';
-import { CONTAINER_CREATE } from 'modules/permission/constants/container';
-import { SHIPMENT_CREATE } from 'modules/permission/constants/shipment';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import {
   targetedIds,
@@ -27,31 +21,6 @@ type Props = {
   targets: Array<string>,
 };
 
-function hasPermissionToClone(
-  hasPermissions: Function,
-  type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT
-) {
-  switch (type) {
-    case ORDER:
-      return hasPermissions(ORDER_CREATE);
-
-    case ORDER_ITEM:
-      return hasPermissions(ORDER_ITEMS_CREATE);
-
-    case BATCH:
-      return hasPermissions(BATCH_CREATE);
-
-    case CONTAINER:
-      return hasPermissions(CONTAINER_CREATE);
-
-    case SHIPMENT:
-      return hasPermissions(SHIPMENT_CREATE);
-
-    default:
-      return false;
-  }
-}
-
 export default function Actions({ targets }: Props) {
   const [currentMenu, setCurrentMenu] = React.useState(null);
   const { dispatch } = React.useContext(RelationMapContext);
@@ -66,26 +35,6 @@ export default function Actions({ targets }: Props) {
   const batchIsDisabled = batchIds.length === 0;
   const containerIsDisabled = containerIds.length === 0;
   const shipmentIsDisabled = shipmentIds.length === 0;
-  const { hasPermissionsByOrganization } = React.useContext(PermissionsContext);
-  const allowToCloneOrders = targetedIds(targets, ORDER).every(id =>
-    hasPermissionToClone(
-      hasPermissionsByOrganization(mapping.entities?.orders?.[id]?.ownedBy),
-      ORDER
-    )
-  );
-  const allowToCloneOrderItems = targetedIds(targets, ORDER_ITEM).every(id =>
-    hasPermissionToClone(
-      hasPermissionsByOrganization(mapping.entities?.orderItems?.[id]?.ownedBy),
-      ORDER_ITEM
-    )
-  );
-  const allowToCloneBatches = targetedIds(targets, BATCH).every(id =>
-    hasPermissionToClone(
-      hasPermissionsByOrganization(mapping.entities?.batches?.[id]?.ownedBy),
-      BATCH
-    )
-  );
-
   const navigateToGTV = () => {
     const ids = [...orderIds];
     batchIds.forEach(batchId => ids.push(findOrderIdByBatch(batchId, mapping.entities)));
@@ -153,7 +102,6 @@ export default function Actions({ targets }: Props) {
                     },
                   });
                 }}
-                isDisabled={!allowToCloneOrders}
               >
                 <Icon icon="CLONE" />
                 <ActionLabel>
@@ -269,7 +217,6 @@ export default function Actions({ targets }: Props) {
                     },
                   });
                 }}
-                isDisabled={!allowToCloneOrderItems}
               >
                 <Icon icon="CLONE" />
                 <ActionLabel>
@@ -360,7 +307,6 @@ export default function Actions({ targets }: Props) {
                     },
                   });
                 }}
-                isDisabled={!allowToCloneBatches}
               >
                 <Icon icon="CLONE" />
                 <ActionLabel>
