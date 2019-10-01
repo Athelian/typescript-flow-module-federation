@@ -18,7 +18,7 @@ export const EntityNavbarWrapperStyle = (color: string, width: number): string =
   align-items: center;
   height: 50px;
   background-color: ${colors[color]};
-  width: ${width}px;
+  width: ${width + 20}px;
   padding: 0 0 0 15px;
   overflow: hidden;
 `;

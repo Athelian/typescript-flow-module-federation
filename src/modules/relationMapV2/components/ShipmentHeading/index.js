@@ -8,6 +8,7 @@ import { isBefore, isAfter, differenceInCalendarDays } from 'utils/date';
 import { getPort } from 'utils/shipment';
 import Heading from 'modules/relationMapV2/components/Heading';
 import {
+  SHIPMENT_WIDTH,
   CARGO_READY,
   LOAD_PORT_DEPARTURE,
   FIRST_TRANSIT_PORT_ARRIVAL,
@@ -164,7 +165,7 @@ export default function ShipmentHeading({
 
   return (
     <Heading
-      width="515px"
+      width={`${SHIPMENT_WIDTH}px`}
       hasSelectedChildren={hasSelectedChildren}
       hasFilterHits={hasFilterHits}
       isExpanded={isExpanded}

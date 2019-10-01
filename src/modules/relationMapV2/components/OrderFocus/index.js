@@ -336,7 +336,10 @@ export default function OrderFocus() {
                         className={ListStyle}
                         itemCount={rowCount}
                         innerElementType={innerElementType}
-                        itemSize={() => 75}
+                        itemSize={index => {
+                          if (index === 0) return 50;
+                          return 75;
+                        }}
                         onItemsRendered={({ visibleStartIndex, visibleStopIndex }) => {
                           const isLastCell = visibleStopIndex === rowCount - 1;
                           if (hasMoreItems(data, 'orders') && isLastCell) {
