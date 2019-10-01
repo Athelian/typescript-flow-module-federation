@@ -132,6 +132,9 @@ export const orderCardFullFragment = gql`
               value
               metric
             }
+            tags {
+              ...tagFragment
+            }
             shipment {
               ... on Shipment {
                 id
