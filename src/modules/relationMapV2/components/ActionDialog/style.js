@@ -2,20 +2,21 @@
 import { css } from 'react-emotion';
 import { fontSizes, colors, layout } from 'styles/common';
 
-export const CloneDialogWrapperStyle: string = css`
-  padding: 20px;
+export const ActionDialogWrapperStyle: string = css`
+  padding: 0 30px 20px 30px;
 `;
 
 export const DialogMessageStyle: string = css`
-  ${fontSizes.LARGE};
+  ${fontSizes.MAIN};
   color: ${colors.BLACK};
   font-weight: bold;
   text-align: center;
-  margin: 0 0 20px 0;
+  padding: 20px 0;
+  border-top: 1px solid ${colors.GRAY_SUPER_LIGHT};
 `;
 
 export const DialogSubMessageStyle: string = css`
-  ${fontSizes.MAIN};
+  ${fontSizes.MEDIUM};
   color: ${colors.GRAY_DARK};
   font-weight: bold;
   text-align: center;
@@ -32,5 +33,4 @@ export const ButtonsWrapperStyle: string = css`
   padding: 20px 0 0 0;
   justify-content: center;
   grid-gap: 10px;
-  border-top: 1px solid ${colors.GRAY_SUPER_LIGHT};
 `;
