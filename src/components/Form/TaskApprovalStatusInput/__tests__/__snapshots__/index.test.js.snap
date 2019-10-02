@@ -102,7 +102,6 @@ exports[`TaskApprovalStatusInput approved, showUser, showDate 1`] = `
     class="emotion-1"
   >
     <div
-      aria-expanded="false"
       class="emotion-0"
       tabindex="-1"
     >

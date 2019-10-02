@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { flatten, flattenDeep } from 'lodash';
 import type { IntlShape } from 'react-intl';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Label } from 'components/Form';
@@ -24,7 +23,7 @@ import orderMessages from 'modules/order/messages';
 import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
 import MiniShipmentTimeline from 'modules/relationMapV2/components/MiniShipmentTimeline';
-import { getByPathWithDefault } from 'utils/fp';
+import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
 import {
   Entities,
   SortAndFilter,
@@ -65,11 +64,11 @@ const Header = React.memo<any>(
   injectIntl(({ intl }: Props) => {
     const { state, dispatch } = React.useContext(RelationMapContext);
     const { mapping } = Entities.useContainer();
+    const { entities } = mapping;
     const { filterAndSort, onChangeFilter } = SortAndFilter.useContainer();
     const clientSorts = ClientSorts.useContainer();
     const { globalShipmentPoint, setGlobalShipmentPoint } = GlobalShipmentPoint.useContainer();
     const hasPermissions = useViewerHasPermissions();
-    const { orders, entities } = mapping;
     const orderSort = [
       { title: intl.formatMessage(orderMessages.updatedAt), value: 'updatedAt' },
       { title: intl.formatMessage(orderMessages.createdAt), value: 'createdAt' },
@@ -109,12 +108,11 @@ const Header = React.memo<any>(
     const containerCount = Object.keys(entities.containers || {}).length;
     const shipmentCount = Object.keys(entities.shipments || {}).length;
 
-    // TODO: Replace with real numbers
-    const selectedOrdersCount = 0;
-    const selectedItemsCount = 0;
-    const selectedBatchesCount = 0;
-    const selectedContainersCount = 0;
-    const selectedShipmentsCount = 0;
+    const selectedOrdersCount = targetedIds(state.targets, ORDER).length;
+    const selectedItemsCount = targetedIds(state.targets, ORDER_ITEM).length;
+    const selectedBatchesCount = targetedIds(state.targets, BATCH).length;
+    const selectedContainersCount = targetedIds(state.targets, CONTAINER).length;
+    const selectedShipmentsCount = targetedIds(state.targets, SHIPMENT).length;
 
     return (
       <div className={EntitiesNavbarWrapperStyle}>
@@ -162,11 +160,9 @@ const Header = React.memo<any>(
 
             <button
               type="button"
-              className={SelectAllButtonStyle}
+              className={SelectAllButtonStyle(selectedOrdersCount === orderCount)}
               onClick={() => {
-                const targets = orders.map(
-                  order => `${ORDER}-${getByPathWithDefault('', 'id', order)}`
-                );
+                const targets = Object.keys(entities.orders || {}).map(id => `${ORDER}-${id}`);
                 dispatch({
                   type: 'TARGET_ALL',
                   payload: {
@@ -230,18 +226,11 @@ const Header = React.memo<any>(
 
             <button
               type="button"
-              className={SelectAllButtonStyle}
+              className={SelectAllButtonStyle(selectedItemsCount === itemCount)}
               onClick={() => {
-                const orderItemIds = flatten(
-                  orders.map(order =>
-                    getByPathWithDefault(
-                      [],
-                      `order.${getByPathWithDefault('', 'id', order)}.orderItems`,
-                      state
-                    ).map(item => getByPathWithDefault('', 'id', item))
-                  )
-                ).filter(Boolean);
-                const targets = orderItemIds.map(id => `${ORDER_ITEM}-${id}`);
+                const targets = Object.keys(entities.orderItems || {}).map(
+                  id => `${ORDER_ITEM}-${id}`
+                );
                 dispatch({
                   type: 'TARGET_ALL',
                   payload: {
@@ -303,22 +292,9 @@ const Header = React.memo<any>(
 
             <button
               type="button"
-              className={SelectAllButtonStyle}
+              className={SelectAllButtonStyle(selectedBatchesCount === batchCount)}
               onClick={() => {
-                const batchIds = flattenDeep(
-                  orders.map(order =>
-                    getByPathWithDefault(
-                      [],
-                      `order.${getByPathWithDefault('', 'id', order)}.orderItems`,
-                      state
-                    ).map(item =>
-                      getByPathWithDefault([], 'batches', item).map(batch =>
-                        getByPathWithDefault('', 'id', batch)
-                      )
-                    )
-                  )
-                ).filter(Boolean);
-                const targets = batchIds.map(id => `${BATCH}-${id}`);
+                const targets = Object.keys(entities.batches || {}).map(id => `${BATCH}-${id}`);
                 dispatch({
                   type: 'TARGET_ALL',
                   payload: {
@@ -380,22 +356,11 @@ const Header = React.memo<any>(
 
             <button
               type="button"
-              className={SelectAllButtonStyle}
+              className={SelectAllButtonStyle(selectedContainersCount === containerCount)}
               onClick={() => {
-                const containerIds = flattenDeep(
-                  orders.map(order =>
-                    getByPathWithDefault(
-                      [],
-                      `order.${getByPathWithDefault('', 'id', order)}.orderItems`,
-                      state
-                    ).map(item =>
-                      getByPathWithDefault([], 'batches', item).map(batch =>
-                        getByPathWithDefault('', 'container.id', batch)
-                      )
-                    )
-                  )
-                ).filter(Boolean);
-                const targets = containerIds.map(id => `${CONTAINER}-${id}`);
+                const targets = Object.keys(entities.containers || {}).map(
+                  id => `${CONTAINER}-${id}`
+                );
                 dispatch({
                   type: 'TARGET_ALL',
                   payload: {
@@ -435,22 +400,11 @@ const Header = React.memo<any>(
 
             <button
               type="button"
-              className={SelectAllButtonStyle}
+              className={SelectAllButtonStyle(selectedShipmentsCount === shipmentCount)}
               onClick={() => {
-                const shipmentIds = flattenDeep(
-                  orders.map(order =>
-                    getByPathWithDefault(
-                      [],
-                      `order.${getByPathWithDefault('', 'id', order)}.orderItems`,
-                      state
-                    ).map(item =>
-                      getByPathWithDefault([], 'batches', item).map(batch =>
-                        getByPathWithDefault('', 'shipment.id', batch)
-                      )
-                    )
-                  )
-                ).filter(Boolean);
-                const targets = shipmentIds.map(id => `${SHIPMENT}-${id}`);
+                const targets = Object.keys(entities.shipments || {}).map(
+                  id => `${SHIPMENT}-${id}`
+                );
                 dispatch({
                   type: 'TARGET_ALL',
                   payload: {

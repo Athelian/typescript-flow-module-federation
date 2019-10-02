@@ -94,7 +94,7 @@ export const AddOrderButtonStyle: string = css`
   padding: 0 5px;
 `;
 
-export const SelectAllButtonStyle: string = css`
+export const SelectAllButtonStyle = (selectAll: boolean) => css`
   ${presets.BUTTON};
   ${fontSizes.SMALL};
   ${borderRadiuses.MAIN};
@@ -103,7 +103,10 @@ export const SelectAllButtonStyle: string = css`
   letter-spacing: 2px;
   text-transform: uppercase;
   color: ${colors.WHITE};
-  background-color: rgba(255, 255, 255, 0.2);
+  ${selectAll &&
+    `
+    background-color: rgba(255, 255, 255, 0.2);
+  `}
   justify-content: space-between;
   padding: 0 5px;
   &:hover {
