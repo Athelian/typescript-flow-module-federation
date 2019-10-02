@@ -337,6 +337,26 @@ export const prepareParsedShipmentInput = ({
       originalValues?.totalPackageQuantityOverriding,
       newValues.totalPackageQuantityOverriding
     ),
+    ...parseGenericField(
+      'totalVolumeOverride',
+      originalValues?.totalVolumeOverride,
+      newValues.totalVolumeOverride
+    ),
+    ...parseGenericField(
+      'totalVolumeOverriding',
+      originalValues?.totalVolumeOverriding,
+      newValues.totalVolumeOverriding
+    ),
+    ...parseGenericField(
+      'totalWeightOverride',
+      originalValues?.totalWeightOverride,
+      newValues.totalWeightOverride
+    ),
+    ...parseGenericField(
+      'totalWeightOverriding',
+      originalValues?.totalWeightOverriding,
+      newValues.totalWeightOverriding
+    ),
     ...parseArrayOfIdsField(
       'forwarderIds',
       getByPathWithDefault([], 'forwarders', originalValues),

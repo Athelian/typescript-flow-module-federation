@@ -24,6 +24,14 @@ export const shipmentFormQueryFragment = gql`
     carrier
     totalPackageQuantityOverride
     totalPackageQuantityOverriding
+    totalVolumeOverride {
+      ...metricFragment
+    }
+    totalVolumeOverriding
+    totalWeightOverride {
+      ...metricFragment
+    }
+    totalWeightOverriding
     ownedBy {
       ...ownedByFragment
     }
@@ -100,6 +108,14 @@ export const shipmentFormFragment = gql`
     }
     totalPackageQuantityOverride
     totalPackageQuantityOverriding
+    totalVolumeOverride {
+      ...metricFragment
+    }
+    totalVolumeOverriding
+    totalWeightOverride {
+      ...metricFragment
+    }
+    totalWeightOverriding
     tags {
       ...tagFragment
     }

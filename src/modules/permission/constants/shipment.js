@@ -18,6 +18,9 @@ export const SHIPMENT_SET_IMPORTER = 'shipment.shipments.setImporter';
 export const SHIPMENT_SET_EXPORTER = 'shipment.shipments.setExporter';
 export const SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY =
   'shipment.shipments.setTotalPackageQuantityOverride';
+export const SHIPMENT_SET_TOTAL_VOLUME = 'shipment.shipments.setTotalVolumeOverride';
+export const SHIPMENT_SET_TOTAL_WEIGHT = 'shipment.shipments.setTotalWeightOverride';
+
 export const SHIPMENT_SET_FORWARDERS = 'shipment.shipments.setForwarders';
 export const SHIPMENT_SET_IN_CHARGE = 'shipment.shipments.setInCharges';
 export const SHIPMENT_SET_TAGS = 'shipment.shipments.setTags';
