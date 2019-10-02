@@ -72,9 +72,9 @@ export const DeleteItemButtonStyle: string = css`
   ${fontSizes.SMALL};
   ${borderRadiuses.CIRCLE};
   z-index: 2;
+  ${shadows.INPUT};
   &:hover {
     opacity: 1;
-    ${shadows.INPUT};
     color: ${colors.RED};
   }
 `;
@@ -83,17 +83,29 @@ export const CreateBatchButtonStyle: string = css`
   opacity: 0;
   position: absolute;
   bottom: -10px;
-  right: -10px;
+  left: calc(100% - 10px);
   ${presets.BUTTON};
   width: 20px;
   height: 20px;
   background-color: ${colors.BATCH};
   color: ${colors.WHITE};
   ${fontSizes.SMALL};
-  ${borderRadiuses.CIRCLE};
+  ${borderRadiuses.BUTTON};
   z-index: 2;
+  justify-content: flex-start;
+  overflow: hidden;
+  ${shadows.INPUT};
   &:hover {
     opacity: 1;
-    ${shadows.INPUT};
+    width: 45px;
   }
+`;
+
+export const CreateBatchIconStyle: string = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 `;

@@ -61,9 +61,9 @@ export const DeleteBatchButtonStyle = css`
   ${fontSizes.SMALL};
   ${borderRadiuses.CIRCLE};
   z-index: 2;
+  ${shadows.INPUT};
   &:hover {
     opacity: 1;
-    ${shadows.INPUT};
     color: ${colors.RED};
   }
 `;
