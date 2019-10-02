@@ -196,7 +196,6 @@ export const orderCoordinates = memoize(
     const batchCount = order?.batchCount ?? 0;
     const containerCount = order?.containerCount ?? 0;
     const shipmentCount = order?.shipmentCount ?? 0;
-    // TODO: need to change the style for the summary row is closed to the next one
     if (!isExpand) {
       return orderItemCount > 0
         ? [
