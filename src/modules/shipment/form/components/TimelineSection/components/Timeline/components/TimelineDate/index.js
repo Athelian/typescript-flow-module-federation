@@ -26,7 +26,7 @@ type OptionalProps = {
   },
   color: string,
   vertical: boolean,
-  mode?: 'date' | 'date-no-year' | 'relative' | 'time' | 'time-relative' | 'datetime',
+  mode?: 'date' | 'date-no-year' | 'relative' | 'time' | 'datetime',
 };
 
 type Props = OptionalProps & {};
