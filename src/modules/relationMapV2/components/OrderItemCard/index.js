@@ -44,8 +44,7 @@ export default function OrderItemCard({
   // TODO: Replace with real permissions
   const allowToNavigateToProductForm = true;
 
-  // TODO: When deliveredAt gets added to graph, make sure to modify query to fetch it
-  const { no, tags = [], deliveredAt, productProvider = {}, todo = {} } = orderItem;
+  const { no, tags = [], deliveryDate, productProvider = {}, todo = {} } = orderItem;
   const productImageUrl = productProvider?.product?.files?.[0]?.pathSmall ?? FALLBACK_IMAGE;
   const productId = productProvider?.product?.id;
   const productLink =
@@ -83,7 +82,7 @@ export default function OrderItemCard({
             <FormattedMessage id="components.cards.delivery" />
           </Label>
           <Display blackout={!canViewDelivery} width="80px">
-            <FormattedDate value={deliveredAt} />
+            <FormattedDate value={deliveryDate} />
           </Display>
         </div>
       </div>

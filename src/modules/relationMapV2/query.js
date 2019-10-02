@@ -101,6 +101,7 @@ export const orderCardFullFragment = gql`
         }
         archived
         no
+        deliveryDate
         price {
           amount
           currency
