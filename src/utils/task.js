@@ -654,7 +654,7 @@ export const getParentInfo = (
   }
   if (__typename === 'Milestone') {
     return {
-      parentType: 'milestone',
+      parentType: 'project',
       parentIcon: 'MILESTONE',
       parentData: parent.name,
       link: `/project/${encodeId(getByPath('project.id', parent))}`,
