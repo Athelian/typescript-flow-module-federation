@@ -8,12 +8,15 @@ import { Entities } from 'modules/relationMapV2/store';
 import { ORDER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
-import Dialog from 'components/Dialog';
-import LoadingIcon from 'components/LoadingIcon';
-import { CancelButton, ArchiveButton, ActivateButton } from 'components/Buttons';
-import Icon from 'components/Icon';
-import { parseIcon } from 'utils/entity';
-import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
+import { ArchiveButton, ActivateButton } from 'components/Buttons';
+import FormattedNumber from 'components/FormattedNumber';
+import { Tooltip } from 'components/Tooltip';
+import ActionDialog, {
+  OrdersLabelIcon,
+  OrderLabelIcon,
+  ShipmentLabelIcon,
+  ShipmentsLabelIcon,
+} from '../ActionDialog';
 import { updateOrdersMutation, updateShipmentMutation } from './mutation';
 import { targetedIds } from '../OrderFocus/helpers';
 
@@ -32,11 +35,12 @@ export default function StatusConfirm({ onSuccess }: Props) {
   const hasOrderPermissions = useAllHasPermission(
     orderIds.map(id => mapping.entities?.orders?.[id]?.ownedBy).filter(Boolean)
   );
+  const totalOrders = orderIds.length;
   const shipmentIds = targetedIds(state.targets, SHIPMENT);
   const hasShipmentPermissions = useAllHasPermission(
     shipmentIds.map(id => mapping.entities?.shipments?.[id]?.ownedBy).filter(Boolean)
   );
-  const selectedEntities = source === ORDER ? orderIds.length : shipmentIds.length;
+  const totalShipments = shipmentIds.length;
 
   const isDisabled = (archived: boolean) => {
     if (source === ORDER) {
@@ -68,8 +72,6 @@ export default function StatusConfirm({ onSuccess }: Props) {
         return false;
     }
   };
-
-  const noPermission = !allowToUpdate();
 
   const onCancel = () => {
     dispatch({
@@ -132,80 +134,137 @@ export default function StatusConfirm({ onSuccess }: Props) {
     }
   };
 
+  const noPermission = !allowToUpdate();
+
+  let dialogMessage = null;
+  let dialogSubMessage = null;
+  let entityLabel = null;
+  let numOfEntity = null;
+
   if (noPermission) {
-    return (
-      <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>
-        <div className={DialogStyle}>
-          <h3 className={ConfirmMessageStyle}>
-            <FormattedMessage
-              id="modules.RelationMap.status.noPermission"
-              defaultMessage="At least one {source} {entity} selected does not allow you to change the status.Please reselect and try again."
-              values={{
-                source,
-                entity: <Icon icon={parseIcon(source)} />,
-              }}
-            />
-          </h3>
-          <div className={ButtonsStyle}>
-            <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          </div>
-        </div>
-      </Dialog>
+    // No permission to change status
+    switch (source) {
+      case ORDER:
+        entityLabel = <OrderLabelIcon />;
+        break;
+      case SHIPMENT:
+        entityLabel = <ShipmentLabelIcon />;
+        break;
+      default:
+        break;
+    }
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.activateArchive.noPermission"
+        defaultMessage="At least one {entityLabel} selected does not allow you to change status."
+        values={{ entityLabel }}
+      />
     );
+    dialogSubMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.actions.tryAgain"
+        defaultMessage="Please reselect and try again."
+      />
+    );
+  } else {
+    switch (source) {
+      case ORDER:
+        numOfEntity = <FormattedNumber value={totalOrders} />;
+        entityLabel = totalOrders > 1 ? <OrdersLabelIcon /> : <OrderLabelIcon />;
+        break;
+      case SHIPMENT:
+        numOfEntity = <FormattedNumber value={totalShipments} />;
+        entityLabel = totalShipments > 1 ? <ShipmentsLabelIcon /> : <ShipmentLabelIcon />;
+        break;
+      default:
+        break;
+    }
+    if (isProcessing) {
+      // Is currently changing status
+      dialogMessage = isArchived ? (
+        <FormattedMessage
+          id="modules.RelationMap.activateArchive.archiving"
+          defaultMessage="Archiving {numOfEntity} {entityLabel} ..."
+          values={{
+            numOfEntity,
+            entityLabel,
+          }}
+        />
+      ) : (
+        <FormattedMessage
+          id="modules.RelationMap.activateArchive.activating"
+          defaultMessage="Activating {numOfEntity} {entityLabel} ..."
+          values={{
+            numOfEntity,
+            entityLabel,
+          }}
+        />
+      );
+    } else {
+      // Has permission to change status
+      dialogMessage = (
+        <FormattedMessage
+          id="modules.RelationMap.activateArchive.message1"
+          defaultMessage="Are you sure you want to activate or archive {numOfEntity} {entityLabel} that you have selected?"
+          values={{
+            numOfEntity,
+            entityLabel,
+          }}
+        />
+      );
+    }
   }
 
   return (
-    <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>
-      {isOpen && (
-        <div className={DialogStyle}>
-          {isProcessing ? (
-            <>
-              {isArchived ? (
+    <ActionDialog
+      isOpen={isOpen}
+      isProcessing={isProcessing}
+      onCancel={onCancel}
+      title={
+        <FormattedMessage
+          id="modules.RelationMap.label.activateArchive"
+          defaultMessage="ACTIVATE/ARCHIVE"
+        />
+      }
+      dialogMessage={dialogMessage}
+      dialogSubMessage={dialogSubMessage}
+      buttons={
+        <>
+          {isProcessing || noPermission || isDisabled(false) ? (
+            <Tooltip
+              message={
                 <FormattedMessage
-                  id="modules.RelationMap.status.archiving"
-                  defaultMessage="Archiving {selectedEntities} {source}..."
-                  values={{
-                    selectedEntities,
-                    source: <Icon icon={source.toUpperCase()} />,
-                  }}
+                  id="modules.RelationMap.activateArchive.disabledActivate"
+                  defaultMessage="Entire selection already has Active statuses"
                 />
-              ) : (
-                <FormattedMessage
-                  id="modules.RelationMap.status.activating"
-                  defaultMessage="Activating {selectedEntities} {source}..."
-                  values={{
-                    selectedEntities,
-                    source: <Icon icon={source.toUpperCase()} />,
-                  }}
-                />
-              )}
-              <LoadingIcon />
-            </>
+              }
+            >
+              <div>
+                <ActivateButton disabled />
+              </div>
+            </Tooltip>
           ) : (
-            <h3 className={ConfirmMessageStyle}>
-              <FormattedMessage
-                id="modules.RelationMap.status.guideline"
-                defaultMessage="Are you sure you want to archive or activate {selectedEntities} {source} ?"
-                values={{
-                  selectedEntities,
-                  source: <Icon icon={source.toUpperCase()} />,
-                }}
-              />
-            </h3>
+            <ActivateButton onClick={() => onConfirm(false)} />
           )}
-          <div className={ButtonsStyle}>
-            <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-            <ArchiveButton
-              disabled={Boolean(isProcessing) || isDisabled(true)}
-              onClick={() => onConfirm(true)}
-            />
-            <ActivateButton
-              disabled={Boolean(isProcessing) || isDisabled(false)}
-              onClick={() => onConfirm(false)}
-            />
-          </div>
-        </div>
-      )}
-    </Dialog>
+
+          {isProcessing || noPermission || isDisabled(true) ? (
+            <Tooltip
+              message={
+                <FormattedMessage
+                  id="modules.RelationMap.activateArchive.disabledArchive"
+                  defaultMessage="Entire selection already has Archived statuses"
+                />
+              }
+            >
+              <div>
+                <ArchiveButton disabled />
+              </div>
+            </Tooltip>
+          ) : (
+            <ArchiveButton onClick={() => onConfirm(false)} />
+          )}
+        </>
+      }
+    />
   );
 }
