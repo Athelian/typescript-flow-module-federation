@@ -305,61 +305,16 @@ export const orderCoordinates = memoize(
       return result;
     }
     if (orderItemCount > 0) {
-      const itemsList = [];
-      const processItemsId = [];
-      const orderItemSorted = getItemsSortByOrderId(order.id, orderItems);
-      orderItemSorted.forEach(itemId => {
-        if (!processItemsId.includes(itemId)) {
-          const item = orderItems.find(orderItem => orderItem?.id === itemId);
-          if (item) {
-            processItemsId.push(itemId);
-            itemsList.push(item);
-            const relatedItems = getRelatedBy('orderItem', item.id);
-            relatedItems
-              .filter(id => !processItemsId.includes(id))
-              .forEach(relateId => {
-                const relatedItem = orderItems.find(orderItem => orderItem?.id === relateId);
-                if (relatedItem) {
-                  itemsList.push(relatedItem);
-                  processItemsId.push(relatedItem.id);
-                }
-              });
-          }
-        }
-      });
-      orderItems
-        .filter(item => !processItemsId.includes(item?.id))
-        .forEach(item => itemsList.push(item));
+      const itemsList = getItemsSortByOrderId({ id: order.id, orderItems, getRelatedBy })
+        .map(itemId => orderItems.find(orderItem => orderItem?.id === itemId))
+        .filter(Boolean);
 
       itemsList.forEach((item, index) => {
         const batches = item?.batches ?? [];
         if (batches.length) {
-          const batchesList = [];
-          const processBatchesId = [];
-          const batchesSorted = getBatchesSortByItemId(item.id, batches);
-          batchesSorted.forEach(batchId => {
-            if (!processBatchesId.includes(batchId)) {
-              const batch = batches.find(batchItem => batchItem?.id === batchId);
-              if (batch) {
-                batchesList.push(batch);
-                processBatchesId.push(batch.id);
-                const relatedBatches = getRelatedBy('batch', batch.id);
-                relatedBatches
-                  .filter(id => !batchesSorted.includes(id))
-                  .forEach(relateId => {
-                    const relatedBatch = batches.find(batchItem => batchItem?.id === relateId);
-                    if (relatedBatch) {
-                      batchesList.push(relatedBatch);
-                      processBatchesId.push(relatedBatch.id);
-                    }
-                  });
-              }
-            }
-          });
-          batches
-            .filter(batch => !processBatchesId.includes(batch?.id))
-            .forEach(batch => batchesList.push(batch));
-
+          const batchesList = getBatchesSortByItemId({ id: item.id, batches, getRelatedBy })
+            .map(batchId => batches.find(batchItem => batchItem?.id === batchId))
+            .filter(Boolean);
           batchesList.forEach((batch, position) => {
             result.push(
               ...[
