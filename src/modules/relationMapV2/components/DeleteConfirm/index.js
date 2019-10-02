@@ -8,12 +8,16 @@ import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/
 import { ORDER_ITEM, CONTAINER } from 'modules/relationMapV2/constants';
 import { ORDER_ITEMS_DELETE } from 'modules/permission/constants/orderItem';
 import { CONTAINER_DELETE } from 'modules/permission/constants/container';
-import Dialog from 'components/Dialog';
-import LoadingIcon from 'components/LoadingIcon';
-import { CancelButton, YesButton } from 'components/Buttons';
-import Icon from 'components/Icon';
-import { parseIcon } from 'utils/entity';
-import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
+import { BaseButton } from 'components/Buttons';
+import FormattedNumber from 'components/FormattedNumber';
+import ActionDialog, {
+  ItemsLabelIcon,
+  ItemLabelIcon,
+  ContainersLabelIcon,
+  ContainerLabelIcon,
+  BatchesLabelIcon,
+  ShipmentLabelIcon,
+} from '../ActionDialog';
 import { deleteContainerMutation, deleteOrderItemMutation } from './mutation';
 import { targetedIds } from '../OrderFocus/helpers';
 
@@ -31,11 +35,12 @@ export default function DeleteConfirm({ onSuccess }: Props) {
   const hasItemPermissions = useAllHasPermission(
     orderItemIds.map(id => mapping.entities?.orderItems?.[id]?.ownedBy).filter(Boolean)
   );
+  const totalOrderItems = orderItemIds.length;
   const containerIds = targetedIds(state.targets, CONTAINER);
   const hasContainerPermissions = useAllHasPermission(
     containerIds.map(id => mapping.entities?.containers?.[id]?.ownedBy).filter(Boolean)
   );
-  const selectedEntities = source === ORDER_ITEM ? orderItemIds.length : containerIds.length;
+  const totalContainers = containerIds.length;
 
   const hasPermission = (permission: string | Array<string>) => {
     switch (source) {
@@ -119,64 +124,121 @@ export default function DeleteConfirm({ onSuccess }: Props) {
 
   const noPermission = !allowToUpdate();
 
+  let dialogMessage = null;
+  let dialogSubMessage = null;
+  let entityLabel = null;
+  let numOfEntity = null;
+
   if (noPermission) {
-    return (
-      <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>
-        <div className={DialogStyle}>
-          <h3 className={ConfirmMessageStyle}>
-            <FormattedMessage
-              id="modules.RelationMap.delete.noPermission"
-              defaultMessage="At least one {source} {entity} selected does not allow you to delete.Please reselect and try again."
-              values={{
-                source,
-                entity: <Icon icon={parseIcon(source)} />,
-              }}
-            />
-          </h3>
-          <div className={ButtonsStyle}>
-            <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          </div>
-        </div>
-      </Dialog>
+    // No permission to delete
+    switch (source) {
+      case ORDER_ITEM:
+        entityLabel = <ItemLabelIcon />;
+        break;
+      case CONTAINER:
+        entityLabel = <ContainerLabelIcon />;
+        break;
+      default:
+        break;
+    }
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.delete.noPermission"
+        defaultMessage="At least one {entityLabel} selected does not allow you to delete."
+        values={{ entityLabel }}
+      />
     );
+    dialogSubMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.actions.tryAgain"
+        defaultMessage="Please reselect and try again."
+      />
+    );
+  } else {
+    switch (source) {
+      case ORDER_ITEM:
+        numOfEntity = <FormattedNumber value={totalOrderItems} />;
+        entityLabel = totalOrderItems > 1 ? <ItemsLabelIcon /> : <ItemLabelIcon />;
+        break;
+      case CONTAINER:
+        numOfEntity = <FormattedNumber value={totalContainers} />;
+        entityLabel = totalContainers > 1 ? <ContainersLabelIcon /> : <ContainerLabelIcon />;
+        break;
+      default:
+        break;
+    }
+    if (isProcessing) {
+      // Is currently deleting
+      dialogMessage = (
+        <FormattedMessage
+          id="modules.RelationMap.delete.deleting"
+          defaultMessage="Deleting {numOfEntity} {entityLabel} ..."
+          values={{
+            numOfEntity,
+            entityLabel,
+          }}
+        />
+      );
+    } else {
+      // Has permission to delete
+      dialogMessage = (
+        <FormattedMessage
+          id="modules.RelationMap.delete.message1"
+          defaultMessage="Are you sure you want to delete {numOfEntity} {entityLabel} that you have selected?"
+          values={{
+            numOfEntity,
+            entityLabel,
+          }}
+        />
+      );
+      switch (source) {
+        case ORDER_ITEM:
+          dialogSubMessage = (
+            <FormattedMessage
+              id="modules.RelationMap.delete.itemMessage2"
+              defaultMessage="All of their {batchesLabel} will be deleted as well"
+              values={{
+                batchesLabel: <BatchesLabelIcon />,
+              }}
+            />
+          );
+          break;
+        case CONTAINER:
+          dialogSubMessage = (
+            <FormattedMessage
+              id="modules.RelationMap.delete.containerMessage2"
+              defaultMessage="All of their {batchesLabel} will be moved to the {shipmentLabel} pool"
+              values={{
+                batchesLabel: <BatchesLabelIcon />,
+                shipmentLabel: <ShipmentLabelIcon />,
+              }}
+            />
+          );
+          break;
+        default:
+          break;
+      }
+    }
   }
+
   return (
-    <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>
-      <div className={DialogStyle}>
-        {isProcessing ? (
-          <>
-            <FormattedMessage
-              id="modules.RelationMap.delete.process"
-              defaultMessage="Deleting {source} {entity} ..."
-              values={{
-                source,
-                entity: <Icon icon={parseIcon(source)} />,
-              }}
-            />
-            <LoadingIcon />
-          </>
-        ) : (
-          <h3 className={ConfirmMessageStyle}>
-            <FormattedMessage
-              id="modules.RelationMap.delete.guideline"
-              defaultMessage="Are you sure you want to delete {total} {source} {entity} ?"
-              values={{
-                source,
-                total: selectedEntities,
-                entity: <Icon icon={parseIcon(source)} />,
-              }}
-            />
-          </h3>
-        )}
-        <div className={ButtonsStyle}>
-          <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          <YesButton
-            disabled={Boolean(isProcessing)}
-            isLoading={Boolean(isProcessing)}
-            onClick={onConfirm}
-          />
-        </div>
-      </div>
-    </Dialog>
+    <ActionDialog
+      isOpen={isOpen}
+      isProcessing={isProcessing}
+      onCancel={onCancel}
+      title={<FormattedMessage id="modules.RelationMap.label.delete" defaultMessage="DELETE" />}
+      dialogMessage={dialogMessage}
+      dialogSubMessage={dialogSubMessage}
+      buttons={
+        <BaseButton
+          label={<FormattedMessage id="modules.RelationMap.label.delete" defaultMessage="DELETE" />}
+          icon="REMOVE"
+          disabled={isProcessing || noPermission}
+          onClick={onConfirm}
+          backgroundColor="RED"
+          hoverBackgroundColor="RED_DARK"
+        />
+      }
+    />
   );
 }
