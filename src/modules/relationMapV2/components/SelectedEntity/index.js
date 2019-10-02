@@ -153,7 +153,7 @@ export default function SelectedEntity() {
 
       <div className={TotalEntitiesStyle}>
         <Label color="TEAL" align="center">
-          <FormattedNumber value={totalCount} />
+          <FormattedNumber value={totalCount} />{' '}
           <FormattedMessage id="modules.relationalMap.selected" defaultMessage="SELECTED" />
         </Label>
         <button

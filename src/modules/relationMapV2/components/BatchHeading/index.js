@@ -101,7 +101,7 @@ export default function BatchHeading({
                 differenceInCalendarDays(new Date(oldestDelivery), new Date(newestDelivery)) !==
                   0 && (
                   <>
-                    -
+                    {' - '}
                     <FormattedDate value={newestDelivery} />
                   </>
                 )}
@@ -121,7 +121,8 @@ export default function BatchHeading({
                 differenceInCalendarDays(new Date(oldestDesired), new Date(newestDesired)) !==
                   0 && (
                   <>
-                    - <FormattedDate value={newestDesired} />
+                    {' - '}
+                    <FormattedDate value={newestDesired} />
                   </>
                 )}
             </Display>
