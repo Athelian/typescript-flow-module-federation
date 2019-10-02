@@ -2181,7 +2181,7 @@ function DuplicateOrderCell({
   const itemPosition = data?.itemPosition ?? 0;
   const batchPosition = data?.batchPosition ?? 0;
   const originalItems = order?.orderItems ?? [];
-  const items = getItemsSortByOrderId(orderId, originalItems);
+  const items = getItemsSortByOrderId({ id: orderId, orderItems: originalItems, getRelatedBy });
   const itemList = [];
   if (items.length !== originalItems.length) {
     items.forEach(itemId => {
@@ -2256,60 +2256,18 @@ function DuplicateOrderCell({
   );
 }
 
-function DuplicateOrderItemCell({
-  data,
-  // $FlowIssue: doesn't support to access to child yet
-  order,
-  beforeConnector,
-  afterConnector,
-}: CellProps & { order: OrderPayload }) {
+function DuplicateOrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
   const { state } = React.useContext(RelationMapContext);
   const { getRelatedBy } = Entities.useContainer();
-  const { getBatchesSortByItemId, getItemsSortByOrderId } = ClientSorts.useContainer();
+  const { getBatchesSortByItemId } = ClientSorts.useContainer();
   const batchPosition = data?.batchPosition ?? 0;
-  const originalItems = order?.orderItems ?? [];
-  const items = getItemsSortByOrderId(order?.id, originalItems);
-  const itemList = [];
-  items.forEach(itemId => {
-    if (!itemList.includes(itemId)) {
-      const relatedItems = getRelatedBy('orderItem', itemId);
-      itemList.push(itemId);
-      if (relatedItems.length) {
-        itemList.push(...relatedItems);
-      }
-    }
-  });
-
   const itemId = data.item?.id;
-
   const originalBatches = data.item?.batches ?? [];
-  const batches = getBatchesSortByItemId(itemId, originalBatches);
-
-  const batchList = [];
-  if (originalBatches.length !== batches.length) {
-    batches.forEach(batchId => {
-      if (!batchList.includes(batchId)) {
-        const relatedBatches = getRelatedBy('batch', batchId);
-        batchList.push(batchId);
-        if (relatedBatches.length) {
-          batchList.push(...relatedBatches);
-        }
-      }
-    });
-    originalBatches
-      .map(batch => batch.id)
-      .forEach(batchId => {
-        if (!batchList.includes(batchId)) {
-          const relatedBatches = getRelatedBy('batch', batchId);
-          batchList.push(batchId);
-          if (relatedBatches.length) {
-            batchList.push(...relatedBatches);
-          }
-        }
-      });
-  } else {
-    batchList.push(...batches);
-  }
+  const batchList = getBatchesSortByItemId({
+    id: itemId,
+    batches: originalBatches,
+    getRelatedBy,
+  }).filter(batchId => originalBatches.find(batch => batch?.id === batchId));
 
   let foundPosition = -1;
   for (let index = batchList.length - 1; index > 0; index -= 1) {

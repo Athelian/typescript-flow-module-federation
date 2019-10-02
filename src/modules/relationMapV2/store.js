@@ -343,23 +343,101 @@ function useClientSorts(
     [onLocalSort]
   );
 
-  const getItemsSortByOrderId = (orderId: string, orderItems: Array<Object>): Array<string> => {
-    if (!orderItemsSort.current[orderId]) {
-      orderItemsSort.current[orderId] = sortOrderItemBy(orderItems, filterAndSort.orderItem.sort)
+  const getItemsSortByOrderId = ({
+    id,
+    orderItems,
+    getRelatedBy,
+  }: {|
+    id: string,
+    orderItems: Array<Object>,
+    getRelatedBy: Function,
+  |}): Array<string> => {
+    if (!orderItemsSort.current[id]) {
+      orderItemsSort.current[id] = sortOrderItemBy(orderItems, filterAndSort.orderItem.sort)
         .map((item: Object) => item?.id ?? '')
         .filter(Boolean);
     }
 
-    return orderItemsSort.current?.[orderId] ?? [];
+    const sorted = orderItemsSort.current?.[id] ?? [];
+
+    // check a case if that was removed from cached sort
+    const itemIds = orderItems.map(item => item.id);
+    const validIds = sorted.filter(itemId => itemIds.includes(itemId));
+
+    // find related
+    const ids = [];
+    validIds.forEach(itemId => {
+      ids.push(itemId);
+      const relatedIds = getRelatedBy('orderItem', itemId);
+      relatedIds.forEach(currentId => {
+        if (!ids.includes(currentId) && !validIds.includes(currentId)) {
+          ids.push(currentId);
+        }
+      });
+    });
+
+    orderItems.forEach(item => {
+      if (!ids.includes(item?.id) && item?.id) {
+        const itemId = item?.id;
+        ids.push(itemId);
+        const relatedIds = getRelatedBy('orderItem', itemId);
+        relatedIds.forEach(currentId => {
+          if (!ids.includes(currentId) && !validIds.includes(currentId)) {
+            ids.push(currentId);
+          }
+        });
+      }
+    });
+
+    return ids;
   };
-  const getBatchesSortByItemId = (itemId: string, batches: Array<Object>): Array<string> => {
-    if (!batchesSort.current?.[itemId]) {
-      batchesSort.current[itemId] = sortBatchBy(batches, filterAndSort.batch.sort)
+
+  const getBatchesSortByItemId = ({
+    id,
+    batches,
+    getRelatedBy,
+  }: {|
+    id: string,
+    batches: Array<Object>,
+    getRelatedBy: Function,
+  |}): Array<string> => {
+    if (!batchesSort.current?.[id]) {
+      batchesSort.current[id] = sortBatchBy(batches, filterAndSort.batch.sort)
         .map((batch: Object) => batch?.id ?? '')
         .filter(Boolean);
     }
 
-    return batchesSort.current?.[itemId] ?? [];
+    const sorted = batchesSort.current?.[id] ?? [];
+    // check a case if that was removed from cached sort
+    const batchIds = batches.map(batch => batch.id);
+    const validIds = sorted.filter(batchId => batchIds.includes(batchId));
+
+    // find related
+    const ids = [];
+    validIds.forEach(batchId => {
+      ids.push(batchId);
+      const relatedIds = getRelatedBy('batch', batchId);
+      relatedIds.forEach(currentId => {
+        if (!ids.includes(currentId) && !validIds.includes(currentId)) {
+          ids.push(currentId);
+        }
+      });
+    });
+
+    batches.forEach(batch => {
+      if (!ids.includes(batch?.id) && batch?.id) {
+        const batchId = batch?.id;
+        ids.push(batchId);
+        const relatedIds = getRelatedBy('batch', batchId);
+        relatedIds.forEach(currentId => {
+          if (!ids.includes(currentId) && !validIds.includes(currentId)) {
+            ids.push(currentId);
+          }
+        });
+      }
+    });
+
+    return ids;
   };
 
   useEffect(() => {

@@ -369,31 +369,14 @@ export default function OrderFocus() {
                               entity: 'orderItem',
                             }))
                           );
-                          const originalItems = entities.orders?.[orderId]?.orderItems ?? [];
-                          const orderItems = getItemsSortByOrderId(orderId, originalItems);
-                          const itemList = [];
-                          if (originalItems.length !== orderItems.length) {
-                            orderItems.forEach(itemId => {
-                              if (!itemList.includes(itemId)) {
-                                const relatedItems = getRelatedBy('orderItem', itemId);
-                                itemList.push(itemId);
-                                if (relatedItems.length) {
-                                  itemList.push(...relatedItems);
-                                }
-                              }
-                            });
-                            originalItems.forEach(itemId => {
-                              if (!itemList.includes(itemId)) {
-                                const relatedItems = getRelatedBy('orderItem', itemId);
-                                itemList.push(itemId);
-                                if (relatedItems.length) {
-                                  itemList.push(...relatedItems);
-                                }
-                              }
-                            });
-                          } else {
-                            itemList.push(...orderItems);
-                          }
+                          const originalItems = (entities.orders?.[orderId]?.orderItems ?? []).map(
+                            itemId => entities.orderItems?.[itemId]
+                          );
+                          const itemList = getItemsSortByOrderId({
+                            getRelatedBy,
+                            id: orderId,
+                            orderItems: originalItems,
+                          });
                           const lastItemId = itemList[itemList.length - 1];
                           const indexPosition = ordersData.findIndex((row: Array<any>) => {
                             const [, itemCell, , , ,] = row;
@@ -488,34 +471,12 @@ export default function OrderFocus() {
                             const originalBatches =
                               // $FlowIgnore this doesn't support yet
                               entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? [];
-                            const batches = getBatchesSortByItemId(
+                            const batchList = getBatchesSortByItemId({
                               // $FlowIgnore this doesn't support yet
-                              batch?.orderItem?.id,
-                              originalBatches
-                            );
-                            const batchList = [];
-                            if (originalBatches.length !== batches.length) {
-                              batches.forEach(batchId => {
-                                if (!batchList.includes(batchId)) {
-                                  const relatedBatches = getRelatedBy('batch', batchId);
-                                  batchList.push(batchId);
-                                  if (relatedBatches.length) {
-                                    batchList.push(...relatedBatches);
-                                  }
-                                }
-                              });
-                              originalBatches.forEach(batchId => {
-                                if (!batchList.includes(batchId)) {
-                                  const relatedBatches = getRelatedBy('batch', batchId);
-                                  batchList.push(batchId);
-                                  if (relatedBatches.length) {
-                                    batchList.push(...relatedBatches);
-                                  }
-                                }
-                              });
-                            } else {
-                              batchList.push(...batches);
-                            }
+                              id: batch?.orderItem?.id,
+                              batches: originalBatches,
+                              getRelatedBy,
+                            });
                             const lastBatchId = batchList[batchList.length - 1];
                             const indexPosition = ordersData.findIndex((row: Array<any>) => {
                               const [, , batchCell, , ,] = row;
