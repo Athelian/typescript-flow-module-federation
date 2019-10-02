@@ -6,20 +6,24 @@ import { useAllHasPermission } from 'components/Context/Permissions';
 import { Entities } from 'modules/relationMapV2/store';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import { useMutation } from '@apollo/react-hooks';
-import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
+import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMapV2/constants';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
 import { BATCH_CREATE } from 'modules/permission/constants/batch';
-import { CONTAINER_CREATE } from 'modules/permission/constants/container';
-import { SHIPMENT_CREATE } from 'modules/permission/constants/shipment';
 import { BaseButton, CancelButton } from 'components/Buttons';
+import FormattedNumber from 'components/FormattedNumber';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
-import { parseIcon } from 'utils/entity';
 import { cloneBatchesMutation, cloneOrderItemsMutation, cloneOrdersMutation } from './mutation';
-import { DialogStyle, ButtonsStyle, ConfirmMessageStyle } from './style';
 import { targetedIds } from '../OrderFocus/helpers';
+import {
+  CloneDialogWrapperStyle,
+  DialogMessageStyle,
+  DialogSubMessageStyle,
+  LabelStyle,
+  ButtonsWrapperStyle,
+} from './style';
 
 type Props = {|
   onSuccess: ({|
@@ -56,16 +60,6 @@ export default function CloneEntities({ onSuccess }: Props) {
     batchIds.map(id => mapping.entities?.batches?.[id]?.ownedBy).filter(Boolean)
   );
   const totalBatches = batchIds.length;
-  const containerIds = targetedIds(targets, CONTAINER);
-  const hasContainerPermissions = useAllHasPermission(
-    containerIds.map(id => mapping.entities?.containers?.[id]?.ownedBy).filter(Boolean)
-  );
-  const totalContainers = containerIds.length;
-  const shipmentIds = targetedIds(targets, SHIPMENT);
-  const hasShipmentPermissions = useAllHasPermission(
-    shipmentIds.map(id => mapping.entities?.shipments?.[id]?.ownedBy).filter(Boolean)
-  );
-  const totalShipments = shipmentIds.length;
 
   const hasPermission = (permission: string | Array<string>) => {
     switch (source) {
@@ -75,10 +69,6 @@ export default function CloneEntities({ onSuccess }: Props) {
         return hasItemPermissions(permission);
       case BATCH:
         return hasBatchPermissions(permission);
-      case CONTAINER:
-        return hasContainerPermissions(permission);
-      case SHIPMENT:
-        return hasShipmentPermissions(permission);
       default:
         return false;
     }
@@ -92,10 +82,6 @@ export default function CloneEntities({ onSuccess }: Props) {
         return hasPermission([ORDER_ITEMS_CREATE]);
       case BATCH:
         return hasPermission([BATCH_CREATE]);
-      case CONTAINER:
-        return hasPermission([CONTAINER_CREATE]);
-      case SHIPMENT:
-        return hasPermission([SHIPMENT_CREATE]);
       default:
         return false;
     }
@@ -348,176 +334,244 @@ export default function CloneEntities({ onSuccess }: Props) {
 
   const noPermission = !allowToUpdate();
 
-  if (noPermission) {
-    switch (source) {
-      case ORDER:
-        return (
-          <Dialog isOpen={isOpen} width="400px">
-            <div className={DialogStyle}>
-              <h3 className={ConfirmMessageStyle}>
-                <FormattedMessage
-                  id="modules.RelationMap.clone.noOrderPermission"
-                  defaultMessage="At least one {source} {entity}, Item {itemIcon}, Batch {batchIcon} selected does not allow you to clone.Please reselect and try again."
-                  values={{
-                    source,
-                    entity: <Icon icon={parseIcon(source)} />,
-                    itemIcon: <Icon icon={parseIcon('OrderItem')} />,
-                    batchIcon: <Icon icon={parseIcon('Batch')} />,
-                  }}
-                />
-              </h3>
-              <div className={ButtonsStyle}>
-                <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-              </div>
-            </div>
-          </Dialog>
-        );
-      case ORDER_ITEM:
-        return (
-          <Dialog isOpen={isOpen} width="400px">
-            <div className={DialogStyle}>
-              <h3 className={ConfirmMessageStyle}>
-                <FormattedMessage
-                  id="modules.RelationMap.clone.noItemPermission"
-                  defaultMessage="At least one {source} {entity}, Batch {batchIcon} selected does not allow you to clone.Please reselect and try again."
-                  values={{
-                    source,
-                    entity: <Icon icon={parseIcon(source)} />,
-                    batchIcon: <Icon icon={parseIcon('Batch')} />,
-                  }}
-                />
-              </h3>
-              <div className={ButtonsStyle}>
-                <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-              </div>
-            </div>
-          </Dialog>
-        );
+  let dialogMessage = null;
+  let dialogSubMessage = null;
 
-      default:
-        return (
-          <Dialog isOpen={isOpen} width="400px">
-            <div className={DialogStyle}>
-              <h3 className={ConfirmMessageStyle}>
-                <FormattedMessage
-                  id="modules.RelationMap.clone.noPermission"
-                  defaultMessage="At least one {source} {entity} selected does not allow you to clone.Please reselect and try again."
-                  values={{
-                    source,
-                    entity: <Icon icon={parseIcon(source)} />,
-                  }}
-                />
-              </h3>
-              <div className={ButtonsStyle}>
-                <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-              </div>
-            </div>
-          </Dialog>
+  const numOfOrders = <FormattedNumber value={totalOrders} />;
+  const numOfItems = <FormattedNumber value={totalOrderItems} />;
+  const numOfBatches = <FormattedNumber value={totalBatches} />;
+  const ordersLabel = (
+    <span className={LabelStyle('ORDER')}>
+      <FormattedMessage id="modules.RelationMap.clone.orders" defaultMessage="Orders" />{' '}
+      <Icon icon="ORDER" />
+    </span>
+  );
+  const orderLabel = (
+    <span className={LabelStyle('ORDER')}>
+      <FormattedMessage id="modules.RelationMap.clone.order" defaultMessage="Order" />{' '}
+      <Icon icon="ORDER" />
+    </span>
+  );
+  const itemsLabel = (
+    <span className={LabelStyle('ORDER_ITEM')}>
+      <FormattedMessage id="modules.RelationMap.clone.items" defaultMessage="Items" />{' '}
+      <Icon icon="ORDER_ITEM" />
+    </span>
+  );
+  const itemLabel = (
+    <span className={LabelStyle('ORDER_ITEM')}>
+      <FormattedMessage id="modules.RelationMap.clone.item" defaultMessage="Item" />{' '}
+      <Icon icon="ORDER_ITEM" />
+    </span>
+  );
+  const batchesLabel = (
+    <span className={LabelStyle('BATCH')}>
+      <FormattedMessage id="modules.RelationMap.clone.batches" defaultMessage="Batches" />{' '}
+      <Icon icon="BATCH" />
+    </span>
+  );
+  const batchLabel = (
+    <span className={LabelStyle('BATCH')}>
+      <FormattedMessage id="modules.RelationMap.clone.batch" defaultMessage="Batch" />{' '}
+      <Icon icon="BATCH" />
+    </span>
+  );
+
+  switch (source) {
+    case ORDER:
+      if (noPermission) {
+        // No permission to clone Orders
+        dialogMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.noOrderPermission"
+            defaultMessage="At least one {orderLabel}, {itemLabel}, or {batchLabel} selected does not allow you to clone."
+            values={{
+              orderLabel,
+              itemLabel,
+              batchLabel,
+            }}
+          />
         );
-    }
+        dialogSubMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.tryAgain"
+            defaultMessage="Please reselect and try again."
+          />
+        );
+      } else if (isProcessing) {
+        // Is currently cloning Orders
+        dialogMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.cloningOrders"
+            defaultMessage="Cloning {numOfOrders} {ordersLabel} ..."
+            values={{
+              numOfOrders,
+              ordersLabel: totalOrders > 1 ? ordersLabel : orderLabel,
+            }}
+          />
+        );
+      } else {
+        // Has permission to clone Orders
+        dialogMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.orderMessage1"
+            defaultMessage="Are you sure you want to clone {numOfOrders} {ordersLabel} ?"
+            values={{
+              numOfOrders,
+              ordersLabel: totalOrders > 1 ? ordersLabel : orderLabel,
+            }}
+          />
+        );
+        dialogSubMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.orderMessage2"
+            defaultMessage="Any selected {itemsLabel} or {batchesLabel} will also be cloned within the cloned {ordersLabel}"
+            values={{
+              itemsLabel,
+              batchesLabel,
+              ordersLabel: totalOrders > 1 ? ordersLabel : orderLabel,
+            }}
+          />
+        );
+      }
+      break;
+    case ORDER_ITEM:
+      if (noPermission) {
+        // No permission to clone Items
+        dialogMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.noItemPermission"
+            defaultMessage="At least one {itemLabel} or {batchLabel} selected does not allow you to clone."
+            values={{
+              itemLabel,
+              batchLabel,
+            }}
+          />
+        );
+        dialogSubMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.tryAgain"
+            defaultMessage="Please reselect and try again."
+          />
+        );
+      } else if (isProcessing) {
+        // Is currently cloning Items
+        dialogMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.cloningItems"
+            defaultMessage="Cloning {numOfItems} {itemsLabel} ..."
+            values={{
+              numOfItems,
+              itemsLabel: totalOrderItems > 1 ? itemsLabel : itemLabel,
+            }}
+          />
+        );
+      } else {
+        // Has permission to clone Items
+        dialogMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.itemMessage1"
+            defaultMessage="Are you sure you want to clone {numOfItems} {itemsLabel} ?"
+            values={{
+              numOfItems,
+              itemsLabel: totalOrderItems > 1 ? itemsLabel : itemLabel,
+            }}
+          />
+        );
+        dialogSubMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.itemMessage2"
+            defaultMessage="Any selected {batchesLabel} will also be cloned within the cloned {itemsLabel}"
+            values={{
+              batchesLabel,
+              itemsLabel: totalOrderItems > 1 ? itemsLabel : itemLabel,
+            }}
+          />
+        );
+      }
+      break;
+    case BATCH:
+      if (noPermission) {
+        // No permission to clone Batches
+        dialogMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.noBatchPermission"
+            defaultMessage="At least one {batchLabel} selected does not allow you to clone."
+            values={{
+              batchLabel,
+            }}
+          />
+        );
+        dialogSubMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.tryAgain"
+            defaultMessage="Please reselect and try again."
+          />
+        );
+      } else if (isProcessing) {
+        // Is currently cloning Batches
+        dialogMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.cloningBatches"
+            defaultMessage="Cloning {numOfBatches} {batchesLabel} ..."
+            values={{
+              numOfBatches,
+              batchesLabel: totalBatches > 1 ? batchesLabel : batchLabel,
+            }}
+          />
+        );
+      } else {
+        // Has permission to clone Batches
+        dialogMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.batchMessage1"
+            defaultMessage="Are you sure you want to clone {numOfBatches} {batchesLabel} ?"
+            values={{
+              numOfBatches,
+              batchesLabel: totalBatches > 1 ? batchesLabel : batchLabel,
+            }}
+          />
+        );
+      }
+      break;
+    default:
+      dialogMessage = (
+        <FormattedMessage
+          id="modules.RelationMap.clone.noPermission"
+          defaultMessage="You are not allowed to clone."
+        />
+      );
+      break;
   }
 
   return (
-    <Dialog isOpen={isOpen} width="400px">
-      <div className={DialogStyle}>
-        <h3 className={ConfirmMessageStyle}>
-          {isProcessing ? (
-            <>
-              <FormattedMessage
-                id="modules.RelationMap.clone.process"
-                defaultMessage="Cloning.. {source} ..."
-                values={{
-                  source: (
-                    <>
-                      {totalOrders > 0 && source === ORDER && (
-                        <>
-                          {totalOrders} <Icon icon="ORDER" /> Orders
-                        </>
-                      )}
-                      {totalOrderItems > 0 && source === ORDER_ITEM && (
-                        <>
-                          {totalOrderItems} <Icon icon="ORDER_ITEM" /> Items
-                        </>
-                      )}
-                      {totalBatches > 0 && source === BATCH && (
-                        <>
-                          {totalBatches} <Icon icon="BATCH" /> Batches
-                        </>
-                      )}
-                      {totalContainers > 0 && source === CONTAINER && (
-                        <>
-                          {totalContainers} <Icon icon="CONTAINER" /> Containers
-                        </>
-                      )}
-                      {totalShipments > 0 && source === SHIPMENT && (
-                        <>
-                          {totalShipments} <Icon icon="SHIPMENT" /> Shipments
-                        </>
-                      )}
-                    </>
-                  ),
-                }}
-              />
-              <LoadingIcon />
-            </>
-          ) : (
-            <FormattedMessage
-              id="modules.RelationMap.clone.guideline"
-              defaultMessage="Are you sure you want to clone {source}"
-              values={{
-                source: (
-                  <>
-                    {totalOrders > 0 && source === ORDER && (
-                      <>
-                        {totalOrders} Orders <Icon icon="ORDER" /> ? Any selected Items
-                        <Icon icon="ORDER_ITEM" />
-                        or Batches
-                        <Icon icon="BATCH" />
-                        will also be cloned within the cloned Orders
-                        <Icon icon="ORDER" />
-                      </>
-                    )}
-                    {totalOrderItems > 0 && source === ORDER_ITEM && (
-                      <>
-                        {totalOrderItems} Items <Icon icon="ORDER_ITEM" /> ? Any selected Batches
-                        <Icon icon="BATCH" />
-                        will also be cloned within the cloned Items
-                        <Icon icon="ORDER_ITEM" />
-                      </>
-                    )}
-                    {totalBatches > 0 && source === BATCH && (
-                      <>
-                        {totalBatches} Batches <Icon icon="BATCH" />
-                      </>
-                    )}
-                    {totalContainers > 0 && source === CONTAINER && (
-                      <>
-                        {totalContainers} <Icon icon="CONTAINER" />
-                      </>
-                    )}
-                    {totalShipments > 0 && source === SHIPMENT && (
-                      <>
-                        {totalShipments} <Icon icon="SHIPMENT" />
-                      </>
-                    )}
-                  </>
-                ),
-              }}
-            />
-          )}
-        </h3>
+    <Dialog
+      isOpen={isOpen}
+      onRequestClose={isProcessing ? () => {} : onCancel}
+      showCancelButton={!isProcessing}
+      onCancel={onCancel}
+      width="400px"
+    >
+      <div className={CloneDialogWrapperStyle}>
+        <div className={DialogMessageStyle}>{dialogMessage}</div>
 
-        <div className={ButtonsStyle}>
-          <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          <BaseButton
-            label={
-              <FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />
-            }
-            isLoading={Boolean(isProcessing)}
-            disabled={Boolean(isProcessing)}
-            onClick={onConfirm}
-          />
-        </div>
+        {dialogSubMessage && <div className={DialogSubMessageStyle}>{dialogSubMessage}</div>}
+
+        {isProcessing ? (
+          <LoadingIcon />
+        ) : (
+          <div className={ButtonsWrapperStyle}>
+            <CancelButton onClick={onCancel} />
+            <BaseButton
+              label={
+                <FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />
+              }
+              icon="CLONE"
+              disabled={isProcessing || noPermission}
+              onClick={onConfirm}
+            />
+          </div>
+        )}
       </div>
     </Dialog>
   );
