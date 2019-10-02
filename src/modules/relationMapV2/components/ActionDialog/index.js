@@ -51,7 +51,7 @@ export default function ActionDialog({
       onRequestClose={isProcessing ? () => {} : onCancel}
       showCancelButton={!isProcessing}
       onCancel={onCancel}
-      width="400px"
+      width="min-content"
     >
       {isOpen && (
         <div className={ActionDialogWrapperStyle}>

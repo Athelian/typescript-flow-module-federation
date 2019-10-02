@@ -96,6 +96,7 @@ export default function Actions({ targets }: Props) {
             <ActionSubMenu isCollapsed={currentMenu !== ORDER}>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'STATUS',
                     payload: {
@@ -115,6 +116,7 @@ export default function Actions({ targets }: Props) {
 
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'TAGS',
                     payload: {
@@ -134,6 +136,7 @@ export default function Actions({ targets }: Props) {
 
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'CLONE',
                     payload: {
@@ -161,6 +164,7 @@ export default function Actions({ targets }: Props) {
             <ActionSubMenu isCollapsed={currentMenu !== ORDER_ITEM}>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'DELETE',
                     payload: {
@@ -176,6 +180,7 @@ export default function Actions({ targets }: Props) {
               </ActionButton>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'TAGS',
                     payload: {
@@ -194,6 +199,7 @@ export default function Actions({ targets }: Props) {
               </ActionButton>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'AUTO_FILL',
                     payload: {
@@ -212,6 +218,7 @@ export default function Actions({ targets }: Props) {
               </ActionButton>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'CLONE',
                     payload: {
@@ -239,6 +246,7 @@ export default function Actions({ targets }: Props) {
             <ActionSubMenu isCollapsed={currentMenu !== BATCH}>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'DELETE_BATCHES',
                     payload: {
@@ -256,6 +264,7 @@ export default function Actions({ targets }: Props) {
               </ActionButton>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'TAGS',
                     payload: {
@@ -274,6 +283,7 @@ export default function Actions({ targets }: Props) {
               </ActionButton>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'MOVE_BATCH',
                     payload: {},
@@ -287,6 +297,7 @@ export default function Actions({ targets }: Props) {
               </ActionButton>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'SPLIT',
                     payload: {
@@ -302,6 +313,7 @@ export default function Actions({ targets }: Props) {
               </ActionButton>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'CLONE',
                     payload: {
@@ -329,6 +341,7 @@ export default function Actions({ targets }: Props) {
             <ActionSubMenu isCollapsed={currentMenu !== CONTAINER}>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'DELETE',
                     payload: {
@@ -344,6 +357,7 @@ export default function Actions({ targets }: Props) {
               </ActionButton>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'TAGS',
                     payload: {
@@ -374,6 +388,7 @@ export default function Actions({ targets }: Props) {
             <ActionSubMenu isCollapsed={currentMenu !== SHIPMENT}>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'STATUS',
                     payload: {
@@ -393,6 +408,7 @@ export default function Actions({ targets }: Props) {
 
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'TAGS',
                     payload: {

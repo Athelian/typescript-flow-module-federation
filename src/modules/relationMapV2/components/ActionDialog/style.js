@@ -4,6 +4,7 @@ import { fontSizes, colors, layout } from 'styles/common';
 
 export const ActionDialogWrapperStyle: string = css`
   padding: 0 30px 20px 30px;
+  min-width: 400px;
 `;
 
 export const DialogMessageStyle: string = css`

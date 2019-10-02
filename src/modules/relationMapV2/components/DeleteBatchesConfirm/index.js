@@ -7,11 +7,10 @@ import { Entities } from 'modules/relationMapV2/store';
 import { BATCH_DELETE, BATCH_UPDATE } from 'modules/permission/constants/batch';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import { BATCH } from 'modules/relationMapV2/constants';
-import Dialog from 'components/Dialog';
-import LoadingIcon from 'components/LoadingIcon';
-import { CancelButton, BaseButton } from 'components/Buttons';
+import { BaseButton } from 'components/Buttons';
+import FormattedNumber from 'components/FormattedNumber';
 import Icon from 'components/Icon';
-import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
+import ActionDialog, { BatchesLabelIcon, BatchLabelIcon } from '../ActionDialog';
 import { targetedIds } from '../OrderFocus/helpers';
 import { deleteBatchMutation } from '../DeleteBatchConfirm/mutation';
 import { entitiesUpdateManyMutation } from '../AddTags/mutation';
@@ -138,88 +137,123 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
   const allowToUpdateBatches = hasPermissions([BATCH_UPDATE]);
   const noPermission = !allowToDeleteBatches && !allowToUpdateBatches;
 
-  if (noPermission)
-    return (
-      <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>
-        <div className={DialogStyle}>
-          <h3 className={ConfirmMessageStyle}>
-            <FormattedMessage
-              id="modules.RelationMap.batches.noPermissionToDeleteOrRemove"
-              defaultMessage="At least one Batch {entity} selected does not allow you to remove or delete.Please reselect and try again."
-              values={{
-                entity: <Icon icon="BATCH" />,
-              }}
-            />
-          </h3>
-          <div className={ButtonsStyle}>
-            <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          </div>
-        </div>
-      </Dialog>
+  let dialogMessage = null;
+  let dialogSubMessage = null;
+  const numOfBatches = <FormattedNumber value={totalBatches} />;
+
+  if (noPermission) {
+    // No permission to delete or remove
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.deleteRemove.noPermission"
+        defaultMessage="At least one {batchLabel} selected does not allow you to delete nor remove."
+        values={{ batchLabel: <BatchLabelIcon /> }}
+      />
     );
+    dialogSubMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.actions.tryAgain"
+        defaultMessage="Please reselect and try again."
+      />
+    );
+  } else if (isProcessing) {
+    // Is currently deleting or removing
+    dialogMessage = isRemove ? (
+      <FormattedMessage
+        id="modules.RelationMap.deleteRemove.removing"
+        defaultMessage="Removing {numOfBatches} {batchesLabel} ..."
+        values={{
+          numOfBatches,
+          batchesLabel: totalBatches > 1 ? <BatchesLabelIcon /> : <BatchLabelIcon />,
+        }}
+      />
+    ) : (
+      <FormattedMessage
+        id="modules.RelationMap.deleteRemove.deleting"
+        defaultMessage="Deleting {numOfBatches} {batchesLabel} ..."
+        values={{
+          numOfBatches,
+          batchesLabel: totalBatches > 1 ? <BatchesLabelIcon /> : <BatchLabelIcon />,
+        }}
+      />
+    );
+  } else {
+    // Has permission to delete or remove
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.delete.message1"
+        defaultMessage="Would you like to delete or remove {numOfBatches} {batchesLabel} that you have selected?"
+        values={{
+          numOfBatches,
+          batchesLabel: totalBatches > 1 ? <BatchesLabelIcon /> : <BatchLabelIcon />,
+        }}
+      />
+    );
+  }
 
   return (
-    <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>
-      <div className={DialogStyle}>
-        {isProcessing ? (
-          <>
-            {isRemove ? (
-              <FormattedMessage
-                id="modules.RelationMap.batches.remove"
-                defaultMessage="Removing {entity} {total, plural, one {# Batch} other {# Batches}}"
-                values={{
-                  entity: <Icon icon="BATCH" />,
-                  total: totalBatches,
-                }}
-              />
-            ) : (
-              <FormattedMessage
-                id="modules.RelationMap.batches.delete"
-                defaultMessage="Deleting {entity} {total, plural, one {# Batch} other {# Batches}}"
-                values={{
-                  entity: <Icon icon="BATCH" />,
-                  total: totalBatches,
-                }}
-              />
-            )}
-            <LoadingIcon />
-          </>
-        ) : (
-          <h3 className={ConfirmMessageStyle}>
-            <FormattedMessage
-              id="modules.RelationMap.batches.deleteOrRemoveGuideLine"
-              defaultMessage="Would you like to delete or remove these  {total, plural, one {# Batch} other {# Batches}} {entity}"
-              values={{
-                entity: <Icon icon="BATCH" />,
-                total: totalBatches,
-              }}
-            />
-          </h3>
-        )}
-        <div className={ButtonsStyle}>
-          <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
+    <ActionDialog
+      isOpen={isOpen}
+      isProcessing={isProcessing}
+      onCancel={onCancel}
+      title={
+        <FormattedMessage
+          id="modules.RelationMap.label.deleteRemove"
+          defaultMessage="DELETE/REMOVE"
+        />
+      }
+      dialogMessage={dialogMessage}
+      dialogSubMessage={dialogSubMessage}
+      buttons={
+        <>
           <BaseButton
-            label={<FormattedMessage id="components.button.delete" defaultMessage="DELETE" />}
-            disabled={Boolean(isProcessing) || !allowToDeleteBatches}
+            label={
+              <FormattedMessage id="modules.RelationMap.label.delete" defaultMessage="DELETE" />
+            }
+            icon="REMOVE"
+            disabled={isProcessing || !allowToDeleteBatches}
             onClick={() => onConfirm('delete')}
+            backgroundColor="RED"
+            hoverBackgroundColor="RED_DARK"
           />
           <BaseButton
             label={
-              <FormattedMessage
-                id="components.button.removeLocally"
-                defaultMessage="REMOVE LOCALLY"
-              />
+              <>
+                <FormattedMessage
+                  id="modules.RelationMap.label.removeFrom"
+                  defaultMessage="REMOVE FROM"
+                />{' '}
+                <Icon icon="CONTAINER" />
+              </>
             }
-            disabled={Boolean(isProcessing) || !allowToUpdateBatches}
+            icon="CLEAR"
+            disabled={isProcessing || !allowToUpdateBatches}
             onClick={() => onConfirm('removeLocally')}
+            textColor="RED"
+            hoverTextColor="WHITE"
+            backgroundColor="GRAY_SUPER_LIGHT"
+            hoverBackgroundColor="RED"
           />
           <BaseButton
-            label={<FormattedMessage id="components.button.remove" defaultMessage="REMOVE" />}
-            disabled={Boolean(isProcessing) || !allowToUpdateBatches}
+            label={
+              <>
+                <FormattedMessage
+                  id="modules.RelationMap.label.removeFrom"
+                  defaultMessage="REMOVE FROM"
+                />{' '}
+                <Icon icon="SHIPMENT" />
+              </>
+            }
+            icon="CLEAR"
+            disabled={isProcessing || !allowToUpdateBatches}
             onClick={() => onConfirm('remove')}
+            textColor="RED"
+            hoverTextColor="WHITE"
+            backgroundColor="GRAY_SUPER_LIGHT"
+            hoverBackgroundColor="RED"
           />
-        </div>
-      </div>
-    </Dialog>
+        </>
+      }
+    />
   );
 }

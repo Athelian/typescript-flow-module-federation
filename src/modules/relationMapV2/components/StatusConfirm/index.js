@@ -231,35 +231,47 @@ export default function StatusConfirm({ onSuccess }: Props) {
       buttons={
         <>
           {isProcessing || noPermission || isDisabled(false) ? (
-            <Tooltip
-              message={
-                <FormattedMessage
-                  id="modules.RelationMap.activateArchive.disabledActivate"
-                  defaultMessage="Entire selection already has Active statuses"
-                />
-              }
-            >
-              <div>
+            <>
+              {noPermission ? (
                 <ActivateButton disabled />
-              </div>
-            </Tooltip>
+              ) : (
+                <Tooltip
+                  message={
+                    <FormattedMessage
+                      id="modules.RelationMap.activateArchive.disabledActivate"
+                      defaultMessage="Entire selection already has Active statuses"
+                    />
+                  }
+                >
+                  <div>
+                    <ActivateButton disabled />
+                  </div>
+                </Tooltip>
+              )}
+            </>
           ) : (
             <ActivateButton onClick={() => onConfirm(false)} />
           )}
 
           {isProcessing || noPermission || isDisabled(true) ? (
-            <Tooltip
-              message={
-                <FormattedMessage
-                  id="modules.RelationMap.activateArchive.disabledArchive"
-                  defaultMessage="Entire selection already has Archived statuses"
-                />
-              }
-            >
-              <div>
+            <>
+              {noPermission ? (
                 <ArchiveButton disabled />
-              </div>
-            </Tooltip>
+              ) : (
+                <Tooltip
+                  message={
+                    <FormattedMessage
+                      id="modules.RelationMap.activateArchive.disabledArchive"
+                      defaultMessage="Entire selection already has Archived statuses"
+                    />
+                  }
+                >
+                  <div>
+                    <ArchiveButton disabled />
+                  </div>
+                </Tooltip>
+              )}
+            </>
           ) : (
             <ArchiveButton onClick={() => onConfirm(true)} />
           )}
