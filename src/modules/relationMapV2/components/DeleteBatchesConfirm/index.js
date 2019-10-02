@@ -144,11 +144,10 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
         <div className={DialogStyle}>
           <h3 className={ConfirmMessageStyle}>
             <FormattedMessage
-              id="modules.RelationMap.batches.deleteOrRemoveGuideLine"
-              defaultMessage="Would you like to delete or remove these  {total, plural, one {# Batch} other {# Batches}} {entity}"
+              id="modules.RelationMap.batches.noPermissionToDeleteOrRemove"
+              defaultMessage="At least one Batch {entity} selected does not allow you to remove or delete.Please reselect and try again."
               values={{
                 entity: <Icon icon="BATCH" />,
-                total: totalBatches,
               }}
             />
           </h3>
