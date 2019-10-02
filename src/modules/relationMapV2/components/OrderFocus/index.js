@@ -317,9 +317,6 @@ export default function OrderFocus() {
                               });
                             });
                           }
-                        });
-                        queryOrdersDetail([...orderIds, ...newOrderIds]);
-                        cloneEntities.forEach(cloneResult => {
                           if (cloneResult?.data?.batchCloneMany?.length ?? 0) {
                             cloneBadges.push(
                               ...(cloneResult?.data?.batchCloneMany ?? []).map(item => {
@@ -331,8 +328,6 @@ export default function OrderFocus() {
                               })
                             );
                           }
-                        });
-                        cloneEntities.forEach(cloneResult => {
                           if (cloneResult?.data?.orderItemCloneMany?.length ?? 0) {
                             const itemsClone = cloneResult?.data?.orderItemCloneMany ?? [];
                             itemsClone.forEach(item => {
@@ -351,6 +346,14 @@ export default function OrderFocus() {
                             });
                           }
                         });
+                        dispatch({
+                          type: 'CLONE_END',
+                          payload: {
+                            sources,
+                            cloneEntities,
+                          },
+                        });
+                        queryOrdersDetail([...orderIds, ...newOrderIds]);
                         onSetBadges(cloneBadges);
                         onSetCloneRelated(sources, cloneEntities);
                       }}

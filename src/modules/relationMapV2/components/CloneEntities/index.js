@@ -292,13 +292,6 @@ export default function CloneEntities({ onSuccess }: Props) {
       }
       try {
         const cloneEntities = await Promise.all(actions);
-        dispatch({
-          type: 'CLONE_END',
-          payload: {
-            sources,
-            cloneEntities,
-          },
-        });
         onSuccess({ sources, cloneEntities, orderIds, newOrderItemPositions });
       } catch (error) {
         dispatch({

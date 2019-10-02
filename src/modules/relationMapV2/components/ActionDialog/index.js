@@ -32,7 +32,7 @@ type Props = {|
   dialogMessage: React.Node,
   dialogSubMessage: React.Node,
   buttons: React.Node,
-  children: React.Node,
+  children?: React.Node,
 |};
 
 export default function ActionDialog({
@@ -53,27 +53,29 @@ export default function ActionDialog({
       onCancel={onCancel}
       width="400px"
     >
-      <div className={ActionDialogWrapperStyle}>
-        <Label height="30px" align="center">
-          {title}
-        </Label>
+      {isOpen && (
+        <div className={ActionDialogWrapperStyle}>
+          <Label height="30px" align="center">
+            {title}
+          </Label>
 
-        {dialogMessage && <div className={DialogMessageStyle}>{dialogMessage}</div>}
+          {dialogMessage && <div className={DialogMessageStyle}>{dialogMessage}</div>}
 
-        {dialogSubMessage && <div className={DialogSubMessageStyle}>{dialogSubMessage}</div>}
+          {dialogSubMessage && <div className={DialogSubMessageStyle}>{dialogSubMessage}</div>}
 
-        {isProcessing ? (
-          <LoadingIcon />
-        ) : (
-          <>
-            {children}
-            <div className={ButtonsWrapperStyle}>
-              <CancelButton onClick={onCancel} />
-              {buttons}
-            </div>
-          </>
-        )}
-      </div>
+          {isProcessing ? (
+            <LoadingIcon />
+          ) : (
+            <>
+              {children}
+              <div className={ButtonsWrapperStyle}>
+                <CancelButton onClick={onCancel} />
+                {buttons}
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </Dialog>
   );
 }

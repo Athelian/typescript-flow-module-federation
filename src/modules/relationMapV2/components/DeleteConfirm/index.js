@@ -158,7 +158,7 @@ export default function DeleteConfirm({ onSuccess }: Props) {
         ) : (
           <h3 className={ConfirmMessageStyle}>
             <FormattedMessage
-              id="modules.RelationMap.autoFill.guideline"
+              id="modules.RelationMap.delete.guideline"
               defaultMessage="Are you sure you want to delete {total} {source} {entity} ?"
               values={{
                 source,
