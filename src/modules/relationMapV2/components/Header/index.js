@@ -129,9 +129,8 @@ const Header = React.memo<any>(
             <div className={OrderTitleWrapperStyle(hasPermissions(ORDER_CREATE))}>
               <Label color="WHITE">
                 <FormattedMessage id="modules.SideBar.order" />
-                {' ('}
-                <FormattedNumber value={orderCount} />
-                {')'}
+                (
+                <FormattedNumber value={orderCount} />)
               </Label>
 
               {hasPermissions(ORDER_CREATE) && (
@@ -223,9 +222,8 @@ const Header = React.memo<any>(
           <div className={TitleWrapperStyle}>
             <Label color="WHITE">
               <FormattedMessage id="modules.SideBar.orderItem" />
-              {' ('}
-              <FormattedNumber value={itemCount} />
-              {')'}
+              (
+              <FormattedNumber value={itemCount} />)
             </Label>
 
             <button
@@ -296,9 +294,8 @@ const Header = React.memo<any>(
           <div className={TitleWrapperStyle}>
             <Label color="WHITE">
               <FormattedMessage id="modules.SideBar.batch" />
-              {' ('}
-              <FormattedNumber value={batchCount} />
-              {')'}
+              (
+              <FormattedNumber value={batchCount} />)
             </Label>
 
             <button
@@ -373,9 +370,8 @@ const Header = React.memo<any>(
           <div className={TitleWrapperStyle}>
             <Label color="WHITE">
               <FormattedMessage id="modules.SideBar.container" />
-              {' ('}
-              <FormattedNumber value={containerCount} />
-              {')'}
+              (
+              <FormattedNumber value={containerCount} />)
             </Label>
 
             <button
@@ -428,9 +424,8 @@ const Header = React.memo<any>(
           <div className={TitleWrapperStyle}>
             <Label color="WHITE">
               <FormattedMessage id="modules.SideBar.shipment" />
-              {' ('}
-              <FormattedNumber value={shipmentCount} />
-              {')'}
+              (
+              <FormattedNumber value={shipmentCount} />)
             </Label>
 
             <button

@@ -98,7 +98,6 @@ export default function AutoFill({ onSuccess }: Props) {
       <div className={DialogStyle}>
         {isProcessing ? (
           <>
-            <Icon icon="ORDER_ITEM" />
             <FormattedMessage
               id="modules.RelationMap.autoFill.process"
               defaultMessage="Autofilling Batches {batch} for {total} Items {entity} ..."
@@ -113,7 +112,7 @@ export default function AutoFill({ onSuccess }: Props) {
         ) : (
           <h3 className={ConfirmMessageStyle}>
             <FormattedMessage
-              id="modules.RelationMap.autoFill.guidline"
+              id="modules.RelationMap.autoFill.guideline"
               defaultMessage="You have selected {total} Items {entity} have more quantity than their Batches {batch}.Would you like to generate a new Batch {batch} which fills up the remaining quantities for each of these Items {entity}"
               values={{
                 total: itemsWithHigherQuantity.length,

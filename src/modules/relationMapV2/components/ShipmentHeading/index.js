@@ -193,7 +193,7 @@ export default function ShipmentHeading({
 
             {canViewPlace && places.length > 1 && (
               <Display width="min-content">
-                {'+'}
+                +
                 <FormattedNumber value={places.length - 1} />
               </Display>
             )}
@@ -211,7 +211,7 @@ export default function ShipmentHeading({
                 newestDate &&
                 differenceInCalendarDays(new Date(oldestDate), new Date(newestDate)) !== 0 && (
                   <>
-                    {' - '}
+                    -
                     <FormattedDate value={newestDate} />
                   </>
                 )}

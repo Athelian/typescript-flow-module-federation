@@ -392,7 +392,7 @@ const orderItemDropMessage = ({
             <FormattedMessage
               id="modules.RelationMap.dnd.noItemPermission"
               defaultMessage="CANNOT MOVE TO ITEM"
-            />{' '}
+            />
             <br />
             (<FormattedMessage id="modules.RelationMap.dnd.sameItem" defaultMessage="SAME ITEM" />)
           </div>
@@ -407,7 +407,7 @@ const orderItemDropMessage = ({
             <FormattedMessage
               id="modules.RelationMap.dnd.noItemPermission"
               defaultMessage="CANNOT MOVE TO ITEM"
-            />{' '}
+            />
             <br />
             (
             <FormattedMessage
@@ -427,7 +427,7 @@ const orderItemDropMessage = ({
             <FormattedMessage
               id="modules.RelationMap.dnd.noItemPermission"
               defaultMessage="CANNOT MOVE TO ITEM"
-            />{' '}
+            />
             <br />
             (
             <FormattedMessage
@@ -448,7 +448,7 @@ const orderItemDropMessage = ({
             <FormattedMessage
               id="modules.RelationMap.dnd.noItemPermission"
               defaultMessage="CANNOT MOVE TO ITEM"
-            />{' '}
+            />
             <br />
             (
             <FormattedMessage
@@ -499,7 +499,7 @@ const containerDropMessage = ({
             <FormattedMessage
               id="modules.RelationMap.dnd.noContainerPermission"
               defaultMessage="CANNOT MOVE TO CONTAINER"
-            />{' '}
+            />
             <br />
             (
             <FormattedMessage
@@ -523,7 +523,7 @@ const containerDropMessage = ({
             <FormattedMessage
               id="modules.RelationMap.dnd.noContainerPermission"
               defaultMessage="CANNOT MOVE TO CONTAINER"
-            />{' '}
+            />
             <br />
             (
             <FormattedMessage
@@ -544,7 +544,7 @@ const containerDropMessage = ({
             <FormattedMessage
               id="modules.RelationMap.dnd.noContainerPermission"
               defaultMessage="CANNOT MOVE TO CONTAINER"
-            />{' '}
+            />
             <br />
             (
             <FormattedMessage
@@ -562,7 +562,7 @@ const containerDropMessage = ({
             <FormattedMessage
               id="modules.RelationMap.dnd.noContainerPermission"
               defaultMessage="CANNOT MOVE TO CONTAINER"
-            />{' '}
+            />
             <br />
             (
             <FormattedMessage
@@ -616,7 +616,7 @@ const shipmentDropMessage = ({
             <FormattedMessage
               id="modules.RelationMap.dnd.noShipmentPermission"
               defaultMessage="CANNOT MOVE TO SHIPMENT"
-            />{' '}
+            />
             <br />
             (
             <FormattedMessage
@@ -639,7 +639,7 @@ const shipmentDropMessage = ({
             <FormattedMessage
               id="modules.RelationMap.dnd.noShipmentPermission"
               defaultMessage="CANNOT MOVE TO SHIPMENT"
-            />{' '}
+            />
             <br />
             (
             <FormattedMessage
@@ -660,7 +660,7 @@ const shipmentDropMessage = ({
             <FormattedMessage
               id="modules.RelationMap.dnd.noShipmentPermission"
               defaultMessage="CANNOT MOVE TO SHIPMENT"
-            />{' '}
+            />
             <br />
             (
             <FormattedMessage
@@ -678,7 +678,7 @@ const shipmentDropMessage = ({
             <FormattedMessage
               id="modules.RelationMap.dnd.noShipmentPermission"
               defaultMessage="CANNOT MOVE TO SHIPMENT"
-            />{' '}
+            />
             <br />
             (
             <FormattedMessage
