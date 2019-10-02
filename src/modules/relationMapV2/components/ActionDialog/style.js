@@ -24,10 +24,6 @@ export const DialogSubMessageStyle: string = css`
   margin: 0 0 20px 0;
 `;
 
-export const LabelStyle = (color: string): string => css`
-  color: ${colors[color]};
-`;
-
 export const ButtonsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   padding: 20px 0 0 0;

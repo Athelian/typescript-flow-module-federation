@@ -349,7 +349,7 @@ export default function CloneEntities({ onSuccess }: Props) {
         );
         dialogSubMessage = (
           <FormattedMessage
-            id="modules.RelationMap.clone.tryAgain"
+            id="modules.RelationMap.actions.tryAgain"
             defaultMessage="Please reselect and try again."
           />
         );
@@ -370,7 +370,7 @@ export default function CloneEntities({ onSuccess }: Props) {
         dialogMessage = (
           <FormattedMessage
             id="modules.RelationMap.clone.orderMessage1"
-            defaultMessage="Are you sure you want to clone {numOfOrders} {ordersLabel} ?"
+            defaultMessage="Are you sure you want to clone {numOfOrders} {ordersLabel} that you have selected?"
             values={{
               numOfOrders,
               ordersLabel: totalOrders > 1 ? <OrdersLabelIcon /> : <OrderLabelIcon />,
@@ -405,7 +405,7 @@ export default function CloneEntities({ onSuccess }: Props) {
         );
         dialogSubMessage = (
           <FormattedMessage
-            id="modules.RelationMap.clone.tryAgain"
+            id="modules.RelationMap.actions.tryAgain"
             defaultMessage="Please reselect and try again."
           />
         );
@@ -426,7 +426,7 @@ export default function CloneEntities({ onSuccess }: Props) {
         dialogMessage = (
           <FormattedMessage
             id="modules.RelationMap.clone.itemMessage1"
-            defaultMessage="Are you sure you want to clone {numOfItems} {itemsLabel} ?"
+            defaultMessage="Are you sure you want to clone {numOfItems} {itemsLabel} that you have selected?"
             values={{
               numOfItems,
               itemsLabel: totalOrderItems > 1 ? <ItemsLabelIcon /> : <ItemLabelIcon />,
@@ -459,7 +459,7 @@ export default function CloneEntities({ onSuccess }: Props) {
         );
         dialogSubMessage = (
           <FormattedMessage
-            id="modules.RelationMap.clone.tryAgain"
+            id="modules.RelationMap.actions.tryAgain"
             defaultMessage="Please reselect and try again."
           />
         );
@@ -480,7 +480,7 @@ export default function CloneEntities({ onSuccess }: Props) {
         dialogMessage = (
           <FormattedMessage
             id="modules.RelationMap.clone.batchMessage1"
-            defaultMessage="Are you sure you want to clone {numOfBatches} {batchesLabel} ?"
+            defaultMessage="Are you sure you want to clone {numOfBatches} {batchesLabel} that you have selected?"
             values={{
               numOfBatches,
               batchesLabel: totalBatches > 1 ? <BatchesLabelIcon /> : <BatchLabelIcon />,
@@ -504,12 +504,12 @@ export default function CloneEntities({ onSuccess }: Props) {
       isOpen={isOpen}
       isProcessing={isProcessing}
       onCancel={onCancel}
-      title={<FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />}
+      title={<FormattedMessage id="modules.RelationMap.label.clone" defaultMessage="CLONE" />}
       dialogMessage={dialogMessage}
       dialogSubMessage={dialogSubMessage}
       buttons={
         <BaseButton
-          label={<FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />}
+          label={<FormattedMessage id="modules.RelationMap.label.clone" defaultMessage="CLONE" />}
           icon="CLONE"
           disabled={isProcessing || noPermission}
           onClick={onConfirm}

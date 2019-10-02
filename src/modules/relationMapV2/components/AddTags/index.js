@@ -310,7 +310,7 @@ export default function AddTags({ onSuccess }: Props) {
     );
     dialogSubMessage = (
       <FormattedMessage
-        id="modules.RelationMap.addTags.tryAgain"
+        id="modules.RelationMap.actions.tryAgain"
         defaultMessage="Please reselect and try again."
       />
     );
@@ -345,7 +345,7 @@ export default function AddTags({ onSuccess }: Props) {
       dialogMessage = (
         <FormattedMessage
           id="modules.RelationMap.addTags.addingTo"
-          defaultMessage="Adding {tagsLabel} {selectedTags} to the {numOfEntity} {entityLabel} that you have selected..."
+          defaultMessage="Adding {tagsLabel} {selectedTags} to {numOfEntity} {entityLabel} ..."
           values={{
             tagsLabel: tags.length > 1 ? <TagsLabelIcon /> : <TagLabelIcon />,
             selectedTags: (
@@ -366,7 +366,7 @@ export default function AddTags({ onSuccess }: Props) {
       // Has permission to add tags
       dialogMessage = (
         <FormattedMessage
-          id="modules.RelationMap.addTags.orderMessage1"
+          id="modules.RelationMap.addTags.message1"
           defaultMessage="Select {tagsLabel} to add to the {numOfEntity} {entityLabel} that you have selected"
           values={{
             tagsLabel: <TagsLabelIcon />,
@@ -383,13 +383,13 @@ export default function AddTags({ onSuccess }: Props) {
       isOpen={isOpen}
       isProcessing={isProcessing}
       onCancel={onCancel}
-      title={<FormattedMessage id="modules.RelationMaps.label.addTags" defaultMessage="ADD TAGS" />}
+      title={<FormattedMessage id="modules.RelationMap.label.addTags" defaultMessage="ADD TAGS" />}
       dialogMessage={dialogMessage}
       dialogSubMessage={dialogSubMessage}
       buttons={
         <BaseButton
           label={
-            <FormattedMessage id="modules.RelationMaps.label.addTags" defaultMessage="ADD TAGS" />
+            <FormattedMessage id="modules.RelationMap.label.addTags" defaultMessage="ADD TAGS" />
           }
           icon="TAG"
           disabled={isProcessing || noPermission || tags.length === 0}
@@ -401,7 +401,7 @@ export default function AddTags({ onSuccess }: Props) {
         vertical
         label={
           <Label height="30px">
-            <FormattedMessage id="modules.Orders.tags" defaultMessage="TAGS" />
+            <FormattedMessage id="modules.RelationMap.label.tags" defaultMessage="TAGS" />
           </Label>
         }
         input={
