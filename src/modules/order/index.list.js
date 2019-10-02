@@ -55,6 +55,7 @@ function OrderModule(props: Props) {
       <NavBar>
         <FilterToolBar
           icon="ORDER"
+          subIcon="CARDS"
           sortFields={sortFields}
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}

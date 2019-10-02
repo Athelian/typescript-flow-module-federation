@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import type { BatchPayload } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
@@ -39,7 +38,8 @@ import {
 } from './style';
 
 type Props = {|
-  batch: BatchPayload,
+  // TODO: should have better typing later
+  batch: Object,
   onClick?: Function,
 |};
 

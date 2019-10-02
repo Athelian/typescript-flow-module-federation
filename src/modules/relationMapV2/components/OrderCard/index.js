@@ -1,9 +1,11 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import RelateEntity from 'components/RelateEntity';
 import TaskRing from 'components/TaskRing';
+import { Tooltip } from 'components/Tooltip';
 import { Display, Blackout } from 'components/Form';
 import { useHasPermissions } from 'components/Context/Permissions';
 import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
@@ -13,6 +15,7 @@ import {
   TagsWrapperStyle,
   BottomRowWrapperStyle,
   CreateItemButtonStyle,
+  CreateItemIconStyle,
 } from './style';
 
 type Props = {|
@@ -69,9 +72,24 @@ export default function OrderCard({ order, onCreateItem, organizationId }: Props
       </div>
 
       {allowToCreateItem && (
-        <button onClick={onCreateItem} className={CreateItemButtonStyle} type="button">
-          <Icon icon="ADD" />
-        </button>
+        <Tooltip
+          message={
+            <FormattedMessage
+              id="modules.RelationMap.order.createItemTooltip"
+              defaultMessage="Create Item(s)"
+            />
+          }
+          delay={800}
+        >
+          <button onClick={onCreateItem} className={CreateItemButtonStyle} type="button">
+            <div className={CreateItemIconStyle}>
+              <Icon icon="ADD" />
+            </div>
+            <div className={CreateItemIconStyle}>
+              <Icon icon="ORDER_ITEM" />
+            </div>
+          </button>
+        </Tooltip>
       )}
     </div>
   );

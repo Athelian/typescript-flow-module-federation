@@ -4,13 +4,13 @@ import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import { Display, Label } from 'components/Form';
+import FilterHitBorder from 'modules/relationMapV2/components/FilterHitBorder';
 import {
   HeadingWrapperStyle,
   LeftWrapperStyle,
   TotalWrapperStyle,
   SelectAllButtonStyle,
   ExpandedIconWrapperStyle,
-  ItemHeadingFilteredStyle,
   ItemHeadingSelectedStyle,
 } from './style';
 
@@ -21,6 +21,7 @@ type Props = {|
   isExpanded: boolean,
   onClick: Function,
   total: number,
+  selectedItemsCount: number,
   onSelectAll: Function,
   renderRightSide: Function,
 |};
@@ -32,15 +33,13 @@ export default function Heading({
   isExpanded,
   onClick,
   total,
+  selectedItemsCount,
   onSelectAll,
   renderRightSide,
 }: Props) {
   // TODO: Replace with real permissions
   const allowToSelectOrUnselectAll = true;
   const canViewTotal = true;
-
-  // TODO: Replace with real numbers
-  const selectedItemsCount = 0;
 
   return (
     <div className={HeadingWrapperStyle(isExpanded, width)} onClick={onClick} role="presentation">
@@ -63,16 +62,11 @@ export default function Heading({
             className={SelectAllButtonStyle}
             type="button"
           >
-            <Label>
-              {selectedItemsCount === total ? (
-                <FormattedMessage
-                  id="components.button.unselectAll"
-                  defaultMessage="UNSELECT ALL"
-                />
-              ) : (
-                <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
-              )}
-            </Label>
+            {selectedItemsCount === total ? (
+              <FormattedMessage id="components.button.unselectAll" defaultMessage="UNSELECT ALL" />
+            ) : (
+              <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+            )}
             <Icon icon="CHECKED" />
           </button>
         )}
@@ -88,7 +82,7 @@ export default function Heading({
         <Icon icon="CHEVRON_DOWN" />
       </span>
 
-      <div className={ItemHeadingFilteredStyle(!isExpanded && hasFilterHits)} />
+      <FilterHitBorder hasFilterHits={!isExpanded && hasFilterHits} />
 
       <div className={ItemHeadingSelectedStyle(!isExpanded && hasSelectedChildren)} />
     </div>

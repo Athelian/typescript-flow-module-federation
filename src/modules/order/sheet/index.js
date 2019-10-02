@@ -9,7 +9,6 @@ import type { ColumnConfig, ColumnSort, SortDirection } from 'components/Sheet';
 import Filter from 'components/NavBar/components/Filter';
 import { OrderConfigFilter } from 'components/NavBar/components/Filter/configs';
 import { clone } from 'utils/fp';
-import { isEnableBetaFeature } from 'utils/env';
 import { ordersExportQuery } from '../query';
 import columns from './columns';
 import transformer from './transformer';
@@ -49,9 +48,9 @@ const OrderSheetModule = ({ orderIds }: Props) => {
   const sorterProxy = React.useCallback(
     (items: Array<Object>, sorts: Array<ColumnSort>): Array<Object> => {
       setLocalSortBy(
-        sorts.map(s => ({
-          field: `${s.group}_${s.name}`,
-          direction: s.direction,
+        sorts.map(({ group, name, direction }: any) => ({
+          direction,
+          field: `${group}_${name}`,
         }))
       );
 
@@ -86,7 +85,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
   return (
     <Content>
       <NavBar>
-        <EntityIcon icon="SHEET" color="SHEET" />
+        <EntityIcon icon="ORDER" color="ORDER" subIcon="TABLE" />
 
         <Filter
           config={OrderConfigFilter}
@@ -115,18 +114,16 @@ const OrderSheetModule = ({ orderIds }: Props) => {
           }
         />
         <ColumnsConfig columns={columns} onChange={setCurrentColumns} />
-        {isEnableBetaFeature && (
-          <ExportButton
-            type="Orders"
-            exportQuery={ordersExportQuery}
-            variables={{
-              filterBy,
-              sortBy,
-              localSortBy,
-              columns: currentColumns.filter(c => !!c.exportKey).map(c => c.exportKey),
-            }}
-          />
-        )}
+        <ExportButton
+          type="Orders"
+          exportQuery={ordersExportQuery}
+          variables={{
+            filterBy,
+            sortBy,
+            localSortBy,
+            columns: currentColumns.filter(c => !!c.exportKey).map(c => c.exportKey),
+          }}
+        />
       </NavBar>
 
       <Sheet

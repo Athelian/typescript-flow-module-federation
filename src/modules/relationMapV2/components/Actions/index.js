@@ -3,20 +3,15 @@ import * as React from 'react';
 import { navigate } from '@reach/router';
 import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
-import { PermissionsContext } from 'components/Context/Permissions';
 import { Entities } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { ORDER_CREATE } from 'modules/permission/constants/order';
-import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
-import { BATCH_CREATE } from 'modules/permission/constants/batch';
-import { CONTAINER_CREATE } from 'modules/permission/constants/container';
-import { SHIPMENT_CREATE } from 'modules/permission/constants/shipment';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import {
   targetedIds,
   findOrderIdByBatch,
   findOrderIdByOrderItem,
 } from 'modules/relationMapV2/components/OrderFocus/helpers';
+import { FormattedMessage } from 'react-intl';
 import ActionButton from './components/ActionButton';
 import ActionSubMenu from './components/ActionSubMenu';
 import ActionLabel from './components/ActionLabel';
@@ -26,32 +21,6 @@ type Props = {
   targets: Array<string>,
 };
 
-function hasPermissionToClone(
-  hasPermissions: Function,
-  type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT
-) {
-  switch (type) {
-    case ORDER:
-      return hasPermissions(ORDER_CREATE);
-
-    case ORDER_ITEM:
-      return hasPermissions(ORDER_ITEMS_CREATE);
-
-    case BATCH:
-      return hasPermissions(BATCH_CREATE);
-
-    case CONTAINER:
-      return hasPermissions(CONTAINER_CREATE);
-
-    case SHIPMENT:
-      return hasPermissions(SHIPMENT_CREATE);
-
-    default:
-      return false;
-  }
-}
-
-// TODO: check the permission for all actions
 export default function Actions({ targets }: Props) {
   const [currentMenu, setCurrentMenu] = React.useState(null);
   const { dispatch } = React.useContext(RelationMapContext);
@@ -66,26 +35,6 @@ export default function Actions({ targets }: Props) {
   const batchIsDisabled = batchIds.length === 0;
   const containerIsDisabled = containerIds.length === 0;
   const shipmentIsDisabled = shipmentIds.length === 0;
-  const { hasPermissionsByOrganization } = React.useContext(PermissionsContext);
-  const allowToCloneOrders = targetedIds(targets, ORDER).every(id =>
-    hasPermissionToClone(
-      hasPermissionsByOrganization(mapping.entities?.orders?.[id]?.ownedBy),
-      ORDER
-    )
-  );
-  const allowToCloneOrderItems = targetedIds(targets, ORDER_ITEM).every(id =>
-    hasPermissionToClone(
-      hasPermissionsByOrganization(mapping.entities?.orderItems?.[id]?.ownedBy),
-      ORDER_ITEM
-    )
-  );
-  const allowToCloneBatches = targetedIds(targets, BATCH).every(id =>
-    hasPermissionToClone(
-      hasPermissionsByOrganization(mapping.entities?.batches?.[id]?.ownedBy),
-      BATCH
-    )
-  );
-
   const navigateToGTV = () => {
     const ids = [...orderIds];
     batchIds.forEach(batchId => ids.push(findOrderIdByBatch(batchId, mapping.entities)));
@@ -98,7 +47,7 @@ export default function Actions({ targets }: Props) {
         ids.push(findOrderIdByBatch(batch.id, mapping.entities));
       }
     });
-    navigate('/order/sheet', {
+    navigate('/order/table', {
       state: {
         orderIds: [...new Set(ids)],
       },
@@ -143,37 +92,11 @@ export default function Actions({ targets }: Props) {
             }}
           >
             <Icon icon="ORDER" />
+
             <ActionSubMenu isCollapsed={currentMenu !== ORDER}>
               <ActionButton
                 onClick={() => {
-                  dispatch({
-                    type: 'CLONE',
-                    payload: {
-                      source: ORDER,
-                    },
-                  });
-                }}
-                isDisabled={!allowToCloneOrders}
-              >
-                <Icon icon="CLONE" />
-                <ActionLabel>CLONE</ActionLabel>
-              </ActionButton>
-
-              <ActionButton
-                onClick={() => {
-                  dispatch({
-                    type: 'TAGS',
-                    payload: {
-                      source: ORDER,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="TAG" />
-                <ActionLabel>ADD TAGS</ActionLabel>
-              </ActionButton>
-              <ActionButton
-                onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'STATUS',
                     payload: {
@@ -183,7 +106,49 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="ACTIVE" /> / <Icon icon="ARCHIVE" />
-                <ActionLabel>Active/Archive</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.ACTIVATE"
+                    defaultMessage="ACTIVATE/ARCHIVE"
+                  />
+                </ActionLabel>
+              </ActionButton>
+
+              <ActionButton
+                onClick={() => {
+                  setCurrentMenu(null);
+                  dispatch({
+                    type: 'TAGS',
+                    payload: {
+                      source: ORDER,
+                    },
+                  });
+                }}
+              >
+                <Icon icon="TAG" />
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.addTags"
+                    defaultMessage="ADD TAGS"
+                  />
+                </ActionLabel>
+              </ActionButton>
+
+              <ActionButton
+                onClick={() => {
+                  setCurrentMenu(null);
+                  dispatch({
+                    type: 'CLONE',
+                    payload: {
+                      source: ORDER,
+                    },
+                  });
+                }}
+              >
+                <Icon icon="CLONE" />
+                <ActionLabel>
+                  <FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />
+                </ActionLabel>
               </ActionButton>
             </ActionSubMenu>
           </ActionButton>
@@ -199,6 +164,7 @@ export default function Actions({ targets }: Props) {
             <ActionSubMenu isCollapsed={currentMenu !== ORDER_ITEM}>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'DELETE',
                     payload: {
@@ -208,10 +174,13 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="REMOVE" />
-                <ActionLabel>DELETE</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
+                </ActionLabel>
               </ActionButton>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'TAGS',
                     payload: {
@@ -221,10 +190,16 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="TAG" />
-                <ActionLabel>ADD TAGS</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.addTags"
+                    defaultMessage="ADD TAGS"
+                  />
+                </ActionLabel>
               </ActionButton>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'AUTO_FILL',
                     payload: {
@@ -234,10 +209,16 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="QUANTITY_ADJUSTMENTS" />
-                <ActionLabel>AUTOFILL</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.autoFill"
+                    defaultMessage="AUTOFILL"
+                  />
+                </ActionLabel>
               </ActionButton>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'CLONE',
                     payload: {
@@ -245,10 +226,11 @@ export default function Actions({ targets }: Props) {
                     },
                   });
                 }}
-                isDisabled={!allowToCloneOrderItems}
               >
                 <Icon icon="CLONE" />
-                <ActionLabel>CLONE</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />
+                </ActionLabel>
               </ActionButton>
             </ActionSubMenu>
           </ActionButton>
@@ -264,6 +246,25 @@ export default function Actions({ targets }: Props) {
             <ActionSubMenu isCollapsed={currentMenu !== BATCH}>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
+                  dispatch({
+                    type: 'DELETE_BATCHES',
+                    payload: {
+                      source: BATCH,
+                    },
+                  });
+                }}
+              >
+                <Icon icon="REMOVE" /> / <Icon icon="CLEAR" />
+                <ActionLabel>
+                  <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
+                  /
+                  <FormattedMessage id="components.button.remove" defaultMessage="REMOVE" />
+                </ActionLabel>
+              </ActionButton>
+              <ActionButton
+                onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'TAGS',
                     payload: {
@@ -273,11 +274,16 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="TAG" />
-                <ActionLabel>ADD TAGS</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.addTags"
+                    defaultMessage="ADD TAGS"
+                  />
+                </ActionLabel>
               </ActionButton>
-              {/* TODO: check permission to move */}
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'MOVE_BATCH',
                     payload: {},
@@ -285,10 +291,13 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="EXCHANGE" />
-                <ActionLabel>MOVE</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage id="components.button.move" defaultMessage="MOVE" />
+                </ActionLabel>
               </ActionButton>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'SPLIT',
                     payload: {
@@ -298,10 +307,13 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="SPLIT" />
-                <ActionLabel>SPLIT</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage id="components.button.split" defaultMessage="SPLIT" />
+                </ActionLabel>
               </ActionButton>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'CLONE',
                     payload: {
@@ -309,10 +321,11 @@ export default function Actions({ targets }: Props) {
                     },
                   });
                 }}
-                isDisabled={!allowToCloneBatches}
               >
                 <Icon icon="CLONE" />
-                <ActionLabel>CLONE</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />
+                </ActionLabel>
               </ActionButton>
             </ActionSubMenu>
           </ActionButton>
@@ -328,6 +341,7 @@ export default function Actions({ targets }: Props) {
             <ActionSubMenu isCollapsed={currentMenu !== CONTAINER}>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'DELETE',
                     payload: {
@@ -337,10 +351,13 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="REMOVE" />
-                <ActionLabel>DELETE</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
+                </ActionLabel>
               </ActionButton>
               <ActionButton
                 onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'TAGS',
                     payload: {
@@ -350,7 +367,12 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="TAG" />
-                <ActionLabel>ADD TAGS</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.addTags"
+                    defaultMessage="ADD TAGS"
+                  />
+                </ActionLabel>
               </ActionButton>
             </ActionSubMenu>
           </ActionButton>
@@ -366,19 +388,7 @@ export default function Actions({ targets }: Props) {
             <ActionSubMenu isCollapsed={currentMenu !== SHIPMENT}>
               <ActionButton
                 onClick={() => {
-                  dispatch({
-                    type: 'TAGS',
-                    payload: {
-                      source: SHIPMENT,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="TAG" />
-                <ActionLabel>ADD TAGS</ActionLabel>
-              </ActionButton>
-              <ActionButton
-                onClick={() => {
+                  setCurrentMenu(null);
                   dispatch({
                     type: 'STATUS',
                     payload: {
@@ -388,7 +398,32 @@ export default function Actions({ targets }: Props) {
                 }}
               >
                 <Icon icon="ACTIVE" /> / <Icon icon="ARCHIVE" />
-                <ActionLabel>Active/Archive</ActionLabel>
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.ActiveOrArchive"
+                    defaultMessage="ACTIVE/ARCHIVE"
+                  />
+                </ActionLabel>
+              </ActionButton>
+
+              <ActionButton
+                onClick={() => {
+                  setCurrentMenu(null);
+                  dispatch({
+                    type: 'TAGS',
+                    payload: {
+                      source: SHIPMENT,
+                    },
+                  });
+                }}
+              >
+                <Icon icon="TAG" />
+                <ActionLabel>
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.addTags"
+                    defaultMessage="ADD TAGS"
+                  />
+                </ActionLabel>
               </ActionButton>
             </ActionSubMenu>
           </ActionButton>

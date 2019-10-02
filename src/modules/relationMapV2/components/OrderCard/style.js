@@ -1,11 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
+import { ORDER_WIDTH } from 'modules/relationMapV2/constants';
 import { layout, borderRadiuses, presets, colors, shadows, fontSizes } from 'styles/common';
 
 export const OrderCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
-  width: 285px;
+  width: ${ORDER_WIDTH}px;
   height: 55px;
   position: relative;
   &:hover {
@@ -42,16 +43,29 @@ export const CreateItemButtonStyle: string = css`
   opacity: 0;
   position: absolute;
   bottom: -10px;
-  right: -10px;
+  left: calc(100% - 10px);
   ${presets.BUTTON};
   width: 20px;
   height: 20px;
   background-color: ${colors.ORDER_ITEM};
   color: ${colors.WHITE};
   ${fontSizes.SMALL};
-  ${borderRadiuses.CIRCLE};
+  ${borderRadiuses.BUTTON};
+  z-index: 2;
+  justify-content: flex-start;
+  overflow: hidden;
+  ${shadows.INPUT};
   &:hover {
     opacity: 1;
-    ${shadows.INPUT};
+    width: 45px;
   }
+`;
+
+export const CreateItemIconStyle: string = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 `;

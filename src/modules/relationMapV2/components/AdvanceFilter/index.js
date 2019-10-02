@@ -32,6 +32,7 @@ export default function AdvanceFilter() {
           }
         />
         <SearchInput
+          key={JSON.stringify({ query })}
           value={query}
           name="search"
           onClear={() =>
@@ -61,7 +62,12 @@ export default function AdvanceFilter() {
         <button
           className={ClearTotalButtonStyle}
           onClick={() => {
-            // TODO: Clear all filters
+            onChangeFilter({
+              ...filterAndSort,
+              filter: {
+                query: '',
+              },
+            });
           }}
           type="button"
         >

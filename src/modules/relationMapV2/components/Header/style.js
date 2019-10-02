@@ -18,12 +18,27 @@ export const EntityNavbarWrapperStyle = (color: string, width: number): string =
   align-items: center;
   height: 50px;
   background-color: ${colors[color]};
-  width: ${width}px;
+  width: ${width + 20}px;
+  padding: 0 0 0 15px;
+`;
+
+export const EntityIconWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  width: 30px;
+  height: 50px;
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.2);
+  overflow: hidden;
 `;
 
 export const EntityIconStyle: string = css`
-  font-size: 24px;
-  color: rgba(255, 255, 255, 0.2);
+  position: absolute;
+  left: -15px;
+  width: 30px;
+  text-align: center;
 `;
 
 export const TitleWrapperStyle: string = css`
@@ -33,17 +48,20 @@ export const TitleWrapperStyle: string = css`
   width: 125px;
 `;
 
-export const OrderTitleWrapperStyle: string = css`
+export const OrderTitleWrapperStyle = (canAdd: boolean) => css`
   position: relative;
   height: 20px;
-  &:hover {
-    & > button {
-      opacity: 1;
+  ${canAdd &&
+    `
+    &:hover {
+      & > button {
+        opacity: 1;
+      }
+      & > div {
+        opacity: 0;
+      }
     }
-    & > div {
-      opacity: 0;
-    }
-  }
+  `}
 `;
 
 export const AddOrderButtonCollapsedStyle: string = css`
@@ -76,7 +94,7 @@ export const AddOrderButtonStyle: string = css`
   padding: 0 5px;
 `;
 
-export const SelectAllButtonStyle: string = css`
+export const SelectAllButtonStyle = css`
   ${presets.BUTTON};
   ${fontSizes.SMALL};
   ${borderRadiuses.MAIN};

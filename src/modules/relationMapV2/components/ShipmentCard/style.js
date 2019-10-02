@@ -1,11 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, borderRadiuses } from 'styles/common';
+import { SHIPMENT_WIDTH } from 'modules/relationMapV2/constants';
+import { layout, borderRadiuses, fontSizes, colors, presets } from 'styles/common';
 
 export const ShipmentCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
-  width: 515px;
+  width: ${SHIPMENT_WIDTH}px;
   height: 55px;
 `;
 
@@ -39,4 +40,25 @@ export const BottomRowWrapperStyle: string = css`
 
 export const TimelineAndDateWrapperStyle: string = css`
   display: flex;
+`;
+
+export const DelayStyle = (delayAmount: number): string => css`
+  color: ${delayAmount > 0 ? colors.RED : colors.TEAL};
+  ${fontSizes.SMALL};
+  ${presets.ELLIPSIS};
+  font-weight: bold;
+  text-align: center;
+  width: 30px;
+  height: 20px;
+  line-height: 20px;
+`;
+
+export const ApprovedIconStyle = (approved: boolean): string => css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  ${fontSizes.SMALL};
+  width: 20px;
+  height: 20px;
+  color: ${approved ? colors.BLUE : colors.GRAY_SUPER_LIGHT};
 `;

@@ -3,16 +3,18 @@ import { colors, fontSizes, borderRadiuses } from 'styles/common';
 
 export const BadgeWrapperStyle = css`
   position: absolute;
-  top: -10px;
-  left: -10px;
+  top: -7px;
+  left: 5px;
   z-index: 1;
-  padding: 1px 2px 1px 4px;
+  padding: 0 2px 0 4px;
   ${borderRadiuses.MAIN};
-  background-color: ${colors.TEAL_VERY_DARK};
+  background-color: ${colors.TEAL};
   color: ${colors.WHITE};
   ${fontSizes.LITTLE};
   letter-spacing: 2px;
   text-transform: uppercase;
+  height: 14px;
+  line-height: 14px;
 `;
 
 export default BadgeWrapperStyle;

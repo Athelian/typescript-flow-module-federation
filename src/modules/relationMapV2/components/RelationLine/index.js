@@ -22,7 +22,7 @@ const RelationLine = ({ type, isTargeted, hasRelation, children }: Props) => {
     type === 'VERTICAL'
       ? RelationLineVerticalStyle(Boolean(isTargeted))
       : RelationLineHorizontalStyle(Boolean(isTargeted), Boolean(hasRelation));
-  return <div className={className}>{children} </div>;
+  return <div className={className}>{children}</div>;
 };
 
 export default RelationLine;

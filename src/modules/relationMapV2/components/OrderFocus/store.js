@@ -102,8 +102,13 @@ export const initialState: State = {
     isOpen: false,
     isProcessing: false,
   },
+  deleteBatches: {
+    isRemove: false,
+    isOpen: false,
+    isProcessing: false,
+  },
   tags: {
-    source: '',
+    source: 'Order',
     isOpen: false,
     isProcessing: false,
   },
@@ -145,6 +150,9 @@ export function reducer(
       | 'DELETE_BATCH'
       | 'DELETE_BATCH_START'
       | 'DELETE_BATCH_CLOSE'
+      | 'DELETE_BATCHES'
+      | 'DELETE_BATCHES_START'
+      | 'DELETE_BATCHES_CLOSE'
       | 'DELETE_ITEM'
       | 'DELETE_ITEM_START'
       | 'DELETE_ITEM_CLOSE'
@@ -508,24 +516,7 @@ export function reducer(
       });
     }
     case 'CREATE_BATCH_END': {
-      // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
-      const orderId = action.payload?.batch?.orderItem?.order?.id ?? '';
-      const { orderItem, ...batch } = action.payload?.batch ?? {};
-      // $FlowIssue it should be okay because we use new syntax for fallback if the property is not exist
-      const orderItemId = action.payload?.batch?.orderItem?.id ?? '';
-      const itemIndex = state.order[orderId].orderItems.findIndex(item => item.id === orderItemId);
       return update(state, {
-        order: {
-          [orderId]: {
-            orderItems: {
-              [itemIndex]: {
-                batches: {
-                  $push: [batch],
-                },
-              },
-            },
-          },
-        },
         itemActions: {
           isProcessing: { $set: false },
           detail: {
@@ -657,6 +648,32 @@ export function reducer(
     case 'STATUS_CLOSE': {
       return update(state, {
         status: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'DELETE_BATCHES': {
+      return update(state, {
+        deleteBatches: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'DELETE_BATCHES_START': {
+      return update(state, {
+        deleteBatches: {
+          $merge: {
+            ...action.payload,
+            isProcessing: true,
+          },
+        },
+      });
+    }
+    case 'DELETE_BATCHES_CLOSE': {
+      return update(state, {
+        deleteBatches: {
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },

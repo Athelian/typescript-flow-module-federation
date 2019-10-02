@@ -4,18 +4,18 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   newItem: {
     id: 'modules.RelationMaps.label.newItem',
-    defaultMessage: 'New',
+    defaultMessage: 'NEW',
   },
   cloned: {
     id: 'modules.RelationMaps.label.cloned',
-    defaultMessage: 'Cloned',
+    defaultMessage: 'CLONED',
   },
   autoFilled: {
     id: 'modules.RelationMaps.label.autoFilled',
-    defaultMessage: 'Auto Filled',
+    defaultMessage: 'AUTOFILLED',
   },
   split: {
     id: 'modules.RelationMaps.label.split',
-    defaultMessage: 'Split',
+    defaultMessage: 'SPLIT',
   },
 });

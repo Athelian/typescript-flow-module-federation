@@ -1,10 +1,13 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import FormattedDate from 'components/FormattedDate';
 import { Display, Label } from 'components/Form';
+import { BATCH, BATCH_WIDTH } from 'modules/relationMapV2/constants';
 import { isBefore, isAfter, differenceInCalendarDays } from 'utils/date';
 import Heading from 'modules/relationMapV2/components/Heading';
+import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
 import { RightWrapperStyle, DatesWrapperStyle } from './style';
 
 const getBatchDateRanges = (batches: Array<Object>) => {
@@ -75,15 +78,19 @@ export default function BatchHeading({
   // TODO: Replace with real permissions
   const canViewDelivery = true;
   const canViewDesired = true;
+  const { state } = React.useContext(RelationMapContext);
+  const batchIds = targetedIds(state.targets, BATCH);
+  const selectedItemsCount = batches.filter(item => batchIds.includes(item.id)).length;
 
   return (
     <Heading
-      width="445px"
+      width={`${BATCH_WIDTH}px`}
       hasSelectedChildren={hasSelectedChildren}
       hasFilterHits={hasFilterHits}
       isExpanded={isExpanded}
       onClick={onClick}
       total={total}
+      selectedItemsCount={selectedItemsCount}
       onSelectAll={onSelectAll}
       renderRightSide={() => (
         <div className={RightWrapperStyle}>
@@ -95,13 +102,15 @@ export default function BatchHeading({
             <Display blackout={!canViewDelivery}>
               <FormattedDate value={oldestDelivery} />
 
-              {differenceInCalendarDays(new Date(oldestDelivery), new Date(newestDelivery)) !==
-                0 && (
-                <>
-                  {' - '}
-                  <FormattedDate value={newestDelivery} />
-                </>
-              )}
+              {oldestDelivery &&
+                newestDelivery &&
+                differenceInCalendarDays(new Date(oldestDelivery), new Date(newestDelivery)) !==
+                  0 && (
+                  <>
+                    {' - '}
+                    <FormattedDate value={newestDelivery} />
+                  </>
+                )}
             </Display>
           </div>
 
@@ -113,12 +122,15 @@ export default function BatchHeading({
             <Display blackout={!canViewDesired}>
               <FormattedDate value={oldestDesired} />
 
-              {differenceInCalendarDays(new Date(oldestDesired), new Date(newestDesired)) !== 0 && (
-                <>
-                  {' - '}
-                  <FormattedDate value={newestDesired} />
-                </>
-              )}
+              {oldestDesired &&
+                newestDesired &&
+                differenceInCalendarDays(new Date(oldestDesired), new Date(newestDesired)) !==
+                  0 && (
+                  <>
+                    {' - '}
+                    <FormattedDate value={newestDesired} />
+                  </>
+                )}
             </Display>
           </div>
         </div>

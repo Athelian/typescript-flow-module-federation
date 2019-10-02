@@ -1,4 +1,4 @@
-import { parseRoute } from '../route';
+import { parseRoute } from '../entity';
 
 describe('utils of route', () => {
   it('parse all route', () => {

@@ -5,6 +5,8 @@ import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label } from 'components/Form';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
+import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+import { targetedIds } from '../OrderFocus/helpers';
 import {
   SelectedEntitiesWrapperStyle,
   EntitiesWrapperStyle,
@@ -16,50 +18,19 @@ import {
   ClearTotalButtonStyle,
 } from './style';
 
-type Props = {
-  targets: Array<string>,
-};
-
-// TODO: Move to helpers file
-const getEntityCounts = (targets: Array<string>) => {
-  let orderCount = 0;
-  let itemCount = 0;
-  let batchCount = 0;
-  let containerCount = 0;
-  let shipmentCount = 0;
-  let totalCount = 0;
-
-  targets.forEach(target => {
-    if (target.includes(`${ORDER}-`)) {
-      orderCount += 1;
-      totalCount += 1;
-    } else if (target.includes(`${ORDER_ITEM}-`)) {
-      itemCount += 1;
-      totalCount += 1;
-    } else if (target.includes(`${BATCH}-`)) {
-      batchCount += 1;
-      totalCount += 1;
-    } else if (target.includes(`${CONTAINER}-`)) {
-      containerCount += 1;
-      totalCount += 1;
-    } else if (target.includes(`${SHIPMENT}-`)) {
-      shipmentCount += 1;
-      totalCount += 1;
-    }
-  });
-
-  return { orderCount, itemCount, batchCount, containerCount, shipmentCount, totalCount };
-};
-
-export default function SelectedEntity({ targets }: Props) {
-  const {
-    orderCount,
-    itemCount,
-    batchCount,
-    containerCount,
-    shipmentCount,
-    totalCount,
-  } = getEntityCounts(targets);
+export default function SelectedEntity() {
+  const { state, dispatch } = React.useContext(RelationMapContext);
+  const orderIds = targetedIds(state.targets, ORDER);
+  const orderItemIds = targetedIds(state.targets, ORDER_ITEM);
+  const batchIds = targetedIds(state.targets, BATCH);
+  const containerIds = targetedIds(state.targets, CONTAINER);
+  const shipmentIds = targetedIds(state.targets, SHIPMENT);
+  const orderCount = orderIds.length;
+  const itemCount = orderItemIds.length;
+  const batchCount = batchIds.length;
+  const containerCount = containerIds.length;
+  const shipmentCount = shipmentIds.length;
+  const totalCount = orderCount + itemCount + batchCount + containerCount + shipmentCount;
 
   return (
     <div className={SelectedEntitiesWrapperStyle}>
@@ -74,7 +45,12 @@ export default function SelectedEntity({ targets }: Props) {
           <button
             className={ClearEntityButtonStyle}
             onClick={() => {
-              // TODO: Clear all selected orders
+              dispatch({
+                type: 'REMOVE_TARGETS',
+                payload: {
+                  targets: orderIds.map(id => `${ORDER}-${id}`),
+                },
+              });
             }}
             type="button"
           >
@@ -92,7 +68,12 @@ export default function SelectedEntity({ targets }: Props) {
           <button
             className={ClearEntityButtonStyle}
             onClick={() => {
-              // TODO: Clear all selected items
+              dispatch({
+                type: 'REMOVE_TARGETS',
+                payload: {
+                  targets: orderItemIds.map(id => `${ORDER_ITEM}-${id}`),
+                },
+              });
             }}
             type="button"
           >
@@ -110,7 +91,12 @@ export default function SelectedEntity({ targets }: Props) {
           <button
             className={ClearEntityButtonStyle}
             onClick={() => {
-              // TODO: Clear all selected batches
+              dispatch({
+                type: 'REMOVE_TARGETS',
+                payload: {
+                  targets: batchIds.map(id => `${BATCH}-${id}`),
+                },
+              });
             }}
             type="button"
           >
@@ -128,7 +114,12 @@ export default function SelectedEntity({ targets }: Props) {
           <button
             className={ClearEntityButtonStyle}
             onClick={() => {
-              // TODO: Clear all selected containers
+              dispatch({
+                type: 'REMOVE_TARGETS',
+                payload: {
+                  targets: containerIds.map(id => `${CONTAINER}-${id}`),
+                },
+              });
             }}
             type="button"
           >
@@ -146,7 +137,12 @@ export default function SelectedEntity({ targets }: Props) {
           <button
             className={ClearEntityButtonStyle}
             onClick={() => {
-              // TODO: Clear all selected shipments
+              dispatch({
+                type: 'REMOVE_TARGETS',
+                payload: {
+                  targets: shipmentIds.map(id => `${SHIPMENT}-${id}`),
+                },
+              });
             }}
             type="button"
           >
@@ -163,7 +159,18 @@ export default function SelectedEntity({ targets }: Props) {
         <button
           className={ClearTotalButtonStyle}
           onClick={() => {
-            // TODO: Clear all selected
+            dispatch({
+              type: 'REMOVE_TARGETS',
+              payload: {
+                targets: [
+                  ...orderIds.map(id => `${ORDER}-${id}`),
+                  ...orderItemIds.map(id => `${ORDER_ITEM}-${id}`),
+                  ...batchIds.map(id => `${BATCH}-${id}`),
+                  ...containerIds.map(id => `${CONTAINER}-${id}`),
+                  ...shipmentIds.map(id => `${SHIPMENT}-${id}`),
+                ],
+              },
+            });
           }}
           type="button"
         >

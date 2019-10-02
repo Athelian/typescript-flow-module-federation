@@ -8,10 +8,11 @@ type Props = {
 };
 
 function Icon({ icon }: Props) {
+  let rotation = null;
   if (icon === 'PROJECT') {
-    return <FontAwesomeIcon icon={IconEnums.TH_LIST} fixedWidth rotation={90} />;
+    rotation = 90;
   }
-  return <FontAwesomeIcon icon={IconEnums[icon]} fixedWidth />;
+  return <FontAwesomeIcon icon={IconEnums[icon]} fixedWidth {...(rotation ? { rotation } : {})} />;
 }
 
 export default Icon;

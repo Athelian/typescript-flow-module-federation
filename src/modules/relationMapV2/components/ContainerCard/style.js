@@ -1,11 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
+import { CONTAINER_WIDTH } from 'modules/relationMapV2/constants';
 import { layout, borderRadiuses } from 'styles/common';
 
 export const ContainerCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
-  width: 375px;
+  width: ${CONTAINER_WIDTH}px;
   height: 55px;
 `;
 

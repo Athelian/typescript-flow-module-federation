@@ -105,9 +105,7 @@ exports[`TaskApprovalStatusInput approved, showUser, showDate 1`] = `
       class="emotion-0"
       tabindex="-1"
     >
-      <span>
-        T
-      </span>
+      T
     </div>
   </div>
   <div
@@ -116,21 +114,17 @@ exports[`TaskApprovalStatusInput approved, showUser, showDate 1`] = `
     <div
       class="emotion-2"
     >
-      <span>
-        APPROVED
-      </span>
+      APPROVED
     </div>
     <div
       class="emotion-2"
     >
-      <span>
-        4/24/2019
-      </span>
+      4/24/2019
     </div>
   </div>
   <svg
     aria-hidden="true"
-    class="svg-inline--fa fa-check-circle fa-w-16 fa-fw "
+    class="svg-inline--fa fa-check-circle fa-w-16 fa-fw fa-null fa-rotate-null fa-pull-null "
     data-icon="check-circle"
     data-prefix="fas"
     focusable="false"
@@ -213,14 +207,12 @@ exports[`TaskApprovalStatusInput rejected 1`] = `
     <div
       class="emotion-0"
     >
-      <span>
-        REJECTED
-      </span>
+      REJECTED
     </div>
   </div>
   <svg
     aria-hidden="true"
-    class="svg-inline--fa fa-times-circle fa-w-16 fa-fw "
+    class="svg-inline--fa fa-times-circle fa-w-16 fa-fw fa-null fa-rotate-null fa-pull-null "
     data-icon="times-circle"
     data-prefix="fas"
     focusable="false"

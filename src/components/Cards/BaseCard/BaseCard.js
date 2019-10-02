@@ -157,7 +157,11 @@ export default class BaseCard extends React.Component<Props, State> {
         {showBadge && <span className={BadgeStyle} />}
         {children}
         {!disabled && selectable && (
-          <div className={SelectableCardStyle(!!selected)} onClick={onSelect} role="presentation" />
+          <div
+            className={SelectableCardStyle(!!selected, flattenCornerIcon)}
+            onClick={onSelect}
+            role="presentation"
+          />
         )}
       </div>
     );

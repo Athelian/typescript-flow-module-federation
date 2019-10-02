@@ -56,6 +56,7 @@ type Props = {
   itemsIsExpanded: boolean,
   orderItems: Array<Object>,
   order: {
+    deliveryDate: ?string,
     currency: string,
     exporter: ?Object,
   },
@@ -79,7 +80,7 @@ function ItemsArea({
 }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const { currency } = order;
+  const { currency, deliveryDate } = order;
   return (
     <div className={ItemsAreaWrapperStyle(itemsIsExpanded)}>
       <div className={ItemsNavbarWrapperStyle} />
@@ -434,6 +435,7 @@ function ItemsArea({
                                 productProvider
                               )} - ${position + 1}`,
                               quantity: 0,
+                              deliveryDate,
                               price: {
                                 amount:
                                   getByPath('unitPrice.currency', productProvider) === currency

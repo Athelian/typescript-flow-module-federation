@@ -10,174 +10,6 @@ const timelineDateFragment = gql`
   }
 `;
 
-export const productProviderNewRMFragment = gql`
-  fragment productProviderNewRMFragment on ProductProvider {
-    id
-    name
-    product {
-      ... on Product {
-        id
-        name
-        serial
-        files {
-          ... on File {
-            id
-            pathSmall: path(preset: Small)
-          }
-        }
-        importer {
-          ... on Organization {
-            id
-            name
-          }
-        }
-      }
-    }
-    exporter {
-      ... on Organization {
-        id
-        name
-      }
-    }
-    supplier {
-      ... on Organization {
-        id
-        name
-      }
-    }
-  }
-`;
-
-export const batchCardNewRMFragment = gql`
-  fragment batchCardNewRMFragment on Batch {
-    id
-    archived
-    no
-    latestQuantity
-    tags {
-      ...tagFragment
-    }
-    totalVolume {
-      ...metricFragment
-    }
-    deliveredAt
-    shipment {
-      ... on Shipment {
-        id
-      }
-    }
-    container {
-      ... on Container {
-        id
-      }
-    }
-    todo {
-      taskCount {
-        ...taskCountFragment
-      }
-      tasks {
-        ...taskWithoutParentInfoFragment
-      }
-      taskTemplate {
-        ...taskTemplateCardFragment
-      }
-    }
-  }
-`;
-
-export const orderCardNewRMFragment = gql`
-  fragment orderCardNewRMFragment on Order {
-    id
-    archived
-    poNo
-    currency
-    totalOrdered
-    totalBatched
-    totalShipped
-    orderItemCount
-    batchCount
-    batchShippedCount
-    shipmentCount
-    todo {
-      taskCount {
-        ...taskCountFragment
-      }
-    }
-    exporter {
-      ... on Organization {
-        id
-        name
-      }
-    }
-    importer {
-      ... on Organization {
-        id
-        name
-      }
-    }
-    tags {
-      ...tagFragment
-    }
-    orderItems {
-      ... on OrderItem {
-        id
-        archived
-        no
-        quantity
-        todo {
-          taskCount {
-            ...taskCountFragment
-          }
-          tasks {
-            ...taskWithoutParentInfoFragment
-          }
-        }
-        tags {
-          ...tagFragment
-        }
-        price {
-          ...priceFragment
-        }
-        productProvider {
-          ...productProviderNewRMFragment
-        }
-        batches {
-          ...batchCardNewRMFragment
-        }
-      }
-    }
-    shipments {
-      ... on Shipment {
-        id
-        batches {
-          ... on Batch {
-            id
-            container {
-              ... on Container {
-                id
-              }
-            }
-            orderItem {
-              ... on OrderItem {
-                id
-                order {
-                  ... on Order {
-                    id
-                  }
-                }
-                productProvider {
-                  ...productProviderNewRMFragment
-                }
-              }
-            }
-          }
-        }
-      }
-      ...shipmentCardNewRMFragment
-    }
-  }
-`;
-
 export const orderCardOptimiseFragment = gql`
   fragment orderCardOptimiseFragment on Order {
     id
@@ -269,6 +101,7 @@ export const orderCardFullFragment = gql`
         }
         archived
         no
+        deliveryDate
         price {
           amount
           currency
@@ -299,6 +132,9 @@ export const orderCardFullFragment = gql`
             totalVolume {
               value
               metric
+            }
+            tags {
+              ...tagFragment
             }
             shipment {
               ... on Shipment {
@@ -434,118 +270,53 @@ export const orderCardFullFragment = gql`
             name
           }
         }
-      }
-    }
-  }
-`;
-
-export const shipmentCardNewRMFragment = gql`
-  fragment shipmentCardNewRMFragment on Shipment {
-    id
-    archived
-    no
-    blNo
-    booked
-    transportType
-    totalPackageQuantity
-    batchCount
-    orderItemCount
-    importer {
-      ...partnerNameFragment
-    }
-    exporter {
-      ...partnerNameFragment
-    }
-    totalVolume {
-      ...metricFragment
-    }
-    containerTypeCounts {
-      containerType
-      count
-    }
-    cargoReady {
-      ...timelineDateMinimalFragment
-    }
-    tags {
-      ...tagFragment
-    }
-    todo {
-      taskCount {
-        ...taskCountFragment
-      }
-    }
-    voyages {
-      ... on Voyage {
-        id
-        departurePort {
-          ...portFragment
+        transportType
+        cargoReady {
+          ...timelineDateFragment
         }
-        arrivalPort {
-          ...portFragment
-        }
-        departure {
-          ...timelineDateMinimalFragment
-        }
-        arrival {
-          ...timelineDateMinimalFragment
-        }
-        vesselName
-      }
-    }
-    containerGroups {
-      ... on ContainerGroup {
-        id
-        customClearance {
-          ...timelineDateMinimalFragment
-        }
-        warehouseArrival {
-          ...timelineDateMinimalFragment
-        }
-        deliveryReady {
-          ...timelineDateMinimalFragment
-        }
-        warehouse {
-          ... on Warehouse {
+        voyages {
+          ... on Voyage {
             id
-            name
+            departurePort {
+              seaportName
+              airportName
+            }
+            arrivalPort {
+              seaportName
+              airportName
+            }
+            departure {
+              ...timelineDateFragment
+            }
+            arrival {
+              ...timelineDateFragment
+            }
           }
         }
-      }
-    }
-    containers {
-      ... on Container {
-        id
-        warehouseArrivalAgreedDate
-        warehouseArrivalAgreedDateApprovedAt
-        warehouseArrivalActualDate
-        warehouseArrivalActualDateApprovedAt
-        warehouse {
-          ... on Warehouse {
+        containerGroups {
+          ... on ContainerGroup {
             id
-            name
-          }
-        }
-      }
-    }
-    batches {
-      ... on Batch {
-        id
-        container {
-          ... on Container {
-            id
-          }
-        }
-        orderItem {
-          ... on OrderItem {
-            id
-            order {
-              ... on Order {
+            warehouse {
+              ... on Warehouse {
                 id
+                name
               }
             }
-            productProvider {
-              ...productProviderNewRMFragment
+            customClearance {
+              ...timelineDateFragment
             }
+            warehouseArrival {
+              ...timelineDateFragment
+            }
+            deliveryReady {
+              ...timelineDateFragment
+            }
+          }
+        }
+        containers {
+          ... on Container {
+            id
+            warehouseArrivalActualDateApprovedAt
           }
         }
       }
@@ -564,6 +335,7 @@ export const orderFocusedListQuery = gql`
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...orderCardOptimiseFragment
+        ...orderCardFullFragment
       }
       hits {
         ... on Hit {
@@ -585,18 +357,6 @@ export const orderFocusedListQuery = gql`
   }
 
   ${orderCardOptimiseFragment}
-  ${tagFragment}
-  ${taskCountFragment}
-  ${ownedByFragment}
-`;
-
-export const orderFocusDetailQuery = gql`
-  query orderFocusDetailQuery($ids: [ID!]!) {
-    ordersByIDs(ids: $ids) {
-      ...orderCardFullFragment
-    }
-  }
-
   ${orderCardFullFragment}
   ${tagFragment}
   ${taskCountFragment}

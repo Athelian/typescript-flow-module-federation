@@ -7,6 +7,7 @@ import FormattedDate from 'components/FormattedDate';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import RelateEntity from 'components/RelateEntity';
 import TaskRing from 'components/TaskRing';
+import { Tooltip } from 'components/Tooltip';
 import { Display, Blackout, Label } from 'components/Form';
 import { encodeId } from 'utils/id';
 import { useHasPermissions } from 'components/Context/Permissions';
@@ -23,6 +24,7 @@ import {
   ProductSerialStyle,
   DeleteItemButtonStyle,
   CreateBatchButtonStyle,
+  CreateBatchIconStyle,
 } from './style';
 
 type Props = {|
@@ -44,8 +46,7 @@ export default function OrderItemCard({
   // TODO: Replace with real permissions
   const allowToNavigateToProductForm = true;
 
-  // TODO: When deliveredAt gets added to graph, make sure to modify query to fetch it
-  const { no, tags = [], deliveredAt, productProvider = {}, todo = {} } = orderItem;
+  const { no, tags = [], deliveryDate, productProvider = {}, todo = {} } = orderItem;
   const productImageUrl = productProvider?.product?.files?.[0]?.pathSmall ?? FALLBACK_IMAGE;
   const productId = productProvider?.product?.id;
   const productLink =
@@ -83,7 +84,7 @@ export default function OrderItemCard({
             <FormattedMessage id="components.cards.delivery" />
           </Label>
           <Display blackout={!canViewDelivery} width="80px">
-            <FormattedDate value={deliveredAt} />
+            <FormattedDate value={deliveryDate} />
           </Display>
         </div>
       </div>
@@ -121,9 +122,24 @@ export default function OrderItemCard({
       )}
 
       {allowToCreateBatch && (
-        <button onClick={onCreateBatch} className={CreateBatchButtonStyle} type="button">
-          <Icon icon="ADD" />
-        </button>
+        <Tooltip
+          message={
+            <FormattedMessage
+              id="modules.RelationMap.item.createBatchTooltip"
+              defaultMessage="Create Batch"
+            />
+          }
+          delay={800}
+        >
+          <button onClick={onCreateBatch} className={CreateBatchButtonStyle} type="button">
+            <div className={CreateBatchIconStyle}>
+              <Icon icon="ADD" />
+            </div>
+            <div className={CreateBatchIconStyle}>
+              <Icon icon="BATCH" />
+            </div>
+          </button>
+        </Tooltip>
       )}
     </div>
   );

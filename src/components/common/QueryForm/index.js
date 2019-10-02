@@ -8,7 +8,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import { usePermissions } from 'components/Context/Permissions';
 import { decodeId } from 'utils/id';
 import logger from 'utils/logger';
-import { parseRoute } from 'utils/route';
+import { parseRoute } from 'utils/entity';
 import QueryFormPermissionContext from './context';
 
 type OptionalProps = {

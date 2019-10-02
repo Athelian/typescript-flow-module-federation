@@ -170,6 +170,14 @@ export default defineMessages({
     id: 'modules.Shipments.inspectionApplication',
     defaultMessage: 'Inspection Application',
   },
+  warehouseArrivalReport: {
+    id: 'modules.Shipments.warehouseArrivalReport',
+    defaultMessage: 'Warehouse Arrival Report',
+  },
+  warehouseInspectionReport: {
+    id: 'modules.Shipments.warehouseInspectionReport',
+    defaultMessage: 'Warehouse Inspection Report',
+  },
   document: {
     id: 'modules.Shipments.document',
     defaultMessage: 'Document',

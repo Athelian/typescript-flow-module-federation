@@ -135,6 +135,14 @@ export const getFileTypesByEntity = (
           label: intl.formatMessage(shipmentMessages.inspectionApplication),
         },
         {
+          value: 'ShipmentWarehouseArrivalReport',
+          label: intl.formatMessage(shipmentMessages.warehouseArrivalReport),
+        },
+        {
+          value: 'ShipmentWarehouseInspectionReport',
+          label: intl.formatMessage(shipmentMessages.warehouseInspectionReport),
+        },
+        {
           value: 'Document',
           label: intl.formatMessage(shipmentMessages.document),
         },

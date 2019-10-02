@@ -80,7 +80,7 @@ export default class Dialog extends React.Component<Props> {
               onClick={event => event.stopPropagation()}
               role="presentation"
             >
-              {showCancelButton && (
+              {isOpen && showCancelButton && (
                 <button type="button" onClick={onCancel} className={CancelButtonStyle}>
                   <Icon icon="CLEAR" />
                 </button>

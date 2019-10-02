@@ -10,23 +10,18 @@ export const ActionSubMenuWrapperStyle = (isCollapsed: boolean, numOfButtons: nu
   align-content: center;
   justify-items: end;
   position: absolute;
-  bottom: 40px;
   right: -10px;
   ${transitions.EXPAND};
-  overflow: hidden;
   padding: 0 10px;
-  border-radius: 40px;
+  height: ${numOfButtons * 50 + 10}px;
   ${isCollapsed
     ? `
-    height: 0px;
     opacity: 0;
+    top: 70px;
   `
     : `
-    height: ${numOfButtons * 50 + 10}px;
     opacity: 1;
-    &:hover {
-      width: 220px;
-    }
+    bottom: 40px;
   `};
 `;
 

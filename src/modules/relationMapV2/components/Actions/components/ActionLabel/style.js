@@ -4,13 +4,14 @@ import { fontSizes, transitions, borderRadiuses, colors, presets } from 'styles/
 
 export const ActionLabelWrapperStyle = css`
   opacity: 0;
-  width: 0px;
+  width: 200px;
   height: 40px;
   position: absolute;
   top: 0;
   right: 0;
   ${transitions.EXPAND};
   overflow: hidden;
+  pointer-events: none;
 `;
 
 export const ActionLabelStyle = css`

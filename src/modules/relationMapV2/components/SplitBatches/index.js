@@ -1,10 +1,12 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { useAllHasPermission } from 'components/Context/Permissions';
 import { useMutation } from '@apollo/react-hooks';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import { Entities } from 'modules/relationMapV2/store';
 import { BATCH } from 'modules/relationMapV2/constants';
+import { BATCH_UPDATE } from 'modules/permission/constants/batch';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import Dialog from 'components/Dialog';
 import Icon from 'components/Icon';
@@ -40,7 +42,7 @@ function SplitBatch({
               id="components.cards.splitQuantityForBatch"
               defaultMessage="QTY FOR BATCH"
             />
-            <Icon icon="BATCH" /> {no}
+            <Icon icon="BATCH" /> {no} ({latestQuantity})
           </Label>
         }
         input={
@@ -62,7 +64,7 @@ function SplitBatch({
                   id="modules.RelationMap.split.validationError"
                   defaultMessage="Please enter the number between {min} and {max}"
                   values={{
-                    min: 0,
+                    min: 1,
                     max: latestQuantity,
                   }}
                 />
@@ -84,10 +86,11 @@ export default function SplitBatches({ onSuccess }: Props) {
     split: { isOpen, isProcessing },
   } = state;
   const batchIds = targetedIds(targets, BATCH);
-  const DEFAULT_QTY = 0;
-  const [batches, setBatches] = React.useState(() =>
-    batchIds.map(id => ({ id, quantity: DEFAULT_QTY }))
+  const hasPermission = useAllHasPermission(
+    batchIds.map(id => mapping.entities?.batches?.[id]?.ownedBy).filter(Boolean)
   );
+  const DEFAULT_QTY = 0;
+  const [batches, setBatches] = React.useState(batchIds.map(id => ({ id, quantity: DEFAULT_QTY })));
   React.useEffect(() => {
     return () => {
       if (!isOpen) setBatches([]);
@@ -134,12 +137,43 @@ export default function SplitBatches({ onSuccess }: Props) {
   };
 
   const isValid = () => {
-    return batches.every(({ id, quantity }) =>
-      validator(0, mapping.entities?.batches?.[id]?.latestQuantity ?? 0).isValidSync({
-        quantity,
-      })
+    return (
+      batches.length > 0 &&
+      batches.every(({ id, quantity }) =>
+        validator(1, mapping.entities?.batches?.[id]?.latestQuantity ?? 0).isValidSync({
+          quantity,
+        })
+      )
     );
   };
+
+  const allowToUpdate = () => {
+    return hasPermission(BATCH_UPDATE);
+  };
+
+  const noPermission = !allowToUpdate();
+
+  if (noPermission) {
+    return (
+      <Dialog isOpen={isOpen} width="500px">
+        <div className={DialogStyle}>
+          <h3 className={ConfirmMessageStyle}>
+            <FormattedMessage
+              id="modules.RelationMap.split.noPermission"
+              defaultMessage="At least one {source} {entity} selected does not allow you to split.Please reselect and try again."
+              values={{
+                source: 'Batch',
+                entity: <Icon icon="BATCH" />,
+              }}
+            />
+          </h3>
+          <div className={ButtonsStyle}>
+            <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
+          </div>
+        </div>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog isOpen={isOpen} width="500px">
@@ -148,16 +182,28 @@ export default function SplitBatches({ onSuccess }: Props) {
           {isProcessing ? (
             <>
               <h3 className={ConfirmMessageStyle}>
-                Split {batchIds.length} batches <Icon icon="BATCH" /> ...
+                <FormattedMessage
+                  id="modules.RelationMap.split.process"
+                  defaultMessage="Splitting {total} {source} Batches ..."
+                  values={{
+                    total: batchIds.length,
+                    source: <Icon icon="BATCH" />,
+                  }}
+                />
+                <LoadingIcon />
               </h3>
-              <LoadingIcon />
             </>
           ) : (
             <>
               <h3 className={ConfirmMessageStyle}>
-                You hae selected {batchIds.length} batches <Icon icon="BATCH" />
-                Please enter the quantity you would like to split each Batch
-                <Icon icon="BATCH" /> into. (Splitting into 0 quantity will simply clone it)
+                <FormattedMessage
+                  id="modules.RelationMap.split.guideline"
+                  defaultMessage="You have selected {total} Batches {source}. Please enter the quantity you would like to split each Batch {source} into."
+                  values={{
+                    total: batchIds.length,
+                    source: <Icon icon="BATCH" />,
+                  }}
+                />
               </h3>
               {batchIds.map(batchId => (
                 <SplitBatch

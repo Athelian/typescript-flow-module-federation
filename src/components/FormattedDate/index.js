@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   FormattedDate as FormattedDateIntl,
-  FormattedRelative,
+  FormattedRelativeTime,
   FormattedTime,
   FormattedMessage,
 } from 'react-intl';
@@ -10,7 +10,7 @@ import { isDataType } from 'utils/fp';
 
 type Props = {
   value: ?string | ?Date,
-  mode?: 'date' | 'date-no-year' | 'relative' | 'time' | 'time-relative' | 'datetime',
+  mode?: 'date' | 'date-no-year' | 'relative' | 'time' | 'datetime',
 };
 
 const FormattedDate = ({ value, mode = 'date' }: Props) => {
@@ -26,8 +26,19 @@ const FormattedDate = ({ value, mode = 'date' }: Props) => {
           day="2-digit"
         />
       );
-    case 'relative':
-      return <FormattedRelative value={isDataType(Date, value) ? value : new Date(value)} />;
+    case 'relative': {
+      let number;
+      if (isDataType(Date, value)) {
+        number = (value.getTime() - Date.now()) / 1000;
+      } else {
+        number = (new Date(value).getTime() - Date.now()) / 1000;
+      }
+      if (number !== undefined) {
+        return <FormattedRelativeTime value={number} updateIntervalInSeconds={1} />;
+      }
+      return null;
+    }
+
     case 'datetime':
       return (
         <>
@@ -37,15 +48,7 @@ const FormattedDate = ({ value, mode = 'date' }: Props) => {
       );
     case 'time':
       return <FormattedTime value={isDataType(Date, value) ? value : new Date(value)} />;
-    case 'time-relative':
-      return (
-        <>
-          <FormattedTime value={isDataType(Date, value) ? value : new Date(value)} />
-          {` (`}
-          <FormattedRelative value={isDataType(Date, value) ? value : new Date(value)} />
-          {`)`}
-        </>
-      );
+
     default:
       return '';
   }

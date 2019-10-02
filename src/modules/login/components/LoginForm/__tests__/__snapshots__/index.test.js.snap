@@ -335,7 +335,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
           >
             <svg
               aria-hidden="true"
-              class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw "
+              class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw fa-null fa-rotate-null fa-pull-null "
               data-icon="sign-in-alt"
               data-prefix="fas"
               focusable="false"
@@ -449,7 +449,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
           >
             <svg
               aria-hidden="true"
-              class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw "
+              class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw fa-null fa-rotate-null fa-pull-null "
               data-icon="sign-in-alt"
               data-prefix="fas"
               focusable="false"
@@ -811,7 +811,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
           >
             <svg
               aria-hidden="true"
-              class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw "
+              class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw fa-null fa-rotate-null fa-pull-null "
               data-icon="sign-in-alt"
               data-prefix="fas"
               focusable="false"

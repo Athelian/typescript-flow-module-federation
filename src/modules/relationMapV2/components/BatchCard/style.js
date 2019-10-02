@@ -1,11 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
+import { BATCH_WIDTH } from 'modules/relationMapV2/constants';
 import { layout, borderRadiuses, fontSizes, colors, presets, shadows } from 'styles/common';
 
 export const BatchCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
-  width: 445px;
+  width: ${BATCH_WIDTH}px;
   height: 55px;
   position: relative;
   &:hover {
@@ -60,9 +61,9 @@ export const DeleteBatchButtonStyle = css`
   ${fontSizes.SMALL};
   ${borderRadiuses.CIRCLE};
   z-index: 2;
+  ${shadows.INPUT};
   &:hover {
     opacity: 1;
-    ${shadows.INPUT};
     color: ${colors.RED};
   }
 `;

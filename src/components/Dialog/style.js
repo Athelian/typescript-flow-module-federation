@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { scrollbars, presets, borderRadiuses, fontSizes, colors } from 'styles/common';
+import { scrollbars, presets, fontSizes, colors } from 'styles/common';
 
 const BackdropStyle: string = css`
   position: fixed;
@@ -96,18 +96,15 @@ export const DialogFadeOutStyle = (width: string): string => css`
 
 export const CancelButtonStyle: string = css`
   position: absolute;
-  right: 5px;
-  top: 5px;
+  right: 0;
+  top: 0;
   ${presets.BUTTON};
-  ${borderRadiuses.CIRCLE};
-  height: 20px;
-  width: 20px;
+  height: 30px;
+  width: 30px;
   ${fontSizes.SMALL};
-  color: ${colors.GRAY_LIGHT};
-  background-color: ${colors.WHITE};
+  color: ${colors.GRAY_VERY_LIGHT};
   &:hover,
   :focus {
-    color: ${colors.GRAY_DARK};
-    background-color: ${colors.GRAY_SUPER_LIGHT};
+    color: ${colors.GRAY};
   }
 `;

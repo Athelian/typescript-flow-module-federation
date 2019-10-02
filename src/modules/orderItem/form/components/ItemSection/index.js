@@ -10,6 +10,7 @@ import {
   ORDER_ITEMS_SET_NO,
   ORDER_ITEMS_SET_QUANTITY,
   ORDER_ITEMS_SET_PRICE,
+  ORDER_ITEMS_SET_DELIVERY_DATE,
   ORDER_ITEMS_SET_CUSTOM_FIELDS,
   ORDER_ITEMS_SET_CUSTOM_FIELDS_MASK,
   ORDER_ITEMS_SET_TAGS,
@@ -26,6 +27,7 @@ import { FormField } from 'modules/form';
 import {
   TextInputFactory,
   NumberInputFactory,
+  DateInputFactory,
   CustomFieldsFactory,
   FieldItem,
   Label,
@@ -129,6 +131,32 @@ const ItemSection = ({ isSlideView }: Props) => {
                         }
                         suffix={getByPathWithDefault('', 'order.currency', values)}
                         editable={hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_PRICE])}
+                      />
+                    )}
+                  </FormField>
+
+                  <FormField
+                    name="deliveryDate"
+                    initValue={values.deliveryDate}
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    validator={validator}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <DateInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        originalValue={originalValues[name]}
+                        label={
+                          <FormattedMessage
+                            id="modules.OrderItems.deliveryDate"
+                            defaultMessage="delivery date"
+                          />
+                        }
+                        editable={hasPermission([
+                          ORDER_ITEMS_UPDATE,
+                          ORDER_ITEMS_SET_DELIVERY_DATE,
+                        ])}
                       />
                     )}
                   </FormField>
