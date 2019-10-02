@@ -10,20 +10,12 @@ import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMapV2/constants';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
 import { BATCH_CREATE } from 'modules/permission/constants/batch';
-import { BaseButton, CancelButton } from 'components/Buttons';
+import { BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
-import Dialog from 'components/Dialog';
-import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
+import ActionDialog, { LabelIcon } from '../ActionDialog';
 import { cloneBatchesMutation, cloneOrderItemsMutation, cloneOrdersMutation } from './mutation';
 import { targetedIds } from '../OrderFocus/helpers';
-import {
-  CloneDialogWrapperStyle,
-  DialogMessageStyle,
-  DialogSubMessageStyle,
-  LabelStyle,
-  ButtonsWrapperStyle,
-} from './style';
 
 type Props = {|
   onSuccess: ({|
@@ -341,40 +333,40 @@ export default function CloneEntities({ onSuccess }: Props) {
   const numOfItems = <FormattedNumber value={totalOrderItems} />;
   const numOfBatches = <FormattedNumber value={totalBatches} />;
   const ordersLabel = (
-    <span className={LabelStyle('ORDER')}>
+    <LabelIcon color="ORDER">
       <FormattedMessage id="modules.RelationMap.clone.orders" defaultMessage="Orders" />{' '}
       <Icon icon="ORDER" />
-    </span>
+    </LabelIcon>
   );
   const orderLabel = (
-    <span className={LabelStyle('ORDER')}>
+    <LabelIcon color="ORDER">
       <FormattedMessage id="modules.RelationMap.clone.order" defaultMessage="Order" />{' '}
       <Icon icon="ORDER" />
-    </span>
+    </LabelIcon>
   );
   const itemsLabel = (
-    <span className={LabelStyle('ORDER_ITEM')}>
+    <LabelIcon color="ORDER_ITEM">
       <FormattedMessage id="modules.RelationMap.clone.items" defaultMessage="Items" />{' '}
       <Icon icon="ORDER_ITEM" />
-    </span>
+    </LabelIcon>
   );
   const itemLabel = (
-    <span className={LabelStyle('ORDER_ITEM')}>
+    <LabelIcon color="ORDER_ITEM">
       <FormattedMessage id="modules.RelationMap.clone.item" defaultMessage="Item" />{' '}
       <Icon icon="ORDER_ITEM" />
-    </span>
+    </LabelIcon>
   );
   const batchesLabel = (
-    <span className={LabelStyle('BATCH')}>
+    <LabelIcon color="BATCH">
       <FormattedMessage id="modules.RelationMap.clone.batches" defaultMessage="Batches" />{' '}
       <Icon icon="BATCH" />
-    </span>
+    </LabelIcon>
   );
   const batchLabel = (
-    <span className={LabelStyle('BATCH')}>
+    <LabelIcon color="BATCH">
       <FormattedMessage id="modules.RelationMap.clone.batch" defaultMessage="Batch" />{' '}
       <Icon icon="BATCH" />
-    </span>
+    </LabelIcon>
   );
 
   switch (source) {
@@ -545,34 +537,21 @@ export default function CloneEntities({ onSuccess }: Props) {
   }
 
   return (
-    <Dialog
+    <ActionDialog
       isOpen={isOpen}
-      onRequestClose={isProcessing ? () => {} : onCancel}
-      showCancelButton={!isProcessing}
+      isProcessing={isProcessing}
       onCancel={onCancel}
-      width="400px"
-    >
-      <div className={CloneDialogWrapperStyle}>
-        <div className={DialogMessageStyle}>{dialogMessage}</div>
-
-        {dialogSubMessage && <div className={DialogSubMessageStyle}>{dialogSubMessage}</div>}
-
-        {isProcessing ? (
-          <LoadingIcon />
-        ) : (
-          <div className={ButtonsWrapperStyle}>
-            <CancelButton onClick={onCancel} />
-            <BaseButton
-              label={
-                <FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />
-              }
-              icon="CLONE"
-              disabled={isProcessing || noPermission}
-              onClick={onConfirm}
-            />
-          </div>
-        )}
-      </div>
-    </Dialog>
+      title={<FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />}
+      dialogMessage={dialogMessage}
+      dialogSubMessage={dialogSubMessage}
+      buttons={
+        <BaseButton
+          label={<FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />}
+          icon="CLONE"
+          disabled={isProcessing || noPermission}
+          onClick={onConfirm}
+        />
+      }
+    />
   );
 }
