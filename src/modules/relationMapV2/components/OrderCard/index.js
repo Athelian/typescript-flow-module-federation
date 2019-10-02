@@ -79,7 +79,7 @@ export default function OrderCard({ order, onCreateItem, organizationId }: Props
               defaultMessage="Create Item(s)"
             />
           }
-          delay="800"
+          delay={800}
         >
           <button onClick={onCreateItem} className={CreateItemButtonStyle} type="button">
             <div className={CreateItemIconStyle}>

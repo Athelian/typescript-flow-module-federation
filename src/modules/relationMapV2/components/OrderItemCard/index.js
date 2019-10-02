@@ -129,7 +129,7 @@ export default function OrderItemCard({
               defaultMessage="Create Batch"
             />
           }
-          delay="800"
+          delay={800}
         >
           <button onClick={onCreateBatch} className={CreateBatchButtonStyle} type="button">
             <div className={CreateBatchIconStyle}>
