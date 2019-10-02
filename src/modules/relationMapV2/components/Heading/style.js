@@ -19,6 +19,7 @@ export const HeadingWrapperStyle = (isExpanded: boolean, width: string): string 
     }
     &:hover {
       background-color: rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
       & span {
         top: 0;
       }
@@ -29,6 +30,7 @@ export const HeadingWrapperStyle = (isExpanded: boolean, width: string): string 
     ${shadows.WATERFALL};
     &:hover {
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transform: translateY(2px);
       & span {
         top: 5px;
       }
