@@ -261,7 +261,7 @@ export default function StatusConfirm({ onSuccess }: Props) {
               </div>
             </Tooltip>
           ) : (
-            <ArchiveButton onClick={() => onConfirm(false)} />
+            <ArchiveButton onClick={() => onConfirm(true)} />
           )}
         </>
       }
