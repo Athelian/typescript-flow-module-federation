@@ -14,6 +14,7 @@ export const ORDER_ITEMS_BATCHES_LIST = 'order.orderItemBatches.list';
 export const ORDER_ITEMS_SET_NO = 'order.orderItems.setNo';
 export const ORDER_ITEMS_SET_QUANTITY = 'order.orderItems.setQuantity';
 export const ORDER_ITEMS_SET_PRICE = 'order.orderItems.setPrice';
+export const ORDER_ITEMS_SET_DELIVERY_DATE = 'order.orderItems.setDeliveryDate';
 export const ORDER_ITEMS_SET_CUSTOM_FIELDS = 'order.orderItems.setCustomFields';
 export const ORDER_ITEMS_SET_CUSTOM_FIELDS_MASK = 'order.orderItems.setCustomFieldsMask';
 export const ORDER_ITEMS_SET_TAGS = 'order.orderItems.setTags';

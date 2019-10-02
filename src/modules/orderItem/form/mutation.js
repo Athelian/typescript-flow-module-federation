@@ -42,6 +42,7 @@ import {
   parseCustomFieldsField,
   parseTodoField,
   parseMemoField,
+  parseDateField,
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
@@ -99,6 +100,7 @@ export const prepareParseOrderItem = (originalValues: Object, newValues: Object)
     getByPathWithDefault(null, 'quantity', originalValues),
     newValues.quantity
   ),
+  ...parseDateField('deliveryDate', originalValues?.deliveryDate, newValues.deliveryDate),
   ...parseArrayOfIdsField(
     'tagIds',
     getByPathWithDefault([], 'tags', originalValues),
@@ -138,11 +140,7 @@ export const prepareParseOrderItemInput = ({
   newValues: Object,
 }): Object => ({
   ...prepareParseOrderItem(originalValues, newValues),
-  ...parseGenericField(
-    'price',
-    getByPathWithDefault(null, 'price', originalValues),
-    newValues.price
-  ),
+  ...parseGenericField('price', originalValues?.price, newValues.price),
   ...parseParentIdField(
     'orderId',
     getByPathWithDefault(null, 'order', originalValues),
