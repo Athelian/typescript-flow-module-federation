@@ -62,16 +62,11 @@ export default function Heading({
             className={SelectAllButtonStyle}
             type="button"
           >
-            <Label>
-              {selectedItemsCount === total ? (
-                <FormattedMessage
-                  id="components.button.unselectAll"
-                  defaultMessage="UNSELECT ALL"
-                />
-              ) : (
-                <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
-              )}
-            </Label>
+            {selectedItemsCount === total ? (
+              <FormattedMessage id="components.button.unselectAll" defaultMessage="UNSELECT ALL" />
+            ) : (
+              <FormattedMessage id="components.button.SelectAll" defaultMessage="SELECT ALL" />
+            )}
             <Icon icon="CHECKED" />
           </button>
         )}

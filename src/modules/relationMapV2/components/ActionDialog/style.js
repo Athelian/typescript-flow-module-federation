@@ -7,7 +7,7 @@ export const ActionDialogWrapperStyle: string = css`
 `;
 
 export const DialogMessageStyle: string = css`
-  ${fontSizes.LARGE};
+  ${fontSizes.MAIN};
   color: ${colors.BLACK};
   font-weight: bold;
   text-align: center;
@@ -16,7 +16,7 @@ export const DialogMessageStyle: string = css`
 `;
 
 export const DialogSubMessageStyle: string = css`
-  ${fontSizes.MAIN};
+  ${fontSizes.MEDIUM};
   color: ${colors.GRAY_DARK};
   font-weight: bold;
   text-align: center;

@@ -49,14 +49,16 @@ export const TotalWrapperStyle: string = css`
 
 export const SelectAllButtonStyle: string = css`
   ${presets.BUTTON};
-  ${borderRadiuses.MAIN};
-  width: 125px;
-  height: 20px;
-  justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.05);
-  padding: 0 5px 0 0;
-  color: ${colors.GRAY_DARK};
   ${fontSizes.SMALL};
+  ${borderRadiuses.MAIN};
+  height: 20px;
+  line-height: 20px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: ${colors.GRAY_DARK};
+  background-color: rgba(0, 0, 0, 0.05);
+  justify-content: space-between;
+  padding: 0 5px;
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
   }
