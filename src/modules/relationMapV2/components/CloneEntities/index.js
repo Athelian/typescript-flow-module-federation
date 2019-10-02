@@ -12,8 +12,14 @@ import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
 import { BATCH_CREATE } from 'modules/permission/constants/batch';
 import { BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
-import Icon from 'components/Icon';
-import ActionDialog, { LabelIcon } from '../ActionDialog';
+import ActionDialog, {
+  OrdersLabelIcon,
+  OrderLabelIcon,
+  ItemsLabelIcon,
+  ItemLabelIcon,
+  BatchesLabelIcon,
+  BatchLabelIcon,
+} from '../ActionDialog';
 import { cloneBatchesMutation, cloneOrderItemsMutation, cloneOrdersMutation } from './mutation';
 import { targetedIds } from '../OrderFocus/helpers';
 
@@ -332,42 +338,6 @@ export default function CloneEntities({ onSuccess }: Props) {
   const numOfOrders = <FormattedNumber value={totalOrders} />;
   const numOfItems = <FormattedNumber value={totalOrderItems} />;
   const numOfBatches = <FormattedNumber value={totalBatches} />;
-  const ordersLabel = (
-    <LabelIcon color="ORDER">
-      <FormattedMessage id="modules.RelationMap.clone.orders" defaultMessage="Orders" />{' '}
-      <Icon icon="ORDER" />
-    </LabelIcon>
-  );
-  const orderLabel = (
-    <LabelIcon color="ORDER">
-      <FormattedMessage id="modules.RelationMap.clone.order" defaultMessage="Order" />{' '}
-      <Icon icon="ORDER" />
-    </LabelIcon>
-  );
-  const itemsLabel = (
-    <LabelIcon color="ORDER_ITEM">
-      <FormattedMessage id="modules.RelationMap.clone.items" defaultMessage="Items" />{' '}
-      <Icon icon="ORDER_ITEM" />
-    </LabelIcon>
-  );
-  const itemLabel = (
-    <LabelIcon color="ORDER_ITEM">
-      <FormattedMessage id="modules.RelationMap.clone.item" defaultMessage="Item" />{' '}
-      <Icon icon="ORDER_ITEM" />
-    </LabelIcon>
-  );
-  const batchesLabel = (
-    <LabelIcon color="BATCH">
-      <FormattedMessage id="modules.RelationMap.clone.batches" defaultMessage="Batches" />{' '}
-      <Icon icon="BATCH" />
-    </LabelIcon>
-  );
-  const batchLabel = (
-    <LabelIcon color="BATCH">
-      <FormattedMessage id="modules.RelationMap.clone.batch" defaultMessage="Batch" />{' '}
-      <Icon icon="BATCH" />
-    </LabelIcon>
-  );
 
   switch (source) {
     case ORDER:
@@ -378,9 +348,9 @@ export default function CloneEntities({ onSuccess }: Props) {
             id="modules.RelationMap.clone.noOrderPermission"
             defaultMessage="At least one {orderLabel}, {itemLabel}, or {batchLabel} selected does not allow you to clone."
             values={{
-              orderLabel,
-              itemLabel,
-              batchLabel,
+              orderLabel: <OrderLabelIcon />,
+              itemLabel: <ItemLabelIcon />,
+              batchLabel: <BatchLabelIcon />,
             }}
           />
         );
@@ -398,7 +368,7 @@ export default function CloneEntities({ onSuccess }: Props) {
             defaultMessage="Cloning {numOfOrders} {ordersLabel} ..."
             values={{
               numOfOrders,
-              ordersLabel: totalOrders > 1 ? ordersLabel : orderLabel,
+              ordersLabel: totalOrders > 1 ? <OrdersLabelIcon /> : <OrderLabelIcon />,
             }}
           />
         );
@@ -410,7 +380,7 @@ export default function CloneEntities({ onSuccess }: Props) {
             defaultMessage="Are you sure you want to clone {numOfOrders} {ordersLabel} ?"
             values={{
               numOfOrders,
-              ordersLabel: totalOrders > 1 ? ordersLabel : orderLabel,
+              ordersLabel: totalOrders > 1 ? <OrdersLabelIcon /> : <OrderLabelIcon />,
             }}
           />
         );
@@ -419,9 +389,9 @@ export default function CloneEntities({ onSuccess }: Props) {
             id="modules.RelationMap.clone.orderMessage2"
             defaultMessage="Any selected {itemsLabel} or {batchesLabel} will also be cloned within the cloned {ordersLabel}"
             values={{
-              itemsLabel,
-              batchesLabel,
-              ordersLabel: totalOrders > 1 ? ordersLabel : orderLabel,
+              itemsLabel: <ItemsLabelIcon />,
+              batchesLabel: <BatchesLabelIcon />,
+              ordersLabel: totalOrders > 1 ? <OrdersLabelIcon /> : <OrderLabelIcon />,
             }}
           />
         );
@@ -435,8 +405,8 @@ export default function CloneEntities({ onSuccess }: Props) {
             id="modules.RelationMap.clone.noItemPermission"
             defaultMessage="At least one {itemLabel} or {batchLabel} selected does not allow you to clone."
             values={{
-              itemLabel,
-              batchLabel,
+              itemLabel: <ItemLabelIcon />,
+              batchLabel: <BatchLabelIcon />,
             }}
           />
         );
@@ -454,7 +424,7 @@ export default function CloneEntities({ onSuccess }: Props) {
             defaultMessage="Cloning {numOfItems} {itemsLabel} ..."
             values={{
               numOfItems,
-              itemsLabel: totalOrderItems > 1 ? itemsLabel : itemLabel,
+              itemsLabel: totalOrderItems > 1 ? <ItemsLabelIcon /> : <ItemLabelIcon />,
             }}
           />
         );
@@ -466,7 +436,7 @@ export default function CloneEntities({ onSuccess }: Props) {
             defaultMessage="Are you sure you want to clone {numOfItems} {itemsLabel} ?"
             values={{
               numOfItems,
-              itemsLabel: totalOrderItems > 1 ? itemsLabel : itemLabel,
+              itemsLabel: totalOrderItems > 1 ? <ItemsLabelIcon /> : <ItemLabelIcon />,
             }}
           />
         );
@@ -475,8 +445,8 @@ export default function CloneEntities({ onSuccess }: Props) {
             id="modules.RelationMap.clone.itemMessage2"
             defaultMessage="Any selected {batchesLabel} will also be cloned within the cloned {itemsLabel}"
             values={{
-              batchesLabel,
-              itemsLabel: totalOrderItems > 1 ? itemsLabel : itemLabel,
+              batchesLabel: <BatchesLabelIcon />,
+              itemsLabel: totalOrderItems > 1 ? <ItemsLabelIcon /> : <ItemLabelIcon />,
             }}
           />
         );
@@ -490,7 +460,7 @@ export default function CloneEntities({ onSuccess }: Props) {
             id="modules.RelationMap.clone.noBatchPermission"
             defaultMessage="At least one {batchLabel} selected does not allow you to clone."
             values={{
-              batchLabel,
+              batchLabel: <BatchLabelIcon />,
             }}
           />
         );
@@ -508,7 +478,7 @@ export default function CloneEntities({ onSuccess }: Props) {
             defaultMessage="Cloning {numOfBatches} {batchesLabel} ..."
             values={{
               numOfBatches,
-              batchesLabel: totalBatches > 1 ? batchesLabel : batchLabel,
+              batchesLabel: totalBatches > 1 ? <BatchesLabelIcon /> : <BatchLabelIcon />,
             }}
           />
         );
@@ -520,7 +490,7 @@ export default function CloneEntities({ onSuccess }: Props) {
             defaultMessage="Are you sure you want to clone {numOfBatches} {batchesLabel} ?"
             values={{
               numOfBatches,
-              batchesLabel: totalBatches > 1 ? batchesLabel : batchLabel,
+              batchesLabel: totalBatches > 1 ? <BatchesLabelIcon /> : <BatchLabelIcon />,
             }}
           />
         );

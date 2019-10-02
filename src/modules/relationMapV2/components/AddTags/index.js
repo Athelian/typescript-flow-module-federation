@@ -12,12 +12,10 @@ import { BATCH_UPDATE, BATCH_SET_TAGS } from 'modules/permission/constants/batch
 import { ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TAGS } from 'modules/permission/constants/orderItem';
 import { CONTAINER_UPDATE, CONTAINER_SET_TAGS } from 'modules/permission/constants/container';
 import { SHIPMENT_UPDATE, SHIPMENT_SET_TAGS } from 'modules/permission/constants/shipment';
-import { SaveButton, CancelButton } from 'components/Buttons';
-import Dialog from 'components/Dialog';
-import LoadingIcon from 'components/LoadingIcon';
-import Icon from 'components/Icon';
+import { BaseButton } from 'components/Buttons';
 import { FieldItem, Label, TagsInput } from 'components/Form';
-import { parseIcon } from 'utils/entity';
+import FormattedNumber from 'components/FormattedNumber';
+import Tag from 'components/Tag';
 import {
   ordersByIDsQuery,
   orderItemsByIDsQuery,
@@ -25,8 +23,21 @@ import {
   containersByIDsQuery,
   shipmentsByIDsQuery,
 } from './query';
+import ActionDialog, {
+  OrdersLabelIcon,
+  OrderLabelIcon,
+  ItemsLabelIcon,
+  ItemLabelIcon,
+  BatchesLabelIcon,
+  BatchLabelIcon,
+  ContainerLabelIcon,
+  ContainersLabelIcon,
+  ShipmentLabelIcon,
+  ShipmentsLabelIcon,
+  TagsLabelIcon,
+  TagLabelIcon,
+} from '../ActionDialog';
 import { entitiesUpdateManyMutation } from './mutation';
-import { DialogStyle, ButtonsStyle, ConfirmMessageStyle } from './style';
 import { targetedIds } from '../OrderFocus/helpers';
 
 type Props = {|
@@ -264,144 +275,155 @@ export default function AddTags({ onSuccess }: Props) {
 
   const noPermission = !allowToUpdate();
 
+  let dialogMessage = null;
+  let dialogSubMessage = null;
+  let entityLabel = null;
+  let numOfEntity = null;
+
   if (noPermission) {
-    return (
-      <Dialog isOpen={isOpen} width="450px">
-        <div className={DialogStyle}>
-          <h3 className={ConfirmMessageStyle}>
-            <FormattedMessage
-              id="modules.RelationMap.tags.noPermission"
-              defaultMessage="At least one {source} {entity} selected does not allow you to add tags.Please reselect and try again."
-              values={{
-                source,
-                entity: <Icon icon={parseIcon(source)} />,
-              }}
-            />
-          </h3>
-          <div className={ButtonsStyle}>
-            <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          </div>
-        </div>
-      </Dialog>
+    // No permission to add tags
+    switch (source) {
+      case ORDER:
+        entityLabel = <OrderLabelIcon />;
+        break;
+      case ORDER_ITEM:
+        entityLabel = <ItemLabelIcon />;
+        break;
+      case BATCH:
+        entityLabel = <BatchLabelIcon />;
+        break;
+      case CONTAINER:
+        entityLabel = <ContainerLabelIcon />;
+        break;
+      case SHIPMENT:
+        entityLabel = <ShipmentLabelIcon />;
+        break;
+      default:
+        break;
+    }
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.addTags.noPermission"
+        defaultMessage="At least one {entityLabel} selected does not allow you to add tags."
+        values={{ entityLabel }}
+      />
     );
+    dialogSubMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.addTags.tryAgain"
+        defaultMessage="Please reselect and try again."
+      />
+    );
+  } else {
+    switch (source) {
+      case ORDER:
+        numOfEntity = <FormattedNumber value={totalOrders} />;
+        entityLabel = totalOrders > 1 ? <OrdersLabelIcon /> : <OrderLabelIcon />;
+        break;
+      case ORDER_ITEM:
+        numOfEntity = <FormattedNumber value={totalOrderItems} />;
+        entityLabel = totalOrderItems > 1 ? <ItemsLabelIcon /> : <ItemLabelIcon />;
+        break;
+      case BATCH:
+        numOfEntity = <FormattedNumber value={totalBatches} />;
+        entityLabel = totalBatches > 1 ? <BatchesLabelIcon /> : <BatchLabelIcon />;
+        break;
+      case CONTAINER:
+        numOfEntity = <FormattedNumber value={totalContainers} />;
+        entityLabel = totalContainers > 1 ? <ContainersLabelIcon /> : <ContainerLabelIcon />;
+        break;
+      case SHIPMENT:
+        numOfEntity = <FormattedNumber value={totalShipments} />;
+        entityLabel = totalShipments > 1 ? <ShipmentsLabelIcon /> : <ShipmentLabelIcon />;
+        break;
+      default:
+        break;
+    }
+    if (isProcessing) {
+      // Is currently adding tags
+
+      dialogMessage = (
+        <FormattedMessage
+          id="modules.RelationMap.addTags.addingTo"
+          defaultMessage="Adding {tagsLabel} {selectedTags} to the {numOfEntity} {entityLabel} that you have selected..."
+          values={{
+            tagsLabel: tags.length > 1 ? <TagsLabelIcon /> : <TagLabelIcon />,
+            selectedTags: (
+              <span>
+                {tags.map(tag => (
+                  <span style={{ marginRight: '5px' }}>
+                    <Tag tag={tag} />
+                  </span>
+                ))}
+              </span>
+            ),
+            numOfEntity,
+            entityLabel,
+          }}
+        />
+      );
+    } else {
+      // Has permission to add tags
+      dialogMessage = (
+        <FormattedMessage
+          id="modules.RelationMap.addTags.orderMessage1"
+          defaultMessage="Select {tagsLabel} to add to the {numOfEntity} {entityLabel} that you have selected"
+          values={{
+            tagsLabel: <TagsLabelIcon />,
+            numOfEntity,
+            entityLabel,
+          }}
+        />
+      );
+    }
   }
 
   return (
-    <Dialog isOpen={isOpen} width="450px">
-      <div className={DialogStyle}>
-        <h3 className={ConfirmMessageStyle}>
-          {isProcessing ? (
-            <>
-              <FormattedMessage
-                id="modules.RelationMap.tags.add"
-                defaultMessage="Adding tags to add to the {source} that you have selected."
-                values={{
-                  source: (
-                    <>
-                      {totalOrders > 0 && source === ORDER && (
-                        <>
-                          {totalOrders} <Icon icon="ORDER" />
-                        </>
-                      )}
-                      {totalOrderItems > 0 && source === ORDER_ITEM && (
-                        <>
-                          {totalOrderItems} <Icon icon="ORDER_ITEM" />
-                        </>
-                      )}
-                      {totalBatches > 0 && source === BATCH && (
-                        <>
-                          {totalBatches} <Icon icon="BATCH" />
-                        </>
-                      )}
-                      {totalContainers > 0 && source === CONTAINER && (
-                        <>
-                          {totalContainers} <Icon icon="CONTAINER" />
-                        </>
-                      )}
-                      {totalShipments > 0 && source === SHIPMENT && (
-                        <>
-                          {totalShipments} <Icon icon="SHIPMENT" />
-                        </>
-                      )}
-                    </>
-                  ),
-                }}
-              />
-              <LoadingIcon />
-            </>
-          ) : (
-            <FormattedMessage
-              id="modules.RelationMap.tags.guideline"
-              defaultMessage="Select tags to add to the {source} that you have selected."
-              values={{
-                source: (
-                  <>
-                    {totalOrders > 0 && source === ORDER && (
-                      <>
-                        {totalOrders} <Icon icon="ORDER" />
-                      </>
-                    )}
-                    {totalOrderItems > 0 && source === ORDER_ITEM && (
-                      <>
-                        {totalOrderItems} <Icon icon="ORDER_ITEM" />
-                      </>
-                    )}
-                    {totalBatches > 0 && source === BATCH && (
-                      <>
-                        {totalBatches} <Icon icon="BATCH" />
-                      </>
-                    )}
-                    {totalContainers > 0 && source === CONTAINER && (
-                      <>
-                        {totalContainers} <Icon icon="CONTAINER" />
-                      </>
-                    )}
-                    {totalShipments > 0 && source === SHIPMENT && (
-                      <>
-                        {totalShipments} <Icon icon="SHIPMENT" />
-                      </>
-                    )}
-                  </>
-                ),
-              }}
-            />
-          )}
-        </h3>
-        <FieldItem
-          vertical
+    <ActionDialog
+      isOpen={isOpen}
+      isProcessing={isProcessing}
+      onCancel={onCancel}
+      title={<FormattedMessage id="modules.RelationMaps.label.addTags" defaultMessage="ADD TAGS" />}
+      dialogMessage={dialogMessage}
+      dialogSubMessage={dialogSubMessage}
+      buttons={
+        <BaseButton
           label={
-            <Label height="30px">
-              <FormattedMessage id="modules.Orders.tags" defaultMessage="TAGS" />
-            </Label>
+            <FormattedMessage id="modules.RelationMaps.label.addTags" defaultMessage="ADD TAGS" />
           }
-          input={
-            <TagsInput
-              id="tags"
-              name="tags"
-              tagType={source}
-              values={tags}
-              onChange={setTags}
-              onClickRemove={tag => setTags(tags.filter(({ id }) => tag.id !== id))}
-              editable={
-                isProcessing
-                  ? { set: false, remove: false }
-                  : {
-                      set: hasPermission(TAG_LIST) && allowToUpdate(),
-                      remove: allowToUpdate(),
-                    }
-              }
-            />
-          }
+          icon="TAG"
+          disabled={isProcessing || noPermission || tags.length === 0}
+          onClick={onConfirm}
         />
-        <div className={ButtonsStyle}>
-          <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          <SaveButton
-            isLoading={Boolean(isProcessing)}
-            disabled={Boolean(isProcessing) || tags.length === 0}
-            onClick={onConfirm}
+      }
+    >
+      <FieldItem
+        vertical
+        label={
+          <Label height="30px">
+            <FormattedMessage id="modules.Orders.tags" defaultMessage="TAGS" />
+          </Label>
+        }
+        input={
+          <TagsInput
+            id="tags"
+            name="tags"
+            tagType={source}
+            values={tags}
+            onChange={setTags}
+            onClickRemove={tag => setTags(tags.filter(({ id }) => tag.id !== id))}
+            width="340px"
+            editable={
+              isProcessing
+                ? { set: false, remove: false }
+                : {
+                    set: hasPermission(TAG_LIST) && allowToUpdate(),
+                    remove: allowToUpdate(),
+                  }
+            }
           />
-        </div>
-      </div>
-    </Dialog>
+        }
+      />
+    </ActionDialog>
   );
 }
