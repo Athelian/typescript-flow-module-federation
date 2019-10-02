@@ -1039,6 +1039,7 @@
   "components.button.removeLocally": "PC上から取り除くREMOVE LOCALLY",
   "modules.RelationMap.delete.noPermission": "At least one {source} {entity} selected does not allow you to delete.Please reselect and try again.",
   "modules.RelationMap.delete.process": "Deleting {source} {entity} ...",
+  "modules.RelationMap.delete.guideline": "Are you sure you want to delete {total} {source} {entity} ?",
   "components.button.collapseTooltip": "Collapse all Orders",
   "components.button.expandTooltip": "Expand all Orders",
   "components.button.unselectAll": "選択解除",
