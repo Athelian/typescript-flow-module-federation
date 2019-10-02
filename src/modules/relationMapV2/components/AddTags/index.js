@@ -397,33 +397,35 @@ export default function AddTags({ onSuccess }: Props) {
         />
       }
     >
-      <FieldItem
-        vertical
-        label={
-          <Label height="30px">
-            <FormattedMessage id="modules.RelationMap.label.tags" defaultMessage="TAGS" />
-          </Label>
-        }
-        input={
-          <TagsInput
-            id="tags"
-            name="tags"
-            tagType={source}
-            values={tags}
-            onChange={setTags}
-            onClickRemove={tag => setTags(tags.filter(({ id }) => tag.id !== id))}
-            width="340px"
-            editable={
-              isProcessing
-                ? { set: false, remove: false }
-                : {
-                    set: hasPermission(TAG_LIST) && allowToUpdate(),
-                    remove: allowToUpdate(),
-                  }
-            }
-          />
-        }
-      />
+      {!(isProcessing || noPermission) && (
+        <FieldItem
+          vertical
+          label={
+            <Label height="30px">
+              <FormattedMessage id="modules.RelationMap.label.tags" defaultMessage="TAGS" />
+            </Label>
+          }
+          input={
+            <TagsInput
+              id="tags"
+              name="tags"
+              tagType={source}
+              values={tags}
+              onChange={setTags}
+              onClickRemove={tag => setTags(tags.filter(({ id }) => tag.id !== id))}
+              width="340px"
+              editable={
+                isProcessing
+                  ? { set: false, remove: false }
+                  : {
+                      set: hasPermission(TAG_LIST) && allowToUpdate(),
+                      remove: allowToUpdate(),
+                    }
+              }
+            />
+          }
+        />
+      )}
     </ActionDialog>
   );
 }
