@@ -327,6 +327,16 @@ export const prepareParsedShipmentInput = ({
       getByPathWithDefault([], 'inCharges', originalValues),
       newValues.inCharges
     ),
+    ...parseGenericField(
+      'totalPackageQuantityOverride',
+      originalValues?.totalPackageQuantityOverride,
+      newValues.totalPackageQuantityOverride
+    ),
+    ...parseGenericField(
+      'totalPackageQuantityOverriding',
+      originalValues?.totalPackageQuantityOverriding,
+      newValues.totalPackageQuantityOverriding
+    ),
     ...parseArrayOfIdsField(
       'forwarderIds',
       getByPathWithDefault([], 'forwarders', originalValues),

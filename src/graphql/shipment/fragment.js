@@ -22,6 +22,8 @@ export const shipmentFormQueryFragment = gql`
     loadType
     transportType
     carrier
+    totalPackageQuantityOverride
+    totalPackageQuantityOverriding
     ownedBy {
       ...ownedByFragment
     }
@@ -96,6 +98,8 @@ export const shipmentFormFragment = gql`
     inCharges {
       ...userAvatarFragment
     }
+    totalPackageQuantityOverride
+    totalPackageQuantityOverriding
     tags {
       ...tagFragment
     }

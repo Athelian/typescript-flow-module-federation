@@ -10,12 +10,14 @@ import { getBatchLatestQuantity, findVolume, findWeight, totalBatchPriceAmount }
 import { getPortName } from 'utils/shipment';
 import GridColumn from 'components/GridColumn';
 import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
-import { FieldItem, Label, Display } from 'components/Form';
+import { FieldItem, Label, Display, NumberInputFactory } from 'components/Form';
+import { FormField } from 'modules/form';
 import FormattedNumber from 'components/FormattedNumber';
 import Icon from 'components/Icon';
 import { Tooltip } from 'components/Tooltip';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import {
+  ShipmentInfoContainer,
   ShipmentTimelineContainer,
   ShipmentTransportTypeContainer,
   ShipmentBatchesContainer,
@@ -23,6 +25,12 @@ import {
   ShipmentTasksContainer,
   ShipmentContainersContainer,
 } from 'modules/shipment/form/containers';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
+import {
+  SHIPMENT_UPDATE,
+  SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY,
+} from 'modules/permission/constants/shipment';
 import {
   SummaryStyle,
   ContainerTypesWrapperStyle,
@@ -57,6 +65,10 @@ const CustomPlaceHolder = () => (
 );
 
 const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+  const canUpdate = hasPermission(SHIPMENT_UPDATE);
+
   return (
     <QueryPlaceHolder
       PlaceHolder={CustomPlaceHolder}
@@ -68,6 +80,7 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
         return (
           <Subscribe
             to={[
+              ShipmentInfoContainer,
               ShipmentTransportTypeContainer,
               ShipmentTimelineContainer,
               ShipmentContainersContainer,
@@ -77,6 +90,12 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
             ]}
           >
             {(
+              {
+                state: baseValues,
+                originalValues: baseOriginalValues,
+                setFieldValue,
+                setFieldValues,
+              },
               { state: { transportType } },
               { state: { voyages: voyagesState = [], hasCalledTimelineApiYet } },
               { state: { containers = [], hasCalledContainerApiYet } },
@@ -309,6 +328,49 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                         </Display>
                       }
                     />
+
+                    <FormField
+                      name="totalPackageQuantityOverride"
+                      initValue={
+                        baseValues.totalPackageQuantityOverriding
+                          ? totalPackageQuantity
+                          : baseValues.totalPackageQuantityOverride
+                      }
+                      setFieldValue={setFieldValue}
+                      values={baseValues}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <NumberInputFactory
+                          name={name}
+                          {...inputHandlers}
+                          originalValue={baseOriginalValues[name]}
+                          label={
+                            <FormattedMessage
+                              id="modules.Shipments.totalPackages"
+                              defaultMessage="Total Packages"
+                            />
+                          }
+                          editable={canUpdate || hasPermission(SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY)}
+                          showExtraToggleButton={
+                            canUpdate || hasPermission(SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY)
+                          }
+                          autoCalculateIsToggled={baseValues.totalPackageQuantityOverriding}
+                          onToggleAutoCalculate={() => {
+                            if (baseValues.totalPackageQuantityOverriding) {
+                              setFieldValues({
+                                totalPackageQuantityOverriding: false,
+                              });
+                            } else {
+                              setFieldValues({
+                                totalPackageQuantityOverriding: true,
+                                totalPackageQuantityOverride: totalPackageQuantity,
+                              });
+                            }
+                          }}
+                        />
+                      )}
+                    </FormField>
+
                     <FieldItem
                       label={
                         <Label>
