@@ -151,7 +151,10 @@ const Header = React.memo<any>(
                     }}
                     type="button"
                   >
-                    NEW ORDER
+                    <FormattedMessage
+                      id="modules.RelationMaps.label.newOrder"
+                      defaultMessage="NEW ORDER"
+                    />
                     <Icon icon="ADD" />
                   </button>
                 </>
@@ -160,7 +163,7 @@ const Header = React.memo<any>(
 
             <button
               type="button"
-              className={SelectAllButtonStyle(selectedOrdersCount === orderCount)}
+              className={SelectAllButtonStyle}
               onClick={() => {
                 const targets = Object.keys(entities.orders || {}).map(id => `${ORDER}-${id}`);
                 dispatch({
@@ -226,7 +229,7 @@ const Header = React.memo<any>(
 
             <button
               type="button"
-              className={SelectAllButtonStyle(selectedItemsCount === itemCount)}
+              className={SelectAllButtonStyle}
               onClick={() => {
                 const targets = Object.keys(entities.orderItems || {}).map(
                   id => `${ORDER_ITEM}-${id}`
@@ -292,7 +295,7 @@ const Header = React.memo<any>(
 
             <button
               type="button"
-              className={SelectAllButtonStyle(selectedBatchesCount === batchCount)}
+              className={SelectAllButtonStyle}
               onClick={() => {
                 const targets = Object.keys(entities.batches || {}).map(id => `${BATCH}-${id}`);
                 dispatch({
@@ -356,7 +359,7 @@ const Header = React.memo<any>(
 
             <button
               type="button"
-              className={SelectAllButtonStyle(selectedContainersCount === containerCount)}
+              className={SelectAllButtonStyle}
               onClick={() => {
                 const targets = Object.keys(entities.containers || {}).map(
                   id => `${CONTAINER}-${id}`
@@ -400,7 +403,7 @@ const Header = React.memo<any>(
 
             <button
               type="button"
-              className={SelectAllButtonStyle(selectedShipmentsCount === shipmentCount)}
+              className={SelectAllButtonStyle}
               onClick={() => {
                 const targets = Object.keys(entities.shipments || {}).map(
                   id => `${SHIPMENT}-${id}`

@@ -1,11 +1,13 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import FormattedDate from 'components/FormattedDate';
 import { Display, Label } from 'components/Form';
-import { BATCH_WIDTH } from 'modules/relationMapV2/constants';
+import { BATCH, BATCH_WIDTH } from 'modules/relationMapV2/constants';
 import { isBefore, isAfter, differenceInCalendarDays } from 'utils/date';
 import Heading from 'modules/relationMapV2/components/Heading';
+import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
 import { RightWrapperStyle, DatesWrapperStyle } from './style';
 
 const getBatchDateRanges = (batches: Array<Object>) => {
@@ -76,6 +78,9 @@ export default function BatchHeading({
   // TODO: Replace with real permissions
   const canViewDelivery = true;
   const canViewDesired = true;
+  const { state } = React.useContext(RelationMapContext);
+  const batchIds = targetedIds(state.targets, BATCH);
+  const selectedItemsCount = batches.filter(item => batchIds.includes(item.id)).length;
 
   return (
     <Heading
@@ -85,6 +90,7 @@ export default function BatchHeading({
       isExpanded={isExpanded}
       onClick={onClick}
       total={total}
+      selectedItemsCount={selectedItemsCount}
       onSelectAll={onSelectAll}
       renderRightSide={() => (
         <div className={RightWrapperStyle}>

@@ -21,6 +21,7 @@ type Props = {|
   isExpanded: boolean,
   onClick: Function,
   total: number,
+  selectedItemsCount: number,
   onSelectAll: Function,
   renderRightSide: Function,
 |};
@@ -32,15 +33,13 @@ export default function Heading({
   isExpanded,
   onClick,
   total,
+  selectedItemsCount,
   onSelectAll,
   renderRightSide,
 }: Props) {
   // TODO: Replace with real permissions
   const allowToSelectOrUnselectAll = true;
   const canViewTotal = true;
-
-  // TODO: Replace with real numbers
-  const selectedItemsCount = 0;
 
   return (
     <div className={HeadingWrapperStyle(isExpanded, width)} onClick={onClick} role="presentation">

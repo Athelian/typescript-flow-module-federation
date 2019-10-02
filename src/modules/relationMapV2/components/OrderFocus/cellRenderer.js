@@ -1811,12 +1811,7 @@ function ItemSummaryCell({
           onClick={onClick}
           total={data?.orderItemCount || 0}
           onSelectAll={() => {
-            const itemIds = flatten(
-              getByPathWithDefault([], `order.${orderId}.orderItems`, state).map(item =>
-                getByPathWithDefault('', 'id', item)
-              )
-            ).filter(Boolean);
-            const targets = itemIds.map(id => `${ORDER_ITEM}-${id}`);
+            const targets = (data?.orderItems || []).map(item => `${ORDER_ITEM}-${item?.id}`);
             dispatch({
               type: 'TARGET_ALL',
               payload: {

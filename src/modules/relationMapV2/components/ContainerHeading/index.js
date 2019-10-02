@@ -1,11 +1,13 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import FormattedDate from 'components/FormattedDate';
 import { Display, Label } from 'components/Form';
-import { CONTAINER_WIDTH } from 'modules/relationMapV2/constants';
+import { CONTAINER, CONTAINER_WIDTH } from 'modules/relationMapV2/constants';
 import { isBefore, isAfter, differenceInMinutes } from 'utils/date';
 import Heading from 'modules/relationMapV2/components/Heading';
+import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
 import { RightWrapperStyle, DatesWrapperStyle, DashStyle } from './style';
 
 const getContainerDateRanges = (containers: Array<Object>) => {
@@ -58,6 +60,10 @@ export default function ContainerHeading({
   // TODO: Replace with real permissions
   const canViewDelivery = true;
 
+  const { state } = React.useContext(RelationMapContext);
+  const containerIds = targetedIds(state.targets, CONTAINER);
+  const selectedItemsCount = containers.filter(item => containerIds.includes(item.id)).length;
+
   return (
     <Heading
       width={`${CONTAINER_WIDTH}px`}
@@ -66,6 +72,7 @@ export default function ContainerHeading({
       isExpanded={isExpanded}
       onClick={onClick}
       total={total}
+      selectedItemsCount={selectedItemsCount}
       onSelectAll={onSelectAll}
       renderRightSide={() => (
         <div className={RightWrapperStyle}>

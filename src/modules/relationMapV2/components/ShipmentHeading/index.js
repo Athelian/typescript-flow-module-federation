@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import { Display, Label } from 'components/Form';
@@ -19,8 +20,10 @@ import {
   CUSTOMS_CLEARANCE,
   WAREHOUSE_ARRIVAL,
   DELIVERY_READY,
+  SHIPMENT,
 } from 'modules/relationMapV2/constants';
 import { GlobalShipmentPoint } from 'modules/relationMapV2/store';
+import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
 import { RightWrapperStyle, PlaceWrapperStyle, DatesWrapperStyle } from './style';
 
 type AllocateDateType = {
@@ -172,6 +175,9 @@ export default function ShipmentHeading({
   // TODO: Replace with real permissions
   const canViewPlace = true;
   const canViewDate = true;
+  const { state } = React.useContext(RelationMapContext);
+  const shipmentIds = targetedIds(state.targets, SHIPMENT);
+  const selectedItemsCount = shipments.filter(item => shipmentIds.includes(item.id)).length;
 
   return (
     <Heading
@@ -181,6 +187,7 @@ export default function ShipmentHeading({
       isExpanded={isExpanded}
       onClick={onClick}
       total={total}
+      selectedItemsCount={selectedItemsCount}
       onSelectAll={onSelectAll}
       renderRightSide={() => (
         <div className={RightWrapperStyle}>
