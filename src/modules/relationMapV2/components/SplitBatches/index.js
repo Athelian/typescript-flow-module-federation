@@ -197,7 +197,7 @@ export default function SplitBatches({ onSuccess }: Props) {
             <>
               <h3 className={ConfirmMessageStyle}>
                 <FormattedMessage
-                  id="modules.RelationMap.split.process"
+                  id="modules.RelationMap.split.guideline"
                   defaultMessage="You have selected {total} Batches {source}. Please enter the quantity you would like to split each Batch {source} into."
                   values={{
                     total: batchIds.length,
