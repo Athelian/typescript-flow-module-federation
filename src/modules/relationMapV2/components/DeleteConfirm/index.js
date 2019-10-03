@@ -183,7 +183,7 @@ export default function DeleteConfirm({ onSuccess }: Props) {
       // Has permission to delete
       dialogMessage = (
         <FormattedMessage
-          id="modules.RelationMap.delete.message1"
+          id="modules.RelationMap.delete.message"
           defaultMessage="Are you sure you want to delete {numOfEntity} {entityLabel} that you have selected?"
           values={{
             numOfEntity,
