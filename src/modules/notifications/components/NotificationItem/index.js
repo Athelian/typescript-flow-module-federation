@@ -3,8 +3,8 @@ import * as React from 'react';
 import { Mutation } from 'react-apollo';
 import FormattedDate from 'components/FormattedDate';
 import { Link } from '@reach/router';
-import { getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';
+import { parseRoute, parseIcon } from 'utils/entity';
 import Icon from 'components/Icon';
 import LoadingIcon from 'components/LoadingIcon';
 import mutation from 'modules/notifications/mutation';
@@ -16,25 +16,13 @@ type Props = {
 };
 
 function parseUrl(notification) {
-  if (getByPathWithDefault('', 'entity.id', notification) === '') return '.';
+  const id = notification?.entity?.id;
 
-  if (notification?.entity?.__typename === 'OrderItem') {
-    return `/order-item/${encodeId(notification?.entity?.id ?? '')}`;
-  }
+  if (notification?.entity?.id === null) return '.';
 
-  return `/${getByPathWithDefault(
-    'STAFF',
-    'entity.__typename',
-    notification
-  ).toLowerCase()}/${encodeId(getByPathWithDefault('', 'entity.id', notification))}`;
-}
+  const typeName = notification?.entity?.__typename;
 
-function parseIcon(notification) {
-  if (notification?.entity?.__typename === 'OrderItem') {
-    return 'ORDER_ITEM';
-  }
-
-  return (notification?.entity?.__typename ?? '').toUpperCase();
+  return `/${parseRoute(typeName).toLowerCase()}/${encodeId(id)}`;
 }
 
 function handleReadNotification(readNotification: Function, notificationId: number) {
@@ -54,7 +42,7 @@ const NotificationItem = ({ notification }: Props) => (
         >
           <div className={AvatarStyle(avatar)}>
             <div className={IconWrapperStyle}>
-              <Icon icon={parseIcon(notification)} />
+              <Icon icon={parseIcon(notification?.entity?.__typename)} />
             </div>
           </div>
           <div className={InfoWrapper}>
