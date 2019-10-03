@@ -24,16 +24,19 @@ import {
   ButtonsWrapperStyle,
 } from './style';
 
-type Props = {|
+type OptionalProps = {
+  dialogSubMessage?: React.Node,
+};
+
+type Props = OptionalProps & {
   isOpen: boolean,
   isProcessing: boolean,
   onCancel: Function,
   title: React.Node,
   dialogMessage: React.Node,
-  dialogSubMessage: React.Node,
   buttons: React.Node,
   children?: React.Node,
-|};
+};
 
 export default function ActionDialog({
   isOpen,
