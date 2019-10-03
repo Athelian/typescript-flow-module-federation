@@ -1,29 +1,13 @@
 // @flow
 import { css } from 'react-emotion';
-import { fontSizes, colors, layout } from 'styles/common';
+import { layout } from 'styles/common';
 
-export const DialogStyle: string = css`
-  padding: 20px;
-`;
-
-export const ConfirmMessageStyle: string = css`
-  margin: 20px 0;
-  text-align: center;
-  font-weight: bold;
-  ${fontSizes.MAIN};
-  color: ${colors.BLACK};
-`;
-
-export const ButtonsStyle: string = css`
-  ${layout.GRID_HORIZONTAL};
-  padding: 20px 0 0 0;
-  justify-content: center;
+export const SplitInputsWrapperStyle: string = css`
+  ${layout.GRID_VERTICAL};
   grid-gap: 10px;
 `;
 
-export const BatchInputStyle: string = css`
-  ${layout.GRID_HORIZONTAL};
-  padding: 20px 0 0 0;
-  justify-content: center;
-  grid-gap: 10px;
+export const SplitRowStyle: string = css`
+  display: grid;
+  grid-template-columns: repeat(3, 200px);
 `;
