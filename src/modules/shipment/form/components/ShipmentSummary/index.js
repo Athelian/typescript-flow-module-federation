@@ -450,11 +450,12 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                             if (values.totalPackageQuantityOverriding) {
                               setFieldValues({
                                 totalPackageQuantityOverriding: false,
+                                totalPackageQuantityOverride: totalPackageQuantity,
                               });
                             } else {
                               setFieldValues({
                                 totalPackageQuantityOverriding: true,
-                                totalPackageQuantityOverride: totalPackageQuantity,
+                                totalPackageQuantityOverride: 0,
                               });
                             }
                           }}
@@ -490,11 +491,12 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                             if (values.totalWeightOverriding) {
                               setFieldValues({
                                 totalWeightOverriding: false,
+                                totalWeightOverride: calculateTotalWeight,
                               });
                             } else {
                               setFieldValues({
                                 totalWeightOverriding: true,
-                                totalWeightOverride: calculateTotalWeight,
+                                totalWeightOverride: defaultWeight,
                               });
                             }
                           }}
@@ -531,11 +533,12 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                             if (values.totalVolumeOverriding) {
                               setFieldValues({
                                 totalVolumeOverriding: false,
+                                totalVolumeOverride: calculateTotalVolume,
                               });
                             } else {
                               setFieldValues({
                                 totalVolumeOverriding: true,
-                                totalVolumeOverride: calculateTotalVolume,
+                                totalVolumeOverride: defaultVolume,
                               });
                             }
                           }}
