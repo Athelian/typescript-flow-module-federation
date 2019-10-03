@@ -37,7 +37,6 @@ import {
 import { FormContext } from 'modules/milestone/form/context';
 import DateBindingInput from '../DateBindingInput';
 import {
-  CommonFormWrapperStyle,
   MilestoneSectionStyle,
   FieldsWrapperStyle,
   StatusWrapperStyle,
@@ -71,7 +70,7 @@ const MilestoneSection = ({ intl }: Props) => {
         const estimatedCompletionDates = calculateMilestonesEstimatedCompletionDate({ milestones });
 
         return (
-          <div className={CommonFormWrapperStyle}>
+          <div>
             <SectionWrapper id="milestone_section">
               <SectionHeader
                 icon="MILESTONE"

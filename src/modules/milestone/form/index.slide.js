@@ -16,6 +16,7 @@ import DocumentsSection from './components/DocumentsSection';
 import validator from './validator';
 
 import { MilestoneBaseContainer, MilestoneFilesContainer } from './containers';
+import { FormWrapperStyle } from './style';
 
 type OptionalProps = {
   inTemplate: boolean,
@@ -38,6 +39,17 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
       }}
     >
       <Provider>
+        <Subscribe to={[MilestoneBaseContainer, MilestoneFilesContainer]}>
+          {({ state, initDetailValues }, filesContainer) => {
+            const { files = [], ...rest } = milestone;
+            if (isNullOrUndefined(state.id)) {
+              initDetailValues(rest);
+              filesContainer.initDetailValues(files);
+            }
+            return null;
+          }}
+        </Subscribe>
+
         <SlideViewLayout>
           <Subscribe to={[FormContainer, MilestoneBaseContainer, MilestoneFilesContainer]}>
             {(formContainer, milestoneStateContainer, filesContainer) => {
@@ -80,19 +92,10 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
           </Subscribe>
 
           <Content>
-            <Subscribe to={[MilestoneBaseContainer, MilestoneFilesContainer]}>
-              {({ state, initDetailValues }, filesContainer) => {
-                const { files = [], ...rest } = milestone;
-                if (isNullOrUndefined(state.id)) {
-                  initDetailValues(rest);
-                  filesContainer.initDetailValues(files);
-                }
-                return null;
-              }}
-            </Subscribe>
-            <MilestoneSection />
-
-            <DocumentsSection />
+            <div className={FormWrapperStyle}>
+              <MilestoneSection />
+              <DocumentsSection />
+            </div>
           </Content>
         </SlideViewLayout>
       </Provider>
