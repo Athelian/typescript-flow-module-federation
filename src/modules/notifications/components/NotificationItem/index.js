@@ -18,11 +18,23 @@ type Props = {
 function parseUrl(notification) {
   if (getByPathWithDefault('', 'entity.id', notification) === '') return '.';
 
+  if (notification?.entity?.__typename === 'OrderItem') {
+    return `/order-item/${encodeId(notification?.entity?.id ?? '')}`;
+  }
+
   return `/${getByPathWithDefault(
     'STAFF',
     'entity.__typename',
     notification
   ).toLowerCase()}/${encodeId(getByPathWithDefault('', 'entity.id', notification))}`;
+}
+
+function parseIcon(notification) {
+  if (notification?.entity?.__typename === 'OrderItem') {
+    return 'ORDER_ITEM';
+  }
+
+  return (notification?.entity?.__typename ?? '').toUpperCase();
 }
 
 function handleReadNotification(readNotification: Function, notificationId: number) {
@@ -42,13 +54,7 @@ const NotificationItem = ({ notification }: Props) => (
         >
           <div className={AvatarStyle(avatar)}>
             <div className={IconWrapperStyle}>
-              <Icon
-                icon={getByPathWithDefault(
-                  'STAFF',
-                  'entity.__typename',
-                  notification
-                ).toUpperCase()}
-              />
+              <Icon icon={parseIcon(notification)} />
             </div>
           </div>
           <div className={InfoWrapper}>
