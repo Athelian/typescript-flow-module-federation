@@ -4,7 +4,7 @@ import * as React from 'react';
 import { RowStyle } from './style';
 // import type { CellRender } from '../OrderFocus/type.js.flow';
 import cellRenderer from '../OrderFocus/cellRenderer';
-import InitLoadingPlaceholder from '../InitLoadingPlaceholder';
+import LoadMorePlaceholder from '../LoadMorePlaceholder';
 
 type Props = {
   index: number,
@@ -15,10 +15,9 @@ type Props = {
 const Row = React.memo<Props>(({ index, style, data }: Props) => {
   const cells = data[index];
   if (!data[index]) {
-    // TODO: Change the placeholder on load more
     return (
       <div className={RowStyle} style={style}>
-        <InitLoadingPlaceholder />
+        <LoadMorePlaceholder />
       </div>
     );
   }
