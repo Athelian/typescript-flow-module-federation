@@ -1,9 +1,8 @@
 // @flow
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import PreventInitialAnimation from 'components/PreventInitialAnimation';
 import Icon from 'components/Icon';
-import logger from 'utils/logger';
+import { usePortalSlot } from 'hooks/usePortalSlot';
 import {
   BackdropFadeInStyle,
   BackdropFadeOutStyle,
@@ -13,7 +12,6 @@ import {
 } from './style';
 
 type OptionalProps = {
-  rootElementId: string,
   width: string,
   showCancelButton: boolean,
   onRequestClose: Function,
@@ -25,73 +23,77 @@ type Props = OptionalProps & {
   children: React.Node,
 };
 
-const ANIMATION_FINISHED = 500;
+const defaultProps = {
+  width: 'min-content',
+  showCancelButton: false,
+  onRequestClose: () => {},
+};
 
-export default class Dialog extends React.Component<Props> {
-  static defaultProps = {
-    rootElementId: 'dialog-root',
-    width: 'min-content',
-    showCancelButton: false,
-    onRequestClose: () => {},
-  };
+const ANIMATION_FINISHED = 300; // 0.3s
 
-  dialogContainer: HTMLDivElement = document.createElement('div');
+const DialogRender = ({
+  isOpen,
+  onRequestClose,
+  onCancel,
+  width,
+  showCancelButton,
+  children,
+}: Props) => {
+  const slot = usePortalSlot();
 
-  componentDidUpdate(prevProps: Props) {
-    const { rootElementId = 'dialog-root' } = this.props;
-    const dialogRoot = document.getElementById(rootElementId);
+  return ReactDOM.createPortal(
+    <div
+      className={isOpen ? BackdropFadeInStyle : BackdropFadeOutStyle}
+      onClick={event => {
+        event.stopPropagation();
+        onRequestClose();
+      }}
+      role="presentation"
+    >
+      <div
+        className={isOpen ? DialogFadeInStyle(width) : DialogFadeOutStyle(width)}
+        onClick={event => event.stopPropagation()}
+        role="presentation"
+      >
+        {showCancelButton && (
+          <button type="button" onClick={onCancel} className={CancelButtonStyle}>
+            <Icon icon="CLEAR" />
+          </button>
+        )}
 
-    if (!dialogRoot) {
-      logger.warn('Not found the rootElementId', rootElementId);
-      return;
-    }
+        {children}
+      </div>
+    </div>,
+    slot
+  );
+};
 
-    const { isOpen } = this.props;
+const Dialog = ({ isOpen, onRequestClose, onCancel, width, showCancelButton, children }: Props) => {
+  const [render, setRender] = React.useState(false);
 
-    if (!prevProps.isOpen && isOpen) {
-      dialogRoot.appendChild(this.dialogContainer);
-    }
-
-    if (prevProps.isOpen && !isOpen) {
+  React.useEffect(() => {
+    if (isOpen) {
+      setRender(true);
+    } else {
       setTimeout(() => {
-        if (dialogRoot.contains(this.dialogContainer)) {
-          dialogRoot.removeChild(this.dialogContainer);
-        }
+        setRender(false);
       }, ANIMATION_FINISHED);
     }
-  }
+  }, [isOpen]);
 
-  render() {
-    const { children, isOpen, onRequestClose, onCancel, width, showCancelButton } = this.props;
+  return render ? (
+    <DialogRender
+      width={width}
+      showCancelButton={showCancelButton}
+      onCancel={onCancel}
+      onRequestClose={onRequestClose}
+      isOpen={isOpen}
+    >
+      {children}
+    </DialogRender>
+  ) : null;
+};
 
-    return (
-      <PreventInitialAnimation isChildrenVisible>
-        {ReactDOM.createPortal(
-          <div
-            className={isOpen ? BackdropFadeInStyle : BackdropFadeOutStyle}
-            onClick={event => {
-              event.stopPropagation();
-              onRequestClose();
-            }}
-            role="presentation"
-          >
-            <div
-              className={isOpen ? DialogFadeInStyle(width) : DialogFadeOutStyle(width)}
-              onClick={event => event.stopPropagation()}
-              role="presentation"
-            >
-              {isOpen && showCancelButton && (
-                <button type="button" onClick={onCancel} className={CancelButtonStyle}>
-                  <Icon icon="CLEAR" />
-                </button>
-              )}
+Dialog.defaultProps = defaultProps;
 
-              {children}
-            </div>
-          </div>,
-          this.dialogContainer
-        )}
-      </PreventInitialAnimation>
-    );
-  }
-}
+export default Dialog;
