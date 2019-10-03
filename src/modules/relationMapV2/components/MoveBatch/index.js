@@ -230,79 +230,79 @@ export default function MoveBatch({ onSuccess }: Props) {
   }
 
   return (
-    <ActionDialog
-      isOpen={isOpen && isMoveBatches}
-      isProcessing={isProcessing}
-      onCancel={onCancel}
-      title={<FormattedMessage id="modules.RelationMap.label.move" defaultMessage="MOVE" />}
-      dialogMessage={dialogMessage}
-      dialogSubMessage={dialogSubMessage}
-      buttons={
-        <>
-          <BaseButton
-            label={
-              <FormattedMessage id="modules.RelationMap.label.moveTo" defaultMessage="MOVE TO" />
-            }
-            icon="ORDER"
-            disabled={!hasPermissionMoveToExistOrder()}
-            onClick={() => onConfirm('existOrder')}
-          />
-          <BaseButton
-            label={
-              <FormattedMessage
-                id="modules.RelationMap.label.moveToNew"
-                defaultMessage="MOVE TO NEW"
-              />
-            }
-            icon="ORDER"
-            disabled={!hasPermissionMoveToNewOrder()}
-            onClick={() => onConfirm('newOrder')}
-          />
-          <BaseButton
-            label={
-              <FormattedMessage id="modules.RelationMap.label.moveTo" defaultMessage="MOVE TO" />
-            }
-            icon="CONTAINER"
-            disabled={!hasPermissionMoveToExistContainer()}
-            onClick={() => onConfirm('existContainer')}
-          />
-          <BaseButton
-            label={
-              <FormattedMessage
-                id="modules.RelationMap.label.moveToNew"
-                defaultMessage="MOVE TO NEW"
-              />
-            }
-            icon="CONTAINER"
-            disabled={!hasPermissionMoveToNewContainer()}
-            onClick={() => onConfirm('newContainer')}
-          />
-          <BaseButton
-            label={
-              <FormattedMessage id="modules.RelationMap.label.moveTo" defaultMessage="MOVE TO" />
-            }
-            icon="SHIPMENT"
-            disabled={!hasPermissionMoveToExistShipment()}
-            onClick={() => onConfirm('existShipment') || !hasPermissionMoveToExistShipment()}
-          />
-          <BaseButton
-            label={
-              <FormattedMessage
-                id="modules.RelationMap.label.moveToNew"
-                defaultMessage="MOVE TO NEW"
-              />
-            }
-            icon="SHIPMENT"
-            disabled={!hasPermissionMoveToNewShipment()}
-            onClick={() => onConfirm('newShipment')}
-          />
-        </>
-      }
-    >
-      {/* TODO: Fix opening slideview bug */}
+    <>
+      <ActionDialog
+        isOpen={isOpen && isMoveBatches}
+        isProcessing={isProcessing}
+        onCancel={onCancel}
+        title={<FormattedMessage id="modules.RelationMap.label.move" defaultMessage="MOVE" />}
+        dialogMessage={dialogMessage}
+        dialogSubMessage={dialogSubMessage}
+        buttons={
+          <>
+            <BaseButton
+              label={
+                <FormattedMessage id="modules.RelationMap.label.moveTo" defaultMessage="MOVE TO" />
+              }
+              icon="ORDER"
+              disabled={!hasPermissionMoveToExistOrder()}
+              onClick={() => onConfirm('existOrder')}
+            />
+            <BaseButton
+              label={
+                <FormattedMessage
+                  id="modules.RelationMap.label.moveToNew"
+                  defaultMessage="MOVE TO NEW"
+                />
+              }
+              icon="ORDER"
+              disabled={!hasPermissionMoveToNewOrder()}
+              onClick={() => onConfirm('newOrder')}
+            />
+            <BaseButton
+              label={
+                <FormattedMessage id="modules.RelationMap.label.moveTo" defaultMessage="MOVE TO" />
+              }
+              icon="CONTAINER"
+              disabled={!hasPermissionMoveToExistContainer()}
+              onClick={() => onConfirm('existContainer')}
+            />
+            <BaseButton
+              label={
+                <FormattedMessage
+                  id="modules.RelationMap.label.moveToNew"
+                  defaultMessage="MOVE TO NEW"
+                />
+              }
+              icon="CONTAINER"
+              disabled={!hasPermissionMoveToNewContainer()}
+              onClick={() => onConfirm('newContainer')}
+            />
+            <BaseButton
+              label={
+                <FormattedMessage id="modules.RelationMap.label.moveTo" defaultMessage="MOVE TO" />
+              }
+              icon="SHIPMENT"
+              disabled={!hasPermissionMoveToExistShipment()}
+              onClick={() => onConfirm('existShipment') || !hasPermissionMoveToExistShipment()}
+            />
+            <BaseButton
+              label={
+                <FormattedMessage
+                  id="modules.RelationMap.label.moveToNew"
+                  defaultMessage="MOVE TO NEW"
+                />
+              }
+              icon="SHIPMENT"
+              disabled={!hasPermissionMoveToNewShipment()}
+              onClick={() => onConfirm('newShipment')}
+            />
+          </>
+        }
+      />
       <SelectOrderToMove onSuccess={onSuccess} />
       <SelectShipmentToMove onSuccess={onSuccess} onNewContainer={onNewContainer} />
       <SelectContainerToMove onSuccess={onSuccess} />
-    </ActionDialog>
+    </>
   );
 }
