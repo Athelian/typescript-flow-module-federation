@@ -60,7 +60,7 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
           )
         )
           .then(() => {
-            onSuccess(batchIds, !isRemove);
+            onSuccess(batchIds, true);
           })
           .catch(() => {
             dispatch({
@@ -87,7 +87,7 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
           },
         })
           .then(() => {
-            onSuccess(batchIds, !isRemove);
+            onSuccess(batchIds, false);
           })
           .catch(() => {
             dispatch({
@@ -116,7 +116,7 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
           },
         })
           .then(() => {
-            onSuccess(batchIds, !isRemove);
+            onSuccess(batchIds, false);
           })
           .catch(() => {
             dispatch({

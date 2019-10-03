@@ -303,7 +303,6 @@ export function reducer(
         });
       });
     case 'RECHECK_TARGET': {
-      // FIXME: there is an issue when it is removing the targeting batches from other order after move batches to order
       if (action.payload?.orderUpdate?.id) {
         return produce(state, draft => {
           const orderId = action.payload?.orderUpdate?.id ?? '';
