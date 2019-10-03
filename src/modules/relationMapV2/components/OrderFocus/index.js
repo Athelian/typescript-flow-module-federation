@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import InfiniteLoader from 'react-window-infinite-loader';
 import { VariableSizeList as List } from 'react-window';
 import { Query } from 'react-apollo';
 import { get, set, uniq } from 'lodash/fp';
@@ -63,11 +64,15 @@ const innerElementType = React.forwardRef(
 );
 
 const loadMore = (
-  clientData: { fetchMore: Function, data: ?Object },
-  queryVariables: Object = {},
-  selectedField: string = ''
+  clientData: {| fetchMore: Function, data: ?Object, onSuccess: Function |},
+  queryVariables: Object = {}
 ) => {
-  const { data = { [`${selectedField}`]: { page: 1, totalPage: 0 } }, fetchMore } = clientData;
+  const selectedField: string = 'orders';
+  const {
+    data = { [`${selectedField}`]: { page: 1, totalPage: 0 } },
+    fetchMore,
+    onSuccess,
+  } = clientData;
   if (!data) return Promise.resolve({});
   const nextPage = get(`${selectedField}.page`, data) + 1;
   const totalPage = get(`${selectedField}.totalPage`, data);
@@ -84,6 +89,7 @@ const loadMore = (
     },
     updateQuery: (prevResult, { fetchMoreResult }) => {
       logger.warn('updateQuery');
+      onSuccess();
 
       if (
         get(`${selectedField}.page`, prevResult) + 1 !==
@@ -112,7 +118,7 @@ const loadMore = (
         result
       );
     },
-  }).catch(logger.warn);
+  });
 };
 
 export default function OrderFocus() {
@@ -123,6 +129,7 @@ export default function OrderFocus() {
   });
   const { expandRows, setExpandRows } = ExpandRows.useContainer();
   const [scrollPosition, setScrollPosition] = React.useState(-1);
+  const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const { initHits } = Hits.useContainer();
   const { getBatchesSortByItemId, getItemsSortByOrderId } = ClientSorts.useContainer();
   const {
@@ -249,6 +256,18 @@ export default function OrderFocus() {
                   setExpandRows,
                 });
                 const rowCount = ordersData.length;
+                const isItemLoaded = (index: number) =>
+                  !hasMoreItems(data, 'orders') || index < rowCount;
+                const loadMoreItems =
+                  loading || isLoadingMore
+                    ? () => {}
+                    : async () => {
+                        setIsLoadingMore(true);
+                        await loadMore(
+                          { fetchMore, data, onSuccess: () => setIsLoadingMore(false) },
+                          queryVariables
+                        );
+                      };
                 const entities = normalize({ orders });
                 initMapping({
                   orders,
@@ -468,9 +487,9 @@ export default function OrderFocus() {
                             // need to find the position base on the order and batch
                             // then use the react-window to navigate to the row
                             // try to get from sort first, if not there, then try to use from entities
-                            const originalBatches =
-                              // $FlowIgnore this doesn't support yet
-                              entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? [];
+                            const originalBatches = ( // $FlowIgnore this doesn't support yet
+                              entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? []
+                            ).map(batchId => entities.batches?.[batchId]);
                             const batchList = getBatchesSortByItemId({
                               // $FlowIgnore this doesn't support yet
                               id: batch?.orderItem?.id,
@@ -733,30 +752,35 @@ export default function OrderFocus() {
                     />
                     {orders.length > 0 ? (
                       <>
-                        {/* $FlowIssue: doesn't match the flow type yet for ref */}
-                        <List
-                          ref={listRef}
-                          itemData={ordersData}
-                          className={ListStyle}
-                          itemCount={rowCount}
-                          innerElementType={innerElementType}
-                          itemSize={index => {
-                            if (index === 0) return 50;
-                            return 75;
-                          }}
-                          onItemsRendered={({ visibleStopIndex }) => {
-                            const isLastCell = visibleStopIndex === rowCount - 1;
-                            if (hasMoreItems(data, 'orders') && isLastCell) {
-                              loadMore({ fetchMore, data }, queryVariables, 'orders');
-                            }
-                          }}
-                          height={window.innerHeight - 50}
-                          width="100%"
-                          overscanCount={5}
+                        <InfiniteLoader
+                          isItemLoaded={isItemLoaded}
+                          itemCount={hasMoreItems(data, 'orders') ? rowCount + 1 : rowCount}
+                          loadMoreItems={loadMoreItems}
                         >
-                          {Row}
-                        </List>
-
+                          {({ onItemsRendered, ref }) => (
+                            <List
+                              // $FlowIgnore: doesn't support https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
+                              ref={element => {
+                                listRef.current = element;
+                                ref(element);
+                              }}
+                              itemData={ordersData}
+                              className={ListStyle}
+                              itemCount={hasMoreItems(data, 'orders') ? rowCount + 1 : rowCount}
+                              innerElementType={innerElementType}
+                              itemSize={index => {
+                                if (index === 0) return 50;
+                                return 75;
+                              }}
+                              onItemsRendered={onItemsRendered}
+                              height={window.innerHeight - 50}
+                              width="100%"
+                              overscanCount={5}
+                            >
+                              {Row}
+                            </List>
+                          )}
+                        </InfiniteLoader>
                         {state.targets.length > 0 && (
                           <>
                             <div className={ActionsBackdropStyle} />
