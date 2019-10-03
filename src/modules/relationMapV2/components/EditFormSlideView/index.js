@@ -21,6 +21,7 @@ import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/
 import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
 import { encodeId, uuid } from 'utils/id';
 import emitter from 'utils/emitter';
+import logger from 'utils/logger';
 import { isEquals } from 'utils/fp';
 import { ordersAndShipmentsQuery } from './query';
 import { createContainerMutation } from './mutation';
@@ -53,7 +54,12 @@ const EditFormSlideView = ({ onClose }: Props) => {
   const isReady = React.useRef(true);
   const { dispatch, state } = React.useContext(RelationMapContext);
   const [createContainer] = useMutation(createContainerMutation);
-  const [fetchOrdersAndShipments, fetchResult] = useLazyQuery(ordersAndShipmentsQuery);
+  const [fetchOrdersAndShipments, { called, loading, error, data = {} }] = useLazyQuery(
+    ordersAndShipmentsQuery,
+    {
+      fetchPolicy: 'no-cache',
+    }
+  );
   const { type, selectedId: id } = state.edit;
   const { mapping, checkRemoveEntities, onSetBadges } = Entities.useContainer();
   const onRequestClose = React.useCallback(() => {
@@ -151,14 +157,14 @@ const EditFormSlideView = ({ onClose }: Props) => {
       const newShipments = [];
       const newBatches = [];
       if (
-        fetchResult.called &&
+        called &&
         isEquals(lastQueryVariables, {
           orderIds,
           shipmentIds,
         }) &&
-        !fetchResult.loading
+        !loading
       ) {
-        const { ordersByIDs } = fetchResult.data;
+        const { ordersByIDs } = data;
         batchIds.forEach(batchId => {
           const orderItemId = findKey(mapping.entities?.orderItems, orderItem => {
             return (orderItem.batches || []).includes(batchId);
@@ -189,8 +195,14 @@ const EditFormSlideView = ({ onClose }: Props) => {
           }
         });
       }
-      const { importer, exporter } = fetchResult.data?.ordersByIDs?.[0] ?? {};
-      if (fetchResult.loading) {
+      const { importer, exporter } = data?.ordersByIDs?.[0] ?? {};
+      logger.warn({
+        data,
+        called,
+        loading,
+        error,
+      });
+      if (loading) {
         form = <LoadingIcon />;
       } else {
         switch (id) {
@@ -223,10 +235,10 @@ const EditFormSlideView = ({ onClose }: Props) => {
                   containers: newContainers,
                   shipments: newShipments,
                 }}
-                onSuccessCallback={data => {
+                onSuccessCallback={result => {
                   onSetBadges([
                     {
-                      id: data.orderCreate.id,
+                      id: result.orderCreate.id,
                       type: 'newItem',
                       entity: 'order',
                     },
@@ -234,12 +246,12 @@ const EditFormSlideView = ({ onClose }: Props) => {
                   dispatch({
                     type: 'NEW_ORDER',
                     payload: {
-                      orderId: data.orderCreate.id,
+                      orderId: result.orderCreate.id,
                     },
                   });
                   onClose({
                     moveToTop: true,
-                    id: data.orderCreate.id,
+                    id: result.orderCreate.id,
                     type: ORDER,
                   });
                 }}
@@ -259,10 +271,10 @@ const EditFormSlideView = ({ onClose }: Props) => {
                   batches: newBatches,
                   containers: newContainers,
                 }}
-                onSuccessCallback={data => {
+                onSuccessCallback={result => {
                   onSetBadges([
                     {
-                      id: data.shipmentCreate.id,
+                      id: result.shipmentCreate.id,
                       type: 'newItem',
                       entity: 'shipment',
                     },
@@ -270,12 +282,12 @@ const EditFormSlideView = ({ onClose }: Props) => {
                   dispatch({
                     type: 'NEW_SHIPMENT',
                     payload: {
-                      orderId: data.shipmentCreate.id,
+                      orderId: result.shipmentCreate.id,
                     },
                   });
                   onClose({
                     moveToTop: true,
-                    id: data.shipmentCreate.id,
+                    id: result.shipmentCreate.id,
                     type: SHIPMENT,
                   });
                 }}
@@ -312,10 +324,10 @@ const EditFormSlideView = ({ onClose }: Props) => {
                       },
                     },
                   })
-                    .then(({ data }) => {
+                    .then(result => {
                       onSetBadges([
                         {
-                          id: data.containerCreate.id,
+                          id: result.data.containerCreate.id,
                           type: 'newItem',
                           entity: 'container',
                         },
@@ -323,12 +335,12 @@ const EditFormSlideView = ({ onClose }: Props) => {
                       dispatch({
                         type: 'NEW_CONTAINER',
                         payload: {
-                          orderId: data.containerCreate.id,
+                          orderId: result.data.containerCreate.id,
                         },
                       });
                       onClose({
                         moveToTop: true,
-                        id: data.containerCreate.id,
+                        id: result.data.containerCreate.id,
                         type: CONTAINER,
                       });
                     })
@@ -347,10 +359,10 @@ const EditFormSlideView = ({ onClose }: Props) => {
           path="new"
           isSlideView
           redirectAfterSuccess={false}
-          onSuccessCallback={data => {
+          onSuccessCallback={result => {
             onSetBadges([
               {
-                id: data.orderCreate.id,
+                id: result.orderCreate.id,
                 type: 'newItem',
                 entity: 'order',
               },
@@ -358,12 +370,12 @@ const EditFormSlideView = ({ onClose }: Props) => {
             dispatch({
               type: 'NEW_ORDER',
               payload: {
-                orderId: data.orderCreate.id,
+                orderId: result.orderCreate.id,
               },
             });
             onClose({
               moveToTop: true,
-              id: data.orderCreate.id,
+              id: result.orderCreate.id,
               type: ORDER,
             });
           }}
