@@ -7,11 +7,14 @@ import { Entities } from 'modules/relationMapV2/store';
 import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import { ORDER_ITEM } from 'modules/relationMapV2/constants';
 import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
-import Dialog from 'components/Dialog';
-import LoadingIcon from 'components/LoadingIcon';
-import { CancelButton, YesButton } from 'components/Buttons';
-import Icon from 'components/Icon';
-import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
+import { BaseButton } from 'components/Buttons';
+import FormattedNumber from 'components/FormattedNumber';
+import ActionDialog, {
+  ItemsLabelIcon,
+  ItemLabelIcon,
+  BatchesLabelIcon,
+  BatchLabelIcon,
+} from '../ActionDialog';
 import { batchBalanceSplitManyMutation } from './mutation';
 import { targetedIds } from '../OrderFocus/helpers';
 
@@ -28,6 +31,7 @@ export default function AutoFill({ onSuccess }: Props) {
   const hasPermission = useAllHasPermission(
     orderItemIds.map(id => mapping.entities?.orderItems?.[id]?.ownedBy).filter(Boolean)
   );
+  const totalOrderItems = orderItemIds.length;
   const itemsWithHigherQuantity = orderItemIds.filter(itemId => {
     const item = mapping.entities?.orderItems?.[itemId];
     const totalBatchQuantity = (item?.batches ?? []).reduce((total, batchId) => {
@@ -35,6 +39,8 @@ export default function AutoFill({ onSuccess }: Props) {
     }, 0);
     return (item?.quantity ?? 0) > totalBatchQuantity;
   });
+  const totalItemsWithHigherQuantity = itemsWithHigherQuantity.length;
+
   const onCancel = () => {
     dispatch({
       type: 'AUTO_FILL_CLOSE',
@@ -72,64 +78,96 @@ export default function AutoFill({ onSuccess }: Props) {
   const allDoesNotHaveHigherQuantity = itemsWithHigherQuantity.length === 0;
   const noPermission = !allowToUpdate();
 
+  let dialogMessage = null;
+  let dialogSubMessage = null;
+
   if (noPermission) {
-    return (
-      <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>
-        <div className={DialogStyle}>
-          <h3 className={ConfirmMessageStyle}>
-            <FormattedMessage
-              id="modules.RelationMap.autoFill.noPermission"
-              defaultMessage="At least one {source} {entity} selected does not allow you to autofill.Please reselect and try again."
-              values={{
-                source: 'Item',
-                entity: <Icon icon="ORDER_ITEM" />,
-              }}
-            />
-          </h3>
-          <div className={ButtonsStyle}>
-            <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          </div>
-        </div>
-      </Dialog>
+    // No permission to autofill
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.autofill.noPermission"
+        defaultMessage="At least one {itemLabel} selected does not allow you to autofill."
+        values={{ itemLabel: <ItemLabelIcon /> }}
+      />
+    );
+    dialogSubMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.actions.tryAgain"
+        defaultMessage="Please reselect and try again."
+      />
+    );
+  } else if (isProcessing) {
+    // Is currently autofilling
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.autofill.autofilling"
+        defaultMessage="Autofilling {numOfItems} {itemsLabel} ..."
+        values={{
+          numOfItems: <FormattedNumber value={totalOrderItems} />,
+          itemsLabel: <ItemsLabelIcon />,
+        }}
+      />
+    );
+  } else if (allDoesNotHaveHigherQuantity) {
+    // Has permission to autofill but no items have enough quantity
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.autofill.notEnoughQuantity"
+        defaultMessage="None of the {itemsLabel} selected have more quantity than the sum of their {batchesLabel} quantities."
+        values={{ itemsLabel: <ItemsLabelIcon />, batchesLabel: <BatchesLabelIcon /> }}
+      />
+    );
+    dialogSubMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.actions.tryAgain"
+        defaultMessage="Please reselect and try again."
+      />
+    );
+  } else {
+    // Has permission to autofill and can autofill
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.autofill.message1"
+        defaultMessage="Are you sure you want to autofill {numOfValidItems} / {numOfItems} {itemsLabel} that you have selected?"
+        values={{
+          numOfValidItems: <FormattedNumber value={totalItemsWithHigherQuantity} />,
+          numOfItems: <FormattedNumber value={totalOrderItems} />,
+          itemsLabel: <ItemsLabelIcon />,
+        }}
+      />
+    );
+    dialogSubMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.autofill.message2"
+        defaultMessage="This will create a {batchLabel} for each {itemLabel} with its quantity set as the remaining quantity of the {itemLabel}. Only {itemsLabel} with quantities higher than the sum of quantities of their {batchesLabel} can be autofilled"
+        values={{
+          batchLabel: <BatchLabelIcon />,
+          itemLabel: <ItemLabelIcon />,
+          itemsLabel: <ItemsLabelIcon />,
+          batchesLabel: <BatchesLabelIcon />,
+        }}
+      />
     );
   }
+
   return (
-    <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>
-      <div className={DialogStyle}>
-        {isProcessing ? (
-          <>
-            <FormattedMessage
-              id="modules.RelationMap.autoFill.process"
-              defaultMessage="Autofilling Batches {batch} for {total} Items {entity} ..."
-              values={{
-                total: itemsWithHigherQuantity.length,
-                batch: <Icon icon="BATCH" />,
-                entity: <Icon icon="ORDER_ITEM" />,
-              }}
-            />
-            <LoadingIcon />
-          </>
-        ) : (
-          <h3 className={ConfirmMessageStyle}>
-            <FormattedMessage
-              id="modules.RelationMap.autoFill.guideline"
-              defaultMessage="You have selected {total} Items {entity} have more quantity than their Batches {batch}.Would you like to generate a new Batch {batch} which fills up the remaining quantities for each of these Items {entity}"
-              values={{
-                total: itemsWithHigherQuantity.length,
-                batch: <Icon icon="BATCH" />,
-                entity: <Icon icon="ORDER_ITEM" />,
-              }}
-            />
-          </h3>
-        )}
-        <div className={ButtonsStyle}>
-          <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          <YesButton
-            disabled={Boolean(isProcessing) || allDoesNotHaveHigherQuantity}
-            onClick={onConfirm}
-          />
-        </div>
-      </div>
-    </Dialog>
+    <ActionDialog
+      isOpen={isOpen}
+      isProcessing={isProcessing}
+      onCancel={onCancel}
+      title={<FormattedMessage id="modules.RelationMap.label.autofill" defaultMessage="AUTOFILL" />}
+      dialogMessage={dialogMessage}
+      dialogSubMessage={dialogSubMessage}
+      buttons={
+        <BaseButton
+          label={
+            <FormattedMessage id="modules.RelationMap.label.autofill" defaultMessage="AUTOFILL" />
+          }
+          icon="QUANTITY_ADJUSTMENTS"
+          disabled={isProcessing || noPermission || allDoesNotHaveHigherQuantity}
+          onClick={onConfirm}
+        />
+      }
+    />
   );
 }
