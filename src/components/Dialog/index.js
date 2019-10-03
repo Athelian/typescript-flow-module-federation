@@ -2,7 +2,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Icon from 'components/Icon';
-import { usePortalSlot } from 'hooks/usePortalSlot';
+import usePortalSlot from 'hooks/usePortalSlot';
 import {
   BackdropFadeInStyle,
   BackdropFadeOutStyle,

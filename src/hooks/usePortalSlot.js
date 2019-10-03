@@ -3,7 +3,7 @@ import * as React from 'react';
 
 const root = document.getElementById('portal-root');
 
-export function usePortalSlot(): HTMLDivElement {
+export default function usePortalSlot(): HTMLDivElement {
   const slotRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {

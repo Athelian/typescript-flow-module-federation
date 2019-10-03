@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { FormattedMessage } from 'react-intl';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
-import { usePortalSlot } from 'hooks/usePortalSlot';
+import usePortalSlot from 'hooks/usePortalSlot';
 import { BackdropStyle, SlideViewStyle, SlideViewContentStyle } from './style';
 
 const StartWidth = 80; // vw
