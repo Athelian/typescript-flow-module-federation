@@ -45,7 +45,7 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
     dispatch({
       type: 'DELETE_BATCHES_START',
       payload: {
-        isRemove: type.includes('removeFromShipment'),
+        isRemove: type.includes('remove'),
       },
     });
     switch (type) {
