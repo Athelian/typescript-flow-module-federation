@@ -42,9 +42,7 @@ function SplitBatch({
 
       <FieldItem
         input={
-          // TODO: Validate if quantity is 0
           // TODO: Use proper number input like the ones we use in our forms
-          // TODO: Make default value as null instead of 0
           <DefaultStyle type="number" width="200px">
             <NumberInput
               min={0}
@@ -222,11 +220,19 @@ export default function SplitBatches({ onSuccess }: Props) {
       </>
     );
     dialogSubMessage = (
-      <FormattedMessage
-        id="modules.RelationMap.split.message2"
-        defaultMessage="You cannot split by more than the quantity of each {batchLabel} or by 0"
-        values={{ batchLabel: <BatchLabelIcon /> }}
-      />
+      <>
+        <FormattedMessage
+          id="modules.RelationMap.split.message2a"
+          defaultMessage="You cannot split by more than the quantity of each {batchLabel}"
+          values={{ batchLabel: <BatchLabelIcon /> }}
+        />
+        <div>
+          <FormattedMessage
+            id="modules.RelationMap.split.message2b"
+            defaultMessage="If quantity to split into is set as 0, it will be ignored"
+          />
+        </div>
+      </>
     );
   }
 
@@ -248,39 +254,41 @@ export default function SplitBatches({ onSuccess }: Props) {
           />
         }
       >
-        <div className={SplitInputsWrapperStyle}>
-          <div className={SplitRowStyle}>
-            <Label>
-              <FormattedMessage id="components.BatchItem.batchNo" />
-            </Label>
+        {!allHasNoQuantity && (
+          <div className={SplitInputsWrapperStyle}>
+            <div className={SplitRowStyle}>
+              <Label>
+                <FormattedMessage id="components.BatchItem.batchNo" />
+              </Label>
 
-            <Label>
-              <FormattedMessage id="components.BatchItem.quantity" />
-            </Label>
+              <Label>
+                <FormattedMessage id="components.BatchItem.quantity" />
+              </Label>
 
-            <Label>
-              <FormattedMessage
-                id="modules.RelationMap.label.splitInto"
-                defaultMessage="Quantity to Split Into"
+              <Label>
+                <FormattedMessage
+                  id="modules.RelationMap.label.splitInto"
+                  defaultMessage="Quantity to Split Into"
+                />
+              </Label>
+            </div>
+
+            {batchIds.map(batchId => (
+              <SplitBatch
+                key={batchId}
+                onChange={quantity =>
+                  setBatches([
+                    ...batches.filter(batch => batch?.id !== batchId),
+                    { id: batchId, quantity },
+                  ])
+                }
+                no={mapping.entities?.batches?.[batchId]?.no ?? ''}
+                latestQuantity={mapping.entities?.batches?.[batchId]?.latestQuantity ?? 0}
+                quantity={getQuantity(batchId)}
               />
-            </Label>
+            ))}
           </div>
-
-          {batchIds.map(batchId => (
-            <SplitBatch
-              key={batchId}
-              onChange={quantity =>
-                setBatches([
-                  ...batches.filter(batch => batch?.id !== batchId),
-                  { id: batchId, quantity },
-                ])
-              }
-              no={mapping.entities?.batches?.[batchId]?.no ?? ''}
-              latestQuantity={mapping.entities?.batches?.[batchId]?.latestQuantity ?? 0}
-              quantity={getQuantity(batchId)}
-            />
-          ))}
-        </div>
+        )}
       </ActionDialog>
     </>
   );
