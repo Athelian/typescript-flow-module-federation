@@ -129,7 +129,7 @@ const ProductProviderFormWrapper = ({
                     icon="PACKAGING"
                   />
                   <SectionTabs
-                    link="productProvider_documentsSection"
+                    link="ProductProvider_DocumentsSection"
                     label={
                       <FormattedMessage
                         id="modules.Products.documents"

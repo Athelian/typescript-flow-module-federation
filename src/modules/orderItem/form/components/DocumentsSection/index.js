@@ -45,7 +45,6 @@ function ItemDocumentsSection() {
 
   return (
     <DocumentsSection
-      sectionId="orderItem_documentsSection"
       entityType="OrderItem"
       container={OrderItemFilesContainer}
       canUpload={canUpload}

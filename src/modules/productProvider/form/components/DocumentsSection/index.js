@@ -43,7 +43,6 @@ export default function EndProductDocumentsSection() {
 
   return (
     <DocumentsSection
-      sectionId="productProvider_documentsSection"
       entityType="ProductProvider"
       container={ProductProviderInfoContainer}
       canUpload={canUpload}

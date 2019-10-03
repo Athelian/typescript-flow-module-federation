@@ -69,7 +69,7 @@ const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
                     icon="BATCH"
                   />
                   <SectionTabs
-                    link="orderItem_documentsSection"
+                    link="OrderItem_DocumentsSection"
                     label={
                       <FormattedMessage
                         id="modules.OrderItems.document"

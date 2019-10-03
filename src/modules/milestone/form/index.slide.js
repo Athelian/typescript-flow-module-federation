@@ -62,6 +62,11 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
                       label={<FormattedMessage id="common.milestone" defaultMessage="MILESTONE" />}
                       icon="MILESTONE"
                     />
+                    <SectionTabs
+                      link="Milestone_DocumentsSection"
+                      label={<FormattedMessage id="common.documents" defaultMessage="DOCUMENTS" />}
+                      icon="DOCUMENT"
+                    />
                   </JumpToSection>
 
                   {(milestoneStateContainer.isDirty() || filesContainer.isDirty()) && (

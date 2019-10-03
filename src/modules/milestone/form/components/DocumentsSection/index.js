@@ -42,7 +42,6 @@ export default function MilestoneDocumentsSection() {
 
   return (
     <DocumentsSection
-      sectionId="milestone_documents_section"
       entityType="Milestone"
       container={MilestoneFilesContainer}
       canUpload={canUpload}
