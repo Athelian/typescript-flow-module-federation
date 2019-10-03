@@ -9,7 +9,8 @@ import { BATCH } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE } from 'modules/permission/constants/batch';
 import { BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
-import { FieldItem, DefaultStyle, Label, Display, NumberInput, FormTooltip } from 'components/Form';
+import { useNumberInput } from 'modules/form/hooks';
+import { Label, Display, NumberInputFactory } from 'components/Form';
 import ActionDialog, { BatchesLabelIcon, BatchLabelIcon } from '../ActionDialog';
 import { batchSimpleSplitMutation } from './mutation';
 import { SplitInputsWrapperStyle, SplitRowStyle } from './style';
@@ -20,18 +21,21 @@ type Props = {|
   onSuccess: (orderIds: Array<string>, batchIds: Object) => void,
 |};
 
+const DEFAULT_QTY = 0;
+
 function SplitBatch({
-  quantity,
+  id,
   no,
   latestQuantity,
   onChange,
 }: {|
+  id: string,
   no: string,
-  quantity: number,
   latestQuantity: number,
   onChange: (quantity: number) => void,
 |}) {
-  const validation = validator(0, latestQuantity);
+  const validation = validator(DEFAULT_QTY, latestQuantity);
+  const { hasError, touch, ...inputHandlers } = useNumberInput(DEFAULT_QTY, { isRequire: false });
   return (
     <div className={SplitRowStyle}>
       <Display height="30px">{no}</Display>
@@ -40,34 +44,30 @@ function SplitBatch({
         <FormattedNumber value={latestQuantity} />
       </Display>
 
-      <FieldItem
-        input={
-          // TODO: Use proper number input like the ones we use in our forms
-          <DefaultStyle type="number" width="200px">
-            <NumberInput
-              min={0}
-              max={latestQuantity}
-              value={quantity}
-              onChange={evt => onChange(evt.target.value)}
+      <NumberInputFactory
+        name={`split-batch-${id}`}
+        originalValue={DEFAULT_QTY}
+        isNew
+        editable
+        inputWidth="200px"
+        inputHeight="30px"
+        {...inputHandlers}
+        onBlur={evt => {
+          inputHandlers.onBlur(evt);
+          onChange(inputHandlers.value || DEFAULT_QTY);
+        }}
+        isTouched={touch}
+        errorMessage={
+          !validation.isValidSync({ quantity: inputHandlers.value }) && (
+            <FormattedMessage
+              id="modules.RelationMap.split.validationError"
+              defaultMessage="Please enter the number between {min} and {max}"
+              values={{
+                min: 1,
+                max: latestQuantity,
+              }}
             />
-          </DefaultStyle>
-        }
-        tooltip={
-          <FormTooltip
-            isNew={false}
-            errorMessage={
-              !validation.isValidSync({ quantity }) && (
-                <FormattedMessage
-                  id="modules.RelationMap.split.validationError"
-                  defaultMessage="Please enter the number between {min} and {max}"
-                  values={{
-                    min: 1,
-                    max: latestQuantity,
-                  }}
-                />
-              )
-            }
-          />
+          )
         }
       />
     </div>
@@ -87,7 +87,6 @@ export default function SplitBatches({ onSuccess }: Props) {
     batchIds.map(id => mapping.entities?.batches?.[id]?.ownedBy).filter(Boolean)
   );
   const totalBatches = batchIds.length;
-  const DEFAULT_QTY = 0;
   const [batches, setBatches] = React.useState(batchIds.map(id => ({ id, quantity: DEFAULT_QTY })));
   React.useEffect(() => {
     return () => {
@@ -100,11 +99,6 @@ export default function SplitBatches({ onSuccess }: Props) {
       payload: {},
     });
   }, [dispatch]);
-
-  const getQuantity = (batchId: string) => {
-    const findBatch = batches.find(batch => batch.id === batchId);
-    return findBatch?.quantity ?? DEFAULT_QTY;
-  };
 
   const onConfirm = () => {
     dispatch({
@@ -135,9 +129,10 @@ export default function SplitBatches({ onSuccess }: Props) {
   };
 
   const isValid = () => {
+    const validSplitBatches = batches.filter(({ quantity }) => quantity);
     return (
-      batches.length > 0 &&
-      batches.every(({ id, quantity }) =>
+      validSplitBatches.length > 0 &&
+      validSplitBatches.every(({ id, quantity }) =>
         validator(1, mapping.entities?.batches?.[id]?.latestQuantity ?? 0).isValidSync({
           quantity,
         })
@@ -273,10 +268,10 @@ export default function SplitBatches({ onSuccess }: Props) {
                 />
               </Label>
             </div>
-
             {batchIds.map(batchId => (
               <SplitBatch
                 key={batchId}
+                id={batchId}
                 onChange={quantity =>
                   setBatches([
                     ...batches.filter(batch => batch?.id !== batchId),
@@ -284,8 +279,7 @@ export default function SplitBatches({ onSuccess }: Props) {
                   ])
                 }
                 no={mapping.entities?.batches?.[batchId]?.no ?? ''}
-                latestQuantity={mapping.entities?.batches?.[batchId]?.latestQuantity ?? 0}
-                quantity={getQuantity(batchId)}
+                latestQuantity={mapping.entities?.batches?.[batchId]?.latestQuantity ?? DEFAULT_QTY}
               />
             ))}
           </div>
