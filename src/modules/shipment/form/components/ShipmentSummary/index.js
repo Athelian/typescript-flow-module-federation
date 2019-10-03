@@ -243,6 +243,26 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                       data
                     );
 
+              const calculateTotalWeight =
+                { value: totalWeightValue, metric: 'kg' } || defaultWeight;
+              const calculateTotalVolume =
+                { value: totalVolumeValue, metric: 'm³' } || defaultVolume;
+
+              const values = {
+                totalPackageQuantityOverride: baseValues.totalPackageQuantityOverriding
+                  ? totalPackageQuantity
+                  : baseValues.totalPackageQuantityOverride,
+                totalPackageQuantityOverriding: baseValues.totalPackageQuantityOverriding,
+                totalWeightOverride: baseValues.totalWeightOverriding
+                  ? calculateTotalWeight
+                  : baseValues.totalWeightOverride,
+                totalWeightOverriding: baseValues.totalWeightOverriding,
+                totalVolumeOverride: baseValues.totalVolumeOverriding
+                  ? calculateTotalVolume
+                  : baseValues.totalVolumeOverride,
+                totalVolumeOverriding: baseValues.totalVolumeOverriding,
+              };
+
               return (
                 <div className={SummaryStyle}>
                   <GridColumn>
@@ -325,49 +345,6 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                         </Display>
                       }
                     />
-
-                    <FormField
-                      name="totalPackageQuantityOverride"
-                      initValue={
-                        baseValues.totalPackageQuantityOverriding
-                          ? totalPackageQuantity
-                          : baseValues.totalPackageQuantityOverride
-                      }
-                      setFieldValue={setFieldValue}
-                      values={baseValues}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <NumberInputFactory
-                          name={name}
-                          {...inputHandlers}
-                          originalValue={baseOriginalValues[name]}
-                          label={
-                            <FormattedMessage
-                              id="modules.Shipments.totalPackages"
-                              defaultMessage="Total Packages"
-                            />
-                          }
-                          editable={canUpdate || hasPermission(SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY)}
-                          showExtraToggleButton={
-                            canUpdate || hasPermission(SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY)
-                          }
-                          autoCalculateIsToggled={baseValues.totalPackageQuantityOverriding}
-                          onToggleAutoCalculate={() => {
-                            if (baseValues.totalPackageQuantityOverriding) {
-                              setFieldValues({
-                                totalPackageQuantityOverriding: false,
-                              });
-                            } else {
-                              setFieldValues({
-                                totalPackageQuantityOverriding: true,
-                                totalPackageQuantityOverride: totalPackageQuantity,
-                              });
-                            }
-                          }}
-                        />
-                      )}
-                    </FormField>
-
                     <FieldItem
                       label={
                         <Label>
@@ -445,19 +422,55 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                         </Display>
                       }
                     />
-
+                    <FormField
+                      name="totalPackageQuantityOverride"
+                      initValue={values.totalPackageQuantityOverride}
+                      setFieldValue={setFieldValue}
+                      values={values}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <NumberInputFactory
+                          inputWidth="150px"
+                          labelWidth="150px"
+                          name={name}
+                          {...inputHandlers}
+                          originalValue={baseOriginalValues[name]}
+                          label={
+                            <FormattedMessage
+                              id="modules.Shipments.totalPackages"
+                              defaultMessage="Total Packages"
+                            />
+                          }
+                          editable={canUpdate || hasPermission(SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY)}
+                          showExtraToggleButton={
+                            canUpdate || hasPermission(SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY)
+                          }
+                          autoCalculateIsToggled={values.totalPackageQuantityOverriding}
+                          onToggleAutoCalculate={() => {
+                            if (values.totalPackageQuantityOverriding) {
+                              setFieldValues({
+                                totalPackageQuantityOverriding: false,
+                              });
+                            } else {
+                              setFieldValues({
+                                totalPackageQuantityOverriding: true,
+                                totalPackageQuantityOverride: totalPackageQuantity,
+                              });
+                            }
+                          }}
+                        />
+                      )}
+                    </FormField>
                     <FormField
                       name="totalWeightOverride"
-                      initValue={
-                        baseValues.totalWeightOverriding
-                          ? totalWeightValue || defaultWeight
-                          : baseValues.totalWeightOverride
-                      }
+                      initValue={values.totalWeightOverride}
                       setFieldValue={setFieldValue}
-                      values={baseValues}
+                      values={values}
                     >
                       {({ name, ...inputHandlers }) => (
                         <MetricInputFactory
+                          inputWidth="150px"
+                          labelWidth="150px"
                           metricType="weight"
                           name={name}
                           {...inputHandlers}
@@ -472,16 +485,16 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                           showExtraToggleButton={
                             canUpdate || hasPermission(SHIPMENT_SET_TOTAL_WEIGHT)
                           }
-                          autoCalculateIsToggled={baseValues.totalWeightOverriding}
+                          autoCalculateIsToggled={values.totalWeightOverriding}
                           onToggleAutoCalculate={() => {
-                            if (baseValues.totalWeightOverriding) {
+                            if (values.totalWeightOverriding) {
                               setFieldValues({
                                 totalWeightOverriding: false,
                               });
                             } else {
                               setFieldValues({
                                 totalWeightOverriding: true,
-                                totalWeightOverride: totalWeightValue || defaultWeight,
+                                totalWeightOverride: calculateTotalWeight,
                               });
                             }
                           }}
@@ -491,16 +504,14 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
 
                     <FormField
                       name="totalVolumeOverride"
-                      initValue={
-                        baseValues.totalVolumeOverriding
-                          ? totalVolumeValue || defaultVolume
-                          : baseValues.totalVolumeOverride
-                      }
+                      initValue={values.totalVolumeOverride}
                       setFieldValue={setFieldValue}
-                      values={baseValues}
+                      values={values}
                     >
                       {({ name, ...inputHandlers }) => (
                         <MetricInputFactory
+                          inputWidth="150px"
+                          labelWidth="150px"
                           metricType="volume"
                           name={name}
                           {...inputHandlers}
@@ -515,16 +526,16 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                           showExtraToggleButton={
                             canUpdate || hasPermission(SHIPMENT_SET_TOTAL_VOLUME)
                           }
-                          autoCalculateIsToggled={baseValues.totalVolumeOverriding}
+                          autoCalculateIsToggled={values.totalVolumeOverriding}
                           onToggleAutoCalculate={() => {
-                            if (baseValues.totalVolumeOverriding) {
+                            if (values.totalVolumeOverriding) {
                               setFieldValues({
                                 totalVolumeOverriding: false,
                               });
                             } else {
                               setFieldValues({
                                 totalVolumeOverriding: true,
-                                totalVolumeOverride: totalVolumeValue || defaultVolume,
+                                totalVolumeOverride: calculateTotalVolume,
                               });
                             }
                           }}
