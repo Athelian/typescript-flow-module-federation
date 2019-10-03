@@ -424,7 +424,7 @@ export default function AddTags({ onSuccess }: Props) {
             <FormattedMessage id="modules.RelationMap.label.addTags" defaultMessage="ADD TAGS" />
           }
           icon="TAG"
-          disabled={isProcessing || noPermission || tags.length === 0}
+          disabled={noPermission || tags.length === 0}
           onClick={onConfirm}
         />
       }

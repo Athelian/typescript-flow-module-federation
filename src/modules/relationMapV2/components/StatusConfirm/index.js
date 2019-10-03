@@ -79,6 +79,7 @@ export default function StatusConfirm({ onSuccess }: Props) {
       payload: {},
     });
   };
+
   const onConfirm = archived => {
     setIsArchived(archived);
     dispatch({
@@ -230,7 +231,7 @@ export default function StatusConfirm({ onSuccess }: Props) {
       dialogSubMessage={dialogSubMessage}
       buttons={
         <>
-          {isProcessing || noPermission || isDisabled(false) ? (
+          {noPermission || isDisabled(false) ? (
             <>
               {noPermission ? (
                 <ActivateButton disabled />
@@ -253,7 +254,7 @@ export default function StatusConfirm({ onSuccess }: Props) {
             <ActivateButton onClick={() => onConfirm(false)} />
           )}
 
-          {isProcessing || noPermission || isDisabled(true) ? (
+          {noPermission || isDisabled(true) ? (
             <>
               {noPermission ? (
                 <ArchiveButton disabled />
