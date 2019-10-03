@@ -18,7 +18,7 @@ type Props = {
 function parseUrl(notification) {
   const id = notification?.entity?.id;
 
-  if (notification?.entity?.id === null) return '.';
+  if (!id) return '.';
 
   const typeName = notification?.entity?.__typename;
 
