@@ -3,8 +3,8 @@ import * as React from 'react';
 import { Mutation } from 'react-apollo';
 import FormattedDate from 'components/FormattedDate';
 import { Link } from '@reach/router';
-import { getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';
+import { parseRoute, parseIcon } from 'utils/entity';
 import Icon from 'components/Icon';
 import LoadingIcon from 'components/LoadingIcon';
 import mutation from 'modules/notifications/mutation';
@@ -16,13 +16,13 @@ type Props = {
 };
 
 function parseUrl(notification) {
-  if (getByPathWithDefault('', 'entity.id', notification) === '') return '.';
+  const id = notification?.entity?.id;
 
-  return `/${getByPathWithDefault(
-    'STAFF',
-    'entity.__typename',
-    notification
-  ).toLowerCase()}/${encodeId(getByPathWithDefault('', 'entity.id', notification))}`;
+  if (!id) return '.';
+
+  const typeName = notification?.entity?.__typename;
+
+  return `/${parseRoute(typeName).toLowerCase()}/${encodeId(id)}`;
 }
 
 function handleReadNotification(readNotification: Function, notificationId: number) {
@@ -42,13 +42,7 @@ const NotificationItem = ({ notification }: Props) => (
         >
           <div className={AvatarStyle(avatar)}>
             <div className={IconWrapperStyle}>
-              <Icon
-                icon={getByPathWithDefault(
-                  'STAFF',
-                  'entity.__typename',
-                  notification
-                ).toUpperCase()}
-              />
+              <Icon icon={parseIcon(notification?.entity?.__typename)} />
             </div>
           </div>
           <div className={InfoWrapper}>

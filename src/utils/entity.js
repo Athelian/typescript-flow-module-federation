@@ -2,6 +2,7 @@
 
 const mappingRoutes = {
   orderItem: 'order-item',
+  OrderItem: 'order-item',
 };
 
 const mappingIcon = {
