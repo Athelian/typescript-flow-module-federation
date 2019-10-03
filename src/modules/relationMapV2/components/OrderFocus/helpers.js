@@ -37,6 +37,28 @@ export const findOrderIdByOrderItem = (itemId: string, entities: Object) => {
   return parentOrderId;
 };
 
+export const findOrderIdsByContainer = (containerId: string, entities: Object) => {
+  const parentOrderIds = (Object.keys(entities.orders || {}).filter(orderId => {
+    return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
+      (entities?.orderItems?.[itemId]?.batches ?? []).some(
+        batchId => entities?.batches?.[batchId]?.container === containerId
+      )
+    );
+  }): Array<string>);
+  return parentOrderIds;
+};
+
+export const findOrderIdsByShipment = (shipmentId: string, entities: Object) => {
+  const parentOrderIds = (Object.keys(entities.orders || {}).filter(orderId => {
+    return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
+      (entities?.orderItems?.[itemId]?.batches ?? []).some(
+        batchId => entities?.batches?.[batchId]?.shipment === shipmentId
+      )
+    );
+  }): Array<string>);
+  return parentOrderIds;
+};
+
 export const targetedIds = (
   targets: Array<string>,
   type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT

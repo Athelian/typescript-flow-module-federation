@@ -38,7 +38,13 @@ import ActionDialog, {
   TagLabelIcon,
 } from '../ActionDialog';
 import { entitiesUpdateManyMutation } from './mutation';
-import { targetedIds } from '../OrderFocus/helpers';
+import {
+  targetedIds,
+  findOrderIdByOrderItem,
+  findOrderIdByBatch,
+  findOrderIdsByContainer,
+  findOrderIdsByShipment,
+} from '../OrderFocus/helpers';
 
 type Props = {|
   onSuccess: (orderIds: Array<string>) => void,
@@ -218,7 +224,32 @@ export default function AddTags({ onSuccess }: Props) {
         },
       })
         .then(result => {
-          onSuccess((result.data?.entitiesUpdateMany?.orders ?? []).map(order => order.id));
+          const ids = (result.data?.entitiesUpdateMany?.orders ?? []).map(order => order.id);
+          if ((result.data?.entitiesUpdateMany?.orderItems ?? []).length) {
+            ids.push(
+              ...(result.data?.entitiesUpdateMany?.orderItems ?? []).map(item =>
+                findOrderIdByOrderItem(item.id, mapping.entities)
+              )
+            );
+          }
+          if ((result.data?.entitiesUpdateMany?.batches ?? []).length) {
+            ids.push(
+              ...(result.data?.entitiesUpdateMany?.batches ?? []).map(batch =>
+                findOrderIdByBatch(batch.id, mapping.entities)
+              )
+            );
+          }
+          if ((result.data?.entitiesUpdateMany?.containers ?? []).length) {
+            (result.data?.entitiesUpdateMany?.containers ?? []).forEach(container =>
+              ids.push(...findOrderIdsByContainer(container.id, mapping.entities))
+            );
+          }
+          if ((result.data?.entitiesUpdateMany?.shipments ?? []).length) {
+            (result.data?.entitiesUpdateMany?.shipments ?? []).forEach(shipment =>
+              ids.push(...findOrderIdsByShipment(shipment.id, mapping.entities))
+            );
+          }
+          onSuccess(ids);
         })
         .catch(onCancel);
     }
@@ -230,6 +261,7 @@ export default function AddTags({ onSuccess }: Props) {
     containersResult.data,
     containersResult.loading,
     isProcessing,
+    mapping.entities,
     onCancel,
     onSuccess,
     orderItemsResult.called,
@@ -351,7 +383,7 @@ export default function AddTags({ onSuccess }: Props) {
             selectedTags: (
               <span>
                 {tags.map(tag => (
-                  <span style={{ marginRight: '5px' }}>
+                  <span key={tag.id} style={{ marginRight: '5px' }}>
                     <Tag tag={tag} />
                   </span>
                 ))}
