@@ -145,8 +145,9 @@ export default function SplitBatches({ onSuccess }: Props) {
     );
   };
 
-  // TODO: Replace with real logic
-  const allHasNoQuantity = false;
+  const allHasNoQuantity = batchIds.every(
+    id => mapping.entities?.batches?.[id]?.latestQuantity === 0
+  );
 
   const allowToUpdate = () => {
     return hasPermission(BATCH_UPDATE);
