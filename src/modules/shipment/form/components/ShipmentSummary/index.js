@@ -445,6 +445,7 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                           showExtraToggleButton={
                             canUpdate || hasPermission(SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY)
                           }
+                          hideTooltip={values.totalPackageQuantityOverriding}
                           autoCalculateIsToggled={values.totalPackageQuantityOverriding}
                           onToggleAutoCalculate={() => {
                             if (values.totalPackageQuantityOverriding) {
@@ -475,7 +476,7 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                           metricType="weight"
                           name={name}
                           {...inputHandlers}
-                          originalValue={baseOriginalValues.totalWeightOverride}
+                          originalValue={baseOriginalValues[name]}
                           label={
                             <FormattedMessage
                               id="modules.Shipments.weight"
@@ -486,6 +487,7 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                           showExtraToggleButton={
                             canUpdate || hasPermission(SHIPMENT_SET_TOTAL_WEIGHT)
                           }
+                          hideTooltip={values.totalWeightOverriding}
                           autoCalculateIsToggled={values.totalWeightOverriding}
                           onToggleAutoCalculate={() => {
                             if (values.totalWeightOverriding) {
@@ -517,7 +519,7 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                           metricType="volume"
                           name={name}
                           {...inputHandlers}
-                          originalValue={baseOriginalValues.totalVolumeOverride}
+                          originalValue={baseOriginalValues[name]}
                           label={
                             <FormattedMessage
                               id="modules.Shipments.volume"
@@ -528,6 +530,7 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                           showExtraToggleButton={
                             canUpdate || hasPermission(SHIPMENT_SET_TOTAL_VOLUME)
                           }
+                          hideTooltip={values.totalVolumeOverriding}
                           autoCalculateIsToggled={values.totalVolumeOverriding}
                           onToggleAutoCalculate={() => {
                             if (values.totalVolumeOverriding) {
