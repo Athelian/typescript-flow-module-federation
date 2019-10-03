@@ -164,7 +164,7 @@ export default function AutoFill({ onSuccess }: Props) {
             <FormattedMessage id="modules.RelationMap.label.autofill" defaultMessage="AUTOFILL" />
           }
           icon="QUANTITY_ADJUSTMENTS"
-          disabled={isProcessing || noPermission || allDoesNotHaveHigherQuantity}
+          disabled={noPermission || allDoesNotHaveHigherQuantity}
           onClick={onConfirm}
         />
       }

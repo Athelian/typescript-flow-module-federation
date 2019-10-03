@@ -249,7 +249,7 @@ export default function SplitBatches({ onSuccess }: Props) {
           <BaseButton
             label={<FormattedMessage id="modules.RelationMap.label.split" defaultMessage="SPLIT" />}
             icon="SPLIT"
-            disabled={isProcessing || noPermission || !isValid() || allHasNoQuantity}
+            disabled={noPermission || !isValid() || allHasNoQuantity}
             onClick={onConfirm}
           />
         }

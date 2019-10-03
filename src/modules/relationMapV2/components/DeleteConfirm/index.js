@@ -233,7 +233,7 @@ export default function DeleteConfirm({ onSuccess }: Props) {
         <BaseButton
           label={<FormattedMessage id="modules.RelationMap.label.delete" defaultMessage="DELETE" />}
           icon="REMOVE"
-          disabled={isProcessing || noPermission}
+          disabled={noPermission}
           onClick={onConfirm}
           backgroundColor="RED"
           hoverBackgroundColor="RED_DARK"

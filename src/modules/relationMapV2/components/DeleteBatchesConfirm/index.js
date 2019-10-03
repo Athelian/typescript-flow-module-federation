@@ -206,7 +206,7 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
               <FormattedMessage id="modules.RelationMap.label.delete" defaultMessage="DELETE" />
             }
             icon="REMOVE"
-            disabled={isProcessing || !allowToDeleteBatches}
+            disabled={!allowToDeleteBatches}
             onClick={() => onConfirm('delete')}
             backgroundColor="RED"
             hoverBackgroundColor="RED_DARK"
@@ -222,7 +222,7 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
               </>
             }
             icon="CLEAR"
-            disabled={isProcessing || !allowToUpdateBatches || isDisableRemovedContainerButton}
+            disabled={!allowToUpdateBatches || isDisableRemovedContainerButton}
             onClick={() => onConfirm('removeFromContainer')}
             textColor="RED"
             hoverTextColor="WHITE"
@@ -240,7 +240,7 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
               </>
             }
             icon="CLEAR"
-            disabled={isProcessing || !allowToUpdateBatches || isDisableRemovedShipmentButton}
+            disabled={!allowToUpdateBatches || isDisableRemovedShipmentButton}
             onClick={() => onConfirm('removeFromShipment')}
             textColor="RED"
             hoverTextColor="WHITE"
