@@ -25,15 +25,21 @@ export const EntityWrapperStyle = (count: number): string => css`
   position: relative;
   display: flex;
   height: 20px;
-  color: ${count > 0 ? colors.TEAL : colors.GRAY_DARK};
-  &:hover {
-    & > div {
-      opacity: 0;
+  ${count > 0
+    ? `
+    color: ${colors.TEAL};
+    &:hover {
+      & > div {
+        opacity: 0;
+      }
+      & > button {
+        opacity: 1;
+      }
     }
-    & > button {
-      opacity: 1;
-    }
-  }
+  `
+    : `
+    color: ${colors.GRAY_DARK};
+  `};
 `;
 
 export const EntityIconStyle: string = css`

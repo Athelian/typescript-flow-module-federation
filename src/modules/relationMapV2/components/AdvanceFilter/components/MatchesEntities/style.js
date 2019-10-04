@@ -15,15 +15,21 @@ export const EntityWrapperStyle = (count: number): string => css`
   position: relative;
   display: flex;
   height: 20px;
-  color: ${count > 0 ? colors.BLUE : colors.GRAY_DARK};
-  &:hover {
-    & > div {
-      opacity: 0;
+  ${count > 0
+    ? `
+    color: ${colors.BLUE};
+    &:hover {
+      & > div {
+        opacity: 0;
+      }
+      & > button {
+        opacity: 1;
+      }
     }
-    & > button {
-      opacity: 1;
-    }
-  }
+  `
+    : `
+    color: ${colors.GRAY_DARK};
+  `};
 `;
 
 export const EntityIconStyle: string = css`
@@ -46,10 +52,11 @@ export const SelectedEntitiesWrapperStyle: string = css`
   ${presets.BUTTON};
   height: 14px;
   width: 100%;
-  color: ${colors.RED};
-  font-size: 11px;
+  color: ${colors.TEAL};
+  font-size: 9px;
   opacity: 0;
   background-color: ${colors.WHITE};
   ${borderRadiuses.BUTTON};
   ${shadows.INPUT};
+  border: 2px solid ${colors.TEAL_HALF};
 `;

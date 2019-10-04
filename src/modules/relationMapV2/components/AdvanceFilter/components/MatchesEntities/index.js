@@ -81,20 +81,22 @@ const MatchesEntities = () => {
         <div className={EntityCountStyle}>
           <FormattedNumber value={orderMatched} />
         </div>
-        <button
-          className={SelectedEntitiesWrapperStyle}
-          onClick={() => {
-            dispatch({
-              type: 'TARGET_ALL',
-              payload: {
-                targets: orderIds.map(id => `${ORDER}-${id}`),
-              },
-            });
-          }}
-          type="button"
-        >
-          <Icon icon="CHECKED" />
-        </button>
+        {orderMatched > 0 && (
+          <button
+            className={SelectedEntitiesWrapperStyle}
+            onClick={() => {
+              dispatch({
+                type: 'TARGET_ALL',
+                payload: {
+                  targets: orderIds.map(id => `${ORDER}-${id}`),
+                },
+              });
+            }}
+            type="button"
+          >
+            <Icon icon="CONFIRM" />
+          </button>
+        )}
       </div>
 
       <div className={EntityWrapperStyle(matchedOrderItem)}>
@@ -104,20 +106,22 @@ const MatchesEntities = () => {
         <div className={EntityCountStyle}>
           <FormattedNumber value={matchedOrderItem} />
         </div>
-        <button
-          className={SelectedEntitiesWrapperStyle}
-          onClick={() => {
-            dispatch({
-              type: 'TARGET_ALL',
-              payload: {
-                targets: orderItemIds.map(id => `${ORDER_ITEM}-${id}`),
-              },
-            });
-          }}
-          type="button"
-        >
-          <Icon icon="CHECKED" />
-        </button>
+        {matchedOrderItem > 0 && (
+          <button
+            className={SelectedEntitiesWrapperStyle}
+            onClick={() => {
+              dispatch({
+                type: 'TARGET_ALL',
+                payload: {
+                  targets: orderItemIds.map(id => `${ORDER_ITEM}-${id}`),
+                },
+              });
+            }}
+            type="button"
+          >
+            <Icon icon="CONFIRM" />
+          </button>
+        )}
       </div>
 
       <div className={EntityWrapperStyle(matchedBatch)}>
@@ -127,20 +131,22 @@ const MatchesEntities = () => {
         <div className={EntityCountStyle}>
           <FormattedNumber value={matchedBatch} />
         </div>
-        <button
-          className={SelectedEntitiesWrapperStyle}
-          onClick={() => {
-            dispatch({
-              type: 'TARGET_ALL',
-              payload: {
-                targets: batchIds.map(id => `${BATCH}-${id}`),
-              },
-            });
-          }}
-          type="button"
-        >
-          <Icon icon="CHECKED" />
-        </button>
+        {matchedBatch > 0 && (
+          <button
+            className={SelectedEntitiesWrapperStyle}
+            onClick={() => {
+              dispatch({
+                type: 'TARGET_ALL',
+                payload: {
+                  targets: batchIds.map(id => `${BATCH}-${id}`),
+                },
+              });
+            }}
+            type="button"
+          >
+            <Icon icon="CONFIRM" />
+          </button>
+        )}
       </div>
 
       <div className={EntityWrapperStyle(matchedContainer)}>
@@ -150,21 +156,23 @@ const MatchesEntities = () => {
         <div className={EntityCountStyle}>
           <FormattedNumber value={matchedContainer} />
         </div>
-        <button
-          className={SelectedEntitiesWrapperStyle}
-          onClick={() => {
-            dispatch({
-              type: 'TARGET_ALL',
-              payload: {
-                // TODO: API is not ready yet
-                targets: [],
-              },
-            });
-          }}
-          type="button"
-        >
-          <Icon icon="CHECKED" />
-        </button>
+        {matchedContainer > 0 && (
+          <button
+            className={SelectedEntitiesWrapperStyle}
+            onClick={() => {
+              dispatch({
+                type: 'TARGET_ALL',
+                payload: {
+                  // TODO: API is not ready yet
+                  targets: [],
+                },
+              });
+            }}
+            type="button"
+          >
+            <Icon icon="CONFIRM" />
+          </button>
+        )}
       </div>
 
       <div className={EntityWrapperStyle(matchedShipment)}>
@@ -174,20 +182,22 @@ const MatchesEntities = () => {
         <div className={EntityCountStyle}>
           <FormattedNumber value={matchedShipment} />
         </div>
-        <button
-          className={SelectedEntitiesWrapperStyle}
-          onClick={() => {
-            dispatch({
-              type: 'TARGET_ALL',
-              payload: {
-                targets: shipmentIds.map(id => `${SHIPMENT}-${id}`),
-              },
-            });
-          }}
-          type="button"
-        >
-          <Icon icon="CHECKED" />
-        </button>
+        {matchedShipment > 0 && (
+          <button
+            className={SelectedEntitiesWrapperStyle}
+            onClick={() => {
+              dispatch({
+                type: 'TARGET_ALL',
+                payload: {
+                  targets: shipmentIds.map(id => `${SHIPMENT}-${id}`),
+                },
+              });
+            }}
+            type="button"
+          >
+            <Icon icon="CONFIRM" />
+          </button>
+        )}
       </div>
     </div>
   );
