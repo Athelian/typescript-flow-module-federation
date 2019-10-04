@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { ArrayValue } from 'react-values';
+import { Query } from 'react-apollo';
 import {
   EntityIcon,
   Filter,
@@ -17,8 +18,8 @@ import { OrderCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Display } from 'components/Form';
-import useListQuery from 'hooks/useListQuery';
 import { isEquals } from 'utils/fp';
+import loadMore from 'utils/loadMore';
 import messages from '../../messages';
 import Ids from '../Ids';
 import { ordersQuery, ordersByIDsQuery } from './query';
@@ -45,7 +46,6 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
     updatedAt: 'DESCENDING',
   });
   const { query, ...filters } = filterBy;
-  const { loading, hasMore, loadMore, nodes } = useListQuery(ordersQuery, { filterBy, sortBy }, 20);
 
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
@@ -84,33 +84,54 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
             </SlideViewNavBar>
 
             <Content>
-              <GridView
-                onLoadMore={loadMore}
-                hasMore={hasMore}
-                isLoading={loading}
-                isEmpty={nodes.length === 0}
-                emptyMessage={null}
-                itemWidth="195px"
+              <Query
+                query={ordersQuery}
+                variables={{ filterBy, sortBy, page: 1, perPage: 20 }}
+                fetchPolicy="network-only"
               >
-                {nodes.map(order => {
-                  const isSelected = values.some(id => id === order?.id);
+                {({ loading, data, fetchMore, error }) => {
+                  if (error) {
+                    return error.message;
+                  }
+
+                  const nextPage = (data?.orders?.page ?? 1) + 1;
+                  const totalPage = data?.orders?.totalPage ?? 1;
+                  const hasMore = nextPage <= totalPage;
+                  const nodes = data?.orders?.nodes ?? [];
+
                   return (
-                    <OrderCard
-                      key={order?.id}
-                      order={order}
-                      selectable
-                      selected={isSelected}
-                      onSelect={() => {
-                        if (isSelected) {
-                          filter(id => id !== order?.id);
-                        } else {
-                          push(order?.id);
-                        }
-                      }}
-                    />
+                    <GridView
+                      onLoadMore={() =>
+                        loadMore({ fetchMore, data }, { filterBy, sortBy }, 'orders')
+                      }
+                      hasMore={hasMore}
+                      isLoading={loading}
+                      isEmpty={nodes.length === 0}
+                      emptyMessage={null}
+                      itemWidth="195px"
+                    >
+                      {nodes.map(order => {
+                        const isSelected = values.some(id => id === order?.id);
+                        return (
+                          <OrderCard
+                            key={order?.id}
+                            order={order}
+                            selectable
+                            selected={isSelected}
+                            onSelect={() => {
+                              if (isSelected) {
+                                filter(id => id !== order?.id);
+                              } else {
+                                push(order?.id);
+                              }
+                            }}
+                          />
+                        );
+                      })}
+                    </GridView>
                   );
-                })}
-              </GridView>
+                }}
+              </Query>
             </Content>
           </>
         )}

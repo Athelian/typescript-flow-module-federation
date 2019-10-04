@@ -11,6 +11,17 @@ import DateRange from './Inputs/DateRange';
 import { VolumeRange, AreaRange, LengthRange, MassRange } from './Inputs/MetricRange';
 import OrderIds from './Inputs/OrderIds';
 import {
+  ProductTags,
+  BatchTags,
+  ContainerTags,
+  OrderItemTags,
+  OrderTags,
+  ProjectTags,
+  ShipmentTags,
+  TaskTags,
+  UserTags,
+} from './Inputs/Tags';
+import {
   ActionsStyle,
   ActiveStyle,
   ButtonStyle,
@@ -57,6 +68,15 @@ const inputs = {
   length_range: LengthRange,
   mass_range: MassRange,
   order_ids: OrderIds,
+  product_tags: ProductTags,
+  order_tags: OrderTags,
+  order_item_tags: OrderItemTags,
+  batch_tags: BatchTags,
+  shipment_tags: ShipmentTags,
+  container_tags: ContainerTags,
+  project_tags: ProjectTags,
+  task_tags: TaskTags,
+  user_tags: UserTags,
 };
 
 const computeFilterStates = (config: Array<FilterConfig>, filters: Filters): Array<FilterState> => {
