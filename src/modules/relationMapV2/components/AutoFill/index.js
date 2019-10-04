@@ -3,8 +3,8 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useAllHasPermission } from 'components/Context/Permissions';
 import { useMutation } from '@apollo/react-hooks';
-import { Entities } from 'modules/relationMapV2/store';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+import { Entities, OrderFocused } from 'modules/relationMapV2/store';
+
 import { ORDER_ITEM } from 'modules/relationMapV2/constants';
 import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
 import { BaseButton } from 'components/Buttons';
@@ -25,7 +25,7 @@ type Props = {|
 export default function AutoFill({ onSuccess }: Props) {
   const [autoFill] = useMutation(batchBalanceSplitManyMutation);
   const { mapping } = Entities.useContainer();
-  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { dispatch, state } = OrderFocused.useContainer();
   const { isProcessing, isOpen } = state.autoFill;
   const orderItemIds = targetedIds(state.targets, ORDER_ITEM);
   const hasPermission = useAllHasPermission(

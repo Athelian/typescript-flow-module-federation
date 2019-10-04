@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+import { OrderFocused } from 'modules/relationMapV2/store';
 import Icon from 'components/Icon';
 import { Blackout, Label } from 'components/Form';
 import { ORDER_ITEM, ORDER_ITEM_WIDTH } from 'modules/relationMapV2/constants';
@@ -31,7 +31,7 @@ export default function OrderItemHeading({
 }: Props) {
   // TODO: Replace with real permissions
   const canViewQuantityGraph = true;
-  const { state } = React.useContext(RelationMapContext);
+  const { state } = OrderFocused.useContainer();
   const itemIds = targetedIds(state.targets, ORDER_ITEM);
   const selectedItemsCount = orderItems.filter(item => itemIds.includes(item.id)).length;
   return (

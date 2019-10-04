@@ -6,8 +6,8 @@ import { Query } from 'react-apollo';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { useEntityHasPermissions } from 'components/Context/Permissions';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
-import { Entities } from 'modules/relationMapV2/store';
+
+import { Entities, OrderFocused } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -37,7 +37,7 @@ function ContainerRenderer({
   selected: ?Object,
   setSelected: (?Object) => void,
 }) {
-  const { state } = React.useContext(RelationMapContext);
+  const { state } = OrderFocused.useContainer();
   const { containerIds, importerIds, exporterIds } = state.moveActions;
   const isSameParent = containerIds.length === 1 && containerIds.includes(container.id);
   const hasPermissions = useEntityHasPermissions(container);
@@ -123,7 +123,7 @@ function ContainerRenderer({
 }
 
 function SelectContainerToMove({ intl, onSuccess }: Props) {
-  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { dispatch, state } = OrderFocused.useContainer();
   const { mapping } = Entities.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
   const [selected, setSelected] = React.useState(null);

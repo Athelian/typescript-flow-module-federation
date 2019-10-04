@@ -3,8 +3,8 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useAllHasPermission } from 'components/Context/Permissions';
 import { useMutation } from '@apollo/react-hooks';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
-import { Entities } from 'modules/relationMapV2/store';
+
+import { Entities, OrderFocused } from 'modules/relationMapV2/store';
 import { BATCH } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE } from 'modules/permission/constants/batch';
 import { BaseButton } from 'components/Buttons';
@@ -76,7 +76,7 @@ function SplitBatch({
 
 export default function SplitBatches({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
-  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { dispatch, state } = OrderFocused.useContainer();
   const [batchSimpleSplit] = useMutation(batchSimpleSplitMutation);
   const {
     targets,

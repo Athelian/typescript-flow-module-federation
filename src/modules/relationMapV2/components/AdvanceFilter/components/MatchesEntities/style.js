@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, fontSizes } from 'styles/common';
+import { colors, borderRadiuses, fontSizes, presets, shadows } from 'styles/common';
 
 export const EntitiesWrapperStyle: string = css`
   display: grid;
@@ -16,6 +16,14 @@ export const EntityWrapperStyle = (count: number): string => css`
   display: flex;
   height: 20px;
   color: ${count > 0 ? colors.BLUE : colors.GRAY_DARK};
+  &:hover {
+    & > div {
+      opacity: 0;
+    }
+    & > button {
+      opacity: 1;
+    }
+  }
 `;
 
 export const EntityIconStyle: string = css`
@@ -29,4 +37,19 @@ export const EntityCountStyle: string = css`
   ${fontSizes.SMALL};
   height: 20px;
   line-height: 20px;
+`;
+
+export const SelectedEntitiesWrapperStyle: string = css`
+  position: absolute;
+  left: 0;
+  top: 3px;
+  ${presets.BUTTON};
+  height: 14px;
+  width: 100%;
+  color: ${colors.RED};
+  font-size: 11px;
+  opacity: 0;
+  background-color: ${colors.WHITE};
+  ${borderRadiuses.BUTTON};
+  ${shadows.INPUT};
 `;

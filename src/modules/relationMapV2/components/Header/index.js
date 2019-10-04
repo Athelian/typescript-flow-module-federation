@@ -29,6 +29,7 @@ import {
   SortAndFilter,
   ClientSorts,
   GlobalShipmentPoint,
+  OrderFocused,
 } from 'modules/relationMapV2/store';
 import { SortInput } from 'components/NavBar';
 import {
@@ -44,7 +45,6 @@ import {
   SortInputWrapperStyle,
   ShipmentTimelineWrapperStyle,
 } from './style';
-import { RelationMapContext } from '../OrderFocus/store';
 
 type Props = { intl: IntlShape };
 
@@ -62,7 +62,7 @@ function currentSort(
 
 const Header = React.memo<any>(
   injectIntl(({ intl }: Props) => {
-    const { state, dispatch } = React.useContext(RelationMapContext);
+    const { state, dispatch } = OrderFocused.useContainer();
     const { mapping } = Entities.useContainer();
     const { entities } = mapping;
     const { filterAndSort, onChangeFilter } = SortAndFilter.useContainer();

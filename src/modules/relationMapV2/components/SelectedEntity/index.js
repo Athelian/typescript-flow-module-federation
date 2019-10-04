@@ -5,7 +5,7 @@ import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label } from 'components/Form';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+import { OrderFocused } from 'modules/relationMapV2/store';
 import { targetedIds } from '../OrderFocus/helpers';
 import {
   SelectedEntitiesWrapperStyle,
@@ -19,7 +19,7 @@ import {
 } from './style';
 
 export default function SelectedEntity() {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch } = OrderFocused.useContainer();
   const orderIds = targetedIds(state.targets, ORDER);
   const orderItemIds = targetedIds(state.targets, ORDER_ITEM);
   const batchIds = targetedIds(state.targets, BATCH);

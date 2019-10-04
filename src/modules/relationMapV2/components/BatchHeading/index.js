@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+import { OrderFocused } from 'modules/relationMapV2/store';
 import FormattedDate from 'components/FormattedDate';
 import { Display, Label } from 'components/Form';
 import { BATCH, BATCH_WIDTH } from 'modules/relationMapV2/constants';
@@ -78,7 +78,7 @@ export default function BatchHeading({
   // TODO: Replace with real permissions
   const canViewDelivery = true;
   const canViewDesired = true;
-  const { state } = React.useContext(RelationMapContext);
+  const { state } = OrderFocused.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
   const selectedItemsCount = batches.filter(item => batchIds.includes(item.id)).length;
 

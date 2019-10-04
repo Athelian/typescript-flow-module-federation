@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import { Display, Label } from 'components/Form';
@@ -22,7 +21,7 @@ import {
   DELIVERY_READY,
   SHIPMENT,
 } from 'modules/relationMapV2/constants';
-import { GlobalShipmentPoint } from 'modules/relationMapV2/store';
+import { GlobalShipmentPoint, OrderFocused } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
 import { RightWrapperStyle, PlaceWrapperStyle, DatesWrapperStyle } from './style';
 
@@ -175,7 +174,7 @@ export default function ShipmentHeading({
   // TODO: Replace with real permissions
   const canViewPlace = true;
   const canViewDate = true;
-  const { state } = React.useContext(RelationMapContext);
+  const { state } = OrderFocused.useContainer();
   const shipmentIds = targetedIds(state.targets, SHIPMENT);
   const selectedItemsCount = shipments.filter(item => shipmentIds.includes(item.id)).length;
 

@@ -2,9 +2,9 @@
 import * as React from 'react';
 import type { OrderItem } from 'generated/graphql';
 import { useMutation } from '@apollo/react-hooks';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+
 import SlideView from 'components/SlideView';
-import { Entities } from 'modules/relationMapV2/store';
+import { Entities, OrderFocused } from 'modules/relationMapV2/store';
 import SelectProductProviders from './SelectProductProviders';
 import { createOrderItemMutation } from './mutation';
 
@@ -14,7 +14,7 @@ type Props = {|
 
 export default function InlineCreateBatch({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
-  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { dispatch, state } = OrderFocused.useContainer();
   const [createItem] = useMutation(createOrderItemMutation);
   const {
     isOpen,

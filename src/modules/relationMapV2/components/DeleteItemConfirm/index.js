@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+import { OrderFocused } from 'modules/relationMapV2/store';
 import { BaseButton } from 'components/Buttons';
 import ActionDialog, { ItemLabelIcon, BatchesLabelIcon } from '../ActionDialog';
 import { deleteOrderItemMutation } from './mutation';
@@ -13,7 +13,7 @@ type Props = {|
 
 export default function DeleteItemConfirm({ onSuccess }: Props) {
   const [deleteItem] = useMutation(deleteOrderItemMutation);
-  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { dispatch, state } = OrderFocused.useContainer();
   const {
     isProcessing,
     isOpen,

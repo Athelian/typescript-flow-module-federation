@@ -3,8 +3,8 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
 import { useAllHasPermission } from 'components/Context/Permissions';
-import { Entities } from 'modules/relationMapV2/store';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+import { Entities, OrderFocused } from 'modules/relationMapV2/store';
+
 import { ORDER_ITEM, CONTAINER } from 'modules/relationMapV2/constants';
 import { ORDER_ITEMS_DELETE } from 'modules/permission/constants/orderItem';
 import { CONTAINER_DELETE } from 'modules/permission/constants/container';
@@ -29,7 +29,7 @@ export default function DeleteConfirm({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
   const [deleteOrderItem] = useMutation(deleteOrderItemMutation);
   const [deleteContainer] = useMutation(deleteContainerMutation);
-  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { dispatch, state } = OrderFocused.useContainer();
   const { isProcessing, isOpen, source } = state.deleteEntities;
   const orderItemIds = targetedIds(state.targets, ORDER_ITEM);
   const hasItemPermissions = useAllHasPermission(

@@ -4,13 +4,13 @@ import type { Batch } from 'generated/graphql';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { orderItemFormQuery } from 'modules/orderItem/form/query';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
 import { generateBatchByOrderItem } from 'utils/batch';
 import { removeTypename } from 'utils/data';
-import { Entities } from 'modules/relationMapV2/store';
+import { Entities, OrderFocused } from 'modules/relationMapV2/store';
 import { DialogStyle, ConfirmMessageStyle } from './style';
 import { createBatchMutation } from './mutation';
 
@@ -20,7 +20,7 @@ type Props = {|
 
 export default function InlineCreateBatch({ onSuccess }: Props) {
   const { mapping, onSetBadges } = Entities.useContainer();
-  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { dispatch, state } = OrderFocused.useContainer();
   const {
     isOpen,
     isProcessing,

@@ -1,6 +1,7 @@
 // @flow
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import type { LINE_CONNECTOR } from '../RelationLine';
+
+type LINE_CONNECTOR = 'VERTICAL' | 'HORIZONTAL';
 
 export type Entity =
   | typeof ORDER
@@ -10,9 +11,7 @@ export type Entity =
   | typeof SHIPMENT;
 
 export type CellRender = {
-  // eslint-disable-next-line flowtype/space-after-type-colon
-  type:
-    | typeof ORDER
+  type: | typeof ORDER
     | typeof ORDER_ITEM
     | typeof BATCH
     | typeof CONTAINER

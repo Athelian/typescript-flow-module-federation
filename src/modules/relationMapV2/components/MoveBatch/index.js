@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import useUser from 'hooks/useUser';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
-import { Entities } from 'modules/relationMapV2/store';
+
+import { Entities, OrderFocused } from 'modules/relationMapV2/store';
 import { BATCH } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { BaseButton } from 'components/Buttons';
@@ -29,7 +29,7 @@ type Props = {
 export default function MoveBatch({ onSuccess }: Props) {
   const { isExporter } = useUser();
   const { mapping } = Entities.useContainer();
-  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { dispatch, state } = OrderFocused.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
   const orderIds = [
     ...new Set(
