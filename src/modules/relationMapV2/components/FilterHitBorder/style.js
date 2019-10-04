@@ -11,7 +11,7 @@ export const FilteredHitStyle = (showBlueBorder: boolean): string => css`
   border: 4px solid ${showBlueBorder ? colors.BLUE_HALF : colors.TRANSPARENT};
   border-radius: 9px;
   pointer-events: none;
-  z-index: 2;
+  z-index: 1;
 `;
 
 export default FilteredHitStyle;

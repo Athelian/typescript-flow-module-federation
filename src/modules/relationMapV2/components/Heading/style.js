@@ -11,6 +11,7 @@ export const HeadingWrapperStyle = (isExpanded: boolean, width: string): string 
   height: 55px;
   ${borderRadiuses.MAIN};
   cursor: pointer;
+  z-index: 2;
   ${isExpanded
     ? `
     background-color: rgba(0, 0, 0, 0.08);

@@ -8,7 +8,7 @@ export const EntitiesNavbarWrapperStyle: string = css`
   height: 50px;
   position: sticky;
   top: 0;
-  z-index: 3;
+  z-index: 4;
   ${shadows.HEADER};
 `;
 
