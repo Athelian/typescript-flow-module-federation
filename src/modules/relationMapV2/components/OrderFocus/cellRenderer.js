@@ -163,10 +163,6 @@ export const Overlay = ({
   );
 };
 
-const baseDragStyle = {
-  cursor: 'move',
-};
-
 const getIdentifier = ({
   id,
   type,
@@ -1248,8 +1244,8 @@ function BatchCell({
         {isDragging ? (
           <div
             style={{
-              background: '#AAAAAA',
-              width: BATCH_WIDTH - 20,
+              background: '#DDD',
+              width: BATCH_WIDTH,
               height: '100%',
               borderRadius: '5px',
             }}
@@ -1264,7 +1260,7 @@ function BatchCell({
             onClick={handleClick}
             flattenCornerIcon
           >
-            <div ref={drag} id={`${BATCH}-${batchId}`} style={baseDragStyle}>
+            <div ref={drag} id={`${BATCH}-${batchId}`}>
               <Badge label={badge.batch?.[batchId] || ''} />
               <BatchCard
                 organizationId={data?.ownedBy?.id}
