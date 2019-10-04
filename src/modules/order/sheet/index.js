@@ -35,10 +35,17 @@ const OrderSheetModule = ({ orderIds }: Props) => {
     page: 1,
     totalPage: 1,
   });
-  const [filterBy, setFilterBy] = React.useState<{ [string]: any }>({
-    query: '',
-    archived: false,
-  });
+  const [filterBy, setFilterBy] = React.useState<{ [string]: any }>(
+    orderIds
+      ? {
+          query: '',
+          ids: orderIds,
+        }
+      : {
+          query: '',
+          archived: false,
+        }
+  );
   const [sortBy, setSortBy] = React.useState<{ [string]: 'ASCENDING' | 'DESCENDING' }>({
     updatedAt: 'DESCENDING',
   });
@@ -58,16 +65,6 @@ const OrderSheetModule = ({ orderIds }: Props) => {
     },
     [setLocalSortBy]
   );
-
-  React.useEffect(() => {
-    if (orderIds) {
-      setFilterBy({
-        ...filterBy,
-        ids: orderIds,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderIds]);
 
   React.useEffect(() => {
     let cancel = false;

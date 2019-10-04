@@ -29,6 +29,13 @@ export const OrderFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'ORDER',
+    field: 'tagIds',
+    type: 'order_tags',
+    message: orderMessages.tags,
+    defaultValue: [],
+  },
+  {
+    entity: 'ORDER',
     field: 'ids',
     type: 'order_ids',
     message: orderMessages.order,

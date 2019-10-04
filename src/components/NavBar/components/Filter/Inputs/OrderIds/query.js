@@ -13,7 +13,7 @@ import {
 
 export const ordersQuery = gql`
   query orders($filterBy: OrderFilterInput, $sortBy: OrderSortInput, $page: Int!, $perPage: Int!) {
-    list: orders(filterBy: $filterBy, sortBy: $sortBy, page: $page, perPage: $perPage) {
+    orders(filterBy: $filterBy, sortBy: $sortBy, page: $page, perPage: $perPage) {
       nodes {
         ...orderCardFragment
         ...forbiddenFragment
