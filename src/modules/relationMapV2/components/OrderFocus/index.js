@@ -118,7 +118,7 @@ const loadMore = (
         result
       );
     },
-  });
+  }).catch(logger.error);
 };
 
 export default function OrderFocus() {
@@ -263,9 +263,9 @@ export default function OrderFocus() {
               const loadMoreItems =
                 loading || isLoadingMore
                   ? () => {}
-                  : async () => {
+                  : () => {
                       setIsLoadingMore(true);
-                      await loadMore(
+                      loadMore(
                         { fetchMore, data, onSuccess: () => setIsLoadingMore(false) },
                         queryVariables
                       );
