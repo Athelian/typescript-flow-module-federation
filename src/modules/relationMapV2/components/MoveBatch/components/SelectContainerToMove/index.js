@@ -183,7 +183,6 @@ function SelectContainerToMove({ intl, onSuccess }: Props) {
     },
     'filterContainerOnMoveNRM'
   );
-  if (!isOpen || !isMoveToContainer) return null;
   return (
     <SlideView
       shouldConfirm={() => !!selected}

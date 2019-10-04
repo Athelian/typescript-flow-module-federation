@@ -218,7 +218,6 @@ function SelectShipmentToMove({ intl, onSuccess, onNewContainer }: Props) {
     'filterShipmentOnMoveNRM'
   );
   const isValid = isMoveToContainer || isMoveToShipment;
-  if (!isOpen || !isValid) return null;
   return (
     <SlideView
       shouldConfirm={() => !!selected}
