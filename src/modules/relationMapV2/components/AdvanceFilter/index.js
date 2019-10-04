@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Filter from 'components/NavBar/components/Filter';
-import { OrderConfigFilter } from 'components/NavBar/components/Filter/configs';
+import { OrderFilterConfig } from 'components/NavBar/components/Filter/configs';
 import { SearchInput } from 'components/NavBar';
 import { SortAndFilter } from 'modules/relationMapV2/store';
 import Icon from 'components/Icon';
@@ -19,7 +19,7 @@ export default function AdvanceFilter() {
     <div className={FilterWrapperStyle(hasFilter)}>
       <div className={BlueOutlineWrapperStyle(hasFilter)}>
         <Filter
-          config={OrderConfigFilter}
+          config={OrderFilterConfig}
           filters={filters}
           onChange={filter =>
             onChangeFilter({

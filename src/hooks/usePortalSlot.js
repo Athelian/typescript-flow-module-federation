@@ -7,14 +7,16 @@ export default function usePortalSlot(): HTMLDivElement {
   const slotRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
+    // $FlowFixMe ignore
     root.appendChild(slotRef.current);
 
     return () => {
+      // $FlowFixMe ignore
       root.removeChild(slotRef.current);
     };
   }, []);
 
-  function getSlotElem() {
+  function getSlotElem(): HTMLDivElement {
     if (!slotRef.current) {
       slotRef.current = document.createElement('div');
     }

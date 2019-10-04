@@ -18,7 +18,7 @@
 
 [options]
 sharedmemory.hash_table_pow=21
-lazy_mode=fs
+#lazy_mode=fs
 name= Zenport web app
 module.file_ext=.js
 module.file_ext=.mjs

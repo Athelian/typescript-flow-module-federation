@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { DefaultStyle, Label, MetricInput } from 'components/Form';
+import { volumeMetrics, areaMetrics, distanceMetrics, weightMetrics } from 'utils/metric';
 import messages from '../../messages';
 
 type Props = {
@@ -53,5 +54,10 @@ const MetricRange = (metrics: Array<string>) => ({ value, readonly, onChange }: 
     </>
   );
 };
+
+export const VolumeRange = MetricRange(volumeMetrics);
+export const AreaRange = MetricRange(areaMetrics);
+export const LengthRange = MetricRange(distanceMetrics);
+export const MassRange = MetricRange(weightMetrics);
 
 export default MetricRange;

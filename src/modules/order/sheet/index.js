@@ -7,7 +7,7 @@ import { ExportButton } from 'components/Buttons';
 import { Sheet, ColumnsConfig } from 'components/Sheet';
 import type { ColumnConfig, ColumnSort, SortDirection } from 'components/Sheet';
 import Filter from 'components/NavBar/components/Filter';
-import { OrderConfigFilter } from 'components/NavBar/components/Filter/configs';
+import { OrderFilterConfig } from 'components/NavBar/components/Filter/configs';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
 import columns from './columns';
@@ -60,6 +60,18 @@ const OrderSheetModule = ({ orderIds }: Props) => {
   );
 
   React.useEffect(() => {
+    if (orderIds) {
+      setFilterBy({
+        ...filterBy,
+        ids: orderIds,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderIds]);
+
+  React.useEffect(() => {
+    let cancel = false;
+
     setLoading(true);
     setInitialOrders([]);
     setPage({ page: 1, totalPage: 1 });
@@ -70,17 +82,21 @@ const OrderSheetModule = ({ orderIds }: Props) => {
         variables: { page: 1, perPage: 20, filterBy, sortBy },
       })
       .then(({ data }) => {
+        if (cancel) {
+          return;
+        }
+
         setPage({ page: 1, totalPage: data?.orders?.totalPage ?? 1 });
         setInitialOrders(clone(data?.orders?.nodes ?? []));
         setLoading(false);
       });
+
+    return () => {
+      cancel = true;
+    };
   }, [client, filterBy, sortBy]);
 
   const { query, ...filters } = filterBy;
-
-  console.warn({
-    orderIds,
-  });
 
   return (
     <Content>
@@ -88,7 +104,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
         <EntityIcon icon="ORDER" color="ORDER" subIcon="TABLE" />
 
         <Filter
-          config={OrderConfigFilter}
+          config={OrderFilterConfig}
           filters={filters}
           onChange={value =>
             setFilterBy({

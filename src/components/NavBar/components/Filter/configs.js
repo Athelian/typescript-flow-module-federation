@@ -5,7 +5,7 @@ import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
 import type { FilterConfig } from './index';
 
-export const OrderConfigFilter: Array<FilterConfig> = [
+export const OrderFilterConfig: Array<FilterConfig> = [
   {
     entity: 'ORDER',
     field: 'archived',
@@ -26,6 +26,13 @@ export const OrderConfigFilter: Array<FilterConfig> = [
     type: 'date_range',
     message: orderMessages.updatedAt,
     defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'ORDER',
+    field: 'ids',
+    type: 'order_ids',
+    message: orderMessages.order,
+    defaultValue: [],
   },
   {
     entity: 'BATCH',

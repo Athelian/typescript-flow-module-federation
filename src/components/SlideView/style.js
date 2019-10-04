@@ -45,7 +45,7 @@ export const BackdropStyle = (isOpen: boolean): string => css`
   `};
 `;
 
-export const SlideViewStyle = (isOpen: boolean, width: string, minWidth: string): string => css`
+export const SlideViewStyle = (isOpen: boolean, width: number, minWidth: number): string => css`
   display: flex;
   flex-direction: column;
   position: absolute;

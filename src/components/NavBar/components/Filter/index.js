@@ -6,9 +6,10 @@ import Icon from 'components/Icon';
 import { Tooltip } from 'components/Tooltip';
 import { BaseButton, SaveButton, ResetButton } from 'components/Buttons';
 import { DefaultOptions, DefaultSelect, SelectInput, Label, Display } from 'components/Form';
-import { volumeMetrics, areaMetrics, distanceMetrics, weightMetrics } from 'utils/metric';
 import Archived from './Inputs/Archived';
 import DateRange from './Inputs/DateRange';
+import { VolumeRange, AreaRange, LengthRange, MassRange } from './Inputs/MetricRange';
+import OrderIds from './Inputs/OrderIds';
 import {
   ActionsStyle,
   ActiveStyle,
@@ -21,7 +22,6 @@ import {
   WrapperStyle,
   AddFilterButtonWrapperStyle,
 } from './style';
-import MetricRange from './Inputs/MetricRange';
 import messages from './messages';
 
 export type FilterConfig = {
@@ -52,30 +52,18 @@ type Props = {
 const inputs = {
   archived: Archived,
   date_range: DateRange,
-  volume_range: MetricRange(volumeMetrics),
-  area_range: MetricRange(areaMetrics),
-  distance_range: MetricRange(distanceMetrics),
-  weight_range: MetricRange(weightMetrics),
+  volume_range: VolumeRange,
+  area_range: AreaRange,
+  length_range: LengthRange,
+  mass_range: MassRange,
+  order_ids: OrderIds,
 };
 
-const intersectFilters = (a: Filters, b: Filters): Filters =>
-  Object.keys(a || {}).reduce((filters, key) => {
-    const filteredFilters = { ...filters };
-    delete filteredFilters[key];
-    return filteredFilters;
-  }, b);
-
-const computeFilterStates = (
-  config: Array<FilterConfig>,
-  filters: Filters,
-  staticFilters: Filters
-): Array<FilterState> => {
-  const filteredFilters = intersectFilters(staticFilters, filters);
-
-  return Object.keys(filteredFilters).map(field => {
+const computeFilterStates = (config: Array<FilterConfig>, filters: Filters): Array<FilterState> => {
+  return Object.keys(filters).map(field => {
     return {
       ...config.find(c => c.field === field),
-      value: filteredFilters[field],
+      value: filters[field],
     };
   });
 };
@@ -87,8 +75,8 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
   const [filterStates, setFilterStates] = React.useState<Array<FilterState>>([]);
 
   React.useEffect(() => {
-    setFilterStates(computeFilterStates(config, filters, staticFilters || {}));
-  }, [config, filters, staticFilters, open]);
+    setFilterStates(computeFilterStates(config, filters));
+  }, [config, filters, open]);
 
   const onSave = () => {
     const states = filterStates.filter(s => !!s.entity && !!s.field && !!s.type);
@@ -109,7 +97,7 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
   };
 
   const onReset = () => {
-    setFilterStates(computeFilterStates(config, filters, staticFilters || {}));
+    setFilterStates(computeFilterStates(config, filters));
   };
 
   const onClearAll = () => {

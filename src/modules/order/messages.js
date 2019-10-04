@@ -2,6 +2,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  order: {
+    id: 'modules.Orders.order',
+    defaultMessage: 'ORDER',
+  },
   save: {
     id: 'modules.Orders.save',
     defaultMessage: 'SAVE',
