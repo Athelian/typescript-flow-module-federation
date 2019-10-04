@@ -920,9 +920,6 @@ function orderReducer(
       });
     case 'MOVE_BATCH_START':
       return update(state, {
-        batchActions: {
-          isOpen: { $set: false },
-        },
         moveActions: {
           $merge: { ...action.payload, isOpen: true },
         },
@@ -951,9 +948,6 @@ function orderReducer(
       return update(state, {
         edit: {
           $merge: action.payload,
-        },
-        batchActions: {
-          isOpen: { $set: false },
         },
         moveActions: {
           isOpen: { $set: false },

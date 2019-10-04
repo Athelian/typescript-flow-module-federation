@@ -26,6 +26,7 @@ const ResetButton = ({ disabled, onClick, label, ...rest }: Props): React.Node =
     hoverBackgroundColor="GRAY_LIGHT"
     disabled={disabled}
     onClick={onClick}
+    id="resetBtn"
     {...rest}
   />
 );

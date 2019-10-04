@@ -118,6 +118,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
   }, [fetchOrdersAndShipments, id, lastQueryVariables, orderIds, shipmentIds, type]);
 
   let form = null;
+  let isNewEntity = false;
   switch (type) {
     case ORDER: {
       form = <OrderForm orderId={encodeId(id)} isSlideView />;
@@ -205,6 +206,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
       if (loading) {
         form = <LoadingIcon />;
       } else {
+        isNewEntity = true;
         switch (id) {
           case 'newOrder':
             form = (
@@ -354,6 +356,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
       break;
     }
     case 'NEW_ORDER': {
+      isNewEntity = true;
       form = (
         <OrderForm
           path="new"
@@ -393,9 +396,8 @@ const EditFormSlideView = ({ onClose }: Props) => {
     <SlideView
       isOpen={id !== ''}
       onRequestClose={onRequestClose}
-      // FIXME: do the robust way, e.g check the dirty state
       shouldConfirm={() => {
-        return false;
+        return isNewEntity || !!document.querySelector('#resetBtn');
       }}
     >
       {form}
