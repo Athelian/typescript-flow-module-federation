@@ -45,18 +45,25 @@ export const EntityCountStyle: string = css`
   line-height: 20px;
 `;
 
-export const SelectedEntitiesWrapperStyle: string = css`
+export const SelectedEntitiesWrapperStyle = (isUnselect: boolean): string => css`
   position: absolute;
   left: 0;
   top: 3px;
   ${presets.BUTTON};
   height: 14px;
   width: 100%;
-  color: ${colors.TEAL};
-  font-size: 9px;
   opacity: 0;
   background-color: ${colors.WHITE};
   ${borderRadiuses.BUTTON};
   ${shadows.INPUT};
-  border: 2px solid ${colors.TEAL_HALF};
+  ${isUnselect
+    ? `
+    color: ${colors.RED};
+    font-size: 11px;
+  `
+    : `
+    color: ${colors.TEAL};
+    font-size: 9px;
+    border: 2px solid ${colors.TEAL_HALF};
+  `};
 `;
