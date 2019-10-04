@@ -66,9 +66,11 @@ const OrderSheetModule = ({ orderIds }: Props) => {
         ids: orderIds,
       });
     }
-  }, [orderIds]);
+  }, [filterBy, orderIds]);
 
   React.useEffect(() => {
+    let cancel = false;
+
     setLoading(true);
     setInitialOrders([]);
     setPage({ page: 1, totalPage: 1 });
@@ -79,10 +81,18 @@ const OrderSheetModule = ({ orderIds }: Props) => {
         variables: { page: 1, perPage: 20, filterBy, sortBy },
       })
       .then(({ data }) => {
+        if (cancel) {
+          return;
+        }
+
         setPage({ page: 1, totalPage: data?.orders?.totalPage ?? 1 });
         setInitialOrders(clone(data?.orders?.nodes ?? []));
         setLoading(false);
       });
+
+    return () => {
+      cancel = true;
+    };
   }, [client, filterBy, sortBy]);
 
   const { query, ...filters } = filterBy;

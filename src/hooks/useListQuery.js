@@ -30,8 +30,10 @@ export default function useListQuery(
 
   React.useEffect(() => {
     if (equals(prevVariables.current, variables)) {
-      return;
+      return () => {};
     }
+
+    let cancel = false;
 
     setLoading(true);
     setNodes([]);
@@ -45,10 +47,20 @@ export default function useListQuery(
         fetchPolicy: 'network-only',
       })
       .then(({ data }) => {
+        if (cancel) {
+          return;
+        }
+
         setPage({ page: 1, totalPage: data?.list?.totalPage ?? 1 });
         setNodes(clone(data?.list?.nodes ?? []));
         setLoading(false);
       });
+
+    return () => {
+      if (!equals(prevVariables.current, variables)) {
+        cancel = true;
+      }
+    };
   }, [client, query, size, variables]);
 
   const loadMore = () => {
