@@ -42,10 +42,7 @@ addDecorator(storyFn => (
           organization: {},
         }}
       >
-        <StoryBookWrapper>
-          {storyFn()}
-          <div id="dialog-root" />
-        </StoryBookWrapper>
+        <StoryBookWrapper>{storyFn()}</StoryBookWrapper>
       </ViewerContext.Provider>
     </IntlProvider>
   </Provider>

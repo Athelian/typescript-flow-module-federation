@@ -3,44 +3,27 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { FormattedMessage } from 'react-intl';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
-import logger from 'utils/logger';
-import SlideViewContext, { type SlideViewContextProps } from './context';
+import usePortalSlot from 'hooks/usePortalSlot';
 import { BackdropStyle, SlideViewStyle, SlideViewContentStyle } from './style';
 
-type WrapperProps = {
-  isOpen: boolean,
+const StartWidth = 80; // vw
+const WidthStep = 10; // vw
+
+const StartMinWidth = 1030; // px
+const MinWidthStep = 50; // px
+
+type RenderProps = {
   onRequestClose: () => void,
   shouldConfirm: Function,
   children: React.Node,
-  options: {
-    width: {
-      initialValue: number,
-      step: number,
-      unit: 'vw' | 'px' | 'em' | '%',
-    },
-    minWidth: {
-      initialValue: number,
-      step: number,
-      unit: 'vw' | 'px' | 'em' | '%',
-    },
-  },
 };
 
-type Props = WrapperProps & {
-  parentContext: SlideViewContextProps,
-};
-
-type State = {
-  neverOpened: boolean,
-  openedDialog: boolean,
-};
+type Props = {
+  isOpen: boolean,
+} & RenderProps;
 
 const defaultProps = {
   isOpen: false,
-  options: {
-    width: { initialValue: 80, step: 10, unit: 'vw' },
-    minWidth: { initialValue: 1030, step: 50, unit: 'px' },
-  },
   shouldConfirm: () => {
     const button = document.getElementById('save_button');
     // $FlowFixMe: Cannot get button.disabled because property disabled is missing in HTMLElement [1].
@@ -48,142 +31,90 @@ const defaultProps = {
   },
 };
 
-class SlideView extends React.Component<Props, State> {
-  slideViewContainer: HTMLElement = document.createElement('div');
+type Context = {
+  width: null | number,
+  minWidth: null | number,
+};
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      neverOpened: true,
-      openedDialog: false,
-    };
-  }
+const SlideViewContext = React.createContext<Context>({
+  width: null,
+  minWidth: null,
+});
 
-  componentDidMount() {
-    const {
-      parentContext: { domElement },
-    } = this.props;
-    const container = domElement || document.body;
-    if (!container) {
-      logger.warn('Container not found');
-      return;
-    }
-    container.appendChild(this.slideViewContainer);
-  }
+const ANIMATION_FINISHED = 300; // 0.3s
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const { isOpen } = nextProps;
-    if (prevState) {
-      const { neverOpened } = prevState;
+const SlideViewRender = ({ isOpen, onRequestClose, shouldConfirm, children }: Props) => {
+  const slot = usePortalSlot();
+  const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
+  const parentContext = React.useContext(SlideViewContext);
 
-      if (isOpen && neverOpened) return { neverOpened: false };
-    }
-    return null;
-  }
+  const handleCloseConfirmDialog = () => setConfirmDialogOpen(false);
 
-  componentWillUnmount() {
-    const container = this.slideViewContainer;
-    if (container.parentNode && container.parentNode.contains(container)) {
-      container.parentNode.removeChild(container);
-    }
-  }
+  const width = parentContext?.width ? parentContext?.width - WidthStep : StartWidth;
+  const minWidth = parentContext?.minWidth ? parentContext?.minWidth - MinWidthStep : StartMinWidth;
 
-  getWidths = () => {
-    const {
-      parentContext: { width: parentWidth, minWidth: parentMinWidth },
-      options: { width: optionWidth, minWidth: optionMinWidth },
-    } = this.props;
-
-    const width = !parentWidth ? optionWidth.initialValue : parentWidth - optionWidth.step;
-    const minWidth = !parentMinWidth
-      ? optionMinWidth.initialValue
-      : parentMinWidth - optionMinWidth.step;
-
-    return {
-      width,
-      minWidth,
-      widthWithUnit: width + optionWidth.unit,
-      minWidthWithUnit: minWidth + optionMinWidth.unit,
-    };
-  };
-
-  openDialog = () => {
-    this.setState({
-      openedDialog: true,
-    });
-  };
-
-  closeDialog = () => {
-    this.setState({
-      openedDialog: false,
-    });
-  };
-
-  render() {
-    const { children, isOpen, onRequestClose, shouldConfirm } = this.props;
-    const { neverOpened, openedDialog } = this.state;
-    const { width, minWidth, widthWithUnit, minWidthWithUnit } = this.getWidths();
-
-    return (
-      <>
-        {ReactDOM.createPortal(
-          <SlideViewContext.Provider
-            value={{ domElement: this.slideViewContainer, width, minWidth }}
-          >
-            <div
-              className={BackdropStyle({ isOpen, neverOpened })}
-              onClick={event => {
-                event.stopPropagation();
-                if (shouldConfirm()) {
-                  this.openDialog();
-                } else {
-                  onRequestClose();
-                }
-              }}
-              role="presentation"
-            >
-              <div
-                className={SlideViewStyle({
-                  isOpen,
-                  neverOpened,
-                  width: widthWithUnit,
-                  minWidth: minWidthWithUnit,
-                })}
-                onClick={evt => evt.stopPropagation()}
-                role="presentation"
-              >
-                <div className={SlideViewContentStyle}>{children}</div>
-              </div>
-            </div>
-            <ConfirmDialog
-              isOpen={openedDialog}
-              onRequestClose={this.closeDialog}
-              onCancel={this.closeDialog}
-              onConfirm={() => {
-                this.closeDialog();
-                onRequestClose();
-              }}
-              message={
-                <FormattedMessage
-                  id="components.form.confirmLeaveMessage"
-                  defaultMessage="Are you sure you want to close this view? Your changes will not be saved."
-                />
-              }
-            />
-          </SlideViewContext.Provider>,
-          this.slideViewContainer
-        )}
-      </>
-    );
-  }
-}
-
-export default function SlideViewConsumerWrapper(props: WrapperProps) {
-  return (
-    <SlideViewContext.Consumer>
-      {parentContext => <SlideView {...props} parentContext={parentContext} />}
-    </SlideViewContext.Consumer>
+  return ReactDOM.createPortal(
+    <SlideViewContext.Provider value={{ width, minWidth }}>
+      <div
+        className={BackdropStyle(isOpen)}
+        onClick={event => {
+          event.stopPropagation();
+          if (shouldConfirm()) {
+            setConfirmDialogOpen(true);
+          } else {
+            onRequestClose();
+          }
+        }}
+        role="presentation"
+      >
+        <div
+          className={SlideViewStyle(isOpen, width, minWidth)}
+          onClick={evt => evt.stopPropagation()}
+          role="presentation"
+        >
+          <div className={SlideViewContentStyle}>{children}</div>
+        </div>
+      </div>
+      <ConfirmDialog
+        isOpen={confirmDialogOpen}
+        onRequestClose={handleCloseConfirmDialog}
+        onCancel={handleCloseConfirmDialog}
+        onConfirm={() => {
+          handleCloseConfirmDialog();
+          onRequestClose();
+        }}
+        message={
+          <FormattedMessage
+            id="components.form.confirmLeaveMessage"
+            defaultMessage="Are you sure you want to close this view? Your changes will not be saved."
+          />
+        }
+      />
+    </SlideViewContext.Provider>,
+    slot
   );
-}
+};
 
-SlideViewConsumerWrapper.defaultProps = defaultProps;
+const SlideView = ({ isOpen, onRequestClose, shouldConfirm, children }: Props) => {
+  const [render, setRender] = React.useState(false);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setRender(true);
+    } else {
+      setTimeout(() => {
+        setRender(false);
+      }, ANIMATION_FINISHED);
+    }
+  }, [isOpen]);
+
+  return render ? (
+    <SlideViewRender isOpen={isOpen} onRequestClose={onRequestClose} shouldConfirm={shouldConfirm}>
+      {children}
+    </SlideViewRender>
+  ) : null;
+};
+
+SlideView.defaultProps = defaultProps;
+
+export default SlideView;
