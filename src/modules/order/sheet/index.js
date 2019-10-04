@@ -66,7 +66,8 @@ const OrderSheetModule = ({ orderIds }: Props) => {
         ids: orderIds,
       });
     }
-  }, [filterBy, orderIds]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderIds]);
 
   React.useEffect(() => {
     let cancel = false;
