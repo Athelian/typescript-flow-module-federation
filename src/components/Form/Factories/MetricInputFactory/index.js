@@ -83,6 +83,9 @@ const MetricInputFactory = ({
   warningMessage,
   infoMessage,
   originalValue,
+  isFocused,
+  disabled,
+  forceHoverStyle,
   inputWidth,
   inputHeight,
   value,
@@ -143,6 +146,11 @@ const MetricInputFactory = ({
       metricSelectWidth,
       metricSelectHeight: inputHeight,
       metricOptionWidth,
+      disabled,
+      isFocused,
+      forceHoverStyle,
+      width: inputWidth,
+      height: inputHeight,
     };
     const valueReadOnly = !editable || autoCalculateIsToggled;
     const metricReadOnly = !editable;
