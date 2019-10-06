@@ -63,7 +63,7 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
                       icon="MILESTONE"
                     />
                     <SectionTabs
-                      link="Milestone_DocumentsSection"
+                      link="milestone_documentsSection"
                       label={<FormattedMessage id="common.documents" defaultMessage="DOCUMENTS" />}
                       icon="DOCUMENT"
                     />
@@ -99,7 +99,7 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
           <Content>
             <div className={FormWrapperStyle}>
               <MilestoneSection />
-              <DocumentsSection />
+              <DocumentsSection sectionId="milestone_documentsSection" />
             </div>
           </Content>
         </SlideViewLayout>

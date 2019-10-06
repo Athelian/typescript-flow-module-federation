@@ -78,7 +78,7 @@ class ShipmentForm extends React.Component<Props> {
           )}
         </Subscribe>
 
-        <SectionWrapper id="Shipment_DocumentsSection">
+        <SectionWrapper id="shipment_documentsSection">
           <DocumentsSection
             entityId={!isClone && shipment.id ? shipment.id : ''}
             isLoading={loading}

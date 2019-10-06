@@ -156,7 +156,7 @@ class OrderItemFormModule extends React.Component<Props> {
                     icon="BATCH"
                   />
                   <SectionTabs
-                    link="OrderItem_DocumentsSection"
+                    link="orderItem_documentsSection"
                     label={
                       <FormattedMessage id="modules.item.documents" defaultMessage="DOCUMENTS" />
                     }

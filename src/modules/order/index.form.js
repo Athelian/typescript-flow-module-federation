@@ -303,7 +303,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                     icon="ORDER_ITEM"
                   />
                   <SectionTabs
-                    link="Order_DocumentsSection"
+                    link="order_documentsSection"
                     label={
                       <FormattedMessage id="modules.Orders.documents" defaultMessage="DOCUMENTS" />
                     }

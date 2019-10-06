@@ -388,7 +388,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                       icon="CARGO"
                     />
                     <SectionTabs
-                      link="Shipment_DocumentsSection"
+                      link="shipment_documentsSection"
                       label={
                         <FormattedMessage
                           id="modules.Shipments.document"

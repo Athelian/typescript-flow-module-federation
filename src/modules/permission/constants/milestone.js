@@ -6,7 +6,6 @@ export const MILESTONE_UPDATE = 'task.milestones.update';
 export const MILESTONE_DELETE = 'task.milestones.delete';
 export const MILESTONE_SET_NAME = 'task.milestones.setName';
 export const MILESTONE_SET_DUE_DATE = 'task.milestones.setDueDate';
-// FIXME:
 export const MILESTONE_SET_DOCUMENTS = 'task.milestones.setDocuments';
 export const MILESTONE_DOCUMENTS_DOWNLOAD = 'task.milestones.downloadDocuments';
 export const MILESTONE_DOCUMENT_DELETE = 'task.milestonesFiles.delete';

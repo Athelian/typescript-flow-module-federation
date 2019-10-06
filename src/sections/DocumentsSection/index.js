@@ -6,6 +6,7 @@ import { DocumentsInput, SectionWrapper, SectionHeader } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 
 type Props = {
+  sectionId: string,
   entityType: string,
   container: Object,
   canUpload: boolean,
@@ -17,6 +18,7 @@ type Props = {
 };
 
 export default function DocumentsSection({
+  sectionId,
   entityType,
   container,
   canUpload,
@@ -31,7 +33,7 @@ export default function DocumentsSection({
       {({ state: { files = [] }, setFieldValue }) => {
         return (
           <div>
-            <SectionWrapper id={`${entityType}_DocumentsSection`}>
+            <SectionWrapper id={sectionId}>
               <SectionHeader
                 icon="DOCUMENT"
                 title={

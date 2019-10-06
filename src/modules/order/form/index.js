@@ -58,7 +58,7 @@ export default class OrderForm extends React.Component<Props> {
           />
         </SectionWrapper>
 
-        <SectionWrapper id="Order_DocumentsSection">
+        <SectionWrapper id="order_documentsSection">
           <DocumentsSection entityId={!isClone && order.id ? order.id : ''} isLoading={loading} />
         </SectionWrapper>
 
