@@ -59,7 +59,7 @@ export const OrderFilterConfig: Array<FilterConfig> = [
   {
     entity: 'ORDER',
     field: 'completelyShipped',
-    type: 'completely_batched',
+    type: 'completely_shipped',
     message: orderMessages.completelyShipped,
     defaultValue: false,
   },
