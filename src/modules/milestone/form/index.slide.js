@@ -10,10 +10,13 @@ import { ResetButton, SaveButton } from 'components/Buttons';
 import { isNullOrUndefined } from 'utils/fp';
 import { FormContainer, resetFormState } from 'modules/form';
 import { FormContext } from './context';
-import MilestoneFrom from './index';
+import MilestoneSection from './components/MilestoneSection';
+import DocumentsSection from './components/DocumentsSection';
+
 import validator from './validator';
 
-import MilestoneStateContainer from './container';
+import { MilestoneBaseContainer, MilestoneFilesContainer } from './containers';
+import { FormWrapperStyle } from './style';
 
 type OptionalProps = {
   inTemplate: boolean,
@@ -36,9 +39,20 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
       }}
     >
       <Provider>
+        <Subscribe to={[MilestoneBaseContainer, MilestoneFilesContainer]}>
+          {({ state, initDetailValues }, filesContainer) => {
+            const { files = [], ...rest } = milestone;
+            if (isNullOrUndefined(state.id)) {
+              initDetailValues(rest);
+              filesContainer.initDetailValues(files);
+            }
+            return null;
+          }}
+        </Subscribe>
+
         <SlideViewLayout>
-          <Subscribe to={[MilestoneStateContainer, FormContainer]}>
-            {(milestoneStateContainer, formContainer) => {
+          <Subscribe to={[FormContainer, MilestoneBaseContainer, MilestoneFilesContainer]}>
+            {(formContainer, milestoneStateContainer, filesContainer) => {
               return (
                 <SlideViewNavBar>
                   <EntityIcon icon="MILESTONE" color="MILESTONE" />
@@ -48,20 +62,32 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
                       label={<FormattedMessage id="common.milestone" defaultMessage="MILESTONE" />}
                       icon="MILESTONE"
                     />
+                    <SectionTabs
+                      link="milestone_documentsSection"
+                      label={<FormattedMessage id="common.documents" defaultMessage="DOCUMENTS" />}
+                      icon="DOCUMENT"
+                    />
                   </JumpToSection>
 
-                  {milestoneStateContainer.isDirty() && (
+                  {(milestoneStateContainer.isDirty() || filesContainer.isDirty()) && (
                     <>
                       <ResetButton
                         onClick={() => {
                           resetFormState(milestoneStateContainer);
+                          resetFormState(filesContainer, 'files');
                           formContainer.onReset();
                         }}
                       />
                       <SaveButton
                         id="milestone_form_save_button"
                         disabled={!formContainer.isReady(milestoneStateContainer.state, validator)}
-                        onClick={() => onSave(milestoneStateContainer.state)}
+                        onClick={() => {
+                          const data = {
+                            ...milestoneStateContainer.state,
+                            ...filesContainer.state,
+                          };
+                          onSave(data);
+                        }}
                       />
                     </>
                   )}
@@ -71,15 +97,11 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
           </Subscribe>
 
           <Content>
-            <Subscribe to={[MilestoneStateContainer]}>
-              {({ state, initDetailValues }) => {
-                if (isNullOrUndefined(state.id)) {
-                  initDetailValues(milestone);
-                }
-                return null;
-              }}
-            </Subscribe>
-            <MilestoneFrom />
+            <div className={FormWrapperStyle}>
+              <MilestoneSection />
+
+              {!inTemplate && <DocumentsSection sectionId="milestone_documentsSection" />}
+            </div>
           </Content>
         </SlideViewLayout>
       </Provider>

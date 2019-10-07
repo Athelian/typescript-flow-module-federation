@@ -33,6 +33,7 @@ import {
   parseParentIdField,
   parseTaskField,
   parseEnumField,
+  parseFilesField,
 } from 'utils/data';
 
 import { getByPathWithDefault } from 'utils/fp';
@@ -68,7 +69,7 @@ export const prepareParsedTaskInput = (originalValues: ?Task, values: Task) => (
 });
 
 const prepareParseMilestone = (originalValues: Object, newValues: Object): Object => ({
-  ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
+  ...parseGenericField('name', originalValues?.name, newValues.name),
   ...parseDateField('dueDate', originalValues?.dueDate, newValues?.dueDate),
   ...parseGenericField(
     'dueDateInterval',
@@ -91,16 +92,8 @@ const prepareParseMilestone = (originalValues: Object, newValues: Object): Objec
     originalValues?.estimatedCompletionDateBinding,
     newValues?.estimatedCompletionDateBinding
   ),
-  ...parseParentIdField(
-    'completedById',
-    getByPathWithDefault(null, 'completedBy', originalValues),
-    newValues.completedBy
-  ),
-  ...parseDateField(
-    'completedAt',
-    getByPathWithDefault(null, 'completedAt', originalValues),
-    newValues.completedAt
-  ),
+  ...parseParentIdField('completedById', originalValues?.completedBy, newValues.completedBy),
+  ...parseDateField('completedAt', originalValues?.completedAt, newValues.completedAt),
   ...parseArrayOfChildrenField(
     'tasks',
     originalValues?.tasks || [],
@@ -113,6 +106,7 @@ const prepareParseMilestone = (originalValues: Object, newValues: Object): Objec
       ),
     })
   ),
+  ...parseFilesField('files', originalValues?.files, newValues?.files),
 });
 export const updateProjectMutation = gql`
   mutation projectUpdate($id: ID!, $input: ProjectUpdateInput!) {

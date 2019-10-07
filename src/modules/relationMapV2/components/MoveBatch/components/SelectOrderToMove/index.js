@@ -176,7 +176,6 @@ function SelectOrderToMove({ intl, onSuccess }: Props) {
     },
     'filterOrderOnMoveNRM'
   );
-  if (!isOpen || !isMoveToOrder) return null;
   return (
     <SlideView
       shouldConfirm={() => !!selected}

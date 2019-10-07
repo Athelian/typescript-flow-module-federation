@@ -1,9 +1,11 @@
 // @flow
 import React from 'react';
+import { intersection } from 'lodash';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import { Hits, Entities, OrderFocused } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, TAG, PRODUCT } from 'modules/relationMapV2/constants';
+import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
 import {
   EntitiesWrapperStyle,
   EntityWrapperStyle,
@@ -13,7 +15,12 @@ import {
 } from './style';
 
 const MatchesEntities = () => {
-  const { dispatch } = OrderFocused.useContainer();
+  const { state, dispatch } = OrderFocused.useContainer();
+  const selectedOrderIds = targetedIds(state.targets, ORDER);
+  const selectedOrderItemIds = targetedIds(state.targets, ORDER_ITEM);
+  const selectedBatchIds = targetedIds(state.targets, BATCH);
+  // const selectedContainerIds = targetedIds(state.targets, CONTAINER);
+  const selectedShipmentIds = targetedIds(state.targets, SHIPMENT);
   const { matches } = Hits.useContainer();
   const { mapping } = Entities.useContainer();
   const keys = Object.keys(matches.entity || {});
@@ -32,6 +39,7 @@ const MatchesEntities = () => {
     ),
   ];
   const orderMatched = orderIds.length;
+  const isUnselectOrders = intersection(selectedOrderIds, orderIds).length === orderMatched;
   const matchedOrderItemIds = Object.keys(mapping.entities?.orderItems ?? {}).filter(itemId =>
     keys.some(key =>
       key.includes(
@@ -48,6 +56,8 @@ const MatchesEntities = () => {
     ),
   ];
   const matchedOrderItem = orderItemIds.length;
+  const isUnselectOrderItems =
+    intersection(selectedOrderItemIds, orderItemIds).length === matchedOrderItem;
   const matchedBatchIds = keys.filter(
     key => key.includes(`-${BATCH}`) && mapping.entities?.batches?.[matches.entity?.[key]?.id]
   );
@@ -60,6 +70,7 @@ const MatchesEntities = () => {
     ),
   ];
   const matchedBatch = batchIds.length;
+  const isUnselectBatches = intersection(selectedBatchIds, batchIds).length === matchedBatch;
   const matchedShipmentIds = keys.filter(key => key.includes(`-${SHIPMENT}`));
   const shipmentIds = [
     ...new Set(
@@ -70,7 +81,11 @@ const MatchesEntities = () => {
     ),
   ];
   const matchedShipment = shipmentIds.length;
-  const matchedContainer = 0; // TODO: API is not supported yet
+  const isUnselectShipments =
+    intersection(selectedShipmentIds, shipmentIds).length === matchedShipment;
+  // TODO: API is not supported yet
+  const matchedContainer = 0;
+  const isUnselectContainers = false;
 
   return (
     <div className={EntitiesWrapperStyle}>
@@ -83,7 +98,7 @@ const MatchesEntities = () => {
         </div>
         {orderMatched > 0 && (
           <button
-            className={SelectedEntitiesWrapperStyle}
+            className={SelectedEntitiesWrapperStyle(isUnselectOrders)}
             onClick={() => {
               dispatch({
                 type: 'TARGET_ALL',
@@ -94,7 +109,7 @@ const MatchesEntities = () => {
             }}
             type="button"
           >
-            <Icon icon="CONFIRM" />
+            <Icon icon={isUnselectOrders ? 'CLEAR' : 'CONFIRM'} />
           </button>
         )}
       </div>
@@ -108,7 +123,7 @@ const MatchesEntities = () => {
         </div>
         {matchedOrderItem > 0 && (
           <button
-            className={SelectedEntitiesWrapperStyle}
+            className={SelectedEntitiesWrapperStyle(isUnselectOrderItems)}
             onClick={() => {
               dispatch({
                 type: 'TARGET_ALL',
@@ -119,7 +134,7 @@ const MatchesEntities = () => {
             }}
             type="button"
           >
-            <Icon icon="CONFIRM" />
+            <Icon icon={isUnselectOrderItems ? 'CLEAR' : 'CONFIRM'} />
           </button>
         )}
       </div>
@@ -133,7 +148,7 @@ const MatchesEntities = () => {
         </div>
         {matchedBatch > 0 && (
           <button
-            className={SelectedEntitiesWrapperStyle}
+            className={SelectedEntitiesWrapperStyle(isUnselectBatches)}
             onClick={() => {
               dispatch({
                 type: 'TARGET_ALL',
@@ -144,7 +159,7 @@ const MatchesEntities = () => {
             }}
             type="button"
           >
-            <Icon icon="CONFIRM" />
+            <Icon icon={isUnselectBatches ? 'CLEAR' : 'CONFIRM'} />
           </button>
         )}
       </div>
@@ -158,7 +173,7 @@ const MatchesEntities = () => {
         </div>
         {matchedContainer > 0 && (
           <button
-            className={SelectedEntitiesWrapperStyle}
+            className={SelectedEntitiesWrapperStyle(isUnselectContainers)}
             onClick={() => {
               dispatch({
                 type: 'TARGET_ALL',
@@ -170,7 +185,7 @@ const MatchesEntities = () => {
             }}
             type="button"
           >
-            <Icon icon="CONFIRM" />
+            <Icon icon={isUnselectContainers ? 'CLEAR' : 'CONFIRM'} />
           </button>
         )}
       </div>
@@ -184,7 +199,7 @@ const MatchesEntities = () => {
         </div>
         {matchedShipment > 0 && (
           <button
-            className={SelectedEntitiesWrapperStyle}
+            className={SelectedEntitiesWrapperStyle(isUnselectShipments)}
             onClick={() => {
               dispatch({
                 type: 'TARGET_ALL',
@@ -195,7 +210,7 @@ const MatchesEntities = () => {
             }}
             type="button"
           >
-            <Icon icon="CONFIRM" />
+            <Icon icon={isUnselectShipments ? 'CLEAR' : 'CONFIRM'} />
           </button>
         )}
       </div>

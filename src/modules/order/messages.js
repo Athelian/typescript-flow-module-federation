@@ -566,4 +566,12 @@ export default defineMessages({
     id: 'modules.Orders.totalItemQuantity',
     defaultMessage: 'TOTAL ITEM QUANTITY',
   },
+  completelyBatched: {
+    id: 'modules.Orders.completelyBatched',
+    defaultMessage: 'Fully Batched',
+  },
+  completelyShipped: {
+    id: 'modules.Orders.completelyShipped',
+    defaultMessage: 'Fully Shipped',
+  },
 });

@@ -1,6 +1,12 @@
 // @flow
 import gql from 'graphql-tag';
-import { ownedByFragment, tagFragment, userAvatarFragment } from 'graphql/common/fragment';
+import {
+  ownedByFragment,
+  tagFragment,
+  userAvatarFragment,
+  documentFragment,
+} from 'graphql/common/fragment';
+import { forbiddenFragment } from 'graphql/errors/fragment';
 import { taskCountFragment, taskFormInProjectFragment } from 'graphql/task/fragment';
 
 const milestoneInProjectCardFragment = gql`
@@ -109,6 +115,10 @@ export const projectFormQueryFragment = gql`
             milestoneSort
           }
         }
+        files {
+          ...documentFragment
+          ...forbiddenFragment
+        }
       }
     }
   }
@@ -117,4 +127,6 @@ export const projectFormQueryFragment = gql`
   ${userAvatarFragment}
   ${taskCountFragment}
   ${taskFormInProjectFragment}
+  ${documentFragment}
+  ${forbiddenFragment}
 `;

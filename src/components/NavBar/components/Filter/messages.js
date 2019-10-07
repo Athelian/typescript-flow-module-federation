@@ -86,4 +86,20 @@ export default defineMessages({
     id: 'components.NavBar.Filter.organizationTypes',
     defaultMessage: 'Types',
   },
+  completelyBatched: {
+    id: 'components.NavBar.Filter.completelyBatched',
+    defaultMessage: 'Fully Batched',
+  },
+  notCompletelyBatched: {
+    id: 'components.NavBar.Filter.notCompletelyBatched',
+    defaultMessage: 'Not Fully Batched',
+  },
+  completelyShipped: {
+    id: 'components.NavBar.Filter.completelyShipped',
+    defaultMessage: 'Fully Shipped',
+  },
+  notCompletelyShipped: {
+    id: 'components.NavBar.Filter.notCompletelyShipped',
+    defaultMessage: 'Not Fully Shipped',
+  },
 });

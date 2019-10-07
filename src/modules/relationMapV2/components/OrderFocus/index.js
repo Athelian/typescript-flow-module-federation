@@ -118,7 +118,7 @@ const loadMore = (
         result
       );
     },
-  });
+  }).catch(logger.error);
 };
 
 export default function OrderFocus() {
@@ -222,7 +222,6 @@ export default function OrderFocus() {
                 );
               }
 
-              const processOrderIds = [];
               const baseOrders = getByPathWithDefault([], 'orders.nodes', data).map(order =>
                 state.order[getByPathWithDefault('', 'id', order)]
                   ? {
@@ -233,6 +232,7 @@ export default function OrderFocus() {
               );
               const loadedOrders = Object.values(state.order || {});
               const orders = state.newOrders.map(orderId => state.order[orderId]);
+              const processOrderIds = orders.map(order => order?.id).filter(Boolean);
               baseOrders.forEach(order => {
                 if (!processOrderIds.includes(order.id)) {
                   processOrderIds.push(order.id);
@@ -263,9 +263,9 @@ export default function OrderFocus() {
               const loadMoreItems =
                 loading || isLoadingMore
                   ? () => {}
-                  : async () => {
+                  : () => {
                       setIsLoadingMore(true);
-                      await loadMore(
+                      loadMore(
                         { fetchMore, data, onSuccess: () => setIsLoadingMore(false) },
                         queryVariables
                       );

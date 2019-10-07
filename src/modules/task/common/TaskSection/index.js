@@ -457,7 +457,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
     canAddTasks,
     canDeleteTasks,
     canOrderingTasks,
-    // canUpdateMilestone,
+    canUpdateMilestone,
     canUpdateTaskTemplate,
     tasksContainer,
     editable,
@@ -512,59 +512,61 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                 />
               )}
 
-              <BooleanValue>
-                {({ value: isOpen, set: toggleSlide }) => (
-                  <>
-                    <Tooltip
-                      message={
-                        <FormattedMessage
-                          id="modules.task.placeAllTasksInAProject"
-                          defaultMessage="Place all Tasks in a Project"
-                        />
-                      }
-                    >
-                      <div>
-                        <BaseButton
-                          icon="PROJECT"
-                          label={
-                            <FormattedMessage
-                              id="modules.task.setToProject"
-                              defaultMessage="SET TO PROJECT"
-                            />
-                          }
-                          onClick={() => toggleSlide(true)}
-                        />
-                      </div>
-                    </Tooltip>
-                    <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
-                      {isOpen && (
-                        <SelectProjectAndMilestone
-                          cacheKey="TaskInfoSectionSelectProjectAndMilestone"
-                          saveButtonMessage={
-                            <FormattedMessage id="modules.task.apply" defaultMessage="APPLY" />
-                          }
-                          onSelect={value => {
-                            setFieldValue(
-                              'todo.tasks',
-                              tasks.map(item => {
-                                const latestTask = {
-                                  ...item,
-                                  milestone: value,
-                                };
+              {canUpdateMilestone && (
+                <BooleanValue>
+                  {({ value: isOpen, set: toggleSlide }) => (
+                    <>
+                      <Tooltip
+                        message={
+                          <FormattedMessage
+                            id="modules.task.placeAllTasksInAProject"
+                            defaultMessage="Place all Tasks in a Project"
+                          />
+                        }
+                      >
+                        <div>
+                          <BaseButton
+                            icon="PROJECT"
+                            label={
+                              <FormattedMessage
+                                id="modules.task.setToProject"
+                                defaultMessage="SET TO PROJECT"
+                              />
+                            }
+                            onClick={() => toggleSlide(true)}
+                          />
+                        </div>
+                      </Tooltip>
+                      <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
+                        {isOpen && (
+                          <SelectProjectAndMilestone
+                            cacheKey="TaskInfoSectionSelectProjectAndMilestone"
+                            saveButtonMessage={
+                              <FormattedMessage id="modules.task.apply" defaultMessage="APPLY" />
+                            }
+                            onSelect={value => {
+                              setFieldValue(
+                                'todo.tasks',
+                                tasks.map(item => {
+                                  const latestTask = {
+                                    ...item,
+                                    milestone: value,
+                                  };
 
-                                return recalculateTaskBindingDate(latestTask);
-                              })
-                            );
-                            setFieldTouched('tasks');
-                            toggleSlide(false);
-                          }}
-                          onCancel={() => toggleSlide(false)}
-                        />
-                      )}
-                    </SlideView>
-                  </>
-                )}
-              </BooleanValue>
+                                  return recalculateTaskBindingDate(latestTask);
+                                })
+                              );
+                              setFieldTouched('tasks');
+                              toggleSlide(false);
+                            }}
+                            onCancel={() => toggleSlide(false)}
+                          />
+                        )}
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
+              )}
             </SectionNavBar>
 
             <div className={TasksSectionStyle}>
