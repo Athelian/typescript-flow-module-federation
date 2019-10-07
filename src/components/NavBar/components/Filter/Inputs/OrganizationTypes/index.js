@@ -30,7 +30,7 @@ const OrganizationTypes = ({ value, onChange, readonly }: Props) => {
 
       <div>
         {Types.map(type => (
-          <div className={CheckboxWrapperStyle}>
+          <div key={type} className={CheckboxWrapperStyle}>
             <CheckboxInput
               checked={value.includes(type)}
               onToggle={handleToggle(type)}

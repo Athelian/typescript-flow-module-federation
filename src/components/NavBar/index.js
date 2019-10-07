@@ -10,8 +10,12 @@ import Sort from './components/Sort';
 import StatusToggleTabs from './components/Tabs/StatusToggleTabs';
 import Tabs from './components/Tabs';
 import LogsButton from './components/LogsButton';
-import { OrderFilterConfig, PartnerFilterConfig } from './components/Filter/configs';
-import { OrderSortConfig, PartnerSortConfig } from './components/Sort/configs';
+import {
+  OrderFilterConfig,
+  WarehouseFilterConfig,
+  PartnerFilterConfig,
+} from './components/Filter/configs';
+import { OrderSortConfig, WarehouseSortConfig, PartnerSortConfig } from './components/Sort/configs';
 
 export {
   NavBar,
@@ -26,7 +30,9 @@ export {
   SectionNavBar,
   LogsButton,
   OrderFilterConfig,
+  WarehouseFilterConfig,
   PartnerFilterConfig,
   OrderSortConfig,
+  WarehouseSortConfig,
   PartnerSortConfig,
 };

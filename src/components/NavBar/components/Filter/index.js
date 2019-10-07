@@ -9,7 +9,9 @@ import { DefaultOptions, DefaultSelect, SelectInput, Label, Display } from 'comp
 import Archived from './Inputs/Archived';
 import DateRange from './Inputs/DateRange';
 import { VolumeRange, AreaRange, LengthRange, MassRange } from './Inputs/MetricRange';
+import OrganizationTypes from './Inputs/OrganizationTypes';
 import OrderIds from './Inputs/OrderIds';
+import WarehouseIds from './Inputs/WarehouseIds';
 import {
   ImporterIds,
   ExporterIds,
@@ -41,7 +43,6 @@ import {
   AddFilterButtonWrapperStyle,
 } from './style';
 import messages from './messages';
-import OrganizationTypes from './Inputs/OrganizationTypes';
 
 export type FilterConfig = {
   entity: string,
@@ -76,6 +77,7 @@ const inputs = {
   length_range: LengthRange,
   mass_range: MassRange,
   order_ids: OrderIds,
+  warehouse_ids: WarehouseIds,
   importer_ids: ImporterIds,
   exporter_ids: ExporterIds,
   supplier_ids: SupplierIds,

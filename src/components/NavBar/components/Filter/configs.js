@@ -3,6 +3,7 @@ import { defaultVolumeMetric } from 'utils/metric';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
+import warehouseMessages from 'modules/warehouse/messages';
 import partnerMessages from 'modules/partner/messages';
 import type { FilterConfig } from './index';
 
@@ -104,6 +105,13 @@ export const OrderFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'SHIPMENT',
+    field: 'shipmentWarehouseIds',
+    type: 'warehouse_ids',
+    message: shipmentMessages.warehouse,
+    defaultValue: [],
+  },
+  {
+    entity: 'SHIPMENT',
     field: 'shipmentCargoReady',
     type: 'date_range',
     message: shipmentMessages.cargoReady,
@@ -192,6 +200,30 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     type: 'shipment_tags',
     message: shipmentMessages.tags,
     defaultValue: [],
+  },
+];
+
+export const WarehouseFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'WAREHOUSE',
+    field: 'archived',
+    type: 'archived',
+    message: warehouseMessages.status,
+    defaultValue: false,
+  },
+  {
+    entity: 'WAREHOUSE',
+    field: 'createdAt',
+    type: 'date_range',
+    message: warehouseMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'WAREHOUSE',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: warehouseMessages.updatedAt,
+    defaultValue: { after: null, before: null },
   },
 ];
 
