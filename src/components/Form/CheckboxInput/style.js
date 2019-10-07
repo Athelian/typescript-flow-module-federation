@@ -15,6 +15,12 @@ export const CheckboxInputStyle = (checked: boolean): string => css`
   :focus {
     background-color: ${checked ? colors.TEAL_DARK : colors.GRAY_LIGHT};
   }
+
+  &[disabled] {
+    cursor: default;
+    color: ${colors.GRAY_SUPER_LIGHT};
+    background-color: ${checked ? colors.TEAL_DARK : colors.GRAY};
+  }
 `;
 
 export default CheckboxInputStyle;

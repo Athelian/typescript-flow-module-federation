@@ -35,7 +35,7 @@ export const ordersQuery = gql`
 
 export const ordersByIDsQuery = gql`
   query ordersByIDs($ids: [ID!]!) {
-    items: ordersByIDs(ids: $ids) {
+    ordersByIDs(ids: $ids) {
       ... on Order {
         id
         poNo

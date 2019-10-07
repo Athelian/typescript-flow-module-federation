@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Sep 27 2019 17:19:51 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Oct 04 2019 18:28:01 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -31065,6 +31065,9 @@ type Query {
   authenticated: Boolean!
   user(id: ID!): UserPayload!
   users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPaginatedSearch!
+  usersByIDs(ids: [ID!]!): [UserPayload!]!
+  organization(id: ID!): OrganizationPayload!
+  organizationsByIDs(ids: [ID!]!): [OrganizationPayload!]!
   partnership(id: ID!): PartnershipPayload!
   partnerships(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnershipPayloadPaginatedSearch!
   product(id: ID!): ProductPayload!
@@ -31106,6 +31109,7 @@ type Query {
   warehousesByIDs(ids: [ID!]!): [WarehousePayload!]!
   tag(id: ID!): TagPayload!
   tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPayloadPaginatedSearch!
+  tagsByIDs(ids: [ID!]!): [TagPayload!]!
   tagExport(id: ID!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   tagsExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: TagFilterInput, sortBy: TagSortInput): ExportPayload!
   tagsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
