@@ -2230,14 +2230,14 @@
   dependencies:
     prop-types "^15.5.10"
 
-"@graphql-codegen/cli@^1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/cli/-/cli-1.8.0.tgz#c190545670ac819b0c1aaf909357f2a519a9b14e"
-  integrity sha512-d5OqdbwN8BwF/zjK3cmTp6LJ0kszX8fMSdWdN93KEJ+0P1fUbksS/FZbd9BuOemki2onMtLSVp+ipJGqbyPThA==
+"@graphql-codegen/cli@^1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/cli/-/cli-1.8.1.tgz#2fc918ce97c6779c2549c7256445358333214bbe"
+  integrity sha512-HMJiEUqCEDqgeq6bzVssih3clz+4ShvtfEFl0bCY2iWs3+8CnbNooS+3KiFU1ESw86k+r8J5cKQTKLZmbU4P9g==
   dependencies:
     "@babel/parser" "7.6.2"
-    "@graphql-codegen/core" "1.8.0"
-    "@graphql-codegen/plugin-helpers" "1.8.0"
+    "@graphql-codegen/core" "1.8.1"
+    "@graphql-codegen/plugin-helpers" "1.8.1"
     "@types/debounce" "1.2.0"
     "@types/is-glob" "4.0.1"
     "@types/mkdirp" "0.5.2"
@@ -2248,6 +2248,7 @@
     chokidar "3.2.1"
     commander "3.0.2"
     common-tags "1.8.0"
+    cosmiconfig "5.2.1"
     debounce "1.2.0"
     detect-indent "6.0.0"
     glob "7.1.4"
@@ -2260,7 +2261,6 @@
     inquirer "7.0.0"
     is-glob "4.0.1"
     is-valid-path "0.1.1"
-    js-yaml "3.13.1"
     json-to-pretty-yaml "1.2.2"
     listr "0.14.3"
     listr-update-renderer "0.5.0"
@@ -2273,65 +2273,65 @@
     tslib "1.10.0"
     valid-url "1.0.9"
 
-"@graphql-codegen/core@1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/core/-/core-1.8.0.tgz#850371115aaf9270443ae9654c8486525440f454"
-  integrity sha512-sNUP03WSICVt+5PTrHnow7F/25mn9gJHm/ZE1Xx19HngY6WoU4L0ATikaPZQ/yS09wMbVXK42LrMUXVSv+w0Aw==
+"@graphql-codegen/core@1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/core/-/core-1.8.1.tgz#a38c00101e11e537c8750df031e8de8e4c72f25d"
+  integrity sha512-QcJ37e6aTGUtu9daeReJJ2hmxe3sEN3QgKlSbpq+sO91Br38iT6ORiWmdKcVzKF3iLrj2BOkO2gWuRYz8umpmA==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "1.8.0"
+    "@graphql-codegen/plugin-helpers" "1.8.1"
     graphql-toolkit "0.5.16"
     tslib "1.10.0"
 
-"@graphql-codegen/flow-operations@1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/flow-operations/-/flow-operations-1.8.0.tgz#c2dbcdef3ea32160724f3f85b6c892100fb600cc"
-  integrity sha512-DjKcjHgXMxAAHq+wtHcD+cK11OfH+/995LLRG+YzS8jF0cWpRvpKfQJIaV8ERpeKLn68W382Vl+qXjy0XRzEtg==
+"@graphql-codegen/flow-operations@1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/flow-operations/-/flow-operations-1.8.1.tgz#28bd7c58bbd13cb32bc3aaab9d200116a229dc28"
+  integrity sha512-lKdEXt2t/33L5p+un0RWFQm+2xJxUBC4cX8fzQOFcDRO5IgqsY6JBgtAlhTd2ESQM+74T1SFAEsHZ/tsrh3LOw==
   dependencies:
-    "@graphql-codegen/flow" "1.8.0"
-    "@graphql-codegen/plugin-helpers" "1.8.0"
-    "@graphql-codegen/visitor-plugin-common" "1.8.0"
+    "@graphql-codegen/flow" "1.8.1"
+    "@graphql-codegen/plugin-helpers" "1.8.1"
+    "@graphql-codegen/visitor-plugin-common" "1.8.1"
     tslib "1.10.0"
 
-"@graphql-codegen/flow@1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/flow/-/flow-1.8.0.tgz#a2eadf76a64f240f617a746b5865071574809779"
-  integrity sha512-cUFOAX+y69PslTrQIl+mDAWCcQlFlCpo7IAr2r2Dy4G4NsI5oBCjUHrj6FY7xTfFBR6LXKJ+IpoLqyALWButHw==
+"@graphql-codegen/flow@1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/flow/-/flow-1.8.1.tgz#71027711c324ac98f00658e024d1b7d5e5fc2360"
+  integrity sha512-LEVklLVeNN6z6Mg4BEVr1FkFFLH/K8HOHfZU/Z8+mVhA7cASHg00robYdA5rucuIuN+4xFmRC+igR22rPXjszw==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "1.8.0"
-    "@graphql-codegen/visitor-plugin-common" "1.8.0"
+    "@graphql-codegen/plugin-helpers" "1.8.1"
+    "@graphql-codegen/visitor-plugin-common" "1.8.1"
     tslib "1.10.0"
 
-"@graphql-codegen/fragment-matcher@1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/fragment-matcher/-/fragment-matcher-1.8.0.tgz#aafb9c0785b1689a7dc9111c78879bf79f2fc84d"
-  integrity sha512-eyEqXAHQ/r+oKNBjhzHH5DOlLDd5/9c/O0kZ1AtFvflwt+IsWYYarxwRuBQ+Es0l21OYpEBeDfG3tJXLeg1pFQ==
+"@graphql-codegen/fragment-matcher@1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/fragment-matcher/-/fragment-matcher-1.8.1.tgz#70f2e2609a9dd6368bc23872ccc8cda39f27ba34"
+  integrity sha512-2dP8h2ck8N5hHS2pzFsv5evd/sJPZJMzbwoaKUDvPgL5zhhiDb3say/uYJ3Frh1mT3llpe0tgdvREt7ExUk6vw==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "1.8.0"
+    "@graphql-codegen/plugin-helpers" "1.8.1"
 
-"@graphql-codegen/introspection@^1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/introspection/-/introspection-1.8.0.tgz#dcd7fa98ac6ca0363a6b4c906be99de7e43336d0"
-  integrity sha512-Gp45lS/i75MDj+8ToFchq94352cIZ43tfcBuVmmf85JgPK2ED5oKgc3GQ2gHbKt1IZGGoqmYZUuqVYbx3/Ywyw==
+"@graphql-codegen/introspection@^1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/introspection/-/introspection-1.8.1.tgz#7e8746bb6709a700f9da79be9e61620c7d21c4ba"
+  integrity sha512-T4oVj50ICS6h9mBj6rE22URZ9NUjWqybQfPAvAJtUDPl+udcq4lqmk2gkr3wXW5l42Pdj91f1pQbLwpw3JpjTw==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "1.8.0"
+    "@graphql-codegen/plugin-helpers" "1.8.1"
     tslib "1.10.0"
 
-"@graphql-codegen/plugin-helpers@1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-1.8.0.tgz#530a4df7d196541515a6000aec768f1f9e08c519"
-  integrity sha512-0rcAYVaxpNkA48f6gwXhsQ3zn7/nhsW//LZrhg1FK8JD1Ytr64KS0EfMq1zAp1PiHh6/8RmvI0cSeAtuNGkS9g==
+"@graphql-codegen/plugin-helpers@1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-1.8.1.tgz#e84eb40988a0d4c0bdfb386d4a8628bf0901c6e3"
+  integrity sha512-gYvt9h/IN77ti7N88GIuSuX9LSGYNnGzpOovG3YBNdOKo4yYc5VT5TcbirigW101jHzjIPNSZVgFPWWg6HSxug==
   dependencies:
     change-case "3.1.0"
     common-tags "1.8.0"
     import-from "3.0.0"
     tslib "1.10.0"
 
-"@graphql-codegen/visitor-plugin-common@1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-1.8.0.tgz#0fafd544062fedbc8631bf92036f855c59d8c712"
-  integrity sha512-Gh868I7XqoX/XSMhAA2rwEodpfZB4cC34FOaiKeAVmRQnerTYWzOEcynOUNvOHhzR44Iwv1etXP7Uqx8iM0Rmg==
+"@graphql-codegen/visitor-plugin-common@1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-1.8.1.tgz#659cbd932147a1cc4bf6b87e813d73c71ab6ec8b"
+  integrity sha512-vhIeTCfiEijWZJJniJ/qYahgfIvQT5rGkXk4yDYsDuMOSi6dNcgpnwuyMDifUidBMac9beliiB9Mw7OeYYelFQ==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "1.8.0"
+    "@graphql-codegen/plugin-helpers" "1.8.1"
     auto-bind "2.0.0"
     dependency-graph "0.8.0"
     graphql-tag "2.10.1"
@@ -6638,7 +6638,7 @@ corejs-upgrade-webpack-plugin@^2.2.0:
     resolve-from "^5.0.0"
     webpack "^4.38.0"
 
-cosmiconfig@^5.0.0, cosmiconfig@^5.2.0, cosmiconfig@^5.2.1:
+cosmiconfig@5.2.1, cosmiconfig@^5.0.0, cosmiconfig@^5.2.0, cosmiconfig@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-5.2.1.tgz#040f726809c591e77a17c0a3626ca45b4f168b1a"
   integrity sha512-H65gsXo1SKjf8zmrJ67eJk8aIRKV5ff2D4uKZIBZShbhGSpEmsQOPW/SKMKYhSTrqR7ufy6RP69rPogdaPh/kA==
@@ -7921,10 +7921,10 @@ eslint-config-airbnb@18.0.1:
     object.assign "^4.1.0"
     object.entries "^1.1.0"
 
-eslint-config-prettier@^6.3.0:
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-6.3.0.tgz#e73b48e59dc49d950843f3eb96d519e2248286a3"
-  integrity sha512-EWaGjlDAZRzVFveh2Jsglcere2KK5CJBhkNSa1xs3KfMUGdRiT7lG089eqPdvlzWHpAqaekubOsOMu8W8Yk71A==
+eslint-config-prettier@^6.4.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-6.4.0.tgz#0a04f147e31d33c6c161b2dd0971418ac52d0477"
+  integrity sha512-YrKucoFdc7SEko5Sxe4r6ixqXPDP1tunGw91POeZTTRKItf/AMFYt/YLEQtZMkR2LVpAVhcAcZgcWpm1oGPW7w==
   dependencies:
     get-stdin "^6.0.0"
 
@@ -8035,20 +8035,20 @@ eslint-plugin-react-hooks@^2.1.2:
   resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-2.1.2.tgz#1358d2acb2c5e02b7e90c37e611ac258a488e3a7"
   integrity sha512-ZR+AyesAUGxJAyTFlF3MbzeVHAcQTFQt1fFVe5o0dzY/HFoj1dgQDMoIkiM+ltN/HhlHBYX4JpJwYonjxsyQMA==
 
-eslint-plugin-react@^7.14.3:
-  version "7.14.3"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.14.3.tgz#911030dd7e98ba49e1b2208599571846a66bdf13"
-  integrity sha512-EzdyyBWC4Uz2hPYBiEJrKCUi2Fn+BJ9B/pJQcjw5X+x/H2Nm59S4MJIvL4O5NEE0+WbnQwEBxWY03oUk+Bc3FA==
+eslint-plugin-react@^7.16.0:
+  version "7.16.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.16.0.tgz#9928e4f3e2122ed3ba6a5b56d0303ba3e41d8c09"
+  integrity sha512-GacBAATewhhptbK3/vTP09CbFrgUJmBSaaRcWdbQLFvUZy9yVcQxigBNHGPU/KE2AyHpzj3AWXpxoMTsIDiHug==
   dependencies:
     array-includes "^3.0.3"
     doctrine "^2.1.0"
     has "^1.0.3"
-    jsx-ast-utils "^2.1.0"
+    jsx-ast-utils "^2.2.1"
     object.entries "^1.1.0"
     object.fromentries "^2.0.0"
     object.values "^1.1.0"
     prop-types "^15.7.2"
-    resolve "^1.10.1"
+    resolve "^1.12.0"
 
 eslint-scope@^3.7.1:
   version "3.7.3"
@@ -8096,10 +8096,10 @@ eslint-visitor-keys@^1.1.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-1.1.0.tgz#e2a82cea84ff246ad6fb57f9bde5b46621459ec2"
   integrity sha512-8y9YjtM1JBJU/A9Kc+SbaOV4y29sSWckBwMHa+FGtVj5gN/sbnKDf6xJUl+8g7FAij9LVaP8C24DUiH/f/2Z9A==
 
-eslint@6.4.0:
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-6.4.0.tgz#5aa9227c3fbe921982b2eda94ba0d7fae858611a"
-  integrity sha512-WTVEzK3lSFoXUovDHEbkJqCVPEPwbhCq4trDktNI6ygs7aO41d4cDT0JFAT5MivzZeVLWlg7vHL+bgrQv/t3vA==
+eslint@6.5.1:
+  version "6.5.1"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-6.5.1.tgz#828e4c469697d43bb586144be152198b91e96ed6"
+  integrity sha512-32h99BoLYStT1iq1v2P9uwpyznQ4M2jRiFB6acitKz52Gqn+vPaMDUTB1bYi1WN4Nquj2w+t+bimYUG83DC55A==
   dependencies:
     "@babel/code-frame" "^7.0.0"
     ajv "^6.10.0"
@@ -10110,10 +10110,10 @@ immer@1.10.0:
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.10.0.tgz#bad67605ba9c810275d91e1c2a47d4582e98286d"
   integrity sha512-O3sR1/opvCDGLEVcvrGTMtLac8GJ5IwZC4puPrLuRj3l7ICKvkmA0vGuU9OW8mV9WIBRnaxp5GJh9IEAaNOoYg==
 
-immer@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-4.0.0.tgz#2f3d6b9228e86e06c0194f6d2c76bcabab394dde"
-  integrity sha512-374/m+biF/6Z24jiqR/u49SH095oIgYr/qLiQnR88svojs5RNJh/h9i0Qq0pqhgUon3Txx8PgUWH+obRy6jbKw==
+immer@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-4.0.1.tgz#9108c1ece7fdd7efb91d21e5eb4bac26f7c3a8ba"
+  integrity sha512-qZFpWApnbubcJ03gvWa6zUQz2OTkDc6yINdFXI1lm2IoMYsiVVMrxvfeLDURFhUGJfsQysDUjHSXYnJfMMHAwQ==
 
 immutability-helper@^3.0.1:
   version "3.0.1"
@@ -11481,7 +11481,7 @@ js-tokens@^3.0.2:
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
   integrity sha1-mGbfOVECEw449/mWvOtlRDIJwls=
 
-js-yaml@3.13.1, js-yaml@^3.10.0, js-yaml@^3.13.0, js-yaml@^3.13.1:
+js-yaml@^3.10.0, js-yaml@^3.13.0, js-yaml@^3.13.1:
   version "3.13.1"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.13.1.tgz#aff151b30bfdfa8e49e05da22e7415e9dfa37847"
   integrity sha512-YfbcO7jXDdyj0DGxYVSlSeQNHbD7XPWvrVWeVUujrQEoZzWJIRrCPoyk6kL6IAjAG2IolMK4T0hNUe0HOUs5Jw==
@@ -11686,13 +11686,6 @@ jstransform@^11.0.3:
     esprima-fb "^15001.1.0-dev-harmony-fb"
     object-assign "^2.0.0"
     source-map "^0.4.2"
-
-jsx-ast-utils@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/jsx-ast-utils/-/jsx-ast-utils-2.1.0.tgz#0ee4e2c971fb9601c67b5641b71be80faecf0b36"
-  integrity sha512-yDGDG2DS4JcqhA6blsuYbtsT09xL8AoLuUR2Gb5exrw7UEM19sBcOTq+YBBhrNbl0PUC4R4LnFu+dHg2HKeVvA==
-  dependencies:
-    array-includes "^3.0.3"
 
 jsx-ast-utils@^2.2.1:
   version "2.2.1"
@@ -15375,10 +15368,10 @@ react-draggable@^4.0.3:
     classnames "^2.2.5"
     prop-types "^15.6.0"
 
-react-dropzone@^10.1.9:
-  version "10.1.9"
-  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-10.1.9.tgz#8093ecd7d2dc4002280eb2dac1d5fa4216c800ee"
-  integrity sha512-7iqALZ0mzk+4g/AsYxEy3QyWPMTVQYKQVkYUe9zIbH18u+pi7EBDg010KEwfIX6jeTDH2qP0E6/eUnXvBYrovA==
+react-dropzone@^10.1.10:
+  version "10.1.10"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-10.1.10.tgz#f340290dfc26ac09ad68abc020ab6232c23d6cf3"
+  integrity sha512-vcLBdkYo7wgZpw1o4cz7uk8/Mmm+sYHeiTfFSshA/EGthz/TjjrTOrKwvFHm3o1p1LPk+x+KbDDlw5OeIo6eYA==
   dependencies:
     attr-accept "^1.1.3"
     file-selector "^0.1.11"
@@ -16355,7 +16348,7 @@ resolve@1.12.0, resolve@^1.12.0:
   dependencies:
     path-parse "^1.0.6"
 
-resolve@^1.1.6, resolve@^1.10.0, resolve@^1.10.1, resolve@^1.11.0, resolve@^1.3.2, resolve@^1.4.0, resolve@^1.5.0, resolve@^1.8.1:
+resolve@^1.1.6, resolve@^1.10.0, resolve@^1.11.0, resolve@^1.3.2, resolve@^1.4.0, resolve@^1.5.0, resolve@^1.8.1:
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.11.1.tgz#ea10d8110376982fef578df8fc30b9ac30a07a3e"
   integrity sha512-vIpgF6wfuJOZI7KKKSP+HmiKggadPQAdsp5HiC1mvqnfp0gF1vdwgBWZIdrVft9pgqoMFQN+R7BSWZiBxx+BBw==
@@ -18417,7 +18410,16 @@ urix@^0.1.0:
   resolved "https://registry.yarnpkg.com/urix/-/urix-0.1.0.tgz#da937f7a62e21fec1fd18d49b35c2935067a6c72"
   integrity sha1-2pN/emLiH+wf0Y1Js1wpNQZ6bHI=
 
-url-loader@2.1.0, url-loader@^2.0.1:
+url-loader@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/url-loader/-/url-loader-2.2.0.tgz#af321aece1fd0d683adc8aaeb27829f29c75b46e"
+  integrity sha512-G8nk3np8ZAnwhHXas1JxJEwJyQdqFXAKJehfgZ/XrC48volFBRtO+FIKtF2u0Ma3bw+4vnDVjHPAQYlF9p2vsw==
+  dependencies:
+    loader-utils "^1.2.3"
+    mime "^2.4.4"
+    schema-utils "^2.4.1"
+
+url-loader@^2.0.1:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/url-loader/-/url-loader-2.1.0.tgz#bcc1ecabbd197e913eca23f5e0378e24b4412961"
   integrity sha512-kVrp/8VfEm5fUt+fl2E0FQyrpmOYgMEkBsv8+UDP1wFhszECq5JyGF33I7cajlVY90zRZ6MyfgKXngLvHYZX8A==
