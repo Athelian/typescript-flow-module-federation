@@ -140,7 +140,6 @@ const MetricInputFactory = ({
         }
       },
       align: inputAlign,
-
       metrics: customMetrics || getMetrics(metricType),
       convert: customConvert || getConvert(metricType),
       metricSelectWidth,

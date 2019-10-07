@@ -2,10 +2,15 @@
 import { css } from 'react-emotion';
 import { layout, borderRadiuses, colors, fontSizes } from 'styles/common';
 
+export const ShipmentSummaryWrapperStyle: string = css`
+  display: flex;
+  flex-direction: column;
+`;
+
 export const SummaryStyle: string = css`
-  ${layout.GRID_HORIZONTAL};
-  grid-gap: 100px;
-  grid-template-columns: repeat(2, 1fr);
+  display: grid;
+  grid-template-columns: 350px 300px;
+  grid-gap: 30px;
 `;
 
 export const ContainerTypesWrapperStyle: string = css`
@@ -33,4 +38,11 @@ export const TaskIconStyle = (color: string): string => css`
   width: 20px;
   align-items: center;
   justify-content: center;
+`;
+
+export const EditableCalculatedFieldsWrapperStyle: string = css`
+  ${layout.GRID_VERTICAL};
+  grid-gap: 20px;
+  width: 350px;
+  padding: 20px 0 0 0;
 `;
