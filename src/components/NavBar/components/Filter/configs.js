@@ -50,6 +50,20 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     defaultValue: [],
   },
   {
+    entity: 'ORDER',
+    field: 'completelyBatched',
+    type: 'completely_batched',
+    message: orderMessages.completelyBatched,
+    defaultValue: false,
+  },
+  {
+    entity: 'ORDER',
+    field: 'completelyShipped',
+    type: 'completely_batched',
+    message: orderMessages.completelyShipped,
+    defaultValue: false,
+  },
+  {
     entity: 'BATCH',
     field: 'batchDeliveredAt',
     type: 'date_range',
