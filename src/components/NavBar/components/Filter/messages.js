@@ -82,6 +82,10 @@ export default defineMessages({
     id: 'components.NavBar.Filter.warehouses',
     defaultMessage: 'Warehouses',
   },
+  users: {
+    id: 'components.NavBar.Filter.users',
+    defaultMessage: 'Users',
+  },
   organizationTypes: {
     id: 'components.NavBar.Filter.organizationTypes',
     defaultMessage: 'Types',
