@@ -4,7 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { UserConsumer } from 'components/Context/Viewer';
-import MilestoneStateContainer from 'modules/milestone/form/container';
+import { MilestoneBaseContainer } from 'modules/milestone/form/containers';
 import validator from 'modules/milestone/form/validator';
 import { FormField } from 'modules/form';
 
@@ -37,7 +37,6 @@ import {
 import { FormContext } from 'modules/milestone/form/context';
 import DateBindingInput from '../DateBindingInput';
 import {
-  CommonFormWrapperStyle,
   MilestoneSectionStyle,
   FieldsWrapperStyle,
   StatusWrapperStyle,
@@ -59,7 +58,7 @@ const MilestoneSection = ({ intl }: Props) => {
   const canCreateOrUpdate = canCreate || canUpdate;
 
   return (
-    <Subscribe to={[MilestoneStateContainer]}>
+    <Subscribe to={[MilestoneBaseContainer]}>
       {({ originalValues, state: values, setFieldValue }) => {
         const { updatedAt, updatedBy } = originalValues;
         const { completedAt, completedBy } = values;
@@ -71,7 +70,7 @@ const MilestoneSection = ({ intl }: Props) => {
         const estimatedCompletionDates = calculateMilestonesEstimatedCompletionDate({ milestones });
 
         return (
-          <div className={CommonFormWrapperStyle}>
+          <div>
             <SectionWrapper id="milestone_section">
               <SectionHeader
                 icon="MILESTONE"

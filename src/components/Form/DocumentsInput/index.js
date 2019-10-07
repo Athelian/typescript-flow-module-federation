@@ -35,7 +35,7 @@ type Props = {|
   intl: IntlShape,
   files: Array<FilePayload>,
   onSave: (Array<FilePayload>) => void,
-  entity: 'Order' | 'OrderItem' | 'Shipment' | 'ProductProvider',
+  entity: 'Order' | 'OrderItem' | 'Shipment' | 'ProductProvider' | 'Milestone',
   editable: {
     status: boolean,
     type: boolean,

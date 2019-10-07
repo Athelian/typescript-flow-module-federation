@@ -2,12 +2,6 @@
 import { css } from 'react-emotion';
 import { presets, layout, colors } from 'styles/common';
 
-export const CommonFormWrapperStyle: string = css`
-  ${layout.GRID_VERTICAL};
-  grid-gap: 40px;
-  padding: 50px 0;
-`;
-
 export const MilestoneSectionStyle: string = css`
   ${presets.BOX};
   width: 880px;
