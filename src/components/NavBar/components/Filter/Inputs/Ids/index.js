@@ -17,10 +17,20 @@ type Props = {
     setSelected: (Array<string>) => void,
   }) => React.Node,
   query: any,
+  getItems: Object => Array<Object>,
   renderItem: Object => React.Node,
 };
 
-const Ids = ({ value, readonly, onChange, title, selector, query, renderItem }: Props) => {
+const Ids = ({
+  value,
+  readonly,
+  onChange,
+  title,
+  selector,
+  query,
+  getItems,
+  renderItem,
+}: Props) => {
   const [open, setOpen] = React.useState<boolean>(false);
   const { data, loading } = useQuery(query, {
     variables: { ids: value },
@@ -45,12 +55,13 @@ const Ids = ({ value, readonly, onChange, title, selector, query, renderItem }: 
             return <LoadingIcon />;
           }
 
-          if (data?.items?.length === 0 && !readonly) {
+          const items = getItems(data);
+
+          if (items.length === 0 && !readonly) {
             return <DashedPlusButton width="200px" height="30px" onClick={() => setOpen(true)} />;
           }
 
-          // $FlowFixMe Flow does not yet support method or property calls in optional chains.
-          return data?.items?.map(item => <div key={item?.id}>{renderItem(item)}</div>);
+          return items.map(item => <div key={item?.id}>{renderItem(item)}</div>);
         })()}
       </div>
 

@@ -3,6 +3,7 @@ import { defaultVolumeMetric } from 'utils/metric';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
+import partnerMessages from 'modules/partner/messages';
 import type { FilterConfig } from './index';
 
 export const OrderFilterConfig: Array<FilterConfig> = [
@@ -26,6 +27,13 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     type: 'date_range',
     message: orderMessages.updatedAt,
     defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'ORDER',
+    field: 'exporterIds',
+    type: 'exporter_ids',
+    message: orderMessages.exporter,
+    defaultValue: [],
   },
   {
     entity: 'ORDER',
@@ -74,11 +82,25 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     },
   },
   {
+    entity: 'BATCH',
+    field: 'batchTagIds',
+    type: 'batch_tags',
+    message: batchMessages.tags,
+    defaultValue: [],
+  },
+  {
     entity: 'SHIPMENT',
     field: 'shipmentArchived',
     type: 'archived',
     message: shipmentMessages.status,
     defaultValue: false,
+  },
+  {
+    entity: 'SHIPMENT',
+    field: 'shipmentForwarderIds',
+    type: 'forwarder_ids',
+    message: shipmentMessages.forwarder,
+    defaultValue: [],
   },
   {
     entity: 'SHIPMENT',
@@ -163,5 +185,36 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     type: 'date_range',
     message: shipmentMessages.updatedAt,
     defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'SHIPMENT',
+    field: 'shipmentTagIds',
+    type: 'shipment_tags',
+    message: shipmentMessages.tags,
+    defaultValue: [],
+  },
+];
+
+export const PartnerFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'PARTNER',
+    field: 'createdAt',
+    type: 'date_range',
+    message: partnerMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'PARTNER',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: partnerMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'PARTNER',
+    field: 'types',
+    type: 'organization_types',
+    message: partnerMessages.type,
+    defaultValue: [],
   },
 ];

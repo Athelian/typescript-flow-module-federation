@@ -11,6 +11,13 @@ import DateRange from './Inputs/DateRange';
 import { VolumeRange, AreaRange, LengthRange, MassRange } from './Inputs/MetricRange';
 import OrderIds from './Inputs/OrderIds';
 import {
+  ImporterIds,
+  ExporterIds,
+  SupplierIds,
+  ForwarderIds,
+  WarehouserIds,
+} from './Inputs/PartnerIds';
+import {
   ProductTags,
   BatchTags,
   ContainerTags,
@@ -34,6 +41,7 @@ import {
   AddFilterButtonWrapperStyle,
 } from './style';
 import messages from './messages';
+import OrganizationTypes from './Inputs/OrganizationTypes';
 
 export type FilterConfig = {
   entity: string,
@@ -55,7 +63,7 @@ type Filters = { [string]: any };
 type Props = {
   config: Array<FilterConfig>,
   filters: Filters,
-  staticFilters?: Filters,
+  staticFilters?: Array<string>,
   onChange: Filters => void,
   intl: IntlShape,
 };
@@ -68,6 +76,11 @@ const inputs = {
   length_range: LengthRange,
   mass_range: MassRange,
   order_ids: OrderIds,
+  importer_ids: ImporterIds,
+  exporter_ids: ExporterIds,
+  supplier_ids: SupplierIds,
+  forwarder_ids: ForwarderIds,
+  warehouser_ids: WarehouserIds,
   product_tags: ProductTags,
   order_tags: OrderTags,
   order_item_tags: OrderItemTags,
@@ -77,6 +90,7 @@ const inputs = {
   project_tags: ProjectTags,
   task_tags: TaskTags,
   user_tags: UserTags,
+  organization_types: OrganizationTypes,
 };
 
 const computeFilterStates = (config: Array<FilterConfig>, filters: Filters): Array<FilterState> => {
@@ -109,7 +123,6 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
         }),
         {}
       ),
-      ...staticFilters,
     });
 
     setOpen(false);
@@ -124,14 +137,12 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
     setFilterStates([]);
   };
 
-  const isActive =
-    Object.getOwnPropertyNames(filters || {}).length > 0 ||
-    Object.getOwnPropertyNames(staticFilters || {}).length > 0;
+  const isActive = filterStates.length > 0;
   const hasWeakFilter = !!filterStates.find(f => !f.entity || !f.field || !f.type);
   const availableConfig = config.filter(
     c => !filterStates.find(f => f.entity === c.entity && f.field === c.field && f.type === c.type)
   );
-
+  const readonlyFilters = filterStates.filter(fs => (staticFilters || []).includes(fs.field));
   const canAddFilter = availableConfig.length > 0 && !hasWeakFilter;
 
   return (
@@ -158,52 +169,65 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
           </div>
 
           <div className={FiltersListStyle}>
-            {staticFilters &&
-              Object.keys(staticFilters).map(field => {
-                const staticFilterConfig = config.find(c => c.field === field);
-
-                return (
-                  <div key={field} className={FilterWrapperStyle}>
-                    <div className={InputsWrapperStyle}>
-                      <div>
-                        <Label height="30px" required>
-                          <FormattedMessage {...messages.category} />
-                        </Label>
-                        <SelectInput
-                          value={staticFilterConfig?.entity}
-                          name="entity"
-                          itemToString={i => i}
-                          itemToValue={i => i}
-                          readOnly
-                        />
-                      </div>
-                      <div>
-                        <Label height="30px" required>
-                          <FormattedMessage {...messages.filter} />
-                        </Label>
-                        <SelectInput
-                          value={staticFilterConfig?.field}
-                          name="field"
-                          itemToString={i => {
-                            const message = staticFilterConfig?.message;
-                            return message ? intl.formatMessage(message) : i;
-                          }}
-                          itemToValue={i => i}
-                          readOnly
-                        />
-                      </div>
-                      <div>
-                        {/* $FlowFixMe */}
-                        {React.createElement(inputs[(staticFilterConfig?.type)], {
-                          value: staticFilters[field],
+            {readonlyFilters.map(state => {
+              return (
+                <div
+                  key={`${state.entity || ''}-${state.field || ''}`}
+                  className={FilterWrapperStyle}
+                >
+                  <div className={InputsWrapperStyle}>
+                    <div>
+                      <Label height="30px" required>
+                        <FormattedMessage {...messages.category} />
+                      </Label>
+                      <SelectInput
+                        value={state.entity}
+                        items={[state.entity]}
+                        name="entity"
+                        itemToString={i => i}
+                        itemToValue={i => i}
+                        readOnly
+                        readOnlyWidth="200px"
+                        readOnlyHeight="30px"
+                      />
+                    </div>
+                    <div>
+                      <Label height="30px" required>
+                        <FormattedMessage {...messages.filter} />
+                      </Label>
+                      <SelectInput
+                        value={state.field}
+                        items={[state.field]}
+                        name="field"
+                        itemToString={i => {
+                          const message = config.find(
+                            c => c.entity === state.entity && c.field === i
+                          )?.message;
+                          return message ? intl.formatMessage(message) : i;
+                        }}
+                        itemToValue={i => i}
+                        readOnly
+                        readOnlyWidth="200px"
+                        readOnlyHeight="30px"
+                      />
+                    </div>
+                    <div>
+                      {state.type &&
+                        React.createElement(inputs[state.type], {
+                          value: state.value,
+                          onChange: () => {},
                           readonly: true,
                         })}
-                      </div>
                     </div>
                   </div>
-                );
-              })}
+                </div>
+              );
+            })}
             {filterStates.map((state, index) => {
+              if ((staticFilters || []).includes(state.field)) {
+                return null;
+              }
+
               const onEntityChange = entity => {
                 setFilterStates(
                   filterStates.map((fs, i) =>
@@ -266,8 +290,10 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
               }
 
               return (
-                // eslint-disable-next-line
-                <div key={`${state.field || ''}-${index}`} className={FilterWrapperStyle}>
+                <div
+                  key={`${state.entity || ''}-${state.field || ''}`}
+                  className={FilterWrapperStyle}
+                >
                   <div className={InputsWrapperStyle}>
                     <div>
                       <Label height="30px" required>

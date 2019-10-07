@@ -8,13 +8,13 @@ import {
   Filter,
   SearchInput,
   Sort,
-  OrderSortConfig,
-  OrderFilterConfig,
+  PartnerSortConfig,
+  PartnerFilterConfig,
 } from 'components/NavBar';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import { Content, SlideViewNavBar } from 'components/Layout';
 import BaseCard from 'components/Cards/BaseCard';
-import { OrderCard } from 'components/Cards';
+import { PartnerCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Display } from 'components/Form';
@@ -22,7 +22,7 @@ import { isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from '../../messages';
 import Ids from '../Ids';
-import { ordersQuery, ordersByIDsQuery } from './query';
+import { organizationsByIDsQuery, partnersQuery } from './query';
 import { CardStyle } from './style';
 
 type Props = {
@@ -32,15 +32,23 @@ type Props = {
 };
 
 type SelectorProps = {
+  organizationType: string,
   open: boolean,
   onClose: () => void,
   selected: Array<string>,
   setSelected: (Array<string>) => void,
 };
 
-const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
+const PartnerSelector = ({
+  open,
+  onClose,
+  selected,
+  setSelected,
+  organizationType,
+}: SelectorProps) => {
   const [filterBy, setFilterBy] = React.useState({
     query: '',
+    types: [organizationType],
   });
   const [sortBy, setSortBy] = React.useState({
     updatedAt: 'DESCENDING',
@@ -53,10 +61,11 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
         {({ value: values, push, filter }) => (
           <>
             <SlideViewNavBar>
-              <EntityIcon icon="ORDER" color="ORDER" />
+              <EntityIcon icon="PARTNER" color="PARTNER" />
               <Filter
-                config={OrderFilterConfig.filter(c => c.field !== 'ids')}
+                config={PartnerFilterConfig}
                 filters={filters}
+                staticFilters={['types']}
                 onChange={value => setFilterBy({ ...value, query })}
               />
               <SearchInput
@@ -75,7 +84,7 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
                   })
                 }
               />
-              <Sort sortBy={sortBy} onChange={setSortBy} config={OrderSortConfig} />
+              <Sort sortBy={sortBy} onChange={setSortBy} config={PartnerSortConfig} />
               <CancelButton onClick={onClose} />
               <SaveButton
                 disabled={isEquals(values, selected)}
@@ -85,7 +94,7 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
 
             <Content>
               <Query
-                query={ordersQuery}
+                query={partnersQuery}
                 variables={{ filterBy, sortBy, page: 1, perPage: 20 }}
                 fetchPolicy="network-only"
               >
@@ -94,15 +103,24 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
                     return error.message;
                   }
 
-                  const nextPage = (data?.orders?.page ?? 1) + 1;
-                  const totalPage = data?.orders?.totalPage ?? 1;
+                  const nextPage = (data?.viewer?.user?.organization?.partners?.page ?? 1) + 1;
+                  const totalPage = data?.viewer?.user?.organization?.partners?.totalPage ?? 1;
                   const hasMore = nextPage <= totalPage;
-                  const nodes = data?.orders?.nodes ?? [];
+                  const nodes = (data?.viewer?.user?.organization?.partners?.nodes ?? []).map(
+                    item => ({
+                      ...item.organization,
+                      code: item.code,
+                    })
+                  );
 
                   return (
                     <GridView
                       onLoadMore={() =>
-                        loadMore({ fetchMore, data }, { filterBy, sortBy }, 'orders')
+                        loadMore(
+                          { fetchMore, data },
+                          { filterBy, sortBy },
+                          'viewer.user.organization.partners'
+                        )
                       }
                       hasMore={hasMore}
                       isLoading={loading}
@@ -110,19 +128,19 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
                       emptyMessage={null}
                       itemWidth="195px"
                     >
-                      {nodes.map(order => {
-                        const isSelected = values.some(id => id === order?.id);
+                      {nodes.map(partner => {
+                        const isSelected = values.some(id => id === partner?.id);
                         return (
-                          <OrderCard
-                            key={order?.id}
-                            order={order}
+                          <PartnerCard
+                            key={partner?.id}
+                            partner={partner}
                             selectable
                             selected={isSelected}
                             onSelect={() => {
                               if (isSelected) {
-                                filter(id => id !== order?.id);
+                                filter(id => id !== partner?.id);
                               } else {
-                                push(order?.id);
+                                push(partner?.id);
                               }
                             }}
                           />
@@ -140,23 +158,44 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
   );
 };
 
-const OrderIds = ({ value, readonly, onChange }: Props) => {
+const PartnerIds = (organizationType: string, title: React.Node) => ({
+  value,
+  readonly,
+  onChange,
+}: Props) => {
   return (
     <Ids
       value={value}
       readonly={readonly}
       onChange={onChange}
-      title={<FormattedMessage {...messages.orders} />}
-      selector={OrderSelector}
-      query={ordersByIDsQuery}
-      getItems={data => data?.ordersByIDs ?? []}
-      renderItem={order => (
-        <BaseCard icon="ORDER" color="ORDER" wrapperClassName={CardStyle} readOnly>
-          <Display height="30px">{order?.poNo}</Display>
+      title={title}
+      selector={({ open, onClose, selected, setSelected }) => (
+        <PartnerSelector
+          organizationType={organizationType}
+          open={open}
+          onClose={onClose}
+          selected={selected}
+          setSelected={setSelected}
+        />
+      )}
+      query={organizationsByIDsQuery}
+      getItems={data => data?.organizationsByIDs ?? []}
+      renderItem={partner => (
+        <BaseCard icon="PARTNER" color="PARTNER" wrapperClassName={CardStyle} readOnly>
+          <Display height="30px">{partner?.partner?.name ?? partner?.name}</Display>
         </BaseCard>
       )}
     />
   );
 };
 
-export default OrderIds;
+export const ImporterIds = PartnerIds('Importer', <FormattedMessage {...messages.importers} />);
+export const ExporterIds = PartnerIds('Exporter', <FormattedMessage {...messages.exporters} />);
+export const SupplierIds = PartnerIds('Supplier', <FormattedMessage {...messages.suppliers} />);
+export const ForwarderIds = PartnerIds('Forwarder', <FormattedMessage {...messages.forwarders} />);
+export const WarehouserIds = PartnerIds(
+  'Warehouser',
+  <FormattedMessage {...messages.warehousers} />
+);
+
+export default PartnerIds;
