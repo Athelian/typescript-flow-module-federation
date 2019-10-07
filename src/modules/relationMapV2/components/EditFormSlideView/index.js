@@ -17,12 +17,12 @@ import { prepareParsedContainerInput } from 'modules/container/form/mutation';
 import ShipmentForm from 'modules/shipment/index.form';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
 import { Entities, OrderFocused } from 'modules/relationMapV2/store';
-
 import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
 import { encodeId, uuid } from 'utils/id';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import { isEquals } from 'utils/fp';
+import NewOrderForm from './components/NewOrderForm';
 import { ordersAndShipmentsQuery } from './query';
 import { createContainerMutation } from './mutation';
 
@@ -54,7 +54,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
   const isReady = React.useRef(true);
   const { dispatch, state } = OrderFocused.useContainer();
   const [createContainer] = useMutation(createContainerMutation);
-  const [fetchOrdersAndShipments, { called, loading, error, data = {} }] = useLazyQuery(
+  const [fetchOrdersAndShipments, { called, loading, data = {} }] = useLazyQuery(
     ordersAndShipmentsQuery,
     {
       fetchPolicy: 'no-cache',
@@ -157,6 +157,9 @@ const EditFormSlideView = ({ onClose }: Props) => {
       const newContainers = [];
       const newShipments = [];
       const newBatches = [];
+      logger.warn({
+        batchIds,
+      });
       if (
         called &&
         isEquals(lastQueryVariables, {
@@ -197,12 +200,6 @@ const EditFormSlideView = ({ onClose }: Props) => {
         });
       }
       const { importer, exporter } = data?.ordersByIDs?.[0] ?? {};
-      logger.warn({
-        data,
-        called,
-        loading,
-        error,
-      });
       if (loading) {
         form = <LoadingIcon />;
       } else {
@@ -210,7 +207,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
         switch (id) {
           case 'newOrder':
             form = (
-              <OrderForm
+              <NewOrderForm
                 path="new"
                 isSlideView
                 redirectAfterSuccess={false}
@@ -358,7 +355,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
     case 'NEW_ORDER': {
       isNewEntity = true;
       form = (
-        <OrderForm
+        <NewOrderForm
           path="new"
           isSlideView
           redirectAfterSuccess={false}
