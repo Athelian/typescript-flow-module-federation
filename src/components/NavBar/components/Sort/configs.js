@@ -1,5 +1,6 @@
 // @flow
 import orderMessages from 'modules/order/messages';
+import warehouseMessages from 'modules/warehouse/messages';
 import partnerMessages from 'modules/partner/messages';
 import type { SortConfig } from './index';
 
@@ -13,6 +14,11 @@ export const OrderSortConfig: Array<SortConfig> = [
   { message: orderMessages.currency, field: 'currency' },
   { message: orderMessages.incoterm, field: 'incoterm' },
   { message: orderMessages.deliveryPlace, field: 'deliveryPlace' },
+];
+
+export const WarehouseSortConfig: Array<SortConfig> = [
+  { message: warehouseMessages.updatedAt, field: 'updatedAt' },
+  { message: warehouseMessages.createdAt, field: 'createdAt' },
 ];
 
 export const PartnerSortConfig: Array<SortConfig> = [

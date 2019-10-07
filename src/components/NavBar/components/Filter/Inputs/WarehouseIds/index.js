@@ -8,13 +8,13 @@ import {
   Filter,
   SearchInput,
   Sort,
-  PartnerSortConfig,
-  PartnerFilterConfig,
+  WarehouseSortConfig,
+  WarehouseFilterConfig,
 } from 'components/NavBar';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import { Content, SlideViewNavBar } from 'components/Layout';
 import BaseCard from 'components/Cards/BaseCard';
-import { PartnerCard } from 'components/Cards';
+import { WarehouseCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Display } from 'components/Form';
@@ -22,7 +22,7 @@ import { isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from '../../messages';
 import Ids from '../Ids';
-import { organizationsByIDsQuery, partnersQuery } from './query';
+import { warehousesQuery, warehousesByIDsQuery } from './query';
 import { CardStyle } from './style';
 
 type Props = {
@@ -32,23 +32,16 @@ type Props = {
 };
 
 type SelectorProps = {
-  organizationType: string,
   open: boolean,
   onClose: () => void,
   selected: Array<string>,
   setSelected: (Array<string>) => void,
 };
 
-const PartnerSelector = ({
-  open,
-  onClose,
-  selected,
-  setSelected,
-  organizationType,
-}: SelectorProps) => {
+const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
   const [filterBy, setFilterBy] = React.useState({
     query: '',
-    types: [organizationType],
+    archived: false,
   });
   const [sortBy, setSortBy] = React.useState({
     updatedAt: 'DESCENDING',
@@ -61,11 +54,10 @@ const PartnerSelector = ({
         {({ value: values, push, filter }) => (
           <>
             <SlideViewNavBar>
-              <EntityIcon icon="PARTNER" color="PARTNER" />
+              <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
               <Filter
-                config={PartnerFilterConfig}
+                config={WarehouseFilterConfig}
                 filters={filters}
-                staticFilters={['types']}
                 onChange={value => setFilterBy({ ...value, query })}
               />
               <SearchInput
@@ -84,7 +76,7 @@ const PartnerSelector = ({
                   })
                 }
               />
-              <Sort sortBy={sortBy} onChange={setSortBy} config={PartnerSortConfig} />
+              <Sort sortBy={sortBy} onChange={setSortBy} config={WarehouseSortConfig} />
               <CancelButton onClick={onClose} />
               <SaveButton
                 disabled={isEquals(values, selected)}
@@ -94,7 +86,7 @@ const PartnerSelector = ({
 
             <Content>
               <Query
-                query={partnersQuery}
+                query={warehousesQuery}
                 variables={{ filterBy, sortBy, page: 1, perPage: 20 }}
                 fetchPolicy="network-only"
               >
@@ -103,24 +95,15 @@ const PartnerSelector = ({
                     return error.message;
                   }
 
-                  const nextPage = (data?.viewer?.user?.organization?.partners?.page ?? 1) + 1;
-                  const totalPage = data?.viewer?.user?.organization?.partners?.totalPage ?? 1;
+                  const nextPage = (data?.warehouses?.page ?? 1) + 1;
+                  const totalPage = data?.warehouses?.totalPage ?? 1;
                   const hasMore = nextPage <= totalPage;
-                  const nodes = (data?.viewer?.user?.organization?.partners?.nodes ?? []).map(
-                    item => ({
-                      ...item.organization,
-                      code: item.code,
-                    })
-                  );
+                  const nodes = data?.warehouses?.nodes ?? [];
 
                   return (
                     <GridView
                       onLoadMore={() =>
-                        loadMore(
-                          { fetchMore, data },
-                          { filterBy, sortBy },
-                          'viewer.user.organization.partners'
-                        )
+                        loadMore({ fetchMore, data }, { filterBy, sortBy }, 'warehouses')
                       }
                       hasMore={hasMore}
                       isLoading={loading}
@@ -128,19 +111,19 @@ const PartnerSelector = ({
                       emptyMessage={null}
                       itemWidth="195px"
                     >
-                      {nodes.map(partner => {
-                        const isSelected = values.some(id => id === partner?.id);
+                      {nodes.map(warehouse => {
+                        const isSelected = values.some(id => id === warehouse?.id);
                         return (
-                          <PartnerCard
-                            key={partner?.id}
-                            partner={partner}
+                          <WarehouseCard
+                            key={warehouse?.id}
+                            warehouse={warehouse}
                             selectable
                             selected={isSelected}
                             onSelect={() => {
                               if (isSelected) {
-                                filter(id => id !== partner?.id);
+                                filter(id => id !== warehouse?.id);
                               } else {
-                                push(partner?.id);
+                                push(warehouse?.id);
                               }
                             }}
                           />
@@ -158,44 +141,23 @@ const PartnerSelector = ({
   );
 };
 
-const PartnerIds = (organizationType: string, title: React.Node) => ({
-  value,
-  readonly,
-  onChange,
-}: Props) => {
+const WarehouseIds = ({ value, readonly, onChange }: Props) => {
   return (
     <Ids
       value={value}
       readonly={readonly}
       onChange={onChange}
-      title={title}
-      selector={({ open, onClose, selected, setSelected }) => (
-        <PartnerSelector
-          organizationType={organizationType}
-          open={open}
-          onClose={onClose}
-          selected={selected}
-          setSelected={setSelected}
-        />
-      )}
-      query={organizationsByIDsQuery}
-      getItems={data => data?.organizationsByIDs ?? []}
-      renderItem={partner => (
-        <BaseCard icon="PARTNER" color="PARTNER" wrapperClassName={CardStyle}>
-          <Display height="30px">{partner?.partner?.name || partner?.name}</Display>
+      title={<FormattedMessage {...messages.warehouses} />}
+      selector={WarehouseSelector}
+      query={warehousesByIDsQuery}
+      getItems={data => data?.warehousesByIDs ?? []}
+      renderItem={warehouse => (
+        <BaseCard icon="WAREHOUSE" color="WAREHOUSE" wrapperClassName={CardStyle}>
+          <Display height="30px">{warehouse?.name}</Display>
         </BaseCard>
       )}
     />
   );
 };
 
-export const ImporterIds = PartnerIds('Importer', <FormattedMessage {...messages.importers} />);
-export const ExporterIds = PartnerIds('Exporter', <FormattedMessage {...messages.exporters} />);
-export const SupplierIds = PartnerIds('Supplier', <FormattedMessage {...messages.suppliers} />);
-export const ForwarderIds = PartnerIds('Forwarder', <FormattedMessage {...messages.forwarders} />);
-export const WarehouserIds = PartnerIds(
-  'Warehouser',
-  <FormattedMessage {...messages.warehousers} />
-);
-
-export default PartnerIds;
+export default WarehouseIds;
