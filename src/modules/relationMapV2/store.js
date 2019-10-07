@@ -945,15 +945,21 @@ function orderReducer(
         },
       });
     case 'MOVE_BATCH_TO_NEW_ENTITY':
-      return update(state, {
-        edit: {
-          $merge: action.payload,
-        },
-        moveActions: {
-          isOpen: { $set: false },
-          isProcessing: { $set: false },
-        },
-      });
+      return action.payload?.selectedId === 'newContainer'
+        ? update(state, {
+            edit: {
+              $merge: action.payload,
+            },
+          })
+        : update(state, {
+            edit: {
+              $merge: action.payload,
+            },
+            moveActions: {
+              isOpen: { $set: false },
+              isProcessing: { $set: false },
+            },
+          });
     case 'MOVE_BATCH_END':
       return update(state, {
         batchActions: {
