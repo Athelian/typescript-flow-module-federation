@@ -37,7 +37,15 @@ import {
   CONTAINER_SET_YARD_NAME,
   CONTAINER_UPDATE,
 } from 'modules/permission/constants/container';
-import { SHIPMENT_SET_NO, SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
+import {
+  SHIPMENT_UPDATE,
+  SHIPMENT_SET_NO,
+  SHIPMENT_SET_BL_NO,
+  SHIPMENT_SET_BOOKING_NO,
+  SHIPMENT_SET_INVOICE_NO,
+  SHIPMENT_SET_CONTRACT_NO,
+  SHIPMENT_SET_CARRIER,
+} from 'modules/permission/constants/shipment';
 
 function transformOrder(basePath: string, order: Object): Array<CellValue> {
   return [
@@ -593,6 +601,66 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
         batch ? batch.shipment : null,
         'no',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_NO)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.blNo',
+      type: 'text',
+      duplicatable: true,
+      disabled: !(batch ? batch.shipment : null),
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch ? batch.shipment : null,
+        'blNo',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BL_NO)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.bookingNo',
+      type: 'text',
+      duplicatable: true,
+      disabled: !(batch ? batch.shipment : null),
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch ? batch.shipment : null,
+        'bookingNo',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BOOKING_NO)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.invoiceNo',
+      type: 'text',
+      duplicatable: true,
+      disabled: !(batch ? batch.shipment : null),
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch ? batch.shipment : null,
+        'invoiceNo',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_INVOICE_NO)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.contractNo',
+      type: 'text',
+      duplicatable: true,
+      disabled: !(batch ? batch.shipment : null),
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch ? batch.shipment : null,
+        'contractNo',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_CONTRACT_NO)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.carrier',
+      type: 'text',
+      duplicatable: true,
+      disabled: !(batch ? batch.shipment : null),
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch ? batch.shipment : null,
+        'carrier',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_CARRIER)
       ),
     },
   ];

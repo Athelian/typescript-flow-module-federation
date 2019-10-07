@@ -575,6 +575,71 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
+  {
+    key: 'order.orderItem.batch.shipment.blNo',
+    exportKey: 'orderItems.batches.shipment.blNo',
+    title: <FormattedMessage {...shipmentMessages.blNo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+    sort: {
+      local: false,
+      name: 'shipmentBlNo',
+      group: 'batch',
+    },
+  },
+  {
+    key: 'order.orderItem.batch.shipment.bookingNo',
+    exportKey: 'orderItems.batches.shipment.bookingNo',
+    title: <FormattedMessage {...shipmentMessages.bookingNo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+    sort: {
+      local: false,
+      name: 'shipmentBookingNo',
+      group: 'batch',
+    },
+  },
+  {
+    key: 'order.orderItem.batch.shipment.invoiceNo',
+    exportKey: 'orderItems.batches.shipment.invoiceNo',
+    title: <FormattedMessage {...shipmentMessages.invoiceNo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+    sort: {
+      local: false,
+      name: 'shipmentInvoiceNo',
+      group: 'batch',
+    },
+  },
+  {
+    key: 'order.orderItem.batch.shipment.contractNo',
+    exportKey: 'orderItems.batches.shipment.contractNo',
+    title: <FormattedMessage {...shipmentMessages.contractNo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+    sort: {
+      local: false,
+      name: 'shipmentContractNo',
+      group: 'batch',
+    },
+  },
+  {
+    key: 'order.orderItem.batch.shipment.carrier',
+    exportKey: 'orderItems.batches.shipment.carrier',
+    title: <FormattedMessage {...shipmentMessages.carrier} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+    sort: {
+      local: false,
+      name: 'shipmentCarrier',
+      group: 'batch',
+    },
+  },
 ];
 
 const columns: Array<ColumnConfig> = [
