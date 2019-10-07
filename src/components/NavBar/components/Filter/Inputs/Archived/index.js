@@ -30,11 +30,13 @@ const Archived = ({ value, readonly, onChange }: Props) => {
 
         <Icon icon={value ? 'ARCHIVE' : 'ACTIVE'} />
 
-        {value ? (
-          <FormattedMessage {...messages.archived} />
-        ) : (
-          <FormattedMessage {...messages.active} />
-        )}
+        <span>
+          {value ? (
+            <FormattedMessage {...messages.archived} />
+          ) : (
+            <FormattedMessage {...messages.active} />
+          )}
+        </span>
       </div>
     </>
   );

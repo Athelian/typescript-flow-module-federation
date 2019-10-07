@@ -10,6 +10,7 @@ import Archived from './Inputs/Archived';
 import DateRange from './Inputs/DateRange';
 import { VolumeRange, AreaRange, LengthRange, MassRange } from './Inputs/MetricRange';
 import OrderIds from './Inputs/OrderIds';
+import { CompletelyBatched, CompletelyShipped } from './Inputs/Bool';
 import {
   ImporterIds,
   ExporterIds,
@@ -91,6 +92,8 @@ const inputs = {
   task_tags: TaskTags,
   user_tags: UserTags,
   organization_types: OrganizationTypes,
+  completely_batched: CompletelyBatched,
+  completely_shipped: CompletelyShipped,
 };
 
 const computeFilterStates = (config: Array<FilterConfig>, filters: Filters): Array<FilterState> => {
@@ -184,7 +187,7 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
                         value={state.entity}
                         items={[state.entity]}
                         name="entity"
-                        itemToString={i => i}
+                        itemToString={i => i?.toUpperCase() ?? ''}
                         itemToValue={i => i}
                         readOnly
                         readOnlyWidth="200px"
@@ -203,7 +206,8 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
                           const message = config.find(
                             c => c.entity === state.entity && c.field === i
                           )?.message;
-                          return message ? intl.formatMessage(message) : i;
+                          const value = message ? intl.formatMessage(message) : i;
+                          return value?.toUpperCase() ?? '';
                         }}
                         itemToValue={i => i}
                         readOnly
@@ -303,7 +307,7 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
                         value={state.entity}
                         onChange={onEntityChange}
                         name="entity"
-                        itemToString={i => i}
+                        itemToString={i => i?.toUpperCase() ?? ''}
                         itemToValue={i => i}
                         items={[...entities]}
                         renderSelect={({ ...rest }) => <DefaultSelect hideClearIcon {...rest} />}
@@ -325,7 +329,8 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
                             const message = config.find(
                               c => c.entity === state.entity && c.field === i
                             )?.message;
-                            return message ? intl.formatMessage(message) : i;
+                            const value = message ? intl.formatMessage(message) : i;
+                            return value?.toUpperCase() ?? '';
                           }}
                           itemToValue={i => i}
                           items={[...fields]}
