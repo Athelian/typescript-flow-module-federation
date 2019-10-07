@@ -14,7 +14,7 @@ type Props = {
 };
 
 const NumberInput = ({ value, focus, onChange, onFocus, onBlur, onKeyDown, readonly }: Props) => (
-  <InputWrapper focus={focus}>
+  <InputWrapper focus={focus} preselect>
     {({ ref }) => (
       <BaseNumberInput
         inputRef={ref}
