@@ -9,6 +9,7 @@ import { DefaultOptions, DefaultSelect, SelectInput, Label, Display } from 'comp
 import Archived from './Inputs/Archived';
 import DateRange from './Inputs/DateRange';
 import { VolumeRange, AreaRange, LengthRange, MassRange } from './Inputs/MetricRange';
+import Ports from './Inputs/Ports';
 import Users from './Inputs/Users';
 import OrganizationTypes from './Inputs/OrganizationTypes';
 import OrderIds from './Inputs/OrderIds';
@@ -98,6 +99,7 @@ const inputs = {
   organization_types: OrganizationTypes,
   completely_batched: CompletelyBatched,
   completely_shipped: CompletelyShipped,
+  ports: Ports,
 };
 
 const computeFilterStates = (config: Array<FilterConfig>, filters: Filters): Array<FilterState> => {

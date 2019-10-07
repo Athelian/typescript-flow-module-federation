@@ -154,6 +154,13 @@ export const OrderFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'SHIPMENT',
+    field: 'shipmentLoadPorts',
+    type: 'ports',
+    message: shipmentMessages.loadPort,
+    defaultValue: [],
+  },
+  {
+    entity: 'SHIPMENT',
     field: 'shipmentFirstTransitPortArrival',
     type: 'date_range',
     message: shipmentMessages.firstTransitPortArrival,
