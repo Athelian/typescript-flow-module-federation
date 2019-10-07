@@ -65,21 +65,6 @@ export const InputStyle = (width: string): string => css`
   }
 `;
 
-export const ListWrapperStyle: string = css`
-  ${layout.VERTICAL};
-  ${presets.BOX};
-  ${scrollbars.SMALL};
-  position: absolute;
-  width: 100%;
-  margin-top: 44px;
-  overflow-y: overlay;
-  overflow-x: hidden;
-  z-index: 5;
-  user-select: none;
-  max-height: 240px;
-  min-width: min-content;
-`;
-
 export const ItemStyle = (highlighted: boolean): string => css`
   display: flex;
   align-items: center;
@@ -92,11 +77,4 @@ export const ItemStyle = (highlighted: boolean): string => css`
   height: 40px;
   width: 100%;
   flex-shrink: 0;
-`;
-
-export const SelectedWrapperStyle = (highlighted: boolean): string => css`
-  ${fontSizes.MAIN};
-  color: ${highlighted ? '#fff' : colors.GRAY_LIGHT};
-  min-width: 20px;
-  margin-right: 3px;
 `;

@@ -29,9 +29,9 @@ import {
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { CONTAINER_BATCHES_ADD } from 'modules/permission/constants/container';
 import { SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH } from 'modules/permission/constants/shipment';
-import { Hits, Entities, ClientSorts } from 'modules/relationMapV2/store';
+import { Hits, Entities, ClientSorts, OrderFocused } from 'modules/relationMapV2/store';
 import Badge from 'modules/relationMapV2/components/Badge';
-import type { CellRender } from './type.js.flow';
+import type { CellRender } from 'modules/relationMapV2/type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
 import RemoveButton from '../RemoveButton';
 import RelationLine from '../RelationLine';
@@ -55,7 +55,6 @@ import {
   findOrderIdByBatch,
   findItemIdByBatch,
 } from './helpers';
-import { RelationMapContext } from './store';
 
 type CellProps = {
   data: Object,
@@ -162,10 +161,6 @@ export const Overlay = ({
       )}
     </div>
   );
-};
-
-const baseDragStyle = {
-  cursor: 'move',
 };
 
 const getIdentifier = ({
@@ -705,7 +700,7 @@ const shipmentDropMessage = ({
 };
 
 function OrderCell({ data, afterConnector }: CellProps) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch } = OrderFocused.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
@@ -906,7 +901,7 @@ function OrderItemCell({
   afterConnector,
   order,
 }: CellProps & { order: OrderPayload }) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch } = OrderFocused.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
@@ -1130,7 +1125,7 @@ function BatchCell({
   afterConnector,
 }: CellProps & { order: OrderPayload }) {
   const hasPermissions = useEntityHasPermissions(data);
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch } = OrderFocused.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { matches } = Hits.useContainer();
   const batchId = getByPathWithDefault('', 'id', data);
@@ -1249,8 +1244,8 @@ function BatchCell({
         {isDragging ? (
           <div
             style={{
-              background: '#AAAAAA',
-              width: BATCH_WIDTH - 20,
+              background: '#DDD',
+              width: BATCH_WIDTH,
               height: '100%',
               borderRadius: '5px',
             }}
@@ -1265,7 +1260,7 @@ function BatchCell({
             onClick={handleClick}
             flattenCornerIcon
           >
-            <div ref={drag} id={`${BATCH}-${batchId}`} style={baseDragStyle}>
+            <div ref={drag} id={`${BATCH}-${batchId}`}>
               <Badge label={badge.batch?.[batchId] || ''} />
               <BatchCard
                 organizationId={data?.ownedBy?.id}
@@ -1312,7 +1307,7 @@ function BatchCell({
 }
 
 function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch } = OrderFocused.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
@@ -1525,7 +1520,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
 }
 
 function ShipmentCell({ data, beforeConnector }: CellProps) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch } = OrderFocused.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
@@ -1696,7 +1691,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
 }
 
 function NoContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch } = OrderFocused.useContainer();
   const isTargetedBatch = state.targets.includes(
     `${BATCH}-${getByPathWithDefault('', 'relatedBatch.id', data)}`
   );
@@ -1764,7 +1759,7 @@ function ItemSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch } = OrderFocused.useContainer();
   const { matches } = Hits.useContainer();
   const { mapping } = Entities.useContainer();
   const orderItemIds = getByPathWithDefault([], 'orderItems', data)
@@ -1843,7 +1838,7 @@ function BatchSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch } = OrderFocused.useContainer();
   const { matches } = Hits.useContainer();
   const orderItemIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item => getByPathWithDefault('', 'id', item))
@@ -1951,7 +1946,7 @@ function ContainerSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch } = OrderFocused.useContainer();
   const { matches } = Hits.useContainer();
   const containerCount = getByPathWithDefault(0, 'containerCount', order);
   const batchIds = flatten(
@@ -2076,7 +2071,7 @@ function ShipmentSummaryCell({
   isExpand,
   beforeConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch } = OrderFocused.useContainer();
   const { matches } = Hits.useContainer();
   const containerCount = getByPathWithDefault(0, 'containerCount', order);
   const batchIds = flatten(
@@ -2174,7 +2169,7 @@ function DuplicateOrderCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload }) {
-  const { state } = React.useContext(RelationMapContext);
+  const { state } = OrderFocused.useContainer();
   const { getRelatedBy } = Entities.useContainer();
   const { getItemsSortByOrderId } = ClientSorts.useContainer();
   const orderId = order?.id;
@@ -2257,7 +2252,7 @@ function DuplicateOrderCell({
 }
 
 function DuplicateOrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
-  const { state } = React.useContext(RelationMapContext);
+  const { state } = OrderFocused.useContainer();
   const { getRelatedBy } = Entities.useContainer();
   const { getBatchesSortByItemId } = ClientSorts.useContainer();
   const batchPosition = data?.batchPosition ?? 0;

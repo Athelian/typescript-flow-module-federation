@@ -2,12 +2,7 @@
 import { css } from 'react-emotion';
 import { colors } from 'styles/common';
 
-type BackdropStyleProps = {
-  isOpen: boolean,
-  neverOpened: boolean,
-};
-
-export const BackdropStyle = ({ isOpen, neverOpened }: BackdropStyleProps): string => css`
+export const BackdropStyle = (isOpen: boolean): string => css`
   position: fixed;
   top: 0;
   bottom: 0;
@@ -15,8 +10,8 @@ export const BackdropStyle = ({ isOpen, neverOpened }: BackdropStyleProps): stri
   right: 0;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.3);
-  ${neverOpened && 'display: none'};
-  z-index: 20;
+  z-index: 100;
+  opacity: 0;
 
   @keyframes appear {
     0% {
@@ -37,35 +32,20 @@ export const BackdropStyle = ({ isOpen, neverOpened }: BackdropStyleProps): stri
     }
   }
 
-  ${!neverOpened &&
-    `${
-      isOpen
-        ? `
+  ${isOpen
+    ? `
     animation-name: appear;
     animation-duration: 0.3s;
     animation-fill-mode: forwards;
   `
-        : `
+    : `
     animation-name: disappear;
     animation-duration: 0.3s;
     animation-fill-mode: forwards;
-  `
-    }`};
+  `};
 `;
 
-type SlideViewStyleProps = {
-  isOpen: boolean,
-  neverOpened: boolean,
-  width: string,
-  minWidth: string,
-};
-
-export const SlideViewStyle = ({
-  isOpen,
-  neverOpened,
-  width,
-  minWidth,
-}: SlideViewStyleProps): string => css`
+export const SlideViewStyle = (isOpen: boolean, width: number, minWidth: number): string => css`
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -74,9 +54,9 @@ export const SlideViewStyle = ({
   height: 100vh;
   background-color: ${colors.GRAY_SUPER_LIGHT};
   box-shadow: -10px 0 20px rgba(0, 0, 0, 0.1);
-  width: ${width};
-  min-width: ${minWidth};
-  ${neverOpened && 'display: none'};
+  width: ${width}vw;
+  min-width: ${minWidth}px;
+  right: -100%;
 
   @keyframes slideIn {
     from {
@@ -96,20 +76,17 @@ export const SlideViewStyle = ({
     }
   }
 
-  ${!neverOpened &&
-    `${
-      isOpen
-        ? `
+  ${isOpen
+    ? `
     animation-name: slideIn;
     animation-duration: 0.3s;
     animation-fill-mode: forwards;
   `
-        : `
+    : `
     animation-name: slideAway;
     animation-duration: 0.3s;
     animation-fill-mode: forwards;
-  `
-    }`};
+  `}
 `;
 
 export const SlideViewContentStyle: string = css`

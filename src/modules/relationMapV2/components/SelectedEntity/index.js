@@ -5,7 +5,7 @@ import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label } from 'components/Form';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+import { OrderFocused } from 'modules/relationMapV2/store';
 import { targetedIds } from '../OrderFocus/helpers';
 import {
   SelectedEntitiesWrapperStyle,
@@ -19,7 +19,7 @@ import {
 } from './style';
 
 export default function SelectedEntity() {
-  const { state, dispatch } = React.useContext(RelationMapContext);
+  const { state, dispatch } = OrderFocused.useContainer();
   const orderIds = targetedIds(state.targets, ORDER);
   const orderItemIds = targetedIds(state.targets, ORDER_ITEM);
   const batchIds = targetedIds(state.targets, BATCH);
@@ -42,20 +42,22 @@ export default function SelectedEntity() {
           <div className={EntityCountStyle}>
             <FormattedNumber value={orderCount} />
           </div>
-          <button
-            className={ClearEntityButtonStyle}
-            onClick={() => {
-              dispatch({
-                type: 'REMOVE_TARGETS',
-                payload: {
-                  targets: orderIds.map(id => `${ORDER}-${id}`),
-                },
-              });
-            }}
-            type="button"
-          >
-            <Icon icon="CLEAR" />
-          </button>
+          {orderCount > 0 && (
+            <button
+              className={ClearEntityButtonStyle}
+              onClick={() => {
+                dispatch({
+                  type: 'REMOVE_TARGETS',
+                  payload: {
+                    targets: orderIds.map(id => `${ORDER}-${id}`),
+                  },
+                });
+              }}
+              type="button"
+            >
+              <Icon icon="CLEAR" />
+            </button>
+          )}
         </div>
 
         <div className={EntityWrapperStyle(itemCount)}>
@@ -65,20 +67,22 @@ export default function SelectedEntity() {
           <div className={EntityCountStyle}>
             <FormattedNumber value={itemCount} />
           </div>
-          <button
-            className={ClearEntityButtonStyle}
-            onClick={() => {
-              dispatch({
-                type: 'REMOVE_TARGETS',
-                payload: {
-                  targets: orderItemIds.map(id => `${ORDER_ITEM}-${id}`),
-                },
-              });
-            }}
-            type="button"
-          >
-            <Icon icon="CLEAR" />
-          </button>
+          {itemCount > 0 && (
+            <button
+              className={ClearEntityButtonStyle}
+              onClick={() => {
+                dispatch({
+                  type: 'REMOVE_TARGETS',
+                  payload: {
+                    targets: orderItemIds.map(id => `${ORDER_ITEM}-${id}`),
+                  },
+                });
+              }}
+              type="button"
+            >
+              <Icon icon="CLEAR" />
+            </button>
+          )}
         </div>
 
         <div className={EntityWrapperStyle(batchCount)}>
@@ -88,20 +92,22 @@ export default function SelectedEntity() {
           <div className={EntityCountStyle}>
             <FormattedNumber value={batchCount} />
           </div>
-          <button
-            className={ClearEntityButtonStyle}
-            onClick={() => {
-              dispatch({
-                type: 'REMOVE_TARGETS',
-                payload: {
-                  targets: batchIds.map(id => `${BATCH}-${id}`),
-                },
-              });
-            }}
-            type="button"
-          >
-            <Icon icon="CLEAR" />
-          </button>
+          {batchCount > 0 && (
+            <button
+              className={ClearEntityButtonStyle}
+              onClick={() => {
+                dispatch({
+                  type: 'REMOVE_TARGETS',
+                  payload: {
+                    targets: batchIds.map(id => `${BATCH}-${id}`),
+                  },
+                });
+              }}
+              type="button"
+            >
+              <Icon icon="CLEAR" />
+            </button>
+          )}
         </div>
 
         <div className={EntityWrapperStyle(containerCount)}>
@@ -111,20 +117,22 @@ export default function SelectedEntity() {
           <div className={EntityCountStyle}>
             <FormattedNumber value={containerCount} />
           </div>
-          <button
-            className={ClearEntityButtonStyle}
-            onClick={() => {
-              dispatch({
-                type: 'REMOVE_TARGETS',
-                payload: {
-                  targets: containerIds.map(id => `${CONTAINER}-${id}`),
-                },
-              });
-            }}
-            type="button"
-          >
-            <Icon icon="CLEAR" />
-          </button>
+          {containerCount > 0 && (
+            <button
+              className={ClearEntityButtonStyle}
+              onClick={() => {
+                dispatch({
+                  type: 'REMOVE_TARGETS',
+                  payload: {
+                    targets: containerIds.map(id => `${CONTAINER}-${id}`),
+                  },
+                });
+              }}
+              type="button"
+            >
+              <Icon icon="CLEAR" />
+            </button>
+          )}
         </div>
 
         <div className={EntityWrapperStyle(shipmentCount)}>
@@ -134,20 +142,22 @@ export default function SelectedEntity() {
           <div className={EntityCountStyle}>
             <FormattedNumber value={shipmentCount} />
           </div>
-          <button
-            className={ClearEntityButtonStyle}
-            onClick={() => {
-              dispatch({
-                type: 'REMOVE_TARGETS',
-                payload: {
-                  targets: shipmentIds.map(id => `${SHIPMENT}-${id}`),
-                },
-              });
-            }}
-            type="button"
-          >
-            <Icon icon="CLEAR" />
-          </button>
+          {shipmentCount > 0 && (
+            <button
+              className={ClearEntityButtonStyle}
+              onClick={() => {
+                dispatch({
+                  type: 'REMOVE_TARGETS',
+                  payload: {
+                    targets: shipmentIds.map(id => `${SHIPMENT}-${id}`),
+                  },
+                });
+              }}
+              type="button"
+            >
+              <Icon icon="CLEAR" />
+            </button>
+          )}
         </div>
       </div>
 

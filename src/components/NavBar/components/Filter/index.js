@@ -6,9 +6,32 @@ import Icon from 'components/Icon';
 import { Tooltip } from 'components/Tooltip';
 import { BaseButton, SaveButton, ResetButton } from 'components/Buttons';
 import { DefaultOptions, DefaultSelect, SelectInput, Label, Display } from 'components/Form';
-import { volumeMetrics, areaMetrics, distanceMetrics, weightMetrics } from 'utils/metric';
 import Archived from './Inputs/Archived';
 import DateRange from './Inputs/DateRange';
+import { VolumeRange, AreaRange, LengthRange, MassRange } from './Inputs/MetricRange';
+import Users from './Inputs/Users';
+import OrganizationTypes from './Inputs/OrganizationTypes';
+import OrderIds from './Inputs/OrderIds';
+import WarehouseIds from './Inputs/WarehouseIds';
+import { CompletelyBatched, CompletelyShipped } from './Inputs/Bool';
+import {
+  ImporterIds,
+  ExporterIds,
+  SupplierIds,
+  ForwarderIds,
+  WarehouserIds,
+} from './Inputs/PartnerIds';
+import {
+  ProductTags,
+  BatchTags,
+  ContainerTags,
+  OrderItemTags,
+  OrderTags,
+  ProjectTags,
+  ShipmentTags,
+  TaskTags,
+  UserTags,
+} from './Inputs/Tags';
 import {
   ActionsStyle,
   ActiveStyle,
@@ -21,7 +44,6 @@ import {
   WrapperStyle,
   AddFilterButtonWrapperStyle,
 } from './style';
-import MetricRange from './Inputs/MetricRange';
 import messages from './messages';
 
 export type FilterConfig = {
@@ -44,7 +66,7 @@ type Filters = { [string]: any };
 type Props = {
   config: Array<FilterConfig>,
   filters: Filters,
-  staticFilters?: Filters,
+  staticFilters?: Array<string>,
   onChange: Filters => void,
   intl: IntlShape,
 };
@@ -52,30 +74,37 @@ type Props = {
 const inputs = {
   archived: Archived,
   date_range: DateRange,
-  volume_range: MetricRange(volumeMetrics),
-  area_range: MetricRange(areaMetrics),
-  distance_range: MetricRange(distanceMetrics),
-  weight_range: MetricRange(weightMetrics),
+  volume_range: VolumeRange,
+  area_range: AreaRange,
+  length_range: LengthRange,
+  mass_range: MassRange,
+  order_ids: OrderIds,
+  warehouse_ids: WarehouseIds,
+  importer_ids: ImporterIds,
+  exporter_ids: ExporterIds,
+  supplier_ids: SupplierIds,
+  forwarder_ids: ForwarderIds,
+  warehouser_ids: WarehouserIds,
+  users: Users,
+  product_tags: ProductTags,
+  order_tags: OrderTags,
+  order_item_tags: OrderItemTags,
+  batch_tags: BatchTags,
+  shipment_tags: ShipmentTags,
+  container_tags: ContainerTags,
+  project_tags: ProjectTags,
+  task_tags: TaskTags,
+  user_tags: UserTags,
+  organization_types: OrganizationTypes,
+  completely_batched: CompletelyBatched,
+  completely_shipped: CompletelyShipped,
 };
 
-const intersectFilters = (a: Filters, b: Filters): Filters =>
-  Object.keys(a || {}).reduce((filters, key) => {
-    const filteredFilters = { ...filters };
-    delete filteredFilters[key];
-    return filteredFilters;
-  }, b);
-
-const computeFilterStates = (
-  config: Array<FilterConfig>,
-  filters: Filters,
-  staticFilters: Filters
-): Array<FilterState> => {
-  const filteredFilters = intersectFilters(staticFilters, filters);
-
-  return Object.keys(filteredFilters).map(field => {
+const computeFilterStates = (config: Array<FilterConfig>, filters: Filters): Array<FilterState> => {
+  return Object.keys(filters).map(field => {
     return {
       ...config.find(c => c.field === field),
-      value: filteredFilters[field],
+      value: filters[field],
     };
   });
 };
@@ -87,8 +116,8 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
   const [filterStates, setFilterStates] = React.useState<Array<FilterState>>([]);
 
   React.useEffect(() => {
-    setFilterStates(computeFilterStates(config, filters, staticFilters || {}));
-  }, [config, filters, staticFilters, open]);
+    setFilterStates(computeFilterStates(config, filters));
+  }, [config, filters, open]);
 
   const onSave = () => {
     const states = filterStates.filter(s => !!s.entity && !!s.field && !!s.type);
@@ -101,7 +130,6 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
         }),
         {}
       ),
-      ...staticFilters,
     });
 
     setOpen(false);
@@ -109,21 +137,19 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
   };
 
   const onReset = () => {
-    setFilterStates(computeFilterStates(config, filters, staticFilters || {}));
+    setFilterStates(computeFilterStates(config, filters));
   };
 
   const onClearAll = () => {
     setFilterStates([]);
   };
 
-  const isActive =
-    Object.getOwnPropertyNames(filters || {}).length > 0 ||
-    Object.getOwnPropertyNames(staticFilters || {}).length > 0;
+  const isActive = filterStates.length > 0;
   const hasWeakFilter = !!filterStates.find(f => !f.entity || !f.field || !f.type);
   const availableConfig = config.filter(
-    c => !filterStates.find(f => f.entity === c.entity && f.field === c.field && f.type === c.type)
+    c => !filterStates.find(f => f.entity === c.entity && f.field === c.field)
   );
-
+  const readonlyFilters = filterStates.filter(fs => (staticFilters || []).includes(fs.field));
   const canAddFilter = availableConfig.length > 0 && !hasWeakFilter;
 
   return (
@@ -150,52 +176,68 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
           </div>
 
           <div className={FiltersListStyle}>
-            {staticFilters &&
-              Object.keys(staticFilters).map(field => {
-                const staticFilterConfig = config.find(c => c.field === field);
-
-                return (
-                  <div key={field} className={FilterWrapperStyle}>
-                    <div className={InputsWrapperStyle}>
-                      <div>
-                        <Label height="30px" required>
-                          <FormattedMessage {...messages.category} />
-                        </Label>
-                        <SelectInput
-                          value={staticFilterConfig?.entity}
-                          name="entity"
-                          itemToString={i => i}
-                          itemToValue={i => i}
-                          readOnly
-                        />
-                      </div>
-                      <div>
-                        <Label height="30px" required>
-                          <FormattedMessage {...messages.filter} />
-                        </Label>
-                        <SelectInput
-                          value={staticFilterConfig?.field}
-                          name="field"
-                          itemToString={i => {
-                            const message = staticFilterConfig?.message;
-                            return message ? intl.formatMessage(message) : i;
-                          }}
-                          itemToValue={i => i}
-                          readOnly
-                        />
-                      </div>
-                      <div>
-                        {/* $FlowFixMe */}
-                        {React.createElement(inputs[(staticFilterConfig?.type)], {
-                          value: staticFilters[field],
+            {readonlyFilters.map(state => {
+              return (
+                <div
+                  key={`${state.entity || ''}-${state.field || ''}`}
+                  className={FilterWrapperStyle}
+                >
+                  <div className={InputsWrapperStyle}>
+                    <div>
+                      <Label height="30px" required>
+                        <FormattedMessage {...messages.category} />
+                      </Label>
+                      <SelectInput
+                        value={state.entity}
+                        items={[state.entity]}
+                        name="entity"
+                        // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
+                        itemToString={i => i?.toUpperCase() ?? ''}
+                        itemToValue={i => i}
+                        readOnly
+                        readOnlyWidth="200px"
+                        readOnlyHeight="30px"
+                      />
+                    </div>
+                    <div>
+                      <Label height="30px" required>
+                        <FormattedMessage {...messages.filter} />
+                      </Label>
+                      <SelectInput
+                        value={state.field}
+                        items={[state.field]}
+                        name="field"
+                        itemToString={i => {
+                          const message = config.find(
+                            c => c.entity === state.entity && c.field === i
+                          )?.message;
+                          const value = message ? intl.formatMessage(message) : i;
+                          // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
+                          return value?.toUpperCase() ?? '';
+                        }}
+                        itemToValue={i => i}
+                        readOnly
+                        readOnlyWidth="200px"
+                        readOnlyHeight="30px"
+                      />
+                    </div>
+                    <div>
+                      {state.type &&
+                        React.createElement(inputs[state.type], {
+                          value: state.value,
+                          onChange: () => {},
                           readonly: true,
                         })}
-                      </div>
                     </div>
                   </div>
-                );
-              })}
+                </div>
+              );
+            })}
             {filterStates.map((state, index) => {
+              if ((staticFilters || []).includes(state.field)) {
+                return null;
+              }
+
               const onEntityChange = entity => {
                 setFilterStates(
                   filterStates.map((fs, i) =>
@@ -245,21 +287,30 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
                 setFilterStates(newStates);
               };
 
-              const entities = new Set(availableConfig.map(c => c.entity));
-              if (state.entity) {
-                entities.add(state.entity);
-              }
-
-              const fields = new Set(
-                availableConfig.filter(c => c.entity === state.entity).map(c => c.field)
+              const entities = new Set(
+                config
+                  .filter(
+                    c =>
+                      c.entity === state.entity ||
+                      !filterStates.find(f => f.entity === c.entity && f.field === c.field)
+                  )
+                  .map(c => c.entity)
               );
-              if (state.field) {
-                fields.add(state.field);
-              }
+
+              const fields = config
+                .filter(
+                  c =>
+                    c.entity === state.entity &&
+                    (c.field === state.field ||
+                      !filterStates.find(f => f.entity === c.entity && f.field === c.field))
+                )
+                .map(c => c.field);
 
               return (
-                // eslint-disable-next-line
-                <div key={`${state.field || ''}-${index}`} className={FilterWrapperStyle}>
+                <div
+                  key={`${state.entity || ''}-${state.field || ''}`}
+                  className={FilterWrapperStyle}
+                >
                   <div className={InputsWrapperStyle}>
                     <div>
                       <Label height="30px" required>
@@ -269,7 +320,8 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
                         value={state.entity}
                         onChange={onEntityChange}
                         name="entity"
-                        itemToString={i => i}
+                        // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
+                        itemToString={i => i?.toUpperCase() ?? ''}
                         itemToValue={i => i}
                         items={[...entities]}
                         renderSelect={({ ...rest }) => <DefaultSelect hideClearIcon {...rest} />}
@@ -291,7 +343,9 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
                             const message = config.find(
                               c => c.entity === state.entity && c.field === i
                             )?.message;
-                            return message ? intl.formatMessage(message) : i;
+                            const value = message ? intl.formatMessage(message) : i;
+                            // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
+                            return value?.toUpperCase() ?? '';
                           }}
                           itemToValue={i => i}
                           items={[...fields]}

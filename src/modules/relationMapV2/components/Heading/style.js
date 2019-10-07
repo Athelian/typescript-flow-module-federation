@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, fontSizes, colors, presets, shadows } from 'styles/common';
+import { borderRadiuses, fontSizes, colors, presets } from 'styles/common';
 
 export const HeadingWrapperStyle = (isExpanded: boolean, width: string): string => css`
   ${presets.BUTTON};
@@ -11,28 +11,35 @@ export const HeadingWrapperStyle = (isExpanded: boolean, width: string): string 
   height: 55px;
   ${borderRadiuses.MAIN};
   cursor: pointer;
+  z-index: 2;
   ${isExpanded
     ? `
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.08);
     & span {
       top: 5px;
+      opacity: 1;
     }
     &:hover {
-      background-color: rgba(0, 0, 0, 0.08);
+      background-color: rgba(0, 0, 0, 0.05);
       transform: translateY(-2px);
       & span {
         top: 0;
+        opacity: 0;
       }
     }
   `
     : `
-    background-color: ${colors.WHITE};
-    ${shadows.WATERFALL};
+    background-color: rgba(0, 0, 0, 0.05);
+    & span {
+      top: 0;
+      opacity: 0;
+    }
     &:hover {
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.08);
       transform: translateY(2px);
       & span {
         top: 5px;
+        opacity: 1;
       }
     }
   `};
@@ -57,7 +64,7 @@ export const SelectAllButtonStyle: string = css`
   line-height: 20px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: ${colors.GRAY_DARK};
+  color: ${colors.WHITE};
   background-color: rgba(0, 0, 0, 0.05);
   justify-content: space-between;
   padding: 0 5px;
@@ -72,7 +79,7 @@ export const ExpandedIconWrapperStyle = (isExpanded: boolean): string => css`
   top: 0;
   right: 0;
   ${isExpanded && 'transform: rotate(180deg)'};
-  color: ${isExpanded ? colors.GRAY_LIGHT : colors.GRAY_VERY_LIGHT};
+  color: rgba(0, 0, 0, 0.1);
   ${fontSizes.SMALL};
   width: 20px;
   height: 20px;

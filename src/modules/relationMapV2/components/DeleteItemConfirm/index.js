@@ -1,12 +1,10 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
-import Dialog from 'components/Dialog';
-import LoadingIcon from 'components/LoadingIcon';
-import { CancelButton, YesButton } from 'components/Buttons';
-import Icon from 'components/Icon';
-import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
+import { OrderFocused } from 'modules/relationMapV2/store';
+import { BaseButton } from 'components/Buttons';
+import ActionDialog, { ItemLabelIcon, BatchesLabelIcon } from '../ActionDialog';
 import { deleteOrderItemMutation } from './mutation';
 
 type Props = {|
@@ -15,7 +13,7 @@ type Props = {|
 
 export default function DeleteItemConfirm({ onSuccess }: Props) {
   const [deleteItem] = useMutation(deleteOrderItemMutation);
-  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { dispatch, state } = OrderFocused.useContainer();
   const {
     isProcessing,
     isOpen,
@@ -23,12 +21,14 @@ export default function DeleteItemConfirm({ onSuccess }: Props) {
     detail: { entity },
   } = state.itemActions;
   const isDeleteItem = type === 'deleteItem';
+
   const onCancel = () => {
     dispatch({
       type: 'DELETE_ITEM_CLOSE',
       payload: {},
     });
   };
+
   const onConfirm = () => {
     dispatch({
       type: 'DELETE_ITEM_START',
@@ -49,29 +49,56 @@ export default function DeleteItemConfirm({ onSuccess }: Props) {
         });
       });
   };
+
+  let dialogMessage = null;
+  let dialogSubMessage = null;
+
+  if (isProcessing) {
+    // Is currently deleting
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.deleteItem.deleting"
+        defaultMessage="Deleting {itemLabel} ..."
+        values={{ itemLabel: <ItemLabelIcon /> }}
+      />
+    );
+  } else {
+    // Has permission to delete
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.deleteItem.message1"
+        defaultMessage="Are you sure you want to delete this {itemLabel}"
+        values={{ itemLabel: <ItemLabelIcon /> }}
+      />
+    );
+    dialogSubMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.deleteItem.message2"
+        defaultMessage="All of their {batchesLabel} will be deleted as well"
+        values={{
+          batchesLabel: <BatchesLabelIcon />,
+        }}
+      />
+    );
+  }
+
   return (
-    <Dialog isOpen={isOpen && isDeleteItem} width="400px" onRequestClose={() => {}}>
-      <div className={DialogStyle}>
-        {isProcessing ? (
-          <>
-            <span>
-              Deleting
-              <Icon icon="ORDER_ITEM" />
-              {` ${entity.no}...`}
-            </span>
-            <LoadingIcon />
-          </>
-        ) : (
-          <h3 className={ConfirmMessageStyle}>
-            Are you sure you want to delete <Icon icon="ORDER_ITEM" /> {` ${entity.no} ?`} All of
-            its Batches will be deleted as well
-          </h3>
-        )}
-        <div className={ButtonsStyle}>
-          <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          <YesButton disabled={Boolean(isProcessing)} onClick={onConfirm} />
-        </div>
-      </div>
-    </Dialog>
+    <ActionDialog
+      isOpen={isOpen && isDeleteItem}
+      isProcessing={isProcessing}
+      onCancel={onCancel}
+      title={<FormattedMessage id="modules.RelationMap.label.delete" defaultMessage="DELETE" />}
+      dialogMessage={dialogMessage}
+      dialogSubMessage={dialogSubMessage}
+      buttons={
+        <BaseButton
+          label={<FormattedMessage id="modules.RelationMap.label.delete" defaultMessage="DELETE" />}
+          icon="REMOVE"
+          onClick={onConfirm}
+          backgroundColor="RED"
+          hoverBackgroundColor="RED_DARK"
+        />
+      }
+    />
   );
 }

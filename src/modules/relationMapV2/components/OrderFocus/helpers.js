@@ -8,7 +8,7 @@ import { findKey } from 'lodash/fp';
 import { getByPathWithDefault } from 'utils/fp';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { ClientSorts, Entities } from 'modules/relationMapV2/store';
-import type { CellRender, Entity } from './type.js.flow';
+import type { CellRender, Entity } from 'modules/relationMapV2/type.js.flow';
 
 const DELAY = 200; // 0.2 second
 const timer = {};
@@ -35,6 +35,28 @@ export const findOrderIdByOrderItem = (itemId: string, entities: Object) => {
     return (currentOrder.orderItems || []).includes(itemId);
   }, entities.orders);
   return parentOrderId;
+};
+
+export const findOrderIdsByContainer = (containerId: string, entities: Object) => {
+  const parentOrderIds = (Object.keys(entities.orders || {}).filter(orderId => {
+    return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
+      (entities?.orderItems?.[itemId]?.batches ?? []).some(
+        batchId => entities?.batches?.[batchId]?.container === containerId
+      )
+    );
+  }): Array<string>);
+  return parentOrderIds;
+};
+
+export const findOrderIdsByShipment = (shipmentId: string, entities: Object) => {
+  const parentOrderIds = (Object.keys(entities.orders || {}).filter(orderId => {
+    return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
+      (entities?.orderItems?.[itemId]?.batches ?? []).some(
+        batchId => entities?.batches?.[batchId]?.shipment === shipmentId
+      )
+    );
+  }): Array<string>);
+  return parentOrderIds;
 };
 
 export const targetedIds = (

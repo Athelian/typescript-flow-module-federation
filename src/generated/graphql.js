@@ -2,7 +2,7 @@
 
 
 /** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
+export type Scalars = {|
   ID: string,
   String: string,
   Boolean: boolean,
@@ -21,7 +21,7 @@ export type Scalars = {
   Upload: any,
   /** Void scalar */
   Void: any,
-};
+|};
 
 export const AirportValues = Object.freeze({
   /** Andorra la Vella */
@@ -17777,52 +17777,61 @@ export const AirportValues = Object.freeze({
 
 export type Airport = $Values<typeof AirportValues>;
 
-export type BadRequest = {
+export type BadRequest = {|
    __typename?: 'BadRequest',
   violations: Array<Violation>,
-};
+|};
 
-export type Batch = Model & Owned & Package & Tagged & Customizable & Memorizable & Sortable & {
-   __typename?: 'Batch',
-  archived: $ElementType<Scalars, 'Boolean'>,
-  no: $ElementType<Scalars, 'String'>,
-  orderItem: OrderItemPayload,
-  shipment?: ?ShipmentPayload,
-  shipmentSort: $ElementType<Scalars, 'Int'>,
-  container?: ?ContainerPayload,
-  containerSort: $ElementType<Scalars, 'Int'>,
-  quantity: $ElementType<Scalars, 'Float'>,
-  latestQuantity: $ElementType<Scalars, 'Float'>,
-  packageQuantity?: ?$ElementType<Scalars, 'Float'>,
-  autoCalculatePackageQuantity: $ElementType<Scalars, 'Boolean'>,
-  producedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  deliveredAt?: ?$ElementType<Scalars, 'DateTime'>,
-  expiredAt?: ?$ElementType<Scalars, 'DateTime'>,
-  desiredAt?: ?$ElementType<Scalars, 'DateTime'>,
-  totalVolume: MetricValue,
-  batchQuantityRevisions: Array<BatchQuantityRevisionPayload>,
-  todo: Todo,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  packageName?: ?$ElementType<Scalars, 'String'>,
-  packageGrossWeight?: ?MetricValue,
-  packageVolume?: ?MetricValue,
-  autoCalculatePackageVolume: $ElementType<Scalars, 'Boolean'>,
-  packageSize?: ?Size,
-  packageCapacity?: ?$ElementType<Scalars, 'Float'>,
-  tags: Array<TagPayload>,
-  customFields: CustomFields,
-  memo?: ?$ElementType<Scalars, 'String'>,
-  sort: $ElementType<Scalars, 'Int'>,
-};
+export type Batch = {|
+  ...Model,
+  ...Owned,
+  ...Package,
+  ...Tagged,
+  ...Customizable,
+  ...Memorizable,
+  ...Sortable,
+  ...{
+     __typename?: 'Batch',
+    archived: $ElementType<Scalars, 'Boolean'>,
+    no: $ElementType<Scalars, 'String'>,
+    orderItem: OrderItemPayload,
+    shipment?: ?ShipmentPayload,
+    shipmentSort: $ElementType<Scalars, 'Int'>,
+    container?: ?ContainerPayload,
+    containerSort: $ElementType<Scalars, 'Int'>,
+    quantity: $ElementType<Scalars, 'Float'>,
+    latestQuantity: $ElementType<Scalars, 'Float'>,
+    packageQuantity?: ?$ElementType<Scalars, 'Float'>,
+    autoCalculatePackageQuantity: $ElementType<Scalars, 'Boolean'>,
+    producedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    deliveredAt?: ?$ElementType<Scalars, 'DateTime'>,
+    expiredAt?: ?$ElementType<Scalars, 'DateTime'>,
+    desiredAt?: ?$ElementType<Scalars, 'DateTime'>,
+    totalVolume: MetricValue,
+    batchQuantityRevisions: Array<BatchQuantityRevisionPayload>,
+    todo: Todo,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    packageName?: ?$ElementType<Scalars, 'String'>,
+    packageGrossWeight?: ?MetricValue,
+    packageVolume?: ?MetricValue,
+    autoCalculatePackageVolume: $ElementType<Scalars, 'Boolean'>,
+    packageSize?: ?Size,
+    packageCapacity?: ?$ElementType<Scalars, 'Float'>,
+    tags: Array<TagPayload>,
+    customFields: CustomFields,
+    memo?: ?$ElementType<Scalars, 'String'>,
+    sort: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type BatchCreateInput = {
+export type BatchCreateInput = {|
   no: $ElementType<Scalars, 'String'>,
   quantity: $ElementType<Scalars, 'Float'>,
   producedAt?: ?$ElementType<Scalars, 'DateTime'>,
@@ -17845,21 +17854,21 @@ export type BatchCreateInput = {
   orderItemId: $ElementType<Scalars, 'ID'>,
   shipmentId?: ?$ElementType<Scalars, 'ID'>,
   containerId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type BatchEqualSplitInput = {
+export type BatchEqualSplitInput = {|
   divideBy: $ElementType<Scalars, 'Int'>,
   precision: $ElementType<Scalars, 'Int'>,
-};
+|};
 
-export type Batches = {
+export type Batches = {|
    __typename?: 'Batches',
   batches: Array<Batch>,
-};
+|};
 
 export type BatchesPayload = Batches | BadRequest | Forbidden | NotFound;
 
-export type BatchFilterInput = {
+export type BatchFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
@@ -17878,43 +17887,52 @@ export type BatchFilterInput = {
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
   milestoneRelatedId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
 export type BatchPayload = Batch | BadRequest | Forbidden | NotFound;
 
-export type BatchPayloadPaginatedSearch = Paginated & {
-   __typename?: 'BatchPayloadPaginatedSearch',
-  nodes: Array<BatchPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type BatchPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'BatchPayloadPaginatedSearch',
+    nodes: Array<BatchPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type BatchQuantityRevision = Model & Owned & Sortable & Memorizable & {
-   __typename?: 'BatchQuantityRevision',
-  batch: BatchPayload,
+export type BatchQuantityRevision = {|
+  ...Model,
+  ...Owned,
+  ...Sortable,
+  ...Memorizable,
+  ...{
+     __typename?: 'BatchQuantityRevision',
+    batch: BatchPayload,
+    type: BatchQuantityRevisionType,
+    quantity: $ElementType<Scalars, 'Float'>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    sort: $ElementType<Scalars, 'Int'>,
+    memo?: ?$ElementType<Scalars, 'String'>,
+  }
+|};
+
+export type BatchQuantityRevisionCreateInput = {|
   type: BatchQuantityRevisionType,
   quantity: $ElementType<Scalars, 'Float'>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  sort: $ElementType<Scalars, 'Int'>,
   memo?: ?$ElementType<Scalars, 'String'>,
-};
-
-export type BatchQuantityRevisionCreateInput = {
-  type: BatchQuantityRevisionType,
-  quantity: $ElementType<Scalars, 'Float'>,
-  memo?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
 export type BatchQuantityRevisionPayload = BatchQuantityRevision | BadRequest | Forbidden | NotFound;
 
@@ -17936,18 +17954,18 @@ export const BatchQuantityRevisionTypeValues = Object.freeze({
 
 export type BatchQuantityRevisionType = $Values<typeof BatchQuantityRevisionTypeValues>;
 
-export type BatchQuantityRevisionUpdateInput = {
+export type BatchQuantityRevisionUpdateInput = {|
   id?: ?$ElementType<Scalars, 'ID'>,
   type?: ?BatchQuantityRevisionType,
   quantity?: ?$ElementType<Scalars, 'Float'>,
   memo?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
-export type BatchSimpleSplitInput = {
+export type BatchSimpleSplitInput = {|
   quantity: $ElementType<Scalars, 'Float'>,
-};
+|};
 
-export type BatchSortInput = {
+export type BatchSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   no?: ?SortOrder,
@@ -17957,9 +17975,9 @@ export type BatchSortInput = {
   producedAt?: ?SortOrder,
   deliveredAt?: ?SortOrder,
   expiredAt?: ?SortOrder,
-};
+|};
 
-export type BatchUpdateInput = {
+export type BatchUpdateInput = {|
   no?: ?$ElementType<Scalars, 'String'>,
   quantity?: ?$ElementType<Scalars, 'Float'>,
   producedAt?: ?$ElementType<Scalars, 'DateTime'>,
@@ -17982,109 +18000,120 @@ export type BatchUpdateInput = {
   orderItemId?: ?$ElementType<Scalars, 'ID'>,
   shipmentId?: ?$ElementType<Scalars, 'ID'>,
   containerId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type BatchUpdateWrapperInput = {
+export type BatchUpdateWrapperInput = {|
   id: $ElementType<Scalars, 'ID'>,
   input: BatchUpdateInput,
-};
+|};
 
-export type Blur = {
+export type Blur = {|
    __typename?: 'Blur',
   id: $ElementType<Scalars, 'ID'>,
   user: UserPayload,
-};
+|};
 
-export type BooleanValue = {
+export type BooleanValue = {|
    __typename?: 'BooleanValue',
   boolean: $ElementType<Scalars, 'Boolean'>,
-};
+|};
 
-export type ChangePasswordInput = {
+export type ChangePasswordInput = {|
   currentPassword: $ElementType<Scalars, 'String'>,
   newPassword: $ElementType<Scalars, 'String'>,
-};
+|};
 
-export type ChangeType = {
+export type ChangeType = {|
    __typename?: 'ChangeType',
   old?: ?Value,
   new?: ?Value,
   field: $ElementType<Scalars, 'String'>,
-};
+|};
 
-export type Comment = Model & Owned & {
-   __typename?: 'Comment',
-  entity: EntityPayload,
-  content: $ElementType<Scalars, 'String'>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-};
+export type Comment = {|
+  ...Model,
+  ...Owned,
+  ...{
+     __typename?: 'Comment',
+    entity: EntityPayload,
+    content: $ElementType<Scalars, 'String'>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+  }
+|};
 
-export type CommentCreateInput = {
+export type CommentCreateInput = {|
   content: $ElementType<Scalars, 'String'>,
   entity: EntityInput,
-};
+|};
 
 export type CommentPayload = Comment | BadRequest | Forbidden | NotFound;
 
-export type CommentUpdateInput = {
+export type CommentUpdateInput = {|
   content?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
-export type Container = Model & Owned & Tagged & Sortable & Memorizable & {
-   __typename?: 'Container',
-  archived: $ElementType<Scalars, 'Boolean'>,
-  no: $ElementType<Scalars, 'String'>,
-  representativeBatch?: ?BatchPayload,
-  warehouse?: ?WarehousePayload,
-  warehouseArrivalAgreedDate?: ?$ElementType<Scalars, 'DateTime'>,
-  warehouseArrivalAgreedDateApprovedBy?: ?UserPayload,
-  warehouseArrivalAgreedDateApprovedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  warehouseArrivalAgreedDateAssignedTo: Array<UserPayload>,
-  warehouseArrivalActualDate?: ?$ElementType<Scalars, 'DateTime'>,
-  warehouseArrivalActualDateApprovedBy?: ?UserPayload,
-  warehouseArrivalActualDateApprovedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  shipment: ShipmentPayload,
-  warehouseArrivalActualDateAssignedTo: Array<UserPayload>,
-  freeTimeStartDate?: ?$ElementType<Scalars, 'DateTime'>,
-  freeTimeDuration?: ?$ElementType<Scalars, 'Int'>,
-  autoCalculatedFreeTimeStartDate: $ElementType<Scalars, 'Boolean'>,
-  yardName?: ?$ElementType<Scalars, 'String'>,
-  departureDate?: ?$ElementType<Scalars, 'DateTime'>,
-  departureDateAssignedTo: Array<UserPayload>,
-  departureDateApprovedBy?: ?UserPayload,
-  departureDateApprovedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  containerType?: ?$ElementType<Scalars, 'String'>,
-  containerOption?: ?ContainerOption,
-  totalVolume: MetricValue,
-  totalWeight: MetricValue,
-  totalPrice?: ?Price,
-  totalQuantity: $ElementType<Scalars, 'Float'>,
-  totalPackageQuantity: $ElementType<Scalars, 'Int'>,
-  orderItemCount: $ElementType<Scalars, 'Int'>,
-  batchCount: $ElementType<Scalars, 'Int'>,
-  batches: Array<BatchPayload>,
-  todo: Todo,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  tags: Array<TagPayload>,
-  sort: $ElementType<Scalars, 'Int'>,
-  memo?: ?$ElementType<Scalars, 'String'>,
-};
+export type Container = {|
+  ...Model,
+  ...Owned,
+  ...Tagged,
+  ...Sortable,
+  ...Memorizable,
+  ...{
+     __typename?: 'Container',
+    archived: $ElementType<Scalars, 'Boolean'>,
+    no: $ElementType<Scalars, 'String'>,
+    representativeBatch?: ?BatchPayload,
+    warehouse?: ?WarehousePayload,
+    warehouseArrivalAgreedDate?: ?$ElementType<Scalars, 'DateTime'>,
+    warehouseArrivalAgreedDateApprovedBy?: ?UserPayload,
+    warehouseArrivalAgreedDateApprovedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    warehouseArrivalAgreedDateAssignedTo: Array<UserPayload>,
+    warehouseArrivalActualDate?: ?$ElementType<Scalars, 'DateTime'>,
+    warehouseArrivalActualDateApprovedBy?: ?UserPayload,
+    warehouseArrivalActualDateApprovedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    shipment: ShipmentPayload,
+    warehouseArrivalActualDateAssignedTo: Array<UserPayload>,
+    freeTimeStartDate?: ?$ElementType<Scalars, 'DateTime'>,
+    freeTimeDuration?: ?$ElementType<Scalars, 'Int'>,
+    autoCalculatedFreeTimeStartDate: $ElementType<Scalars, 'Boolean'>,
+    yardName?: ?$ElementType<Scalars, 'String'>,
+    departureDate?: ?$ElementType<Scalars, 'DateTime'>,
+    departureDateAssignedTo: Array<UserPayload>,
+    departureDateApprovedBy?: ?UserPayload,
+    departureDateApprovedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    containerType?: ?$ElementType<Scalars, 'String'>,
+    containerOption?: ?ContainerOption,
+    totalVolume: MetricValue,
+    totalWeight: MetricValue,
+    totalPrice?: ?Price,
+    totalQuantity: $ElementType<Scalars, 'Float'>,
+    totalPackageQuantity: $ElementType<Scalars, 'Int'>,
+    orderItemCount: $ElementType<Scalars, 'Int'>,
+    batchCount: $ElementType<Scalars, 'Int'>,
+    batches: Array<BatchPayload>,
+    todo: Todo,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    tags: Array<TagPayload>,
+    sort: $ElementType<Scalars, 'Int'>,
+    memo?: ?$ElementType<Scalars, 'String'>,
+  }
+|};
 
-export type ContainerBatchInput = {
+export type ContainerBatchInput = {|
   no?: ?$ElementType<Scalars, 'String'>,
   quantity?: ?$ElementType<Scalars, 'Float'>,
   producedAt?: ?$ElementType<Scalars, 'DateTime'>,
@@ -18106,9 +18135,9 @@ export type ContainerBatchInput = {
   todo?: ?TodoInput,
   id?: ?$ElementType<Scalars, 'ID'>,
   orderItemId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type ContainerCreateInput = {
+export type ContainerCreateInput = {|
   no: $ElementType<Scalars, 'String'>,
   warehouseId?: ?$ElementType<Scalars, 'ID'>,
   departureDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -18133,9 +18162,9 @@ export type ContainerCreateInput = {
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   todo?: ?TodoInput,
   shipmentId: $ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type ContainerFilterInput = {
+export type ContainerFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
@@ -18147,33 +18176,38 @@ export type ContainerFilterInput = {
   warehouseIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
   milestoneRelatedId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type ContainerGroup = Model & Owned & Sortable & {
-   __typename?: 'ContainerGroup',
-  customClearance: TimelineDatePayload,
-  warehouseArrival: TimelineDatePayload,
-  deliveryReady: TimelineDatePayload,
-  warehouse?: ?WarehousePayload,
-  shipment: ShipmentPayload,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  sort: $ElementType<Scalars, 'Int'>,
-};
+export type ContainerGroup = {|
+  ...Model,
+  ...Owned,
+  ...Sortable,
+  ...{
+     __typename?: 'ContainerGroup',
+    customClearance: TimelineDatePayload,
+    warehouseArrival: TimelineDatePayload,
+    deliveryReady: TimelineDatePayload,
+    warehouse?: ?WarehousePayload,
+    shipment: ShipmentPayload,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    sort: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type ContainerGroupNestedInput = {
+export type ContainerGroupNestedInput = {|
   id?: ?$ElementType<Scalars, 'ID'>,
   warehouseId?: ?$ElementType<Scalars, 'ID'>,
   customClearance?: ?TimelineDateNestedInput,
   warehouseArrival?: ?TimelineDateNestedInput,
   deliveryReady?: ?TimelineDateNestedInput,
-};
+|};
 
 export type ContainerGroupPayload = ContainerGroup | BadRequest | Forbidden | NotFound;
 
@@ -18187,32 +18221,35 @@ export type ContainerOption = $Values<typeof ContainerOptionValues>;
 
 export type ContainerPayload = Container | BadRequest | Forbidden | NotFound;
 
-export type ContainerPayloadPaginatedSearch = Paginated & {
-   __typename?: 'ContainerPayloadPaginatedSearch',
-  nodes: Array<ContainerPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type ContainerPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'ContainerPayloadPaginatedSearch',
+    nodes: Array<ContainerPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type ContainerSortInput = {
+export type ContainerSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   warehouseName?: ?SortOrder,
   warehouseArrivalActualDate?: ?SortOrder,
   warehouseArrivalAgreedDate?: ?SortOrder,
-};
+|};
 
-export type ContainerTypeCount = {
+export type ContainerTypeCount = {|
    __typename?: 'ContainerTypeCount',
   containerType: $ElementType<Scalars, 'String'>,
   count: $ElementType<Scalars, 'Float'>,
-};
+|};
 
-export type ContainerUpdateInput = {
+export type ContainerUpdateInput = {|
   no?: ?$ElementType<Scalars, 'String'>,
   warehouseId?: ?$ElementType<Scalars, 'ID'>,
   departureDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -18237,12 +18274,12 @@ export type ContainerUpdateInput = {
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   todo?: ?TodoInput,
   shipmentId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type ContainerUpdateWrapperInput = {
+export type ContainerUpdateWrapperInput = {|
   id: $ElementType<Scalars, 'ID'>,
   input: ContainerUpdateInput,
-};
+|};
 
 export const CountryValues = Object.freeze({
   /** Andorra */
@@ -18748,10 +18785,10 @@ export const CountryValues = Object.freeze({
 
 export type Country = $Values<typeof CountryValues>;
 
-export type CredentialsInput = {
+export type CredentialsInput = {|
   email: $ElementType<Scalars, 'String'>,
   password: $ElementType<Scalars, 'String'>,
-};
+|};
 
 export const CurrencyValues = Object.freeze({
   /** AED */
@@ -19101,21 +19138,21 @@ export const CurrencyValues = Object.freeze({
 
 export type Currency = $Values<typeof CurrencyValues>;
 
-export type CustomFields = {
+export type CustomFields = {|
    __typename?: 'CustomFields',
   mask?: ?MaskPayload,
   fieldValues: Array<FieldValuePayload>,
   fieldDefinitions: Array<FieldDefinitionPayload>,
-};
+|};
 
-export type CustomFieldsInput = {
+export type CustomFieldsInput = {|
   maskId?: ?$ElementType<Scalars, 'ID'>,
   fieldValues?: ?Array<FieldValueInput>,
-};
+|};
 
-export type Customizable = {
+export type Customizable = {|
   customFields: CustomFields,
-};
+|};
 
 export const CustomizableEntityTypeValues = Object.freeze({
   Product: 'Product', 
@@ -19130,40 +19167,40 @@ export const CustomizableEntityTypeValues = Object.freeze({
 
 export type CustomizableEntityType = $Values<typeof CustomizableEntityTypeValues>;
 
-export type DateRangeInput = {
+export type DateRangeInput = {|
   after?: ?$ElementType<Scalars, 'DateTime'>,
   before?: ?$ElementType<Scalars, 'DateTime'>,
-};
+|};
 
 
-export type DateTimeValue = {
+export type DateTimeValue = {|
    __typename?: 'DateTimeValue',
   datetime: $ElementType<Scalars, 'DateTime'>,
-};
+|};
 
-export type Documented = {
+export type Documented = {|
   files: Array<FilePayload>,
-};
+|};
 
-export type Duration = {
+export type Duration = {|
    __typename?: 'Duration',
   seconds: $ElementType<Scalars, 'Long'>,
   nanos: $ElementType<Scalars, 'Int'>,
-};
+|};
 
-export type DurationInput = {
+export type DurationInput = {|
   seconds: $ElementType<Scalars, 'Long'>,
   nanos?: ?$ElementType<Scalars, 'Int'>,
-};
+|};
 
-export type DurationValue = {
+export type DurationValue = {|
    __typename?: 'DurationValue',
   duration: Duration,
-};
+|};
 
 export type EmptyPayload = BadRequest | Forbidden | NotFound;
 
-export type EntitiesMany = {
+export type EntitiesMany = {|
    __typename?: 'EntitiesMany',
   products?: ?Array<?ProductPayload>,
   orders?: ?Array<?OrderPayload>,
@@ -19172,23 +19209,23 @@ export type EntitiesMany = {
   shipments?: ?Array<?ShipmentPayload>,
   containers?: ?Array<?ContainerPayload>,
   warehouses?: ?Array<?WarehousePayload>,
-};
+|};
 
-export type EntityEvent = {
+export type EntityEvent = {|
    __typename?: 'EntityEvent',
   lifeCycle: LifeCycle,
   entity: EntityPayload,
   reference: Reference,
   changes?: ?Array<ChangeType>,
-};
+|};
 
-export type EntityHit = {
+export type EntityHit = {|
    __typename?: 'EntityHit',
   field?: ?$ElementType<Scalars, 'String'>,
   entity: EntityPayload,
-};
+|};
 
-export type EntityInput = {
+export type EntityInput = {|
   productId?: ?$ElementType<Scalars, 'ID'>,
   productProviderId?: ?$ElementType<Scalars, 'ID'>,
   orderId?: ?$ElementType<Scalars, 'ID'>,
@@ -19199,77 +19236,87 @@ export type EntityInput = {
   projectId?: ?$ElementType<Scalars, 'ID'>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
   taskId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
 export type EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | BatchQuantityRevision | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | Milestone | BadRequest | Forbidden | NotFound;
 
-export type EntityValue = {
+export type EntityValue = {|
    __typename?: 'EntityValue',
   entity?: ?EntityPayload,
-};
+|};
 
 export type Entry = Event | Comment | BadRequest | Forbidden | NotFound;
 
-export type EntryPaginatedList = Paginated & {
-   __typename?: 'EntryPaginatedList',
-  nodes: Array<Entry>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type EntryPaginatedList = {|
+  ...Paginated,
+  ...{
+     __typename?: 'EntryPaginatedList',
+    nodes: Array<Entry>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type Event = Model & Owned & {
-   __typename?: 'Event',
-  entity: EntityPayload,
-  logs: Array<Log>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-};
+export type Event = {|
+  ...Model,
+  ...Owned,
+  ...{
+     __typename?: 'Event',
+    entity: EntityPayload,
+    logs: Array<Log>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+  }
+|};
 
-export type Export = {
+export type Export = {|
    __typename?: 'Export',
   id: $ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type ExportExtension = {
+export type ExportExtension = {|
    __typename?: 'ExportExtension',
   extension: $ElementType<Scalars, 'String'>,
-};
+|};
 
 export type ExportExtensionPayload = ExportExtension | BadRequest | Forbidden | NotFound;
 
 export type ExportPayload = Export | BadRequest | Forbidden | NotFound;
 
-export type ExportTemplate = Model & {
-   __typename?: 'ExportTemplate',
-  name: $ElementType<Scalars, 'String'>,
-  types: Array<ExportType>,
-  extension: $ElementType<Scalars, 'String'>,
-  builder: $ElementType<Scalars, 'String'>,
-  fetcher: $ElementType<Scalars, 'String'>,
-  normalizers: Array<$ElementType<Scalars, 'String'>>,
-  ownedBy?: ?OrganizationPayload,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-};
+export type ExportTemplate = {|
+  ...Model,
+  ...{
+     __typename?: 'ExportTemplate',
+    name: $ElementType<Scalars, 'String'>,
+    types: Array<ExportType>,
+    extension: $ElementType<Scalars, 'String'>,
+    builder: $ElementType<Scalars, 'String'>,
+    fetcher: $ElementType<Scalars, 'String'>,
+    normalizers: Array<$ElementType<Scalars, 'String'>>,
+    ownedBy?: ?OrganizationPayload,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+  }
+|};
 
-export type ExportTemplateFilterInput = {
+export type ExportTemplateFilterInput = {|
   type?: ?ExportType,
   dynamic?: ?$ElementType<Scalars, 'Boolean'>,
-};
+|};
 
 export type ExportTemplatePayload = ExportTemplate | BadRequest | Forbidden | NotFound;
 
@@ -19307,83 +19354,93 @@ export const ExportTypeValues = Object.freeze({
 
 export type ExportType = $Values<typeof ExportTypeValues>;
 
-export type FieldDefinition = Model & Owned & Sortable & {
-   __typename?: 'FieldDefinition',
-  name: $ElementType<Scalars, 'String'>,
-  entityType: CustomizableEntityType,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  sort: $ElementType<Scalars, 'Int'>,
-};
+export type FieldDefinition = {|
+  ...Model,
+  ...Owned,
+  ...Sortable,
+  ...{
+     __typename?: 'FieldDefinition',
+    name: $ElementType<Scalars, 'String'>,
+    entityType: CustomizableEntityType,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    sort: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type FieldDefinitionInput = {
+export type FieldDefinitionInput = {|
   id?: ?$ElementType<Scalars, 'ID'>,
   name?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
 export type FieldDefinitionPayload = FieldDefinition | BadRequest | Forbidden | NotFound;
 
-export type FieldDefinitions = {
+export type FieldDefinitions = {|
    __typename?: 'FieldDefinitions',
   fieldDefinitions: Array<FieldDefinition>,
-};
+|};
 
-export type FieldDefinitionsInput = {
+export type FieldDefinitionsInput = {|
   entityType: CustomizableEntityType,
   fieldDefinitions: Array<FieldDefinitionInput>,
-};
+|};
 
 export type FieldDefinitionsPayload = FieldDefinitions | BadRequest | Forbidden | NotFound;
 
-export type FieldValue = {
+export type FieldValue = {|
    __typename?: 'FieldValue',
   value: Value,
   fieldDefinition: FieldDefinitionPayload,
   entity: EntityPayload,
-};
+|};
 
-export type FieldValueInput = {
+export type FieldValueInput = {|
   value?: ?ValueInput,
   fieldDefinitionId: $ElementType<Scalars, 'ID'>,
-};
+|};
 
 export type FieldValuePayload = FieldValue | BadRequest | Forbidden | NotFound;
 
-export type File = Model & Owned & Memorizable & {
-   __typename?: 'File',
-  name: $ElementType<Scalars, 'String'>,
-  type: FileType,
-  status: FileStatus,
-  size: $ElementType<Scalars, 'Int'>,
-  mimetype: $ElementType<Scalars, 'String'>,
-  path: $ElementType<Scalars, 'String'>,
-  pathExpiredAt: $ElementType<Scalars, 'DateTime'>,
-  entity?: ?EntityPayload,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  memo?: ?$ElementType<Scalars, 'String'>,
-};
+export type File = {|
+  ...Model,
+  ...Owned,
+  ...Memorizable,
+  ...{
+     __typename?: 'File',
+    name: $ElementType<Scalars, 'String'>,
+    type: FileType,
+    status: FileStatus,
+    size: $ElementType<Scalars, 'Int'>,
+    mimetype: $ElementType<Scalars, 'String'>,
+    path: $ElementType<Scalars, 'String'>,
+    pathExpiredAt: $ElementType<Scalars, 'DateTime'>,
+    entity?: ?EntityPayload,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    memo?: ?$ElementType<Scalars, 'String'>,
+  }
+|};
 
 
-export type FilePathArgs = {
+export type FilePathArgs = {|
   preset?: ?ResizePreset,
   width?: ?$ElementType<Scalars, 'Int'>,
   height?: ?$ElementType<Scalars, 'Int'>
-};
+|};
 
-export type FileFilterInput = {
+export type FileFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
@@ -19391,37 +19448,40 @@ export type FileFilterInput = {
   type?: ?FileType,
   status?: ?FileStatus,
   mimetype?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
-export type FileInput = {
+export type FileInput = {|
   id: $ElementType<Scalars, 'ID'>,
   name?: ?$ElementType<Scalars, 'String'>,
   type?: ?FileType,
   status?: ?FileStatus,
   memo?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
 export type FilePayload = File | BadRequest | Forbidden | NotFound;
 
-export type FilePayloadPaginatedSearch = Paginated & {
-   __typename?: 'FilePayloadPaginatedSearch',
-  nodes: Array<FilePayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type FilePayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'FilePayloadPaginatedSearch',
+    nodes: Array<FilePayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type FileSortInput = {
+export type FileSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   name?: ?SortOrder,
   type?: ?SortOrder,
   status?: ?SortOrder,
   size?: ?SortOrder,
-};
+|};
 
 export const FileStatusValues = Object.freeze({
   /** Draft */
@@ -19473,57 +19533,57 @@ export const FileTypeValues = Object.freeze({
 
 export type FileType = $Values<typeof FileTypeValues>;
 
-export type FloatValue = {
+export type FloatValue = {|
    __typename?: 'FloatValue',
   float: $ElementType<Scalars, 'Float'>,
-};
+|};
 
-export type Focus = {
+export type Focus = {|
    __typename?: 'Focus',
   id: $ElementType<Scalars, 'ID'>,
   user: UserPayload,
   entity: EntityPayload,
   field: $ElementType<Scalars, 'String'>,
-};
+|};
 
 export type FocusEvent = Focus | Blur;
 
-export type FocusingInput = {
+export type FocusingInput = {|
   entity: EntityInput,
   field: $ElementType<Scalars, 'String'>,
-};
+|};
 
 export type FocusPayload = Focus | BadRequest | Forbidden | NotFound;
 
-export type Forbidden = {
+export type Forbidden = {|
    __typename?: 'Forbidden',
   reference?: ?Reference,
   reason?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
-export type GenericSortInput = {
+export type GenericSortInput = {|
   field: $ElementType<Scalars, 'String'>,
   direction: SortOrder,
-};
+|};
 
-export type Hit = {
+export type Hit = {|
    __typename?: 'Hit',
   score: $ElementType<Scalars, 'Float'>,
   entityHits: Array<EntityHit>,
-};
+|};
 
-export type Import = {
+export type Import = {|
    __typename?: 'Import',
   id: $ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type ImportEvent = {
+export type ImportEvent = {|
    __typename?: 'ImportEvent',
   lifecycle: ImportLifecycle,
   sheet?: ?$ElementType<Scalars, 'String'>,
   error?: ?$ElementType<Scalars, 'String'>,
   violations: Array<Violation>,
-};
+|};
 
 export const ImportLifecycleValues = Object.freeze({
   /** Start */
@@ -19568,134 +19628,152 @@ export const IncotermValues = Object.freeze({
 
 export type Incoterm = $Values<typeof IncotermValues>;
 
-export type Integration = Model & Owned & {
-   __typename?: 'Integration',
-  name: $ElementType<Scalars, 'String'>,
-  service: $ElementType<Scalars, 'String'>,
-  bot: UserPayload,
-  automated: $ElementType<Scalars, 'Boolean'>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-};
+export type Integration = {|
+  ...Model,
+  ...Owned,
+  ...{
+     __typename?: 'Integration',
+    name: $ElementType<Scalars, 'String'>,
+    service: $ElementType<Scalars, 'String'>,
+    bot: UserPayload,
+    automated: $ElementType<Scalars, 'Boolean'>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+  }
+|};
 
-export type IntegrationConfiguration = Model & Owned & {
-   __typename?: 'IntegrationConfiguration',
-  integration: IntegrationPayload,
-  automated: $ElementType<Scalars, 'Boolean'>,
-  interval: Duration,
-  key?: ?$ElementType<Scalars, 'String'>,
-  integrationLinks: IntegrationLinkPayloadPaginatedList,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-};
+export type IntegrationConfiguration = {|
+  ...Model,
+  ...Owned,
+  ...{
+     __typename?: 'IntegrationConfiguration',
+    integration: IntegrationPayload,
+    automated: $ElementType<Scalars, 'Boolean'>,
+    interval: Duration,
+    key?: ?$ElementType<Scalars, 'String'>,
+    integrationLinks: IntegrationLinkPayloadPaginatedList,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+  }
+|};
 
 
-export type IntegrationConfigurationIntegrationLinksArgs = {
+export type IntegrationConfigurationIntegrationLinksArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>
-};
+|};
 
-export type IntegrationConfigurationCreateInput = {
+export type IntegrationConfigurationCreateInput = {|
   integrationId: $ElementType<Scalars, 'ID'>,
   automated?: ?$ElementType<Scalars, 'Boolean'>,
   interval: DurationInput,
   key?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
-export type IntegrationConfigurationFilterInput = {
+export type IntegrationConfigurationFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   organizationId?: ?$ElementType<Scalars, 'ID'>,
   integrationId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
 export type IntegrationConfigurationPayload = IntegrationConfiguration | BadRequest | Forbidden | NotFound;
 
-export type IntegrationConfigurationPayloadPaginatedSearch = Paginated & {
-   __typename?: 'IntegrationConfigurationPayloadPaginatedSearch',
-  nodes: Array<IntegrationConfigurationPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type IntegrationConfigurationPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'IntegrationConfigurationPayloadPaginatedSearch',
+    nodes: Array<IntegrationConfigurationPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type IntegrationConfigurationSortInput = {
+export type IntegrationConfigurationSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
-};
+|};
 
-export type IntegrationConfigurationUpdateInput = {
+export type IntegrationConfigurationUpdateInput = {|
   integrationId?: ?$ElementType<Scalars, 'ID'>,
   automated?: ?$ElementType<Scalars, 'Boolean'>,
   interval?: ?DurationInput,
   key?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
-export type IntegrationFilterInput = {
+export type IntegrationFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   organizationId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type IntegrationLink = Model & Owned & {
-   __typename?: 'IntegrationLink',
-  configuration: IntegrationConfigurationPayload,
-  status: IntegrationLinkStatus,
-  entity: EntityPayload,
-  externalId: $ElementType<Scalars, 'ID'>,
-  automated: $ElementType<Scalars, 'Boolean'>,
-  interval: Duration,
-  lastRunAt?: ?$ElementType<Scalars, 'DateTime'>,
-  nextRunAt?: ?$ElementType<Scalars, 'DateTime'>,
-  lastError?: ?$ElementType<Scalars, 'String'>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-};
+export type IntegrationLink = {|
+  ...Model,
+  ...Owned,
+  ...{
+     __typename?: 'IntegrationLink',
+    configuration: IntegrationConfigurationPayload,
+    status: IntegrationLinkStatus,
+    entity: EntityPayload,
+    externalId: $ElementType<Scalars, 'ID'>,
+    automated: $ElementType<Scalars, 'Boolean'>,
+    interval: Duration,
+    lastRunAt?: ?$ElementType<Scalars, 'DateTime'>,
+    nextRunAt?: ?$ElementType<Scalars, 'DateTime'>,
+    lastError?: ?$ElementType<Scalars, 'String'>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+  }
+|};
 
-export type IntegrationLinkCreateInput = {
+export type IntegrationLinkCreateInput = {|
   configurationId: $ElementType<Scalars, 'ID'>,
   entity: EntityInput,
   externalId: $ElementType<Scalars, 'ID'>,
   automated?: ?$ElementType<Scalars, 'Boolean'>,
   interval: DurationInput,
-};
+|};
 
 export type IntegrationLinkPayload = IntegrationLink | BadRequest | Forbidden | NotFound;
 
-export type IntegrationLinkPayloadPaginatedList = Paginated & {
-   __typename?: 'IntegrationLinkPayloadPaginatedList',
-  nodes: Array<IntegrationLinkPayload>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type IntegrationLinkPayloadPaginatedList = {|
+  ...Paginated,
+  ...{
+     __typename?: 'IntegrationLinkPayloadPaginatedList',
+    nodes: Array<IntegrationLinkPayload>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
 export const IntegrationLinkStatusValues = Object.freeze({
   /** Idle */
@@ -19713,32 +19791,35 @@ export const IntegrationLinkStatusValues = Object.freeze({
 
 export type IntegrationLinkStatus = $Values<typeof IntegrationLinkStatusValues>;
 
-export type IntegrationLinkUpdateInput = {
+export type IntegrationLinkUpdateInput = {|
   externalId?: ?$ElementType<Scalars, 'ID'>,
   automated?: ?$ElementType<Scalars, 'Boolean'>,
   interval?: ?DurationInput,
-};
+|};
 
 export type IntegrationPayload = Integration | BadRequest | Forbidden | NotFound;
 
-export type IntegrationPayloadPaginatedSearch = Paginated & {
-   __typename?: 'IntegrationPayloadPaginatedSearch',
-  nodes: Array<IntegrationPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type IntegrationPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'IntegrationPayloadPaginatedSearch',
+    nodes: Array<IntegrationPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type IntegrationSortInput = {
+export type IntegrationSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   name?: ?SortOrder,
-};
+|};
 
-export type Interval = {
+export type Interval = {|
    __typename?: 'Interval',
   years: $ElementType<Scalars, 'Int'>,
   months: $ElementType<Scalars, 'Int'>,
@@ -19748,9 +19829,9 @@ export type Interval = {
   minutes: $ElementType<Scalars, 'Int'>,
   seconds: $ElementType<Scalars, 'Int'>,
   nanos: $ElementType<Scalars, 'Int'>,
-};
+|};
 
-export type IntervalInput = {
+export type IntervalInput = {|
   years?: ?$ElementType<Scalars, 'Int'>,
   months?: ?$ElementType<Scalars, 'Int'>,
   weeks?: ?$ElementType<Scalars, 'Int'>,
@@ -19759,17 +19840,17 @@ export type IntervalInput = {
   minutes?: ?$ElementType<Scalars, 'Int'>,
   seconds?: ?$ElementType<Scalars, 'Int'>,
   nanos?: ?$ElementType<Scalars, 'Int'>,
-};
+|};
 
-export type IntervalValue = {
+export type IntervalValue = {|
    __typename?: 'IntervalValue',
   interval: Interval,
-};
+|};
 
-export type IntValue = {
+export type IntValue = {|
    __typename?: 'IntValue',
   int: $ElementType<Scalars, 'Int'>,
-};
+|};
 
 export const LanguageValues = Object.freeze({
   /** Afar */
@@ -20169,87 +20250,100 @@ export const LoadTypeValues = Object.freeze({
 
 export type LoadType = $Values<typeof LoadTypeValues>;
 
-export type Log = {
+export type Log = {|
    __typename?: 'Log',
   id: $ElementType<Scalars, 'ID'>,
   entity: EntityPayload,
   translationKey: $ElementType<Scalars, 'String'>,
   parameters: Array<Parameter>,
-};
+|};
 
 
-export type Mask = Model & Owned & Memorizable & {
-   __typename?: 'Mask',
-  name: $ElementType<Scalars, 'String'>,
-  entityType: CustomizableEntityType,
-  fieldDefinitions: Array<FieldDefinitionPayload>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  memo?: ?$ElementType<Scalars, 'String'>,
-};
+export type Mask = {|
+  ...Model,
+  ...Owned,
+  ...Memorizable,
+  ...{
+     __typename?: 'Mask',
+    name: $ElementType<Scalars, 'String'>,
+    entityType: CustomizableEntityType,
+    fieldDefinitions: Array<FieldDefinitionPayload>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    memo?: ?$ElementType<Scalars, 'String'>,
+  }
+|};
 
-export type MaskCreateInput = {
+export type MaskCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   entityType: CustomizableEntityType,
   memo?: ?$ElementType<Scalars, 'String'>,
   fieldDefinitionIDs: Array<$ElementType<Scalars, 'ID'>>,
-};
+|};
 
-export type MaskEdit = Model & Owned & Memorizable & {
-   __typename?: 'MaskEdit',
+export type MaskEdit = {|
+  ...Model,
+  ...Owned,
+  ...Memorizable,
+  ...{
+     __typename?: 'MaskEdit',
+    name: $ElementType<Scalars, 'String'>,
+    type: MaskEditType,
+    fields: Array<$ElementType<Scalars, 'String'>>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    memo?: ?$ElementType<Scalars, 'String'>,
+  }
+|};
+
+export type MaskEditCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   type: MaskEditType,
-  fields: Array<$ElementType<Scalars, 'String'>>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  memo?: ?$ElementType<Scalars, 'String'>,
-};
-
-export type MaskEditCreateInput = {
-  name: $ElementType<Scalars, 'String'>,
-  type: MaskEditType,
   memo?: ?$ElementType<Scalars, 'String'>,
   fields: Array<$ElementType<Scalars, 'String'>>,
-};
+|};
 
-export type MaskEditFilterInput = {
+export type MaskEditFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   type?: ?MaskEditType,
-};
+|};
 
 export type MaskEditPayload = MaskEdit | BadRequest | Forbidden | NotFound;
 
-export type MaskEditPayloadPaginatedSearch = Paginated & {
-   __typename?: 'MaskEditPayloadPaginatedSearch',
-  nodes: Array<MaskEditPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type MaskEditPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'MaskEditPayloadPaginatedSearch',
+    nodes: Array<MaskEditPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type MaskEditSortInput = {
+export type MaskEditSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   name?: ?SortOrder,
-};
+|};
 
 export const MaskEditTypeValues = Object.freeze({
   /** Order */
@@ -20259,100 +20353,110 @@ export const MaskEditTypeValues = Object.freeze({
 
 export type MaskEditType = $Values<typeof MaskEditTypeValues>;
 
-export type MaskEditUpdateInput = {
+export type MaskEditUpdateInput = {|
   name?: ?$ElementType<Scalars, 'String'>,
   type?: ?MaskEditType,
   memo?: ?$ElementType<Scalars, 'String'>,
   fields?: ?Array<$ElementType<Scalars, 'String'>>,
-};
+|};
 
-export type MaskFilterInput = {
+export type MaskFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   entityTypes?: ?Array<CustomizableEntityType>,
-};
+|};
 
 export type MaskPayload = Mask | BadRequest | Forbidden | NotFound;
 
-export type MaskPayloadPaginatedSearch = Paginated & {
-   __typename?: 'MaskPayloadPaginatedSearch',
-  nodes: Array<MaskPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type MaskPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'MaskPayloadPaginatedSearch',
+    nodes: Array<MaskPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type MaskSortInput = {
+export type MaskSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   name?: ?SortOrder,
-};
+|};
 
-export type MaskUpdateInput = {
+export type MaskUpdateInput = {|
   name?: ?$ElementType<Scalars, 'String'>,
   entityType?: ?CustomizableEntityType,
   memo?: ?$ElementType<Scalars, 'String'>,
   fieldDefinitionIDs?: ?Array<$ElementType<Scalars, 'ID'>>,
-};
+|};
 
-export type Memorizable = {
+export type Memorizable = {|
   memo?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
-export type MetricRangeInput = {
+export type MetricRangeInput = {|
   min?: ?$ElementType<Scalars, 'Float'>,
   max?: ?$ElementType<Scalars, 'Float'>,
   metric: $ElementType<Scalars, 'String'>,
-};
+|};
 
-export type MetricValue = {
+export type MetricValue = {|
    __typename?: 'MetricValue',
   value: $ElementType<Scalars, 'Float'>,
   metric: $ElementType<Scalars, 'String'>,
-};
+|};
 
-export type MetricValueInput = {
+export type MetricValueInput = {|
   value: $ElementType<Scalars, 'Float'>,
   metric: $ElementType<Scalars, 'String'>,
-};
+|};
 
-export type MetricValueValue = {
+export type MetricValueValue = {|
    __typename?: 'MetricValueValue',
   metricValue: MetricValue,
-};
+|};
 
-export type Milestone = Model & Owned & Sortable & {
-   __typename?: 'Milestone',
-  name: $ElementType<Scalars, 'String'>,
-  description?: ?$ElementType<Scalars, 'String'>,
-  dueDate?: ?$ElementType<Scalars, 'DateTime'>,
-  dueDateInterval?: ?Interval,
-  dueDateBinding?: ?MilestoneDateBinding,
-  project: ProjectPayload,
-  completedBy?: ?UserPayload,
-  completedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  estimatedCompletionDate?: ?$ElementType<Scalars, 'DateTime'>,
-  estimatedCompletionDateInterval?: ?Interval,
-  estimatedCompletionDateBinding?: ?MilestoneDateBinding,
-  taskCount: TaskCount,
-  tasks: Array<TaskPayload>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  sort: $ElementType<Scalars, 'Int'>,
-};
+export type Milestone = {|
+  ...Model,
+  ...Owned,
+  ...Documented,
+  ...Sortable,
+  ...{
+     __typename?: 'Milestone',
+    name: $ElementType<Scalars, 'String'>,
+    description?: ?$ElementType<Scalars, 'String'>,
+    dueDate?: ?$ElementType<Scalars, 'DateTime'>,
+    dueDateInterval?: ?Interval,
+    dueDateBinding?: ?MilestoneDateBinding,
+    project: ProjectPayload,
+    completedBy?: ?UserPayload,
+    completedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    estimatedCompletionDate?: ?$ElementType<Scalars, 'DateTime'>,
+    estimatedCompletionDateInterval?: ?Interval,
+    estimatedCompletionDateBinding?: ?MilestoneDateBinding,
+    taskCount: TaskCount,
+    tasks: Array<TaskPayload>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    files: Array<FilePayload>,
+    sort: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type MilestoneCreateInput = {
+export type MilestoneCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   dueDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -20364,8 +20468,9 @@ export type MilestoneCreateInput = {
   estimatedCompletionDateInterval?: ?IntervalInput,
   estimatedCompletionDateBinding?: ?MilestoneDateBinding,
   tasks?: ?Array<MilestoneTaskInput>,
+  files?: ?Array<FileInput>,
   projectId: $ElementType<Scalars, 'ID'>,
-};
+|};
 
 export const MilestoneDateBindingValues = Object.freeze({
   ProjectDueDate: 'ProjectDueDate', 
@@ -20377,7 +20482,7 @@ export type MilestoneDateBinding = $Values<typeof MilestoneDateBindingValues>;
 
 export type MilestonePayload = Milestone | BadRequest | Forbidden | NotFound;
 
-export type MilestoneTaskInput = {
+export type MilestoneTaskInput = {|
   name?: ?$ElementType<Scalars, 'String'>,
   approvable?: ?$ElementType<Scalars, 'Boolean'>,
   startDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -20403,31 +20508,36 @@ export type MilestoneTaskInput = {
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   id?: ?$ElementType<Scalars, 'ID'>,
   entity?: ?EntityInput,
-};
+|};
 
-export type MilestoneTemplate = Model & Owned & Sortable & {
-   __typename?: 'MilestoneTemplate',
-  project: ProjectTemplatePayload,
-  name: $ElementType<Scalars, 'String'>,
-  description?: ?$ElementType<Scalars, 'String'>,
-  dueDateInterval?: ?Interval,
-  dueDateBinding?: ?MilestoneDateBinding,
-  estimatedCompletionDateInterval?: ?Interval,
-  estimatedCompletionDateBinding?: ?MilestoneDateBinding,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  sort: $ElementType<Scalars, 'Int'>,
-};
+export type MilestoneTemplate = {|
+  ...Model,
+  ...Owned,
+  ...Sortable,
+  ...{
+     __typename?: 'MilestoneTemplate',
+    project: ProjectTemplatePayload,
+    name: $ElementType<Scalars, 'String'>,
+    description?: ?$ElementType<Scalars, 'String'>,
+    dueDateInterval?: ?Interval,
+    dueDateBinding?: ?MilestoneDateBinding,
+    estimatedCompletionDateInterval?: ?Interval,
+    estimatedCompletionDateBinding?: ?MilestoneDateBinding,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    sort: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
 export type MilestoneTemplatePayload = MilestoneTemplate | BadRequest | Forbidden | NotFound;
 
-export type MilestoneUpdateInput = {
+export type MilestoneUpdateInput = {|
   name?: ?$ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   dueDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -20439,11 +20549,12 @@ export type MilestoneUpdateInput = {
   estimatedCompletionDateInterval?: ?IntervalInput,
   estimatedCompletionDateBinding?: ?MilestoneDateBinding,
   tasks?: ?Array<MilestoneTaskInput>,
+  files?: ?Array<FileInput>,
   id?: ?$ElementType<Scalars, 'ID'>,
   projectId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type Model = {
+export type Model = {|
   id: $ElementType<Scalars, 'ID'>,
   createdAt: $ElementType<Scalars, 'DateTime'>,
   updatedAt: $ElementType<Scalars, 'DateTime'>,
@@ -20451,9 +20562,9 @@ export type Model = {
   createdBy?: ?UserPayload,
   updatedBy?: ?UserPayload,
   deletedBy?: ?UserPayload,
-};
+|};
 
-export type Mutation = {
+export type Mutation = {|
    __typename?: 'Mutation',
   login: TokenPayload,
   logout: $ElementType<Scalars, 'Boolean'>,
@@ -20560,267 +20671,267 @@ export type Mutation = {
   focusSubscribe: Array<FocusPayload>,
   focusUnsubscribe: $ElementType<Scalars, 'Void'>,
   focusUnsubscribeAll: $ElementType<Scalars, 'Void'>,
-};
+|};
 
 
-export type MutationLoginArgs = {
+export type MutationLoginArgs = {|
   input: CredentialsInput
-};
+|};
 
 
-export type MutationChangePasswordArgs = {
+export type MutationChangePasswordArgs = {|
   input: ChangePasswordInput
-};
+|};
 
 
-export type MutationRequestResetPasswordArgs = {
+export type MutationRequestResetPasswordArgs = {|
   input: RequestResetPasswordInput
-};
+|};
 
 
-export type MutationResetPasswordArgs = {
+export type MutationResetPasswordArgs = {|
   input: ResetPasswordInput
-};
+|};
 
 
-export type MutationUserUpdateArgs = {
+export type MutationUserUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: UserUpdateInput
-};
+|};
 
 
-export type MutationUserAddRoleArgs = {
+export type MutationUserAddRoleArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: UserRoleInput
-};
+|};
 
 
-export type MutationUserRemoveRoleArgs = {
+export type MutationUserRemoveRoleArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: UserRoleInput
-};
+|};
 
 
-export type MutationProductCreateArgs = {
+export type MutationProductCreateArgs = {|
   input: ProductCreateInput
-};
+|};
 
 
-export type MutationProductUpdateArgs = {
+export type MutationProductUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: ProductUpdateInput
-};
+|};
 
 
-export type MutationProductUpdateManyArgs = {
+export type MutationProductUpdateManyArgs = {|
   products: Array<ProductUpdateWrapperInput>
-};
+|};
 
 
-export type MutationProductDeleteArgs = {
+export type MutationProductDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationOrderCreateArgs = {
+export type MutationOrderCreateArgs = {|
   input: OrderCreateInput
-};
+|};
 
 
-export type MutationOrderUpdateArgs = {
+export type MutationOrderUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: OrderUpdateInput
-};
+|};
 
 
-export type MutationOrderUpdateManyArgs = {
+export type MutationOrderUpdateManyArgs = {|
   orders: Array<OrderUpdateWrapperInput>
-};
+|};
 
 
-export type MutationOrderDeleteArgs = {
+export type MutationOrderDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationOrderCloneArgs = {
+export type MutationOrderCloneArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: OrderUpdateInput
-};
+|};
 
 
-export type MutationOrderCloneManyArgs = {
+export type MutationOrderCloneManyArgs = {|
   orders: Array<OrderUpdateWrapperInput>
-};
+|};
 
 
-export type MutationOrderItemCreateArgs = {
+export type MutationOrderItemCreateArgs = {|
   input: OrderItemCreateInput
-};
+|};
 
 
-export type MutationOrderItemUpdateArgs = {
+export type MutationOrderItemUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: OrderItemUpdateInput
-};
+|};
 
 
-export type MutationOrderItemUpdateManyArgs = {
+export type MutationOrderItemUpdateManyArgs = {|
   orderItems: Array<OrderItemUpdateWrapperInput>
-};
+|};
 
 
-export type MutationOrderItemDeleteArgs = {
+export type MutationOrderItemDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationOrderItemCloneArgs = {
+export type MutationOrderItemCloneArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: OrderItemUpdateInput
-};
+|};
 
 
-export type MutationOrderItemCloneManyArgs = {
+export type MutationOrderItemCloneManyArgs = {|
   orderItems: Array<OrderItemUpdateWrapperInput>
-};
+|};
 
 
-export type MutationBatchCreateArgs = {
+export type MutationBatchCreateArgs = {|
   input: BatchCreateInput
-};
+|};
 
 
-export type MutationBatchUpdateArgs = {
+export type MutationBatchUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: BatchUpdateInput
-};
+|};
 
 
-export type MutationBatchUpdateManyArgs = {
+export type MutationBatchUpdateManyArgs = {|
   batches: Array<BatchUpdateWrapperInput>
-};
+|};
 
 
-export type MutationBatchDeleteArgs = {
+export type MutationBatchDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationBatchSimpleSplitArgs = {
+export type MutationBatchSimpleSplitArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: BatchSimpleSplitInput
-};
+|};
 
 
-export type MutationBatchEqualSplitArgs = {
+export type MutationBatchEqualSplitArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: BatchEqualSplitInput
-};
+|};
 
 
-export type MutationBatchBalanceSplitArgs = {
+export type MutationBatchBalanceSplitArgs = {|
   orderItemId: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationBatchBalanceSplitManyArgs = {
+export type MutationBatchBalanceSplitManyArgs = {|
   orderItemIds: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type MutationBatchCloneArgs = {
+export type MutationBatchCloneArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: BatchUpdateInput
-};
+|};
 
 
-export type MutationBatchCloneManyArgs = {
+export type MutationBatchCloneManyArgs = {|
   batches: Array<BatchUpdateWrapperInput>
-};
+|};
 
 
-export type MutationShipmentCreateArgs = {
+export type MutationShipmentCreateArgs = {|
   input: ShipmentCreateInput
-};
+|};
 
 
-export type MutationShipmentUpdateArgs = {
+export type MutationShipmentUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: ShipmentUpdateInput
-};
+|};
 
 
-export type MutationShipmentUpdateManyArgs = {
+export type MutationShipmentUpdateManyArgs = {|
   shipments: Array<ShipmentUpdateWrapperInput>
-};
+|};
 
 
-export type MutationShipmentDeleteArgs = {
+export type MutationShipmentDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationShipmentCloneArgs = {
+export type MutationShipmentCloneArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: ShipmentUpdateInput
-};
+|};
 
 
-export type MutationShipmentCloneManyArgs = {
+export type MutationShipmentCloneManyArgs = {|
   shipments: Array<ShipmentUpdateWrapperInput>
-};
+|};
 
 
-export type MutationContainerCreateArgs = {
+export type MutationContainerCreateArgs = {|
   input: ContainerCreateInput
-};
+|};
 
 
-export type MutationContainerUpdateArgs = {
+export type MutationContainerUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: ContainerUpdateInput
-};
+|};
 
 
-export type MutationContainerDeleteArgs = {
+export type MutationContainerDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationContainerCloneArgs = {
+export type MutationContainerCloneArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: ContainerUpdateInput
-};
+|};
 
 
-export type MutationContainerCloneManyArgs = {
+export type MutationContainerCloneManyArgs = {|
   containers: Array<ContainerUpdateWrapperInput>
-};
+|};
 
 
-export type MutationWarehouseCreateArgs = {
+export type MutationWarehouseCreateArgs = {|
   input: WarehouseCreateInput
-};
+|};
 
 
-export type MutationWarehouseUpdateArgs = {
+export type MutationWarehouseUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: WarehouseUpdateInput
-};
+|};
 
 
-export type MutationWarehouseUpdateManyArgs = {
+export type MutationWarehouseUpdateManyArgs = {|
   warehouses: Array<WarehouseUpdateWrapperInput>
-};
+|};
 
 
-export type MutationWarehouseDeleteArgs = {
+export type MutationWarehouseDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationEntitiesUpdateManyArgs = {
+export type MutationEntitiesUpdateManyArgs = {|
   products?: ?Array<ProductUpdateWrapperInput>,
   orders?: ?Array<OrderUpdateWrapperInput>,
   orderItems?: ?Array<OrderItemUpdateWrapperInput>,
@@ -20828,296 +20939,296 @@ export type MutationEntitiesUpdateManyArgs = {
   shipments?: ?Array<ShipmentUpdateWrapperInput>,
   containers?: ?Array<ContainerUpdateWrapperInput>,
   warehouses?: ?Array<WarehouseUpdateWrapperInput>
-};
+|};
 
 
-export type MutationTagCreateArgs = {
+export type MutationTagCreateArgs = {|
   input: TagCreateInput
-};
+|};
 
 
-export type MutationTagUpdateArgs = {
+export type MutationTagUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: TagUpdateInput
-};
+|};
 
 
-export type MutationTagDeleteArgs = {
+export type MutationTagDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationFieldDefinitionsUpdateArgs = {
+export type MutationFieldDefinitionsUpdateArgs = {|
   input: FieldDefinitionsInput
-};
+|};
 
 
-export type MutationMaskCreateArgs = {
+export type MutationMaskCreateArgs = {|
   input: MaskCreateInput
-};
+|};
 
 
-export type MutationMaskUpdateArgs = {
+export type MutationMaskUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: MaskUpdateInput
-};
+|};
 
 
-export type MutationMaskDeleteArgs = {
+export type MutationMaskDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationMaskEditCreateArgs = {
+export type MutationMaskEditCreateArgs = {|
   input: MaskEditCreateInput
-};
+|};
 
 
-export type MutationMaskEditUpdateArgs = {
+export type MutationMaskEditUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: MaskEditUpdateInput
-};
+|};
 
 
-export type MutationMaskEditDeleteArgs = {
+export type MutationMaskEditDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationCommentCreateArgs = {
+export type MutationCommentCreateArgs = {|
   input: CommentCreateInput
-};
+|};
 
 
-export type MutationCommentUpdateArgs = {
+export type MutationCommentUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: CommentUpdateInput
-};
+|};
 
 
-export type MutationCommentDeleteArgs = {
+export type MutationCommentDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationTimelineReadArgs = {
+export type MutationTimelineReadArgs = {|
   entity: EntityInput
-};
+|};
 
 
-export type MutationNotificationReadArgs = {
+export type MutationNotificationReadArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationRoleCreateArgs = {
+export type MutationRoleCreateArgs = {|
   input: RoleCreateInput
-};
+|};
 
 
-export type MutationRoleUpdateArgs = {
+export type MutationRoleUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: RoleUpdateInput
-};
+|};
 
 
-export type MutationRoleDeleteArgs = {
+export type MutationRoleDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationTaskCreateArgs = {
+export type MutationTaskCreateArgs = {|
   input: TaskCreateInput
-};
+|};
 
 
-export type MutationTaskUpdateArgs = {
+export type MutationTaskUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: TaskUpdateInput
-};
+|};
 
 
-export type MutationTaskUpdateManyArgs = {
+export type MutationTaskUpdateManyArgs = {|
   tasks: Array<TaskUpdateWrapperInput>
-};
+|};
 
 
-export type MutationTaskStartArgs = {
+export type MutationTaskStartArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationTaskCompleteArgs = {
+export type MutationTaskCompleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationTaskDeleteArgs = {
+export type MutationTaskDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationTaskTemplateCreateArgs = {
+export type MutationTaskTemplateCreateArgs = {|
   input: TaskTemplateCreateInput
-};
+|};
 
 
-export type MutationTaskTemplateUpdateArgs = {
+export type MutationTaskTemplateUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: TaskTemplateUpdateInput
-};
+|};
 
 
-export type MutationTaskTemplateDeleteArgs = {
+export type MutationTaskTemplateDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationProjectCreateArgs = {
+export type MutationProjectCreateArgs = {|
   input: ProjectCreateInput
-};
+|};
 
 
-export type MutationProjectUpdateArgs = {
+export type MutationProjectUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: ProjectUpdateInput
-};
+|};
 
 
-export type MutationProjectDeleteArgs = {
+export type MutationProjectDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationMilestoneCreateArgs = {
+export type MutationMilestoneCreateArgs = {|
   input: MilestoneCreateInput
-};
+|};
 
 
-export type MutationMilestoneUpdateArgs = {
+export type MutationMilestoneUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: MilestoneUpdateInput
-};
+|};
 
 
-export type MutationMilestoneDeleteArgs = {
+export type MutationMilestoneDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationProjectTemplateCreateArgs = {
+export type MutationProjectTemplateCreateArgs = {|
   input: ProjectTemplateCreateInput
-};
+|};
 
 
-export type MutationProjectTemplateUpdateArgs = {
+export type MutationProjectTemplateUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: ProjectTemplateUpdateInput
-};
+|};
 
 
-export type MutationProjectTemplateDeleteArgs = {
+export type MutationProjectTemplateDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationIntegrationConfigurationCreateArgs = {
+export type MutationIntegrationConfigurationCreateArgs = {|
   input: IntegrationConfigurationCreateInput
-};
+|};
 
 
-export type MutationIntegrationConfigurationUpdateArgs = {
+export type MutationIntegrationConfigurationUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: IntegrationConfigurationUpdateInput
-};
+|};
 
 
-export type MutationIntegrationConfigurationDeleteArgs = {
+export type MutationIntegrationConfigurationDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationIntegrationLinkCreateArgs = {
+export type MutationIntegrationLinkCreateArgs = {|
   input: IntegrationLinkCreateInput
-};
+|};
 
 
-export type MutationIntegrationLinkUpdateArgs = {
+export type MutationIntegrationLinkUpdateArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: IntegrationLinkUpdateInput
-};
+|};
 
 
-export type MutationIntegrationLinkResetArgs = {
+export type MutationIntegrationLinkResetArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationIntegrationLinkExecuteArgs = {
+export type MutationIntegrationLinkExecuteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationIntegrationLinkDeleteArgs = {
+export type MutationIntegrationLinkDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationImportArgs = {
+export type MutationImportArgs = {|
   file: $ElementType<Scalars, 'Upload'>
-};
+|};
 
 
-export type MutationFocusArgs = {
+export type MutationFocusArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: FocusingInput
-};
+|};
 
 
-export type MutationBlurArgs = {
+export type MutationBlurArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationEntitySubscribeArgs = {
+export type MutationEntitySubscribeArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: SubscriptionInput
-};
+|};
 
 
-export type MutationEntityUnsubscribeArgs = {
+export type MutationEntityUnsubscribeArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: SubscriptionInput
-};
+|};
 
 
-export type MutationEntityUnsubscribeAllArgs = {
+export type MutationEntityUnsubscribeAllArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type MutationFocusSubscribeArgs = {
+export type MutationFocusSubscribeArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: SubscriptionInput
-};
+|};
 
 
-export type MutationFocusUnsubscribeArgs = {
+export type MutationFocusUnsubscribeArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: SubscriptionInput
-};
+|};
 
 
-export type MutationFocusUnsubscribeAllArgs = {
+export type MutationFocusUnsubscribeAllArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
-export type NotFound = {
+export type NotFound = {|
    __typename?: 'NotFound',
   reference?: ?Reference,
-};
+|};
 
-export type Notification = {
+export type Notification = {|
    __typename?: 'Notification',
   id: $ElementType<Scalars, 'ID'>,
   sender: UserPayload,
@@ -21128,19 +21239,22 @@ export type Notification = {
   read: $ElementType<Scalars, 'Boolean'>,
   seen: $ElementType<Scalars, 'Boolean'>,
   createdAt: $ElementType<Scalars, 'DateTime'>,
-};
+|};
 
 export type NotificationPayload = Notification | BadRequest | Forbidden | NotFound;
 
-export type NotificationPayloadPaginatedList = Paginated & {
-   __typename?: 'NotificationPayloadPaginatedList',
-  nodes: Array<NotificationPayload>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type NotificationPayloadPaginatedList = {|
+  ...Paginated,
+  ...{
+     __typename?: 'NotificationPayloadPaginatedList',
+    nodes: Array<NotificationPayload>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
 export const NotificationTypeValues = Object.freeze({
   /** ShipmentCreate */
@@ -21256,49 +21370,58 @@ export const NotificationTypeValues = Object.freeze({
 
 export type NotificationType = $Values<typeof NotificationTypeValues>;
 
-export type Order = Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable & {
-   __typename?: 'Order',
-  archived: $ElementType<Scalars, 'Boolean'>,
-  importer: OrganizationPayload,
-  exporter: OrganizationPayload,
-  poNo: $ElementType<Scalars, 'String'>,
-  currency: Currency,
-  issuedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  piNo?: ?$ElementType<Scalars, 'String'>,
-  incoterm?: ?Incoterm,
-  deliveryPlace?: ?$ElementType<Scalars, 'String'>,
-  deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
-  timeline: Timeline,
-  todo: Todo,
-  totalPrice: Price,
-  totalOrdered: $ElementType<Scalars, 'Float'>,
-  totalBatched: $ElementType<Scalars, 'Float'>,
-  totalShipped: $ElementType<Scalars, 'Float'>,
-  orderItemCount: $ElementType<Scalars, 'Int'>,
-  orderItemChildlessCount: $ElementType<Scalars, 'Int'>,
-  batchCount: $ElementType<Scalars, 'Int'>,
-  batchShippedCount: $ElementType<Scalars, 'Int'>,
-  shipmentCount: $ElementType<Scalars, 'Int'>,
-  containerCount: $ElementType<Scalars, 'Int'>,
-  orderItems: Array<OrderItemPayload>,
-  shipments: Array<ShipmentPayload>,
-  containers: Array<ContainerPayload>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  tags: Array<TagPayload>,
-  inCharges: Array<UserPayload>,
-  files: Array<FilePayload>,
-  customFields: CustomFields,
-  memo?: ?$ElementType<Scalars, 'String'>,
-};
+export type Order = {|
+  ...Model,
+  ...Owned,
+  ...Tagged,
+  ...Supervised,
+  ...Documented,
+  ...Customizable,
+  ...Memorizable,
+  ...{
+     __typename?: 'Order',
+    archived: $ElementType<Scalars, 'Boolean'>,
+    importer: OrganizationPayload,
+    exporter: OrganizationPayload,
+    poNo: $ElementType<Scalars, 'String'>,
+    currency: Currency,
+    issuedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    piNo?: ?$ElementType<Scalars, 'String'>,
+    incoterm?: ?Incoterm,
+    deliveryPlace?: ?$ElementType<Scalars, 'String'>,
+    deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
+    timeline: Timeline,
+    todo: Todo,
+    totalPrice: Price,
+    totalOrdered: $ElementType<Scalars, 'Float'>,
+    totalBatched: $ElementType<Scalars, 'Float'>,
+    totalShipped: $ElementType<Scalars, 'Float'>,
+    orderItemCount: $ElementType<Scalars, 'Int'>,
+    orderItemChildlessCount: $ElementType<Scalars, 'Int'>,
+    batchCount: $ElementType<Scalars, 'Int'>,
+    batchShippedCount: $ElementType<Scalars, 'Int'>,
+    shipmentCount: $ElementType<Scalars, 'Int'>,
+    containerCount: $ElementType<Scalars, 'Int'>,
+    orderItems: Array<OrderItemPayload>,
+    shipments: Array<ShipmentPayload>,
+    containers: Array<ContainerPayload>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    tags: Array<TagPayload>,
+    inCharges: Array<UserPayload>,
+    files: Array<FilePayload>,
+    customFields: CustomFields,
+    memo?: ?$ElementType<Scalars, 'String'>,
+  }
+|};
 
-export type OrderCreateInput = {
+export type OrderCreateInput = {|
   importerId?: ?$ElementType<Scalars, 'ID'>,
   exporterId: $ElementType<Scalars, 'ID'>,
   poNo: $ElementType<Scalars, 'String'>,
@@ -21315,9 +21438,9 @@ export type OrderCreateInput = {
   files?: ?Array<FileInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
-};
+|};
 
-export type OrderFilterInput = {
+export type OrderFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
@@ -21360,43 +21483,52 @@ export type OrderFilterInput = {
   shipmentCreatedAt?: ?DateRangeInput,
   shipmentUpdatedAt?: ?DateRangeInput,
   shipmentArchived?: ?$ElementType<Scalars, 'Boolean'>,
-};
+|};
 
-export type OrderItem = Model & Owned & Sortable & Tagged & Documented & Customizable & Memorizable & {
-   __typename?: 'OrderItem',
-  order: OrderPayload,
-  productProvider: ProductProviderPayload,
-  archived: $ElementType<Scalars, 'Boolean'>,
-  no: $ElementType<Scalars, 'String'>,
-  price: Price,
-  quantity: $ElementType<Scalars, 'Float'>,
-  deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
-  totalPrice: Price,
-  totalBatched: $ElementType<Scalars, 'Float'>,
-  totalShipped: $ElementType<Scalars, 'Float'>,
-  batchCount: $ElementType<Scalars, 'Int'>,
-  batchShippedCount: $ElementType<Scalars, 'Int'>,
-  shipmentCount: $ElementType<Scalars, 'Int'>,
-  batches: Array<BatchPayload>,
-  shipments: Array<ShipmentPayload>,
-  timeline: Timeline,
-  todo: Todo,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  sort: $ElementType<Scalars, 'Int'>,
-  tags: Array<TagPayload>,
-  files: Array<FilePayload>,
-  customFields: CustomFields,
-  memo?: ?$ElementType<Scalars, 'String'>,
-};
+export type OrderItem = {|
+  ...Model,
+  ...Owned,
+  ...Sortable,
+  ...Tagged,
+  ...Documented,
+  ...Customizable,
+  ...Memorizable,
+  ...{
+     __typename?: 'OrderItem',
+    order: OrderPayload,
+    productProvider: ProductProviderPayload,
+    archived: $ElementType<Scalars, 'Boolean'>,
+    no: $ElementType<Scalars, 'String'>,
+    price: Price,
+    quantity: $ElementType<Scalars, 'Float'>,
+    deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
+    totalPrice: Price,
+    totalBatched: $ElementType<Scalars, 'Float'>,
+    totalShipped: $ElementType<Scalars, 'Float'>,
+    batchCount: $ElementType<Scalars, 'Int'>,
+    batchShippedCount: $ElementType<Scalars, 'Int'>,
+    shipmentCount: $ElementType<Scalars, 'Int'>,
+    batches: Array<BatchPayload>,
+    shipments: Array<ShipmentPayload>,
+    timeline: Timeline,
+    todo: Todo,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    sort: $ElementType<Scalars, 'Int'>,
+    tags: Array<TagPayload>,
+    files: Array<FilePayload>,
+    customFields: CustomFields,
+    memo?: ?$ElementType<Scalars, 'String'>,
+  }
+|};
 
-export type OrderItemBatchInput = {
+export type OrderItemBatchInput = {|
   no?: ?$ElementType<Scalars, 'String'>,
   quantity?: ?$ElementType<Scalars, 'Float'>,
   producedAt?: ?$ElementType<Scalars, 'DateTime'>,
@@ -21419,9 +21551,9 @@ export type OrderItemBatchInput = {
   id?: ?$ElementType<Scalars, 'ID'>,
   shipmentId?: ?$ElementType<Scalars, 'ID'>,
   containerId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type OrderItemCreateInput = {
+export type OrderItemCreateInput = {|
   productProviderId: $ElementType<Scalars, 'ID'>,
   no: $ElementType<Scalars, 'String'>,
   price: PriceInput,
@@ -21434,9 +21566,9 @@ export type OrderItemCreateInput = {
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   orderId: $ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type OrderItemFilterInput = {
+export type OrderItemFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
@@ -21450,22 +21582,25 @@ export type OrderItemFilterInput = {
   importerId?: ?$ElementType<Scalars, 'ID'>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
   milestoneRelatedId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
 export type OrderItemPayload = OrderItem | BadRequest | Forbidden | NotFound;
 
-export type OrderItemPayloadPaginatedSearch = Paginated & {
-   __typename?: 'OrderItemPayloadPaginatedSearch',
-  nodes: Array<OrderItemPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type OrderItemPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'OrderItemPayloadPaginatedSearch',
+    nodes: Array<OrderItemPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type OrderItemSortInput = {
+export type OrderItemSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   no?: ?SortOrder,
@@ -21474,9 +21609,9 @@ export type OrderItemSortInput = {
   productSerial?: ?SortOrder,
   productProviderName?: ?SortOrder,
   supplierName?: ?SortOrder,
-};
+|};
 
-export type OrderItemUpdateInput = {
+export type OrderItemUpdateInput = {|
   productProviderId?: ?$ElementType<Scalars, 'ID'>,
   no?: ?$ElementType<Scalars, 'String'>,
   price?: ?PriceInput,
@@ -21489,14 +21624,14 @@ export type OrderItemUpdateInput = {
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   orderId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type OrderItemUpdateWrapperInput = {
+export type OrderItemUpdateWrapperInput = {|
   id: $ElementType<Scalars, 'ID'>,
   input: OrderItemUpdateInput,
-};
+|};
 
-export type OrderOrderItemInput = {
+export type OrderOrderItemInput = {|
   productProviderId?: ?$ElementType<Scalars, 'ID'>,
   no?: ?$ElementType<Scalars, 'String'>,
   price?: ?PriceInput,
@@ -21509,22 +21644,25 @@ export type OrderOrderItemInput = {
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   id?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
 export type OrderPayload = Order | BadRequest | Forbidden | NotFound;
 
-export type OrderPayloadPaginatedSearch = Paginated & {
-   __typename?: 'OrderPayloadPaginatedSearch',
-  nodes: Array<OrderPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type OrderPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'OrderPayloadPaginatedSearch',
+    nodes: Array<OrderPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type OrderSortInput = {
+export type OrderSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   poNo?: ?SortOrder,
@@ -21534,9 +21672,9 @@ export type OrderSortInput = {
   currency?: ?SortOrder,
   incoterm?: ?SortOrder,
   deliveryPlace?: ?SortOrder,
-};
+|};
 
-export type OrderUpdateInput = {
+export type OrderUpdateInput = {|
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   importerId?: ?$ElementType<Scalars, 'ID'>,
   exporterId?: ?$ElementType<Scalars, 'ID'>,
@@ -21554,55 +21692,58 @@ export type OrderUpdateInput = {
   files?: ?Array<FileInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
-};
+|};
 
-export type OrderUpdateWrapperInput = {
+export type OrderUpdateWrapperInput = {|
   id: $ElementType<Scalars, 'ID'>,
   input: OrderUpdateInput,
-};
+|};
 
-export type Organization = Model & {
-   __typename?: 'Organization',
-  types: Array<OrganizationType>,
-  name: $ElementType<Scalars, 'String'>,
-  name2?: ?$ElementType<Scalars, 'String'>,
-  tel?: ?$ElementType<Scalars, 'String'>,
-  street?: ?$ElementType<Scalars, 'String'>,
-  locality?: ?$ElementType<Scalars, 'String'>,
-  region?: ?$ElementType<Scalars, 'String'>,
-  postalCode?: ?$ElementType<Scalars, 'String'>,
-  country?: ?$ElementType<Scalars, 'String'>,
-  avatar?: ?FilePayload,
-  disabled: $ElementType<Scalars, 'Boolean'>,
-  dummy: $ElementType<Scalars, 'Boolean'>,
-  users: UserPayloadPaginatedSearch,
-  /** Resolving the current partnership of this organization from user's organization */
+export type Organization = {|
+  ...Model,
+  ...{
+     __typename?: 'Organization',
+    types: Array<OrganizationType>,
+    name: $ElementType<Scalars, 'String'>,
+    name2?: ?$ElementType<Scalars, 'String'>,
+    tel?: ?$ElementType<Scalars, 'String'>,
+    street?: ?$ElementType<Scalars, 'String'>,
+    locality?: ?$ElementType<Scalars, 'String'>,
+    region?: ?$ElementType<Scalars, 'String'>,
+    postalCode?: ?$ElementType<Scalars, 'String'>,
+    country?: ?$ElementType<Scalars, 'String'>,
+    avatar?: ?FilePayload,
+    disabled: $ElementType<Scalars, 'Boolean'>,
+    dummy: $ElementType<Scalars, 'Boolean'>,
+    users: UserPayloadPaginatedSearch,
+    /** Resolving the current partnership of this organization from user's organization */
   partner?: ?PartnerPayload,
-  partners: PartnerPayloadPaginatedSearch,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-};
+    partners: PartnerPayloadPaginatedSearch,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+  }
+|};
 
 
-export type OrganizationUsersArgs = {
+export type OrganizationUsersArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?UserFilterInput,
   sortBy?: ?UserSortInput
-};
+|};
 
 
-export type OrganizationPartnersArgs = {
+export type OrganizationPartnersArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?PartnerFilterInput,
   sortBy?: ?PartnerSortInput
-};
+|};
 
 export type OrganizationPayload = Organization | BadRequest | Forbidden | NotFound;
 
@@ -21622,219 +21763,239 @@ export const OrganizationTypeValues = Object.freeze({
 
 export type OrganizationType = $Values<typeof OrganizationTypeValues>;
 
-export type Owned = {
+export type Owned = {|
   ownedBy: OrganizationPayload,
-};
+|};
 
-export type Package = {
+export type Package = {|
   packageName?: ?$ElementType<Scalars, 'String'>,
   packageGrossWeight?: ?MetricValue,
   packageVolume?: ?MetricValue,
   autoCalculatePackageVolume: $ElementType<Scalars, 'Boolean'>,
   packageSize?: ?Size,
   packageCapacity?: ?$ElementType<Scalars, 'Float'>,
-};
+|};
 
-export type Paginated = {
+export type Paginated = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   totalPage: $ElementType<Scalars, 'Int'>,
   count: $ElementType<Scalars, 'Int'>,
   totalCount: $ElementType<Scalars, 'Int'>,
-};
+|};
 
-export type Parameter = {
+export type Parameter = {|
    __typename?: 'Parameter',
   key: $ElementType<Scalars, 'String'>,
   value?: ?Value,
-};
+|};
 
-export type Partner = Model & {
-   __typename?: 'Partner',
-  organization: OrganizationPayload,
-  types: Array<OrganizationType>,
-  name?: ?$ElementType<Scalars, 'String'>,
-  code?: ?$ElementType<Scalars, 'String'>,
-  confirmed: $ElementType<Scalars, 'Boolean'>,
-  approvedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  approvedByPartnerAt?: ?$ElementType<Scalars, 'DateTime'>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-};
+export type Partner = {|
+  ...Model,
+  ...{
+     __typename?: 'Partner',
+    organization: OrganizationPayload,
+    types: Array<OrganizationType>,
+    name?: ?$ElementType<Scalars, 'String'>,
+    code?: ?$ElementType<Scalars, 'String'>,
+    confirmed: $ElementType<Scalars, 'Boolean'>,
+    approvedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    approvedByPartnerAt?: ?$ElementType<Scalars, 'DateTime'>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+  }
+|};
 
-export type PartnerFilterInput = {
+export type PartnerFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   types?: ?Array<OrganizationType>,
   confirmed?: ?$ElementType<Scalars, 'Boolean'>,
-};
+|};
 
 export type PartnerPayload = Partner | BadRequest | Forbidden | NotFound;
 
-export type PartnerPayloadPaginatedSearch = Paginated & {
-   __typename?: 'PartnerPayloadPaginatedSearch',
-  nodes: Array<PartnerPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type PartnerPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'PartnerPayloadPaginatedSearch',
+    nodes: Array<PartnerPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type Partnership = Model & {
-   __typename?: 'Partnership',
-  confirmed: $ElementType<Scalars, 'Boolean'>,
-  leftOrganization: OrganizationPayload,
-  leftTypes: Array<OrganizationType>,
-  leftName?: ?$ElementType<Scalars, 'String'>,
-  leftCode?: ?$ElementType<Scalars, 'String'>,
-  leftConfirmedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  leftRoles: Array<RolePayload>,
-  rightOrganization: OrganizationPayload,
-  rightTypes: Array<OrganizationType>,
-  rightName?: ?$ElementType<Scalars, 'String'>,
-  rightCode?: ?$ElementType<Scalars, 'String'>,
-  rightConfirmedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  rightRoles: Array<RolePayload>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-};
+export type Partnership = {|
+  ...Model,
+  ...{
+     __typename?: 'Partnership',
+    confirmed: $ElementType<Scalars, 'Boolean'>,
+    leftOrganization: OrganizationPayload,
+    leftTypes: Array<OrganizationType>,
+    leftName?: ?$ElementType<Scalars, 'String'>,
+    leftCode?: ?$ElementType<Scalars, 'String'>,
+    leftConfirmedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    leftRoles: Array<RolePayload>,
+    rightOrganization: OrganizationPayload,
+    rightTypes: Array<OrganizationType>,
+    rightName?: ?$ElementType<Scalars, 'String'>,
+    rightCode?: ?$ElementType<Scalars, 'String'>,
+    rightConfirmedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    rightRoles: Array<RolePayload>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+  }
+|};
 
 export type PartnershipPayload = Partnership | BadRequest | Forbidden | NotFound;
 
-export type PartnershipPayloadPaginatedSearch = Paginated & {
-   __typename?: 'PartnershipPayloadPaginatedSearch',
-  nodes: Array<PartnershipPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type PartnershipPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'PartnershipPayloadPaginatedSearch',
+    nodes: Array<PartnershipPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type PartnerSortInput = {
+export type PartnerSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   name?: ?SortOrder,
   code?: ?SortOrder,
-};
+|};
 
-export type Port = {
+export type Port = {|
    __typename?: 'Port',
   seaport?: ?Seaport,
   seaportName?: ?$ElementType<Scalars, 'String'>,
   airport?: ?Airport,
   airportName?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
-export type PortInput = {
+export type PortInput = {|
   seaport?: ?Seaport,
   airport?: ?Airport,
-};
+|};
 
-export type Price = {
+export type Price = {|
    __typename?: 'Price',
   amount: $ElementType<Scalars, 'Float'>,
   currency: Currency,
-};
+|};
 
-export type PriceInput = {
+export type PriceInput = {|
   amount: $ElementType<Scalars, 'Float'>,
   currency: Currency,
-};
+|};
 
-export type PriceRangeInput = {
+export type PriceRangeInput = {|
   min?: ?$ElementType<Scalars, 'Float'>,
   max?: ?$ElementType<Scalars, 'Float'>,
   currency?: ?Currency,
-};
+|};
 
-export type Product = Model & Owned & Tagged & Documented & Memorizable & Customizable & {
-   __typename?: 'Product',
-  archived: $ElementType<Scalars, 'Boolean'>,
-  importer: OrganizationPayload,
-  name: $ElementType<Scalars, 'String'>,
-  serial: $ElementType<Scalars, 'String'>,
-  hsCode?: ?$ElementType<Scalars, 'String'>,
-  janCode?: ?$ElementType<Scalars, 'String'>,
-  material?: ?$ElementType<Scalars, 'String'>,
-  productProviders: Array<ProductProviderPayload>,
-  timeline: Timeline,
-  todo: Todo,
-  orders: OrderPayloadPaginatedSearch,
-  orderItems: OrderItemPayloadPaginatedSearch,
-  batches: BatchPayloadPaginatedSearch,
-  shipments: ShipmentPayloadPaginatedSearch,
-  containers: ContainerPayloadPaginatedSearch,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  tags: Array<TagPayload>,
-  files: Array<FilePayload>,
-  memo?: ?$ElementType<Scalars, 'String'>,
-  customFields: CustomFields,
-};
+export type Product = {|
+  ...Model,
+  ...Owned,
+  ...Tagged,
+  ...Documented,
+  ...Memorizable,
+  ...Customizable,
+  ...{
+     __typename?: 'Product',
+    archived: $ElementType<Scalars, 'Boolean'>,
+    importer: OrganizationPayload,
+    name: $ElementType<Scalars, 'String'>,
+    serial: $ElementType<Scalars, 'String'>,
+    hsCode?: ?$ElementType<Scalars, 'String'>,
+    janCode?: ?$ElementType<Scalars, 'String'>,
+    material?: ?$ElementType<Scalars, 'String'>,
+    productProviders: Array<ProductProviderPayload>,
+    timeline: Timeline,
+    todo: Todo,
+    orders: OrderPayloadPaginatedSearch,
+    orderItems: OrderItemPayloadPaginatedSearch,
+    batches: BatchPayloadPaginatedSearch,
+    shipments: ShipmentPayloadPaginatedSearch,
+    containers: ContainerPayloadPaginatedSearch,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    tags: Array<TagPayload>,
+    files: Array<FilePayload>,
+    memo?: ?$ElementType<Scalars, 'String'>,
+    customFields: CustomFields,
+  }
+|};
 
 
-export type ProductOrdersArgs = {
+export type ProductOrdersArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?OrderFilterInput,
   sortBy?: ?OrderSortInput
-};
+|};
 
 
-export type ProductOrderItemsArgs = {
+export type ProductOrderItemsArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?OrderItemFilterInput,
   sortBy?: ?OrderItemSortInput
-};
+|};
 
 
-export type ProductBatchesArgs = {
+export type ProductBatchesArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?BatchFilterInput,
   sortBy?: ?BatchSortInput
-};
+|};
 
 
-export type ProductShipmentsArgs = {
+export type ProductShipmentsArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?ShipmentFilterInput,
   sortBy?: ?ShipmentSortInput
-};
+|};
 
 
-export type ProductContainersArgs = {
+export type ProductContainersArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?ContainerFilterInput,
   sortBy?: ?ContainerSortInput
-};
+|};
 
-export type ProductCreateInput = {
+export type ProductCreateInput = {|
   importerId?: ?$ElementType<Scalars, 'ID'>,
   name: $ElementType<Scalars, 'String'>,
   serial: $ElementType<Scalars, 'String'>,
@@ -21847,9 +22008,9 @@ export type ProductCreateInput = {
   productProviders: Array<ProductProviderCreateInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
-};
+|};
 
-export type ProductFilterInput = {
+export type ProductFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
@@ -21860,73 +22021,84 @@ export type ProductFilterInput = {
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
   milestoneRelatedId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
 export type ProductPayload = Product | BadRequest | Forbidden | NotFound;
 
-export type ProductPayloadPaginatedSearch = Paginated & {
-   __typename?: 'ProductPayloadPaginatedSearch',
-  nodes: Array<ProductPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type ProductPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'ProductPayloadPaginatedSearch',
+    nodes: Array<ProductPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type ProductProvider = Model & Owned & Sortable & Documented & Customizable & Memorizable & {
-   __typename?: 'ProductProvider',
-  archived: $ElementType<Scalars, 'Boolean'>,
-  /** Determined if the ProductProvider is referenced by at least one OrderItem or not */
+export type ProductProvider = {|
+  ...Model,
+  ...Owned,
+  ...Sortable,
+  ...Documented,
+  ...Customizable,
+  ...Memorizable,
+  ...{
+     __typename?: 'ProductProvider',
+    archived: $ElementType<Scalars, 'Boolean'>,
+    /** Determined if the ProductProvider is referenced by at least one OrderItem or not */
   referenced: $ElementType<Scalars, 'Boolean'>,
-  name: $ElementType<Scalars, 'String'>,
-  product: ProductPayload,
-  exporter: OrganizationPayload,
-  supplier?: ?OrganizationPayload,
-  unitType?: ?$ElementType<Scalars, 'String'>,
-  unitVolume?: ?MetricValue,
-  autoCalculateUnitVolume: $ElementType<Scalars, 'Boolean'>,
-  unitWeight?: ?MetricValue,
-  unitPrice?: ?Price,
-  unitSize?: ?Size,
-  inspectionFee?: ?Price,
-  origin?: ?Country,
-  productionLeadTime?: ?$ElementType<Scalars, 'Int'>,
-  packageName?: ?$ElementType<Scalars, 'String'>,
-  packageGrossWeight?: ?MetricValue,
-  packageVolume?: ?MetricValue,
-  autoCalculatePackageVolume: $ElementType<Scalars, 'Boolean'>,
-  packageSize?: ?Size,
-  packageCapacity?: ?$ElementType<Scalars, 'Float'>,
-  defaultPackage?: ?ProductProviderPackagePayload,
-  packages: Array<ProductProviderPackagePayload>,
-  timeline: Timeline,
-  todo: Todo,
-  batches: BatchPayloadPaginatedSearch,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  sort: $ElementType<Scalars, 'Int'>,
-  files: Array<FilePayload>,
-  customFields: CustomFields,
-  memo?: ?$ElementType<Scalars, 'String'>,
-};
+    name: $ElementType<Scalars, 'String'>,
+    product: ProductPayload,
+    exporter: OrganizationPayload,
+    supplier?: ?OrganizationPayload,
+    unitType?: ?$ElementType<Scalars, 'String'>,
+    unitVolume?: ?MetricValue,
+    autoCalculateUnitVolume: $ElementType<Scalars, 'Boolean'>,
+    unitWeight?: ?MetricValue,
+    unitPrice?: ?Price,
+    unitSize?: ?Size,
+    inspectionFee?: ?Price,
+    origin?: ?Country,
+    productionLeadTime?: ?$ElementType<Scalars, 'Int'>,
+    packageName?: ?$ElementType<Scalars, 'String'>,
+    packageGrossWeight?: ?MetricValue,
+    packageVolume?: ?MetricValue,
+    autoCalculatePackageVolume: $ElementType<Scalars, 'Boolean'>,
+    packageSize?: ?Size,
+    packageCapacity?: ?$ElementType<Scalars, 'Float'>,
+    defaultPackage?: ?ProductProviderPackagePayload,
+    packages: Array<ProductProviderPackagePayload>,
+    timeline: Timeline,
+    todo: Todo,
+    batches: BatchPayloadPaginatedSearch,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    sort: $ElementType<Scalars, 'Int'>,
+    files: Array<FilePayload>,
+    customFields: CustomFields,
+    memo?: ?$ElementType<Scalars, 'String'>,
+  }
+|};
 
 
-export type ProductProviderBatchesArgs = {
+export type ProductProviderBatchesArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?BatchFilterInput,
   sortBy?: ?BatchSortInput
-};
+|};
 
-export type ProductProviderCreateInput = {
+export type ProductProviderCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   exporterId: $ElementType<Scalars, 'ID'>,
   supplierId?: ?$ElementType<Scalars, 'ID'>,
@@ -21946,9 +22118,9 @@ export type ProductProviderCreateInput = {
   packages: Array<ProductProviderPackageCreateInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
-};
+|};
 
-export type ProductProviderFilterInput = {
+export type ProductProviderFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
@@ -21961,40 +22133,45 @@ export type ProductProviderFilterInput = {
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
   milestoneRelatedId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type ProductProviderPackage = Model & Owned & Sortable & {
-   __typename?: 'ProductProviderPackage',
-  productProvider: ProductProviderPayload,
-  name?: ?$ElementType<Scalars, 'String'>,
-  grossWeight?: ?MetricValue,
-  volume?: ?MetricValue,
-  autoCalculateVolume: $ElementType<Scalars, 'Boolean'>,
-  size?: ?Size,
-  capacity?: ?$ElementType<Scalars, 'Float'>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  sort: $ElementType<Scalars, 'Int'>,
-};
+export type ProductProviderPackage = {|
+  ...Model,
+  ...Owned,
+  ...Sortable,
+  ...{
+     __typename?: 'ProductProviderPackage',
+    productProvider: ProductProviderPayload,
+    name?: ?$ElementType<Scalars, 'String'>,
+    grossWeight?: ?MetricValue,
+    volume?: ?MetricValue,
+    autoCalculateVolume: $ElementType<Scalars, 'Boolean'>,
+    size?: ?Size,
+    capacity?: ?$ElementType<Scalars, 'Float'>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    sort: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type ProductProviderPackageCreateInput = {
+export type ProductProviderPackageCreateInput = {|
   name?: ?$ElementType<Scalars, 'String'>,
   grossWeight?: ?MetricValueInput,
   volume?: ?MetricValueInput,
   autoCalculateVolume?: ?$ElementType<Scalars, 'Boolean'>,
   size?: ?SizeInput,
   capacity?: ?$ElementType<Scalars, 'Float'>,
-};
+|};
 
 export type ProductProviderPackagePayload = ProductProviderPackage | BadRequest | Forbidden | NotFound;
 
-export type ProductProviderPackageUpdateInput = {
+export type ProductProviderPackageUpdateInput = {|
   id?: ?$ElementType<Scalars, 'ID'>,
   name?: ?$ElementType<Scalars, 'String'>,
   grossWeight?: ?MetricValueInput,
@@ -22002,22 +22179,25 @@ export type ProductProviderPackageUpdateInput = {
   autoCalculateVolume?: ?$ElementType<Scalars, 'Boolean'>,
   size?: ?SizeInput,
   capacity?: ?$ElementType<Scalars, 'Float'>,
-};
+|};
 
 export type ProductProviderPayload = ProductProvider | BadRequest | Forbidden | NotFound;
 
-export type ProductProviderPayloadPaginatedSearch = Paginated & {
-   __typename?: 'ProductProviderPayloadPaginatedSearch',
-  nodes: Array<ProductProviderPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type ProductProviderPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'ProductProviderPayloadPaginatedSearch',
+    nodes: Array<ProductProviderPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type ProductProviderSortInput = {
+export type ProductProviderSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   name?: ?SortOrder,
@@ -22026,9 +22206,9 @@ export type ProductProviderSortInput = {
   exporterName?: ?SortOrder,
   supplierName?: ?SortOrder,
   unitPriceCurrency?: ?SortOrder,
-};
+|};
 
-export type ProductProviderUpdateInput = {
+export type ProductProviderUpdateInput = {|
   id?: ?$ElementType<Scalars, 'ID'>,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   name?: ?$ElementType<Scalars, 'String'>,
@@ -22050,16 +22230,16 @@ export type ProductProviderUpdateInput = {
   packages?: ?Array<ProductProviderPackageUpdateInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
-};
+|};
 
-export type ProductSortInput = {
+export type ProductSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   name?: ?SortOrder,
   serial?: ?SortOrder,
-};
+|};
 
-export type ProductUpdateInput = {
+export type ProductUpdateInput = {|
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   importerId?: ?$ElementType<Scalars, 'ID'>,
   name?: ?$ElementType<Scalars, 'String'>,
@@ -22073,49 +22253,54 @@ export type ProductUpdateInput = {
   productProviders?: ?Array<ProductProviderUpdateInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
-};
+|};
 
-export type ProductUpdateWrapperInput = {
+export type ProductUpdateWrapperInput = {|
   id: $ElementType<Scalars, 'ID'>,
   input: ProductUpdateInput,
-};
+|};
 
-export type Project = Model & Owned & Tagged & {
-   __typename?: 'Project',
-  name: $ElementType<Scalars, 'String'>,
-  description?: ?$ElementType<Scalars, 'String'>,
-  dueDate?: ?$ElementType<Scalars, 'DateTime'>,
-  taskCount: TaskCount,
-  milestones: Array<MilestonePayload>,
-  timeline: Timeline,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  tags: Array<TagPayload>,
-};
+export type Project = {|
+  ...Model,
+  ...Owned,
+  ...Tagged,
+  ...{
+     __typename?: 'Project',
+    name: $ElementType<Scalars, 'String'>,
+    description?: ?$ElementType<Scalars, 'String'>,
+    dueDate?: ?$ElementType<Scalars, 'DateTime'>,
+    taskCount: TaskCount,
+    milestones: Array<MilestonePayload>,
+    timeline: Timeline,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    tags: Array<TagPayload>,
+  }
+|};
 
-export type ProjectCreateInput = {
+export type ProjectCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   dueDate?: ?$ElementType<Scalars, 'DateTime'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   milestones?: ?Array<ProjectMilestoneCreateInput>,
-};
+|};
 
-export type ProjectFilterInput = {
+export type ProjectFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   dueDate?: ?DateRangeInput,
-};
+|};
 
-export type ProjectMilestoneCreateInput = {
+export type ProjectMilestoneCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   dueDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -22127,9 +22312,10 @@ export type ProjectMilestoneCreateInput = {
   estimatedCompletionDateInterval?: ?IntervalInput,
   estimatedCompletionDateBinding?: ?MilestoneDateBinding,
   tasks?: ?Array<MilestoneTaskInput>,
-};
+  files?: ?Array<FileInput>,
+|};
 
-export type ProjectMilestoneUpdateInput = {
+export type ProjectMilestoneUpdateInput = {|
   name?: ?$ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   dueDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -22141,69 +22327,78 @@ export type ProjectMilestoneUpdateInput = {
   estimatedCompletionDateInterval?: ?IntervalInput,
   estimatedCompletionDateBinding?: ?MilestoneDateBinding,
   tasks?: ?Array<MilestoneTaskInput>,
+  files?: ?Array<FileInput>,
   id?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
 export type ProjectPayload = Project | BadRequest | Forbidden | NotFound;
 
-export type ProjectPayloadPaginatedSearch = Paginated & {
-   __typename?: 'ProjectPayloadPaginatedSearch',
-  nodes: Array<ProjectPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type ProjectPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'ProjectPayloadPaginatedSearch',
+    nodes: Array<ProjectPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type ProjectSortInput = {
+export type ProjectSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   name?: ?SortOrder,
   dueDate?: ?SortOrder,
-};
+|};
 
-export type ProjectTemplate = Model & Owned & Tagged & {
-   __typename?: 'ProjectTemplate',
-  name: $ElementType<Scalars, 'String'>,
-  description?: ?$ElementType<Scalars, 'String'>,
-  milestones: Array<MilestoneTemplatePayload>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  tags: Array<TagPayload>,
-};
+export type ProjectTemplate = {|
+  ...Model,
+  ...Owned,
+  ...Tagged,
+  ...{
+     __typename?: 'ProjectTemplate',
+    name: $ElementType<Scalars, 'String'>,
+    description?: ?$ElementType<Scalars, 'String'>,
+    milestones: Array<MilestoneTemplatePayload>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    tags: Array<TagPayload>,
+  }
+|};
 
-export type ProjectTemplateCreateInput = {
+export type ProjectTemplateCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   milestones?: ?Array<ProjectTemplateMilestoneCreateInput>,
-};
+|};
 
-export type ProjectTemplateFilterInput = {
+export type ProjectTemplateFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
-};
+|};
 
-export type ProjectTemplateMilestoneCreateInput = {
+export type ProjectTemplateMilestoneCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   dueDateInterval?: ?IntervalInput,
   dueDateBinding?: ?MilestoneDateBinding,
   estimatedCompletionDateInterval?: ?IntervalInput,
   estimatedCompletionDateBinding?: ?MilestoneDateBinding,
-};
+|};
 
-export type ProjectTemplateMilestoneUpdateInput = {
+export type ProjectTemplateMilestoneUpdateInput = {|
   name?: ?$ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   dueDateInterval?: ?IntervalInput,
@@ -22211,43 +22406,46 @@ export type ProjectTemplateMilestoneUpdateInput = {
   estimatedCompletionDateInterval?: ?IntervalInput,
   estimatedCompletionDateBinding?: ?MilestoneDateBinding,
   id?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
 export type ProjectTemplatePayload = ProjectTemplate | BadRequest | Forbidden | NotFound;
 
-export type ProjectTemplatePayloadPaginatedSearch = Paginated & {
-   __typename?: 'ProjectTemplatePayloadPaginatedSearch',
-  nodes: Array<ProjectTemplatePayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type ProjectTemplatePayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'ProjectTemplatePayloadPaginatedSearch',
+    nodes: Array<ProjectTemplatePayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type ProjectTemplateSortInput = {
+export type ProjectTemplateSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   name?: ?SortOrder,
-};
+|};
 
-export type ProjectTemplateUpdateInput = {
+export type ProjectTemplateUpdateInput = {|
   name?: ?$ElementType<Scalars, 'ID'>,
   description?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   milestones?: ?Array<ProjectTemplateMilestoneUpdateInput>,
-};
+|};
 
-export type ProjectUpdateInput = {
+export type ProjectUpdateInput = {|
   name?: ?$ElementType<Scalars, 'ID'>,
   description?: ?$ElementType<Scalars, 'String'>,
   dueDate?: ?$ElementType<Scalars, 'DateTime'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   milestones?: ?Array<ProjectMilestoneUpdateInput>,
-};
+|};
 
-export type Query = {
+export type Query = {|
    __typename?: 'Query',
   viewer: Viewer,
   authenticated: $ElementType<Scalars, 'Boolean'>,
@@ -22343,607 +22541,607 @@ export type Query = {
   permissions: Array<$ElementType<Scalars, 'String'>>,
   orderShipmentTable: Array<EntityPayload>,
   focuses: Array<FocusPayload>,
-};
+|};
 
 
-export type QueryUserArgs = {
+export type QueryUserArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryUsersArgs = {
+export type QueryUsersArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?UserFilterInput,
   sortBy?: ?UserSortInput
-};
+|};
 
 
-export type QueryPartnershipArgs = {
+export type QueryPartnershipArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryPartnershipsArgs = {
+export type QueryPartnershipsArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?PartnerFilterInput,
   sortBy?: ?PartnerSortInput
-};
+|};
 
 
-export type QueryProductArgs = {
+export type QueryProductArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryProductsArgs = {
+export type QueryProductsArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?ProductFilterInput,
   sortBy?: ?ProductSortInput
-};
+|};
 
 
-export type QueryProductsByIDsArgs = {
+export type QueryProductsByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryProductExportArgs = {
+export type QueryProductExportArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>
-};
+|};
 
 
-export type QueryProductsExportArgs = {
+export type QueryProductsExportArgs = {|
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>,
   filterBy?: ?ProductFilterInput,
   sortBy?: ?ProductSortInput
-};
+|};
 
 
-export type QueryProductsByIDsExportArgs = {
+export type QueryProductsByIDsExportArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>,
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>
-};
+|};
 
 
-export type QueryProductProviderArgs = {
+export type QueryProductProviderArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryProductProvidersArgs = {
+export type QueryProductProvidersArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?ProductProviderFilterInput,
   sortBy?: ?ProductProviderSortInput
-};
+|};
 
 
-export type QueryProductProvidersByIDsArgs = {
+export type QueryProductProvidersByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryOrderArgs = {
+export type QueryOrderArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryOrdersArgs = {
+export type QueryOrdersArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?OrderFilterInput,
   sortBy?: ?OrderSortInput
-};
+|};
 
 
-export type QueryOrdersByIDsArgs = {
+export type QueryOrdersByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryOrderExportArgs = {
+export type QueryOrderExportArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>
-};
+|};
 
 
-export type QueryOrdersExportArgs = {
+export type QueryOrdersExportArgs = {|
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>,
   filterBy?: ?OrderFilterInput,
   sortBy?: ?OrderSortInput
-};
+|};
 
 
-export type QueryOrdersByIDsExportArgs = {
+export type QueryOrdersByIDsExportArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>,
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>
-};
+|};
 
 
-export type QueryOrderItemArgs = {
+export type QueryOrderItemArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryOrderItemsArgs = {
+export type QueryOrderItemsArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?OrderItemFilterInput,
   sortBy?: ?OrderItemSortInput
-};
+|};
 
 
-export type QueryOrderItemsByIDsArgs = {
+export type QueryOrderItemsByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryBatchArgs = {
+export type QueryBatchArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryBatchesArgs = {
+export type QueryBatchesArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?BatchFilterInput,
   sortBy?: ?BatchSortInput
-};
+|};
 
 
-export type QueryBatchesByIDsArgs = {
+export type QueryBatchesByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryBatchesTableArgs = {
+export type QueryBatchesTableArgs = {|
   entities: Array<EntityInput>
-};
+|};
 
 
-export type QueryShipmentArgs = {
+export type QueryShipmentArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryShipmentsArgs = {
+export type QueryShipmentsArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?ShipmentFilterInput,
   sortBy?: ?ShipmentSortInput
-};
+|};
 
 
-export type QueryShipmentsByIDsArgs = {
+export type QueryShipmentsByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryShipmentExportArgs = {
+export type QueryShipmentExportArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>
-};
+|};
 
 
-export type QueryShipmentsExportArgs = {
+export type QueryShipmentsExportArgs = {|
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>,
   filterBy?: ?ShipmentFilterInput,
   sortBy?: ?ShipmentSortInput
-};
+|};
 
 
-export type QueryShipmentsByIDsExportArgs = {
+export type QueryShipmentsByIDsExportArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>,
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>
-};
+|};
 
 
-export type QueryContainerArgs = {
+export type QueryContainerArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryContainersArgs = {
+export type QueryContainersArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?ContainerFilterInput,
   sortBy?: ?ContainerSortInput
-};
+|};
 
 
-export type QueryContainersByIDsArgs = {
+export type QueryContainersByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryContainerExportArgs = {
+export type QueryContainerExportArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>
-};
+|};
 
 
-export type QueryContainersExportArgs = {
+export type QueryContainersExportArgs = {|
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>,
   filterBy?: ?ContainerFilterInput,
   sortBy?: ?ContainerSortInput
-};
+|};
 
 
-export type QueryContainersByIDsExportArgs = {
+export type QueryContainersByIDsExportArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>,
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>
-};
+|};
 
 
-export type QueryWarehouseArgs = {
+export type QueryWarehouseArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryWarehousesArgs = {
+export type QueryWarehousesArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?WarehouseFilterInput,
   sortBy?: ?WarehouseSortInput
-};
+|};
 
 
-export type QueryWarehousesByIDsArgs = {
+export type QueryWarehousesByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryTagArgs = {
+export type QueryTagArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryTagsArgs = {
+export type QueryTagsArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?TagFilterInput,
   sortBy?: ?TagSortInput
-};
+|};
 
 
-export type QueryTagExportArgs = {
+export type QueryTagExportArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>
-};
+|};
 
 
-export type QueryTagsExportArgs = {
+export type QueryTagsExportArgs = {|
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>,
   filterBy?: ?TagFilterInput,
   sortBy?: ?TagSortInput
-};
+|};
 
 
-export type QueryTagsByIDsExportArgs = {
+export type QueryTagsByIDsExportArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>,
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>
-};
+|};
 
 
-export type QueryTaskArgs = {
+export type QueryTaskArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryTasksArgs = {
+export type QueryTasksArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?TaskFilterInput,
   sortBy?: ?TaskSortInput
-};
+|};
 
 
-export type QueryTasksByIDsArgs = {
+export type QueryTasksByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryTaskExportArgs = {
+export type QueryTaskExportArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>
-};
+|};
 
 
-export type QueryTasksExportArgs = {
+export type QueryTasksExportArgs = {|
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>,
   filterBy?: ?TaskFilterInput,
   sortBy?: ?TaskSortInput
-};
+|};
 
 
-export type QueryTasksByIDsExportArgs = {
+export type QueryTasksByIDsExportArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>,
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>
-};
+|};
 
 
-export type QueryTaskTemplateArgs = {
+export type QueryTaskTemplateArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryTaskTemplatesArgs = {
+export type QueryTaskTemplatesArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?TaskTemplateFilterInput,
   sortBy?: ?TaskTemplateSortInput
-};
+|};
 
 
-export type QueryTaskTemplatesByIDsArgs = {
+export type QueryTaskTemplatesByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryProjectArgs = {
+export type QueryProjectArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryProjectsArgs = {
+export type QueryProjectsArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?ProjectFilterInput,
   sortBy?: ?ProjectSortInput
-};
+|};
 
 
-export type QueryProjectsByIDsArgs = {
+export type QueryProjectsByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryProjectExportArgs = {
+export type QueryProjectExportArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>
-};
+|};
 
 
-export type QueryProjectsExportArgs = {
+export type QueryProjectsExportArgs = {|
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>,
   filterBy?: ?ProjectFilterInput,
   sortBy?: ?ProjectSortInput
-};
+|};
 
 
-export type QueryProjectsByIDsExportArgs = {
+export type QueryProjectsByIDsExportArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>,
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>
-};
+|};
 
 
-export type QueryMilestoneArgs = {
+export type QueryMilestoneArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryMilestonesByIDsArgs = {
+export type QueryMilestonesByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryProjectTemplateArgs = {
+export type QueryProjectTemplateArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryProjectTemplatesArgs = {
+export type QueryProjectTemplatesArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?ProjectTemplateFilterInput,
   sortBy?: ?ProjectTemplateSortInput
-};
+|};
 
 
-export type QueryProjectTemplatesByIDsArgs = {
+export type QueryProjectTemplatesByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryMilestoneTemplateArgs = {
+export type QueryMilestoneTemplateArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryMilestoneTemplatesByIDsArgs = {
+export type QueryMilestoneTemplatesByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryFieldDefinitionArgs = {
+export type QueryFieldDefinitionArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryFieldDefinitionsArgs = {
+export type QueryFieldDefinitionsArgs = {|
   entityType: CustomizableEntityType
-};
+|};
 
 
-export type QueryMaskArgs = {
+export type QueryMaskArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryMasksArgs = {
+export type QueryMasksArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?MaskFilterInput,
   sortBy?: ?MaskSortInput
-};
+|};
 
 
-export type QueryMasksByIDsArgs = {
+export type QueryMasksByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryMaskEditArgs = {
+export type QueryMaskEditArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryMaskEditsArgs = {
+export type QueryMaskEditsArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?MaskEditFilterInput,
   sortBy?: ?MaskEditSortInput
-};
+|};
 
 
-export type QueryMaskEditsByIDsArgs = {
+export type QueryMaskEditsByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryIntegrationArgs = {
+export type QueryIntegrationArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryIntegrationsArgs = {
+export type QueryIntegrationsArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?IntegrationFilterInput,
   sortBy?: ?IntegrationSortInput
-};
+|};
 
 
-export type QueryIntegrationConfigurationArgs = {
+export type QueryIntegrationConfigurationArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryIntegrationConfigurationsArgs = {
+export type QueryIntegrationConfigurationsArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?IntegrationConfigurationFilterInput,
   sortBy?: ?IntegrationConfigurationSortInput
-};
+|};
 
 
-export type QueryIntegrationLinkArgs = {
+export type QueryIntegrationLinkArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryFileArgs = {
+export type QueryFileArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryFilesArgs = {
+export type QueryFilesArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?FileFilterInput,
   sortBy?: ?FileSortInput
-};
+|};
 
 
-export type QueryFilesByIDsArgs = {
+export type QueryFilesByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
-};
+|};
 
 
-export type QueryExportTemplatesArgs = {
+export type QueryExportTemplatesArgs = {|
   filterBy?: ?ExportTemplateFilterInput
-};
+|};
 
 
-export type QueryGenericExportArgs = {
+export type QueryGenericExportArgs = {|
   extension: $ElementType<Scalars, 'String'>,
   columns: Array<$ElementType<Scalars, 'String'>>,
   rows: Array<Array<?$ElementType<Scalars, 'String'>>>
-};
+|};
 
 
-export type QueryRoleArgs = {
+export type QueryRoleArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type QueryRolesArgs = {
+export type QueryRolesArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>
-};
+|};
 
 
-export type QueryOrderShipmentTableArgs = {
+export type QueryOrderShipmentTableArgs = {|
   entities: Array<EntityInput>
-};
+|};
 
 
-export type QueryFocusesArgs = {
+export type QueryFocusesArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   entities: Array<EntityInput>
-};
+|};
 
-export type Reference = {
+export type Reference = {|
    __typename?: 'Reference',
   id: $ElementType<Scalars, 'ID'>,
   type: $ElementType<Scalars, 'String'>,
   service: $ElementType<Scalars, 'String'>,
-};
+|};
 
-export type RequestResetPasswordInput = {
+export type RequestResetPasswordInput = {|
   email?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
-export type ResetPasswordInput = {
+export type ResetPasswordInput = {|
   token: $ElementType<Scalars, 'String'>,
   password: $ElementType<Scalars, 'String'>,
-};
+|};
 
 export const ResizePresetValues = Object.freeze({
   /** Original */
@@ -22959,51 +23157,58 @@ export const ResizePresetValues = Object.freeze({
 
 export type ResizePreset = $Values<typeof ResizePresetValues>;
 
-export type Role = Model & Memorizable & {
-   __typename?: 'Role',
-  name: $ElementType<Scalars, 'String'>,
-  parents: Array<RolePayload>,
-  permissions: Array<$ElementType<Scalars, 'String'>>,
-  flattenPermissions: Array<$ElementType<Scalars, 'String'>>,
-  partnership?: ?PartnershipPayload,
-  ownedBy?: ?OrganizationPayload,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  memo?: ?$ElementType<Scalars, 'String'>,
-};
+export type Role = {|
+  ...Model,
+  ...Memorizable,
+  ...{
+     __typename?: 'Role',
+    name: $ElementType<Scalars, 'String'>,
+    parents: Array<RolePayload>,
+    permissions: Array<$ElementType<Scalars, 'String'>>,
+    flattenPermissions: Array<$ElementType<Scalars, 'String'>>,
+    partnership?: ?PartnershipPayload,
+    ownedBy?: ?OrganizationPayload,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    memo?: ?$ElementType<Scalars, 'String'>,
+  }
+|};
 
-export type RoleCreateInput = {
+export type RoleCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   parentIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   permissions: Array<$ElementType<Scalars, 'String'>>,
   partnershipId?: ?$ElementType<Scalars, 'ID'>,
   memo?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
 export type RolePayload = Role | BadRequest | Forbidden | NotFound;
 
-export type RolePayloadPaginatedList = Paginated & {
-   __typename?: 'RolePayloadPaginatedList',
-  nodes: Array<RolePayload>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type RolePayloadPaginatedList = {|
+  ...Paginated,
+  ...{
+     __typename?: 'RolePayloadPaginatedList',
+    nodes: Array<RolePayload>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type RoleUpdateInput = {
+export type RoleUpdateInput = {|
   name?: ?$ElementType<Scalars, 'String'>,
   parentIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   permissions?: ?Array<$ElementType<Scalars, 'String'>>,
   partnershipId?: ?$ElementType<Scalars, 'ID'>,
   memo?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
 export const SeaportValues = Object.freeze({
   /** Abu al Bukhoosh */
@@ -60029,65 +60234,74 @@ export const SeaportValues = Object.freeze({
 
 export type Seaport = $Values<typeof SeaportValues>;
 
-export type Shipment = Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable & {
-   __typename?: 'Shipment',
-  archived: $ElementType<Scalars, 'Boolean'>,
-  importer: OrganizationPayload,
-  exporter?: ?OrganizationPayload,
-  no: $ElementType<Scalars, 'String'>,
-  blNo?: ?$ElementType<Scalars, 'String'>,
-  blDate?: ?$ElementType<Scalars, 'DateTime'>,
-  booked?: ?$ElementType<Scalars, 'Boolean'>,
-  bookingNo?: ?$ElementType<Scalars, 'String'>,
-  bookingDate?: ?$ElementType<Scalars, 'DateTime'>,
-  invoiceNo?: ?$ElementType<Scalars, 'String'>,
-  contractNo?: ?$ElementType<Scalars, 'String'>,
-  incoterm?: ?Incoterm,
-  loadType?: ?LoadType,
-  transportType?: ?TransportType,
-  carrier?: ?$ElementType<Scalars, 'String'>,
-  cargoReady: TimelineDatePayload,
-  voyages: Array<VoyagePayload>,
-  containerGroups: Array<ContainerGroupPayload>,
-  forwarders: Array<OrganizationPayload>,
-  totalVolume: MetricValue,
-  totalVolumeOverride?: ?MetricValue,
-  totalVolumeOverriding: $ElementType<Scalars, 'Boolean'>,
-  totalVolumeDisplayMetric: $ElementType<Scalars, 'String'>,
-  totalWeight: MetricValue,
-  totalWeightOverride?: ?MetricValue,
-  totalWeightOverriding: $ElementType<Scalars, 'Boolean'>,
-  totalWeightDisplayMetric: $ElementType<Scalars, 'String'>,
-  totalPackageQuantity: $ElementType<Scalars, 'Float'>,
-  totalPackageQuantityOverride?: ?$ElementType<Scalars, 'Float'>,
-  totalPackageQuantityOverriding: $ElementType<Scalars, 'Boolean'>,
-  orderCount: $ElementType<Scalars, 'Int'>,
-  orderItemCount: $ElementType<Scalars, 'Int'>,
-  batchCount: $ElementType<Scalars, 'Int'>,
-  containerCount: $ElementType<Scalars, 'Int'>,
-  containerTypeCounts: Array<ContainerTypeCount>,
-  batches: Array<BatchPayload>,
-  batchesWithoutContainer: Array<BatchPayload>,
-  integrationLinks: Array<IntegrationLinkPayload>,
-  containers: Array<ContainerPayload>,
-  timeline: Timeline,
-  todo: Todo,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  tags: Array<TagPayload>,
-  inCharges: Array<UserPayload>,
-  files: Array<FilePayload>,
-  customFields: CustomFields,
-  memo?: ?$ElementType<Scalars, 'String'>,
-};
+export type Shipment = {|
+  ...Model,
+  ...Owned,
+  ...Tagged,
+  ...Supervised,
+  ...Documented,
+  ...Customizable,
+  ...Memorizable,
+  ...{
+     __typename?: 'Shipment',
+    archived: $ElementType<Scalars, 'Boolean'>,
+    importer: OrganizationPayload,
+    exporter?: ?OrganizationPayload,
+    no: $ElementType<Scalars, 'String'>,
+    blNo?: ?$ElementType<Scalars, 'String'>,
+    blDate?: ?$ElementType<Scalars, 'DateTime'>,
+    booked?: ?$ElementType<Scalars, 'Boolean'>,
+    bookingNo?: ?$ElementType<Scalars, 'String'>,
+    bookingDate?: ?$ElementType<Scalars, 'DateTime'>,
+    invoiceNo?: ?$ElementType<Scalars, 'String'>,
+    contractNo?: ?$ElementType<Scalars, 'String'>,
+    incoterm?: ?Incoterm,
+    loadType?: ?LoadType,
+    transportType?: ?TransportType,
+    carrier?: ?$ElementType<Scalars, 'String'>,
+    cargoReady: TimelineDatePayload,
+    voyages: Array<VoyagePayload>,
+    containerGroups: Array<ContainerGroupPayload>,
+    forwarders: Array<OrganizationPayload>,
+    totalVolume: MetricValue,
+    totalVolumeOverride?: ?MetricValue,
+    totalVolumeOverriding: $ElementType<Scalars, 'Boolean'>,
+    totalVolumeDisplayMetric: $ElementType<Scalars, 'String'>,
+    totalWeight: MetricValue,
+    totalWeightOverride?: ?MetricValue,
+    totalWeightOverriding: $ElementType<Scalars, 'Boolean'>,
+    totalWeightDisplayMetric: $ElementType<Scalars, 'String'>,
+    totalPackageQuantity: $ElementType<Scalars, 'Float'>,
+    totalPackageQuantityOverride?: ?$ElementType<Scalars, 'Float'>,
+    totalPackageQuantityOverriding: $ElementType<Scalars, 'Boolean'>,
+    orderCount: $ElementType<Scalars, 'Int'>,
+    orderItemCount: $ElementType<Scalars, 'Int'>,
+    batchCount: $ElementType<Scalars, 'Int'>,
+    containerCount: $ElementType<Scalars, 'Int'>,
+    containerTypeCounts: Array<ContainerTypeCount>,
+    batches: Array<BatchPayload>,
+    batchesWithoutContainer: Array<BatchPayload>,
+    integrationLinks: Array<IntegrationLinkPayload>,
+    containers: Array<ContainerPayload>,
+    timeline: Timeline,
+    todo: Todo,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    tags: Array<TagPayload>,
+    inCharges: Array<UserPayload>,
+    files: Array<FilePayload>,
+    customFields: CustomFields,
+    memo?: ?$ElementType<Scalars, 'String'>,
+  }
+|};
 
-export type ShipmentBatchInput = {
+export type ShipmentBatchInput = {|
   no?: ?$ElementType<Scalars, 'String'>,
   quantity?: ?$ElementType<Scalars, 'Float'>,
   producedAt?: ?$ElementType<Scalars, 'DateTime'>,
@@ -60109,9 +60323,9 @@ export type ShipmentBatchInput = {
   todo?: ?TodoInput,
   id?: ?$ElementType<Scalars, 'ID'>,
   orderItemId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type ShipmentContainerCreateInput = {
+export type ShipmentContainerCreateInput = {|
   no: $ElementType<Scalars, 'String'>,
   warehouseId?: ?$ElementType<Scalars, 'ID'>,
   departureDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -60135,9 +60349,9 @@ export type ShipmentContainerCreateInput = {
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   todo?: ?TodoInput,
-};
+|};
 
-export type ShipmentContainerUpdateInput = {
+export type ShipmentContainerUpdateInput = {|
   no?: ?$ElementType<Scalars, 'String'>,
   warehouseId?: ?$ElementType<Scalars, 'ID'>,
   departureDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -60162,9 +60376,9 @@ export type ShipmentContainerUpdateInput = {
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   todo?: ?TodoInput,
   id?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type ShipmentCreateInput = {
+export type ShipmentCreateInput = {|
   importerId: $ElementType<Scalars, 'ID'>,
   exporterId?: ?$ElementType<Scalars, 'ID'>,
   no: $ElementType<Scalars, 'String'>,
@@ -60199,9 +60413,9 @@ export type ShipmentCreateInput = {
   totalPackageQuantityOverriding?: ?$ElementType<Scalars, 'Boolean'>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
-};
+|};
 
-export type ShipmentFilterInput = {
+export type ShipmentFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
@@ -60229,22 +60443,25 @@ export type ShipmentFilterInput = {
   productId?: ?$ElementType<Scalars, 'ID'>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
   milestoneRelatedId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
 export type ShipmentPayload = Shipment | BadRequest | Forbidden | NotFound;
 
-export type ShipmentPayloadPaginatedSearch = Paginated & {
-   __typename?: 'ShipmentPayloadPaginatedSearch',
-  nodes: Array<ShipmentPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type ShipmentPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'ShipmentPayloadPaginatedSearch',
+    nodes: Array<ShipmentPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type ShipmentSortInput = {
+export type ShipmentSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   no?: ?SortOrder,
@@ -60260,9 +60477,9 @@ export type ShipmentSortInput = {
   customClearance?: ?SortOrder,
   warehouseArrival?: ?SortOrder,
   deliveryReady?: ?SortOrder,
-};
+|};
 
-export type ShipmentUpdateInput = {
+export type ShipmentUpdateInput = {|
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   importerId?: ?$ElementType<Scalars, 'ID'>,
   exporterId?: ?$ElementType<Scalars, 'ID'>,
@@ -60298,34 +60515,34 @@ export type ShipmentUpdateInput = {
   totalPackageQuantityOverriding?: ?$ElementType<Scalars, 'Boolean'>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
-};
+|};
 
-export type ShipmentUpdateWrapperInput = {
+export type ShipmentUpdateWrapperInput = {|
   id: $ElementType<Scalars, 'ID'>,
   input: ShipmentUpdateInput,
-};
+|};
 
-export type Size = {
+export type Size = {|
    __typename?: 'Size',
   length: MetricValue,
   width: MetricValue,
   height: MetricValue,
-};
+|};
 
-export type SizeInput = {
+export type SizeInput = {|
   length: MetricValueInput,
   width: MetricValueInput,
   height: MetricValueInput,
-};
+|};
 
-export type SizeValue = {
+export type SizeValue = {|
    __typename?: 'SizeValue',
   size: Size,
-};
+|};
 
-export type Sortable = {
+export type Sortable = {|
   sort: $ElementType<Scalars, 'Int'>,
-};
+|};
 
 export const SortOrderValues = Object.freeze({
   Ascending: 'ASCENDING', 
@@ -60335,70 +60552,74 @@ export const SortOrderValues = Object.freeze({
 
 export type SortOrder = $Values<typeof SortOrderValues>;
 
-export type StringValue = {
+export type StringValue = {|
    __typename?: 'StringValue',
   string: $ElementType<Scalars, 'String'>,
-};
+|};
 
-export type Subscription = {
+export type Subscription = {|
    __typename?: 'Subscription',
   notificationNew: Notification,
   importEvent: ImportEvent,
   exportReady: File,
   entityEvent: EntityEvent,
   focusEvent: FocusEvent,
-};
+|};
 
 
-export type SubscriptionImportEventArgs = {
+export type SubscriptionImportEventArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type SubscriptionExportReadyArgs = {
+export type SubscriptionExportReadyArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type SubscriptionEntityEventArgs = {
+export type SubscriptionEntityEventArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type SubscriptionFocusEventArgs = {
+export type SubscriptionFocusEventArgs = {|
   id: $ElementType<Scalars, 'ID'>
-};
+|};
 
-export type SubscriptionInput = {
+export type SubscriptionInput = {|
   entities: Array<EntityInput>,
-};
+|};
 
-export type Supervised = {
+export type Supervised = {|
   inCharges: Array<UserPayload>,
-};
+|};
 
-export type Tag = Model & Owned & {
-   __typename?: 'Tag',
-  name: $ElementType<Scalars, 'String'>,
-  description?: ?$ElementType<Scalars, 'String'>,
-  color: $ElementType<Scalars, 'String'>,
-  entityTypes: Array<TagEntityType>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-};
+export type Tag = {|
+  ...Model,
+  ...Owned,
+  ...{
+     __typename?: 'Tag',
+    name: $ElementType<Scalars, 'String'>,
+    description?: ?$ElementType<Scalars, 'String'>,
+    color: $ElementType<Scalars, 'String'>,
+    entityTypes: Array<TagEntityType>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+  }
+|};
 
-export type TagCreateInput = {
+export type TagCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   color: $ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   entityTypes: Array<TagEntityType>,
-};
+|};
 
 export const TagEntityTypeValues = Object.freeze({
   /** Product */
@@ -60424,86 +60645,96 @@ export const TagEntityTypeValues = Object.freeze({
 
 export type TagEntityType = $Values<typeof TagEntityTypeValues>;
 
-export type TagFilterInput = {
+export type TagFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   entityTypes?: ?Array<TagEntityType>,
-};
+|};
 
-export type Tagged = {
+export type Tagged = {|
   tags: Array<TagPayload>,
-};
+|};
 
 export type TagPayload = Tag | BadRequest | Forbidden | NotFound;
 
-export type TagPayloadPaginatedSearch = Paginated & {
-   __typename?: 'TagPayloadPaginatedSearch',
-  nodes: Array<TagPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type TagPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'TagPayloadPaginatedSearch',
+    nodes: Array<TagPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type TagSortInput = {
+export type TagSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   name?: ?SortOrder,
-};
+|};
 
-export type TagUpdateInput = {
+export type TagUpdateInput = {|
   name?: ?$ElementType<Scalars, 'ID'>,
   color?: ?$ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   entityTypes?: ?Array<TagEntityType>,
-};
+|};
 
-export type Task = Model & Owned & Sortable & Memorizable & Tagged & {
-   __typename?: 'Task',
-  name: $ElementType<Scalars, 'String'>,
-  approvable: $ElementType<Scalars, 'Boolean'>,
-  entity?: ?EntityPayload,
-  taskTemplate?: ?TaskTemplatePayload,
-  milestone?: ?MilestonePayload,
-  description?: ?$ElementType<Scalars, 'String'>,
-  assignedTo: Array<UserPayload>,
-  approvers: Array<UserPayload>,
-  startDate?: ?$ElementType<Scalars, 'DateTime'>,
-  startDateInterval?: ?Interval,
-  startDateBinding?: ?TaskDateBinding,
-  dueDate?: ?$ElementType<Scalars, 'DateTime'>,
-  dueDateInterval?: ?Interval,
-  dueDateBinding?: ?TaskDateBinding,
-  inProgressBy?: ?UserPayload,
-  inProgressAt?: ?$ElementType<Scalars, 'DateTime'>,
-  completedBy?: ?UserPayload,
-  completedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  rejectedBy?: ?UserPayload,
-  rejectedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  approvedBy?: ?UserPayload,
-  approvedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  skippedBy?: ?UserPayload,
-  skippedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  milestoneSort: $ElementType<Scalars, 'Int'>,
-  timeline: Timeline,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  sort: $ElementType<Scalars, 'Int'>,
-  memo?: ?$ElementType<Scalars, 'String'>,
-  tags: Array<TagPayload>,
-};
+export type Task = {|
+  ...Model,
+  ...Owned,
+  ...Sortable,
+  ...Memorizable,
+  ...Tagged,
+  ...{
+     __typename?: 'Task',
+    name: $ElementType<Scalars, 'String'>,
+    approvable: $ElementType<Scalars, 'Boolean'>,
+    entity?: ?EntityPayload,
+    taskTemplate?: ?TaskTemplatePayload,
+    milestone?: ?MilestonePayload,
+    description?: ?$ElementType<Scalars, 'String'>,
+    assignedTo: Array<UserPayload>,
+    approvers: Array<UserPayload>,
+    startDate?: ?$ElementType<Scalars, 'DateTime'>,
+    startDateInterval?: ?Interval,
+    startDateBinding?: ?TaskDateBinding,
+    dueDate?: ?$ElementType<Scalars, 'DateTime'>,
+    dueDateInterval?: ?Interval,
+    dueDateBinding?: ?TaskDateBinding,
+    inProgressBy?: ?UserPayload,
+    inProgressAt?: ?$ElementType<Scalars, 'DateTime'>,
+    completedBy?: ?UserPayload,
+    completedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    rejectedBy?: ?UserPayload,
+    rejectedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    approvedBy?: ?UserPayload,
+    approvedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    skippedBy?: ?UserPayload,
+    skippedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    milestoneSort: $ElementType<Scalars, 'Int'>,
+    timeline: Timeline,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    sort: $ElementType<Scalars, 'Int'>,
+    memo?: ?$ElementType<Scalars, 'String'>,
+    tags: Array<TagPayload>,
+  }
+|};
 
-export type TaskCount = {
+export type TaskCount = {|
    __typename?: 'TaskCount',
   count: $ElementType<Scalars, 'Int'>,
   remain: $ElementType<Scalars, 'Int'>,
@@ -60513,9 +60744,9 @@ export type TaskCount = {
   approved: $ElementType<Scalars, 'Int'>,
   skipped: $ElementType<Scalars, 'Int'>,
   delayed: $ElementType<Scalars, 'Int'>,
-};
+|};
 
-export type TaskCreateInput = {
+export type TaskCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   approvable?: ?$ElementType<Scalars, 'Boolean'>,
   startDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -60542,7 +60773,7 @@ export type TaskCreateInput = {
   entity: EntityInput,
   taskTemplateId?: ?$ElementType<Scalars, 'ID'>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
 export const TaskDateBindingValues = Object.freeze({
   OrderIssuedAt: 'OrderIssuedAt', 
@@ -60574,7 +60805,7 @@ export const TaskDateBindingValues = Object.freeze({
 
 export type TaskDateBinding = $Values<typeof TaskDateBindingValues>;
 
-export type TaskFilterInput = {
+export type TaskFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
@@ -60585,52 +60816,59 @@ export type TaskFilterInput = {
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
   hasMilestone?: ?$ElementType<Scalars, 'Boolean'>,
   hasMilestoneExceptIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-};
+|};
 
 export type TaskPayload = Task | BadRequest | Forbidden | NotFound;
 
-export type TaskPayloadPaginatedSearch = Paginated & {
-   __typename?: 'TaskPayloadPaginatedSearch',
-  nodes: Array<TaskPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type TaskPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'TaskPayloadPaginatedSearch',
+    nodes: Array<TaskPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type TaskSortInput = {
+export type TaskSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   name?: ?SortOrder,
   startDate?: ?SortOrder,
   dueDate?: ?SortOrder,
   entity?: ?SortOrder,
-};
+|};
 
-export type TaskTemplate = Model & Owned & {
-   __typename?: 'TaskTemplate',
-  name: $ElementType<Scalars, 'String'>,
-  entityType: TaskTemplateEntityType,
-  description?: ?$ElementType<Scalars, 'String'>,
-  tasks: Array<TaskPayload>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-};
+export type TaskTemplate = {|
+  ...Model,
+  ...Owned,
+  ...{
+     __typename?: 'TaskTemplate',
+    name: $ElementType<Scalars, 'String'>,
+    entityType: TaskTemplateEntityType,
+    description?: ?$ElementType<Scalars, 'String'>,
+    tasks: Array<TaskPayload>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+  }
+|};
 
-export type TaskTemplateCreateInput = {
+export type TaskTemplateCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   entityType: TaskTemplateEntityType,
   description?: ?$ElementType<Scalars, 'String'>,
   tasks?: ?Array<TaskTemplateTaskCreateInput>,
-};
+|};
 
 export const TaskTemplateEntityTypeValues = Object.freeze({
   /** Product */
@@ -60652,34 +60890,37 @@ export const TaskTemplateEntityTypeValues = Object.freeze({
 
 export type TaskTemplateEntityType = $Values<typeof TaskTemplateEntityTypeValues>;
 
-export type TaskTemplateFilterInput = {
+export type TaskTemplateFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   entityTypes?: ?Array<TaskTemplateEntityType>,
-};
+|};
 
 export type TaskTemplatePayload = TaskTemplate | BadRequest | Forbidden | NotFound;
 
-export type TaskTemplatePayloadPaginatedSearch = Paginated & {
-   __typename?: 'TaskTemplatePayloadPaginatedSearch',
-  nodes: Array<TaskTemplatePayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type TaskTemplatePayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'TaskTemplatePayloadPaginatedSearch',
+    nodes: Array<TaskTemplatePayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type TaskTemplateSortInput = {
+export type TaskTemplateSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   name?: ?SortOrder,
-};
+|};
 
-export type TaskTemplateTaskCreateInput = {
+export type TaskTemplateTaskCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   approvable?: ?$ElementType<Scalars, 'Boolean'>,
   startDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -60703,9 +60944,9 @@ export type TaskTemplateTaskCreateInput = {
   memo?: ?$ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-};
+|};
 
-export type TaskTemplateTaskUpdateInput = {
+export type TaskTemplateTaskUpdateInput = {|
   name?: ?$ElementType<Scalars, 'String'>,
   approvable?: ?$ElementType<Scalars, 'Boolean'>,
   startDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -60730,16 +60971,16 @@ export type TaskTemplateTaskUpdateInput = {
   description?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   id?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type TaskTemplateUpdateInput = {
+export type TaskTemplateUpdateInput = {|
   name?: ?$ElementType<Scalars, 'ID'>,
   entityType?: ?TaskTemplateEntityType,
   description?: ?$ElementType<Scalars, 'String'>,
   tasks?: ?Array<TaskTemplateTaskUpdateInput>,
-};
+|};
 
-export type TaskUpdateInput = {
+export type TaskUpdateInput = {|
   name?: ?$ElementType<Scalars, 'String'>,
   approvable?: ?$ElementType<Scalars, 'Boolean'>,
   startDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -60766,78 +61007,89 @@ export type TaskUpdateInput = {
   entity?: ?EntityInput,
   taskTemplateId?: ?$ElementType<Scalars, 'ID'>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type TaskUpdateWrapperInput = {
+export type TaskUpdateWrapperInput = {|
   id: $ElementType<Scalars, 'ID'>,
   input: TaskUpdateInput,
-};
+|};
 
-export type Timeline = {
+export type Timeline = {|
    __typename?: 'Timeline',
   unreadCount: $ElementType<Scalars, 'Int'>,
   entries: EntryPaginatedList,
-};
+|};
 
 
-export type TimelineEntriesArgs = {
+export type TimelineEntriesArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>
-};
+|};
 
-export type TimelineDate = Model & Owned & Memorizable & {
-   __typename?: 'TimelineDate',
-  date?: ?$ElementType<Scalars, 'DateTime'>,
-  latestDate?: ?$ElementType<Scalars, 'DateTime'>,
-  latestReason?: ?TimelineDateRevisionType,
-  assignedTo: Array<UserPayload>,
-  approvedBy?: ?UserPayload,
-  approvedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  timelineDateRevisions: Array<TimelineDateRevisionPayload>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  memo?: ?$ElementType<Scalars, 'String'>,
-};
+export type TimelineDate = {|
+  ...Model,
+  ...Owned,
+  ...Memorizable,
+  ...{
+     __typename?: 'TimelineDate',
+    date?: ?$ElementType<Scalars, 'DateTime'>,
+    latestDate?: ?$ElementType<Scalars, 'DateTime'>,
+    latestReason?: ?TimelineDateRevisionType,
+    assignedTo: Array<UserPayload>,
+    approvedBy?: ?UserPayload,
+    approvedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    timelineDateRevisions: Array<TimelineDateRevisionPayload>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    memo?: ?$ElementType<Scalars, 'String'>,
+  }
+|};
 
-export type TimelineDateNestedInput = {
+export type TimelineDateNestedInput = {|
   date?: ?$ElementType<Scalars, 'DateTime'>,
   assignedToIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   approvedById?: ?$ElementType<Scalars, 'ID'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   timelineDateRevisions?: ?Array<TimelineDateRevisionInput>,
-};
+|};
 
 export type TimelineDatePayload = TimelineDate | BadRequest | Forbidden | NotFound;
 
-export type TimelineDateRevision = Model & Owned & Sortable & Memorizable & {
-   __typename?: 'TimelineDateRevision',
-  date: $ElementType<Scalars, 'DateTime'>,
-  type: TimelineDateRevisionType,
-  timelineDate: TimelineDatePayload,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  sort: $ElementType<Scalars, 'Int'>,
-  memo?: ?$ElementType<Scalars, 'String'>,
-};
+export type TimelineDateRevision = {|
+  ...Model,
+  ...Owned,
+  ...Sortable,
+  ...Memorizable,
+  ...{
+     __typename?: 'TimelineDateRevision',
+    date: $ElementType<Scalars, 'DateTime'>,
+    type: TimelineDateRevisionType,
+    timelineDate: TimelineDatePayload,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    sort: $ElementType<Scalars, 'Int'>,
+    memo?: ?$ElementType<Scalars, 'String'>,
+  }
+|};
 
-export type TimelineDateRevisionInput = {
+export type TimelineDateRevisionInput = {|
   id?: ?$ElementType<Scalars, 'ID'>,
   date?: ?$ElementType<Scalars, 'DateTime'>,
   type?: ?TimelineDateRevisionType,
   memo?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
 export type TimelineDateRevisionPayload = TimelineDateRevision | BadRequest | Forbidden | NotFound;
 
@@ -60853,7 +61105,7 @@ export const TimelineDateRevisionTypeValues = Object.freeze({
 
 export type TimelineDateRevisionType = $Values<typeof TimelineDateRevisionTypeValues>;
 
-export type Todo = {
+export type Todo = {|
    __typename?: 'Todo',
   taskCount: TaskCount,
   completedCount: $ElementType<Scalars, 'Int'>,
@@ -60861,14 +61113,14 @@ export type Todo = {
   remainingCount: $ElementType<Scalars, 'Int'>,
   tasks: Array<TaskPayload>,
   taskTemplate?: ?TaskTemplatePayload,
-};
+|};
 
-export type TodoInput = {
+export type TodoInput = {|
   tasks?: ?Array<TodoTaskInput>,
   taskTemplateId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type TodoTaskInput = {
+export type TodoTaskInput = {|
   name?: ?$ElementType<Scalars, 'String'>,
   approvable?: ?$ElementType<Scalars, 'Boolean'>,
   startDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -60895,12 +61147,12 @@ export type TodoTaskInput = {
   id?: ?$ElementType<Scalars, 'ID'>,
   taskTemplateId?: ?$ElementType<Scalars, 'ID'>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type Token = {
+export type Token = {|
    __typename?: 'Token',
   token: $ElementType<Scalars, 'String'>,
-};
+|};
 
 export type TokenPayload = Token | BadRequest | Forbidden | NotFound;
 
@@ -60915,74 +61167,82 @@ export const TransportTypeValues = Object.freeze({
 export type TransportType = $Values<typeof TransportTypeValues>;
 
 
-export type User = Model & Tagged & Memorizable & {
-   __typename?: 'User',
-  email: $ElementType<Scalars, 'String'>,
-  organization?: ?OrganizationPayload,
-  superAdmin: $ElementType<Scalars, 'Boolean'>,
-  roles: Array<RolePayload>,
-  role: $ElementType<Scalars, 'String'>,
-  disabled: $ElementType<Scalars, 'Boolean'>,
-  firstName: $ElementType<Scalars, 'String'>,
-  lastName: $ElementType<Scalars, 'String'>,
-  firstName2?: ?$ElementType<Scalars, 'String'>,
-  lastName2?: ?$ElementType<Scalars, 'String'>,
-  avatar?: ?FilePayload,
-  language: Language,
-  timezone: $ElementType<Scalars, 'String'>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  tags: Array<TagPayload>,
-  memo?: ?$ElementType<Scalars, 'String'>,
-};
+export type User = {|
+  ...Model,
+  ...Tagged,
+  ...Memorizable,
+  ...{
+     __typename?: 'User',
+    email: $ElementType<Scalars, 'String'>,
+    organization?: ?OrganizationPayload,
+    superAdmin: $ElementType<Scalars, 'Boolean'>,
+    roles: Array<RolePayload>,
+    role: $ElementType<Scalars, 'String'>,
+    disabled: $ElementType<Scalars, 'Boolean'>,
+    firstName: $ElementType<Scalars, 'String'>,
+    lastName: $ElementType<Scalars, 'String'>,
+    firstName2?: ?$ElementType<Scalars, 'String'>,
+    lastName2?: ?$ElementType<Scalars, 'String'>,
+    avatar?: ?FilePayload,
+    language: Language,
+    timezone: $ElementType<Scalars, 'String'>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    tags: Array<TagPayload>,
+    memo?: ?$ElementType<Scalars, 'String'>,
+  }
+|};
 
-export type UserFilterInput = {
+export type UserFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   organizationId?: ?$ElementType<Scalars, 'ID'>,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-};
+|};
 
 export type UserPayload = User | BadRequest | Forbidden | NotFound;
 
-export type UserPayloadPaginatedSearch = Paginated & {
-   __typename?: 'UserPayloadPaginatedSearch',
-  nodes: Array<UserPayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type UserPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'UserPayloadPaginatedSearch',
+    nodes: Array<UserPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type UserRoleInput = {
+export type UserRoleInput = {|
   roleId: $ElementType<Scalars, 'ID'>,
-};
+|};
 
-export type UserRoles = {
+export type UserRoles = {|
    __typename?: 'UserRoles',
   roles: Array<RolePayload>,
-};
+|};
 
 export type UserRolesPayload = UserRoles | BadRequest | Forbidden | NotFound;
 
-export type UserSortInput = {
+export type UserSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
   firstName?: ?SortOrder,
   lastName?: ?SortOrder,
   fullName?: ?SortOrder,
-};
+|};
 
-export type UserUpdateInput = {
+export type UserUpdateInput = {|
   firstName?: ?$ElementType<Scalars, 'String'>,
   lastName?: ?$ElementType<Scalars, 'String'>,
   firstName2?: ?$ElementType<Scalars, 'String'>,
@@ -60998,23 +61258,23 @@ export type UserUpdateInput = {
   organizationId?: ?$ElementType<Scalars, 'ID'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-};
+|};
 
 export type Value = StringValue | IntValue | FloatValue | BooleanValue | DateTimeValue | IntervalValue | DurationValue | MetricValueValue | SizeValue | EntityValue | Values;
 
-export type ValueInput = {
+export type ValueInput = {|
   string?: ?$ElementType<Scalars, 'String'>,
   int?: ?$ElementType<Scalars, 'Int'>,
   float?: ?$ElementType<Scalars, 'Float'>,
   boolean?: ?$ElementType<Scalars, 'Boolean'>,
-};
+|};
 
-export type Values = {
+export type Values = {|
    __typename?: 'Values',
   values: Array<?Value>,
-};
+|};
 
-export type Viewer = {
+export type Viewer = {|
    __typename?: 'Viewer',
   user: UserPayload,
   permissions: Array<$ElementType<Scalars, 'String'>>,
@@ -61023,56 +61283,61 @@ export type Viewer = {
   notificationUnread: $ElementType<Scalars, 'Int'>,
   notificationUnseen: $ElementType<Scalars, 'Int'>,
   token?: ?$ElementType<Scalars, 'String'>,
-};
+|};
 
 
-export type ViewerPermissionsForOrganizationArgs = {
+export type ViewerPermissionsForOrganizationArgs = {|
   organizationId: $ElementType<Scalars, 'ID'>
-};
+|};
 
 
-export type ViewerNotificationsArgs = {
+export type ViewerNotificationsArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>
-};
+|};
 
-export type Violation = {
+export type Violation = {|
    __typename?: 'Violation',
   message: $ElementType<Scalars, 'String'>,
   error: $ElementType<Scalars, 'String'>,
   code: $ElementType<Scalars, 'String'>,
   path: $ElementType<Scalars, 'String'>,
   parameters: Array<ViolationParameter>,
-};
+|};
 
-export type ViolationParameter = {
+export type ViolationParameter = {|
    __typename?: 'ViolationParameter',
   key: $ElementType<Scalars, 'String'>,
   value: $ElementType<Scalars, 'String'>,
-};
+|};
 
 
-export type Voyage = Model & Owned & Sortable & {
-   __typename?: 'Voyage',
-  vesselName?: ?$ElementType<Scalars, 'String'>,
-  vesselCode?: ?$ElementType<Scalars, 'String'>,
-  departurePort?: ?Port,
-  departure: TimelineDatePayload,
-  arrivalPort?: ?Port,
-  arrival: TimelineDatePayload,
-  shipment: ShipmentPayload,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  sort: $ElementType<Scalars, 'Int'>,
-};
+export type Voyage = {|
+  ...Model,
+  ...Owned,
+  ...Sortable,
+  ...{
+     __typename?: 'Voyage',
+    vesselName?: ?$ElementType<Scalars, 'String'>,
+    vesselCode?: ?$ElementType<Scalars, 'String'>,
+    departurePort?: ?Port,
+    departure: TimelineDatePayload,
+    arrivalPort?: ?Port,
+    arrival: TimelineDatePayload,
+    shipment: ShipmentPayload,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    sort: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type VoyageNestedInput = {
+export type VoyageNestedInput = {|
   id?: ?$ElementType<Scalars, 'ID'>,
   vesselName?: ?$ElementType<Scalars, 'String'>,
   vesselCode?: ?$ElementType<Scalars, 'String'>,
@@ -61080,35 +61345,41 @@ export type VoyageNestedInput = {
   arrivalPort?: ?PortInput,
   departure?: ?TimelineDateNestedInput,
   arrival?: ?TimelineDateNestedInput,
-};
+|};
 
 export type VoyagePayload = Voyage | BadRequest | Forbidden | NotFound;
 
-export type Warehouse = Model & Owned & Supervised & Customizable & {
-   __typename?: 'Warehouse',
-  archived: $ElementType<Scalars, 'Boolean'>,
-  name: $ElementType<Scalars, 'String'>,
-  no?: ?$ElementType<Scalars, 'String'>,
-  surface?: ?MetricValue,
-  street?: ?$ElementType<Scalars, 'String'>,
-  locality?: ?$ElementType<Scalars, 'String'>,
-  region?: ?$ElementType<Scalars, 'String'>,
-  postalCode?: ?$ElementType<Scalars, 'String'>,
-  country?: ?Country,
-  organizations: Array<OrganizationPayload>,
-  id: $ElementType<Scalars, 'ID'>,
-  createdAt: $ElementType<Scalars, 'DateTime'>,
-  updatedAt: $ElementType<Scalars, 'DateTime'>,
-  deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  createdBy?: ?UserPayload,
-  updatedBy?: ?UserPayload,
-  deletedBy?: ?UserPayload,
-  ownedBy: OrganizationPayload,
-  inCharges: Array<UserPayload>,
-  customFields: CustomFields,
-};
+export type Warehouse = {|
+  ...Model,
+  ...Owned,
+  ...Supervised,
+  ...Customizable,
+  ...{
+     __typename?: 'Warehouse',
+    archived: $ElementType<Scalars, 'Boolean'>,
+    name: $ElementType<Scalars, 'String'>,
+    no?: ?$ElementType<Scalars, 'String'>,
+    surface?: ?MetricValue,
+    street?: ?$ElementType<Scalars, 'String'>,
+    locality?: ?$ElementType<Scalars, 'String'>,
+    region?: ?$ElementType<Scalars, 'String'>,
+    postalCode?: ?$ElementType<Scalars, 'String'>,
+    country?: ?Country,
+    organizations: Array<OrganizationPayload>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    inCharges: Array<UserPayload>,
+    customFields: CustomFields,
+  }
+|};
 
-export type WarehouseCreateInput = {
+export type WarehouseCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   no?: ?$ElementType<Scalars, 'String'>,
   surface?: ?MetricValueInput,
@@ -61120,35 +61391,38 @@ export type WarehouseCreateInput = {
   customFields?: ?CustomFieldsInput,
   inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-};
+|};
 
-export type WarehouseFilterInput = {
+export type WarehouseFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
-};
+|};
 
 export type WarehousePayload = Warehouse | BadRequest | Forbidden | NotFound;
 
-export type WarehousePayloadPaginatedSearch = Paginated & {
-   __typename?: 'WarehousePayloadPaginatedSearch',
-  nodes: Array<WarehousePayload>,
-  hits: Array<Hit>,
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>,
-  totalPage: $ElementType<Scalars, 'Int'>,
-  count: $ElementType<Scalars, 'Int'>,
-  totalCount: $ElementType<Scalars, 'Int'>,
-};
+export type WarehousePayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{
+     __typename?: 'WarehousePayloadPaginatedSearch',
+    nodes: Array<WarehousePayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  }
+|};
 
-export type WarehouseSortInput = {
+export type WarehouseSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
-};
+|};
 
-export type WarehouseUpdateInput = {
+export type WarehouseUpdateInput = {|
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   name?: ?$ElementType<Scalars, 'String'>,
   no?: ?$ElementType<Scalars, 'String'>,
@@ -61161,780 +61435,918 @@ export type WarehouseUpdateInput = {
   customFields?: ?CustomFieldsInput,
   inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-};
+|};
 
-export type WarehouseUpdateWrapperInput = {
+export type WarehouseUpdateWrapperInput = {|
   id: $ElementType<Scalars, 'ID'>,
   input: WarehouseUpdateInput,
-};
+|};
+
 type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
 
-export type BatchFormFragmentFragment = (
-  { __typename?: 'Batch' }
-  & $Pick<Batch, { id: *, sort: *, shipmentSort: *, archived: *, autoCalculatePackageQuantity: *, autoCalculatePackageVolume: *, updatedAt: *, memo: *, no: *, quantity: *, latestQuantity: *, producedAt: *, deliveredAt: *, desiredAt: *, expiredAt: *, packageName: *, packageCapacity: *, packageQuantity: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-  , batchQuantityRevisions: Array<(
-    { __typename?: 'BatchQuantityRevision' }
-    & $Pick<BatchQuantityRevision, { id: *, sort: *, updatedAt: *, quantity: *, type: *, memo: * }>
-    & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & UserAvatarFragmentFragment
-     }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, totalVolume: { __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-  , todo: (
-    { __typename?: 'Todo' }
-    & { taskCount: { __typename?: 'TaskCount' }
-      & TaskCountFragmentFragment
-    , tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskWithoutParentInfoFragmentFragment
-    >, taskTemplate: ?({ __typename?: 'TaskTemplate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskTemplateCardFragmentFragment
-     }
-  ), customFields: { __typename?: 'CustomFields' }
-    & CustomFieldsFragmentFragment
-  , packageGrossWeight: ?{ __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-  , packageVolume: ?{ __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-  , packageSize: ?{ __typename?: 'Size' }
-    & SizeFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, orderItem: ({ __typename?: 'OrderItem' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ItemInBatchFormFragmentFragment
-  , shipment: ?({ __typename?: 'Shipment' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ShipmentCardFragmentFragment
-  , container: ?(
-    { __typename?: 'Container' }
-    & $Pick<Container, { id: *, no: *, warehouseArrivalAgreedDate: *, warehouseArrivalActualDate: * }>
-    & { representativeBatch: ?(
-      { __typename?: 'Batch' }
-      & $Pick<Batch, { id: * }>
-      & { orderItem: (
-        { __typename?: 'OrderItem' }
-        & $Pick<OrderItem, { id: * }>
-        & { productProvider: (
-          { __typename?: 'ProductProvider' }
-          & $Pick<ProductProvider, { id: * }>
-          & { product: (
-            { __typename?: 'Product' }
-            & $Pick<Product, { id: *, name: *, serial: * }>
-            & { files: Array<({ __typename?: 'File' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-              & ImageFragmentFragment
-            > }
-          ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-        ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-      ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, totalVolume: (
-      { __typename?: 'MetricValue' }
-      & $Pick<MetricValue, { value: *, metric: * }>
-    ), batches: Array<(
-      { __typename?: 'Batch' }
-      & $Pick<Batch, { id: * }>
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, warehouse: ?(
-      { __typename?: 'Warehouse' }
-      & $Pick<Warehouse, { id: *, name: * }>
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouseArrivalAgreedDateApprovedBy: ?(
-      { __typename?: 'User' }
-      & $Pick<User, { id: * }>
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouseArrivalActualDateApprovedBy: ?(
-      { __typename?: 'User' }
-      & $Pick<User, { id: * }>
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, shipment: (
-      { __typename?: 'Shipment' }
-      & $Pick<Shipment, { id: *, no: * }>
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TagFragmentFragment
-    > }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
+export type BatchFormFragmentFragment = ({
+    ...{ __typename?: 'Batch' },
+  ...$Pick<Batch, {| id: *, sort: *, shipmentSort: *, archived: *, autoCalculatePackageQuantity: *, autoCalculatePackageVolume: *, updatedAt: *, memo: *, no: *, quantity: *, latestQuantity: *, producedAt: *, deliveredAt: *, desiredAt: *, expiredAt: *, packageName: *, packageCapacity: *, packageQuantity: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, batchQuantityRevisions: Array<({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: *, sort: *, updatedAt: *, quantity: *, type: *, memo: * |}>,
+    ...{| updatedBy: ?({
+        ...{ __typename?: 'User' },
+      ...UserAvatarFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, totalVolume: ({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), todo: ({
+      ...{ __typename?: 'Todo' },
+    ...{| taskCount: ({
+        ...{ __typename?: 'TaskCount' },
+      ...TaskCountFragmentFragment
+    }), tasks: Array<({
+        ...{ __typename?: 'Task' },
+      ...TaskWithoutParentInfoFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, taskTemplate: ?({
+        ...{ __typename?: 'TaskTemplate' },
+      ...TaskTemplateCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }), customFields: ({
+      ...{ __typename?: 'CustomFields' },
+    ...CustomFieldsFragmentFragment
+  }), packageGrossWeight: ?({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), packageVolume: ?({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), packageSize: ?({
+      ...{ __typename?: 'Size' },
+    ...SizeFragmentFragment
+  }), tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, orderItem: ({
+      ...{ __typename?: 'OrderItem' },
+    ...ItemInBatchFormFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, shipment: ?({
+      ...{ __typename?: 'Shipment' },
+    ...ShipmentCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, container: ?({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: *, no: *, warehouseArrivalAgreedDate: *, warehouseArrivalActualDate: * |}>,
+    ...{| representativeBatch: ?({
+        ...{ __typename?: 'Batch' },
+      ...$Pick<Batch, {| id: * |}>,
+      ...{| orderItem: ({
+          ...{ __typename?: 'OrderItem' },
+        ...$Pick<OrderItem, {| id: * |}>,
+        ...{| productProvider: ({
+            ...{ __typename?: 'ProductProvider' },
+          ...$Pick<ProductProvider, {| id: * |}>,
+          ...{| product: ({
+              ...{ __typename?: 'Product' },
+            ...$Pick<Product, {| id: *, name: *, serial: * |}>,
+            ...{| files: Array<({
+                ...{ __typename?: 'File' },
+              ...ImageFragmentFragment
+            }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+          }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+        }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, totalVolume: ({
+        ...{ __typename?: 'MetricValue' },
+      ...$Pick<MetricValue, {| value: *, metric: * |}>
+    }), batches: Array<({
+        ...{ __typename?: 'Batch' },
+      ...$Pick<Batch, {| id: * |}>
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, warehouse: ?({
+        ...{ __typename?: 'Warehouse' },
+      ...$Pick<Warehouse, {| id: *, name: * |}>
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouseArrivalAgreedDateApprovedBy: ?({
+        ...{ __typename?: 'User' },
+      ...$Pick<User, {| id: * |}>
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouseArrivalActualDateApprovedBy: ?({
+        ...{ __typename?: 'User' },
+      ...$Pick<User, {| id: * |}>
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, shipment: ({
+        ...{ __typename?: 'Shipment' },
+      ...$Pick<Shipment, {| id: *, no: * |}>
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({
+        ...{ __typename?: 'Tag' },
+      ...TagFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
-export type BatchCardFragmentFragment = (
-  { __typename?: 'Batch' }
-  & $Pick<Batch, { id: *, no: *, archived: *, latestQuantity: *, deliveredAt: *, desiredAt: *, packageQuantity: * }>
-  & { todo: (
-    { __typename?: 'Todo' }
-    & { taskCount: { __typename?: 'TaskCount' }
-      & TaskCountFragmentFragment
-     }
-  ), packageVolume: ?{ __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, shipment: ?(
-    { __typename?: 'Shipment' }
-    & $Pick<Shipment, { id: *, no: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, container: ?(
-    { __typename?: 'Container' }
-    & $Pick<Container, { id: *, no: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, orderItem: (
-    { __typename?: 'OrderItem' }
-    & $Pick<OrderItem, { id: * }>
-    & { price: { __typename?: 'Price' }
-      & PriceFragmentFragment
-    , order: (
-      { __typename?: 'Order' }
-      & $Pick<Order, { id: *, poNo: *, currency: * }>
-      & { importer: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & PartnerNameFragmentFragment
-      , exporter: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & PartnerNameFragmentFragment
-       }
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, productProvider: (
-      { __typename?: 'ProductProvider' }
-      & $Pick<ProductProvider, { id: *, name: * }>
-      & { product: (
-        { __typename?: 'Product' }
-        & $Pick<Product, { id: *, name: *, serial: * }>
-        & { files: Array<({ __typename?: 'File' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-          & ImageFragmentFragment
-        > }
-      ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
+export type BatchCardFragmentFragment = ({
+    ...{ __typename?: 'Batch' },
+  ...$Pick<Batch, {| id: *, no: *, archived: *, latestQuantity: *, deliveredAt: *, desiredAt: *, packageQuantity: * |}>,
+  ...{| todo: ({
+      ...{ __typename?: 'Todo' },
+    ...{| taskCount: ({
+        ...{ __typename?: 'TaskCount' },
+      ...TaskCountFragmentFragment
+    }) |}
+  }), packageVolume: ?({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, shipment: ?({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: *, no: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, container: ?({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: *, no: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, orderItem: ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: * |}>,
+    ...{| price: ({
+        ...{ __typename?: 'Price' },
+      ...PriceFragmentFragment
+    }), order: ({
+        ...{ __typename?: 'Order' },
+      ...$Pick<Order, {| id: *, poNo: *, currency: * |}>,
+      ...{| importer: ({
+          ...{ __typename?: 'Organization' },
+        ...PartnerNameFragmentFragment
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, exporter: ({
+          ...{ __typename?: 'Organization' },
+        ...PartnerNameFragmentFragment
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, productProvider: ({
+        ...{ __typename?: 'ProductProvider' },
+      ...$Pick<ProductProvider, {| id: *, name: * |}>,
+      ...{| product: ({
+          ...{ __typename?: 'Product' },
+        ...$Pick<Product, {| id: *, name: *, serial: * |}>,
+        ...{| files: Array<({
+            ...{ __typename?: 'File' },
+          ...ImageFragmentFragment
+        }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
-export type BatchCardWithOwnedFragmentFragment = (
-  { __typename?: 'Batch' }
-  & { ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-   }
-)
-  & BatchCardFragmentFragment
-;
+export type BatchCardWithOwnedFragmentFragment = ({
+    ...{ __typename?: 'Batch' },
+  ...{| ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |},
+  ...BatchCardFragmentFragment
+});
 
-export type MetricFragmentFragment = (
-  { __typename?: 'MetricValue' }
-  & $Pick<MetricValue, { value: *, metric: * }>
-);
+export type MetricFragmentFragment = ({
+    ...{ __typename?: 'MetricValue' },
+  ...$Pick<MetricValue, {| value: *, metric: * |}>
+});
 
-export type SizeFragmentFragment = (
-  { __typename?: 'Size' }
-  & { length: { __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-  , width: { __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-  , height: { __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-   }
-);
+export type SizeFragmentFragment = ({
+    ...{ __typename?: 'Size' },
+  ...{| length: ({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), width: ({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), height: ({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }) |}
+});
 
-export type PriceFragmentFragment = (
-  { __typename?: 'Price' }
-  & $Pick<Price, { amount: *, currency: * }>
-);
+export type PriceFragmentFragment = ({
+    ...{ __typename?: 'Price' },
+  ...$Pick<Price, {| amount: *, currency: * |}>
+});
 
-export type TagFragmentFragment = (
-  { __typename?: 'Tag' }
-  & $Pick<Tag, { id: *, name: *, color: * }>
-);
+export type TagFragmentFragment = ({
+    ...{ __typename?: 'Tag' },
+  ...$Pick<Tag, {| id: *, name: *, color: * |}>
+});
 
-export type ImageFragmentFragment = (
-  { __typename?: 'File' }
-  & $Pick<File, { id: *, path: * }>
-  & { pathSmall: $ElementType<File, 'path'>, pathMedium: $ElementType<File, 'path'>, pathLarge: $ElementType<File, 'path'> }
-);
+export type ImageFragmentFragment = ({
+    ...{ __typename?: 'File' },
+  ...$Pick<File, {| id: *, path: * |}>,
+  ...{| pathSmall: $ElementType<File, 'path'>, pathMedium: $ElementType<File, 'path'>, pathLarge: $ElementType<File, 'path'> |}
+});
 
-export type DocumentFragmentFragment = (
-  { __typename?: 'File' }
-  & $Pick<File, { id: *, name: *, path: *, type: *, status: *, memo: * }>
-  & { entity: ?(
-    { __typename?: 'Product' }
-    & $Pick<Product, { id: *, name: * }>
-  ) | (
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: *, name: * }>
-    & { product: (
-      { __typename?: 'Product' }
-      & $Pick<Product, { id: *, name: * }>
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | (
-    { __typename?: 'ProductProviderPackage' }
-    & $Pick<ProductProviderPackage, { id: * }>
-  ) | (
-    { __typename?: 'Order' }
-    & $Pick<Order, { id: *, poNo: * }>
-  ) | (
-    { __typename?: 'OrderItem' }
-    & $Pick<OrderItem, { id: *, no: * }>
-  ) | (
-    { __typename?: 'Batch' }
-    & $Pick<Batch, { id: *, no: * }>
-  ) | (
-    { __typename?: 'BatchQuantityRevision' }
-    & $Pick<BatchQuantityRevision, { id: * }>
-  ) | (
-    { __typename?: 'Shipment' }
-    & $Pick<Shipment, { id: *, no: * }>
-  ) | (
-    { __typename?: 'Voyage' }
-    & $Pick<Voyage, { id: * }>
-  ) | (
-    { __typename?: 'Container' }
-    & $Pick<Container, { id: * }>
-  ) | (
-    { __typename?: 'ContainerGroup' }
-    & $Pick<ContainerGroup, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDate' }
-    & $Pick<TimelineDate, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDateRevision' }
-    & $Pick<TimelineDateRevision, { id: * }>
-  ) | (
-    { __typename?: 'Warehouse' }
-    & $Pick<Warehouse, { id: * }>
-  ) | (
-    { __typename?: 'Tag' }
-    & $Pick<Tag, { id: * }>
-  ) | (
-    { __typename?: 'User' }
-    & $Pick<User, { id: * }>
-  ) | (
-    { __typename?: 'Organization' }
-    & $Pick<Organization, { id: * }>
-  ) | (
-    { __typename?: 'Partnership' }
-    & $Pick<Partnership, { id: * }>
-  ) | (
-    { __typename?: 'Role' }
-    & $Pick<Role, { id: * }>
-  ) | (
-    { __typename?: 'File' }
-    & $Pick<File, { id: * }>
-  ) | (
-    { __typename?: 'Task' }
-    & $Pick<Task, { id: * }>
-  ) | (
-    { __typename?: 'TaskTemplate' }
-    & $Pick<TaskTemplate, { id: * }>
-  ) | (
-    { __typename?: 'Project' }
-    & $Pick<Project, { id: * }>
-  ) | (
-    { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
+export type DocumentFragmentFragment = ({
+    ...{ __typename?: 'File' },
+  ...$Pick<File, {| id: *, name: *, path: *, type: *, status: *, memo: * |}>,
+  ...{| entity: ?({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: *, name: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: *, name: * |}>,
+    ...{| product: ({
+        ...{ __typename?: 'Product' },
+      ...$Pick<Product, {| id: *, name: * |}>
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | ({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...$Pick<ProductProviderPackage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: *, poNo: * |}>
+  }) | ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: *, no: * |}>
+  }) | ({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: *, no: * |}>
+  }) | ({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: *, no: * |}>
+  }) | ({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDate' },
+    ...$Pick<TimelineDate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Tag' },
+    ...$Pick<Tag, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Partnership' },
+    ...$Pick<Partnership, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'File' },
+    ...$Pick<File, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
-export type UserAvatarFragmentFragment = (
-  { __typename?: 'User' }
-  & $Pick<User, { id: *, firstName: *, lastName: * }>
-  & { organization: ?(
-    { __typename?: 'Organization' }
-    & $Pick<Organization, { id: *, name: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
+export type UserAvatarFragmentFragment = ({
+    ...{ __typename?: 'User' },
+  ...$Pick<User, {| id: *, firstName: *, lastName: * |}>,
+  ...{| organization: ?({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: *, name: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
-export type PartnerNameFragmentFragment = (
-  { __typename?: 'Organization' }
-  & $Pick<Organization, { id: *, name: * }>
-);
+export type PartnerNameFragmentFragment = ({
+    ...{ __typename?: 'Organization' },
+  ...$Pick<Organization, {| id: *, name: * |}>
+});
 
-export type TimelineDateFullFragmentFragment = (
-  { __typename?: 'TimelineDate' }
-  & $Pick<TimelineDate, { id: *, date: *, approvedAt: * }>
-  & { assignedTo: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, approvedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , timelineDateRevisions: Array<(
-    { __typename?: 'TimelineDateRevision' }
-    & $Pick<TimelineDateRevision, { id: *, date: *, type: *, memo: *, updatedAt: * }>
-    & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & UserAvatarFragmentFragment
-     }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> }
-);
+export type TimelineDateFullFragmentFragment = ({
+    ...{ __typename?: 'TimelineDate' },
+  ...$Pick<TimelineDate, {| id: *, date: *, approvedAt: * |}>,
+  ...{| assignedTo: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, approvedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, timelineDateRevisions: Array<({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: *, date: *, type: *, memo: *, updatedAt: * |}>,
+    ...{| updatedBy: ?({
+        ...{ __typename?: 'User' },
+      ...UserAvatarFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type TimelineDateMinimalFragmentFragment = (
-  { __typename?: 'TimelineDate' }
-  & $Pick<TimelineDate, { id: *, date: *, approvedAt: * }>
-  & { approvedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , timelineDateRevisions: Array<(
-    { __typename?: 'TimelineDateRevision' }
-    & $Pick<TimelineDateRevision, { id: *, date: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> }
-);
+export type TimelineDateMinimalFragmentFragment = ({
+    ...{ __typename?: 'TimelineDate' },
+  ...$Pick<TimelineDate, {| id: *, date: *, approvedAt: * |}>,
+  ...{| approvedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, timelineDateRevisions: Array<({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: *, date: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type PortFragmentFragment = (
-  { __typename?: 'Port' }
-  & $Pick<Port, { seaport: *, airport: * }>
-);
+export type PortFragmentFragment = ({
+    ...{ __typename?: 'Port' },
+  ...$Pick<Port, {| seaport: *, airport: * |}>
+});
 
-export type CustomFieldsFragmentFragment = (
-  { __typename?: 'CustomFields' }
-  & { mask: ?({ __typename?: 'Mask' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & MaskFragmentFragment
-  , fieldValues: Array<({ __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & FieldValuesFragmentFragment
-  >, fieldDefinitions: Array<({ __typename?: 'FieldDefinition' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & FieldDefinitionFragmentFragment
-  > }
-);
+export type CustomFieldsFragmentFragment = ({
+    ...{ __typename?: 'CustomFields' },
+  ...{| mask: ?({
+      ...{ __typename?: 'Mask' },
+    ...MaskFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, fieldValues: Array<({
+      ...{ __typename?: 'FieldValue' },
+    ...FieldValuesFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, fieldDefinitions: Array<({
+      ...{ __typename?: 'FieldDefinition' },
+    ...FieldDefinitionFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type MaskFragmentFragment = (
-  { __typename?: 'Mask' }
-  & $Pick<Mask, { id: *, name: *, memo: *, entityType: * }>
-  & { fieldDefinitions: Array<({ __typename?: 'FieldDefinition' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & FieldDefinitionFragmentFragment
-  > }
-);
+export type MaskFragmentFragment = ({
+    ...{ __typename?: 'Mask' },
+  ...$Pick<Mask, {| id: *, name: *, memo: *, entityType: * |}>,
+  ...{| fieldDefinitions: Array<({
+      ...{ __typename?: 'FieldDefinition' },
+    ...FieldDefinitionFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type FieldValuesFragmentFragment = (
-  { __typename?: 'FieldValue' }
-  & { value: (
-    { __typename?: 'StringValue' }
-    & $Pick<StringValue, { string: * }>
-  ) | { __typename?: 'IntValue' } | { __typename?: 'FloatValue' } | { __typename?: 'BooleanValue' } | { __typename?: 'DateTimeValue' } | { __typename?: 'IntervalValue' } | { __typename?: 'DurationValue' } | { __typename?: 'MetricValueValue' } | { __typename?: 'SizeValue' } | { __typename?: 'EntityValue' } | { __typename?: 'Values' }, fieldDefinition: ({ __typename?: 'FieldDefinition' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & FieldDefinitionFragmentFragment
-  , entity: { __typename?: 'Product' } | { __typename?: 'ProductProvider' } | { __typename?: 'ProductProviderPackage' } | { __typename?: 'Order' } | { __typename?: 'OrderItem' } | { __typename?: 'Batch' } | { __typename?: 'BatchQuantityRevision' } | { __typename?: 'Shipment' } | { __typename?: 'Voyage' } | { __typename?: 'Container' } | { __typename?: 'ContainerGroup' } | { __typename?: 'TimelineDate' } | { __typename?: 'TimelineDateRevision' } | { __typename?: 'Warehouse' } | { __typename?: 'Tag' } | { __typename?: 'User' } | { __typename?: 'Organization' } | { __typename?: 'Partnership' } | { __typename?: 'Role' } | { __typename?: 'File' } | { __typename?: 'Task' } | { __typename?: 'TaskTemplate' } | { __typename?: 'Project' } | { __typename?: 'Milestone' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
+export type FieldValuesFragmentFragment = ({
+    ...{ __typename?: 'FieldValue' },
+  ...{| value: ({
+      ...{ __typename?: 'StringValue' },
+    ...$Pick<StringValue, {| string: * |}>
+  }) | { __typename?: 'IntValue' } | { __typename?: 'FloatValue' } | { __typename?: 'BooleanValue' } | { __typename?: 'DateTimeValue' } | { __typename?: 'IntervalValue' } | { __typename?: 'DurationValue' } | { __typename?: 'MetricValueValue' } | { __typename?: 'SizeValue' } | { __typename?: 'EntityValue' } | { __typename?: 'Values' }, fieldDefinition: ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...FieldDefinitionFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, entity: { __typename?: 'Product' } | { __typename?: 'ProductProvider' } | { __typename?: 'ProductProviderPackage' } | { __typename?: 'Order' } | { __typename?: 'OrderItem' } | { __typename?: 'Batch' } | { __typename?: 'BatchQuantityRevision' } | { __typename?: 'Shipment' } | { __typename?: 'Voyage' } | { __typename?: 'Container' } | { __typename?: 'ContainerGroup' } | { __typename?: 'TimelineDate' } | { __typename?: 'TimelineDateRevision' } | { __typename?: 'Warehouse' } | { __typename?: 'Tag' } | { __typename?: 'User' } | { __typename?: 'Organization' } | { __typename?: 'Partnership' } | { __typename?: 'Role' } | { __typename?: 'File' } | { __typename?: 'Task' } | { __typename?: 'TaskTemplate' } | { __typename?: 'Project' } | { __typename?: 'Milestone' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
-export type FieldDefinitionFragmentFragment = (
-  { __typename?: 'FieldDefinition' }
-  & $Pick<FieldDefinition, { id: *, name: *, entityType: *, sort: * }>
-);
+export type FieldDefinitionFragmentFragment = ({
+    ...{ __typename?: 'FieldDefinition' },
+  ...$Pick<FieldDefinition, {| id: *, name: *, entityType: *, sort: * |}>
+});
 
-export type OwnedByFragmentFragment = (
-  { __typename?: 'Organization' }
-  & $Pick<Organization, { id: *, name: * }>
-);
+export type OwnedByFragmentFragment = ({
+    ...{ __typename?: 'Organization' },
+  ...$Pick<Organization, {| id: *, name: * |}>
+});
 
-export type ContainerFormFragmentFragment = (
-  { __typename?: 'Container' }
-  & $Pick<Container, { id: *, archived: *, updatedAt: *, no: *, containerType: *, containerOption: *, memo: *, warehouseArrivalAgreedDate: *, warehouseArrivalActualDate: *, warehouseArrivalAgreedDateApprovedAt: *, warehouseArrivalActualDateApprovedAt: *, freeTimeStartDate: *, freeTimeDuration: *, autoCalculatedFreeTimeStartDate: *, yardName: *, departureDate: *, departureDateApprovedAt: * }>
-  & { ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-  , updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , warehouse: ?({ __typename?: 'Warehouse' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & WarehouseCardFragmentFragment
-  , warehouseArrivalAgreedDateApprovedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , warehouseArrivalActualDateApprovedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , warehouseArrivalAgreedDateAssignedTo: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, warehouseArrivalActualDateAssignedTo: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, departureDateAssignedTo: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, departureDateApprovedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, shipment: ({ __typename?: 'Shipment' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ShipmentCardFragmentFragment
-  , batches: Array<({ __typename?: 'Batch' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & BatchFormFragmentFragment
-  >, representativeBatch: ?({ __typename?: 'Batch' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & BatchFormFragmentFragment
-   }
-);
+export type ContainerFormFragmentFragment = ({
+    ...{ __typename?: 'Container' },
+  ...$Pick<Container, {| id: *, archived: *, updatedAt: *, no: *, containerType: *, containerOption: *, memo: *, warehouseArrivalAgreedDate: *, warehouseArrivalActualDate: *, warehouseArrivalAgreedDateApprovedAt: *, warehouseArrivalActualDateApprovedAt: *, freeTimeStartDate: *, freeTimeDuration: *, autoCalculatedFreeTimeStartDate: *, yardName: *, departureDate: *, departureDateApprovedAt: * |}>,
+  ...{| ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouse: ?({
+      ...{ __typename?: 'Warehouse' },
+    ...WarehouseCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouseArrivalAgreedDateApprovedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouseArrivalActualDateApprovedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouseArrivalAgreedDateAssignedTo: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, warehouseArrivalActualDateAssignedTo: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, departureDateAssignedTo: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, departureDateApprovedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, shipment: ({
+      ...{ __typename?: 'Shipment' },
+    ...ShipmentCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, batches: Array<({
+      ...{ __typename?: 'Batch' },
+    ...BatchFormFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, representativeBatch: ?({
+      ...{ __typename?: 'Batch' },
+    ...BatchFormFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
-export type ContainerCardFragmentFragment = (
-  { __typename?: 'Container' }
-  & $Pick<Container, { id: *, archived: *, no: *, containerType: *, containerOption: *, warehouseArrivalAgreedDate: *, warehouseArrivalActualDate: *, freeTimeStartDate: *, freeTimeDuration: * }>
-  & { representativeBatch: ?(
-    { __typename?: 'Batch' }
-    & $Pick<Batch, { id: * }>
-    & { orderItem: (
-      { __typename?: 'OrderItem' }
-      & $Pick<OrderItem, { id: * }>
-      & { productProvider: (
-        { __typename?: 'ProductProvider' }
-        & $Pick<ProductProvider, { id: * }>
-        & { product: (
-          { __typename?: 'Product' }
-          & $Pick<Product, { id: *, name: *, serial: * }>
-          & { files: Array<({ __typename?: 'File' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-            & ImageFragmentFragment
-          > }
-        ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-      ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, totalVolume: { __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-  , batches: Array<(
-    { __typename?: 'Batch' }
-    & $Pick<Batch, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, warehouse: ?(
-    { __typename?: 'Warehouse' }
-    & $Pick<Warehouse, { id: *, name: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouseArrivalAgreedDateApprovedBy: ?(
-    { __typename?: 'User' }
-    & $Pick<User, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouseArrivalActualDateApprovedBy: ?(
-    { __typename?: 'User' }
-    & $Pick<User, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, shipment: (
-    { __typename?: 'Shipment' }
-    & $Pick<Shipment, { id: *, no: * }>
-    & { importer: (
-      { __typename?: 'Organization' }
-      & $Pick<Organization, { id: *, name: * }>
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  > }
-);
+export type ContainerCardFragmentFragment = ({
+    ...{ __typename?: 'Container' },
+  ...$Pick<Container, {| id: *, archived: *, no: *, containerType: *, containerOption: *, warehouseArrivalAgreedDate: *, warehouseArrivalActualDate: *, freeTimeStartDate: *, freeTimeDuration: * |}>,
+  ...{| representativeBatch: ?({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>,
+    ...{| orderItem: ({
+        ...{ __typename?: 'OrderItem' },
+      ...$Pick<OrderItem, {| id: * |}>,
+      ...{| productProvider: ({
+          ...{ __typename?: 'ProductProvider' },
+        ...$Pick<ProductProvider, {| id: * |}>,
+        ...{| product: ({
+            ...{ __typename?: 'Product' },
+          ...$Pick<Product, {| id: *, name: *, serial: * |}>,
+          ...{| files: Array<({
+              ...{ __typename?: 'File' },
+            ...ImageFragmentFragment
+          }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+        }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, totalVolume: ({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), batches: Array<({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, warehouse: ?({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: *, name: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouseArrivalAgreedDateApprovedBy: ?({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouseArrivalActualDateApprovedBy: ?({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, shipment: ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: *, no: * |}>,
+    ...{| importer: ({
+        ...{ __typename?: 'Organization' },
+      ...$Pick<Organization, {| id: *, name: * |}>
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type ContainerCardWithOwnedFragmentFragment = (
-  { __typename?: 'Container' }
-  & { ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-  , warehouse: ?(
-    { __typename?: 'Warehouse' }
-    & $Pick<Warehouse, { id: *, name: * }>
-    & { ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & OwnedByFragmentFragment
-     }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-)
-  & ContainerCardFragmentFragment
-;
+export type ContainerCardWithOwnedFragmentFragment = ({
+    ...{ __typename?: 'Container' },
+  ...{| ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouse: ?({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: *, name: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |},
+  ...ContainerCardFragmentFragment
+});
 
-export type BadRequestFragmentFragment = (
-  { __typename?: 'BadRequest' }
-  & { violations: Array<(
-    { __typename?: 'Violation' }
-    & $Pick<Violation, { message: *, error: *, code: *, path: * }>
-    & { parameters: Array<(
-      { __typename?: 'ViolationParameter' }
-      & $Pick<ViolationParameter, { key: *, value: * }>
-    )> }
-  )> }
-);
+export type BadRequestFragmentFragment = ({
+    ...{ __typename?: 'BadRequest' },
+  ...{| violations: Array<({
+      ...{ __typename?: 'Violation' },
+    ...$Pick<Violation, {| message: *, error: *, code: *, path: * |}>,
+    ...{| parameters: Array<({
+        ...{ __typename?: 'ViolationParameter' },
+      ...$Pick<ViolationParameter, {| key: *, value: * |}>
+    })> |}
+  })> |}
+});
 
-export type NotFoundFragmentFragment = (
-  { __typename?: 'NotFound' }
-  & { reference: ?(
-    { __typename?: 'Reference' }
-    & $Pick<Reference, { id: *, type: *, service: * }>
-  ) }
-);
+export type NotFoundFragmentFragment = ({
+    ...{ __typename?: 'NotFound' },
+  ...{| reference: ?({
+      ...{ __typename?: 'Reference' },
+    ...$Pick<Reference, {| id: *, type: *, service: * |}>
+  }) |}
+});
 
-export type ForbiddenFragmentFragment = (
-  { __typename?: 'Forbidden' }
-  & $Pick<Forbidden, { reason: * }>
-  & { reference: ?(
-    { __typename?: 'Reference' }
-    & $Pick<Reference, { id: * }>
-  ) }
-);
+export type ForbiddenFragmentFragment = ({
+    ...{ __typename?: 'Forbidden' },
+  ...$Pick<Forbidden, {| reason: * |}>,
+  ...{| reference: ?({
+      ...{ __typename?: 'Reference' },
+    ...$Pick<Reference, {| id: * |}>
+  }) |}
+});
 
-export type ItemCardFragmentFragment = (
-  { __typename?: 'OrderItem' }
-  & $Pick<OrderItem, { id: *, archived: *, no: *, quantity: *, totalBatched: *, totalShipped: *, batchCount: *, batchShippedCount: * }>
-  & { price: { __typename?: 'Price' }
-    & PriceFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, todo: (
-    { __typename?: 'Todo' }
-    & { taskCount: { __typename?: 'TaskCount' }
-      & TaskCountFragmentFragment
-     }
-  ), order: (
-    { __typename?: 'Order' }
-    & $Pick<Order, { id: *, poNo: * }>
-    & { importer: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & PartnerNameFragmentFragment
-    , exporter: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & PartnerNameFragmentFragment
-     }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, productProvider: (
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: *, name: * }>
-    & { product: (
-      { __typename?: 'Product' }
-      & $Pick<Product, { id: *, name: *, serial: * }>
-      & { tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & TagFragmentFragment
-      >, files: Array<({ __typename?: 'File' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & ImageFragmentFragment
-      > }
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
+export type ItemCardFragmentFragment = ({
+    ...{ __typename?: 'OrderItem' },
+  ...$Pick<OrderItem, {| id: *, archived: *, no: *, quantity: *, totalBatched: *, totalShipped: *, batchCount: *, batchShippedCount: * |}>,
+  ...{| price: ({
+      ...{ __typename?: 'Price' },
+    ...PriceFragmentFragment
+  }), tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, todo: ({
+      ...{ __typename?: 'Todo' },
+    ...{| taskCount: ({
+        ...{ __typename?: 'TaskCount' },
+      ...TaskCountFragmentFragment
+    }) |}
+  }), order: ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: *, poNo: * |}>,
+    ...{| importer: ({
+        ...{ __typename?: 'Organization' },
+      ...PartnerNameFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, exporter: ({
+        ...{ __typename?: 'Organization' },
+      ...PartnerNameFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, productProvider: ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: *, name: * |}>,
+    ...{| product: ({
+        ...{ __typename?: 'Product' },
+      ...$Pick<Product, {| id: *, name: *, serial: * |}>,
+      ...{| tags: Array<({
+          ...{ __typename?: 'Tag' },
+        ...TagFragmentFragment
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, files: Array<({
+          ...{ __typename?: 'File' },
+        ...ImageFragmentFragment
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
-export type ItemCardWithOwnedFragmentFragment = (
-  { __typename?: 'OrderItem' }
-  & { ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-   }
-)
-  & ItemCardFragmentFragment
-;
+export type ItemCardWithOwnedFragmentFragment = ({
+    ...{ __typename?: 'OrderItem' },
+  ...{| ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |},
+  ...ItemCardFragmentFragment
+});
 
-export type ItemFormFragmentFragment = (
-  { __typename?: 'OrderItem' }
-  & $Pick<OrderItem, { id: *, archived: *, updatedAt: *, no: *, quantity: *, memo: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-  , price: { __typename?: 'Price' }
-    & PriceFragmentFragment
-  , customFields: { __typename?: 'CustomFields' }
-    & CustomFieldsFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, todo: (
-    { __typename?: 'Todo' }
-    & { taskCount: { __typename?: 'TaskCount' }
-      & TaskCountFragmentFragment
-    , tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskWithoutParentInfoFragmentFragment
-    >, taskTemplate: ?({ __typename?: 'TaskTemplate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskTemplateCardFragmentFragment
-     }
-  ), order: ({ __typename?: 'Order' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OrderCardFragmentFragment
-  , productProvider: ({ __typename?: 'ProductProvider' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ProductProviderCardFragmentFragment
-  , batches: Array<({ __typename?: 'Batch' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & BatchFormFragmentFragment
-  >, files: Array<({ __typename?: 'File' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & DocumentFragmentFragment
-    & ForbiddenFragmentFragment
-  >, shipments: Array<({ __typename?: 'Shipment' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ShipmentCardFragmentFragment
-  > }
-);
+export type ItemFormFragmentFragment = ({
+    ...{ __typename?: 'OrderItem' },
+  ...$Pick<OrderItem, {| id: *, archived: *, updatedAt: *, no: *, quantity: *, deliveryDate: *, memo: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, price: ({
+      ...{ __typename?: 'Price' },
+    ...PriceFragmentFragment
+  }), customFields: ({
+      ...{ __typename?: 'CustomFields' },
+    ...CustomFieldsFragmentFragment
+  }), tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, todo: ({
+      ...{ __typename?: 'Todo' },
+    ...{| taskCount: ({
+        ...{ __typename?: 'TaskCount' },
+      ...TaskCountFragmentFragment
+    }), tasks: Array<({
+        ...{ __typename?: 'Task' },
+      ...TaskWithoutParentInfoFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, taskTemplate: ?({
+        ...{ __typename?: 'TaskTemplate' },
+      ...TaskTemplateCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }), order: ({
+      ...{ __typename?: 'Order' },
+    ...OrderCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, productProvider: ({
+      ...{ __typename?: 'ProductProvider' },
+    ...ProductProviderCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, batches: Array<({
+      ...{ __typename?: 'Batch' },
+    ...BatchFormFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, files: Array<({
+      ...{ __typename?: 'File' },
+    ...DocumentFragmentFragment
+  }) | { __typename?: 'BadRequest' } | ({
+      ...{ __typename?: 'Forbidden' },
+    ...ForbiddenFragmentFragment
+  }) | { __typename?: 'NotFound' }>, shipments: Array<({
+      ...{ __typename?: 'Shipment' },
+    ...ShipmentCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type ItemInSelectorFragmentFragment = (
-  { __typename?: 'OrderItem' }
-  & $Pick<OrderItem, { id: *, archived: *, no: *, quantity: *, totalBatched: *, totalShipped: *, batchCount: *, batchShippedCount: * }>
-  & { price: { __typename?: 'Price' }
-    & PriceFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, todo: (
-    { __typename?: 'Todo' }
-    & { taskCount: { __typename?: 'TaskCount' }
-      & TaskCountFragmentFragment
-     }
-  ), order: ({ __typename?: 'Order' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OrderCardFragmentFragment
-  , productProvider: (
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: *, name: * }>
-    & { exporter: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & PartnerCardFragmentFragment
-    , defaultPackage: ?({ __typename?: 'ProductProviderPackage' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & ProductProviderPackagingFragmentFragment
-    , packages: Array<({ __typename?: 'ProductProviderPackage' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & ProductProviderPackagingFragmentFragment
-    >, product: (
-      { __typename?: 'Product' }
-      & $Pick<Product, { id: *, name: *, serial: * }>
-      & { tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & TagFragmentFragment
-      >, files: Array<({ __typename?: 'File' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & ImageFragmentFragment
-      > }
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
+export type ItemInSelectorFragmentFragment = ({
+    ...{ __typename?: 'OrderItem' },
+  ...$Pick<OrderItem, {| id: *, archived: *, no: *, quantity: *, totalBatched: *, totalShipped: *, batchCount: *, batchShippedCount: * |}>,
+  ...{| price: ({
+      ...{ __typename?: 'Price' },
+    ...PriceFragmentFragment
+  }), tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, todo: ({
+      ...{ __typename?: 'Todo' },
+    ...{| taskCount: ({
+        ...{ __typename?: 'TaskCount' },
+      ...TaskCountFragmentFragment
+    }) |}
+  }), order: ({
+      ...{ __typename?: 'Order' },
+    ...OrderCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, productProvider: ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: *, name: * |}>,
+    ...{| exporter: ({
+        ...{ __typename?: 'Organization' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, defaultPackage: ?({
+        ...{ __typename?: 'ProductProviderPackage' },
+      ...ProductProviderPackagingFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, packages: Array<({
+        ...{ __typename?: 'ProductProviderPackage' },
+      ...ProductProviderPackagingFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, product: ({
+        ...{ __typename?: 'Product' },
+      ...$Pick<Product, {| id: *, name: *, serial: * |}>,
+      ...{| tags: Array<({
+          ...{ __typename?: 'Tag' },
+        ...TagFragmentFragment
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, files: Array<({
+          ...{ __typename?: 'File' },
+        ...ImageFragmentFragment
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
-export type ItemInOrderFormFragmentFragment = (
-  { __typename?: 'OrderItem' }
-  & $Pick<OrderItem, { id: *, archived: *, no: *, quantity: *, memo: * }>
-  & { price: { __typename?: 'Price' }
-    & PriceFragmentFragment
-  , customFields: { __typename?: 'CustomFields' }
-    & CustomFieldsFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, todo: (
-    { __typename?: 'Todo' }
-    & { taskCount: { __typename?: 'TaskCount' }
-      & TaskCountFragmentFragment
-    , tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskWithoutParentInfoFragmentFragment
-    >, taskTemplate: ?({ __typename?: 'TaskTemplate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskTemplateCardFragmentFragment
-     }
-  ), productProvider: (
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: *, name: * }>
-    & { exporter: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & PartnerNameFragmentFragment
-    , supplier: ?({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & PartnerNameFragmentFragment
-    , defaultPackage: ?({ __typename?: 'ProductProviderPackage' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & ProductProviderPackagingFragmentFragment
-    , packages: Array<({ __typename?: 'ProductProviderPackage' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & ProductProviderPackagingFragmentFragment
-    >, unitPrice: ?{ __typename?: 'Price' }
-      & PriceFragmentFragment
-    , product: (
-      { __typename?: 'Product' }
-      & $Pick<Product, { id: *, name: *, serial: * }>
-      & { tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & TagFragmentFragment
-      >, files: Array<({ __typename?: 'File' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & ImageFragmentFragment
-      > }
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, batches: Array<({ __typename?: 'Batch' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & BatchFormFragmentFragment
-  >, files: Array<({ __typename?: 'File' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & DocumentFragmentFragment
-  > }
-);
+export type ItemInOrderFormFragmentFragment = ({
+    ...{ __typename?: 'OrderItem' },
+  ...$Pick<OrderItem, {| id: *, archived: *, no: *, quantity: *, deliveryDate: *, memo: * |}>,
+  ...{| price: ({
+      ...{ __typename?: 'Price' },
+    ...PriceFragmentFragment
+  }), customFields: ({
+      ...{ __typename?: 'CustomFields' },
+    ...CustomFieldsFragmentFragment
+  }), tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, todo: ({
+      ...{ __typename?: 'Todo' },
+    ...{| taskCount: ({
+        ...{ __typename?: 'TaskCount' },
+      ...TaskCountFragmentFragment
+    }), tasks: Array<({
+        ...{ __typename?: 'Task' },
+      ...TaskWithoutParentInfoFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, taskTemplate: ?({
+        ...{ __typename?: 'TaskTemplate' },
+      ...TaskTemplateCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }), productProvider: ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: *, name: * |}>,
+    ...{| exporter: ({
+        ...{ __typename?: 'Organization' },
+      ...PartnerNameFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, supplier: ?({
+        ...{ __typename?: 'Organization' },
+      ...PartnerNameFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, defaultPackage: ?({
+        ...{ __typename?: 'ProductProviderPackage' },
+      ...ProductProviderPackagingFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, packages: Array<({
+        ...{ __typename?: 'ProductProviderPackage' },
+      ...ProductProviderPackagingFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, unitPrice: ?({
+        ...{ __typename?: 'Price' },
+      ...PriceFragmentFragment
+    }), product: ({
+        ...{ __typename?: 'Product' },
+      ...$Pick<Product, {| id: *, name: *, serial: * |}>,
+      ...{| tags: Array<({
+          ...{ __typename?: 'Tag' },
+        ...TagFragmentFragment
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, files: Array<({
+          ...{ __typename?: 'File' },
+        ...ImageFragmentFragment
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, batches: Array<({
+      ...{ __typename?: 'Batch' },
+    ...BatchFormFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, files: Array<({
+      ...{ __typename?: 'File' },
+    ...DocumentFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type ItemInBatchFormFragmentFragment = (
-  { __typename?: 'OrderItem' }
-  & $Pick<OrderItem, { id: *, archived: *, no: *, quantity: *, totalBatched: *, totalShipped: *, batchCount: *, batchShippedCount: * }>
-  & { price: { __typename?: 'Price' }
-    & PriceFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, todo: (
-    { __typename?: 'Todo' }
-    & { taskCount: { __typename?: 'TaskCount' }
-      & TaskCountFragmentFragment
-     }
-  ), order: ({ __typename?: 'Order' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OrderCardFragmentFragment
-  , productProvider: (
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: *, name: * }>
-    & { exporter: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & PartnerCardFragmentFragment
-    , supplier: ?({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & PartnerCardFragmentFragment
-    , defaultPackage: ?({ __typename?: 'ProductProviderPackage' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & ProductProviderPackagingFragmentFragment
-    , packages: Array<({ __typename?: 'ProductProviderPackage' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & ProductProviderPackagingFragmentFragment
-    >, product: (
-      { __typename?: 'Product' }
-      & $Pick<Product, { id: *, name: *, serial: * }>
-      & { tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & TagFragmentFragment
-      >, files: Array<({ __typename?: 'File' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-        & ImageFragmentFragment
-      > }
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
+export type ItemInBatchFormFragmentFragment = ({
+    ...{ __typename?: 'OrderItem' },
+  ...$Pick<OrderItem, {| id: *, archived: *, no: *, quantity: *, totalBatched: *, totalShipped: *, batchCount: *, batchShippedCount: * |}>,
+  ...{| price: ({
+      ...{ __typename?: 'Price' },
+    ...PriceFragmentFragment
+  }), tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, todo: ({
+      ...{ __typename?: 'Todo' },
+    ...{| taskCount: ({
+        ...{ __typename?: 'TaskCount' },
+      ...TaskCountFragmentFragment
+    }) |}
+  }), order: ({
+      ...{ __typename?: 'Order' },
+    ...OrderCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, productProvider: ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: *, name: * |}>,
+    ...{| exporter: ({
+        ...{ __typename?: 'Organization' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, supplier: ?({
+        ...{ __typename?: 'Organization' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, defaultPackage: ?({
+        ...{ __typename?: 'ProductProviderPackage' },
+      ...ProductProviderPackagingFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, packages: Array<({
+        ...{ __typename?: 'ProductProviderPackage' },
+      ...ProductProviderPackagingFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, product: ({
+        ...{ __typename?: 'Product' },
+      ...$Pick<Product, {| id: *, name: *, serial: * |}>,
+      ...{| tags: Array<({
+          ...{ __typename?: 'Tag' },
+        ...TagFragmentFragment
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, files: Array<({
+          ...{ __typename?: 'File' },
+        ...ImageFragmentFragment
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
-export type OrderFormQueryFragmentFragment = (
-  { __typename?: 'Order' }
-  & $Pick<Order, { id: *, archived: *, updatedAt: *, memo: *, poNo: *, currency: *, totalOrdered: *, totalBatched: *, totalShipped: *, orderItemCount: *, batchCount: *, batchShippedCount: *, shipmentCount: *, issuedAt: *, deliveryDate: *, piNo: *, incoterm: *, deliveryPlace: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-  , totalPrice: { __typename?: 'Price' }
-    & PriceFragmentFragment
-  , customFields: { __typename?: 'CustomFields' }
-    & CustomFieldsFragmentFragment
-  , importer: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerCardFragmentFragment
-  , exporter: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerCardFragmentFragment
-  , inCharges: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  > }
-);
+export type OrderFormQueryFragmentFragment = ({
+    ...{ __typename?: 'Order' },
+  ...$Pick<Order, {| id: *, archived: *, updatedAt: *, memo: *, poNo: *, currency: *, totalOrdered: *, totalBatched: *, totalShipped: *, orderItemCount: *, batchCount: *, batchShippedCount: *, shipmentCount: *, issuedAt: *, deliveryDate: *, piNo: *, incoterm: *, deliveryPlace: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, totalPrice: ({
+      ...{ __typename?: 'Price' },
+    ...PriceFragmentFragment
+  }), customFields: ({
+      ...{ __typename?: 'CustomFields' },
+    ...CustomFieldsFragmentFragment
+  }), importer: ({
+      ...{ __typename?: 'Organization' },
+    ...PartnerCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, exporter: ({
+      ...{ __typename?: 'Organization' },
+    ...PartnerCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, inCharges: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type OrderFormFragmentFragment = (
-  { __typename?: 'Order' }
-  & $Pick<Order, { id: *, archived: *, updatedAt: *, memo: *, poNo: *, currency: *, totalOrdered: *, totalBatched: *, totalShipped: *, orderItemCount: *, batchCount: *, batchShippedCount: *, shipmentCount: *, issuedAt: *, deliveryDate: *, piNo: *, incoterm: *, deliveryPlace: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-  , customFields: { __typename?: 'CustomFields' }
-    & CustomFieldsFragmentFragment
-  , importer: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerCardFragmentFragment
-  , exporter: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerCardFragmentFragment
-  , inCharges: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, todo: (
-    { __typename?: 'Todo' }
-    & { taskCount: { __typename?: 'TaskCount' }
-      & TaskCountFragmentFragment
-    , tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskWithoutParentInfoFragmentFragment
-    >, taskTemplate: ?({ __typename?: 'TaskTemplate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskTemplateCardFragmentFragment
-     }
-  ), files: Array<({ __typename?: 'File' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & DocumentFragmentFragment
-  >, orderItems: Array<({ __typename?: 'OrderItem' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ItemInOrderFormFragmentFragment
-  >, shipments: Array<({ __typename?: 'Shipment' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ShipmentCardFragmentFragment
-  >, containers: Array<({ __typename?: 'Container' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ContainerCardFragmentFragment
-  > }
-);
+export type OrderFormFragmentFragment = ({
+    ...{ __typename?: 'Order' },
+  ...$Pick<Order, {| id: *, archived: *, updatedAt: *, memo: *, poNo: *, currency: *, totalOrdered: *, totalBatched: *, totalShipped: *, orderItemCount: *, batchCount: *, batchShippedCount: *, shipmentCount: *, issuedAt: *, deliveryDate: *, piNo: *, incoterm: *, deliveryPlace: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, customFields: ({
+      ...{ __typename?: 'CustomFields' },
+    ...CustomFieldsFragmentFragment
+  }), importer: ({
+      ...{ __typename?: 'Organization' },
+    ...PartnerCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, exporter: ({
+      ...{ __typename?: 'Organization' },
+    ...PartnerCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, inCharges: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, todo: ({
+      ...{ __typename?: 'Todo' },
+    ...{| taskCount: ({
+        ...{ __typename?: 'TaskCount' },
+      ...TaskCountFragmentFragment
+    }), tasks: Array<({
+        ...{ __typename?: 'Task' },
+      ...TaskWithoutParentInfoFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, taskTemplate: ?({
+        ...{ __typename?: 'TaskTemplate' },
+      ...TaskTemplateCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }), files: Array<({
+      ...{ __typename?: 'File' },
+    ...DocumentFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, orderItems: Array<({
+      ...{ __typename?: 'OrderItem' },
+    ...ItemInOrderFormFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, shipments: Array<({
+      ...{ __typename?: 'Shipment' },
+    ...ShipmentCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, containers: Array<({
+      ...{ __typename?: 'Container' },
+    ...ContainerCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type OrderCardFragmentFragment = (
-  { __typename?: 'Order' }
-  & $Pick<Order, { id: *, archived: *, poNo: *, issuedAt: *, deliveryDate: *, totalOrdered: *, totalBatched: *, totalShipped: *, orderItemCount: *, batchCount: *, batchShippedCount: *, currency: * }>
-  & { ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-  , totalPrice: { __typename?: 'Price' }
-    & PriceFragmentFragment
-  , importer: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerNameFragmentFragment
-  , exporter: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerNameFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, todo: (
-    { __typename?: 'Todo' }
-    & { taskCount: { __typename?: 'TaskCount' }
-      & TaskCountFragmentFragment
-     }
-  ), inCharges: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  > }
-);
+export type OrderCardFragmentFragment = ({
+    ...{ __typename?: 'Order' },
+  ...$Pick<Order, {| id: *, archived: *, poNo: *, issuedAt: *, deliveryDate: *, totalOrdered: *, totalBatched: *, totalShipped: *, orderItemCount: *, batchCount: *, batchShippedCount: *, currency: * |}>,
+  ...{| ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, totalPrice: ({
+      ...{ __typename?: 'Price' },
+    ...PriceFragmentFragment
+  }), importer: ({
+      ...{ __typename?: 'Organization' },
+    ...PartnerNameFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, exporter: ({
+      ...{ __typename?: 'Organization' },
+    ...PartnerNameFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, todo: ({
+      ...{ __typename?: 'Todo' },
+    ...{| taskCount: ({
+        ...{ __typename?: 'TaskCount' },
+      ...TaskCountFragmentFragment
+    }) |}
+  }), inCharges: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type OrderCardWithOwnedFragmentFragment = (
-  { __typename?: 'Order' }
-  & { ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-   }
-)
-  & OrderCardFragmentFragment
-;
+export type OrderCardWithOwnedFragmentFragment = ({
+    ...{ __typename?: 'Order' },
+  ...{| ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |},
+  ...OrderCardFragmentFragment
+});
 
-export type PartnerFormFragmentFragment = (
-  { __typename?: 'Organization' }
-  & $Pick<Organization, { id: * }>
-);
+export type PartnerFormFragmentFragment = ({
+    ...{ __typename?: 'Organization' },
+  ...$Pick<Organization, {| id: * |}>
+});
 
-export type PartnerCardFragmentFragment = (
-  { __typename?: 'Organization' }
-  & $Pick<Organization, { id: *, name: *, types: * }>
-  & { partner: ?(
-    { __typename?: 'Partner' }
-    & $Pick<Partner, { id: *, code: * }>
-    & { organization: (
-      { __typename?: 'Organization' }
-      & $Pick<Organization, { id: *, name: * }>
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
+export type PartnerCardFragmentFragment = ({
+    ...{ __typename?: 'Organization' },
+  ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+  ...{| partner: ?({
+      ...{ __typename?: 'Partner' },
+    ...$Pick<Partner, {| id: *, code: * |}>,
+    ...{| organization: ({
+        ...{ __typename?: 'Organization' },
+      ...$Pick<Organization, {| id: *, name: * |}>
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
 export type PartnersQueryQueryVariables = {
   page: $ElementType<Scalars, 'Int'>,
@@ -61944,474 +62356,579 @@ export type PartnersQueryQueryVariables = {
 };
 
 
-export type PartnersQueryQuery = (
-  { __typename?: 'Query' }
-  & { viewer: (
-    { __typename?: 'Viewer' }
-    & { user: (
-      { __typename?: 'User' }
-      & $Pick<User, { id: * }>
-      & { organization: ?(
-        { __typename?: 'Organization' }
-        & $Pick<Organization, { id: * }>
-        & { partners: (
-          { __typename?: 'PartnerPayloadPaginatedSearch' }
-          & $Pick<PartnerPayloadPaginatedSearch, { page: *, totalPage: * }>
-          & { nodes: Array<(
-            { __typename?: 'Partner' }
-            & $Pick<Partner, { id: *, code: * }>
-            & { organization: (
-              { __typename?: 'Organization' }
-              & $Pick<Organization, { id: *, name: *, types: * }>
-              & { partner: ?(
-                { __typename?: 'Partner' }
-                & $Pick<Partner, { id: *, code: * }>
-              ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-            ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-          ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> }
-        ) }
-      ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) }
-);
+export type PartnersQueryQuery = ({
+    ...{ __typename?: 'Query' },
+  ...{| viewer: ({
+      ...{ __typename?: 'Viewer' },
+    ...{| user: ({
+        ...{ __typename?: 'User' },
+      ...$Pick<User, {| id: * |}>,
+      ...{| organization: ?({
+          ...{ __typename?: 'Organization' },
+        ...$Pick<Organization, {| id: * |}>,
+        ...{| partners: ({
+            ...{ __typename?: 'PartnerPayloadPaginatedSearch' },
+          ...$Pick<PartnerPayloadPaginatedSearch, {| page: *, totalPage: * |}>,
+          ...{| nodes: Array<({
+              ...{ __typename?: 'Partner' },
+            ...$Pick<Partner, {| id: *, code: * |}>,
+            ...{| organization: ({
+                ...{ __typename?: 'Organization' },
+              ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+              ...{| partner: ?({
+                  ...{ __typename?: 'Partner' },
+                ...$Pick<Partner, {| id: *, code: * |}>
+              }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+            }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+          }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+        }) |}
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) |}
+});
 
-export type ProductFormFragmentFragment = (
-  { __typename?: 'Product' }
-  & $Pick<Product, { id: *, archived: *, updatedAt: *, name: *, serial: *, hsCode: *, janCode: *, material: *, memo: * }>
-  & { importer: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerCardFragmentFragment
-  , updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-  , todo: (
-    { __typename?: 'Todo' }
-    & { tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskWithoutParentInfoFragmentFragment
-    >, taskTemplate: ?({ __typename?: 'TaskTemplate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskTemplateCardFragmentFragment
-     }
-  ), customFields: { __typename?: 'CustomFields' }
-    & CustomFieldsFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, files: Array<({ __typename?: 'File' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ImageFragmentFragment
-    & ForbiddenFragmentFragment
-  >, productProviders: Array<({ __typename?: 'ProductProvider' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ProductProviderFormFragmentFragment
-    & ForbiddenFragmentFragment
-  > }
-);
+export type ProductFormFragmentFragment = ({
+    ...{ __typename?: 'Product' },
+  ...$Pick<Product, {| id: *, archived: *, updatedAt: *, name: *, serial: *, hsCode: *, janCode: *, material: *, memo: * |}>,
+  ...{| importer: ({
+      ...{ __typename?: 'Organization' },
+    ...PartnerCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, todo: ({
+      ...{ __typename?: 'Todo' },
+    ...{| tasks: Array<({
+        ...{ __typename?: 'Task' },
+      ...TaskWithoutParentInfoFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, taskTemplate: ?({
+        ...{ __typename?: 'TaskTemplate' },
+      ...TaskTemplateCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }), customFields: ({
+      ...{ __typename?: 'CustomFields' },
+    ...CustomFieldsFragmentFragment
+  }), tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, files: Array<({
+      ...{ __typename?: 'File' },
+    ...ImageFragmentFragment
+  }) | { __typename?: 'BadRequest' } | ({
+      ...{ __typename?: 'Forbidden' },
+    ...ForbiddenFragmentFragment
+  }) | { __typename?: 'NotFound' }>, productProviders: Array<({
+      ...{ __typename?: 'ProductProvider' },
+    ...ProductProviderFormFragmentFragment
+  }) | { __typename?: 'BadRequest' } | ({
+      ...{ __typename?: 'Forbidden' },
+    ...ForbiddenFragmentFragment
+  }) | { __typename?: 'NotFound' }> |}
+});
 
-export type ProductCardFragmentFragment = (
-  { __typename?: 'Product' }
-  & $Pick<Product, { id: *, archived: *, name: *, serial: * }>
-  & { ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-  , importer: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerNameFragmentFragment
-  , productProviders: Array<(
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: * }>
-    & { exporter: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & PartnerNameFragmentFragment
-    , supplier: ?({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & PartnerNameFragmentFragment
-     }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, todo: (
-    { __typename?: 'Todo' }
-    & { taskCount: { __typename?: 'TaskCount' }
-      & TaskCountFragmentFragment
-     }
-  ), files: Array<({ __typename?: 'File' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ImageFragmentFragment
-  > }
-);
+export type ProductCardFragmentFragment = ({
+    ...{ __typename?: 'Product' },
+  ...$Pick<Product, {| id: *, archived: *, name: *, serial: * |}>,
+  ...{| ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, importer: ({
+      ...{ __typename?: 'Organization' },
+    ...PartnerNameFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, productProviders: Array<({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: * |}>,
+    ...{| exporter: ({
+        ...{ __typename?: 'Organization' },
+      ...PartnerNameFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, supplier: ?({
+        ...{ __typename?: 'Organization' },
+      ...PartnerNameFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, todo: ({
+      ...{ __typename?: 'Todo' },
+    ...{| taskCount: ({
+        ...{ __typename?: 'TaskCount' },
+      ...TaskCountFragmentFragment
+    }) |}
+  }), files: Array<({
+      ...{ __typename?: 'File' },
+    ...ImageFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type ProductCardWithOwnedFragmentFragment = (
-  { __typename?: 'Product' }
-  & { ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-   }
-)
-  & ProductCardFragmentFragment
-;
+export type ProductCardWithOwnedFragmentFragment = ({
+    ...{ __typename?: 'Product' },
+  ...{| ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |},
+  ...ProductCardFragmentFragment
+});
 
-export type ProductProviderPackagingFragmentFragment = (
-  { __typename?: 'ProductProviderPackage' }
-  & $Pick<ProductProviderPackage, { id: *, name: *, capacity: *, autoCalculateVolume: * }>
-  & { grossWeight: ?{ __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-  , volume: ?{ __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-  , size: ?{ __typename?: 'Size' }
-    & SizeFragmentFragment
-   }
-);
+export type ProductProviderPackagingFragmentFragment = ({
+    ...{ __typename?: 'ProductProviderPackage' },
+  ...$Pick<ProductProviderPackage, {| id: *, name: *, capacity: *, autoCalculateVolume: * |}>,
+  ...{| grossWeight: ?({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), volume: ?({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), size: ?({
+      ...{ __typename?: 'Size' },
+    ...SizeFragmentFragment
+  }) |}
+});
 
-export type ProductProviderFormFragmentFragment = (
-  { __typename?: 'ProductProvider' }
-  & $Pick<ProductProvider, { id: *, name: *, archived: *, updatedAt: *, referenced: *, origin: *, productionLeadTime: *, unitType: *, autoCalculateUnitVolume: *, memo: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , exporter: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerCardFragmentFragment
-  , supplier: ?({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerCardFragmentFragment
-  , inspectionFee: ?{ __typename?: 'Price' }
-    & PriceFragmentFragment
-  , unitPrice: ?{ __typename?: 'Price' }
-    & PriceFragmentFragment
-  , unitWeight: ?{ __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-  , unitVolume: ?{ __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-  , unitSize: ?{ __typename?: 'Size' }
-    & SizeFragmentFragment
-  , defaultPackage: ?({ __typename?: 'ProductProviderPackage' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ProductProviderPackagingFragmentFragment
-  , packages: Array<({ __typename?: 'ProductProviderPackage' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ProductProviderPackagingFragmentFragment
-  >, customFields: { __typename?: 'CustomFields' }
-    & CustomFieldsFragmentFragment
-  , files: Array<({ __typename?: 'File' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & DocumentFragmentFragment
-    & ForbiddenFragmentFragment
-  >, todo: (
-    { __typename?: 'Todo' }
-    & { tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskWithoutParentInfoFragmentFragment
-    >, taskTemplate: ?({ __typename?: 'TaskTemplate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskTemplateCardFragmentFragment
-     }
-  ) }
-);
+export type ProductProviderFormFragmentFragment = ({
+    ...{ __typename?: 'ProductProvider' },
+  ...$Pick<ProductProvider, {| id: *, name: *, archived: *, updatedAt: *, referenced: *, origin: *, unitType: *, autoCalculateUnitVolume: *, memo: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, exporter: ({
+      ...{ __typename?: 'Organization' },
+    ...PartnerCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, supplier: ?({
+      ...{ __typename?: 'Organization' },
+    ...PartnerCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, unitPrice: ?({
+      ...{ __typename?: 'Price' },
+    ...PriceFragmentFragment
+  }), unitWeight: ?({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), unitVolume: ?({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), unitSize: ?({
+      ...{ __typename?: 'Size' },
+    ...SizeFragmentFragment
+  }), defaultPackage: ?({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...ProductProviderPackagingFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, packages: Array<({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...ProductProviderPackagingFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, customFields: ({
+      ...{ __typename?: 'CustomFields' },
+    ...CustomFieldsFragmentFragment
+  }), files: Array<({
+      ...{ __typename?: 'File' },
+    ...DocumentFragmentFragment
+  }) | { __typename?: 'BadRequest' } | ({
+      ...{ __typename?: 'Forbidden' },
+    ...ForbiddenFragmentFragment
+  }) | { __typename?: 'NotFound' }>, todo: ({
+      ...{ __typename?: 'Todo' },
+    ...{| tasks: Array<({
+        ...{ __typename?: 'Task' },
+      ...TaskWithoutParentInfoFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, taskTemplate: ?({
+        ...{ __typename?: 'TaskTemplate' },
+      ...TaskTemplateCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) |}
+});
 
-export type ProductProviderCardFragmentFragment = (
-  { __typename?: 'ProductProvider' }
-  & $Pick<ProductProvider, { id: *, archived: *, name: * }>
-  & { exporter: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerNameFragmentFragment
-  , supplier: ?({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerNameFragmentFragment
-  , unitPrice: ?{ __typename?: 'Price' }
-    & PriceFragmentFragment
-  , product: (
-    { __typename?: 'Product' }
-    & $Pick<Product, { id: *, name: *, serial: * }>
-    & { importer: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & PartnerNameFragmentFragment
-    , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TagFragmentFragment
-    >, files: Array<({ __typename?: 'File' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & ImageFragmentFragment
-    > }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, defaultPackage: ?({ __typename?: 'ProductProviderPackage' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ProductProviderPackagingFragmentFragment
-  , packages: Array<({ __typename?: 'ProductProviderPackage' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ProductProviderPackagingFragmentFragment
-  >, todo: (
-    { __typename?: 'Todo' }
-    & { taskCount: { __typename?: 'TaskCount' }
-      & TaskCountFragmentFragment
-     }
-  ) }
-);
+export type ProductProviderCardFragmentFragment = ({
+    ...{ __typename?: 'ProductProvider' },
+  ...$Pick<ProductProvider, {| id: *, archived: *, name: * |}>,
+  ...{| exporter: ({
+      ...{ __typename?: 'Organization' },
+    ...PartnerNameFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, supplier: ?({
+      ...{ __typename?: 'Organization' },
+    ...PartnerNameFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, unitPrice: ?({
+      ...{ __typename?: 'Price' },
+    ...PriceFragmentFragment
+  }), product: ({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: *, name: *, serial: * |}>,
+    ...{| importer: ({
+        ...{ __typename?: 'Organization' },
+      ...PartnerNameFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({
+        ...{ __typename?: 'Tag' },
+      ...TagFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, files: Array<({
+        ...{ __typename?: 'File' },
+      ...ImageFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, defaultPackage: ?({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...ProductProviderPackagingFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, packages: Array<({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...ProductProviderPackagingFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, todo: ({
+      ...{ __typename?: 'Todo' },
+    ...{| taskCount: ({
+        ...{ __typename?: 'TaskCount' },
+      ...TaskCountFragmentFragment
+    }) |}
+  }) |}
+});
 
-export type MilestoneInProjectCardFragmentFragment = (
-  { __typename?: 'Milestone' }
-  & $Pick<Milestone, { id: *, name: *, dueDate: *, completedAt: *, estimatedCompletionDate: * }>
-  & { tasks: Array<(
-    { __typename?: 'Task' }
-    & $Pick<Task, { id: *, completedAt: *, skippedAt: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> }
-);
+export type MilestoneInProjectCardFragmentFragment = ({
+    ...{ __typename?: 'Milestone' },
+  ...$Pick<Milestone, {| id: *, name: *, dueDate: *, completedAt: *, estimatedCompletionDate: * |}>,
+  ...{| tasks: Array<({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: *, completedAt: *, skippedAt: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type ProjectCardFragmentFragment = (
-  { __typename?: 'Project' }
-  & $Pick<Project, { id: *, name: *, description: *, dueDate: * }>
-  & { milestones: Array<({ __typename?: 'Milestone' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & MilestoneInProjectCardFragmentFragment
-  >, taskCount: { __typename?: 'TaskCount' }
-    & TaskCountFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  > }
-);
+export type ProjectCardFragmentFragment = ({
+    ...{ __typename?: 'Project' },
+  ...$Pick<Project, {| id: *, name: *, description: *, dueDate: * |}>,
+  ...{| milestones: Array<({
+      ...{ __typename?: 'Milestone' },
+    ...MilestoneInProjectCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, taskCount: ({
+      ...{ __typename?: 'TaskCount' },
+    ...TaskCountFragmentFragment
+  }), tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type MilestoneCardFragmentFragment = (
-  { __typename?: 'Milestone' }
-  & $Pick<Milestone, { id: *, name: *, description: *, dueDate: * }>
-  & { taskCount: { __typename?: 'TaskCount' }
-    & TaskCountFragmentFragment
-   }
-);
+export type MilestoneCardFragmentFragment = ({
+    ...{ __typename?: 'Milestone' },
+  ...$Pick<Milestone, {| id: *, name: *, description: *, dueDate: * |}>,
+  ...{| taskCount: ({
+      ...{ __typename?: 'TaskCount' },
+    ...TaskCountFragmentFragment
+  }) |}
+});
 
-export type ProjectFormQueryFragmentFragment = (
-  { __typename?: 'Project' }
-  & $Pick<Project, { id: *, name: *, description: *, dueDate: *, updatedAt: * }>
-  & { taskCount: { __typename?: 'TaskCount' }
-    & TaskCountFragmentFragment
-  , updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, milestones: Array<(
-    { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: *, updatedAt: *, name: *, dueDate: *, dueDateBinding: *, estimatedCompletionDate: *, estimatedCompletionDateBinding: *, completedAt: * }>
-    & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & UserAvatarFragmentFragment
-    , dueDateInterval: ?(
-      { __typename?: 'Interval' }
-      & $Pick<Interval, { months: *, weeks: *, days: * }>
-    ), estimatedCompletionDateInterval: ?(
-      { __typename?: 'Interval' }
-      & $Pick<Interval, { months: *, weeks: *, days: * }>
-    ), completedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & UserAvatarFragmentFragment
-    , taskCount: { __typename?: 'TaskCount' }
-      & TaskCountFragmentFragment
-    , tasks: Array<((
-      { __typename?: 'Task' }
-      & $Pick<Task, { milestoneSort: * }>
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskFormInProjectFragmentFragment
-    > }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> }
-);
+export type ProjectFormQueryFragmentFragment = ({
+    ...{ __typename?: 'Project' },
+  ...$Pick<Project, {| id: *, name: *, description: *, dueDate: *, updatedAt: * |}>,
+  ...{| taskCount: ({
+      ...{ __typename?: 'TaskCount' },
+    ...TaskCountFragmentFragment
+  }), updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, milestones: Array<({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: *, updatedAt: *, name: *, dueDate: *, dueDateBinding: *, estimatedCompletionDate: *, estimatedCompletionDateBinding: *, completedAt: * |}>,
+    ...{| updatedBy: ?({
+        ...{ __typename?: 'User' },
+      ...UserAvatarFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, dueDateInterval: ?({
+        ...{ __typename?: 'Interval' },
+      ...$Pick<Interval, {| months: *, weeks: *, days: * |}>
+    }), estimatedCompletionDateInterval: ?({
+        ...{ __typename?: 'Interval' },
+      ...$Pick<Interval, {| months: *, weeks: *, days: * |}>
+    }), completedBy: ?({
+        ...{ __typename?: 'User' },
+      ...UserAvatarFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, taskCount: ({
+        ...{ __typename?: 'TaskCount' },
+      ...TaskCountFragmentFragment
+    }), tasks: Array<({
+        ...{ __typename?: 'Task' },
+      ...$Pick<Task, {| milestoneSort: * |}>,
+      ...TaskFormInProjectFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type MilestoneTemplateFormFragmentFragment = (
-  { __typename?: 'MilestoneTemplate' }
-  & $Pick<MilestoneTemplate, { id: *, name: *, description: *, dueDateBinding: *, estimatedCompletionDateBinding: *, sort: * }>
-  & { dueDateInterval: ?(
-    { __typename?: 'Interval' }
-    & $Pick<Interval, { months: *, weeks: *, days: * }>
-  ), estimatedCompletionDateInterval: ?(
-    { __typename?: 'Interval' }
-    & $Pick<Interval, { months: *, weeks: *, days: * }>
-  ) }
-);
+export type MilestoneTemplateFormFragmentFragment = ({
+    ...{ __typename?: 'MilestoneTemplate' },
+  ...$Pick<MilestoneTemplate, {| id: *, name: *, description: *, dueDateBinding: *, estimatedCompletionDateBinding: *, sort: * |}>,
+  ...{| dueDateInterval: ?({
+      ...{ __typename?: 'Interval' },
+    ...$Pick<Interval, {| months: *, weeks: *, days: * |}>
+  }), estimatedCompletionDateInterval: ?({
+      ...{ __typename?: 'Interval' },
+    ...$Pick<Interval, {| months: *, weeks: *, days: * |}>
+  }) |}
+});
 
-export type ProjectTemplateCardFragmentFragment = (
-  { __typename?: 'ProjectTemplate' }
-  & $Pick<ProjectTemplate, { id: *, updatedAt: *, name: *, description: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, milestones: Array<(
-    { __typename?: 'MilestoneTemplate' }
-    & $Pick<MilestoneTemplate, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> }
-);
+export type ProjectTemplateCardFragmentFragment = ({
+    ...{ __typename?: 'ProjectTemplate' },
+  ...$Pick<ProjectTemplate, {| id: *, updatedAt: *, name: *, description: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, milestones: Array<({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type ProjectTemplateFormFragmentFragment = (
-  { __typename?: 'ProjectTemplate' }
-  & $Pick<ProjectTemplate, { id: *, updatedAt: *, name: *, description: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, milestones: Array<({ __typename?: 'MilestoneTemplate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & MilestoneTemplateFormFragmentFragment
-  > }
-);
+export type ProjectTemplateFormFragmentFragment = ({
+    ...{ __typename?: 'ProjectTemplate' },
+  ...$Pick<ProjectTemplate, {| id: *, updatedAt: *, name: *, description: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, milestones: Array<({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...MilestoneTemplateFormFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type ShipmentFormQueryFragmentFragment = (
-  { __typename?: 'Shipment' }
-  & $Pick<Shipment, { id: *, archived: *, updatedAt: *, memo: *, no: *, blNo: *, blDate: *, booked: *, bookingNo: *, bookingDate: *, invoiceNo: *, contractNo: *, incoterm: *, loadType: *, transportType: *, carrier: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-  , customFields: { __typename?: 'CustomFields' }
-    & CustomFieldsFragmentFragment
-  , forwarders: Array<({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerCardFragmentFragment
-  >, importer: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerCardFragmentFragment
-  , exporter: ?({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerCardFragmentFragment
-  , inCharges: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, totalVolume: { __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-   }
-);
+export type ShipmentFormQueryFragmentFragment = ({
+    ...{ __typename?: 'Shipment' },
+  ...$Pick<Shipment, {| id: *, archived: *, updatedAt: *, memo: *, no: *, blNo: *, blDate: *, booked: *, bookingNo: *, bookingDate: *, invoiceNo: *, contractNo: *, incoterm: *, loadType: *, transportType: *, carrier: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, customFields: ({
+      ...{ __typename?: 'CustomFields' },
+    ...CustomFieldsFragmentFragment
+  }), forwarders: Array<({
+      ...{ __typename?: 'Organization' },
+    ...PartnerCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, importer: ({
+      ...{ __typename?: 'Organization' },
+    ...PartnerCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, exporter: ?({
+      ...{ __typename?: 'Organization' },
+    ...PartnerCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, inCharges: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, totalVolume: ({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }) |}
+});
 
-export type ShipmentFormFragmentFragment = (
-  { __typename?: 'Shipment' }
-  & $Pick<Shipment, { id: *, archived: *, updatedAt: *, memo: *, no: *, blNo: *, blDate: *, booked: *, bookingNo: *, bookingDate: *, invoiceNo: *, contractNo: *, incoterm: *, loadType: *, transportType: *, carrier: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-  , todo: (
-    { __typename?: 'Todo' }
-    & { tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskWithoutParentInfoFragmentFragment
-    >, taskTemplate: ?({ __typename?: 'TaskTemplate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TaskTemplateCardFragmentFragment
-     }
-  ), customFields: { __typename?: 'CustomFields' }
-    & CustomFieldsFragmentFragment
-  , forwarders: Array<({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerCardFragmentFragment
-  >, importer: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerCardFragmentFragment
-  , exporter: ?({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerCardFragmentFragment
-  , inCharges: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, files: Array<({ __typename?: 'File' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & DocumentFragmentFragment
-  >, cargoReady: ({ __typename?: 'TimelineDate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TimelineDateFullFragmentFragment
-  , voyages: Array<(
-    { __typename?: 'Voyage' }
-    & $Pick<Voyage, { id: *, vesselName: *, vesselCode: * }>
-    & { departurePort: ?{ __typename?: 'Port' }
-      & PortFragmentFragment
-    , arrivalPort: ?{ __typename?: 'Port' }
-      & PortFragmentFragment
-    , departure: ({ __typename?: 'TimelineDate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TimelineDateFullFragmentFragment
-    , arrival: ({ __typename?: 'TimelineDate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TimelineDateFullFragmentFragment
-     }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, containerGroups: Array<(
-    { __typename?: 'ContainerGroup' }
-    & $Pick<ContainerGroup, { id: * }>
-    & { warehouse: ?(
-      { __typename?: 'Warehouse' }
-      & $Pick<Warehouse, { id: *, name: * }>
-      & { ownedBy: (
-        { __typename?: 'Organization' }
-        & $Pick<Organization, { id: *, name: * }>
-      ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, customClearance: ({ __typename?: 'TimelineDate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TimelineDateFullFragmentFragment
-    , warehouseArrival: ({ __typename?: 'TimelineDate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TimelineDateFullFragmentFragment
-    , deliveryReady: ({ __typename?: 'TimelineDate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TimelineDateFullFragmentFragment
-     }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, containers: Array<({ __typename?: 'Container' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & ContainerFormFragmentFragment
-  >, totalVolume: { __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-  , batches: Array<({ __typename?: 'Batch' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & BatchFormFragmentFragment
-  > }
-);
+export type ShipmentFormFragmentFragment = ({
+    ...{ __typename?: 'Shipment' },
+  ...$Pick<Shipment, {| id: *, archived: *, updatedAt: *, memo: *, no: *, blNo: *, blDate: *, booked: *, bookingNo: *, bookingDate: *, invoiceNo: *, contractNo: *, incoterm: *, loadType: *, transportType: *, carrier: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, todo: ({
+      ...{ __typename?: 'Todo' },
+    ...{| tasks: Array<({
+        ...{ __typename?: 'Task' },
+      ...TaskWithoutParentInfoFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, taskTemplate: ?({
+        ...{ __typename?: 'TaskTemplate' },
+      ...TaskTemplateCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }), customFields: ({
+      ...{ __typename?: 'CustomFields' },
+    ...CustomFieldsFragmentFragment
+  }), forwarders: Array<({
+      ...{ __typename?: 'Organization' },
+    ...PartnerCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, importer: ({
+      ...{ __typename?: 'Organization' },
+    ...PartnerCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, exporter: ?({
+      ...{ __typename?: 'Organization' },
+    ...PartnerCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, inCharges: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, files: Array<({
+      ...{ __typename?: 'File' },
+    ...DocumentFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, cargoReady: ({
+      ...{ __typename?: 'TimelineDate' },
+    ...TimelineDateFullFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, voyages: Array<({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: *, vesselName: *, vesselCode: * |}>,
+    ...{| departurePort: ?({
+        ...{ __typename?: 'Port' },
+      ...PortFragmentFragment
+    }), arrivalPort: ?({
+        ...{ __typename?: 'Port' },
+      ...PortFragmentFragment
+    }), departure: ({
+        ...{ __typename?: 'TimelineDate' },
+      ...TimelineDateFullFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, arrival: ({
+        ...{ __typename?: 'TimelineDate' },
+      ...TimelineDateFullFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, containerGroups: Array<({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>,
+    ...{| warehouse: ?({
+        ...{ __typename?: 'Warehouse' },
+      ...$Pick<Warehouse, {| id: *, name: * |}>,
+      ...{| ownedBy: ({
+          ...{ __typename?: 'Organization' },
+        ...$Pick<Organization, {| id: *, name: * |}>
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, customClearance: ({
+        ...{ __typename?: 'TimelineDate' },
+      ...TimelineDateFullFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouseArrival: ({
+        ...{ __typename?: 'TimelineDate' },
+      ...TimelineDateFullFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, deliveryReady: ({
+        ...{ __typename?: 'TimelineDate' },
+      ...TimelineDateFullFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, containers: Array<({
+      ...{ __typename?: 'Container' },
+    ...ContainerFormFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, totalVolume: ({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), batches: Array<({
+      ...{ __typename?: 'Batch' },
+    ...BatchFormFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type ShipmentCardFragmentFragment = (
-  { __typename?: 'Shipment' }
-  & $Pick<Shipment, { id: *, archived: *, no: *, blNo: *, booked: *, transportType: *, batchCount: *, totalPackageQuantity: *, orderItemCount: * }>
-  & { totalVolume: { __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-  , containerTypeCounts: Array<(
-    { __typename?: 'ContainerTypeCount' }
-    & $Pick<ContainerTypeCount, { containerType: *, count: * }>
-  )>, importer: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerNameFragmentFragment
-  , exporter: ?({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerNameFragmentFragment
-  , cargoReady: ({ __typename?: 'TimelineDate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TimelineDateMinimalFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, todo: (
-    { __typename?: 'Todo' }
-    & { taskCount: { __typename?: 'TaskCount' }
-      & TaskCountFragmentFragment
-     }
-  ), voyages: Array<(
-    { __typename?: 'Voyage' }
-    & $Pick<Voyage, { id: *, vesselName: * }>
-    & { departurePort: ?{ __typename?: 'Port' }
-      & PortFragmentFragment
-    , arrivalPort: ?{ __typename?: 'Port' }
-      & PortFragmentFragment
-    , departure: ({ __typename?: 'TimelineDate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TimelineDateMinimalFragmentFragment
-    , arrival: ({ __typename?: 'TimelineDate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TimelineDateMinimalFragmentFragment
-     }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, containerGroups: Array<(
-    { __typename?: 'ContainerGroup' }
-    & $Pick<ContainerGroup, { id: * }>
-    & { customClearance: ({ __typename?: 'TimelineDate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TimelineDateMinimalFragmentFragment
-    , warehouseArrival: ({ __typename?: 'TimelineDate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TimelineDateMinimalFragmentFragment
-    , deliveryReady: ({ __typename?: 'TimelineDate' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & TimelineDateMinimalFragmentFragment
-    , warehouse: ?(
-      { __typename?: 'Warehouse' }
-      & $Pick<Warehouse, { id: *, name: * }>
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, containers: Array<(
-    { __typename?: 'Container' }
-    & $Pick<Container, { id: *, no: *, freeTimeStartDate: *, freeTimeDuration: *, containerType: *, warehouseArrivalAgreedDate: *, warehouseArrivalAgreedDateApprovedAt: *, warehouseArrivalActualDate: *, warehouseArrivalActualDateApprovedAt: * }>
-    & { warehouse: ?(
-      { __typename?: 'Warehouse' }
-      & $Pick<Warehouse, { id: *, name: * }>
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, batches: Array<(
-    { __typename?: 'Batch' }
-    & $Pick<Batch, { id: * }>
-    & { orderItem: (
-      { __typename?: 'OrderItem' }
-      & $Pick<OrderItem, { id: * }>
-      & { productProvider: (
-        { __typename?: 'ProductProvider' }
-        & $Pick<ProductProvider, { id: * }>
-        & { exporter: (
-          { __typename?: 'Organization' }
-          & $Pick<Organization, { id: *, name: * }>
-        ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-      ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> }
-);
+export type ShipmentCardFragmentFragment = ({
+    ...{ __typename?: 'Shipment' },
+  ...$Pick<Shipment, {| id: *, archived: *, no: *, blNo: *, booked: *, transportType: *, batchCount: *, totalPackageQuantity: *, orderItemCount: * |}>,
+  ...{| totalVolume: ({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), containerTypeCounts: Array<({
+      ...{ __typename?: 'ContainerTypeCount' },
+    ...$Pick<ContainerTypeCount, {| containerType: *, count: * |}>
+  })>, importer: ({
+      ...{ __typename?: 'Organization' },
+    ...PartnerNameFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, exporter: ?({
+      ...{ __typename?: 'Organization' },
+    ...PartnerNameFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, cargoReady: ({
+      ...{ __typename?: 'TimelineDate' },
+    ...TimelineDateMinimalFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, todo: ({
+      ...{ __typename?: 'Todo' },
+    ...{| taskCount: ({
+        ...{ __typename?: 'TaskCount' },
+      ...TaskCountFragmentFragment
+    }) |}
+  }), voyages: Array<({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: *, vesselName: * |}>,
+    ...{| departurePort: ?({
+        ...{ __typename?: 'Port' },
+      ...PortFragmentFragment
+    }), arrivalPort: ?({
+        ...{ __typename?: 'Port' },
+      ...PortFragmentFragment
+    }), departure: ({
+        ...{ __typename?: 'TimelineDate' },
+      ...TimelineDateMinimalFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, arrival: ({
+        ...{ __typename?: 'TimelineDate' },
+      ...TimelineDateMinimalFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, containerGroups: Array<({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>,
+    ...{| customClearance: ({
+        ...{ __typename?: 'TimelineDate' },
+      ...TimelineDateMinimalFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouseArrival: ({
+        ...{ __typename?: 'TimelineDate' },
+      ...TimelineDateMinimalFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, deliveryReady: ({
+        ...{ __typename?: 'TimelineDate' },
+      ...TimelineDateMinimalFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, warehouse: ?({
+        ...{ __typename?: 'Warehouse' },
+      ...$Pick<Warehouse, {| id: *, name: * |}>
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, containers: Array<({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: *, no: *, freeTimeStartDate: *, freeTimeDuration: *, containerType: *, warehouseArrivalAgreedDate: *, warehouseArrivalAgreedDateApprovedAt: *, warehouseArrivalActualDate: *, warehouseArrivalActualDateApprovedAt: * |}>,
+    ...{| warehouse: ?({
+        ...{ __typename?: 'Warehouse' },
+      ...$Pick<Warehouse, {| id: *, name: * |}>
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, batches: Array<({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>,
+    ...{| orderItem: ({
+        ...{ __typename?: 'OrderItem' },
+      ...$Pick<OrderItem, {| id: * |}>,
+      ...{| productProvider: ({
+          ...{ __typename?: 'ProductProvider' },
+        ...$Pick<ProductProvider, {| id: * |}>,
+        ...{| exporter: ({
+            ...{ __typename?: 'Organization' },
+          ...$Pick<Organization, {| id: *, name: * |}>
+        }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type ShipmentCardWithOwnedFragmentFragment = (
-  { __typename?: 'Shipment' }
-  & { ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-   }
-)
-  & ShipmentCardFragmentFragment
-;
+export type ShipmentCardWithOwnedFragmentFragment = ({
+    ...{ __typename?: 'Shipment' },
+  ...{| ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |},
+  ...ShipmentCardFragmentFragment
+});
 
-export type StaffFormFragmentFragment = (
-  { __typename?: 'User' }
-  & $Pick<User, { id: * }>
-);
+export type StaffFormFragmentFragment = ({
+    ...{ __typename?: 'User' },
+  ...$Pick<User, {| id: * |}>
+});
 
-export type StaffCardFragmentFragment = (
-  { __typename?: 'User' }
-  & $Pick<User, { id: *, email: *, firstName: *, lastName: * }>
-  & { roles: Array<(
-    { __typename?: 'Role' }
-    & $Pick<Role, { id: *, name: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, organization: ?(
-    { __typename?: 'Organization' }
-    & $Pick<Organization, { id: *, name: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
+export type StaffCardFragmentFragment = ({
+    ...{ __typename?: 'User' },
+  ...$Pick<User, {| id: *, email: *, firstName: *, lastName: * |}>,
+  ...{| roles: Array<({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: *, name: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, organization: ?({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: *, name: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
 export type UsersQueryQueryVariables = {
   page: $ElementType<Scalars, 'Int'>,
@@ -62421,804 +62938,840 @@ export type UsersQueryQueryVariables = {
 };
 
 
-export type UsersQueryQuery = (
-  { __typename?: 'Query' }
-  & { users: (
-    { __typename?: 'UserPayloadPaginatedSearch' }
-    & $Pick<UserPayloadPaginatedSearch, { page: *, totalPage: * }>
-    & { nodes: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & StaffCardFragmentFragment
-    > }
-  ) }
-);
+export type UsersQueryQuery = ({
+    ...{ __typename?: 'Query' },
+  ...{| users: ({
+      ...{ __typename?: 'UserPayloadPaginatedSearch' },
+    ...$Pick<UserPayloadPaginatedSearch, {| page: *, totalPage: * |}>,
+    ...{| nodes: Array<({
+        ...{ __typename?: 'User' },
+      ...StaffCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+  }) |}
+});
 
-export type TableTemplateCardFragmentFragment = (
-  { __typename?: 'MaskEdit' }
-  & $Pick<MaskEdit, { id: *, name: *, type: *, memo: *, fields: *, updatedAt: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-   }
-);
+export type TableTemplateCardFragmentFragment = ({
+    ...{ __typename?: 'MaskEdit' },
+  ...$Pick<MaskEdit, {| id: *, name: *, type: *, memo: *, fields: *, updatedAt: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
-export type TagFormFragmentFragment = (
-  { __typename?: 'Tag' }
-  & $Pick<Tag, { id: *, updatedAt: *, name: *, description: *, color: *, entityTypes: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-   }
-);
+export type TagFormFragmentFragment = ({
+    ...{ __typename?: 'Tag' },
+  ...$Pick<Tag, {| id: *, updatedAt: *, name: *, description: *, color: *, entityTypes: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
-export type TagCardFragmentFragment = (
-  { __typename?: 'Tag' }
-  & $Pick<Tag, { id: *, name: *, description: *, color: *, entityTypes: * }>
-);
+export type TagCardFragmentFragment = ({
+    ...{ __typename?: 'Tag' },
+  ...$Pick<Tag, {| id: *, name: *, description: *, color: *, entityTypes: * |}>
+});
 
-export type TaskInfoFragmentFragment = (
-  { __typename?: 'Task' }
-  & $Pick<Task, { id: *, updatedAt: *, name: *, description: *, startDate: *, startDateBinding: *, dueDate: *, dueDateBinding: *, inProgressAt: *, skippedAt: *, completedAt: *, approvable: *, rejectedAt: *, approvedAt: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , ownedBy: ({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, startDateInterval: ?(
-    { __typename?: 'Interval' }
-    & $Pick<Interval, { months: *, weeks: *, days: * }>
-  ), dueDateInterval: ?(
-    { __typename?: 'Interval' }
-    & $Pick<Interval, { months: *, weeks: *, days: * }>
-  ), inProgressBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , skippedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , completedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , assignedTo: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, rejectedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , approvedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , approvers: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  > }
-);
+export type TaskInfoFragmentFragment = ({
+    ...{ __typename?: 'Task' },
+  ...$Pick<Task, {| id: *, updatedAt: *, name: *, description: *, startDate: *, startDateBinding: *, dueDate: *, dueDateBinding: *, inProgressAt: *, skippedAt: *, completedAt: *, approvable: *, rejectedAt: *, approvedAt: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, startDateInterval: ?({
+      ...{ __typename?: 'Interval' },
+    ...$Pick<Interval, {| months: *, weeks: *, days: * |}>
+  }), dueDateInterval: ?({
+      ...{ __typename?: 'Interval' },
+    ...$Pick<Interval, {| months: *, weeks: *, days: * |}>
+  }), inProgressBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, skippedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, completedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, assignedTo: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, rejectedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, approvedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, approvers: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type TaskEntityCardFragmentFragment = (
-  { __typename?: 'Task' }
-  & { entity: ?(
-    { __typename?: 'Product' }
-    & $Pick<Product, { id: * }>
-  ) | (
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: * }>
-  ) | (
-    { __typename?: 'ProductProviderPackage' }
-    & $Pick<ProductProviderPackage, { id: * }>
-  ) | (
-    { __typename?: 'Order' }
-    & $Pick<Order, { id: * }>
-  ) | (
-    { __typename?: 'OrderItem' }
-    & $Pick<OrderItem, { id: * }>
-  ) | (
-    { __typename?: 'Batch' }
-    & $Pick<Batch, { id: * }>
-  ) | (
-    { __typename?: 'BatchQuantityRevision' }
-    & $Pick<BatchQuantityRevision, { id: * }>
-  ) | (
-    { __typename?: 'Shipment' }
-    & $Pick<Shipment, { id: * }>
-  ) | (
-    { __typename?: 'Voyage' }
-    & $Pick<Voyage, { id: * }>
-  ) | (
-    { __typename?: 'Container' }
-    & $Pick<Container, { id: * }>
-  ) | (
-    { __typename?: 'ContainerGroup' }
-    & $Pick<ContainerGroup, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDate' }
-    & $Pick<TimelineDate, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDateRevision' }
-    & $Pick<TimelineDateRevision, { id: * }>
-  ) | (
-    { __typename?: 'Warehouse' }
-    & $Pick<Warehouse, { id: * }>
-  ) | (
-    { __typename?: 'Tag' }
-    & $Pick<Tag, { id: * }>
-  ) | (
-    { __typename?: 'User' }
-    & $Pick<User, { id: * }>
-  ) | (
-    { __typename?: 'Organization' }
-    & $Pick<Organization, { id: * }>
-  ) | (
-    { __typename?: 'Partnership' }
-    & $Pick<Partnership, { id: * }>
-  ) | (
-    { __typename?: 'Role' }
-    & $Pick<Role, { id: * }>
-  ) | (
-    { __typename?: 'File' }
-    & $Pick<File, { id: * }>
-  ) | (
-    { __typename?: 'Task' }
-    & $Pick<Task, { id: * }>
-  ) | (
-    { __typename?: 'TaskTemplate' }
-    & $Pick<TaskTemplate, { id: * }>
-  ) | (
-    { __typename?: 'Project' }
-    & $Pick<Project, { id: * }>
-  ) | (
-    { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, order: ?(
-    { __typename?: 'Product' }
-    & $Pick<Product, { id: * }>
-  ) | (
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: * }>
-  ) | (
-    { __typename?: 'ProductProviderPackage' }
-    & $Pick<ProductProviderPackage, { id: * }>
-  ) | (
-    { __typename?: 'Order' }
-    & $Pick<Order, { id: * }>
-    & OrderCardFragmentFragment
-  ) | (
-    { __typename?: 'OrderItem' }
-    & $Pick<OrderItem, { id: * }>
-  ) | (
-    { __typename?: 'Batch' }
-    & $Pick<Batch, { id: * }>
-  ) | (
-    { __typename?: 'BatchQuantityRevision' }
-    & $Pick<BatchQuantityRevision, { id: * }>
-  ) | (
-    { __typename?: 'Shipment' }
-    & $Pick<Shipment, { id: * }>
-  ) | (
-    { __typename?: 'Voyage' }
-    & $Pick<Voyage, { id: * }>
-  ) | (
-    { __typename?: 'Container' }
-    & $Pick<Container, { id: * }>
-  ) | (
-    { __typename?: 'ContainerGroup' }
-    & $Pick<ContainerGroup, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDate' }
-    & $Pick<TimelineDate, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDateRevision' }
-    & $Pick<TimelineDateRevision, { id: * }>
-  ) | (
-    { __typename?: 'Warehouse' }
-    & $Pick<Warehouse, { id: * }>
-  ) | (
-    { __typename?: 'Tag' }
-    & $Pick<Tag, { id: * }>
-  ) | (
-    { __typename?: 'User' }
-    & $Pick<User, { id: * }>
-  ) | (
-    { __typename?: 'Organization' }
-    & $Pick<Organization, { id: * }>
-  ) | (
-    { __typename?: 'Partnership' }
-    & $Pick<Partnership, { id: * }>
-  ) | (
-    { __typename?: 'Role' }
-    & $Pick<Role, { id: * }>
-  ) | (
-    { __typename?: 'File' }
-    & $Pick<File, { id: * }>
-  ) | (
-    { __typename?: 'Task' }
-    & $Pick<Task, { id: * }>
-  ) | (
-    { __typename?: 'TaskTemplate' }
-    & $Pick<TaskTemplate, { id: * }>
-  ) | (
-    { __typename?: 'Project' }
-    & $Pick<Project, { id: * }>
-  ) | (
-    { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, orderItem: ?(
-    { __typename?: 'Product' }
-    & $Pick<Product, { id: * }>
-  ) | (
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: * }>
-  ) | (
-    { __typename?: 'ProductProviderPackage' }
-    & $Pick<ProductProviderPackage, { id: * }>
-  ) | (
-    { __typename?: 'Order' }
-    & $Pick<Order, { id: * }>
-  ) | (
-    { __typename?: 'OrderItem' }
-    & $Pick<OrderItem, { id: * }>
-    & ItemCardFragmentFragment
-  ) | (
-    { __typename?: 'Batch' }
-    & $Pick<Batch, { id: * }>
-  ) | (
-    { __typename?: 'BatchQuantityRevision' }
-    & $Pick<BatchQuantityRevision, { id: * }>
-  ) | (
-    { __typename?: 'Shipment' }
-    & $Pick<Shipment, { id: * }>
-  ) | (
-    { __typename?: 'Voyage' }
-    & $Pick<Voyage, { id: * }>
-  ) | (
-    { __typename?: 'Container' }
-    & $Pick<Container, { id: * }>
-  ) | (
-    { __typename?: 'ContainerGroup' }
-    & $Pick<ContainerGroup, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDate' }
-    & $Pick<TimelineDate, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDateRevision' }
-    & $Pick<TimelineDateRevision, { id: * }>
-  ) | (
-    { __typename?: 'Warehouse' }
-    & $Pick<Warehouse, { id: * }>
-  ) | (
-    { __typename?: 'Tag' }
-    & $Pick<Tag, { id: * }>
-  ) | (
-    { __typename?: 'User' }
-    & $Pick<User, { id: * }>
-  ) | (
-    { __typename?: 'Organization' }
-    & $Pick<Organization, { id: * }>
-  ) | (
-    { __typename?: 'Partnership' }
-    & $Pick<Partnership, { id: * }>
-  ) | (
-    { __typename?: 'Role' }
-    & $Pick<Role, { id: * }>
-  ) | (
-    { __typename?: 'File' }
-    & $Pick<File, { id: * }>
-  ) | (
-    { __typename?: 'Task' }
-    & $Pick<Task, { id: * }>
-  ) | (
-    { __typename?: 'TaskTemplate' }
-    & $Pick<TaskTemplate, { id: * }>
-  ) | (
-    { __typename?: 'Project' }
-    & $Pick<Project, { id: * }>
-  ) | (
-    { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, batch: ?(
-    { __typename?: 'Product' }
-    & $Pick<Product, { id: * }>
-  ) | (
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: * }>
-  ) | (
-    { __typename?: 'ProductProviderPackage' }
-    & $Pick<ProductProviderPackage, { id: * }>
-  ) | (
-    { __typename?: 'Order' }
-    & $Pick<Order, { id: * }>
-  ) | (
-    { __typename?: 'OrderItem' }
-    & $Pick<OrderItem, { id: * }>
-  ) | (
-    { __typename?: 'Batch' }
-    & $Pick<Batch, { id: * }>
-    & BatchCardFragmentFragment
-  ) | (
-    { __typename?: 'BatchQuantityRevision' }
-    & $Pick<BatchQuantityRevision, { id: * }>
-  ) | (
-    { __typename?: 'Shipment' }
-    & $Pick<Shipment, { id: * }>
-  ) | (
-    { __typename?: 'Voyage' }
-    & $Pick<Voyage, { id: * }>
-  ) | (
-    { __typename?: 'Container' }
-    & $Pick<Container, { id: * }>
-  ) | (
-    { __typename?: 'ContainerGroup' }
-    & $Pick<ContainerGroup, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDate' }
-    & $Pick<TimelineDate, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDateRevision' }
-    & $Pick<TimelineDateRevision, { id: * }>
-  ) | (
-    { __typename?: 'Warehouse' }
-    & $Pick<Warehouse, { id: * }>
-  ) | (
-    { __typename?: 'Tag' }
-    & $Pick<Tag, { id: * }>
-  ) | (
-    { __typename?: 'User' }
-    & $Pick<User, { id: * }>
-  ) | (
-    { __typename?: 'Organization' }
-    & $Pick<Organization, { id: * }>
-  ) | (
-    { __typename?: 'Partnership' }
-    & $Pick<Partnership, { id: * }>
-  ) | (
-    { __typename?: 'Role' }
-    & $Pick<Role, { id: * }>
-  ) | (
-    { __typename?: 'File' }
-    & $Pick<File, { id: * }>
-  ) | (
-    { __typename?: 'Task' }
-    & $Pick<Task, { id: * }>
-  ) | (
-    { __typename?: 'TaskTemplate' }
-    & $Pick<TaskTemplate, { id: * }>
-  ) | (
-    { __typename?: 'Project' }
-    & $Pick<Project, { id: * }>
-  ) | (
-    { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, product: ?(
-    { __typename?: 'Product' }
-    & $Pick<Product, { id: * }>
-    & ProductCardFragmentFragment
-  ) | (
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: * }>
-  ) | (
-    { __typename?: 'ProductProviderPackage' }
-    & $Pick<ProductProviderPackage, { id: * }>
-  ) | (
-    { __typename?: 'Order' }
-    & $Pick<Order, { id: * }>
-  ) | (
-    { __typename?: 'OrderItem' }
-    & $Pick<OrderItem, { id: * }>
-  ) | (
-    { __typename?: 'Batch' }
-    & $Pick<Batch, { id: * }>
-  ) | (
-    { __typename?: 'BatchQuantityRevision' }
-    & $Pick<BatchQuantityRevision, { id: * }>
-  ) | (
-    { __typename?: 'Shipment' }
-    & $Pick<Shipment, { id: * }>
-  ) | (
-    { __typename?: 'Voyage' }
-    & $Pick<Voyage, { id: * }>
-  ) | (
-    { __typename?: 'Container' }
-    & $Pick<Container, { id: * }>
-  ) | (
-    { __typename?: 'ContainerGroup' }
-    & $Pick<ContainerGroup, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDate' }
-    & $Pick<TimelineDate, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDateRevision' }
-    & $Pick<TimelineDateRevision, { id: * }>
-  ) | (
-    { __typename?: 'Warehouse' }
-    & $Pick<Warehouse, { id: * }>
-  ) | (
-    { __typename?: 'Tag' }
-    & $Pick<Tag, { id: * }>
-  ) | (
-    { __typename?: 'User' }
-    & $Pick<User, { id: * }>
-  ) | (
-    { __typename?: 'Organization' }
-    & $Pick<Organization, { id: * }>
-  ) | (
-    { __typename?: 'Partnership' }
-    & $Pick<Partnership, { id: * }>
-  ) | (
-    { __typename?: 'Role' }
-    & $Pick<Role, { id: * }>
-  ) | (
-    { __typename?: 'File' }
-    & $Pick<File, { id: * }>
-  ) | (
-    { __typename?: 'Task' }
-    & $Pick<Task, { id: * }>
-  ) | (
-    { __typename?: 'TaskTemplate' }
-    & $Pick<TaskTemplate, { id: * }>
-  ) | (
-    { __typename?: 'Project' }
-    & $Pick<Project, { id: * }>
-  ) | (
-    { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, productProvider: ?(
-    { __typename?: 'Product' }
-    & $Pick<Product, { id: * }>
-  ) | (
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: * }>
-    & ProductProviderCardFragmentFragment
-  ) | (
-    { __typename?: 'ProductProviderPackage' }
-    & $Pick<ProductProviderPackage, { id: * }>
-  ) | (
-    { __typename?: 'Order' }
-    & $Pick<Order, { id: * }>
-  ) | (
-    { __typename?: 'OrderItem' }
-    & $Pick<OrderItem, { id: * }>
-  ) | (
-    { __typename?: 'Batch' }
-    & $Pick<Batch, { id: * }>
-  ) | (
-    { __typename?: 'BatchQuantityRevision' }
-    & $Pick<BatchQuantityRevision, { id: * }>
-  ) | (
-    { __typename?: 'Shipment' }
-    & $Pick<Shipment, { id: * }>
-  ) | (
-    { __typename?: 'Voyage' }
-    & $Pick<Voyage, { id: * }>
-  ) | (
-    { __typename?: 'Container' }
-    & $Pick<Container, { id: * }>
-  ) | (
-    { __typename?: 'ContainerGroup' }
-    & $Pick<ContainerGroup, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDate' }
-    & $Pick<TimelineDate, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDateRevision' }
-    & $Pick<TimelineDateRevision, { id: * }>
-  ) | (
-    { __typename?: 'Warehouse' }
-    & $Pick<Warehouse, { id: * }>
-  ) | (
-    { __typename?: 'Tag' }
-    & $Pick<Tag, { id: * }>
-  ) | (
-    { __typename?: 'User' }
-    & $Pick<User, { id: * }>
-  ) | (
-    { __typename?: 'Organization' }
-    & $Pick<Organization, { id: * }>
-  ) | (
-    { __typename?: 'Partnership' }
-    & $Pick<Partnership, { id: * }>
-  ) | (
-    { __typename?: 'Role' }
-    & $Pick<Role, { id: * }>
-  ) | (
-    { __typename?: 'File' }
-    & $Pick<File, { id: * }>
-  ) | (
-    { __typename?: 'Task' }
-    & $Pick<Task, { id: * }>
-  ) | (
-    { __typename?: 'TaskTemplate' }
-    & $Pick<TaskTemplate, { id: * }>
-  ) | (
-    { __typename?: 'Project' }
-    & $Pick<Project, { id: * }>
-  ) | (
-    { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, shipment: ?(
-    { __typename?: 'Product' }
-    & $Pick<Product, { id: * }>
-  ) | (
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: * }>
-  ) | (
-    { __typename?: 'ProductProviderPackage' }
-    & $Pick<ProductProviderPackage, { id: * }>
-  ) | (
-    { __typename?: 'Order' }
-    & $Pick<Order, { id: * }>
-  ) | (
-    { __typename?: 'OrderItem' }
-    & $Pick<OrderItem, { id: * }>
-  ) | (
-    { __typename?: 'Batch' }
-    & $Pick<Batch, { id: * }>
-  ) | (
-    { __typename?: 'BatchQuantityRevision' }
-    & $Pick<BatchQuantityRevision, { id: * }>
-  ) | (
-    { __typename?: 'Shipment' }
-    & $Pick<Shipment, { id: * }>
-    & ShipmentCardFragmentFragment
-  ) | (
-    { __typename?: 'Voyage' }
-    & $Pick<Voyage, { id: * }>
-  ) | (
-    { __typename?: 'Container' }
-    & $Pick<Container, { id: * }>
-  ) | (
-    { __typename?: 'ContainerGroup' }
-    & $Pick<ContainerGroup, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDate' }
-    & $Pick<TimelineDate, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDateRevision' }
-    & $Pick<TimelineDateRevision, { id: * }>
-  ) | (
-    { __typename?: 'Warehouse' }
-    & $Pick<Warehouse, { id: * }>
-  ) | (
-    { __typename?: 'Tag' }
-    & $Pick<Tag, { id: * }>
-  ) | (
-    { __typename?: 'User' }
-    & $Pick<User, { id: * }>
-  ) | (
-    { __typename?: 'Organization' }
-    & $Pick<Organization, { id: * }>
-  ) | (
-    { __typename?: 'Partnership' }
-    & $Pick<Partnership, { id: * }>
-  ) | (
-    { __typename?: 'Role' }
-    & $Pick<Role, { id: * }>
-  ) | (
-    { __typename?: 'File' }
-    & $Pick<File, { id: * }>
-  ) | (
-    { __typename?: 'Task' }
-    & $Pick<Task, { id: * }>
-  ) | (
-    { __typename?: 'TaskTemplate' }
-    & $Pick<TaskTemplate, { id: * }>
-  ) | (
-    { __typename?: 'Project' }
-    & $Pick<Project, { id: * }>
-  ) | (
-    { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
+export type TaskEntityCardFragmentFragment = ({
+    ...{ __typename?: 'Task' },
+  ...{| entity: ?({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...$Pick<ProductProviderPackage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDate' },
+    ...$Pick<TimelineDate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Tag' },
+    ...$Pick<Tag, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Partnership' },
+    ...$Pick<Partnership, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'File' },
+    ...$Pick<File, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, order: ?({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...$Pick<ProductProviderPackage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: * |}>,
+    ...OrderCardFragmentFragment
+  }) | ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDate' },
+    ...$Pick<TimelineDate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Tag' },
+    ...$Pick<Tag, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Partnership' },
+    ...$Pick<Partnership, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'File' },
+    ...$Pick<File, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, orderItem: ?({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...$Pick<ProductProviderPackage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: * |}>,
+    ...ItemCardFragmentFragment
+  }) | ({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDate' },
+    ...$Pick<TimelineDate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Tag' },
+    ...$Pick<Tag, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Partnership' },
+    ...$Pick<Partnership, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'File' },
+    ...$Pick<File, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, batch: ?({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...$Pick<ProductProviderPackage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>,
+    ...BatchCardFragmentFragment
+  }) | ({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDate' },
+    ...$Pick<TimelineDate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Tag' },
+    ...$Pick<Tag, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Partnership' },
+    ...$Pick<Partnership, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'File' },
+    ...$Pick<File, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, product: ?({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: * |}>,
+    ...ProductCardFragmentFragment
+  }) | ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...$Pick<ProductProviderPackage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDate' },
+    ...$Pick<TimelineDate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Tag' },
+    ...$Pick<Tag, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Partnership' },
+    ...$Pick<Partnership, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'File' },
+    ...$Pick<File, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, productProvider: ?({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: * |}>,
+    ...ProductProviderCardFragmentFragment
+  }) | ({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...$Pick<ProductProviderPackage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDate' },
+    ...$Pick<TimelineDate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Tag' },
+    ...$Pick<Tag, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Partnership' },
+    ...$Pick<Partnership, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'File' },
+    ...$Pick<File, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, shipment: ?({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...$Pick<ProductProviderPackage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: * |}>,
+    ...ShipmentCardFragmentFragment
+  }) | ({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDate' },
+    ...$Pick<TimelineDate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Tag' },
+    ...$Pick<Tag, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Partnership' },
+    ...$Pick<Partnership, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'File' },
+    ...$Pick<File, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
-export type TaskCardFragmentFragment = (
-  { __typename?: 'Task' }
-  & $Pick<Task, { id: *, name: *, approvable: *, startDate: *, dueDate: *, inProgressAt: *, skippedAt: *, completedAt: *, rejectedAt: *, approvedAt: *, startDateBinding: *, dueDateBinding: * }>
-  & { entity: ?(
-    { __typename?: 'Product' }
-    & $Pick<Product, { id: *, name: * }>
-  ) | (
-    { __typename?: 'ProductProvider' }
-    & $Pick<ProductProvider, { id: *, name: * }>
-    & { product: (
-      { __typename?: 'Product' }
-      & $Pick<Product, { id: *, name: * }>
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | (
-    { __typename?: 'ProductProviderPackage' }
-    & $Pick<ProductProviderPackage, { id: * }>
-  ) | (
-    { __typename?: 'Order' }
-    & $Pick<Order, { id: *, poNo: * }>
-  ) | (
-    { __typename?: 'OrderItem' }
-    & $Pick<OrderItem, { id: *, no: * }>
-  ) | (
-    { __typename?: 'Batch' }
-    & $Pick<Batch, { id: *, no: * }>
-  ) | (
-    { __typename?: 'BatchQuantityRevision' }
-    & $Pick<BatchQuantityRevision, { id: * }>
-  ) | (
-    { __typename?: 'Shipment' }
-    & $Pick<Shipment, { id: *, no: * }>
-  ) | (
-    { __typename?: 'Voyage' }
-    & $Pick<Voyage, { id: * }>
-  ) | (
-    { __typename?: 'Container' }
-    & $Pick<Container, { id: * }>
-  ) | (
-    { __typename?: 'ContainerGroup' }
-    & $Pick<ContainerGroup, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDate' }
-    & $Pick<TimelineDate, { id: * }>
-  ) | (
-    { __typename?: 'TimelineDateRevision' }
-    & $Pick<TimelineDateRevision, { id: * }>
-  ) | (
-    { __typename?: 'Warehouse' }
-    & $Pick<Warehouse, { id: * }>
-  ) | (
-    { __typename?: 'Tag' }
-    & $Pick<Tag, { id: * }>
-  ) | (
-    { __typename?: 'User' }
-    & $Pick<User, { id: * }>
-  ) | (
-    { __typename?: 'Organization' }
-    & $Pick<Organization, { id: * }>
-  ) | (
-    { __typename?: 'Partnership' }
-    & $Pick<Partnership, { id: * }>
-  ) | (
-    { __typename?: 'Role' }
-    & $Pick<Role, { id: * }>
-  ) | (
-    { __typename?: 'File' }
-    & $Pick<File, { id: * }>
-  ) | (
-    { __typename?: 'Task' }
-    & $Pick<Task, { id: * }>
-  ) | (
-    { __typename?: 'TaskTemplate' }
-    & $Pick<TaskTemplate, { id: * }>
-  ) | (
-    { __typename?: 'Project' }
-    & $Pick<Project, { id: * }>
-  ) | (
-    { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, assignedTo: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, approvers: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, inProgressBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , skippedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , completedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , rejectedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , approvedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, milestone: ?(
-    { __typename?: 'Milestone' }
-    & $Pick<Milestone, { id: *, name: * }>
-    & { project: (
-      { __typename?: 'Project' }
-      & $Pick<Project, { id: *, name: * }>
-    ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
+export type TaskCardFragmentFragment = ({
+    ...{ __typename?: 'Task' },
+  ...$Pick<Task, {| id: *, name: *, approvable: *, startDate: *, dueDate: *, inProgressAt: *, skippedAt: *, completedAt: *, rejectedAt: *, approvedAt: *, startDateBinding: *, dueDateBinding: * |}>,
+  ...{| entity: ?({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: *, name: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: *, name: * |}>,
+    ...{| product: ({
+        ...{ __typename?: 'Product' },
+      ...$Pick<Product, {| id: *, name: * |}>
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | ({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...$Pick<ProductProviderPackage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: *, poNo: * |}>
+  }) | ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: *, no: * |}>
+  }) | ({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: *, no: * |}>
+  }) | ({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: *, no: * |}>
+  }) | ({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDate' },
+    ...$Pick<TimelineDate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Tag' },
+    ...$Pick<Tag, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Partnership' },
+    ...$Pick<Partnership, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'File' },
+    ...$Pick<File, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, assignedTo: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, approvers: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, inProgressBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, skippedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, completedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, rejectedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, approvedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, milestone: ?({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: *, name: * |}>,
+    ...{| project: ({
+        ...{ __typename?: 'Project' },
+      ...$Pick<Project, {| id: *, name: * |}>
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
-export type TaskTemplateCardFragmentFragment = (
-  { __typename?: 'TaskTemplate' }
-  & $Pick<TaskTemplate, { id: *, updatedAt: *, name: *, description: *, entityType: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TaskFormInTemplateFragmentFragment
-  > }
-);
+export type TaskTemplateCardFragmentFragment = ({
+    ...{ __typename?: 'TaskTemplate' },
+  ...$Pick<TaskTemplate, {| id: *, updatedAt: *, name: *, description: *, entityType: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tasks: Array<({
+      ...{ __typename?: 'Task' },
+    ...TaskFormInTemplateFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type TaskFormInTemplateFragmentFragment = (
-  { __typename?: 'Task' }
-  & $Pick<Task, { id: *, approvable: *, updatedAt: *, name: *, startDateBinding: *, dueDateBinding: *, description: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , startDateInterval: ?(
-    { __typename?: 'Interval' }
-    & $Pick<Interval, { months: *, weeks: *, days: * }>
-  ), dueDateInterval: ?(
-    { __typename?: 'Interval' }
-    & $Pick<Interval, { months: *, weeks: *, days: * }>
-  ), tags: Array<({ __typename?: 'Tag' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TagFragmentFragment
-  >, assignedTo: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, approvers: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, taskTemplate: ?(
-    { __typename?: 'TaskTemplate' }
-    & $Pick<TaskTemplate, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
+export type TaskFormInTemplateFragmentFragment = ({
+    ...{ __typename?: 'Task' },
+  ...$Pick<Task, {| id: *, approvable: *, updatedAt: *, name: *, startDateBinding: *, dueDateBinding: *, description: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, startDateInterval: ?({
+      ...{ __typename?: 'Interval' },
+    ...$Pick<Interval, {| months: *, weeks: *, days: * |}>
+  }), dueDateInterval: ?({
+      ...{ __typename?: 'Interval' },
+    ...$Pick<Interval, {| months: *, weeks: *, days: * |}>
+  }), tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, assignedTo: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, approvers: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, taskTemplate: ?({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
 
-export type TaskWithoutParentInfoFragmentFragment = (
-  { __typename?: 'Task' }
-  & { milestone: ?(
-    { __typename?: 'Milestone' }
-    & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & ProjectCardFragmentFragment
-     }
-    & MilestoneCardFragmentFragment
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, taskTemplate: ?(
-    { __typename?: 'TaskTemplate' }
-    & $Pick<TaskTemplate, { id: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-)
-  & TaskInfoFragmentFragment
-;
+export type TaskWithoutParentInfoFragmentFragment = ({
+    ...{ __typename?: 'Task' },
+  ...{| milestone: ?({
+      ...{ __typename?: 'Milestone' },
+    ...{| project: ({
+        ...{ __typename?: 'Project' },
+      ...ProjectCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |},
+    ...MilestoneCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, taskTemplate: ?({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |},
+  ...TaskInfoFragmentFragment
+});
 
-export type TaskFormInProjectFragmentFragment = { __typename?: 'Task' }
-  & TaskInfoFragmentFragment
-  & TaskEntityCardFragmentFragment
-;
+export type TaskFormInProjectFragmentFragment = ({
+    ...{ __typename?: 'Task' },
+  ...TaskInfoFragmentFragment,
+  ...TaskEntityCardFragmentFragment
+});
 
-export type TaskWithParentInfoFragmentFragment = (
-  { __typename?: 'Task' }
-  & { milestone: ?(
-    { __typename?: 'Milestone' }
-    & { project: ({ __typename?: 'Project' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-      & ProjectCardFragmentFragment
-     }
-    & MilestoneCardFragmentFragment
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-)
-  & TaskInfoFragmentFragment
-  & TaskEntityCardFragmentFragment
-;
+export type TaskWithParentInfoFragmentFragment = ({
+    ...{ __typename?: 'Task' },
+  ...{| milestone: ?({
+      ...{ __typename?: 'Milestone' },
+    ...{| project: ({
+        ...{ __typename?: 'Project' },
+      ...ProjectCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |},
+    ...MilestoneCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |},
+  ...TaskInfoFragmentFragment,
+  ...TaskEntityCardFragmentFragment
+});
 
-export type TaskTemplateFormFragmentFragment = (
-  { __typename?: 'TaskTemplate' }
-  & $Pick<TaskTemplate, { id: *, updatedAt: *, name: *, description: *, entityType: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , tasks: Array<({ __typename?: 'Task' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & TaskFormInTemplateFragmentFragment
-  > }
-);
+export type TaskTemplateFormFragmentFragment = ({
+    ...{ __typename?: 'TaskTemplate' },
+  ...$Pick<TaskTemplate, {| id: *, updatedAt: *, name: *, description: *, entityType: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tasks: Array<({
+      ...{ __typename?: 'Task' },
+    ...TaskFormInTemplateFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+});
 
-export type TaskCountFragmentFragment = (
-  { __typename?: 'TaskCount' }
-  & $Pick<TaskCount, { count: *, remain: *, inProgress: *, completed: *, rejected: *, approved: *, skipped: *, delayed: * }>
-);
+export type TaskCountFragmentFragment = ({
+    ...{ __typename?: 'TaskCount' },
+  ...$Pick<TaskCount, {| count: *, remain: *, inProgress: *, completed: *, rejected: *, approved: *, skipped: *, delayed: * |}>
+});
 
-export type WarehouseFormFragmentFragment = (
-  { __typename?: 'Warehouse' }
-  & $Pick<Warehouse, { id: *, archived: *, updatedAt: *, name: *, street: *, locality: *, region: *, postalCode: *, country: * }>
-  & { updatedBy: ?({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  , ownedBy: ((
-    { __typename?: 'Organization' }
-    & PartnerCardFragmentFragment
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & OwnedByFragmentFragment
-  , inCharges: Array<({ __typename?: 'User' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & UserAvatarFragmentFragment
-  >, organizations: Array<({ __typename?: 'Organization' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' })
-    & PartnerCardFragmentFragment
-  >, surface: ?{ __typename?: 'MetricValue' }
-    & MetricFragmentFragment
-  , customFields: { __typename?: 'CustomFields' }
-    & CustomFieldsFragmentFragment
-   }
-);
+export type WarehouseFormFragmentFragment = ({
+    ...{ __typename?: 'Warehouse' },
+  ...$Pick<Warehouse, {| id: *, archived: *, updatedAt: *, name: *, street: *, locality: *, region: *, postalCode: *, country: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...PartnerCardFragmentFragment,
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, inCharges: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, organizations: Array<({
+      ...{ __typename?: 'Organization' },
+    ...PartnerCardFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, surface: ?({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), customFields: ({
+      ...{ __typename?: 'CustomFields' },
+    ...CustomFieldsFragmentFragment
+  }) |}
+});
 
-export type WarehouseCardFragmentFragment = (
-  { __typename?: 'Warehouse' }
-  & $Pick<Warehouse, { id: *, name: * }>
-  & { ownedBy: (
-    { __typename?: 'Organization' }
-    & $Pick<Organization, { id: *, name: * }>
-  ) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } }
-);
+export type WarehouseCardFragmentFragment = ({
+    ...{ __typename?: 'Warehouse' },
+  ...$Pick<Warehouse, {| id: *, name: * |}>,
+  ...{| ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: *, name: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
+
 
       export default {
   "__schema": {
@@ -63691,6 +64244,9 @@ export type WarehouseCardFragmentFragment = (
           },
           {
             "name": "ProductProvider"
+          },
+          {
+            "name": "Milestone"
           },
           {
             "name": "OrderItem"

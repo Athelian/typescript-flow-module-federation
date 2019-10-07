@@ -21,7 +21,7 @@ const OrderApp = () => (
       <Router location={location}>
         <Redirect path="/" from="/" to="/order/cards" noThrow />
         <OrderListModuleWrapper path="/cards" />
-        <OrderSheetModuleWrapper path="/table" orderIds={location?.state?.orderIds ?? []} />
+        <OrderSheetModuleWrapper path="/table" orderIds={location?.state?.orderIds} />
         <OrderRelationalMapModuleWrapper path="/map" />
         <OrderFormModuleCreationWrapper path="new" />
         <OrderFormModuleCreationWrapper path="clone/:orderId" />

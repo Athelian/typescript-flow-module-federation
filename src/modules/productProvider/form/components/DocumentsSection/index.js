@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Subscribe } from 'unstated';
-import { DocumentsInput } from 'components/Form';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import { ProductProviderInfoContainer } from 'modules/productProvider/form/containers';
 import usePermission from 'hooks/usePermission';
 import {
@@ -21,56 +20,38 @@ import {
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
 } from 'modules/permission/constants/file';
+import DocumentsSection from 'sections/DocumentsSection';
 
-type Props = {
-  isOwner: boolean,
-};
-
-function DocumentsSection({ isOwner }: Props) {
+export default function EndProductDocumentsSection() {
+  const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const canSetDocuments = hasPermission(PRODUCT_PROVIDER_SET_DOCUMENTS);
+  const canUpload =
+    canSetDocuments || hasPermission([PRODUCT_PROVIDER_DOCUMENT_CREATE, DOCUMENT_CREATE]);
+  const canDownload = hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS);
+  const canRemove =
+    canSetDocuments || hasPermission([PRODUCT_PROVIDER_DOCUMENT_DELETE, DOCUMENT_DELETE]);
+  const canUpdateStatus =
+    canSetDocuments ||
+    hasPermission([DOCUMENT_SET_STATUS, PRODUCT_PROVIDER_DOCUMENT_SET_STATUS, DOCUMENT_UPDATE]);
+  const canUpdateType =
+    canSetDocuments ||
+    hasPermission([DOCUMENT_SET_TYPE, PRODUCT_PROVIDER_DOCUMENT_SET_TYPE, DOCUMENT_UPDATE]);
+  const canUpdateMemo =
+    canSetDocuments ||
+    hasPermission([DOCUMENT_SET_MEMO, PRODUCT_PROVIDER_DOCUMENT_SET_MEMO, DOCUMENT_UPDATE]);
 
   return (
-    <Subscribe to={[ProductProviderInfoContainer]}>
-      {({ state: { files }, setFieldValue }) => (
-        <DocumentsInput
-          uploadable={
-            canSetDocuments || hasPermission([PRODUCT_PROVIDER_DOCUMENT_CREATE, DOCUMENT_CREATE])
-          }
-          removable={
-            canSetDocuments || hasPermission([PRODUCT_PROVIDER_DOCUMENT_DELETE, DOCUMENT_DELETE])
-          }
-          editable={{
-            status:
-              canSetDocuments ||
-              hasPermission([
-                DOCUMENT_SET_STATUS,
-                PRODUCT_PROVIDER_DOCUMENT_SET_STATUS,
-                DOCUMENT_UPDATE,
-              ]),
-            type:
-              canSetDocuments ||
-              hasPermission([
-                DOCUMENT_SET_TYPE,
-                PRODUCT_PROVIDER_DOCUMENT_SET_TYPE,
-                DOCUMENT_UPDATE,
-              ]),
-            memo:
-              canSetDocuments ||
-              hasPermission([
-                DOCUMENT_SET_MEMO,
-                PRODUCT_PROVIDER_DOCUMENT_SET_MEMO,
-                DOCUMENT_UPDATE,
-              ]),
-          }}
-          downloadable={hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS)}
-          files={files}
-          onSave={updateFiles => setFieldValue('files', updateFiles)}
-          entity="ProductProvider"
-        />
-      )}
-    </Subscribe>
+    <DocumentsSection
+      sectionId="productProvider_documentsSection"
+      entityType="ProductProvider"
+      container={ProductProviderInfoContainer}
+      canUpload={canUpload}
+      canRemove={canRemove}
+      canDownload={canDownload}
+      canUpdateStatus={canUpdateStatus}
+      canUpdateMemo={canUpdateMemo}
+      canUpdateType={canUpdateType}
+    />
   );
 }
-
-export default DocumentsSection;

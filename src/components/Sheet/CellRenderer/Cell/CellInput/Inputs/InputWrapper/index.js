@@ -24,7 +24,7 @@ const InputWrapper = ({ focus, preselect, children }: Props) => {
       });
 
       if (preselect) {
-        input.setSelectionRange(0, 99999);
+        input.select();
       }
     } else {
       input.blur();

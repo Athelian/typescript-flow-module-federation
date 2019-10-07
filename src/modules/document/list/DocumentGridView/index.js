@@ -17,6 +17,8 @@ import {
   PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS,
 } from 'modules/permission/constants/product';
 import { SHIPMENT_FORM, SHIPMENT_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/shipment';
+import { PROJECT_FORM } from 'modules/permission/constants/project';
+import { MILESTONE_DOCUMENTS_DOWNLOAD } from 'modules/permission/constants/milestone';
 import { getParentInfo } from 'utils/task';
 import { getByPathWithDefault } from 'utils/fp';
 
@@ -49,6 +51,7 @@ const defaultRenderItem = (file: FilePayload): React$Node => (
         shipment: hasPermission(SHIPMENT_FORM),
         product: hasPermission(PRODUCT_FORM),
         productProvider: hasPermission(PRODUCT_FORM),
+        project: hasPermission(PROJECT_FORM),
       };
       const downloadPermissions = {
         order: hasPermission(ORDER_DOWNLOAD_DOCUMENTS),
@@ -56,6 +59,7 @@ const defaultRenderItem = (file: FilePayload): React$Node => (
         shipment: hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS),
         product: hasPermission(PRODUCT_DOWNLOAD_DOCUMENTS),
         productProvider: hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS),
+        project: hasPermission(MILESTONE_DOCUMENTS_DOWNLOAD),
       };
 
       return (

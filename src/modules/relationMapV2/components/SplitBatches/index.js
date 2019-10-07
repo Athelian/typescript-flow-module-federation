@@ -3,17 +3,17 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useAllHasPermission } from 'components/Context/Permissions';
 import { useMutation } from '@apollo/react-hooks';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
-import { Entities } from 'modules/relationMapV2/store';
+
+import { Entities, OrderFocused } from 'modules/relationMapV2/store';
 import { BATCH } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE } from 'modules/permission/constants/batch';
-import { SaveButton, CancelButton } from 'components/Buttons';
-import Dialog from 'components/Dialog';
-import Icon from 'components/Icon';
-import { FieldItem, DefaultStyle, Label, NumberInput, FormTooltip } from 'components/Form';
-import LoadingIcon from 'components/LoadingIcon';
+import { BaseButton } from 'components/Buttons';
+import FormattedNumber from 'components/FormattedNumber';
+import { useNumberInput } from 'modules/form/hooks';
+import { Label, Display, NumberInputFactory } from 'components/Form';
+import ActionDialog, { BatchesLabelIcon, BatchLabelIcon } from '../ActionDialog';
 import { batchSimpleSplitMutation } from './mutation';
-import { DialogStyle, ButtonsStyle, ConfirmMessageStyle, BatchInputStyle } from './style';
+import { SplitInputsWrapperStyle, SplitRowStyle } from './style';
 import validator from './validator';
 import { targetedIds } from '../OrderFocus/helpers';
 
@@ -21,56 +21,53 @@ type Props = {|
   onSuccess: (orderIds: Array<string>, batchIds: Object) => void,
 |};
 
+const DEFAULT_QTY = 0;
+
 function SplitBatch({
-  quantity,
+  id,
   no,
   latestQuantity,
   onChange,
 }: {|
+  id: string,
   no: string,
-  quantity: number,
   latestQuantity: number,
   onChange: (quantity: number) => void,
 |}) {
-  const validation = validator(0, latestQuantity);
+  const validation = validator(DEFAULT_QTY, latestQuantity);
+  const { hasError, touch, ...inputHandlers } = useNumberInput(DEFAULT_QTY, { isRequire: false });
   return (
-    <div className={BatchInputStyle}>
-      <FieldItem
-        label={
-          <Label width="min-content" align="right">
+    <div className={SplitRowStyle}>
+      <Display height="30px">{no}</Display>
+
+      <Display height="30px">
+        <FormattedNumber value={latestQuantity} />
+      </Display>
+
+      <NumberInputFactory
+        name={`split-batch-${id}`}
+        originalValue={DEFAULT_QTY}
+        isNew
+        editable
+        inputWidth="200px"
+        inputHeight="30px"
+        {...inputHandlers}
+        onBlur={evt => {
+          inputHandlers.onBlur(evt);
+          onChange(inputHandlers.value || DEFAULT_QTY);
+        }}
+        isTouched={touch}
+        errorMessage={
+          !validation.isValidSync({ quantity: inputHandlers.value }) && (
             <FormattedMessage
-              id="components.cards.splitQuantityForBatch"
-              defaultMessage="QTY FOR BATCH"
+              id="modules.RelationMap.split.validationError"
+              defaultMessage="Please enter the number between {min} and {max}"
+              values={{
+                min: 1,
+                max: latestQuantity,
+              }}
             />
-            <Icon icon="BATCH" /> {no} ({latestQuantity})
-          </Label>
-        }
-        input={
-          <DefaultStyle type="number" width="160px">
-            <NumberInput
-              min={0}
-              max={latestQuantity}
-              value={quantity}
-              onChange={evt => onChange(evt.target.value)}
-            />
-          </DefaultStyle>
-        }
-        tooltip={
-          <FormTooltip
-            isNew={false}
-            errorMessage={
-              !validation.isValidSync({ quantity }) && (
-                <FormattedMessage
-                  id="modules.RelationMap.split.validationError"
-                  defaultMessage="Please enter the number between {min} and {max}"
-                  values={{
-                    min: 1,
-                    max: latestQuantity,
-                  }}
-                />
-              )
-            }
-          />
+          )
         }
       />
     </div>
@@ -79,7 +76,7 @@ function SplitBatch({
 
 export default function SplitBatches({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
-  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { dispatch, state } = OrderFocused.useContainer();
   const [batchSimpleSplit] = useMutation(batchSimpleSplitMutation);
   const {
     targets,
@@ -89,7 +86,7 @@ export default function SplitBatches({ onSuccess }: Props) {
   const hasPermission = useAllHasPermission(
     batchIds.map(id => mapping.entities?.batches?.[id]?.ownedBy).filter(Boolean)
   );
-  const DEFAULT_QTY = 0;
+  const totalBatches = batchIds.length;
   const [batches, setBatches] = React.useState(batchIds.map(id => ({ id, quantity: DEFAULT_QTY })));
   React.useEffect(() => {
     return () => {
@@ -102,11 +99,6 @@ export default function SplitBatches({ onSuccess }: Props) {
       payload: {},
     });
   }, [dispatch]);
-
-  const getQuantity = (batchId: string) => {
-    const findBatch = batches.find(batch => batch.id === batchId);
-    return findBatch?.quantity ?? DEFAULT_QTY;
-  };
 
   const onConfirm = () => {
     dispatch({
@@ -137,9 +129,10 @@ export default function SplitBatches({ onSuccess }: Props) {
   };
 
   const isValid = () => {
+    const validSplitBatches = batches.filter(({ quantity }) => quantity);
     return (
-      batches.length > 0 &&
-      batches.every(({ id, quantity }) =>
+      validSplitBatches.length > 0 &&
+      validSplitBatches.every(({ id, quantity }) =>
         validator(1, mapping.entities?.batches?.[id]?.latestQuantity ?? 0).isValidSync({
           quantity,
         })
@@ -147,90 +140,151 @@ export default function SplitBatches({ onSuccess }: Props) {
     );
   };
 
+  const allHasNoQuantity = batchIds.every(
+    id => mapping.entities?.batches?.[id]?.latestQuantity === 0
+  );
+
   const allowToUpdate = () => {
     return hasPermission(BATCH_UPDATE);
   };
 
   const noPermission = !allowToUpdate();
 
+  let dialogMessage = null;
+  let dialogSubMessage = null;
+
   if (noPermission) {
-    return (
-      <Dialog isOpen={isOpen} width="500px">
-        <div className={DialogStyle}>
-          <h3 className={ConfirmMessageStyle}>
-            <FormattedMessage
-              id="modules.RelationMap.split.noPermission"
-              defaultMessage="At least one {source} {entity} selected does not allow you to split.Please reselect and try again."
-              values={{
-                source: 'Batch',
-                entity: <Icon icon="BATCH" />,
-              }}
-            />
-          </h3>
-          <div className={ButtonsStyle}>
-            <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-          </div>
+    // No permission to split
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.split.noPermission"
+        defaultMessage="At least one {batchLabel} selected does not allow you to split."
+        values={{ batchLabel: <BatchLabelIcon /> }}
+      />
+    );
+    dialogSubMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.actions.tryAgain"
+        defaultMessage="Please reselect and try again."
+      />
+    );
+  } else if (isProcessing) {
+    // Is currently splitting
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.split.splitting"
+        defaultMessage="Splitting {numOfBatches} {batchesLabel} ..."
+        values={{
+          numOfBatches: <FormattedNumber value={totalBatches} />,
+          batchesLabel: totalBatches > 1 ? <BatchesLabelIcon /> : <BatchLabelIcon />,
+        }}
+      />
+    );
+  } else if (allHasNoQuantity) {
+    // Has permission to split but no batches have more than 0 quantity
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.split.notEnoughQuantity"
+        defaultMessage="None of the {batchesLabel} selected have quantities greater than 0"
+        values={{ batchesLabel: <BatchesLabelIcon /> }}
+      />
+    );
+    dialogSubMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.actions.tryAgain"
+        defaultMessage="Please reselect and try again."
+      />
+    );
+  } else {
+    // Has permission to split and can split
+    dialogMessage = (
+      <>
+        <FormattedMessage
+          id="modules.RelationMap.split.message1a"
+          defaultMessage="You have selected {numOfBatches} {batchesLabel}"
+          values={{
+            numOfBatches: <FormattedNumber value={totalBatches} />,
+            batchesLabel: totalBatches > 1 ? <BatchesLabelIcon /> : <BatchLabelIcon />,
+          }}
+        />
+        <div>
+          <FormattedMessage
+            id="modules.RelationMap.split.message1b"
+            defaultMessage="Please enter the quantities that you would like to split by"
+          />
         </div>
-      </Dialog>
+      </>
+    );
+    dialogSubMessage = (
+      <>
+        <FormattedMessage
+          id="modules.RelationMap.split.message2a"
+          defaultMessage="You cannot split by more than the quantity of each {batchLabel}"
+          values={{ batchLabel: <BatchLabelIcon /> }}
+        />
+        <div>
+          <FormattedMessage
+            id="modules.RelationMap.split.message2b"
+            defaultMessage="If quantity to split into is set as 0, it will be ignored"
+          />
+        </div>
+      </>
     );
   }
 
   return (
-    <Dialog isOpen={isOpen} width="500px">
-      {isOpen && (
-        <div className={DialogStyle}>
-          {isProcessing ? (
-            <>
-              <h3 className={ConfirmMessageStyle}>
+    <>
+      <ActionDialog
+        isOpen={isOpen}
+        isProcessing={isProcessing}
+        onCancel={onCancel}
+        title={<FormattedMessage id="modules.RelationMap.label.split" defaultMessage="SPLIT" />}
+        dialogMessage={dialogMessage}
+        dialogSubMessage={dialogSubMessage}
+        buttons={
+          <BaseButton
+            label={<FormattedMessage id="modules.RelationMap.label.split" defaultMessage="SPLIT" />}
+            icon="SPLIT"
+            disabled={noPermission || !isValid() || allHasNoQuantity}
+            onClick={onConfirm}
+          />
+        }
+      >
+        {!allHasNoQuantity && (
+          <div className={SplitInputsWrapperStyle}>
+            <div className={SplitRowStyle}>
+              <Label>
+                <FormattedMessage id="components.BatchItem.batchNo" />
+              </Label>
+
+              <Label>
+                <FormattedMessage id="components.BatchItem.quantity" />
+              </Label>
+
+              <Label>
                 <FormattedMessage
-                  id="modules.RelationMap.split.process"
-                  defaultMessage="Splitting {total} {source} Batches ..."
-                  values={{
-                    total: batchIds.length,
-                    source: <Icon icon="BATCH" />,
-                  }}
+                  id="modules.RelationMap.label.splitInto"
+                  defaultMessage="Quantity to Split Into"
                 />
-                <LoadingIcon />
-              </h3>
-            </>
-          ) : (
-            <>
-              <h3 className={ConfirmMessageStyle}>
-                <FormattedMessage
-                  id="modules.RelationMap.split.guideline"
-                  defaultMessage="You have selected {total} Batches {source}. Please enter the quantity you would like to split each Batch {source} into."
-                  values={{
-                    total: batchIds.length,
-                    source: <Icon icon="BATCH" />,
-                  }}
-                />
-              </h3>
-              {batchIds.map(batchId => (
-                <SplitBatch
-                  key={batchId}
-                  onChange={quantity =>
-                    setBatches([
-                      ...batches.filter(batch => batch?.id !== batchId),
-                      { id: batchId, quantity },
-                    ])
-                  }
-                  no={mapping.entities?.batches?.[batchId]?.no ?? ''}
-                  latestQuantity={mapping.entities?.batches?.[batchId]?.latestQuantity ?? 0}
-                  quantity={getQuantity(batchId)}
-                />
-              ))}
-              <div className={ButtonsStyle}>
-                <CancelButton disabled={Boolean(isProcessing)} onClick={onCancel} />
-                <SaveButton
-                  isLoading={Boolean(isProcessing)}
-                  disabled={Boolean(isProcessing) || !isValid()}
-                  onClick={onConfirm}
-                />
-              </div>
-            </>
-          )}
-        </div>
-      )}
-    </Dialog>
+              </Label>
+            </div>
+            {batchIds.map(batchId => (
+              <SplitBatch
+                key={batchId}
+                id={batchId}
+                onChange={quantity =>
+                  setBatches([
+                    ...batches.filter(batch => batch?.id !== batchId),
+                    { id: batchId, quantity },
+                  ])
+                }
+                no={mapping.entities?.batches?.[batchId]?.no ?? ''}
+                latestQuantity={mapping.entities?.batches?.[batchId]?.latestQuantity ?? DEFAULT_QTY}
+              />
+            ))}
+          </div>
+        )}
+      </ActionDialog>
+    </>
   );
 }

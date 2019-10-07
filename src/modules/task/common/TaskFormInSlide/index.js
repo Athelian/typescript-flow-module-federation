@@ -60,9 +60,7 @@ const TaskFormInSlide = ({
                   />
                   <SectionTabs
                     link="task_project_section"
-                    label={
-                      <FormattedMessage id="modules.task.project" defaultMessage="`PROJECT`" />
-                    }
+                    label={<FormattedMessage id="modules.task.project" defaultMessage="PROJECT" />}
                     icon="PROJECT"
                   />
                   <SectionTabs

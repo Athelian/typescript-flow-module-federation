@@ -3,9 +3,11 @@ import { defaultVolumeMetric } from 'utils/metric';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
+import warehouseMessages from 'modules/warehouse/messages';
+import partnerMessages from 'modules/partner/messages';
 import type { FilterConfig } from './index';
 
-export const OrderConfigFilter: Array<FilterConfig> = [
+export const OrderFilterConfig: Array<FilterConfig> = [
   {
     entity: 'ORDER',
     field: 'archived',
@@ -26,6 +28,48 @@ export const OrderConfigFilter: Array<FilterConfig> = [
     type: 'date_range',
     message: orderMessages.updatedAt,
     defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'ORDER',
+    field: 'inChargeIds',
+    type: 'users',
+    message: orderMessages.inCharge,
+    defaultValue: [],
+  },
+  {
+    entity: 'ORDER',
+    field: 'exporterIds',
+    type: 'exporter_ids',
+    message: orderMessages.exporter,
+    defaultValue: [],
+  },
+  {
+    entity: 'ORDER',
+    field: 'tagIds',
+    type: 'order_tags',
+    message: orderMessages.tags,
+    defaultValue: [],
+  },
+  {
+    entity: 'ORDER',
+    field: 'ids',
+    type: 'order_ids',
+    message: orderMessages.order,
+    defaultValue: [],
+  },
+  {
+    entity: 'ORDER',
+    field: 'completelyBatched',
+    type: 'completely_batched',
+    message: orderMessages.completelyBatched,
+    defaultValue: false,
+  },
+  {
+    entity: 'ORDER',
+    field: 'completelyShipped',
+    type: 'completely_shipped',
+    message: orderMessages.completelyShipped,
+    defaultValue: false,
   },
   {
     entity: 'BATCH',
@@ -60,11 +104,39 @@ export const OrderConfigFilter: Array<FilterConfig> = [
     },
   },
   {
+    entity: 'BATCH',
+    field: 'batchTagIds',
+    type: 'batch_tags',
+    message: batchMessages.tags,
+    defaultValue: [],
+  },
+  {
     entity: 'SHIPMENT',
     field: 'shipmentArchived',
     type: 'archived',
     message: shipmentMessages.status,
     defaultValue: false,
+  },
+  {
+    entity: 'SHIPMENT',
+    field: 'shipmentForwarderIds',
+    type: 'forwarder_ids',
+    message: shipmentMessages.forwarder,
+    defaultValue: [],
+  },
+  {
+    entity: 'SHIPMENT',
+    field: 'shipmentInChargeIds',
+    type: 'users',
+    message: shipmentMessages.inCharge,
+    defaultValue: [],
+  },
+  {
+    entity: 'SHIPMENT',
+    field: 'shipmentWarehouseIds',
+    type: 'warehouse_ids',
+    message: shipmentMessages.warehouse,
+    defaultValue: [],
   },
   {
     entity: 'SHIPMENT',
@@ -149,5 +221,60 @@ export const OrderConfigFilter: Array<FilterConfig> = [
     type: 'date_range',
     message: shipmentMessages.updatedAt,
     defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'SHIPMENT',
+    field: 'shipmentTagIds',
+    type: 'shipment_tags',
+    message: shipmentMessages.tags,
+    defaultValue: [],
+  },
+];
+
+export const WarehouseFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'WAREHOUSE',
+    field: 'archived',
+    type: 'archived',
+    message: warehouseMessages.status,
+    defaultValue: false,
+  },
+  {
+    entity: 'WAREHOUSE',
+    field: 'createdAt',
+    type: 'date_range',
+    message: warehouseMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'WAREHOUSE',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: warehouseMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+];
+
+export const PartnerFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'PARTNER',
+    field: 'createdAt',
+    type: 'date_range',
+    message: partnerMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'PARTNER',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: partnerMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'PARTNER',
+    field: 'types',
+    type: 'organization_types',
+    message: partnerMessages.type,
+    defaultValue: [],
   },
 ];

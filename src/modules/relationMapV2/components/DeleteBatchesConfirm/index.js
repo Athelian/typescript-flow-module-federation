@@ -3,9 +3,9 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
 import { useAllHasPermission } from 'components/Context/Permissions';
-import { Entities } from 'modules/relationMapV2/store';
+import { Entities, OrderFocused } from 'modules/relationMapV2/store';
 import { BATCH_DELETE, BATCH_UPDATE } from 'modules/permission/constants/batch';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
+
 import { BATCH } from 'modules/relationMapV2/constants';
 import { BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
@@ -23,9 +23,13 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
   const [deleteBatch] = useMutation(deleteBatchMutation);
   const [updateEntities] = useMutation(entitiesUpdateManyMutation);
-  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { dispatch, state } = OrderFocused.useContainer();
   const { isProcessing, isRemove, isOpen } = state.deleteBatches;
   const batchIds = targetedIds(state.targets, BATCH);
+  const isDisableRemovedContainerButton =
+    batchIds.filter(batchId => mapping.entities?.batches?.[batchId]?.container).length === 0;
+  const isDisableRemovedShipmentButton =
+    batchIds.filter(batchId => mapping.entities?.batches?.[batchId]?.shipment).length === 0;
   const totalBatches = batchIds.length;
   const hasPermissions = useAllHasPermission(
     batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.ownedBy).filter(Boolean)
@@ -37,7 +41,7 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
       payload: {},
     });
   };
-  const onConfirm = (type: 'delete' | 'remove' | 'removeLocally') => {
+  const onConfirm = (type: 'delete' | 'removeFromShipment' | 'removeFromContainer') => {
     dispatch({
       type: 'DELETE_BATCHES_START',
       payload: {
@@ -56,7 +60,7 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
           )
         )
           .then(() => {
-            onSuccess(batchIds, !isRemove);
+            onSuccess(batchIds, true);
           })
           .catch(() => {
             dispatch({
@@ -66,22 +70,13 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
           });
         break;
 
-      case 'removeLocally': {
-        const batchesInput = batchIds.map(id =>
-          mapping.entities.batches?.[id]?.container
-            ? {
-                id,
-                input: {
-                  containerId: null,
-                },
-              }
-            : {
-                id,
-                input: {
-                  shipmentId: null,
-                },
-              }
-        );
+      case 'removeFromContainer': {
+        const batchesInput = batchIds.map(id => ({
+          id,
+          input: {
+            containerId: null,
+          },
+        }));
         updateEntities({
           variables: {
             orders: [],
@@ -92,7 +87,7 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
           },
         })
           .then(() => {
-            onSuccess(batchIds, !isRemove);
+            onSuccess(batchIds, false);
           })
           .catch(() => {
             dispatch({
@@ -121,7 +116,7 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
           },
         })
           .then(() => {
-            onSuccess(batchIds, !isRemove);
+            onSuccess(batchIds, false);
           })
           .catch(() => {
             dispatch({
@@ -181,7 +176,7 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
     // Has permission to delete or remove
     dialogMessage = (
       <FormattedMessage
-        id="modules.RelationMap.delete.message1"
+        id="modules.RelationMap.deleteBatches.message"
         defaultMessage="Would you like to delete or remove {numOfBatches} {batchesLabel} that you have selected?"
         values={{
           numOfBatches,
@@ -211,7 +206,7 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
               <FormattedMessage id="modules.RelationMap.label.delete" defaultMessage="DELETE" />
             }
             icon="REMOVE"
-            disabled={isProcessing || !allowToDeleteBatches}
+            disabled={!allowToDeleteBatches}
             onClick={() => onConfirm('delete')}
             backgroundColor="RED"
             hoverBackgroundColor="RED_DARK"
@@ -227,8 +222,8 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
               </>
             }
             icon="CLEAR"
-            disabled={isProcessing || !allowToUpdateBatches}
-            onClick={() => onConfirm('removeLocally')}
+            disabled={!allowToUpdateBatches || isDisableRemovedContainerButton}
+            onClick={() => onConfirm('removeFromContainer')}
             textColor="RED"
             hoverTextColor="WHITE"
             backgroundColor="GRAY_SUPER_LIGHT"
@@ -245,8 +240,8 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
               </>
             }
             icon="CLEAR"
-            disabled={isProcessing || !allowToUpdateBatches}
-            onClick={() => onConfirm('remove')}
+            disabled={!allowToUpdateBatches || isDisableRemovedShipmentButton}
+            onClick={() => onConfirm('removeFromShipment')}
             textColor="RED"
             hoverTextColor="WHITE"
             backgroundColor="GRAY_SUPER_LIGHT"

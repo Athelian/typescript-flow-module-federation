@@ -1,17 +1,14 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import type { Batch } from 'generated/graphql';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { orderItemFormQuery } from 'modules/orderItem/form/query';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
-import Dialog from 'components/Dialog';
-import LoadingIcon from 'components/LoadingIcon';
-import Icon from 'components/Icon';
 import { generateBatchByOrderItem } from 'utils/batch';
 import { removeTypename } from 'utils/data';
-import { Entities } from 'modules/relationMapV2/store';
-import { DialogStyle, ConfirmMessageStyle } from './style';
+import { Entities, OrderFocused } from 'modules/relationMapV2/store';
+import ActionDialog, { BatchLabelIcon } from '../ActionDialog';
 import { createBatchMutation } from './mutation';
 
 type Props = {|
@@ -20,7 +17,7 @@ type Props = {|
 
 export default function InlineCreateBatch({ onSuccess }: Props) {
   const { mapping, onSetBadges } = Entities.useContainer();
-  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { dispatch, state } = OrderFocused.useContainer();
   const {
     isOpen,
     isProcessing,
@@ -124,13 +121,24 @@ export default function InlineCreateBatch({ onSuccess }: Props) {
   ]);
 
   return (
-    <Dialog isOpen={isOpen} width="400px">
-      <div className={DialogStyle}>
-        <h3 className={ConfirmMessageStyle}>
-          Creating new <Icon icon="BATCH" /> from <Icon icon="ORDER_ITEM" /> {` ${entity.no}...`}
-        </h3>
-        <LoadingIcon />
-      </div>
-    </Dialog>
+    <ActionDialog
+      isOpen={isOpen && isBatchCreation}
+      isProcessing
+      onCancel={() => {}}
+      title={
+        <FormattedMessage
+          id="modules.RelationMap.label.createBatch"
+          defaultMessage="CREATE BATCH"
+        />
+      }
+      dialogMessage={
+        <FormattedMessage
+          id="modules.RelationMap.createBatch.creating"
+          defaultMessage="Creating {batchLabel} ..."
+          values={{ batchLabel: <BatchLabelIcon /> }}
+        />
+      }
+      buttons={null}
+    />
   );
 }

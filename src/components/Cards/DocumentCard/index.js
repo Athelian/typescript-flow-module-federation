@@ -61,7 +61,7 @@ type Props = {|
 |};
 
 export const getFileTypesByEntity = (
-  entity: 'Order' | 'OrderItem' | 'Shipment' | 'ProductProvider',
+  entity: 'Order' | 'OrderItem' | 'Shipment' | 'ProductProvider' | 'Milestone',
   intl: IntlShape
 ) => {
   switch (entity) {
@@ -73,6 +73,7 @@ export const getFileTypesByEntity = (
       ];
 
     case 'OrderItem':
+    case 'Milestone':
       return [
         {
           value: 'Document',

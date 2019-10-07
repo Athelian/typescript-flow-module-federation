@@ -2,22 +2,21 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import useUser from 'hooks/useUser';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
-import { Entities } from 'modules/relationMapV2/store';
+
+import { Entities, OrderFocused } from 'modules/relationMapV2/store';
 import { BATCH } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
-import Dialog from 'components/Dialog';
-import { BaseButton, CancelButton } from 'components/Buttons';
-import Icon from 'components/Icon';
+import { BaseButton } from 'components/Buttons';
 import { useAllHasPermission } from 'components/Context/Permissions';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
 import { CONTAINER_CREATE } from 'modules/permission/constants/container';
+import FormattedNumber from 'components/FormattedNumber';
 import {
   SHIPMENT_UPDATE,
   SHIPMENT_ADD_BATCH,
   SHIPMENT_CREATE,
 } from 'modules/permission/constants/shipment';
-import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
+import ActionDialog, { BatchesLabelIcon, BatchLabelIcon } from '../ActionDialog';
 import SelectOrderToMove from './components/SelectOrderToMove';
 import SelectShipmentToMove from './components/SelectShipmentToMove';
 import SelectContainerToMove from './components/SelectContainerToMove';
@@ -30,7 +29,7 @@ type Props = {
 export default function MoveBatch({ onSuccess }: Props) {
   const { isExporter } = useUser();
   const { mapping } = Entities.useContainer();
-  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { dispatch, state } = OrderFocused.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
   const orderIds = [
     ...new Set(
@@ -75,62 +74,6 @@ export default function MoveBatch({ onSuccess }: Props) {
       exporterIds.push(exporterId);
     }
   });
-
-  const isSamePartners = () => {
-    return importerIds.length <= 1 && exporterIds.length <= 1;
-  };
-
-  const isSameImporter = () => {
-    return importerIds.length <= 1;
-  };
-
-  const hasPermissionMoveToExistOrder = () => {
-    return isSamePartners() && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
-  };
-
-  const hasPermissionMoveToExistContainer = () => {
-    return isSameImporter() && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
-  };
-
-  const hasPermissionMoveToExistShipment = () => {
-    return isSameImporter() && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
-  };
-
-  const hasPermissionMoveToNewOrder = () => {
-    return (
-      isSamePartners() &&
-      hasPermissions(ORDER_CREATE) &&
-      hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM])
-    );
-  };
-
-  const hasPermissionMoveToNewContainer = () => {
-    return (
-      isSameImporter() &&
-      hasPermissions(CONTAINER_CREATE) &&
-      hasPermissions([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH]) &&
-      hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM])
-    );
-  };
-
-  const hasPermissionMoveToNewShipment = () => {
-    return isExporter()
-      ? isSamePartners()
-      : isSameImporter() &&
-          hasPermissions(SHIPMENT_CREATE) &&
-          hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
-  };
-
-  const noPermission = () => {
-    return (
-      !hasPermissionMoveToExistOrder() &&
-      !hasPermissionMoveToNewOrder() &&
-      !hasPermissionMoveToExistContainer() &&
-      !hasPermissionMoveToNewContainer() &&
-      !hasPermissionMoveToExistShipment() &&
-      !hasPermissionMoveToNewShipment()
-    );
-  };
 
   const onNewContainer = (shipment: Object) => {
     dispatch({
@@ -189,70 +132,177 @@ export default function MoveBatch({ onSuccess }: Props) {
     }
   };
 
+  const isSamePartners = () => {
+    return importerIds.length <= 1 && exporterIds.length <= 1;
+  };
+
+  const isSameImporter = () => {
+    return importerIds.length <= 1;
+  };
+
+  const hasPermissionMoveToExistOrder = () => {
+    return isSamePartners() && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
+  };
+
+  const hasPermissionMoveToExistContainer = () => {
+    return isSameImporter() && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
+  };
+
+  const hasPermissionMoveToExistShipment = () => {
+    return isSameImporter() && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
+  };
+
+  const hasPermissionMoveToNewOrder = () => {
+    return (
+      isSamePartners() &&
+      hasPermissions(ORDER_CREATE) &&
+      hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM])
+    );
+  };
+
+  const hasPermissionMoveToNewContainer = () => {
+    return (
+      isSameImporter() &&
+      hasPermissions(CONTAINER_CREATE) &&
+      hasPermissions([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH]) &&
+      hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM])
+    );
+  };
+
+  const hasPermissionMoveToNewShipment = () => {
+    return isExporter()
+      ? isSamePartners()
+      : isSameImporter() &&
+          hasPermissions(SHIPMENT_CREATE) &&
+          hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
+  };
+
+  const noPermission =
+    !hasPermissionMoveToExistOrder() &&
+    !hasPermissionMoveToNewOrder() &&
+    !hasPermissionMoveToExistContainer() &&
+    !hasPermissionMoveToNewContainer() &&
+    !hasPermissionMoveToExistShipment() &&
+    !hasPermissionMoveToNewShipment();
+
+  let dialogMessage = null;
+  let dialogSubMessage = null;
+
+  if (noPermission) {
+    // No permission to move anywhere
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.move.noPermission"
+        defaultMessage="At least one {batchLabel} selected does not allow you to move it anywhere"
+        values={{ batchLabel: <BatchLabelIcon /> }}
+      />
+    );
+    dialogSubMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.actions.tryAgain"
+        defaultMessage="Please reselect and try again."
+      />
+    );
+  } else if (isProcessing) {
+    // Is currently moving
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.move.moving"
+        defaultMessage="Moving {numOfBatches} {batchesLabel} ..."
+        values={{
+          numOfBatches: <FormattedNumber value={totalBatches} />,
+          batchesLabel: totalBatches > 1 ? <BatchesLabelIcon /> : <BatchLabelIcon />,
+        }}
+      />
+    );
+  } else {
+    // Has permission to move
+    dialogMessage = (
+      <FormattedMessage
+        id="modules.RelationMap.move.message1"
+        defaultMessage="Where would you like to move the {numOfBatches} {batchesLabel} that you have selected?"
+        values={{
+          numOfBatches: <FormattedNumber value={totalBatches} />,
+          batchesLabel: totalBatches > 1 ? <BatchesLabelIcon /> : <BatchLabelIcon />,
+        }}
+      />
+    );
+  }
+
   return (
-    <Dialog isOpen={isOpen && isMoveBatches} width="660px" onRequestClose={onCancel}>
-      <div className={DialogStyle}>
-        {noPermission() ? (
+    <>
+      <ActionDialog
+        isOpen={isOpen && isMoveBatches}
+        isProcessing={isProcessing}
+        onCancel={onCancel}
+        title={<FormattedMessage id="modules.RelationMap.label.move" defaultMessage="MOVE" />}
+        dialogMessage={dialogMessage}
+        dialogSubMessage={dialogSubMessage}
+        buttons={
           <>
-            <FormattedMessage
-              id="modules.RelationMap.move.noPermissionToMove"
-              defaultMessage="Your selection of Batches {entity} do not allow you to move them.Please reselect and try again."
-              values={{
-                entity: <Icon icon="BATCH" />,
-              }}
+            <BaseButton
+              label={
+                <FormattedMessage id="modules.RelationMap.label.moveTo" defaultMessage="MOVE TO" />
+              }
+              icon="ORDER"
+              disabled={!hasPermissionMoveToExistOrder()}
+              onClick={() => onConfirm('existOrder')}
             />
-            <CancelButton onClick={onCancel} />
+            <BaseButton
+              label={
+                <FormattedMessage
+                  id="modules.RelationMap.label.moveToNew"
+                  defaultMessage="MOVE TO NEW"
+                />
+              }
+              icon="ORDER"
+              disabled={!hasPermissionMoveToNewOrder()}
+              onClick={() => onConfirm('newOrder')}
+            />
+            <BaseButton
+              label={
+                <FormattedMessage id="modules.RelationMap.label.moveTo" defaultMessage="MOVE TO" />
+              }
+              icon="CONTAINER"
+              disabled={!hasPermissionMoveToExistContainer()}
+              onClick={() => onConfirm('existContainer')}
+            />
+            <BaseButton
+              label={
+                <FormattedMessage
+                  id="modules.RelationMap.label.moveToNew"
+                  defaultMessage="MOVE TO NEW"
+                />
+              }
+              icon="CONTAINER"
+              disabled={!hasPermissionMoveToNewContainer()}
+              onClick={() => onConfirm('newContainer')}
+            />
+            <BaseButton
+              label={
+                <FormattedMessage id="modules.RelationMap.label.moveTo" defaultMessage="MOVE TO" />
+              }
+              icon="SHIPMENT"
+              disabled={!hasPermissionMoveToExistShipment()}
+              onClick={() => onConfirm('existShipment') || !hasPermissionMoveToExistShipment()}
+            />
+            <BaseButton
+              label={
+                <FormattedMessage
+                  id="modules.RelationMap.label.moveToNew"
+                  defaultMessage="MOVE TO NEW"
+                />
+              }
+              icon="SHIPMENT"
+              disabled={!hasPermissionMoveToNewShipment()}
+              onClick={() => onConfirm('newShipment')}
+            />
           </>
-        ) : (
-          <>
-            <h3 className={ConfirmMessageStyle}>
-              <FormattedMessage
-                id="modules.RelationMap.move.guideline"
-                defaultMessage="Where would you like to move these {total, plural, one {# Batch} other {# Batches}} {entity} to?"
-                values={{
-                  total: totalBatches,
-                  entity: <Icon icon="BATCH" />,
-                }}
-              />
-            </h3>
-            <div className={ButtonsStyle}>
-              <BaseButton
-                label="Order"
-                disabled={Boolean(isProcessing) || !hasPermissionMoveToExistOrder()}
-                onClick={() => onConfirm('existOrder')}
-              />
-              <BaseButton
-                label="New Order"
-                disabled={Boolean(isProcessing) || !hasPermissionMoveToNewOrder()}
-                onClick={() => onConfirm('newOrder')}
-              />
-              <BaseButton
-                label="Container"
-                disabled={Boolean(isProcessing) || !hasPermissionMoveToExistContainer()}
-                onClick={() => onConfirm('existContainer')}
-              />
-              <BaseButton
-                label="New Container"
-                disabled={Boolean(isProcessing) || !hasPermissionMoveToNewContainer()}
-                onClick={() => onConfirm('newContainer')}
-              />
-              <BaseButton
-                label="Shipment"
-                disabled={Boolean(isProcessing)}
-                onClick={() => onConfirm('existShipment') || !hasPermissionMoveToExistShipment()}
-              />
-              <BaseButton
-                label="New Shipment"
-                disabled={Boolean(isProcessing) || !hasPermissionMoveToNewShipment()}
-                onClick={() => onConfirm('newShipment')}
-              />
-            </div>
-          </>
-        )}
-      </div>
+        }
+      />
       <SelectOrderToMove onSuccess={onSuccess} />
       <SelectShipmentToMove onSuccess={onSuccess} onNewContainer={onNewContainer} />
       <SelectContainerToMove onSuccess={onSuccess} />
-    </Dialog>
+    </>
   );
 }

@@ -85,6 +85,14 @@ export const documentFragment = gql`
           }
         }
       }
+      ... on Milestone {
+        name
+        project {
+          ... on Project {
+            id
+          }
+        }
+      }
     }
   }
 `;

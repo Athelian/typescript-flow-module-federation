@@ -50,4 +50,60 @@ export default defineMessages({
     id: 'components.NavBar.Filter.archived',
     defaultMessage: 'Archived',
   },
+  tags: {
+    id: 'components.NavBar.Filter.tags',
+    defaultMessage: 'Tags',
+  },
+  importers: {
+    id: 'components.NavBar.Filter.importers',
+    defaultMessage: 'Importers',
+  },
+  exporters: {
+    id: 'components.NavBar.Filter.exporters',
+    defaultMessage: 'Exporters',
+  },
+  suppliers: {
+    id: 'components.NavBar.Filter.suppliers',
+    defaultMessage: 'Suppliers',
+  },
+  forwarders: {
+    id: 'components.NavBar.Filter.forwarders',
+    defaultMessage: 'Forwarders',
+  },
+  warehousers: {
+    id: 'components.NavBar.Filter.warehousers',
+    defaultMessage: 'Warehousers',
+  },
+  orders: {
+    id: 'components.NavBar.Filter.orders',
+    defaultMessage: 'Orders',
+  },
+  warehouses: {
+    id: 'components.NavBar.Filter.warehouses',
+    defaultMessage: 'Warehouses',
+  },
+  users: {
+    id: 'components.NavBar.Filter.users',
+    defaultMessage: 'Users',
+  },
+  organizationTypes: {
+    id: 'components.NavBar.Filter.organizationTypes',
+    defaultMessage: 'Types',
+  },
+  completelyBatched: {
+    id: 'components.NavBar.Filter.completelyBatched',
+    defaultMessage: 'Fully Batched',
+  },
+  notCompletelyBatched: {
+    id: 'components.NavBar.Filter.notCompletelyBatched',
+    defaultMessage: 'Not Fully Batched',
+  },
+  completelyShipped: {
+    id: 'components.NavBar.Filter.completelyShipped',
+    defaultMessage: 'Fully Shipped',
+  },
+  notCompletelyShipped: {
+    id: 'components.NavBar.Filter.notCompletelyShipped',
+    defaultMessage: 'Not Fully Shipped',
+  },
 });

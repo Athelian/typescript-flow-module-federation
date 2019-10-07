@@ -8,6 +8,7 @@
 <PROJECT_ROOT>/node_modules/date-fns-tz
 <PROJECT_ROOT>/node_modules/unstated
 <PROJECT_ROOT>/node_modules/graphql
+<PROJECT_ROOT>/src/generated
 
 [include]
 
@@ -17,7 +18,7 @@
 
 [options]
 sharedmemory.hash_table_pow=21
-lazy_mode=fs
+#lazy_mode=fs
 name= Zenport web app
 module.file_ext=.js
 module.file_ext=.mjs
@@ -34,6 +35,7 @@ module.name_mapper='^components\(.*\)$' -> '<PROJECT_ROOT>/src/components/\1'
 module.name_mapper='^hooks\(.*\)$' -> '<PROJECT_ROOT>/src/hooks/\1'
 module.name_mapper='^constants\(.*\)$' -> '<PROJECT_ROOT>/src/constants/\1'
 module.name_mapper='^modules\(.*\)$' -> '<PROJECT_ROOT>/src/modules/\1'
+module.name_mapper='^sections\(.*\)$' -> '<PROJECT_ROOT>/src/sections/\1'
 module.name_mapper='^generated\(.*\)$' -> '<PROJECT_ROOT>/src/generated/\1'
 module.name_mapper='^media\(.*\)$' -> '<PROJECT_ROOT>/src/media/\1'
 module.name_mapper='^providers\(.*\)$' -> '<PROJECT_ROOT>/src/providers/\1'

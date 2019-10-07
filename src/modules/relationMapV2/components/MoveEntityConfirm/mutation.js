@@ -4,7 +4,7 @@ import { findKey } from 'lodash';
 import { getByPathWithDefault } from 'utils/fp';
 import { updateOrderMutation } from 'modules/order/form/mutation';
 import { updateBatchMutation } from 'modules/batch/form/mutation';
-import type { State } from 'modules/relationMapV2/components/OrderFocus/type.js.flow';
+import type { State } from 'modules/relationMapV2/type.js.flow';
 
 const moveBatchToOrder = ({
   batch,

@@ -40,6 +40,7 @@ type OptionalProps = {
   redirectAfterSuccess: boolean,
   onSuccessCallback: ?Function,
   onCancel?: Function,
+  // TODO: clean up when old RM is removing
   initDataForSlideView: Object,
   originalDataForSlideView: Object,
 };

@@ -6,8 +6,8 @@ import { Query } from 'react-apollo';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { useEntityHasPermissions } from 'components/Context/Permissions';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
-import { Entities } from 'modules/relationMapV2/store';
+
+import { Entities, OrderFocused } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -36,7 +36,7 @@ function OrderRenderer({
   selected: ?Object,
   setSelected: (?Object) => void,
 }) {
-  const { state } = React.useContext(RelationMapContext);
+  const { state } = OrderFocused.useContainer();
   const { orderIds, importerIds, exporterIds } = state.moveActions;
   const hasPermissions = useEntityHasPermissions(order);
   const isSameParent = orderIds.length === 1 && orderIds.includes(order.id);
@@ -119,7 +119,7 @@ function OrderRenderer({
 }
 
 function SelectOrderToMove({ intl, onSuccess }: Props) {
-  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { dispatch, state } = OrderFocused.useContainer();
   const { mapping } = Entities.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
   const [selected, setSelected] = React.useState(null);
@@ -176,7 +176,6 @@ function SelectOrderToMove({ intl, onSuccess }: Props) {
     },
     'filterOrderOnMoveNRM'
   );
-  if (!isOpen || !isMoveToOrder) return null;
   return (
     <SlideView
       shouldConfirm={() => !!selected}

@@ -2,6 +2,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  order: {
+    id: 'modules.Orders.order',
+    defaultMessage: 'ORDER',
+  },
   save: {
     id: 'modules.Orders.save',
     defaultMessage: 'SAVE',
@@ -561,5 +565,13 @@ export default defineMessages({
   totalItemQuantity: {
     id: 'modules.Orders.totalItemQuantity',
     defaultMessage: 'TOTAL ITEM QUANTITY',
+  },
+  completelyBatched: {
+    id: 'modules.Orders.completelyBatched',
+    defaultMessage: 'Fully Batched',
+  },
+  completelyShipped: {
+    id: 'modules.Orders.completelyShipped',
+    defaultMessage: 'Fully Shipped',
   },
 });

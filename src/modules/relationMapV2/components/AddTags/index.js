@@ -3,8 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { useAllHasPermission } from 'components/Context/Permissions';
-import { RelationMapContext } from 'modules/relationMapV2/components/OrderFocus/store';
-import { Entities } from 'modules/relationMapV2/store';
+import { Entities, OrderFocused } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { ORDER_UPDATE, ORDER_SET_TAGS } from 'modules/permission/constants/order';
@@ -38,7 +37,13 @@ import ActionDialog, {
   TagLabelIcon,
 } from '../ActionDialog';
 import { entitiesUpdateManyMutation } from './mutation';
-import { targetedIds } from '../OrderFocus/helpers';
+import {
+  targetedIds,
+  findOrderIdByOrderItem,
+  findOrderIdByBatch,
+  findOrderIdsByContainer,
+  findOrderIdsByShipment,
+} from '../OrderFocus/helpers';
 
 type Props = {|
   onSuccess: (orderIds: Array<string>) => void,
@@ -47,7 +52,7 @@ type Props = {|
 export default function AddTags({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
   const [tags, setTags] = React.useState([]);
-  const { dispatch, state } = React.useContext(RelationMapContext);
+  const { dispatch, state } = OrderFocused.useContainer();
   const [loadOrders, ordersResult] = useLazyQuery(ordersByIDsQuery);
   const [loadOrderItems, orderItemsResult] = useLazyQuery(orderItemsByIDsQuery);
   const [loadBatches, batchesResult] = useLazyQuery(batchesByIDsQuery);
@@ -218,7 +223,32 @@ export default function AddTags({ onSuccess }: Props) {
         },
       })
         .then(result => {
-          onSuccess((result.data?.entitiesUpdateMany?.orders ?? []).map(order => order.id));
+          const ids = (result.data?.entitiesUpdateMany?.orders ?? []).map(order => order.id);
+          if ((result.data?.entitiesUpdateMany?.orderItems ?? []).length) {
+            ids.push(
+              ...(result.data?.entitiesUpdateMany?.orderItems ?? []).map(item =>
+                findOrderIdByOrderItem(item.id, mapping.entities)
+              )
+            );
+          }
+          if ((result.data?.entitiesUpdateMany?.batches ?? []).length) {
+            ids.push(
+              ...(result.data?.entitiesUpdateMany?.batches ?? []).map(batch =>
+                findOrderIdByBatch(batch.id, mapping.entities)
+              )
+            );
+          }
+          if ((result.data?.entitiesUpdateMany?.containers ?? []).length) {
+            (result.data?.entitiesUpdateMany?.containers ?? []).forEach(container =>
+              ids.push(...findOrderIdsByContainer(container.id, mapping.entities))
+            );
+          }
+          if ((result.data?.entitiesUpdateMany?.shipments ?? []).length) {
+            (result.data?.entitiesUpdateMany?.shipments ?? []).forEach(shipment =>
+              ids.push(...findOrderIdsByShipment(shipment.id, mapping.entities))
+            );
+          }
+          onSuccess(ids);
         })
         .catch(onCancel);
     }
@@ -230,6 +260,7 @@ export default function AddTags({ onSuccess }: Props) {
     containersResult.data,
     containersResult.loading,
     isProcessing,
+    mapping.entities,
     onCancel,
     onSuccess,
     orderItemsResult.called,
@@ -351,7 +382,7 @@ export default function AddTags({ onSuccess }: Props) {
             selectedTags: (
               <span>
                 {tags.map(tag => (
-                  <span style={{ marginRight: '5px' }}>
+                  <span key={tag.id} style={{ marginRight: '5px' }}>
                     <Tag tag={tag} />
                   </span>
                 ))}
@@ -392,7 +423,7 @@ export default function AddTags({ onSuccess }: Props) {
             <FormattedMessage id="modules.RelationMap.label.addTags" defaultMessage="ADD TAGS" />
           }
           icon="TAG"
-          disabled={isProcessing || noPermission || tags.length === 0}
+          disabled={noPermission || tags.length === 0}
           onClick={onConfirm}
         />
       }

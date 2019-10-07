@@ -141,12 +141,6 @@ export default class TagsInput extends React.Component<Props, State> {
     this.setState({ focused: true });
   };
 
-  removeInputFocus = () => {
-    if (this.inputRef.current) {
-      this.inputRef.current.blur();
-    }
-  };
-
   handleInputBlur = () => {
     this.setState({ focused: false });
     this.handleBlur();

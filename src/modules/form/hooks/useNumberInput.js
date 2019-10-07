@@ -8,6 +8,7 @@ import type { ValidationObject } from './type.js.flow';
 function useNumberInput(initialValue: number, schema: ValidationObject) {
   const [value, setValue] = useState(initialValue || 0);
   const [focus, setFocus] = useState(false);
+  const [touch, setTouch] = useState(false);
   const hasError = schema.isRequired
     ? !number()
         .required()
@@ -21,6 +22,7 @@ function useNumberInput(initialValue: number, schema: ValidationObject) {
   }, []);
   const onFocus = useCallback(() => {
     setFocus(true);
+    setTouch(true);
   }, []);
   const onBlur = useCallback((event: Object) => {
     if (event && event.currentTarget) {
@@ -32,6 +34,7 @@ function useNumberInput(initialValue: number, schema: ValidationObject) {
 
   return {
     value,
+    touch,
     onChange,
     onFocus,
     onBlur,
