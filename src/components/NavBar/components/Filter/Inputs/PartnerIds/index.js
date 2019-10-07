@@ -181,8 +181,8 @@ const PartnerIds = (organizationType: string, title: React.Node) => ({
       query={organizationsByIDsQuery}
       getItems={data => data?.organizationsByIDs ?? []}
       renderItem={partner => (
-        <BaseCard icon="PARTNER" color="PARTNER" wrapperClassName={CardStyle} readOnly>
-          <Display height="30px">{partner?.partner?.name ?? partner?.name}</Display>
+        <BaseCard icon="PARTNER" color="PARTNER" wrapperClassName={CardStyle}>
+          <Display height="30px">{partner?.partner?.name || partner?.name}</Display>
         </BaseCard>
       )}
     />

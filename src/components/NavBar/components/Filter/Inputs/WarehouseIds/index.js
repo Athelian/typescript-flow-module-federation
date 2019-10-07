@@ -152,7 +152,7 @@ const WarehouseIds = ({ value, readonly, onChange }: Props) => {
       query={warehousesByIDsQuery}
       getItems={data => data?.warehousesByIDs ?? []}
       renderItem={warehouse => (
-        <BaseCard icon="WAREHOUSE" color="WAREHOUSE" wrapperClassName={CardStyle} readOnly>
+        <BaseCard icon="WAREHOUSE" color="WAREHOUSE" wrapperClassName={CardStyle}>
           <Display height="30px">{warehouse?.name}</Display>
         </BaseCard>
       )}

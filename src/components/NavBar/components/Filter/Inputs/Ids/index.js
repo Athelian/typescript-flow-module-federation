@@ -51,11 +51,11 @@ const Ids = ({
         }}
       >
         {(() => {
-          if (loading) {
-            return <LoadingIcon />;
+          if (loading && value.length > 0) {
+            return <LoadingIcon size={20} />;
           }
 
-          const items = getItems(data);
+          const items = loading ? [] : getItems(data);
 
           if (items.length === 0 && !readonly) {
             return <DashedPlusButton width="200px" height="30px" onClick={() => setOpen(true)} />;

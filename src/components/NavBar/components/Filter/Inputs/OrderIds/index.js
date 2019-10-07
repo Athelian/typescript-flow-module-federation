@@ -151,7 +151,7 @@ const OrderIds = ({ value, readonly, onChange }: Props) => {
       query={ordersByIDsQuery}
       getItems={data => data?.ordersByIDs ?? []}
       renderItem={order => (
-        <BaseCard icon="ORDER" color="ORDER" wrapperClassName={CardStyle} readOnly>
+        <BaseCard icon="ORDER" color="ORDER" wrapperClassName={CardStyle}>
           <Display height="30px">{order?.poNo}</Display>
         </BaseCard>
       )}
