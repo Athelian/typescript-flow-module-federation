@@ -22,7 +22,7 @@ import {
   SHIPMENT,
 } from 'modules/relationMapV2/constants';
 import { GlobalShipmentPoint, OrderFocused } from 'modules/relationMapV2/store';
-import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
+import { targetedIds } from 'modules/relationMapV2/helpers';
 import { RightWrapperStyle, PlaceWrapperStyle, DatesWrapperStyle } from './style';
 
 type AllocateDateType = {

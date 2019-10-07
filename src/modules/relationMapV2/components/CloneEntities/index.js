@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react';
+import { useMutation } from '@apollo/react-hooks';
 import { findKey, flattenDeep } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { useAllHasPermission } from 'components/Context/Permissions';
 import { Entities, OrderFocused } from 'modules/relationMapV2/store';
-
-import { useMutation } from '@apollo/react-hooks';
+import { targetedIds } from 'modules/relationMapV2/helpers';
 import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMapV2/constants';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
@@ -21,7 +21,6 @@ import ActionDialog, {
   BatchLabelIcon,
 } from '../ActionDialog';
 import { cloneBatchesMutation, cloneOrderItemsMutation, cloneOrdersMutation } from './mutation';
-import { targetedIds } from '../OrderFocus/helpers';
 
 type Props = {|
   onSuccess: ({|

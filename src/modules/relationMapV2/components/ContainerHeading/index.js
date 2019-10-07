@@ -7,7 +7,7 @@ import { Display, Label } from 'components/Form';
 import { CONTAINER, CONTAINER_WIDTH } from 'modules/relationMapV2/constants';
 import { isBefore, isAfter, differenceInMinutes } from 'utils/date';
 import Heading from 'modules/relationMapV2/components/Heading';
-import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
+import { targetedIds } from 'modules/relationMapV2/helpers';
 import { RightWrapperStyle, DatesWrapperStyle, DashStyle } from './style';
 
 const getContainerDateRanges = (containers: Array<Object>) => {

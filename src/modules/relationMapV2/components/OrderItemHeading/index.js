@@ -7,7 +7,7 @@ import { Blackout, Label } from 'components/Form';
 import { ORDER_ITEM, ORDER_ITEM_WIDTH } from 'modules/relationMapV2/constants';
 import QuantityGraph from 'modules/relationMapV2/components/QuantityGraph';
 import Heading from 'modules/relationMapV2/components/Heading';
-import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
+import { targetedIds } from 'modules/relationMapV2/helpers';
 import { RightWrapperStyle, QuantityIconsWrapperStyle, QuantityLabelStyle } from './style';
 
 type Props = {|

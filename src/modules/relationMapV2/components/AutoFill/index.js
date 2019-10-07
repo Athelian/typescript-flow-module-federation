@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { useAllHasPermission } from 'components/Context/Permissions';
 import { useMutation } from '@apollo/react-hooks';
 import { Entities, OrderFocused } from 'modules/relationMapV2/store';
-
+import { targetedIds } from 'modules/relationMapV2/helpers';
 import { ORDER_ITEM } from 'modules/relationMapV2/constants';
 import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
 import { BaseButton } from 'components/Buttons';
@@ -16,7 +16,6 @@ import ActionDialog, {
   BatchLabelIcon,
 } from '../ActionDialog';
 import { batchBalanceSplitManyMutation } from './mutation';
-import { targetedIds } from '../OrderFocus/helpers';
 
 type Props = {|
   onSuccess: (itemIds: Array<string>, batchIds: Array<string>) => void,

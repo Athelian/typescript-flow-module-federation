@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import useUser from 'hooks/useUser';
-
 import { Entities, OrderFocused } from 'modules/relationMapV2/store';
+import { targetedIds, findOrderIdByBatch } from 'modules/relationMapV2/helpers';
 import { BATCH } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { BaseButton } from 'components/Buttons';
@@ -20,7 +20,6 @@ import ActionDialog, { BatchesLabelIcon, BatchLabelIcon } from '../ActionDialog'
 import SelectOrderToMove from './components/SelectOrderToMove';
 import SelectShipmentToMove from './components/SelectShipmentToMove';
 import SelectContainerToMove from './components/SelectContainerToMove';
-import { targetedIds, findOrderIdByBatch } from '../OrderFocus/helpers';
 
 type Props = {
   onSuccess: (orderIds: Array<string>) => void,

@@ -30,6 +30,13 @@ import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants
 import { CONTAINER_BATCHES_ADD } from 'modules/permission/constants/container';
 import { SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH } from 'modules/permission/constants/shipment';
 import { Hits, Entities, ClientSorts, OrderFocused } from 'modules/relationMapV2/store';
+import {
+  getColorByEntity,
+  getIconByEntity,
+  handleClickAndDoubleClick,
+  findOrderIdByBatch,
+  findItemIdByBatch,
+} from 'modules/relationMapV2/helpers';
 import Badge from 'modules/relationMapV2/components/Badge';
 import type { CellRender } from 'modules/relationMapV2/type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
@@ -47,14 +54,6 @@ import BatchHeading from '../BatchHeading';
 import ContainerHeading from '../ContainerHeading';
 import ShipmentHeading from '../ShipmentHeading';
 import { ContentStyle } from './style';
-import {
-  getColorByEntity,
-  getIconByEntity,
-  getCardByEntity,
-  handleClickAndDoubleClick,
-  findOrderIdByBatch,
-  findItemIdByBatch,
-} from './helpers';
 
 type CellProps = {
   data: Object,
@@ -2343,7 +2342,7 @@ const cellRenderer = (
     case 'placeholder': {
       const color = getColorByEntity(entity);
       const icon = getIconByEntity(entity);
-      const PlaceHolder = getCardByEntity(entity);
+      const PlaceHolder = React.Fragment;
       content = (
         <div className={ContentStyle}>
           <BaseCard icon={icon} color={color}>

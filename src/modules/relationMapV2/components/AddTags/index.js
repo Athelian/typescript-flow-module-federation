@@ -16,6 +16,13 @@ import { FieldItem, Label, TagsInput } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import Tag from 'components/Tag';
 import {
+  targetedIds,
+  findOrderIdByOrderItem,
+  findOrderIdByBatch,
+  findOrderIdsByContainer,
+  findOrderIdsByShipment,
+} from 'modules/relationMapV2/helpers';
+import {
   ordersByIDsQuery,
   orderItemsByIDsQuery,
   batchesByIDsQuery,
@@ -37,13 +44,6 @@ import ActionDialog, {
   TagLabelIcon,
 } from '../ActionDialog';
 import { entitiesUpdateManyMutation } from './mutation';
-import {
-  targetedIds,
-  findOrderIdByOrderItem,
-  findOrderIdByBatch,
-  findOrderIdsByContainer,
-  findOrderIdsByShipment,
-} from '../OrderFocus/helpers';
 
 type Props = {|
   onSuccess: (orderIds: Array<string>) => void,

@@ -23,7 +23,7 @@ import orderMessages from 'modules/order/messages';
 import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
 import MiniShipmentTimeline from 'modules/relationMapV2/components/MiniShipmentTimeline';
-import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
+import { targetedIds } from 'modules/relationMapV2/helpers';
 import {
   Entities,
   SortAndFilter,

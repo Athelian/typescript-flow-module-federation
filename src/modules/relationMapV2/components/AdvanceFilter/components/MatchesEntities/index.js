@@ -5,7 +5,7 @@ import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import { Hits, Entities, OrderFocused } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, TAG, PRODUCT } from 'modules/relationMapV2/constants';
-import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
+import { targetedIds } from 'modules/relationMapV2/helpers';
 import {
   EntitiesWrapperStyle,
   EntityWrapperStyle,

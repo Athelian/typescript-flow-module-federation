@@ -17,7 +17,7 @@ import { prepareParsedContainerInput } from 'modules/container/form/mutation';
 import ShipmentForm from 'modules/shipment/index.form';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
 import { Entities, OrderFocused } from 'modules/relationMapV2/store';
-import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
+import { targetedIds } from 'modules/relationMapV2/helpers';
 import { encodeId, uuid } from 'utils/id';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';

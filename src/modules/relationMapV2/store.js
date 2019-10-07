@@ -1235,3 +1235,4 @@ function useOrderFocus(init: State = initialState) {
 }
 
 export const OrderFocused = createContainer(useOrderFocus);
+export const ShipmentFocused = createContainer(useOrderFocus);

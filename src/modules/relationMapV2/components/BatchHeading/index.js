@@ -7,7 +7,7 @@ import { Display, Label } from 'components/Form';
 import { BATCH, BATCH_WIDTH } from 'modules/relationMapV2/constants';
 import { isBefore, isAfter, differenceInCalendarDays } from 'utils/date';
 import Heading from 'modules/relationMapV2/components/Heading';
-import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
+import { targetedIds } from 'modules/relationMapV2/helpers';
 import { RightWrapperStyle, DatesWrapperStyle } from './style';
 
 const getBatchDateRanges = (batches: Array<Object>) => {

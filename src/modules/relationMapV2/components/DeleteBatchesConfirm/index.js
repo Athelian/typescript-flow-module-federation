@@ -3,15 +3,14 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
 import { useAllHasPermission } from 'components/Context/Permissions';
-import { Entities, OrderFocused } from 'modules/relationMapV2/store';
 import { BATCH_DELETE, BATCH_UPDATE } from 'modules/permission/constants/batch';
-
+import { Entities, OrderFocused } from 'modules/relationMapV2/store';
+import { targetedIds } from 'modules/relationMapV2/helpers';
 import { BATCH } from 'modules/relationMapV2/constants';
 import { BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import Icon from 'components/Icon';
 import ActionDialog, { BatchesLabelIcon, BatchLabelIcon } from '../ActionDialog';
-import { targetedIds } from '../OrderFocus/helpers';
 import { deleteBatchMutation } from '../DeleteBatchConfirm/mutation';
 import { entitiesUpdateManyMutation } from '../AddTags/mutation';
 

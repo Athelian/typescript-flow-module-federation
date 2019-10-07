@@ -6,7 +6,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import { Label } from 'components/Form';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { OrderFocused } from 'modules/relationMapV2/store';
-import { targetedIds } from '../OrderFocus/helpers';
+import { targetedIds } from 'modules/relationMapV2/helpers';
 import {
   SelectedEntitiesWrapperStyle,
   EntitiesWrapperStyle,

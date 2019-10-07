@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
 import { useAllHasPermission } from 'components/Context/Permissions';
 import { Entities, OrderFocused } from 'modules/relationMapV2/store';
-
+import { targetedIds } from 'modules/relationMapV2/helpers';
 import { ORDER_ITEM, CONTAINER } from 'modules/relationMapV2/constants';
 import { ORDER_ITEMS_DELETE } from 'modules/permission/constants/orderItem';
 import { CONTAINER_DELETE } from 'modules/permission/constants/container';
@@ -19,7 +19,6 @@ import ActionDialog, {
   ShipmentLabelIcon,
 } from '../ActionDialog';
 import { deleteContainerMutation, deleteOrderItemMutation } from './mutation';
-import { targetedIds } from '../OrderFocus/helpers';
 
 type Props = {|
   onSuccess: ({ orderItemIds: Array<string>, containerIds: Array<string> }) => void,

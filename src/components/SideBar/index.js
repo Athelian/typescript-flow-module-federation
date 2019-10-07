@@ -2,6 +2,7 @@
 import React from 'react';
 import { Location } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
+import { isEnableBetaFeature } from 'utils/env';
 import {
   RM_ORDER_FOCUS_LIST,
   RM_PRODUCT_FOCUS_LIST,
@@ -98,23 +99,27 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.shipment} />,
     icon: 'SHIPMENT',
     path: 'shipment',
-    permitted: hasPermissions => hasPermissions([SHIPMENT_LIST, CONTAINER_LIST]),
+    permitted: hasPermissions => hasPermissions(SHIPMENT_LIST),
     submenu: [
       {
-        label: <FormattedMessage {...messages.shipment} />,
-        icon: 'SHIPMENT',
-        path: 'shipment',
-        overrideFullPath: 'shipment',
-        permitted: hasPermissions => hasPermissions(SHIPMENT_LIST),
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
       },
       {
-        label: <FormattedMessage {...messages.container} />,
-        icon: 'CONTAINER',
-        path: 'container',
-        overrideFullPath: 'container',
-        permitted: hasPermissions => hasPermissions(CONTAINER_LIST),
+        label: <FormattedMessage {...messages.map} />,
+        icon: 'MAP',
+        path: 'map',
+        beta: true,
+        hidden: !isEnableBetaFeature,
       },
     ],
+  },
+  {
+    label: <FormattedMessage {...messages.container} />,
+    icon: 'CONTAINER',
+    path: 'container',
+    permitted: hasPermissions => hasPermissions(CONTAINER_LIST),
   },
   {
     label: <FormattedMessage {...messages.product} />,
