@@ -8,6 +8,7 @@ import DateInput from './Inputs/DateInput';
 import DatetimeInput from './Inputs/DatetimeInput';
 import SelectEnumInput from './Inputs/SelectEnumInput';
 import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
+import ContainerTypeInput from './Inputs/ContainerTypeInput';
 import DocumentsInput from './Inputs/DocumentsInput';
 import QuantityRevisionsInput from './Inputs/QuantityRevisionsInput';
 import { WrapperStyle } from './style';
@@ -33,6 +34,7 @@ const inputs = {
   date: DateInput,
   datetime: DatetimeInput,
   incoterm: SelectEnumInput.Incoterm,
+  container_type: ContainerTypeInput,
   order_documents: DocumentsInput.Order,
   order_item_documents: DocumentsInput.OrderItem,
   shipment_documents: DocumentsInput.Shipment,

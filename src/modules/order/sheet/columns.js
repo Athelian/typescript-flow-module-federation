@@ -522,7 +522,18 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // ctn type
+  {
+    key: 'order.orderItem.batch.container.containerType',
+    title: <FormattedMessage {...containerMessages.containerType} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+    sort: {
+      local: true,
+      name: 'containerContainerType',
+      group: 'batch',
+    },
+  },
   // ctn option
   {
     key: 'order.orderItem.batch.container.warehouseArrivalAgreedDate',
