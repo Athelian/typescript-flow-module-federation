@@ -178,23 +178,23 @@ export default class MetricInput extends React.Component<Props> {
       );
     }
 
+    if (valueReadOnly && !metricReadOnly) {
+      return (
+        <>
+          <Display align={align} height="30px">
+            <FormattedNumber value={value} />
+          </Display>
+          <DefaultStyle width="30px" isFocused={isFocused} forceHoverStyle={forceHoverStyle}>
+            {select}
+          </DefaultStyle>
+        </>
+      );
+    }
+
     return (
-      <>
-        {valueReadOnly ? (
-          <>
-            <Display align={align} height="30px">
-              <FormattedNumber value={value} />
-            </Display>
-            <DefaultStyle width="30px"> {select}</DefaultStyle>
-          </>
-        ) : (
-          <>
-            <DefaultStyle {...inputWrapperConfig}>
-              {input} {select}
-            </DefaultStyle>
-          </>
-        )}
-      </>
+      <DefaultStyle {...inputWrapperConfig}>
+        {input} {select}
+      </DefaultStyle>
     );
   }
 }
