@@ -402,3 +402,22 @@ export const shipmentFocusedListQuery = gql`
   ${ownedByFragment}
   ${timelineDateFragment}
 `;
+
+export const shipmentFullFocusDetailQuery = gql`
+  query shipmentFullFocusDetailQuery($ids: [ID!]!) {
+    shipmentsByIDs(ids: $ids) {
+      ...shipmentCardFullFragment
+    }
+  }
+
+  ${shipmentCardFullFragment}
+  ${shipmentEntityCardFragment}
+  ${containerEntityCardFragment}
+  ${batchEntityCardFragment}
+  ${itemEntityCardFragment}
+  ${orderEntityCardFragment}
+  ${tagFragment}
+  ${taskCountFragment}
+  ${ownedByFragment}
+  ${timelineDateFragment}
+`;

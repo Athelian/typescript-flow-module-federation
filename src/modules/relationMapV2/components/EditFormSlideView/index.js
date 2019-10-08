@@ -23,6 +23,7 @@ import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import { isEquals } from 'utils/fp';
 import NewOrderForm from './components/NewOrderForm';
+import NewShipmentForm from './components/NewShipmentForm';
 import { ordersAndShipmentsQuery } from './query';
 import { createContainerMutation } from './mutation';
 
@@ -208,9 +209,6 @@ const EditFormSlideView = ({ onClose }: Props) => {
           case 'newOrder':
             form = (
               <NewOrderForm
-                path="new"
-                isSlideView
-                redirectAfterSuccess={false}
                 originalDataForSlideView={{
                   orderItems: newOrderItems.map(item => ({
                     ...defaultItemValues,
@@ -260,10 +258,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
             break;
           case 'newShipment':
             form = (
-              <ShipmentForm
-                path="new"
-                isSlideView
-                redirectAfterSuccess={false}
+              <NewShipmentForm
                 initDataForSlideView={{
                   importer,
                   exporter: isExporter() ? exporter : null,
@@ -356,9 +351,6 @@ const EditFormSlideView = ({ onClose }: Props) => {
       isNewEntity = true;
       form = (
         <NewOrderForm
-          path="new"
-          isSlideView
-          redirectAfterSuccess={false}
           onSuccessCallback={result => {
             onSetBadges([
               {
@@ -377,6 +369,35 @@ const EditFormSlideView = ({ onClose }: Props) => {
               moveToTop: true,
               id: result.orderCreate.id,
               type: ORDER,
+            });
+          }}
+          onCancel={onClose}
+        />
+      );
+      break;
+    }
+    case 'NEW_SHIPMENT': {
+      isNewEntity = true;
+      form = (
+        <NewShipmentForm
+          onSuccessCallback={result => {
+            onSetBadges([
+              {
+                id: result.shipmentCreate.id,
+                type: 'newItem',
+                entity: 'shipment',
+              },
+            ]);
+            dispatch({
+              type: 'NEW_SHIPMENT',
+              payload: {
+                shipmentId: result.shipmentCreate.id,
+              },
+            });
+            onClose({
+              moveToTop: true,
+              id: result.shipmentCreate.id,
+              type: SHIPMENT,
             });
           }}
           onCancel={onClose}
