@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
 import { useAllHasPermission } from 'components/Context/Permissions';
 import { BATCH_DELETE, BATCH_UPDATE } from 'modules/permission/constants/batch';
-import { Entities, OrderFocused } from 'modules/relationMapV2/store';
+import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import { BATCH } from 'modules/relationMapV2/constants';
 import { BaseButton } from 'components/Buttons';
@@ -22,7 +22,7 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
   const [deleteBatch] = useMutation(deleteBatchMutation);
   const [updateEntities] = useMutation(entitiesUpdateManyMutation);
-  const { dispatch, state } = OrderFocused.useContainer();
+  const { dispatch, state } = FocusedView.useContainer();
   const { isProcessing, isRemove, isOpen } = state.deleteBatches;
   const batchIds = targetedIds(state.targets, BATCH);
   const isDisableRemovedContainerButton =

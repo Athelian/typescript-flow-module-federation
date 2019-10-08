@@ -7,7 +7,7 @@ import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { useEntityHasPermissions } from 'components/Context/Permissions';
 
-import { Entities, OrderFocused } from 'modules/relationMapV2/store';
+import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -37,7 +37,7 @@ function ContainerRenderer({
   selected: ?Object,
   setSelected: (?Object) => void,
 }) {
-  const { state } = OrderFocused.useContainer();
+  const { state } = FocusedView.useContainer();
   const { containerIds, importerIds, exporterIds } = state.moveActions;
   const isSameParent = containerIds.length === 1 && containerIds.includes(container.id);
   const hasPermissions = useEntityHasPermissions(container);
@@ -123,7 +123,7 @@ function ContainerRenderer({
 }
 
 function SelectContainerToMove({ intl, onSuccess }: Props) {
-  const { dispatch, state } = OrderFocused.useContainer();
+  const { dispatch, state } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
   const [selected, setSelected] = React.useState(null);

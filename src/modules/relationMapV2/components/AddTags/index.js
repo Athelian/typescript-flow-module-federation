@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { useAllHasPermission } from 'components/Context/Permissions';
-import { Entities, OrderFocused } from 'modules/relationMapV2/store';
+import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { ORDER_UPDATE, ORDER_SET_TAGS } from 'modules/permission/constants/order';
@@ -52,7 +52,7 @@ type Props = {|
 export default function AddTags({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
   const [tags, setTags] = React.useState([]);
-  const { dispatch, state } = OrderFocused.useContainer();
+  const { dispatch, state } = FocusedView.useContainer();
   const [loadOrders, ordersResult] = useLazyQuery(ordersByIDsQuery);
   const [loadOrderItems, orderItemsResult] = useLazyQuery(orderItemsByIDsQuery);
   const [loadBatches, batchesResult] = useLazyQuery(batchesByIDsQuery);

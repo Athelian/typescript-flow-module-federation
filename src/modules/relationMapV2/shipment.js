@@ -8,7 +8,7 @@ import AdvanceFilter from './components/AdvanceFilter';
 import ExpandButton from './components/ExpandButton';
 import {
   Hits,
-  ShipmentFocused,
+  FocusedView,
   Entities,
   SortAndFilter,
   ClientSorts,
@@ -19,7 +19,7 @@ import {
 const RelationMap = () => {
   return (
     <Provider>
-      <ShipmentFocused.Provider>
+      <FocusedView.Provider initialState="Shipment">
         <ExpandRows.Provider>
           <GlobalShipmentPoint.Provider>
             <Hits.Provider>
@@ -52,7 +52,7 @@ const RelationMap = () => {
             </Hits.Provider>
           </GlobalShipmentPoint.Provider>
         </ExpandRows.Provider>
-      </ShipmentFocused.Provider>
+      </FocusedView.Provider>
     </Provider>
   );
 };

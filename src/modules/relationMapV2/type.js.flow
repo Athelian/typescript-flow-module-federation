@@ -32,6 +32,7 @@ export type CellRender = {
 };
 
 export type State = {|
+  viewer: "Order" | "Shipment",
   order: Object,
   targets: Array<string>,
   isDragging: boolean,

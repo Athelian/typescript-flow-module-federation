@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
-import { Entities, OrderFocused } from 'modules/relationMapV2/store';
+import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import {
   targetedIds,
@@ -22,7 +22,7 @@ type Props = {
 
 export default function Actions({ targets }: Props) {
   const [currentMenu, setCurrentMenu] = React.useState(null);
-  const { dispatch } = OrderFocused.useContainer();
+  const { dispatch } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
   const orderIds = targetedIds(targets, ORDER);
   const orderItemIds = targetedIds(targets, ORDER_ITEM);

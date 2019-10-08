@@ -4,7 +4,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { findKey, flattenDeep } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { useAllHasPermission } from 'components/Context/Permissions';
-import { Entities, OrderFocused } from 'modules/relationMapV2/store';
+import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMapV2/constants';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
@@ -32,7 +32,7 @@ type Props = {|
 |};
 
 export default function CloneEntities({ onSuccess }: Props) {
-  const { dispatch, state } = OrderFocused.useContainer();
+  const { dispatch, state } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
   const [cloneBatches] = useMutation(cloneBatchesMutation);
   const [cloneOrderItems] = useMutation(cloneOrderItemsMutation);

@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 
-import { Entities, OrderFocused } from 'modules/relationMapV2/store';
+import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import { CancelButton, MoveButton } from 'components/Buttons';
@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function MoveEntityConfirm({ onSuccess }: Props) {
-  const { dispatch, state } = OrderFocused.useContainer();
+  const { dispatch, state } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
   const {
     isProcessing,

@@ -7,7 +7,7 @@ import { orderItemFormQuery } from 'modules/orderItem/form/query';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
 import { generateBatchByOrderItem } from 'utils/batch';
 import { removeTypename } from 'utils/data';
-import { Entities, OrderFocused } from 'modules/relationMapV2/store';
+import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import ActionDialog, { BatchLabelIcon } from '../ActionDialog';
 import { createBatchMutation } from './mutation';
 
@@ -17,7 +17,7 @@ type Props = {|
 
 export default function InlineCreateBatch({ onSuccess }: Props) {
   const { mapping, onSetBadges } = Entities.useContainer();
-  const { dispatch, state } = OrderFocused.useContainer();
+  const { dispatch, state } = FocusedView.useContainer();
   const {
     isOpen,
     isProcessing,

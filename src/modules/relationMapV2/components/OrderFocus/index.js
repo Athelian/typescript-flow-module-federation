@@ -21,7 +21,7 @@ import {
   SortAndFilter,
   ClientSorts,
   ExpandRows,
-  OrderFocused,
+  FocusedView,
 } from 'modules/relationMapV2/store';
 import { findOrderIdByOrderItem, findOrderIdByBatch } from 'modules/relationMapV2/helpers';
 import EditFormSlideView from '../EditFormSlideView';
@@ -176,7 +176,7 @@ export default function OrderFocus() {
     }
   }, [listRef, scrollPosition, scrollToRow]);
 
-  const { state, dispatch } = OrderFocused.useContainer();
+  const { state, dispatch } = FocusedView.useContainer();
   const queryOrdersDetail = React.useCallback(
     (orderIds: Array<string>) => {
       if (orderIds.length) {
@@ -490,9 +490,10 @@ export default function OrderFocus() {
                           // need to find the position base on the order and batch
                           // then use the react-window to navigate to the row
                           // try to get from sort first, if not there, then try to use from entities
-                          const originalBatches = ( // $FlowIgnore this doesn't support yet
-                            entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? []
-                          ).map(batchId => entities.batches?.[batchId]);
+                          const originalBatches = // $FlowIgnore this doesn't support yet
+                          (entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? []).map(
+                            batchId => entities.batches?.[batchId]
+                          );
                           const batchList = getBatchesSortByItemId({
                             // $FlowIgnore this doesn't support yet
                             id: batch?.orderItem?.id,

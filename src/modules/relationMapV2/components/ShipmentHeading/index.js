@@ -21,7 +21,7 @@ import {
   DELIVERY_READY,
   SHIPMENT,
 } from 'modules/relationMapV2/constants';
-import { GlobalShipmentPoint, OrderFocused } from 'modules/relationMapV2/store';
+import { GlobalShipmentPoint, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import { RightWrapperStyle, PlaceWrapperStyle, DatesWrapperStyle } from './style';
 
@@ -174,7 +174,7 @@ export default function ShipmentHeading({
   // TODO: Replace with real permissions
   const canViewPlace = true;
   const canViewDate = true;
-  const { state } = OrderFocused.useContainer();
+  const { state } = FocusedView.useContainer();
   const shipmentIds = targetedIds(state.targets, SHIPMENT);
   const selectedItemsCount = shipments.filter(item => shipmentIds.includes(item.id)).length;
 

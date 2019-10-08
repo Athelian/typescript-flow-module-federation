@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
 import { useAllHasPermission } from 'components/Context/Permissions';
-import { Entities, OrderFocused } from 'modules/relationMapV2/store';
+import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import { ORDER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
@@ -27,7 +27,7 @@ export default function StatusConfirm({ onSuccess }: Props) {
   const [isArchived, setIsArchived] = React.useState(false);
   const [updateOrders] = useMutation(updateOrdersMutation);
   const [updateShipments] = useMutation(updateShipmentMutation);
-  const { dispatch, state } = OrderFocused.useContainer();
+  const { dispatch, state } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
   const { isProcessing, isOpen, source } = state.status;
   const orderIds = targetedIds(state.targets, ORDER);

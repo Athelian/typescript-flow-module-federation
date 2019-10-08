@@ -492,6 +492,7 @@ const initMoveEntity = {
 };
 
 const initialState: State = {
+  viewer: 'Order',
   order: {},
   targets: [],
   isDragging: false,
@@ -1227,12 +1228,18 @@ function orderReducer(
   }
 }
 
-function useOrderFocus(init: State = initialState) {
-  const [state, dispatch] = useReducer(orderReducer, init);
+function useFocusView(viewer: 'Order' | 'Shipment') {
+  const [state, dispatch] = useReducer(orderReducer, { ...initialState, viewer });
   // TODO: add selector
   // TODO: need to init state base on orders
-  return { state, dispatch };
+  return {
+    state,
+    selectors: {
+      isOrderFocus: state.viewer === 'Order',
+      isShipmentFocus: state.viewer === 'Shipment',
+    },
+    dispatch,
+  };
 }
 
-export const OrderFocused = createContainer(useOrderFocus);
-export const ShipmentFocused = createContainer(useOrderFocus);
+export const FocusedView = createContainer(useFocusView);

@@ -3,7 +3,7 @@ import React from 'react';
 import { intersection } from 'lodash';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
-import { Hits, Entities, OrderFocused } from 'modules/relationMapV2/store';
+import { Hits, Entities, FocusedView } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, TAG, PRODUCT } from 'modules/relationMapV2/constants';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import {
@@ -15,7 +15,7 @@ import {
 } from './style';
 
 const MatchesEntities = () => {
-  const { state, dispatch } = OrderFocused.useContainer();
+  const { state, dispatch } = FocusedView.useContainer();
   const selectedOrderIds = targetedIds(state.targets, ORDER);
   const selectedOrderItemIds = targetedIds(state.targets, ORDER_ITEM);
   const selectedBatchIds = targetedIds(state.targets, BATCH);
