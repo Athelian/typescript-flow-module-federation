@@ -12,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import PermissionsProvider from './components/Context/Permissions';
 import LanguageProvider from './components/Context/Language';
 import ViewerProvider from './components/Context/Viewer';
-import UIProvider from './modules/ui';
+import UIProvider from './components/Context/UI';
 import apolloClient from './apollo';
 import Routes from './routes';
 import loadFonts from './fonts';
@@ -47,14 +47,14 @@ const renderApp = (Component, renderFn) => {
               <ViewerProvider>
                 <PermissionsProvider>
                   <LanguageProvider>
-                    <>
-                      {isAppInProduction && (
-                        <DeployNotifier
-                          revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
-                          revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
-                        />
-                      )}
-                      <UIProvider>
+                    <UIProvider>
+                      <>
+                        {isAppInProduction && (
+                          <DeployNotifier
+                            revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
+                            revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
+                          />
+                        )}
                         {isEnableStrictMode ? (
                           <React.StrictMode>
                             <Component />
@@ -62,8 +62,8 @@ const renderApp = (Component, renderFn) => {
                         ) : (
                           <Component />
                         )}
-                      </UIProvider>
-                    </>
+                      </>
+                    </UIProvider>
                   </LanguageProvider>
                 </PermissionsProvider>
               </ViewerProvider>
