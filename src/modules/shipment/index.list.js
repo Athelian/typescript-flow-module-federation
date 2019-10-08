@@ -103,6 +103,7 @@ const ShipmentListModule = (props: Props) => {
       <NavBar>
         <FilterToolBar
           icon="SHIPMENT"
+          subIcon="CARDS"
           sortFields={sortFields}
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}

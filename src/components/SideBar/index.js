@@ -305,7 +305,8 @@ const SideBar = () => {
                           isActive={
                             subConfig.overrideFullPath
                               ? pathnameSplit[1] === subConfig.overrideFullPath
-                              : pathnameSplit[2] === subConfig.path
+                              : pathnameSplit[2] === subConfig.path &&
+                                activePaths.includes(pathnameSplit[1])
                           }
                           icon={subConfig.icon}
                           label={subConfig.label}
