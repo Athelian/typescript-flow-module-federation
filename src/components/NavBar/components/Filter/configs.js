@@ -175,6 +175,13 @@ export const OrderFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'SHIPMENT',
+    field: 'shipmentFirstTransitPorts',
+    type: 'ports',
+    message: shipmentMessages.firstTransitPort,
+    defaultValue: [],
+  },
+  {
+    entity: 'SHIPMENT',
     field: 'shipmentSecondTransitPortArrival',
     type: 'date_range',
     message: shipmentMessages.secondTransitPortArrival,
@@ -189,10 +196,24 @@ export const OrderFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'SHIPMENT',
+    field: 'shipmentSecondTransitPorts',
+    type: 'ports',
+    message: shipmentMessages.secondTransitPort,
+    defaultValue: [],
+  },
+  {
+    entity: 'SHIPMENT',
     field: 'shipmentDischargePortArrival',
     type: 'date_range',
     message: shipmentMessages.dischargePortArrival,
     defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'SHIPMENT',
+    field: 'shipmentDischargePorts',
+    type: 'ports',
+    message: shipmentMessages.dischargePort,
+    defaultValue: [],
   },
   {
     entity: 'SHIPMENT',
