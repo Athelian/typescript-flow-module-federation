@@ -25,8 +25,8 @@ import {
   TASK_LIST,
   TASK_TEMPLATE_LIST,
 } from 'modules/permission/constants/task';
-import { UIConsumer } from 'modules/ui';
 import { useViewerHasPermissions, type HasPermissions } from 'components/Context/Permissions';
+import { useUI } from 'components/Context/UI';
 import { Logo, MenuItem, SubMenu } from './components';
 import { SideBarWrapperStyle, SideBarBodyStyle } from './style';
 import messages from './messages';
@@ -227,6 +227,7 @@ const menu: Array<MenuConfig> = [
 
 const SideBar = () => {
   const hasPermissions = useViewerHasPermissions();
+  const uiState = useUI();
 
   return (
     <Location>
@@ -239,83 +240,79 @@ const SideBar = () => {
         const pathnameSplit = location.pathname.split('/');
 
         return (
-          <UIConsumer>
-            {uiState => (
-              <div className={SideBarWrapperStyle(uiState.isSideBarExpanded)}>
-                <Logo {...uiState} />
-                <div className={SideBarBodyStyle}>
-                  {menu.map(config => {
-                    if (config.hidden) {
-                      return null;
-                    }
+          <div className={SideBarWrapperStyle(uiState.isSideBarExpanded)}>
+            <Logo {...uiState} />
+            <div className={SideBarBodyStyle}>
+              {menu.map(config => {
+                if (config.hidden) {
+                  return null;
+                }
 
-                    if (config.permitted && !config.permitted(hasPermissions)) {
-                      return null;
-                    }
+                if (config.permitted && !config.permitted(hasPermissions)) {
+                  return null;
+                }
 
-                    if (!config.submenu) {
+                if (!config.submenu) {
+                  return (
+                    <MenuItem
+                      key={config.path}
+                      path={`/${config.path}`}
+                      isActive={pathnameSplit[1] === config.path}
+                      icon={config.icon}
+                      label={config.label}
+                      isBeta={config.beta}
+                    />
+                  );
+                }
+
+                const activePaths = [
+                  config.path,
+                  ...config.submenu
+                    .filter(subConfig => !!subConfig.overrideFullPath)
+                    .map(subConfig => subConfig.overrideFullPath),
+                ];
+
+                return (
+                  <SubMenu
+                    key={config.path}
+                    hasActiveChild={activePaths.includes(pathnameSplit[1])}
+                    icon={config.icon}
+                    label={config.label}
+                  >
+                    {/* $FlowFixMe already check if submenu is defined */}
+                    {config.submenu.map(subConfig => {
+                      if (subConfig.hidden) {
+                        return null;
+                      }
+
+                      if (subConfig.permitted && !subConfig.permitted(hasPermissions)) {
+                        return null;
+                      }
+
                       return (
                         <MenuItem
-                          key={config.path}
-                          path={`/${config.path}`}
-                          isActive={pathnameSplit[1] === config.path}
-                          icon={config.icon}
-                          label={config.label}
-                          isBeta={config.beta}
+                          key={subConfig.path}
+                          path={
+                            subConfig.overrideFullPath
+                              ? `/${subConfig.overrideFullPath}`
+                              : `/${config.path}/${subConfig.path}`
+                          }
+                          isActive={
+                            subConfig.overrideFullPath
+                              ? pathnameSplit[1] === subConfig.overrideFullPath
+                              : pathnameSplit[2] === subConfig.path
+                          }
+                          icon={subConfig.icon}
+                          label={subConfig.label}
+                          isBeta={subConfig.beta}
                         />
                       );
-                    }
-
-                    const activePaths = [
-                      config.path,
-                      ...config.submenu
-                        .filter(subConfig => !!subConfig.overrideFullPath)
-                        .map(subConfig => subConfig.overrideFullPath),
-                    ];
-
-                    return (
-                      <SubMenu
-                        key={config.path}
-                        hasActiveChild={activePaths.includes(pathnameSplit[1])}
-                        icon={config.icon}
-                        label={config.label}
-                      >
-                        {/* $FlowFixMe already check if submenu is defined */}
-                        {config.submenu.map(subConfig => {
-                          if (subConfig.hidden) {
-                            return null;
-                          }
-
-                          if (subConfig.permitted && !subConfig.permitted(hasPermissions)) {
-                            return null;
-                          }
-
-                          return (
-                            <MenuItem
-                              key={subConfig.path}
-                              path={
-                                subConfig.overrideFullPath
-                                  ? `/${subConfig.overrideFullPath}`
-                                  : `/${config.path}/${subConfig.path}`
-                              }
-                              isActive={
-                                subConfig.overrideFullPath
-                                  ? pathnameSplit[1] === subConfig.overrideFullPath
-                                  : pathnameSplit[2] === subConfig.path
-                              }
-                              icon={subConfig.icon}
-                              label={subConfig.label}
-                              isBeta={subConfig.beta}
-                            />
-                          );
-                        })}
-                      </SubMenu>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </UIConsumer>
+                    })}
+                  </SubMenu>
+                );
+              })}
+            </div>
+          </div>
         );
       }}
     </Location>
