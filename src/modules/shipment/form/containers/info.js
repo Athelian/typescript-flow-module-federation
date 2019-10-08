@@ -2,6 +2,7 @@
 import { Container } from 'unstated';
 import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
+import { defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
 
 type ShipmentInfoType = {
   no: ?string,
@@ -50,12 +51,12 @@ const initValues = {
   importer: null,
   forwarders: [],
   exporter: null,
-  totalPackageQuantityOverride: null,
-  totalPackageQuantityOverriding: null,
-  totalVolumeOverride: null,
-  totalVolumeOverriding: null,
-  totalWeightOverride: null,
-  totalWeightOverriding: null,
+  totalPackageQuantityOverride: 0,
+  totalPackageQuantityOverriding: true,
+  totalVolumeOverride: { value: 0, metric: defaultVolumeMetric },
+  totalVolumeOverriding: true,
+  totalWeightOverride: { value: 0, metric: defaultWeightMetric },
+  totalWeightOverriding: true,
 };
 
 export default class ShipmentInfoContainer extends Container<ShipmentInfoType> {
