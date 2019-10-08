@@ -1,13 +1,12 @@
 // @flow
 import * as React from 'react';
-import { Subscribe } from 'unstated';
+import { Provider, Subscribe } from 'unstated';
 import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Mutation } from 'react-apollo';
 import { showToastError } from 'utils/errors';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { getByPath } from 'utils/fp';
 import { FormContainer } from 'modules/form';
-import { UserConsumer } from 'components/Context/Viewer';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { EntityIcon } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
@@ -31,6 +30,7 @@ type Props = {|
   onCancel: Function,
   initDataForSlideView: Object,
   originalDataForSlideView: Object,
+  organization: Object,
   intl: IntlShape,
 |};
 
@@ -41,23 +41,43 @@ type CreateOrderResponse = {|
   },
 |};
 
-type OrderFormState = {
-  orderInfoState: Object,
-  orderItemState: Object,
-  orderTagsState: Object,
-  orderFilesState: Object,
-  orderTasksState: Object,
-};
-
+const orderItemState = new OrderItemsContainer();
+const orderInfoState = new OrderInfoContainer();
+const orderTagsState = new OrderTagsContainer();
+const orderFilesState = new OrderFilesContainer();
+const orderTasksState = new OrderTasksContainer();
+const form = new FormContainer();
 class NewOrderForm extends React.PureComponent<Props> {
   isMountedOnDOM = false;
 
   componentDidMount() {
+    const { initDataForSlideView, organization } = this.props;
     this.isMountedOnDOM = true;
+    const order = {
+      id: uuid(),
+      inCharges: [],
+      currency: 'USD',
+      customFields: {
+        mask: null,
+        fieldValues: [],
+      },
+      tags: [],
+      importer: organization,
+      todo: {
+        tasks: [],
+      },
+      files: [],
+      orderItems: [],
+      shipments: [],
+      containers: [],
+      ...initDataForSlideView,
+    };
+    this.initAllValues(order);
   }
 
   componentWillUnmount() {
     this.isMountedOnDOM = false;
+    form.onReset();
   }
 
   onSave = async (
@@ -90,16 +110,7 @@ class NewOrderForm extends React.PureComponent<Props> {
     }
   };
 
-  initAllValues = (
-    {
-      orderItemState,
-      orderInfoState,
-      orderTagsState,
-      orderFilesState,
-      orderTasksState,
-    }: OrderFormState,
-    order: Object
-  ) => {
+  initAllValues = (order: Object) => {
     const {
       orderItems = [],
       hasCalledItemsApiYet = false,
@@ -114,33 +125,6 @@ class NewOrderForm extends React.PureComponent<Props> {
     orderFilesState.initDetailValues(files);
     orderTasksState.initDetailValues(todo, hasCalledTasksApiYet || todo.tasks.length > 0);
     orderTagsState.initDetailValues(tags);
-    return null;
-  };
-
-  onFormReady = (
-    {
-      orderItemState,
-      orderInfoState,
-      orderTagsState,
-      orderFilesState,
-      orderTasksState,
-    }: OrderFormState,
-    order: Object
-  ) => {
-    const hasInitialStateYet = orderInfoState.state.id || Object.keys(order).length === 0;
-    if (hasInitialStateYet || this.isMountedOnDOM) return null;
-
-    this.initAllValues(
-      {
-        orderItemState,
-        orderInfoState,
-        orderTagsState,
-        orderFilesState,
-        orderTasksState,
-      },
-      order
-    );
-    return null;
   };
 
   onMutationCompleted = (result: CreateOrderResponse) => {
@@ -150,204 +134,146 @@ class NewOrderForm extends React.PureComponent<Props> {
   };
 
   render() {
-    const { onCancel, initDataForSlideView } = this.props;
+    const { onCancel } = this.props;
     return (
-      <Mutation mutation={createOrderMutation} onCompleted={this.onMutationCompleted}>
-        {(saveOrder, { loading: isLoading, error: apiError }) => (
-          <SlideViewLayout>
-            <SlideViewNavBar>
-              <EntityIcon icon="ORDER" color="ORDER" />
-              <JumpToSection>
-                <SectionTabs
-                  link="order_orderSection"
-                  label={<FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />}
-                  icon="ORDER"
-                />
-                <SectionTabs
-                  link="order_itemsSection"
-                  label={<FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" />}
-                  icon="ORDER_ITEM"
-                />
-                <SectionTabs
-                  link="order_documentsSection"
-                  label={
-                    <FormattedMessage id="modules.Orders.documents" defaultMessage="DOCUMENTS" />
-                  }
-                  icon="DOCUMENT"
-                />
-                <SectionTabs
-                  link="order_taskSection"
-                  label={<FormattedMessage id="modules.Orders.task" defaultMessage="TASK" />}
-                  icon="TASK"
-                />
-                <SectionTabs
-                  link="order_shipmentsSection"
-                  label={
-                    <FormattedMessage id="modules.Orders.shipments" defaultMessage="SHIPMENTS" />
-                  }
-                  icon="SHIPMENT"
-                />
-                <SectionTabs
-                  link="order_containersSection"
-                  label={
-                    <FormattedMessage id="modules.Orders.containers" defaultMessage="CONTAINERS" />
-                  }
-                  icon="CONTAINER"
-                />
-              </JumpToSection>
-              <Subscribe
-                to={[
-                  OrderItemsContainer,
-                  OrderInfoContainer,
-                  OrderTagsContainer,
-                  OrderFilesContainer,
-                  OrderTasksContainer,
-                  FormContainer,
-                ]}
-              >
-                {(
-                  orderItemState,
-                  orderInfoState,
-                  orderTagsState,
-                  orderFilesState,
-                  orderTasksState,
-                  form
-                ) => {
-                  const isDirty =
-                    orderItemState.isDirty() ||
-                    orderInfoState.isDirty() ||
-                    orderTagsState.isDirty() ||
-                    orderFilesState.isDirty() ||
-                    orderTasksState.isDirty();
+      <Provider
+        inject={[
+          orderItemState,
+          orderInfoState,
+          orderTagsState,
+          orderFilesState,
+          orderTasksState,
+          form,
+        ]}
+      >
+        <Mutation mutation={createOrderMutation} onCompleted={this.onMutationCompleted}>
+          {(saveOrder, { loading: isLoading, error: apiError }) => (
+            <SlideViewLayout>
+              <SlideViewNavBar>
+                <EntityIcon icon="ORDER" color="ORDER" />
+                <JumpToSection>
+                  <SectionTabs
+                    link="order_orderSection"
+                    label={<FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />}
+                    icon="ORDER"
+                  />
+                  <SectionTabs
+                    link="order_itemsSection"
+                    label={<FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" />}
+                    icon="ORDER_ITEM"
+                  />
+                  <SectionTabs
+                    link="order_documentsSection"
+                    label={
+                      <FormattedMessage id="modules.Orders.documents" defaultMessage="DOCUMENTS" />
+                    }
+                    icon="DOCUMENT"
+                  />
+                  <SectionTabs
+                    link="order_taskSection"
+                    label={<FormattedMessage id="modules.Orders.task" defaultMessage="TASK" />}
+                    icon="TASK"
+                  />
+                  <SectionTabs
+                    link="order_shipmentsSection"
+                    label={
+                      <FormattedMessage id="modules.Orders.shipments" defaultMessage="SHIPMENTS" />
+                    }
+                    icon="SHIPMENT"
+                  />
+                  <SectionTabs
+                    link="order_containersSection"
+                    label={
+                      <FormattedMessage
+                        id="modules.Orders.containers"
+                        defaultMessage="CONTAINERS"
+                      />
+                    }
+                    icon="CONTAINER"
+                  />
+                </JumpToSection>
+                <Subscribe
+                  to={[
+                    orderItemState,
+                    orderInfoState,
+                    orderTagsState,
+                    orderFilesState,
+                    orderTasksState,
+                    form,
+                  ]}
+                >
+                  {() => {
+                    const isDirty =
+                      orderItemState.isDirty() ||
+                      orderInfoState.isDirty() ||
+                      orderTagsState.isDirty() ||
+                      orderFilesState.isDirty() ||
+                      orderTasksState.isDirty();
 
-                  return (
-                    <>
-                      <CancelButton onClick={onCancel} />
+                    return (
+                      <>
+                        <CancelButton onClick={onCancel} />
 
-                      {isDirty && (
-                        <SaveButton
-                          id="order_form_save_button"
-                          data-testid="btnSaveOrder"
-                          disabled={
-                            !form.isReady(
-                              {
-                                ...orderItemState.state,
-                                ...orderInfoState.state,
-                                ...orderTagsState.state,
-                                ...orderFilesState.state,
-                                ...orderTasksState.state,
-                              },
-                              validator
-                            )
-                          }
-                          isLoading={isLoading}
-                          onClick={() =>
-                            this.onSave(
-                              {
-                                ...orderItemState.originalValues,
-                                ...orderInfoState.originalValues,
-                                ...orderTagsState.originalValues,
-                                ...orderFilesState.originalValues,
-                                ...orderTasksState.originalValues,
-                              },
-                              {
-                                ...orderItemState.state,
-                                ...orderInfoState.state,
-                                ...orderTagsState.state,
-                                ...orderFilesState.state,
-                                ...orderTasksState.state,
-                              },
-                              saveOrder,
-                              updateOrder => {
-                                this.initAllValues(
-                                  {
-                                    orderItemState,
-                                    orderInfoState,
-                                    orderTagsState,
-                                    orderFilesState,
-                                    orderTasksState,
-                                  },
-                                  {
+                        {isDirty && (
+                          <SaveButton
+                            id="order_form_save_button"
+                            data-testid="btnSaveOrder"
+                            disabled={
+                              !form.isReady(
+                                {
+                                  ...orderItemState.state,
+                                  ...orderInfoState.state,
+                                  ...orderTagsState.state,
+                                  ...orderFilesState.state,
+                                  ...orderTasksState.state,
+                                },
+                                validator
+                              )
+                            }
+                            isLoading={isLoading}
+                            onClick={() =>
+                              this.onSave(
+                                {
+                                  ...orderItemState.originalValues,
+                                  ...orderInfoState.originalValues,
+                                  ...orderTagsState.originalValues,
+                                  ...orderFilesState.originalValues,
+                                  ...orderTasksState.originalValues,
+                                },
+                                {
+                                  ...orderItemState.state,
+                                  ...orderInfoState.state,
+                                  ...orderTagsState.state,
+                                  ...orderFilesState.state,
+                                  ...orderTasksState.state,
+                                },
+                                saveOrder,
+                                updateOrder => {
+                                  this.initAllValues({
                                     ...updateOrder,
                                     hasCalledItemsApiYet: true,
                                     hasCalledTasksApiYet: true,
-                                  }
-                                );
-                                form.onReset();
-                              },
-                              form.onErrors
-                            )
-                          }
-                        />
-                      )}
-                    </>
-                  );
-                }}
-              </Subscribe>
-            </SlideViewNavBar>
-            <Content>
-              {apiError && <p>Error: Please try again.</p>}
-              <UserConsumer>
-                {({ organization }) => {
-                  const { types = [] } = organization;
-                  const isImporter = types.includes('Importer');
-                  return (
-                    <>
-                      <OrderForm isNew />
-                      <Subscribe
-                        to={[
-                          OrderItemsContainer,
-                          OrderInfoContainer,
-                          OrderTagsContainer,
-                          OrderFilesContainer,
-                          OrderTasksContainer,
-                        ]}
-                      >
-                        {(
-                          orderItemState,
-                          orderInfoState,
-                          orderTagsState,
-                          orderFilesState,
-                          orderTasksState
-                        ) =>
-                          this.onFormReady(
-                            {
-                              orderItemState,
-                              orderInfoState,
-                              orderTagsState,
-                              orderFilesState,
-                              orderTasksState,
-                            },
-                            {
-                              id: uuid(),
-                              inCharges: [],
-                              currency: 'USD',
-                              customFields: {
-                                mask: null,
-                                fieldValues: [],
-                              },
-                              tags: [],
-                              importer: isImporter ? organization : {},
-                              todo: {
-                                tasks: [],
-                              },
-                              files: [],
-                              orderItems: [],
-                              shipments: [],
-                              containers: [],
-                              ...initDataForSlideView,
+                                  });
+                                  form.onReset();
+                                },
+                                form.onErrors
+                              )
                             }
-                          )
-                        }
-                      </Subscribe>
-                    </>
-                  );
-                }}
-              </UserConsumer>
-            </Content>
-          </SlideViewLayout>
-        )}
-      </Mutation>
+                          />
+                        )}
+                      </>
+                    );
+                  }}
+                </Subscribe>
+              </SlideViewNavBar>
+              <Content>
+                {apiError && <p>Error: Please try again.</p>}
+                <OrderForm isNew />
+              </Content>
+            </SlideViewLayout>
+          )}
+        </Mutation>
+      </Provider>
     );
   }
 }

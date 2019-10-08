@@ -148,7 +148,6 @@ export default function OrderFocus() {
   }, [lastQueryVariables, queryVariables, setExpandRows]);
 
   const scrollToRow = React.useCallback(
-    // eslint-disable-next-line react/no-unused-prop-types
     ({ position, id, type }: { position: number, id: string, type: string }) => {
       scrollEntity.current = {
         id,

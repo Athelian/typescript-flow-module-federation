@@ -128,7 +128,6 @@ export default function ShipmentFocus() {
   }, [lastQueryVariables, queryVariables, setExpandRows]);
 
   const scrollToRow = React.useCallback(
-    // eslint-disable-next-line react/no-unused-prop-types
     ({ position, id, type }: { position: number, id: string, type: string }) => {
       scrollEntity.current = {
         id,
@@ -169,7 +168,7 @@ export default function ShipmentFocus() {
           })
           .then(result => {
             dispatch({
-              type: 'FETCH_ORDERS',
+              type: 'FETCH_SHIPMENTS',
               payload: {
                 shipments: result.data.shipmentsByIDs,
               },

@@ -51,7 +51,7 @@ type Props = {|
 |};
 
 const EditFormSlideView = ({ onClose }: Props) => {
-  const { isExporter } = useUser();
+  const { isExporter, isImporter, organization } = useUser();
   const isReady = React.useRef(true);
   const { dispatch, state } = FocusedView.useContainer();
   const [createContainer] = useMutation(createContainerMutation);
@@ -209,6 +209,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
           case 'newOrder':
             form = (
               <NewOrderForm
+                organization={isImporter() ? organization : {}}
                 originalDataForSlideView={{
                   orderItems: newOrderItems.map(item => ({
                     ...defaultItemValues,
@@ -351,6 +352,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
       isNewEntity = true;
       form = (
         <NewOrderForm
+          organization={isImporter() ? organization : {}}
           onSuccessCallback={result => {
             onSetBadges([
               {

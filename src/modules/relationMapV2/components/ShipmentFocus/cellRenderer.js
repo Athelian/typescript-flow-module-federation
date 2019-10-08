@@ -1663,7 +1663,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
             onClick={handleClick}
             flattenCornerIcon
           >
-            <div ref={drag}>
+            <div ref={drag} id={`${SHIPMENT}-${shipmentId}`}>
               <Badge label={badge.shipment?.[shipmentId] || ''} />
               <ShipmentCard shipment={shipment} />
               <FilterHitBorder hasFilterHits={isMatchedEntity(matches, shipment)} />

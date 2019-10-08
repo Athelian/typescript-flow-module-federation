@@ -618,9 +618,11 @@ function orderReducer(
   action: {
     // prettier-ignore
     type: | 'NEW_ORDER'
+      | 'NEW_SHIPMENT'
       | 'RESET_NEW_ORDERS'
       | 'RESET_NEW_SHIPMENTS'
       | 'FETCH_ORDERS'
+      | 'FETCH_SHIPMENTS'
       | 'TARGET'
       | 'TARGET_ALL'
       | 'TARGET_TREE'
@@ -707,6 +709,12 @@ function orderReducer(
           $set: [action.payload.orderId, ...state.newOrders],
         },
       });
+    case 'NEW_SHIPMENT':
+      return update(state, {
+        newShipments: {
+          $set: [action.payload.shipmentId, ...state.newShipments],
+        },
+      });
     case 'RESET_NEW_ORDERS':
       return update(state, {
         newOrders: {
@@ -725,6 +733,16 @@ function orderReducer(
         orders.forEach(order => {
           if (order.id) {
             draft.order[order.id] = order;
+          }
+        });
+      });
+    }
+    case 'FETCH_SHIPMENTS': {
+      return produce(state, draft => {
+        const { shipments = [] } = action.payload;
+        shipments.forEach(shipment => {
+          if (shipment.id) {
+            draft.shipment[shipment.id] = shipment;
           }
         });
       });
