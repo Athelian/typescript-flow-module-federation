@@ -583,7 +583,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 200,
     sort: {
-      local: false,
+      local: true,
       name: 'shipmentBlNo',
       group: 'batch',
     },
@@ -596,7 +596,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 200,
     sort: {
-      local: false,
+      local: true,
       name: 'shipmentBookingNo',
       group: 'batch',
     },
@@ -609,7 +609,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 200,
     sort: {
-      local: false,
+      local: true,
       name: 'shipmentInvoiceNo',
       group: 'batch',
     },
@@ -622,7 +622,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 200,
     sort: {
-      local: false,
+      local: true,
       name: 'shipmentContractNo',
       group: 'batch',
     },
@@ -635,7 +635,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 200,
     sort: {
-      local: false,
+      local: true,
       name: 'shipmentCarrier',
       group: 'batch',
     },
