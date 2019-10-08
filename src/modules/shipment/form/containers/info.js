@@ -21,6 +21,12 @@ type ShipmentInfoType = {
   importer: ?{ id: string, name: string },
   forwarders: Array<{ id: string, name: string }>,
   exporter: ?{ id: string, name: string },
+  totalPackageQuantityOverride: number,
+  totalPackageQuantityOverriding: boolean,
+  totalVolumeOverride: Object,
+  totalVolumeOverriding: boolean,
+  totalWeightOverride: Object,
+  totalWeightOverriding: boolean,
 };
 
 const initValues = {
@@ -44,6 +50,12 @@ const initValues = {
   importer: null,
   forwarders: [],
   exporter: null,
+  totalPackageQuantityOverride: null,
+  totalPackageQuantityOverriding: null,
+  totalVolumeOverride: null,
+  totalVolumeOverriding: null,
+  totalWeightOverride: null,
+  totalWeightOverriding: null,
 };
 
 export default class ShipmentInfoContainer extends Container<ShipmentInfoType> {
@@ -63,6 +75,10 @@ export default class ShipmentInfoContainer extends Container<ShipmentInfoType> {
     this.setState({
       [name]: value,
     });
+  };
+
+  setFieldValues = (values: Object) => {
+    this.setState(values);
   };
 
   initDetailValues = (values: Object) => {

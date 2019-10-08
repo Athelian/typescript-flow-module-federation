@@ -16,6 +16,9 @@ type OptionalProps = {
   metricReadOnly: boolean,
   inputWidth: string,
   inputHeight: string,
+  isFocused: boolean,
+  disabled: boolean,
+  forceHoverStyle: Object,
 };
 
 type Props = OptionalProps & NumberInputProps;
@@ -108,6 +111,9 @@ export default class MetricInput extends React.Component<Props> {
       metricReadOnly,
       inputWidth,
       inputHeight,
+      isFocused,
+      disabled,
+      forceHoverStyle,
       metrics,
       convert,
       onChange,
@@ -123,6 +129,9 @@ export default class MetricInput extends React.Component<Props> {
       type: 'number',
       width: inputWidth,
       height: inputHeight,
+      isFocused,
+      disabled,
+      forceHoverStyle,
     };
 
     const input = (
@@ -169,23 +178,23 @@ export default class MetricInput extends React.Component<Props> {
       );
     }
 
+    if (valueReadOnly && !metricReadOnly) {
+      return (
+        <>
+          <Display align={align} height="30px">
+            <FormattedNumber value={value} />
+          </Display>
+          <DefaultStyle width="30px" isFocused={isFocused} forceHoverStyle={forceHoverStyle}>
+            {select}
+          </DefaultStyle>
+        </>
+      );
+    }
+
     return (
-      <>
-        {valueReadOnly ? (
-          <>
-            <Display align={align} height="30px">
-              <FormattedNumber value={value} />
-            </Display>
-            <DefaultStyle width="30px"> {select}</DefaultStyle>
-          </>
-        ) : (
-          <>
-            <DefaultStyle {...inputWrapperConfig}>
-              {input} {select}
-            </DefaultStyle>
-          </>
-        )}
-      </>
+      <DefaultStyle {...inputWrapperConfig}>
+        {input} {select}
+      </DefaultStyle>
     );
   }
 }

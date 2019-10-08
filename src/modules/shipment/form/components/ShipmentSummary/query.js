@@ -8,6 +8,16 @@ export const shipmentFormSummaryQuery = gql`
       ... on Shipment {
         id
         totalPackageQuantity
+        totalPackageQuantityOverride
+        totalPackageQuantityOverriding
+        totalVolumeOverride {
+          ...metricFragment
+        }
+        totalVolumeOverriding
+        totalWeightOverride {
+          ...metricFragment
+        }
+        totalWeightOverriding
         orderCount
         batchCount
         containerCount
