@@ -693,6 +693,7 @@ function orderReducer(
       entity?: string,
       targets?: Array<string>,
       orders?: Array<Order>,
+      shipments?: Array<Shipment>,
       orderUpdate?: Order,
       batch?: Batch,
       orderItemUpdate?: OrderItem,

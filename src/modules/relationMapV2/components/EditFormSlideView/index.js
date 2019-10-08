@@ -51,7 +51,7 @@ type Props = {|
 |};
 
 const EditFormSlideView = ({ onClose }: Props) => {
-  const { isExporter, isImporter, organization } = useUser();
+  const { isExporter, isImporter, isForwarder, organization } = useUser();
   const isReady = React.useRef(true);
   const { dispatch, state } = FocusedView.useContainer();
   const [createContainer] = useMutation(createContainerMutation);
@@ -209,7 +209,6 @@ const EditFormSlideView = ({ onClose }: Props) => {
           case 'newOrder':
             form = (
               <NewOrderForm
-                organization={isImporter() ? organization : {}}
                 originalDataForSlideView={{
                   orderItems: newOrderItems.map(item => ({
                     ...defaultItemValues,
@@ -222,7 +221,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
                   })),
                 }}
                 initDataForSlideView={{
-                  importer,
+                  importer: isImporter() ? organization : {},
                   exporter,
                   orderItems: newOrderItems.map(item => ({
                     ...item,
@@ -261,7 +260,8 @@ const EditFormSlideView = ({ onClose }: Props) => {
             form = (
               <NewShipmentForm
                 initDataForSlideView={{
-                  importer,
+                  importer: isImporter() ? importer : null,
+                  forwarders: isForwarder() ? [organization] : [],
                   exporter: isExporter() ? exporter : null,
                   batches: newBatches,
                   containers: newContainers,
@@ -352,7 +352,9 @@ const EditFormSlideView = ({ onClose }: Props) => {
       isNewEntity = true;
       form = (
         <NewOrderForm
-          organization={isImporter() ? organization : {}}
+          initDataForSlideView={{
+            importer: isImporter() ? organization : {},
+          }}
           onSuccessCallback={result => {
             onSetBadges([
               {
@@ -382,6 +384,11 @@ const EditFormSlideView = ({ onClose }: Props) => {
       isNewEntity = true;
       form = (
         <NewShipmentForm
+          initDataForSlideView={{
+            importer: isImporter() ? organization : null,
+            forwarders: isForwarder() ? [organization] : [],
+            exporter: isExporter() ? organization : null,
+          }}
           onSuccessCallback={result => {
             onSetBadges([
               {

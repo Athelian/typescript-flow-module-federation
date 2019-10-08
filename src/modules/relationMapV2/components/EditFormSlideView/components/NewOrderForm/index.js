@@ -30,7 +30,6 @@ type Props = {|
   onCancel: Function,
   initDataForSlideView: Object,
   originalDataForSlideView: Object,
-  organization: Object,
   intl: IntlShape,
 |};
 
@@ -51,7 +50,7 @@ class NewOrderForm extends React.PureComponent<Props> {
   isMountedOnDOM = false;
 
   componentDidMount() {
-    const { initDataForSlideView, organization } = this.props;
+    const { initDataForSlideView } = this.props;
     this.isMountedOnDOM = true;
     const order = {
       id: uuid(),
@@ -62,7 +61,7 @@ class NewOrderForm extends React.PureComponent<Props> {
         fieldValues: [],
       },
       tags: [],
-      importer: organization,
+      importer: {},
       todo: {
         tasks: [],
       },
