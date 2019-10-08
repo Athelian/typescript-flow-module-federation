@@ -111,8 +111,7 @@ class OrderFormModule extends React.PureComponent<Props> {
     onErrors: Function = () => {}
   ) => {
     const { orderId, onSuccessCallback, originalDataForSlideView } = this.props;
-    console.warn('originalValues', originalValues);
-    console.warn('formData', formData);
+
     const isNewOrClone = this.isNewOrClone();
     const input = prepareParsedOrderInput(
       isNewOrClone ? removeTypename(originalDataForSlideView) : removeTypename(originalValues),
