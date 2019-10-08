@@ -67,20 +67,11 @@ export function containerCell(batch: BatchPayload): ?CellRender {
 }
 
 export const orderCoordinates = memoize(
-  ({
-    isExpand,
-    isLoadedData,
-    order,
-  }: {
-    isExpand: boolean,
-    order: Object,
-    isLoadedData?: boolean,
-  }): Array<?CellRender> => {
+  ({ isExpand, order }: { isExpand: boolean, order: Object }): Array<?CellRender> => {
     const { getItemsSortByOrderId, getBatchesSortByItemId } = ClientSorts.useContainer();
     const { getRelatedBy } = Entities.useContainer();
     const orderItems = order?.orderItems ?? [];
     const orderItemCount = order?.orderItemCount ?? 0;
-    const orderItemChildlessCount = order?.orderItemChildlessCount ?? 0;
     const batchCount = order?.batchCount ?? 0;
     const containerCount = order?.containerCount ?? 0;
     const shipmentCount = order?.shipmentCount ?? 0;
@@ -151,47 +142,7 @@ export const orderCoordinates = memoize(
         data: order,
       },
     ];
-    if (!isLoadedData) {
-      // calculate the total base on container count
-      for (let index = 0; index < orderItemChildlessCount + batchCount; index += 1) {
-        result.push(
-          ...[
-            index > 0
-              ? null
-              : {
-                  type: ORDER,
-                  data: order,
-                  afterConnector: 'HORIZONTAL',
-                },
-            {
-              beforeConnector: 'HORIZONTAL',
-              type: 'placeholder',
-              entity: ORDER_ITEM,
-              afterConnector: 'HORIZONTAL',
-            },
-            {
-              beforeConnector: 'HORIZONTAL',
-              type: 'placeholder',
-              entity: BATCH,
-              afterConnector: 'HORIZONTAL',
-            },
-            {
-              beforeConnector: 'HORIZONTAL',
-              type: 'placeholder',
-              entity: CONTAINER,
-              afterConnector: 'HORIZONTAL',
-            },
-            {
-              beforeConnector: 'HORIZONTAL',
-              type: 'placeholder',
-              entity: SHIPMENT,
-              afterConnector: 'HORIZONTAL',
-            },
-          ]
-        );
-      }
-      return result;
-    }
+
     if (orderItemCount > 0) {
       const itemsList = getItemsSortByOrderId({ id: order.id, orderItems, getRelatedBy })
         .map(itemId => orderItems.find(orderItem => orderItem?.id === itemId))

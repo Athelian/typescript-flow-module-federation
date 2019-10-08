@@ -779,7 +779,6 @@ export default function OrderFocus() {
                             onItemsRendered={onItemsRendered}
                             height={window.innerHeight - 50}
                             width="100%"
-                            overscanCount={5}
                           >
                             {Row}
                           </List>
