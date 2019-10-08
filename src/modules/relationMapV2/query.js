@@ -300,7 +300,6 @@ export const shipmentCardFullFragment = gql`
   }
 `;
 
-// TODO: consider to optimise the hits if no search or filter
 export const orderFocusedListQuery = gql`
   query orderFocusedListQuery(
     $page: Int!

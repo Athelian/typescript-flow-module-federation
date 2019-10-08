@@ -23,6 +23,8 @@ import Icon from 'components/Icon';
 import orderMessages from 'modules/order/messages';
 import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
+import containerMessages from 'modules/container/messages';
+import shipmentMessages from 'modules/shipment/messages';
 import MiniShipmentTimeline from 'modules/relationMapV2/components/MiniShipmentTimeline';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import {
@@ -102,6 +104,60 @@ const Header = React.memo<any>(
       { title: intl.formatMessage(batchMessages.expiredAt), value: 'expiredAt' },
       { title: intl.formatMessage(batchMessages.producedAt), value: 'producedAt' },
     ];
+    const containerSort = [
+      { title: intl.formatMessage(containerMessages.updatedAt), value: 'updatedAt' },
+      { title: intl.formatMessage(containerMessages.createdAt), value: 'createdAt' },
+      { title: intl.formatMessage(containerMessages.warehouseName), value: 'warehouseName' },
+      {
+        title: intl.formatMessage(containerMessages.warehouseArrivalActualDate),
+        value: 'warehouseArrivalActualDate',
+      },
+      {
+        title: intl.formatMessage(containerMessages.warehouseArrivalAgreedDate),
+        value: 'warehouseArrivalAgreedDate',
+      },
+    ];
+    const shipmentSort = [
+      { title: intl.formatMessage(shipmentMessages.updatedAt), value: 'updatedAt' },
+      { title: intl.formatMessage(shipmentMessages.createdAt), value: 'createdAt' },
+      { title: intl.formatMessage(shipmentMessages.shipmentId), value: 'no' },
+      { title: intl.formatMessage(shipmentMessages.blNo), value: 'blNo' },
+      { title: intl.formatMessage(shipmentMessages.vesselName), value: 'vesselName' },
+      { title: intl.formatMessage(shipmentMessages.cargoReady), value: 'cargoReady' },
+      {
+        title: intl.formatMessage(shipmentMessages.loadPortDeparture),
+        value: 'loadPortDeparture',
+      },
+      {
+        title: intl.formatMessage(shipmentMessages.firstTransitPortArrival),
+        value: 'firstTransitPortArrival',
+      },
+      {
+        title: intl.formatMessage(shipmentMessages.firstTransitPortDeparture),
+        value: 'firstTransitPortDeparture',
+      },
+      {
+        title: intl.formatMessage(shipmentMessages.secondTransitPortArrival),
+        value: 'secondTransitPortArrival',
+      },
+      {
+        title: intl.formatMessage(shipmentMessages.secondTransitPortDeparture),
+        value: 'secondTransitPortDeparture',
+      },
+      {
+        title: intl.formatMessage(shipmentMessages.dischargePortArrival),
+        value: 'dischargePortArrival',
+      },
+      {
+        title: intl.formatMessage(shipmentMessages.customClearance),
+        value: 'customClearance',
+      },
+      { title: intl.formatMessage(shipmentMessages.warehouseArrival), value: 'warehouseArrival' },
+      {
+        title: intl.formatMessage(shipmentMessages.deliveryReady),
+        value: 'deliveryReady',
+      },
+    ];
 
     const orderCount = Object.keys(entities.orders || {}).length;
     const itemCount = Object.keys(entities.orderItems || {}).length;
@@ -118,7 +174,7 @@ const Header = React.memo<any>(
     if (selectors.isShipmentFocus)
       return (
         <div className={EntitiesNavbarWrapperStyle}>
-          <div className={EntityNavbarWrapperStyle('SHIPMENT', SHIPMENT_WIDTH)}>
+          <div className={EntityNavbarWrapperStyle('SHIPMENT', SHIPMENT_WIDTH + 150)}>
             <div className={EntityIconWrapperStyle}>
               <div className={EntityIconStyle}>
                 <Icon icon="SHIPMENT" />
@@ -191,7 +247,29 @@ const Header = React.memo<any>(
               </button>
             </div>
 
-            {/* TODO: Shipment sort */}
+            <div className={SortInputWrapperStyle}>
+              <SortInput
+                invertColors
+                width="125px"
+                sort={currentSort(shipmentSort, filterAndSort.sort)}
+                ascending={filterAndSort.sort.direction !== 'DESCENDING'}
+                fields={shipmentSort}
+                sortable
+                onChange={({ field: { value }, ascending }) => {
+                  onChangeFilter({
+                    ...filterAndSort,
+                    sort: {
+                      field: value,
+                      direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                    },
+                  });
+                  dispatch({
+                    type: 'RESET_NEW_SHIPMENTS',
+                    payload: {},
+                  });
+                }}
+              />
+            </div>
 
             <div className={ShipmentTimelineWrapperStyle}>
               <Label align="center" height="15px" color="TEAL">
@@ -248,7 +326,27 @@ const Header = React.memo<any>(
                 <Icon icon="CHECKED" />
               </button>
             </div>
-            {/* TODO: Container sort */}
+            <div className={SortInputWrapperStyle}>
+              <SortInput
+                invertColors
+                sort={currentSort(containerSort, clientSorts?.filterAndSort?.container?.sort)}
+                ascending={clientSorts?.filterAndSort?.container?.sort?.direction !== 'DESCENDING'}
+                fields={containerSort}
+                sortable
+                onChange={({ field: { value }, ascending }) => {
+                  clientSorts.onChangeFilter({
+                    mapping,
+                    type: 'container',
+                    newFilter: {
+                      sort: {
+                        field: value,
+                        direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                      },
+                    },
+                  });
+                }}
+              />
+            </div>
           </div>
 
           <div className={EntityNavbarWrapperStyle('BATCH', BATCH_WIDTH)}>

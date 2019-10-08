@@ -24,26 +24,14 @@ const RelationMap = () => {
           <GlobalShipmentPoint.Provider>
             <Hits.Provider>
               <Entities.Provider>
-                <SortAndFilter.Provider
-                  initialState={{
-                    filter: {
-                      query: '',
-                    },
-                    sort: {
-                      field: 'updatedAt',
-                      direction: 'DESCENDING',
-                    },
-                    perPage: 10,
-                    page: 1,
-                  }}
-                >
+                <SortAndFilter.Provider initialState="NRMShipment">
                   <NavBar>
                     <EntityIcon icon="SHIPMENT" color="SHIPMENT" subIcon="MAP" />
                     <AdvanceFilter />
                     <ExpandButton />
                   </NavBar>
                   <Content>
-                    <ClientSorts.Provider>
+                    <ClientSorts.Provider initialState="NRMShipment">
                       <ShipmentFocus />
                     </ClientSorts.Provider>
                   </Content>

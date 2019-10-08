@@ -3,8 +3,6 @@
 import type { Hit, Order, Shipment, Batch, OrderItem } from 'generated/graphql';
 import { useState, useRef, useEffect, useCallback, useReducer } from 'react';
 import { intersection } from 'lodash';
-// $FlowFixMe missing define for partialRight
-import { partialRight } from 'ramda';
 import { createContainer } from 'unstated-next';
 import update from 'immutability-helper';
 import produce from 'immer';
@@ -184,7 +182,6 @@ function useEntities(
             previousIds.orderItemIds.forEach(itemId => {
               previousIds.mapping[itemId] = draft.entities.orderItems?.[itemId]?.batches ?? [];
             });
-            // $FlowIgnore flow doesn't support this way yet
             const orderItemIds = orderItems.map(item => item.id);
             const existItemIds = intersection(previousIds.orderItemIds, orderItemIds);
             previousIds.orderItemIds.forEach(itemId => {
@@ -196,7 +193,6 @@ function useEntities(
               } else {
                 const existBatchIds = intersection(
                   previousIds.mapping[itemId],
-                  // $FlowIgnore flow doesn't support this way yet
                   (orderItems?.[itemId]?.batches ?? []).map(batch => batch.id)
                 );
                 previousIds.mapping[itemId].forEach(batchId => {
@@ -216,7 +212,6 @@ function useEntities(
             const batches = entity.batches || [];
             const existBatchIds = intersection(
               draft.entities.orderItems?.[itemId]?.batches ?? [],
-              // $FlowIgnore flow doesn't support this way yet
               batches.map(batch => batch.id)
             );
 
@@ -246,20 +241,27 @@ function useEntities(
 
 export const Entities = createContainer(useEntities);
 
-export const SortAndFilter = createContainer(partialRight(usePersistFilter, 'NRMFilter'));
-
-type SortField = {
-  sort: {
-    field: string,
-    direction: string,
-  },
+const useSortAndFilter = (type: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') => {
+  return usePersistFilter(
+    {
+      filter: {
+        query: '',
+      },
+      sort: {
+        field: 'updatedAt',
+        direction: 'DESCENDING',
+      },
+      perPage: 10,
+      page: 1,
+    },
+    type
+  );
 };
 
-function useClientSorts(
-  initSorts: {
-    orderItem: SortField,
-    batch: SortField,
-  } = {
+export const SortAndFilter = createContainer(useSortAndFilter);
+
+function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
+  const initSorts = {
     orderItem: {
       sort: {
         field: 'updatedAt',
@@ -272,12 +274,18 @@ function useClientSorts(
         direction: 'DESCENDING',
       },
     },
-  }
-) {
-  const cacheKey = 'NRMLocalSorts';
+    container: {
+      sort: {
+        field: 'updatedAt',
+        direction: 'DESCENDING',
+      },
+    },
+  };
+  const cacheKey = `${viewer}LocalSort`;
   const localFilter = window.localStorage.getItem(cacheKey);
   const orderItemsSort = useRef({});
   const batchesSort = useRef({});
+  const containersSort = useRef({});
   let initialFilter;
   try {
     initialFilter = localFilter
@@ -293,8 +301,11 @@ function useClientSorts(
   const [filterAndSort, changeFilterAndSort] = useState(initialFilter);
 
   const onLocalSort = useCallback(
-    (mapping: { orders: Array<Order> }, { type, filters }: { type: string, filters: Object }) => {
-      const { orders } = mapping;
+    (
+      mapping: { orders?: Array<Order>, shipments?: Array<Shipment> },
+      { type, filters }: { type: string, filters: Object }
+    ) => {
+      const { orders = [], shipments = [] } = mapping;
       orders.forEach((order: Object) => {
         if (type === 'orderItem') {
           orderItemsSort.current[order.id] = sortOrderItemBy(
@@ -321,6 +332,19 @@ function useClientSorts(
           });
         }
       });
+      shipments.forEach((shipment: Object) => {
+        if (type === 'container') {
+          containersSort.current[shipment.id] = sortOrderItemBy(
+            shipment?.containers ?? [],
+            filters.container?.sort ?? {
+              field: 'updatedAt',
+              direction: 'DESCENDING',
+            }
+          )
+            .map((container: Object) => container?.id ?? '')
+            .filter(Boolean);
+        }
+      });
     },
     []
   );
@@ -333,7 +357,7 @@ function useClientSorts(
     }: {
       type: string,
       newFilter: Object,
-      mapping: { orders: Array<Order> },
+      mapping: { orders?: Array<Order>, shipments?: Array<Shipment> },
     }) => {
       changeFilterAndSort(prevState => {
         const nextState = produce(prevState, draft => {
@@ -595,6 +619,7 @@ function orderReducer(
     // prettier-ignore
     type: | 'NEW_ORDER'
       | 'RESET_NEW_ORDERS'
+      | 'RESET_NEW_SHIPMENTS'
       | 'FETCH_ORDERS'
       | 'TARGET'
       | 'TARGET_ALL'
@@ -675,10 +700,6 @@ function orderReducer(
     },
   }
 ) {
-  console.warn({
-    action,
-    state,
-  });
   switch (action.type) {
     case 'NEW_ORDER':
       return update(state, {
@@ -689,6 +710,12 @@ function orderReducer(
     case 'RESET_NEW_ORDERS':
       return update(state, {
         newOrders: {
+          $set: [],
+        },
+      });
+    case 'RESET_NEW_SHIPMENTS':
+      return update(state, {
+        newShipments: {
           $set: [],
         },
       });
@@ -778,7 +805,6 @@ function orderReducer(
           if (!orderId) {
             return;
           }
-          // $FlowIgnore flow doesn't support this way yet
           const orderItems = action.payload?.orderUpdate?.orderItems ?? [];
           const previousIds = {
             orderItemIds: action.payload?.mapping?.orders?.[orderId].orderItems ?? [],
@@ -819,7 +845,6 @@ function orderReducer(
         return produce(state, draft => {
           const itemId = action.payload?.orderItemUpdate?.id ?? '';
           const previousBatchIds = action.payload?.mapping?.orderItems?.[itemId]?.batches ?? [];
-          // $FlowIgnore flow doesn't support this way yet
           const batches = action.payload?.orderItemUpdate?.batches ?? [];
           const existBatchIds = intersection(previousBatchIds, batches.map(batch => batch.id));
 
@@ -1234,8 +1259,6 @@ function orderReducer(
 
 function useFocusView(viewer: 'Order' | 'Shipment') {
   const [state, dispatch] = useReducer(orderReducer, { ...initialState, viewer });
-  // TODO: add selector
-  // TODO: need to init state base on orders
   return {
     state,
     selectors: {
