@@ -1,6 +1,6 @@
 // @flow
 /* eslint-disable no-param-reassign */
-import type { Hit, Order, Batch, OrderItem } from 'generated/graphql';
+import type { Hit, Order, Shipment, Batch, OrderItem } from 'generated/graphql';
 import { useState, useRef, useEffect, useCallback, useReducer } from 'react';
 import { intersection } from 'lodash';
 // $FlowFixMe missing define for partialRight
@@ -30,13 +30,15 @@ function useHits(initialState: Object = defaultState) {
 export const Hits = createContainer(useHits);
 
 type RelationMapEntities = {
-  orders: Array<Order>,
+  orders?: Array<Order>,
+  shipments?: Array<Shipment>,
   entities: Object,
 };
 
 function useEntities(
   initialState: RelationMapEntities = {
     orders: [],
+    shipments: [],
     entities: {},
   }
 ) {
@@ -494,6 +496,7 @@ const initMoveEntity = {
 const initialState: State = {
   viewer: 'Order',
   order: {},
+  shipment: {},
   targets: [],
   isDragging: false,
   moveEntity: {
@@ -583,6 +586,7 @@ const initialState: State = {
     selectedId: '',
   },
   newOrders: [],
+  newShipments: [],
 };
 
 function orderReducer(

@@ -13,6 +13,10 @@ const timelineDateFragment = gql`
 const shipmentEntityCardFragment = gql`
   fragment shipmentEntityCardFragment on Shipment {
     id
+    orderCount
+    orderItemCount
+    batchCount
+    containerCount
     exporter {
       ... on Organization {
         id

@@ -34,6 +34,7 @@ export type CellRender = {
 export type State = {|
   viewer: "Order" | "Shipment",
   order: Object,
+  shipment: Object,
   targets: Array<string>,
   isDragging: boolean,
   moveEntity: {
@@ -149,4 +150,5 @@ export type State = {|
     shipment?: Object,
   },
   newOrders: Array<string>,
+  newShipments: Array<string>,
 |};

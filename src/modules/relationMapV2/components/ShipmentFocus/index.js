@@ -24,17 +24,12 @@ import SelectedEntity from '../SelectedEntity';
 import Actions from '../Actions';
 import Header from '../Header';
 import Row from '../Row';
-import generateListData from '../OrderFocus/generateListData';
-import normalize from '../OrderFocus/normalize';
 import InitLoadingPlaceholder from '../InitLoadingPlaceholder';
-import {
-  WrapperStyle,
-  ListStyle,
-  ActionsBackdropStyle,
-  NoOrdersFoundStyle,
-} from '../OrderFocus/style';
+import generateListData from './generateListData';
+import normalize from './normalize';
+import { WrapperStyle, ListStyle, ActionsBackdropStyle, NoShipmentsFoundStyle } from './style';
 
-const hasMoreItems = (data: Object, model: string = 'orders') => {
+const hasMoreItems = (data: Object, model: string = 'shipments') => {
   const nextPage = getByPathWithDefault(1, `${model}.page`, data) + 1;
   const totalPage = getByPathWithDefault(1, `${model}.totalPage`, data);
   return nextPage <= totalPage;
@@ -53,7 +48,7 @@ const loadMore = (
   clientData: {| fetchMore: Function, data: ?Object, onSuccess: Function |},
   queryVariables: Object = {}
 ) => {
-  const selectedField: string = 'orders';
+  const selectedField: string = 'shipments';
   const {
     data = { [`${selectedField}`]: { page: 1, totalPage: 0 } },
     fetchMore,
@@ -180,44 +175,47 @@ export default function ShipmentFocus() {
                 );
               }
 
-              const baseOrders = getByPathWithDefault([], 'orders.nodes', data).map(order =>
-                state.order[getByPathWithDefault('', 'id', order)]
-                  ? {
-                      ...order,
-                      ...state.order[getByPathWithDefault('', 'id', order)],
-                    }
-                  : order
+              const baseShipments = getByPathWithDefault([], 'shipments.nodes', data).map(
+                shipment =>
+                  state.shipment[getByPathWithDefault('', 'id', shipment)]
+                    ? {
+                        ...shipment,
+                        ...state.shipment[getByPathWithDefault('', 'id', shipment)],
+                      }
+                    : shipment
               );
-              const loadedOrders = Object.values(state.order || {});
-              const orders = state.newOrders.map(orderId => state.order[orderId]);
-              const processOrderIds = orders.map(order => order?.id).filter(Boolean);
-              baseOrders.forEach(order => {
-                if (!processOrderIds.includes(order.id)) {
-                  processOrderIds.push(order.id);
-                  if (!orders.includes(order)) orders.push(order);
-                  const relatedOrders = getRelatedBy('order', order.id);
-                  relatedOrders
-                    .filter(id => !baseOrders.map(currentOrder => currentOrder.id).includes(id))
+              const loadedShipments = Object.values(state.shipment || {});
+              const shipments = state.newShipments.map(orderId => state.shipment[orderId]);
+              const processShipmentIds = shipments.map(shipment => shipment?.id).filter(Boolean);
+              baseShipments.forEach(shipment => {
+                if (!processShipmentIds.includes(shipment.id)) {
+                  processShipmentIds.push(shipment.id);
+                  if (!shipments.includes(shipment)) shipments.push(shipment);
+                  const relatedShipments = getRelatedBy('shipment', shipment.id);
+                  relatedShipments
+                    .filter(
+                      id => !baseShipments.map(currentShipment => currentShipment.id).includes(id)
+                    )
                     .forEach(relateId => {
-                      const relatedOrder: Object = loadedOrders.find(
-                        (currentOrder: ?Object) => currentOrder?.id === relateId
+                      const relatedShipment: Object = loadedShipments.find(
+                        (currentShipment: ?Object) => currentShipment?.id === relateId
                       );
-                      if (relatedOrder && !processOrderIds.includes(relatedOrder.id)) {
-                        orders.push(relatedOrder);
-                        processOrderIds.push(relatedOrder.id);
+                      if (relatedShipment && !processShipmentIds.includes(relatedShipment.id)) {
+                        shipments.push(relatedShipment);
+                        processShipmentIds.push(relatedShipment.id);
                       }
                     });
                 }
               });
-              initHits(getByPathWithDefault([], 'orders.hits', data));
-              const ordersData = generateListData({
-                orders,
+              initHits(getByPathWithDefault([], 'shipments.hits', data));
+              const shipmentsData = generateListData({
+                shipments,
                 expandRows,
                 setExpandRows,
               });
-              const rowCount = ordersData.length;
+              const rowCount = shipmentsData.length;
               const isItemLoaded = (index: number) =>
-                !hasMoreItems(data, 'orders') || index < rowCount;
+                !hasMoreItems(data, 'shipments') || index < rowCount;
               const loadMoreItems =
                 loading || isLoadingMore
                   ? () => {}
@@ -228,30 +226,30 @@ export default function ShipmentFocus() {
                         queryVariables
                       );
                     };
-              const entities = normalize({ orders });
+              const entities = normalize({ shipments });
               initMapping({
-                orders,
+                shipments,
                 entities,
               });
               return (
                 <>
-                  {orders.length > 0 ? (
+                  {shipments.length > 0 ? (
                     <>
                       <InfiniteLoader
                         isItemLoaded={isItemLoaded}
-                        itemCount={hasMoreItems(data, 'orders') ? rowCount + 1 : rowCount}
+                        itemCount={hasMoreItems(data, 'shipments') ? rowCount + 1 : rowCount}
                         loadMoreItems={loadMoreItems}
                       >
                         {({ onItemsRendered, ref }) => (
+                          // $FlowIgnore: doesn't support
                           <List
-                            // $FlowIgnore: doesn't support https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
                             ref={element => {
                               listRef.current = element;
                               ref(element);
                             }}
-                            itemData={ordersData}
+                            itemData={shipmentsData}
                             className={ListStyle}
-                            itemCount={hasMoreItems(data, 'orders') ? rowCount + 1 : rowCount}
+                            itemCount={hasMoreItems(data, 'shipments') ? rowCount + 1 : rowCount}
                             innerElementType={innerElementType}
                             itemSize={index => {
                               if (index === 0) return 50;
@@ -260,7 +258,6 @@ export default function ShipmentFocus() {
                             onItemsRendered={onItemsRendered}
                             height={window.innerHeight - 50}
                             width="100%"
-                            overscanCount={5}
                           >
                             {Row}
                           </List>
@@ -277,11 +274,11 @@ export default function ShipmentFocus() {
                   ) : (
                     <>
                       <Header />
-                      <div className={NoOrdersFoundStyle}>
+                      <div className={NoShipmentsFoundStyle}>
                         <Display>
                           <FormattedMessage
-                            id="modules.Orders.noOrderFound"
-                            defaultMessage="No orders found"
+                            id="modules.Shipments.noShipmentFound"
+                            defaultMessage="No shipments found"
                           />
                         </Display>
                       </div>

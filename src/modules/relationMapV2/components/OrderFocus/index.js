@@ -762,8 +762,8 @@ export default function OrderFocus() {
                         loadMoreItems={loadMoreItems}
                       >
                         {({ onItemsRendered, ref }) => (
+                          // $FlowIgnore: doesn't support
                           <List
-                            // $FlowIgnore: doesn't support https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
                             ref={element => {
                               listRef.current = element;
                               ref(element);
