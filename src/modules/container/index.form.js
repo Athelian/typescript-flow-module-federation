@@ -47,8 +47,6 @@ const formContainer = new FormContainer();
 class ContainerFormModule extends React.Component<Props> {
   static defaultProps = defaultProps;
 
-  prevContainer = {};
-
   componentWillUnmount() {
     formContainer.onReset();
   }
@@ -124,10 +122,10 @@ class ContainerFormModule extends React.Component<Props> {
     }: { containerInfoContainer: Object, containerBatchesContainer: Object },
     container: Object
   ) => {
-    const hasInitialStateYet = getByPath('id', this.prevContainer) === getByPath('id', container);
+    const hasInitialStateYet =
+      containerInfoContainer.state.id || Object.keys(container).length === 0;
     if (hasInitialStateYet) return null;
 
-    this.prevContainer = { ...container };
     this.initAllValues(
       {
         containerInfoContainer,
