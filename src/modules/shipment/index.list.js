@@ -111,7 +111,7 @@ const ShipmentListModule = (props: Props) => {
           canSearch
         />
         {hasPermission(SHIPMENT_CREATE) && (
-          <Link to="new">
+          <Link to="/shipment/new">
             <NewButton />
           </Link>
         )}
