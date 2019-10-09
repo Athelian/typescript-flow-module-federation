@@ -7,7 +7,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import TaskRing from 'components/TaskRing';
 import Icon from 'components/Icon';
 import { Display, Blackout, Label } from 'components/Form';
-import { GlobalShipmentPoint } from 'modules/relationMapV2/store';
+import { FocusedView, GlobalShipmentPoint } from 'modules/relationMapV2/store';
 import { getPort } from 'utils/shipment';
 import { differenceInCalendarDays } from 'utils/date';
 import MiniShipmentTimeline from 'modules/relationMapV2/components/MiniShipmentTimeline';
@@ -54,7 +54,7 @@ type Props = {|
 
 export default function ShipmentCard({ shipment }: Props) {
   const { globalShipmentPoint } = GlobalShipmentPoint.useContainer();
-
+  const { selectors } = FocusedView.useContainer();
   const {
     no,
     tags = [],
@@ -184,7 +184,7 @@ export default function ShipmentCard({ shipment }: Props) {
   const canViewTasks = true;
 
   return (
-    <div className={ShipmentCardWrapperStyle}>
+    <div className={ShipmentCardWrapperStyle(selectors.isShipmentFocus)}>
       <div className={TopRowWrapperStyle}>
         <Display blackout={!canViewNo}>{no}</Display>
 

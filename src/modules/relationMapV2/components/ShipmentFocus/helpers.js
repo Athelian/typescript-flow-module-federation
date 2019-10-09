@@ -2,7 +2,7 @@
 import type { BatchPayload } from 'generated/graphql';
 import memoize from 'memoize-one';
 import { getByPathWithDefault } from 'utils/fp';
-import { ORDER, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
+import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import type { CellRender } from 'modules/relationMapV2/type.js.flow';
 
 export function orderCell({
@@ -78,7 +78,7 @@ export const shipmentCoordinates = memoize(
               afterConnector: 'HORIZONTAL',
             },
             {
-              ...(containerCount ? { beforeConnector: 'HORIZONTAL' } : {}),
+              ...(containerCount || batchCount ? { beforeConnector: 'HORIZONTAL' } : {}),
               type: 'containerSummary',
               data: shipment,
               ...(batchCount ? { afterConnector: 'HORIZONTAL' } : {}),
@@ -113,7 +113,9 @@ export const shipmentCoordinates = memoize(
           ];
     }
     const result = [
-      null,
+      {
+        type: 'shipmentPlaceholder',
+      },
       {
         type: 'containerSummary',
         data: shipment,
@@ -138,7 +140,6 @@ export const shipmentCoordinates = memoize(
     ];
 
     if (containerCount || batchCount) {
-      // TODO: fill render logic later
       result.push(
         ...[
           {
@@ -151,6 +152,46 @@ export const shipmentCoordinates = memoize(
           null,
         ]
       );
+      // batches without container on the top
+      const batchesWithoutContainers = (shipment?.batches ?? []).filter(batch => !batch?.container);
+      batchesWithoutContainers.forEach(batch => {
+        result.push(
+          ...[
+            {
+              type: 'duplicateShipment',
+              data: shipment,
+            },
+            {
+              beforeConnector: 'HORIZONTAL',
+              type: 'shipmentWithoutContainer',
+              data: {
+                shipment,
+                relatedBatch: batch,
+              },
+              afterConnector: 'HORIZONTAL',
+            },
+            {
+              beforeConnector: 'HORIZONTAL',
+              type: BATCH,
+              data: batch,
+              afterConnector: batch && (batch.container || batch.shipment) ? 'HORIZONTAL' : null,
+            },
+            {
+              beforeConnector: 'HORIZONTAL',
+              type: ORDER_ITEM,
+              data: batch,
+              afterConnector: 'HORIZONTAL',
+            },
+            {
+              beforeConnector: 'HORIZONTAL',
+              type: ORDER,
+              data: batch,
+            },
+          ]
+        );
+      });
+
+      // TODO: container with batches
     } else {
       // shipment which has no item
       result.push(

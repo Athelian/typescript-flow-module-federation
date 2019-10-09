@@ -3,10 +3,10 @@ import { css } from 'react-emotion';
 import { SHIPMENT_WIDTH } from 'modules/relationMapV2/constants';
 import { layout, borderRadiuses, fontSizes, colors, presets } from 'styles/common';
 
-export const ShipmentCardWrapperStyle: string = css`
+export const ShipmentCardWrapperStyle = (isShipmentFocus: boolean) => css`
   display: flex;
   flex-direction: column;
-  width: ${SHIPMENT_WIDTH}px;
+  width: ${isShipmentFocus ? SHIPMENT_WIDTH + 150 : SHIPMENT_WIDTH}px;
   height: 55px;
 `;
 
