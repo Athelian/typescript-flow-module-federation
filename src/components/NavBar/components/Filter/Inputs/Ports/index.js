@@ -15,11 +15,6 @@ type Props = {
 };
 
 const Ports = ({ value, readonly, onChange }: Props) => {
-  React.useEffect(() => {
-    onChange(value.filter(v => !!v.seaport || !!v.airport));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const hasWeakPort = !value.every(v => !!v.seaport || !!v.airport);
 
   return (
@@ -40,7 +35,6 @@ const Ports = ({ value, readonly, onChange }: Props) => {
                 value={port}
                 onChange={newPort => onChange(value.map((v, i) => (i === index ? newPort : v)))}
                 readonly={readonly}
-                selectedPorts={value.filter((v, i) => i !== index)}
               />
               <button
                 type="button"

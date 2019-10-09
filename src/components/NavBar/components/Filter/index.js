@@ -111,6 +111,21 @@ const computeFilterStates = (config: Array<FilterConfig>, filters: Filters): Arr
   });
 };
 
+const cleanFilterStates = (filters: Array<FilterState>): Array<FilterState> =>
+  filters
+    .filter(s => !!s.entity && !!s.field && !!s.type)
+    .map((filter: FilterState) => {
+      switch (filter.type) {
+        case 'ports':
+          return {
+            ...filter,
+            value: filter.value.filter(v => !!v.seaport || !!v.airport),
+          };
+        default:
+          return filter;
+      }
+    });
+
 const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
   const buttonRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
@@ -122,7 +137,7 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
   }, [config, filters, open]);
 
   const onSave = () => {
-    const states = filterStates.filter(s => !!s.entity && !!s.field && !!s.type);
+    const states = cleanFilterStates(filterStates);
 
     onChange({
       ...states.reduce(
