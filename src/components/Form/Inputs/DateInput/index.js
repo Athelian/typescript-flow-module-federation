@@ -23,8 +23,15 @@ const DateInput = ({
   placeholder,
   color,
   inputRef,
+  onBlur,
   ...rest
 }: Props) => {
+  const handleBlur = e => {
+    if (onBlur) {
+      onBlur(e);
+      e.target.value = e.target.value ? formatToDateInput(e.target.value) : '';
+    }
+  };
   return readOnly ? (
     <Display align={align} width={readOnlyWidth} height={readOnlyHeight} color={color}>
       <FormattedDate value={value} />
@@ -39,6 +46,7 @@ const DateInput = ({
           ? intl.formatMessage(messages.defaultPlaceholder)
           : placeholder
       }
+      onBlur={handleBlur}
       {...rest}
       type="date"
     />
