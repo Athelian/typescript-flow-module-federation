@@ -20,14 +20,27 @@ const DateTimeInput = ({
   readOnlyWidth,
   readOnlyHeight,
   placeholder,
+  inputRef,
+  onBlur,
   ...rest
 }: Props) => {
+  const handleBlur = e => {
+    if (onBlur) {
+      onBlur(e);
+      if (inputRef) {
+        // eslint-disable-next-line no-param-reassign
+        inputRef.current.value = e.target.value ? formatToDateTimeInput(e.target.value) : '';
+      }
+    }
+  };
+
   return readOnly ? (
     <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
       <FormattedDate value={value} mode="datetime" />
     </Display>
   ) : (
     <input
+      ref={inputRef}
       value={value ? formatToDateTimeInput(value) : ''}
       style={{ textAlign: align }}
       placeholder={
@@ -35,6 +48,7 @@ const DateTimeInput = ({
           ? intl.formatMessage(messages.defaultPlaceholder)
           : placeholder
       }
+      onBlur={handleBlur}
       {...rest}
       type="datetime-local"
     />
