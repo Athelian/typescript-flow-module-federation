@@ -85,9 +85,6 @@ export const extractForbiddenId = (data: Object): Object => {
 
 // For String and Number fields. Can be used for Object in certain situations.
 export const parseGenericField = (key: string, originalValue: ?any, newValue: ?any): Object => {
-  if (!originalValue && !newValue) {
-    return {};
-  }
   if (!isEquals(originalValue, newValue)) {
     return { [key]: newValue };
   }
