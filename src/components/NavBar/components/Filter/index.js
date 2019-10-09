@@ -9,6 +9,7 @@ import { DefaultOptions, DefaultSelect, SelectInput, Label, Display } from 'comp
 import Archived from './Inputs/Archived';
 import DateRange from './Inputs/DateRange';
 import { VolumeRange, AreaRange, LengthRange, MassRange } from './Inputs/MetricRange';
+import Ports from './Inputs/Ports';
 import Users from './Inputs/Users';
 import OrganizationTypes from './Inputs/OrganizationTypes';
 import OrderIds from './Inputs/OrderIds';
@@ -98,6 +99,7 @@ const inputs = {
   organization_types: OrganizationTypes,
   completely_batched: CompletelyBatched,
   completely_shipped: CompletelyShipped,
+  ports: Ports,
 };
 
 const computeFilterStates = (config: Array<FilterConfig>, filters: Filters): Array<FilterState> => {
@@ -108,6 +110,21 @@ const computeFilterStates = (config: Array<FilterConfig>, filters: Filters): Arr
     };
   });
 };
+
+const cleanFilterStates = (filters: Array<FilterState>): Array<FilterState> =>
+  filters
+    .filter(s => !!s.entity && !!s.field && !!s.type)
+    .map((filter: FilterState) => {
+      switch (filter.type) {
+        case 'ports':
+          return {
+            ...filter,
+            value: filter.value.filter(v => !!v.seaport || !!v.airport),
+          };
+        default:
+          return filter;
+      }
+    });
 
 const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
   const buttonRef = React.useRef(null);
@@ -120,7 +137,7 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
   }, [config, filters, open]);
 
   const onSave = () => {
-    const states = filterStates.filter(s => !!s.entity && !!s.field && !!s.type);
+    const states = cleanFilterStates(filterStates);
 
     onChange({
       ...states.reduce(

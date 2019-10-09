@@ -2,8 +2,8 @@
 import gql from 'graphql-tag';
 
 export const enumQuery = gql`
-  query enumQuery($enumType: String!) {
-    __type(name: $enumType) {
+  query enumQuery($enum: String!) {
+    __type(name: $enum) {
       enumValues {
         name
         description

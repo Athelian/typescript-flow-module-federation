@@ -86,6 +86,18 @@ export default defineMessages({
     id: 'components.NavBar.Filter.users',
     defaultMessage: 'Users',
   },
+  ports: {
+    id: 'components.NavBar.Filter.ports',
+    defaultMessage: 'Ports',
+  },
+  addPort: {
+    id: 'components.NavBar.Filter.addPort',
+    defaultMessage: 'Add Port',
+  },
+  portPlaceholder: {
+    id: 'components.NavBar.Filter.portPlaceholder',
+    defaultMessage: 'Please choose a port',
+  },
   organizationTypes: {
     id: 'components.NavBar.Filter.organizationTypes',
     defaultMessage: 'Types',
