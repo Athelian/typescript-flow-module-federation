@@ -17,7 +17,8 @@ type Props = {
 const Ports = ({ value, readonly, onChange }: Props) => {
   React.useEffect(() => {
     onChange(value.filter(v => !!v.seaport || !!v.airport));
-  }, [onChange, value]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const hasWeakPort = !value.every(v => !!v.seaport || !!v.airport);
 
