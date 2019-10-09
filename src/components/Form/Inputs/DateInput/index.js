@@ -29,10 +29,7 @@ const DateInput = ({
   const handleBlur = e => {
     if (onBlur) {
       onBlur(e);
-      if (inputRef) {
-        // eslint-disable-next-line no-param-reassign
-        inputRef.current.value = e.target.value ? formatToDateInput(e.target.value) : '';
-      }
+      e.target.value = e.target.value ? formatToDateInput(e.target.value) : '';
     }
   };
   return readOnly ? (

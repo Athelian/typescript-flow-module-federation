@@ -27,10 +27,7 @@ const DateTimeInput = ({
   const handleBlur = e => {
     if (onBlur) {
       onBlur(e);
-      if (inputRef) {
-        // eslint-disable-next-line no-param-reassign
-        inputRef.current.value = e.target.value ? formatToDateTimeInput(e.target.value) : '';
-      }
+      e.target.value = e.target.value ? formatToDateTimeInput(e.target.value) : '';
     }
   };
 
