@@ -15,6 +15,12 @@ type Props = {
 };
 
 const Ports = ({ value, readonly, onChange }: Props) => {
+  React.useEffect(() => {
+    onChange(value.filter(v => !!v.seaport || !!v.airport));
+  }, [onChange, value]);
+
+  const hasWeakPort = !value.every(v => !!v.seaport || !!v.airport);
+
   return (
     <>
       <Label height="30px">
@@ -33,6 +39,7 @@ const Ports = ({ value, readonly, onChange }: Props) => {
                 value={port}
                 onChange={newPort => onChange(value.map((v, i) => (i === index ? newPort : v)))}
                 readonly={readonly}
+                selectedPorts={value.filter((v, i) => i !== index)}
               />
               <button
                 type="button"
@@ -50,6 +57,7 @@ const Ports = ({ value, readonly, onChange }: Props) => {
           label={<FormattedMessage {...messages.addPort} />}
           backgroundColor="TEAL"
           hoverBackgroundColor="TEAL_DARK"
+          disabled={hasWeakPort}
           onClick={() => onChange([...value, {}])}
         />
       </div>

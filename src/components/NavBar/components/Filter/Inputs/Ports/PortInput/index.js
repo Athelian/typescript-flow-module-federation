@@ -17,6 +17,7 @@ type Props = {
   value: { seaport?: string, airport?: string },
   onChange: ({ seaport?: string, airport?: string }) => void,
   readonly: boolean,
+  selectedPorts: [{ seaport?: string, airport?: string }],
 };
 
 const PortSelectInput = ({
@@ -75,8 +76,15 @@ const PortSelectOption = ({ item, selected, highlighted }: RenderOptionProps) =>
   );
 };
 
-const PortInput = ({ value, onChange, readonly }: Props) => {
+const PortInput = ({ value, onChange, readonly, selectedPorts }: Props) => {
   const options = usePortOptions();
+  const remainingOptions = React.useMemo(
+    () =>
+      options.filter(opt => {
+        return !selectedPorts.find(sp => equals(sp, itemToValue(opt)));
+      }),
+    [options, selectedPorts]
+  );
 
   if (readonly) {
     const selectedItem = value ? options.find(item => equals(itemToValue(item), value)) : null;
@@ -92,7 +100,7 @@ const PortInput = ({ value, onChange, readonly }: Props) => {
       name="port"
       value={value}
       onChange={onChange}
-      items={options}
+      items={remainingOptions}
       filterItems={filterItems}
       itemToString={itemToString}
       itemToValue={itemToValue}
