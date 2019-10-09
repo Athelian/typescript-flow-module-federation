@@ -103,6 +103,7 @@ const ShipmentListModule = (props: Props) => {
       <NavBar>
         <FilterToolBar
           icon="SHIPMENT"
+          subIcon="CARDS"
           sortFields={sortFields}
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
@@ -110,7 +111,7 @@ const ShipmentListModule = (props: Props) => {
           canSearch
         />
         {hasPermission(SHIPMENT_CREATE) && (
-          <Link to="new">
+          <Link to="/shipment/new">
             <NewButton />
           </Link>
         )}

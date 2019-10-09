@@ -1,405 +1,116 @@
 // @flow
-import type {
-  UserPayload,
-  OrganizationPayload,
-  TaskCount,
-  Todo,
-  CustomFields,
-  Price,
-  Timeline,
-  TimelineDate,
-  ProductPayload,
-  ProductProviderPayload,
-  OrderPayload,
-  OrderItemPayload,
-  BatchPayload,
-  ShipmentPayload,
-  ContainerPayload,
-} from 'generated/graphql';
-/* eslint-disable import/no-extraneous-dependencies */
-import faker from 'faker';
+import { findKey } from 'lodash/fp';
+import { getByPathWithDefault } from 'utils/fp';
+import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from './constants';
+import type { Entity } from './type.js.flow';
 
-const userGenerator = (): UserPayload => {
-  return {
-    id: faker.random.uuid(),
-    firstName: faker.name.firstName(),
-    lastName: faker.name.lastName(),
-    email: faker.internet.email(),
-    role: 'default',
-    superAdmin: false,
-    tags: [],
-    createdAt: faker.date.future(),
-    updatedAt: faker.date.future(),
-    disabled: false,
-    roles: [],
-    language: 'ja',
-    timezone: '+09:00',
-    __typename: 'User',
-  };
+const DELAY = 200; // 0.2 second
+const timer = {};
+const isTimeoutRunning = {};
+
+export const findOrderIdByBatch = (batchId: string, entities: Object) => {
+  const parentOrderId = findKey(currentOrder => {
+    return (currentOrder.orderItems || []).some(itemId =>
+      getByPathWithDefault([], `orderItems.${itemId}.batches`, entities).includes(batchId)
+    );
+  }, entities.orders);
+  return parentOrderId;
 };
 
-const taskCountGenerator = (): TaskCount => {
-  return {
-    count: faker.random.number(),
-    remain: faker.random.number(),
-    inProgress: faker.random.number(),
-    completed: faker.random.number(),
-    rejected: faker.random.number(),
-    approved: faker.random.number(),
-    skipped: faker.random.number(),
-    delayed: faker.random.number(),
-    __typename: 'TaskCount',
-  };
+export const findItemIdByBatch = (batchId: string, entities: Object) => {
+  const parentIemId = findKey(currentItem => {
+    return (currentItem.batches || []).includes(batchId);
+  }, entities.orderItems);
+  return parentIemId;
 };
 
-const timelineGenerator = (): Timeline => {
-  return {
-    unreadCount: 0,
-    entries: {
-      nodes: [],
-      page: 0,
-      perPage: 0,
-      totalPage: 0,
-      count: 0,
-      totalCount: 0,
-      __typename: 'EntryPaginatedList',
-    },
-    __typename: 'Timeline',
-  };
+export const findOrderIdByOrderItem = (itemId: string, entities: Object) => {
+  const parentOrderId = findKey(currentOrder => {
+    return (currentOrder.orderItems || []).includes(itemId);
+  }, entities.orders);
+  return parentOrderId;
 };
 
-const groupGenerator = (): OrganizationPayload => {
-  return {
-    id: faker.random.uuid(),
-    name: faker.name.firstName(),
-    createdAt: faker.date.future(),
-    updatedAt: faker.date.future(),
-    disabled: false,
-    dummy: false,
-    partners: {
-      __typename: 'PartnerPayloadPaginatedSearch',
-      nodes: [],
-      hits: [],
-      page: 0,
-      perPage: 0,
-      totalPage: 0,
-      count: 0,
-      totalCount: 0,
-    },
-    types: [],
-    users: {
-      __typename: 'UserPayloadPaginatedSearch',
-      nodes: [],
-      hits: [],
-      page: 0,
-      perPage: 0,
-      totalPage: 0,
-      count: 0,
-      totalCount: 0,
-    },
-    __typename: 'Organization',
-  };
+export const findOrderIdsByContainer = (containerId: string, entities: Object) => {
+  const parentOrderIds = (Object.keys(entities.orders || {}).filter(orderId => {
+    return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
+      (entities?.orderItems?.[itemId]?.batches ?? []).some(
+        batchId => entities?.batches?.[batchId]?.container === containerId
+      )
+    );
+  }): Array<string>);
+  return parentOrderIds;
 };
 
-const todoGenerator = (): Todo => {
-  return {
-    tasks: [],
-    completedCount: faker.random.number(),
-    inProgressCount: faker.random.number(),
-    remainingCount: faker.random.number(),
-    taskCount: taskCountGenerator(),
-    __typename: 'Todo',
-  };
+export const findOrderIdsByShipment = (shipmentId: string, entities: Object) => {
+  const parentOrderIds = (Object.keys(entities.orders || {}).filter(orderId => {
+    return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
+      (entities?.orderItems?.[itemId]?.batches ?? []).some(
+        batchId => entities?.batches?.[batchId]?.shipment === shipmentId
+      )
+    );
+  }): Array<string>);
+  return parentOrderIds;
 };
 
-const customFieldsGenerator = (): CustomFields => {
-  return {
-    __typename: 'CustomFields',
-    fieldValues: [],
-    fieldDefinitions: [],
-  };
+export const targetedIds = (
+  targets: Array<string>,
+  type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT
+) => {
+  const ids = targets.filter(item => item.includes(`${type}-`));
+  return (ids.map(orderItem => {
+    const [, id] = orderItem.split('-');
+    return id;
+  }): Array<string>);
 };
 
-const priceGenerator = (): Price => {
-  return {
-    _typename: 'Price',
-    amount: faker.random.number(),
-    currency: 'USD',
+export const handleClickAndDoubleClick = ({
+  clickId,
+  onClick,
+  onDoubleClick,
+  onCtrlClick,
+}: {|
+  clickId: string,
+  onClick: Function,
+  onDoubleClick: Function,
+  onCtrlClick?: Function,
+|}) => {
+  const handleClick = (evt: SyntheticMouseEvent<any>) => {
+    evt.persist();
+    if (isTimeoutRunning[clickId]) {
+      onDoubleClick();
+      clearTimeout(timer[clickId]);
+      isTimeoutRunning[clickId] = false;
+    } else {
+      if (evt.metaKey || evt.ctrlKey) {
+        const fn = onCtrlClick || onClick;
+        fn();
+      } else {
+        onClick();
+      }
+      isTimeoutRunning[clickId] = true;
+      timer[clickId] = setTimeout(() => {
+        isTimeoutRunning[clickId] = false;
+      }, DELAY);
+    }
   };
+
+  return handleClick;
 };
 
-export const orderGenerator = (): OrderPayload => {
-  return {
-    id: faker.random.uuid(),
-    archived: faker.random.boolean(),
-    batchCount: faker.random.number(),
-    batchShippedCount: faker.random.number(),
-    containers: [],
-    createdAt: faker.date.future(),
-    currency: 'USD',
-    customFields: customFieldsGenerator(),
-    exporter: groupGenerator(),
-    files: [],
-    importer: groupGenerator(),
-    inCharges: [],
-    orderItemCount: faker.random.number(),
-    orderItems: [],
-    ownedBy: groupGenerator(),
-    poNo: faker.name.findName(),
-    containerCount: faker.random.number(),
-    shipmentCount: faker.random.number(),
-    shipments: [],
-    tags: [],
-    timeline: timelineGenerator(),
-    todo: todoGenerator(),
-    totalPrice: priceGenerator(),
-    totalBatched: 0,
-    totalOrdered: 0,
-    totalShipped: 0,
-    updatedAt: faker.date.future(),
-    updatedBy: userGenerator(),
-  };
+export const getColorByEntity = (entity: ?Entity) => {
+  switch (entity) {
+    case ORDER_ITEM:
+      return 'ORDER_ITEM';
+    default:
+      return entity && entity.toUpperCase();
+  }
 };
-
-const productGenerator = (): ProductPayload => {
-  return {
-    id: faker.random.uuid(),
-    __typename: 'Product',
-    archived: faker.random.boolean(),
-    batches: {
-      __typename: 'BatchPayloadPaginatedSearch',
-      nodes: [],
-      hits: [],
-      page: 0,
-      perPage: 0,
-      totalPage: 0,
-      count: 0,
-      totalCount: 0,
-    },
-    containers: {
-      __typename: 'ContainerPayloadPaginatedSearch',
-      nodes: [],
-      hits: [],
-      page: 0,
-      perPage: 0,
-      totalPage: 0,
-      count: 0,
-      totalCount: 0,
-    },
-    createdAt: faker.date.future(),
-    customFields: customFieldsGenerator(),
-    files: [],
-    importer: groupGenerator(),
-    name: faker.name.findName(),
-    orderItems: {
-      __typename: 'OrderItemPayloadPaginatedSearch',
-      nodes: [],
-      hits: [],
-      page: 0,
-      perPage: 0,
-      totalPage: 0,
-      count: 0,
-      totalCount: 0,
-    },
-    orders: {
-      __typename: 'OrderPayloadPaginatedSearch',
-      nodes: [],
-      hits: [],
-      page: 0,
-      perPage: 0,
-      totalPage: 0,
-      count: 0,
-      totalCount: 0,
-    },
-    ownedBy: groupGenerator(),
-    productProviders: [],
-    serial: faker.name.findName(),
-    shipments: {
-      __typename: 'ShipmentPayloadPaginatedSearch',
-      nodes: [],
-      hits: [],
-      page: 0,
-      perPage: 0,
-      totalPage: 0,
-      count: 0,
-      totalCount: 0,
-    },
-    tags: [],
-    timeline: timelineGenerator(),
-    todo: todoGenerator(),
-    updatedAt: faker.date.future(),
-  };
-};
-
-const productProviderGenerator = (): ProductProviderPayload => {
-  return {
-    id: faker.random.uuid(),
-    __typename: 'ProductProvider',
-    archived: faker.random.boolean(),
-    autoCalculatePackageVolume: faker.random.boolean(),
-    autoCalculateUnitVolume: faker.random.boolean(),
-    batches: {
-      __typename: 'BatchPayloadPaginatedSearch',
-      nodes: [],
-      hits: [],
-      page: 0,
-      perPage: 0,
-      totalPage: 0,
-      count: 0,
-      totalCount: 0,
-    },
-    createdAt: faker.date.future(),
-    customFields: customFieldsGenerator(),
-    exporter: groupGenerator(),
-    files: [],
-    name: faker.name.findName(),
-    ownedBy: groupGenerator(),
-    packages: [],
-    product: productGenerator(),
-    referenced: faker.random.boolean(),
-    sort: faker.random.number(),
-    timeline: timelineGenerator(),
-    todo: todoGenerator(),
-    updatedAt: faker.date.future(),
-  };
-};
-
-export const orderItemGenerator = (): OrderItemPayload => {
-  return {
-    id: faker.random.uuid(),
-    __typename: 'OrderItem',
-    archived: faker.random.boolean(),
-    batchCount: faker.random.number(),
-    batchShippedCount: faker.random.number(),
-    batches: [],
-    createdAt: faker.date.future(),
-    customFields: customFieldsGenerator(),
-    files: [],
-    no: faker.name.findName(),
-    order: orderGenerator(),
-    ownedBy: groupGenerator(),
-    price: priceGenerator(),
-    productProvider: productProviderGenerator(),
-    quantity: faker.random.number(),
-    shipmentCount: faker.random.number(),
-    shipments: [],
-    sort: faker.random.number(),
-    tags: [],
-    timeline: timelineGenerator(),
-    todo: todoGenerator(),
-    totalBatched: faker.random.number(),
-    totalPrice: priceGenerator(),
-    totalShipped: faker.random.number(),
-    updatedAt: faker.date.future(),
-  };
-};
-
-export const batchGenerator = (): BatchPayload => {
-  return {
-    id: faker.random.uuid(),
-    __typename: 'Batch',
-    archived: faker.random.boolean(),
-    autoCalculatePackageQuantity: faker.random.boolean(),
-    autoCalculatePackageVolume: faker.random.boolean(),
-    batchQuantityRevisions: [],
-    containerSort: faker.random.number(),
-    createdAt: faker.date.future(),
-    customFields: customFieldsGenerator(),
-    latestQuantity: faker.random.number(),
-    no: faker.name.findName(),
-    orderItem: orderItemGenerator(),
-    ownedBy: groupGenerator(),
-    quantity: faker.random.number(),
-    shipmentSort: faker.random.number(),
-    sort: faker.random.number(),
-    tags: [],
-    todo: todoGenerator(),
-    totalVolume: {
-      value: faker.random.number(),
-      metric: 'm',
-    },
-    updatedAt: faker.date.future(),
-  };
-};
-
-const timelineDateGenerator = (): TimelineDate => {
-  return {
-    __typename: 'TimelineDate',
-    assignedTo: [userGenerator()],
-    createdAt: faker.date.future(),
-    id: faker.random.uuid(),
-    ownedBy: groupGenerator(),
-    timelineDateRevisions: [],
-    updatedAt: faker.date.future(),
-  };
-};
-
-export const shipmentGenerator = (): ShipmentPayload => {
-  return {
-    id: faker.random.uuid(),
-    __typename: 'Shipment',
-    archived: faker.random.boolean(),
-    batchCount: faker.random.number(),
-    batches: [],
-    batchesWithoutContainer: [],
-    cargoReady: timelineDateGenerator(),
-    containerCount: faker.random.number(),
-    containerGroups: [],
-    containerTypeCounts: [],
-    containers: [],
-    createdAt: faker.date.future(),
-    customFields: customFieldsGenerator(),
-    files: [],
-    forwarders: [],
-    importer: groupGenerator(),
-    inCharges: [userGenerator()],
-    integrationLinks: [],
-    no: faker.name.findName(),
-    orderCount: faker.random.number(),
-    orderItemCount: faker.random.number(),
-    ownedBy: groupGenerator(),
-    tags: [],
-    timeline: timelineGenerator(),
-    todo: todoGenerator(),
-    totalPackageQuantity: faker.random.number(),
-    totalVolume: {
-      value: faker.random.number(),
-      metric: 'm',
-    },
-    updatedAt: faker.date.future(),
-    voyages: [],
-  };
-};
-
-export const containerGenerator = (): ContainerPayload => {
-  return {
-    id: faker.random.uuid(),
-    __typename: 'Container',
-    archived: faker.random.boolean(),
-    autoCalculatedFreeTimeStartDate: faker.random.boolean(),
-    batchCount: faker.random.number(),
-    batches: [batchGenerator()],
-    createdAt: faker.date.future(),
-    departureDateAssignedTo: [userGenerator()],
-    no: faker.name.findName(),
-    orderItemCount: faker.random.number(),
-    ownedBy: groupGenerator(),
-    shipment: shipmentGenerator(),
-    sort: faker.random.number(),
-    tags: [],
-    todo: todoGenerator(),
-    totalPackageQuantity: faker.random.number(),
-    totalQuantity: faker.random.number(),
-    totalVolume: {
-      value: faker.random.number(),
-      metric: 'm',
-    },
-    totalWeight: {
-      value: faker.random.number(),
-      metric: 'kg',
-    },
-    updatedAt: faker.date.future(),
-    warehouseArrivalActualDateAssignedTo: [],
-    warehouseArrivalAgreedDateAssignedTo: [],
-  };
+export const getIconByEntity = (entity: ?Entity) => {
+  switch (entity) {
+    case ORDER_ITEM:
+      return 'ORDER_ITEM';
+    default:
+      return entity && entity.toUpperCase();
+  }
 };

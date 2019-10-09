@@ -21,9 +21,9 @@ import {
   SortAndFilter,
   ClientSorts,
   ExpandRows,
-  OrderFocused,
+  FocusedView,
 } from 'modules/relationMapV2/store';
-import { findOrderIdByOrderItem, findOrderIdByBatch } from './helpers';
+import { findOrderIdByOrderItem, findOrderIdByBatch } from 'modules/relationMapV2/helpers';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import CloneEntities from '../CloneEntities';
@@ -148,6 +148,7 @@ export default function OrderFocus() {
   }, [lastQueryVariables, queryVariables, setExpandRows]);
 
   const scrollToRow = React.useCallback(
+    // eslint-disable-next-line react/no-unused-prop-types
     ({ position, id, type }: { position: number, id: string, type: string }) => {
       scrollEntity.current = {
         id,
@@ -175,7 +176,7 @@ export default function OrderFocus() {
     }
   }, [listRef, scrollPosition, scrollToRow]);
 
-  const { state, dispatch } = OrderFocused.useContainer();
+  const { state, dispatch } = FocusedView.useContainer();
   const queryOrdersDetail = React.useCallback(
     (orderIds: Array<string>) => {
       if (orderIds.length) {
@@ -761,8 +762,8 @@ export default function OrderFocus() {
                         loadMoreItems={loadMoreItems}
                       >
                         {({ onItemsRendered, ref }) => (
+                          // $FlowIgnore: doesn't support
                           <List
-                            // $FlowIgnore: doesn't support https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
                             ref={element => {
                               listRef.current = element;
                               ref(element);
@@ -778,7 +779,6 @@ export default function OrderFocus() {
                             onItemsRendered={onItemsRendered}
                             height={window.innerHeight - 50}
                             width="100%"
-                            overscanCount={5}
                           >
                             {Row}
                           </List>

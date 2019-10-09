@@ -7,9 +7,6 @@ import { orderCoordinates } from './helpers';
 
 const generateCells = memoize(
   ({ order, isExpand, onExpand }: {| order: Object, isExpand: boolean, onExpand: Function |}) => {
-    const isLoadedData =
-      getByPathWithDefault([], 'orderItems', order).length ===
-      getByPathWithDefault(0, 'orderItemCount', order);
     const onClick = () => {
       if (!isExpand) {
         onExpand(expandIds => [...expandIds, getByPathWithDefault('', 'id', order)]);
@@ -17,7 +14,7 @@ const generateCells = memoize(
         onExpand(expandIds => expandIds.filter(id => id !== getByPathWithDefault('', 'id', order)));
       }
     };
-    const cells = orderCoordinates({ isExpand, order, isLoadedData });
+    const cells = orderCoordinates({ isExpand, order });
     return { cells, onClick, isExpand };
   }
 );

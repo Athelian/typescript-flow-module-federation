@@ -4,7 +4,7 @@ import { Redirect, Router, Location } from '@reach/router';
 import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
 import { ORDER_CREATE, ORDER_LIST } from 'modules/permission/constants/order';
-import OrderRelationalMapModule from 'modules/relationMapV2';
+import OrderRelationalMapModule from 'modules/relationMapV2/order';
 import OrderListModule from './index.list';
 import OrderFormModule from './index.form';
 import OrderSheetModule from './sheet';

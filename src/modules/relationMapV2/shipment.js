@@ -3,12 +3,12 @@ import React from 'react';
 import { Provider } from 'unstated';
 import { Content } from 'components/Layout';
 import { NavBar, EntityIcon } from 'components/NavBar';
-import OrderFocus from './components/OrderFocus';
+import ShipmentFocus from './components/ShipmentFocus';
 import AdvanceFilter from './components/AdvanceFilter';
 import ExpandButton from './components/ExpandButton';
 import {
   Hits,
-  OrderFocused,
+  FocusedView,
   Entities,
   SortAndFilter,
   ClientSorts,
@@ -19,32 +19,20 @@ import {
 const RelationMap = () => {
   return (
     <Provider>
-      <OrderFocused.Provider>
+      <FocusedView.Provider initialState="Shipment">
         <ExpandRows.Provider>
           <GlobalShipmentPoint.Provider>
             <Hits.Provider>
               <Entities.Provider>
-                <SortAndFilter.Provider
-                  initialState={{
-                    filter: {
-                      query: '',
-                    },
-                    sort: {
-                      field: 'updatedAt',
-                      direction: 'DESCENDING',
-                    },
-                    perPage: 10,
-                    page: 1,
-                  }}
-                >
+                <SortAndFilter.Provider initialState="NRMShipment">
                   <NavBar>
-                    <EntityIcon icon="ORDER" color="ORDER" subIcon="MAP" />
+                    <EntityIcon icon="SHIPMENT" color="SHIPMENT" subIcon="MAP" />
                     <AdvanceFilter />
                     <ExpandButton />
                   </NavBar>
                   <Content>
-                    <ClientSorts.Provider>
-                      <OrderFocus />
+                    <ClientSorts.Provider initialState="NRMShipment">
+                      <ShipmentFocus />
                     </ClientSorts.Provider>
                   </Content>
                 </SortAndFilter.Provider>
@@ -52,7 +40,7 @@ const RelationMap = () => {
             </Hits.Provider>
           </GlobalShipmentPoint.Provider>
         </ExpandRows.Provider>
-      </OrderFocused.Provider>
+      </FocusedView.Provider>
     </Provider>
   );
 };

@@ -90,6 +90,11 @@ const shipmentSheetFragment = gql`
     no
     createdAt
     updatedAt
+    blNo
+    bookingNo
+    invoiceNo
+    contractNo
+    carrier
     createdBy {
       ...userAvatarFragment
     }

@@ -3,8 +3,8 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
 import { useAllHasPermission } from 'components/Context/Permissions';
-import { Entities, OrderFocused } from 'modules/relationMapV2/store';
-
+import { Entities, FocusedView } from 'modules/relationMapV2/store';
+import { targetedIds } from 'modules/relationMapV2/helpers';
 import { ORDER_ITEM, CONTAINER } from 'modules/relationMapV2/constants';
 import { ORDER_ITEMS_DELETE } from 'modules/permission/constants/orderItem';
 import { CONTAINER_DELETE } from 'modules/permission/constants/container';
@@ -19,7 +19,6 @@ import ActionDialog, {
   ShipmentLabelIcon,
 } from '../ActionDialog';
 import { deleteContainerMutation, deleteOrderItemMutation } from './mutation';
-import { targetedIds } from '../OrderFocus/helpers';
 
 type Props = {|
   onSuccess: ({ orderItemIds: Array<string>, containerIds: Array<string> }) => void,
@@ -29,7 +28,7 @@ export default function DeleteConfirm({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
   const [deleteOrderItem] = useMutation(deleteOrderItemMutation);
   const [deleteContainer] = useMutation(deleteContainerMutation);
-  const { dispatch, state } = OrderFocused.useContainer();
+  const { dispatch, state } = FocusedView.useContainer();
   const { isProcessing, isOpen, source } = state.deleteEntities;
   const orderItemIds = targetedIds(state.targets, ORDER_ITEM);
   const hasItemPermissions = useAllHasPermission(

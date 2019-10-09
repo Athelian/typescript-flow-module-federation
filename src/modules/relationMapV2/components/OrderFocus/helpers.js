@@ -1,146 +1,12 @@
 // @flow
-import * as React from 'react';
-import { colors, borderRadiuses } from 'styles/common';
 import type { BatchPayload } from 'generated/graphql';
 import memoize from 'memoize-one';
-import styled from 'react-emotion';
-import { findKey } from 'lodash/fp';
 import { getByPathWithDefault } from 'utils/fp';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { ClientSorts, Entities } from 'modules/relationMapV2/store';
-import type { CellRender, Entity } from 'modules/relationMapV2/type.js.flow';
+import type { CellRender } from 'modules/relationMapV2/type.js.flow';
 
-const DELAY = 200; // 0.2 second
-const timer = {};
-const isTimeoutRunning = {};
-
-export const findOrderIdByBatch = (batchId: string, entities: Object) => {
-  const parentOrderId = findKey(currentOrder => {
-    return (currentOrder.orderItems || []).some(itemId =>
-      getByPathWithDefault([], `orderItems.${itemId}.batches`, entities).includes(batchId)
-    );
-  }, entities.orders);
-  return parentOrderId;
-};
-
-export const findItemIdByBatch = (batchId: string, entities: Object) => {
-  const parentIemId = findKey(currentItem => {
-    return (currentItem.batches || []).includes(batchId);
-  }, entities.orderItems);
-  return parentIemId;
-};
-
-export const findOrderIdByOrderItem = (itemId: string, entities: Object) => {
-  const parentOrderId = findKey(currentOrder => {
-    return (currentOrder.orderItems || []).includes(itemId);
-  }, entities.orders);
-  return parentOrderId;
-};
-
-export const findOrderIdsByContainer = (containerId: string, entities: Object) => {
-  const parentOrderIds = (Object.keys(entities.orders || {}).filter(orderId => {
-    return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
-      (entities?.orderItems?.[itemId]?.batches ?? []).some(
-        batchId => entities?.batches?.[batchId]?.container === containerId
-      )
-    );
-  }): Array<string>);
-  return parentOrderIds;
-};
-
-export const findOrderIdsByShipment = (shipmentId: string, entities: Object) => {
-  const parentOrderIds = (Object.keys(entities.orders || {}).filter(orderId => {
-    return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
-      (entities?.orderItems?.[itemId]?.batches ?? []).some(
-        batchId => entities?.batches?.[batchId]?.shipment === shipmentId
-      )
-    );
-  }): Array<string>);
-  return parentOrderIds;
-};
-
-export const targetedIds = (
-  targets: Array<string>,
-  type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT
-) => {
-  const ids = targets.filter(item => item.includes(`${type}-`));
-  return (ids.map(orderItem => {
-    const [, id] = orderItem.split('-');
-    return id;
-  }): Array<string>);
-};
-
-export const handleClickAndDoubleClick = ({
-  clickId,
-  onClick,
-  onDoubleClick,
-  onCtrlClick,
-}: {|
-  clickId: string,
-  onClick: Function,
-  onDoubleClick: Function,
-  onCtrlClick?: Function,
-|}) => {
-  const handleClick = (evt: SyntheticMouseEvent<any>) => {
-    evt.persist();
-    if (isTimeoutRunning[clickId]) {
-      onDoubleClick();
-      clearTimeout(timer[clickId]);
-      isTimeoutRunning[clickId] = false;
-    } else {
-      if (evt.metaKey || evt.ctrlKey) {
-        const fn = onCtrlClick || onClick;
-        fn();
-      } else {
-        onClick();
-      }
-      isTimeoutRunning[clickId] = true;
-      timer[clickId] = setTimeout(() => {
-        isTimeoutRunning[clickId] = false;
-      }, DELAY);
-    }
-  };
-
-  return handleClick;
-};
-
-export const OrderCard = styled.div`
-  width: 285px;
-  height: 55px;
-`;
-export const ItemCard = styled.div`
-  width: 465px;
-  height: 55px;
-`;
-export const BatchHeaderCard = styled.div`
-  width: 445px;
-  height: 55px;
-`;
-export const BatchCard = styled.div`
-  width: 445px;
-  height: 55px;
-`;
-export const ContainerCard = styled.div`
-  width: 375px;
-  height: 55px;
-`;
-export const ShipmentCard = styled.div`
-  width: 515px;
-  height: 55px;
-`;
-export const HeaderCard = styled.div`
-  position: relative;
-  ${borderRadiuses.MAIN};
-  background: ${props => (props.isExpand ? colors.GRAY_VERY_LIGHT : colors.WHITE)};
-  border: 4px solid ${props => (props.selected ? colors.TEAL : colors.TRANSPARENT)};
-  width: calc(100% - 8px);
-  height: calc(100% - 8px);
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-function orderCell({
+export function orderCell({
   itemPosition,
   batchPosition,
   order,
@@ -172,7 +38,7 @@ function orderCell({
   return null;
 }
 
-function containerCell(batch: BatchPayload): ?CellRender {
+export function containerCell(batch: BatchPayload): ?CellRender {
   if (getByPathWithDefault(null, 'container', batch)) {
     return {
       beforeConnector: 'HORIZONTAL',
@@ -201,20 +67,11 @@ function containerCell(batch: BatchPayload): ?CellRender {
 }
 
 export const orderCoordinates = memoize(
-  ({
-    isExpand,
-    isLoadedData,
-    order,
-  }: {
-    isExpand: boolean,
-    order: Object,
-    isLoadedData?: boolean,
-  }): Array<?CellRender> => {
+  ({ isExpand, order }: { isExpand: boolean, order: Object }): Array<?CellRender> => {
     const { getItemsSortByOrderId, getBatchesSortByItemId } = ClientSorts.useContainer();
     const { getRelatedBy } = Entities.useContainer();
     const orderItems = order?.orderItems ?? [];
     const orderItemCount = order?.orderItemCount ?? 0;
-    const orderItemChildlessCount = order?.orderItemChildlessCount ?? 0;
     const batchCount = order?.batchCount ?? 0;
     const containerCount = order?.containerCount ?? 0;
     const shipmentCount = order?.shipmentCount ?? 0;
@@ -285,47 +142,7 @@ export const orderCoordinates = memoize(
         data: order,
       },
     ];
-    if (!isLoadedData) {
-      // calculate the total base on container count
-      for (let index = 0; index < orderItemChildlessCount + batchCount; index += 1) {
-        result.push(
-          ...[
-            index > 0
-              ? null
-              : {
-                  type: ORDER,
-                  data: order,
-                  afterConnector: 'HORIZONTAL',
-                },
-            {
-              beforeConnector: 'HORIZONTAL',
-              type: 'placeholder',
-              entity: ORDER_ITEM,
-              afterConnector: 'HORIZONTAL',
-            },
-            {
-              beforeConnector: 'HORIZONTAL',
-              type: 'placeholder',
-              entity: BATCH,
-              afterConnector: 'HORIZONTAL',
-            },
-            {
-              beforeConnector: 'HORIZONTAL',
-              type: 'placeholder',
-              entity: CONTAINER,
-              afterConnector: 'HORIZONTAL',
-            },
-            {
-              beforeConnector: 'HORIZONTAL',
-              type: 'placeholder',
-              entity: SHIPMENT,
-              afterConnector: 'HORIZONTAL',
-            },
-          ]
-        );
-      }
-      return result;
-    }
+
     if (orderItemCount > 0) {
       const itemsList = getItemsSortByOrderId({ id: order.id, orderItems, getRelatedBy })
         .map(itemId => orderItems.find(orderItem => orderItem?.id === itemId))
@@ -432,37 +249,3 @@ export const orderCoordinates = memoize(
     return result;
   }
 );
-
-export const getColorByEntity = (entity: ?Entity) => {
-  switch (entity) {
-    case ORDER_ITEM:
-      return 'ORDER_ITEM';
-    default:
-      return entity && entity.toUpperCase();
-  }
-};
-export const getIconByEntity = (entity: ?Entity) => {
-  switch (entity) {
-    case ORDER_ITEM:
-      return 'ORDER_ITEM';
-    default:
-      return entity && entity.toUpperCase();
-  }
-};
-
-export const getCardByEntity = (entity: ?Entity) => {
-  switch (entity) {
-    case ORDER:
-      return OrderCard;
-    case ORDER_ITEM:
-      return ItemCard;
-    case BATCH:
-      return BatchCard;
-    case CONTAINER:
-      return ContainerCard;
-    case SHIPMENT:
-      return ShipmentCard;
-    default:
-      return React.Fragment;
-  }
-};

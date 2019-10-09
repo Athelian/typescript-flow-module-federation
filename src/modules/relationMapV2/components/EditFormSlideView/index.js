@@ -16,8 +16,8 @@ import RMEditTasks from 'modules/relationMap/order/components/RMEditTasks';
 import { prepareParsedContainerInput } from 'modules/container/form/mutation';
 import ShipmentForm from 'modules/shipment/index.form';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
-import { Entities, OrderFocused } from 'modules/relationMapV2/store';
-import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
+import { Entities, FocusedView } from 'modules/relationMapV2/store';
+import { targetedIds } from 'modules/relationMapV2/helpers';
 import { encodeId, uuid } from 'utils/id';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
@@ -52,7 +52,7 @@ type Props = {|
 const EditFormSlideView = ({ onClose }: Props) => {
   const { isExporter } = useUser();
   const isReady = React.useRef(true);
-  const { dispatch, state } = OrderFocused.useContainer();
+  const { dispatch, state } = FocusedView.useContainer();
   const [createContainer] = useMutation(createContainerMutation);
   const [fetchOrdersAndShipments, { called, loading, data = {} }] = useLazyQuery(
     ordersAndShipmentsQuery,

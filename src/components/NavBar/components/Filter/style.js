@@ -87,6 +87,11 @@ export const DeleteButtonStyle = css`
   right: 0;
   width: 30px;
   height: 30px;
+
+  &:hover,
+  &:focus {
+    color: ${colors.RED};
+  }
 `;
 
 export const AddFilterButtonWrapperStyle = css`

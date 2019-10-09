@@ -217,6 +217,36 @@ export default function sorter(items: Array<Object>, sorts: Array<ColumnSort>): 
                   sort.direction
                 );
                 break;
+              case 'shipmentBlNo':
+                result = setDirection(
+                  stringSort(a.shipment?.blNo ?? '', b.shipment?.blNo ?? ''),
+                  sort.direction
+                );
+                break;
+              case 'shipmentBookingNo':
+                result = setDirection(
+                  stringSort(a.shipment?.bookingNo ?? '', b.shipment?.bookingNo ?? ''),
+                  sort.direction
+                );
+                break;
+              case 'shipmentInvoiceNo':
+                result = setDirection(
+                  stringSort(a.shipment?.invoiceNo ?? '', b.shipment?.invoiceNo ?? ''),
+                  sort.direction
+                );
+                break;
+              case 'shipmentContractNo':
+                result = setDirection(
+                  stringSort(a.shipment?.contractNo ?? '', b.shipment?.contractNo ?? ''),
+                  sort.direction
+                );
+                break;
+              case 'shipmentCarrier':
+                result = setDirection(
+                  stringSort(a.shipment?.carrier ?? '', b.shipment?.carrier ?? ''),
+                  sort.direction
+                );
+                break;
               default:
                 break;
             }

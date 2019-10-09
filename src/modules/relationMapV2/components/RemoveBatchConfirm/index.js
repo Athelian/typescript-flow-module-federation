@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
-import { OrderFocused } from 'modules/relationMapV2/store';
+import { FocusedView } from 'modules/relationMapV2/store';
 import { BaseButton } from 'components/Buttons';
 import ActionDialog, {
   BatchLabelIcon,
@@ -17,7 +17,7 @@ type Props = {|
 
 export default function RemoveBatchConfirm({ onSuccess }: Props) {
   const [removeBatch] = useMutation(removeBatchMutation);
-  const { dispatch, state } = OrderFocused.useContainer();
+  const { dispatch, state } = FocusedView.useContainer();
   const {
     isProcessing,
     isOpen,

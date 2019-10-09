@@ -114,6 +114,14 @@ export default defineMessages({
     id: 'modules.Shipments.transitPort',
     defaultMessage: 'TRANSIT PORT',
   },
+  firstTransitPort: {
+    id: 'modules.Shipments.firstTransitPort',
+    defaultMessage: 'FIRST TRANSIT PORT',
+  },
+  secondTransitPort: {
+    id: 'modules.Shipments.secondTransitPort',
+    defaultMessage: 'SECOND TRANSIT PORT',
+  },
   dischargePort: {
     id: 'modules.Shipments.dischargePort',
     defaultMessage: 'DISCHARGE PORT',

@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { OrderFocused } from 'modules/relationMapV2/store';
+import { FocusedView } from 'modules/relationMapV2/store';
 import FormattedDate from 'components/FormattedDate';
 import { Display, Label } from 'components/Form';
 import { CONTAINER, CONTAINER_WIDTH } from 'modules/relationMapV2/constants';
 import { isBefore, isAfter, differenceInMinutes } from 'utils/date';
 import Heading from 'modules/relationMapV2/components/Heading';
-import { targetedIds } from 'modules/relationMapV2/components/OrderFocus/helpers';
+import { targetedIds } from 'modules/relationMapV2/helpers';
 import { RightWrapperStyle, DatesWrapperStyle, DashStyle } from './style';
 
 const getContainerDateRanges = (containers: Array<Object>) => {
@@ -60,7 +60,7 @@ export default function ContainerHeading({
   // TODO: Replace with real permissions
   const canViewDelivery = true;
 
-  const { state } = OrderFocused.useContainer();
+  const { state } = FocusedView.useContainer();
   const containerIds = targetedIds(state.targets, CONTAINER);
   const selectedItemsCount = containers.filter(item => containerIds.includes(item.id)).length;
 

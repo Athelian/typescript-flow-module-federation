@@ -29,7 +29,14 @@ import {
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { CONTAINER_BATCHES_ADD } from 'modules/permission/constants/container';
 import { SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH } from 'modules/permission/constants/shipment';
-import { Hits, Entities, ClientSorts, OrderFocused } from 'modules/relationMapV2/store';
+import { Hits, Entities, ClientSorts, FocusedView } from 'modules/relationMapV2/store';
+import {
+  getColorByEntity,
+  getIconByEntity,
+  handleClickAndDoubleClick,
+  findOrderIdByBatch,
+  findItemIdByBatch,
+} from 'modules/relationMapV2/helpers';
 import Badge from 'modules/relationMapV2/components/Badge';
 import type { CellRender } from 'modules/relationMapV2/type.js.flow';
 import type { LINE_CONNECTOR } from '../RelationLine';
@@ -47,14 +54,6 @@ import BatchHeading from '../BatchHeading';
 import ContainerHeading from '../ContainerHeading';
 import ShipmentHeading from '../ShipmentHeading';
 import { ContentStyle } from './style';
-import {
-  getColorByEntity,
-  getIconByEntity,
-  getCardByEntity,
-  handleClickAndDoubleClick,
-  findOrderIdByBatch,
-  findItemIdByBatch,
-} from './helpers';
 
 type CellProps = {
   data: Object,
@@ -700,7 +699,7 @@ const shipmentDropMessage = ({
 };
 
 function OrderCell({ data, afterConnector }: CellProps) {
-  const { state, dispatch } = OrderFocused.useContainer();
+  const { state, dispatch } = FocusedView.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
@@ -901,7 +900,7 @@ function OrderItemCell({
   afterConnector,
   order,
 }: CellProps & { order: OrderPayload }) {
-  const { state, dispatch } = OrderFocused.useContainer();
+  const { state, dispatch } = FocusedView.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
@@ -1125,7 +1124,7 @@ function BatchCell({
   afterConnector,
 }: CellProps & { order: OrderPayload }) {
   const hasPermissions = useEntityHasPermissions(data);
-  const { state, dispatch } = OrderFocused.useContainer();
+  const { state, dispatch } = FocusedView.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { matches } = Hits.useContainer();
   const batchId = getByPathWithDefault('', 'id', data);
@@ -1307,7 +1306,7 @@ function BatchCell({
 }
 
 function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
-  const { state, dispatch } = OrderFocused.useContainer();
+  const { state, dispatch } = FocusedView.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
@@ -1520,7 +1519,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
 }
 
 function ShipmentCell({ data, beforeConnector }: CellProps) {
-  const { state, dispatch } = OrderFocused.useContainer();
+  const { state, dispatch } = FocusedView.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
@@ -1657,7 +1656,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
           <BaseCard
             icon="SHIPMENT"
             color="SHIPMENT"
-            isArchived={getByPathWithDefault(false, `shipments.${shipmentId}.archived`, entities)}
+            isArchived={shipment?.archived}
             selected={state.targets.includes(`${SHIPMENT}-${shipmentId}`)}
             selectable={state.targets.includes(`${SHIPMENT}-${shipmentId}`)}
             onClick={handleClick}
@@ -1665,8 +1664,8 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
           >
             <div ref={drag}>
               <Badge label={badge.shipment?.[shipmentId] || ''} />
-              <ShipmentCard shipment={data} />
-              <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
+              <ShipmentCard shipment={shipment} />
+              <FilterHitBorder hasFilterHits={isMatchedEntity(matches, shipment)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
                   color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
@@ -1691,7 +1690,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
 }
 
 function NoContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
-  const { state, dispatch } = OrderFocused.useContainer();
+  const { state, dispatch } = FocusedView.useContainer();
   const isTargetedBatch = state.targets.includes(
     `${BATCH}-${getByPathWithDefault('', 'relatedBatch.id', data)}`
   );
@@ -1759,7 +1758,7 @@ function ItemSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = OrderFocused.useContainer();
+  const { state, dispatch } = FocusedView.useContainer();
   const { matches } = Hits.useContainer();
   const { mapping } = Entities.useContainer();
   const orderItemIds = getByPathWithDefault([], 'orderItems', data)
@@ -1838,7 +1837,7 @@ function BatchSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = OrderFocused.useContainer();
+  const { state, dispatch } = FocusedView.useContainer();
   const { matches } = Hits.useContainer();
   const orderItemIds = flatten(
     getByPathWithDefault([], 'orderItems', order).map(item => getByPathWithDefault('', 'id', item))
@@ -1946,7 +1945,7 @@ function ContainerSummaryCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = OrderFocused.useContainer();
+  const { state, dispatch } = FocusedView.useContainer();
   const { matches } = Hits.useContainer();
   const containerCount = getByPathWithDefault(0, 'containerCount', order);
   const batchIds = flatten(
@@ -2071,7 +2070,7 @@ function ShipmentSummaryCell({
   isExpand,
   beforeConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
-  const { state, dispatch } = OrderFocused.useContainer();
+  const { state, dispatch } = FocusedView.useContainer();
   const { matches } = Hits.useContainer();
   const containerCount = getByPathWithDefault(0, 'containerCount', order);
   const batchIds = flatten(
@@ -2169,7 +2168,7 @@ function DuplicateOrderCell({
   beforeConnector,
   afterConnector,
 }: CellProps & { order: OrderPayload }) {
-  const { state } = OrderFocused.useContainer();
+  const { state } = FocusedView.useContainer();
   const { getRelatedBy } = Entities.useContainer();
   const { getItemsSortByOrderId } = ClientSorts.useContainer();
   const orderId = order?.id;
@@ -2252,7 +2251,7 @@ function DuplicateOrderCell({
 }
 
 function DuplicateOrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
-  const { state } = OrderFocused.useContainer();
+  const { state } = FocusedView.useContainer();
   const { getRelatedBy } = Entities.useContainer();
   const { getBatchesSortByItemId } = ClientSorts.useContainer();
   const batchPosition = data?.batchPosition ?? 0;
@@ -2343,7 +2342,7 @@ const cellRenderer = (
     case 'placeholder': {
       const color = getColorByEntity(entity);
       const icon = getIconByEntity(entity);
-      const PlaceHolder = getCardByEntity(entity);
+      const PlaceHolder = React.Fragment;
       content = (
         <div className={ContentStyle}>
           <BaseCard icon={icon} color={color}>

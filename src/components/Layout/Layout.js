@@ -2,6 +2,7 @@
 import * as React from 'react';
 import * as Sentry from '@sentry/browser';
 import { isDevEnvironment } from 'utils/env';
+import logger from 'utils/logger';
 import InternalError from 'components/InternalError';
 import UserNavbar from 'modules/userNavbar';
 import { DesktopWrapperStyle } from 'styles/main';
@@ -17,7 +18,10 @@ type State = {
 };
 
 export default class Layout extends React.Component<Props, State> {
-  state: State = { hasError: false };
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false };
+  }
 
   static getDerivedStateFromError(error: Object) {
     if (!isDevEnvironment) {
@@ -27,6 +31,9 @@ export default class Layout extends React.Component<Props, State> {
   }
 
   componentDidCatch(error: Object) {
+    logger.warn({
+      error,
+    });
     this.setState({ hasError: true });
     if (!isDevEnvironment) {
       Sentry.captureException(error);
