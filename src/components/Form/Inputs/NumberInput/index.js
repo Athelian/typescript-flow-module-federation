@@ -52,7 +52,6 @@ class NumberInput extends React.Component<Props> {
     const { onBlur, nullable } = this.props;
 
     if (onBlur) {
-      const { inputRef } = this.props;
       if (!nullable && evt.target.value === '') {
         onBlur({
           ...evt,
@@ -61,9 +60,8 @@ class NumberInput extends React.Component<Props> {
             value: 0,
           },
         });
-        if (inputRef) {
-          inputRef.current.value = 0;
-        }
+        // eslint-disable-next-line no-param-reassign
+        evt.target.value = 0;
       } else {
         const value = toFloatNullable(evt.target.value);
         onBlur({
@@ -74,9 +72,8 @@ class NumberInput extends React.Component<Props> {
           },
         });
 
-        if (inputRef) {
-          inputRef.current.value = value;
-        }
+        // eslint-disable-next-line no-param-reassign
+        evt.target.value = value;
       }
     }
   };
