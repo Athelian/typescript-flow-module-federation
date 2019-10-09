@@ -60,14 +60,20 @@ class NumberInput extends React.Component<Props> {
             value: 0,
           },
         });
+        // eslint-disable-next-line no-param-reassign
+        evt.target.value = 0;
       } else {
+        const value = toFloatNullable(evt.target.value);
         onBlur({
           ...evt,
           target: {
             ...evt.target,
-            value: toFloatNullable(evt.target.value),
+            value,
           },
         });
+
+        // eslint-disable-next-line no-param-reassign
+        evt.target.value = value;
       }
     }
   };
