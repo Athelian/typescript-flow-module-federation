@@ -5,6 +5,9 @@ import { badRequestFragment, forbiddenFragment } from 'graphql';
 export const updateOrdersMutation = gql`
   mutation orderUpdateMany($orders: [OrderUpdateWrapperInput!]!) {
     orderUpdateMany(orders: $orders) {
+      ... on Order {
+        id
+      }
       ...badRequestFragment
       ...forbiddenFragment
     }

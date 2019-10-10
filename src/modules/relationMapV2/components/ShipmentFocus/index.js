@@ -289,11 +289,11 @@ export default function ShipmentFocus() {
                     }}
                   />
                   <StatusConfirm
-                    onSuccess={orderIds => {
-                      console.warn(orderIds);
+                    onSuccess={ids => {
+                      queryShipmentsDetail(ids);
                       dispatch({
                         type: 'STATUS_END',
-                        payload: { orderIds },
+                        payload: { ids },
                       });
                     }}
                   />
