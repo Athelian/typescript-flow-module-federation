@@ -9,21 +9,36 @@ export function shipmentCell({
   batchPosition,
   shipment,
   totalContainers,
+  hasBatchesInPool,
 }: {|
   containerPosition: number,
   batchPosition: number,
+  hasBatchesInPool: boolean,
   shipment: mixed,
   totalContainers: number,
 |}) {
+  const isTheLastItemWithFirstBatch =
+    containerPosition === totalContainers - 1 && batchPosition === 0;
+  const isNotTheLastItem = containerPosition < totalContainers - 1 && totalContainers > 1;
+  if (hasBatchesInPool) {
+    return {
+      type: 'duplicateShipment',
+      data: {
+        shipment,
+        totalContainers,
+        batchPosition,
+      },
+      ...(isTheLastItemWithFirstBatch || isNotTheLastItem ? { afterConnector: 'VERTICAL' } : {}),
+    };
+  }
+
   if (containerPosition === 0 && batchPosition === 0)
     return {
       type: SHIPMENT,
       data: shipment,
       afterConnector: 'HORIZONTAL',
     };
-  const isTheLastItemWithFirstBatch =
-    containerPosition === totalContainers - 1 && batchPosition === 0;
-  const isNotTheLastItem = containerPosition < totalContainers - 1 && totalContainers > 1;
+
   if (isTheLastItemWithFirstBatch || isNotTheLastItem)
     return {
       type: 'duplicateShipment',
@@ -34,12 +49,17 @@ export function shipmentCell({
       },
       afterConnector: 'VERTICAL',
     };
+
   return null;
 }
 
 export const shipmentCoordinates = memoize(
   ({ isExpand, shipment }: { isExpand: boolean, shipment: Object }): Array<?CellRender> => {
-    const { getContainersSortByShipmentId } = ClientSorts.useContainer();
+    const {
+      getContainersSortByShipmentId,
+      getBatchesSortByShipmentId,
+      getBatchesSortByContainerId,
+    } = ClientSorts.useContainer();
     const { getRelatedBy } = Entities.useContainer();
     const containerCount = shipment?.containerCount ?? 0;
     const batchCount = shipment?.batchCount ?? 0;
@@ -124,8 +144,14 @@ export const shipmentCoordinates = memoize(
       // batches without container on the top
       const batchesWithoutContainers = batches.filter(batch => !batch?.container);
       const batchesWithContainers = batches.filter(batch => !!batch?.container);
-      // TODO: get batch sort by shipment
-      batchesWithoutContainers.forEach((batch, index) => {
+      const batchesList = getBatchesSortByShipmentId({
+        id: shipment.id,
+        batches: batchesWithoutContainers,
+        getRelatedBy,
+      })
+        .map(batchId => batchesWithoutContainers.find(batchItem => batchItem?.id === batchId))
+        .filter(Boolean);
+      batchesList.forEach((batch, index) => {
         result.push(
           ...[
             index
@@ -177,16 +203,23 @@ export const shipmentCoordinates = memoize(
         .map(containerId => containers.find(container => container?.id === containerId))
         .filter(Boolean);
       containerList.forEach((container, index) => {
-        // TODO: get batches sort by container
         const batchesByContainer = batchesWithContainers.filter(
           batch => batch.container.id === container.id
         );
         if (batchesByContainer.length) {
-          batchesByContainer.forEach((batch, counter) => {
+          const batchesSortedList = getBatchesSortByContainerId({
+            id: container.id,
+            batches: batchesByContainer,
+            getRelatedBy,
+          })
+            .map(batchId => batchesByContainer.find(batchItem => batchItem?.id === batchId))
+            .filter(Boolean);
+          batchesSortedList.forEach((batch, counter) => {
             result.push(
               ...[
                 shipmentCell({
                   shipment,
+                  hasBatchesInPool: batchesWithoutContainers.length > 0,
                   containerPosition: index,
                   batchPosition: counter,
                   totalContainers: containerList.length,
