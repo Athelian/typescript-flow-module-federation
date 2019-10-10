@@ -9,6 +9,7 @@ import { Tooltip } from 'components/Tooltip';
 import { Display, Blackout } from 'components/Form';
 import { useHasPermissions } from 'contexts/Permissions';
 import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
+import { FocusedView } from 'modules/relationMapV2/store';
 import {
   OrderCardWrapperStyle,
   TopRowWrapperStyle,
@@ -25,6 +26,7 @@ type Props = {|
 |};
 
 export default function OrderCard({ order, onCreateItem, organizationId }: Props) {
+  const { selectors } = FocusedView.useContainer();
   const { poNo, tags = [], importer, exporter, todo = {} } = order || {};
 
   const hasPermissions = useHasPermissions(organizationId);
@@ -71,7 +73,7 @@ export default function OrderCard({ order, onCreateItem, organizationId }: Props
         <TaskRing blackout={!canViewTasks} {...todo} />
       </div>
 
-      {allowToCreateItem && (
+      {allowToCreateItem && selectors.isOrderFocus && (
         <Tooltip
           message={
             <FormattedMessage

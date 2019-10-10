@@ -14,6 +14,7 @@ import { useHasPermissions } from 'contexts/Permissions';
 import { BATCH_CREATE } from 'modules/permission/constants/batch';
 import { ORDER_ITEMS_DELETE } from 'modules/permission/constants/orderItem';
 import QuantityGraph from 'modules/relationMapV2/components/QuantityGraph';
+import { FocusedView } from 'modules/relationMapV2/store';
 import {
   ItemCardWrapperStyle,
   TopRowWrapperStyle,
@@ -40,6 +41,7 @@ export default function OrderItemCard({
   onDeleteItem,
   organizationId,
 }: Props) {
+  const { selectors } = FocusedView.useContainer();
   const hasPermissions = useHasPermissions(organizationId);
   const allowToCreateBatch = hasPermissions(BATCH_CREATE);
   const allowToDeleteItem = hasPermissions(ORDER_ITEMS_DELETE);
@@ -115,13 +117,13 @@ export default function OrderItemCard({
         <TaskRing blackout={!canViewTasks} {...todo} />
       </div>
 
-      {allowToDeleteItem && (
+      {allowToDeleteItem && selectors.isOrderFocus && (
         <button onClick={onDeleteItem} className={DeleteItemButtonStyle} type="button">
           <Icon icon="REMOVE" />
         </button>
       )}
 
-      {allowToCreateBatch && (
+      {allowToCreateBatch && selectors.isOrderFocus && (
         <Tooltip
           message={
             <FormattedMessage
