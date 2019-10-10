@@ -14,6 +14,7 @@ import {
 import {
   ORDER_ITEMS_SET_NO,
   ORDER_ITEMS_SET_QUANTITY,
+  ORDER_ITEMS_SET_PRICE,
   ORDER_ITEMS_UPDATE,
 } from 'modules/permission/constants/orderItem';
 import {
@@ -257,6 +258,19 @@ const transformOrderItem = (
         'quantity',
         hasPermission =>
           hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.price',
+      type: 'price',
+      disabled: !hasItems && !orderItem,
+      empty: hasItems && !orderItem,
+      parent: true,
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'price',
+        hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_PRICE)
       ),
     },
     {

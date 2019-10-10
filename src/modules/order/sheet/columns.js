@@ -189,7 +189,19 @@ const orderItemColumns: Array<ColumnConfig> = [
       group: 'orderItem',
     },
   },
-  // price
+  {
+    key: 'order.orderItem.price',
+    exportKey: 'orderItems.price',
+    title: <FormattedMessage {...orderItemMessages.unitPrice} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+    sort: {
+      local: true,
+      name: 'price',
+      group: 'orderItem',
+    },
+  },
   // tags
   // memo
   /* {

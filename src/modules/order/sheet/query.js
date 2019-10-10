@@ -36,6 +36,10 @@ const orderItemSheetFragment = gql`
     id
     no
     quantity
+    price {
+      value: amount
+      metric: currency
+    }
     sort
     totalBatched
     totalShipped
