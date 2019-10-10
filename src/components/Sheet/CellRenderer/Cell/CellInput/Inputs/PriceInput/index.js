@@ -8,7 +8,7 @@ type Props = {
     value: number,
     metric: string,
   },
-  onChange: string => void,
+  onChange: ({ value: number, metric: string }) => void,
   focus: boolean,
   onFocus: () => void,
   onBlur: () => void,
