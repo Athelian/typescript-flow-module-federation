@@ -10,7 +10,6 @@ export const ContentStyle: string = css`
   margin: 20px 0;
   text-align: center;
   font-weight: bold;
-  ${fontSizes.MAIN};
   color: ${colors.BLACK};
 `;
 
@@ -35,6 +34,7 @@ export const TextAreaStyle: string = css`
   overflow-x: hidden;
   overflow-y: auto;
   ${shadows.INPUT};
+  ${fontSizes.MAIN};
 
   &:focus {
     outline: none;

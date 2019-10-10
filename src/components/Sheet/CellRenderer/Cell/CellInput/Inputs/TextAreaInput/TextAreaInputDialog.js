@@ -5,12 +5,12 @@ import { SaveButton } from 'components/Buttons';
 import { DialogStyle, ContentStyle, TextAreaStyle, FooterStyle } from './style';
 
 type Props = {
+  inputRef: Object,
   value: string,
   onSave: Function,
-  onKeyDown: Function,
 };
 
-const TextAreaInputDialog = ({ value, onSave, onKeyDown }: Props) => {
+const TextAreaInputDialog = ({ inputRef, value, onSave }: Props) => {
   const [content, setContent] = React.useState(value || '');
   const intl = useIntl();
 
@@ -18,6 +18,7 @@ const TextAreaInputDialog = ({ value, onSave, onKeyDown }: Props) => {
     <div className={DialogStyle}>
       <div className={ContentStyle}>
         <textarea
+          ref={inputRef}
           className={TextAreaStyle}
           value={content}
           placeholder={intl.formatMessage({
@@ -26,7 +27,7 @@ const TextAreaInputDialog = ({ value, onSave, onKeyDown }: Props) => {
           })}
           spellCheck={false}
           onChange={e => setContent(e.target.value)}
-          onKeyDown={onKeyDown}
+          onKeyDown={e => e.stopPropagation()}
         />
       </div>
       <div className={FooterStyle}>
