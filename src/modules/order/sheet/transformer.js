@@ -10,6 +10,7 @@ import {
   ORDER_SET_DELIVERY_DATE,
   ORDER_SET_ISSUE_AT,
   ORDER_SET_INCOTERM,
+  ORDER_SET_MEMO,
 } from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_SET_NO,
@@ -165,6 +166,18 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
         order,
         'deliveryPlace',
         hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_DELIVERY_PLACE)
+      ),
+    },
+    {
+      columnKey: 'order.memo',
+      type: 'textarea',
+      empty: !order,
+      parent: true,
+      ...transformValueField(
+        basePath,
+        order,
+        'memo',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_MEMO)
       ),
     },
     {
