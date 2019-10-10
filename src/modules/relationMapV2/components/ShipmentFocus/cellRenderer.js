@@ -252,8 +252,11 @@ const orderDropMessage = ({
   switch (type) {
     case BATCH: {
       const batchId = item?.id ?? '';
-      const parentOrderId = findOrderIdByBatch(batchId, entities);
-      if (!parentOrderId) return '';
+      const parentItemId = entities.batches?.[batchId]?.orderItem;
+      if (!parentItemId) return false;
+
+      const parentOrderId = entities.orderItems?.[parentItemId]?.order;
+      if (!parentOrderId) return false;
 
       const isOwnOrder = orderId === parentOrderId;
       if (isOwnOrder)
@@ -373,7 +376,7 @@ const orderItemDropMessage = ({
     case BATCH: {
       const batchId = item?.id;
       const parentItemId = entities.batches?.[batchId]?.orderItem;
-      if (!parentItemId) return true;
+      if (!parentItemId) return false;
 
       const parentOrderId = entities.orderItems?.[parentItemId]?.order;
       if (!parentOrderId) return false;
@@ -702,10 +705,10 @@ function OrderCell({ data, beforeConnector }: CellProps) {
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
-  const hasPermissions = useEntityHasPermissions(data);
-  const orderId = data.orderItem?.order?.id;
-  const itemId = data.orderItem?.id;
   const order = data.orderItem?.order;
+  const hasPermissions = useEntityHasPermissions(data);
+  const orderId = order?.id;
+  const itemId = data.orderItem?.id;
   const [{ isOver, canDrop, dropMessage, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
     canDrop: item => {
@@ -713,7 +716,10 @@ function OrderCell({ data, beforeConnector }: CellProps) {
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
+          const parentItemId = entities.batches?.[batchId]?.orderItem;
+          if (!parentItemId) return false;
+
+          const parentOrderId = entities.orderItems?.[parentItemId]?.order;
           if (!parentOrderId) return false;
           const isOwnOrder = orderId === parentOrderId;
           const isDifferentImporter =
@@ -882,7 +888,7 @@ function OrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
         case BATCH: {
           const batchId = item.id;
           const parentItemId = entities.batches?.[batchId]?.orderItem;
-          if (!parentItemId) return true;
+          if (!parentItemId) return false;
 
           const parentOrderId = entities.orderItems?.[parentItemId]?.order;
           if (!parentOrderId) return false;
@@ -1491,7 +1497,7 @@ function ShipmentCell({
           if (!parentOrderId) return false;
 
           const parentItemId = findItemIdByBatch(batchId, entities);
-          if (!parentItemId) return true;
+          if (!parentItemId) return false;
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
           const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);

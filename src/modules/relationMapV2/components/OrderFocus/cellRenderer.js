@@ -919,7 +919,7 @@ function OrderItemCell({
           const parentOrder = entities.orders?.[parentOrderId];
 
           const parentItemId = findItemIdByBatch(batchId, entities);
-          if (!parentItemId) return true;
+          if (!parentItemId) return false;
           const isOwnItem = parentItemId === itemId;
           const isDifferentImporter =
             getByPathWithDefault('', 'importer.id', order) !==
@@ -1537,7 +1537,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
           if (!parentOrderId) return false;
 
           const parentItemId = findItemIdByBatch(batchId, entities);
-          if (!parentItemId) return true;
+          if (!parentItemId) return false;
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
           const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
