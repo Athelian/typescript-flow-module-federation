@@ -27,6 +27,8 @@ import {
 } from 'modules/relationMapV2/store';
 import EditFormSlideView from '../EditFormSlideView';
 import SelectedEntity from '../SelectedEntity';
+import StatusConfirm from '../StatusConfirm';
+import AddTags from '../AddTags';
 import Actions from '../Actions';
 import Header from '../Header';
 import Row from '../Row';
@@ -283,6 +285,24 @@ export default function ShipmentFocus() {
                           type: '',
                           selectedId: '',
                         },
+                      });
+                    }}
+                  />
+                  <StatusConfirm
+                    onSuccess={orderIds => {
+                      console.warn(orderIds);
+                      dispatch({
+                        type: 'STATUS_END',
+                        payload: { orderIds },
+                      });
+                    }}
+                  />
+                  <AddTags
+                    onSuccess={ids => {
+                      queryShipmentsDetail(ids);
+                      dispatch({
+                        type: 'TAGS_END',
+                        payload: { ids },
                       });
                     }}
                   />

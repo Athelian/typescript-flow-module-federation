@@ -136,6 +136,25 @@ export default function Actions({ targets }: Props) {
                       />
                     </ActionLabel>
                   </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'CLONE',
+                        payload: {
+                          source: SHIPMENT,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="CLONE" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.clone"
+                        defaultMessage="CLONE"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
                 </ActionSubMenu>
               </ActionButton>
 
@@ -180,6 +199,25 @@ export default function Actions({ targets }: Props) {
                       <FormattedMessage
                         id="modules.RelationMaps.label.addTags"
                         defaultMessage="ADD TAGS"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'CLONE',
+                        payload: {
+                          source: CONTAINER,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="CLONE" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.clone"
+                        defaultMessage="CLONE"
                       />
                     </ActionLabel>
                   </ActionButton>

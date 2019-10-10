@@ -42,6 +42,46 @@ export const findOrderIdsByContainer = (containerId: string, entities: Object) =
   return parentOrderIds;
 };
 
+export const findShipmentIdByContainer = (containerId: string, entities: Object) => {
+  const parentIds = (Object.keys(entities.containers || {})
+    .filter(id => {
+      return containerId === id;
+    })
+    .map(id => entities.containers?.[id]?.shipment): Array<string>);
+  const [shipmentId] = parentIds || [];
+  return shipmentId;
+};
+
+export const findShipmentIdsByBatch = (batchId: string, entities: Object) => {
+  const parentIds = (Object.keys(entities.batches || {})
+    .filter(id => {
+      return batchId === id;
+    })
+    .map(id => entities.batches?.[id]?.shipment): Array<string>);
+  return [...new Set(parentIds)];
+};
+
+export const findShipmentIdsByOrderItem = (itemId: string, entities: Object) => {
+  const parentIds = (Object.keys(entities.batches || {})
+    .filter(id => {
+      return entities.batches?.[id]?.orderItem === itemId;
+    })
+    .map(id => entities.batches?.[id]?.shipment): Array<string>);
+  return [...new Set(parentIds)];
+};
+
+export const findShipmentIdsByOrder = (orderId: string, entities: Object) => {
+  const parentIds = (Object.keys(entities.batches || {})
+    .filter(id => {
+      return (
+        entities.batches?.[id]?.orderItem &&
+        entities.orderItems?.[entities.batches?.[id]?.orderItem]?.order === orderId
+      );
+    })
+    .map(id => entities.batches?.[id]?.shipment): Array<string>);
+  return [...new Set(parentIds)];
+};
+
 export const findOrderIdsByShipment = (shipmentId: string, entities: Object) => {
   const parentOrderIds = (Object.keys(entities.orders || {}).filter(orderId => {
     return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
