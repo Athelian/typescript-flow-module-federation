@@ -322,7 +322,7 @@ const batchColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.batch.quantity',
     exportKey: 'orderItems.batches.quantity',
-    title: <FormattedMessage {...batchMessages.quantity} />,
+    title: <FormattedMessage {...batchMessages.initialQuantity} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
@@ -451,18 +451,7 @@ const containerColumns: Array<ColumnConfig> = [
   // actual arrival assigned to
   // actual arrival approval
   // free time
-  {
-    key: 'order.orderItem.batch.container.freeTimeStartDate',
-    title: 'Start Date',
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 140,
-    sort: {
-      local: true,
-      name: 'containerFreeTimeStartDate',
-      group: 'batch',
-    },
-  },
+  // start date
   // start date auto
   // duration
   // due date

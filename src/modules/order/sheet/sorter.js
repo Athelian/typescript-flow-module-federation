@@ -131,15 +131,7 @@ function batchSorter(sorts: Array<ColumnSort>) {
             sort.direction
           );
           break;
-        case 'containerFreeTimeStartDate':
-          result = setDirection(
-            dateSort(
-              a.container?.freeTimeStartDate ?? new Date(),
-              b.container?.freeTimeStartDate ?? new Date()
-            ),
-            sort.direction
-          );
-          break;
+        // start date
         case 'containerYardName':
           result = setDirection(
             stringSort(a.container?.yardName ?? '', b.container?.yardName ?? ''),

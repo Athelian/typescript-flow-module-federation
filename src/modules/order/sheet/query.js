@@ -115,7 +115,7 @@ const containerSheetFragment = gql`
     no
     warehouseArrivalAgreedDate
     warehouseArrivalActualDate
-    freeTimeStartDate
+
     yardName
     departureDate
     totalPackageQuantity

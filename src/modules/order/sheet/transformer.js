@@ -32,7 +32,6 @@ import {
   CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
   CONTAINER_SET_AGREE_ARRIVAL_DATE,
   CONTAINER_SET_DEPARTURE_DATE,
-  CONTAINER_SET_FREE_TIME_START_DATE,
   CONTAINER_SET_NO,
   CONTAINER_SET_YARD_NAME,
   CONTAINER_UPDATE,
@@ -484,19 +483,7 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_ACTUAL_ARRIVAL_DATE)
       ),
     },
-    {
-      columnKey: 'order.orderItem.batch.container.freeTimeStartDate',
-      type: 'date',
-      duplicatable: true,
-      disabled: !(batch ? batch.container : null),
-      ...transformValueField(
-        `${basePath}.container`,
-        batch ? batch.container : null,
-        'freeTimeStartDate',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_FREE_TIME_START_DATE)
-      ),
-    },
+    // start date
     {
       columnKey: 'order.orderItem.batch.container.yardName',
       type: 'text',
