@@ -26,8 +26,8 @@ import {
   TASK_LIST,
   TASK_TEMPLATE_LIST,
 } from 'modules/permission/constants/task';
-import { useViewerHasPermissions, type HasPermissions } from 'components/Context/Permissions';
-import { useUI } from 'components/Context/UI';
+import { useViewerHasPermissions, type HasPermissions } from 'contexts/Permissions';
+import { useUI } from 'contexts/UI';
 import { Logo, MenuItem, SubMenu } from './components';
 import { SideBarWrapperStyle, SideBarBodyStyle } from './style';
 import messages from './messages';

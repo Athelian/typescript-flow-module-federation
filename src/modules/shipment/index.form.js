@@ -6,7 +6,7 @@ import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import QueryFormV2 from 'components/common/QueryFormV2';
 import { navigate } from '@reach/router';
-import { UserConsumer } from 'components/Context/Viewer';
+import { UserConsumer } from 'contexts/Viewer';
 import { getByPath } from 'utils/fp';
 import { showToastError } from 'utils/errors';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';

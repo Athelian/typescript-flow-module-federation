@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useAllHasPermission } from 'components/Context/Permissions';
+import { useAllHasPermission } from 'contexts/Permissions';
 import { useMutation } from '@apollo/react-hooks';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/helpers';

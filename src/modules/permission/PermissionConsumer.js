@@ -1,5 +1,5 @@
 // @flow
-import { useViewerHasPermissions } from 'components/Context/Permissions';
+import { useViewerHasPermissions } from 'contexts/Permissions';
 
 /**
  * @deprecated Use instead hook useViewerHasPermissions

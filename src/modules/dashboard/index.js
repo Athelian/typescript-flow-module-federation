@@ -9,7 +9,7 @@ import { ORDER_LIST } from 'modules/permission/constants/order';
 import { SHIPMENT_LIST } from 'modules/permission/constants/shipment';
 import { PRODUCT_LIST } from 'modules/permission/constants/product';
 import LoadingIcon from 'components/LoadingIcon';
-import { useViewerHasPermissions, useViewerPermissions } from 'components/Context/Permissions';
+import { useViewerHasPermissions, useViewerPermissions } from 'contexts/Permissions';
 
 const findRedirectUrlBaseOnPermission = (hasPermission: string => boolean) => {
   if (hasPermission(RM_ORDER_FOCUS_LIST)) return 'relation-map/order';

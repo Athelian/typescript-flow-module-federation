@@ -7,7 +7,7 @@ import { navigate } from '@reach/router';
 import { QueryForm } from 'components/common';
 import { getByPath } from 'utils/fp';
 import { showToastError } from 'utils/errors';
-import { UserConsumer } from 'components/Context/Viewer';
+import { UserConsumer } from 'contexts/Viewer';
 import { FormContainer, resetFormState } from 'modules/form';
 import { NavBar, EntityIcon } from 'components/NavBar';
 import { Content } from 'components/Layout';

@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { UserConsumer } from 'components/Context/Viewer';
+import { UserConsumer } from 'contexts/Viewer';
 import { DefaultStyle, DateInput } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import Icon from 'components/Icon';

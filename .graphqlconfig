@@ -1,21 +1,18 @@
 {
-  "projects": {
-    "zenport": {
-      "schemaPath": "src/generated/schema.graphql",
-      "extensions": {
-        "endpoints": {
-          "dev": {
-            "url": "https://graphql-staging.zenport.io/graphql"
-          },
-          "localhost": {
-            "url": "http://localhost:8080/graphql"
-          }
-        },
-        "generate-fragments": {
-          "output": "src/generated/fragments.js",
-          "generator": "js"
-        }
+  "schemaPath": "src/generated/schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "dev": {
+        "url": "https://graphql-staging.zenport.io/graphql",
+        "introspect": true
+      },
+      "localhost": {
+        "url": "http://localhost:8080/graphql"
       }
+    },
+    "generate-fragments": {
+      "output": "src/generated/fragments.js",
+      "generator": "js"
     }
   }
 }

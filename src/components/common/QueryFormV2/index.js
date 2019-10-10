@@ -3,7 +3,7 @@ import * as React from 'react';
 import { navigate } from '@reach/router';
 import { useQuery } from '@apollo/react-hooks';
 import type { DocumentNode } from 'graphql';
-import { usePermissions } from 'components/Context/Permissions';
+import { usePermissions } from 'contexts/Permissions';
 import useUser from 'hooks/useUser';
 import { decodeId } from 'utils/id';
 import logger from 'utils/logger';

@@ -5,7 +5,7 @@ import { Provider } from 'unstated';
 import { Mutation } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import GradientContainer from 'components/GradientContainer';
-import { AuthenticatedConsumer } from 'components/Context/Viewer';
+import { AuthenticatedConsumer } from 'contexts/Viewer';
 import loginIcon from 'media/icon_white.png';
 import loginIconName from 'media/logo_white.png';
 import LoadingIcon from 'components/LoadingIcon';

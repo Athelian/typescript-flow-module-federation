@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { useHasPermissions } from 'components/Context/Permissions';
+import { useHasPermissions } from 'contexts/Permissions';
 import { Blackout } from 'components/Form';
 import type { CellValue } from '../../SheetState/types';
 import { useCell, useSheetState } from '../../SheetState';

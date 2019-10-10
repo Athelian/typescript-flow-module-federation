@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { UserConsumer } from 'components/Context/Viewer';
+import { UserConsumer } from 'contexts/Viewer';
 import UserAvatar from 'components/UserAvatar';
 import FormattedName from 'components/FormattedName';
 import FormattedDate from 'components/FormattedDate';
