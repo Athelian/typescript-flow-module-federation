@@ -175,10 +175,12 @@ const EditFormSlideView = ({ onClose }: Props) => {
             return (orderItem.batches || []).includes(batchId);
           });
           const parentOrder = ordersByIDs.find(order =>
-            order.orderItems.map(item => item.id).includes(orderItemId)
+            (order?.orderItems ?? []).map(item => item.id).includes(orderItemId)
           );
-          const parentItem = parentOrder.orderItems.find(item => item.id === orderItemId);
-          const batch = parentItem.batches.find(currentBatch => currentBatch.id === batchId);
+          const parentItem = (parentOrder?.orderItems ?? []).find(item => item.id === orderItemId);
+          const batch = (parentItem?.batches ?? []).find(
+            currentBatch => currentBatch.id === batchId
+          );
           if (batch && parentItem) {
             newBatches.push(batch);
             const { id: itemId, ...item } = parentItem;
