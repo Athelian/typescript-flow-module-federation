@@ -1264,9 +1264,8 @@ function ContainerCell({
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
   const containerId = data?.id;
-  const container = entities.containers?.[containerId] ?? { id: containerId };
-  const hasPermissions = useHasPermissions(container.ownedBy);
-  const hasBatchPermissions = useHasPermissions(data?.relatedBatch?.ownedBy?.id);
+  const hasPermissions = useEntityHasPermissions(data);
+  const batches = shipment?.batches ?? [];
   const shipmentId = shipment?.id ?? '';
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
     accept: BATCH,
@@ -1275,7 +1274,10 @@ function ContainerCell({
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
+          const parentItemId = entities.batches?.[batchId]?.orderItem;
+          if (!parentItemId) return false;
+
+          const parentOrderId = entities.orderItems?.[parentItemId]?.order;
           if (!parentOrderId) return false;
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
@@ -1335,14 +1337,14 @@ function ContainerCell({
     }),
   });
   const isTargetedContainer = state.targets.includes(`${CONTAINER}-${containerId}`);
-  const isTargetedBatch = state.targets.includes(
-    `${BATCH}-${getByPathWithDefault('', 'relatedBatch.id', data)}`
-  );
+  const isTargetedAnyBatches = batches
+    .filter(batch => containerId === batch?.container?.id)
+    .some(batch => state.targets.includes(`${BATCH}-${batch?.id}`));
   const isTargetedShipment = state.targets.includes(`${SHIPMENT}-${shipmentId}`);
   const entity = `${CONTAINER}-${containerId}`;
   const onTargetTree = () => {
     const targets = [];
-    (shipment?.batches ?? []).forEach(batch => {
+    batches.forEach(batch => {
       if (containerId === batch?.container?.id) {
         targets.push(`${BATCH}-${batch.id}`);
         if (!targets.includes(`${ORDER_ITEM}-${batch.orderItem?.id}`)) {
@@ -1391,31 +1393,10 @@ function ContainerCell({
       <div className={ContentStyle}>
         {beforeConnector && (
           <RelationLine
-            isTargeted={isTargetedContainer && isTargetedBatch}
-            hasRelation={isTargetedContainer && isTargetedBatch}
+            isTargeted={isTargetedContainer && isTargetedShipment}
+            hasRelation={isTargetedContainer && isTargetedShipment}
             type={beforeConnector}
-          >
-            {hasBatchPermissions([BATCH_UPDATE]) && (
-              <RemoveButton
-                offset
-                onClick={() => {
-                  dispatch({
-                    type: 'REMOVE_BATCH',
-                    payload: {
-                      entity: {
-                        id: data?.relatedBatch?.id,
-                        no: data?.relatedBatch?.no,
-                      },
-                      from: {
-                        type: 'CONTAINER',
-                        id: data?.relatedBatch?.container,
-                      },
-                    },
-                  });
-                }}
-              />
-            )}
-          </RelationLine>
+          />
         )}
       </div>
 
@@ -1441,7 +1422,21 @@ function ContainerCell({
           >
             <div ref={drag}>
               <Badge label={badge.container?.[containerId] || ''} />
-              <ContainerCard container={container} />
+              <ContainerCard
+                container={data}
+                onDeleteContainer={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'DELETE_CONTAINER',
+                    payload: {
+                      entity: {
+                        id: containerId,
+                        no: data?.no,
+                      },
+                    },
+                  });
+                }}
+              />
               <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
@@ -1464,8 +1459,8 @@ function ContainerCell({
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine
-            isTargeted={isTargetedContainer && isTargetedShipment}
-            hasRelation={isTargetedContainer && isTargetedShipment}
+            isTargeted={isTargetedContainer && isTargetedAnyBatches}
+            hasRelation={isTargetedContainer && isTargetedAnyBatches}
             type={afterConnector}
           />
         )}

@@ -1,6 +1,10 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import Icon from 'components/Icon';
+import { FocusedView } from 'modules/relationMapV2/store';
+import { useEntityHasPermissions } from 'components/Context/Permissions';
+import { CONTAINER_DELETE } from 'modules/permission/constants/container';
 import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
 import { Display, Blackout, Label } from 'components/Form';
@@ -10,13 +14,18 @@ import {
   TagsWrapperStyle,
   BottomRowWrapperStyle,
   DeliveryWarehouseWrapperStyle,
+  DeleteButtonStyle,
 } from './style';
 
 type Props = {|
   container: Object,
+  onDeleteContainer?: Event => void,
 |};
 
-export default function ContainerCard({ container }: Props) {
+export default function ContainerCard({ container, onDeleteContainer }: Props) {
+  const { selectors } = FocusedView.useContainer();
+  const hasPermissions = useEntityHasPermissions(container);
+  const allowToDeleteContainer = hasPermissions(CONTAINER_DELETE);
   const {
     no,
     tags = [],
@@ -69,6 +78,12 @@ export default function ContainerCard({ container }: Props) {
           <FormattedDate value={warehouseArrival} mode="datetime" />
         </Display>
       </div>
+
+      {allowToDeleteContainer && selectors.isShipmentFocus && (
+        <button onClick={onDeleteContainer} className={DeleteButtonStyle} type="button">
+          <Icon icon="REMOVE" />
+        </button>
+      )}
     </div>
   );
 }
