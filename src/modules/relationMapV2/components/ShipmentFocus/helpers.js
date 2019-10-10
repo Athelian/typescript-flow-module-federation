@@ -5,7 +5,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import type { CellRender } from 'modules/relationMapV2/type.js.flow';
 
-export function orderCell({
+export function shipmentCell({
   itemPosition,
   batchPosition,
   shipment,
@@ -70,7 +70,7 @@ export const shipmentCoordinates = memoize(
     const containerCount = shipment?.containerCount ?? 0;
     const batchCount = shipment?.batchCount ?? 0;
     if (!isExpand) {
-      return batchCount
+      return batchCount || containerCount
         ? [
             {
               type: SHIPMENT,
@@ -116,10 +116,14 @@ export const shipmentCoordinates = memoize(
       {
         type: 'shipmentPlaceholder',
       },
-      {
-        type: 'containerSummary',
-        data: shipment,
-      },
+      containerCount
+        ? {
+            type: 'containerSummary',
+            data: shipment,
+          }
+        : {
+            type: 'containerPlaceholder',
+          },
       {
         type: 'batchSummary',
         data: shipment,
@@ -129,10 +133,7 @@ export const shipmentCoordinates = memoize(
             type: 'itemSummary',
             data: shipment,
           }
-        : {
-            type: 'itemSummary',
-            data: null,
-          },
+        : null,
       {
         type: 'orderSummary',
         data: shipment,
@@ -140,27 +141,23 @@ export const shipmentCoordinates = memoize(
     ];
 
     if (containerCount || batchCount) {
-      result.push(
-        ...[
-          {
-            type: SHIPMENT,
-            data: shipment,
-          },
-          null,
-          null,
-          null,
-          null,
-        ]
-      );
       // batches without container on the top
       const batchesWithoutContainers = (shipment?.batches ?? []).filter(batch => !batch?.container);
-      batchesWithoutContainers.forEach(batch => {
+      const batchesWithContainers = (shipment?.batches ?? []).filter(batch => !!batch?.container);
+      batchesWithoutContainers.forEach((batch, index) => {
         result.push(
           ...[
-            {
-              type: 'duplicateShipment',
-              data: shipment,
-            },
+            index
+              ? {
+                  type: 'duplicateShipment',
+                  data: shipment,
+                  afterConnector: 'HORIZONTAL',
+                }
+              : {
+                  type: SHIPMENT,
+                  data: shipment,
+                  afterConnector: 'HORIZONTAL',
+                },
             {
               beforeConnector: 'HORIZONTAL',
               type: 'shipmentWithoutContainer',
@@ -192,6 +189,85 @@ export const shipmentCoordinates = memoize(
       });
 
       // TODO: container with batches
+      shipment.containers.forEach((container, index) => {
+        const batchesByContainer = batchesWithContainers.filter(
+          batch => batch.container.id === container.id
+        );
+        if (batchesByContainer.length) {
+          batchesByContainer.forEach((batch, counter) => {
+            result.push(
+              ...[
+                index || batchesWithoutContainers.length
+                  ? {
+                      type: 'duplicateShipment',
+                      data: shipment,
+                      ...(counter ? {} : { afterConnector: 'VERTICAL' }),
+                    }
+                  : {
+                      type: SHIPMENT,
+                      data: shipment,
+                      afterConnector: 'HORIZONTAL',
+                    },
+                counter
+                  ? {
+                      type: 'duplicateContainer',
+                      data: container,
+                      afterConnector: 'VERTICAL',
+                    }
+                  : {
+                      beforeConnector: 'HORIZONTAL',
+                      type: CONTAINER,
+                      data: container,
+                      afterConnector: 'HORIZONTAL',
+                    },
+                {
+                  beforeConnector: 'HORIZONTAL',
+                  type: BATCH,
+                  data: batch,
+                  afterConnector:
+                    batch && (batch.container || batch.shipment) ? 'HORIZONTAL' : null,
+                },
+                {
+                  beforeConnector: 'HORIZONTAL',
+                  type: ORDER_ITEM,
+                  data: batch,
+                  afterConnector: 'HORIZONTAL',
+                },
+                {
+                  beforeConnector: 'HORIZONTAL',
+                  type: ORDER,
+                  data: batch,
+                },
+              ]
+            );
+          });
+        } else {
+          // empty container
+          result.push(
+            ...[
+              index || batchesWithoutContainers.length
+                ? {
+                    type: 'duplicateShipment',
+                    data: shipment,
+                    afterConnector: 'VERTICAL',
+                  }
+                : {
+                    type: SHIPMENT,
+                    data: shipment,
+                    afterConnector: 'HORIZONTAL',
+                  },
+              {
+                beforeConnector: 'HORIZONTAL',
+                type: CONTAINER,
+                data: container,
+              },
+              null,
+              null,
+              null,
+            ]
+          );
+        }
+      });
     } else {
       // shipment which has no item
       result.push(

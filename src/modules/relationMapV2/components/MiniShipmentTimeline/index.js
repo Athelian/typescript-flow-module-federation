@@ -46,13 +46,8 @@ export default function MiniShipmentTimeline({
   activePoint,
   onChangeActivePoint,
 }: Props) {
-  const {
-    transportType,
-    cargoReady,
-    voyages = [{}],
-    containerGroups = [{}],
-    containers = [],
-  } = shipment;
+  const { transportType, cargoReady, voyages = [{}], containerGroups = [{}], containers = [] } =
+    shipment || {};
 
   const transportIcon = getTransportIcon(transportType);
   const coloring = getTimelineColoring({ cargoReady, voyages, containerGroups });

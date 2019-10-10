@@ -64,7 +64,7 @@ export default function ShipmentCard({ shipment }: Props) {
     voyages = [{}],
     containerGroups = [{}],
     containers = [],
-  } = shipment;
+  } = shipment || {};
 
   const [localShipmentPoint, setLocalShipmentPoint] = React.useState(
     getInitLocalShipmentPoint(globalShipmentPoint, voyages)
