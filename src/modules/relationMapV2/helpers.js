@@ -8,6 +8,7 @@ const DELAY = 200; // 0.2 second
 const timer = {};
 const isTimeoutRunning = {};
 
+// Those are only use for NRM order focused
 export const findOrderIdByBatch = (batchId: string, entities: Object) => {
   const parentOrderId = findKey(currentOrder => {
     return (currentOrder.orderItems || []).some(itemId =>
@@ -42,6 +43,18 @@ export const findOrderIdsByContainer = (containerId: string, entities: Object) =
   return parentOrderIds;
 };
 
+export const findOrderIdsByShipment = (shipmentId: string, entities: Object) => {
+  const parentOrderIds = (Object.keys(entities.orders || {}).filter(orderId => {
+    return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
+      (entities?.orderItems?.[itemId]?.batches ?? []).some(
+        batchId => entities?.batches?.[batchId]?.shipment === shipmentId
+      )
+    );
+  }): Array<string>);
+  return parentOrderIds;
+};
+
+// find shipment id will be called on shipment focused
 export const findShipmentIdByContainer = (containerId: string, entities: Object) => {
   const parentIds = (Object.keys(entities.containers || {})
     .filter(id => {
@@ -80,17 +93,6 @@ export const findShipmentIdsByOrder = (orderId: string, entities: Object) => {
     })
     .map(id => entities.batches?.[id]?.shipment): Array<string>);
   return [...new Set(parentIds)];
-};
-
-export const findOrderIdsByShipment = (shipmentId: string, entities: Object) => {
-  const parentOrderIds = (Object.keys(entities.orders || {}).filter(orderId => {
-    return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
-      (entities?.orderItems?.[itemId]?.batches ?? []).some(
-        batchId => entities?.batches?.[batchId]?.shipment === shipmentId
-      )
-    );
-  }): Array<string>);
-  return parentOrderIds;
 };
 
 export const targetedIds = (

@@ -371,12 +371,12 @@ const orderItemDropMessage = ({
   const type = item?.type ?? '';
   switch (type) {
     case BATCH: {
-      const batchId = item && item.id;
-      const parentOrderId = findOrderIdByBatch(batchId, entities);
-      if (!parentOrderId) return '';
+      const batchId = item?.id;
+      const parentItemId = entities.batches?.[batchId]?.orderItem;
+      if (!parentItemId) return true;
 
-      const parentItemId = findItemIdByBatch(batchId, entities);
-      if (!parentItemId) return '';
+      const parentOrderId = entities.orderItems?.[parentItemId]?.order;
+      if (!parentOrderId) return false;
 
       const isOwnItem = parentItemId === itemId;
       if (isOwnItem)
@@ -870,9 +870,9 @@ function OrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
-  const hasPermissions = useEntityHasPermissions(data);
-  const orderId = data.orderItem?.order?.id;
-  const order = entities.orders?.[orderId];
+  const hasPermissions = useEntityHasPermissions(data.orderItem);
+  const order = data.orderItem?.order;
+  const orderId = order?.id;
   const itemId = data.orderItem?.id;
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
     accept: BATCH,
@@ -881,12 +881,13 @@ function OrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
-          if (!parentOrderId) return false;
-          const parentOrder = entities.orders?.[parentOrderId];
-
-          const parentItemId = findItemIdByBatch(batchId, entities);
+          const parentItemId = entities.batches?.[batchId]?.orderItem;
           if (!parentItemId) return true;
+
+          const parentOrderId = entities.orderItems?.[parentItemId]?.order;
+          if (!parentOrderId) return false;
+
+          const parentOrder = entities.orders?.[parentOrderId];
           const isOwnItem = parentItemId === itemId;
           const isDifferentImporter =
             getByPathWithDefault('', 'importer.id', order) !==
