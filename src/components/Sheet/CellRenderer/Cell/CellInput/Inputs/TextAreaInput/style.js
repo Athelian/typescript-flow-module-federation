@@ -4,6 +4,10 @@ import { layout, fontSizes, colors, borderRadiuses, scrollbars, shadows } from '
 
 export const DialogStyle: string = css`
   padding: 20px;
+
+  &:not(:focus-within) {
+    transition: background-color 0.01s;
+  }
 `;
 
 export const ContentStyle: string = css`
