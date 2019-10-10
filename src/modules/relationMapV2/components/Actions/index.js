@@ -22,7 +22,7 @@ type Props = {
 
 export default function Actions({ targets }: Props) {
   const [currentMenu, setCurrentMenu] = React.useState(null);
-  const { dispatch } = FocusedView.useContainer();
+  const { dispatch, selectors } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
   const orderIds = targetedIds(targets, ORDER);
   const orderItemIds = targetedIds(targets, ORDER_ITEM);
@@ -56,9 +56,12 @@ export default function Actions({ targets }: Props) {
   return (
     <>
       <div className={LeftActionsWrapperStyle}>
-        <ActionButton onClick={navigateToGTV}>
-          <Icon icon="TABLE" />
-        </ActionButton>
+        {/* TODO: should support GTV shipment later */}
+        {!selectors.isShipmentFocus && (
+          <ActionButton onClick={navigateToGTV}>
+            <Icon icon="TABLE" />
+          </ActionButton>
+        )}
         <ActionButton
           onClick={() => {
             dispatch({
@@ -83,349 +86,659 @@ export default function Actions({ targets }: Props) {
         ignoreClick={currentMenu === null}
       >
         <div className={ActionsWrapperStyle}>
-          <ActionButton
-            isDisabled={orderIsDisabled}
-            onClick={() => {
-              if (currentMenu === ORDER) setCurrentMenu(null);
-              else setCurrentMenu(ORDER);
-            }}
-          >
-            <Icon icon="ORDER" />
+          {selectors.isShipmentFocus ? (
+            <>
+              <ActionButton
+                isDisabled={shipmentIsDisabled}
+                onClick={() => {
+                  if (currentMenu === SHIPMENT) setCurrentMenu(null);
+                  else setCurrentMenu(SHIPMENT);
+                }}
+              >
+                <Icon icon="SHIPMENT" />
+                <ActionSubMenu isCollapsed={currentMenu !== SHIPMENT}>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'STATUS',
+                        payload: {
+                          source: SHIPMENT,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="ACTIVE" /> / <Icon icon="ARCHIVE" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.ActiveOrArchive"
+                        defaultMessage="ACTIVE/ARCHIVE"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
 
-            <ActionSubMenu isCollapsed={currentMenu !== ORDER}>
-              <ActionButton
-                onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'STATUS',
-                    payload: {
-                      source: ORDER,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="ACTIVE" /> / <Icon icon="ARCHIVE" />
-                <ActionLabel>
-                  <FormattedMessage
-                    id="modules.RelationMaps.label.ACTIVATE"
-                    defaultMessage="ACTIVATE/ARCHIVE"
-                  />
-                </ActionLabel>
-              </ActionButton>
-
-              <ActionButton
-                onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'TAGS',
-                    payload: {
-                      source: ORDER,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="TAG" />
-                <ActionLabel>
-                  <FormattedMessage
-                    id="modules.RelationMaps.label.addTags"
-                    defaultMessage="ADD TAGS"
-                  />
-                </ActionLabel>
-              </ActionButton>
-
-              <ActionButton
-                onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'CLONE',
-                    payload: {
-                      source: ORDER,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="CLONE" />
-                <ActionLabel>
-                  <FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />
-                </ActionLabel>
-              </ActionButton>
-            </ActionSubMenu>
-          </ActionButton>
-
-          <ActionButton
-            isDisabled={itemIsDisabled}
-            onClick={() => {
-              if (currentMenu === ORDER_ITEM) setCurrentMenu(null);
-              else setCurrentMenu(ORDER_ITEM);
-            }}
-          >
-            <Icon icon="ORDER_ITEM" />
-            <ActionSubMenu isCollapsed={currentMenu !== ORDER_ITEM}>
-              <ActionButton
-                onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'DELETE',
-                    payload: {
-                      source: ORDER_ITEM,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="REMOVE" />
-                <ActionLabel>
-                  <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
-                </ActionLabel>
-              </ActionButton>
-              <ActionButton
-                onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'TAGS',
-                    payload: {
-                      source: ORDER_ITEM,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="TAG" />
-                <ActionLabel>
-                  <FormattedMessage
-                    id="modules.RelationMaps.label.addTags"
-                    defaultMessage="ADD TAGS"
-                  />
-                </ActionLabel>
-              </ActionButton>
-              <ActionButton
-                onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'AUTO_FILL',
-                    payload: {
-                      source: ORDER_ITEM,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="QUANTITY_ADJUSTMENTS" />
-                <ActionLabel>
-                  <FormattedMessage
-                    id="modules.RelationMaps.label.autoFill"
-                    defaultMessage="AUTOFILL"
-                  />
-                </ActionLabel>
-              </ActionButton>
-              <ActionButton
-                onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'CLONE',
-                    payload: {
-                      source: ORDER_ITEM,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="CLONE" />
-                <ActionLabel>
-                  <FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />
-                </ActionLabel>
-              </ActionButton>
-            </ActionSubMenu>
-          </ActionButton>
-
-          <ActionButton
-            isDisabled={batchIsDisabled}
-            onClick={() => {
-              if (currentMenu === BATCH) setCurrentMenu(null);
-              else setCurrentMenu(BATCH);
-            }}
-          >
-            <Icon icon="BATCH" />
-            <ActionSubMenu isCollapsed={currentMenu !== BATCH}>
-              <ActionButton
-                onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'DELETE_BATCHES',
-                    payload: {
-                      source: BATCH,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="REMOVE" /> / <Icon icon="CLEAR" />
-                <ActionLabel>
-                  <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
-                  /
-                  <FormattedMessage id="components.button.remove" defaultMessage="REMOVE" />
-                </ActionLabel>
-              </ActionButton>
-              <ActionButton
-                onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'TAGS',
-                    payload: {
-                      source: BATCH,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="TAG" />
-                <ActionLabel>
-                  <FormattedMessage
-                    id="modules.RelationMaps.label.addTags"
-                    defaultMessage="ADD TAGS"
-                  />
-                </ActionLabel>
-              </ActionButton>
-              <ActionButton
-                onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'MOVE_BATCH',
-                    payload: {},
-                  });
-                }}
-              >
-                <Icon icon="EXCHANGE" />
-                <ActionLabel>
-                  <FormattedMessage id="components.button.move" defaultMessage="MOVE" />
-                </ActionLabel>
-              </ActionButton>
-              <ActionButton
-                onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'SPLIT',
-                    payload: {
-                      source: BATCH,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="SPLIT" />
-                <ActionLabel>
-                  <FormattedMessage id="components.button.split" defaultMessage="SPLIT" />
-                </ActionLabel>
-              </ActionButton>
-              <ActionButton
-                onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'CLONE',
-                    payload: {
-                      source: BATCH,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="CLONE" />
-                <ActionLabel>
-                  <FormattedMessage id="modules.RelationMaps.label.clone" defaultMessage="CLONE" />
-                </ActionLabel>
-              </ActionButton>
-            </ActionSubMenu>
-          </ActionButton>
-
-          <ActionButton
-            isDisabled={containerIsDisabled}
-            onClick={() => {
-              if (currentMenu === CONTAINER) setCurrentMenu(null);
-              else setCurrentMenu(CONTAINER);
-            }}
-          >
-            <Icon icon="CONTAINER" />
-            <ActionSubMenu isCollapsed={currentMenu !== CONTAINER}>
-              <ActionButton
-                onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'DELETE',
-                    payload: {
-                      source: CONTAINER,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="REMOVE" />
-                <ActionLabel>
-                  <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
-                </ActionLabel>
-              </ActionButton>
-              <ActionButton
-                onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'TAGS',
-                    payload: {
-                      source: CONTAINER,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="TAG" />
-                <ActionLabel>
-                  <FormattedMessage
-                    id="modules.RelationMaps.label.addTags"
-                    defaultMessage="ADD TAGS"
-                  />
-                </ActionLabel>
-              </ActionButton>
-            </ActionSubMenu>
-          </ActionButton>
-
-          <ActionButton
-            isDisabled={shipmentIsDisabled}
-            onClick={() => {
-              if (currentMenu === SHIPMENT) setCurrentMenu(null);
-              else setCurrentMenu(SHIPMENT);
-            }}
-          >
-            <Icon icon="SHIPMENT" />
-            <ActionSubMenu isCollapsed={currentMenu !== SHIPMENT}>
-              <ActionButton
-                onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'STATUS',
-                    payload: {
-                      source: SHIPMENT,
-                    },
-                  });
-                }}
-              >
-                <Icon icon="ACTIVE" /> / <Icon icon="ARCHIVE" />
-                <ActionLabel>
-                  <FormattedMessage
-                    id="modules.RelationMaps.label.ActiveOrArchive"
-                    defaultMessage="ACTIVE/ARCHIVE"
-                  />
-                </ActionLabel>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'TAGS',
+                        payload: {
+                          source: SHIPMENT,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="TAG" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addTags"
+                        defaultMessage="ADD TAGS"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                </ActionSubMenu>
               </ActionButton>
 
               <ActionButton
+                isDisabled={containerIsDisabled}
                 onClick={() => {
-                  setCurrentMenu(null);
-                  dispatch({
-                    type: 'TAGS',
-                    payload: {
-                      source: SHIPMENT,
-                    },
-                  });
+                  if (currentMenu === CONTAINER) setCurrentMenu(null);
+                  else setCurrentMenu(CONTAINER);
                 }}
               >
-                <Icon icon="TAG" />
-                <ActionLabel>
-                  <FormattedMessage
-                    id="modules.RelationMaps.label.addTags"
-                    defaultMessage="ADD TAGS"
-                  />
-                </ActionLabel>
+                <Icon icon="CONTAINER" />
+                <ActionSubMenu isCollapsed={currentMenu !== CONTAINER}>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'DELETE',
+                        payload: {
+                          source: CONTAINER,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="REMOVE" />
+                    <ActionLabel>
+                      <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'TAGS',
+                        payload: {
+                          source: CONTAINER,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="TAG" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addTags"
+                        defaultMessage="ADD TAGS"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                </ActionSubMenu>
               </ActionButton>
-            </ActionSubMenu>
-          </ActionButton>
+
+              <ActionButton
+                isDisabled={batchIsDisabled}
+                onClick={() => {
+                  if (currentMenu === BATCH) setCurrentMenu(null);
+                  else setCurrentMenu(BATCH);
+                }}
+              >
+                <Icon icon="BATCH" />
+                <ActionSubMenu isCollapsed={currentMenu !== BATCH}>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'DELETE_BATCHES',
+                        payload: {
+                          source: BATCH,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="REMOVE" /> / <Icon icon="CLEAR" />
+                    <ActionLabel>
+                      <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
+                      /
+                      <FormattedMessage id="components.button.remove" defaultMessage="REMOVE" />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'TAGS',
+                        payload: {
+                          source: BATCH,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="TAG" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addTags"
+                        defaultMessage="ADD TAGS"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'MOVE_BATCH',
+                        payload: {},
+                      });
+                    }}
+                  >
+                    <Icon icon="EXCHANGE" />
+                    <ActionLabel>
+                      <FormattedMessage id="components.button.move" defaultMessage="MOVE" />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'SPLIT',
+                        payload: {
+                          source: BATCH,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="SPLIT" />
+                    <ActionLabel>
+                      <FormattedMessage id="components.button.split" defaultMessage="SPLIT" />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'CLONE',
+                        payload: {
+                          source: BATCH,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="CLONE" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.clone"
+                        defaultMessage="CLONE"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                </ActionSubMenu>
+              </ActionButton>
+
+              <ActionButton
+                isDisabled={itemIsDisabled}
+                onClick={() => {
+                  if (currentMenu === ORDER_ITEM) setCurrentMenu(null);
+                  else setCurrentMenu(ORDER_ITEM);
+                }}
+              >
+                <Icon icon="ORDER_ITEM" />
+                <ActionSubMenu isCollapsed={currentMenu !== ORDER_ITEM}>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'DELETE',
+                        payload: {
+                          source: ORDER_ITEM,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="REMOVE" />
+                    <ActionLabel>
+                      <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'TAGS',
+                        payload: {
+                          source: ORDER_ITEM,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="TAG" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addTags"
+                        defaultMessage="ADD TAGS"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                </ActionSubMenu>
+              </ActionButton>
+
+              <ActionButton
+                isDisabled={orderIsDisabled}
+                onClick={() => {
+                  if (currentMenu === ORDER) setCurrentMenu(null);
+                  else setCurrentMenu(ORDER);
+                }}
+              >
+                <Icon icon="ORDER" />
+
+                <ActionSubMenu isCollapsed={currentMenu !== ORDER}>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'STATUS',
+                        payload: {
+                          source: ORDER,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="ACTIVE" /> / <Icon icon="ARCHIVE" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.ACTIVATE"
+                        defaultMessage="ACTIVATE/ARCHIVE"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'TAGS',
+                        payload: {
+                          source: ORDER,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="TAG" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addTags"
+                        defaultMessage="ADD TAGS"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                </ActionSubMenu>
+              </ActionButton>
+            </>
+          ) : (
+            <>
+              <ActionButton
+                isDisabled={orderIsDisabled}
+                onClick={() => {
+                  if (currentMenu === ORDER) setCurrentMenu(null);
+                  else setCurrentMenu(ORDER);
+                }}
+              >
+                <Icon icon="ORDER" />
+
+                <ActionSubMenu isCollapsed={currentMenu !== ORDER}>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'STATUS',
+                        payload: {
+                          source: ORDER,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="ACTIVE" /> / <Icon icon="ARCHIVE" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.ACTIVATE"
+                        defaultMessage="ACTIVATE/ARCHIVE"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'TAGS',
+                        payload: {
+                          source: ORDER,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="TAG" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addTags"
+                        defaultMessage="ADD TAGS"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'CLONE',
+                        payload: {
+                          source: ORDER,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="CLONE" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.clone"
+                        defaultMessage="CLONE"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                </ActionSubMenu>
+              </ActionButton>
+
+              <ActionButton
+                isDisabled={itemIsDisabled}
+                onClick={() => {
+                  if (currentMenu === ORDER_ITEM) setCurrentMenu(null);
+                  else setCurrentMenu(ORDER_ITEM);
+                }}
+              >
+                <Icon icon="ORDER_ITEM" />
+                <ActionSubMenu isCollapsed={currentMenu !== ORDER_ITEM}>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'DELETE',
+                        payload: {
+                          source: ORDER_ITEM,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="REMOVE" />
+                    <ActionLabel>
+                      <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'TAGS',
+                        payload: {
+                          source: ORDER_ITEM,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="TAG" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addTags"
+                        defaultMessage="ADD TAGS"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'AUTO_FILL',
+                        payload: {
+                          source: ORDER_ITEM,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="QUANTITY_ADJUSTMENTS" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.autoFill"
+                        defaultMessage="AUTOFILL"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'CLONE',
+                        payload: {
+                          source: ORDER_ITEM,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="CLONE" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.clone"
+                        defaultMessage="CLONE"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                </ActionSubMenu>
+              </ActionButton>
+
+              <ActionButton
+                isDisabled={batchIsDisabled}
+                onClick={() => {
+                  if (currentMenu === BATCH) setCurrentMenu(null);
+                  else setCurrentMenu(BATCH);
+                }}
+              >
+                <Icon icon="BATCH" />
+                <ActionSubMenu isCollapsed={currentMenu !== BATCH}>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'DELETE_BATCHES',
+                        payload: {
+                          source: BATCH,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="REMOVE" /> / <Icon icon="CLEAR" />
+                    <ActionLabel>
+                      <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
+                      /
+                      <FormattedMessage id="components.button.remove" defaultMessage="REMOVE" />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'TAGS',
+                        payload: {
+                          source: BATCH,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="TAG" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addTags"
+                        defaultMessage="ADD TAGS"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'MOVE_BATCH',
+                        payload: {},
+                      });
+                    }}
+                  >
+                    <Icon icon="EXCHANGE" />
+                    <ActionLabel>
+                      <FormattedMessage id="components.button.move" defaultMessage="MOVE" />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'SPLIT',
+                        payload: {
+                          source: BATCH,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="SPLIT" />
+                    <ActionLabel>
+                      <FormattedMessage id="components.button.split" defaultMessage="SPLIT" />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'CLONE',
+                        payload: {
+                          source: BATCH,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="CLONE" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.clone"
+                        defaultMessage="CLONE"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                </ActionSubMenu>
+              </ActionButton>
+
+              <ActionButton
+                isDisabled={containerIsDisabled}
+                onClick={() => {
+                  if (currentMenu === CONTAINER) setCurrentMenu(null);
+                  else setCurrentMenu(CONTAINER);
+                }}
+              >
+                <Icon icon="CONTAINER" />
+                <ActionSubMenu isCollapsed={currentMenu !== CONTAINER}>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'DELETE',
+                        payload: {
+                          source: CONTAINER,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="REMOVE" />
+                    <ActionLabel>
+                      <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'TAGS',
+                        payload: {
+                          source: CONTAINER,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="TAG" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addTags"
+                        defaultMessage="ADD TAGS"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                </ActionSubMenu>
+              </ActionButton>
+
+              <ActionButton
+                isDisabled={shipmentIsDisabled}
+                onClick={() => {
+                  if (currentMenu === SHIPMENT) setCurrentMenu(null);
+                  else setCurrentMenu(SHIPMENT);
+                }}
+              >
+                <Icon icon="SHIPMENT" />
+                <ActionSubMenu isCollapsed={currentMenu !== SHIPMENT}>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'STATUS',
+                        payload: {
+                          source: SHIPMENT,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="ACTIVE" /> / <Icon icon="ARCHIVE" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.ActiveOrArchive"
+                        defaultMessage="ACTIVE/ARCHIVE"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'TAGS',
+                        payload: {
+                          source: SHIPMENT,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="TAG" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addTags"
+                        defaultMessage="ADD TAGS"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                </ActionSubMenu>
+              </ActionButton>
+            </>
+          )}
         </div>
       </OutsideClickHandler>
     </>
