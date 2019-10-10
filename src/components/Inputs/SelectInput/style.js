@@ -11,7 +11,7 @@ export const OptionsWrapperStyle = (height: number) => css`
   ${scrollbars.SMALL};
   ${borderRadiuses.MAIN};
   background: ${colors.WHITE};
-  height: ${height};
+  height: ${height}px;
   width: 200px;
   position: absolute;
   top: calc(100% + 5px);
