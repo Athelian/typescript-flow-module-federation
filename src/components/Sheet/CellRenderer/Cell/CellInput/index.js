@@ -5,6 +5,7 @@ import NumberInput from './Inputs/NumberInput';
 import DateInput from './Inputs/DateInput';
 import DatetimeInput from './Inputs/DatetimeInput';
 import EnumInput from './Inputs/EnumInput';
+import PriceInput from './Inputs/PriceInput';
 import { WrapperStyle } from './style';
 
 type Props = {
@@ -23,6 +24,7 @@ type Props = {
 const inputs = {
   text: TextInput,
   number: NumberInput,
+  price: PriceInput,
   date: DateInput,
   datetime: DatetimeInput,
   currency: EnumInput.Currency,

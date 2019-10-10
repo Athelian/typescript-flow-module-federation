@@ -30,6 +30,24 @@ function normalizedInput(type: string, field: string, value: any): Object {
             [field]: value,
           };
       }
+    case 'OrderItem':
+      switch (field) {
+        case 'price': {
+          if (value.value === null) {
+            return { price: null };
+          }
+          return {
+            price: {
+              amount: value.value,
+              currency: value.metric,
+            },
+          };
+        }
+        default:
+          return {
+            [field]: value,
+          };
+      }
     case 'Batch':
       switch (field) {
         case 'desiredAt':

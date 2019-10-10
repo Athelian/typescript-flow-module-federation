@@ -36,6 +36,10 @@ const orderItemSheetFragment = gql`
     id
     no
     quantity
+    price {
+      value: amount
+      metric: currency
+    }
     sort
     totalBatched
     totalShipped
@@ -115,7 +119,7 @@ const containerSheetFragment = gql`
     no
     warehouseArrivalAgreedDate
     warehouseArrivalActualDate
-    freeTimeStartDate
+
     yardName
     departureDate
     totalPackageQuantity

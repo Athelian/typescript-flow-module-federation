@@ -34,6 +34,10 @@ export default defineMessages({
     id: 'modules.OrderItems.list.sort.no',
     defaultMessage: 'Item No.',
   },
+  unitPrice: {
+    id: 'modules.orderItems.unitPrice',
+    defaultMessage: 'Unit Price',
+  },
   currency: {
     id: 'modules.OrderItems.list.sort.currency',
     defaultMessage: 'Currency',
