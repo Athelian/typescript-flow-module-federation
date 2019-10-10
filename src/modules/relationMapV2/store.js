@@ -10,7 +10,7 @@ import { isEquals } from 'utils/fp';
 import usePersistFilter from 'hooks/usePersistFilter';
 import { ORDER, ORDER_ITEM, BATCH, CARGO_READY } from 'modules/relationMapV2/constants';
 import { normalizeEntity } from 'modules/relationMapV2/components/OrderFocus/normalize';
-import { sortOrderItemBy, sortBatchBy } from './sort';
+import { sortOrderItemBy, sortBatchBy, sortContainerBy } from './sort';
 import type { State } from './type.js.flow';
 
 const defaultState = [];
@@ -334,7 +334,7 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
       });
       shipments.forEach((shipment: Object) => {
         if (type === 'container') {
-          containersSort.current[shipment.id] = sortOrderItemBy(
+          containersSort.current[shipment.id] = sortContainerBy(
             shipment?.containers ?? [],
             filters.container?.sort ?? {
               field: 'updatedAt',
@@ -343,6 +343,10 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
           )
             .map((container: Object) => container?.id ?? '')
             .filter(Boolean);
+        }
+        if (type === 'batch') {
+          // TODO: sort batch pool
+          // TODO: sort batch by container
         }
       });
     },
@@ -420,6 +424,55 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     return ids;
   };
 
+  const getContainersSortByShipmentId = ({
+    id,
+    containers,
+    getRelatedBy,
+  }: {|
+    id: string,
+    containers: Array<Object>,
+    getRelatedBy: Function,
+  |}): Array<string> => {
+    if (!containersSort.current[id]) {
+      containersSort.current[id] = sortContainerBy(containers, filterAndSort.container.sort)
+        .map((item: Object) => item?.id ?? '')
+        .filter(Boolean);
+    }
+
+    const sorted = containersSort.current?.[id] ?? [];
+
+    // check a case if that was removed from cached sort
+    const containerIds = containers.map(container => container.id);
+    const validIds = sorted.filter(containerId => containerIds.includes(containerId));
+
+    // find related
+    const ids = [];
+    validIds.forEach(itemId => {
+      ids.push(itemId);
+      const relatedIds = getRelatedBy('container', itemId);
+      relatedIds.forEach(currentId => {
+        if (!ids.includes(currentId) && !validIds.includes(currentId)) {
+          ids.push(currentId);
+        }
+      });
+    });
+
+    containers.forEach(container => {
+      if (!ids.includes(container?.id) && container?.id) {
+        const containerId = container?.id;
+        ids.push(containerId);
+        const relatedIds = getRelatedBy('container', containerId);
+        relatedIds.forEach(currentId => {
+          if (!ids.includes(currentId) && !validIds.includes(currentId)) {
+            ids.push(currentId);
+          }
+        });
+      }
+    });
+
+    return ids;
+  };
+
   const getBatchesSortByItemId = ({
     id,
     batches,
@@ -479,6 +532,7 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     onChangeFilter,
     getItemsSortByOrderId,
     getBatchesSortByItemId,
+    getContainersSortByShipmentId,
     onLocalSort,
   };
 }

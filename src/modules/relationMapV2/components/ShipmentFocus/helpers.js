@@ -1,35 +1,35 @@
 // @flow
-import type { BatchPayload } from 'generated/graphql';
 import memoize from 'memoize-one';
-import { getByPathWithDefault } from 'utils/fp';
+import { ClientSorts, Entities } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import type { CellRender } from 'modules/relationMapV2/type.js.flow';
 
 export function shipmentCell({
-  itemPosition,
+  containerPosition,
   batchPosition,
   shipment,
-  totalItems,
+  totalContainers,
 }: {|
-  itemPosition: number,
+  containerPosition: number,
   batchPosition: number,
   shipment: mixed,
-  totalItems: number,
+  totalContainers: number,
 |}) {
-  if (itemPosition === 0 && batchPosition === 0)
+  if (containerPosition === 0 && batchPosition === 0)
     return {
-      type: ORDER,
+      type: SHIPMENT,
       data: shipment,
       afterConnector: 'HORIZONTAL',
     };
-  const isTheLastItemWithFirstBatch = itemPosition === totalItems - 1 && batchPosition === 0;
-  const isNotTheLastItem = itemPosition < totalItems - 1 && totalItems > 1;
+  const isTheLastItemWithFirstBatch =
+    containerPosition === totalContainers - 1 && batchPosition === 0;
+  const isNotTheLastItem = containerPosition < totalContainers - 1 && totalContainers > 1;
   if (isTheLastItemWithFirstBatch || isNotTheLastItem)
     return {
-      type: 'duplicateOrder',
+      type: 'duplicateShipment',
       data: {
         shipment,
-        itemPosition,
+        totalContainers,
         batchPosition,
       },
       afterConnector: 'VERTICAL',
@@ -37,38 +37,14 @@ export function shipmentCell({
   return null;
 }
 
-export function containerCell(batch: BatchPayload): ?CellRender {
-  if (getByPathWithDefault(null, 'container', batch)) {
-    return {
-      beforeConnector: 'HORIZONTAL',
-      type: CONTAINER,
-      data: {
-        ...getByPathWithDefault({}, 'container', batch),
-        relatedBatch: batch,
-      },
-      afterConnector: 'HORIZONTAL',
-    };
-  }
-  if (
-    getByPathWithDefault(null, 'shipment', batch) &&
-    !getByPathWithDefault(null, 'container', batch)
-  ) {
-    return {
-      beforeConnector: 'HORIZONTAL',
-      type: 'shipmentWithoutContainer',
-      data: {
-        relatedBatch: batch,
-      },
-      afterConnector: 'HORIZONTAL',
-    };
-  }
-  return null;
-}
-
 export const shipmentCoordinates = memoize(
   ({ isExpand, shipment }: { isExpand: boolean, shipment: Object }): Array<?CellRender> => {
+    const { getContainersSortByShipmentId } = ClientSorts.useContainer();
+    const { getRelatedBy } = Entities.useContainer();
     const containerCount = shipment?.containerCount ?? 0;
     const batchCount = shipment?.batchCount ?? 0;
+    const batches = shipment?.batches ?? [];
+    const containers = shipment?.containers ?? [];
     if (!isExpand) {
       return batchCount || containerCount
         ? [
@@ -89,17 +65,21 @@ export const shipmentCoordinates = memoize(
               data: shipment,
               ...(batchCount ? { afterConnector: 'HORIZONTAL' } : {}),
             },
-            {
-              ...(batchCount ? { beforeConnector: 'HORIZONTAL' } : {}),
-              type: 'itemSummary',
-              data: shipment,
-              ...(batchCount ? { afterConnector: 'HORIZONTAL' } : {}),
-            },
-            {
-              ...(batchCount ? { beforeConnector: 'HORIZONTAL' } : {}),
-              type: 'orderSummary',
-              data: shipment,
-            },
+            batchCount
+              ? {
+                  ...(batchCount ? { beforeConnector: 'HORIZONTAL' } : {}),
+                  type: 'itemSummary',
+                  data: shipment,
+                  ...(batchCount ? { afterConnector: 'HORIZONTAL' } : {}),
+                }
+              : null,
+            batchCount
+              ? {
+                  ...(batchCount ? { beforeConnector: 'HORIZONTAL' } : {}),
+                  type: 'orderSummary',
+                  data: shipment,
+                }
+              : null,
           ]
         : [
             {
@@ -142,8 +122,9 @@ export const shipmentCoordinates = memoize(
 
     if (containerCount || batchCount) {
       // batches without container on the top
-      const batchesWithoutContainers = (shipment?.batches ?? []).filter(batch => !batch?.container);
-      const batchesWithContainers = (shipment?.batches ?? []).filter(batch => !!batch?.container);
+      const batchesWithoutContainers = batches.filter(batch => !batch?.container);
+      const batchesWithContainers = batches.filter(batch => !!batch?.container);
+      // TODO: get batch sort by shipment
       batchesWithoutContainers.forEach((batch, index) => {
         result.push(
           ...[
@@ -151,7 +132,7 @@ export const shipmentCoordinates = memoize(
               ? {
                   type: 'duplicateShipment',
                   data: shipment,
-                  afterConnector: 'HORIZONTAL',
+                  afterConnector: 'VERTICAL',
                 }
               : {
                   type: SHIPMENT,
@@ -188,8 +169,15 @@ export const shipmentCoordinates = memoize(
         );
       });
 
-      // TODO: container with batches
-      shipment.containers.forEach((container, index) => {
+      const containerList = getContainersSortByShipmentId({
+        id: shipment.id,
+        containers,
+        getRelatedBy,
+      })
+        .map(containerId => containers.find(container => container?.id === containerId))
+        .filter(Boolean);
+      containerList.forEach((container, index) => {
+        // TODO: get batches sort by container
         const batchesByContainer = batchesWithContainers.filter(
           batch => batch.container.id === container.id
         );
@@ -197,17 +185,12 @@ export const shipmentCoordinates = memoize(
           batchesByContainer.forEach((batch, counter) => {
             result.push(
               ...[
-                index || batchesWithoutContainers.length
-                  ? {
-                      type: 'duplicateShipment',
-                      data: shipment,
-                      ...(counter ? {} : { afterConnector: 'VERTICAL' }),
-                    }
-                  : {
-                      type: SHIPMENT,
-                      data: shipment,
-                      afterConnector: 'HORIZONTAL',
-                    },
+                shipmentCell({
+                  shipment,
+                  containerPosition: index,
+                  batchPosition: counter,
+                  totalContainers: containerList.length,
+                }),
                 counter
                   ? {
                       type: 'duplicateContainer',
