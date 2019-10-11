@@ -8,6 +8,7 @@ import shipmentMessages from 'modules/shipment/messages';
 import containerMessages from 'modules/container/messages';
 import warehouseMessages from 'modules/warehouse/messages';
 import partnerMessages from 'modules/partner/messages';
+import userMessages from 'modules/staff/messages';
 import fileMessages from 'modules/document/messages';
 import projectMessages from 'modules/project/messages';
 import type { FilterConfig } from './index';
@@ -611,6 +612,23 @@ export const PartnerFilterConfig: Array<FilterConfig> = [
     type: 'organization_types',
     message: partnerMessages.type,
     defaultValue: [],
+  },
+];
+
+export const UserFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'USER',
+    field: 'createdAt',
+    type: 'date_range',
+    message: userMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'USER',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: userMessages.updatedAt,
+    defaultValue: { after: null, before: null },
   },
 ];
 
