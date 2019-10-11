@@ -1,8 +1,9 @@
 // @flow
 import orderMessages from 'modules/order/messages';
-import { shipmentSortMessages as shipmentMessages } from 'modules/shipment/messages';
-import warehouseMessages from 'modules/warehouse/messages';
 import batchMessages from 'modules/batch/messages';
+import { shipmentSortMessages as shipmentMessages } from 'modules/shipment/messages';
+import containerMessages from 'modules/container/messages';
+import warehouseMessages from 'modules/warehouse/messages';
 import partnerMessages from 'modules/partner/messages';
 import type { SortConfig } from './index';
 
@@ -46,6 +47,14 @@ export const ShipmentSortConfig: Array<SortConfig> = [
   { message: shipmentMessages.customClearance, field: 'customClearance' },
   { message: shipmentMessages.warehouseArrival, field: 'warehouseArrival' },
   { message: shipmentMessages.deliveryReady, field: 'deliveryReady' },
+];
+
+export const ContainerSortConfig: Array<SortConfig> = [
+  { message: containerMessages.updatedAt, field: 'updatedAt' },
+  { message: containerMessages.createdAt, field: 'createdAt' },
+  { message: containerMessages.warehouseName, field: 'warehouseName' },
+  { message: containerMessages.warehouseArrivalActualDate, field: 'warehouseArrivalActualDate' },
+  { message: containerMessages.warehouseArrivalAgreedDate, field: 'warehouseArrivalAgreedDate' },
 ];
 
 export const WarehouseSortConfig: Array<SortConfig> = [

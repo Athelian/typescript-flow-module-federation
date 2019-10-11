@@ -1,81 +1,48 @@
 // @flow
 import * as React from 'react';
-import { injectIntl } from 'react-intl';
-import type { IntlShape } from 'react-intl';
-import FilterToolBar from 'components/common/FilterToolBar';
 import { ExportButton } from 'components/Buttons';
-import useFilter from 'hooks/useFilter';
 import { Content } from 'components/Layout';
-import { NavBar } from 'components/NavBar';
-import ContainerList from './list';
+import {
+  ContainerFilterConfig,
+  ContainerSortConfig,
+  EntityIcon,
+  Filter,
+  NavBar,
+  Search,
+  Sort,
+} from 'components/NavBar';
+import useFilterSort from 'hooks/useFilterSort';
 import { containersExportQuery } from './query';
-import messages from './messages';
+import ContainerList from './list';
 
-type Props = {
-  intl: IntlShape,
-};
-
-const getInitFilter = () => {
-  const state = {
-    filter: {
-      query: '',
-      archived: false,
-    },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-    perPage: 10,
-    page: 1,
-  };
-  return state;
-};
-
-function ContainerModule(props: Props) {
-  const { intl } = props;
-
-  const sortFields = [
-    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-    { title: intl.formatMessage(messages.warehouseName), value: 'warehouseName' },
-    {
-      title: intl.formatMessage(messages.warehouseArrivalActualDate),
-      value: 'warehouseArrivalActualDate',
-    },
-    {
-      title: intl.formatMessage(messages.warehouseArrivalAgreedDate),
-      value: 'warehouseArrivalAgreedDate',
-    },
-  ];
-  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
-    getInitFilter(),
-    'filterContainer'
+const ContainerListModule = () => {
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    { query: '', archived: false },
+    { updatedAt: 'DESCENDING' },
+    'container_cards'
   );
+
   return (
     <Content>
       <NavBar>
-        <FilterToolBar
-          icon="CONTAINER"
-          sortFields={sortFields}
-          filtersAndSort={filterAndSort}
-          onChange={onChangeFilter}
-          canArchive
-          canSearch
-        />
+        <EntityIcon icon="CONTAINER" color="CONTAINER" subIcon="CARDS" />
+
+        <Filter config={ContainerFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
+        <Search query={query} onChange={setQuery} />
+        <Sort config={ContainerSortConfig} sortBy={sortBy} onChange={setSortBy} />
+
         <ExportButton
           type="Containers"
           exportQuery={containersExportQuery}
           variables={{
-            filterBy: filterAndSort.filter,
-            sortBy: {
-              [filterAndSort.sort.field]: filterAndSort.sort.direction,
-            },
+            filterBy: { query, ...filterBy },
+            sortBy,
           }}
         />
       </NavBar>
-      <ContainerList {...queryVariables} />
+      <ContainerList filterBy={{ query, ...filterBy }} sortBy={sortBy} page={1} perPage={10} />
     </Content>
   );
-}
+};
 
-export default injectIntl(ContainerModule);
+export default ContainerListModule;
