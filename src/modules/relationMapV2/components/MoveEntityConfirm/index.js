@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { flatten } from 'lodash';
 import logger from 'utils/logger';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import Dialog from 'components/Dialog';
@@ -33,7 +34,7 @@ export default function MoveEntityConfirm({ onSuccess }: Props) {
       payload: {},
     });
     moveEntityMutation(state, mapping.entities)
-      .then(onSuccess)
+      .then(ids => onSuccess(flatten(ids).filter(Boolean)))
       .catch(error => {
         logger.warn({
           error,
