@@ -124,7 +124,7 @@ exports[`TaskApprovalStatusInput approved, showUser, showDate 1`] = `
   </div>
   <svg
     aria-hidden="true"
-    class="svg-inline--fa fa-check-circle fa-w-16 fa-fw fa-null fa-rotate-null fa-pull-null "
+    class="svg-inline--fa fa-check-circle fa-w-16 fa-fw "
     data-icon="check-circle"
     data-prefix="fas"
     focusable="false"
@@ -212,7 +212,7 @@ exports[`TaskApprovalStatusInput rejected 1`] = `
   </div>
   <svg
     aria-hidden="true"
-    class="svg-inline--fa fa-times-circle fa-w-16 fa-fw fa-null fa-rotate-null fa-pull-null "
+    class="svg-inline--fa fa-times-circle fa-w-16 fa-fw "
     data-icon="times-circle"
     data-prefix="fas"
     focusable="false"
