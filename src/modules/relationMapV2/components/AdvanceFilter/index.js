@@ -20,7 +20,7 @@ export default function AdvanceFilter() {
       <div className={BlueOutlineWrapperStyle(hasFilter)}>
         <Filter
           config={OrderFilterConfig}
-          filters={filters}
+          filterBy={filters}
           onChange={filter =>
             onChangeFilter({
               ...filterAndSort,

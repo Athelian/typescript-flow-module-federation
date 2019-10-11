@@ -7,6 +7,7 @@ import SortInput from './components/SortInput';
 import SearchInput from './components/SearchInput';
 import Filter from './components/Filter';
 import Sort from './components/Sort';
+import Search from './components/Search';
 import StatusToggleTabs from './components/Tabs/StatusToggleTabs';
 import Tabs from './components/Tabs';
 import LogsButton from './components/LogsButton';
@@ -25,6 +26,7 @@ export {
   SearchInput,
   Filter,
   Sort,
+  Search,
   StatusToggleTabs,
   Tabs,
   SectionNavBar,

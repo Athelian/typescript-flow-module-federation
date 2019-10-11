@@ -6,7 +6,7 @@ import { Query } from 'react-apollo';
 import {
   EntityIcon,
   Filter,
-  SearchInput,
+  Search,
   Sort,
   PartnerSortConfig,
   PartnerFilterConfig,
@@ -18,6 +18,7 @@ import { PartnerCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Display } from 'components/Form';
+import useFilterSort from 'hooks/useFilterSort';
 import { isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from '../../messages';
@@ -46,14 +47,10 @@ const PartnerSelector = ({
   setSelected,
   organizationType,
 }: SelectorProps) => {
-  const [filterBy, setFilterBy] = React.useState({
-    query: '',
-    types: [organizationType],
-  });
-  const [sortBy, setSortBy] = React.useState({
-    updatedAt: 'DESCENDING',
-  });
-  const { query, ...filters } = filterBy;
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    { query: '', types: [organizationType] },
+    { updatedAt: 'DESCENDING' }
+  );
 
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
@@ -64,26 +61,11 @@ const PartnerSelector = ({
               <EntityIcon icon="PARTNER" color="PARTNER" />
               <Filter
                 config={PartnerFilterConfig}
-                filters={filters}
+                filterBy={filterBy}
                 staticFilters={['types']}
-                onChange={value => setFilterBy({ ...value, query })}
+                onChange={setFilterBy}
               />
-              <SearchInput
-                value={query}
-                name="search"
-                onClear={() =>
-                  setFilterBy({
-                    ...filterBy,
-                    query: '',
-                  })
-                }
-                onChange={value =>
-                  setFilterBy({
-                    ...filterBy,
-                    query: value,
-                  })
-                }
-              />
+              <Search query={query} onChange={setQuery} />
               <Sort sortBy={sortBy} onChange={setSortBy} config={PartnerSortConfig} />
               <CancelButton onClick={onClose} />
               <SaveButton
@@ -95,7 +77,7 @@ const PartnerSelector = ({
             <Content>
               <Query
                 query={partnersQuery}
-                variables={{ filterBy, sortBy, page: 1, perPage: 20 }}
+                variables={{ filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 }}
                 fetchPolicy="network-only"
               >
                 {({ loading, data, fetchMore, error }) => {

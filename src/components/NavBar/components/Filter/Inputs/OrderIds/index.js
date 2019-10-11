@@ -6,7 +6,7 @@ import { Query } from 'react-apollo';
 import {
   EntityIcon,
   Filter,
-  SearchInput,
+  Search,
   Sort,
   OrderSortConfig,
   OrderFilterConfig,
@@ -18,6 +18,7 @@ import { OrderCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Display } from 'components/Form';
+import useFilterSort from 'hooks/useFilterSort';
 import { isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from '../../messages';
@@ -39,13 +40,10 @@ type SelectorProps = {
 };
 
 const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
-  const [filterBy, setFilterBy] = React.useState({
-    query: '',
-  });
-  const [sortBy, setSortBy] = React.useState({
-    updatedAt: 'DESCENDING',
-  });
-  const { query, ...filters } = filterBy;
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    { query: '' },
+    { updatedAt: 'DESCENDING' }
+  );
 
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
@@ -56,25 +54,10 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
               <EntityIcon icon="ORDER" color="ORDER" />
               <Filter
                 config={OrderFilterConfig.filter(c => c.field !== 'ids')}
-                filters={filters}
-                onChange={value => setFilterBy({ ...value, query })}
+                filterBy={filterBy}
+                onChange={setFilterBy}
               />
-              <SearchInput
-                value={query}
-                name="search"
-                onClear={() =>
-                  setFilterBy({
-                    ...filterBy,
-                    query: '',
-                  })
-                }
-                onChange={value =>
-                  setFilterBy({
-                    ...filterBy,
-                    query: value,
-                  })
-                }
-              />
+              <Search query={query} onChange={setQuery} />
               <Sort sortBy={sortBy} onChange={setSortBy} config={OrderSortConfig} />
               <CancelButton onClick={onClose} />
               <SaveButton
@@ -86,7 +69,7 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
             <Content>
               <Query
                 query={ordersQuery}
-                variables={{ filterBy, sortBy, page: 1, perPage: 20 }}
+                variables={{ filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 }}
                 fetchPolicy="network-only"
               >
                 {({ loading, data, fetchMore, error }) => {
