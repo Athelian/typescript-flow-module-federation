@@ -1,7 +1,7 @@
 // @flow
 import { findKey } from 'lodash/fp';
 import { getByPathWithDefault } from 'utils/fp';
-import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from './constants';
+import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT, PRODUCT, TAG } from './constants';
 import type { Entity } from './type.js.flow';
 
 const DELAY = 200; // 0.2 second
@@ -148,6 +148,7 @@ export const getColorByEntity = (entity: ?Entity) => {
       return entity && entity.toUpperCase();
   }
 };
+
 export const getIconByEntity = (entity: ?Entity) => {
   switch (entity) {
     case ORDER_ITEM:
@@ -156,3 +157,70 @@ export const getIconByEntity = (entity: ?Entity) => {
       return entity && entity.toUpperCase();
   }
 };
+
+export const getIdentifier = ({
+  id,
+  type,
+  entities,
+}: {
+  id: string,
+  type: typeof ORDER | typeof BATCH | typeof ORDER_ITEM | typeof CONTAINER | typeof SHIPMENT,
+  entities: Object,
+}) => {
+  switch (type) {
+    case ORDER:
+      return {
+        id,
+        icon: 'ORDER',
+        value: getByPathWithDefault('', `orders.${id}.poNo`, entities),
+      };
+    case ORDER_ITEM:
+      return {
+        id,
+        icon: 'ORDER_ITEM',
+        value: getByPathWithDefault('', `orderItems.${id}.no`, entities),
+      };
+    case BATCH:
+      return {
+        id,
+        icon: 'BATCH',
+        value: getByPathWithDefault('', `batches.${id}.no`, entities),
+      };
+    case CONTAINER:
+      return {
+        id,
+        icon: 'CONTAINER',
+        value: getByPathWithDefault('', `containers.${id}.no`, entities),
+      };
+    case SHIPMENT:
+      return {
+        id,
+        icon: 'SHIPMENT',
+        value: getByPathWithDefault('', `shipments.${id}.blNo`, entities),
+      };
+
+    default:
+      return {
+        id,
+        icon: 'ORDER',
+        value: '',
+      };
+  }
+};
+
+export function isMatchedEntity(matches: Object, data: Object) {
+  if (!matches?.entity || !data) return false;
+
+  if (data.__typename === ORDER_ITEM) {
+    return matches?.entity[`${data.productProvider?.product?.id}-${PRODUCT}`];
+  }
+
+  if (data.__typename === ORDER) {
+    return (
+      matches?.entity[`${data.id}-${data.__typename}`] ||
+      (data?.tags ?? []).some(tag => matches?.entity[`${tag?.id}-${TAG}`])
+    );
+  }
+
+  return matches?.entity[`${data.id}-${data.__typename}`];
+}

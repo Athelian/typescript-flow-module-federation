@@ -19,7 +19,6 @@ import {
   CONTAINER,
   SHIPMENT,
   PRODUCT,
-  TAG,
   ORDER_WIDTH,
   BATCH_WIDTH,
   ORDER_ITEM_WIDTH,
@@ -36,6 +35,8 @@ import {
   handleClickAndDoubleClick,
   findOrderIdByBatch,
   findItemIdByBatch,
+  isMatchedEntity,
+  getIdentifier,
 } from 'modules/relationMapV2/helpers';
 import Badge from 'modules/relationMapV2/components/Badge';
 import type { CellRender } from 'modules/relationMapV2/type.js.flow';
@@ -60,23 +61,6 @@ type CellProps = {
   beforeConnector?: ?LINE_CONNECTOR,
   afterConnector?: ?LINE_CONNECTOR,
 };
-
-function isMatchedEntity(matches: Object, data: Object) {
-  if (!matches?.entity || !data) return false;
-
-  if (data.__typename === ORDER_ITEM) {
-    return matches?.entity[`${data.productProvider?.product?.id}-${PRODUCT}`];
-  }
-
-  if (data.__typename === ORDER) {
-    return (
-      matches?.entity[`${data.id}-${data.__typename}`] ||
-      (data?.tags ?? []).some(tag => matches?.entity[`${tag?.id}-${TAG}`])
-    );
-  }
-
-  return matches?.entity[`${data.id}-${data.__typename}`];
-}
 
 export const Overlay = ({
   color,
@@ -160,56 +144,6 @@ export const Overlay = ({
       )}
     </div>
   );
-};
-
-const getIdentifier = ({
-  id,
-  type,
-  entities,
-}: {
-  id: string,
-  type: typeof ORDER | typeof BATCH | typeof ORDER_ITEM | typeof CONTAINER | typeof SHIPMENT,
-  entities: Object,
-}) => {
-  switch (type) {
-    case ORDER:
-      return {
-        id,
-        icon: 'ORDER',
-        value: getByPathWithDefault('', `orders.${id}.poNo`, entities),
-      };
-    case ORDER_ITEM:
-      return {
-        id,
-        icon: 'ORDER_ITEM',
-        value: getByPathWithDefault('', `orderItems.${id}.no`, entities),
-      };
-    case BATCH:
-      return {
-        id,
-        icon: 'BATCH',
-        value: getByPathWithDefault('', `batches.${id}.no`, entities),
-      };
-    case CONTAINER:
-      return {
-        id,
-        icon: 'CONTAINER',
-        value: getByPathWithDefault('', `containers.${id}.no`, entities),
-      };
-    case SHIPMENT:
-      return {
-        id,
-        icon: 'SHIPMENT',
-        value: getByPathWithDefault('', `shipments.${id}.blNo`, entities),
-      };
-
-    default:
-      return {
-        id,
-        icon: 'ORDER',
-        value: '',
-      };
-  }
 };
 
 // NOTE: only support for drag and drop a batch
