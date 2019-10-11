@@ -21,6 +21,7 @@ import {
   WarehouseFilterConfig,
   PartnerFilterConfig,
   FileFilterConfig,
+  ProjectFilterConfig,
 } from './components/Filter/configs';
 import {
   ProductSortConfig,
@@ -32,6 +33,7 @@ import {
   WarehouseSortConfig,
   PartnerSortConfig,
   FileSortConfig,
+  ProjectSortConfig,
 } from './components/Sort/configs';
 
 export {
@@ -56,6 +58,7 @@ export {
   WarehouseFilterConfig,
   PartnerFilterConfig,
   FileFilterConfig,
+  ProjectFilterConfig,
   ProductSortConfig,
   OrderSortConfig,
   OrderItemSortConfig,
@@ -65,4 +68,5 @@ export {
   WarehouseSortConfig,
   PartnerSortConfig,
   FileSortConfig,
+  ProjectSortConfig,
 };

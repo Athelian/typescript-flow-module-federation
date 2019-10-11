@@ -8,6 +8,7 @@ import containerMessages from 'modules/container/messages';
 import warehouseMessages from 'modules/warehouse/messages';
 import partnerMessages from 'modules/partner/messages';
 import fileMessages from 'modules/document/messages';
+import projectMessages from 'modules/project/messages';
 import type { SortConfig } from './index';
 
 export const ProductSortConfig: Array<SortConfig> = [
@@ -97,4 +98,11 @@ export const FileSortConfig: Array<SortConfig> = [
   { message: fileMessages.type, field: 'type' },
   { message: fileMessages.status, field: 'status' },
   { message: fileMessages.size, field: 'size' },
+];
+
+export const ProjectSortConfig: Array<SortConfig> = [
+  { message: projectMessages.updatedAt, field: 'updatedAt' },
+  { message: projectMessages.createdAt, field: 'createdAt' },
+  { message: projectMessages.name, field: 'name' },
+  { message: projectMessages.dueDate, field: 'dueDate' },
 ];

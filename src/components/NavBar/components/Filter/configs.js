@@ -9,6 +9,7 @@ import containerMessages from 'modules/container/messages';
 import warehouseMessages from 'modules/warehouse/messages';
 import partnerMessages from 'modules/partner/messages';
 import fileMessages from 'modules/document/messages';
+import projectMessages from 'modules/project/messages';
 import type { FilterConfig } from './index';
 
 export const ProductFilterConfig: Array<FilterConfig> = [
@@ -626,6 +627,30 @@ export const FileFilterConfig: Array<FilterConfig> = [
     field: 'updatedAt',
     type: 'date_range',
     message: fileMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+];
+
+export const ProjectFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'PROJECT',
+    field: 'createdAt',
+    type: 'date_range',
+    message: projectMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'PROJECT',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: projectMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'PROJECT',
+    field: 'dueDate',
+    type: 'date_range',
+    message: projectMessages.dueDate,
     defaultValue: { after: null, before: null },
   },
 ];
