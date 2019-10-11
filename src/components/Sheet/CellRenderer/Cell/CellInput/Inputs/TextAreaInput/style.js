@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, fontSizes, colors, borderRadiuses, scrollbars, shadows } from 'styles/common';
+import { fontSizes, colors, borderRadiuses, scrollbars, shadows } from 'styles/common';
 
 export const DialogStyle: string = css`
   padding: 20px;
@@ -17,15 +17,7 @@ export const ContentStyle: string = css`
   color: ${colors.BLACK};
 `;
 
-export const FooterStyle: string = css`
-  ${layout.GRID_HORIZONTAL};
-  padding: 20px 0 0 0;
-  justify-content: center;
-  grid-gap: 10px;
-`;
-
 export const TextAreaStyle: string = css`
-  border: none;
   padding: 0;
   width: 400px;
   height: 65px;
@@ -37,9 +29,12 @@ export const TextAreaStyle: string = css`
   ${scrollbars.SMALL};
   overflow-x: hidden;
   overflow-y: auto;
-  ${shadows.INPUT};
-  ${fontSizes.MAIN};
 
+  ${fontSizes.MAIN};
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  &:hover {
+    ${shadows.INPUT};
+  }
   &:focus {
     outline: none;
     border-color: ${colors.TEAL};

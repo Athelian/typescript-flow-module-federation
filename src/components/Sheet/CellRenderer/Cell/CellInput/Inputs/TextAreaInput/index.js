@@ -49,6 +49,7 @@ const TextInput = ({ value, focus, onChange, readonly, onKeyDown }: Props) => {
             <Dialog
               isOpen={isOpen}
               onRequestClose={() => {
+                onChange(inputRef?.current?.value ?? '');
                 setIsOpen(false);
               }}
             >
@@ -56,10 +57,6 @@ const TextInput = ({ value, focus, onChange, readonly, onKeyDown }: Props) => {
                 <TextAreaInputDialog
                   inputRef={inputRef}
                   value={value || ''}
-                  onSave={newValue => {
-                    onChange(newValue);
-                    setIsOpen(false);
-                  }}
                   onKeyDown={onKeyDown}
                 />
               )}
