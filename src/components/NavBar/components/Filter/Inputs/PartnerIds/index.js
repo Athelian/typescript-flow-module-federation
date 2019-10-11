@@ -77,7 +77,7 @@ const PartnerSelector = ({
             <Content>
               <Query
                 query={partnersQuery}
-                variables={{ filterBy, sortBy, page: 1, perPage: 20 }}
+                variables={{ filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 }}
                 fetchPolicy="network-only"
               >
                 {({ loading, data, fetchMore, error }) => {

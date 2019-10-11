@@ -65,7 +65,7 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
             <Content>
               <Query
                 query={warehousesQuery}
-                variables={{ filterBy, sortBy, page: 1, perPage: 20 }}
+                variables={{ filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 }}
                 fetchPolicy="network-only"
               >
                 {({ loading, data, fetchMore, error }) => {

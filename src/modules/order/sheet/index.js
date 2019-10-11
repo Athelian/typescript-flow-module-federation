@@ -66,7 +66,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
     client
       .query({
         query: ordersQuery,
-        variables: { page: 1, perPage: 20, filterBy, sortBy },
+        variables: { page: 1, perPage: 20, filterBy: { query, ...filterBy }, sortBy },
       })
       .then(({ data }) => {
         if (cancel) {
@@ -81,7 +81,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
     return () => {
       cancel = true;
     };
-  }, [client, filterBy, sortBy]);
+  }, [client, query, filterBy, sortBy]);
 
   return (
     <Content>
@@ -95,7 +95,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
           type="Orders"
           exportQuery={ordersExportQuery}
           variables={{
-            filterBy,
+            filterBy: { query, ...filterBy },
             sortBy,
             localSortBy,
             columns: currentColumns.filter(c => !!c.exportKey).map(c => c.exportKey),
@@ -126,7 +126,12 @@ const OrderSheetModule = ({ orderIds }: Props) => {
           client
             .query({
               query: ordersQuery,
-              variables: { page: page.page + 1, perPage: 20, filterBy, sortBy },
+              variables: {
+                page: page.page + 1,
+                perPage: 20,
+                filterBy: { query, ...filterBy },
+                sortBy,
+              },
             })
             .then(({ data }) => {
               setPage({

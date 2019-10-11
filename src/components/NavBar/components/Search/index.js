@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import CInput from 'react-composition-input';
 import Icon from 'components/Icon';
 import useDebounce from 'hooks/useDebounce';
 import { ClearButtonStyle, IconStyle, InputStyle, SearchStyle } from './style';
@@ -32,13 +33,7 @@ const Search = ({ query, onChange }: Props) => {
       <i className={IconStyle}>
         <Icon icon="SEARCH" />
       </i>
-      <input
-        className={InputStyle}
-        type="text"
-        name="search"
-        value={value}
-        onChange={handleChange}
-      />
+      <CInput className={InputStyle} value={value} onInputChange={handleChange} />
       {!!value && (
         <button className={ClearButtonStyle} type="button" onClick={handleClear}>
           <Icon icon="CLEAR" />

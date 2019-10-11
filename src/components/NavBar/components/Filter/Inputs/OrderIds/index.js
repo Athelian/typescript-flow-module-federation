@@ -69,7 +69,7 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
             <Content>
               <Query
                 query={ordersQuery}
-                variables={{ filterBy, sortBy, page: 1, perPage: 20 }}
+                variables={{ filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 }}
                 fetchPolicy="network-only"
               >
                 {({ loading, data, fetchMore, error }) => {
