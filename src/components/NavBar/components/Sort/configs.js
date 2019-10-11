@@ -5,6 +5,7 @@ import { shipmentSortMessages as shipmentMessages } from 'modules/shipment/messa
 import containerMessages from 'modules/container/messages';
 import warehouseMessages from 'modules/warehouse/messages';
 import partnerMessages from 'modules/partner/messages';
+import fileMessages from 'modules/document/messages';
 import type { SortConfig } from './index';
 
 export const OrderSortConfig: Array<SortConfig> = [
@@ -67,4 +68,13 @@ export const PartnerSortConfig: Array<SortConfig> = [
   { message: partnerMessages.createdAt, field: 'createdAt' },
   { message: partnerMessages.name, field: 'name' },
   { message: partnerMessages.code, field: 'code' },
+];
+
+export const FileSortConfig: Array<SortConfig> = [
+  { message: fileMessages.updatedAt, field: 'updatedAt' },
+  { message: fileMessages.createdAt, field: 'createdAt' },
+  { message: fileMessages.name, field: 'name' },
+  { message: fileMessages.type, field: 'type' },
+  { message: fileMessages.status, field: 'status' },
+  { message: fileMessages.size, field: 'size' },
 ];

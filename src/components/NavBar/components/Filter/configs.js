@@ -6,6 +6,7 @@ import shipmentMessages from 'modules/shipment/messages';
 import containerMessages from 'modules/container/messages';
 import warehouseMessages from 'modules/warehouse/messages';
 import partnerMessages from 'modules/partner/messages';
+import fileMessages from 'modules/document/messages';
 import type { FilterConfig } from './index';
 
 export const OrderFilterConfig: Array<FilterConfig> = [
@@ -552,5 +553,22 @@ export const PartnerFilterConfig: Array<FilterConfig> = [
     type: 'organization_types',
     message: partnerMessages.type,
     defaultValue: [],
+  },
+];
+
+export const FileFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'DOCUMENT',
+    field: 'createdAt',
+    type: 'date_range',
+    message: fileMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'DOCUMENT',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: fileMessages.updatedAt,
+    defaultValue: { after: null, before: null },
   },
 ];

@@ -1,61 +1,40 @@
 // @flow
 import * as React from 'react';
 import { Provider } from 'unstated';
-import { injectIntl } from 'react-intl';
-import type { IntlShape } from 'react-intl';
 import { Content } from 'components/Layout';
-import { NavBar } from 'components/NavBar';
-import FilterToolBar from 'components/common/FilterToolBar';
-import useFilter from 'hooks/useFilter';
+import {
+  FileFilterConfig,
+  FileSortConfig,
+  EntityIcon,
+  Filter,
+  NavBar,
+  Search,
+  Sort,
+} from 'components/NavBar';
+import useFilterSort from 'hooks/useFilterSort';
 import DocumentList from './list';
-import messages from './messages';
 
-type Props = {
-  intl: IntlShape,
-};
-
-function DocumentModule(props: Props) {
-  const { intl } = props;
-
-  const sortFields = [
-    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-    { title: intl.formatMessage(messages.name), value: 'name' },
-    { title: intl.formatMessage(messages.type), value: 'type' },
-    { title: intl.formatMessage(messages.status), value: 'status' },
-    { title: intl.formatMessage(messages.size), value: 'size' },
-  ];
-  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
-    {
-      filter: {
-        query: '',
-      },
-      sort: {
-        field: 'updatedAt',
-        direction: 'DESCENDING',
-      },
-      perPage: 10,
-      page: 1,
-    },
-    'filterDocument'
+const DocumentModule = () => {
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    { query: '' },
+    { updatedAt: 'DESCENDING' },
+    'file_cards'
   );
 
   return (
     <Provider>
       <Content>
         <NavBar>
-          <FilterToolBar
-            icon="DOCUMENT"
-            sortFields={sortFields}
-            filtersAndSort={filterAndSort}
-            onChange={onChangeFilter}
-            canSearch
-          />
+          <EntityIcon icon="DOCUMENT" color="DOCUMENT" />
+
+          <Filter config={FileFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
+          <Search query={query} onChange={setQuery} />
+          <Sort config={FileSortConfig} sortBy={sortBy} onChange={setSortBy} />
         </NavBar>
-        <DocumentList {...queryVariables} />
+        <DocumentList filterBy={{ query, ...filterBy }} sortBy={sortBy} page={1} perPage={10} />
       </Content>
     </Provider>
   );
-}
+};
 
-export default injectIntl(DocumentModule);
+export default DocumentModule;
