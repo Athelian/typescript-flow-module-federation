@@ -353,6 +353,10 @@ export default defineMessages({
     id: 'components.BatchItem.noShipmentID',
     defaultMessage: 'No Shipment ID',
   },
+  hasShipment: {
+    id: 'components.BatchItem.hasShipment',
+    defaultMessage: 'Has Shipment',
+  },
   totalPrice: {
     id: 'components.BatchItem.totalPrice',
     defaultMessage: 'TOTAL PRICE',

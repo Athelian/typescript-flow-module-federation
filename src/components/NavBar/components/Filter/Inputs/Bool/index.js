@@ -64,5 +64,10 @@ export const CompletelyShipped = Bool(
   messages.completelyShipped,
   messages.notCompletelyShipped
 );
+export const HasShipment = Bool(
+  messages.hasShipment,
+  messages.hasShipment,
+  messages.hasNotShipment
+);
 
 export default Bool;

@@ -2,6 +2,7 @@
 import orderMessages from 'modules/order/messages';
 import { shipmentSortMessages as shipmentMessages } from 'modules/shipment/messages';
 import warehouseMessages from 'modules/warehouse/messages';
+import batchMessages from 'modules/batch/messages';
 import partnerMessages from 'modules/partner/messages';
 import type { SortConfig } from './index';
 
@@ -15,6 +16,18 @@ export const OrderSortConfig: Array<SortConfig> = [
   { message: orderMessages.currency, field: 'currency' },
   { message: orderMessages.incoterm, field: 'incoterm' },
   { message: orderMessages.deliveryPlace, field: 'deliveryPlace' },
+];
+
+export const BatchSortConfig: Array<SortConfig> = [
+  { message: batchMessages.updatedAt, field: 'updatedAt' },
+  { message: batchMessages.createdAt, field: 'createdAt' },
+  { message: batchMessages.batchNo, field: 'no' },
+  { message: batchMessages.poNo, field: 'poNo' },
+  { message: batchMessages.productName, field: 'productName' },
+  { message: batchMessages.productSerial, field: 'productSerial' },
+  { message: batchMessages.producedAt, field: 'producedAt' },
+  { message: batchMessages.deliveredAt, field: 'deliveredAt' },
+  { message: batchMessages.expiredAt, field: 'expiredAt' },
 ];
 
 export const ShipmentSortConfig: Array<SortConfig> = [
