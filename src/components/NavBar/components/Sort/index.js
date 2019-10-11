@@ -3,6 +3,7 @@ import * as React from 'react';
 import { MessageDescriptor, useIntl } from 'react-intl';
 import Icon from 'components/Icon';
 import { SelectInput } from 'components/Form/Inputs';
+import type { SortBy } from 'types';
 import {
   ButtonStyle,
   InputStyle,
@@ -10,8 +11,6 @@ import {
   OptionWrapperStyle,
   WrapperStyle,
 } from './style';
-
-type SortBy = { [string]: 'ASCENDING' | 'DESCENDING' };
 
 export type SortConfig = {
   message: MessageDescriptor,

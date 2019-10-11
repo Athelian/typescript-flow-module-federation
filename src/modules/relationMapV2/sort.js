@@ -2,6 +2,7 @@
 import type { OrderItemPayload, BatchPayload, ContainerPayload } from 'generated/graphql';
 import { comparator, sort } from 'ramda';
 import { getByPathWithDefault } from 'utils/fp';
+import type { SortDirection } from 'types';
 
 export type BatchSortField =
   | 'updatedAt'
@@ -27,8 +28,6 @@ export type ContainerSortField =
   | 'warehouseName'
   | 'warehouseArrivalActualDate'
   | 'warehouseArrivalAgreedDate';
-
-export type SortDirection = 'ASCENDING' | 'DESCENDING';
 
 function compareByGeneric(firstNumber: any, secondNumber: any) {
   return firstNumber < secondNumber;

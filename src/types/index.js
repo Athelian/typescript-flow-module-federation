@@ -5,3 +5,7 @@ export type UserAvatarType = {
   firstName: string,
   lastName: string,
 };
+
+export type SortDirection = 'ASCENDING' | 'DESCENDING';
+export type SortBy = { [string]: SortDirection };
+export type FilterBy = { [string]: any };
