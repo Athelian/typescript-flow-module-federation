@@ -2,12 +2,11 @@
 import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
-import { EntityIcon, NavBar, SearchInput } from 'components/NavBar';
+import { EntityIcon, NavBar, Search, Filter, OrderFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
 import { Sheet, ColumnsConfig } from 'components/Sheet';
 import type { ColumnConfig, ColumnSort, SortDirection } from 'components/Sheet';
-import Filter from 'components/NavBar/components/Filter';
-import { OrderFilterConfig } from 'components/NavBar/components/Filter/configs';
+import useFilterSort from 'hooks/useFilterSort';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
 import columns from './columns';
@@ -35,20 +34,11 @@ const OrderSheetModule = ({ orderIds }: Props) => {
     page: 1,
     totalPage: 1,
   });
-  const [filterBy, setFilterBy] = React.useState<{ [string]: any }>(
-    orderIds
-      ? {
-          query: '',
-          ids: orderIds,
-        }
-      : {
-          query: '',
-          archived: false,
-        }
+
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    orderIds ? { query: '', ids: orderIds } : { query: '', archived: false },
+    { updatedAt: 'DESCENDING' }
   );
-  const [sortBy, setSortBy] = React.useState<{ [string]: 'ASCENDING' | 'DESCENDING' }>({
-    updatedAt: 'DESCENDING',
-  });
   const [localSortBy, setLocalSortBy] = React.useState<
     Array<{ field: string, direction: SortDirection }>
   >([]);
@@ -93,39 +83,13 @@ const OrderSheetModule = ({ orderIds }: Props) => {
     };
   }, [client, filterBy, sortBy]);
 
-  const { query, ...filters } = filterBy;
-
   return (
     <Content>
       <NavBar>
         <EntityIcon icon="ORDER" color="ORDER" subIcon="TABLE" />
 
-        <Filter
-          config={OrderFilterConfig}
-          filters={filters}
-          onChange={value =>
-            setFilterBy({
-              ...value,
-              query,
-            })
-          }
-        />
-        <SearchInput
-          value={query}
-          name="search"
-          onClear={() =>
-            setFilterBy({
-              ...filterBy,
-              query: '',
-            })
-          }
-          onChange={value =>
-            setFilterBy({
-              ...filterBy,
-              query: value,
-            })
-          }
-        />
+        <Filter config={OrderFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
+        <Search query={query} onChange={setQuery} />
         <ColumnsConfig columns={columns} onChange={setCurrentColumns} />
         <ExportButton
           type="Orders"

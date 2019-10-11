@@ -6,7 +6,7 @@ import { Query } from 'react-apollo';
 import {
   EntityIcon,
   Filter,
-  SearchInput,
+  Search,
   Sort,
   WarehouseSortConfig,
   WarehouseFilterConfig,
@@ -18,6 +18,7 @@ import { WarehouseCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Display } from 'components/Form';
+import useFilterSort from 'hooks/useFilterSort';
 import { isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from '../../messages';
@@ -39,14 +40,10 @@ type SelectorProps = {
 };
 
 const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
-  const [filterBy, setFilterBy] = React.useState({
-    query: '',
-    archived: false,
-  });
-  const [sortBy, setSortBy] = React.useState({
-    updatedAt: 'DESCENDING',
-  });
-  const { query, ...filters } = filterBy;
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    { query: '', archived: false },
+    { updatedAt: 'DESCENDING' }
+  );
 
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
@@ -55,28 +52,9 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
           <>
             <SlideViewNavBar>
               <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
-              <Filter
-                config={WarehouseFilterConfig}
-                filters={filters}
-                onChange={value => setFilterBy({ ...value, query })}
-              />
-              <SearchInput
-                value={query}
-                name="search"
-                onClear={() =>
-                  setFilterBy({
-                    ...filterBy,
-                    query: '',
-                  })
-                }
-                onChange={value =>
-                  setFilterBy({
-                    ...filterBy,
-                    query: value,
-                  })
-                }
-              />
-              <Sort sortBy={sortBy} onChange={setSortBy} config={WarehouseSortConfig} />
+              <Filter config={WarehouseFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
+              <Search query={query} onChange={setQuery} />
+              <Sort config={WarehouseSortConfig} sortBy={sortBy} onChange={setSortBy} />
               <CancelButton onClick={onClose} />
               <SaveButton
                 disabled={isEquals(values, selected)}

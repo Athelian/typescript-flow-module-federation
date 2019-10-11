@@ -104,8 +104,8 @@ export default function useFilterSort(
       return;
     }
 
-    const { query, ...cachableFilterBy } = filterBy;
-    setFilterSortCache(cacheKey, { filterBy: cachableFilterBy, sortBy });
+    const { query, ...cachableFilterBy } = filterBy || {};
+    setFilterSortCache(cacheKey, { filterBy: cachableFilterBy, sortBy: sortBy || {} });
   }, [filterBy, sortBy, cacheKey]);
 
   const currentFilterBy = getFilterBy();

@@ -8,7 +8,7 @@ import {
   EntityIcon,
   Filter,
   Sort,
-  SearchInput,
+  Search,
   OrderFilterConfig,
   OrderSortConfig,
 } from 'components/NavBar';
@@ -20,10 +20,7 @@ import { ordersExportQuery } from './query';
 
 const OrderModule = () => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
-    {
-      query: '',
-      archived: false,
-    },
+    { query: '', archived: false },
     { updatedAt: 'DESCENDING' },
     'order_cards'
   );
@@ -35,8 +32,8 @@ const OrderModule = () => {
       <NavBar>
         <EntityIcon icon="ORDER" color="ORDER" subIcon="CARDS" />
 
-        <Filter config={OrderFilterConfig} filters={filterBy} onChange={setFilterBy} />
-        <SearchInput value={query} name="search" onClear={() => setQuery('')} onChange={setQuery} />
+        <Filter config={OrderFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
+        <Search query={query} onChange={setQuery} />
         <Sort config={OrderSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
         {hasPermissions(ORDER_CREATE) && (

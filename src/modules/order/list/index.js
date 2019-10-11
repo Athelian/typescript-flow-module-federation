@@ -14,7 +14,7 @@ type Props = {
     archived: boolean,
   },
   sortBy: {
-    [field: string]: string,
+    [string]: 'ASCENDING' | 'DESCENDING',
   },
   perPage: number,
   page: number,
