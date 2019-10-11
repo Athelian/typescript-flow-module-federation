@@ -5,6 +5,7 @@ import Fuse from 'fuse.js';
 import memoize from 'memoize-one';
 import { comparator, sort } from 'ramda';
 import { getByPathWithDefault } from 'utils/fp';
+import type { SortDirection } from 'types';
 
 export type SortField =
   | 'sort'
@@ -17,8 +18,6 @@ export type SortField =
   | 'deliveredAt'
   | 'expiredAt'
   | 'producedAt';
-
-export type SortDirection = 'ASCENDING' | 'DESCENDING';
 
 function compareByNumber(firstNumber: number, secondNumber: number) {
   return firstNumber < secondNumber;

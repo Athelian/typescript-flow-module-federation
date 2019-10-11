@@ -6,6 +6,7 @@ import Icon from 'components/Icon';
 import { Tooltip } from 'components/Tooltip';
 import { BaseButton, SaveButton, ResetButton } from 'components/Buttons';
 import { DefaultOptions, DefaultSelect, SelectInput, Label, Display } from 'components/Form';
+import type { FilterBy } from 'types';
 import Archived from './Inputs/Archived';
 import DateRange from './Inputs/DateRange';
 import { VolumeRange, AreaRange, LengthRange, MassRange } from './Inputs/MetricRange';
@@ -64,9 +65,9 @@ type FilterState = {
 
 type Props = {
   config: Array<FilterConfig>,
-  filterBy: { [string]: any },
+  filterBy: FilterBy,
   staticFilters?: Array<string>,
-  onChange: ({ [string]: any }) => void,
+  onChange: FilterBy => void,
 };
 
 const inputs = {
@@ -102,7 +103,7 @@ const inputs = {
 
 const computeFilterStates = (
   config: Array<FilterConfig>,
-  filters: { [string]: any }
+  filters: FilterBy
 ): Array<FilterState> => {
   return Object.keys(filters).map(field => {
     return {

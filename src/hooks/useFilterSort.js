@@ -1,19 +1,20 @@
 // @flow
 import * as React from 'react';
 import { useAuthenticated } from 'contexts/Viewer';
+import type { FilterBy, SortBy } from 'types';
 
 type FilterSort = {
   query: string,
-  filterBy: { [string]: any },
-  sortBy: { [string]: 'ASCENDING' | 'DESCENDING' },
+  filterBy: FilterBy,
+  sortBy: SortBy,
   setQuery: string => void,
-  setFilterBy: ({ [string]: any }) => void,
-  setSortBy: ({ [string]: 'ASCENDING' | 'DESCENDING' }) => void,
+  setFilterBy: FilterBy => void,
+  setSortBy: SortBy => void,
 };
 
 type FilterSortCache = {
-  filterBy: { [string]: any },
-  sortBy: { [string]: 'ASCENDING' | 'DESCENDING' },
+  filterBy: FilterBy,
+  sortBy: SortBy,
 };
 
 const KEY_PREFIX = 'zenport_filter_sort';
@@ -58,12 +59,12 @@ export function useFilterSortInvalidator() {
 }
 
 export default function useFilterSort(
-  initialFilterBy: { [string]: any },
-  initialSortBy: { [string]: 'ASCENDING' | 'DESCENDING' },
+  initialFilterBy: FilterBy,
+  initialSortBy: SortBy,
   cacheKey: ?string = null
 ): FilterSort {
-  const [filterBy, setFilterBy] = React.useState<{ [string]: any } | null>(null);
-  const [sortBy, setSortBy] = React.useState<{ [string]: 'ASCENDING' | 'DESCENDING' } | null>(null);
+  const [filterBy, setFilterBy] = React.useState<FilterBy | null>(null);
+  const [sortBy, setSortBy] = React.useState<SortBy | null>(null);
 
   function getFilterBy() {
     if (!filterBy) {
@@ -124,7 +125,7 @@ export default function useFilterSort(
     [filterBy, setFilterBy]
   );
   const setFilterByWithoutQuery = React.useCallback(
-    (value: { [string]: any }) => {
+    (value: FilterBy) => {
       setFilterBy({
         ...value,
         query,
