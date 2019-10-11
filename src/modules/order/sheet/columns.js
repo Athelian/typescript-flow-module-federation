@@ -104,7 +104,14 @@ const orderColumns: Array<ColumnConfig> = [
     width: 200,
   },
   // tags
-  // memo
+  {
+    key: 'order.memo',
+    exportKey: 'memo',
+    title: <FormattedMessage {...orderMessages.memo} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   // in charge
   /* {
     key: 'order.totalOrdered',

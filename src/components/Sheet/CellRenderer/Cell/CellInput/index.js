@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import TextInput from './Inputs/TextInput';
+import TextAreaInput from './Inputs/TextAreaInput';
 import NumberInput from './Inputs/NumberInput';
 import DateInput from './Inputs/DateInput';
 import DatetimeInput from './Inputs/DatetimeInput';
@@ -23,6 +24,7 @@ type Props = {
 
 const inputs = {
   text: TextInput,
+  textarea: TextAreaInput,
   number: NumberInput,
   price: PriceInput,
   date: DateInput,

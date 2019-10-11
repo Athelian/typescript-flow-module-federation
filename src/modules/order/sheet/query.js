@@ -6,6 +6,7 @@ const orderSheetFragment = gql`
   fragment orderSheetFragment on Order {
     id
     poNo
+    memo
     issuedAt
     piNo
     currency
