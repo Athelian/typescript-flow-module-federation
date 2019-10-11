@@ -2,8 +2,8 @@ import gql from 'graphql-tag';
 import { tagCardFragment } from 'graphql';
 
 export const tagsQuery = gql`
-  query($entityTypes: [TagEntityType!], $page: Int!, $perPage: Int!, $sortBy: TagSortInput) {
-    tags(page: $page, perPage: $perPage, filterBy: { entityTypes: $entityTypes }, sortBy: $sortBy) {
+  query tags($filterBy: TagFilterInput, $sortBy: TagSortInput, $page: Int!, $perPage: Int!) {
+    tags(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...tagCardFragment
       }

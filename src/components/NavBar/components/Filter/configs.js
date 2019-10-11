@@ -11,6 +11,7 @@ import partnerMessages from 'modules/partner/messages';
 import userMessages from 'modules/staff/messages';
 import fileMessages from 'modules/document/messages';
 import projectMessages from 'modules/project/messages';
+import tagMessages from 'modules/tags/messages';
 import type { FilterConfig } from './index';
 
 export const ProductFilterConfig: Array<FilterConfig> = [
@@ -669,6 +670,23 @@ export const ProjectFilterConfig: Array<FilterConfig> = [
     field: 'dueDate',
     type: 'date_range',
     message: projectMessages.dueDate,
+    defaultValue: { after: null, before: null },
+  },
+];
+
+export const TagFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'TAG',
+    field: 'createdAt',
+    type: 'date_range',
+    message: tagMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'TAG',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: tagMessages.updatedAt,
     defaultValue: { after: null, before: null },
   },
 ];

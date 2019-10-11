@@ -23,6 +23,7 @@ import {
   UserFilterConfig,
   FileFilterConfig,
   ProjectFilterConfig,
+  TagFilterConfig,
 } from './components/Filter/configs';
 import {
   ProductSortConfig,
@@ -36,6 +37,7 @@ import {
   UserSortConfig,
   FileSortConfig,
   ProjectSortConfig,
+  TagSortConfig,
 } from './components/Sort/configs';
 
 export {
@@ -51,6 +53,7 @@ export {
   Tabs,
   SectionNavBar,
   LogsButton,
+  // Filter configs
   ProductFilterConfig,
   OrderFilterConfig,
   OrderItemFilterConfig,
@@ -62,6 +65,8 @@ export {
   UserFilterConfig,
   FileFilterConfig,
   ProjectFilterConfig,
+  TagFilterConfig,
+  // Sort configs
   ProductSortConfig,
   OrderSortConfig,
   OrderItemSortConfig,
@@ -73,4 +78,5 @@ export {
   UserSortConfig,
   FileSortConfig,
   ProjectSortConfig,
+  TagSortConfig,
 };
