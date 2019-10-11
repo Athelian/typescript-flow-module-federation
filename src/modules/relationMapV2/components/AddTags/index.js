@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
-import { useAllHasPermission } from 'components/Context/Permissions';
+import { useAllHasPermission } from 'contexts/Permissions';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { TAG_LIST } from 'modules/permission/constants/tag';

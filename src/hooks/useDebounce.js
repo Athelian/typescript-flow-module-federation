@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 // refer https://usehooks.com/useDebounce/
-export default function useDebounce(value: mixed, delay: number) {
+export default function useDebounce(value: any, delay: number): any {
   const [debouncedValue, setDebouncedValue] = React.useState(value);
 
   React.useEffect(

@@ -24,13 +24,15 @@ const DateUser = ({ value }: Props) => {
       <span className={DateStyle}>
         <FormattedDate value={value.at} />
       </span>
-      <UserAvatar
-        width="20px"
-        height="20px"
-        firstName={value.by.firstName}
-        lastName={value.by.lastName}
-        image={value.by.avatar?.path}
-      />
+      {value.by && (
+        <UserAvatar
+          width="20px"
+          height="20px"
+          firstName={value.by?.firstName || ''}
+          lastName={value.by?.lastName || ''}
+          image={value.by?.avatar?.path}
+        />
+      )}
     </DisplayWrapper>
   );
 };

@@ -8,11 +8,16 @@ import { Query } from 'react-apollo';
 import { get, set, uniq } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
 import scrollIntoView from 'scroll-into-view-if-needed';
+import apolloClient from 'apollo';
 import usePrevious from 'hooks/usePrevious';
 import logger from 'utils/logger';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { Display } from 'components/Form';
-import { shipmentFocusedListQuery } from 'modules/relationMapV2/query';
+import { SHIPMENT } from 'modules/relationMapV2/constants';
+import {
+  shipmentFocusedListQuery,
+  shipmentFullFocusDetailQuery,
+} from 'modules/relationMapV2/query';
 import {
   Hits,
   Entities,
@@ -20,6 +25,7 @@ import {
   ExpandRows,
   FocusedView,
 } from 'modules/relationMapV2/store';
+import EditFormSlideView from '../EditFormSlideView';
 import SelectedEntity from '../SelectedEntity';
 import Actions from '../Actions';
 import Header from '../Header';
@@ -122,7 +128,6 @@ export default function ShipmentFocus() {
   }, [lastQueryVariables, queryVariables, setExpandRows]);
 
   const scrollToRow = React.useCallback(
-    // eslint-disable-next-line react/no-unused-prop-types
     ({ position, id, type }: { position: number, id: string, type: string }) => {
       scrollEntity.current = {
         id,
@@ -150,7 +155,29 @@ export default function ShipmentFocus() {
     }
   }, [listRef, scrollPosition, scrollToRow]);
 
-  const { state } = FocusedView.useContainer();
+  const { state, dispatch } = FocusedView.useContainer();
+  const queryShipmentsDetail = React.useCallback(
+    (shipmentIds: Array<string>) => {
+      if (shipmentIds.length) {
+        apolloClient
+          .query({
+            query: shipmentFullFocusDetailQuery,
+            variables: {
+              ids: shipmentIds,
+            },
+          })
+          .then(result => {
+            dispatch({
+              type: 'FETCH_SHIPMENTS',
+              payload: {
+                shipments: result.data.shipmentsByIDs,
+              },
+            });
+          });
+      }
+    },
+    [dispatch]
+  );
 
   return (
     <>
@@ -233,6 +260,32 @@ export default function ShipmentFocus() {
               });
               return (
                 <>
+                  <EditFormSlideView
+                    onClose={result => {
+                      if (state.edit.type === SHIPMENT) {
+                        queryShipmentsDetail([state.edit.selectedId]);
+                      } else if (state.edit.orderId) {
+                        queryShipmentsDetail([state.edit.orderId]);
+                      } else if (state.edit.orderIds && state.edit.orderIds.length) {
+                        queryShipmentsDetail(state.edit.orderIds);
+                      }
+                      if (result?.moveToTop) {
+                        queryShipmentsDetail([result?.id ?? ''].filter(Boolean));
+                        scrollToRow({
+                          position: 0,
+                          id: result?.id ?? '',
+                          type: result?.type ?? '',
+                        });
+                      }
+                      dispatch({
+                        type: 'EDIT',
+                        payload: {
+                          type: '',
+                          selectedId: '',
+                        },
+                      });
+                    }}
+                  />
                   {shipments.length > 0 ? (
                     <>
                       <InfiniteLoader

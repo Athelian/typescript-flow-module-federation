@@ -4,10 +4,13 @@ import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import emitter from 'utils/emitter';
+import type { FilterBy, SortBy } from 'types';
 import TagGridView from './TagGridView';
 import { tagsQuery } from './query';
 
 type Props = {
+  filterBy: FilterBy,
+  sortBy: SortBy,
   perPage: number,
   page: number,
 };

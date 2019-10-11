@@ -23,6 +23,7 @@ import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import { isEquals } from 'utils/fp';
 import NewOrderForm from './components/NewOrderForm';
+import NewShipmentForm from './components/NewShipmentForm';
 import { ordersAndShipmentsQuery } from './query';
 import { createContainerMutation } from './mutation';
 
@@ -50,7 +51,7 @@ type Props = {|
 |};
 
 const EditFormSlideView = ({ onClose }: Props) => {
-  const { isExporter } = useUser();
+  const { isExporter, isImporter, isForwarder, organization } = useUser();
   const isReady = React.useRef(true);
   const { dispatch, state } = FocusedView.useContainer();
   const [createContainer] = useMutation(createContainerMutation);
@@ -174,10 +175,12 @@ const EditFormSlideView = ({ onClose }: Props) => {
             return (orderItem.batches || []).includes(batchId);
           });
           const parentOrder = ordersByIDs.find(order =>
-            order.orderItems.map(item => item.id).includes(orderItemId)
+            (order?.orderItems ?? []).map(item => item.id).includes(orderItemId)
           );
-          const parentItem = parentOrder.orderItems.find(item => item.id === orderItemId);
-          const batch = parentItem.batches.find(currentBatch => currentBatch.id === batchId);
+          const parentItem = (parentOrder?.orderItems ?? []).find(item => item.id === orderItemId);
+          const batch = (parentItem?.batches ?? []).find(
+            currentBatch => currentBatch.id === batchId
+          );
           if (batch && parentItem) {
             newBatches.push(batch);
             const { id: itemId, ...item } = parentItem;
@@ -208,9 +211,6 @@ const EditFormSlideView = ({ onClose }: Props) => {
           case 'newOrder':
             form = (
               <NewOrderForm
-                path="new"
-                isSlideView
-                redirectAfterSuccess={false}
                 originalDataForSlideView={{
                   orderItems: newOrderItems.map(item => ({
                     ...defaultItemValues,
@@ -223,7 +223,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
                   })),
                 }}
                 initDataForSlideView={{
-                  importer,
+                  importer: isImporter() ? organization : {},
                   exporter,
                   orderItems: newOrderItems.map(item => ({
                     ...item,
@@ -260,12 +260,10 @@ const EditFormSlideView = ({ onClose }: Props) => {
             break;
           case 'newShipment':
             form = (
-              <ShipmentForm
-                path="new"
-                isSlideView
-                redirectAfterSuccess={false}
+              <NewShipmentForm
                 initDataForSlideView={{
-                  importer,
+                  importer: isImporter() ? importer : null,
+                  forwarders: isForwarder() ? [organization] : [],
                   exporter: isExporter() ? exporter : null,
                   batches: newBatches,
                   containers: newContainers,
@@ -356,9 +354,9 @@ const EditFormSlideView = ({ onClose }: Props) => {
       isNewEntity = true;
       form = (
         <NewOrderForm
-          path="new"
-          isSlideView
-          redirectAfterSuccess={false}
+          initDataForSlideView={{
+            importer: isImporter() ? organization : {},
+          }}
           onSuccessCallback={result => {
             onSetBadges([
               {
@@ -377,6 +375,40 @@ const EditFormSlideView = ({ onClose }: Props) => {
               moveToTop: true,
               id: result.orderCreate.id,
               type: ORDER,
+            });
+          }}
+          onCancel={onClose}
+        />
+      );
+      break;
+    }
+    case 'NEW_SHIPMENT': {
+      isNewEntity = true;
+      form = (
+        <NewShipmentForm
+          initDataForSlideView={{
+            importer: isImporter() ? organization : null,
+            forwarders: isForwarder() ? [organization] : [],
+            exporter: isExporter() ? organization : null,
+          }}
+          onSuccessCallback={result => {
+            onSetBadges([
+              {
+                id: result.shipmentCreate.id,
+                type: 'newItem',
+                entity: 'shipment',
+              },
+            ]);
+            dispatch({
+              type: 'NEW_SHIPMENT',
+              payload: {
+                shipmentId: result.shipmentCreate.id,
+              },
+            });
+            onClose({
+              moveToTop: true,
+              id: result.shipmentCreate.id,
+              type: SHIPMENT,
             });
           }}
           onCancel={onClose}

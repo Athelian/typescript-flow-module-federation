@@ -5,17 +5,13 @@ import apolloClient from 'apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import emitter from 'utils/emitter';
+import type { FilterBy, SortBy } from 'types';
 import ShipmentGridView from './ShipmentGridView';
 import { shipmentListQuery } from './query';
 
 type Props = {
-  filterBy: {
-    query: string,
-    archived: boolean,
-  },
-  sortBy: {
-    [field: string]: string,
-  },
+  filterBy: FilterBy,
+  sortBy: SortBy,
   perPage: number,
 };
 

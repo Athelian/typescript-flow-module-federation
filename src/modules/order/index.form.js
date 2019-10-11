@@ -9,7 +9,7 @@ import { showToastError } from 'utils/errors';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { getByPath } from 'utils/fp';
 import { FormContainer } from 'modules/form';
-import { UserConsumer } from 'components/Context/Viewer';
+import { UserConsumer } from 'contexts/Viewer';
 import Timeline from 'modules/timeline/components/Timeline';
 import QueryFormV2 from 'components/common/QueryFormV2';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';

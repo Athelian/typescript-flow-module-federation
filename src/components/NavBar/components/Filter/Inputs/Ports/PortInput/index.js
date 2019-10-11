@@ -5,8 +5,8 @@ import DebounceInput from 'react-debounce-input';
 import { equals } from 'ramda';
 import Icon from 'components/Icon';
 import { Display } from 'components/Form';
-import SearchSelectInput from 'components/Inputs/SearchSelectInput';
-import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SearchSelectInput';
+import SelectInput from 'components/Inputs/SelectInput';
+import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
 import { DefaultStyleWrapperStyle } from 'components/Form/Inputs/Styles/DefaultStyle/style';
 import messages from '../../../messages';
 import usePortOptions from './hooks';
@@ -88,7 +88,7 @@ const PortInput = ({ value, onChange, readonly }: Props) => {
   }
 
   return (
-    <SearchSelectInput
+    <SelectInput
       name="port"
       value={value}
       onChange={onChange}

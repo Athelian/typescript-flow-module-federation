@@ -5,7 +5,8 @@ import type { DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-
 import type { Task } from 'generated/graphql';
 import { colors } from 'styles/common';
 import sortBy from 'modules/project/form/helpers';
-import type { SortField, SortDirection } from 'modules/project/form/helpers';
+import type { SortField } from 'modules/project/form/helpers';
+import type { SortDirection } from 'types';
 import { MilestoneColumnWrapperStyle } from './style';
 import MilestoneColumnHeaderCard from '../MilestoneColumnHeaderCard';
 import TaskList from '../TaskList';

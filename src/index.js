@@ -9,10 +9,11 @@ import UNSTATED from 'unstated-debug';
 import FullStory from 'react-fullstory';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import PermissionsProvider from './components/Context/Permissions';
-import LanguageProvider from './components/Context/Language';
-import ViewerProvider from './components/Context/Viewer';
-import UIProvider from './components/Context/UI';
+import PermissionsProvider from './contexts/Permissions';
+import LanguageProvider from './contexts/Language';
+import ViewerProvider from './contexts/Viewer';
+import UIProvider from './contexts/UI';
+import { useFilterSortInvalidator } from './hooks/useFilterSort';
 import apolloClient from './apollo';
 import Routes from './routes';
 import loadFonts from './fonts';
@@ -36,6 +37,11 @@ if (!container) {
   throw new Error(`couldn't find element with id root`);
 }
 
+const AppHooks = () => {
+  useFilterSortInvalidator();
+  return null;
+};
+
 const renderApp = (Component, renderFn) => {
   trace('initial render', performance.now(), () =>
     renderFn(
@@ -48,21 +54,21 @@ const renderApp = (Component, renderFn) => {
                 <PermissionsProvider>
                   <LanguageProvider>
                     <UIProvider>
-                      <>
-                        {isAppInProduction && (
-                          <DeployNotifier
-                            revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
-                            revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
-                          />
-                        )}
-                        {isEnableStrictMode ? (
-                          <React.StrictMode>
-                            <Component />
-                          </React.StrictMode>
-                        ) : (
+                      <AppHooks />
+
+                      {isAppInProduction && (
+                        <DeployNotifier
+                          revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
+                          revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
+                        />
+                      )}
+                      {isEnableStrictMode ? (
+                        <React.StrictMode>
                           <Component />
-                        )}
-                      </>
+                        </React.StrictMode>
+                      ) : (
+                        <Component />
+                      )}
                     </UIProvider>
                   </LanguageProvider>
                 </PermissionsProvider>

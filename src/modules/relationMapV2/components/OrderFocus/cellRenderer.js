@@ -7,7 +7,7 @@ import { useDrop, useDrag } from 'react-dnd';
 import { flatten } from 'lodash';
 import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
-import { useEntityHasPermissions, useHasPermissions } from 'components/Context/Permissions';
+import { useEntityHasPermissions, useHasPermissions } from 'contexts/Permissions';
 import { Tooltip } from 'components/Tooltip';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';

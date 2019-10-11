@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import { findKey, flattenDeep } from 'lodash';
 import { FormattedMessage } from 'react-intl';
-import { useAllHasPermission } from 'components/Context/Permissions';
+import { useAllHasPermission } from 'contexts/Permissions';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMapV2/constants';

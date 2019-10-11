@@ -14,6 +14,10 @@ export default defineMessages({
     id: 'modules.OrderItems.active',
     defaultMessage: 'Active',
   },
+  status: {
+    id: 'modules.OrderItems.status',
+    defaultMessage: 'STATUS',
+  },
   newOrderItem: {
     id: 'modules.OrderItems.newOrderItem',
     defaultMessage: 'NEW',
@@ -33,6 +37,10 @@ export default defineMessages({
   no: {
     id: 'modules.OrderItems.list.sort.no',
     defaultMessage: 'Item No.',
+  },
+  unitPrice: {
+    id: 'modules.orderItems.unitPrice',
+    defaultMessage: 'Unit Price',
   },
   currency: {
     id: 'modules.OrderItems.list.sort.currency',

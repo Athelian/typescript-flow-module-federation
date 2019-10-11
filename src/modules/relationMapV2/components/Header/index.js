@@ -4,7 +4,7 @@ import type { IntlShape } from 'react-intl';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Label } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
-import { useViewerHasPermissions } from 'components/Context/Permissions';
+import { useViewerHasPermissions } from 'contexts/Permissions';
 import {
   ORDER,
   ORDER_ITEM,

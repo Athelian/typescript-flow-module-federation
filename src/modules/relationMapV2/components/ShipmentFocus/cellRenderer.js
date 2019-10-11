@@ -1,13 +1,12 @@
 /* eslint-disable react/no-unused-prop-types */
 // @flow
 import * as React from 'react';
-import type { OrderPayload } from 'generated/graphql';
+import type { OrderPayload, ShipmentPayload } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { useDrop, useDrag } from 'react-dnd';
-import { flatten } from 'lodash';
 import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
-import { useEntityHasPermissions, useHasPermissions } from 'components/Context/Permissions';
+import { useEntityHasPermissions, useHasPermissions } from 'contexts/Permissions';
 import { Tooltip } from 'components/Tooltip';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
@@ -52,7 +51,7 @@ import ShipmentCard from '../ShipmentCard';
 import OrderItemHeading from '../OrderItemHeading';
 import BatchHeading from '../BatchHeading';
 import ContainerHeading from '../ContainerHeading';
-import ShipmentHeading from '../ShipmentHeading';
+import OrderHeading from '../OrderHeading';
 import { ContentStyle } from './style';
 
 type CellProps = {
@@ -698,13 +697,15 @@ const shipmentDropMessage = ({
   }
 };
 
-function OrderCell({ data, afterConnector }: CellProps) {
+function OrderCell({ data, beforeConnector }: CellProps) {
   const { state, dispatch } = FocusedView.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
   const hasPermissions = useEntityHasPermissions(data);
-  const orderId = getByPathWithDefault('', 'id', data);
+  const orderId = data.orderItem?.order?.id;
+  const itemId = data.orderItem?.id;
+  const order = data.orderItem?.order;
   const [{ isOver, canDrop, dropMessage, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
     canDrop: item => {
@@ -769,31 +770,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
       isDragging: !!monitor.isDragging(),
     }),
   });
-  const entity = `${ORDER}-${getByPathWithDefault('', 'id', data)}`;
-  const onTargetTree = () => {
-    const targets = [];
-    const orderItems = getByPathWithDefault([], 'orderItems', data);
-    orderItems.forEach(item => {
-      targets.push(`${ORDER_ITEM}-${getByPathWithDefault('', 'id', item)}`);
-      const batches = getByPathWithDefault([], 'batches', item);
-      batches.forEach(batch => {
-        targets.push(`${BATCH}-${getByPathWithDefault('', 'id', batch)}`);
-        if (batch.container) {
-          targets.push(`${CONTAINER}-${getByPathWithDefault('', 'container.id', batch)}`);
-        }
-        if (batch.shipment) {
-          targets.push(`${SHIPMENT}-${getByPathWithDefault('', 'shipment.id', batch)}`);
-        }
-      });
-    });
-    dispatch({
-      type: 'TARGET_TREE',
-      payload: {
-        targets,
-        entity,
-      },
-    });
-  };
+  const entity = `${ORDER}-${orderId}`;
   const onTarget = () => {
     dispatch({
       type: 'TARGET',
@@ -802,20 +779,14 @@ function OrderCell({ data, afterConnector }: CellProps) {
       },
     });
   };
-  const orderItemIds = flatten(
-    getByPathWithDefault([], 'orderItems', data).map(item => getByPathWithDefault('', 'id', item))
-  ).filter(Boolean);
   const isTargetedOrder = state.targets.includes(`${ORDER}-${orderId}`);
-  const isTargetedAnyItems = orderItemIds.some(itemId =>
-    state.targets.includes(`${ORDER_ITEM}-${itemId}`)
-  );
-
-  const isTargeted = isTargetedOrder && isTargetedAnyItems;
-  const hasRelation = isTargetedAnyItems;
+  const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${itemId}`);
+  const isTargeted = isTargetedOrder && isTargetedItem;
+  const hasRelation = isTargetedItem;
   const handleClick = handleClickAndDoubleClick({
     clickId: entity,
     onClick: onTarget,
-    onDoubleClick: onTargetTree,
+    onDoubleClick: onTarget,
     onCtrlClick: () =>
       dispatch({
         type: 'EDIT',
@@ -827,7 +798,11 @@ function OrderCell({ data, afterConnector }: CellProps) {
   });
   return (
     <>
-      <div className={ContentStyle} />
+      <div className={ContentStyle}>
+        {beforeConnector && (
+          <RelationLine isTargeted={isTargeted} hasRelation={hasRelation} type={beforeConnector} />
+        )}
+      </div>
 
       <CellWrapper ref={drop}>
         {isDragging ? (
@@ -843,17 +818,17 @@ function OrderCell({ data, afterConnector }: CellProps) {
           <BaseCard
             icon="ORDER"
             color="ORDER"
-            isArchived={getByPathWithDefault(false, 'archived', data)}
-            selected={state.targets.includes(`${ORDER}-${getByPathWithDefault('', 'id', data)}`)}
-            selectable={state.targets.includes(`${ORDER}-${getByPathWithDefault('', 'id', data)}`)}
+            isArchived={getByPathWithDefault(false, 'archived', order)}
+            selected={state.targets.includes(`${ORDER}-${orderId}`)}
+            selectable={state.targets.includes(`${ORDER}-${orderId}`)}
             onClick={handleClick}
             flattenCornerIcon
           >
             <div ref={drag} id={`${ORDER}-${orderId}`}>
               <Badge label={badge.order?.[orderId] || ''} />
               <OrderCard
-                organizationId={data?.ownedBy?.id}
-                order={data}
+                organizationId={order?.ownedBy?.id}
+                order={order}
                 onCreateItem={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -885,28 +860,20 @@ function OrderCell({ data, afterConnector }: CellProps) {
         )}
       </CellWrapper>
 
-      <div className={ContentStyle}>
-        {afterConnector && (
-          <RelationLine isTargeted={isTargeted} hasRelation={hasRelation} type={afterConnector} />
-        )}
-      </div>
+      <div className={ContentStyle} />
     </>
   );
 }
 
-function OrderItemCell({
-  data,
-  beforeConnector,
-  afterConnector,
-  order,
-}: CellProps & { order: OrderPayload }) {
+function OrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
   const { state, dispatch } = FocusedView.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
   const hasPermissions = useEntityHasPermissions(data);
-  const orderId = getByPathWithDefault('', 'id', order);
-  const itemId = getByPathWithDefault('', 'id', data);
+  const orderId = data.orderItem?.order?.id;
+  const order = entities.orders?.[orderId];
+  const itemId = data.orderItem?.id;
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
     accept: BATCH,
     canDrop: item => {
@@ -969,30 +936,14 @@ function OrderItemCell({
     }),
   });
   const entity = `${ORDER_ITEM}-${itemId}`;
-  const batchIds = flatten(
-    getByPathWithDefault([], 'batches', data).map(item => getByPathWithDefault('', 'id', item))
-  );
   const isTargetedOrder = state.targets.includes(`${ORDER}-${orderId}`);
   const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${itemId}`);
-  const isTargetedAnyBatches = batchIds.some(batchId =>
-    state.targets.includes(`${BATCH}-${batchId}`)
-  );
+  const isTargetedBatch = state.targets.includes(`${BATCH}-${data.id}`);
   const onTargetTree = () => {
-    const targets = [];
-    const batches = getByPathWithDefault([], 'batches', data);
-    batches.forEach(batch => {
-      targets.push(`${BATCH}-${getByPathWithDefault('', 'id', batch)}`);
-      if (batch.container) {
-        targets.push(`${CONTAINER}-${getByPathWithDefault('', 'container.id', batch)}`);
-      }
-      if (batch.shipment) {
-        targets.push(`${SHIPMENT}-${getByPathWithDefault('', 'shipment.id', batch)}`);
-      }
-    });
     dispatch({
       type: 'TARGET_TREE',
       payload: {
-        targets,
+        targets: [`${ORDER}-${orderId}`],
         entity,
       },
     });
@@ -1024,8 +975,8 @@ function OrderItemCell({
       <div className={ContentStyle}>
         {beforeConnector && (
           <RelationLine
-            isTargeted={isTargetedOrder && isTargetedItem}
-            hasRelation={isTargetedItem}
+            isTargeted={isTargetedItem && isTargetedBatch}
+            hasRelation={isTargetedBatch}
             type={beforeConnector}
           />
         )}
@@ -1045,21 +996,17 @@ function OrderItemCell({
           <BaseCard
             icon="ORDER_ITEM"
             color="ORDER_ITEM"
-            isArchived={getByPathWithDefault(false, 'archived', data)}
-            selected={state.targets.includes(
-              `${ORDER_ITEM}-${getByPathWithDefault('', 'id', data)}`
-            )}
-            selectable={state.targets.includes(
-              `${ORDER_ITEM}-${getByPathWithDefault('', 'id', data)}`
-            )}
+            isArchived={getByPathWithDefault(false, 'orderItem.archived', data)}
+            selected={state.targets.includes(`${ORDER_ITEM}-${itemId}`)}
+            selectable={state.targets.includes(`${ORDER_ITEM}-${itemId}`)}
             onClick={handleClick}
             flattenCornerIcon
           >
             <div ref={drag} id={`${ORDER_ITEM}-${itemId}`}>
               <Badge label={badge.orderItem?.[itemId] || ''} />
               <OrderItemCard
-                organizationId={data?.ownedBy?.id}
-                orderItem={data}
+                organizationId={data.orderItem?.ownedBy?.id}
+                orderItem={data.orderItem}
                 onDeleteItem={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -1067,7 +1014,7 @@ function OrderItemCell({
                     payload: {
                       entity: {
                         id: itemId,
-                        no: data?.no,
+                        no: data.orderItem?.no,
                       },
                     },
                   });
@@ -1079,7 +1026,7 @@ function OrderItemCell({
                     payload: {
                       entity: {
                         id: itemId,
-                        no: data?.no,
+                        no: data.orderItem?.no,
                       },
                     },
                   });
@@ -1107,8 +1054,8 @@ function OrderItemCell({
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine
-            isTargeted={isTargetedItem && isTargetedAnyBatches}
-            hasRelation={isTargetedAnyBatches}
+            isTargeted={isTargetedOrder && isTargetedItem}
+            hasRelation={isTargetedItem}
             type={afterConnector}
           />
         )}
@@ -1119,15 +1066,15 @@ function OrderItemCell({
 
 function BatchCell({
   data,
-  order,
+  shipment,
   beforeConnector,
   afterConnector,
-}: CellProps & { order: OrderPayload }) {
+}: CellProps & { shipment: ?ShipmentPayload }) {
   const hasPermissions = useEntityHasPermissions(data);
   const { state, dispatch } = FocusedView.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { matches } = Hits.useContainer();
-  const batchId = getByPathWithDefault('', 'id', data);
+  const batchId = data?.id;
   const { entities } = mapping;
   const [{ isOver, canDrop, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
@@ -1176,25 +1123,19 @@ function BatchCell({
   });
 
   const entity = `${BATCH}-${batchId}`;
-  const orderId = getByPathWithDefault('', 'id', order);
-  const orderItems = getByPathWithDefault([], 'orderItems', order);
-  const foundParentItem = orderItems.find(item =>
-    item.batches.map(batch => batch.id).includes(batchId)
-  );
-  const batch = foundParentItem.batches.find(item => item.id === batchId);
   const isTargetedBatch = state.targets.includes(`${BATCH}-${batchId}`);
-  const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${foundParentItem.id}`);
+  const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${data?.orderItem?.id}`);
   const isTargetedContainer =
-    batch.container && state.targets.includes(`${CONTAINER}-${batch.container.id}`);
+    data?.container && state.targets.includes(`${CONTAINER}-${data?.container?.id}`);
   const isTargetedShipment =
-    batch.shipment && state.targets.includes(`${SHIPMENT}-${batch.shipment.id}`);
+    data?.shipment && state.targets.includes(`${SHIPMENT}-${data?.shipment?.id}`);
   const onTargetTree = () => {
     const targets = [];
-    if (data.container) {
-      targets.push(`${CONTAINER}-${getByPathWithDefault('', 'container.id', data)}`);
+    if (data?.orderItem?.id) {
+      targets.push(`${ORDER_ITEM}-${data?.orderItem?.id}`);
     }
-    if (data.shipment) {
-      targets.push(`${SHIPMENT}-${getByPathWithDefault('', 'shipment.id', data)}`);
+    if (data?.orderItem?.order?.id) {
+      targets.push(`${ORDER}-${data?.orderItem?.order?.id}`);
     }
     dispatch({
       type: 'TARGET_TREE',
@@ -1223,7 +1164,7 @@ function BatchCell({
         payload: {
           type: BATCH,
           selectedId: batchId,
-          orderId,
+          shipmentId: shipment?.id,
         },
       }),
   });
@@ -1232,8 +1173,8 @@ function BatchCell({
       <div className={ContentStyle}>
         {beforeConnector && (
           <RelationLine
-            isTargeted={isTargetedItem && isTargetedBatch}
-            hasRelation={isTargetedItem && isTargetedBatch}
+            isTargeted={isTargetedBatch && (isTargetedContainer || isTargetedShipment)}
+            hasRelation={isTargetedBatch}
             type={beforeConnector}
           />
         )}
@@ -1254,8 +1195,8 @@ function BatchCell({
             icon="BATCH"
             color="BATCH"
             isArchived={getByPathWithDefault(false, 'archived', data)}
-            selected={state.targets.includes(`${BATCH}-${getByPathWithDefault('', 'id', data)}`)}
-            selectable={state.targets.includes(`${BATCH}-${getByPathWithDefault('', 'id', data)}`)}
+            selected={state.targets.includes(`${BATCH}-${batchId}`)}
+            selectable={state.targets.includes(`${BATCH}-${batchId}`)}
             onClick={handleClick}
             flattenCornerIcon
           >
@@ -1270,7 +1211,7 @@ function BatchCell({
                     type: 'DELETE_BATCH',
                     payload: {
                       entity: {
-                        id: data?.id,
+                        id: batchId,
                         no: data?.no,
                       },
                     },
@@ -1295,7 +1236,7 @@ function BatchCell({
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine
-            isTargeted={isTargetedBatch && (isTargetedContainer || isTargetedShipment)}
+            isTargeted={isTargetedBatch && isTargetedItem}
             hasRelation={isTargetedBatch}
             type={afterConnector}
           />
@@ -1305,7 +1246,12 @@ function BatchCell({
   );
 }
 
-function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
+function ContainerCell({
+  data,
+  shipment,
+  beforeConnector,
+  afterConnector,
+}: CellProps & { shipment: ?ShipmentPayload }) {
   const { state, dispatch } = FocusedView.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
@@ -1314,7 +1260,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
   const container = entities.containers?.[containerId] ?? { id: containerId };
   const hasPermissions = useHasPermissions(container.ownedBy);
   const hasBatchPermissions = useHasPermissions(data?.relatedBatch?.ownedBy?.id);
-  const shipmentId = getByPathWithDefault('', 'relatedBatch.shipment.id', data);
+  const shipmentId = shipment?.id ?? '';
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
     accept: BATCH,
     canDrop: item => {
@@ -1327,15 +1273,12 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
           const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
-          const shipment = getByPathWithDefault({}, `shipments.${container.shipment}`, entities);
           const isOwnContainer = batch.container === containerId;
           const isDifferentImporter =
-            getByPathWithDefault('', 'importer.id', shipment) !==
-            getByPathWithDefault('', 'importer.id', order);
+            shipment?.importer?.id !== getByPathWithDefault('', 'importer.id', order);
           const isDifferentExporter =
-            shipment.exporter &&
-            getByPathWithDefault('', 'exporter.id', shipment) !==
-              getByPathWithDefault('', 'exporter.id', order);
+            shipment?.exporter &&
+            shipment?.exporter?.id !== getByPathWithDefault('', 'exporter.id', order);
           const noPermission = !hasPermissionToMove({
             hasPermissions,
             type: SHIPMENT,
@@ -1388,15 +1331,21 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
   const isTargetedBatch = state.targets.includes(
     `${BATCH}-${getByPathWithDefault('', 'relatedBatch.id', data)}`
   );
-  const isTargetedShipment = state.targets.includes(
-    `${SHIPMENT}-${getByPathWithDefault('', 'relatedBatch.shipment.id', data)}`
-  );
+  const isTargetedShipment = state.targets.includes(`${SHIPMENT}-${shipmentId}`);
   const entity = `${CONTAINER}-${containerId}`;
   const onTargetTree = () => {
     const targets = [];
-    if (data.relatedBatch && data.relatedBatch.shipment) {
-      targets.push(`${SHIPMENT}-${getByPathWithDefault('', 'relatedBatch.shipment.id', data)}`);
-    }
+    (shipment?.batches ?? []).forEach(batch => {
+      if (containerId === batch?.container?.id) {
+        targets.push(`${BATCH}-${batch.id}`);
+        if (!targets.includes(`${ORDER_ITEM}-${batch.orderItem?.id}`)) {
+          targets.push(`${ORDER_ITEM}-${batch.orderItem?.id}`);
+        }
+        if (!targets.includes(`${ORDER}-${batch.orderItem?.order?.id}`)) {
+          targets.push(`${ORDER}-${batch.orderItem?.order?.id}`);
+        }
+      }
+    });
     dispatch({
       type: 'TARGET_TREE',
       payload: {
@@ -1518,14 +1467,18 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
   );
 }
 
-function ShipmentCell({ data, beforeConnector }: CellProps) {
+function ShipmentCell({
+  // $FlowIgnore: does not support
+  shipment,
+  beforeConnector,
+  afterConnector,
+}: CellProps & { shipment: ?ShipmentPayload }) {
   const { state, dispatch } = FocusedView.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
-  const shipmentId = data?.id;
-  const shipment = entities.shipments?.[shipmentId] ?? { id: shipmentId };
-  const hasPermissions = useHasPermissions(shipment.ownedBy);
+  const shipmentId = shipment?.id;
+  const hasPermissions = useHasPermissions(shipment?.ownedBy?.id);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
     accept: BATCH,
     canDrop: item => {
@@ -1543,12 +1496,10 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
           const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
           const isOwnShipment = batch.shipment === shipmentId;
           const isDifferentImporter =
-            getByPathWithDefault('', 'importer.id', shipment) !==
-            getByPathWithDefault('', 'importer.id', order);
+            shipment?.importer?.id !== getByPathWithDefault('', 'importer.id', order);
           const isDifferentExporter =
-            shipment.exporter &&
-            getByPathWithDefault('', 'exporter.id', shipment) !==
-              getByPathWithDefault('', 'exporter.id', order);
+            shipment?.exporter &&
+            shipment?.importer?.id !== getByPathWithDefault('', 'exporter.id', order);
           const noPermission = !hasPermissionToMove({
             hasPermissions,
             type: SHIPMENT,
@@ -1598,12 +1549,33 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
     }),
   });
   const isTargetedShipment = state.targets.includes(`${SHIPMENT}-${shipmentId}`);
-  const isTargetedRelateEntity = getByPathWithDefault(null, 'relatedBatch.container', data)
-    ? state.targets.includes(
-        `${CONTAINER}-${getByPathWithDefault('', 'relatedBatch.container.id', data)}`
-      )
-    : state.targets.includes(`${BATCH}-${getByPathWithDefault('', 'relatedBatch.id', data)}`);
+  const isTargetedRelateEntity =
+    (shipment?.containers ?? []).some(container =>
+      state.targets.includes(`${CONTAINER}-${container.id}`)
+    ) || (shipment?.batches ?? []).some(batch => state.targets.includes(`${BATCH}-${batch.id}`));
   const entity = `${SHIPMENT}-${shipmentId}`;
+  const onTargetTree = () => {
+    const targets = [];
+    (shipment?.containers ?? []).forEach(container => {
+      targets.push(`${CONTAINER}-${container.id}`);
+    });
+    (shipment?.batches ?? []).forEach(batch => {
+      targets.push(`${BATCH}-${batch.id}`);
+      if (!targets.includes(`${ORDER_ITEM}-${batch.orderItem?.id}`)) {
+        targets.push(`${ORDER_ITEM}-${batch.orderItem?.id}`);
+      }
+      if (!targets.includes(`${ORDER}-${batch.orderItem?.order?.id}`)) {
+        targets.push(`${ORDER}-${batch.orderItem?.order?.id}`);
+      }
+    });
+    dispatch({
+      type: 'TARGET_TREE',
+      payload: {
+        targets,
+        entity,
+      },
+    });
+  };
   const onTarget = () => {
     dispatch({
       type: 'TARGET',
@@ -1613,14 +1585,13 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
     });
   };
 
-  // TODO: need to check the mapping data
-  const orderIds = Object.keys(entities?.orders ?? {}).filter(orderId =>
-    getByPathWithDefault([], 'shipments', entities.orders[orderId]).includes(shipmentId)
-  );
+  const orderIds = (shipment?.batches ?? [])
+    .map(batch => batch.orderItem?.order?.id)
+    .filter(Boolean);
   const handleClick = handleClickAndDoubleClick({
     clickId: entity,
     onClick: onTarget,
-    onDoubleClick: onTarget,
+    onDoubleClick: onTargetTree,
     onCtrlClick: () =>
       dispatch({
         type: 'EDIT',
@@ -1663,7 +1634,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
             onClick={handleClick}
             flattenCornerIcon
           >
-            <div ref={drag}>
+            <div ref={drag} id={`${SHIPMENT}-${shipmentId}`}>
               <Badge label={badge.shipment?.[shipmentId] || ''} />
               <ShipmentCard shipment={shipment} />
               <FilterHitBorder hasFilterHits={isMatchedEntity(matches, shipment)} />
@@ -1685,7 +1656,15 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
         )}
       </CellWrapper>
 
-      <div className={ContentStyle} />
+      <div className={ContentStyle}>
+        {afterConnector && (
+          <RelationLine
+            isTargeted={isTargetedShipment && isTargetedRelateEntity}
+            hasRelation={isTargetedShipment && isTargetedRelateEntity}
+            type={afterConnector}
+          />
+        )}
+      </div>
     </>
   );
 }
@@ -1762,23 +1741,18 @@ function ItemSummaryCell({
   const { state, dispatch } = FocusedView.useContainer();
   const { matches } = Hits.useContainer();
   const { mapping } = Entities.useContainer();
-  const orderItemIds = getByPathWithDefault([], 'orderItems', data)
-    .map(item => getByPathWithDefault('', 'id', item))
-    .filter(Boolean);
-  const orderId = getByPathWithDefault('', 'id', data);
-  const batchIds = flatten(
-    getByPathWithDefault([], 'orderItems', data).map(item =>
-      getByPathWithDefault([], 'batches', item).map(batch => getByPathWithDefault('', 'id', batch))
-    )
-  ).filter(Boolean);
+  const orderItemIds = data.batches.map(batch => batch.orderItem?.id).filter(Boolean);
+  const orderItems = data.batches.map(batch => batch.orderItem).filter(Boolean);
+  const orderIds = data.batches.map(batch => batch.orderItem?.order?.id).filter(Boolean);
+  const batchIds = data.batches.map(batch => batch.id).filter(Boolean);
   const selected = orderItemIds.some(itemId => state.targets.includes(`${ORDER_ITEM}-${itemId}`));
-  const isTargetedOrder = state.targets.includes(`${ORDER}-${orderId}`);
   const isTargetedAnyItems = orderItemIds.some(itemId =>
     state.targets.includes(`${ORDER_ITEM}-${itemId}`)
   );
   const isTargetedAnyBatches = batchIds.some(batchId =>
     state.targets.includes(`${BATCH}-${batchId}`)
   );
+  const isTargetedAnyOrders = orderIds.some(oderId => state.targets.includes(`${ORDER}-${oderId}`));
   const isMatched = orderItemIds.some(
     itemId =>
       matches?.entity?.[
@@ -1790,8 +1764,8 @@ function ItemSummaryCell({
       <div className={ContentStyle}>
         {beforeConnector && (
           <RelationLine
-            isTargeted={isExpand ? false : isTargetedOrder && isTargetedAnyItems}
-            hasRelation={isExpand ? false : isTargetedOrder}
+            isTargeted={isExpand ? false : isTargetedAnyBatches && isTargetedAnyItems}
+            hasRelation={isExpand ? false : isTargetedAnyBatches}
             type={beforeConnector}
           />
         )}
@@ -1799,14 +1773,14 @@ function ItemSummaryCell({
 
       <CellWrapper isExpandedHeading={isExpand}>
         <OrderItemHeading
-          orderItems={data?.orderItems || []}
+          orderItems={orderItems}
           hasSelectedChildren={selected}
           hasFilterHits={isMatched}
           isExpanded={isExpand}
           onClick={onClick}
           total={data?.orderItemCount || 0}
           onSelectAll={() => {
-            const targets = (data?.orderItems || []).map(item => `${ORDER_ITEM}-${item?.id}`);
+            const targets = orderItems.map(item => `${ORDER_ITEM}-${item?.id}`);
             dispatch({
               type: 'TARGET_ALL',
               payload: {
@@ -1820,8 +1794,8 @@ function ItemSummaryCell({
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine
-            isTargeted={isExpand ? false : isTargetedAnyItems && isTargetedAnyBatches}
-            hasRelation={isExpand ? false : isTargetedAnyBatches}
+            isTargeted={isExpand ? false : isTargetedAnyItems && isTargetedAnyOrders}
+            hasRelation={isExpand ? false : isTargetedAnyOrders}
             type={afterConnector}
           />
         )}
@@ -1831,79 +1805,58 @@ function ItemSummaryCell({
 }
 
 function BatchSummaryCell({
-  data,
   onClick,
-  order,
+  // $FlowIgnore: does not support
+  shipment,
   isExpand,
   beforeConnector,
   afterConnector,
-}: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
+}: CellProps & { shipment: ?ShipmentPayload, isExpand: boolean, onClick: Function }) {
   const { state, dispatch } = FocusedView.useContainer();
   const { matches } = Hits.useContainer();
-  const orderItemIds = flatten(
-    getByPathWithDefault([], 'orderItems', order).map(item => getByPathWithDefault('', 'id', item))
-  ).filter(Boolean);
-  const batchIds = flatten(
-    getByPathWithDefault([], 'orderItems', order).map(item =>
-      getByPathWithDefault([], 'batches', item).map(batch => getByPathWithDefault('', 'id', batch))
-    )
-  ).filter(Boolean);
+  const orderItemIds = (shipment?.batches ?? []).map(batch => batch.orderItem?.id).filter(Boolean);
+  const batchIds = (shipment?.batches ?? []).map(batch => batch.id).filter(Boolean);
   const isTargetedAnyItems = orderItemIds.some(itemId =>
     state.targets.includes(`${ORDER_ITEM}-${itemId}`)
   );
   const isTargetedAnyBatches = batchIds.some(batchId =>
     state.targets.includes(`${BATCH}-${batchId}`)
   );
-  const containerCount = getByPathWithDefault(0, 'containerCount', order);
-  const containerIds = flatten(
-    getByPathWithDefault([], 'orderItems', order).map(item =>
-      getByPathWithDefault([], 'batches', item).map(batch =>
-        getByPathWithDefault('', 'container.id', batch)
-      )
-    )
-  ).filter(Boolean);
-  const shipmentIds = flatten(
-    getByPathWithDefault([], 'orderItems', order).map(item =>
-      getByPathWithDefault([], 'batches', item).map(batch =>
-        getByPathWithDefault('', 'shipment.id', batch)
-      )
-    )
-  ).filter(Boolean);
-  const isTargetedAnyShipments = shipmentIds.some(batchId =>
-    state.targets.includes(`${SHIPMENT}-${batchId}`)
-  );
+  const containerCount = shipment?.containerCount ?? 0;
+  const batchCount = shipment?.batchCount ?? 0;
+  const containerIds = (shipment?.containers ?? []).map(container => container.id).filter(Boolean);
   const isTargetedAnyContainers = containerIds.some(containerId =>
     state.targets.includes(`${CONTAINER}-${containerId}`)
   );
+  const isTargetedShipment = state.targets.includes(`${SHIPMENT}-${shipment?.id}`);
   const isTargeted = containerCount
     ? isTargetedAnyBatches && isTargetedAnyContainers
-    : isTargetedAnyBatches && isTargetedAnyShipments;
+    : isTargetedAnyBatches && isTargetedShipment;
   const hasRelation = containerCount
     ? isTargetedAnyBatches && isTargetedAnyContainers
-    : isTargetedAnyBatches && isTargetedAnyShipments;
-  const total = getByPathWithDefault(0, 'batchCount', data);
+    : isTargetedAnyBatches && isTargetedShipment;
   const isMatched = batchIds.some(itemId => matches.entity && matches.entity[`${itemId}-${BATCH}`]);
   return (
     <>
       <div className={ContentStyle}>
         {beforeConnector && (
           <RelationLine
-            isTargeted={isExpand ? false : isTargetedAnyItems && isTargetedAnyBatches}
-            hasRelation={isExpand ? false : isTargetedAnyBatches}
+            isTargeted={isExpand ? false : isTargeted}
+            hasRelation={isExpand ? false : hasRelation}
             type={beforeConnector}
           />
         )}
       </div>
 
-      {total ? (
+      {batchCount ? (
         <CellWrapper isExpandedHeading={isExpand}>
           <BatchHeading
-            batches={(data?.orderItems || []).flatMap(orderItem => orderItem?.batches) || []}
+            batches={shipment?.batches ?? []}
             hasSelectedChildren={isTargetedAnyBatches}
             hasFilterHits={isMatched}
             isExpanded={isExpand}
             onClick={onClick}
-            total={data?.batchCount || 0}
+            total={batchCount}
             onSelectAll={() => {
               const targets = [];
               batchIds.forEach(id => targets.push(`${BATCH}-${id}`));
@@ -1928,8 +1881,8 @@ function BatchSummaryCell({
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine
-            isTargeted={isExpand ? false : isTargeted}
-            hasRelation={isExpand ? false : hasRelation}
+            isTargeted={isExpand ? false : isTargetedAnyItems && isTargetedAnyBatches}
+            hasRelation={isExpand ? false : isTargetedAnyBatches}
             type={afterConnector}
           />
         )}
@@ -1939,60 +1892,42 @@ function BatchSummaryCell({
 }
 
 function ContainerSummaryCell({
-  data,
   onClick,
-  order,
+  // $FlowIgnore: does not support
+  shipment,
   isExpand,
   beforeConnector,
   afterConnector,
-}: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
+}: CellProps & { shipment: ?ShipmentPayload, isExpand: boolean, onClick: Function }) {
   const { state, dispatch } = FocusedView.useContainer();
   const { matches } = Hits.useContainer();
-  const containerCount = getByPathWithDefault(0, 'containerCount', order);
-  const batchIds = flatten(
-    getByPathWithDefault([], 'orderItems', order).map(item =>
-      getByPathWithDefault([], 'batches', item).map(batch => getByPathWithDefault('', 'id', batch))
-    )
-  ).filter(Boolean);
-  const containerIds = flatten(
-    getByPathWithDefault([], 'orderItems', order).map(item =>
-      getByPathWithDefault([], 'batches', item).map(batch =>
-        getByPathWithDefault('', 'container.id', batch)
-      )
-    )
-  ).filter(Boolean);
-  const shipmentIds = flatten(
-    getByPathWithDefault([], 'orderItems', order).map(item =>
-      getByPathWithDefault([], 'batches', item).map(batch =>
-        getByPathWithDefault('', 'shipment.id', batch)
-      )
-    )
-  ).filter(Boolean);
+  const containerCount = shipment?.containerCount ?? 0;
+  const batchCount = shipment?.batchCount ?? 0;
+  const batchIds = (shipment?.batches ?? []).map(batch => batch?.id).filter(Boolean);
+  const containerIds = (shipment?.containers ?? []).map(container => container?.id).filter(Boolean);
   const isTargetedAnyBatches = batchIds.some(batchId =>
     state.targets.includes(`${BATCH}-${batchId}`)
-  );
-  const isTargetedAnyShipments = shipmentIds.some(batchId =>
-    state.targets.includes(`${SHIPMENT}-${batchId}`)
   );
   const isTargetedAnyContainers = containerIds.some(containerId =>
     state.targets.includes(`${CONTAINER}-${containerId}`)
   );
+  const isTargetedShipment = state.targets.includes(`${SHIPMENT}-${shipment?.id}`);
   const beforeLine = {
     isTargeted: containerCount
-      ? isTargetedAnyBatches && isTargetedAnyContainers
-      : isTargetedAnyBatches && isTargetedAnyShipments,
-    hasRelation: containerCount
-      ? isTargetedAnyBatches && isTargetedAnyContainers
-      : isTargetedAnyBatches && isTargetedAnyShipments,
+      ? isTargetedAnyContainers && isTargetedShipment
+      : isTargetedShipment && isTargetedAnyBatches,
+    hasRelation: isTargetedShipment,
   };
   const afterLine = {
     isTargeted: containerCount
-      ? isTargetedAnyContainers && isTargetedAnyShipments
-      : isTargetedAnyShipments && isTargetedAnyBatches,
-    hasRelation: isTargetedAnyShipments,
+      ? isTargetedAnyBatches && isTargetedAnyContainers
+      : isTargetedAnyBatches && isTargetedShipment,
+    hasRelation: containerCount
+      ? isTargetedAnyBatches && isTargetedAnyContainers
+      : isTargetedAnyBatches && isTargetedShipment,
   };
   const isMatched = containerIds.some(
-    itemId => matches.entity && matches.entity[`${itemId}-${CONTAINER}`]
+    containerId => matches.entity && matches.entity[`${containerId}-${CONTAINER}`]
   );
   return (
     <>
@@ -2007,18 +1942,16 @@ function ContainerSummaryCell({
       </div>
 
       {(() => {
-        const total = getByPathWithDefault(0, 'containerCount', data);
-        const shipmentCount = getByPathWithDefault(0, 'shipmentCount', data);
-        if (total) {
+        if (containerCount) {
           return (
             <CellWrapper isExpandedHeading={isExpand}>
               <ContainerHeading
-                containers={data?.containers || []}
+                containers={shipment?.containers || []}
                 hasSelectedChildren={isTargetedAnyContainers}
                 hasFilterHits={isMatched}
                 isExpanded={isExpand}
                 onClick={onClick}
-                total={data?.containerCount || 0}
+                total={containerCount}
                 onSelectAll={() => {
                   const targets = [];
 
@@ -2036,12 +1969,12 @@ function ContainerSummaryCell({
           );
         }
 
-        if (shipmentCount) {
+        if (batchCount) {
           return (
             <div style={{ width: CONTAINER_WIDTH }} className={ContentStyle}>
               <RelationLine
-                isTargeted={isTargetedAnyShipments && isTargetedAnyBatches}
-                hasRelation={isTargetedAnyShipments && isTargetedAnyBatches}
+                isTargeted={isTargetedShipment && isTargetedAnyBatches}
+                hasRelation={isTargetedShipment && isTargetedAnyBatches}
                 type="HORIZONTAL"
               />
             </div>
@@ -2064,55 +1997,33 @@ function ContainerSummaryCell({
   );
 }
 
-function ShipmentSummaryCell({
-  data,
+function OrderSummaryCell({
   onClick,
-  order,
+  shipment,
   isExpand,
   beforeConnector,
-}: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
+}: CellProps & { shipment: ?ShipmentPayload, isExpand: boolean, onClick: Function }) {
   const { state, dispatch } = FocusedView.useContainer();
   const { matches } = Hits.useContainer();
-  const containerCount = getByPathWithDefault(0, 'containerCount', order);
-  const batchIds = flatten(
-    getByPathWithDefault([], 'orderItems', order).map(item =>
-      getByPathWithDefault([], 'batches', item).map(batch => getByPathWithDefault('', 'id', batch))
-    )
-  ).filter(Boolean);
-  const containerIds = flatten(
-    getByPathWithDefault([], 'orderItems', order).map(item =>
-      getByPathWithDefault([], 'batches', item).map(batch =>
-        getByPathWithDefault('', 'container.id', batch)
-      )
-    )
-  ).filter(Boolean);
-  const shipmentIds = flatten(
-    getByPathWithDefault([], 'orderItems', order).map(item =>
-      getByPathWithDefault([], 'batches', item).map(batch =>
-        getByPathWithDefault('', 'shipment.id', batch)
-      )
-    )
-  ).filter(Boolean);
-  const isTargetedAnyBatches = batchIds.some(batchId =>
-    state.targets.includes(`${BATCH}-${batchId}`)
+  const itemIds = (shipment?.batches ?? []).map(batch => batch.orderItem?.id).filter(Boolean);
+  const orderIds = (shipment?.batches ?? [])
+    .map(batch => batch.orderItem?.order?.id)
+    .filter(Boolean);
+  const isTargetedAnyItems = itemIds.some(itemId =>
+    state.targets.includes(`${ORDER_ITEM}-${itemId}`)
   );
-  const isTargetedAnyContainers = containerIds.some(containerId =>
-    state.targets.includes(`${CONTAINER}-${containerId}`)
-  );
-  const isTargetedAnyShipments = shipmentIds.some(batchId =>
-    state.targets.includes(`${SHIPMENT}-${batchId}`)
+  const orders = [
+    ...new Set((shipment?.batches ?? []).map(batch => batch.orderItem?.order).filter(Boolean)),
+  ];
+  const isTargetedAnyOrders = orderIds.some(orderId =>
+    state.targets.includes(`${ORDER}-${orderId}`)
   );
   const beforeLine = {
-    isTargeted: containerCount
-      ? isTargetedAnyContainers && isTargetedAnyShipments
-      : isTargetedAnyBatches && isTargetedAnyShipments,
-    hasRelation: containerCount
-      ? isTargetedAnyContainers && isTargetedAnyShipments
-      : isTargetedAnyBatches && isTargetedAnyShipments,
+    isTargeted: isTargetedAnyItems && isTargetedAnyOrders,
+    hasRelation: isTargetedAnyItems,
   };
-  const isMatched = shipmentIds.some(
-    itemId => matches.entity && matches.entity[`${itemId}-${SHIPMENT}`]
-  );
+  const isMatched = orderIds.some(itemId => matches.entity && matches.entity[`${itemId}-${ORDER}`]);
+  const orderCount = shipment?.orderCount ?? 0;
   return (
     <>
       <div className={ContentStyle}>
@@ -2124,99 +2035,49 @@ function ShipmentSummaryCell({
           />
         )}
       </div>
+      {orderIds.length ? (
+        <CellWrapper isExpandedHeading={isExpand}>
+          <OrderHeading
+            orders={orders}
+            hasSelectedChildren={isTargetedAnyOrders}
+            hasFilterHits={isMatched}
+            isExpanded={isExpand}
+            onClick={onClick}
+            total={orderCount}
+            onSelectAll={() => {
+              const targets = [];
+              orderIds.forEach(id => targets.push(`${ORDER}-${id}`));
 
-      {(() => {
-        const total = getByPathWithDefault(0, 'shipmentCount', data);
-        if (total) {
-          return (
-            <CellWrapper isExpandedHeading={isExpand}>
-              <ShipmentHeading
-                shipments={data?.shipments || []}
-                hasSelectedChildren={isTargetedAnyShipments}
-                hasFilterHits={isMatched}
-                isExpanded={isExpand}
-                onClick={onClick}
-                total={data?.shipmentCount || 0}
-                onSelectAll={() => {
-                  const targets = [];
-
-                  shipmentIds.forEach(id => targets.push(`${SHIPMENT}-${id}`));
-
-                  dispatch({
-                    type: 'TARGET_ALL',
-                    payload: {
-                      targets,
-                    },
-                  });
-                }}
-              />
-            </CellWrapper>
-          );
-        }
-
-        return <div style={{ width: SHIPMENT_WIDTH }} className={ContentStyle} />;
-      })()}
+              dispatch({
+                type: 'TARGET_ALL',
+                payload: {
+                  targets,
+                },
+              });
+            }}
+          />
+        </CellWrapper>
+      ) : (
+        <div style={{ width: ORDER_WIDTH }} className={ContentStyle} />
+      )}
 
       <div className={ContentStyle} />
     </>
   );
 }
 
-function DuplicateOrderCell({
-  data,
-  // $FlowIssue: doesn't support to access to child yet
-  order,
+function DuplicateShipmentCell({
+  // $FlowIgnore: does not support
+  shipment,
   beforeConnector,
   afterConnector,
-}: CellProps & { order: OrderPayload }) {
+}: CellProps & { shipment: ?ShipmentPayload }) {
   const { state } = FocusedView.useContainer();
-  const { getRelatedBy } = Entities.useContainer();
-  const { getItemsSortByOrderId } = ClientSorts.useContainer();
-  const orderId = order?.id;
-  const itemPosition = data?.itemPosition ?? 0;
-  const batchPosition = data?.batchPosition ?? 0;
-  const originalItems = order?.orderItems ?? [];
-  const items = getItemsSortByOrderId({ id: orderId, orderItems: originalItems, getRelatedBy });
-  const itemList = [];
-  if (items.length !== originalItems.length) {
-    items.forEach(itemId => {
-      if (!itemList.includes(itemId)) {
-        const relatedItems = getRelatedBy('orderItem', itemId);
-        itemList.push(itemId);
-        if (relatedItems.length) {
-          itemList.push(...relatedItems);
-        }
-      }
-    });
-    originalItems
-      .map(item => item.id)
-      .forEach(itemId => {
-        if (!itemList.includes(itemId)) {
-          const relatedItems = getRelatedBy('orderItem', itemId);
-          itemList.push(itemId);
-          if (relatedItems.length) {
-            itemList.push(...relatedItems);
-          }
-        }
-      });
-  } else {
-    itemList.push(...items);
-  }
-
-  let foundPosition = -1;
-  for (let index = itemList.length - 1; index > 0; index -= 1) {
-    const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${itemList[index]}`);
-    if (isTargetedItem) {
-      foundPosition = index;
-      break;
-    }
-  }
-  const isTargetedOrder = state.targets.includes(`${ORDER}-${orderId}`);
+  const shipmentId = shipment?.id;
+  const isTargetedShipment = state.targets.includes(`${SHIPMENT}-${shipmentId}`);
 
   const connector = {
-    isTargeted:
-      isTargetedOrder &&
-      (foundPosition > itemPosition || (batchPosition === 0 && foundPosition === itemPosition)),
+    isTargeted: isTargetedShipment,
     hasRelation: false,
   };
   return (
@@ -2233,7 +2094,7 @@ function DuplicateOrderCell({
 
       <div
         style={{
-          width: ORDER_WIDTH,
+          width: SHIPMENT_WIDTH + 150,
         }}
         className={ContentStyle}
       />
@@ -2251,7 +2112,8 @@ function DuplicateOrderCell({
   );
 }
 
-function DuplicateOrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
+// TODO: fix the card
+function DuplicateContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
   const { state } = FocusedView.useContainer();
   const { getRelatedBy } = Entities.useContainer();
   const { getBatchesSortByItemId } = ClientSorts.useContainer();
@@ -2293,7 +2155,7 @@ function DuplicateOrderItemCell({ data, beforeConnector, afterConnector }: CellP
 
       <div
         style={{
-          width: ORDER_ITEM_WIDTH,
+          width: CONTAINER_WIDTH,
         }}
         className={ContentStyle}
       />
@@ -2316,11 +2178,11 @@ const cellRenderer = (
   {
     onClick,
     isExpand,
-    order,
+    shipment,
   }: {
     onClick: Function,
     isExpand: boolean,
-    order: OrderPayload,
+    shipment: ShipmentPayload,
   }
 ) => {
   if (!cell)
@@ -2328,7 +2190,6 @@ const cellRenderer = (
       <div
         style={{
           display: 'flex',
-          width: ORDER_WIDTH + 20,
         }}
         key={uuid()}
       >
@@ -2343,17 +2204,44 @@ const cellRenderer = (
     case 'placeholder': {
       const color = getColorByEntity(entity);
       const icon = getIconByEntity(entity);
-      const PlaceHolder = React.Fragment;
       content = (
         <div className={ContentStyle}>
           <BaseCard icon={icon} color={color}>
-            <PlaceHolder>
-              <LoadingIcon />
-            </PlaceHolder>
+            <LoadingIcon />
           </BaseCard>
         </div>
       );
       break;
+    }
+    case 'shipmentPlaceholder': {
+      return (
+        <div
+          style={{
+            display: 'flex',
+            width: SHIPMENT_WIDTH + 170,
+          }}
+          key={uuid()}
+        >
+          <div className={ContentStyle} />
+          <div className={ContentStyle} />
+          <div className={ContentStyle} />
+        </div>
+      );
+    }
+    case 'containerPlaceholder': {
+      return (
+        <div
+          style={{
+            display: 'flex',
+            width: CONTAINER_WIDTH + 40,
+          }}
+          key={uuid()}
+        >
+          <div className={ContentStyle} />
+          <div className={ContentStyle} />
+          <div className={ContentStyle} />
+        </div>
+      );
     }
     case ORDER: {
       content = (
@@ -2365,7 +2253,7 @@ const cellRenderer = (
       content = (
         <OrderItemCell
           data={data}
-          order={order}
+          shipment={shipment}
           beforeConnector={beforeConnector}
           afterConnector={afterConnector}
         />
@@ -2376,7 +2264,7 @@ const cellRenderer = (
       content = (
         <BatchCell
           data={data}
-          order={order}
+          shipment={shipment}
           beforeConnector={beforeConnector}
           afterConnector={afterConnector}
         />
@@ -2387,6 +2275,7 @@ const cellRenderer = (
       content = (
         <ContainerCell
           data={data}
+          shipment={shipment}
           beforeConnector={beforeConnector}
           afterConnector={afterConnector}
         />
@@ -2397,6 +2286,7 @@ const cellRenderer = (
       content = (
         <ShipmentCell
           data={data}
+          shipment={shipment}
           beforeConnector={beforeConnector}
           afterConnector={afterConnector}
         />
@@ -2429,7 +2319,7 @@ const cellRenderer = (
       content = (
         <BatchSummaryCell
           data={data}
-          order={order}
+          shipment={shipment}
           onClick={onClick}
           isExpand={isExpand}
           beforeConnector={beforeConnector}
@@ -2442,7 +2332,7 @@ const cellRenderer = (
       content = (
         <ContainerSummaryCell
           data={data}
-          order={order}
+          shipment={shipment}
           onClick={onClick}
           isExpand={isExpand}
           beforeConnector={beforeConnector}
@@ -2451,11 +2341,11 @@ const cellRenderer = (
       );
       break;
     }
-    case 'shipmentSummary': {
+    case 'orderSummary': {
       content = (
-        <ShipmentSummaryCell
+        <OrderSummaryCell
           data={data}
-          order={order}
+          shipment={shipment}
           onClick={onClick}
           isExpand={isExpand}
           beforeConnector={beforeConnector}
@@ -2464,22 +2354,22 @@ const cellRenderer = (
 
       break;
     }
-    case 'duplicateOrder': {
+    case 'duplicateShipment': {
       content = (
-        <DuplicateOrderCell
+        <DuplicateShipmentCell
           data={data}
-          order={order}
+          shipment={shipment}
           beforeConnector={beforeConnector}
           afterConnector={afterConnector}
         />
       );
       break;
     }
-    case 'duplicateOrderItem': {
+    case 'duplicateContainer': {
       content = (
-        <DuplicateOrderItemCell
+        <DuplicateContainerCell
           data={data}
-          order={order}
+          shipment={shipment}
           beforeConnector={beforeConnector}
           afterConnector={afterConnector}
         />

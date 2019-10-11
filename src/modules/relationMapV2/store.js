@@ -8,9 +8,16 @@ import update from 'immutability-helper';
 import produce from 'immer';
 import { isEquals } from 'utils/fp';
 import usePersistFilter from 'hooks/usePersistFilter';
-import { ORDER, ORDER_ITEM, BATCH, CARGO_READY } from 'modules/relationMapV2/constants';
+import {
+  ORDER,
+  ORDER_ITEM,
+  BATCH,
+  CONTAINER,
+  SHIPMENT,
+  CARGO_READY,
+} from 'modules/relationMapV2/constants';
 import { normalizeEntity } from 'modules/relationMapV2/components/OrderFocus/normalize';
-import { sortOrderItemBy, sortBatchBy } from './sort';
+import { sortOrderItemBy, sortBatchBy, sortContainerBy } from './sort';
 import type { State } from './type.js.flow';
 
 const defaultState = [];
@@ -320,7 +327,8 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
         }
         if (type === 'batch') {
           (order?.orderItems ?? []).forEach(orderItem => {
-            batchesSort.current[orderItem.id] = sortBatchBy(
+            const sortId = `${orderItem.id}-${ORDER_ITEM}`;
+            batchesSort.current[sortId] = sortBatchBy(
               orderItem?.batches ?? [],
               filters.batch?.sort ?? {
                 field: 'updatedAt',
@@ -334,7 +342,7 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
       });
       shipments.forEach((shipment: Object) => {
         if (type === 'container') {
-          containersSort.current[shipment.id] = sortOrderItemBy(
+          containersSort.current[shipment.id] = sortContainerBy(
             shipment?.containers ?? [],
             filters.container?.sort ?? {
               field: 'updatedAt',
@@ -343,6 +351,35 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
           )
             .map((container: Object) => container?.id ?? '')
             .filter(Boolean);
+        }
+        if (type === 'batch') {
+          const batches = shipment?.batches ?? [];
+          const containers = shipment?.containers ?? [];
+          const batchesWithoutContainers = batches.filter(batch => !batch?.container);
+          const batchesWithContainers = batches.filter(batch => !!batch?.container);
+          const sortId = `${shipment.id}-${SHIPMENT}`;
+          batchesSort.current[sortId] = sortBatchBy(
+            batchesWithoutContainers,
+            filters.batch?.sort ?? {
+              field: 'updatedAt',
+              direction: 'DESCENDING',
+            }
+          )
+            .map((batch: Object) => batch?.id ?? '')
+            .filter(Boolean);
+
+          containers.forEach(container => {
+            const containerSortId = `${container.id}-${CONTAINER}`;
+            batchesSort.current[containerSortId] = sortBatchBy(
+              batchesWithContainers.filter(batch => batch.container?.id === container.id),
+              filters.batch?.sort ?? {
+                field: 'updatedAt',
+                direction: 'DESCENDING',
+              }
+            )
+              .map((batch: Object) => batch?.id ?? '')
+              .filter(Boolean);
+          });
         }
       });
     },
@@ -420,22 +457,74 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     return ids;
   };
 
-  const getBatchesSortByItemId = ({
+  const getContainersSortByShipmentId = ({
     id,
+    containers,
+    getRelatedBy,
+  }: {|
+    id: string,
+    containers: Array<Object>,
+    getRelatedBy: Function,
+  |}): Array<string> => {
+    if (!containersSort.current[id]) {
+      containersSort.current[id] = sortContainerBy(containers, filterAndSort.container.sort)
+        .map((item: Object) => item?.id ?? '')
+        .filter(Boolean);
+    }
+
+    const sorted = containersSort.current?.[id] ?? [];
+
+    // check a case if that was removed from cached sort
+    const containerIds = containers.map(container => container.id);
+    const validIds = sorted.filter(containerId => containerIds.includes(containerId));
+
+    // find related
+    const ids = [];
+    validIds.forEach(itemId => {
+      ids.push(itemId);
+      const relatedIds = getRelatedBy('container', itemId);
+      relatedIds.forEach(currentId => {
+        if (!ids.includes(currentId) && !validIds.includes(currentId)) {
+          ids.push(currentId);
+        }
+      });
+    });
+
+    containers.forEach(container => {
+      if (!ids.includes(container?.id) && container?.id) {
+        const containerId = container?.id;
+        ids.push(containerId);
+        const relatedIds = getRelatedBy('container', containerId);
+        relatedIds.forEach(currentId => {
+          if (!ids.includes(currentId) && !validIds.includes(currentId)) {
+            ids.push(currentId);
+          }
+        });
+      }
+    });
+
+    return ids;
+  };
+
+  const getBatchesSortBy = ({
+    id,
+    type,
     batches,
     getRelatedBy,
   }: {|
     id: string,
+    type: string,
     batches: Array<Object>,
     getRelatedBy: Function,
   |}): Array<string> => {
-    if (!batchesSort.current?.[id]) {
-      batchesSort.current[id] = sortBatchBy(batches, filterAndSort.batch.sort)
+    const sortId = `${id}-${type}`;
+    if (!batchesSort.current?.[sortId]) {
+      batchesSort.current[sortId] = sortBatchBy(batches, filterAndSort.batch.sort)
         .map((batch: Object) => batch?.id ?? '')
         .filter(Boolean);
     }
 
-    const sorted = batchesSort.current?.[id] ?? [];
+    const sorted = batchesSort.current?.[sortId] ?? [];
     // check a case if that was removed from cached sort
     const batchIds = batches.map(batch => batch.id);
     const validIds = sorted.filter(batchId => batchIds.includes(batchId));
@@ -468,6 +557,57 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     return ids;
   };
 
+  const getBatchesSortByItemId = ({
+    id,
+    batches,
+    getRelatedBy,
+  }: {|
+    id: string,
+    batches: Array<Object>,
+    getRelatedBy: Function,
+  |}): Array<string> => {
+    return getBatchesSortBy({
+      id,
+      batches,
+      getRelatedBy,
+      type: ORDER_ITEM,
+    });
+  };
+
+  const getBatchesSortByShipmentId = ({
+    id,
+    batches,
+    getRelatedBy,
+  }: {|
+    id: string,
+    batches: Array<Object>,
+    getRelatedBy: Function,
+  |}): Array<string> => {
+    return getBatchesSortBy({
+      id,
+      batches,
+      getRelatedBy,
+      type: SHIPMENT,
+    });
+  };
+
+  const getBatchesSortByContainerId = ({
+    id,
+    batches,
+    getRelatedBy,
+  }: {|
+    id: string,
+    batches: Array<Object>,
+    getRelatedBy: Function,
+  |}): Array<string> => {
+    return getBatchesSortBy({
+      id,
+      batches,
+      getRelatedBy,
+      type: CONTAINER,
+    });
+  };
+
   useEffect(() => {
     if (window.localStorage) {
       window.localStorage.setItem(cacheKey, JSON.stringify(filterAndSort));
@@ -479,6 +619,9 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     onChangeFilter,
     getItemsSortByOrderId,
     getBatchesSortByItemId,
+    getContainersSortByShipmentId,
+    getBatchesSortByContainerId,
+    getBatchesSortByShipmentId,
     onLocalSort,
   };
 }
@@ -618,9 +761,11 @@ function orderReducer(
   action: {
     // prettier-ignore
     type: | 'NEW_ORDER'
+      | 'NEW_SHIPMENT'
       | 'RESET_NEW_ORDERS'
       | 'RESET_NEW_SHIPMENTS'
       | 'FETCH_ORDERS'
+      | 'FETCH_SHIPMENTS'
       | 'TARGET'
       | 'TARGET_ALL'
       | 'TARGET_TREE'
@@ -691,6 +836,7 @@ function orderReducer(
       entity?: string,
       targets?: Array<string>,
       orders?: Array<Order>,
+      shipments?: Array<Shipment>,
       orderUpdate?: Order,
       batch?: Batch,
       orderItemUpdate?: OrderItem,
@@ -705,6 +851,12 @@ function orderReducer(
       return update(state, {
         newOrders: {
           $set: [action.payload.orderId, ...state.newOrders],
+        },
+      });
+    case 'NEW_SHIPMENT':
+      return update(state, {
+        newShipments: {
+          $set: [action.payload.shipmentId, ...state.newShipments],
         },
       });
     case 'RESET_NEW_ORDERS':
@@ -725,6 +877,16 @@ function orderReducer(
         orders.forEach(order => {
           if (order.id) {
             draft.order[order.id] = order;
+          }
+        });
+      });
+    }
+    case 'FETCH_SHIPMENTS': {
+      return produce(state, draft => {
+        const { shipments = [] } = action.payload;
+        shipments.forEach(shipment => {
+          if (shipment.id) {
+            draft.shipment[shipment.id] = shipment;
           }
         });
       });

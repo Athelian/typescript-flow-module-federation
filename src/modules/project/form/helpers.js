@@ -4,6 +4,7 @@ import type { Task } from 'generated/graphql';
 import memoize from 'memoize-one';
 import { comparator, sort } from 'ramda';
 import { getByPathWithDefault } from 'utils/fp';
+import type { SortDirection } from 'types';
 
 export const EstimatedCompletionDateContext = React.createContext<Array<string>>([]);
 
@@ -15,8 +16,6 @@ export type SortField =
   | 'startDate'
   | 'dueDate'
   | 'entity';
-
-export type SortDirection = 'ASCENDING' | 'DESCENDING';
 
 export const ENTITIES = [
   'Order',

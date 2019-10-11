@@ -7,7 +7,7 @@ import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import TaskRing from 'components/TaskRing';
 import { Display, Blackout, Label } from 'components/Form';
-import { useHasPermissions } from 'components/Context/Permissions';
+import { useHasPermissions } from 'contexts/Permissions';
 import { BATCH_DELETE } from 'modules/permission/constants/batch';
 import {
   BatchCardWrapperStyle,

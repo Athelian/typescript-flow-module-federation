@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
-
-export type SortDirection = 'ASCENDING' | 'DESCENDING';
+import type { SortDirection } from 'types';
 
 export type ColumnSortConfig = {
   local?: boolean,

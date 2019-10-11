@@ -118,4 +118,12 @@ export default defineMessages({
     id: 'components.NavBar.Filter.notCompletelyShipped',
     defaultMessage: 'Not Fully Shipped',
   },
+  hasShipment: {
+    id: 'components.NavBar.Filter.hasShipment',
+    defaultMessage: 'Has Shipment',
+  },
+  hasNotShipment: {
+    id: 'components.NavBar.Filter.hasNotShipment',
+    defaultMessage: 'Has Not Shipment',
+  },
 });

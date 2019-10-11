@@ -1,49 +1,61 @@
 // @flow
 import * as React from 'react';
 
-export type Offset = {
-  top: number,
-  left: number,
-};
-
+/**
+ * TODO: Should listen scroll only from the closest scrollable parent
+ */
 export default function useFixedCompanion(
   ref: { current: HTMLElement | null },
-  side: 'bottom' | 'right' = 'bottom'
-): Offset {
-  const [offset, setOffset] = React.useState<Offset>({ top: 0, left: 0 });
+  horizontal: 'top' | 'bottom' = 'bottom',
+  vertical: 'right' | 'left' = 'right'
+): Object {
+  const [style, setStyle] = React.useState<Object>({
+    position: 'fixed',
+  });
 
-  const computeOffset = React.useCallback(() => {
+  const computeStyle = React.useCallback(() => {
     if (!ref.current) {
       return;
     }
 
     const viewportOffset: ClientRect = ref.current.getBoundingClientRect();
 
-    switch (side) {
-      case 'bottom':
-        setOffset({
-          top: viewportOffset.top + viewportOffset.height,
-          left: viewportOffset.left,
-        });
+    let newStyle = {
+      position: 'fixed',
+    };
+
+    switch (horizontal) {
+      case 'top':
+        newStyle = { ...newStyle, bottom: viewportOffset.top };
         break;
-      case 'right':
-        setOffset({
-          top: viewportOffset.top,
-          left: viewportOffset.left + viewportOffset.width,
-        });
+      case 'bottom':
+        newStyle = { ...newStyle, top: viewportOffset.top + viewportOffset.height };
         break;
       default:
         break;
     }
-  }, [ref, side]);
+
+    switch (vertical) {
+      case 'right':
+        newStyle = { ...newStyle, left: viewportOffset.left };
+        break;
+      case 'left':
+        newStyle = { ...newStyle, right: viewportOffset.right };
+        break;
+      default:
+        break;
+    }
+
+    setStyle(newStyle);
+  }, [ref, horizontal, vertical]);
 
   React.useEffect(() => {
-    computeOffset();
+    computeStyle();
     const opts = { capture: false, passive: true };
-    document.addEventListener('wheel', computeOffset, opts);
+    document.addEventListener('wheel', computeStyle, opts);
 
-    return () => document.removeEventListener('wheel', computeOffset, opts);
-  }, [computeOffset]);
+    return () => document.removeEventListener('wheel', computeStyle, opts);
+  }, [computeStyle]);
 
-  return offset;
+  return style;
 }

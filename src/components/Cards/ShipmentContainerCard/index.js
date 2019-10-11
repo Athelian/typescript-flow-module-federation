@@ -23,7 +23,7 @@ import {
   EnumSelectInputFactory,
 } from 'components/Form';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
-import { UserConsumer } from 'components/Context/Viewer';
+import { UserConsumer } from 'contexts/Viewer';
 import { calculateDueDate } from 'utils/date';
 import { calculateContainerTotalVolume } from 'modules/container/utils';
 import validator from './validator';

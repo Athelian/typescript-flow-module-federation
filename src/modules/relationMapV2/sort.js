@@ -1,7 +1,8 @@
 // @flow
-import type { OrderItemPayload, BatchPayload } from 'generated/graphql';
+import type { OrderItemPayload, BatchPayload, ContainerPayload } from 'generated/graphql';
 import { comparator, sort } from 'ramda';
 import { getByPathWithDefault } from 'utils/fp';
+import type { SortDirection } from 'types';
 
 export type BatchSortField =
   | 'updatedAt'
@@ -21,7 +22,12 @@ export type ItemSortField =
   | 'productProviderName'
   | 'supplierName';
 
-export type SortDirection = 'ASCENDING' | 'DESCENDING';
+export type ContainerSortField =
+  | 'updatedAt'
+  | 'createdAt'
+  | 'warehouseName'
+  | 'warehouseArrivalActualDate'
+  | 'warehouseArrivalAgreedDate';
 
 function compareByGeneric(firstNumber: any, secondNumber: any) {
   return firstNumber < secondNumber;
@@ -201,6 +207,65 @@ export function sortOrderItemBy(
   }
 
   const result = sort(compareBy, orderItems);
+
+  return result;
+}
+
+export function sortContainerBy(
+  containers: Array<ContainerPayload>,
+  { field, direction }: { field: ContainerSortField | string, direction: SortDirection | string }
+) {
+  let compareBy;
+  switch (field) {
+    case 'warehouseArrivalActualDate':
+    case 'warehouseArrivalAgreedDate':
+    case 'createdAt':
+    case 'updatedAt': {
+      compareBy = comparator((firstItem, secondItem) =>
+        direction === 'DESCENDING'
+          ? !compareByGeneric(
+              getByPathWithDefault(0, field, firstItem),
+              getByPathWithDefault(0, field, secondItem)
+            )
+          : compareByGeneric(
+              getByPathWithDefault(0, field, firstItem),
+              getByPathWithDefault(0, field, secondItem)
+            )
+      );
+      break;
+    }
+
+    case 'warehouseName': {
+      compareBy = comparator((firstItem, secondItem) =>
+        direction === 'DESCENDING'
+          ? !compareByName(
+              getByPathWithDefault('', 'warehouse.name', firstItem),
+              getByPathWithDefault('', 'warehouse.name', secondItem)
+            )
+          : compareByName(
+              getByPathWithDefault('', 'warehouse.name', firstItem),
+              getByPathWithDefault('', 'warehouse.name', secondItem)
+            )
+      );
+      break;
+    }
+
+    default: {
+      compareBy = comparator((firstItem, secondItem) =>
+        direction === 'DESCENDING'
+          ? !compareByGeneric(
+              getByPathWithDefault(0, 'id', firstItem),
+              getByPathWithDefault(0, 'id', secondItem)
+            )
+          : compareByGeneric(
+              getByPathWithDefault(0, 'id', firstItem),
+              getByPathWithDefault(0, 'id', secondItem)
+            )
+      );
+    }
+  }
+
+  const result = sort(compareBy, containers);
 
   return result;
 }

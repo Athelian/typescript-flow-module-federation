@@ -1,11 +1,12 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage, injectIntl, type IntlShape, type MessageDescriptor } from 'react-intl';
+import { FormattedMessage, type MessageDescriptor, useIntl } from 'react-intl';
 import Dialog from 'components/Dialog';
 import Icon from 'components/Icon';
 import { Tooltip } from 'components/Tooltip';
 import { BaseButton, SaveButton, ResetButton } from 'components/Buttons';
 import { DefaultOptions, DefaultSelect, SelectInput, Label, Display } from 'components/Form';
+import type { FilterBy } from 'types';
 import Archived from './Inputs/Archived';
 import DateRange from './Inputs/DateRange';
 import { VolumeRange, AreaRange, LengthRange, MassRange } from './Inputs/MetricRange';
@@ -14,7 +15,7 @@ import Users from './Inputs/Users';
 import OrganizationTypes from './Inputs/OrganizationTypes';
 import OrderIds from './Inputs/OrderIds';
 import WarehouseIds from './Inputs/WarehouseIds';
-import { CompletelyBatched, CompletelyShipped } from './Inputs/Bool';
+import { CompletelyBatched, CompletelyShipped, HasShipment } from './Inputs/Bool';
 import {
   ImporterIds,
   ExporterIds,
@@ -62,14 +63,11 @@ type FilterState = {
   value: any,
 };
 
-type Filters = { [string]: any };
-
 type Props = {
   config: Array<FilterConfig>,
-  filters: Filters,
+  filterBy: FilterBy,
   staticFilters?: Array<string>,
-  onChange: Filters => void,
-  intl: IntlShape,
+  onChange: FilterBy => void,
 };
 
 const inputs = {
@@ -99,10 +97,14 @@ const inputs = {
   organization_types: OrganizationTypes,
   completely_batched: CompletelyBatched,
   completely_shipped: CompletelyShipped,
+  has_shipment: HasShipment,
   ports: Ports,
 };
 
-const computeFilterStates = (config: Array<FilterConfig>, filters: Filters): Array<FilterState> => {
+const computeFilterStates = (
+  config: Array<FilterConfig>,
+  filters: FilterBy
+): Array<FilterState> => {
   return Object.keys(filters).map(field => {
     return {
       ...config.find(c => c.field === field),
@@ -126,15 +128,16 @@ const cleanFilterStates = (filters: Array<FilterState>): Array<FilterState> =>
       }
     });
 
-const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
+const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
+  const intl = useIntl();
   const buttonRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
 
   const [filterStates, setFilterStates] = React.useState<Array<FilterState>>([]);
 
   React.useEffect(() => {
-    setFilterStates(computeFilterStates(config, filters));
-  }, [config, filters, open]);
+    setFilterStates(computeFilterStates(config, filterBy));
+  }, [config, filterBy, open]);
 
   const onSave = () => {
     const states = cleanFilterStates(filterStates);
@@ -154,7 +157,7 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
   };
 
   const onReset = () => {
-    setFilterStates(computeFilterStates(config, filters));
+    setFilterStates(computeFilterStates(config, filterBy));
   };
 
   const onClearAll = () => {
@@ -436,4 +439,4 @@ const Filter = ({ config, filters, staticFilters, onChange, intl }: Props) => {
   );
 };
 
-export default injectIntl(Filter);
+export default Filter;

@@ -36,11 +36,12 @@ const Row = React.memo<Props>(({ index, style, data }: Props) => {
   }
   return (
     <div className={RowStyle} style={style}>
-      {cells.map(({ cell, order, onClick, isExpand }) =>
+      {cells.map(({ cell, order, shipment, onClick, isExpand }) =>
         render(cell, {
           onClick,
           isExpand,
           order,
+          shipment,
         })
       )}
     </div>

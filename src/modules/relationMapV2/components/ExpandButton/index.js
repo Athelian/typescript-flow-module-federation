@@ -3,18 +3,26 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
-import { ExpandRows, Entities } from 'modules/relationMapV2/store';
+import { ExpandRows, Entities, FocusedView } from 'modules/relationMapV2/store';
 import { ExpandButtonStyle } from './style';
 
 export default function ExpandButton() {
+  const { selectors } = FocusedView.useContainer();
   const { expandRows, setExpandRows } = ExpandRows.useContainer();
   const { mapping } = Entities.useContainer();
   const orderIds = Object.keys(mapping.entities?.orders ?? {}).filter(
     id => mapping.entities?.orders?.[id]?.orderItemCount
   );
+  const shipmentIds = Object.keys(mapping.entities?.shipments ?? {}).filter(
+    id =>
+      mapping.entities?.shipments?.[id]?.containerCount ||
+      mapping.entities?.shipments?.[id]?.batchCount
+  );
 
   const allIsExpanded =
-    expandRows.length > 0 && orderIds.length > 0 && expandRows.length === orderIds.length;
+    expandRows.length > 0 && selectors.isShipmentFocus
+      ? shipmentIds.length > 0 && expandRows.length === shipmentIds.length
+      : orderIds.length > 0 && expandRows.length === orderIds.length;
 
   return (
     <Tooltip
@@ -38,7 +46,7 @@ export default function ExpandButton() {
           if (allIsExpanded) {
             setExpandRows([]);
           } else {
-            setExpandRows(orderIds);
+            setExpandRows(selectors.isShipmentFocus ? shipmentIds : orderIds);
           }
         }}
         className={ExpandButtonStyle(allIsExpanded)}

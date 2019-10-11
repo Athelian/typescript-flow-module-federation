@@ -1,5 +1,5 @@
 // @flow
-import { useAuthorizedViewer } from 'components/Context/Viewer';
+import { useAuthorizedViewer } from 'contexts/Viewer';
 
 const useUser = () => {
   const { user, organization } = useAuthorizedViewer();

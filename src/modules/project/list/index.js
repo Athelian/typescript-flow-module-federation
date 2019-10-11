@@ -4,13 +4,13 @@ import { Query } from 'react-apollo';
 import logger from 'utils/logger';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault } from 'utils/fp';
+import type { FilterBy, SortBy } from 'types';
 import { projectListQuery } from './query';
 import ProjectGridView from './ProjectGridView';
 
 type Props = {
-  sortBy: {
-    [field: string]: string,
-  },
+  filterBy: FilterBy,
+  sortBy: SortBy,
   perPage: number,
 };
 
