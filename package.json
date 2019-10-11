@@ -31,7 +31,6 @@
     "emotion": "^9.2.12",
     "fbemitter": "^2.1.1",
     "firebase": "^7.1.0",
-    "focus-trap-react": "^6.0.0",
     "fontfaceobserver": "^2.1.0",
     "fuse.js": "^3.4.5",
     "graphql": "^14.5.8",
