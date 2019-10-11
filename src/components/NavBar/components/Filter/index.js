@@ -14,7 +14,7 @@ import Users from './Inputs/Users';
 import OrganizationTypes from './Inputs/OrganizationTypes';
 import OrderIds from './Inputs/OrderIds';
 import WarehouseIds from './Inputs/WarehouseIds';
-import { CompletelyBatched, CompletelyShipped } from './Inputs/Bool';
+import { CompletelyBatched, CompletelyShipped, HasShipment } from './Inputs/Bool';
 import {
   ImporterIds,
   ExporterIds,
@@ -96,6 +96,7 @@ const inputs = {
   organization_types: OrganizationTypes,
   completely_batched: CompletelyBatched,
   completely_shipped: CompletelyShipped,
+  has_shipment: HasShipment,
   ports: Ports,
 };
 

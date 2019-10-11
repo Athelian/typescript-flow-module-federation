@@ -1,67 +1,37 @@
 // @flow
 import * as React from 'react';
-import { injectIntl } from 'react-intl';
-import type { IntlShape } from 'react-intl';
-import useFilter from 'hooks/useFilter';
-import FilterToolBar from 'components/common/FilterToolBar';
 import { Content } from 'components/Layout';
-import { NavBar } from 'components/NavBar';
+import {
+  EntityIcon,
+  Filter,
+  NavBar,
+  BatchFilterConfig,
+  BatchSortConfig,
+  Search,
+  Sort,
+} from 'components/NavBar';
+import useFilterSort from 'hooks/useFilterSort';
 import BatchList from './list';
-import messages from './messages';
 
-type Props = {
-  intl: IntlShape,
-};
-
-const getInitFilter = () => {
-  const state = {
-    filter: {
-      query: '',
-      archived: false,
-    },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-    perPage: 10,
-    page: 1,
-  };
-  return state;
-};
-
-const BatchListModule = (props: Props) => {
-  const { intl } = props;
-
-  const sortFields = [
-    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-    { title: intl.formatMessage(messages.batchNo), value: 'no' },
-    { title: intl.formatMessage(messages.poNo), value: 'poNo' },
-    { title: intl.formatMessage(messages.productName), value: 'productName' },
-    { title: intl.formatMessage(messages.productSerial), value: 'productSerial' },
-    { title: intl.formatMessage(messages.deliveredAt), value: 'deliveredAt' },
-    { title: intl.formatMessage(messages.expiredAt), value: 'expiredAt' },
-    { title: intl.formatMessage(messages.producedAt), value: 'producedAt' },
-  ];
-  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
-    getInitFilter(),
-    'filterBatch'
+const BatchListModule = () => {
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    { query: '', archived: false },
+    { updatedAt: 'DESCENDING' },
+    'batch_cards'
   );
+
   return (
     <Content>
       <NavBar>
-        <FilterToolBar
-          icon="BATCH"
-          sortFields={sortFields}
-          filtersAndSort={filterAndSort}
-          onChange={onChangeFilter}
-          canArchive
-          canSearch
-        />
+        <EntityIcon icon="BATCH" color="BATCH" subIcon="CARDS" />
+
+        <Filter config={BatchFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
+        <Search query={query} onChange={setQuery} />
+        <Sort config={BatchSortConfig} sortBy={sortBy} onChange={setSortBy} />
       </NavBar>
-      <BatchList {...queryVariables} />
+      <BatchList filterBy={{ query, ...filterBy }} sortBy={sortBy} page={1} perPage={10} />
     </Content>
   );
 };
 
-export default injectIntl(BatchListModule);
+export default BatchListModule;

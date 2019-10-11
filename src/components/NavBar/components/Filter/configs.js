@@ -259,6 +259,65 @@ export const OrderFilterConfig: Array<FilterConfig> = [
   },
 ];
 
+export const BatchFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'BATCH',
+    field: 'archived',
+    type: 'archived',
+    message: batchMessages.status,
+    defaultValue: false,
+  },
+  {
+    entity: 'BATCH',
+    field: 'deliveredAt',
+    type: 'date_range',
+    message: batchMessages.deliveredAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'BATCH',
+    field: 'expiredAt',
+    type: 'date_range',
+    message: batchMessages.expiredAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'BATCH',
+    field: 'producedAt',
+    type: 'date_range',
+    message: batchMessages.producedAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'BATCH',
+    field: 'tagIds',
+    type: 'batch_tags',
+    message: batchMessages.tags,
+    defaultValue: [],
+  },
+  {
+    entity: 'BATCH',
+    field: 'hasShipment',
+    type: 'has_shipment',
+    message: batchMessages.hasShipment,
+    defaultValue: [],
+  },
+  {
+    entity: 'BATCH',
+    field: 'createdAt',
+    type: 'date_range',
+    message: batchMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'BATCH',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: batchMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+];
+
 export const ShipmentFilterConfig: Array<FilterConfig> = [
   {
     entity: 'SHIPMENT',

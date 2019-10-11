@@ -13,12 +13,14 @@ import Tabs from './components/Tabs';
 import LogsButton from './components/LogsButton';
 import {
   OrderFilterConfig,
+  BatchFilterConfig,
   ShipmentFilterConfig,
   WarehouseFilterConfig,
   PartnerFilterConfig,
 } from './components/Filter/configs';
 import {
   OrderSortConfig,
+  BatchSortConfig,
   ShipmentSortConfig,
   WarehouseSortConfig,
   PartnerSortConfig,
@@ -38,10 +40,12 @@ export {
   SectionNavBar,
   LogsButton,
   OrderFilterConfig,
+  BatchFilterConfig,
   ShipmentFilterConfig,
   WarehouseFilterConfig,
   PartnerFilterConfig,
   OrderSortConfig,
+  BatchSortConfig,
   ShipmentSortConfig,
   WarehouseSortConfig,
   PartnerSortConfig,
