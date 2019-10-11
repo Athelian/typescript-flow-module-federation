@@ -13,6 +13,7 @@ import Tabs from './components/Tabs';
 import LogsButton from './components/LogsButton';
 import {
   OrderFilterConfig,
+  OrderItemFilterConfig,
   BatchFilterConfig,
   ShipmentFilterConfig,
   ContainerFilterConfig,
@@ -22,6 +23,7 @@ import {
 } from './components/Filter/configs';
 import {
   OrderSortConfig,
+  OrderItemSortConfig,
   BatchSortConfig,
   ShipmentSortConfig,
   ContainerSortConfig,
@@ -44,6 +46,7 @@ export {
   SectionNavBar,
   LogsButton,
   OrderFilterConfig,
+  OrderItemFilterConfig,
   BatchFilterConfig,
   ShipmentFilterConfig,
   ContainerFilterConfig,
@@ -51,6 +54,7 @@ export {
   PartnerFilterConfig,
   FileFilterConfig,
   OrderSortConfig,
+  OrderItemSortConfig,
   BatchSortConfig,
   ShipmentSortConfig,
   ContainerSortConfig,

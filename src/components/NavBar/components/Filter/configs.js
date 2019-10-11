@@ -1,6 +1,7 @@
 // @flow
 import { defaultVolumeMetric } from 'utils/metric';
 import orderMessages from 'modules/order/messages';
+import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
 import containerMessages from 'modules/container/messages';
@@ -258,6 +259,30 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     type: 'shipment_tags',
     message: shipmentMessages.tags,
     defaultValue: [],
+  },
+];
+
+export const OrderItemFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'ORDER ITEM',
+    field: 'archived',
+    type: 'archived',
+    message: orderItemMessages.status,
+    defaultValue: false,
+  },
+  {
+    entity: 'ORDER ITEM',
+    field: 'createdAt',
+    type: 'date_range',
+    message: orderItemMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'ORDER ITEM',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: orderItemMessages.updatedAt,
+    defaultValue: { after: null, before: null },
   },
 ];
 

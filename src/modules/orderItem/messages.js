@@ -14,6 +14,10 @@ export default defineMessages({
     id: 'modules.OrderItems.active',
     defaultMessage: 'Active',
   },
+  status: {
+    id: 'modules.OrderItems.status',
+    defaultMessage: 'STATUS',
+  },
   newOrderItem: {
     id: 'modules.OrderItems.newOrderItem',
     defaultMessage: 'NEW',
