@@ -13,7 +13,7 @@ import PermissionsProvider from './contexts/Permissions';
 import LanguageProvider from './contexts/Language';
 import ViewerProvider from './contexts/Viewer';
 import UIProvider from './contexts/UI';
-import ListCacheProvider from './contexts/ListCache';
+import { useFilterSortInvalidator } from './hooks/useFilterSort';
 import apolloClient from './apollo';
 import Routes from './routes';
 import loadFonts from './fonts';
@@ -37,6 +37,11 @@ if (!container) {
   throw new Error(`couldn't find element with id root`);
 }
 
+const AppHooks = () => {
+  useFilterSortInvalidator();
+  return null;
+};
+
 const renderApp = (Component, renderFn) => {
   trace('initial render', performance.now(), () =>
     renderFn(
@@ -49,23 +54,21 @@ const renderApp = (Component, renderFn) => {
                 <PermissionsProvider>
                   <LanguageProvider>
                     <UIProvider>
-                      <ListCacheProvider>
-                        <>
-                          {isAppInProduction && (
-                            <DeployNotifier
-                              revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
-                              revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
-                            />
-                          )}
-                          {isEnableStrictMode ? (
-                            <React.StrictMode>
-                              <Component />
-                            </React.StrictMode>
-                          ) : (
-                            <Component />
-                          )}
-                        </>
-                      </ListCacheProvider>
+                      <AppHooks />
+
+                      {isAppInProduction && (
+                        <DeployNotifier
+                          revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
+                          revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
+                        />
+                      )}
+                      {isEnableStrictMode ? (
+                        <React.StrictMode>
+                          <Component />
+                        </React.StrictMode>
+                      ) : (
+                        <Component />
+                      )}
                     </UIProvider>
                   </LanguageProvider>
                 </PermissionsProvider>

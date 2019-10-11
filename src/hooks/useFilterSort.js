@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { useListCache } from 'contexts/ListCache';
+import { useAuthenticated } from 'contexts/Viewer';
 
 type FilterSort = {
   query: string,
@@ -11,21 +11,68 @@ type FilterSort = {
   setSortBy: ({ [string]: 'ASCENDING' | 'DESCENDING' }) => void,
 };
 
+type FilterSortCache = {
+  filterBy: { [string]: any },
+  sortBy: { [string]: 'ASCENDING' | 'DESCENDING' },
+};
+
+const KEY_PREFIX = 'zenport_filter_sort';
+
+function getFilterSortCache(key: string): FilterSortCache | null {
+  const result = window.localStorage.getItem(`${KEY_PREFIX}_${key}`);
+  if (!result) {
+    return null;
+  }
+
+  try {
+    const value = JSON.parse(atob(result));
+    const { filterBy = {}, sortBy = {} } = value;
+    return { filterBy, sortBy };
+  } catch (e) {
+    return null;
+  }
+}
+
+function setFilterSortCache(key: string, { filterBy, sortBy }: FilterSortCache) {
+  window.localStorage.setItem(`${KEY_PREFIX}_${key}`, btoa(JSON.stringify({ filterBy, sortBy })));
+}
+
+export function useFilterSortInvalidator() {
+  const { authenticated } = useAuthenticated();
+
+  React.useEffect(() => {
+    if (authenticated) {
+      return;
+    }
+
+    const cacheKeys = [];
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < window.localStorage.length; i++) {
+      if (window.localStorage.key(i).indexOf(KEY_PREFIX) === 0) {
+        cacheKeys.push(window.localStorage.key(i));
+      }
+    }
+
+    cacheKeys.forEach(window.localStorage.removeItem);
+  }, [authenticated]);
+}
+
 export default function useFilterSort(
   initialFilterBy: { [string]: any },
   initialSortBy: { [string]: 'ASCENDING' | 'DESCENDING' },
-  cacheKey: string
+  cacheKey: ?string = null
 ): FilterSort {
-  const { getListCache, setListCache } = useListCache();
   const [filterBy, setFilterBy] = React.useState<{ [string]: any } | null>(null);
   const [sortBy, setSortBy] = React.useState<{ [string]: 'ASCENDING' | 'DESCENDING' } | null>(null);
 
   function getFilterBy() {
     if (!filterBy) {
-      const cache = getListCache(cacheKey);
-      if (cache) {
-        setFilterBy(cache.filterBy);
-        return cache.filterBy;
+      if (cacheKey) {
+        const cache = getFilterSortCache(cacheKey);
+        if (cache) {
+          setFilterBy(cache.filterBy);
+          return cache.filterBy;
+        }
       }
 
       setFilterBy(initialFilterBy);
@@ -37,10 +84,12 @@ export default function useFilterSort(
 
   function getSortBy() {
     if (!sortBy) {
-      const cache = getListCache(cacheKey);
-      if (cache) {
-        setSortBy(cache.sortBy);
-        return cache.sortBy;
+      if (cacheKey) {
+        const cache = getFilterSortCache(cacheKey);
+        if (cache) {
+          setSortBy(cache.sortBy);
+          return cache.sortBy;
+        }
       }
 
       setSortBy(initialSortBy);
@@ -51,9 +100,13 @@ export default function useFilterSort(
   }
 
   React.useEffect(() => {
+    if (!cacheKey) {
+      return;
+    }
+
     const { query, ...cachableFilterBy } = filterBy;
-    setListCache(cacheKey, { filterBy: cachableFilterBy, sortBy });
-  }, [filterBy, sortBy, cacheKey, setListCache]);
+    setFilterSortCache(cacheKey, { filterBy: cachableFilterBy, sortBy });
+  }, [filterBy, sortBy, cacheKey]);
 
   const currentFilterBy = getFilterBy();
   const [query, filterByWithoutQuery] = React.useMemo(() => {
