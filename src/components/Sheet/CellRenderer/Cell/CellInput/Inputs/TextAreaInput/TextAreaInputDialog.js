@@ -26,7 +26,12 @@ const TextAreaInputDialog = ({ inputRef, value }: Props) => {
           })}
           spellCheck={false}
           onChange={e => setContent(e.target.value)}
-          onKeyDown={e => e.stopPropagation()}
+          onKeyDown={e => {
+            if (e.key === 'Tab') {
+              e.preventDefault();
+            }
+            e.stopPropagation();
+          }}
         />
       </div>
     </div>

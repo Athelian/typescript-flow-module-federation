@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import FocusTrap from 'focus-trap-react';
 import Icon from 'components/Icon';
 import usePortalSlot from 'hooks/usePortalSlot';
 import {
@@ -43,30 +42,28 @@ const DialogRender = ({
   const slot = usePortalSlot();
 
   return ReactDOM.createPortal(
-    <FocusTrap>
+    <div
+      className={isOpen ? BackdropFadeInStyle : BackdropFadeOutStyle}
+      onClick={event => {
+        event.stopPropagation();
+        onRequestClose();
+      }}
+      role="presentation"
+    >
       <div
-        className={isOpen ? BackdropFadeInStyle : BackdropFadeOutStyle}
-        onClick={event => {
-          event.stopPropagation();
-          onRequestClose();
-        }}
+        className={isOpen ? DialogFadeInStyle(width) : DialogFadeOutStyle(width)}
+        onClick={event => event.stopPropagation()}
         role="presentation"
       >
-        <div
-          className={isOpen ? DialogFadeInStyle(width) : DialogFadeOutStyle(width)}
-          onClick={event => event.stopPropagation()}
-          role="presentation"
-        >
-          {showCancelButton && (
-            <button type="button" onClick={onCancel} className={CancelButtonStyle}>
-              <Icon icon="CLEAR" />
-            </button>
-          )}
+        {showCancelButton && (
+          <button type="button" onClick={onCancel} className={CancelButtonStyle}>
+            <Icon icon="CLEAR" />
+          </button>
+        )}
 
-          {children}
-        </div>
+        {children}
       </div>
-    </FocusTrap>,
+    </div>,
     slot
   );
 };

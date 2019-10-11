@@ -10,10 +10,12 @@ type Props = {
   onChange: string => void,
   focus: boolean,
   readonly: boolean,
+  onFocus: Function,
+  onBlur: Function,
   onKeyDown: Function,
 };
 
-const TextInput = ({ value, focus, onChange, readonly, onKeyDown }: Props) => {
+const TextInput = ({ value, focus, onChange, onFocus, onBlur, readonly, onKeyDown }: Props) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const intl = useIntl();
   const inputRef = useRef(null);
@@ -35,21 +37,31 @@ const TextInput = ({ value, focus, onChange, readonly, onKeyDown }: Props) => {
               readOnly
               spellCheck={false}
               value={value}
-              onFocus={() => {
+              onClick={() => {
                 if (!readonly) {
+                  onFocus();
                   setIsOpen(true);
                 }
+              }}
+              onKeyDown={e => {
+                if (!readonly && e.key === 'Enter') {
+                  onFocus();
+                  setIsOpen(true);
+                }
+                e.preventDefault();
+                e.stopPropagation();
               }}
               placeholder={intl.formatMessage({
                 id: 'components.sheet.textarea.placeholder',
                 defaultMessage: 'Please enter a value',
               })}
-              onKeyDown={onKeyDown}
+              onFocus={onFocus}
             />
             <Dialog
               isOpen={isOpen}
               onRequestClose={() => {
                 onChange(inputRef?.current?.value ?? '');
+                onBlur();
                 setIsOpen(false);
               }}
             >

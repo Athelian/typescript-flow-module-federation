@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { fontSizes, colors, borderRadiuses, scrollbars, shadows } from 'styles/common';
+import { fontSizes, colors, borderRadiuses, scrollbars, shadows, transitions } from 'styles/common';
 
 export const DialogStyle: string = css`
   padding: 20px;
@@ -25,14 +25,17 @@ export const TextAreaStyle: string = css`
   ${scrollbars.SMALL};
   overflow-x: hidden;
   overflow-y: auto;
-
+  ${transitions.MAIN};
+  color: ${colors.BLACK};
   ${fontSizes.MAIN};
+  font-weight: bold;
   border: 1px solid rgba(0, 0, 0, 0.1);
   &:hover {
     ${shadows.INPUT};
   }
   &:focus {
     outline: none;
+    ${shadows.INPUT};
     border-color: ${colors.TEAL};
   }
   &::placeholder {
