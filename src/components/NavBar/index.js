@@ -12,6 +12,7 @@ import StatusToggleTabs from './components/Tabs/StatusToggleTabs';
 import Tabs from './components/Tabs';
 import LogsButton from './components/LogsButton';
 import {
+  ProductFilterConfig,
   OrderFilterConfig,
   OrderItemFilterConfig,
   BatchFilterConfig,
@@ -22,6 +23,7 @@ import {
   FileFilterConfig,
 } from './components/Filter/configs';
 import {
+  ProductSortConfig,
   OrderSortConfig,
   OrderItemSortConfig,
   BatchSortConfig,
@@ -45,6 +47,7 @@ export {
   Tabs,
   SectionNavBar,
   LogsButton,
+  ProductFilterConfig,
   OrderFilterConfig,
   OrderItemFilterConfig,
   BatchFilterConfig,
@@ -53,6 +56,7 @@ export {
   WarehouseFilterConfig,
   PartnerFilterConfig,
   FileFilterConfig,
+  ProductSortConfig,
   OrderSortConfig,
   OrderItemSortConfig,
   BatchSortConfig,

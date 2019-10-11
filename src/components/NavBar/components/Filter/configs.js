@@ -1,5 +1,6 @@
 // @flow
 import { defaultVolumeMetric } from 'utils/metric';
+import productMessages from 'modules/product/messages';
 import orderMessages from 'modules/order/messages';
 import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
@@ -9,6 +10,37 @@ import warehouseMessages from 'modules/warehouse/messages';
 import partnerMessages from 'modules/partner/messages';
 import fileMessages from 'modules/document/messages';
 import type { FilterConfig } from './index';
+
+export const ProductFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'PRODUCT',
+    field: 'archived',
+    type: 'archived',
+    message: productMessages.status,
+    defaultValue: false,
+  },
+  {
+    entity: 'PRODUCT',
+    field: 'createdAt',
+    type: 'date_range',
+    message: productMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'PRODUCT',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: productMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'PRODUCT',
+    field: 'tagIds',
+    type: 'product_tags',
+    message: productMessages.tags,
+    defaultValue: [],
+  },
+];
 
 export const OrderFilterConfig: Array<FilterConfig> = [
   {

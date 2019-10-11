@@ -1,4 +1,5 @@
 // @flow
+import productMessages from 'modules/product/messages';
 import orderMessages from 'modules/order/messages';
 import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
@@ -8,6 +9,13 @@ import warehouseMessages from 'modules/warehouse/messages';
 import partnerMessages from 'modules/partner/messages';
 import fileMessages from 'modules/document/messages';
 import type { SortConfig } from './index';
+
+export const ProductSortConfig: Array<SortConfig> = [
+  { message: productMessages.updatedAt, field: 'updatedAt' },
+  { message: productMessages.createdAt, field: 'createdAt' },
+  { message: productMessages.name, field: 'name' },
+  { message: productMessages.serial, field: 'serial' },
+];
 
 export const OrderSortConfig: Array<SortConfig> = [
   { message: orderMessages.updatedAt, field: 'updatedAt' },
