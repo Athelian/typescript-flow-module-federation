@@ -10,6 +10,7 @@ import partnerMessages from 'modules/partner/messages';
 import userMessages from 'modules/staff/messages';
 import fileMessages from 'modules/document/messages';
 import projectMessages from 'modules/project/messages';
+import taskMessages from 'modules/task/messages';
 import tagMessages from 'modules/tags/messages';
 import type { SortConfig } from './index';
 
@@ -115,6 +116,15 @@ export const ProjectSortConfig: Array<SortConfig> = [
   { message: projectMessages.createdAt, field: 'createdAt' },
   { message: projectMessages.name, field: 'name' },
   { message: projectMessages.dueDate, field: 'dueDate' },
+];
+
+export const TaskSortConfig: Array<SortConfig> = [
+  { message: taskMessages.updatedAt, field: 'updatedAt' },
+  { message: taskMessages.createdAt, field: 'createdAt' },
+  { message: taskMessages.name, field: 'name' },
+  { message: taskMessages.startDate, field: 'startDate' },
+  { message: taskMessages.dueDate, field: 'dueDate' },
+  { message: taskMessages.entity, field: 'entity' },
 ];
 
 export const TagSortConfig: Array<SortConfig> = [

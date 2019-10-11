@@ -11,6 +11,7 @@ import partnerMessages from 'modules/partner/messages';
 import userMessages from 'modules/staff/messages';
 import fileMessages from 'modules/document/messages';
 import projectMessages from 'modules/project/messages';
+import taskMessages from 'modules/task/messages';
 import tagMessages from 'modules/tags/messages';
 import type { FilterConfig } from './index';
 
@@ -670,6 +671,37 @@ export const ProjectFilterConfig: Array<FilterConfig> = [
     field: 'dueDate',
     type: 'date_range',
     message: projectMessages.dueDate,
+    defaultValue: { after: null, before: null },
+  },
+];
+
+export const TaskFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'TASK',
+    field: 'createdAt',
+    type: 'date_range',
+    message: taskMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'TASK',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: taskMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'TASK',
+    field: 'startDate',
+    type: 'date_range',
+    message: taskMessages.startDate,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'TASK',
+    field: 'dueDate',
+    type: 'date_range',
+    message: taskMessages.dueDate,
     defaultValue: { after: null, before: null },
   },
 ];
