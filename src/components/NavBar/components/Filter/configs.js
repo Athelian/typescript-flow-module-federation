@@ -1,11 +1,50 @@
 // @flow
 import { defaultVolumeMetric } from 'utils/metric';
+import productMessages from 'modules/product/messages';
 import orderMessages from 'modules/order/messages';
+import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
+import containerMessages from 'modules/container/messages';
 import warehouseMessages from 'modules/warehouse/messages';
 import partnerMessages from 'modules/partner/messages';
+import userMessages from 'modules/staff/messages';
+import fileMessages from 'modules/document/messages';
+import projectMessages from 'modules/project/messages';
+import taskMessages from 'modules/task/messages';
+import tagMessages from 'modules/tags/messages';
 import type { FilterConfig } from './index';
+
+export const ProductFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'PRODUCT',
+    field: 'archived',
+    type: 'archived',
+    message: productMessages.status,
+    defaultValue: false,
+  },
+  {
+    entity: 'PRODUCT',
+    field: 'createdAt',
+    type: 'date_range',
+    message: productMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'PRODUCT',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: productMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'PRODUCT',
+    field: 'tagIds',
+    type: 'product_tags',
+    message: productMessages.tags,
+    defaultValue: [],
+  },
+];
 
 export const OrderFilterConfig: Array<FilterConfig> = [
   {
@@ -259,6 +298,30 @@ export const OrderFilterConfig: Array<FilterConfig> = [
   },
 ];
 
+export const OrderItemFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'ORDER ITEM',
+    field: 'archived',
+    type: 'archived',
+    message: orderItemMessages.status,
+    defaultValue: false,
+  },
+  {
+    entity: 'ORDER ITEM',
+    field: 'createdAt',
+    type: 'date_range',
+    message: orderItemMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'ORDER ITEM',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: orderItemMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+];
+
 export const BatchFilterConfig: Array<FilterConfig> = [
   {
     entity: 'BATCH',
@@ -468,6 +531,44 @@ export const ShipmentFilterConfig: Array<FilterConfig> = [
   },
 ];
 
+export const ContainerFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'CONTAINER',
+    field: 'archived',
+    type: 'archived',
+    message: containerMessages.status,
+    defaultValue: false,
+  },
+  {
+    entity: 'CONTAINER',
+    field: 'warehouseArrivalActualDate',
+    type: 'date_range',
+    message: containerMessages.warehouseArrivalActualDate,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'CONTAINER',
+    field: 'warehouseIds',
+    type: 'warehouse_ids',
+    message: containerMessages.warehouse,
+    defaultValue: [],
+  },
+  {
+    entity: 'CONTAINER',
+    field: 'createdAt',
+    type: 'date_range',
+    message: containerMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'CONTAINER',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: containerMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+];
+
 export const WarehouseFilterConfig: Array<FilterConfig> = [
   {
     entity: 'WAREHOUSE',
@@ -513,5 +614,111 @@ export const PartnerFilterConfig: Array<FilterConfig> = [
     type: 'organization_types',
     message: partnerMessages.type,
     defaultValue: [],
+  },
+];
+
+export const UserFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'USER',
+    field: 'createdAt',
+    type: 'date_range',
+    message: userMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'USER',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: userMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+];
+
+export const FileFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'DOCUMENT',
+    field: 'createdAt',
+    type: 'date_range',
+    message: fileMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'DOCUMENT',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: fileMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+];
+
+export const ProjectFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'PROJECT',
+    field: 'createdAt',
+    type: 'date_range',
+    message: projectMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'PROJECT',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: projectMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'PROJECT',
+    field: 'dueDate',
+    type: 'date_range',
+    message: projectMessages.dueDate,
+    defaultValue: { after: null, before: null },
+  },
+];
+
+export const TaskFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'TASK',
+    field: 'createdAt',
+    type: 'date_range',
+    message: taskMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'TASK',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: taskMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'TASK',
+    field: 'startDate',
+    type: 'date_range',
+    message: taskMessages.startDate,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'TASK',
+    field: 'dueDate',
+    type: 'date_range',
+    message: taskMessages.dueDate,
+    defaultValue: { after: null, before: null },
+  },
+];
+
+export const TagFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'TAG',
+    field: 'createdAt',
+    type: 'date_range',
+    message: tagMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'TAG',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: tagMessages.updatedAt,
+    defaultValue: { after: null, before: null },
   },
 ];

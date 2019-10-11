@@ -1,10 +1,25 @@
 // @flow
+import productMessages from 'modules/product/messages';
 import orderMessages from 'modules/order/messages';
-import { shipmentSortMessages as shipmentMessages } from 'modules/shipment/messages';
-import warehouseMessages from 'modules/warehouse/messages';
+import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
+import { shipmentSortMessages as shipmentMessages } from 'modules/shipment/messages';
+import containerMessages from 'modules/container/messages';
+import warehouseMessages from 'modules/warehouse/messages';
 import partnerMessages from 'modules/partner/messages';
+import userMessages from 'modules/staff/messages';
+import fileMessages from 'modules/document/messages';
+import projectMessages from 'modules/project/messages';
+import taskMessages from 'modules/task/messages';
+import tagMessages from 'modules/tags/messages';
 import type { SortConfig } from './index';
+
+export const ProductSortConfig: Array<SortConfig> = [
+  { message: productMessages.updatedAt, field: 'updatedAt' },
+  { message: productMessages.createdAt, field: 'createdAt' },
+  { message: productMessages.name, field: 'name' },
+  { message: productMessages.serial, field: 'serial' },
+];
 
 export const OrderSortConfig: Array<SortConfig> = [
   { message: orderMessages.updatedAt, field: 'updatedAt' },
@@ -16,6 +31,17 @@ export const OrderSortConfig: Array<SortConfig> = [
   { message: orderMessages.currency, field: 'currency' },
   { message: orderMessages.incoterm, field: 'incoterm' },
   { message: orderMessages.deliveryPlace, field: 'deliveryPlace' },
+];
+
+export const OrderItemSortConfig: Array<SortConfig> = [
+  { message: orderItemMessages.updatedAt, field: 'updatedAt' },
+  { message: orderItemMessages.createdAt, field: 'createdAt' },
+  { message: orderItemMessages.no, field: 'no' },
+  { message: orderItemMessages.currency, field: 'currency' },
+  { message: orderItemMessages.productName, field: 'productName' },
+  { message: orderItemMessages.productSerial, field: 'productSerial' },
+  { message: orderItemMessages.productProviderName, field: 'productProviderName' },
+  { message: orderItemMessages.supplierName, field: 'supplierName' },
 ];
 
 export const BatchSortConfig: Array<SortConfig> = [
@@ -48,6 +74,14 @@ export const ShipmentSortConfig: Array<SortConfig> = [
   { message: shipmentMessages.deliveryReady, field: 'deliveryReady' },
 ];
 
+export const ContainerSortConfig: Array<SortConfig> = [
+  { message: containerMessages.updatedAt, field: 'updatedAt' },
+  { message: containerMessages.createdAt, field: 'createdAt' },
+  { message: containerMessages.warehouseName, field: 'warehouseName' },
+  { message: containerMessages.warehouseArrivalActualDate, field: 'warehouseArrivalActualDate' },
+  { message: containerMessages.warehouseArrivalAgreedDate, field: 'warehouseArrivalAgreedDate' },
+];
+
 export const WarehouseSortConfig: Array<SortConfig> = [
   { message: warehouseMessages.updatedAt, field: 'updatedAt' },
   { message: warehouseMessages.createdAt, field: 'createdAt' },
@@ -58,4 +92,43 @@ export const PartnerSortConfig: Array<SortConfig> = [
   { message: partnerMessages.createdAt, field: 'createdAt' },
   { message: partnerMessages.name, field: 'name' },
   { message: partnerMessages.code, field: 'code' },
+];
+
+export const UserSortConfig: Array<SortConfig> = [
+  { message: userMessages.updatedAt, field: 'updatedAt' },
+  { message: userMessages.createdAt, field: 'createdAt' },
+  { message: userMessages.firstName, field: 'firstName' },
+  { message: userMessages.lastName, field: 'lastName' },
+  { message: userMessages.fullName, field: 'fullName' },
+];
+
+export const FileSortConfig: Array<SortConfig> = [
+  { message: fileMessages.updatedAt, field: 'updatedAt' },
+  { message: fileMessages.createdAt, field: 'createdAt' },
+  { message: fileMessages.name, field: 'name' },
+  { message: fileMessages.type, field: 'type' },
+  { message: fileMessages.status, field: 'status' },
+  { message: fileMessages.size, field: 'size' },
+];
+
+export const ProjectSortConfig: Array<SortConfig> = [
+  { message: projectMessages.updatedAt, field: 'updatedAt' },
+  { message: projectMessages.createdAt, field: 'createdAt' },
+  { message: projectMessages.name, field: 'name' },
+  { message: projectMessages.dueDate, field: 'dueDate' },
+];
+
+export const TaskSortConfig: Array<SortConfig> = [
+  { message: taskMessages.updatedAt, field: 'updatedAt' },
+  { message: taskMessages.createdAt, field: 'createdAt' },
+  { message: taskMessages.name, field: 'name' },
+  { message: taskMessages.startDate, field: 'startDate' },
+  { message: taskMessages.dueDate, field: 'dueDate' },
+  { message: taskMessages.entity, field: 'entity' },
+];
+
+export const TagSortConfig: Array<SortConfig> = [
+  { message: tagMessages.updatedAt, field: 'updatedAt' },
+  { message: tagMessages.createdAt, field: 'createdAt' },
+  { message: tagMessages.name, field: 'name' },
 ];

@@ -1,67 +1,43 @@
 // @flow
 import * as React from 'react';
 import { Link } from '@reach/router';
-import { injectIntl } from 'react-intl';
-import type { IntlShape } from 'react-intl';
 import { TAG_CREATE } from 'modules/permission/constants/tag';
-import usePermission from 'hooks/usePermission';
 import { Content } from 'components/Layout';
-import { NavBar, EntityIcon, SortInput } from 'components/NavBar';
-import { ExportButton, NewButton } from 'components/Buttons';
-import { currentSort } from 'components/common/FilterToolBar';
-import useFilter from 'hooks/useFilter';
-import TagsList from './list';
+import {
+  EntityIcon,
+  Filter,
+  NavBar,
+  TagFilterConfig,
+  TagSortConfig,
+  Search,
+  Sort,
+} from 'components/NavBar';
+import { NewButton, ExportButton } from 'components/Buttons';
+import { useViewerHasPermissions } from 'contexts/Permissions';
+import useFilterSort from 'hooks/useFilterSort';
+import TagList from './list';
 import { tagsExportQuery } from './query';
-import messages from './messages';
 
-type Props = {
-  intl: IntlShape,
-};
+const TagListModule = () => {
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    { query: '' },
+    { updatedAt: 'DESCENDING' },
+    'tag_cards'
+  );
 
-const getInitFilter = () => {
-  const filter = {
-    filter: {
-      entityTypes: ['Product', 'Order', 'Batch', 'Shipment', 'User'],
-    },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-    perPage: 10,
-    page: 1,
-  };
-  return filter;
-};
+  const hasPermissions = useViewerHasPermissions();
 
-const TagListModule = (props: Props) => {
-  const { intl } = props;
-  const sortFields = [
-    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-    { title: intl.formatMessage(messages.name), value: 'name' },
-  ];
-  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(getInitFilter(), 'filterTag');
-  const { hasPermission } = usePermission();
-  const allowCreate = hasPermission(TAG_CREATE);
   return (
     <Content>
       <NavBar>
-        <EntityIcon icon="TAG" color="TAG" />
-        <SortInput
-          sort={currentSort(sortFields, filterAndSort.sort)}
-          ascending={filterAndSort.sort.direction !== 'DESCENDING'}
-          fields={sortFields}
-          onChange={({ field: { value }, ascending }) =>
-            onChangeFilter({
-              sort: {
-                field: value,
-                direction: ascending ? 'ASCENDING' : 'DESCENDING',
-              },
-            })
-          }
-        />
-        {allowCreate && (
-          <Link to="new">
+        <EntityIcon icon="TAG" color="TAG" subIcon="CARDS" />
+
+        <Filter config={TagFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
+        <Search query={query} onChange={setQuery} />
+        <Sort config={TagSortConfig} sortBy={sortBy} onChange={setSortBy} />
+
+        {hasPermissions(TAG_CREATE) && (
+          <Link to="/tag/new">
             <NewButton data-testid="newButton" />
           </Link>
         )}
@@ -69,16 +45,14 @@ const TagListModule = (props: Props) => {
           type="Tags"
           exportQuery={tagsExportQuery}
           variables={{
-            filterBy: filterAndSort.filter,
-            sortBy: {
-              [filterAndSort.sort.field]: filterAndSort.sort.direction,
-            },
+            filterBy: { query, ...filterBy },
+            sortBy,
           }}
         />
       </NavBar>
-      <TagsList {...queryVariables} />
+      <TagList filterBy={{ query, ...filterBy }} sortBy={sortBy} page={1} perPage={10} />
     </Content>
   );
 };
 
-export default injectIntl(TagListModule);
+export default TagListModule;
