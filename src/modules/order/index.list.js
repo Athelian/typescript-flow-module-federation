@@ -45,7 +45,7 @@ const OrderModule = () => {
           type="Orders"
           exportQuery={ordersExportQuery}
           variables={{
-            filterBy,
+            filterBy: { query, ...filterBy },
             sortBy,
           }}
         />
