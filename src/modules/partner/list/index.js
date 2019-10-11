@@ -3,14 +3,13 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
+import type { FilterBy, SortBy } from 'types';
 import PartnerGridView from './PartnerGridView';
 import { partnerListQuery } from './query';
 
 type Props = {
-  filterBy: {},
-  sortBy: {
-    [field: string]: string,
-  },
+  filterBy: FilterBy,
+  sortBy: SortBy,
   perPage: number,
 };
 
