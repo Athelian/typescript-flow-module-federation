@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import useUser from 'hooks/useUser';
 import { Tooltip } from 'components/Tooltip';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
-import { targetedIds, findOrderIdByBatch } from 'modules/relationMapV2/helpers';
+import { targetedIds, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
 import { BATCH } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { BaseButton } from 'components/Buttons';
@@ -33,7 +33,16 @@ export default function MoveBatch({ onSuccess }: Props) {
   const batchIds = targetedIds(state.targets, BATCH);
   const orderIds = [
     ...new Set(
-      batchIds.map(batchId => findOrderIdByBatch(batchId, mapping.entities)).filter(Boolean)
+      batchIds
+        .map(batchId => {
+          const [, parentOrderId] = findParentIdsByBatch({
+            batchId,
+            viewer: state.viewer,
+            entities: mapping.entities,
+          });
+          return parentOrderId;
+        })
+        .filter(Boolean)
     ),
   ];
   const containerIds = [

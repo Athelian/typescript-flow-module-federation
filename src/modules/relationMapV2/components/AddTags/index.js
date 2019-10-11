@@ -17,8 +17,8 @@ import FormattedNumber from 'components/FormattedNumber';
 import Tag from 'components/Tag';
 import {
   targetedIds,
-  findOrderIdByOrderItem,
-  findOrderIdByBatch,
+  findOrderIdByItem,
+  findParentIdsByBatch,
   findOrderIdsByContainer,
   findOrderIdsByShipment,
   findShipmentIdByContainer,
@@ -230,27 +230,50 @@ export default function AddTags({ onSuccess }: Props) {
           if (selectors.isOrderFocus) {
             const ids = (result.data?.entitiesUpdateMany?.orders ?? []).map(order => order.id);
             if ((result.data?.entitiesUpdateMany?.orderItems ?? []).length) {
-              ids.push(
-                ...(result.data?.entitiesUpdateMany?.orderItems ?? []).map(item =>
-                  findOrderIdByOrderItem(item.id, mapping.entities)
-                )
-              );
+              (result.data?.entitiesUpdateMany?.orderItems ?? []).forEach(item => {
+                const parentOrderId = findOrderIdByItem({
+                  orderItemId: item.id,
+                  entities: mapping.entities,
+                  viewer: state.viewer,
+                });
+                if (parentOrderId) {
+                  ids.push(parentOrderId);
+                }
+              });
             }
             if ((result.data?.entitiesUpdateMany?.batches ?? []).length) {
-              ids.push(
-                ...(result.data?.entitiesUpdateMany?.batches ?? []).map(batch =>
-                  findOrderIdByBatch(batch.id, mapping.entities)
-                )
-              );
+              (result.data?.entitiesUpdateMany?.batches ?? []).forEach(batch => {
+                const [, parentOrderId] = findParentIdsByBatch({
+                  batchId: batch.id,
+                  entities: mapping.entities,
+                  viewer: state.viewer,
+                });
+                if (parentOrderId) {
+                  ids.push(parentOrderId);
+                }
+              });
             }
+
             if ((result.data?.entitiesUpdateMany?.containers ?? []).length) {
               (result.data?.entitiesUpdateMany?.containers ?? []).forEach(container =>
-                ids.push(...findOrderIdsByContainer(container.id, mapping.entities))
+                ids.push(
+                  ...findOrderIdsByContainer({
+                    viewer: state.viewer,
+                    containerId: container.id,
+                    entities: mapping.entities,
+                  })
+                )
               );
             }
             if ((result.data?.entitiesUpdateMany?.shipments ?? []).length) {
               (result.data?.entitiesUpdateMany?.shipments ?? []).forEach(shipment =>
-                ids.push(...findOrderIdsByShipment(shipment.id, mapping.entities))
+                ids.push(
+                  ...findOrderIdsByShipment({
+                    shipmentId: shipment.id,
+                    entities: mapping.entities,
+                    viewer: state.viewer,
+                  })
+                )
               );
             }
             onSuccess(ids);
@@ -309,6 +332,7 @@ export default function AddTags({ onSuccess }: Props) {
     shipmentsResult.data,
     shipmentsResult.loading,
     source,
+    state.viewer,
     tags,
     updateEntities,
   ]);

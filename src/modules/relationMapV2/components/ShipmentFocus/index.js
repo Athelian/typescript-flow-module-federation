@@ -28,6 +28,7 @@ import {
 import EditFormSlideView from '../EditFormSlideView';
 import SelectedEntity from '../SelectedEntity';
 import StatusConfirm from '../StatusConfirm';
+import MoveEntityConfirm from '../MoveEntityConfirm';
 import AddTags from '../AddTags';
 import Actions from '../Actions';
 import Header from '../Header';
@@ -285,6 +286,15 @@ export default function ShipmentFocus() {
                           type: '',
                           selectedId: '',
                         },
+                      });
+                    }}
+                  />
+                  <MoveEntityConfirm
+                    onSuccess={ids => {
+                      queryShipmentsDetail(ids);
+                      dispatch({
+                        type: 'CONFIRM_MOVE_END',
+                        payload: { ids },
                       });
                     }}
                   />

@@ -8,8 +8,8 @@ import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import {
   targetedIds,
-  findOrderIdByBatch,
-  findOrderIdByOrderItem,
+  findParentIdsByBatch,
+  findOrderIdByItem,
 } from 'modules/relationMapV2/helpers';
 import ActionButton from './components/ActionButton';
 import ActionSubMenu from './components/ActionSubMenu';
@@ -22,7 +22,7 @@ type Props = {
 
 export default function Actions({ targets }: Props) {
   const [currentMenu, setCurrentMenu] = React.useState(null);
-  const { dispatch, selectors } = FocusedView.useContainer();
+  const { state, dispatch, selectors } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
   const orderIds = targetedIds(targets, ORDER);
   const orderItemIds = targetedIds(targets, ORDER_ITEM);
@@ -36,14 +36,35 @@ export default function Actions({ targets }: Props) {
   const shipmentIsDisabled = shipmentIds.length === 0;
   const navigateToGTV = () => {
     const ids = [...orderIds];
-    batchIds.forEach(batchId => ids.push(findOrderIdByBatch(batchId, mapping.entities)));
-    orderItemIds.forEach(itemId => ids.push(findOrderIdByOrderItem(itemId, mapping.entities)));
+    batchIds.forEach(batchId => {
+      const [, parentOrderId] = findParentIdsByBatch({
+        batchId,
+        viewer: state.viewer,
+        entities: mapping.entities,
+      });
+      if (parentOrderId) ids.push(parentOrderId);
+    });
+
+    orderItemIds.forEach(orderItemId => {
+      const parentOrderId = findOrderIdByItem({
+        orderItemId,
+        viewer: state.viewer,
+        entities: mapping.entities,
+      });
+      if (parentOrderId) ids.push(parentOrderId);
+    });
+
     Object.values(mapping.entities?.batches ?? {}).forEach((batch: Object) => {
       if (
         (batch.container && containerIds.includes(batch.container)) ||
         (batch.shipment && shipmentIds.includes(batch.shipment))
       ) {
-        ids.push(findOrderIdByBatch(batch.id, mapping.entities));
+        const [, parentOrderId] = findParentIdsByBatch({
+          batchId: batch.id,
+          viewer: state.viewer,
+          entities: mapping.entities,
+        });
+        if (parentOrderId) ids.push(parentOrderId);
       }
     });
     navigate('/order/table', {

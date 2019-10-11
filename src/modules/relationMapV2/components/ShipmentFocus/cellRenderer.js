@@ -32,8 +32,6 @@ import {
   getColorByEntity,
   getIconByEntity,
   handleClickAndDoubleClick,
-  findOrderIdByBatch,
-  findItemIdByBatch,
   getIdentifier,
   isMatchedEntity,
 } from 'modules/relationMapV2/helpers';
@@ -540,8 +538,12 @@ const shipmentDropMessage = ({
   switch (type) {
     case BATCH: {
       const batchId = item?.id ?? '';
-      const parentOrderId = findOrderIdByBatch(batchId, entities);
+      const parentItemId = entities.batches?.[batchId]?.orderItem;
+      if (!parentItemId) return '';
+
+      const parentOrderId = entities.orderItems?.[parentItemId]?.order;
       if (!parentOrderId) return '';
+
       const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
       const isOwnShipment = batch.shipment === shipmentId;
       if (isOwnShipment)
@@ -563,7 +565,6 @@ const shipmentDropMessage = ({
 
       const shipment = getByPathWithDefault({}, `shipments.${shipmentId}`, entities);
       const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
-
       const isDifferentImporter =
         getByPathWithDefault('', 'importer.id', shipment) !==
         getByPathWithDefault('', 'importer.id', order);
@@ -1427,11 +1428,11 @@ function ShipmentCell({
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
-          if (!parentOrderId) return false;
-
-          const parentItemId = findItemIdByBatch(batchId, entities);
+          const parentItemId = entities.batches?.[batchId]?.orderItem;
           if (!parentItemId) return false;
+
+          const parentOrderId = entities.orderItems?.[parentItemId]?.order;
+          if (!parentOrderId) return false;
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
           const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
@@ -1440,7 +1441,7 @@ function ShipmentCell({
             shipment?.importer?.id !== getByPathWithDefault('', 'importer.id', order);
           const isDifferentExporter =
             shipment?.exporter &&
-            shipment?.importer?.id !== getByPathWithDefault('', 'exporter.id', order);
+            shipment?.exporter?.id !== getByPathWithDefault('', 'exporter.id', order);
           const noPermission = !hasPermissionToMove({
             hasPermissions,
             type: SHIPMENT,

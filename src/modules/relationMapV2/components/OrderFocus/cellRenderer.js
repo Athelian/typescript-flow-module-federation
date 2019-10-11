@@ -33,8 +33,7 @@ import {
   getColorByEntity,
   getIconByEntity,
   handleClickAndDoubleClick,
-  findOrderIdByBatch,
-  findItemIdByBatch,
+  findParentIdsByBatch,
   isMatchedEntity,
   getIdentifier,
 } from 'modules/relationMapV2/helpers';
@@ -187,7 +186,7 @@ const orderDropMessage = ({
   switch (type) {
     case BATCH: {
       const batchId = item?.id ?? '';
-      const parentOrderId = findOrderIdByBatch(batchId, entities);
+      const [, parentOrderId] = findParentIdsByBatch({ batchId, entities, viewer: ORDER });
       if (!parentOrderId) return '';
 
       const isOwnOrder = orderId === parentOrderId;
@@ -307,11 +306,12 @@ const orderItemDropMessage = ({
   switch (type) {
     case BATCH: {
       const batchId = item && item.id;
-      const parentOrderId = findOrderIdByBatch(batchId, entities);
-      if (!parentOrderId) return '';
-
-      const parentItemId = findItemIdByBatch(batchId, entities);
-      if (!parentItemId) return '';
+      const [parentItemId, parentOrderId] = findParentIdsByBatch({
+        batchId,
+        entities,
+        viewer: ORDER,
+      });
+      if (!parentItemId || !parentOrderId) return '';
 
       const isOwnItem = parentItemId === itemId;
       if (isOwnItem)
@@ -417,7 +417,7 @@ const containerDropMessage = ({
   switch (type) {
     case BATCH: {
       const batchId = item?.id ?? '';
-      const parentOrderId = findOrderIdByBatch(batchId, entities);
+      const [, parentOrderId] = findParentIdsByBatch({ batchId, entities, viewer: ORDER });
       if (!parentOrderId) return '';
       const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
       const isOwnContainer = batch.container === containerId;
@@ -534,7 +534,7 @@ const shipmentDropMessage = ({
   switch (type) {
     case BATCH: {
       const batchId = item?.id ?? '';
-      const parentOrderId = findOrderIdByBatch(batchId, entities);
+      const [, parentOrderId] = findParentIdsByBatch({ batchId, entities, viewer: ORDER });
       if (!parentOrderId) return '';
       const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
       const isOwnShipment = batch.shipment === shipmentId;
@@ -646,7 +646,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
+          const [, parentOrderId] = findParentIdsByBatch({ batchId, entities, viewer: ORDER });
           if (!parentOrderId) return false;
           const isOwnOrder = orderId === parentOrderId;
           const isDifferentImporter =
@@ -848,12 +848,13 @@ function OrderItemCell({
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
-          if (!parentOrderId) return false;
+          const [parentItemId, parentOrderId] = findParentIdsByBatch({
+            batchId,
+            entities,
+            viewer: ORDER,
+          });
+          if (!parentOrderId || !parentItemId) return false;
           const parentOrder = entities.orders?.[parentOrderId];
-
-          const parentItemId = findItemIdByBatch(batchId, entities);
-          if (!parentItemId) return false;
           const isOwnItem = parentItemId === itemId;
           const isDifferentImporter =
             getByPathWithDefault('', 'importer.id', order) !==
@@ -1256,7 +1257,11 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
+          const [, parentOrderId] = findParentIdsByBatch({
+            batchId,
+            entities,
+            viewer: ORDER,
+          });
           if (!parentOrderId) return false;
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
@@ -1467,11 +1472,12 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
-          if (!parentOrderId) return false;
-
-          const parentItemId = findItemIdByBatch(batchId, entities);
-          if (!parentItemId) return false;
+          const [parentItemId, parentOrderId] = findParentIdsByBatch({
+            batchId,
+            entities,
+            viewer: ORDER,
+          });
+          if (!parentItemId || !parentOrderId) return false;
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
           const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);

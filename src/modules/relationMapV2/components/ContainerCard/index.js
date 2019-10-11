@@ -79,6 +79,7 @@ export default function ContainerCard({ container, onDeleteContainer }: Props) {
         </Display>
       </div>
 
+      {/* FIXME: fix hover to show the delete action */}
       {allowToDeleteContainer && selectors.isShipmentFocus && (
         <button onClick={onDeleteContainer} className={DeleteButtonStyle} type="button">
           <Icon icon="REMOVE" />

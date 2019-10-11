@@ -8,50 +8,117 @@ const DELAY = 200; // 0.2 second
 const timer = {};
 const isTimeoutRunning = {};
 
-// Those are only use for NRM order focused
-export const findOrderIdByBatch = (batchId: string, entities: Object) => {
-  const parentOrderId = findKey(currentOrder => {
-    return (currentOrder.orderItems || []).some(itemId =>
-      getByPathWithDefault([], `orderItems.${itemId}.batches`, entities).includes(batchId)
-    );
-  }, entities.orders);
+export function findParentIdsByBatch({
+  viewer,
+  batchId,
+  entities,
+}: {|
+  viewer: typeof ORDER | typeof SHIPMENT,
+  batchId: string,
+  entities: Object,
+|}): [?string, ?string] {
+  if (viewer === ORDER) {
+    const parentItemId = findKey(orderItem => {
+      return (orderItem.batches || []).includes(batchId);
+    }, entities.orderItems);
+
+    const parentOrderId = findKey(currentOrder => {
+      return (currentOrder.orderItems || []).includes(parentItemId);
+    }, entities.orders);
+
+    return [parentItemId, parentOrderId];
+  }
+
+  const parentItemId = entities.batches?.[batchId]?.orderItem;
+
+  const parentOrderId = entities.orderItems?.[parentItemId]?.order;
+
+  return [parentItemId, parentOrderId];
+}
+
+export function findOrderIdByItem({
+  viewer,
+  orderItemId,
+  entities,
+}: {|
+  viewer: typeof ORDER | typeof SHIPMENT,
+  orderItemId: string,
+  entities: Object,
+|}): ?string {
+  if (viewer === ORDER) {
+    const parentOrderId = findKey(currentOrder => {
+      return (currentOrder.orderItems || []).includes(orderItemId);
+    }, entities.orders);
+
+    return parentOrderId;
+  }
+
+  const parentOrderId = entities.orderItems?.[orderItemId]?.order;
+
   return parentOrderId;
-};
+}
 
-export const findItemIdByBatch = (batchId: string, entities: Object) => {
-  const parentIemId = findKey(currentItem => {
-    return (currentItem.batches || []).includes(batchId);
-  }, entities.orderItems);
-  return parentIemId;
-};
+export function findOrderIdsByContainer({
+  viewer,
+  containerId,
+  entities,
+}: {|
+  viewer: typeof ORDER | typeof SHIPMENT,
+  containerId: string,
+  entities: Object,
+|}): Array<string> {
+  if (viewer === ORDER) {
+    return (Object.keys(entities.orders || {}).filter(orderId => {
+      return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
+        (entities?.orderItems?.[itemId]?.batches ?? []).some(
+          batchId => entities?.batches?.[batchId]?.container === containerId
+        )
+      );
+    }): Array<string>);
+  }
 
-export const findOrderIdByOrderItem = (itemId: string, entities: Object) => {
-  const parentOrderId = findKey(currentOrder => {
-    return (currentOrder.orderItems || []).includes(itemId);
-  }, entities.orders);
-  return parentOrderId;
-};
+  const parentOrderIds = (Object.keys(entities.batches || {})
+    .filter(batchId => {
+      return entities?.batches?.[batchId]?.container === containerId;
+    })
+    .map(batchId => {
+      const parentItemId = entities.batches?.[batchId]?.orderItem;
+      return entities.orderItems?.[parentItemId]?.order;
+    }): Array<string>);
 
-export const findOrderIdsByContainer = (containerId: string, entities: Object) => {
-  const parentOrderIds = (Object.keys(entities.orders || {}).filter(orderId => {
-    return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
-      (entities?.orderItems?.[itemId]?.batches ?? []).some(
-        batchId => entities?.batches?.[batchId]?.container === containerId
-      )
-    );
-  }): Array<string>);
-  return parentOrderIds;
-};
+  return [...new Set(parentOrderIds)];
+}
 
-export const findOrderIdsByShipment = (shipmentId: string, entities: Object) => {
-  const parentOrderIds = (Object.keys(entities.orders || {}).filter(orderId => {
-    return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
-      (entities?.orderItems?.[itemId]?.batches ?? []).some(
-        batchId => entities?.batches?.[batchId]?.shipment === shipmentId
-      )
-    );
-  }): Array<string>);
-  return parentOrderIds;
+export const findOrderIdsByShipment = ({
+  viewer,
+  shipmentId,
+  entities,
+}: {|
+  viewer: typeof ORDER | typeof SHIPMENT,
+  shipmentId: string,
+  entities: Object,
+|}) => {
+  if (viewer === ORDER) {
+    const parentOrderIds = (Object.keys(entities.orders || {}).filter(orderId => {
+      return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
+        (entities?.orderItems?.[itemId]?.batches ?? []).some(
+          batchId => entities?.batches?.[batchId]?.shipment === shipmentId
+        )
+      );
+    }): Array<string>);
+    return [...new Set(parentOrderIds)];
+  }
+
+  const parentOrderIds = (Object.keys(entities.batches || {})
+    .filter(batchId => {
+      return entities?.batches?.[batchId]?.shipment === shipmentId;
+    })
+    .map(batchId => {
+      const parentItemId = entities.batches?.[batchId]?.orderItem;
+      return entities.orderItems?.[parentItemId]?.order;
+    }): Array<string>);
+
+  return [...new Set(parentOrderIds)];
 };
 
 // find shipment id will be called on shipment focused
