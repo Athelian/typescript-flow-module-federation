@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { FocusedView } from 'modules/relationMapV2/store';
-import { useEntityHasPermissions } from 'components/Context/Permissions';
+import { useEntityHasPermissions } from 'contexts/Permissions';
 import { CONTAINER_DELETE } from 'modules/permission/constants/container';
 import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
