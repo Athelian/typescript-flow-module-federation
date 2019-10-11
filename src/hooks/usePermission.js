@@ -1,7 +1,7 @@
 // @flow
 import { useContext, useCallback } from 'react';
 import { intersection } from 'lodash';
-import { useViewerHasPermissions } from 'components/Context/Permissions';
+import { useViewerHasPermissions } from 'contexts/Permissions';
 import QueryFormPermissionContext from 'components/common/QueryForm/context';
 
 /**

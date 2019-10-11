@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/react-hooks';
 import type { DocumentNode } from 'graphql';
 import useUser from 'hooks/useUser';
 import LoadingIcon from 'components/LoadingIcon';
-import { usePermissions } from 'components/Context/Permissions';
+import { usePermissions } from 'contexts/Permissions';
 import { decodeId } from 'utils/id';
 import logger from 'utils/logger';
 import { parseRoute } from 'utils/entity';

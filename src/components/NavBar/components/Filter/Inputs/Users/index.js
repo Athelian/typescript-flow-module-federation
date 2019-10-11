@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { FormattedMessage } from 'react-intl';
 import { Label, UserAssignmentInput } from 'components/Form';
-import { useAuthorizedViewer } from 'components/Context/Viewer';
+import { useAuthorizedViewer } from 'contexts/Viewer';
 import messages from '../../messages';
 import { usersByIDsQuery } from './query';
 

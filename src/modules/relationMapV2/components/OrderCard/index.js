@@ -7,7 +7,7 @@ import RelateEntity from 'components/RelateEntity';
 import TaskRing from 'components/TaskRing';
 import { Tooltip } from 'components/Tooltip';
 import { Display, Blackout } from 'components/Form';
-import { useHasPermissions } from 'components/Context/Permissions';
+import { useHasPermissions } from 'contexts/Permissions';
 import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
 import {
   OrderCardWrapperStyle,

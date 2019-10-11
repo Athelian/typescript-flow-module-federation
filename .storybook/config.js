@@ -7,7 +7,7 @@ import { withConsole } from '@storybook/addon-console';
 import { Provider } from 'unstated';
 import { IntlProvider } from 'react-intl';
 import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
-import { ViewerContext } from 'components/Context/Viewer';
+import { ViewerContext } from 'Context/Viewer';
 import StoryBookWrapper from 'components/StoryBookWrapper';
 import introspectionQueryResultData from 'generated/fragmentTypes.json';
 import typeDefs from 'generated/schema.graphql';

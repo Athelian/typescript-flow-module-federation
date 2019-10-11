@@ -5,7 +5,7 @@ import { type IntlShape, injectIntl, FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { ObjectValue } from 'react-values';
 import { TAG_LIST } from 'modules/permission/constants/tag';
-import { UserConsumer } from 'components/Context/Viewer';
+import { UserConsumer } from 'contexts/Viewer';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import emitter from 'utils/emitter';
 import {

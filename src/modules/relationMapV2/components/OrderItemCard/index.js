@@ -10,7 +10,7 @@ import TaskRing from 'components/TaskRing';
 import { Tooltip } from 'components/Tooltip';
 import { Display, Blackout, Label } from 'components/Form';
 import { encodeId } from 'utils/id';
-import { useHasPermissions } from 'components/Context/Permissions';
+import { useHasPermissions } from 'contexts/Permissions';
 import { BATCH_CREATE } from 'modules/permission/constants/batch';
 import { ORDER_ITEMS_DELETE } from 'modules/permission/constants/orderItem';
 import QuantityGraph from 'modules/relationMapV2/components/QuantityGraph';

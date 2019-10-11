@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Location, Redirect } from '@reach/router';
-import { useAuthenticated } from 'components/Context/Viewer';
+import { useAuthenticated } from 'contexts/Viewer';
 
 type Props = {
   children: React.Node,

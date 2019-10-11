@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { FormattedMessage } from 'react-intl';
 import { Label, TagsInput } from 'components/Form';
-import { useViewerHasPermissions } from 'components/Context/Permissions';
+import { useViewerHasPermissions } from 'contexts/Permissions';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import messages from '../../messages';
 import { tagsByIDsQuery } from './query';

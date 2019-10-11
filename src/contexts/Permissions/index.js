@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import { intersection } from 'lodash';
 import { getByPathWithDefault } from 'utils/fp';
-import { useAuthenticated, useAuthorizedViewer } from 'components/Context/Viewer';
+import { useAuthenticated, useAuthorizedViewer } from 'contexts/Viewer';
 import { permissionsForOrganization } from './query';
 
 type Permissions = {

@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { usePermissions } from 'components/Context/Permissions';
+import { usePermissions } from 'contexts/Permissions';
 import LoadingIcon from 'components/LoadingIcon';
 import useUser from 'hooks/useUser';
 

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
-import { useAllHasPermission } from 'components/Context/Permissions';
+import { useAllHasPermission } from 'contexts/Permissions';
 import { BATCH_DELETE, BATCH_UPDATE } from 'modules/permission/constants/batch';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/helpers';

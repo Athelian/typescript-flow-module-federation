@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, IntlShape, MessageDescriptor } from 'react-intl';
+import { MessageDescriptor, useIntl } from 'react-intl';
 import Icon from 'components/Icon';
 import { SelectInput } from 'components/Form/Inputs';
 import {
@@ -22,10 +22,10 @@ type Props = {
   sortBy: SortBy,
   onChange: SortBy => void,
   config: Array<SortConfig>,
-  intl: IntlShape,
 };
 
-const Sort = ({ sortBy, config, onChange, intl }: Props) => {
+const Sort = ({ sortBy, config, onChange }: Props) => {
+  const intl = useIntl();
   const currentSortField = Object.entries(sortBy)[0]?.[0] ?? config[0]?.field ?? 'updatedAt';
   const currentSortDirection = Object.entries(sortBy)[0]?.[1] ?? 'DESCENDING';
 
@@ -84,4 +84,4 @@ const Sort = ({ sortBy, config, onChange, intl }: Props) => {
   );
 };
 
-export default injectIntl(Sort);
+export default Sort;

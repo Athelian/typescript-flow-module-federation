@@ -8,7 +8,7 @@ import { targetedIds, findOrderIdByBatch } from 'modules/relationMapV2/helpers';
 import { BATCH } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { BaseButton } from 'components/Buttons';
-import { useAllHasPermission } from 'components/Context/Permissions';
+import { useAllHasPermission } from 'contexts/Permissions';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
 import { CONTAINER_CREATE } from 'modules/permission/constants/container';
 import FormattedNumber from 'components/FormattedNumber';

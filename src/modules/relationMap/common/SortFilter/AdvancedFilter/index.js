@@ -7,7 +7,7 @@ import { CancelButton, SaveButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
 import OutsideClickHandler from 'components/OutsideClickHandler';
-import { useUI } from 'components/Context/UI';
+import { useUI } from 'contexts/UI';
 import { convertToFilterQuery } from './utils';
 import EntityTypesMenu from './EntityTypesMenu';
 import FilterMenu from './FilterMenu';

@@ -5,7 +5,7 @@ import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
-import { useEntityHasPermissions } from 'components/Context/Permissions';
+import { useEntityHasPermissions } from 'contexts/Permissions';
 
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/helpers';
