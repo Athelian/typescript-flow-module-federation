@@ -12,23 +12,9 @@ type Props = {
 const TextAreaInputDialog = ({ inputRef, value }: Props) => {
   const [content, setContent] = React.useState(value || '');
   const intl = useIntl();
-  const wrapperRef = React.useRef();
-  React.useEffect(() => {
-    const node = wrapperRef.current;
-    const focus = () => inputRef.current.focus();
-    if (node) {
-      node.addEventListener('transitionend', focus);
-    }
-
-    return () => {
-      if (node) {
-        node.removeEventListener('transitionend', focus);
-      }
-    };
-  });
 
   return (
-    <div ref={wrapperRef} className={DialogStyle}>
+    <div className={DialogStyle}>
       <div className={ContentStyle}>
         <textarea
           ref={inputRef}
