@@ -156,7 +156,6 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId, exporter
                         >
                           {selectBatchesIsOpen && (
                             <SelectShipmentBatches
-                              cacheKey="ContainerSelectBatches"
                               filter={{
                                 importerId,
                                 ...(exporterId ? { exporterId } : {}),

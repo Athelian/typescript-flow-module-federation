@@ -199,6 +199,10 @@ export default defineMessages({
     id: 'components.BatchItem.adjustmentType',
     defaultMessage: 'CATEGORY',
   },
+  importer: {
+    id: 'components.BatchItem.importer',
+    defaultMessage: 'IMPORTER',
+  },
   exporter: {
     id: 'components.BatchItem.exporter',
     defaultMessage: 'EXPORTER',
