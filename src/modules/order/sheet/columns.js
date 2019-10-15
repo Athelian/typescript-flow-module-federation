@@ -636,6 +636,19 @@ const shipmentColumns: Array<ColumnConfig> = [
     },
   },
   {
+    key: 'order.orderItem.batch.shipment.bookingDate',
+    exportKey: 'orderItems.batches.shipment.bookingDate',
+    title: <FormattedMessage {...shipmentMessages.bookingDate} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 140,
+    sort: {
+      local: true,
+      name: 'bookingDate',
+      group: 'batch',
+    },
+  },
+  {
     key: 'order.orderItem.batch.shipment.invoiceNo',
     exportKey: 'orderItems.batches.shipment.invoiceNo',
     title: <FormattedMessage {...shipmentMessages.invoiceNo} />,

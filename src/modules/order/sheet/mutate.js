@@ -69,6 +69,7 @@ function normalizedInput(type: string, field: string, value: any): Object {
     case 'Shipment':
       switch (field) {
         case 'blDate':
+        case 'bookingDate':
           return {
             [field]: new Date(value),
           };

@@ -178,12 +178,6 @@ function batchSorter(sorts: Array<ColumnSort>) {
             sort.direction
           );
           break;
-        case 'shipmentBlDate':
-          result = setDirection(
-            dateSort(a.shipment?.blDate ?? new Date(), b.shipment?.blDate ?? new Date()),
-            sort.direction
-          );
-          break;
         case 'shipmentUpdatedAt':
           result = setDirection(
             dateSort(a.shipment?.updatedAt ?? new Date(), b.shipment?.updatedAt ?? new Date()),
@@ -202,9 +196,21 @@ function batchSorter(sorts: Array<ColumnSort>) {
             sort.direction
           );
           break;
+        case 'shipmentBlDate':
+          result = setDirection(
+            dateSort(a.shipment?.blDate ?? new Date(), b.shipment?.blDate ?? new Date()),
+            sort.direction
+          );
+          break;
         case 'shipmentBookingNo':
           result = setDirection(
             stringSort(a.shipment?.bookingNo ?? '', b.shipment?.bookingNo ?? ''),
+            sort.direction
+          );
+          break;
+        case 'shipmentBookingDate':
+          result = setDirection(
+            dateSort(a.shipment?.bookingDate ?? new Date(), b.shipment?.bookingDate ?? new Date()),
             sort.direction
           );
           break;

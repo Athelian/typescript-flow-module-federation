@@ -99,6 +99,7 @@ const shipmentSheetFragment = gql`
     blNo
     blDate
     bookingNo
+    bookingDate
     invoiceNo
     contractNo
     carrier
