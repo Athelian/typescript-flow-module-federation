@@ -191,13 +191,8 @@ export const findShipmentIdByContainer = (containerId: string, entities: Object)
   return shipmentId;
 };
 
-export const findShipmentIdsByBatch = (batchId: string, entities: Object) => {
-  const parentIds = (Object.keys(entities.batches || {})
-    .filter(id => {
-      return batchId === id;
-    })
-    .map(id => entities.batches?.[id]?.shipment): Array<string>);
-  return [...new Set(parentIds)];
+export const findShipmentIdByBatch = (batchId: string, entities: Object) => {
+  return entities.batches?.[batchId]?.shipment;
 };
 
 export const findShipmentIdsByOrderItem = (itemId: string, entities: Object) => {

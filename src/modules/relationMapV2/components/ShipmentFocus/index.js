@@ -11,12 +11,17 @@ import apolloClient from 'apollo';
 import usePrevious from 'hooks/usePrevious';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { Display } from 'components/Form';
-import { SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
+import { SHIPMENT, CONTAINER, BATCH, ORDER_ITEM, ORDER } from 'modules/relationMapV2/constants';
 import {
   shipmentFocusedListQuery,
   shipmentFullFocusDetailQuery,
 } from 'modules/relationMapV2/query';
-import { loadMore, findShipmentIdByContainer } from 'modules/relationMapV2/helpers';
+import {
+  loadMore,
+  findShipmentIdByContainer,
+  findShipmentIdByBatch,
+  findParentIdsByBatch,
+} from 'modules/relationMapV2/helpers';
 import {
   Hits,
   Entities,
@@ -29,6 +34,7 @@ import EditFormSlideView from '../EditFormSlideView';
 import SelectedEntity from '../SelectedEntity';
 import InlineCreateContainer from '../InlineCreateContainer';
 import DeleteContainerConfirm from '../DeleteContainerConfirm';
+import RemoveBatchConfirm from '../RemoveBatchConfirm';
 import StatusConfirm from '../StatusConfirm';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import AddTags from '../AddTags';
@@ -315,6 +321,47 @@ export default function ShipmentFocus() {
                           );
                         }
                       }
+                    }}
+                  />
+                  <RemoveBatchConfirm
+                    onSuccess={batchId => {
+                      queryShipmentsDetail([findShipmentIdByBatch(batchId, entities)]);
+                      const [itemId, orderId] = findParentIdsByBatch({
+                        batchId,
+                        entities,
+                        viewer: state.viewer,
+                      });
+                      const removeTargets = [];
+                      const remainItemsCount = Object.values(entities.batches).filter(
+                        (currentBatch: Object) =>
+                          currentBatch.container && currentBatch.orderItem === itemId
+                      ).length;
+                      if (!entities.batches?.[batchId]?.container) {
+                        removeTargets.push(`${BATCH}-${batchId}`);
+                      }
+                      if (remainItemsCount === 1 && orderId && itemId) {
+                        removeTargets.push(`${ORDER}-${orderId}`);
+                        removeTargets.push(`${ORDER_ITEM}-${itemId}`);
+                      }
+                      window.requestIdleCallback(
+                        () => {
+                          if (removeTargets.length) {
+                            dispatch({
+                              type: 'REMOVE_TARGETS',
+                              payload: {
+                                targets: removeTargets,
+                              },
+                            });
+                          }
+                          dispatch({
+                            type: 'REMOVE_BATCH_CLOSE',
+                            payload: {},
+                          });
+                        },
+                        {
+                          timeout: 250,
+                        }
+                      );
                     }}
                   />
                   <AddTags

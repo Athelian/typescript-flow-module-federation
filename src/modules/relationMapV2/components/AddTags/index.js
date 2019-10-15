@@ -22,7 +22,7 @@ import {
   findOrderIdsByContainer,
   findOrderIdsByShipment,
   findShipmentIdByContainer,
-  findShipmentIdsByBatch,
+  findShipmentIdByBatch,
   findShipmentIdsByOrderItem,
   findShipmentIdsByOrder,
 } from 'modules/relationMapV2/helpers';
@@ -288,8 +288,8 @@ export default function AddTags({ onSuccess }: Props) {
             }
             if ((result.data?.entitiesUpdateMany?.batches ?? []).length) {
               ids.push(
-                ...(result.data?.entitiesUpdateMany?.batches ?? []).flatMap(batch =>
-                  findShipmentIdsByBatch(batch.id, mapping.entities)
+                ...(result.data?.entitiesUpdateMany?.batches ?? []).map(batch =>
+                  findShipmentIdByBatch(batch.id, mapping.entities)
                 )
               );
             }
