@@ -692,6 +692,16 @@ const initialState: State = {
       },
     },
   },
+  containerActions: {
+    isOpen: false,
+    isProcessing: false,
+    detail: {
+      entity: {
+        id: '',
+        no: '',
+      },
+    },
+  },
   batchActions: {
     isOpen: false,
     isProcessing: false,
@@ -802,6 +812,9 @@ function orderReducer(
       | 'DELETE_ITEM'
       | 'DELETE_ITEM_START'
       | 'DELETE_ITEM_CLOSE'
+      | 'DELETE_CONTAINER'
+      | 'DELETE_CONTAINER_START'
+      | 'DELETE_CONTAINER_CLOSE'
       | 'CREATE_ITEM'
       | 'CREATE_ITEM_START'
       | 'CREATE_ITEM_END'
@@ -1085,6 +1098,15 @@ function orderReducer(
         },
       });
     }
+    case 'DELETE_CONTAINER': {
+      return update(state, {
+        containerActions: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          detail: { $set: action.payload },
+        },
+      });
+    }
     case 'REMOVE_BATCH': {
       return update(state, {
         batchActions: {
@@ -1173,6 +1195,13 @@ function orderReducer(
           isProcessing: { $set: false },
         },
       });
+    case 'DELETE_CONTAINER_START': {
+      return update(state, {
+        containerActions: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
     case 'DELETE_ITEM_START':
     case 'CREATE_BATCH_START': {
       return update(state, {
@@ -1204,6 +1233,14 @@ function orderReducer(
           isOpen: { $set: false },
         },
       });
+    case 'DELETE_CONTAINER_CLOSE': {
+      return update(state, {
+        containerActions: {
+          type: { $set: '' },
+          isOpen: { $set: false },
+        },
+      });
+    }
     case 'DELETE_ITEM_CLOSE':
     case 'CREATE_BATCH_CLOSE': {
       return update(state, {

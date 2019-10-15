@@ -13,11 +13,12 @@ import usePrevious from 'hooks/usePrevious';
 import logger from 'utils/logger';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { Display } from 'components/Form';
-import { SHIPMENT } from 'modules/relationMapV2/constants';
+import { SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
 import {
   shipmentFocusedListQuery,
   shipmentFullFocusDetailQuery,
 } from 'modules/relationMapV2/query';
+import { findShipmentIdByContainer } from 'modules/relationMapV2/helpers';
 import {
   Hits,
   Entities,
@@ -27,6 +28,7 @@ import {
 } from 'modules/relationMapV2/store';
 import EditFormSlideView from '../EditFormSlideView';
 import SelectedEntity from '../SelectedEntity';
+import DeleteContainerConfirm from '../DeleteContainerConfirm';
 import StatusConfirm from '../StatusConfirm';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import AddTags from '../AddTags';
@@ -287,6 +289,29 @@ export default function ShipmentFocus() {
                           selectedId: '',
                         },
                       });
+                    }}
+                  />
+                  <DeleteContainerConfirm
+                    onSuccess={containerId => {
+                      const ids = [findShipmentIdByContainer(containerId, entities)];
+                      queryShipmentsDetail(ids);
+                      window.requestIdleCallback(
+                        () => {
+                          dispatch({
+                            type: 'DELETE_CONTAINER_CLOSE',
+                            payload: { containerId },
+                          });
+                          dispatch({
+                            type: 'REMOVE_TARGETS',
+                            payload: {
+                              targets: [`${CONTAINER}-${containerId}`],
+                            },
+                          });
+                        },
+                        {
+                          timeout: 250,
+                        }
+                      );
                     }}
                   />
                   <MoveEntityConfirm

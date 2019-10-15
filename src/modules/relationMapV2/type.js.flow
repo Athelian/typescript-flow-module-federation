@@ -32,7 +32,7 @@ export type CellRender = {
 };
 
 export type State = {|
-  viewer: "Order" | "Shipment",
+  viewer: 'Order' | 'Shipment',
   order: Object,
   shipment: Object,
   targets: Array<string>,
@@ -63,6 +63,16 @@ export type State = {|
       },
     },
     type?: 'createBatch' | 'deleteItem',
+  },
+  containerActions: {
+    isOpen: boolean,
+    isProcessing: boolean,
+    detail: {
+      entity: {
+        id: string,
+        no: string,
+      },
+    },
   },
   batchActions: {
     isOpen: boolean,
