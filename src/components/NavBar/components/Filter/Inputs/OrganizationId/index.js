@@ -58,7 +58,7 @@ const OrganizationSelector = ({
         <Filter
           config={PartnerFilterConfig}
           filterBy={filterBy}
-          staticFilters={organizationType ? ['types'] : null}
+          staticFilters={organizationType ? ['types'] : []}
           onChange={setFilterBy}
         />
         <Search query={query} onChange={setQuery} />
