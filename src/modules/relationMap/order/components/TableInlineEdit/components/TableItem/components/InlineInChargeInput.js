@@ -69,7 +69,6 @@ export default function InlineInChargeInput({ name, values, max, id: inputId, gr
               <SlideView isOpen={isOpen} onRequestClose={() => slideToggle(false)}>
                 {isOpen && (
                   <AssignUsers
-                    cacheKey="InlineEditTableUserSelect"
                     selected={values}
                     onSelect={selected => {
                       slideToggle(false);
@@ -80,9 +79,7 @@ export default function InlineInChargeInput({ name, values, max, id: inputId, gr
                         value: selected,
                       });
                     }}
-                    filterBy={{
-                      organizationIds: groupIds,
-                    }}
+                    organizationIds={groupIds}
                     onCancel={() => slideToggle(false)}
                   />
                 )}

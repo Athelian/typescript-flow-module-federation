@@ -16,13 +16,13 @@ import OrganizationTypes from './Inputs/OrganizationTypes';
 import OrderIds from './Inputs/OrderIds';
 import WarehouseIds from './Inputs/WarehouseIds';
 import { CompletelyBatched, CompletelyShipped, HasShipment } from './Inputs/Bool';
-import {
+import OrganizationIds, {
   ImporterIds,
   ExporterIds,
   SupplierIds,
   ForwarderIds,
   WarehouserIds,
-} from './Inputs/PartnerIds';
+} from './Inputs/OrganizationIds';
 import {
   ProductTags,
   BatchTags,
@@ -79,6 +79,7 @@ const inputs = {
   mass_range: MassRange,
   order_ids: OrderIds,
   warehouse_ids: WarehouseIds,
+  organization_ids: OrganizationIds,
   importer_ids: ImporterIds,
   exporter_ids: ExporterIds,
   supplier_ids: SupplierIds,

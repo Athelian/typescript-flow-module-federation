@@ -106,4 +106,8 @@ export default defineMessages({
     id: 'modules.Users.list.sort.fullName',
     defaultMessage: 'Full Name',
   },
+  organizations: {
+    id: 'modules.Users.organizations',
+    defaultMessage: 'Organizations',
+  },
 });
