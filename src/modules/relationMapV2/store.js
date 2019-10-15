@@ -848,6 +848,10 @@ function orderReducer(
       | 'REMOVE_BATCH'
       | 'REMOVE_BATCH_START'
       | 'REMOVE_BATCH_CLOSE'
+      | 'MOVE_ITEM'
+      | 'MOVE_ITEM_START'
+      | 'MOVE_ITEM_CLOSE'
+      | 'MOVE_ITEM_END'
       | 'MOVE_BATCH'
       | 'MOVE_BATCH_START'
       | 'MOVE_BATCH_CLOSE'
@@ -1132,6 +1136,15 @@ function orderReducer(
         },
       });
     }
+    case 'MOVE_ITEM': {
+      return update(state, {
+        itemActions: {
+          type: { $set: 'moveItems' },
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+        },
+      });
+    }
     case 'MOVE_BATCH': {
       return update(state, {
         batchActions: {
@@ -1278,6 +1291,7 @@ function orderReducer(
         },
       });
     }
+    case 'MOVE_ITEM_CLOSE':
     case 'DELETE_ITEM_CLOSE':
     case 'CREATE_BATCH_CLOSE': {
       return update(state, {

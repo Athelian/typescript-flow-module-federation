@@ -564,6 +564,20 @@ export default function Actions({ targets }: Props) {
                     onClick={() => {
                       setCurrentMenu(null);
                       dispatch({
+                        type: 'MOVE_ITEM',
+                        payload: {},
+                      });
+                    }}
+                  >
+                    <Icon icon="EXCHANGE" />
+                    <ActionLabel>
+                      <FormattedMessage id="components.button.move" defaultMessage="MOVE" />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
                         type: 'AUTO_FILL',
                         payload: {
                           source: ORDER_ITEM,
