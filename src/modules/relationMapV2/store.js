@@ -812,6 +812,10 @@ function orderReducer(
       | 'DELETE_ITEM'
       | 'DELETE_ITEM_START'
       | 'DELETE_ITEM_CLOSE'
+      | 'CREATE_CONTAINER'
+      | 'CREATE_CONTAINER_START'
+      | 'CREATE_CONTAINER_END'
+      | 'CREATE_CONTAINER_CLOSE'
       | 'DELETE_CONTAINER'
       | 'DELETE_CONTAINER_START'
       | 'DELETE_CONTAINER_CLOSE'
@@ -1088,6 +1092,16 @@ function orderReducer(
         },
       });
     }
+    case 'CREATE_CONTAINER': {
+      return update(state, {
+        containerActions: {
+          type: { $set: 'createContainer' },
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          detail: { $set: action.payload },
+        },
+      });
+    }
     case 'DELETE_ITEM': {
       return update(state, {
         itemActions: {
@@ -1101,6 +1115,7 @@ function orderReducer(
     case 'DELETE_CONTAINER': {
       return update(state, {
         containerActions: {
+          type: { $set: 'deleteContainer' },
           isOpen: { $set: true },
           isProcessing: { $set: false },
           detail: { $set: action.payload },
@@ -1224,6 +1239,27 @@ function orderReducer(
         },
       });
     }
+    case 'CREATE_CONTAINER_START': {
+      return update(state, {
+        containerActions: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'CREATE_CONTAINER_END': {
+      return update(state, {
+        containerActions: {
+          isProcessing: { $set: false },
+          detail: {
+            entity: {
+              $merge: {
+                id: '',
+              },
+            },
+          },
+        },
+      });
+    }
     case 'MOVE_BATCH_CLOSE':
     case 'REMOVE_BATCH_CLOSE':
     case 'DELETE_BATCH_CLOSE':
@@ -1233,6 +1269,7 @@ function orderReducer(
           isOpen: { $set: false },
         },
       });
+    case 'CREATE_CONTAINER_CLOSE':
     case 'DELETE_CONTAINER_CLOSE': {
       return update(state, {
         containerActions: {

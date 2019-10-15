@@ -73,6 +73,7 @@ export type State = {|
         no: string,
       },
     },
+    type?: 'createContainer' | 'deleteContainer',
   },
   batchActions: {
     isOpen: boolean,

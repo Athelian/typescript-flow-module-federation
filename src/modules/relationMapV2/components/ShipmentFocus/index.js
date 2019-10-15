@@ -27,6 +27,7 @@ import {
 } from 'modules/relationMapV2/store';
 import EditFormSlideView from '../EditFormSlideView';
 import SelectedEntity from '../SelectedEntity';
+import InlineCreateContainer from '../InlineCreateContainer';
 import DeleteContainerConfirm from '../DeleteContainerConfirm';
 import StatusConfirm from '../StatusConfirm';
 import MoveEntityConfirm from '../MoveEntityConfirm';
@@ -286,6 +287,34 @@ export default function ShipmentFocus() {
                         type: 'STATUS_END',
                         payload: { ids },
                       });
+                    }}
+                  />
+                  <InlineCreateContainer
+                    onSuccess={(shipmentId, container) => {
+                      if (shipmentId) {
+                        queryShipmentsDetail([shipmentId]);
+                        const node = document.querySelector(`#${CONTAINER}-${container?.id}`);
+                        if (node) {
+                          // on UI, found the DOM, then try to scroll the center position
+                          scrollIntoView(node, {
+                            behavior: 'smooth',
+                            scrollMode: 'if-needed',
+                          });
+                        } else {
+                          // TODO: scroll to the position
+                          window.requestIdleCallback(
+                            () => {
+                              dispatch({
+                                type: 'CREATE_CONTAINER_CLOSE',
+                                payload: {},
+                              });
+                            },
+                            {
+                              timeout: 250,
+                            }
+                          );
+                        }
+                      }
                     }}
                   />
                   <AddTags

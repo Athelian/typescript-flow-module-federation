@@ -17,9 +17,10 @@ export default function DeleteContainerConfirm({ onSuccess }: Props) {
   const {
     isProcessing,
     isOpen,
+    type,
     detail: { entity },
   } = state.containerActions;
-
+  const isContainerDelete = type === 'deleteContainer';
   const onCancel = () => {
     dispatch({
       type: 'DELETE_CONTAINER_CLOSE',
@@ -82,7 +83,7 @@ export default function DeleteContainerConfirm({ onSuccess }: Props) {
 
   return (
     <ActionDialog
-      isOpen={isOpen}
+      isOpen={isOpen && isContainerDelete}
       isProcessing={isProcessing}
       onCancel={onCancel}
       title={<FormattedMessage id="modules.RelationMap.label.delete" defaultMessage="DELETE" />}

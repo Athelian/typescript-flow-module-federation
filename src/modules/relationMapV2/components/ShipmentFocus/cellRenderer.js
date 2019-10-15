@@ -1578,7 +1578,20 @@ function ShipmentCell({
           >
             <div ref={drag} id={`${SHIPMENT}-${shipmentId}`}>
               <Badge label={badge.shipment?.[shipmentId] || ''} />
-              <ShipmentCard shipment={shipment} />
+              <ShipmentCard
+                shipment={shipment}
+                onCreateContainer={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'CREATE_CONTAINER',
+                    payload: {
+                      entity: {
+                        id: shipmentId,
+                      },
+                    },
+                  });
+                }}
+              />
               <FilterHitBorder hasFilterHits={isMatchedEntity(matches, shipment)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
