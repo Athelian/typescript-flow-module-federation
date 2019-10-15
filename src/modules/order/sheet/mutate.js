@@ -43,6 +43,10 @@ function normalizedInput(type: string, field: string, value: any): Object {
             },
           };
         }
+        case 'deliveryDate':
+          return {
+            [field]: new Date(value),
+          };
         default:
           return {
             [field]: value,

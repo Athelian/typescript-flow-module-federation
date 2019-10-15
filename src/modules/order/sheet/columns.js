@@ -235,6 +235,19 @@ const orderItemColumns: Array<ColumnConfig> = [
       group: 'orderItem',
     },
   }, */
+  {
+    key: 'order.orderItem.deliveryDate',
+    exportKey: 'orderItems.deliveryDate',
+    title: <FormattedMessage {...orderItemMessages.deliveryDate} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 140,
+    sort: {
+      local: true,
+      name: 'deliveryDate',
+      group: 'orderItem',
+    },
+  },
   // total price
   // documents
   // tasks

@@ -34,6 +34,9 @@ function orderItemSorter(sorts: Array<ColumnSort>) {
         case 'updatedAt':
           result = setDirection(dateSort(a.updatedAt, b.updatedAt), sort.direction);
           break;
+        case 'deliveryDate':
+          result = setDirection(dateSort(a.deliveryDate, b.deliveryDate), sort.direction);
+          break;
         case 'no':
           result = setDirection(stringSort(a.no, b.no), sort.direction);
           break;

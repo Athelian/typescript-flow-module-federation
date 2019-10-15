@@ -17,6 +17,7 @@ import {
   ORDER_ITEMS_SET_QUANTITY,
   ORDER_ITEMS_SET_PRICE,
   ORDER_ITEMS_UPDATE,
+  ORDER_ITEMS_SET_DELIVERY_DATE,
 } from 'modules/permission/constants/orderItem';
 import {
   BATCH_SET_DELIVERY_DATE,
@@ -301,6 +302,20 @@ const transformOrderItem = (
       empty: hasItems && !orderItem,
       parent: true,
       ...transformReadonlyField(basePath, orderItem, 'totalShipped', orderItem?.totalShipped ?? 0),
+    },
+    {
+      columnKey: 'order.orderItem.deliveryDate',
+      type: 'date',
+      disabled: !hasItems && !orderItem,
+      empty: hasItems && !orderItem,
+      parent: true,
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'deliveryDate',
+        hasPermission =>
+          hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_DELIVERY_DATE)
+      ),
     },
   ];
 };
