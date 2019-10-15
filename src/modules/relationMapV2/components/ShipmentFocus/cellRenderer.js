@@ -775,6 +775,16 @@ function OrderCell({ data, beforeConnector }: CellProps) {
               <OrderCard
                 organizationId={order?.ownedBy?.id}
                 order={order}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: ORDER,
+                      selectedId: orderId,
+                    },
+                  });
+                }}
                 onCreateItem={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -954,6 +964,17 @@ function OrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
               <OrderItemCard
                 organizationId={data.orderItem?.ownedBy?.id}
                 orderItem={data.orderItem}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: ORDER_ITEM,
+                      selectedId: itemId,
+                      orderId,
+                    },
+                  });
+                }}
                 onDeleteItem={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -1175,6 +1196,17 @@ function BatchCell({
               <BatchCard
                 organizationId={data?.ownedBy?.id}
                 batch={data}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: BATCH,
+                      selectedId: batchId,
+                      shipmentId: shipment?.id,
+                    },
+                  });
+                }}
                 onDeleteBatch={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -1386,7 +1418,19 @@ function ContainerCell({
             <div ref={drag}>
               <Badge label={badge.container?.[containerId] || ''} />
               <ContainerCard
+                organizationId={data?.ownedBy?.id}
                 container={data}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: CONTAINER,
+                      selectedId: containerId,
+                      orderIds,
+                    },
+                  });
+                }}
                 onDeleteContainer={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -1602,7 +1646,19 @@ function ShipmentCell({
             <div ref={drag} id={`${SHIPMENT}-${shipmentId}`}>
               <Badge label={badge.shipment?.[shipmentId] || ''} />
               <ShipmentCard
+                organizationId={shipment?.ownedBy?.id}
                 shipment={shipment}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: SHIPMENT,
+                      selectedId: shipmentId,
+                      orderIds,
+                    },
+                  });
+                }}
                 onCreateContainer={evt => {
                   evt.stopPropagation();
                   dispatch({

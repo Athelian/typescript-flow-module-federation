@@ -1460,7 +1460,21 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
           >
             <div ref={drag}>
               <Badge label={badge.container?.[containerId] || ''} />
-              <ContainerCard container={container} />
+              <ContainerCard
+                organizationId={container?.ownedBy}
+                container={container}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: CONTAINER,
+                      selectedId: containerId,
+                      orderIds,
+                    },
+                  });
+                }}
+              />
               <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
@@ -1641,7 +1655,21 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
           >
             <div ref={drag}>
               <Badge label={badge.shipment?.[shipmentId] || ''} />
-              <ShipmentCard shipment={shipment} />
+              <ShipmentCard
+                organizationId={shipment?.ownedBy}
+                shipment={shipment}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: SHIPMENT,
+                      selectedId: shipmentId,
+                      orderIds,
+                    },
+                  });
+                }}
+              />
               <FilterHitBorder hasFilterHits={isMatchedEntity(matches, shipment)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay

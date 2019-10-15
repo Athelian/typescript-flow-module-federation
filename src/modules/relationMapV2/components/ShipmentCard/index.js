@@ -5,15 +5,16 @@ import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import TaskRing from 'components/TaskRing';
-import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
 import { Display, Blackout, Label } from 'components/Form';
 import { FocusedView, GlobalShipmentPoint } from 'modules/relationMapV2/store';
 import { useHasPermissions } from 'contexts/Permissions';
 import { CONTAINER_CREATE } from 'modules/permission/constants/container';
+import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
 import { getPort } from 'utils/shipment';
 import { differenceInCalendarDays } from 'utils/date';
 import MiniShipmentTimeline from 'modules/relationMapV2/components/MiniShipmentTimeline';
+import CardActions from 'modules/relationMapV2/components/CardActions';
 import {
   CARGO_READY,
   LOAD_PORT_DEPARTURE,
@@ -35,8 +36,6 @@ import {
   TimelineAndDateWrapperStyle,
   DelayStyle,
   ApprovedIconStyle,
-  CreateContainerBtnStyle,
-  CreateContainerIconStyle,
 } from './style';
 
 const getInitLocalShipmentPoint = (globalShipmentPoint: string, voyages: Array<Object>): string => {
@@ -55,10 +54,21 @@ const getInitLocalShipmentPoint = (globalShipmentPoint: string, voyages: Array<O
 
 type Props = {|
   shipment: Object,
+  onViewForm: Event => void,
   onCreateContainer?: Event => void,
+  organizationId: string,
 |};
 
-export default function ShipmentCard({ shipment, onCreateContainer }: Props) {
+export default function ShipmentCard({
+  shipment,
+  onViewForm,
+  onCreateContainer,
+  organizationId,
+}: Props) {
+  const hasPermissions = useHasPermissions(organizationId);
+  const allowToViewForm = hasPermissions(SHIPMENT_FORM);
+  const allowToCreateContainer = hasPermissions(CONTAINER_CREATE);
+
   const { globalShipmentPoint } = GlobalShipmentPoint.useContainer();
   const { selectors } = FocusedView.useContainer();
   const {
@@ -188,8 +198,7 @@ export default function ShipmentCard({ shipment, onCreateContainer }: Props) {
   const canViewTimeline = true;
   const canViewDate = true;
   const canViewTasks = true;
-  const hasPermissions = useHasPermissions(shipment?.ownedBy?.id);
-  const allowToCreateContainer = hasPermissions(CONTAINER_CREATE);
+
   return (
     <div className={ShipmentCardWrapperStyle(selectors.isShipmentFocus)}>
       <div className={TopRowWrapperStyle}>
@@ -258,26 +267,29 @@ export default function ShipmentCard({ shipment, onCreateContainer }: Props) {
         <TaskRing blackout={!canViewTasks} {...todo} />
       </div>
 
-      {allowToCreateContainer && selectors.isShipmentFocus && (
-        <Tooltip
-          message={
-            <FormattedMessage
-              id="modules.RelationMap.shipment.createContainerTooltip"
-              defaultMessage="Create Container"
-            />
-          }
-          delay={800}
-        >
-          <button onClick={onCreateContainer} className={CreateContainerBtnStyle} type="button">
-            <div className={CreateContainerIconStyle}>
-              <Icon icon="ADD" />
-            </div>
-            <div className={CreateContainerIconStyle}>
-              <Icon icon="CONTAINER" />
-            </div>
-          </button>
-        </Tooltip>
-      )}
+      <CardActions
+        actions={[
+          allowToViewForm && {
+            label: (
+              <FormattedMessage
+                id="modules.RelationMap.cards.viewForm"
+                defaultMessage="View Form"
+              />
+            ),
+            onClick: onViewForm,
+          },
+          allowToCreateContainer &&
+            selectors.isShipmentFocus && {
+              label: (
+                <FormattedMessage
+                  id="modules.RelationMap.cards.createContainer"
+                  defaultMessage="Create Container"
+                />
+              ),
+              onClick: onCreateContainer,
+            },
+        ].filter(Boolean)}
+      />
     </div>
   );
 }
