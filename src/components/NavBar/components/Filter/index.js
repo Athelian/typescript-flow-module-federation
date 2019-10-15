@@ -161,7 +161,7 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
   };
 
   const onClearAll = () => {
-    setFilterStates([]);
+    setFilterStates(filterStates.filter(fs => (staticFilters || []).includes(fs.field)));
   };
 
   const isActive = filterStates.length > 0;
