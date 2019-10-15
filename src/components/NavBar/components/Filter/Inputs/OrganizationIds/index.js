@@ -22,7 +22,7 @@ import useFilterSort from 'hooks/useFilterSort';
 import { isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from '../../messages';
-import Ids from '../Ids';
+import Ids from '../Common/Ids';
 import { organizationsByIDsQuery, partnersQuery } from './query';
 import { CardStyle } from './style';
 
@@ -62,7 +62,7 @@ const OrganizationSelector = ({
               <Filter
                 config={PartnerFilterConfig}
                 filterBy={filterBy}
-                staticFilters={organizationType ? ['types'] : null}
+                staticFilters={organizationType ? ['types'] : []}
                 onChange={setFilterBy}
               />
               <Search query={query} onChange={setQuery} />

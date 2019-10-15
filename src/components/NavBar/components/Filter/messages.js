@@ -78,6 +78,30 @@ export default defineMessages({
     id: 'components.NavBar.Filter.warehousers',
     defaultMessage: 'Warehousers',
   },
+  organization: {
+    id: 'components.NavBar.Filter.organization',
+    defaultMessage: 'Organization',
+  },
+  importer: {
+    id: 'components.NavBar.Filter.importer',
+    defaultMessage: 'Importer',
+  },
+  exporter: {
+    id: 'components.NavBar.Filter.exporter',
+    defaultMessage: 'Exporter',
+  },
+  supplier: {
+    id: 'components.NavBar.Filter.supplier',
+    defaultMessage: 'Supplier',
+  },
+  forwarder: {
+    id: 'components.NavBar.Filter.forwarder',
+    defaultMessage: 'Forwarder',
+  },
+  warehouser: {
+    id: 'components.NavBar.Filter.warehouser',
+    defaultMessage: 'Warehouser',
+  },
   orders: {
     id: 'components.NavBar.Filter.orders',
     defaultMessage: 'Orders',

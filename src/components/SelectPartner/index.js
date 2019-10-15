@@ -19,11 +19,7 @@ import {
 import { PartnerCard } from 'components/Cards';
 import PartnerGridView from 'modules/partner/list/PartnerGridView';
 
-type OptionalProps = {
-  cacheKey: string,
-};
-
-type Props = OptionalProps & {|
+type Props = {|
   partnerTypes: Array<string>,
   selected?: ?{
     id: string,
@@ -35,11 +31,10 @@ type Props = OptionalProps & {|
 
 const partnerPath = 'viewer.user.organization.partners';
 
-const SelectPartner = ({ cacheKey, partnerTypes, selected, onCancel, onSelect }: Props) => {
+const SelectPartner = ({ partnerTypes, selected, onCancel, onSelect }: Props) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', types: partnerTypes },
-    { updatedAt: 'DESCENDING' },
-    cacheKey
+    { updatedAt: 'DESCENDING' }
   );
 
   const queryVariables = { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 10 };
@@ -112,11 +107,5 @@ const SelectPartner = ({ cacheKey, partnerTypes, selected, onCancel, onSelect }:
     </Query>
   );
 };
-
-const defaultProps = {
-  cacheKey: 'SelectPartner',
-};
-
-SelectPartner.defaultProps = defaultProps;
 
 export default SelectPartner;

@@ -23,6 +23,13 @@ import OrganizationIds, {
   ForwarderIds,
   WarehouserIds,
 } from './Inputs/OrganizationIds';
+import OrganizationId, {
+  ImporterId,
+  ExporterId,
+  SupplierId,
+  ForwarderId,
+  WarehouserId,
+} from './Inputs/OrganizationId';
 import {
   ProductTags,
   BatchTags,
@@ -54,6 +61,7 @@ export type FilterConfig = {
   type: string,
   message: MessageDescriptor,
   defaultValue?: any,
+  hidden?: boolean,
 };
 
 type FilterState = {
@@ -85,6 +93,12 @@ const inputs = {
   supplier_ids: SupplierIds,
   forwarder_ids: ForwarderIds,
   warehouser_ids: WarehouserIds,
+  organization_id: OrganizationId,
+  importer_id: ImporterId,
+  exporter_id: ExporterId,
+  supplier_id: SupplierId,
+  forwarder_id: ForwarderId,
+  warehouser_id: WarehouserId,
   users: Users,
   product_tags: ProductTags,
   order_tags: OrderTags,
@@ -168,7 +182,8 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
   const isActive = filterStates.length > 0;
   const hasWeakFilter = !!filterStates.find(f => !f.entity || !f.field || !f.type);
   const availableConfig = config.filter(
-    c => !filterStates.find(f => f.entity === c.entity && f.field === c.field)
+    (c: FilterConfig) =>
+      !filterStates.find(f => f.entity === c.entity && f.field === c.field) && !c.hidden
   );
   const readonlyFilters = filterStates.filter(fs => (staticFilters || []).includes(fs.field));
   const canAddFilter = availableConfig.length > 0 && !hasWeakFilter;
@@ -311,19 +326,21 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
               const entities = new Set(
                 config
                   .filter(
-                    c =>
+                    (c: FilterConfig) =>
                       c.entity === state.entity ||
-                      !filterStates.find(f => f.entity === c.entity && f.field === c.field)
+                      (!filterStates.find(f => f.entity === c.entity && f.field === c.field) &&
+                        !c.hidden)
                   )
                   .map(c => c.entity)
               );
 
               const fields = config
                 .filter(
-                  c =>
+                  (c: FilterConfig) =>
                     c.entity === state.entity &&
                     (c.field === state.field ||
-                      !filterStates.find(f => f.entity === c.entity && f.field === c.field))
+                      (!filterStates.find(f => f.entity === c.entity && f.field === c.field) &&
+                        !c.hidden))
                 )
                 .map(c => c.field);
 
