@@ -8,6 +8,9 @@ export const ContainerCardWrapperStyle: string = css`
   flex-direction: column;
   width: ${CONTAINER_WIDTH}px;
   height: 55px;
+  &:hover > button {
+    opacity: 1;
+  }
 `;
 
 export const TopRowWrapperStyle: string = css`
@@ -52,8 +55,7 @@ export const DeleteButtonStyle: string = css`
   ${borderRadiuses.CIRCLE};
   z-index: 2;
   ${shadows.INPUT};
-  &:hover {
-    opacity: 1;
+  &:hover > button {
     color: ${colors.RED};
   }
 `;
