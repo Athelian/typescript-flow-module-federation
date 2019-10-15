@@ -1,21 +1,26 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import type { IntlShape } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ArrayValue } from 'react-values';
 import { removeTypename } from 'utils/data';
 import GridView from 'components/GridView';
-import useFilter from 'hooks/useFilter';
-import FilterToolBar from 'components/common/FilterToolBar';
 import IncrementInput from 'components/IncrementInput';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { Label, Display } from 'components/Form';
 import { OrderProductProviderCard } from 'components/Cards';
 import { SaveButton, CancelButton } from 'components/Buttons';
+import {
+  EntityIcon,
+  Filter,
+  ProductProviderFilterConfig,
+  ProductProviderSortConfig,
+  Search,
+  Sort,
+} from 'components/NavBar';
+import useFilterSort from 'hooks/useFilterSort';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
-import messages from 'modules/order/messages';
 import type { OrderItem } from 'modules/order/type.js.flow';
 import { productProvidersListQuery } from './query';
 import { ItemWrapperStyle } from './style';
@@ -24,61 +29,40 @@ type OptionalProps = {
   importerId: string,
   exporterId: string,
   orderCurrency: string,
-  cacheKey: string,
 };
 
 type Props = OptionalProps & {
   onCancel: Function,
   onSelect: Function,
-  intl: IntlShape,
 };
 
 const defaultProps = {
   importerId: '',
   exporterId: '',
   orderCurrency: '',
-  cacheKey: 'SelectProductProviders',
 };
 
 const countSelected = (selected: Array<OrderItem> = [], value: OrderItem) =>
   selected.filter(item => item.id === value.id).length;
 
 function SelectProductProviders({
-  intl,
   onCancel,
   onSelect,
   importerId,
   exporterId,
   orderCurrency,
-  cacheKey,
 }: Props) {
-  const sortFields = [
-    { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
-    { title: intl.formatMessage(messages.endProductName), value: 'name' },
-    { title: intl.formatMessage(messages.productName), value: 'productName' },
-    { title: intl.formatMessage(messages.productSerial), value: 'productSerial' },
-    { title: intl.formatMessage(messages.priceCurrency), value: 'unitPriceCurrency' },
-    { title: intl.formatMessage(messages.exporterName), value: 'exporterName' },
-    { title: intl.formatMessage(messages.supplier), value: 'supplierName' },
-  ];
-
-  const defaultQueryVariables = {
-    perPage: 10,
-    page: 1,
-    filter: {
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    {
       importerId,
       exporterId,
       archived: false,
       query: '',
     },
-    sort: { field: 'updatedAt', direction: 'DESCENDING' },
-  };
-
-  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
-    defaultQueryVariables,
-    cacheKey
+    { updatedAt: 'DESCENDING' }
   );
+
+  const queryVariables = { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 10 };
 
   return (
     <Query query={productProvidersListQuery} variables={queryVariables} fetchPolicy="network-only">
@@ -98,13 +82,17 @@ function SelectProductProviders({
             {({ value: selected, push, splice, filter }) => (
               <SlideViewLayout>
                 <SlideViewNavBar>
-                  <FilterToolBar
-                    icon="PRODUCT_PROVIDER"
-                    sortFields={sortFields}
-                    filtersAndSort={filterAndSort}
-                    onChange={onChangeFilter}
-                    canSearch
+                  <EntityIcon icon="PRODUCT_PROVIDER" color="PRODUCT_PROVIDER" />
+
+                  <Filter
+                    config={ProductProviderFilterConfig}
+                    filterBy={filterBy}
+                    onChange={setFilterBy}
+                    staticFilters={['importerId', 'exporterId', 'archived']}
                   />
+                  <Search query={query} onChange={setQuery} />
+                  <Sort config={ProductProviderSortConfig} sortBy={sortBy} onChange={setSortBy} />
+
                   <div>
                     <Label>
                       <FormattedMessage
@@ -118,6 +106,7 @@ function SelectProductProviders({
                       )}
                     </Display>
                   </div>
+
                   <CancelButton onClick={onCancel} />
                   <SaveButton
                     data-testid="btnSaveSelectProductProviders"
@@ -183,4 +172,4 @@ function SelectProductProviders({
 
 SelectProductProviders.defaultProps = defaultProps;
 
-export default injectIntl(SelectProductProviders);
+export default SelectProductProviders;

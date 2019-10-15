@@ -46,6 +46,61 @@ export const ProductFilterConfig: Array<FilterConfig> = [
   },
 ];
 
+export const ProductProviderFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'PRODUCT PROVIDER',
+    field: 'archived',
+    type: 'archived',
+    message: productMessages.status,
+    defaultValue: false,
+  },
+  {
+    entity: 'PRODUCT PROVIDER',
+    field: 'createdAt',
+    type: 'date_range',
+    message: productMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'PRODUCT PROVIDER',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: productMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'PRODUCT PROVIDER',
+    field: 'tagIds',
+    type: 'product_tags',
+    message: productMessages.tags,
+    defaultValue: [],
+  },
+  {
+    entity: 'PRODUCT PROVIDER',
+    field: 'importerId',
+    type: 'importer_id',
+    message: productMessages.importer,
+    defaultValue: null,
+    hidden: true,
+  },
+  {
+    entity: 'PRODUCT PROVIDER',
+    field: 'exporterId',
+    type: 'exporter_id',
+    message: productMessages.exporter,
+    defaultValue: null,
+    hidden: true,
+  },
+  {
+    entity: 'PRODUCT PROVIDER',
+    field: 'supplierId',
+    type: 'supplier_id',
+    message: productMessages.supplier,
+    defaultValue: null,
+    hidden: true,
+  },
+];
+
 export const OrderFilterConfig: Array<FilterConfig> = [
   {
     entity: 'ORDER',
@@ -95,6 +150,7 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     type: 'order_ids',
     message: orderMessages.order,
     defaultValue: [],
+    hidden: true,
   },
   {
     entity: 'ORDER',

@@ -70,6 +70,10 @@ export default defineMessages({
     id: 'modules.Products.metadataValue',
     defaultMessage: 'VALUE',
   },
+  importer: {
+    id: 'modules.Products.importer',
+    defaultMessage: 'IMPORTER',
+  },
   exporter: {
     id: 'modules.Products.exporter',
     defaultMessage: 'EXPORTER',
