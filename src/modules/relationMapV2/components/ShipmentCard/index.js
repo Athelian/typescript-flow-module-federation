@@ -5,9 +5,12 @@ import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import TaskRing from 'components/TaskRing';
+import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
 import { Display, Blackout, Label } from 'components/Form';
 import { FocusedView, GlobalShipmentPoint } from 'modules/relationMapV2/store';
+import { useHasPermissions } from 'contexts/Permissions';
+import { CONTAINER_CREATE } from 'modules/permission/constants/container';
 import { getPort } from 'utils/shipment';
 import { differenceInCalendarDays } from 'utils/date';
 import MiniShipmentTimeline from 'modules/relationMapV2/components/MiniShipmentTimeline';
@@ -32,6 +35,8 @@ import {
   TimelineAndDateWrapperStyle,
   DelayStyle,
   ApprovedIconStyle,
+  CreateContainerBtnStyle,
+  CreateContainerIconStyle,
 } from './style';
 
 const getInitLocalShipmentPoint = (globalShipmentPoint: string, voyages: Array<Object>): string => {
@@ -50,9 +55,10 @@ const getInitLocalShipmentPoint = (globalShipmentPoint: string, voyages: Array<O
 
 type Props = {|
   shipment: Object,
+  onCreateContainer?: Event => void,
 |};
 
-export default function ShipmentCard({ shipment }: Props) {
+export default function ShipmentCard({ shipment, onCreateContainer }: Props) {
   const { globalShipmentPoint } = GlobalShipmentPoint.useContainer();
   const { selectors } = FocusedView.useContainer();
   const {
@@ -182,7 +188,8 @@ export default function ShipmentCard({ shipment }: Props) {
   const canViewTimeline = true;
   const canViewDate = true;
   const canViewTasks = true;
-
+  const hasPermissions = useHasPermissions(shipment?.ownedBy?.id);
+  const allowToCreateContainer = hasPermissions(CONTAINER_CREATE);
   return (
     <div className={ShipmentCardWrapperStyle(selectors.isShipmentFocus)}>
       <div className={TopRowWrapperStyle}>
@@ -250,6 +257,27 @@ export default function ShipmentCard({ shipment }: Props) {
 
         <TaskRing blackout={!canViewTasks} {...todo} />
       </div>
+
+      {allowToCreateContainer && selectors.isShipmentFocus && (
+        <Tooltip
+          message={
+            <FormattedMessage
+              id="modules.RelationMap.shipment.createContainerTooltip"
+              defaultMessage="Create Container"
+            />
+          }
+          delay={800}
+        >
+          <button onClick={onCreateContainer} className={CreateContainerBtnStyle} type="button">
+            <div className={CreateContainerIconStyle}>
+              <Icon icon="ADD" />
+            </div>
+            <div className={CreateContainerIconStyle}>
+              <Icon icon="CONTAINER" />
+            </div>
+          </button>
+        </Tooltip>
+      )}
     </div>
   );
 }
