@@ -545,7 +545,7 @@ const shipmentDropMessage = ({
       if (!parentOrderId) return '';
 
       const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
-      const isOwnShipment = batch.shipment === shipmentId;
+      const isOwnShipment = batch.shipment === shipmentId && !batch.container;
       if (isOwnShipment)
         return (
           <div>
@@ -1436,7 +1436,7 @@ function ShipmentCell({
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
           const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
-          const isOwnShipment = batch.shipment === shipmentId;
+          const isOwnShipment = batch.shipment === shipmentId && !batch.container;
           const isDifferentImporter =
             shipment?.importer?.id !== getByPathWithDefault('', 'importer.id', order);
           const isDifferentExporter =
