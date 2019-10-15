@@ -43,6 +43,7 @@ import {
   SHIPMENT_UPDATE,
   SHIPMENT_SET_NO,
   SHIPMENT_SET_BL_NO,
+  SHIPMENT_SET_BL_DATE,
   SHIPMENT_SET_BOOKING_NO,
   SHIPMENT_SET_INVOICE_NO,
   SHIPMENT_SET_CONTRACT_NO,
@@ -642,6 +643,18 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
         batch ? batch.shipment : null,
         'blNo',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BL_NO)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.blDate',
+      type: 'date',
+      duplicatable: true,
+      disabled: !(batch ? batch.shipment : null),
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch ? batch.shipment : null,
+        'blDate',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BL_DATE)
       ),
     },
     {
