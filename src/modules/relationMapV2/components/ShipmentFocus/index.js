@@ -5,12 +5,10 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import InfiniteLoader from 'react-window-infinite-loader';
 import { VariableSizeList as List } from 'react-window';
 import { Query } from 'react-apollo';
-import { get, set, uniq } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import apolloClient from 'apollo';
 import usePrevious from 'hooks/usePrevious';
-import logger from 'utils/logger';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { Display } from 'components/Form';
 import { SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
@@ -18,12 +16,13 @@ import {
   shipmentFocusedListQuery,
   shipmentFullFocusDetailQuery,
 } from 'modules/relationMapV2/query';
-import { findShipmentIdByContainer } from 'modules/relationMapV2/helpers';
+import { loadMore, findShipmentIdByContainer } from 'modules/relationMapV2/helpers';
 import {
   Hits,
   Entities,
   SortAndFilter,
   ExpandRows,
+  LoadMoreExpanded,
   FocusedView,
 } from 'modules/relationMapV2/store';
 import EditFormSlideView from '../EditFormSlideView';
@@ -55,64 +54,6 @@ const innerElementType = React.forwardRef(
   )
 );
 
-const loadMore = (
-  clientData: {| fetchMore: Function, data: ?Object, onSuccess: Function |},
-  queryVariables: Object = {}
-) => {
-  const selectedField: string = 'shipments';
-  const {
-    data = { [`${selectedField}`]: { page: 1, totalPage: 0 } },
-    fetchMore,
-    onSuccess,
-  } = clientData;
-  if (!data) return Promise.resolve({});
-  const nextPage = get(`${selectedField}.page`, data) + 1;
-  const totalPage = get(`${selectedField}.totalPage`, data);
-  if (nextPage > totalPage) return Promise.resolve({});
-  logger.warn('loadMore nextPage', nextPage);
-  return fetchMore({
-    variables: {
-      ...queryVariables,
-      filter: queryVariables.filter,
-      ...(queryVariables && queryVariables.sort
-        ? { sort: { [queryVariables.sort.field]: queryVariables.sort.direction } }
-        : {}),
-      page: nextPage,
-    },
-    updateQuery: (prevResult, { fetchMoreResult }) => {
-      logger.warn('updateQuery');
-      onSuccess();
-
-      if (
-        get(`${selectedField}.page`, prevResult) + 1 !==
-        get(`${selectedField}.page`, fetchMoreResult)
-      ) {
-        return prevResult;
-      }
-
-      if (get(`${selectedField}.nodes`, fetchMoreResult).length === 0) return prevResult;
-
-      const result = set(
-        `${selectedField}.hits`,
-        uniq([
-          ...get(`${selectedField}.hits`, prevResult),
-          ...get(`${selectedField}.hits`, fetchMoreResult),
-        ]),
-        fetchMoreResult
-      );
-
-      return set(
-        `${selectedField}.nodes`,
-        uniq([
-          ...get(`${selectedField}.nodes`, prevResult),
-          ...get(`${selectedField}.nodes`, fetchMoreResult),
-        ]),
-        result
-      );
-    },
-  }).catch(logger.error);
-};
-
 export default function ShipmentFocus() {
   const listRef = React.createRef();
   const scrollEntity = React.useRef({
@@ -120,6 +61,7 @@ export default function ShipmentFocus() {
     id: '',
   });
   const { expandRows, setExpandRows } = ExpandRows.useContainer();
+  const { loadMoreExpanded } = LoadMoreExpanded.useContainer();
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const { initHits } = Hits.useContainer();
@@ -254,7 +196,21 @@ export default function ShipmentFocus() {
                   : () => {
                       setIsLoadingMore(true);
                       loadMore(
-                        { fetchMore, data, onSuccess: () => setIsLoadingMore(false) },
+                        'shipments',
+                        {
+                          fetchMore,
+                          data,
+                          onSuccess: fetchMoreResult => {
+                            if (loadMoreExpanded)
+                              setExpandRows([
+                                ...expandRows,
+                                ...(fetchMoreResult?.shipments?.nodes ?? []).map(
+                                  shipment => shipment?.id
+                                ),
+                              ]);
+                            setIsLoadingMore(false);
+                          },
+                        },
                         queryVariables
                       );
                     };

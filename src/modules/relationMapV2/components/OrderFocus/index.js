@@ -5,12 +5,10 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import InfiniteLoader from 'react-window-infinite-loader';
 import { VariableSizeList as List } from 'react-window';
 import { Query } from 'react-apollo';
-import { get, set, uniq } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import apolloClient from 'apollo';
 import usePrevious from 'hooks/usePrevious';
-import logger from 'utils/logger';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { Display } from 'components/Form';
 import { orderFocusedListQuery, orderFullFocusDetailQuery } from 'modules/relationMapV2/query';
@@ -21,9 +19,10 @@ import {
   SortAndFilter,
   ClientSorts,
   ExpandRows,
+  LoadMoreExpanded,
   FocusedView,
 } from 'modules/relationMapV2/store';
-import { findOrderIdByItem, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
+import { loadMore, findOrderIdByItem, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import CloneEntities from '../CloneEntities';
@@ -63,64 +62,6 @@ const innerElementType = React.forwardRef(
   )
 );
 
-const loadMore = (
-  clientData: {| fetchMore: Function, data: ?Object, onSuccess: Function |},
-  queryVariables: Object = {}
-) => {
-  const selectedField: string = 'orders';
-  const {
-    data = { [`${selectedField}`]: { page: 1, totalPage: 0 } },
-    fetchMore,
-    onSuccess,
-  } = clientData;
-  if (!data) return Promise.resolve({});
-  const nextPage = get(`${selectedField}.page`, data) + 1;
-  const totalPage = get(`${selectedField}.totalPage`, data);
-  if (nextPage > totalPage) return Promise.resolve({});
-  logger.warn('loadMore nextPage', nextPage);
-  return fetchMore({
-    variables: {
-      ...queryVariables,
-      filter: queryVariables.filter,
-      ...(queryVariables && queryVariables.sort
-        ? { sort: { [queryVariables.sort.field]: queryVariables.sort.direction } }
-        : {}),
-      page: nextPage,
-    },
-    updateQuery: (prevResult, { fetchMoreResult }) => {
-      logger.warn('updateQuery');
-      onSuccess();
-
-      if (
-        get(`${selectedField}.page`, prevResult) + 1 !==
-        get(`${selectedField}.page`, fetchMoreResult)
-      ) {
-        return prevResult;
-      }
-
-      if (get(`${selectedField}.nodes`, fetchMoreResult).length === 0) return prevResult;
-
-      const result = set(
-        `${selectedField}.hits`,
-        uniq([
-          ...get(`${selectedField}.hits`, prevResult),
-          ...get(`${selectedField}.hits`, fetchMoreResult),
-        ]),
-        fetchMoreResult
-      );
-
-      return set(
-        `${selectedField}.nodes`,
-        uniq([
-          ...get(`${selectedField}.nodes`, prevResult),
-          ...get(`${selectedField}.nodes`, fetchMoreResult),
-        ]),
-        result
-      );
-    },
-  }).catch(logger.error);
-};
-
 export default function OrderFocus() {
   const listRef = React.createRef();
   const scrollEntity = React.useRef({
@@ -128,6 +69,7 @@ export default function OrderFocus() {
     id: '',
   });
   const { expandRows, setExpandRows } = ExpandRows.useContainer();
+  const { loadMoreExpanded } = LoadMoreExpanded.useContainer();
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const { initHits } = Hits.useContainer();
@@ -260,14 +202,25 @@ export default function OrderFocus() {
               const rowCount = ordersData.length;
               const isItemLoaded = (index: number) =>
                 !hasMoreItems(data, 'orders') || index < rowCount;
-              // TODO: On load more, if 'loadMoreExpanded' is true, then set 'isExpand' as true, else set as false
               const loadMoreItems =
                 loading || isLoadingMore
                   ? () => {}
                   : () => {
                       setIsLoadingMore(true);
                       loadMore(
-                        { fetchMore, data, onSuccess: () => setIsLoadingMore(false) },
+                        'orders',
+                        {
+                          fetchMore,
+                          data,
+                          onSuccess: fetchMoreResult => {
+                            if (loadMoreExpanded)
+                              setExpandRows([
+                                ...expandRows,
+                                ...(fetchMoreResult?.orders?.nodes ?? []).map(order => order?.id),
+                              ]);
+                            setIsLoadingMore(false);
+                          },
+                        },
                         queryVariables
                       );
                     };

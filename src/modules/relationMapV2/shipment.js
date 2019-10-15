@@ -14,32 +14,35 @@ import {
   ClientSorts,
   GlobalShipmentPoint,
   ExpandRows,
+  LoadMoreExpanded,
 } from './store';
 
 const RelationMap = () => {
   return (
     <Provider>
       <FocusedView.Provider initialState="Shipment">
-        <ExpandRows.Provider>
-          <GlobalShipmentPoint.Provider>
-            <Hits.Provider>
-              <Entities.Provider>
-                <SortAndFilter.Provider initialState="NRMShipment">
-                  <NavBar>
-                    <EntityIcon icon="SHIPMENT" color="SHIPMENT" subIcon="MAP" />
-                    <AdvanceFilter />
-                    <ExpandButton />
-                  </NavBar>
-                  <Content>
-                    <ClientSorts.Provider initialState="NRMShipment">
-                      <ShipmentFocus />
-                    </ClientSorts.Provider>
-                  </Content>
-                </SortAndFilter.Provider>
-              </Entities.Provider>
-            </Hits.Provider>
-          </GlobalShipmentPoint.Provider>
-        </ExpandRows.Provider>
+        <LoadMoreExpanded.Provider>
+          <ExpandRows.Provider>
+            <GlobalShipmentPoint.Provider>
+              <Hits.Provider>
+                <Entities.Provider>
+                  <SortAndFilter.Provider initialState="NRMShipment">
+                    <NavBar>
+                      <EntityIcon icon="SHIPMENT" color="SHIPMENT" subIcon="MAP" />
+                      <AdvanceFilter />
+                      <ExpandButton />
+                    </NavBar>
+                    <Content>
+                      <ClientSorts.Provider initialState="NRMShipment">
+                        <ShipmentFocus />
+                      </ClientSorts.Provider>
+                    </Content>
+                  </SortAndFilter.Provider>
+                </Entities.Provider>
+              </Hits.Provider>
+            </GlobalShipmentPoint.Provider>
+          </ExpandRows.Provider>
+        </LoadMoreExpanded.Provider>
       </FocusedView.Provider>
     </Provider>
   );

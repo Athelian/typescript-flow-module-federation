@@ -74,7 +74,7 @@ export const CreateContainerBtnStyle: string = css`
   ${presets.BUTTON};
   width: 20px;
   height: 20px;
-  background-color: ${colors.ORDER_ITEM};
+  background-color: ${colors.CONTAINER};
   color: ${colors.WHITE};
   ${fontSizes.SMALL};
   ${borderRadiuses.BUTTON};

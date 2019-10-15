@@ -1,12 +1,71 @@
 // @flow
-import { findKey } from 'lodash/fp';
+import { findKey, get, set, uniq } from 'lodash/fp';
 import { getByPathWithDefault } from 'utils/fp';
+import logger from 'utils/logger';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT, PRODUCT, TAG } from './constants';
 import type { Entity } from './type.js.flow';
 
 const DELAY = 200; // 0.2 second
 const timer = {};
 const isTimeoutRunning = {};
+
+export const loadMore = (
+  selectedField: string,
+  clientData: {| fetchMore: Function, data: ?Object, onSuccess: Function |},
+  queryVariables: Object = {}
+) => {
+  const {
+    data = { [`${selectedField}`]: { page: 1, totalPage: 0 } },
+    fetchMore,
+    onSuccess,
+  } = clientData;
+  if (!data) return Promise.resolve({});
+  const nextPage = get(`${selectedField}.page`, data) + 1;
+  const totalPage = get(`${selectedField}.totalPage`, data);
+  if (nextPage > totalPage) return Promise.resolve({});
+  logger.warn('loadMore nextPage', nextPage);
+  return fetchMore({
+    variables: {
+      ...queryVariables,
+      filter: queryVariables.filter,
+      ...(queryVariables && queryVariables.sort
+        ? { sort: { [queryVariables.sort.field]: queryVariables.sort.direction } }
+        : {}),
+      page: nextPage,
+    },
+    updateQuery: (prevResult, { fetchMoreResult }) => {
+      logger.warn('updateQuery');
+      onSuccess(fetchMoreResult);
+
+      if (
+        get(`${selectedField}.page`, prevResult) + 1 !==
+        get(`${selectedField}.page`, fetchMoreResult)
+      ) {
+        return prevResult;
+      }
+
+      if (get(`${selectedField}.nodes`, fetchMoreResult).length === 0) return prevResult;
+
+      const result = set(
+        `${selectedField}.hits`,
+        uniq([
+          ...get(`${selectedField}.hits`, prevResult),
+          ...get(`${selectedField}.hits`, fetchMoreResult),
+        ]),
+        fetchMoreResult
+      );
+
+      return set(
+        `${selectedField}.nodes`,
+        uniq([
+          ...get(`${selectedField}.nodes`, prevResult),
+          ...get(`${selectedField}.nodes`, fetchMoreResult),
+        ]),
+        result
+      );
+    },
+  }).catch(logger.error);
+};
 
 export function findParentIdsByBatch({
   viewer,
