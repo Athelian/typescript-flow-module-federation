@@ -41,6 +41,7 @@ const orderSheetFragment = gql`
 const orderItemSheetFragment = gql`
   fragment orderItemSheetFragment on OrderItem {
     id
+    archived
     no
     quantity
     price {
@@ -96,6 +97,7 @@ const orderItemSheetFragment = gql`
 const batchSheetFragment = gql`
   fragment batchSheetFragment on Batch {
     id
+    archived
     no
     quantity
     deliveredAt
@@ -156,6 +158,7 @@ const shipmentSheetFragment = gql`
 const containerSheetFragment = gql`
   fragment containerSheetFragment on Container {
     id
+    archived
     no
     warehouseArrivalAgreedDate
     warehouseArrivalActualDate

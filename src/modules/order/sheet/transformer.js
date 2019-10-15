@@ -298,6 +298,14 @@ function transformOrderItem(
       ),
     },
     {
+      columnKey: 'order.orderItem.archived',
+      type: 'status',
+      disabled: !hasItems && !orderItem,
+      empty: hasItems && !orderItem,
+      parent: true,
+      ...transformReadonlyField(basePath, orderItem, 'archived', orderItem?.archived),
+    },
+    {
       columnKey: 'order.orderItem.no',
       type: 'text',
       ...transformValueField(
@@ -435,6 +443,13 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
       ...transformReadonlyField(basePath, batch, 'updatedAt', batch?.updatedAt ?? null),
     },
     {
+      columnKey: 'order.orderItem.batch.archived',
+      type: 'status',
+      disabled: !batch,
+      parent: true,
+      ...transformReadonlyField(basePath, batch, 'archived', batch?.archived),
+    },
+    {
       columnKey: 'order.orderItem.batch.no',
       type: 'text',
       ...transformValueField(
@@ -566,6 +581,17 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         batch?.container ?? null,
         'createdAt',
         batch?.createdAt ?? null
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.archived',
+      type: 'status',
+      disabled: !batch,
+      ...transformReadonlyField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'archived',
+        batch?.container?.archived
       ),
     },
     {
