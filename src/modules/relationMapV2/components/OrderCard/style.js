@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 import { ORDER_WIDTH } from 'modules/relationMapV2/constants';
-import { layout, borderRadiuses, presets, colors, shadows, fontSizes } from 'styles/common';
+import { layout, borderRadiuses } from 'styles/common';
 
 export const OrderCardWrapperStyle: string = css`
   display: flex;
@@ -10,7 +10,7 @@ export const OrderCardWrapperStyle: string = css`
   height: 55px;
   position: relative;
   &:hover {
-    & > button {
+    & button {
       opacity: 1;
     }
   }
@@ -37,35 +37,4 @@ export const BottomRowWrapperStyle: string = css`
   grid-template-rows: 20px;
   grid-gap: 5px;
   padding: 0 0 5px 5px;
-`;
-
-export const CreateItemButtonStyle: string = css`
-  opacity: 0;
-  position: absolute;
-  bottom: -10px;
-  left: calc(100% - 10px);
-  ${presets.BUTTON};
-  width: 20px;
-  height: 20px;
-  background-color: ${colors.ORDER_ITEM};
-  color: ${colors.WHITE};
-  ${fontSizes.SMALL};
-  ${borderRadiuses.BUTTON};
-  z-index: 2;
-  justify-content: flex-start;
-  overflow: hidden;
-  ${shadows.INPUT};
-  &:hover {
-    opacity: 1;
-    width: 45px;
-  }
-`;
-
-export const CreateItemIconStyle: string = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
 `;

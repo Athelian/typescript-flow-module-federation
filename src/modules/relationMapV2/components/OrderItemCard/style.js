@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 import { ORDER_ITEM_WIDTH } from 'modules/relationMapV2/constants';
-import { layout, borderRadiuses, fontSizes, colors, presets, shadows } from 'styles/common';
+import { layout, borderRadiuses, fontSizes, colors, presets } from 'styles/common';
 
 export const ItemCardWrapperStyle: string = css`
   display: flex;
@@ -57,55 +57,4 @@ export const ProductSerialStyle: string = css`
   ${presets.ELLIPSIS};
   width: 100%;
   line-height: 20px;
-`;
-
-export const DeleteItemButtonStyle: string = css`
-  opacity: 0;
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  ${presets.BUTTON};
-  width: 20px;
-  height: 20px;
-  background-color: ${colors.WHITE};
-  color: ${colors.GRAY_LIGHT};
-  ${fontSizes.SMALL};
-  ${borderRadiuses.CIRCLE};
-  z-index: 2;
-  ${shadows.INPUT};
-  &:hover {
-    opacity: 1;
-    color: ${colors.RED};
-  }
-`;
-
-export const CreateBatchButtonStyle: string = css`
-  opacity: 0;
-  position: absolute;
-  bottom: -10px;
-  left: calc(100% - 10px);
-  ${presets.BUTTON};
-  width: 20px;
-  height: 20px;
-  background-color: ${colors.BATCH};
-  color: ${colors.WHITE};
-  ${fontSizes.SMALL};
-  ${borderRadiuses.BUTTON};
-  z-index: 2;
-  justify-content: flex-start;
-  overflow: hidden;
-  ${shadows.INPUT};
-  &:hover {
-    opacity: 1;
-    width: 45px;
-  }
-`;
-
-export const CreateBatchIconStyle: string = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
 `;

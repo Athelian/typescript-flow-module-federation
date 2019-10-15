@@ -751,6 +751,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
     onClick: onTarget,
     onDoubleClick: onTargetTree,
     onCtrlClick: () =>
+      // TODO: Check view form permissions
       dispatch({
         type: 'EDIT',
         payload: {
@@ -788,6 +789,16 @@ function OrderCell({ data, afterConnector }: CellProps) {
               <OrderCard
                 organizationId={data?.ownedBy?.id}
                 order={data}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: ORDER,
+                      selectedId: orderId,
+                    },
+                  });
+                }}
                 onCreateItem={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -945,6 +956,7 @@ function OrderItemCell({
     onClick: onTarget,
     onDoubleClick: onTargetTree,
     onCtrlClick: () =>
+      // TODO: Check view form permissions
       dispatch({
         type: 'EDIT',
         payload: {
@@ -995,6 +1007,17 @@ function OrderItemCell({
               <OrderItemCard
                 organizationId={data?.ownedBy?.id}
                 orderItem={data}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: ORDER_ITEM,
+                      selectedId: itemId,
+                      orderId,
+                    },
+                  });
+                }}
                 onDeleteItem={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -1153,6 +1176,7 @@ function BatchCell({
     onClick: onTarget,
     onDoubleClick: onTargetTree,
     onCtrlClick: () =>
+      // TODO: Check view form permissions
       dispatch({
         type: 'EDIT',
         payload: {
@@ -1199,6 +1223,17 @@ function BatchCell({
               <BatchCard
                 organizationId={data?.ownedBy?.id}
                 batch={data}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: BATCH,
+                      selectedId: batchId,
+                      orderId,
+                    },
+                  });
+                }}
                 onDeleteBatch={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -1360,6 +1395,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
     onClick: onTarget,
     onDoubleClick: onTargetTree,
     onCtrlClick: () =>
+      // TODO: Check view form permissions
       dispatch({
         type: 'EDIT',
         payload: {
@@ -1561,6 +1597,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
     onClick: onTarget,
     onDoubleClick: onTarget,
     onCtrlClick: () =>
+      // TODO: Check view form permissions
       dispatch({
         type: 'EDIT',
         payload: {

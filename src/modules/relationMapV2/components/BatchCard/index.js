@@ -1,14 +1,14 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import TaskRing from 'components/TaskRing';
 import { Display, Blackout, Label } from 'components/Form';
 import { useHasPermissions } from 'contexts/Permissions';
-import { BATCH_DELETE } from 'modules/permission/constants/batch';
+import { BATCH_DELETE, BATCH_FORM } from 'modules/permission/constants/batch';
+import CardActions from 'modules/relationMapV2/components/CardActions';
 import {
   BatchCardWrapperStyle,
   TopRowWrapperStyle,
@@ -16,18 +16,19 @@ import {
   TagsWrapperStyle,
   BottomRowWrapperStyle,
   QuantityVolumeDesiredWrapperStyle,
-  DeleteBatchButtonStyle,
 } from './style';
 
 type Props = {|
   batch: Object,
+  onViewForm: Event => void,
   onDeleteBatch: Event => void,
   organizationId: string,
 |};
 
-export default function BatchCard({ batch, onDeleteBatch, organizationId }: Props) {
+export default function BatchCard({ batch, onViewForm, onDeleteBatch, organizationId }: Props) {
   const hasPermissions = useHasPermissions(organizationId);
-  const allowToDeleteItem = hasPermissions(BATCH_DELETE);
+  const allowToViewForm = hasPermissions(BATCH_FORM);
+  const allowToDeleteBatch = hasPermissions(BATCH_DELETE);
 
   const { no, tags = [], deliveredAt, latestQuantity, totalVolume, desiredAt, todo = {} } = batch;
 
@@ -92,11 +93,25 @@ export default function BatchCard({ batch, onDeleteBatch, organizationId }: Prop
         <TaskRing blackout={!canViewTasks} {...todo} />
       </div>
 
-      {allowToDeleteItem && (
-        <button onClick={onDeleteBatch} className={DeleteBatchButtonStyle} type="button">
-          <Icon icon="REMOVE" />
-        </button>
-      )}
+      <CardActions
+        actions={[
+          allowToViewForm && {
+            label: (
+              <FormattedMessage
+                id="modules.RelationMap.cards.viewForm"
+                defaultMessage="View Form"
+              />
+            ),
+            onClick: onViewForm,
+          },
+          allowToDeleteBatch && {
+            label: (
+              <FormattedMessage id="modules.RelationMap.cards.delete" defaultMessage="Delete" />
+            ),
+            onClick: onDeleteBatch,
+          },
+        ].filter(Boolean)}
+      />
     </div>
   );
 }
