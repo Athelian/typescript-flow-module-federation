@@ -260,6 +260,7 @@ export default function OrderFocus() {
               const rowCount = ordersData.length;
               const isItemLoaded = (index: number) =>
                 !hasMoreItems(data, 'orders') || index < rowCount;
+              // TODO: On load more, if 'loadMoreExpanded' is true, then set 'isExpand' as true, else set as false
               const loadMoreItems =
                 loading || isLoadingMore
                   ? () => {}
@@ -489,9 +490,10 @@ export default function OrderFocus() {
                           // need to find the position base on the order and batch
                           // then use the react-window to navigate to the row
                           // try to get from sort first, if not there, then try to use from entities
-                          const originalBatches = ( // $FlowIgnore this doesn't support yet
-                            entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? []
-                          ).map(batchId => entities.batches?.[batchId]);
+                          const originalBatches = // $FlowIgnore this doesn't support yet
+                          (entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? []).map(
+                            batchId => entities.batches?.[batchId]
+                          );
                           const batchList = getBatchesSortByItemId({
                             // $FlowIgnore this doesn't support yet
                             id: batch?.orderItem?.id,
