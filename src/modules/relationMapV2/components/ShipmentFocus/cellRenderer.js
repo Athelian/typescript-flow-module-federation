@@ -1022,6 +1022,8 @@ function BatchCell({
   const { mapping, badge } = Entities.useContainer();
   const { matches } = Hits.useContainer();
   const batchId = data?.id;
+  const belongToContainer = !!data?.container;
+  const hasBatchPermissions = useHasPermissions(data?.ownedBy?.id);
   const { entities } = mapping;
   const [{ isOver, canDrop, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
@@ -1123,7 +1125,28 @@ function BatchCell({
             isTargeted={isTargetedBatch && (isTargetedContainer || isTargetedShipment)}
             hasRelation={isTargetedBatch}
             type={beforeConnector}
-          />
+          >
+            {belongToContainer && hasBatchPermissions([BATCH_UPDATE]) && (
+              <RemoveButton
+                offset
+                onClick={() => {
+                  dispatch({
+                    type: 'REMOVE_BATCH',
+                    payload: {
+                      entity: {
+                        id: data?.id,
+                        no: data?.no,
+                      },
+                      from: {
+                        type: 'CONTAINER',
+                        id: data?.container?.id,
+                      },
+                    },
+                  });
+                }}
+              />
+            )}
+          </RelationLine>
         )}
       </div>
 
