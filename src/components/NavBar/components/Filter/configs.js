@@ -632,6 +632,13 @@ export const UserFilterConfig: Array<FilterConfig> = [
     message: userMessages.updatedAt,
     defaultValue: { after: null, before: null },
   },
+  {
+    entity: 'USER',
+    field: 'organizationIds',
+    type: 'organization_ids',
+    message: userMessages.organizations,
+    defaultValue: [],
+  },
 ];
 
 export const FileFilterConfig: Array<FilterConfig> = [

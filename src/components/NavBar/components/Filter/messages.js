@@ -54,6 +54,10 @@ export default defineMessages({
     id: 'components.NavBar.Filter.tags',
     defaultMessage: 'Tags',
   },
+  organizations: {
+    id: 'components.NavBar.Filter.organizations',
+    defaultMessage: 'Organizations',
+  },
   importers: {
     id: 'components.NavBar.Filter.importers',
     defaultMessage: 'Importers',
