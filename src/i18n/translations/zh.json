@@ -650,6 +650,7 @@
   "modules.OrderItems.noOrderItemFound": "没找到订单商品",
   "modules.OrderItems.save": "保存",
   "modules.OrderItems.cancel": "取消",
+  "modules.OrderItems.status": "STATUS",
   "modules.OrderItems.newOrderItem": "新建",
   "modules.OrderItems.noOrderItems": "没找到订单商品",
   "modules.OrderItems.list.sort.updatedAt": "最后修改日期",

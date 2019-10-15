@@ -650,6 +650,7 @@
   "modules.OrderItems.noOrderItemFound": "No order Items found",
   "modules.OrderItems.save": "SAVE",
   "modules.OrderItems.cancel": "CANCEL",
+  "modules.OrderItems.status": "STATUS",
   "modules.OrderItems.newOrderItem": "NEW",
   "modules.OrderItems.noOrderItems": "No order items found.",
   "modules.OrderItems.list.sort.updatedAt": "Last Modified",

@@ -650,6 +650,7 @@
   "modules.OrderItems.noOrderItemFound": "発注商品が見つかりません",
   "modules.OrderItems.save": "保存",
   "modules.OrderItems.cancel": "キャンセル",
+  "modules.OrderItems.status": "STATUS",
   "modules.OrderItems.newOrderItem": "新規",
   "modules.OrderItems.noOrderItems": "発注商品がありません",
   "modules.OrderItems.list.sort.updatedAt": "最終更新",
