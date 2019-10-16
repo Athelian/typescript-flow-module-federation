@@ -40,6 +40,7 @@ import generateListData from './generateListData';
 import normalize from './normalize';
 import RemoveBatchConfirm from '../RemoveBatchConfirm';
 import DeleteBatchesConfirm from '../DeleteBatchesConfirm';
+import MoveItem from '../MoveItem';
 import MoveBatch from '../MoveBatch';
 import AddTags from '../AddTags';
 import DeleteConfirm from '../DeleteConfirm';
@@ -377,6 +378,11 @@ export default function OrderFocus() {
                       }
                     }}
                   />
+                  <MoveItem
+                    onSuccess={() => {
+                      // TODO: Replace with real function
+                    }}
+                  />
                   <MoveBatch
                     onSuccess={orderIds => {
                       queryOrdersDetail(orderIds);
@@ -443,10 +449,9 @@ export default function OrderFocus() {
                           // need to find the position base on the order and batch
                           // then use the react-window to navigate to the row
                           // try to get from sort first, if not there, then try to use from entities
-                          const originalBatches = // $FlowIgnore this doesn't support yet
-                          (entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? []).map(
-                            batchId => entities.batches?.[batchId]
-                          );
+                          const originalBatches = ( // $FlowIgnore this doesn't support yet
+                            entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? []
+                          ).map(batchId => entities.batches?.[batchId]);
                           const batchList = getBatchesSortByItemId({
                             // $FlowIgnore this doesn't support yet
                             id: batch?.orderItem?.id,
