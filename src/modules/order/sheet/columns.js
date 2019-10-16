@@ -235,6 +235,19 @@ const orderItemColumns: Array<ColumnConfig> = [
       group: 'orderItem',
     },
   }, */
+  {
+    key: 'order.orderItem.deliveryDate',
+    exportKey: 'orderItems.deliveryDate',
+    title: <FormattedMessage {...orderItemMessages.deliveryDate} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 140,
+    sort: {
+      local: true,
+      name: 'deliveryDate',
+      group: 'orderItem',
+    },
+  },
   // total price
   // documents
   // tasks
@@ -597,6 +610,19 @@ const shipmentColumns: Array<ColumnConfig> = [
     },
   },
   {
+    key: 'order.orderItem.batch.shipment.blDate',
+    exportKey: 'orderItems.batches.shipment.blDate',
+    title: <FormattedMessage {...shipmentMessages.blDate} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 140,
+    sort: {
+      local: true,
+      name: 'shipmentBlDate',
+      group: 'batch',
+    },
+  },
+  {
     key: 'order.orderItem.batch.shipment.bookingNo',
     exportKey: 'orderItems.batches.shipment.bookingNo',
     title: <FormattedMessage {...shipmentMessages.bookingNo} />,
@@ -606,6 +632,19 @@ const shipmentColumns: Array<ColumnConfig> = [
     sort: {
       local: true,
       name: 'shipmentBookingNo',
+      group: 'batch',
+    },
+  },
+  {
+    key: 'order.orderItem.batch.shipment.bookingDate',
+    exportKey: 'orderItems.batches.shipment.bookingDate',
+    title: <FormattedMessage {...shipmentMessages.bookingDate} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 140,
+    sort: {
+      local: true,
+      name: 'shipmentBookingDate',
       group: 'batch',
     },
   },
