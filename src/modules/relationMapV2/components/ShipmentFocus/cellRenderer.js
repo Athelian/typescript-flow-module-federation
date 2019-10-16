@@ -2268,7 +2268,7 @@ const cellRenderer = (
         <div
           style={{
             display: 'flex',
-            width: CONTAINER_WIDTH + 40,
+            width: CONTAINER_WIDTH + 20,
           }}
           key={uuid()}
         >
