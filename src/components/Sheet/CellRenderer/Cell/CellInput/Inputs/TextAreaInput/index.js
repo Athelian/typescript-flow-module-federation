@@ -20,12 +20,14 @@ const TextInput = ({ value, focus, onChange, onFocus, onBlur, readonly, onKeyDow
   const intl = useIntl();
   const inputRef = useRef(null);
   useEffect(() => {
-    setTimeout(() => {
-      if (inputRef && inputRef.current) {
-        inputRef.current.select();
-      }
-    }, 200);
-  });
+    if (isOpen) {
+      setTimeout(() => {
+        if (inputRef && inputRef.current) {
+          inputRef.current.select();
+        }
+      }, 200);
+    }
+  }, [isOpen]);
 
   return (
     <>

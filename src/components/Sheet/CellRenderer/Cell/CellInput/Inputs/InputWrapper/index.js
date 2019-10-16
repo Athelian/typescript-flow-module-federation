@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { WrapperStyle } from './style';
+import { InputWrapperStyle } from './style';
 
 type Props = {
   focus: boolean,
@@ -31,7 +31,7 @@ const InputWrapper = ({ focus, preselect, children }: Props) => {
     }
   }, [focus, preselect]);
 
-  return <div className={WrapperStyle}>{children({ ref: inputRef })}</div>;
+  return <div className={InputWrapperStyle}>{children({ ref: inputRef })}</div>;
 };
 
 InputWrapper.defaultProps = {

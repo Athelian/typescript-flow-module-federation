@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import BaseNumberInput from 'components/Form/Inputs/NumberInput';
+import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
 import InputWrapper from '../InputWrapper';
 
 type Props = {
@@ -48,7 +49,9 @@ const PriceInput = ({
             onBlur={onBlur}
             onKeyDown={onKeyDown}
           />
-          {metric}
+          <DisplayWrapper>
+            <span>{metric}</span>
+          </DisplayWrapper>
         </>
       )}
     </InputWrapper>

@@ -1,6 +1,9 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const DateStyle = css`
-  margin-right: 10px;
+export const DateUserDisplayStyle: string = css`
+  margin-right: 5px;
+  width: 70px;
 `;
+
+export default DateUserDisplayStyle;

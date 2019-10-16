@@ -2,21 +2,14 @@
 import { css } from 'react-emotion';
 import { fontSizes, colors, borderRadiuses, scrollbars, shadows, transitions } from 'styles/common';
 
-export const DialogStyle: string = css`
+export const TextAreaInputDialogWrapperStyle: string = css`
   padding: 20px;
+  height: 340px;
 `;
 
-export const ContentStyle: string = css`
-  margin: 20px 0;
-  text-align: center;
-  font-weight: bold;
-  color: ${colors.BLACK};
-`;
-
-export const TextAreaStyle: string = css`
-  padding: 0;
+export const TextAreaInputStyle: string = css`
   width: 400px;
-  height: 65px;
+  height: 300px;
   line-height: 20px;
   padding: 0 4px;
   background: none;
@@ -30,6 +23,7 @@ export const TextAreaStyle: string = css`
   ${fontSizes.MAIN};
   font-weight: bold;
   border: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 0;
   &:hover {
     ${shadows.INPUT};
   }
