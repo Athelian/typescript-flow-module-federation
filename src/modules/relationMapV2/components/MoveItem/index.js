@@ -11,7 +11,12 @@ import { useAllHasPermission } from 'contexts/Permissions';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label } from 'components/Form';
-import ActionDialog, { OrderLabelIcon, ItemLabelIcon, ItemsLabelIcon } from '../ActionDialog';
+import ActionDialog, {
+  OrderLabelIcon,
+  ItemLabelIcon,
+  ItemsLabelIcon,
+  BatchesLabelIcon,
+} from '../ActionDialog';
 import SelectOrderToMoveItem from './components/SelectOrderToMoveItem';
 import {
   ItemMoveButtonsWrapperStyle,
@@ -181,10 +186,11 @@ export default function MoveItem({ onSuccess }: Props) {
               <div className={DescriptionStyle}>
                 <FormattedMessage
                   id="modules.RelationMap.moveItem.moveToOrderDescription"
-                  defaultMessage="Move {itemsLabel} to an existing {orderLabel}"
+                  defaultMessage="Move {itemsLabel} (along with their {batchesLabel}) to an existing {orderLabel}"
                   values={{
                     orderLabel: <OrderLabelIcon />,
                     itemsLabel: <ItemsLabelIcon />,
+                    batchesLabel: <BatchesLabelIcon />,
                   }}
                 />
               </div>
@@ -244,10 +250,11 @@ export default function MoveItem({ onSuccess }: Props) {
               <div className={DescriptionStyle}>
                 <FormattedMessage
                   id="modules.RelationMap.moveItem.moveToNewOrderDescription"
-                  defaultMessage="Move {itemsLabel} to a new {orderLabel}"
+                  defaultMessage="Move {itemsLabel} (along with their {batchesLabel}) to a new {orderLabel}"
                   values={{
                     orderLabel: <OrderLabelIcon />,
                     itemsLabel: <ItemsLabelIcon />,
+                    batchesLabel: <BatchesLabelIcon />,
                   }}
                 />
               </div>
