@@ -411,7 +411,6 @@ const TimelineSection = ({ isNew, isTaskReadyForBinding }: Props) => {
                                 >
                                   {opened && (
                                     <SelectWareHouse
-                                      cacheKey="shipmentTimelineSectionSelectWarehouseQuery"
                                       selected={warehouse}
                                       onCancel={() => slideToggle(false)}
                                       onSelect={newValue => {
