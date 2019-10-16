@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { layout, colors, fontSizes, presets } from 'styles/common';
 
-export const WrapperStyle = css`
+export const InputWrapperStyle: string = css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   padding: 0 5px;
@@ -22,4 +22,4 @@ export const WrapperStyle = css`
   }
 `;
 
-export default WrapperStyle;
+export default InputWrapperStyle;
