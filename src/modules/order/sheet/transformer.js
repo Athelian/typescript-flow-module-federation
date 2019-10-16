@@ -15,7 +15,7 @@ import {
 import {
   ORDER_ITEMS_SET_NO,
   ORDER_ITEMS_SET_QUANTITY,
-  ORDER_ITEMS_SET_PRICE,
+  // ORDER_ITEMS_SET_PRICE,
   ORDER_ITEMS_UPDATE,
   ORDER_ITEMS_SET_DELIVERY_DATE,
 } from 'modules/permission/constants/orderItem';
@@ -276,19 +276,19 @@ const transformOrderItem = (
           hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_QUANTITY)
       ),
     },
-    {
-      columnKey: 'order.orderItem.price',
-      type: 'price',
-      disabled: !hasItems && !orderItem,
-      empty: hasItems && !orderItem,
-      parent: true,
-      ...transformValueField(
-        basePath,
-        orderItem,
-        'price',
-        hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_PRICE)
-      ),
-    },
+    // {
+    //   columnKey: 'order.orderItem.price',
+    //   type: 'price',
+    //   disabled: !hasItems && !orderItem,
+    //   empty: hasItems && !orderItem,
+    //   parent: true,
+    //   ...transformValueField(
+    //     basePath,
+    //     orderItem,
+    //     'price',
+    //     hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_PRICE)
+    //   ),
+    // },
     {
       columnKey: 'order.orderItem.totalBatched',
       type: 'number',
