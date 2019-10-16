@@ -45,10 +45,10 @@ export default function Heading({
     <div className={HeadingWrapperStyle(isExpanded, width)} onClick={onClick} role="presentation">
       <div className={LeftWrapperStyle}>
         <div className={TotalWrapperStyle}>
-          <Label width="55px">
+          <Label width="min-content">
             <FormattedMessage id="components.button.total" defaultMessage="TOTAL" />
           </Label>
-          <Display width="70px" blackout={!canViewTotal}>
+          <Display blackout={!canViewTotal}>
             <FormattedNumber value={total} />
           </Display>
         </div>

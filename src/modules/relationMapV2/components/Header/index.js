@@ -41,9 +41,9 @@ import {
   EntityIconWrapperStyle,
   EntityIconStyle,
   TitleWrapperStyle,
-  OrderTitleWrapperStyle,
-  AddOrderButtonCollapsedStyle,
-  AddOrderButtonStyle,
+  CreateNewTitleWrapperStyle,
+  CreateNewButtonCollapsedStyle,
+  CreateNewButtonStyle,
   SelectAllButtonStyle,
   SortInputWrapperStyle,
   ShipmentTimelineWrapperStyle,
@@ -182,8 +182,7 @@ const Header = React.memo<any>(
             </div>
 
             <div className={TitleWrapperStyle}>
-              {/* TODO: fix the new shipment css */}
-              <div className={OrderTitleWrapperStyle(hasPermissions(SHIPMENT_CREATE))}>
+              <div className={CreateNewTitleWrapperStyle(hasPermissions(SHIPMENT_CREATE))}>
                 <Label color="WHITE">
                   <FormattedMessage id="modules.SideBar.shipment" />
                   {' ('}
@@ -193,12 +192,12 @@ const Header = React.memo<any>(
 
                 {hasPermissions(SHIPMENT_CREATE) && (
                   <>
-                    <div className={AddOrderButtonCollapsedStyle}>
+                    <div className={CreateNewButtonCollapsedStyle}>
                       <Icon icon="ADD" />
                     </div>
 
                     <button
-                      className={AddOrderButtonStyle}
+                      className={CreateNewButtonStyle}
                       onClick={() => {
                         dispatch({
                           type: 'EDIT',
@@ -465,14 +464,12 @@ const Header = React.memo<any>(
             </div>
 
             <div className={TitleWrapperStyle}>
-              <div className={OrderTitleWrapperStyle(false)}>
-                <Label color="WHITE">
-                  <FormattedMessage id="modules.SideBar.order" />
-                  {' ('}
-                  <FormattedNumber value={orderCount} />
-                  {')'}
-                </Label>
-              </div>
+              <Label color="WHITE">
+                <FormattedMessage id="modules.SideBar.order" />
+                {' ('}
+                <FormattedNumber value={orderCount} />
+                {')'}
+              </Label>
 
               <button
                 type="button"
@@ -513,7 +510,7 @@ const Header = React.memo<any>(
           </div>
 
           <div className={TitleWrapperStyle}>
-            <div className={OrderTitleWrapperStyle(hasPermissions(ORDER_CREATE))}>
+            <div className={CreateNewTitleWrapperStyle(hasPermissions(ORDER_CREATE))}>
               <Label color="WHITE">
                 <FormattedMessage id="modules.SideBar.order" />
                 {' ('}
@@ -523,12 +520,12 @@ const Header = React.memo<any>(
 
               {hasPermissions(ORDER_CREATE) && (
                 <>
-                  <div className={AddOrderButtonCollapsedStyle}>
+                  <div className={CreateNewButtonCollapsedStyle}>
                     <Icon icon="ADD" />
                   </div>
 
                   <button
-                    className={AddOrderButtonStyle}
+                    className={CreateNewButtonStyle}
                     onClick={() => {
                       dispatch({
                         type: 'EDIT',

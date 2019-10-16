@@ -5,7 +5,7 @@ import { fontSizes, colors } from 'styles/common';
 export const RightWrapperStyle: string = css`
   position: relative;
   display: grid;
-  grid-template-columns: 75px 120px;
+  grid-template-columns: 75px 135px;
   padding: 5px 20px 5px 0;
 `;
 

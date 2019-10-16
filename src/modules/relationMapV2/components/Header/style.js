@@ -45,10 +45,10 @@ export const TitleWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 125px;
+  width: 135px;
 `;
 
-export const OrderTitleWrapperStyle = (canAdd: boolean) => css`
+export const CreateNewTitleWrapperStyle = (canAdd: boolean) => css`
   position: relative;
   height: 20px;
   ${canAdd &&
@@ -64,7 +64,7 @@ export const OrderTitleWrapperStyle = (canAdd: boolean) => css`
   `}
 `;
 
-export const AddOrderButtonCollapsedStyle: string = css`
+export const CreateNewButtonCollapsedStyle: string = css`
   ${presets.BUTTON};
   ${fontSizes.SMALL};
   color: ${colors.WHITE};
@@ -75,7 +75,7 @@ export const AddOrderButtonCollapsedStyle: string = css`
   height: 20px;
 `;
 
-export const AddOrderButtonStyle: string = css`
+export const CreateNewButtonStyle: string = css`
   opacity: 0;
   position: absolute;
   right: 0;
