@@ -213,6 +213,10 @@ const EditFormSlideView = ({ onClose }: Props) => {
                   id: result.orderCreate.id,
                   type: ORDER,
                 });
+                dispatch({
+                  type: 'MOVE_ITEM_END',
+                  payload: {},
+                });
               }}
               onCancel={onClose}
             />
@@ -322,6 +326,10 @@ const EditFormSlideView = ({ onClose }: Props) => {
                     id: result.orderCreate.id,
                     type: ORDER,
                   });
+                  dispatch({
+                    type: 'MOVE_BATCH_END',
+                    payload: {},
+                  });
                 }}
                 onCancel={onClose}
               />
@@ -355,6 +363,10 @@ const EditFormSlideView = ({ onClose }: Props) => {
                     moveToTop: true,
                     id: result.shipmentCreate.id,
                     type: SHIPMENT,
+                  });
+                  dispatch({
+                    type: 'MOVE_BATCH_END',
+                    payload: {},
                   });
                 }}
                 onCancel={onClose}
@@ -408,6 +420,10 @@ const EditFormSlideView = ({ onClose }: Props) => {
                         moveToTop: true,
                         id: result.data.containerCreate.id,
                         type: CONTAINER,
+                      });
+                      dispatch({
+                        type: 'MOVE_BATCH_END',
+                        payload: {},
                       });
                     })
                     .catch(onClose);

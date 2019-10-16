@@ -1263,6 +1263,18 @@ function orderReducer(
               isProcessing: { $set: false },
             },
           });
+    case 'MOVE_ITEM_END':
+      return update(state, {
+        itemActions: {
+          type: { $set: '' },
+          from: { $set: '' },
+          isOpen: { $set: false },
+        },
+        moveActions: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
     case 'MOVE_BATCH_END':
       return update(state, {
         batchActions: {
