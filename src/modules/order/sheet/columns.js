@@ -618,7 +618,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     width: 140,
     sort: {
       local: true,
-      name: 'blDate',
+      name: 'shipmentBlDate',
       group: 'batch',
     },
   },
@@ -644,7 +644,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     width: 140,
     sort: {
       local: true,
-      name: 'bookingDate',
+      name: 'shipmentBookingDate',
       group: 'batch',
     },
   },
