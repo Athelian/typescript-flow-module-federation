@@ -1,19 +1,19 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import RelateEntity from 'components/RelateEntity';
 import TaskRing from 'components/TaskRing';
-import { Tooltip } from 'components/Tooltip';
 import { Display, Blackout, Label } from 'components/Form';
 import { encodeId } from 'utils/id';
 import { useHasPermissions } from 'contexts/Permissions';
 import { BATCH_CREATE } from 'modules/permission/constants/batch';
-import { ORDER_ITEMS_DELETE } from 'modules/permission/constants/orderItem';
+import { ORDER_ITEMS_DELETE, ORDER_ITEMS_FORM } from 'modules/permission/constants/orderItem';
 import QuantityGraph from 'modules/relationMapV2/components/QuantityGraph';
+import CardActions from 'modules/relationMapV2/components/CardActions';
+import { FocusedView } from 'modules/relationMapV2/store';
 import {
   ItemCardWrapperStyle,
   TopRowWrapperStyle,
@@ -22,13 +22,11 @@ import {
   BottomRowWrapperStyle,
   ProductImageStyle,
   ProductSerialStyle,
-  DeleteItemButtonStyle,
-  CreateBatchButtonStyle,
-  CreateBatchIconStyle,
 } from './style';
 
 type Props = {|
   orderItem: Object,
+  onViewForm: Event => void,
   onCreateBatch: Event => void,
   onDeleteItem: Event => void,
   organizationId: string,
@@ -36,11 +34,14 @@ type Props = {|
 
 export default function OrderItemCard({
   orderItem,
+  onViewForm,
   onCreateBatch,
   onDeleteItem,
   organizationId,
 }: Props) {
+  const { selectors } = FocusedView.useContainer();
   const hasPermissions = useHasPermissions(organizationId);
+  const allowToViewForm = hasPermissions(ORDER_ITEMS_FORM);
   const allowToCreateBatch = hasPermissions(BATCH_CREATE);
   const allowToDeleteItem = hasPermissions(ORDER_ITEMS_DELETE);
   // TODO: Replace with real permissions
@@ -115,32 +116,40 @@ export default function OrderItemCard({
         <TaskRing blackout={!canViewTasks} {...todo} />
       </div>
 
-      {allowToDeleteItem && (
-        <button onClick={onDeleteItem} className={DeleteItemButtonStyle} type="button">
-          <Icon icon="REMOVE" />
-        </button>
-      )}
-
-      {allowToCreateBatch && (
-        <Tooltip
-          message={
-            <FormattedMessage
-              id="modules.RelationMap.item.createBatchTooltip"
-              defaultMessage="Create Batch"
-            />
-          }
-          delay={800}
-        >
-          <button onClick={onCreateBatch} className={CreateBatchButtonStyle} type="button">
-            <div className={CreateBatchIconStyle}>
-              <Icon icon="ADD" />
-            </div>
-            <div className={CreateBatchIconStyle}>
-              <Icon icon="BATCH" />
-            </div>
-          </button>
-        </Tooltip>
-      )}
+      <CardActions
+        actions={[
+          allowToViewForm
+            ? {
+                label: (
+                  <FormattedMessage
+                    id="modules.RelationMap.cards.viewForm"
+                    defaultMessage="View Form"
+                  />
+                ),
+                onClick: onViewForm,
+              }
+            : null,
+          allowToCreateBatch && selectors.isOrderFocus
+            ? {
+                label: (
+                  <FormattedMessage
+                    id="modules.RelationMap.item.createBatch"
+                    defaultMessage="Create Batch"
+                  />
+                ),
+                onClick: onCreateBatch,
+              }
+            : null,
+          allowToDeleteItem && selectors.isOrderFocus
+            ? {
+                label: (
+                  <FormattedMessage id="modules.RelationMap.cards.delete" defaultMessage="Delete" />
+                ),
+                onClick: onDeleteItem,
+              }
+            : null,
+        ].filter(Boolean)}
+      />
     </div>
   );
 }

@@ -18,12 +18,12 @@ import {
   CONTAINER,
   SHIPMENT,
   PRODUCT,
-  TAG,
   ORDER_WIDTH,
   BATCH_WIDTH,
   ORDER_ITEM_WIDTH,
   CONTAINER_WIDTH,
   SHIPMENT_WIDTH,
+  SHIPMENT_LONG_WIDTH,
 } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { CONTAINER_BATCHES_ADD } from 'modules/permission/constants/container';
@@ -33,8 +33,8 @@ import {
   getColorByEntity,
   getIconByEntity,
   handleClickAndDoubleClick,
-  findOrderIdByBatch,
-  findItemIdByBatch,
+  getIdentifier,
+  isMatchedEntity,
 } from 'modules/relationMapV2/helpers';
 import Badge from 'modules/relationMapV2/components/Badge';
 import type { CellRender } from 'modules/relationMapV2/type.js.flow';
@@ -59,23 +59,6 @@ type CellProps = {
   beforeConnector?: ?LINE_CONNECTOR,
   afterConnector?: ?LINE_CONNECTOR,
 };
-
-function isMatchedEntity(matches: Object, data: Object) {
-  if (!matches?.entity || !data) return false;
-
-  if (data.__typename === ORDER_ITEM) {
-    return matches?.entity[`${data.productProvider?.product?.id}-${PRODUCT}`];
-  }
-
-  if (data.__typename === ORDER) {
-    return (
-      matches?.entity[`${data.id}-${data.__typename}`] ||
-      (data?.tags ?? []).some(tag => matches?.entity[`${tag?.id}-${TAG}`])
-    );
-  }
-
-  return matches?.entity[`${data.id}-${data.__typename}`];
-}
 
 export const Overlay = ({
   color,
@@ -161,56 +144,6 @@ export const Overlay = ({
   );
 };
 
-const getIdentifier = ({
-  id,
-  type,
-  entities,
-}: {
-  id: string,
-  type: typeof ORDER | typeof BATCH | typeof ORDER_ITEM | typeof CONTAINER | typeof SHIPMENT,
-  entities: Object,
-}) => {
-  switch (type) {
-    case ORDER:
-      return {
-        id,
-        icon: 'ORDER',
-        value: getByPathWithDefault('', `orders.${id}.poNo`, entities),
-      };
-    case ORDER_ITEM:
-      return {
-        id,
-        icon: 'ORDER_ITEM',
-        value: getByPathWithDefault('', `orderItems.${id}.no`, entities),
-      };
-    case BATCH:
-      return {
-        id,
-        icon: 'BATCH',
-        value: getByPathWithDefault('', `batches.${id}.no`, entities),
-      };
-    case CONTAINER:
-      return {
-        id,
-        icon: 'CONTAINER',
-        value: getByPathWithDefault('', `containers.${id}.no`, entities),
-      };
-    case SHIPMENT:
-      return {
-        id,
-        icon: 'SHIPMENT',
-        value: getByPathWithDefault('', `shipments.${id}.blNo`, entities),
-      };
-
-    default:
-      return {
-        id,
-        icon: 'ORDER',
-        value: '',
-      };
-  }
-};
-
 // NOTE: only support for drag and drop a batch
 const hasPermissionToMove = ({
   type,
@@ -252,7 +185,10 @@ const orderDropMessage = ({
   switch (type) {
     case BATCH: {
       const batchId = item?.id ?? '';
-      const parentOrderId = findOrderIdByBatch(batchId, entities);
+      const parentItemId = entities.batches?.[batchId]?.orderItem;
+      if (!parentItemId) return '';
+
+      const parentOrderId = entities.orderItems?.[parentItemId]?.order;
       if (!parentOrderId) return '';
 
       const isOwnOrder = orderId === parentOrderId;
@@ -371,12 +307,12 @@ const orderItemDropMessage = ({
   const type = item?.type ?? '';
   switch (type) {
     case BATCH: {
-      const batchId = item && item.id;
-      const parentOrderId = findOrderIdByBatch(batchId, entities);
-      if (!parentOrderId) return '';
-
-      const parentItemId = findItemIdByBatch(batchId, entities);
+      const batchId = item?.id;
+      const parentItemId = entities.batches?.[batchId]?.orderItem;
       if (!parentItemId) return '';
+
+      const parentOrderId = entities.orderItems?.[parentItemId]?.order;
+      if (!parentOrderId) return '';
 
       const isOwnItem = parentItemId === itemId;
       if (isOwnItem)
@@ -482,8 +418,12 @@ const containerDropMessage = ({
   switch (type) {
     case BATCH: {
       const batchId = item?.id ?? '';
-      const parentOrderId = findOrderIdByBatch(batchId, entities);
+      const parentItemId = entities.batches?.[batchId]?.orderItem;
+      if (!parentItemId) return '';
+
+      const parentOrderId = entities.orderItems?.[parentItemId]?.order;
       if (!parentOrderId) return '';
+
       const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
       const isOwnContainer = batch.container === containerId;
       if (isOwnContainer)
@@ -599,10 +539,14 @@ const shipmentDropMessage = ({
   switch (type) {
     case BATCH: {
       const batchId = item?.id ?? '';
-      const parentOrderId = findOrderIdByBatch(batchId, entities);
+      const parentItemId = entities.batches?.[batchId]?.orderItem;
+      if (!parentItemId) return '';
+
+      const parentOrderId = entities.orderItems?.[parentItemId]?.order;
       if (!parentOrderId) return '';
+
       const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
-      const isOwnShipment = batch.shipment === shipmentId;
+      const isOwnShipment = batch.shipment === shipmentId && !batch.container;
       if (isOwnShipment)
         return (
           <div>
@@ -622,7 +566,6 @@ const shipmentDropMessage = ({
 
       const shipment = getByPathWithDefault({}, `shipments.${shipmentId}`, entities);
       const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
-
       const isDifferentImporter =
         getByPathWithDefault('', 'importer.id', shipment) !==
         getByPathWithDefault('', 'importer.id', order);
@@ -702,10 +645,10 @@ function OrderCell({ data, beforeConnector }: CellProps) {
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
-  const hasPermissions = useEntityHasPermissions(data);
-  const orderId = data.orderItem?.order?.id;
-  const itemId = data.orderItem?.id;
   const order = data.orderItem?.order;
+  const hasPermissions = useEntityHasPermissions(data);
+  const orderId = order?.id;
+  const itemId = data.orderItem?.id;
   const [{ isOver, canDrop, dropMessage, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
     canDrop: item => {
@@ -713,8 +656,12 @@ function OrderCell({ data, beforeConnector }: CellProps) {
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
+          const parentItemId = entities.batches?.[batchId]?.orderItem;
+          if (!parentItemId) return false;
+
+          const parentOrderId = entities.orderItems?.[parentItemId]?.order;
           if (!parentOrderId) return false;
+
           const isOwnOrder = orderId === parentOrderId;
           const isDifferentImporter =
             getByPathWithDefault('', 'importer.id', entities.orders[orderId]) !==
@@ -829,6 +776,16 @@ function OrderCell({ data, beforeConnector }: CellProps) {
               <OrderCard
                 organizationId={order?.ownedBy?.id}
                 order={order}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: ORDER,
+                      selectedId: orderId,
+                    },
+                  });
+                }}
                 onCreateItem={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -870,9 +827,9 @@ function OrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
-  const hasPermissions = useEntityHasPermissions(data);
-  const orderId = data.orderItem?.order?.id;
-  const order = entities.orders?.[orderId];
+  const hasPermissions = useEntityHasPermissions(data.orderItem);
+  const order = data.orderItem?.order;
+  const orderId = order?.id;
   const itemId = data.orderItem?.id;
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
     accept: BATCH,
@@ -881,12 +838,13 @@ function OrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
-          if (!parentOrderId) return false;
-          const parentOrder = entities.orders?.[parentOrderId];
+          const parentItemId = entities.batches?.[batchId]?.orderItem;
+          if (!parentItemId) return false;
 
-          const parentItemId = findItemIdByBatch(batchId, entities);
-          if (!parentItemId) return true;
+          const parentOrderId = entities.orderItems?.[parentItemId]?.order;
+          if (!parentOrderId) return false;
+
+          const parentOrder = entities.orders?.[parentOrderId];
           const isOwnItem = parentItemId === itemId;
           const isDifferentImporter =
             getByPathWithDefault('', 'importer.id', order) !==
@@ -1007,6 +965,17 @@ function OrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
               <OrderItemCard
                 organizationId={data.orderItem?.ownedBy?.id}
                 orderItem={data.orderItem}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: ORDER_ITEM,
+                      selectedId: itemId,
+                      orderId,
+                    },
+                  });
+                }}
                 onDeleteItem={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -1075,6 +1044,8 @@ function BatchCell({
   const { mapping, badge } = Entities.useContainer();
   const { matches } = Hits.useContainer();
   const batchId = data?.id;
+  const belongToContainer = !!data?.container;
+  const hasBatchPermissions = useHasPermissions(data?.ownedBy?.id);
   const { entities } = mapping;
   const [{ isOver, canDrop, isSameItem }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
@@ -1176,7 +1147,28 @@ function BatchCell({
             isTargeted={isTargetedBatch && (isTargetedContainer || isTargetedShipment)}
             hasRelation={isTargetedBatch}
             type={beforeConnector}
-          />
+          >
+            {belongToContainer && hasBatchPermissions([BATCH_UPDATE]) && (
+              <RemoveButton
+                offset
+                onClick={() => {
+                  dispatch({
+                    type: 'REMOVE_BATCH',
+                    payload: {
+                      entity: {
+                        id: data?.id,
+                        no: data?.no,
+                      },
+                      from: {
+                        type: 'CONTAINER',
+                        id: data?.container?.id,
+                      },
+                    },
+                  });
+                }}
+              />
+            )}
+          </RelationLine>
         )}
       </div>
 
@@ -1205,6 +1197,17 @@ function BatchCell({
               <BatchCard
                 organizationId={data?.ownedBy?.id}
                 batch={data}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: BATCH,
+                      selectedId: batchId,
+                      shipmentId: shipment?.id,
+                    },
+                  });
+                }}
                 onDeleteBatch={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -1257,9 +1260,8 @@ function ContainerCell({
   const { entities } = mapping;
   const { matches } = Hits.useContainer();
   const containerId = data?.id;
-  const container = entities.containers?.[containerId] ?? { id: containerId };
-  const hasPermissions = useHasPermissions(container.ownedBy);
-  const hasBatchPermissions = useHasPermissions(data?.relatedBatch?.ownedBy?.id);
+  const hasPermissions = useEntityHasPermissions(data);
+  const batches = shipment?.batches ?? [];
   const shipmentId = shipment?.id ?? '';
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
     accept: BATCH,
@@ -1268,7 +1270,10 @@ function ContainerCell({
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
+          const parentItemId = entities.batches?.[batchId]?.orderItem;
+          if (!parentItemId) return false;
+
+          const parentOrderId = entities.orderItems?.[parentItemId]?.order;
           if (!parentOrderId) return false;
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
@@ -1328,14 +1333,14 @@ function ContainerCell({
     }),
   });
   const isTargetedContainer = state.targets.includes(`${CONTAINER}-${containerId}`);
-  const isTargetedBatch = state.targets.includes(
-    `${BATCH}-${getByPathWithDefault('', 'relatedBatch.id', data)}`
-  );
+  const isTargetedAnyBatches = batches
+    .filter(batch => containerId === batch?.container?.id)
+    .some(batch => state.targets.includes(`${BATCH}-${batch?.id}`));
   const isTargetedShipment = state.targets.includes(`${SHIPMENT}-${shipmentId}`);
   const entity = `${CONTAINER}-${containerId}`;
   const onTargetTree = () => {
     const targets = [];
-    (shipment?.batches ?? []).forEach(batch => {
+    batches.forEach(batch => {
       if (containerId === batch?.container?.id) {
         targets.push(`${BATCH}-${batch.id}`);
         if (!targets.includes(`${ORDER_ITEM}-${batch.orderItem?.id}`)) {
@@ -1384,31 +1389,10 @@ function ContainerCell({
       <div className={ContentStyle}>
         {beforeConnector && (
           <RelationLine
-            isTargeted={isTargetedContainer && isTargetedBatch}
-            hasRelation={isTargetedContainer && isTargetedBatch}
+            isTargeted={isTargetedContainer && isTargetedShipment}
+            hasRelation={isTargetedContainer && isTargetedShipment}
             type={beforeConnector}
-          >
-            {hasBatchPermissions([BATCH_UPDATE]) && (
-              <RemoveButton
-                offset
-                onClick={() => {
-                  dispatch({
-                    type: 'REMOVE_BATCH',
-                    payload: {
-                      entity: {
-                        id: data?.relatedBatch?.id,
-                        no: data?.relatedBatch?.no,
-                      },
-                      from: {
-                        type: 'CONTAINER',
-                        id: data?.relatedBatch?.container,
-                      },
-                    },
-                  });
-                }}
-              />
-            )}
-          </RelationLine>
+          />
         )}
       </div>
 
@@ -1434,7 +1418,33 @@ function ContainerCell({
           >
             <div ref={drag}>
               <Badge label={badge.container?.[containerId] || ''} />
-              <ContainerCard container={container} />
+              <ContainerCard
+                organizationId={data?.ownedBy?.id}
+                container={data}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: CONTAINER,
+                      selectedId: containerId,
+                      orderIds,
+                    },
+                  });
+                }}
+                onDeleteContainer={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'DELETE_CONTAINER',
+                    payload: {
+                      entity: {
+                        id: containerId,
+                        no: data?.no,
+                      },
+                    },
+                  });
+                }}
+              />
               <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
@@ -1457,8 +1467,8 @@ function ContainerCell({
       <div className={ContentStyle}>
         {afterConnector && (
           <RelationLine
-            isTargeted={isTargetedContainer && isTargetedShipment}
-            hasRelation={isTargetedContainer && isTargetedShipment}
+            isTargeted={isTargetedContainer && isTargetedAnyBatches}
+            hasRelation={isTargetedContainer && isTargetedAnyBatches}
             type={afterConnector}
           />
         )}
@@ -1486,20 +1496,20 @@ function ShipmentCell({
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
-          if (!parentOrderId) return false;
+          const parentItemId = entities.batches?.[batchId]?.orderItem;
+          if (!parentItemId) return false;
 
-          const parentItemId = findItemIdByBatch(batchId, entities);
-          if (!parentItemId) return true;
+          const parentOrderId = entities.orderItems?.[parentItemId]?.order;
+          if (!parentOrderId) return false;
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
           const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
-          const isOwnShipment = batch.shipment === shipmentId;
+          const isOwnShipment = batch.shipment === shipmentId && !batch.container;
           const isDifferentImporter =
             shipment?.importer?.id !== getByPathWithDefault('', 'importer.id', order);
           const isDifferentExporter =
             shipment?.exporter &&
-            shipment?.importer?.id !== getByPathWithDefault('', 'exporter.id', order);
+            shipment?.exporter?.id !== getByPathWithDefault('', 'exporter.id', order);
           const noPermission = !hasPermissionToMove({
             hasPermissions,
             type: SHIPMENT,
@@ -1636,7 +1646,32 @@ function ShipmentCell({
           >
             <div ref={drag} id={`${SHIPMENT}-${shipmentId}`}>
               <Badge label={badge.shipment?.[shipmentId] || ''} />
-              <ShipmentCard shipment={shipment} />
+              <ShipmentCard
+                organizationId={shipment?.ownedBy?.id}
+                shipment={shipment}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: SHIPMENT,
+                      selectedId: shipmentId,
+                      orderIds,
+                    },
+                  });
+                }}
+                onCreateContainer={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'CREATE_CONTAINER',
+                    payload: {
+                      entity: {
+                        id: shipmentId,
+                      },
+                    },
+                  });
+                }}
+              />
               <FilterHitBorder hasFilterHits={isMatchedEntity(matches, shipment)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
@@ -2094,7 +2129,7 @@ function DuplicateShipmentCell({
 
       <div
         style={{
-          width: SHIPMENT_WIDTH + 150,
+          width: SHIPMENT_LONG_WIDTH,
         }}
         className={ContentStyle}
       />
@@ -2218,7 +2253,7 @@ const cellRenderer = (
         <div
           style={{
             display: 'flex',
-            width: SHIPMENT_WIDTH + 170,
+            width: SHIPMENT_LONG_WIDTH + 20,
           }}
           key={uuid()}
         >
@@ -2233,7 +2268,7 @@ const cellRenderer = (
         <div
           style={{
             display: 'flex',
-            width: CONTAINER_WIDTH + 40,
+            width: CONTAINER_WIDTH + 20,
           }}
           key={uuid()}
         >

@@ -5,28 +5,40 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import InfiniteLoader from 'react-window-infinite-loader';
 import { VariableSizeList as List } from 'react-window';
 import { Query } from 'react-apollo';
-import { get, set, uniq } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import apolloClient from 'apollo';
 import usePrevious from 'hooks/usePrevious';
-import logger from 'utils/logger';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { Display } from 'components/Form';
-import { SHIPMENT } from 'modules/relationMapV2/constants';
+import { SHIPMENT, CONTAINER, BATCH, ORDER_ITEM, ORDER } from 'modules/relationMapV2/constants';
 import {
   shipmentFocusedListQuery,
   shipmentFullFocusDetailQuery,
 } from 'modules/relationMapV2/query';
 import {
+  loadMore,
+  findShipmentIdByContainer,
+  findShipmentIdByBatch,
+  findParentIdsByBatch,
+} from 'modules/relationMapV2/helpers';
+import {
   Hits,
   Entities,
   SortAndFilter,
   ExpandRows,
+  LoadMoreExpanded,
   FocusedView,
 } from 'modules/relationMapV2/store';
 import EditFormSlideView from '../EditFormSlideView';
 import SelectedEntity from '../SelectedEntity';
+import CloneEntities from '../CloneEntities';
+import InlineCreateContainer from '../InlineCreateContainer';
+import DeleteContainerConfirm from '../DeleteContainerConfirm';
+import RemoveBatchConfirm from '../RemoveBatchConfirm';
+import StatusConfirm from '../StatusConfirm';
+import MoveEntityConfirm from '../MoveEntityConfirm';
+import AddTags from '../AddTags';
 import Actions from '../Actions';
 import Header from '../Header';
 import Row from '../Row';
@@ -50,64 +62,6 @@ const innerElementType = React.forwardRef(
   )
 );
 
-const loadMore = (
-  clientData: {| fetchMore: Function, data: ?Object, onSuccess: Function |},
-  queryVariables: Object = {}
-) => {
-  const selectedField: string = 'shipments';
-  const {
-    data = { [`${selectedField}`]: { page: 1, totalPage: 0 } },
-    fetchMore,
-    onSuccess,
-  } = clientData;
-  if (!data) return Promise.resolve({});
-  const nextPage = get(`${selectedField}.page`, data) + 1;
-  const totalPage = get(`${selectedField}.totalPage`, data);
-  if (nextPage > totalPage) return Promise.resolve({});
-  logger.warn('loadMore nextPage', nextPage);
-  return fetchMore({
-    variables: {
-      ...queryVariables,
-      filter: queryVariables.filter,
-      ...(queryVariables && queryVariables.sort
-        ? { sort: { [queryVariables.sort.field]: queryVariables.sort.direction } }
-        : {}),
-      page: nextPage,
-    },
-    updateQuery: (prevResult, { fetchMoreResult }) => {
-      logger.warn('updateQuery');
-      onSuccess();
-
-      if (
-        get(`${selectedField}.page`, prevResult) + 1 !==
-        get(`${selectedField}.page`, fetchMoreResult)
-      ) {
-        return prevResult;
-      }
-
-      if (get(`${selectedField}.nodes`, fetchMoreResult).length === 0) return prevResult;
-
-      const result = set(
-        `${selectedField}.hits`,
-        uniq([
-          ...get(`${selectedField}.hits`, prevResult),
-          ...get(`${selectedField}.hits`, fetchMoreResult),
-        ]),
-        fetchMoreResult
-      );
-
-      return set(
-        `${selectedField}.nodes`,
-        uniq([
-          ...get(`${selectedField}.nodes`, prevResult),
-          ...get(`${selectedField}.nodes`, fetchMoreResult),
-        ]),
-        result
-      );
-    },
-  }).catch(logger.error);
-};
-
 export default function ShipmentFocus() {
   const listRef = React.createRef();
   const scrollEntity = React.useRef({
@@ -115,10 +69,11 @@ export default function ShipmentFocus() {
     id: '',
   });
   const { expandRows, setExpandRows } = ExpandRows.useContainer();
+  const { loadMoreExpanded } = LoadMoreExpanded.useContainer();
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const { initHits } = Hits.useContainer();
-  const { initMapping, getRelatedBy } = Entities.useContainer();
+  const { initMapping, getRelatedBy, onSetBadges, onSetCloneRelated } = Entities.useContainer();
   const { queryVariables } = SortAndFilter.useContainer();
   const lastQueryVariables = usePrevious(queryVariables);
   React.useEffect(() => {
@@ -249,7 +204,21 @@ export default function ShipmentFocus() {
                   : () => {
                       setIsLoadingMore(true);
                       loadMore(
-                        { fetchMore, data, onSuccess: () => setIsLoadingMore(false) },
+                        'shipments',
+                        {
+                          fetchMore,
+                          data,
+                          onSuccess: fetchMoreResult => {
+                            if (loadMoreExpanded)
+                              setExpandRows([
+                                ...expandRows,
+                                ...(fetchMoreResult?.shipments?.nodes ?? []).map(
+                                  shipment => shipment?.id
+                                ),
+                              ]);
+                            setIsLoadingMore(false);
+                          },
+                        },
                         queryVariables
                       );
                     };
@@ -283,6 +252,196 @@ export default function ShipmentFocus() {
                           type: '',
                           selectedId: '',
                         },
+                      });
+                    }}
+                  />
+                  <DeleteContainerConfirm
+                    onSuccess={containerId => {
+                      const ids = [findShipmentIdByContainer(containerId, entities)];
+                      queryShipmentsDetail(ids);
+                      window.requestIdleCallback(
+                        () => {
+                          dispatch({
+                            type: 'DELETE_CONTAINER_CLOSE',
+                            payload: { containerId },
+                          });
+                          dispatch({
+                            type: 'REMOVE_TARGETS',
+                            payload: {
+                              targets: [`${CONTAINER}-${containerId}`],
+                            },
+                          });
+                        },
+                        {
+                          timeout: 250,
+                        }
+                      );
+                    }}
+                  />
+                  <MoveEntityConfirm
+                    onSuccess={ids => {
+                      queryShipmentsDetail(ids);
+                      dispatch({
+                        type: 'CONFIRM_MOVE_END',
+                        payload: { ids },
+                      });
+                    }}
+                  />
+                  <StatusConfirm
+                    onSuccess={ids => {
+                      queryShipmentsDetail(ids);
+                      dispatch({
+                        type: 'STATUS_END',
+                        payload: { ids },
+                      });
+                    }}
+                  />
+                  <CloneEntities
+                    onSuccess={({ sources, shipmentIds, cloneEntities }) => {
+                      const cloneBadges = [];
+                      const newShipmentIds = [];
+                      cloneEntities.forEach(cloneResult => {
+                        if (cloneResult?.data?.shipmentCloneMany?.length ?? 0) {
+                          const shipmentsClone = cloneResult?.data?.shipmentCloneMany ?? [];
+                          newShipmentIds.push(...shipmentsClone.map(shipment => shipment?.id));
+                          shipmentsClone.forEach(shipment => {
+                            cloneBadges.push({
+                              id: shipment?.id,
+                              type: 'cloned',
+                              entity: 'shipment',
+                            });
+                            cloneBadges.push(
+                              ...(shipment?.containers ?? []).map(container => ({
+                                id: container?.id,
+                                type: 'cloned',
+                                entity: 'container',
+                              }))
+                            );
+                            cloneBadges.push(
+                              ...(shipment?.batches ?? []).map(batch => ({
+                                id: batch?.id,
+                                type: 'cloned',
+                                entity: 'batch',
+                              }))
+                            );
+                          });
+                        }
+                        if (cloneResult?.data?.batchCloneMany?.length ?? 0) {
+                          cloneBadges.push(
+                            ...(cloneResult?.data?.batchCloneMany ?? []).map(item => {
+                              return {
+                                id: item?.id,
+                                type: 'cloned',
+                                entity: 'batch',
+                              };
+                            })
+                          );
+                        }
+                        if (cloneResult?.data?.containerCloneMany?.length ?? 0) {
+                          const containersClone = cloneResult?.data?.containerCloneMany ?? [];
+                          containersClone.forEach(container => {
+                            cloneBadges.push({
+                              id: container?.id,
+                              type: 'cloned',
+                              entity: 'container',
+                            });
+                            cloneBadges.push(
+                              ...(container?.batches ?? []).map(batch => ({
+                                id: batch?.id,
+                                type: 'cloned',
+                                entity: 'batch',
+                              }))
+                            );
+                          });
+                        }
+                      });
+                      dispatch({
+                        type: 'CLONE_END',
+                        payload: {
+                          sources,
+                          cloneEntities,
+                        },
+                      });
+                      queryShipmentsDetail([...shipmentIds, ...newShipmentIds]);
+                      onSetBadges(cloneBadges);
+                      onSetCloneRelated(sources, cloneEntities);
+                    }}
+                  />
+                  <InlineCreateContainer
+                    onSuccess={(shipmentId, container) => {
+                      if (shipmentId) {
+                        queryShipmentsDetail([shipmentId]);
+                        const node = document.querySelector(`#${CONTAINER}-${container?.id}`);
+                        if (node) {
+                          // on UI, found the DOM, then try to scroll the center position
+                          scrollIntoView(node, {
+                            behavior: 'smooth',
+                            scrollMode: 'if-needed',
+                          });
+                        } else {
+                          // TODO: scroll to the position
+                          window.requestIdleCallback(
+                            () => {
+                              dispatch({
+                                type: 'CREATE_CONTAINER_CLOSE',
+                                payload: {},
+                              });
+                            },
+                            {
+                              timeout: 250,
+                            }
+                          );
+                        }
+                      }
+                    }}
+                  />
+                  <RemoveBatchConfirm
+                    onSuccess={batchId => {
+                      queryShipmentsDetail([findShipmentIdByBatch(batchId, entities)]);
+                      const [itemId, orderId] = findParentIdsByBatch({
+                        batchId,
+                        entities,
+                        viewer: state.viewer,
+                      });
+                      const removeTargets = [];
+                      const remainItemsCount = Object.values(entities.batches).filter(
+                        (currentBatch: Object) =>
+                          currentBatch.container && currentBatch.orderItem === itemId
+                      ).length;
+                      if (!entities.batches?.[batchId]?.container) {
+                        removeTargets.push(`${BATCH}-${batchId}`);
+                      }
+                      if (remainItemsCount === 1 && orderId && itemId) {
+                        removeTargets.push(`${ORDER}-${orderId}`);
+                        removeTargets.push(`${ORDER_ITEM}-${itemId}`);
+                      }
+                      window.requestIdleCallback(
+                        () => {
+                          if (removeTargets.length) {
+                            dispatch({
+                              type: 'REMOVE_TARGETS',
+                              payload: {
+                                targets: removeTargets,
+                              },
+                            });
+                          }
+                          dispatch({
+                            type: 'REMOVE_BATCH_CLOSE',
+                            payload: {},
+                          });
+                        },
+                        {
+                          timeout: 250,
+                        }
+                      );
+                    }}
+                  />
+                  <AddTags
+                    onSuccess={ids => {
+                      queryShipmentsDetail(ids);
+                      dispatch({
+                        type: 'TAGS_END',
+                        payload: { ids },
                       });
                     }}
                   />

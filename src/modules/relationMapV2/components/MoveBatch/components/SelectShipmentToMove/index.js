@@ -6,7 +6,6 @@ import { Query } from 'react-apollo';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { useEntityHasPermissions } from 'contexts/Permissions';
-
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
@@ -128,14 +127,15 @@ function SelectShipmentToMove({ intl, onSuccess, onNewContainer }: Props) {
   const { mapping } = Entities.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
   const [selected, setSelected] = React.useState(null);
-  const { isProcessing, isOpen, type, orderIds } = state.moveActions;
+  const { isProcessing, isOpen, type, from, orderIds } = state.moveActions;
+  const isMoveFromBatch = from === 'batch';
+  const isMoveToContainer = type === 'newContainer';
+  const isMoveToShipment = type === 'existShipment';
   React.useEffect(() => {
     return () => {
       if (isOpen) setSelected(null);
     };
   }, [isOpen]);
-  const isMoveToShipment = type === 'existShipment';
-  const isMoveToContainer = type === 'newContainer';
   const onCancel = () => {
     dispatch({
       type: 'MOVE_TO_SHIPMENT_CLOSE',
@@ -217,7 +217,7 @@ function SelectShipmentToMove({ intl, onSuccess, onNewContainer }: Props) {
     },
     'filterShipmentOnMoveNRM'
   );
-  const isValid = isMoveToContainer || isMoveToShipment;
+  const isValid = (isMoveToContainer || isMoveToShipment) && isMoveFromBatch;
   return (
     <SlideView
       shouldConfirm={() => !!selected}

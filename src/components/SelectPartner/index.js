@@ -1,26 +1,25 @@
 // @flow
 import * as React from 'react';
-import { injectIntl } from 'react-intl';
-import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
-import { partnersQuery } from 'graphql/partner/query';
 import { ObjectValue } from 'react-values';
-import useFilter from 'hooks/useFilter';
+import { partnersQuery } from 'graphql/partner/query';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
-import FilterToolBar from 'components/common/FilterToolBar';
+import useFilterSort from 'hooks/useFilterSort';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import PartnerGridView from 'modules/partner/list/PartnerGridView';
-import messages from 'modules/partner/messages';
+import {
+  EntityIcon,
+  Filter,
+  PartnerFilterConfig,
+  PartnerSortConfig,
+  Search,
+  Sort,
+} from 'components/NavBar';
 import { PartnerCard } from 'components/Cards';
+import PartnerGridView from 'modules/partner/list/PartnerGridView';
 
-type OptionalProps = {
-  cacheKey: string,
-};
-
-type Props = OptionalProps & {|
-  intl: IntlShape,
+type Props = {|
   partnerTypes: Array<string>,
   selected?: ?{
     id: string,
@@ -32,28 +31,14 @@ type Props = OptionalProps & {|
 
 const partnerPath = 'viewer.user.organization.partners';
 
-const SelectPartner = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSelect }: Props) => {
-  const initialQueryVariables = {
-    filter: {
-      types: partnerTypes,
-    },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-    page: 1,
-    perPage: 10,
-  };
-  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
-    initialQueryVariables,
-    cacheKey
+const SelectPartner = ({ partnerTypes, selected, onCancel, onSelect }: Props) => {
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    { query: '', types: partnerTypes },
+    { updatedAt: 'DESCENDING' }
   );
-  const sortFields = [
-    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-    { title: intl.formatMessage(messages.name), value: 'name' },
-    { title: intl.formatMessage(messages.code), value: 'code' },
-  ];
+
+  const queryVariables = { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 10 };
+
   return (
     <Query fetchPolicy="network-only" query={partnersQuery} variables={queryVariables}>
       {({ loading, data, fetchMore, error }) => {
@@ -73,13 +58,17 @@ const SelectPartner = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSel
             {({ value, set }) => (
               <SlideViewLayout>
                 <SlideViewNavBar>
-                  <FilterToolBar
-                    icon="PARTNER"
-                    sortFields={sortFields}
-                    filtersAndSort={filterAndSort}
-                    onChange={onChangeFilter}
-                    canSearch
+                  <EntityIcon icon="PARTNER" color="PARTNER" />
+
+                  <Filter
+                    config={PartnerFilterConfig}
+                    filterBy={filterBy}
+                    onChange={setFilterBy}
+                    staticFilters={['types']}
                   />
+                  <Search query={query} onChange={setQuery} />
+                  <Sort config={PartnerSortConfig} sortBy={sortBy} onChange={setSortBy} />
+
                   <CancelButton onClick={onCancel} />
                   <SaveButton
                     disabled={isEquals(value, selected)}
@@ -119,10 +108,4 @@ const SelectPartner = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSel
   );
 };
 
-const defaultProps = {
-  cacheKey: 'SelectPartner',
-};
-
-SelectPartner.defaultProps = defaultProps;
-
-export default injectIntl(SelectPartner);
+export default SelectPartner;

@@ -34,7 +34,7 @@ type Props = OptionalProps & {
   onCancel: Function,
   title: React.Node,
   dialogMessage: React.Node,
-  buttons: React.Node,
+  buttons?: React.Node,
   children?: React.Node,
 };
 

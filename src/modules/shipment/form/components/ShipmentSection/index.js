@@ -624,7 +624,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                               }) => (
                                                 <>
                                                   <SelectPartner
-                                                    cacheKey="ShipmentSelectImporter"
                                                     partnerTypes={['Importer']}
                                                     selected={values.importer}
                                                     onCancel={() => importerSelectorToggle(false)}
@@ -717,7 +716,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                         </BooleanValue>
                                       ) : (
                                         <SelectPartner
-                                          cacheKey="ShipmentSelectImporter"
                                           partnerTypes={['Importer']}
                                           selected={values.importer}
                                           onCancel={() => importerSelectorToggle(false)}
@@ -985,7 +983,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                               {opened && (
                                 <SelectPartners
-                                  cacheKey="ShipmentSelectForwarders"
                                   partnerTypes={['Forwarder']}
                                   selected={getByPathWithDefault([], 'forwarders', values)}
                                   onCancel={() => slideToggle(false)}

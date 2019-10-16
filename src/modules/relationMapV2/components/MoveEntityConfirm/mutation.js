@@ -1,30 +1,36 @@
 // @flow
 import apolloClient from 'apollo';
-import { findKey } from 'lodash';
 import { getByPathWithDefault } from 'utils/fp';
 import { updateOrderMutation } from 'modules/order/form/mutation';
 import { updateBatchMutation } from 'modules/batch/form/mutation';
+import {
+  findShipmentIdsByOrder,
+  findParentIdsByBatch,
+  findOrderIdByItem,
+  findOrderIdsByContainer,
+  findOrderIdsByShipment,
+} from 'modules/relationMapV2/helpers';
+import { ORDER, SHIPMENT } from 'modules/relationMapV2/constants';
 import type { State } from 'modules/relationMapV2/type.js.flow';
 
 const moveBatchToOrder = ({
   batch,
   order,
   entities,
+  isOrderFocus,
 }: {
   batch: Object,
   order: Object,
   entities: Object,
+  isOrderFocus: boolean,
 }) => {
-  const orderItemId = findKey(entities.orderItems, orderItem => {
-    return (orderItem.batches || []).includes(batch.id);
+  const [orderItemId, parentOrderId] = findParentIdsByBatch({
+    entities,
+    batchId: batch.id,
+    viewer: isOrderFocus ? ORDER : SHIPMENT,
   });
 
   if (!orderItemId) return Promise.reject(new Error(`Not found order item`));
-
-  const parentOrderId = findKey(entities.orders, currentOrder => {
-    return (currentOrder.orderItems || []).includes(orderItemId);
-  });
-
   if (!parentOrderId) return Promise.reject(new Error(`Not found order`));
 
   const parentItem = getByPathWithDefault(
@@ -61,22 +67,40 @@ const moveBatchToOrder = ({
         },
       },
     })
-    .then(() =>
-      Promise.resolve({
-        orderIds: [order.id, parentOrderId],
-      })
-    );
+    .then(() => {
+      if (isOrderFocus) {
+        return Promise.resolve([order.id, parentOrderId].filter(Boolean));
+      }
+
+      return Promise.resolve(
+        [order.id, parentOrderId].filter(Boolean).map(id => findShipmentIdsByOrder(id, entities))
+      );
+    });
 };
 
 const moveBatchToOrderItem = ({
   batchId,
   orderItemId,
   entities,
+  isOrderFocus,
 }: {
   batchId: string,
   orderItemId: string,
   entities: Object,
+  isOrderFocus: boolean,
 }) => {
+  const [, parentOrderId] = findParentIdsByBatch({
+    entities,
+    batchId,
+    viewer: isOrderFocus ? ORDER : SHIPMENT,
+  });
+
+  const orderId = findOrderIdByItem({
+    entities,
+    orderItemId,
+    viewer: isOrderFocus ? ORDER : SHIPMENT,
+  });
+
   return apolloClient
     .mutate({
       mutation: updateBatchMutation,
@@ -88,18 +112,13 @@ const moveBatchToOrderItem = ({
       },
     })
     .then(() => {
-      const parentOrderId = findKey(entities.orders, currentOrder => {
-        return (currentOrder.orderItems || []).includes(orderItemId);
-      });
+      if (isOrderFocus) {
+        return Promise.resolve([orderId, parentOrderId].filter(Boolean));
+      }
 
-      const orderId = findKey(entities.orders, order => {
-        return (order.orderItems || []).some(itemId =>
-          getByPathWithDefault([], `orderItems.${itemId}.batches`, entities).includes(batchId)
-        );
-      });
-      return Promise.resolve({
-        orderIds: [orderId, parentOrderId].filter(Boolean),
-      });
+      return Promise.resolve(
+        [orderId, parentOrderId].filter(Boolean).flatMap(id => findShipmentIdsByOrder(id, entities))
+      );
     });
 };
 
@@ -107,12 +126,25 @@ const moveBatchToContainer = ({
   batchId,
   containerId,
   entities,
+  isOrderFocus,
 }: {
   batchId: string,
   containerId: string,
   entities: Object,
+  isOrderFocus: boolean,
 }) => {
   const container = getByPathWithDefault({}, `containers.${containerId}`, entities);
+  const [, parentOrderId] = findParentIdsByBatch({
+    entities,
+    batchId,
+    viewer: isOrderFocus ? ORDER : SHIPMENT,
+  });
+  const orderIds = findOrderIdsByContainer({
+    entities,
+    containerId,
+    viewer: isOrderFocus ? ORDER : SHIPMENT,
+  });
+
   return apolloClient
     .mutate({
       mutation: updateBatchMutation,
@@ -125,21 +157,14 @@ const moveBatchToContainer = ({
       },
     })
     .then(() => {
-      const parentOrderId = findKey(entities.orders, currentOrder => {
-        return (currentOrder.shipments || []).some(shipmentId =>
-          getByPathWithDefault([], `shipments.${shipmentId}.containers`, entities).includes(
-            containerId
-          )
-        );
-      });
-      const orderId = findKey(entities.orders, order => {
-        return (order.orderItems || []).some(itemId =>
-          getByPathWithDefault([], `orderItems.${itemId}.batches`, entities).includes(batchId)
-        );
-      });
-      return Promise.resolve({
-        orderIds: [orderId, parentOrderId].filter(Boolean),
-      });
+      if (isOrderFocus) {
+        return Promise.resolve([...orderIds, parentOrderId].filter(Boolean));
+      }
+
+      return Promise.resolve([
+        ...(parentOrderId ? findShipmentIdsByOrder(parentOrderId, entities) : []),
+        container.shipment,
+      ]);
     });
 };
 
@@ -147,11 +172,23 @@ const moveBatchToShipment = ({
   batchId,
   shipmentId,
   entities,
-}: {
+  isOrderFocus,
+}: {|
   batchId: string,
   shipmentId: string,
   entities: Object,
-}) => {
+  isOrderFocus: boolean,
+|}) => {
+  const [, parentOrderId] = findParentIdsByBatch({
+    entities,
+    batchId,
+    viewer: isOrderFocus ? ORDER : SHIPMENT,
+  });
+  const orderIds = findOrderIdsByShipment({
+    entities,
+    shipmentId,
+    viewer: isOrderFocus ? ORDER : SHIPMENT,
+  });
   return apolloClient
     .mutate({
       mutation: updateBatchMutation,
@@ -164,21 +201,19 @@ const moveBatchToShipment = ({
       },
     })
     .then(() => {
-      const parentOrderId = findKey(entities.orders, currentOrder => {
-        return (currentOrder.shipments || []).includes(shipmentId);
-      });
-      const orderId = findKey(entities.orders, order => {
-        return (order.orderItems || []).some(itemId =>
-          getByPathWithDefault([], `orderItems.${itemId}.batches`, entities).includes(batchId)
-        );
-      });
-      return Promise.resolve({
-        orderIds: [orderId, parentOrderId].filter(Boolean),
-      });
+      if (isOrderFocus) {
+        return Promise.resolve([...orderIds, parentOrderId].filter(Boolean));
+      }
+
+      return Promise.resolve([
+        ...(parentOrderId ? findShipmentIdsByOrder(parentOrderId, entities) : []),
+        shipmentId,
+      ]);
     });
 };
 
 export const moveEntityMutation = (state: State, entities: Object) => {
+  const isOrderFocus = state.viewer === 'Order';
   switch (state.moveEntity.detail.from.icon) {
     case 'BATCH': {
       const batch = getByPathWithDefault(
@@ -198,30 +233,34 @@ export const moveEntityMutation = (state: State, entities: Object) => {
             batch,
             order,
             entities,
+            isOrderFocus,
           });
         }
 
         case 'ORDER_ITEM': {
           return moveBatchToOrderItem({
+            entities,
+            isOrderFocus,
             batchId: state.moveEntity.detail.from.id,
             orderItemId: state.moveEntity.detail.to.id,
-            entities,
           });
         }
 
         case 'CONTAINER': {
           return moveBatchToContainer({
-            batchId: state.moveEntity.detail.from.id,
-            containerId: state.moveEntity.detail.to.id,
             entities,
+            isOrderFocus,
+            containerId: state.moveEntity.detail.to.id,
+            batchId: state.moveEntity.detail.from.id,
           });
         }
 
         case 'SHIPMENT': {
           return moveBatchToShipment({
-            batchId: state.moveEntity.detail.from.id,
-            shipmentId: state.moveEntity.detail.to.id,
             entities,
+            isOrderFocus,
+            shipmentId: state.moveEntity.detail.to.id,
+            batchId: state.moveEntity.detail.from.id,
           });
         }
 

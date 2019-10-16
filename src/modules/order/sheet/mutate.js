@@ -43,6 +43,10 @@ function normalizedInput(type: string, field: string, value: any): Object {
             },
           };
         }
+        case 'deliveryDate':
+          return {
+            [field]: new Date(value),
+          };
         default:
           return {
             [field]: value,
@@ -57,6 +61,19 @@ function normalizedInput(type: string, field: string, value: any): Object {
           return {
             [field]: new Date(value),
           };
+        default:
+          return {
+            [field]: value,
+          };
+      }
+    case 'Shipment':
+      switch (field) {
+        case 'blDate':
+        case 'bookingDate':
+          return {
+            [field]: new Date(value),
+          };
+
         default:
           return {
             [field]: value,

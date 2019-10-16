@@ -1,62 +1,49 @@
 // @flow
 import * as React from 'react';
-import { injectIntl } from 'react-intl';
-import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ArrayValue } from 'react-values';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
-import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { usersQuery } from 'graphql/staff/query';
+import useFilterSort from 'hooks/useFilterSort';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
-
-import FilterToolBar from 'components/common/FilterToolBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import StaffGridView from 'modules/staff/list/StaffGridView';
+import {
+  EntityIcon,
+  Filter,
+  Search,
+  Sort,
+  UserFilterConfig,
+  UserSortConfig,
+} from 'components/NavBar';
 import { StaffCard } from 'components/Cards';
+import StaffGridView from 'modules/staff/list/StaffGridView';
 import { type UserAvatarType } from 'types';
-import messages from './messages';
 
 type OptionalProps = {
-  cacheKey: string,
   selected: Array<UserAvatarType>,
-  filterBy: Object,
+  organizationIds: Array<string>,
 };
 
 type Props = OptionalProps & {
-  intl: IntlShape,
   onSelect: (values: Array<UserAvatarType>) => void,
   onCancel: () => void,
 };
 
 const defaultProps = {
   selected: [],
-  filterBy: {},
-  cacheKey: 'AssignUsers',
+  organizationIds: [],
 };
 
 const MAX_SELECTIONS = 5;
 
-const AssignUsers = ({ intl, cacheKey, selected, onCancel, onSelect, filterBy }: Props) => {
-  const sortFields = [
-    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-    { title: intl.formatMessage(messages.firstName), value: 'firstName' },
-    { title: intl.formatMessage(messages.lastName), value: 'lastName' },
-    { title: intl.formatMessage(messages.fullName), value: 'fullName' },
-  ];
+const AssignUsers = ({ selected, onCancel, onSelect, organizationIds }: Props) => {
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    { query: '', organizationIds },
+    { updatedAt: 'DESCENDING' }
+  );
 
-  const initialFilter = {
-    filter: filterBy,
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-    page: 1,
-    perPage: 10,
-  };
-
-  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(initialFilter, cacheKey);
+  const queryVariables = { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 10 };
 
   return (
     <Query fetchPolicy="network-only" query={usersQuery} variables={queryVariables}>
@@ -76,16 +63,21 @@ const AssignUsers = ({ intl, cacheKey, selected, onCancel, onSelect, filterBy }:
               return (
                 <SlideViewLayout>
                   <SlideViewNavBar>
-                    <FilterToolBar
-                      icon="STAFF"
-                      sortFields={sortFields}
-                      filtersAndSort={filterAndSort}
-                      onChange={onChangeFilter}
-                      canSearch
+                    <EntityIcon icon="STAFF" color="STAFF" />
+
+                    <Filter
+                      config={UserFilterConfig}
+                      filterBy={filterBy}
+                      onChange={setFilterBy}
+                      staticFilters={['organizationIds']}
                     />
+                    <Search query={query} onChange={setQuery} />
+                    <Sort config={UserSortConfig} sortBy={sortBy} onChange={setSortBy} />
+
                     <h3>
                       {values.length}/{MAX_SELECTIONS}
                     </h3>
+
                     <CancelButton onClick={onCancel} />
                     <SaveButton
                       data-testid="saveButtonOnAssignUsers"
@@ -132,4 +124,4 @@ const AssignUsers = ({ intl, cacheKey, selected, onCancel, onSelect, filterBy }:
 
 AssignUsers.defaultProps = defaultProps;
 
-export default injectIntl(AssignUsers);
+export default AssignUsers;

@@ -22,7 +22,7 @@ import useFilterSort from 'hooks/useFilterSort';
 import { isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from '../../messages';
-import Ids from '../Ids';
+import Ids from '../Common/Ids';
 import { organizationsByIDsQuery, partnersQuery } from './query';
 import { CardStyle } from './style';
 
@@ -33,14 +33,14 @@ type Props = {
 };
 
 type SelectorProps = {
-  organizationType: string,
+  organizationType: ?string,
   open: boolean,
   onClose: () => void,
   selected: Array<string>,
   setSelected: (Array<string>) => void,
 };
 
-const PartnerSelector = ({
+const OrganizationSelector = ({
   open,
   onClose,
   selected,
@@ -48,7 +48,7 @@ const PartnerSelector = ({
   organizationType,
 }: SelectorProps) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
-    { query: '', types: [organizationType] },
+    { query: '', ...(organizationType ? { types: [organizationType] } : {}) },
     { updatedAt: 'DESCENDING' }
   );
 
@@ -62,7 +62,7 @@ const PartnerSelector = ({
               <Filter
                 config={PartnerFilterConfig}
                 filterBy={filterBy}
-                staticFilters={['types']}
+                staticFilters={organizationType ? ['types'] : []}
                 onChange={setFilterBy}
               />
               <Search query={query} onChange={setQuery} />
@@ -140,7 +140,7 @@ const PartnerSelector = ({
   );
 };
 
-const PartnerIds = (organizationType: string, title: React.Node) => ({
+const OrganizationIdsImpl = (organizationType: ?string, title: React.Node) => ({
   value,
   readonly,
   onChange,
@@ -152,7 +152,7 @@ const PartnerIds = (organizationType: string, title: React.Node) => ({
       onChange={onChange}
       title={title}
       selector={({ open, onClose, selected, setSelected }) => (
-        <PartnerSelector
+        <OrganizationSelector
           organizationType={organizationType}
           open={open}
           onClose={onClose}
@@ -171,13 +171,25 @@ const PartnerIds = (organizationType: string, title: React.Node) => ({
   );
 };
 
-export const ImporterIds = PartnerIds('Importer', <FormattedMessage {...messages.importers} />);
-export const ExporterIds = PartnerIds('Exporter', <FormattedMessage {...messages.exporters} />);
-export const SupplierIds = PartnerIds('Supplier', <FormattedMessage {...messages.suppliers} />);
-export const ForwarderIds = PartnerIds('Forwarder', <FormattedMessage {...messages.forwarders} />);
-export const WarehouserIds = PartnerIds(
+export const ImporterIds = OrganizationIdsImpl(
+  'Importer',
+  <FormattedMessage {...messages.importers} />
+);
+export const ExporterIds = OrganizationIdsImpl(
+  'Exporter',
+  <FormattedMessage {...messages.exporters} />
+);
+export const SupplierIds = OrganizationIdsImpl(
+  'Supplier',
+  <FormattedMessage {...messages.suppliers} />
+);
+export const ForwarderIds = OrganizationIdsImpl(
+  'Forwarder',
+  <FormattedMessage {...messages.forwarders} />
+);
+export const WarehouserIds = OrganizationIdsImpl(
   'Warehouser',
   <FormattedMessage {...messages.warehousers} />
 );
 
-export default PartnerIds;
+export default OrganizationIdsImpl(null, <FormattedMessage {...messages.organizations} />);

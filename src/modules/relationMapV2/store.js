@@ -138,6 +138,32 @@ function useEntities(
             draft.order[order.id] = [cloneOrders?.[index]?.id, ...related.order[order.id]];
           }
         });
+        const shipments = sources.filter(item => item.type === SHIPMENT);
+        const cloneShipments =
+          cloneEntities.find(item => item.data.shipmentCloneMany)?.data?.shipmentCloneMany ?? [];
+        shipments.forEach((shipment, index) => {
+          if (!related.shipment[shipment.id]) {
+            draft.shipment[shipment.id] = [cloneShipments?.[index]?.id];
+          } else {
+            draft.shipment[shipment.id] = [
+              cloneShipments?.[index]?.id,
+              ...related.shipment[shipment.id],
+            ];
+          }
+        });
+        const containers = sources.filter(item => item.type === CONTAINER);
+        const cloneContainers =
+          cloneEntities.find(item => item.data.containerCloneMany)?.data?.containerCloneMany ?? [];
+        containers.forEach((container, index) => {
+          if (!related.container[container.id]) {
+            draft.container[container.id] = [cloneContainers?.[index]?.id];
+          } else {
+            draft.container[container.id] = [
+              cloneContainers?.[index]?.id,
+              ...related.container[container.id],
+            ];
+          }
+        });
       })
     );
   };
@@ -163,7 +189,10 @@ function useEntities(
     [related]
   );
 
-  const getRelatedBy = (type: 'batch' | 'orderItem' | 'order', id: string) => {
+  const getRelatedBy = (
+    type: 'batch' | 'orderItem' | 'order' | 'shipment' | 'container',
+    id: string
+  ) => {
     if (!related?.[type]?.[id]) {
       return [];
     }
@@ -647,6 +676,17 @@ function useExpandRow() {
 
 export const ExpandRows = createContainer(useExpandRow);
 
+function useLoadMoreExpanded() {
+  const [loadMoreExpanded, setLoadMoreExpanded] = useState(false);
+
+  return {
+    loadMoreExpanded,
+    setLoadMoreExpanded,
+  };
+}
+
+export const LoadMoreExpanded = createContainer(useLoadMoreExpanded);
+
 const initMoveEntity = {
   from: {
     id: '',
@@ -681,6 +721,16 @@ const initialState: State = {
       },
     },
   },
+  containerActions: {
+    isOpen: false,
+    isProcessing: false,
+    detail: {
+      entity: {
+        id: '',
+        no: '',
+      },
+    },
+  },
   batchActions: {
     isOpen: false,
     isProcessing: false,
@@ -696,6 +746,7 @@ const initialState: State = {
     },
   },
   moveActions: {
+    from: 'batch',
     isOpen: false,
     isProcessing: false,
     orderIds: [],
@@ -791,6 +842,13 @@ function orderReducer(
       | 'DELETE_ITEM'
       | 'DELETE_ITEM_START'
       | 'DELETE_ITEM_CLOSE'
+      | 'CREATE_CONTAINER'
+      | 'CREATE_CONTAINER_START'
+      | 'CREATE_CONTAINER_END'
+      | 'CREATE_CONTAINER_CLOSE'
+      | 'DELETE_CONTAINER'
+      | 'DELETE_CONTAINER_START'
+      | 'DELETE_CONTAINER_CLOSE'
       | 'CREATE_ITEM'
       | 'CREATE_ITEM_START'
       | 'CREATE_ITEM_END'
@@ -820,6 +878,11 @@ function orderReducer(
       | 'REMOVE_BATCH'
       | 'REMOVE_BATCH_START'
       | 'REMOVE_BATCH_CLOSE'
+      | 'MOVE_ITEM'
+      | 'MOVE_ITEM_START'
+      | 'MOVE_ITEM_CLOSE'
+      | 'MOVE_ITEM_END'
+      | 'MOVE_ITEM_TO_NEW_ENTITY'
       | 'MOVE_BATCH'
       | 'MOVE_BATCH_START'
       | 'MOVE_BATCH_CLOSE'
@@ -1064,10 +1127,30 @@ function orderReducer(
         },
       });
     }
+    case 'CREATE_CONTAINER': {
+      return update(state, {
+        containerActions: {
+          type: { $set: 'createContainer' },
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          detail: { $set: action.payload },
+        },
+      });
+    }
     case 'DELETE_ITEM': {
       return update(state, {
         itemActions: {
           type: { $set: 'deleteItem' },
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          detail: { $set: action.payload },
+        },
+      });
+    }
+    case 'DELETE_CONTAINER': {
+      return update(state, {
+        containerActions: {
+          type: { $set: 'deleteContainer' },
           isOpen: { $set: true },
           isProcessing: { $set: false },
           detail: { $set: action.payload },
@@ -1084,6 +1167,32 @@ function orderReducer(
         },
       });
     }
+    case 'MOVE_ITEM': {
+      return update(state, {
+        itemActions: {
+          type: { $set: 'moveItems' },
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'MOVE_ITEM_TO_NEW_ENTITY':
+      return action.payload?.selectedId === 'newOrder'
+        ? update(state, {
+            edit: {
+              $merge: action.payload,
+            },
+          })
+        : update(state, {
+            edit: {
+              $merge: action.payload,
+            },
+            moveActions: {
+              from: { $set: 'item' },
+              isOpen: { $set: false },
+              isProcessing: { $set: false },
+            },
+          });
     case 'MOVE_BATCH': {
       return update(state, {
         batchActions: {
@@ -1110,6 +1219,7 @@ function orderReducer(
           isProcessing: { $set: true },
         },
       });
+    case 'MOVE_ITEM_START':
     case 'MOVE_BATCH_START':
       return update(state, {
         moveActions: {
@@ -1148,10 +1258,23 @@ function orderReducer(
               $merge: action.payload,
             },
             moveActions: {
+              from: { $set: 'batch' },
               isOpen: { $set: false },
               isProcessing: { $set: false },
             },
           });
+    case 'MOVE_ITEM_END':
+      return update(state, {
+        itemActions: {
+          type: { $set: '' },
+          from: { $set: '' },
+          isOpen: { $set: false },
+        },
+        moveActions: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
     case 'MOVE_BATCH_END':
       return update(state, {
         batchActions: {
@@ -1162,6 +1285,13 @@ function orderReducer(
           isProcessing: { $set: false },
         },
       });
+    case 'DELETE_CONTAINER_START': {
+      return update(state, {
+        containerActions: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
     case 'DELETE_ITEM_START':
     case 'CREATE_BATCH_START': {
       return update(state, {
@@ -1184,6 +1314,27 @@ function orderReducer(
         },
       });
     }
+    case 'CREATE_CONTAINER_START': {
+      return update(state, {
+        containerActions: {
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'CREATE_CONTAINER_END': {
+      return update(state, {
+        containerActions: {
+          isProcessing: { $set: false },
+          detail: {
+            entity: {
+              $merge: {
+                id: '',
+              },
+            },
+          },
+        },
+      });
+    }
     case 'MOVE_BATCH_CLOSE':
     case 'REMOVE_BATCH_CLOSE':
     case 'DELETE_BATCH_CLOSE':
@@ -1193,6 +1344,16 @@ function orderReducer(
           isOpen: { $set: false },
         },
       });
+    case 'CREATE_CONTAINER_CLOSE':
+    case 'DELETE_CONTAINER_CLOSE': {
+      return update(state, {
+        containerActions: {
+          type: { $set: '' },
+          isOpen: { $set: false },
+        },
+      });
+    }
+    case 'MOVE_ITEM_CLOSE':
     case 'DELETE_ITEM_CLOSE':
     case 'CREATE_BATCH_CLOSE': {
       return update(state, {

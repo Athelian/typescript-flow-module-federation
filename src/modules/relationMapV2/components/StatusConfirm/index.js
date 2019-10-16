@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
 import { useAllHasPermission } from 'contexts/Permissions';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
-import { targetedIds } from 'modules/relationMapV2/helpers';
+import { targetedIds, findShipmentIdsByOrder } from 'modules/relationMapV2/helpers';
 import { ORDER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
@@ -20,14 +20,14 @@ import ActionDialog, {
 import { updateOrdersMutation, updateShipmentMutation } from './mutation';
 
 type Props = {|
-  onSuccess: (orderIds: Array<string>) => void,
+  onSuccess: (ids: Array<string>) => void,
 |};
 
 export default function StatusConfirm({ onSuccess }: Props) {
   const [isArchived, setIsArchived] = React.useState(false);
   const [updateOrders] = useMutation(updateOrdersMutation);
   const [updateShipments] = useMutation(updateShipmentMutation);
-  const { dispatch, state } = FocusedView.useContainer();
+  const { dispatch, state, selectors } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
   const { isProcessing, isOpen, source } = state.status;
   const orderIds = targetedIds(state.targets, ORDER);
@@ -96,8 +96,16 @@ export default function StatusConfirm({ onSuccess }: Props) {
           })),
         },
       })
-        .then(() => {
-          onSuccess(orderIds);
+        .then(result => {
+          if (selectors.isShipmentFocus) {
+            const ids = [];
+            (result.data?.orderUpdateMany ?? []).forEach(order => {
+              ids.push(...findShipmentIdsByOrder(order.id, mapping.entities));
+            });
+            onSuccess(ids);
+          } else {
+            onSuccess(orderIds);
+          }
         })
         .catch(() => {
           dispatch({
@@ -117,13 +125,18 @@ export default function StatusConfirm({ onSuccess }: Props) {
         },
       })
         .then(result => {
-          const ids = [];
-          (result.data?.shipmentUpdateMany ?? []).forEach(shipment => {
-            (shipment?.batches ?? []).forEach(batch => {
-              if (!ids.includes(batch?.orderItem?.order?.id)) ids.push(batch?.orderItem?.order?.id);
+          if (selectors.isShipmentFocus) {
+            onSuccess(shipmentIds);
+          } else {
+            const ids = [];
+            (result.data?.shipmentUpdateMany ?? []).forEach(shipment => {
+              (shipment?.batches ?? []).forEach(batch => {
+                if (!ids.includes(batch?.orderItem?.order?.id))
+                  ids.push(batch?.orderItem?.order?.id);
+              });
             });
-          });
-          onSuccess(ids);
+            onSuccess(ids);
+          }
         })
         .catch(() => {
           dispatch({

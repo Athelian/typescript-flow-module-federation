@@ -16,6 +16,7 @@ import {
   BATCH_WIDTH,
   CONTAINER_WIDTH,
   SHIPMENT_WIDTH,
+  SHIPMENT_LONG_WIDTH,
 } from 'modules/relationMapV2/constants';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
 import { SHIPMENT_CREATE } from 'modules/permission/constants/shipment';
@@ -41,9 +42,9 @@ import {
   EntityIconWrapperStyle,
   EntityIconStyle,
   TitleWrapperStyle,
-  OrderTitleWrapperStyle,
-  AddOrderButtonCollapsedStyle,
-  AddOrderButtonStyle,
+  CreateNewTitleWrapperStyle,
+  CreateNewButtonCollapsedStyle,
+  CreateNewButtonStyle,
   SelectAllButtonStyle,
   SortInputWrapperStyle,
   ShipmentTimelineWrapperStyle,
@@ -174,7 +175,7 @@ const Header = React.memo<any>(
     if (selectors.isShipmentFocus)
       return (
         <div className={EntitiesNavbarWrapperStyle}>
-          <div className={EntityNavbarWrapperStyle('SHIPMENT', SHIPMENT_WIDTH + 150)}>
+          <div className={EntityNavbarWrapperStyle('SHIPMENT', SHIPMENT_LONG_WIDTH)}>
             <div className={EntityIconWrapperStyle}>
               <div className={EntityIconStyle}>
                 <Icon icon="SHIPMENT" />
@@ -182,8 +183,7 @@ const Header = React.memo<any>(
             </div>
 
             <div className={TitleWrapperStyle}>
-              {/* TODO: fix the new shipment css */}
-              <div className={OrderTitleWrapperStyle(hasPermissions(SHIPMENT_CREATE))}>
+              <div className={CreateNewTitleWrapperStyle(hasPermissions(SHIPMENT_CREATE))}>
                 <Label color="WHITE">
                   <FormattedMessage id="modules.SideBar.shipment" />
                   {' ('}
@@ -193,12 +193,12 @@ const Header = React.memo<any>(
 
                 {hasPermissions(SHIPMENT_CREATE) && (
                   <>
-                    <div className={AddOrderButtonCollapsedStyle}>
+                    <div className={CreateNewButtonCollapsedStyle}>
                       <Icon icon="ADD" />
                     </div>
 
                     <button
-                      className={AddOrderButtonStyle}
+                      className={CreateNewButtonStyle}
                       onClick={() => {
                         dispatch({
                           type: 'EDIT',
@@ -219,6 +219,7 @@ const Header = React.memo<any>(
                   </>
                 )}
               </div>
+
               <button
                 type="button"
                 className={SelectAllButtonStyle}
@@ -247,10 +248,22 @@ const Header = React.memo<any>(
               </button>
             </div>
 
+            <div className={ShipmentTimelineWrapperStyle}>
+              <Label align="center" height="15px" color="TEAL">
+                <FormattedMessage id={`modules.Shipments.${globalShipmentPoint}`} />
+              </Label>
+
+              <MiniShipmentTimeline
+                shipment={{ voyages: [{}, {}, {}] }}
+                activePoint={globalShipmentPoint}
+                onChangeActivePoint={point => setGlobalShipmentPoint(point)}
+              />
+            </div>
+
             <div className={SortInputWrapperStyle}>
               <SortInput
                 invertColors
-                width="125px"
+                width="150px"
                 sort={currentSort(shipmentSort, filterAndSort.sort)}
                 ascending={filterAndSort.sort.direction !== 'DESCENDING'}
                 fields={shipmentSort}
@@ -268,18 +281,6 @@ const Header = React.memo<any>(
                     payload: {},
                   });
                 }}
-              />
-            </div>
-
-            <div className={ShipmentTimelineWrapperStyle}>
-              <Label align="center" height="15px" color="TEAL">
-                <FormattedMessage id={`modules.Shipments.${globalShipmentPoint}`} />
-              </Label>
-
-              <MiniShipmentTimeline
-                shipment={{ voyages: [{}, {}, {}] }}
-                activePoint={globalShipmentPoint}
-                onChangeActivePoint={point => setGlobalShipmentPoint(point)}
               />
             </div>
           </div>
@@ -465,14 +466,12 @@ const Header = React.memo<any>(
             </div>
 
             <div className={TitleWrapperStyle}>
-              <div className={OrderTitleWrapperStyle(false)}>
-                <Label color="WHITE">
-                  <FormattedMessage id="modules.SideBar.order" />
-                  {' ('}
-                  <FormattedNumber value={orderCount} />
-                  {')'}
-                </Label>
-              </div>
+              <Label color="WHITE">
+                <FormattedMessage id="modules.SideBar.order" />
+                {' ('}
+                <FormattedNumber value={orderCount} />
+                {')'}
+              </Label>
 
               <button
                 type="button"
@@ -513,7 +512,7 @@ const Header = React.memo<any>(
           </div>
 
           <div className={TitleWrapperStyle}>
-            <div className={OrderTitleWrapperStyle(hasPermissions(ORDER_CREATE))}>
+            <div className={CreateNewTitleWrapperStyle(hasPermissions(ORDER_CREATE))}>
               <Label color="WHITE">
                 <FormattedMessage id="modules.SideBar.order" />
                 {' ('}
@@ -523,12 +522,12 @@ const Header = React.memo<any>(
 
               {hasPermissions(ORDER_CREATE) && (
                 <>
-                  <div className={AddOrderButtonCollapsedStyle}>
+                  <div className={CreateNewButtonCollapsedStyle}>
                     <Icon icon="ADD" />
                   </div>
 
                   <button
-                    className={AddOrderButtonStyle}
+                    className={CreateNewButtonStyle}
                     onClick={() => {
                       dispatch({
                         type: 'EDIT',

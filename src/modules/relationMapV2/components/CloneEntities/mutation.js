@@ -37,6 +37,16 @@ export const cloneShipmentsMutation = gql`
     shipmentCloneMany(shipments: $shipments) {
       ... on Shipment {
         id
+        batches {
+          ... on Batch {
+            id
+          }
+        }
+        containers {
+          ... on Container {
+            id
+          }
+        }
       }
       ...badRequestFragment
       ...forbiddenFragment

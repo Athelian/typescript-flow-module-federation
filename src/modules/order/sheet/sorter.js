@@ -34,6 +34,9 @@ function orderItemSorter(sorts: Array<ColumnSort>) {
         case 'updatedAt':
           result = setDirection(dateSort(a.updatedAt, b.updatedAt), sort.direction);
           break;
+        case 'deliveryDate':
+          result = setDirection(dateSort(a.deliveryDate, b.deliveryDate), sort.direction);
+          break;
         case 'no':
           result = setDirection(stringSort(a.no, b.no), sort.direction);
           break;
@@ -193,9 +196,21 @@ function batchSorter(sorts: Array<ColumnSort>) {
             sort.direction
           );
           break;
+        case 'shipmentBlDate':
+          result = setDirection(
+            dateSort(a.shipment?.blDate ?? new Date(), b.shipment?.blDate ?? new Date()),
+            sort.direction
+          );
+          break;
         case 'shipmentBookingNo':
           result = setDirection(
             stringSort(a.shipment?.bookingNo ?? '', b.shipment?.bookingNo ?? ''),
+            sort.direction
+          );
+          break;
+        case 'shipmentBookingDate':
+          result = setDirection(
+            dateSort(a.shipment?.bookingDate ?? new Date(), b.shipment?.bookingDate ?? new Date()),
             sort.direction
           );
           break;

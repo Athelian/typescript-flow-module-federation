@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import useUser from 'hooks/useUser';
 import { Tooltip } from 'components/Tooltip';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
-import { targetedIds, findOrderIdByBatch } from 'modules/relationMapV2/helpers';
+import { targetedIds, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
 import { BATCH } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { BaseButton } from 'components/Buttons';
@@ -12,15 +12,28 @@ import { useAllHasPermission } from 'contexts/Permissions';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
 import { CONTAINER_CREATE } from 'modules/permission/constants/container';
 import FormattedNumber from 'components/FormattedNumber';
+import { Label } from 'components/Form';
 import {
   SHIPMENT_UPDATE,
   SHIPMENT_ADD_BATCH,
   SHIPMENT_CREATE,
 } from 'modules/permission/constants/shipment';
-import ActionDialog, { BatchesLabelIcon, BatchLabelIcon } from '../ActionDialog';
+import ActionDialog, {
+  BatchesLabelIcon,
+  BatchLabelIcon,
+  OrderLabelIcon,
+  ContainerLabelIcon,
+  ShipmentLabelIcon,
+} from '../ActionDialog';
 import SelectOrderToMove from './components/SelectOrderToMove';
 import SelectShipmentToMove from './components/SelectShipmentToMove';
 import SelectContainerToMove from './components/SelectContainerToMove';
+import {
+  BatchMoveButtonsWrapperStyle,
+  MoveWrapperStyle,
+  TitleDescriptionWrapperStyle,
+  DescriptionStyle,
+} from './style';
 
 type Props = {
   onSuccess: (orderIds: Array<string>) => void,
@@ -33,7 +46,16 @@ export default function MoveBatch({ onSuccess }: Props) {
   const batchIds = targetedIds(state.targets, BATCH);
   const orderIds = [
     ...new Set(
-      batchIds.map(batchId => findOrderIdByBatch(batchId, mapping.entities)).filter(Boolean)
+      batchIds
+        .map(batchId => {
+          const [, parentOrderId] = findParentIdsByBatch({
+            batchId,
+            viewer: state.viewer,
+            entities: mapping.entities,
+          });
+          return parentOrderId;
+        })
+        .filter(Boolean)
     ),
   ];
   const containerIds = [
@@ -122,6 +144,7 @@ export default function MoveBatch({ onSuccess }: Props) {
           type: 'MOVE_BATCH_START',
           payload: {
             type: target,
+            from: 'batch',
             orderIds,
             containerIds,
             shipmentIds,
@@ -238,8 +261,28 @@ export default function MoveBatch({ onSuccess }: Props) {
         title={<FormattedMessage id="modules.RelationMap.label.move" defaultMessage="MOVE" />}
         dialogMessage={dialogMessage}
         dialogSubMessage={dialogSubMessage}
-        buttons={
-          <>
+      >
+        <div className={BatchMoveButtonsWrapperStyle}>
+          <div className={MoveWrapperStyle}>
+            <div className={TitleDescriptionWrapperStyle}>
+              <Label height="30px">
+                <FormattedMessage
+                  id="modules.RelationMap.move.moveToOrder"
+                  defaultMessage="Move to Order"
+                />
+              </Label>
+              <div className={DescriptionStyle}>
+                <FormattedMessage
+                  id="modules.RelationMap.move.moveToOrderDescription"
+                  defaultMessage="Move {batchesLabel} to an existing {orderLabel}"
+                  values={{
+                    orderLabel: <OrderLabelIcon />,
+                    batchesLabel: <BatchesLabelIcon />,
+                  }}
+                />
+              </div>
+            </div>
+
             {!hasPermissionMoveToExistOrder() ? (
               <Tooltip
                 message={
@@ -281,7 +324,27 @@ export default function MoveBatch({ onSuccess }: Props) {
                 onClick={() => onConfirm('existOrder')}
               />
             )}
+          </div>
 
+          <div className={MoveWrapperStyle}>
+            <div className={TitleDescriptionWrapperStyle}>
+              <Label height="30px">
+                <FormattedMessage
+                  id="modules.RelationMap.move.moveToNewOrder"
+                  defaultMessage="Move to New Order"
+                />
+              </Label>
+              <div className={DescriptionStyle}>
+                <FormattedMessage
+                  id="modules.RelationMap.move.moveToNewOrderDescription"
+                  defaultMessage="Move {batchesLabel} to a new {orderLabel}"
+                  values={{
+                    orderLabel: <OrderLabelIcon />,
+                    batchesLabel: <BatchesLabelIcon />,
+                  }}
+                />
+              </div>
+            </div>
             {!hasPermissionMoveToNewOrder() ? (
               <Tooltip
                 message={
@@ -323,7 +386,27 @@ export default function MoveBatch({ onSuccess }: Props) {
                 onClick={() => onConfirm('newOrder')}
               />
             )}
+          </div>
 
+          <div className={MoveWrapperStyle}>
+            <div className={TitleDescriptionWrapperStyle}>
+              <Label height="30px">
+                <FormattedMessage
+                  id="modules.RelationMap.move.moveToContainer"
+                  defaultMessage="Move to Container"
+                />
+              </Label>
+              <div className={DescriptionStyle}>
+                <FormattedMessage
+                  id="modules.RelationMap.move.moveToContainerDescription"
+                  defaultMessage="Move {batchesLabel} to an existing {containerLabel}"
+                  values={{
+                    containerLabel: <ContainerLabelIcon />,
+                    batchesLabel: <BatchesLabelIcon />,
+                  }}
+                />
+              </div>
+            </div>
             {!hasPermissionMoveToExistContainer() ? (
               <Tooltip
                 message={
@@ -365,7 +448,29 @@ export default function MoveBatch({ onSuccess }: Props) {
                 onClick={() => onConfirm('existContainer')}
               />
             )}
+          </div>
 
+          <div className={MoveWrapperStyle}>
+            <div className={TitleDescriptionWrapperStyle}>
+              <Label height="30px">
+                <FormattedMessage
+                  id="modules.RelationMap.move.moveToNewContainer"
+                  defaultMessage="Move to New Container"
+                />
+              </Label>
+
+              <div className={DescriptionStyle}>
+                <FormattedMessage
+                  id="modules.RelationMap.move.moveToNewContainerDescription"
+                  defaultMessage="Move {batchesLabel} to a new {containerLabel} in an existing {shipmentLabel}"
+                  values={{
+                    containerLabel: <ContainerLabelIcon />,
+                    shipmentLabel: <ShipmentLabelIcon />,
+                    batchesLabel: <BatchesLabelIcon />,
+                  }}
+                />
+              </div>
+            </div>
             {!hasPermissionMoveToNewContainer() ? (
               <Tooltip
                 message={
@@ -407,7 +512,28 @@ export default function MoveBatch({ onSuccess }: Props) {
                 onClick={() => onConfirm('newContainer')}
               />
             )}
+          </div>
 
+          <div className={MoveWrapperStyle}>
+            <div className={TitleDescriptionWrapperStyle}>
+              <Label height="30px">
+                <FormattedMessage
+                  id="modules.RelationMap.move.moveToShipment"
+                  defaultMessage="Move to Shipment"
+                />
+              </Label>
+
+              <div className={DescriptionStyle}>
+                <FormattedMessage
+                  id="modules.RelationMap.move.moveToShipmentDescription"
+                  defaultMessage="Move {batchesLabel} to an existing {shipmentLabel}"
+                  values={{
+                    shipmentLabel: <ShipmentLabelIcon />,
+                    batchesLabel: <BatchesLabelIcon />,
+                  }}
+                />
+              </div>
+            </div>
             {!hasPermissionMoveToExistShipment() ? (
               <Tooltip
                 message={
@@ -449,7 +575,28 @@ export default function MoveBatch({ onSuccess }: Props) {
                 onClick={() => onConfirm('existShipment') || !hasPermissionMoveToExistShipment()}
               />
             )}
+          </div>
 
+          <div className={MoveWrapperStyle}>
+            <div className={TitleDescriptionWrapperStyle}>
+              <Label height="30px">
+                <FormattedMessage
+                  id="modules.RelationMap.move.moveToNewShipment"
+                  defaultMessage="Move to New Shipment"
+                />
+              </Label>
+
+              <div className={DescriptionStyle}>
+                <FormattedMessage
+                  id="modules.RelationMap.move.moveToNewShipmentDescription"
+                  defaultMessage="Move {batchesLabel} to a new {shipmentLabel}"
+                  values={{
+                    shipmentLabel: <ShipmentLabelIcon />,
+                    batchesLabel: <BatchesLabelIcon />,
+                  }}
+                />
+              </div>
+            </div>
             {!hasPermissionMoveToNewShipment() ? (
               <Tooltip
                 message={
@@ -491,9 +638,9 @@ export default function MoveBatch({ onSuccess }: Props) {
                 onClick={() => onConfirm('newShipment')}
               />
             )}
-          </>
-        }
-      />
+          </div>
+        </div>
+      </ActionDialog>
 
       <SelectOrderToMove onSuccess={onSuccess} />
       <SelectShipmentToMove onSuccess={onSuccess} onNewContainer={onNewContainer} />

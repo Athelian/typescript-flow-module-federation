@@ -20,6 +20,7 @@ export const EntityNavbarWrapperStyle = (color: string, width: number): string =
   background-color: ${colors[color]};
   width: ${width + 20}px;
   padding: 0 0 0 15px;
+  justify-content: space-between;
 `;
 
 export const EntityIconWrapperStyle: string = css`
@@ -45,10 +46,10 @@ export const TitleWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 125px;
+  width: 135px;
 `;
 
-export const OrderTitleWrapperStyle = (canAdd: boolean) => css`
+export const CreateNewTitleWrapperStyle = (canAdd: boolean) => css`
   position: relative;
   height: 20px;
   ${canAdd &&
@@ -64,7 +65,7 @@ export const OrderTitleWrapperStyle = (canAdd: boolean) => css`
   `}
 `;
 
-export const AddOrderButtonCollapsedStyle: string = css`
+export const CreateNewButtonCollapsedStyle: string = css`
   ${presets.BUTTON};
   ${fontSizes.SMALL};
   color: ${colors.WHITE};
@@ -75,7 +76,7 @@ export const AddOrderButtonCollapsedStyle: string = css`
   height: 20px;
 `;
 
-export const AddOrderButtonStyle: string = css`
+export const CreateNewButtonStyle: string = css`
   opacity: 0;
   position: absolute;
   right: 0;
@@ -112,7 +113,6 @@ export const SelectAllButtonStyle = css`
 `;
 
 export const SortInputWrapperStyle: string = css`
-  margin-left: auto;
   padding: 0 10px 0 0;
 `;
 
@@ -124,5 +124,5 @@ export const ShipmentTimelineWrapperStyle: string = css`
   color: ${colors.BLACK};
   padding: 0 5px;
   height: 40px;
-  margin: 0 5px 0 auto;
+  margin: 0 10px;
 `;

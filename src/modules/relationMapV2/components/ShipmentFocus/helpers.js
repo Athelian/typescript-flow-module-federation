@@ -50,7 +50,9 @@ export function shipmentCell({
       afterConnector: 'VERTICAL',
     };
 
-  return null;
+  return {
+    type: 'shipmentPlaceholder',
+  };
 }
 
 export const shipmentCoordinates = memoize(

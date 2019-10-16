@@ -21,6 +21,17 @@ export const ProductSortConfig: Array<SortConfig> = [
   { message: productMessages.serial, field: 'serial' },
 ];
 
+export const ProductProviderSortConfig: Array<SortConfig> = [
+  { message: orderMessages.updatedAt, field: 'updatedAt' },
+  { message: orderMessages.createdAt, field: 'createdAt' },
+  { message: orderMessages.endProductName, field: 'name' },
+  { message: orderMessages.productName, field: 'productName' },
+  { message: orderMessages.productSerial, field: 'productSerial' },
+  { message: orderMessages.priceCurrency, field: 'unitPriceCurrency' },
+  { message: orderMessages.exporterName, field: 'exporterName' },
+  { message: orderMessages.supplier, field: 'supplierName' },
+];
+
 export const OrderSortConfig: Array<SortConfig> = [
   { message: orderMessages.updatedAt, field: 'updatedAt' },
   { message: orderMessages.createdAt, field: 'createdAt' },

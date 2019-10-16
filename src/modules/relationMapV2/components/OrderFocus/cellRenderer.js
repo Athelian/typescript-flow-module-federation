@@ -19,7 +19,6 @@ import {
   CONTAINER,
   SHIPMENT,
   PRODUCT,
-  TAG,
   ORDER_WIDTH,
   BATCH_WIDTH,
   ORDER_ITEM_WIDTH,
@@ -34,8 +33,9 @@ import {
   getColorByEntity,
   getIconByEntity,
   handleClickAndDoubleClick,
-  findOrderIdByBatch,
-  findItemIdByBatch,
+  findParentIdsByBatch,
+  isMatchedEntity,
+  getIdentifier,
 } from 'modules/relationMapV2/helpers';
 import Badge from 'modules/relationMapV2/components/Badge';
 import type { CellRender } from 'modules/relationMapV2/type.js.flow';
@@ -60,23 +60,6 @@ type CellProps = {
   beforeConnector?: ?LINE_CONNECTOR,
   afterConnector?: ?LINE_CONNECTOR,
 };
-
-function isMatchedEntity(matches: Object, data: Object) {
-  if (!matches?.entity || !data) return false;
-
-  if (data.__typename === ORDER_ITEM) {
-    return matches?.entity[`${data.productProvider?.product?.id}-${PRODUCT}`];
-  }
-
-  if (data.__typename === ORDER) {
-    return (
-      matches?.entity[`${data.id}-${data.__typename}`] ||
-      (data?.tags ?? []).some(tag => matches?.entity[`${tag?.id}-${TAG}`])
-    );
-  }
-
-  return matches?.entity[`${data.id}-${data.__typename}`];
-}
 
 export const Overlay = ({
   color,
@@ -162,56 +145,6 @@ export const Overlay = ({
   );
 };
 
-const getIdentifier = ({
-  id,
-  type,
-  entities,
-}: {
-  id: string,
-  type: typeof ORDER | typeof BATCH | typeof ORDER_ITEM | typeof CONTAINER | typeof SHIPMENT,
-  entities: Object,
-}) => {
-  switch (type) {
-    case ORDER:
-      return {
-        id,
-        icon: 'ORDER',
-        value: getByPathWithDefault('', `orders.${id}.poNo`, entities),
-      };
-    case ORDER_ITEM:
-      return {
-        id,
-        icon: 'ORDER_ITEM',
-        value: getByPathWithDefault('', `orderItems.${id}.no`, entities),
-      };
-    case BATCH:
-      return {
-        id,
-        icon: 'BATCH',
-        value: getByPathWithDefault('', `batches.${id}.no`, entities),
-      };
-    case CONTAINER:
-      return {
-        id,
-        icon: 'CONTAINER',
-        value: getByPathWithDefault('', `containers.${id}.no`, entities),
-      };
-    case SHIPMENT:
-      return {
-        id,
-        icon: 'SHIPMENT',
-        value: getByPathWithDefault('', `shipments.${id}.blNo`, entities),
-      };
-
-    default:
-      return {
-        id,
-        icon: 'ORDER',
-        value: '',
-      };
-  }
-};
-
 // NOTE: only support for drag and drop a batch
 const hasPermissionToMove = ({
   type,
@@ -253,7 +186,7 @@ const orderDropMessage = ({
   switch (type) {
     case BATCH: {
       const batchId = item?.id ?? '';
-      const parentOrderId = findOrderIdByBatch(batchId, entities);
+      const [, parentOrderId] = findParentIdsByBatch({ batchId, entities, viewer: ORDER });
       if (!parentOrderId) return '';
 
       const isOwnOrder = orderId === parentOrderId;
@@ -373,11 +306,12 @@ const orderItemDropMessage = ({
   switch (type) {
     case BATCH: {
       const batchId = item && item.id;
-      const parentOrderId = findOrderIdByBatch(batchId, entities);
-      if (!parentOrderId) return '';
-
-      const parentItemId = findItemIdByBatch(batchId, entities);
-      if (!parentItemId) return '';
+      const [parentItemId, parentOrderId] = findParentIdsByBatch({
+        batchId,
+        entities,
+        viewer: ORDER,
+      });
+      if (!parentItemId || !parentOrderId) return '';
 
       const isOwnItem = parentItemId === itemId;
       if (isOwnItem)
@@ -483,7 +417,7 @@ const containerDropMessage = ({
   switch (type) {
     case BATCH: {
       const batchId = item?.id ?? '';
-      const parentOrderId = findOrderIdByBatch(batchId, entities);
+      const [, parentOrderId] = findParentIdsByBatch({ batchId, entities, viewer: ORDER });
       if (!parentOrderId) return '';
       const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
       const isOwnContainer = batch.container === containerId;
@@ -600,7 +534,7 @@ const shipmentDropMessage = ({
   switch (type) {
     case BATCH: {
       const batchId = item?.id ?? '';
-      const parentOrderId = findOrderIdByBatch(batchId, entities);
+      const [, parentOrderId] = findParentIdsByBatch({ batchId, entities, viewer: ORDER });
       if (!parentOrderId) return '';
       const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
       const isOwnShipment = batch.shipment === shipmentId;
@@ -712,7 +646,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
+          const [, parentOrderId] = findParentIdsByBatch({ batchId, entities, viewer: ORDER });
           if (!parentOrderId) return false;
           const isOwnOrder = orderId === parentOrderId;
           const isDifferentImporter =
@@ -817,6 +751,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
     onClick: onTarget,
     onDoubleClick: onTargetTree,
     onCtrlClick: () =>
+      // TODO: Check view form permissions
       dispatch({
         type: 'EDIT',
         payload: {
@@ -854,6 +789,16 @@ function OrderCell({ data, afterConnector }: CellProps) {
               <OrderCard
                 organizationId={data?.ownedBy?.id}
                 order={data}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: ORDER,
+                      selectedId: orderId,
+                    },
+                  });
+                }}
                 onCreateItem={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -914,12 +859,13 @@ function OrderItemCell({
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
-          if (!parentOrderId) return false;
+          const [parentItemId, parentOrderId] = findParentIdsByBatch({
+            batchId,
+            entities,
+            viewer: ORDER,
+          });
+          if (!parentOrderId || !parentItemId) return false;
           const parentOrder = entities.orders?.[parentOrderId];
-
-          const parentItemId = findItemIdByBatch(batchId, entities);
-          if (!parentItemId) return true;
           const isOwnItem = parentItemId === itemId;
           const isDifferentImporter =
             getByPathWithDefault('', 'importer.id', order) !==
@@ -1010,6 +956,7 @@ function OrderItemCell({
     onClick: onTarget,
     onDoubleClick: onTargetTree,
     onCtrlClick: () =>
+      // TODO: Check view form permissions
       dispatch({
         type: 'EDIT',
         payload: {
@@ -1060,6 +1007,17 @@ function OrderItemCell({
               <OrderItemCard
                 organizationId={data?.ownedBy?.id}
                 orderItem={data}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: ORDER_ITEM,
+                      selectedId: itemId,
+                      orderId,
+                    },
+                  });
+                }}
                 onDeleteItem={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -1218,6 +1176,7 @@ function BatchCell({
     onClick: onTarget,
     onDoubleClick: onTargetTree,
     onCtrlClick: () =>
+      // TODO: Check view form permissions
       dispatch({
         type: 'EDIT',
         payload: {
@@ -1264,6 +1223,17 @@ function BatchCell({
               <BatchCard
                 organizationId={data?.ownedBy?.id}
                 batch={data}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: BATCH,
+                      selectedId: batchId,
+                      orderId,
+                    },
+                  });
+                }}
                 onDeleteBatch={evt => {
                   evt.stopPropagation();
                   dispatch({
@@ -1322,7 +1292,11 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
+          const [, parentOrderId] = findParentIdsByBatch({
+            batchId,
+            entities,
+            viewer: ORDER,
+          });
           if (!parentOrderId) return false;
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
@@ -1421,6 +1395,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
     onClick: onTarget,
     onDoubleClick: onTargetTree,
     onCtrlClick: () =>
+      // TODO: Check view form permissions
       dispatch({
         type: 'EDIT',
         payload: {
@@ -1485,7 +1460,21 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
           >
             <div ref={drag}>
               <Badge label={badge.container?.[containerId] || ''} />
-              <ContainerCard container={container} />
+              <ContainerCard
+                organizationId={container?.ownedBy}
+                container={container}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: CONTAINER,
+                      selectedId: containerId,
+                      orderIds,
+                    },
+                  });
+                }}
+              />
               <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay
@@ -1533,11 +1522,12 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
       switch (type) {
         case BATCH: {
           const batchId = item.id;
-          const parentOrderId = findOrderIdByBatch(batchId, entities);
-          if (!parentOrderId) return false;
-
-          const parentItemId = findItemIdByBatch(batchId, entities);
-          if (!parentItemId) return true;
+          const [parentItemId, parentOrderId] = findParentIdsByBatch({
+            batchId,
+            entities,
+            viewer: ORDER,
+          });
+          if (!parentItemId || !parentOrderId) return false;
 
           const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
           const order = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
@@ -1621,6 +1611,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
     onClick: onTarget,
     onDoubleClick: onTarget,
     onCtrlClick: () =>
+      // TODO: Check view form permissions
       dispatch({
         type: 'EDIT',
         payload: {
@@ -1664,7 +1655,21 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
           >
             <div ref={drag}>
               <Badge label={badge.shipment?.[shipmentId] || ''} />
-              <ShipmentCard shipment={shipment} />
+              <ShipmentCard
+                organizationId={shipment?.ownedBy}
+                shipment={shipment}
+                onViewForm={evt => {
+                  evt.stopPropagation();
+                  dispatch({
+                    type: 'EDIT',
+                    payload: {
+                      type: SHIPMENT,
+                      selectedId: shipmentId,
+                      orderIds,
+                    },
+                  });
+                }}
+              />
               <FilterHitBorder hasFilterHits={isMatchedEntity(matches, shipment)} />
               {(isOver || state.isDragging) && !isSameItem && !canDrop && (
                 <Overlay

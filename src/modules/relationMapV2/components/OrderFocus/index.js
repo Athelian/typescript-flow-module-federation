@@ -5,12 +5,10 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import InfiniteLoader from 'react-window-infinite-loader';
 import { VariableSizeList as List } from 'react-window';
 import { Query } from 'react-apollo';
-import { get, set, uniq } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import apolloClient from 'apollo';
 import usePrevious from 'hooks/usePrevious';
-import logger from 'utils/logger';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { Display } from 'components/Form';
 import { orderFocusedListQuery, orderFullFocusDetailQuery } from 'modules/relationMapV2/query';
@@ -21,9 +19,10 @@ import {
   SortAndFilter,
   ClientSorts,
   ExpandRows,
+  LoadMoreExpanded,
   FocusedView,
 } from 'modules/relationMapV2/store';
-import { findOrderIdByOrderItem, findOrderIdByBatch } from 'modules/relationMapV2/helpers';
+import { loadMore, findOrderIdByItem, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
 import EditFormSlideView from '../EditFormSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import CloneEntities from '../CloneEntities';
@@ -41,6 +40,7 @@ import generateListData from './generateListData';
 import normalize from './normalize';
 import RemoveBatchConfirm from '../RemoveBatchConfirm';
 import DeleteBatchesConfirm from '../DeleteBatchesConfirm';
+import MoveItem from '../MoveItem';
 import MoveBatch from '../MoveBatch';
 import AddTags from '../AddTags';
 import DeleteConfirm from '../DeleteConfirm';
@@ -63,64 +63,6 @@ const innerElementType = React.forwardRef(
   )
 );
 
-const loadMore = (
-  clientData: {| fetchMore: Function, data: ?Object, onSuccess: Function |},
-  queryVariables: Object = {}
-) => {
-  const selectedField: string = 'orders';
-  const {
-    data = { [`${selectedField}`]: { page: 1, totalPage: 0 } },
-    fetchMore,
-    onSuccess,
-  } = clientData;
-  if (!data) return Promise.resolve({});
-  const nextPage = get(`${selectedField}.page`, data) + 1;
-  const totalPage = get(`${selectedField}.totalPage`, data);
-  if (nextPage > totalPage) return Promise.resolve({});
-  logger.warn('loadMore nextPage', nextPage);
-  return fetchMore({
-    variables: {
-      ...queryVariables,
-      filter: queryVariables.filter,
-      ...(queryVariables && queryVariables.sort
-        ? { sort: { [queryVariables.sort.field]: queryVariables.sort.direction } }
-        : {}),
-      page: nextPage,
-    },
-    updateQuery: (prevResult, { fetchMoreResult }) => {
-      logger.warn('updateQuery');
-      onSuccess();
-
-      if (
-        get(`${selectedField}.page`, prevResult) + 1 !==
-        get(`${selectedField}.page`, fetchMoreResult)
-      ) {
-        return prevResult;
-      }
-
-      if (get(`${selectedField}.nodes`, fetchMoreResult).length === 0) return prevResult;
-
-      const result = set(
-        `${selectedField}.hits`,
-        uniq([
-          ...get(`${selectedField}.hits`, prevResult),
-          ...get(`${selectedField}.hits`, fetchMoreResult),
-        ]),
-        fetchMoreResult
-      );
-
-      return set(
-        `${selectedField}.nodes`,
-        uniq([
-          ...get(`${selectedField}.nodes`, prevResult),
-          ...get(`${selectedField}.nodes`, fetchMoreResult),
-        ]),
-        result
-      );
-    },
-  }).catch(logger.error);
-};
-
 export default function OrderFocus() {
   const listRef = React.createRef();
   const scrollEntity = React.useRef({
@@ -128,6 +70,7 @@ export default function OrderFocus() {
     id: '',
   });
   const { expandRows, setExpandRows } = ExpandRows.useContainer();
+  const { loadMoreExpanded } = LoadMoreExpanded.useContainer();
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const { initHits } = Hits.useContainer();
@@ -266,7 +209,19 @@ export default function OrderFocus() {
                   : () => {
                       setIsLoadingMore(true);
                       loadMore(
-                        { fetchMore, data, onSuccess: () => setIsLoadingMore(false) },
+                        'orders',
+                        {
+                          fetchMore,
+                          data,
+                          onSuccess: fetchMoreResult => {
+                            if (loadMoreExpanded)
+                              setExpandRows([
+                                ...expandRows,
+                                ...(fetchMoreResult?.orders?.nodes ?? []).map(order => order?.id),
+                              ]);
+                            setIsLoadingMore(false);
+                          },
+                        },
                         queryVariables
                       );
                     };
@@ -278,7 +233,7 @@ export default function OrderFocus() {
               return (
                 <>
                   <MoveEntityConfirm
-                    onSuccess={({ orderIds }) => {
+                    onSuccess={orderIds => {
                       queryOrdersDetail(orderIds);
                       dispatch({
                         type: 'CONFIRM_MOVE_END',
@@ -423,6 +378,33 @@ export default function OrderFocus() {
                       }
                     }}
                   />
+                  <MoveItem
+                    onSuccess={orderIds => {
+                      queryOrdersDetail(orderIds);
+                      // scroll to first orderId if that is exist on UI
+                      const orderId = orderIds[0];
+                      const indexPosition = ordersData.findIndex((row: Array<any>) => {
+                        const [orderCell, , , ,] = row;
+                        return Number(orderCell.cell?.data?.id) === Number(orderId);
+                      });
+                      scrollToRow({
+                        position: indexPosition,
+                        id: orderId,
+                        type: ORDER,
+                      });
+                      window.requestIdleCallback(
+                        () => {
+                          dispatch({
+                            type: 'MOVE_ITEM_END',
+                            payload: {},
+                          });
+                        },
+                        {
+                          timeout: 250,
+                        }
+                      );
+                    }}
+                  />
                   <MoveBatch
                     onSuccess={orderIds => {
                       queryOrdersDetail(orderIds);
@@ -527,7 +509,9 @@ export default function OrderFocus() {
                   <AutoFill
                     onSuccess={(itemIds, batchIds) => {
                       const orderIds = itemIds
-                        .map(itemId => findOrderIdByOrderItem(itemId, entities))
+                        .map(orderItemId =>
+                          findOrderIdByItem({ orderItemId, entities, viewer: ORDER })
+                        )
                         .filter(Boolean);
                       if (orderIds.length) queryOrdersDetail(orderIds);
                       if (batchIds.length) {
@@ -553,9 +537,13 @@ export default function OrderFocus() {
                     }}
                   />
                   <DeleteItemConfirm
-                    onSuccess={itemId => {
-                      const parentOrderId = findOrderIdByOrderItem(itemId, entities);
-                      const item = entities?.orderItems[itemId];
+                    onSuccess={orderItemId => {
+                      const parentOrderId = findOrderIdByItem({
+                        orderItemId,
+                        entities,
+                        viewer: ORDER,
+                      });
+                      const item = entities?.orderItems[orderItemId];
                       if (parentOrderId) {
                         queryOrdersDetail([parentOrderId]);
                         window.requestIdleCallback(
@@ -568,7 +556,7 @@ export default function OrderFocus() {
                               type: 'REMOVE_TARGETS',
                               payload: {
                                 targets: [
-                                  `${ORDER_ITEM}-${itemId}`,
+                                  `${ORDER_ITEM}-${orderItemId}`,
                                   ...(item?.batches ?? []).map(batchId => `${BATCH}-${batchId}`),
                                 ],
                               },
@@ -583,7 +571,11 @@ export default function OrderFocus() {
                   />
                   <RemoveBatchConfirm
                     onSuccess={batchId => {
-                      const parentOrderId = findOrderIdByBatch(batchId, entities);
+                      const [, parentOrderId] = findParentIdsByBatch({
+                        batchId,
+                        entities,
+                        viewer: ORDER,
+                      });
                       if (parentOrderId) {
                         queryOrdersDetail([parentOrderId]);
                         const batch = entities.batches?.[batchId] ?? {};
@@ -630,12 +622,16 @@ export default function OrderFocus() {
                     onSuccess={({ orderItemIds, containerIds }) => {
                       const orderIds = [];
                       const batchIds = [];
-                      orderItemIds.forEach(itemId => {
-                        const parentOrderId = findOrderIdByOrderItem(itemId, entities);
+                      orderItemIds.forEach(orderItemId => {
+                        const parentOrderId = findOrderIdByItem({
+                          orderItemId,
+                          entities,
+                          viewer: ORDER,
+                        });
                         if (parentOrderId) {
                           orderIds.push(parentOrderId);
                         }
-                        batchIds.push(...(entities.orderItems?.[itemId]?.batches ?? []));
+                        batchIds.push(...(entities.orderItems?.[orderItemId]?.batches ?? []));
                       });
 
                       containerIds.forEach(containerId => {
@@ -644,7 +640,11 @@ export default function OrderFocus() {
                           .map((batch: ?Object) => batch?.id ?? '');
                         batchIdsOfContainer.forEach(batchId => {
                           if (batchId) {
-                            const parentOrderId = findOrderIdByBatch(batchId, entities);
+                            const [, parentOrderId] = findParentIdsByBatch({
+                              batchId,
+                              entities,
+                              viewer: ORDER,
+                            });
                             if (parentOrderId) {
                               orderIds.push(parentOrderId);
                             }
@@ -678,7 +678,14 @@ export default function OrderFocus() {
                   <DeleteBatchesConfirm
                     onSuccess={(batchIds, isRemoveTargeting) => {
                       const orderIds = batchIds
-                        .map(batchId => findOrderIdByBatch(batchId, entities))
+                        .map(batchId => {
+                          const [, parentOrderId] = findParentIdsByBatch({
+                            batchId,
+                            entities,
+                            viewer: ORDER,
+                          });
+                          return parentOrderId;
+                        })
                         .filter(Boolean);
                       queryOrdersDetail(orderIds);
                       window.requestIdleCallback(
@@ -704,7 +711,11 @@ export default function OrderFocus() {
                   />
                   <DeleteBatchConfirm
                     onSuccess={batchId => {
-                      const parentOrderId = findOrderIdByBatch(batchId, entities);
+                      const [, parentOrderId] = findParentIdsByBatch({
+                        batchId,
+                        entities,
+                        viewer: ORDER,
+                      });
                       if (parentOrderId) {
                         queryOrdersDetail([parentOrderId]);
                         window.requestIdleCallback(

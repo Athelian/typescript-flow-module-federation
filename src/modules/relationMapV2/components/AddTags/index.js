@@ -17,10 +17,14 @@ import FormattedNumber from 'components/FormattedNumber';
 import Tag from 'components/Tag';
 import {
   targetedIds,
-  findOrderIdByOrderItem,
-  findOrderIdByBatch,
+  findOrderIdByItem,
+  findParentIdsByBatch,
   findOrderIdsByContainer,
   findOrderIdsByShipment,
+  findShipmentIdByContainer,
+  findShipmentIdByBatch,
+  findShipmentIdsByOrderItem,
+  findShipmentIdsByOrder,
 } from 'modules/relationMapV2/helpers';
 import {
   ordersByIDsQuery,
@@ -46,13 +50,13 @@ import ActionDialog, {
 import { entitiesUpdateManyMutation } from './mutation';
 
 type Props = {|
-  onSuccess: (orderIds: Array<string>) => void,
+  onSuccess: (ids: Array<string>) => void,
 |};
 
 export default function AddTags({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
   const [tags, setTags] = React.useState([]);
-  const { dispatch, state } = FocusedView.useContainer();
+  const { dispatch, state, selectors } = FocusedView.useContainer();
   const [loadOrders, ordersResult] = useLazyQuery(ordersByIDsQuery);
   const [loadOrderItems, orderItemsResult] = useLazyQuery(orderItemsByIDsQuery);
   const [loadBatches, batchesResult] = useLazyQuery(batchesByIDsQuery);
@@ -223,32 +227,88 @@ export default function AddTags({ onSuccess }: Props) {
         },
       })
         .then(result => {
-          const ids = (result.data?.entitiesUpdateMany?.orders ?? []).map(order => order.id);
-          if ((result.data?.entitiesUpdateMany?.orderItems ?? []).length) {
-            ids.push(
-              ...(result.data?.entitiesUpdateMany?.orderItems ?? []).map(item =>
-                findOrderIdByOrderItem(item.id, mapping.entities)
-              )
+          if (selectors.isOrderFocus) {
+            const ids = (result.data?.entitiesUpdateMany?.orders ?? []).map(order => order.id);
+            if ((result.data?.entitiesUpdateMany?.orderItems ?? []).length) {
+              (result.data?.entitiesUpdateMany?.orderItems ?? []).forEach(item => {
+                const parentOrderId = findOrderIdByItem({
+                  orderItemId: item.id,
+                  entities: mapping.entities,
+                  viewer: state.viewer,
+                });
+                if (parentOrderId) {
+                  ids.push(parentOrderId);
+                }
+              });
+            }
+            if ((result.data?.entitiesUpdateMany?.batches ?? []).length) {
+              (result.data?.entitiesUpdateMany?.batches ?? []).forEach(batch => {
+                const [, parentOrderId] = findParentIdsByBatch({
+                  batchId: batch.id,
+                  entities: mapping.entities,
+                  viewer: state.viewer,
+                });
+                if (parentOrderId) {
+                  ids.push(parentOrderId);
+                }
+              });
+            }
+
+            if ((result.data?.entitiesUpdateMany?.containers ?? []).length) {
+              (result.data?.entitiesUpdateMany?.containers ?? []).forEach(container =>
+                ids.push(
+                  ...findOrderIdsByContainer({
+                    viewer: state.viewer,
+                    containerId: container.id,
+                    entities: mapping.entities,
+                  })
+                )
+              );
+            }
+            if ((result.data?.entitiesUpdateMany?.shipments ?? []).length) {
+              (result.data?.entitiesUpdateMany?.shipments ?? []).forEach(shipment =>
+                ids.push(
+                  ...findOrderIdsByShipment({
+                    shipmentId: shipment.id,
+                    entities: mapping.entities,
+                    viewer: state.viewer,
+                  })
+                )
+              );
+            }
+            onSuccess(ids);
+          } else {
+            const ids = (result.data?.entitiesUpdateMany?.shipments ?? []).map(
+              shipment => shipment.id
             );
+            if ((result.data?.entitiesUpdateMany?.containers ?? []).length) {
+              (result.data?.entitiesUpdateMany?.containers ?? []).forEach(container =>
+                ids.push(findShipmentIdByContainer(container.id, mapping.entities))
+              );
+            }
+            if ((result.data?.entitiesUpdateMany?.batches ?? []).length) {
+              ids.push(
+                ...(result.data?.entitiesUpdateMany?.batches ?? []).map(batch =>
+                  findShipmentIdByBatch(batch.id, mapping.entities)
+                )
+              );
+            }
+            if ((result.data?.entitiesUpdateMany?.orderItems ?? []).length) {
+              ids.push(
+                ...(result.data?.entitiesUpdateMany?.orderItems ?? []).flatMap(item =>
+                  findShipmentIdsByOrderItem(item.id, mapping.entities)
+                )
+              );
+            }
+            if ((result.data?.entitiesUpdateMany?.orders ?? []).length) {
+              ids.push(
+                ...(result.data?.entitiesUpdateMany?.orders ?? []).flatMap(order =>
+                  findShipmentIdsByOrder(order.id, mapping.entities)
+                )
+              );
+            }
+            onSuccess(ids);
           }
-          if ((result.data?.entitiesUpdateMany?.batches ?? []).length) {
-            ids.push(
-              ...(result.data?.entitiesUpdateMany?.batches ?? []).map(batch =>
-                findOrderIdByBatch(batch.id, mapping.entities)
-              )
-            );
-          }
-          if ((result.data?.entitiesUpdateMany?.containers ?? []).length) {
-            (result.data?.entitiesUpdateMany?.containers ?? []).forEach(container =>
-              ids.push(...findOrderIdsByContainer(container.id, mapping.entities))
-            );
-          }
-          if ((result.data?.entitiesUpdateMany?.shipments ?? []).length) {
-            (result.data?.entitiesUpdateMany?.shipments ?? []).forEach(shipment =>
-              ids.push(...findOrderIdsByShipment(shipment.id, mapping.entities))
-            );
-          }
-          onSuccess(ids);
         })
         .catch(onCancel);
     }
@@ -267,10 +327,12 @@ export default function AddTags({ onSuccess }: Props) {
     orderItemsResult.data,
     orderItemsResult.loading,
     ordersResult,
+    selectors.isOrderFocus,
     shipmentsResult.called,
     shipmentsResult.data,
     shipmentsResult.loading,
     source,
+    state.viewer,
     tags,
     updateEntities,
   ]);

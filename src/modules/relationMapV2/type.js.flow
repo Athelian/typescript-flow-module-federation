@@ -11,6 +11,7 @@ export type Entity =
   | typeof SHIPMENT;
 
 export type CellRender = {
+  // prettier-ignore
   type: | typeof ORDER
     | typeof ORDER_ITEM
     | typeof BATCH
@@ -32,7 +33,7 @@ export type CellRender = {
 };
 
 export type State = {|
-  viewer: "Order" | "Shipment",
+  viewer: 'Order' | 'Shipment',
   order: Object,
   shipment: Object,
   targets: Array<string>,
@@ -64,6 +65,17 @@ export type State = {|
     },
     type?: 'createBatch' | 'deleteItem',
   },
+  containerActions: {
+    isOpen: boolean,
+    isProcessing: boolean,
+    detail: {
+      entity: {
+        id: string,
+        no: string,
+      },
+    },
+    type?: 'createContainer' | 'deleteContainer',
+  },
   batchActions: {
     isOpen: boolean,
     isProcessing: boolean,
@@ -87,12 +99,14 @@ export type State = {|
     shipmentIds: Array<string>,
     importerIds: Array<string>,
     exporterIds: Array<string>,
+    from: 'batch' | 'item',
+    // prettier-ignore
     type?: | 'existOrder'
       | 'newOrder'
       | 'existContainer'
       | 'newContainer'
       | 'existShipment'
-      | 'newShipment',
+      | 'newShipment'
   },
   createItem: {
     isOpen: boolean,

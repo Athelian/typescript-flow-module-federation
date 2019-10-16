@@ -3,11 +3,12 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
-import { ExpandRows, Entities, FocusedView } from 'modules/relationMapV2/store';
+import { LoadMoreExpanded, ExpandRows, Entities, FocusedView } from 'modules/relationMapV2/store';
 import { ExpandButtonStyle } from './style';
 
 export default function ExpandButton() {
   const { selectors } = FocusedView.useContainer();
+  const { loadMoreExpanded, setLoadMoreExpanded } = LoadMoreExpanded.useContainer();
   const { expandRows, setExpandRows } = ExpandRows.useContainer();
   const { mapping } = Entities.useContainer();
   const orderIds = Object.keys(mapping.entities?.orders ?? {}).filter(
@@ -25,35 +26,54 @@ export default function ExpandButton() {
       : orderIds.length > 0 && expandRows.length === orderIds.length;
 
   return (
-    <Tooltip
-      delay={1000}
-      message={
-        allIsExpanded ? (
-          <FormattedMessage
-            id="components.button.collapseTooltip"
-            defaultMessage="Collapse all Orders"
-          />
-        ) : (
+    <>
+      <Tooltip
+        delay={1000}
+        message={
           <FormattedMessage
             id="components.button.expandTooltip"
-            defaultMessage="Expand all Orders"
+            defaultMessage="Expand all Orders. Loaded data will also be expanded."
           />
-        )
-      }
-    >
-      <button
-        onClick={() => {
-          if (allIsExpanded) {
-            setExpandRows([]);
-          } else {
-            setExpandRows(selectors.isShipmentFocus ? shipmentIds : orderIds);
-          }
-        }}
-        className={ExpandButtonStyle(allIsExpanded)}
-        type="button"
+        }
       >
-        <Icon icon={allIsExpanded ? 'COMPRESS' : 'EXPAND'} />
-      </button>
-    </Tooltip>
+        <button
+          onClick={() => {
+            if (!allIsExpanded) {
+              setExpandRows(selectors.isShipmentFocus ? shipmentIds : orderIds);
+            }
+            if (!loadMoreExpanded) {
+              setLoadMoreExpanded(true);
+            }
+          }}
+          className={ExpandButtonStyle(false, loadMoreExpanded)}
+          type="button"
+        >
+          <Icon icon="EXPAND" />
+        </button>
+      </Tooltip>
+
+      <Tooltip
+        delay={1000}
+        message={
+          <FormattedMessage
+            id="components.button.collapseTooltip"
+            defaultMessage="Collapse all Orders. Loaded data will also be collapsed."
+          />
+        }
+      >
+        <button
+          onClick={() => {
+            setExpandRows([]);
+            if (loadMoreExpanded) {
+              setLoadMoreExpanded(false);
+            }
+          }}
+          className={ExpandButtonStyle(true, !loadMoreExpanded)}
+          type="button"
+        >
+          <Icon icon="COMPRESS" />
+        </button>
+      </Tooltip>
+    </>
   );
 }

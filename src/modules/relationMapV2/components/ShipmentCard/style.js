@@ -1,21 +1,27 @@
 // @flow
 import { css } from 'react-emotion';
-import { SHIPMENT_WIDTH } from 'modules/relationMapV2/constants';
-import { layout, borderRadiuses, fontSizes, colors, presets } from 'styles/common';
+import { SHIPMENT_WIDTH, SHIPMENT_LONG_WIDTH } from 'modules/relationMapV2/constants';
+import { layout, borderRadiuses, presets, colors, fontSizes } from 'styles/common';
 
-export const ShipmentCardWrapperStyle = (isShipmentFocus: boolean) => css`
+export const ShipmentCardWrapperStyle = (isShipmentFocus: boolean): string => css`
   display: flex;
   flex-direction: column;
-  width: ${isShipmentFocus ? SHIPMENT_WIDTH + 150 : SHIPMENT_WIDTH}px;
+  width: ${isShipmentFocus ? SHIPMENT_LONG_WIDTH : SHIPMENT_WIDTH}px;
   height: 55px;
+  position: relative;
+  &:hover {
+    & button {
+      opacity: 1;
+    }
+  }
 `;
 
 export const TopRowWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 165px 315px;
+  grid-template-columns: 165px 1fr;
   grid-template-rows: 20px;
   grid-gap: 5px;
-  padding: 5px;
+  padding: 5px 25px 5px 5px;
 `;
 
 export const TagsAndPlaceWrapperStyle: string = css`
@@ -27,12 +33,12 @@ export const TagsWrapperStyle: string = css`
   ${borderRadiuses.MAIN};
   grid-gap: 5px;
   overflow: hidden;
-  flex: 1;
+  width: 130px;
 `;
 
 export const BottomRowWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 485px 20px;
+  grid-template-columns: 1fr 20px;
   grid-template-rows: 20px;
   grid-gap: 5px;
   padding: 0 0 5px 5px;

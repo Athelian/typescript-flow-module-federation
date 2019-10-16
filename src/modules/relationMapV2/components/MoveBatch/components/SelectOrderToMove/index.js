@@ -6,7 +6,6 @@ import { Query } from 'react-apollo';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { useEntityHasPermissions } from 'contexts/Permissions';
-
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
@@ -123,13 +122,14 @@ function SelectOrderToMove({ intl, onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
   const [selected, setSelected] = React.useState(null);
-  const { isProcessing, isOpen, type } = state.moveActions;
+  const { isProcessing, isOpen, type, from } = state.moveActions;
+  const isMoveToOrder = type === 'existOrder';
+  const isMoveFromBatch = from === 'batch';
   React.useEffect(() => {
     return () => {
       if (isOpen) setSelected(null);
     };
   }, [isOpen]);
-  const isMoveToOrder = type === 'existOrder';
   const onCancel = () => {
     dispatch({
       type: 'MOVE_TO_ORDER_CLOSE',
@@ -179,10 +179,10 @@ function SelectOrderToMove({ intl, onSuccess }: Props) {
   return (
     <SlideView
       shouldConfirm={() => !!selected}
-      isOpen={isOpen && isMoveToOrder}
+      isOpen={isOpen && isMoveToOrder && isMoveFromBatch}
       onRequestClose={onCancel}
     >
-      {isOpen && isMoveToOrder && (
+      {isOpen && isMoveToOrder && isMoveFromBatch && (
         <SlideViewLayout>
           <SlideViewNavBar>
             <FilterToolBar

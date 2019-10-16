@@ -8,6 +8,12 @@ export const ContainerCardWrapperStyle: string = css`
   flex-direction: column;
   width: ${CONTAINER_WIDTH}px;
   height: 55px;
+  position: relative;
+  &:hover {
+    & button {
+      opacity: 1;
+    }
+  }
 `;
 
 export const TopRowWrapperStyle: string = css`

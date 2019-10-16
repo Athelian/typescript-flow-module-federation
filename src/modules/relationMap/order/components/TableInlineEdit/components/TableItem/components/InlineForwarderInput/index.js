@@ -50,7 +50,6 @@ export default function InlineForwarderInput({ name, values, id, disabled }: Pro
             <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
               {opened && (
                 <SelectPartners
-                  cacheKey="EditableTableSelectForwarders"
                   partnerTypes={['Forwarder']}
                   selected={getByPathWithDefault([], 'forwarders', values)}
                   onCancel={() => slideToggle(false)}

@@ -3,7 +3,7 @@ import * as React from 'react';
 import FormattedDate from 'components/FormattedDate';
 import UserAvatar from 'components/UserAvatar';
 import DisplayWrapper from '../DisplayWrapper';
-import { DateStyle } from './style';
+import { DateUserDisplayStyle } from './style';
 
 type Props = {
   value: {
@@ -21,7 +21,7 @@ type Props = {
 const DateUser = ({ value }: Props) => {
   return (
     <DisplayWrapper>
-      <span className={DateStyle}>
+      <span className={DateUserDisplayStyle}>
         <FormattedDate value={value.at} />
       </span>
       {value.by && (

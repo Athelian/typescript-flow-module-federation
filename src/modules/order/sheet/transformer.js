@@ -15,8 +15,9 @@ import {
 import {
   ORDER_ITEMS_SET_NO,
   ORDER_ITEMS_SET_QUANTITY,
-  ORDER_ITEMS_SET_PRICE,
+  // ORDER_ITEMS_SET_PRICE,
   ORDER_ITEMS_UPDATE,
+  ORDER_ITEMS_SET_DELIVERY_DATE,
 } from 'modules/permission/constants/orderItem';
 import {
   BATCH_SET_DELIVERY_DATE,
@@ -42,7 +43,9 @@ import {
   SHIPMENT_UPDATE,
   SHIPMENT_SET_NO,
   SHIPMENT_SET_BL_NO,
+  SHIPMENT_SET_BL_DATE,
   SHIPMENT_SET_BOOKING_NO,
+  SHIPMENT_SET_BOOKING_DATE,
   SHIPMENT_SET_INVOICE_NO,
   SHIPMENT_SET_CONTRACT_NO,
   SHIPMENT_SET_CARRIER,
@@ -273,19 +276,19 @@ const transformOrderItem = (
           hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_QUANTITY)
       ),
     },
-    {
-      columnKey: 'order.orderItem.price',
-      type: 'price',
-      disabled: !hasItems && !orderItem,
-      empty: hasItems && !orderItem,
-      parent: true,
-      ...transformValueField(
-        basePath,
-        orderItem,
-        'price',
-        hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_PRICE)
-      ),
-    },
+    // {
+    //   columnKey: 'order.orderItem.price',
+    //   type: 'price',
+    //   disabled: !hasItems && !orderItem,
+    //   empty: hasItems && !orderItem,
+    //   parent: true,
+    //   ...transformValueField(
+    //     basePath,
+    //     orderItem,
+    //     'price',
+    //     hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_PRICE)
+    //   ),
+    // },
     {
       columnKey: 'order.orderItem.totalBatched',
       type: 'number',
@@ -301,6 +304,20 @@ const transformOrderItem = (
       empty: hasItems && !orderItem,
       parent: true,
       ...transformReadonlyField(basePath, orderItem, 'totalShipped', orderItem?.totalShipped ?? 0),
+    },
+    {
+      columnKey: 'order.orderItem.deliveryDate',
+      type: 'date',
+      disabled: !hasItems && !orderItem,
+      empty: hasItems && !orderItem,
+      parent: true,
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'deliveryDate',
+        hasPermission =>
+          hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_DELIVERY_DATE)
+      ),
     },
   ];
 };
@@ -630,6 +647,18 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
       ),
     },
     {
+      columnKey: 'order.orderItem.batch.shipment.blDate',
+      type: 'date',
+      duplicatable: true,
+      disabled: !(batch ? batch.shipment : null),
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch ? batch.shipment : null,
+        'blDate',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BL_DATE)
+      ),
+    },
+    {
       columnKey: 'order.orderItem.batch.shipment.bookingNo',
       type: 'text',
       duplicatable: true,
@@ -639,6 +668,18 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
         batch ? batch.shipment : null,
         'bookingNo',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BOOKING_NO)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.bookingDate',
+      type: 'date',
+      duplicatable: true,
+      disabled: !(batch ? batch.shipment : null),
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch ? batch.shipment : null,
+        'bookingDate',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BOOKING_DATE)
       ),
     },
     {

@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-
+import { flatten } from 'lodash';
+import logger from 'utils/logger';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
@@ -10,7 +11,7 @@ import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
 import { moveEntityMutation } from './mutation';
 
 type Props = {
-  onSuccess: ({ orderIds: Array<string> }) => void,
+  onSuccess: (ids: Array<string>) => void,
 };
 
 export default function MoveEntityConfirm({ onSuccess }: Props) {
@@ -33,8 +34,11 @@ export default function MoveEntityConfirm({ onSuccess }: Props) {
       payload: {},
     });
     moveEntityMutation(state, mapping.entities)
-      .then(onSuccess)
-      .catch(() => {
+      .then(ids => onSuccess(flatten(ids).filter(Boolean)))
+      .catch(error => {
+        logger.warn({
+          error,
+        });
         dispatch({
           type: 'CONFIRM_MOVE_END',
           payload: {},

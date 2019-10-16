@@ -15,7 +15,6 @@ import {
 } from './style';
 
 type OptionalProps = {
-  cacheKey: string,
   users: Array<UserAvatarType>,
   name: string,
   onChange: (name: string, users: Array<UserAvatarType>) => void,
@@ -33,7 +32,7 @@ const defaultProps = {
   editable: false,
 };
 
-const UserAssignmentInput = ({ cacheKey, users, name, groupIds, onChange, editable }: Props) => (
+const UserAssignmentInput = ({ users, name, groupIds, onChange, editable }: Props) => (
   <div className={AssignmentWrapperStyle}>
     {users.map(({ id, firstName, lastName }) => (
       <div className={AssignmentStyle} key={id}>
@@ -64,8 +63,7 @@ const UserAssignmentInput = ({ cacheKey, users, name, groupIds, onChange, editab
             <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
               {isOpen && (
                 <AssignUsers
-                  cacheKey={cacheKey}
-                  filterBy={{ organizationIds: groupIds }}
+                  organizationIds={groupIds}
                   selected={users}
                   onSelect={selected => {
                     toggleSlide(false);

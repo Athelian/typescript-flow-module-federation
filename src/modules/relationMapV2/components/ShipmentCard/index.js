@@ -8,9 +8,13 @@ import TaskRing from 'components/TaskRing';
 import Icon from 'components/Icon';
 import { Display, Blackout, Label } from 'components/Form';
 import { FocusedView, GlobalShipmentPoint } from 'modules/relationMapV2/store';
+import { useHasPermissions } from 'contexts/Permissions';
+import { CONTAINER_CREATE } from 'modules/permission/constants/container';
+import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
 import { getPort } from 'utils/shipment';
 import { differenceInCalendarDays } from 'utils/date';
 import MiniShipmentTimeline from 'modules/relationMapV2/components/MiniShipmentTimeline';
+import CardActions from 'modules/relationMapV2/components/CardActions';
 import {
   CARGO_READY,
   LOAD_PORT_DEPARTURE,
@@ -50,9 +54,21 @@ const getInitLocalShipmentPoint = (globalShipmentPoint: string, voyages: Array<O
 
 type Props = {|
   shipment: Object,
+  onViewForm: Event => void,
+  onCreateContainer?: Event => void,
+  organizationId: string,
 |};
 
-export default function ShipmentCard({ shipment }: Props) {
+export default function ShipmentCard({
+  shipment,
+  onViewForm,
+  onCreateContainer,
+  organizationId,
+}: Props) {
+  const hasPermissions = useHasPermissions(organizationId);
+  const allowToViewForm = hasPermissions(SHIPMENT_FORM);
+  const allowToCreateContainer = hasPermissions(CONTAINER_CREATE);
+
   const { globalShipmentPoint } = GlobalShipmentPoint.useContainer();
   const { selectors } = FocusedView.useContainer();
   const {
@@ -196,13 +212,13 @@ export default function ShipmentCard({ shipment }: Props) {
               ))}
             </div>
           ) : (
-            <Blackout />
+            <Blackout width="130px" />
           )}
 
           <Label width="55px">
             <FormattedMessage id="components.cards.place" defaultMessage="PLACE" />
           </Label>
-          <Display blackout={!canViewPlace} width="130px">
+          <Display blackout={!canViewPlace} width={selectors.isShipmentFocus ? '235px' : '130px'}>
             {place}
           </Display>
         </div>
@@ -244,12 +260,39 @@ export default function ShipmentCard({ shipment }: Props) {
               </div>
             </>
           ) : (
-            <Blackout width="130px" />
+            <Blackout width={selectors.isShipmentFocus ? '235px' : '130px'} />
           )}
         </div>
 
         <TaskRing blackout={!canViewTasks} {...todo} />
       </div>
+
+      <CardActions
+        actions={[
+          allowToViewForm
+            ? {
+                label: (
+                  <FormattedMessage
+                    id="modules.RelationMap.cards.viewForm"
+                    defaultMessage="View Form"
+                  />
+                ),
+                onClick: onViewForm,
+              }
+            : null,
+          allowToCreateContainer && selectors.isShipmentFocus
+            ? {
+                label: (
+                  <FormattedMessage
+                    id="modules.RelationMap.cards.createContainer"
+                    defaultMessage="Create Container"
+                  />
+                ),
+                onClick: onCreateContainer,
+              }
+            : null,
+        ].filter(Boolean)}
+      />
     </div>
   );
 }
