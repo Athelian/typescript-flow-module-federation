@@ -746,6 +746,7 @@ const initialState: State = {
     },
   },
   moveActions: {
+    from: 'batch',
     isOpen: false,
     isProcessing: false,
     orderIds: [],
@@ -1187,6 +1188,7 @@ function orderReducer(
               $merge: action.payload,
             },
             moveActions: {
+              from: { $set: 'item' },
               isOpen: { $set: false },
               isProcessing: { $set: false },
             },
@@ -1217,6 +1219,7 @@ function orderReducer(
           isProcessing: { $set: true },
         },
       });
+    case 'MOVE_ITEM_START':
     case 'MOVE_BATCH_START':
       return update(state, {
         moveActions: {
@@ -1255,6 +1258,7 @@ function orderReducer(
               $merge: action.payload,
             },
             moveActions: {
+              from: { $set: 'batch' },
               isOpen: { $set: false },
               isProcessing: { $set: false },
             },

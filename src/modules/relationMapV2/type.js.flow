@@ -11,6 +11,7 @@ export type Entity =
   | typeof SHIPMENT;
 
 export type CellRender = {
+  // prettier-ignore
   type: | typeof ORDER
     | typeof ORDER_ITEM
     | typeof BATCH
@@ -98,12 +99,14 @@ export type State = {|
     shipmentIds: Array<string>,
     importerIds: Array<string>,
     exporterIds: Array<string>,
+    from: 'batch' | 'item',
+    // prettier-ignore
     type?: | 'existOrder'
       | 'newOrder'
       | 'existContainer'
       | 'newContainer'
       | 'existShipment'
-      | 'newShipment',
+      | 'newShipment'
   },
   createItem: {
     isOpen: boolean,

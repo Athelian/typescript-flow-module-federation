@@ -127,13 +127,14 @@ function SelectContainerToMove({ intl, onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
   const [selected, setSelected] = React.useState(null);
-  const { isProcessing, isOpen, type, orderIds } = state.moveActions;
+  const { isProcessing, isOpen, type, orderIds, from } = state.moveActions;
+  const isMoveFromBatch = from === 'batch';
+  const isMoveToContainer = type === 'existContainer';
   React.useEffect(() => {
     return () => {
       if (isOpen) setSelected(null);
     };
   }, [isOpen]);
-  const isMoveToContainer = type === 'existContainer';
   const onCancel = () => {
     dispatch({
       type: 'MOVE_TO_CONTAINER_CLOSE',
@@ -186,10 +187,10 @@ function SelectContainerToMove({ intl, onSuccess }: Props) {
   return (
     <SlideView
       shouldConfirm={() => !!selected}
-      isOpen={isOpen && isMoveToContainer}
+      isOpen={isOpen && isMoveToContainer && isMoveFromBatch}
       onRequestClose={onCancel}
     >
-      {isOpen && isMoveToContainer && (
+      {isOpen && isMoveToContainer && isMoveFromBatch && (
         <SlideViewLayout>
           <SlideViewNavBar>
             <FilterToolBar

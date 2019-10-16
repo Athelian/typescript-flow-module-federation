@@ -12,7 +12,7 @@ import { ORDER_CREATE } from 'modules/permission/constants/order';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label } from 'components/Form';
 import ActionDialog, { OrderLabelIcon, ItemLabelIcon, ItemsLabelIcon } from '../ActionDialog';
-import SelectOrderToMove from '../MoveBatch/components/SelectOrderToMove';
+import SelectOrderToMoveItem from './components/SelectOrderToMoveItem';
 import {
   ItemMoveButtonsWrapperStyle,
   MoveWrapperStyle,
@@ -28,15 +28,19 @@ export default function MoveItem({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
   const { dispatch, state } = FocusedView.useContainer();
   const itemIds = targetedIds(state.targets, ORDER_ITEM);
-  const orderIds = itemIds
-    .map(orderItemId =>
-      findOrderIdByItem({
-        orderItemId,
-        viewer: state.viewer,
-        entities: mapping.entities,
-      })
-    )
-    .filter(Boolean);
+  const orderIds = [
+    ...new Set(
+      itemIds
+        .map(orderItemId =>
+          findOrderIdByItem({
+            orderItemId,
+            viewer: state.viewer,
+            entities: mapping.entities,
+          })
+        )
+        .filter(Boolean)
+    ),
+  ];
   const totalItems = itemIds.length;
   const { isProcessing, isOpen, type } = state.itemActions;
   const isMoveItems = type === 'moveItems';
@@ -87,6 +91,7 @@ export default function MoveItem({ onSuccess }: Props) {
           type: 'MOVE_ITEM_START',
           payload: {
             type: target,
+            from: 'item',
             itemIds,
             orderIds,
             importerIds,
@@ -292,7 +297,7 @@ export default function MoveItem({ onSuccess }: Props) {
         </div>
       </ActionDialog>
 
-      <SelectOrderToMove onSuccess={onSuccess} />
+      <SelectOrderToMoveItem onSuccess={onSuccess} />
     </>
   );
 }

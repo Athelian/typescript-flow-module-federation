@@ -144,6 +144,7 @@ export default function MoveBatch({ onSuccess }: Props) {
           type: 'MOVE_BATCH_START',
           payload: {
             type: target,
+            from: 'batch',
             orderIds,
             containerIds,
             shipmentIds,

@@ -15,11 +15,11 @@ import FilterToolBar from 'components/common/FilterToolBar';
 import messages from 'modules/order/messages';
 import OrderGridView from 'modules/order/list/OrderGridView';
 import { OrderCard } from 'components/Cards';
-import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
-import { BATCH } from 'modules/relationMapV2/constants';
+import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
+import { ORDER_ITEM } from 'modules/relationMapV2/constants';
 import { OverlayStyle } from './style';
 import { orderListQuery } from './query';
-import { moveBatchesToOrder } from './mutation';
+import { moveOrderItemsToOrder } from './mutation';
 
 type Props = {
   intl: IntlShape,
@@ -41,7 +41,7 @@ function OrderRenderer({
   const isSameParent = orderIds.length === 1 && orderIds.includes(order.id);
   const isDifferentImporter = !importerIds.includes(order?.importer?.id);
   const isDifferentExporter = !exporterIds.includes(order?.exporter?.id);
-  const noPermission = !hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
+  const noPermission = !hasPermissions([ORDER_ITEMS_UPDATE]);
   const isInvalid = isSameParent || isDifferentImporter || isDifferentExporter || noPermission;
   const msg = () => {
     if (noPermission)
@@ -117,14 +117,13 @@ function OrderRenderer({
   );
 }
 
-function SelectOrderToMove({ intl, onSuccess }: Props) {
+function SelectOrderToMoveItem({ intl, onSuccess }: Props) {
   const { dispatch, state } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
-  const batchIds = targetedIds(state.targets, BATCH);
+  const itemIds = targetedIds(state.targets, ORDER_ITEM);
   const [selected, setSelected] = React.useState(null);
-  const { isProcessing, isOpen, type, from } = state.moveActions;
-  const isMoveToOrder = type === 'existOrder';
-  const isMoveFromBatch = from === 'batch';
+  const { isProcessing, isOpen, from } = state.moveActions;
+  const isMoveFromItem = from === 'item';
   React.useEffect(() => {
     return () => {
       if (isOpen) setSelected(null);
@@ -141,9 +140,9 @@ function SelectOrderToMove({ intl, onSuccess }: Props) {
       type: 'MOVE_TO_ORDER_START',
       payload: {},
     });
-    moveBatchesToOrder({
+    moveOrderItemsToOrder({
       order: selected,
-      batchIds,
+      itemIds,
       entities: mapping.entities,
     })
       .then(onSuccess)
@@ -174,15 +173,15 @@ function SelectOrderToMove({ intl, onSuccess }: Props) {
       perPage: 10,
       page: 1,
     },
-    'filterOrderOnMoveNRM'
+    'filterOrderOnMoveNRMFromItem'
   );
   return (
     <SlideView
       shouldConfirm={() => !!selected}
-      isOpen={isOpen && isMoveToOrder && isMoveFromBatch}
+      isOpen={isOpen && isMoveFromItem}
       onRequestClose={onCancel}
     >
-      {isOpen && isMoveToOrder && isMoveFromBatch && (
+      {isOpen && isMoveFromItem && (
         <SlideViewLayout>
           <SlideViewNavBar>
             <FilterToolBar
@@ -239,4 +238,4 @@ function SelectOrderToMove({ intl, onSuccess }: Props) {
   );
 }
 
-export default injectIntl(SelectOrderToMove);
+export default injectIntl(SelectOrderToMoveItem);
