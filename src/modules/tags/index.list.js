@@ -37,7 +37,7 @@ const TagListModule = () => {
         <Sort config={TagSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
         {hasPermissions(TAG_CREATE) && (
-          <Link to="/tag/new">
+          <Link to="/tags/new">
             <NewButton data-testid="newButton" />
           </Link>
         )}
