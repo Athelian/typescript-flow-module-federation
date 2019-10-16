@@ -138,6 +138,32 @@ function useEntities(
             draft.order[order.id] = [cloneOrders?.[index]?.id, ...related.order[order.id]];
           }
         });
+        const shipments = sources.filter(item => item.type === SHIPMENT);
+        const cloneShipments =
+          cloneEntities.find(item => item.data.shipmentCloneMany)?.data?.shipmentCloneMany ?? [];
+        shipments.forEach((shipment, index) => {
+          if (!related.shipment[shipment.id]) {
+            draft.shipment[shipment.id] = [cloneShipments?.[index]?.id];
+          } else {
+            draft.shipment[shipment.id] = [
+              cloneShipments?.[index]?.id,
+              ...related.shipment[shipment.id],
+            ];
+          }
+        });
+        const containers = sources.filter(item => item.type === CONTAINER);
+        const cloneContainers =
+          cloneEntities.find(item => item.data.containerCloneMany)?.data?.containerCloneMany ?? [];
+        containers.forEach((container, index) => {
+          if (!related.container[container.id]) {
+            draft.container[container.id] = [cloneContainers?.[index]?.id];
+          } else {
+            draft.container[container.id] = [
+              cloneContainers?.[index]?.id,
+              ...related.container[container.id],
+            ];
+          }
+        });
       })
     );
   };
@@ -163,7 +189,10 @@ function useEntities(
     [related]
   );
 
-  const getRelatedBy = (type: 'batch' | 'orderItem' | 'order', id: string) => {
+  const getRelatedBy = (
+    type: 'batch' | 'orderItem' | 'order' | 'shipment' | 'container',
+    id: string
+  ) => {
     if (!related?.[type]?.[id]) {
       return [];
     }

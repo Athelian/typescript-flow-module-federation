@@ -32,6 +32,7 @@ import {
 } from 'modules/relationMapV2/store';
 import EditFormSlideView from '../EditFormSlideView';
 import SelectedEntity from '../SelectedEntity';
+import CloneEntities from '../CloneEntities';
 import InlineCreateContainer from '../InlineCreateContainer';
 import DeleteContainerConfirm from '../DeleteContainerConfirm';
 import RemoveBatchConfirm from '../RemoveBatchConfirm';
@@ -72,7 +73,7 @@ export default function ShipmentFocus() {
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const { initHits } = Hits.useContainer();
-  const { initMapping, getRelatedBy } = Entities.useContainer();
+  const { initMapping, getRelatedBy, onSetBadges, onSetCloneRelated } = Entities.useContainer();
   const { queryVariables } = SortAndFilter.useContainer();
   const lastQueryVariables = usePrevious(queryVariables);
   React.useEffect(() => {
@@ -293,6 +294,77 @@ export default function ShipmentFocus() {
                         type: 'STATUS_END',
                         payload: { ids },
                       });
+                    }}
+                  />
+                  <CloneEntities
+                    onSuccess={({ sources, shipmentIds, cloneEntities }) => {
+                      const cloneBadges = [];
+                      const newShipmentIds = [];
+                      cloneEntities.forEach(cloneResult => {
+                        if (cloneResult?.data?.shipmentCloneMany?.length ?? 0) {
+                          const shipmentsClone = cloneResult?.data?.shipmentCloneMany ?? [];
+                          newShipmentIds.push(...shipmentsClone.map(shipment => shipment?.id));
+                          shipmentsClone.forEach(shipment => {
+                            cloneBadges.push({
+                              id: shipment?.id,
+                              type: 'cloned',
+                              entity: 'shipment',
+                            });
+                            cloneBadges.push(
+                              ...(shipment?.containers ?? []).map(container => ({
+                                id: container?.id,
+                                type: 'cloned',
+                                entity: 'container',
+                              }))
+                            );
+                            cloneBadges.push(
+                              ...(shipment?.batches ?? []).map(batch => ({
+                                id: batch?.id,
+                                type: 'cloned',
+                                entity: 'batch',
+                              }))
+                            );
+                          });
+                        }
+                        if (cloneResult?.data?.batchCloneMany?.length ?? 0) {
+                          cloneBadges.push(
+                            ...(cloneResult?.data?.batchCloneMany ?? []).map(item => {
+                              return {
+                                id: item?.id,
+                                type: 'cloned',
+                                entity: 'batch',
+                              };
+                            })
+                          );
+                        }
+                        if (cloneResult?.data?.containerCloneMany?.length ?? 0) {
+                          const containersClone = cloneResult?.data?.containerCloneMany ?? [];
+                          containersClone.forEach(container => {
+                            cloneBadges.push({
+                              id: container?.id,
+                              type: 'cloned',
+                              entity: 'container',
+                            });
+                            cloneBadges.push(
+                              ...(container?.batches ?? []).map(batch => ({
+                                id: batch?.id,
+                                type: 'cloned',
+                                entity: 'batch',
+                              }))
+                            );
+                          });
+                        }
+                      });
+                      dispatch({
+                        type: 'CLONE_END',
+                        payload: {
+                          sources,
+                          cloneEntities,
+                        },
+                      });
+                      queryShipmentsDetail([...shipmentIds, ...newShipmentIds]);
+                      onSetBadges(cloneBadges);
+                      onSetCloneRelated(sources, cloneEntities);
                     }}
                   />
                   <InlineCreateContainer

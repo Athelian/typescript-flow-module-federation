@@ -10,7 +10,7 @@ import {
 } from './style';
 
 type Props = {|
-  actions: Array<{
+  actions?: Array<{
     label: React.Node,
     onClick: Function,
   }>,
@@ -38,11 +38,12 @@ export default function CardActions({ actions = [] }: Props) {
           </button>
 
           <div className={DropdownWrapperStyle(dropdownIsOpen, actions.length)}>
-            {actions.map(action => {
+            {actions.map((action, index) => {
               const { label, onClick } = action;
 
               return (
                 <button
+                  key={String(index)}
                   className={OptionStyle}
                   onClick={event => {
                     onClick(event);
