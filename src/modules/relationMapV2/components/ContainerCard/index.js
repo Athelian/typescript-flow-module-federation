@@ -1,31 +1,39 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import Icon from 'components/Icon';
 import { FocusedView } from 'modules/relationMapV2/store';
-import { useEntityHasPermissions } from 'contexts/Permissions';
-import { CONTAINER_DELETE } from 'modules/permission/constants/container';
+import { useHasPermissions } from 'contexts/Permissions';
+import { CONTAINER_DELETE, CONTAINER_FORM } from 'modules/permission/constants/container';
 import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
 import { Display, Blackout, Label } from 'components/Form';
+import CardActions from 'modules/relationMapV2/components/CardActions';
 import {
   ContainerCardWrapperStyle,
   TopRowWrapperStyle,
   TagsWrapperStyle,
   BottomRowWrapperStyle,
   DeliveryWarehouseWrapperStyle,
-  DeleteButtonStyle,
 } from './style';
 
 type Props = {|
   container: Object,
+  onViewForm: Event => void,
   onDeleteContainer?: Event => void,
+  organizationId: string,
 |};
 
-export default function ContainerCard({ container, onDeleteContainer }: Props) {
+export default function ContainerCard({
+  container,
+  onViewForm,
+  onDeleteContainer,
+  organizationId,
+}: Props) {
   const { selectors } = FocusedView.useContainer();
-  const hasPermissions = useEntityHasPermissions(container);
+  const hasPermissions = useHasPermissions(organizationId);
+  const allowToViewForm = hasPermissions(CONTAINER_FORM);
   const allowToDeleteContainer = hasPermissions(CONTAINER_DELETE);
+
   const {
     no,
     tags = [],
@@ -79,12 +87,26 @@ export default function ContainerCard({ container, onDeleteContainer }: Props) {
         </Display>
       </div>
 
-      {/* FIXME: fix hover to show the delete action */}
-      {allowToDeleteContainer && selectors.isShipmentFocus && (
-        <button onClick={onDeleteContainer} className={DeleteButtonStyle} type="button">
-          <Icon icon="REMOVE" />
-        </button>
-      )}
+      <CardActions
+        actions={[
+          allowToViewForm && {
+            label: (
+              <FormattedMessage
+                id="modules.RelationMap.cards.viewForm"
+                defaultMessage="View Form"
+              />
+            ),
+            onClick: onViewForm,
+          },
+          allowToDeleteContainer &&
+            selectors.isShipmentFocus && {
+              label: (
+                <FormattedMessage id="modules.RelationMap.cards.delete" defaultMessage="Delete" />
+              ),
+              onClick: onDeleteContainer,
+            },
+        ].filter(Boolean)}
+      />
     </div>
   );
 }

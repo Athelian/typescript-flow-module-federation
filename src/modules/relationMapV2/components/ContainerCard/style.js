@@ -1,15 +1,18 @@
 // @flow
 import { css } from 'react-emotion';
 import { CONTAINER_WIDTH } from 'modules/relationMapV2/constants';
-import { layout, borderRadiuses, fontSizes, colors, presets, shadows } from 'styles/common';
+import { layout, borderRadiuses } from 'styles/common';
 
 export const ContainerCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   width: ${CONTAINER_WIDTH}px;
   height: 55px;
-  &:hover > button {
-    opacity: 1;
+  position: relative;
+  &:hover {
+    & button {
+      opacity: 1;
+    }
   }
 `;
 
@@ -39,23 +42,4 @@ export const BottomRowWrapperStyle: string = css`
 
 export const DeliveryWarehouseWrapperStyle: string = css`
   display: flex;
-`;
-
-export const DeleteButtonStyle: string = css`
-  opacity: 0;
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  ${presets.BUTTON};
-  width: 20px;
-  height: 20px;
-  background-color: ${colors.WHITE};
-  color: ${colors.GRAY_LIGHT};
-  ${fontSizes.SMALL};
-  ${borderRadiuses.CIRCLE};
-  z-index: 2;
-  ${shadows.INPUT};
-  &:hover > button {
-    color: ${colors.RED};
-  }
 `;
