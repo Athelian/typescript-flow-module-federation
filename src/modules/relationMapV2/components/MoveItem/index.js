@@ -3,8 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Tooltip } from 'components/Tooltip';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
-// import { targetedIds, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
-import { targetedIds } from 'modules/relationMapV2/helpers';
+import { targetedIds, findOrderIdByItem } from 'modules/relationMapV2/helpers';
 import { ORDER_ITEM } from 'modules/relationMapV2/constants';
 import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
 import { BaseButton } from 'components/Buttons';
@@ -29,8 +28,15 @@ export default function MoveItem({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
   const { dispatch, state } = FocusedView.useContainer();
   const itemIds = targetedIds(state.targets, ORDER_ITEM);
-  // TODO: Replace with real values
-  const orderIds = [];
+  const orderIds = itemIds
+    .map(orderItemId =>
+      findOrderIdByItem({
+        orderItemId,
+        viewer: state.viewer,
+        entities: mapping.entities,
+      })
+    )
+    .filter(Boolean);
   const totalItems = itemIds.length;
   const { isProcessing, isOpen, type } = state.itemActions;
   const isMoveItems = type === 'moveItems';
@@ -42,8 +48,9 @@ export default function MoveItem({ onSuccess }: Props) {
     });
   };
 
-  // TODO: Replace with real values
-  const hasPermissions = useAllHasPermission([]);
+  const hasPermissions = useAllHasPermission(
+    itemIds.map(orderItemId => mapping.entities?.orderItems?.[orderItemId]?.ownedBy).filter(Boolean)
+  );
 
   const importerIds = [];
   const exporterIds = [];
@@ -59,11 +66,7 @@ export default function MoveItem({ onSuccess }: Props) {
     }
   });
 
-  const onConfirm = (
-    // prettier-ignore
-    target: | 'existOrder'
-      | 'newOrder'
-  ) => {
+  const onConfirm = (target: 'existOrder' | 'newOrder') => {
     switch (target) {
       case 'newOrder':
         dispatch({
@@ -71,6 +74,7 @@ export default function MoveItem({ onSuccess }: Props) {
           payload: {
             type: 'MOVE_ITEMS',
             selectedId: target,
+            itemIds,
             orderIds,
             importerIds,
             exporterIds,
@@ -83,6 +87,7 @@ export default function MoveItem({ onSuccess }: Props) {
           type: 'MOVE_ITEM_START',
           payload: {
             type: target,
+            itemIds,
             orderIds,
             importerIds,
             exporterIds,

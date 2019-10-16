@@ -102,7 +102,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
   });
   React.useEffect(() => {
     if (
-      type === 'MOVE_BATCHES' &&
+      ['MOVE_BATCHES', 'MOVE_ITEMS'].includes(type) &&
       id !== '' &&
       !isEquals(lastQueryVariables, {
         orderIds,
@@ -150,6 +150,75 @@ const EditFormSlideView = ({ onClose }: Props) => {
           shipmentIds={targetedIds(state.targets, SHIPMENT)}
         />
       );
+      break;
+    }
+    case 'MOVE_ITEMS': {
+      const itemIds = targetedIds(state.targets, ORDER_ITEM);
+      const newOrderItems = [];
+      logger.warn({
+        itemIds,
+      });
+      if (
+        called &&
+        isEquals(lastQueryVariables, {
+          orderIds,
+          shipmentIds,
+        }) &&
+        !loading
+      ) {
+        const { ordersByIDs } = data;
+        itemIds.forEach(orderItemId => {
+          const parentOrder = ordersByIDs.find(order =>
+            (order?.orderItems ?? []).map(item => item.id).includes(orderItemId)
+          );
+          const parentItem = (parentOrder?.orderItems ?? []).find(item => item.id === orderItemId);
+          newOrderItems.push(parentItem);
+        });
+      }
+      const { exporter } = data?.ordersByIDs?.[0] ?? {};
+      if (loading) {
+        form = <LoadingIcon />;
+      } else {
+        isNewEntity = true;
+        if (id) {
+          form = (
+            <NewOrderForm
+              originalDataForSlideView={{
+                orderItems: newOrderItems,
+              }}
+              initDataForSlideView={{
+                importer: isImporter() ? organization : {},
+                exporter,
+                orderItems: newOrderItems.map(item => ({
+                  ...item,
+                  no: `[move] ${item.no}`,
+                })),
+              }}
+              onSuccessCallback={result => {
+                onSetBadges([
+                  {
+                    id: result.orderCreate.id,
+                    type: 'newItem',
+                    entity: 'order',
+                  },
+                ]);
+                dispatch({
+                  type: 'NEW_ORDER',
+                  payload: {
+                    orderId: result.orderCreate.id,
+                  },
+                });
+                onClose({
+                  moveToTop: true,
+                  id: result.orderCreate.id,
+                  type: ORDER,
+                });
+              }}
+              onCancel={onClose}
+            />
+          );
+        }
+      }
       break;
     }
     case 'MOVE_BATCHES': {

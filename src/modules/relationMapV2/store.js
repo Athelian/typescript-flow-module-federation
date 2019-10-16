@@ -881,6 +881,7 @@ function orderReducer(
       | 'MOVE_ITEM_START'
       | 'MOVE_ITEM_CLOSE'
       | 'MOVE_ITEM_END'
+      | 'MOVE_ITEM_TO_NEW_ENTITY'
       | 'MOVE_BATCH'
       | 'MOVE_BATCH_START'
       | 'MOVE_BATCH_CLOSE'
@@ -1174,6 +1175,22 @@ function orderReducer(
         },
       });
     }
+    case 'MOVE_ITEM_TO_NEW_ENTITY':
+      return action.payload?.selectedId === 'newOrder'
+        ? update(state, {
+            edit: {
+              $merge: action.payload,
+            },
+          })
+        : update(state, {
+            edit: {
+              $merge: action.payload,
+            },
+            moveActions: {
+              isOpen: { $set: false },
+              isProcessing: { $set: false },
+            },
+          });
     case 'MOVE_BATCH': {
       return update(state, {
         batchActions: {
