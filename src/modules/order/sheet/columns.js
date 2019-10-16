@@ -110,7 +110,14 @@ const orderColumns: Array<ColumnConfig> = [
     color: colors.ORDER,
     width: 200,
   },
-  // tags
+  {
+    key: 'order.tags',
+    exportKey: 'tags',
+    title: <FormattedMessage {...orderMessages.tags} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   {
     key: 'order.memo',
     exportKey: 'memo',

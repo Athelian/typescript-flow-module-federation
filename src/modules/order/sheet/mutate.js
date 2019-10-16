@@ -66,6 +66,11 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
               ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
             ),
           };
+        case 'tags': {
+          return {
+            tagIds: value.map(item => item.id),
+          };
+        }
         default:
           return {
             [field]: value,

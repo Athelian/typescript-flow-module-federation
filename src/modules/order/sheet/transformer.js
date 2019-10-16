@@ -17,6 +17,7 @@ import {
   ORDER_SET_INCOTERM,
   ORDER_SET_MEMO,
   ORDER_SET_DOCUMENTS,
+  ORDER_TASK_SET_TAGS,
 } from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_SET_NO,
@@ -183,6 +184,18 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
         order,
         'deliveryPlace',
         hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_DELIVERY_PLACE)
+      ),
+    },
+    {
+      columnKey: 'order.tags',
+      type: 'tags',
+      empty: !order,
+      parent: true,
+      ...transformValueField(
+        basePath,
+        order,
+        'tags',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_TASK_SET_TAGS)
       ),
     },
     {

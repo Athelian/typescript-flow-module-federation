@@ -5,6 +5,7 @@ import {
   forbiddenFragment,
   userAvatarFragment,
   documentFragment,
+  tagFragment,
 } from 'graphql';
 
 const orderSheetFragment = gql`
@@ -13,6 +14,9 @@ const orderSheetFragment = gql`
     archived
     poNo
     memo
+    tags {
+      ...tagFragment
+    }
     issuedAt
     piNo
     currency
@@ -37,6 +41,7 @@ const orderSheetFragment = gql`
       }
     }
   }
+  ${tagFragment}
 `;
 
 const orderItemSheetFragment = gql`

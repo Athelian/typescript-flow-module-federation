@@ -14,9 +14,11 @@ import DocumentsInput from './Inputs/DocumentsInput';
 import QuantityRevisionsInput from './Inputs/QuantityRevisionsInput';
 import DateRevisionsInput from './Inputs/DateRevisionsInput';
 import StatusInput from './Inputs/StatusInput';
+import TagsInput from './Inputs/TagsInput';
 import { WrapperStyle } from './style';
 
 type Props = {
+  entity: string,
   value: any,
   type: string,
   focus: boolean,
@@ -47,9 +49,11 @@ const inputs = {
   quantity_revisions: QuantityRevisionsInput,
   date_revisions: DateRevisionsInput,
   status: StatusInput,
+  tags: TagsInput,
 };
 
 const CellInput = ({
+  entity,
   value,
   type,
   focus,
@@ -116,6 +120,7 @@ const CellInput = ({
   return (
     <div className={WrapperStyle(focus)}>
       {React.createElement(inputs[type], {
+        entity,
         value: dirtyValue,
         readonly: disabled,
         focus: inputFocus,
