@@ -7,6 +7,7 @@ import DateInput from './Inputs/DateInput';
 import DatetimeInput from './Inputs/DatetimeInput';
 import EnumInput from './Inputs/EnumInput';
 import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
+import DocumentsInput from './Inputs/DocumentsInput';
 import { WrapperStyle } from './style';
 
 type Props = {
@@ -31,6 +32,7 @@ const inputs = {
   datetime: DatetimeInput,
   currency: EnumInput.Currency,
   incoterm: EnumInput.Incoterm,
+  documents: DocumentsInput,
 };
 
 const CellInput = ({

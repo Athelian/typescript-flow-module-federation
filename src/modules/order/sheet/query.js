@@ -16,6 +16,12 @@ const orderSheetFragment = gql`
     totalOrdered
     totalBatched
     totalShipped
+    files {
+      ... on File {
+        id
+        name
+      }
+    }
     createdAt
     updatedAt
     createdBy {

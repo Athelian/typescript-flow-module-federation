@@ -11,6 +11,7 @@ import {
   ORDER_SET_ISSUE_AT,
   ORDER_SET_INCOTERM,
   ORDER_SET_MEMO,
+  ORDER_SET_DOCUMENTS,
 } from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_SET_NO,
@@ -203,6 +204,18 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
       empty: !order,
       parent: true,
       ...transformReadonlyField(basePath, order, 'totalShipped', order?.totalShipped ?? 0),
+    },
+    {
+      columnKey: 'order.files',
+      type: 'documents',
+      empty: !order,
+      parent: true,
+      ...transformValueField(
+        basePath,
+        order,
+        'files',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_DOCUMENTS)
+      ),
     },
   ];
 }
