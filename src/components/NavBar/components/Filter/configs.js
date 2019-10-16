@@ -416,6 +416,22 @@ export const BatchFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'BATCH',
+    field: 'importerId',
+    type: 'importer_id',
+    message: batchMessages.importer,
+    defaultValue: null,
+    hidden: true,
+  },
+  {
+    entity: 'BATCH',
+    field: 'exporterId',
+    type: 'exporter_id',
+    message: batchMessages.exporter,
+    defaultValue: null,
+    hidden: true,
+  },
+  {
+    entity: 'BATCH',
     field: 'hasShipment',
     type: 'has_shipment',
     message: batchMessages.hasShipment,

@@ -1,78 +1,52 @@
 // @flow
 import * as React from 'react';
 import { toast } from 'react-toastify';
-import { injectIntl } from 'react-intl';
-import type { IntlShape } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { useQuery } from '@apollo/react-hooks';
 import { ArrayValue } from 'react-values';
 import { trackingError } from 'utils/trackingError';
-import usePartnerPermission from 'hooks/usePartnerPermission';
-import usePermission from 'hooks/usePermission';
-import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
-import { BATCH_TASK_LIST } from 'modules/permission/constants/batch';
-import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
-import BatchGridView from 'modules/batch/list/BatchGridView';
-import { ShipmentBatchCard } from 'components/Cards';
-import { EntityIcon, SortInput, SearchInput } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
 import { getByPathWithDefault } from 'utils/fp';
 import { removeTypename } from 'utils/data';
-import messages from 'modules/batch/messages';
-import useFilter from 'hooks/useFilter';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
+import useFilterSort from 'hooks/useFilterSort';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
+import { BATCH_TASK_LIST } from 'modules/permission/constants/batch';
+import BatchGridView from 'modules/batch/list/BatchGridView';
+import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
+import { ShipmentBatchCard } from 'components/Cards';
+import {
+  EntityIcon,
+  Filter,
+  BatchFilterConfig,
+  BatchSortConfig,
+  Search,
+  Sort,
+} from 'components/NavBar';
+import { SaveButton, CancelButton } from 'components/Buttons';
 import { selectBatchListQuery } from './query';
 
-type OptionalProps = {
-  cacheKey: string,
-};
-
-type Props = OptionalProps & {
+type Props = {
   onCancel: Function,
   onSelect: Function,
-  intl: IntlShape,
   selectedBatches: Array<Object>,
   filter: Object,
 };
 
-const getInitFilter = (filter: Object) => ({
-  perPage: 20,
-  page: 1,
-  filter: {
-    query: '',
-    hasShipment: false,
-    archived: false,
-    ...filter,
-  },
-  sort: { field: 'updatedAt', direction: 'DESCENDING' },
-});
+function SelectShipmentBatches({ onCancel, onSelect, selectedBatches, filter }: Props) {
+  const intl = useIntl();
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    { query: '', archived: false, hasShipment: false, ...filter },
+    { updatedAt: 'DESCENDING' }
+  );
 
-function SelectShipmentBatches({
-  intl,
-  cacheKey,
-  onCancel,
-  onSelect,
-  selectedBatches,
-  filter,
-}: Props) {
+  const queryVariables = { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 };
+
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const viewPrice = hasPermission(ORDER_ITEMS_GET_PRICE);
   const viewTasks = hasPermission(BATCH_TASK_LIST);
   const ignoreBatches = selectedBatches.map(batch => batch.id);
-  const fields = [
-    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-    { title: intl.formatMessage(messages.batchNo), value: 'no' },
-    { title: intl.formatMessage(messages.poNo), value: 'poNo' },
-    { title: intl.formatMessage(messages.productName), value: 'productName' },
-    { title: intl.formatMessage(messages.productSerial), value: 'productSerial' },
-    { title: intl.formatMessage(messages.deliveredAt), value: 'deliveredAt' },
-    { title: intl.formatMessage(messages.expiredAt), value: 'expiredAt' },
-    { title: intl.formatMessage(messages.producedAt), value: 'producedAt' },
-  ];
-  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
-    getInitFilter(filter),
-    cacheKey
-  );
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [hasMore, setHasMore] = React.useState(true);
@@ -110,36 +84,16 @@ function SelectShipmentBatches({
         <SlideViewLayout>
           <SlideViewNavBar>
             <EntityIcon icon="BATCH" color="BATCH" />
-            <SortInput
-              sort={fields.find(item => item.value === filterAndSort.sort.field) || fields[0]}
-              ascending={filterAndSort.sort.direction !== 'DESCENDING'}
-              fields={fields}
-              onChange={({ field: { value }, ascending }) =>
-                onChangeFilter({
-                  ...filterAndSort,
-                  sort: {
-                    field: value,
-                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
-                  },
-                })
-              }
+
+            <Filter
+              config={BatchFilterConfig}
+              filterBy={filterBy}
+              onChange={setFilterBy}
+              staticFilters={['archived', 'hasShipment', ...Object.keys(filter)]}
             />
-            <SearchInput
-              value={filterAndSort.filter.query}
-              name="search"
-              onClear={() =>
-                onChangeFilter({
-                  ...filterAndSort,
-                  filter: { ...filterAndSort.filter, query: '' },
-                })
-              }
-              onChange={newQuery =>
-                onChangeFilter({
-                  ...filterAndSort,
-                  filter: { ...filterAndSort.filter, query: newQuery },
-                })
-              }
-            />
+            <Search query={query} onChange={setQuery} />
+            <Sort config={BatchSortConfig} sortBy={sortBy} onChange={setSortBy} />
+
             <CancelButton onClick={onCancel} />
             <SaveButton
               data-testid="saveButtonOnSelectContainerBatches"
@@ -215,10 +169,4 @@ function SelectShipmentBatches({
   );
 }
 
-const defaultProps = {
-  cacheKey: 'SelectShipmentBatches',
-};
-
-SelectShipmentBatches.defaultProps = defaultProps;
-
-export default injectIntl(SelectShipmentBatches);
+export default SelectShipmentBatches;
