@@ -23,6 +23,7 @@ import {
   ORDER_ITEM_WIDTH,
   CONTAINER_WIDTH,
   SHIPMENT_WIDTH,
+  SHIPMENT_LONG_WIDTH,
 } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { CONTAINER_BATCHES_ADD } from 'modules/permission/constants/container';
@@ -2128,7 +2129,7 @@ function DuplicateShipmentCell({
 
       <div
         style={{
-          width: SHIPMENT_WIDTH + 150,
+          width: SHIPMENT_LONG_WIDTH,
         }}
         className={ContentStyle}
       />
@@ -2252,7 +2253,7 @@ const cellRenderer = (
         <div
           style={{
             display: 'flex',
-            width: SHIPMENT_WIDTH + 170,
+            width: SHIPMENT_LONG_WIDTH + 20,
           }}
           key={uuid()}
         >
