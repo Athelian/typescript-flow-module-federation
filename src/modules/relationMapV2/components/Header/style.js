@@ -20,6 +20,7 @@ export const EntityNavbarWrapperStyle = (color: string, width: number): string =
   background-color: ${colors[color]};
   width: ${width + 20}px;
   padding: 0 0 0 15px;
+  justify-content: space-between;
 `;
 
 export const EntityIconWrapperStyle: string = css`
@@ -112,7 +113,6 @@ export const SelectAllButtonStyle = css`
 `;
 
 export const SortInputWrapperStyle: string = css`
-  margin-left: auto;
   padding: 0 10px 0 0;
 `;
 
@@ -124,5 +124,5 @@ export const ShipmentTimelineWrapperStyle: string = css`
   color: ${colors.BLACK};
   padding: 0 5px;
   height: 40px;
-  margin: 0 5px 0 auto;
+  margin: 0 10px;
 `;

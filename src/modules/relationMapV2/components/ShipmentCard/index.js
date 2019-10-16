@@ -212,13 +212,13 @@ export default function ShipmentCard({
               ))}
             </div>
           ) : (
-            <Blackout />
+            <Blackout width="130px" />
           )}
 
           <Label width="55px">
             <FormattedMessage id="components.cards.place" defaultMessage="PLACE" />
           </Label>
-          <Display blackout={!canViewPlace} width="130px">
+          <Display blackout={!canViewPlace} width={selectors.isShipmentFocus ? '235px' : '130px'}>
             {place}
           </Display>
         </div>
@@ -260,7 +260,7 @@ export default function ShipmentCard({
               </div>
             </>
           ) : (
-            <Blackout width="130px" />
+            <Blackout width={selectors.isShipmentFocus ? '235px' : '130px'} />
           )}
         </div>
 
