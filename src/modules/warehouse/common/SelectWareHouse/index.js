@@ -64,6 +64,7 @@ const SelectWareHouse = ({ selected, onCancel, onSelect }: Props) => {
                     config={WarehouseFilterConfig}
                     filterBy={filterBy}
                     onChange={setFilterBy}
+                    staticFilters={['archived']}
                   />
                   <Search query={query} onChange={setQuery} />
                   <Sort config={WarehouseSortConfig} sortBy={sortBy} onChange={setSortBy} />
