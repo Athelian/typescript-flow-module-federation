@@ -75,25 +75,28 @@ export default function OrderCard({ order, onViewForm, onCreateItem, organizatio
 
       <CardActions
         actions={[
-          allowToViewForm && {
-            label: (
-              <FormattedMessage
-                id="modules.RelationMap.cards.viewForm"
-                defaultMessage="View Form"
-              />
-            ),
-            onClick: onViewForm,
-          },
-          allowToCreateItem &&
-            selectors.isOrderFocus && {
-              label: (
-                <FormattedMessage
-                  id="modules.RelationMap.order.createItems"
-                  defaultMessage="Create Item(s)"
-                />
-              ),
-              onClick: onCreateItem,
-            },
+          allowToViewForm
+            ? {
+                label: (
+                  <FormattedMessage
+                    id="modules.RelationMap.cards.viewForm"
+                    defaultMessage="View Form"
+                  />
+                ),
+                onClick: onViewForm,
+              }
+            : null,
+          allowToCreateItem && selectors.isOrderFocus
+            ? {
+                label: (
+                  <FormattedMessage
+                    id="modules.RelationMap.order.createItems"
+                    defaultMessage="Create Item(s)"
+                  />
+                ),
+                onClick: onCreateItem,
+              }
+            : null,
         ].filter(Boolean)}
       />
     </div>

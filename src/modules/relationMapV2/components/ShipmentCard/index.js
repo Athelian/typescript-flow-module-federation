@@ -269,25 +269,28 @@ export default function ShipmentCard({
 
       <CardActions
         actions={[
-          allowToViewForm && {
-            label: (
-              <FormattedMessage
-                id="modules.RelationMap.cards.viewForm"
-                defaultMessage="View Form"
-              />
-            ),
-            onClick: onViewForm,
-          },
-          allowToCreateContainer &&
-            selectors.isShipmentFocus && {
-              label: (
-                <FormattedMessage
-                  id="modules.RelationMap.cards.createContainer"
-                  defaultMessage="Create Container"
-                />
-              ),
-              onClick: onCreateContainer,
-            },
+          allowToViewForm
+            ? {
+                label: (
+                  <FormattedMessage
+                    id="modules.RelationMap.cards.viewForm"
+                    defaultMessage="View Form"
+                  />
+                ),
+                onClick: onViewForm,
+              }
+            : null,
+          allowToCreateContainer && selectors.isShipmentFocus
+            ? {
+                label: (
+                  <FormattedMessage
+                    id="modules.RelationMap.cards.createContainer"
+                    defaultMessage="Create Container"
+                  />
+                ),
+                onClick: onCreateContainer,
+              }
+            : null,
         ].filter(Boolean)}
       />
     </div>

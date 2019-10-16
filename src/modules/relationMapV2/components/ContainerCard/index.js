@@ -89,22 +89,25 @@ export default function ContainerCard({
 
       <CardActions
         actions={[
-          allowToViewForm && {
-            label: (
-              <FormattedMessage
-                id="modules.RelationMap.cards.viewForm"
-                defaultMessage="View Form"
-              />
-            ),
-            onClick: onViewForm,
-          },
-          allowToDeleteContainer &&
-            selectors.isShipmentFocus && {
-              label: (
-                <FormattedMessage id="modules.RelationMap.cards.delete" defaultMessage="Delete" />
-              ),
-              onClick: onDeleteContainer,
-            },
+          allowToViewForm
+            ? {
+                label: (
+                  <FormattedMessage
+                    id="modules.RelationMap.cards.viewForm"
+                    defaultMessage="View Form"
+                  />
+                ),
+                onClick: onViewForm,
+              }
+            : null,
+          allowToDeleteContainer && selectors.isShipmentFocus
+            ? {
+                label: (
+                  <FormattedMessage id="modules.RelationMap.cards.delete" defaultMessage="Delete" />
+                ),
+                onClick: onDeleteContainer,
+              }
+            : null,
         ].filter(Boolean)}
       />
     </div>

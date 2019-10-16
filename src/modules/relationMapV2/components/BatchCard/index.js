@@ -95,21 +95,25 @@ export default function BatchCard({ batch, onViewForm, onDeleteBatch, organizati
 
       <CardActions
         actions={[
-          allowToViewForm && {
-            label: (
-              <FormattedMessage
-                id="modules.RelationMap.cards.viewForm"
-                defaultMessage="View Form"
-              />
-            ),
-            onClick: onViewForm,
-          },
-          allowToDeleteBatch && {
-            label: (
-              <FormattedMessage id="modules.RelationMap.cards.delete" defaultMessage="Delete" />
-            ),
-            onClick: onDeleteBatch,
-          },
+          allowToViewForm
+            ? {
+                label: (
+                  <FormattedMessage
+                    id="modules.RelationMap.cards.viewForm"
+                    defaultMessage="View Form"
+                  />
+                ),
+                onClick: onViewForm,
+              }
+            : null,
+          allowToDeleteBatch
+            ? {
+                label: (
+                  <FormattedMessage id="modules.RelationMap.cards.delete" defaultMessage="Delete" />
+                ),
+                onClick: onDeleteBatch,
+              }
+            : null,
         ].filter(Boolean)}
       />
     </div>

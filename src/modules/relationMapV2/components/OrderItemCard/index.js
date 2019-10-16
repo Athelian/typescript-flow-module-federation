@@ -118,32 +118,36 @@ export default function OrderItemCard({
 
       <CardActions
         actions={[
-          allowToViewForm && {
-            label: (
-              <FormattedMessage
-                id="modules.RelationMap.cards.viewForm"
-                defaultMessage="View Form"
-              />
-            ),
-            onClick: onViewForm,
-          },
-          allowToCreateBatch &&
-            selectors.isOrderFocus && {
-              label: (
-                <FormattedMessage
-                  id="modules.RelationMap.item.createBatch"
-                  defaultMessage="Create Batch"
-                />
-              ),
-              onClick: onCreateBatch,
-            },
-          allowToDeleteItem &&
-            selectors.isOrderFocus && {
-              label: (
-                <FormattedMessage id="modules.RelationMap.cards.delete" defaultMessage="Delete" />
-              ),
-              onClick: onDeleteItem,
-            },
+          allowToViewForm
+            ? {
+                label: (
+                  <FormattedMessage
+                    id="modules.RelationMap.cards.viewForm"
+                    defaultMessage="View Form"
+                  />
+                ),
+                onClick: onViewForm,
+              }
+            : null,
+          allowToCreateBatch && selectors.isOrderFocus
+            ? {
+                label: (
+                  <FormattedMessage
+                    id="modules.RelationMap.item.createBatch"
+                    defaultMessage="Create Batch"
+                  />
+                ),
+                onClick: onCreateBatch,
+              }
+            : null,
+          allowToDeleteItem && selectors.isOrderFocus
+            ? {
+                label: (
+                  <FormattedMessage id="modules.RelationMap.cards.delete" defaultMessage="Delete" />
+                ),
+                onClick: onDeleteItem,
+              }
+            : null,
         ].filter(Boolean)}
       />
     </div>
