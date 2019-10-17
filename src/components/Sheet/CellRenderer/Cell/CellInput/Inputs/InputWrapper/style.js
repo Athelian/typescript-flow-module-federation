@@ -9,10 +9,11 @@ export const InputWrapperStyle: string = css`
   height: 30px;
 
   & > input {
-    width: 100%;
-    color: ${colors.BLACK};
     ${fontSizes.MAIN};
     ${presets.ELLIPSIS};
+    color: ${colors.BLACK};
+    background: transparent;
+    width: 100%;
     line-height: 18px;
     font-weight: 600;
 
