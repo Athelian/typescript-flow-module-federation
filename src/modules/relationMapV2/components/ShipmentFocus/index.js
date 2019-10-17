@@ -27,7 +27,7 @@ import {
   Entities,
   SortAndFilter,
   ExpandRows,
-  LoadMoreExpanded,
+  GlobalExpanded,
   FocusedView,
 } from 'modules/relationMapV2/store';
 import EditFormSlideView from '../EditFormSlideView';
@@ -35,7 +35,9 @@ import SelectedEntity from '../SelectedEntity';
 import CloneEntities from '../CloneEntities';
 import InlineCreateContainer from '../InlineCreateContainer';
 import DeleteContainerConfirm from '../DeleteContainerConfirm';
+import DeleteConfirm from '../DeleteConfirm';
 import RemoveBatchConfirm from '../RemoveBatchConfirm';
+import DeleteBatchConfirm from '../DeleteBatchConfirm';
 import StatusConfirm from '../StatusConfirm';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import AddTags from '../AddTags';
@@ -69,7 +71,7 @@ export default function ShipmentFocus() {
     id: '',
   });
   const { expandRows, setExpandRows } = ExpandRows.useContainer();
-  const { loadMoreExpanded } = LoadMoreExpanded.useContainer();
+  const { expandAll } = GlobalExpanded.useContainer();
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const { initHits } = Hits.useContainer();
@@ -208,14 +210,7 @@ export default function ShipmentFocus() {
                         {
                           fetchMore,
                           data,
-                          onSuccess: fetchMoreResult => {
-                            if (loadMoreExpanded)
-                              setExpandRows([
-                                ...expandRows,
-                                ...(fetchMoreResult?.shipments?.nodes ?? []).map(
-                                  shipment => shipment?.id
-                                ),
-                              ]);
+                          onSuccess: () => {
                             setIsLoadingMore(false);
                           },
                         },
@@ -223,6 +218,10 @@ export default function ShipmentFocus() {
                       );
                     };
               const entities = normalize({ shipments });
+              const expandAllRows = shipments.map(shipment => shipment?.id);
+              if (expandAll && !isEquals(expandAllRows, expandRows)) {
+                setExpandRows(expandAllRows);
+              }
               initMapping({
                 shipments,
                 entities,
@@ -253,6 +252,33 @@ export default function ShipmentFocus() {
                           selectedId: '',
                         },
                       });
+                    }}
+                  />
+                  <DeleteConfirm
+                    onSuccess={({ containerIds }) => {
+                      const ids = containerIds.map(containerId =>
+                        findShipmentIdByContainer(containerId, entities)
+                      );
+                      queryShipmentsDetail(ids);
+                      window.requestIdleCallback(
+                        () => {
+                          dispatch({
+                            type: 'DELETE_CLOSE',
+                            payload: {},
+                          });
+                          dispatch({
+                            type: 'REMOVE_TARGETS',
+                            payload: {
+                              targets: containerIds.map(
+                                containerId => `${CONTAINER}-${containerId}`
+                              ),
+                            },
+                          });
+                        },
+                        {
+                          timeout: 250,
+                        }
+                      );
                     }}
                   />
                   <DeleteContainerConfirm
@@ -393,6 +419,47 @@ export default function ShipmentFocus() {
                           );
                         }
                       }
+                    }}
+                  />
+                  <DeleteBatchConfirm
+                    onSuccess={batchId => {
+                      queryShipmentsDetail([findShipmentIdByBatch(batchId, entities)]);
+                      const [itemId, orderId] = findParentIdsByBatch({
+                        batchId,
+                        entities,
+                        viewer: state.viewer,
+                      });
+                      const removeTargets = [];
+                      const remainItemsCount = Object.values(entities.batches).filter(
+                        (currentBatch: Object) =>
+                          currentBatch.container && currentBatch.orderItem === itemId
+                      ).length;
+                      if (!entities.batches?.[batchId]?.container) {
+                        removeTargets.push(`${BATCH}-${batchId}`);
+                      }
+                      if (remainItemsCount === 1 && orderId && itemId) {
+                        removeTargets.push(`${ORDER}-${orderId}`);
+                        removeTargets.push(`${ORDER_ITEM}-${itemId}`);
+                      }
+                      window.requestIdleCallback(
+                        () => {
+                          if (removeTargets.length) {
+                            dispatch({
+                              type: 'REMOVE_TARGETS',
+                              payload: {
+                                targets: removeTargets,
+                              },
+                            });
+                          }
+                          dispatch({
+                            type: 'REMOVE_BATCH_CLOSE',
+                            payload: {},
+                          });
+                        },
+                        {
+                          timeout: 250,
+                        }
+                      );
                     }}
                   />
                   <RemoveBatchConfirm

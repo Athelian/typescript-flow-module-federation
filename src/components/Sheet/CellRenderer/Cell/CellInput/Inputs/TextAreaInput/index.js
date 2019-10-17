@@ -2,20 +2,19 @@
 import React, { useRef, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import Dialog from 'components/Dialog';
+import type { InputProps } from '../../types';
 import InputWrapper from '../InputWrapper';
 import TextAreaInputDialog from './TextAreaInputDialog';
 
-type Props = {
-  value: string | null,
-  onChange: string => void,
-  focus: boolean,
-  readonly: boolean,
-  onFocus: Function,
-  onBlur: Function,
-  onKeyDown: Function,
-};
-
-const TextInput = ({ value, focus, onChange, onFocus, onBlur, readonly, onKeyDown }: Props) => {
+const TextInput = ({
+  value,
+  focus,
+  onChange,
+  onFocus,
+  onBlur,
+  readonly,
+  onKeyDown,
+}: InputProps<string>) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const intl = useIntl();
   const inputRef = useRef(null);
@@ -38,7 +37,7 @@ const TextInput = ({ value, focus, onChange, onFocus, onBlur, readonly, onKeyDow
               ref={ref}
               readOnly
               spellCheck={false}
-              value={value}
+              value={value || ''}
               onClick={() => {
                 if (!readonly) {
                   onFocus();

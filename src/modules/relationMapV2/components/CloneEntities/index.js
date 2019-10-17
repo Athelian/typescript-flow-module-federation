@@ -11,6 +11,7 @@ import { ORDER_CREATE } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
 import { BATCH_CREATE } from 'modules/permission/constants/batch';
 import { SHIPMENT_CREATE } from 'modules/permission/constants/shipment';
+import { CONTAINER_CREATE } from 'modules/permission/constants/container';
 import { BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import ActionDialog, {
@@ -30,6 +31,7 @@ import {
   cloneOrderItemsMutation,
   cloneOrdersMutation,
   cloneShipmentsMutation,
+  cloneContainersMutation,
 } from './mutation';
 
 type Props = {|
@@ -49,6 +51,7 @@ export default function CloneEntities({ onSuccess }: Props) {
   const [cloneOrderItems] = useMutation(cloneOrderItemsMutation);
   const [cloneOrders] = useMutation(cloneOrdersMutation);
   const [cloneShipments] = useMutation(cloneShipmentsMutation);
+  const [cloneContainers] = useMutation(cloneContainersMutation);
   const {
     targets,
     clone: { isOpen, isProcessing, source },
@@ -74,6 +77,11 @@ export default function CloneEntities({ onSuccess }: Props) {
     shipmentIds.map(id => mapping.entities?.shipments?.[id]?.ownedBy).filter(Boolean)
   );
   const totalShipments = shipmentIds.length;
+  const containerIds = targetedIds(targets, CONTAINER);
+  const hasContainerPermissions = useAllHasPermission(
+    containerIds.map(id => mapping.entities?.containers?.[id]?.ownedBy).filter(Boolean)
+  );
+  const totalContainers = containerIds.length;
 
   const hasPermission = (permission: string | Array<string>) => {
     switch (source) {
@@ -85,6 +93,8 @@ export default function CloneEntities({ onSuccess }: Props) {
         return hasBatchPermissions(permission);
       case SHIPMENT:
         return hasShipmentPermissions(permission);
+      case CONTAINER:
+        return hasContainerPermissions(permission);
       default:
         return false;
     }
@@ -100,6 +110,8 @@ export default function CloneEntities({ onSuccess }: Props) {
         return hasPermission([BATCH_CREATE]);
       case SHIPMENT:
         return hasPermission([SHIPMENT_CREATE]);
+      case CONTAINER:
+        return hasPermission([CONTAINER_CREATE]);
       default:
         return false;
     }
@@ -120,6 +132,7 @@ export default function CloneEntities({ onSuccess }: Props) {
       const newOrderItemPositions = {};
       const processOrderIds = [];
       const processShipmentIds = [];
+      const processContainerIds = [];
       if (totalBatches && source === BATCH) {
         const batches = [];
         batchIds.forEach(batchId => {
@@ -303,10 +316,6 @@ export default function CloneEntities({ onSuccess }: Props) {
                 .filter(batchId => targets.includes(`${BATCH}-${batchId}`))
                 .map(id => ({
                   id,
-                  // TODO: confirm with Maxime
-                  ...(mapping.entities?.shipments?.[shipmentId]?.batches?.[id]?.container
-                    ? { containerId: null }
-                    : {}),
                 })),
               containers: (mapping.entities?.shipments?.[shipmentId]?.containers ?? [])
                 .filter(containerId => targets.includes(`${CONTAINER}-${containerId}`))
@@ -329,6 +338,42 @@ export default function CloneEntities({ onSuccess }: Props) {
           cloneShipments({
             variables: {
               shipments,
+            },
+          })
+        );
+      }
+      if (totalContainers && source === CONTAINER) {
+        const containers = [];
+        containerIds.forEach(containerId => {
+          sources.push({
+            type: CONTAINER,
+            id: containerId,
+          });
+
+          // clone container along with batches has been targeted
+          const shipmentId = mapping.entities?.containers?.[containerId]?.shipment;
+          if (!shipmentIds.includes(shipmentId)) shipmentIds.push(shipmentId);
+          processContainerIds.push(containerId);
+          containers.push({
+            id: containerId,
+            input: {
+              no: `[cloned][${Date.now()}] ${mapping.entities?.containers?.[containerId]?.no}`,
+              batches: Object.keys(mapping.entities?.batches ?? {})
+                .filter(
+                  batchId =>
+                    targets.includes(`${BATCH}-${batchId}`) &&
+                    mapping.entities?.batches?.[batchId]?.container === containerId
+                )
+                .map(id => ({
+                  id,
+                })),
+            },
+          });
+        });
+        actions.push(
+          cloneContainers({
+            variables: {
+              containers,
             },
           })
         );
@@ -359,9 +404,11 @@ export default function CloneEntities({ onSuccess }: Props) {
   }, [
     batchIds,
     cloneBatches,
+    cloneContainers,
     cloneOrderItems,
     cloneOrders,
     cloneShipments,
+    containerIds,
     dispatch,
     itemIds,
     mapping.entities,
@@ -372,6 +419,7 @@ export default function CloneEntities({ onSuccess }: Props) {
     source,
     targets,
     totalBatches,
+    totalContainers,
     totalOrderItems,
     totalOrders,
     totalShipments,
@@ -386,6 +434,7 @@ export default function CloneEntities({ onSuccess }: Props) {
   const numOfItems = <FormattedNumber value={totalOrderItems} />;
   const numOfBatches = <FormattedNumber value={totalBatches} />;
   const numOfShipments = <FormattedNumber value={totalShipments} />;
+  const numOfContainers = <FormattedNumber value={totalContainers} />;
 
   switch (source) {
     case ORDER:
@@ -593,6 +642,61 @@ export default function CloneEntities({ onSuccess }: Props) {
               containersLabel: <ContainersLabelIcon />,
               batchesLabel: <BatchesLabelIcon />,
               shipmentsLabel: totalShipments > 1 ? <ShipmentsLabelIcon /> : <ShipmentLabelIcon />,
+            }}
+          />
+        );
+      }
+      break;
+    case CONTAINER:
+      if (noPermission) {
+        dialogMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.noContainerPermission"
+            defaultMessage="At least one {containerLabel}, or {batchLabel} selected does not allow you to clone."
+            values={{
+              containerLabel: <ContainerLabelIcon />,
+              batchLabel: <BatchLabelIcon />,
+            }}
+          />
+        );
+        dialogSubMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.actions.tryAgain"
+            defaultMessage="Please reselect and try again."
+          />
+        );
+      } else if (isProcessing) {
+        dialogMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.cloningContainers"
+            defaultMessage="Cloning {numOfContainers} {containersLabel} ..."
+            values={{
+              numOfContainers,
+              containersLabel:
+                totalContainers > 1 ? <ContainersLabelIcon /> : <ContainerLabelIcon />,
+            }}
+          />
+        );
+      } else {
+        dialogMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.containerMessage1"
+            defaultMessage="Are you sure you want to clone {numOfContainers} {containersLabel} that you have selected?"
+            values={{
+              numOfContainers,
+              containersLabel:
+                totalContainers > 1 ? <ContainersLabelIcon /> : <ContainerLabelIcon />,
+            }}
+          />
+        );
+        dialogSubMessage = (
+          <FormattedMessage
+            id="modules.RelationMap.clone.containerMessage2"
+            defaultMessage="Any selected {batchesLabel} will also be cloned within the cloned {containersLabel}"
+            values={{
+              batchesLabel: <BatchesLabelIcon />,
+              containersLabel:
+                totalContainers > 1 ? <ContainersLabelIcon /> : <ContainerLabelIcon />,
             }}
           />
         );

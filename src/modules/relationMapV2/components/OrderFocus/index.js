@@ -19,7 +19,7 @@ import {
   SortAndFilter,
   ClientSorts,
   ExpandRows,
-  LoadMoreExpanded,
+  GlobalExpanded,
   FocusedView,
 } from 'modules/relationMapV2/store';
 import { loadMore, findOrderIdByItem, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
@@ -70,7 +70,7 @@ export default function OrderFocus() {
     id: '',
   });
   const { expandRows, setExpandRows } = ExpandRows.useContainer();
-  const { loadMoreExpanded } = LoadMoreExpanded.useContainer();
+  const { expandAll } = GlobalExpanded.useContainer();
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const { initHits } = Hits.useContainer();
@@ -213,12 +213,7 @@ export default function OrderFocus() {
                         {
                           fetchMore,
                           data,
-                          onSuccess: fetchMoreResult => {
-                            if (loadMoreExpanded)
-                              setExpandRows([
-                                ...expandRows,
-                                ...(fetchMoreResult?.orders?.nodes ?? []).map(order => order?.id),
-                              ]);
+                          onSuccess: () => {
                             setIsLoadingMore(false);
                           },
                         },
@@ -226,6 +221,10 @@ export default function OrderFocus() {
                       );
                     };
               const entities = normalize({ orders });
+              const expandAllRows = orders.map(order => order?.id);
+              if (expandAll && !isEquals(expandAllRows, expandRows)) {
+                setExpandRows(expandAllRows);
+              }
               initMapping({
                 orders,
                 entities,

@@ -13,13 +13,11 @@ type Props = OptionalProps & {
 
 const FormattedNumber = ({ value, suffix, prefix, ...rest }: Props) => (
   <>
-    {prefix ? `${prefix} ` : ''}
-    {value === null || value === undefined || value === '' ? (
-      ''
-    ) : (
+    {prefix && `${prefix} `}
+    {value !== null && value !== undefined && value !== '' && (
       <FormattedNumberIntl value={value} {...rest} />
     )}
-    {suffix ? ` ${suffix}` : ''}
+    {suffix && ` ${suffix}`}
   </>
 );
 

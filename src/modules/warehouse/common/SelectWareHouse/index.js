@@ -1,27 +1,25 @@
 // @flow
 import * as React from 'react';
-import { injectIntl } from 'react-intl';
-import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ObjectValue } from 'react-values';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
+import useFilterSort from 'hooks/useFilterSort';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
-import FilterToolBar from 'components/common/FilterToolBar';
-import useFilter from 'hooks/useFilter';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import WarehouseGridView from 'modules/warehouse/list/WarehouseGridView';
 import { WarehouseCard } from 'components/Cards';
+import {
+  EntityIcon,
+  Filter,
+  Search,
+  Sort,
+  WarehouseFilterConfig,
+  WarehouseSortConfig,
+} from 'components/NavBar';
 import { warehouseListQuery } from 'modules/warehouse/list/query';
-import messages from 'modules/warehouse/messages';
-import { warehousesDefaultQueryVariables } from 'modules/warehouse/constants';
+import WarehouseGridView from 'modules/warehouse/list/WarehouseGridView';
 
-type OptionalProps = {
-  cacheKey: string,
-};
-
-type Props = OptionalProps & {
-  intl: IntlShape,
+type Props = {
   selected?: ?{
     id: string,
     name: string,
@@ -31,22 +29,19 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  cacheKey: 'SelectWareHouse',
   selected: {
     id: '',
     name: '',
   },
 };
 
-const SelectWareHouse = ({ intl, cacheKey, selected, onCancel, onSelect }: Props) => {
-  const sortFields = [
-    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-  ];
-  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
-    warehousesDefaultQueryVariables,
-    cacheKey
+const SelectWareHouse = ({ selected, onCancel, onSelect }: Props) => {
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    { query: '', archived: false },
+    { updatedAt: 'DESCENDING' }
   );
+
+  const queryVariables = { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 10 };
 
   return (
     <Query query={warehouseListQuery} variables={queryVariables} fetchPolicy="network-only">
@@ -63,13 +58,17 @@ const SelectWareHouse = ({ intl, cacheKey, selected, onCancel, onSelect }: Props
             {({ value, set }) => (
               <SlideViewLayout>
                 <SlideViewNavBar>
-                  <FilterToolBar
-                    icon="WAREHOUSE"
-                    sortFields={sortFields}
-                    filtersAndSort={filterAndSort}
-                    onChange={onChangeFilter}
-                    canSearch
+                  <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
+
+                  <Filter
+                    config={WarehouseFilterConfig}
+                    filterBy={filterBy}
+                    onChange={setFilterBy}
+                    staticFilters={['archived']}
                   />
+                  <Search query={query} onChange={setQuery} />
+                  <Sort config={WarehouseSortConfig} sortBy={sortBy} onChange={setSortBy} />
+
                   <CancelButton onClick={onCancel} />
                   <SaveButton
                     disabled={isEquals(value, selected)}
@@ -108,6 +107,7 @@ const SelectWareHouse = ({ intl, cacheKey, selected, onCancel, onSelect }: Props
     </Query>
   );
 };
+
 SelectWareHouse.defaultProps = defaultProps;
 
-export default injectIntl(SelectWareHouse);
+export default SelectWareHouse;

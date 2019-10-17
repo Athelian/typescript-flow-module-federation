@@ -511,7 +511,6 @@ function ContainersArea({
                                       >
                                         {isOpenSelectWarehouse && (
                                           <SelectWareHouse
-                                            cacheKey="shipmentCargoSectionSelectWarehouseQuery"
                                             selected={container.warehouse}
                                             onCancel={() => toggleSelectWarehouse(false)}
                                             onSelect={newValue => {

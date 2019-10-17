@@ -3,12 +3,12 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
-import { LoadMoreExpanded, ExpandRows, Entities, FocusedView } from 'modules/relationMapV2/store';
+import { GlobalExpanded, ExpandRows, Entities, FocusedView } from 'modules/relationMapV2/store';
 import { ExpandButtonStyle } from './style';
 
 export default function ExpandButton() {
   const { selectors } = FocusedView.useContainer();
-  const { loadMoreExpanded, setLoadMoreExpanded } = LoadMoreExpanded.useContainer();
+  const { expandAll, setExpandAll } = GlobalExpanded.useContainer();
   const { expandRows, setExpandRows } = ExpandRows.useContainer();
   const { mapping } = Entities.useContainer();
   const orderIds = Object.keys(mapping.entities?.orders ?? {}).filter(
@@ -41,11 +41,11 @@ export default function ExpandButton() {
             if (!allIsExpanded) {
               setExpandRows(selectors.isShipmentFocus ? shipmentIds : orderIds);
             }
-            if (!loadMoreExpanded) {
-              setLoadMoreExpanded(true);
+            if (!expandAll) {
+              setExpandAll(true);
             }
           }}
-          className={ExpandButtonStyle(false, loadMoreExpanded)}
+          className={ExpandButtonStyle(false, expandAll)}
           type="button"
         >
           <Icon icon="EXPAND" />
@@ -64,11 +64,11 @@ export default function ExpandButton() {
         <button
           onClick={() => {
             setExpandRows([]);
-            if (loadMoreExpanded) {
-              setLoadMoreExpanded(false);
+            if (expandAll) {
+              setExpandAll(false);
             }
           }}
-          className={ExpandButtonStyle(true, !loadMoreExpanded)}
+          className={ExpandButtonStyle(true, !expandAll)}
           type="button"
         >
           <Icon icon="COMPRESS" />

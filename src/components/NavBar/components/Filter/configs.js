@@ -785,6 +785,30 @@ export const TaskFilterConfig: Array<FilterConfig> = [
   },
 ];
 
+export const TaskTemplateFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'TASK TEMPLATE',
+    field: 'createdAt',
+    type: 'date_range',
+    message: taskMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'TASK TEMPLATE',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: taskMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'TASK TEMPLATE',
+    field: 'entityTypes',
+    type: 'task_template_entity_types',
+    message: taskMessages.entity,
+    defaultValue: [],
+  },
+];
+
 export const TagFilterConfig: Array<FilterConfig> = [
   {
     entity: 'TAG',

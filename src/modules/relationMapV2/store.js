@@ -676,16 +676,16 @@ function useExpandRow() {
 
 export const ExpandRows = createContainer(useExpandRow);
 
-function useLoadMoreExpanded() {
-  const [loadMoreExpanded, setLoadMoreExpanded] = useState(false);
+function useGlobalExpanded() {
+  const [expandAll, setExpandAll] = useState(false);
 
   return {
-    loadMoreExpanded,
-    setLoadMoreExpanded,
+    expandAll,
+    setExpandAll,
   };
 }
 
-export const LoadMoreExpanded = createContainer(useLoadMoreExpanded);
+export const GlobalExpanded = createContainer(useGlobalExpanded);
 
 const initMoveEntity = {
   from: {

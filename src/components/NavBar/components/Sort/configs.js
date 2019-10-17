@@ -138,6 +138,12 @@ export const TaskSortConfig: Array<SortConfig> = [
   { message: taskMessages.entity, field: 'entity' },
 ];
 
+export const TaskTemplateSortConfig: Array<SortConfig> = [
+  { message: taskMessages.updatedAt, field: 'updatedAt' },
+  { message: taskMessages.createdAt, field: 'createdAt' },
+  { message: taskMessages.name, field: 'name' },
+];
+
 export const TagSortConfig: Array<SortConfig> = [
   { message: tagMessages.updatedAt, field: 'updatedAt' },
   { message: tagMessages.createdAt, field: 'createdAt' },

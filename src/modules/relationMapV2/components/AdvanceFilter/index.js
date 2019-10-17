@@ -1,14 +1,18 @@
 // @flow
 import * as React from 'react';
 import Filter from 'components/NavBar/components/Filter';
-import { OrderFilterConfig } from 'components/NavBar/components/Filter/configs';
+import {
+  OrderFilterConfig,
+  ShipmentFilterConfig,
+} from 'components/NavBar/components/Filter/configs';
 import { SearchInput } from 'components/NavBar';
-import { SortAndFilter } from 'modules/relationMapV2/store';
+import { SortAndFilter, FocusedView } from 'modules/relationMapV2/store';
 import Icon from 'components/Icon';
 import MatchesEntities from './components/MatchesEntities';
 import { FilterWrapperStyle, BlueOutlineWrapperStyle, ClearTotalButtonStyle } from './style';
 
 export default function AdvanceFilter() {
+  const { selectors } = FocusedView.useContainer();
   const { filterAndSort, onChangeFilter } = SortAndFilter.useContainer();
   const {
     filter: { query, ...filters },
@@ -19,7 +23,7 @@ export default function AdvanceFilter() {
     <div className={FilterWrapperStyle(hasFilter)}>
       <div className={BlueOutlineWrapperStyle(hasFilter)}>
         <Filter
-          config={OrderFilterConfig}
+          config={selectors.isOrderFocus ? OrderFilterConfig : ShipmentFilterConfig}
           filterBy={filters}
           onChange={filter =>
             onChangeFilter({

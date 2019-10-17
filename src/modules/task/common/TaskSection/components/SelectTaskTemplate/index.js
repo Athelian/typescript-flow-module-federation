@@ -1,55 +1,37 @@
 // @flow
 import * as React from 'react';
-import { injectIntl } from 'react-intl';
-import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ObjectValue } from 'react-values';
 import { getByPathWithDefault } from 'utils/fp';
-import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
+import useFilterSort from 'hooks/useFilterSort';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
-import FilterToolBar from 'components/common/FilterToolBar';
 import { ApplyButton, CancelButton } from 'components/Buttons';
-import TaskTemplateGridView from 'modules/taskTemplate/list/TaskTemplateGridView';
 import { TemplateCard } from 'components/Cards';
+import {
+  EntityIcon,
+  Filter,
+  TaskTemplateFilterConfig,
+  TaskTemplateSortConfig,
+  Search,
+  Sort,
+} from 'components/NavBar';
+import TaskTemplateGridView from 'modules/taskTemplate/list/TaskTemplateGridView';
 import { taskTemplateListQuery } from 'modules/taskTemplate/list/query';
-import messages from 'modules/task/messages';
 
-type OptionalProps = {
-  cacheKey: string,
-};
-
-type Props = OptionalProps & {
-  intl: IntlShape,
+type Props = {
   entityType: string,
   onSelect: (item: Object) => void,
   onCancel: Function,
 };
 
-const defaultProps = {
-  cacheKey: 'SelectTaskTemplate',
-};
+const SelectTaskTemplate = ({ entityType, onCancel, onSelect }: Props) => {
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    { query: '', entityTypes: [entityType] },
+    { updatedAt: 'DESCENDING' }
+  );
 
-const SelectTaskTemplate = ({ intl, cacheKey, entityType, onCancel, onSelect }: Props) => {
-  const sortFields = [
-    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-    { title: intl.formatMessage(messages.name), value: 'name' },
-  ];
-
-  const initialFilter = {
-    filter: {
-      entityTypes: [entityType],
-    },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-    page: 1,
-    perPage: 10,
-  };
-
-  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(initialFilter, cacheKey);
+  const queryVariables = { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 10 };
 
   return (
     <Query
@@ -71,13 +53,17 @@ const SelectTaskTemplate = ({ intl, cacheKey, entityType, onCancel, onSelect }: 
             {({ value, set }) => (
               <SlideViewLayout>
                 <SlideViewNavBar>
-                  <FilterToolBar
-                    icon="TEMPLATE"
-                    sortFields={sortFields}
-                    filtersAndSort={filterAndSort}
-                    onChange={onChangeFilter}
-                    canSearch
+                  <EntityIcon icon="TEMPLATE" color="TEMPLATE" />
+
+                  <Filter
+                    config={TaskTemplateFilterConfig}
+                    filterBy={filterBy}
+                    onChange={setFilterBy}
+                    staticFilters={['entityTypes']}
                   />
+                  <Search query={query} onChange={setQuery} />
+                  <Sort config={TaskTemplateSortConfig} sortBy={sortBy} onChange={setSortBy} />
+
                   <CancelButton onClick={onCancel} />
                   <ApplyButton
                     disabled={!value}
@@ -126,6 +112,4 @@ const SelectTaskTemplate = ({ intl, cacheKey, entityType, onCancel, onSelect }: 
   );
 };
 
-SelectTaskTemplate.defaultProps = defaultProps;
-
-export default injectIntl(SelectTaskTemplate);
+export default SelectTaskTemplate;
