@@ -5,23 +5,6 @@ import Dialog from 'components/Dialog';
 import { FormContainer } from 'modules/form';
 import { DocumentsInput as DocumentsSection } from 'components/Form';
 import type { FilePayload } from 'generated/graphql';
-import {
-  ORDER_SET_DOCUMENTS,
-  ORDER_DOWNLOAD_DOCUMENTS,
-  ORDER_DOCUMENT_DELETE,
-  ORDER_DOCUMENT_CREATE,
-  ORDER_DOCUMENT_SET_MEMO,
-  ORDER_DOCUMENT_SET_STATUS,
-  ORDER_DOCUMENT_SET_TYPE,
-} from 'modules/permission/constants/order';
-import {
-  DOCUMENT_CREATE,
-  DOCUMENT_DELETE,
-  DOCUMENT_SET_MEMO,
-  DOCUMENT_SET_STATUS,
-  DOCUMENT_SET_TYPE,
-  DOCUMENT_UPDATE,
-} from 'modules/permission/constants/file';
 import type { InputProps } from '../../types';
 import DocumentsContainer from './container';
 
@@ -38,8 +21,12 @@ const documentsContainer = new DocumentsContainer();
 
 const DocumentsInput = ({ value, onChange, onBlur, focus }: InputProps<Array<FilePayload>>) => {
   // TODO: Maxime said to do dummy permission until he changes it
-  const hasPermission = () => true;
-  const canSetDocuments = hasPermission(ORDER_SET_DOCUMENTS);
+  const canDelete = true;
+  const canUpload = true;
+  const canUpdateStatus = true;
+  const canUpdateType = true;
+  const canUpdateMemo = true;
+  const canDownload = true;
 
   const { state, setFieldValue, initDetailValues } = documentsContainer;
 
@@ -63,20 +50,14 @@ const DocumentsInput = ({ value, onChange, onBlur, focus }: InputProps<Array<Fil
         }}
       >
         <DocumentsSection
-          removable={canSetDocuments || hasPermission([ORDER_DOCUMENT_DELETE, DOCUMENT_DELETE])}
-          uploadable={canSetDocuments || hasPermission([ORDER_DOCUMENT_CREATE, DOCUMENT_CREATE])}
+          removable={canDelete}
+          uploadable={canUpload}
           editable={{
-            status:
-              canSetDocuments ||
-              hasPermission([DOCUMENT_SET_STATUS, ORDER_DOCUMENT_SET_STATUS, DOCUMENT_UPDATE]),
-            type:
-              canSetDocuments ||
-              hasPermission([DOCUMENT_SET_TYPE, ORDER_DOCUMENT_SET_TYPE, DOCUMENT_UPDATE]),
-            memo:
-              canSetDocuments ||
-              hasPermission([DOCUMENT_SET_MEMO, ORDER_DOCUMENT_SET_MEMO, DOCUMENT_UPDATE]),
+            status: canUpdateStatus,
+            type: canUpdateType,
+            memo: canUpdateMemo,
           }}
-          downloadable={hasPermission(ORDER_DOWNLOAD_DOCUMENTS)}
+          downloadable={canDownload}
           files={state.files}
           onSave={setFieldValue}
           entity="Order"
