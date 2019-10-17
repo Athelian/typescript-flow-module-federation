@@ -54,8 +54,10 @@ const CellInput = ({
   }, [value, setDirtyValue]);
 
   const handleChange = newValue => {
+    console.warn(newValue);
     if (newValue !== dirtyValue) {
       setDirtyValue(newValue);
+      console.log('hello');
 
       if (!inputFocus) {
         onUpdate(newValue);
@@ -67,6 +69,7 @@ const CellInput = ({
     onBlur();
 
     if (dirtyValue === value) {
+      console.warn(value, dirtyValue);
       return;
     }
 
