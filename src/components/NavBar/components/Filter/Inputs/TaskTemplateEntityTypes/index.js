@@ -11,15 +11,15 @@ type Props = {
   onChange: (Array<string>) => void,
 };
 
-const Types = [
-  'Product',
-  'ProductProvider',
-  'Order',
-  'OrderItem',
-  'Batch',
-  'Shipment',
-  'Container',
-];
+const Types = {
+  Product: 'modules.TaskTemplates.product',
+  ProductProvider: 'modules.TaskTemplates.endProduct',
+  Order: 'modules.TaskTemplates.order',
+  OrderItem: 'modules.TaskTemplates.orderItem',
+  Batch: 'modules.TaskTemplates.batch',
+  Shipment: 'modules.TaskTemplates.shipment',
+  Container: 'modules.TaskTemplates.container',
+};
 
 const TaskTemplateEntityTypes = ({ value, onChange, readonly }: Props) => {
   const handleToggle = (type: string) => () => {
@@ -37,14 +37,16 @@ const TaskTemplateEntityTypes = ({ value, onChange, readonly }: Props) => {
       </Label>
 
       <div>
-        {Types.map(type => (
+        {Object.entries(Types).map(([type, messageId]) => (
           <div key={type} className={CheckboxWrapperStyle}>
             <CheckboxInput
               checked={value.includes(type)}
               onToggle={handleToggle(type)}
               disabled={readonly}
             />
-            <span>{type}</span>
+            <span>
+              <FormattedMessage id={messageId} defaultMessage={type} />
+            </span>
           </div>
         ))}
       </div>

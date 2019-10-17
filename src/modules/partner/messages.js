@@ -38,6 +38,10 @@ export default defineMessages({
     id: 'modules.Partners.type.supplier',
     defaultMessage: 'Supplier',
   },
+  warehouser: {
+    id: 'modules.Partners.type.warehouser',
+    defaultMessage: 'Warehouser',
+  },
   tooltipName: {
     id: 'modules.Partners.tooltip.name',
     defaultMessage: '[Name] {name}',

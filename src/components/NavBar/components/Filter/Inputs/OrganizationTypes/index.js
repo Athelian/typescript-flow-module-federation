@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { CheckboxInput, Label } from 'components/Form';
+import partnerMessages from 'modules/partner/messages';
 import messages from '../../messages';
 import { CheckboxWrapperStyle } from './style';
 
@@ -11,7 +12,13 @@ type Props = {
   onChange: (Array<string>) => void,
 };
 
-const Types = ['Importer', 'Exporter', 'Supplier', 'Forwarder', 'Warehouser'];
+const Types = {
+  Importer: partnerMessages.importer,
+  Exporter: partnerMessages.exporter,
+  Supplier: partnerMessages.supplier,
+  Forwarder: partnerMessages.forwarder,
+  Warehouser: partnerMessages.warehouser,
+};
 
 const OrganizationTypes = ({ value, onChange, readonly }: Props) => {
   const handleToggle = (type: string) => () => {
@@ -29,14 +36,16 @@ const OrganizationTypes = ({ value, onChange, readonly }: Props) => {
       </Label>
 
       <div>
-        {Types.map(type => (
+        {Object.entries(Types).map(([type, message]) => (
           <div key={type} className={CheckboxWrapperStyle}>
             <CheckboxInput
               checked={value.includes(type)}
               onToggle={handleToggle(type)}
               disabled={readonly}
             />
-            <span>{type}</span>
+            <span>
+              <FormattedMessage {...message} />
+            </span>
           </div>
         ))}
       </div>
