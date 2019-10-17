@@ -36,7 +36,7 @@ import {
 } from './style';
 
 type Props = {
-  onSuccess: (orderIds: Array<string>) => void,
+  onSuccess: (orderIds: Array<string>, shipmentIds: Array<string>) => void,
 };
 
 export default function MoveBatch({ onSuccess }: Props) {

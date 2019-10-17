@@ -23,7 +23,7 @@ import { moveBatchesToOrder } from './mutation';
 
 type Props = {
   intl: IntlShape,
-  onSuccess: (orderIds: Array<string>) => void,
+  onSuccess: (orderIds: Array<string>, shipmentIds: Array<string>) => void,
 };
 
 function OrderRenderer({
@@ -142,11 +142,12 @@ function SelectOrderToMove({ intl, onSuccess }: Props) {
       payload: {},
     });
     moveBatchesToOrder({
-      order: selected,
       batchIds,
+      viewer: state.viewer,
+      order: selected,
       entities: mapping.entities,
     })
-      .then(onSuccess)
+      .then(result => onSuccess(result.orderIds, result.shipmentIds))
       .catch(onCancel);
   };
 

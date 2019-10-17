@@ -24,7 +24,7 @@ import { moveBatchesToShipment } from './mutation';
 
 type Props = {
   intl: IntlShape,
-  onSuccess: (orderIds: Array<string>) => void,
+  onSuccess: (orderIds: Array<string>, shipmentIds: Array<string>) => void,
   onNewContainer: (shipment: Object) => void,
 };
 
@@ -151,12 +151,13 @@ function SelectShipmentToMove({ intl, onSuccess, onNewContainer }: Props) {
         payload: {},
       });
       moveBatchesToShipment({
-        shipment: selected,
         batchIds,
         orderIds,
+        viewer: state.viewer,
+        shipment: selected,
         entities: mapping.entities,
       })
-        .then(onSuccess)
+        .then(result => onSuccess(result.orderIds, result.shipmentIds))
         .catch(onCancel);
     }
   };

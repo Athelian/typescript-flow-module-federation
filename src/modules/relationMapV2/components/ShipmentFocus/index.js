@@ -430,22 +430,22 @@ export default function ShipmentFocus() {
                     }}
                   />
                   <MoveBatch
-                    onSuccess={orderIds => {
+                    onSuccess={(_, shipmentIds) => {
                       console.warn({
-                        orderIds,
+                        shipmentIds,
                       });
-                      // queryOrdersDetail(orderIds);
+                      queryShipmentsDetail(shipmentIds);
                       // // scroll to first orderId if that is exist on UI
-                      // const orderId = orderIds[0];
-                      // const indexPosition = ordersData.findIndex((row: Array<any>) => {
-                      //   const [orderCell, , , ,] = row;
-                      //   return Number(orderCell.cell?.data?.id) === Number(orderId);
-                      // });
-                      // scrollToRow({
-                      //   position: indexPosition,
-                      //   id: orderId,
-                      //   type: ORDER,
-                      // });
+                      const shipmentId = shipmentIds[0];
+                      const indexPosition = shipmentsData.findIndex((row: Array<any>) => {
+                        const [shipmentCell, , , ,] = row;
+                        return Number(shipmentCell.cell?.data?.id) === Number(shipmentId);
+                      });
+                      scrollToRow({
+                        position: indexPosition,
+                        id: shipmentId,
+                        type: SHIPMENT,
+                      });
                       window.requestIdleCallback(
                         () => {
                           dispatch({

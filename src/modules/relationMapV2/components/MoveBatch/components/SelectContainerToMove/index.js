@@ -6,7 +6,6 @@ import { Query } from 'react-apollo';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { useEntityHasPermissions } from 'contexts/Permissions';
-
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
@@ -25,7 +24,7 @@ import { moveBatchesToContainer } from './mutation';
 
 type Props = {
   intl: IntlShape,
-  onSuccess: (orderIds: Array<string>) => void,
+  onSuccess: (orderIds: Array<string>, shipmentIds: Array<string>) => void,
 };
 
 function ContainerRenderer({
@@ -147,12 +146,13 @@ function SelectContainerToMove({ intl, onSuccess }: Props) {
       payload: {},
     });
     moveBatchesToContainer({
-      container: selected,
       batchIds,
       orderIds,
+      viewer: state.viewer,
+      container: selected,
       entities: mapping.entities,
     })
-      .then(onSuccess)
+      .then(result => onSuccess(result.orderIds, result.shipmentIds))
       .catch(onCancel);
   };
 
