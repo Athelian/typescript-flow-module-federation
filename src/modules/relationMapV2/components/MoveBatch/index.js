@@ -42,7 +42,7 @@ type Props = {
 export default function MoveBatch({ onSuccess }: Props) {
   const { isExporter } = useUser();
   const { mapping } = Entities.useContainer();
-  const { dispatch, state } = FocusedView.useContainer();
+  const { dispatch, state, selectors } = FocusedView.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
   const orderIds = [
     ...new Set(
@@ -263,294 +263,58 @@ export default function MoveBatch({ onSuccess }: Props) {
         dialogSubMessage={dialogSubMessage}
       >
         <div className={BatchMoveButtonsWrapperStyle}>
-          <div className={MoveWrapperStyle}>
-            <div className={TitleDescriptionWrapperStyle}>
-              <Label height="30px">
-                <FormattedMessage
-                  id="modules.RelationMap.move.moveToOrder"
-                  defaultMessage="Move to Order"
-                />
-              </Label>
-              <div className={DescriptionStyle}>
-                <FormattedMessage
-                  id="modules.RelationMap.move.moveToOrderDescription"
-                  defaultMessage="Move {batchesLabel} to an existing {orderLabel}"
-                  values={{
-                    orderLabel: <OrderLabelIcon />,
-                    batchesLabel: <BatchesLabelIcon />,
-                  }}
-                />
-              </div>
-            </div>
+          {selectors.isShipmentFocus ? (
+            <>
+              <div className={MoveWrapperStyle}>
+                <div className={TitleDescriptionWrapperStyle}>
+                  <Label height="30px">
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToShipment"
+                      defaultMessage="Move to Shipment"
+                    />
+                  </Label>
 
-            {!hasPermissionMoveToExistOrder() ? (
-              <Tooltip
-                message={
-                  !isSamePartners() ? (
+                  <div className={DescriptionStyle}>
                     <FormattedMessage
-                      id="modules.RelationMap.move.moveToOrderSamePartnersTooltip"
-                      defaultMessage="At least one selected Batch has a different Importer or Exporter from the others. You can only move Batches to a different Order if they all have the same Importer and Exporter."
+                      id="modules.RelationMap.move.moveToShipmentDescription"
+                      defaultMessage="Move {batchesLabel} to an existing {shipmentLabel}"
+                      values={{
+                        shipmentLabel: <ShipmentLabelIcon />,
+                        batchesLabel: <BatchesLabelIcon />,
+                      }}
                     />
-                  ) : (
-                    <FormattedMessage
-                      id="modules.RelationMap.move.noPermissionTooltip"
-                      defaultMessage="At least one selected Batch does not give you permission to move it."
-                    />
-                  )
-                }
-              >
-                <div>
-                  <BaseButton
-                    label={
-                      <FormattedMessage
-                        id="modules.RelationMap.label.moveTo"
-                        defaultMessage="MOVE TO"
-                      />
-                    }
-                    icon="ORDER"
-                    disabled
-                  />
+                  </div>
                 </div>
-              </Tooltip>
-            ) : (
-              <BaseButton
-                label={
-                  <FormattedMessage
-                    id="modules.RelationMap.label.moveTo"
-                    defaultMessage="MOVE TO"
-                  />
-                }
-                icon="ORDER"
-                onClick={() => onConfirm('existOrder')}
-              />
-            )}
-          </div>
-
-          <div className={MoveWrapperStyle}>
-            <div className={TitleDescriptionWrapperStyle}>
-              <Label height="30px">
-                <FormattedMessage
-                  id="modules.RelationMap.move.moveToNewOrder"
-                  defaultMessage="Move to New Order"
-                />
-              </Label>
-              <div className={DescriptionStyle}>
-                <FormattedMessage
-                  id="modules.RelationMap.move.moveToNewOrderDescription"
-                  defaultMessage="Move {batchesLabel} to a new {orderLabel}"
-                  values={{
-                    orderLabel: <OrderLabelIcon />,
-                    batchesLabel: <BatchesLabelIcon />,
-                  }}
-                />
-              </div>
-            </div>
-            {!hasPermissionMoveToNewOrder() ? (
-              <Tooltip
-                message={
-                  !isSamePartners() ? (
-                    <FormattedMessage
-                      id="modules.RelationMap.move.moveToOrderSamePartnersTooltip"
-                      defaultMessage="At least one selected Batch has a different Importer or Exporter from the others. You can only move Batches to a different Order if they all have the same Importer and Exporter."
-                    />
-                  ) : (
-                    <FormattedMessage
-                      id="modules.RelationMap.move.noPermissionTooltip"
-                      defaultMessage="At least one selected Batch does not give you permission to move it."
-                    />
-                  )
-                }
-              >
-                <div>
-                  <BaseButton
-                    label={
-                      <FormattedMessage
-                        id="modules.RelationMap.label.moveToNew"
-                        defaultMessage="MOVE TO NEW"
-                      />
+                {!hasPermissionMoveToExistShipment() ? (
+                  <Tooltip
+                    message={
+                      !isSameImporter() ? (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.moveToShipmentSameImportersTooltip"
+                          defaultMessage="At least one selected Batch has a different Importer from the others. You can only move Batches to a different Shipment if they all have the same Importer."
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.noPermissionTooltip"
+                          defaultMessage="At least one selected Batch does not give you permission to move it."
+                        />
+                      )
                     }
-                    icon="ORDER"
-                    disabled
-                  />
-                </div>
-              </Tooltip>
-            ) : (
-              <BaseButton
-                label={
-                  <FormattedMessage
-                    id="modules.RelationMap.label.moveToNew"
-                    defaultMessage="MOVE TO NEW"
-                  />
-                }
-                icon="ORDER"
-                onClick={() => onConfirm('newOrder')}
-              />
-            )}
-          </div>
-
-          <div className={MoveWrapperStyle}>
-            <div className={TitleDescriptionWrapperStyle}>
-              <Label height="30px">
-                <FormattedMessage
-                  id="modules.RelationMap.move.moveToContainer"
-                  defaultMessage="Move to Container"
-                />
-              </Label>
-              <div className={DescriptionStyle}>
-                <FormattedMessage
-                  id="modules.RelationMap.move.moveToContainerDescription"
-                  defaultMessage="Move {batchesLabel} to an existing {containerLabel}"
-                  values={{
-                    containerLabel: <ContainerLabelIcon />,
-                    batchesLabel: <BatchesLabelIcon />,
-                  }}
-                />
-              </div>
-            </div>
-            {!hasPermissionMoveToExistContainer() ? (
-              <Tooltip
-                message={
-                  !isSameImporter() ? (
-                    <FormattedMessage
-                      id="modules.RelationMap.move.moveToContainerSameImportersTooltip"
-                      defaultMessage="At least one selected Batch has a different Importer from the others. You can only move Batches to a different Container if they all have the same Importer."
-                    />
-                  ) : (
-                    <FormattedMessage
-                      id="modules.RelationMap.move.noPermissionTooltip"
-                      defaultMessage="At least one selected Batch does not give you permission to move it."
-                    />
-                  )
-                }
-              >
-                <div>
-                  <BaseButton
-                    label={
-                      <FormattedMessage
-                        id="modules.RelationMap.label.moveTo"
-                        defaultMessage="MOVE TO"
+                  >
+                    <div>
+                      <BaseButton
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMap.label.moveTo"
+                            defaultMessage="MOVE TO"
+                          />
+                        }
+                        icon="SHIPMENT"
+                        disabled
                       />
-                    }
-                    icon="CONTAINER"
-                    disabled
-                  />
-                </div>
-              </Tooltip>
-            ) : (
-              <BaseButton
-                label={
-                  <FormattedMessage
-                    id="modules.RelationMap.label.moveTo"
-                    defaultMessage="MOVE TO"
-                  />
-                }
-                icon="CONTAINER"
-                onClick={() => onConfirm('existContainer')}
-              />
-            )}
-          </div>
-
-          <div className={MoveWrapperStyle}>
-            <div className={TitleDescriptionWrapperStyle}>
-              <Label height="30px">
-                <FormattedMessage
-                  id="modules.RelationMap.move.moveToNewContainer"
-                  defaultMessage="Move to New Container"
-                />
-              </Label>
-
-              <div className={DescriptionStyle}>
-                <FormattedMessage
-                  id="modules.RelationMap.move.moveToNewContainerDescription"
-                  defaultMessage="Move {batchesLabel} to a new {containerLabel} in an existing {shipmentLabel}"
-                  values={{
-                    containerLabel: <ContainerLabelIcon />,
-                    shipmentLabel: <ShipmentLabelIcon />,
-                    batchesLabel: <BatchesLabelIcon />,
-                  }}
-                />
-              </div>
-            </div>
-            {!hasPermissionMoveToNewContainer() ? (
-              <Tooltip
-                message={
-                  !isSameImporter() ? (
-                    <FormattedMessage
-                      id="modules.RelationMap.move.moveToContainerSameImportersTooltip"
-                      defaultMessage="At least one selected Batch has a different Importer from the others. You can only move Batches to a different Container if they all have the same Importer."
-                    />
-                  ) : (
-                    <FormattedMessage
-                      id="modules.RelationMap.move.noPermissionTooltip"
-                      defaultMessage="At least one selected Batch does not give you permission to move it."
-                    />
-                  )
-                }
-              >
-                <div>
-                  <BaseButton
-                    label={
-                      <FormattedMessage
-                        id="modules.RelationMap.label.moveToNew"
-                        defaultMessage="MOVE TO NEW"
-                      />
-                    }
-                    icon="CONTAINER"
-                    disabled
-                  />
-                </div>
-              </Tooltip>
-            ) : (
-              <BaseButton
-                label={
-                  <FormattedMessage
-                    id="modules.RelationMap.label.moveToNew"
-                    defaultMessage="MOVE TO NEW"
-                  />
-                }
-                icon="CONTAINER"
-                onClick={() => onConfirm('newContainer')}
-              />
-            )}
-          </div>
-
-          <div className={MoveWrapperStyle}>
-            <div className={TitleDescriptionWrapperStyle}>
-              <Label height="30px">
-                <FormattedMessage
-                  id="modules.RelationMap.move.moveToShipment"
-                  defaultMessage="Move to Shipment"
-                />
-              </Label>
-
-              <div className={DescriptionStyle}>
-                <FormattedMessage
-                  id="modules.RelationMap.move.moveToShipmentDescription"
-                  defaultMessage="Move {batchesLabel} to an existing {shipmentLabel}"
-                  values={{
-                    shipmentLabel: <ShipmentLabelIcon />,
-                    batchesLabel: <BatchesLabelIcon />,
-                  }}
-                />
-              </div>
-            </div>
-            {!hasPermissionMoveToExistShipment() ? (
-              <Tooltip
-                message={
-                  !isSameImporter() ? (
-                    <FormattedMessage
-                      id="modules.RelationMap.move.moveToShipmentSameImportersTooltip"
-                      defaultMessage="At least one selected Batch has a different Importer from the others. You can only move Batches to a different Shipment if they all have the same Importer."
-                    />
-                  ) : (
-                    <FormattedMessage
-                      id="modules.RelationMap.move.noPermissionTooltip"
-                      defaultMessage="At least one selected Batch does not give you permission to move it."
-                    />
-                  )
-                }
-              >
-                <div>
+                    </div>
+                  </Tooltip>
+                ) : (
                   <BaseButton
                     label={
                       <FormattedMessage
@@ -559,61 +323,63 @@ export default function MoveBatch({ onSuccess }: Props) {
                       />
                     }
                     icon="SHIPMENT"
-                    disabled
+                    onClick={() =>
+                      onConfirm('existShipment') || !hasPermissionMoveToExistShipment()
+                    }
                   />
-                </div>
-              </Tooltip>
-            ) : (
-              <BaseButton
-                label={
-                  <FormattedMessage
-                    id="modules.RelationMap.label.moveTo"
-                    defaultMessage="MOVE TO"
-                  />
-                }
-                icon="SHIPMENT"
-                onClick={() => onConfirm('existShipment') || !hasPermissionMoveToExistShipment()}
-              />
-            )}
-          </div>
-
-          <div className={MoveWrapperStyle}>
-            <div className={TitleDescriptionWrapperStyle}>
-              <Label height="30px">
-                <FormattedMessage
-                  id="modules.RelationMap.move.moveToNewShipment"
-                  defaultMessage="Move to New Shipment"
-                />
-              </Label>
-
-              <div className={DescriptionStyle}>
-                <FormattedMessage
-                  id="modules.RelationMap.move.moveToNewShipmentDescription"
-                  defaultMessage="Move {batchesLabel} to a new {shipmentLabel}"
-                  values={{
-                    shipmentLabel: <ShipmentLabelIcon />,
-                    batchesLabel: <BatchesLabelIcon />,
-                  }}
-                />
+                )}
               </div>
-            </div>
-            {!hasPermissionMoveToNewShipment() ? (
-              <Tooltip
-                message={
-                  !isSameImporter() ? (
+
+              <div className={MoveWrapperStyle}>
+                <div className={TitleDescriptionWrapperStyle}>
+                  <Label height="30px">
                     <FormattedMessage
-                      id="modules.RelationMap.move.moveToShipmentSameImportersTooltip"
-                      defaultMessage="At least one selected Batch has a different Importer from the others. You can only move Batches to a different Shipment if they all have the same Importer."
+                      id="modules.RelationMap.move.moveToNewShipment"
+                      defaultMessage="Move to New Shipment"
                     />
-                  ) : (
+                  </Label>
+
+                  <div className={DescriptionStyle}>
                     <FormattedMessage
-                      id="modules.RelationMap.move.noPermissionTooltip"
-                      defaultMessage="At least one selected Batch does not give you permission to move it."
+                      id="modules.RelationMap.move.moveToNewShipmentDescription"
+                      defaultMessage="Move {batchesLabel} to a new {shipmentLabel}"
+                      values={{
+                        shipmentLabel: <ShipmentLabelIcon />,
+                        batchesLabel: <BatchesLabelIcon />,
+                      }}
                     />
-                  )
-                }
-              >
-                <div>
+                  </div>
+                </div>
+                {!hasPermissionMoveToNewShipment() ? (
+                  <Tooltip
+                    message={
+                      !isSameImporter() ? (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.moveToShipmentSameImportersTooltip"
+                          defaultMessage="At least one selected Batch has a different Importer from the others. You can only move Batches to a different Shipment if they all have the same Importer."
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.noPermissionTooltip"
+                          defaultMessage="At least one selected Batch does not give you permission to move it."
+                        />
+                      )
+                    }
+                  >
+                    <div>
+                      <BaseButton
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMap.label.moveToNew"
+                            defaultMessage="MOVE TO NEW"
+                          />
+                        }
+                        icon="SHIPMENT"
+                        disabled
+                      />
+                    </div>
+                  </Tooltip>
+                ) : (
                   <BaseButton
                     label={
                       <FormattedMessage
@@ -622,23 +388,639 @@ export default function MoveBatch({ onSuccess }: Props) {
                       />
                     }
                     icon="SHIPMENT"
-                    disabled
+                    onClick={() => onConfirm('newShipment')}
                   />
+                )}
+              </div>
+
+              <div className={MoveWrapperStyle}>
+                <div className={TitleDescriptionWrapperStyle}>
+                  <Label height="30px">
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToContainer"
+                      defaultMessage="Move to Container"
+                    />
+                  </Label>
+                  <div className={DescriptionStyle}>
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToContainerDescription"
+                      defaultMessage="Move {batchesLabel} to an existing {containerLabel}"
+                      values={{
+                        containerLabel: <ContainerLabelIcon />,
+                        batchesLabel: <BatchesLabelIcon />,
+                      }}
+                    />
+                  </div>
                 </div>
-              </Tooltip>
-            ) : (
-              <BaseButton
-                label={
-                  <FormattedMessage
-                    id="modules.RelationMap.label.moveToNew"
-                    defaultMessage="MOVE TO NEW"
+                {!hasPermissionMoveToExistContainer() ? (
+                  <Tooltip
+                    message={
+                      !isSameImporter() ? (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.moveToContainerSameImportersTooltip"
+                          defaultMessage="At least one selected Batch has a different Importer from the others. You can only move Batches to a different Container if they all have the same Importer."
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.noPermissionTooltip"
+                          defaultMessage="At least one selected Batch does not give you permission to move it."
+                        />
+                      )
+                    }
+                  >
+                    <div>
+                      <BaseButton
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMap.label.moveTo"
+                            defaultMessage="MOVE TO"
+                          />
+                        }
+                        icon="CONTAINER"
+                        disabled
+                      />
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <BaseButton
+                    label={
+                      <FormattedMessage
+                        id="modules.RelationMap.label.moveTo"
+                        defaultMessage="MOVE TO"
+                      />
+                    }
+                    icon="CONTAINER"
+                    onClick={() => onConfirm('existContainer')}
                   />
-                }
-                icon="SHIPMENT"
-                onClick={() => onConfirm('newShipment')}
-              />
-            )}
-          </div>
+                )}
+              </div>
+
+              <div className={MoveWrapperStyle}>
+                <div className={TitleDescriptionWrapperStyle}>
+                  <Label height="30px">
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToNewContainer"
+                      defaultMessage="Move to New Container"
+                    />
+                  </Label>
+
+                  <div className={DescriptionStyle}>
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToNewContainerDescription"
+                      defaultMessage="Move {batchesLabel} to a new {containerLabel} in an existing {shipmentLabel}"
+                      values={{
+                        containerLabel: <ContainerLabelIcon />,
+                        shipmentLabel: <ShipmentLabelIcon />,
+                        batchesLabel: <BatchesLabelIcon />,
+                      }}
+                    />
+                  </div>
+                </div>
+                {!hasPermissionMoveToNewContainer() ? (
+                  <Tooltip
+                    message={
+                      !isSameImporter() ? (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.moveToContainerSameImportersTooltip"
+                          defaultMessage="At least one selected Batch has a different Importer from the others. You can only move Batches to a different Container if they all have the same Importer."
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.noPermissionTooltip"
+                          defaultMessage="At least one selected Batch does not give you permission to move it."
+                        />
+                      )
+                    }
+                  >
+                    <div>
+                      <BaseButton
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMap.label.moveToNew"
+                            defaultMessage="MOVE TO NEW"
+                          />
+                        }
+                        icon="CONTAINER"
+                        disabled
+                      />
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <BaseButton
+                    label={
+                      <FormattedMessage
+                        id="modules.RelationMap.label.moveToNew"
+                        defaultMessage="MOVE TO NEW"
+                      />
+                    }
+                    icon="CONTAINER"
+                    onClick={() => onConfirm('newContainer')}
+                  />
+                )}
+              </div>
+
+              <div className={MoveWrapperStyle}>
+                <div className={TitleDescriptionWrapperStyle}>
+                  <Label height="30px">
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToOrder"
+                      defaultMessage="Move to Order"
+                    />
+                  </Label>
+                  <div className={DescriptionStyle}>
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToOrderDescription"
+                      defaultMessage="Move {batchesLabel} to an existing {orderLabel}"
+                      values={{
+                        orderLabel: <OrderLabelIcon />,
+                        batchesLabel: <BatchesLabelIcon />,
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {!hasPermissionMoveToExistOrder() ? (
+                  <Tooltip
+                    message={
+                      !isSamePartners() ? (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.moveToOrderSamePartnersTooltip"
+                          defaultMessage="At least one selected Batch has a different Importer or Exporter from the others. You can only move Batches to a different Order if they all have the same Importer and Exporter."
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.noPermissionTooltip"
+                          defaultMessage="At least one selected Batch does not give you permission to move it."
+                        />
+                      )
+                    }
+                  >
+                    <div>
+                      <BaseButton
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMap.label.moveTo"
+                            defaultMessage="MOVE TO"
+                          />
+                        }
+                        icon="ORDER"
+                        disabled
+                      />
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <BaseButton
+                    label={
+                      <FormattedMessage
+                        id="modules.RelationMap.label.moveTo"
+                        defaultMessage="MOVE TO"
+                      />
+                    }
+                    icon="ORDER"
+                    onClick={() => onConfirm('existOrder')}
+                  />
+                )}
+              </div>
+
+              <div className={MoveWrapperStyle}>
+                <div className={TitleDescriptionWrapperStyle}>
+                  <Label height="30px">
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToNewOrder"
+                      defaultMessage="Move to New Order"
+                    />
+                  </Label>
+                  <div className={DescriptionStyle}>
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToNewOrderDescription"
+                      defaultMessage="Move {batchesLabel} to a new {orderLabel}"
+                      values={{
+                        orderLabel: <OrderLabelIcon />,
+                        batchesLabel: <BatchesLabelIcon />,
+                      }}
+                    />
+                  </div>
+                </div>
+                {!hasPermissionMoveToNewOrder() ? (
+                  <Tooltip
+                    message={
+                      !isSamePartners() ? (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.moveToOrderSamePartnersTooltip"
+                          defaultMessage="At least one selected Batch has a different Importer or Exporter from the others. You can only move Batches to a different Order if they all have the same Importer and Exporter."
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.noPermissionTooltip"
+                          defaultMessage="At least one selected Batch does not give you permission to move it."
+                        />
+                      )
+                    }
+                  >
+                    <div>
+                      <BaseButton
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMap.label.moveToNew"
+                            defaultMessage="MOVE TO NEW"
+                          />
+                        }
+                        icon="ORDER"
+                        disabled
+                      />
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <BaseButton
+                    label={
+                      <FormattedMessage
+                        id="modules.RelationMap.label.moveToNew"
+                        defaultMessage="MOVE TO NEW"
+                      />
+                    }
+                    icon="ORDER"
+                    onClick={() => onConfirm('newOrder')}
+                  />
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={MoveWrapperStyle}>
+                <div className={TitleDescriptionWrapperStyle}>
+                  <Label height="30px">
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToOrder"
+                      defaultMessage="Move to Order"
+                    />
+                  </Label>
+                  <div className={DescriptionStyle}>
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToOrderDescription"
+                      defaultMessage="Move {batchesLabel} to an existing {orderLabel}"
+                      values={{
+                        orderLabel: <OrderLabelIcon />,
+                        batchesLabel: <BatchesLabelIcon />,
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {!hasPermissionMoveToExistOrder() ? (
+                  <Tooltip
+                    message={
+                      !isSamePartners() ? (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.moveToOrderSamePartnersTooltip"
+                          defaultMessage="At least one selected Batch has a different Importer or Exporter from the others. You can only move Batches to a different Order if they all have the same Importer and Exporter."
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.noPermissionTooltip"
+                          defaultMessage="At least one selected Batch does not give you permission to move it."
+                        />
+                      )
+                    }
+                  >
+                    <div>
+                      <BaseButton
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMap.label.moveTo"
+                            defaultMessage="MOVE TO"
+                          />
+                        }
+                        icon="ORDER"
+                        disabled
+                      />
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <BaseButton
+                    label={
+                      <FormattedMessage
+                        id="modules.RelationMap.label.moveTo"
+                        defaultMessage="MOVE TO"
+                      />
+                    }
+                    icon="ORDER"
+                    onClick={() => onConfirm('existOrder')}
+                  />
+                )}
+              </div>
+              <div className={MoveWrapperStyle}>
+                <div className={TitleDescriptionWrapperStyle}>
+                  <Label height="30px">
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToNewOrder"
+                      defaultMessage="Move to New Order"
+                    />
+                  </Label>
+                  <div className={DescriptionStyle}>
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToNewOrderDescription"
+                      defaultMessage="Move {batchesLabel} to a new {orderLabel}"
+                      values={{
+                        orderLabel: <OrderLabelIcon />,
+                        batchesLabel: <BatchesLabelIcon />,
+                      }}
+                    />
+                  </div>
+                </div>
+                {!hasPermissionMoveToNewOrder() ? (
+                  <Tooltip
+                    message={
+                      !isSamePartners() ? (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.moveToOrderSamePartnersTooltip"
+                          defaultMessage="At least one selected Batch has a different Importer or Exporter from the others. You can only move Batches to a different Order if they all have the same Importer and Exporter."
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.noPermissionTooltip"
+                          defaultMessage="At least one selected Batch does not give you permission to move it."
+                        />
+                      )
+                    }
+                  >
+                    <div>
+                      <BaseButton
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMap.label.moveToNew"
+                            defaultMessage="MOVE TO NEW"
+                          />
+                        }
+                        icon="ORDER"
+                        disabled
+                      />
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <BaseButton
+                    label={
+                      <FormattedMessage
+                        id="modules.RelationMap.label.moveToNew"
+                        defaultMessage="MOVE TO NEW"
+                      />
+                    }
+                    icon="ORDER"
+                    onClick={() => onConfirm('newOrder')}
+                  />
+                )}
+              </div>
+              <div className={MoveWrapperStyle}>
+                <div className={TitleDescriptionWrapperStyle}>
+                  <Label height="30px">
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToContainer"
+                      defaultMessage="Move to Container"
+                    />
+                  </Label>
+                  <div className={DescriptionStyle}>
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToContainerDescription"
+                      defaultMessage="Move {batchesLabel} to an existing {containerLabel}"
+                      values={{
+                        containerLabel: <ContainerLabelIcon />,
+                        batchesLabel: <BatchesLabelIcon />,
+                      }}
+                    />
+                  </div>
+                </div>
+                {!hasPermissionMoveToExistContainer() ? (
+                  <Tooltip
+                    message={
+                      !isSameImporter() ? (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.moveToContainerSameImportersTooltip"
+                          defaultMessage="At least one selected Batch has a different Importer from the others. You can only move Batches to a different Container if they all have the same Importer."
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.noPermissionTooltip"
+                          defaultMessage="At least one selected Batch does not give you permission to move it."
+                        />
+                      )
+                    }
+                  >
+                    <div>
+                      <BaseButton
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMap.label.moveTo"
+                            defaultMessage="MOVE TO"
+                          />
+                        }
+                        icon="CONTAINER"
+                        disabled
+                      />
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <BaseButton
+                    label={
+                      <FormattedMessage
+                        id="modules.RelationMap.label.moveTo"
+                        defaultMessage="MOVE TO"
+                      />
+                    }
+                    icon="CONTAINER"
+                    onClick={() => onConfirm('existContainer')}
+                  />
+                )}
+              </div>
+              <div className={MoveWrapperStyle}>
+                <div className={TitleDescriptionWrapperStyle}>
+                  <Label height="30px">
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToNewContainer"
+                      defaultMessage="Move to New Container"
+                    />
+                  </Label>
+
+                  <div className={DescriptionStyle}>
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToNewContainerDescription"
+                      defaultMessage="Move {batchesLabel} to a new {containerLabel} in an existing {shipmentLabel}"
+                      values={{
+                        containerLabel: <ContainerLabelIcon />,
+                        shipmentLabel: <ShipmentLabelIcon />,
+                        batchesLabel: <BatchesLabelIcon />,
+                      }}
+                    />
+                  </div>
+                </div>
+                {!hasPermissionMoveToNewContainer() ? (
+                  <Tooltip
+                    message={
+                      !isSameImporter() ? (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.moveToContainerSameImportersTooltip"
+                          defaultMessage="At least one selected Batch has a different Importer from the others. You can only move Batches to a different Container if they all have the same Importer."
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.noPermissionTooltip"
+                          defaultMessage="At least one selected Batch does not give you permission to move it."
+                        />
+                      )
+                    }
+                  >
+                    <div>
+                      <BaseButton
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMap.label.moveToNew"
+                            defaultMessage="MOVE TO NEW"
+                          />
+                        }
+                        icon="CONTAINER"
+                        disabled
+                      />
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <BaseButton
+                    label={
+                      <FormattedMessage
+                        id="modules.RelationMap.label.moveToNew"
+                        defaultMessage="MOVE TO NEW"
+                      />
+                    }
+                    icon="CONTAINER"
+                    onClick={() => onConfirm('newContainer')}
+                  />
+                )}
+              </div>
+              <div className={MoveWrapperStyle}>
+                <div className={TitleDescriptionWrapperStyle}>
+                  <Label height="30px">
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToShipment"
+                      defaultMessage="Move to Shipment"
+                    />
+                  </Label>
+
+                  <div className={DescriptionStyle}>
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToShipmentDescription"
+                      defaultMessage="Move {batchesLabel} to an existing {shipmentLabel}"
+                      values={{
+                        shipmentLabel: <ShipmentLabelIcon />,
+                        batchesLabel: <BatchesLabelIcon />,
+                      }}
+                    />
+                  </div>
+                </div>
+                {!hasPermissionMoveToExistShipment() ? (
+                  <Tooltip
+                    message={
+                      !isSameImporter() ? (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.moveToShipmentSameImportersTooltip"
+                          defaultMessage="At least one selected Batch has a different Importer from the others. You can only move Batches to a different Shipment if they all have the same Importer."
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.noPermissionTooltip"
+                          defaultMessage="At least one selected Batch does not give you permission to move it."
+                        />
+                      )
+                    }
+                  >
+                    <div>
+                      <BaseButton
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMap.label.moveTo"
+                            defaultMessage="MOVE TO"
+                          />
+                        }
+                        icon="SHIPMENT"
+                        disabled
+                      />
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <BaseButton
+                    label={
+                      <FormattedMessage
+                        id="modules.RelationMap.label.moveTo"
+                        defaultMessage="MOVE TO"
+                      />
+                    }
+                    icon="SHIPMENT"
+                    onClick={() =>
+                      onConfirm('existShipment') || !hasPermissionMoveToExistShipment()
+                    }
+                  />
+                )}
+              </div>
+              <div className={MoveWrapperStyle}>
+                <div className={TitleDescriptionWrapperStyle}>
+                  <Label height="30px">
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToNewShipment"
+                      defaultMessage="Move to New Shipment"
+                    />
+                  </Label>
+
+                  <div className={DescriptionStyle}>
+                    <FormattedMessage
+                      id="modules.RelationMap.move.moveToNewShipmentDescription"
+                      defaultMessage="Move {batchesLabel} to a new {shipmentLabel}"
+                      values={{
+                        shipmentLabel: <ShipmentLabelIcon />,
+                        batchesLabel: <BatchesLabelIcon />,
+                      }}
+                    />
+                  </div>
+                </div>
+                {!hasPermissionMoveToNewShipment() ? (
+                  <Tooltip
+                    message={
+                      !isSameImporter() ? (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.moveToShipmentSameImportersTooltip"
+                          defaultMessage="At least one selected Batch has a different Importer from the others. You can only move Batches to a different Shipment if they all have the same Importer."
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id="modules.RelationMap.move.noPermissionTooltip"
+                          defaultMessage="At least one selected Batch does not give you permission to move it."
+                        />
+                      )
+                    }
+                  >
+                    <div>
+                      <BaseButton
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMap.label.moveToNew"
+                            defaultMessage="MOVE TO NEW"
+                          />
+                        }
+                        icon="SHIPMENT"
+                        disabled
+                      />
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <BaseButton
+                    label={
+                      <FormattedMessage
+                        id="modules.RelationMap.label.moveToNew"
+                        defaultMessage="MOVE TO NEW"
+                      />
+                    }
+                    icon="SHIPMENT"
+                    onClick={() => onConfirm('newShipment')}
+                  />
+                )}
+              </div>
+            </>
+          )}
         </div>
       </ActionDialog>
 

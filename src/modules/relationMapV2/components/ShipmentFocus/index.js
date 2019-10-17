@@ -33,6 +33,7 @@ import {
 import EditFormSlideView from '../EditFormSlideView';
 import SelectedEntity from '../SelectedEntity';
 import SplitBatches from '../SplitBatches';
+import MoveBatch from '../MoveBatch';
 import CloneEntities from '../CloneEntities';
 import InlineCreateContainer from '../InlineCreateContainer';
 import DeleteContainerConfirm from '../DeleteContainerConfirm';
@@ -426,6 +427,36 @@ export default function ShipmentFocus() {
                           );
                         }
                       }
+                    }}
+                  />
+                  <MoveBatch
+                    onSuccess={orderIds => {
+                      console.warn({
+                        orderIds,
+                      });
+                      // queryOrdersDetail(orderIds);
+                      // // scroll to first orderId if that is exist on UI
+                      // const orderId = orderIds[0];
+                      // const indexPosition = ordersData.findIndex((row: Array<any>) => {
+                      //   const [orderCell, , , ,] = row;
+                      //   return Number(orderCell.cell?.data?.id) === Number(orderId);
+                      // });
+                      // scrollToRow({
+                      //   position: indexPosition,
+                      //   id: orderId,
+                      //   type: ORDER,
+                      // });
+                      window.requestIdleCallback(
+                        () => {
+                          dispatch({
+                            type: 'MOVE_BATCH_END',
+                            payload: {},
+                          });
+                        },
+                        {
+                          timeout: 250,
+                        }
+                      );
                     }}
                   />
                   <SplitBatches
