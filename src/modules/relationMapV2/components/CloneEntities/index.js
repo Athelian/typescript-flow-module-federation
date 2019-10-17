@@ -351,6 +351,8 @@ export default function CloneEntities({ onSuccess }: Props) {
           });
 
           // clone container along with batches has been targeted
+          const shipmentId = mapping.entities?.containers?.[containerId]?.shipment;
+          if (!shipmentIds.includes(shipmentId)) shipmentIds.push(shipmentId);
           processContainerIds.push(containerId);
           containers.push({
             id: containerId,
