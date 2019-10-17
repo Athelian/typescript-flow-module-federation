@@ -12,7 +12,7 @@ import DocumentsInputDialog from './DocumentsInputDialog';
 import { DocumentsInputWrapperStyle, DocumentCountWrapperStyle, DocumentIconStyle } from './style';
 
 const DocumentsInput = ({
-  value,
+  value = [],
   focus,
   readonly,
   onChange,
@@ -21,7 +21,7 @@ const DocumentsInput = ({
 }: InputProps<Array<FilePayload>>) => {
   return (
     <>
-      <InputWrapper>
+      <InputWrapper focus={focus}>
         {({ ref }) => (
           <button
             ref={ref}
