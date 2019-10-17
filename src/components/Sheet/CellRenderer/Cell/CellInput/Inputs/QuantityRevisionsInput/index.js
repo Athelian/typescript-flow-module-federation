@@ -10,7 +10,6 @@ import {
   WrapperStyle,
   SeparatorStyle,
   SelectInputStyle,
-  ArrowDownStyle,
   OptionStyle,
   AddButtonStyle,
   RemoveButtonStyle,
@@ -23,12 +22,20 @@ const QuantityRevisionTypeSelectInput = ({
   selectedItem,
   isOpen,
 }: RenderInputProps) => (
-  <div className={SelectInputStyle}>
+  <button
+    type="button"
+    {...getToggleButtonProps({
+      onKeyDown: e => {
+        e.stopPropagation();
+      },
+    })}
+    className={SelectInputStyle(isOpen)}
+  >
     <span>{selectedItem}</span>
-    <button className={ArrowDownStyle(isOpen)} type="button" {...getToggleButtonProps()}>
+    <i>
       <Icon icon="CHEVRON_DOWN" />
-    </button>
-  </div>
+    </i>
+  </button>
 );
 
 const QuantityRevisionTypeSelectOption = ({ item, selected, highlighted }: RenderOptionProps) => (
@@ -39,13 +46,29 @@ const QuantityRevisionTypeSelectOption = ({ item, selected, highlighted }: Rende
 
 const QuantityRevisionsInput = ({
   value,
-  onBlur,
+  focus,
   onChange,
-  onFocus,
-  onKeyDown,
   readonly,
 }: InputProps<Array<{ id?: string, type: string, quantity: number }>>) => {
+  const firstElementRef = React.useRef<HTMLInputElement | HTMLButtonElement | null>(null);
   const { enums } = useEnum('BatchQuantityRevisionType');
+
+  React.useEffect(() => {
+    if (!firstElementRef.current) {
+      return;
+    }
+
+    const elem = firstElementRef.current;
+
+    if (focus) {
+      // $FlowIssue: Flow doesn't know focus options
+      elem.focus({
+        preventScroll: true,
+      });
+    } else {
+      elem.blur();
+    }
+  }, [focus]);
 
   const handleTypeChange = (index: number) => (newType: string) => {
     onChange((value || []).map((v, i) => (i === index ? { ...v, type: newType } : v)));
@@ -78,8 +101,9 @@ const QuantityRevisionsInput = ({
             filterItems={(query, items) => items}
             itemToString={v => v}
             itemToValue={v => v}
-            optionWidth={100}
+            optionWidth={200}
             optionHeight={30}
+            toggleRef={index === 0 ? firstElementRef : undefined}
             renderInput={QuantityRevisionTypeSelectInput}
             renderOption={QuantityRevisionTypeSelectOption}
           />
@@ -87,17 +111,25 @@ const QuantityRevisionsInput = ({
           <NumberInput
             className={InputStyle}
             value={revision.quantity}
-            tabIndex="-1"
             nullable={false}
             readOnly={readonly}
             readOnlyHeight="30px"
             onChange={handleQuantityChange(index)}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            onKeyDown={onKeyDown}
+            onKeyDown={e => {
+              e.stopPropagation();
+            }}
           />
           {!readonly && (
-            <button type="button" className={RemoveButtonStyle} onClick={handleRemove(index)}>
+            <button
+              type="button"
+              className={RemoveButtonStyle}
+              onClick={handleRemove(index)}
+              onKeyDown={e => {
+                if ((value || []).length < 5) {
+                  e.stopPropagation();
+                }
+              }}
+            >
               <Icon icon="REMOVE" />
             </button>
           )}
@@ -105,7 +137,21 @@ const QuantityRevisionsInput = ({
       ))}
 
       {!readonly && (value || []).length < 5 && (
-        <button type="button" className={AddButtonStyle} onClick={handleAdd}>
+        <button
+          ref={ref => {
+            if ((value || []).length === 0) {
+              firstElementRef.current = ref;
+            }
+          }}
+          type="button"
+          className={AddButtonStyle}
+          onClick={handleAdd}
+          onKeyDown={e => {
+            if ((value || []).length > 0 && e.key === 'Tab' && e.shiftKey) {
+              e.stopPropagation();
+            }
+          }}
+        >
           New Quantity <Icon icon="ADD" />
         </button>
       )}

@@ -10,6 +10,8 @@ export type RenderInputProps = {
   selectedItem: any,
   getInputProps: Function,
   getToggleButtonProps: Function,
+  onFocus?: (SyntheticFocusEvent<any>) => void,
+  onBlur?: (SyntheticFocusEvent<any>) => void,
 };
 
 export type RenderOptionProps = {
@@ -21,12 +23,16 @@ export type RenderOptionProps = {
 type Props = {
   value: any,
   onChange: any => void,
+  onFocus?: (SyntheticFocusEvent<any>) => void,
+  onBlur?: (SyntheticFocusEvent<any>) => void,
   items: Array<any>,
   filterItems: (query: string, items: Array<any>) => Array<any>,
   itemToString: any => string,
   itemToValue: any => any,
   optionWidth: number,
   optionHeight: number,
+  inputRef?: { current: any },
+  toggleRef?: { current: any },
   renderInput: RenderInputProps => React.Node,
   renderOption: RenderOptionProps => React.Node,
 };
@@ -118,16 +124,20 @@ const SelectOptions = ({
 const SelectInput = ({
   value,
   onChange,
+  onFocus,
+  onBlur,
   items,
   filterItems,
   itemToString,
   itemToValue,
   optionWidth,
   optionHeight,
+  inputRef,
+  toggleRef,
   renderInput,
   renderOption,
 }: Props) => {
-  const inputRef = React.useRef<HTMLInputElement | null>(null);
+  const internalInputRef = React.useRef<HTMLInputElement | null>(null);
   const handleChange = React.useCallback(item => onChange(itemToValue(item)), [
     onChange,
     itemToValue,
@@ -171,20 +181,36 @@ const SelectInput = ({
             getInputProps: props =>
               getInputProps({
                 ...props,
-                ref: inputRef,
+                ref: ref => {
+                  if (inputRef) {
+                    // eslint-disable-next-line no-param-reassign
+                    inputRef.current = ref;
+                  }
+                  internalInputRef.current = ref;
+                },
                 onClick: e => {
                   e.target.select();
                   openMenu();
                 },
+                onFocus,
+                onBlur,
               }),
             getToggleButtonProps: props =>
               getToggleButtonProps({
                 ...props,
-                onClick: () => {
-                  if (inputRef.current) {
-                    inputRef.current.focus();
+                ref: ref => {
+                  if (toggleRef) {
+                    // eslint-disable-next-line no-param-reassign
+                    toggleRef.current = ref;
                   }
                 },
+                onClick: () => {
+                  if (internalInputRef.current) {
+                    internalInputRef.current.focus();
+                  }
+                },
+                onFocus,
+                onBlur,
               }),
           })}
           {isOpen && (

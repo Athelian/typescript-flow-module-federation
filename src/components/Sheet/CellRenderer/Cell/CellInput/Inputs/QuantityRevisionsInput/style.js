@@ -6,7 +6,6 @@ export const WrapperStyle = css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   height: 30px;
-  overflow: hidden;
 `;
 
 export const RevisionWrapperStyle = css`
@@ -16,29 +15,31 @@ export const RevisionWrapperStyle = css`
   border-right: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
-export const SelectInputStyle = css`
+export const SelectInputStyle = (isOpen: boolean): string => css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
+  ${presets.BUTTON};
   width: 100px;
 
   & > span {
     ${fontSizes.MAIN};
     ${presets.ELLIPSIS};
+    text-align: left;
     font-weight: bold;
     padding: 0 5px;
     flex: 1;
   }
-`;
 
-export const ArrowDownStyle = (isOpen: boolean): string => css`
-  ${presets.BUTTON};
-  ${transitions.EXPAND};
-  ${fontSizes.SMALL};
-  color: ${isOpen ? colors.TEAL : colors.GRAY_LIGHT};
-  height: 100%;
-  cursor: pointer;
+  & > i {
+    ${transitions.EXPAND};
+    ${fontSizes.SMALL};
+    color: ${isOpen ? colors.TEAL : colors.GRAY_LIGHT};
+    height: 100%;
+    cursor: pointer;
+  }
+
   &:hover,
-  :focus {
+  :focus > i {
     color: ${colors.TEAL};
   }
 `;
