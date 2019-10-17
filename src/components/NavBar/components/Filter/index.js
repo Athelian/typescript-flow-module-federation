@@ -13,6 +13,7 @@ import { VolumeRange, AreaRange, LengthRange, MassRange } from './Inputs/MetricR
 import Ports from './Inputs/Ports';
 import Users from './Inputs/Users';
 import OrganizationTypes from './Inputs/OrganizationTypes';
+import TaskTemplateEntityTypes from './Inputs/TaskTemplateEntityTypes';
 import OrderIds from './Inputs/OrderIds';
 import WarehouseIds from './Inputs/WarehouseIds';
 import { CompletelyBatched, CompletelyShipped, HasShipment } from './Inputs/Bool';
@@ -110,6 +111,7 @@ const inputs = {
   task_tags: TaskTags,
   user_tags: UserTags,
   organization_types: OrganizationTypes,
+  task_template_entity_types: TaskTemplateEntityTypes,
   completely_batched: CompletelyBatched,
   completely_shipped: CompletelyShipped,
   has_shipment: HasShipment,

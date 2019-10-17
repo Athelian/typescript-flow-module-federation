@@ -130,6 +130,10 @@ export default defineMessages({
     id: 'components.NavBar.Filter.organizationTypes',
     defaultMessage: 'Types',
   },
+  taskTemplateEntityTypes: {
+    id: 'components.NavBar.Filter.taskTemplateEntityTypes',
+    defaultMessage: 'Entity types',
+  },
   completelyBatched: {
     id: 'components.NavBar.Filter.completelyBatched',
     defaultMessage: 'Fully Batched',

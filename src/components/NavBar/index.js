@@ -25,6 +25,7 @@ import {
   FileFilterConfig,
   ProjectFilterConfig,
   TaskFilterConfig,
+  TaskTemplateFilterConfig,
   TagFilterConfig,
 } from './components/Filter/configs';
 import {
@@ -41,6 +42,7 @@ import {
   FileSortConfig,
   ProjectSortConfig,
   TaskSortConfig,
+  TaskTemplateSortConfig,
   TagSortConfig,
 } from './components/Sort/configs';
 
@@ -71,6 +73,7 @@ export {
   FileFilterConfig,
   ProjectFilterConfig,
   TaskFilterConfig,
+  TaskTemplateFilterConfig,
   TagFilterConfig,
   // Sort configs
   ProductSortConfig,
@@ -86,5 +89,6 @@ export {
   FileSortConfig,
   ProjectSortConfig,
   TaskSortConfig,
+  TaskTemplateSortConfig,
   TagSortConfig,
 };

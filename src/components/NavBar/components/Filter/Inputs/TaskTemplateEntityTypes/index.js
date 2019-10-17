@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { CheckboxInput, Label } from 'components/Form';
-import partnerMessages from 'modules/partner/messages';
+import taskTemplateMessage from 'modules/taskTemplate/messages';
 import messages from '../../messages';
 import { CheckboxWrapperStyle } from './style';
 
@@ -13,14 +13,16 @@ type Props = {
 };
 
 const Types = {
-  Importer: partnerMessages.importer,
-  Exporter: partnerMessages.exporter,
-  Supplier: partnerMessages.supplier,
-  Forwarder: partnerMessages.forwarder,
-  Warehouser: partnerMessages.warehouser,
+  Product: taskTemplateMessage.product,
+  ProductProvider: taskTemplateMessage.endProduct,
+  Order: taskTemplateMessage.order,
+  OrderItem: taskTemplateMessage.orderItem,
+  Batch: taskTemplateMessage.batch,
+  Shipment: taskTemplateMessage.shipment,
+  Container: taskTemplateMessage.container,
 };
 
-const OrganizationTypes = ({ value, onChange, readonly }: Props) => {
+const TaskTemplateEntityTypes = ({ value, onChange, readonly }: Props) => {
   const handleToggle = (type: string) => () => {
     if (value.includes(type)) {
       onChange(value.filter(t => t !== type));
@@ -32,7 +34,7 @@ const OrganizationTypes = ({ value, onChange, readonly }: Props) => {
   return (
     <>
       <Label height="30px">
-        <FormattedMessage {...messages.organizationTypes} />
+        <FormattedMessage {...messages.taskTemplateEntityTypes} />
       </Label>
 
       <div>
@@ -53,4 +55,4 @@ const OrganizationTypes = ({ value, onChange, readonly }: Props) => {
   );
 };
 
-export default OrganizationTypes;
+export default TaskTemplateEntityTypes;
