@@ -185,6 +185,7 @@ const Cell = ({
           <CellInput
             value={cell.data?.value ?? null}
             type={cell.type}
+            entityId={cell.entity?.id}
             focus={focus}
             inputFocus={inputFocus}
             readonly={isReadonly}

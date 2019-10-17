@@ -1,6 +1,11 @@
 // @flow
 import gql from 'graphql-tag';
-import { badRequestFragment, forbiddenFragment, userAvatarFragment } from 'graphql';
+import {
+  badRequestFragment,
+  forbiddenFragment,
+  userAvatarFragment,
+  documentFragment,
+} from 'graphql';
 
 const orderSheetFragment = gql`
   fragment orderSheetFragment on Order {
@@ -17,10 +22,8 @@ const orderSheetFragment = gql`
     totalBatched
     totalShipped
     files {
-      ... on File {
-        id
-        name
-      }
+      ...documentFragment
+      ...forbiddenFragment
     }
     createdAt
     updatedAt
@@ -192,6 +195,7 @@ export const ordersQuery = gql`
   ${shipmentSheetFragment}
   ${containerSheetFragment}
   ${userAvatarFragment}
+  ${documentFragment}
   ${forbiddenFragment}
 `;
 
