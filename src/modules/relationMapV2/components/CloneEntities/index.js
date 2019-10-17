@@ -316,8 +316,6 @@ export default function CloneEntities({ onSuccess }: Props) {
                 .filter(batchId => targets.includes(`${BATCH}-${batchId}`))
                 .map(id => ({
                   id,
-                  // TODO: confirm with Maxime
-                  ...(mapping.entities?.batches?.[id]?.container ? { containerId: null } : {}),
                 })),
               containers: (mapping.entities?.shipments?.[shipmentId]?.containers ?? [])
                 .filter(containerId => targets.includes(`${CONTAINER}-${containerId}`))
