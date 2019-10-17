@@ -27,7 +27,7 @@ import {
   Entities,
   SortAndFilter,
   ExpandRows,
-  LoadMoreExpanded,
+  GlobalExpanded,
   FocusedView,
 } from 'modules/relationMapV2/store';
 import EditFormSlideView from '../EditFormSlideView';
@@ -71,7 +71,7 @@ export default function ShipmentFocus() {
     id: '',
   });
   const { expandRows, setExpandRows } = ExpandRows.useContainer();
-  const { loadMoreExpanded } = LoadMoreExpanded.useContainer();
+  const { expandAll } = GlobalExpanded.useContainer();
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const { initHits } = Hits.useContainer();
@@ -210,14 +210,7 @@ export default function ShipmentFocus() {
                         {
                           fetchMore,
                           data,
-                          onSuccess: fetchMoreResult => {
-                            if (loadMoreExpanded)
-                              setExpandRows([
-                                ...expandRows,
-                                ...(fetchMoreResult?.shipments?.nodes ?? []).map(
-                                  shipment => shipment?.id
-                                ),
-                              ]);
+                          onSuccess: () => {
                             setIsLoadingMore(false);
                           },
                         },
@@ -225,6 +218,10 @@ export default function ShipmentFocus() {
                       );
                     };
               const entities = normalize({ shipments });
+              const expandAllRows = shipments.map(shipment => shipment?.id);
+              if (expandAll && !isEquals(expandAllRows, expandRows)) {
+                setExpandRows(expandAllRows);
+              }
               initMapping({
                 shipments,
                 entities,
