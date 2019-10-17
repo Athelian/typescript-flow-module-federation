@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { CheckboxInput, Label } from 'components/Form';
+import taskTemplateMessage from 'modules/taskTemplate/messages';
 import messages from '../../messages';
 import { CheckboxWrapperStyle } from './style';
 
@@ -12,13 +13,13 @@ type Props = {
 };
 
 const Types = {
-  Product: 'modules.TaskTemplates.product',
-  ProductProvider: 'modules.TaskTemplates.endProduct',
-  Order: 'modules.TaskTemplates.order',
-  OrderItem: 'modules.TaskTemplates.orderItem',
-  Batch: 'modules.TaskTemplates.batch',
-  Shipment: 'modules.TaskTemplates.shipment',
-  Container: 'modules.TaskTemplates.container',
+  Product: taskTemplateMessage.product,
+  ProductProvider: taskTemplateMessage.endProduct,
+  Order: taskTemplateMessage.order,
+  OrderItem: taskTemplateMessage.orderItem,
+  Batch: taskTemplateMessage.batch,
+  Shipment: taskTemplateMessage.shipment,
+  Container: taskTemplateMessage.container,
 };
 
 const TaskTemplateEntityTypes = ({ value, onChange, readonly }: Props) => {
@@ -37,7 +38,7 @@ const TaskTemplateEntityTypes = ({ value, onChange, readonly }: Props) => {
       </Label>
 
       <div>
-        {Object.entries(Types).map(([type, messageId]) => (
+        {Object.entries(Types).map(([type, message]) => (
           <div key={type} className={CheckboxWrapperStyle}>
             <CheckboxInput
               checked={value.includes(type)}
@@ -45,7 +46,7 @@ const TaskTemplateEntityTypes = ({ value, onChange, readonly }: Props) => {
               disabled={readonly}
             />
             <span>
-              <FormattedMessage id={messageId} defaultMessage={type} />
+              <FormattedMessage {...message} />
             </span>
           </div>
         ))}
