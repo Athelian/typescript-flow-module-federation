@@ -10,9 +10,7 @@ type Props = {
 const NumberDisplay = ({ value }: Props) => {
   return (
     <DisplayWrapper>
-      <span>
-        <FormattedNumber value={value} />
-      </span>
+      <FormattedNumber value={value} />
     </DisplayWrapper>
   );
 };

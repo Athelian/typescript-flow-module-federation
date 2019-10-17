@@ -7,12 +7,10 @@ export const DisplayWrapperStyle: string = css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   padding: 5px;
-  & > span {
-    ${fontSizes.MAIN};
-    ${presets.ELLIPSIS};
-    color: ${colors.BLACK};
-    font-weight: bold;
-  }
+  ${fontSizes.MAIN};
+  ${presets.ELLIPSIS};
+  color: ${colors.BLACK};
+  font-weight: bold;
 `;
 
 export default DisplayWrapperStyle;

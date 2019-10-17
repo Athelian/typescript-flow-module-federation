@@ -6,7 +6,7 @@ import NumberInput from './Inputs/NumberInput';
 import DateInput from './Inputs/DateInput';
 import DatetimeInput from './Inputs/DatetimeInput';
 import EnumInput from './Inputs/EnumInput';
-import PriceInput from './Inputs/PriceInput';
+import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
 import { WrapperStyle } from './style';
 
 type Props = {
@@ -26,7 +26,7 @@ const inputs = {
   text: TextInput,
   textarea: TextAreaInput,
   number: NumberInput,
-  price: PriceInput,
+  static_metric_value: StaticMetricValueInput,
   date: DateInput,
   datetime: DatetimeInput,
   currency: EnumInput.Currency,
