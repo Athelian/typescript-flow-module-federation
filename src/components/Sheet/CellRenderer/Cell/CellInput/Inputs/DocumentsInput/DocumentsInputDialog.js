@@ -23,14 +23,8 @@ import {
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
 } from 'modules/permission/constants/file';
+import type { InputProps } from '../../types';
 import DocumentsContainer from './container';
-
-type Props = {
-  value: number | null,
-  onChange: string => void,
-  onBlur: () => void,
-  focus: boolean,
-};
 
 function usePrevious(value) {
   const ref = React.useRef();
@@ -43,9 +37,7 @@ function usePrevious(value) {
 const formContainer = new FormContainer();
 const documentsContainer = new DocumentsContainer();
 
-// const useOnMount = func => React.useEffect(func, []);
-
-const DocumentsInput = ({ value, onChange, onBlur, focus }: Props) => {
+const DocumentsInput = ({ value, onChange, onBlur, focus }: InputProps<string>) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const canSetDocuments = hasPermission(ORDER_SET_DOCUMENTS);

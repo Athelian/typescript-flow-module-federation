@@ -6,26 +6,22 @@ import FormattedNumber from 'components/FormattedNumber';
 import { computeIcon, getFileExtension } from 'components/Form/DocumentsInput/helpers';
 import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
 import InputWrapper from '../InputWrapper';
+import type { InputProps } from '../../types';
 import DocumentsInputDialog from './DocumentsInputDialog';
 import { DocumentsInputWrapperStyle, DocumentCountWrapperStyle, DocumentIconStyle } from './style';
 
-type Props = {
-  value: number | null,
-  focus: boolean,
-  readonly: boolean,
-  onChange: string => void,
-  onBlur: () => void,
-  onFocus: () => void,
-};
-
-// const useOnMount = func => React.useEffect(func, []);
-
-const DocumentsInput = ({ value, focus, readonly, onChange, onBlur, onFocus }: Props) => {
+const DocumentsInput = ({
+  value,
+  focus,
+  readonly,
+  onChange,
+  onBlur,
+  onFocus,
+}: InputProps<string>) => {
   return (
     <>
       <InputWrapper>
         {({ ref }) => (
-          // TODO: Manage props correctly and do slideview behavior
           <button
             ref={ref}
             tabIndex="-1"
