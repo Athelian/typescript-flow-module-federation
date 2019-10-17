@@ -35,6 +35,7 @@ import SelectedEntity from '../SelectedEntity';
 import CloneEntities from '../CloneEntities';
 import InlineCreateContainer from '../InlineCreateContainer';
 import DeleteContainerConfirm from '../DeleteContainerConfirm';
+import DeleteConfirm from '../DeleteConfirm';
 import RemoveBatchConfirm from '../RemoveBatchConfirm';
 import DeleteBatchConfirm from '../DeleteBatchConfirm';
 import StatusConfirm from '../StatusConfirm';
@@ -254,6 +255,33 @@ export default function ShipmentFocus() {
                           selectedId: '',
                         },
                       });
+                    }}
+                  />
+                  <DeleteConfirm
+                    onSuccess={({ containerIds }) => {
+                      const ids = containerIds.map(containerId =>
+                        findShipmentIdByContainer(containerId, entities)
+                      );
+                      queryShipmentsDetail(ids);
+                      window.requestIdleCallback(
+                        () => {
+                          dispatch({
+                            type: 'DELETE_CLOSE',
+                            payload: {},
+                          });
+                          dispatch({
+                            type: 'REMOVE_TARGETS',
+                            payload: {
+                              targets: containerIds.map(
+                                containerId => `${CONTAINER}-${containerId}`
+                              ),
+                            },
+                          });
+                        },
+                        {
+                          timeout: 250,
+                        }
+                      );
                     }}
                   />
                   <DeleteContainerConfirm
