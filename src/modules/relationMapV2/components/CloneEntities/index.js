@@ -45,7 +45,7 @@ type Props = {|
 |};
 
 export default function CloneEntities({ onSuccess }: Props) {
-  const { dispatch, state } = FocusedView.useContainer();
+  const { dispatch, state, selectors } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
   const [cloneBatches] = useMutation(cloneBatchesMutation);
   const [cloneOrderItems] = useMutation(cloneOrderItemsMutation);
@@ -136,6 +136,10 @@ export default function CloneEntities({ onSuccess }: Props) {
       if (totalBatches && source === BATCH) {
         const batches = [];
         batchIds.forEach(batchId => {
+          if (selectors.isShipmentFocus) {
+            const shipmentId = mapping.entities?.batches?.[batchId]?.shipment;
+            if (!shipmentIds.includes(shipmentId)) shipmentIds.push(shipmentId);
+          }
           const parentOrderPosition = findKey(mapping.orders, order => {
             return (order?.orderItems ?? []).some(orderItem =>
               (orderItem?.batches ?? []).map(batch => batch.id).includes(batchId)
@@ -155,9 +159,12 @@ export default function CloneEntities({ onSuccess }: Props) {
           batches.push({
             id: batchId,
             input: {
-              // TODO: fix for clone batch on shipment view
-              shipmentId: null,
-              containerId: null,
+              ...(selectors.isOrderFocus
+                ? {
+                    shipmentId: null,
+                    containerId: null,
+                  }
+                : {}),
               deliveredAt: null,
               desiredAt: null,
               expiredAt: null,
@@ -415,6 +422,8 @@ export default function CloneEntities({ onSuccess }: Props) {
     mapping.orders,
     onSuccess,
     ordersIds,
+    selectors.isOrderFocus,
+    selectors.isShipmentFocus,
     shipmentIds,
     source,
     targets,
