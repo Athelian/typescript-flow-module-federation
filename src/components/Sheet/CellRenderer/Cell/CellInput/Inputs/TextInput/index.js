@@ -1,19 +1,18 @@
 // @flow
 import * as React from 'react';
 import BaseTextInput from 'components/Form/Inputs/TextInput';
+import type { InputProps } from '../../types';
 import InputWrapper from '../InputWrapper';
 
-type Props = {
-  value: string | null,
-  onChange: string => void,
-  focus: boolean,
-  onFocus: () => void,
-  onBlur: () => void,
-  onKeyDown: () => void,
-  readonly: boolean,
-};
-
-const TextInput = ({ value, focus, onChange, onFocus, onBlur, onKeyDown, readonly }: Props) => (
+const TextInput = ({
+  value,
+  focus,
+  onChange,
+  onFocus,
+  onBlur,
+  onKeyDown,
+  readonly,
+}: InputProps<string>) => (
   <InputWrapper focus={focus} preselect>
     {({ ref }) => (
       <BaseTextInput

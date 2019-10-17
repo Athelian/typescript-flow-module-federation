@@ -2,31 +2,19 @@
 import * as React from 'react';
 import BaseNumberInput from 'components/Form/Inputs/NumberInput';
 import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
+import type { InputProps } from '../../types';
 import InputWrapper from '../InputWrapper';
 
-type Props = {
-  value: {
-    value: number,
-    metric: string,
-  },
-  onChange: ({ value: number, metric: string }) => void,
-  focus: boolean,
-  onFocus: () => void,
-  onBlur: () => void,
-  onKeyDown: () => void,
-  readonly: boolean,
-};
-
-const PriceInput = ({
-  value: price,
+const StaticMetricValueInput = ({
+  value: metricValue,
   focus,
   onChange,
   onFocus,
   onBlur,
   onKeyDown,
   readonly,
-}: Props) => {
-  const { value, metric } = price;
+}: InputProps<{ value: number, metric: string }>) => {
+  const { value = 0, metric = '' } = metricValue || {};
   return (
     <InputWrapper focus={focus} preselect>
       {({ ref }) => (
@@ -57,4 +45,5 @@ const PriceInput = ({
     </InputWrapper>
   );
 };
-export default PriceInput;
+
+export default StaticMetricValueInput;

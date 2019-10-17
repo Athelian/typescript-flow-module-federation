@@ -1,19 +1,18 @@
 // @flow
 import * as React from 'react';
 import BaseDateInput from 'components/Form/Inputs/DateInput';
+import type { InputProps } from '../../types';
 import InputWrapper from '../InputWrapper';
 
-type Props = {
-  value: Date | string | null,
-  onChange: string => void,
-  focus: boolean,
-  onFocus: () => void,
-  onBlur: () => void,
-  onKeyDown: () => void,
-  readonly: boolean,
-};
-
-const DateInput = ({ value, focus, onChange, onFocus, onBlur, onKeyDown, readonly }: Props) => (
+const DateInput = ({
+  value,
+  focus,
+  onChange,
+  onFocus,
+  onBlur,
+  onKeyDown,
+  readonly,
+}: InputProps<Date | string>) => (
   <InputWrapper focus={focus}>
     {({ ref }) => (
       <BaseDateInput
