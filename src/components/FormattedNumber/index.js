@@ -14,7 +14,9 @@ type Props = OptionalProps & {
 const FormattedNumber = ({ value, suffix, prefix, ...rest }: Props) => (
   <>
     {prefix && `${prefix} `}
-    {value ? <FormattedNumberIntl value={value} {...rest} /> : ''}
+    {value !== null && value !== undefined && value !== '' && (
+      <FormattedNumberIntl value={value} {...rest} />
+    )}
     {suffix && ` ${suffix}`}
   </>
 );
