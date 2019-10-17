@@ -9,12 +9,18 @@ import type {
   EntityEventHandler,
 } from 'components/Sheet/SheetLive/entity';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
-import { batchByIDQuery, containerByIDQuery, orderItemByIDQuery, shipmentByIDQuery } from './query';
+import {
+  batchByIDQuery,
+  batchQuantityRevisionByIDQuery,
+  containerByIDQuery,
+  orderItemByIDQuery,
+  shipmentByIDQuery,
+} from './query';
 
 // $FlowFixMe not compatible with hook implementation
-function addOrderItemFactory(client: ApolloClient, dispatch: Action => void) {
-  return async (orderItemId: string) => {
-    await client
+function onCreateOrderItemFactory(client: ApolloClient, dispatch: Action => void) {
+  return (orderItemId: string) =>
+    client
       .query({
         query: orderItemByIDQuery,
         fetchPolicy: 'network-only',
@@ -60,13 +66,12 @@ function addOrderItemFactory(client: ApolloClient, dispatch: Action => void) {
           },
         });
       });
-  };
 }
 
 // $FlowFixMe not compatible with hook implementation
-function addBatchFactory(client: ApolloClient, dispatch: Action => void) {
-  return async (batchId: string) => {
-    await client
+function onCreateBatchFactory(client: ApolloClient, dispatch: Action => void) {
+  return (batchId: string) =>
+    client
       .query({
         query: batchByIDQuery,
         fetchPolicy: 'network-only',
@@ -125,11 +130,80 @@ function addBatchFactory(client: ApolloClient, dispatch: Action => void) {
           },
         });
       });
-  };
 }
 
 // $FlowFixMe not compatible with hook implementation
-function changeBatchContainerFactory(client: ApolloClient, dispatch: Action => void) {
+function onBatchQuantityRevisionFactory(client: ApolloClient, dispatch: Action => void) {
+  return (batchQuantityRevisionId: string, items: Array<Object>) =>
+    client
+      .query({
+        query: batchQuantityRevisionByIDQuery,
+        fetchPolicy: 'network-only',
+        variables: {
+          id: batchQuantityRevisionId,
+        },
+      })
+      .then(({ data }) => {
+        const batchQuantityRevision = data?.batchQuantityRevision;
+        if (batchQuantityRevision?.__typename !== 'BatchQuantityRevision') {
+          return;
+        }
+
+        items.every((order, orderIdx) =>
+          order.orderItems.every((orderItem, orderItemIdx) =>
+            orderItem.batches.every((batch, batchIdx) => {
+              if (batch.id !== batchQuantityRevision.batch?.id) {
+                return true;
+              }
+
+              const orderItems = [...order.orderItems];
+              const batches = [...orderItem.batches];
+
+              let found = false;
+              const batchQuantityRevisions = batch.batchQuantityRevisions
+                .filter(bqr => !!bqr.id)
+                .map(bqr => {
+                  if (bqr.id === batchQuantityRevision.id) {
+                    found = true;
+                    return batchQuantityRevision;
+                  }
+
+                  return bqr;
+                });
+
+              if (!found) {
+                batchQuantityRevisions.splice(batchQuantityRevision.sort, 0, batchQuantityRevision);
+              }
+
+              batches[batchIdx] = {
+                ...batch,
+                batchQuantityRevisions,
+              };
+              orderItems[orderItemIdx] = {
+                ...orderItem,
+                batches,
+              };
+
+              dispatch({
+                type: Actions.REPLACE_ITEM,
+                payload: {
+                  item: {
+                    ...order,
+                    orderItems,
+                  },
+                  index: orderIdx,
+                },
+              });
+
+              return false;
+            })
+          )
+        );
+      });
+}
+
+// $FlowFixMe not compatible with hook implementation
+function onUpdateBatchContainerFactory(client: ApolloClient, dispatch: Action => void) {
   function changeContainer(batchId: string, container: Object | null, items: Array<Object>) {
     items.every((item, itemIdx) =>
       item.orderItems.every((orderItem, orderItemIdx) =>
@@ -191,7 +265,7 @@ function changeBatchContainerFactory(client: ApolloClient, dispatch: Action => v
 }
 
 // $FlowFixMe not compatible with hook implementation
-function changeBatchShipmentFactory(client: ApolloClient, dispatch: Action => void) {
+function onUpdateBatchShipmentFactory(client: ApolloClient, dispatch: Action => void) {
   function changeShipment(batchId: string, shipment: Object | null, items: Array<Object>) {
     items.every((item, itemIdx) =>
       item.orderItems.every((orderItem, orderItemIdx) =>
@@ -252,8 +326,8 @@ function changeBatchShipmentFactory(client: ApolloClient, dispatch: Action => vo
   };
 }
 
-function removeOrderItemFactory(dispatch: Action => void) {
-  return function(orderItemId: string) {
+function onDeleteOrderItemFactory(dispatch: Action => void) {
+  return (orderItemId: string) => {
     dispatch({
       type: Actions.PRE_REMOVE_ENTITY,
       payload: {
@@ -284,8 +358,8 @@ function removeOrderItemFactory(dispatch: Action => void) {
   };
 }
 
-function removeBatchFactory(dispatch: Action => void) {
-  return function(batchId: string) {
+function onDeleteBatchFactory(dispatch: Action => void) {
+  return (batchId: string) => {
     dispatch({
       type: Actions.PRE_REMOVE_ENTITY,
       payload: {
@@ -320,28 +394,75 @@ function removeBatchFactory(dispatch: Action => void) {
   };
 }
 
+function onDeleteBatchQuantityRevisionFactory(dispatch: Action => void) {
+  return (batchQuantityRevisionId: string, items: Array<Object>) =>
+    items.every((order, orderIdx) =>
+      order.orderItems.every((orderItem, orderItemIdx) =>
+        orderItem.batches.every((batch, batchIdx) =>
+          batch.batchQuantityRevisions.every(batchQuantityRevision => {
+            if (batchQuantityRevision.id !== batchQuantityRevisionId) {
+              return true;
+            }
+
+            const orderItems = [...order.orderItems];
+            const batches = [...orderItem.batches];
+            batches[batchIdx] = {
+              ...batch,
+              batchQuantityRevisions: batch.batchQuantityRevisions.filter(
+                bqr => bqr.id !== batchQuantityRevisionId
+              ),
+            };
+            orderItems[orderItemIdx] = {
+              ...orderItem,
+              batches,
+            };
+
+            dispatch({
+              type: Actions.REPLACE_ITEM,
+              payload: {
+                item: {
+                  ...order,
+                  orderItems,
+                },
+                index: orderIdx,
+              },
+            });
+
+            return false;
+          })
+        )
+      )
+    );
+}
+
 export default function entityEventHandler(
   // $FlowFixMe not compatible with hook implementation
   client: ApolloClient,
   dispatch: Action => void
 ): EntityEventHandler {
-  const addOrderItem = addOrderItemFactory(client, dispatch);
-  const addBatch = addBatchFactory(client, dispatch);
-  const changeBatchContainer = changeBatchContainerFactory(client, dispatch);
-  const changeBatchShipment = changeBatchShipmentFactory(client, dispatch);
-  const removeOrderItem = removeOrderItemFactory(dispatch);
-  const removeBatch = removeBatchFactory(dispatch);
+  const onCreateOrderItem = onCreateOrderItemFactory(client, dispatch);
+  const onCreateBatch = onCreateBatchFactory(client, dispatch);
+  const onBatchQuantityRevision = onBatchQuantityRevisionFactory(client, dispatch);
+  const onUpdateBatchContainer = onUpdateBatchContainerFactory(client, dispatch);
+  const onUpdateBatchShipment = onUpdateBatchShipmentFactory(client, dispatch);
+  const onDeleteOrderItem = onDeleteOrderItemFactory(dispatch);
+  const onDeleteBatch = onDeleteBatchFactory(dispatch);
+  const onDeleteBatchQuantityRevision = onDeleteBatchQuantityRevisionFactory(dispatch);
 
   return async (event: EntityEvent, items: Array<Object>) => {
     switch (event.lifeCycle) {
       case 'Create':
         switch (event.entity.__typename) {
           case 'OrderItem': {
-            await addOrderItem(event.entity.id);
+            await onCreateOrderItem(event.entity.id);
             break;
           }
           case 'Batch': {
-            await addBatch(event.entity.id);
+            await onCreateBatch(event.entity.id);
+            break;
+          }
+          case 'BatchQuantityRevision': {
+            await onBatchQuantityRevision(event.entity.id, items);
             break;
           }
           default:
@@ -355,8 +476,8 @@ export default function entityEventHandler(
           case 'OrderItem': {
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               if (change.field === 'order') {
-                removeOrderItem(event.entity.id);
-                await addOrderItem(event.entity.id);
+                onDeleteOrderItem(event.entity.id);
+                await onCreateOrderItem(event.entity.id);
 
                 return false;
               }
@@ -368,24 +489,32 @@ export default function entityEventHandler(
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               switch (change.field) {
                 case 'orderItem':
-                  removeBatch(event.entity.id);
-                  await addBatch(event.entity.id);
+                  onDeleteBatch(event.entity.id);
+                  await onCreateBatch(event.entity.id);
                   return false;
                 case 'container':
-                  await changeBatchContainer(
+                  await onUpdateBatchContainer(
                     event.entity.id,
                     change.new?.entity?.id ?? null,
                     items
                   );
                   return false;
                 case 'shipment':
-                  await changeBatchShipment(event.entity.id, change.new?.entity?.id ?? null, items);
+                  await onUpdateBatchShipment(
+                    event.entity.id,
+                    change.new?.entity?.id ?? null,
+                    items
+                  );
                   return false;
                 default:
                   return true;
               }
             });
             break;
+          }
+          case 'BatchQuantityRevision': {
+            await onBatchQuantityRevision(event.entity.id, items);
+            return;
           }
           default:
             break;
@@ -406,10 +535,13 @@ export default function entityEventHandler(
       case 'Delete':
         switch (event.entity.__typename) {
           case 'OrderItem':
-            removeOrderItem(event.entity.id);
+            onDeleteOrderItem(event.entity.id);
             break;
           case 'Batch':
-            removeBatch(event.entity.id);
+            onDeleteBatch(event.entity.id);
+            break;
+          case 'BatchQuantityRevision':
+            onDeleteBatchQuantityRevision(event.entity.id, items);
             break;
           default:
             break;

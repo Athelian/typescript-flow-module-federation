@@ -6,13 +6,13 @@ export const WrapperStyle = css`
   position: relative;
 `;
 
-export const OptionsWrapperStyle = (height: number) => css`
+export const OptionsWrapperStyle = (width: number, height: number) => css`
   ${shadows.INPUT};
   ${scrollbars.SMALL};
   ${borderRadiuses.MAIN};
   background: ${colors.WHITE};
   height: ${height}px;
-  width: 200px;
+  width: ${width}px;
   position: absolute;
   top: calc(100% + 5px);
   left: 0;

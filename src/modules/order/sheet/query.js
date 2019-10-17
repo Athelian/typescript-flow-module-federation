@@ -74,6 +74,13 @@ const batchSheetFragment = gql`
     id
     no
     quantity
+    batchQuantityRevisions {
+      ... on BatchQuantityRevision {
+        id
+        quantity
+        type
+      }
+    }
     deliveredAt
     desiredAt
     expiredAt
@@ -135,7 +142,6 @@ const containerSheetFragment = gql`
     no
     warehouseArrivalAgreedDate
     warehouseArrivalActualDate
-
     yardName
     departureDate
     totalPackageQuantity
@@ -269,6 +275,24 @@ export const batchByIDQuery = gql`
   ${userAvatarFragment}
   ${documentFragment}
   ${forbiddenFragment}
+`;
+
+export const batchQuantityRevisionByIDQuery = gql`
+  query batchQuantityRevisionByIDQuery($id: ID!) {
+    batchQuantityRevision(id: $id) {
+      ... on BatchQuantityRevision {
+        id
+        quantity
+        type
+        sort
+        batch {
+          ... on Batch {
+            id
+          }
+        }
+      }
+    }
+  }
 `;
 
 export const containerByIDQuery = gql`

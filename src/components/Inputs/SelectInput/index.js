@@ -95,7 +95,7 @@ const SelectOptions = ({
   const height = Math.min(availableItems.length * optionHeight, 200);
 
   return (
-    <div className={OptionsWrapperStyle(height)} {...getMenuProps()}>
+    <div className={OptionsWrapperStyle(optionWidth, height)} {...getMenuProps()}>
       <FixedSizeList
         width={optionWidth}
         height={height}

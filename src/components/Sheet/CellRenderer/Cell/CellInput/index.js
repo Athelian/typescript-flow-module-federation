@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { equals } from 'ramda';
 import TextInput from './Inputs/TextInput';
 import TextAreaInput from './Inputs/TextAreaInput';
 import NumberInput from './Inputs/NumberInput';
@@ -8,6 +9,7 @@ import DatetimeInput from './Inputs/DatetimeInput';
 import EnumInput from './Inputs/EnumInput';
 import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
 import DocumentsInput from './Inputs/DocumentsInput';
+import QuantityRevisionsInput from './Inputs/QuantityRevisionsInput';
 import { WrapperStyle } from './style';
 
 type Props = {
@@ -35,6 +37,7 @@ const inputs = {
   order_documents: DocumentsInput.Order,
   order_item_documents: DocumentsInput.OrderItem,
   shipment_documents: DocumentsInput.Shipment,
+  quantity_revisions: QuantityRevisionsInput,
 };
 
 const CellInput = ({
@@ -56,7 +59,7 @@ const CellInput = ({
   }, [value, setDirtyValue]);
 
   const handleChange = newValue => {
-    if (newValue !== dirtyValue) {
+    if (!equals(newValue, dirtyValue)) {
       setDirtyValue(newValue);
 
       if (!inputFocus) {
@@ -68,7 +71,7 @@ const CellInput = ({
   const handleBlur = () => {
     onBlur();
 
-    if (dirtyValue === value) {
+    if (equals(dirtyValue, value)) {
       return;
     }
 
