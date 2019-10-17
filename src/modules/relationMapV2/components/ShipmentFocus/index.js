@@ -32,6 +32,7 @@ import {
 } from 'modules/relationMapV2/store';
 import EditFormSlideView from '../EditFormSlideView';
 import SelectedEntity from '../SelectedEntity';
+import SplitBatches from '../SplitBatches';
 import CloneEntities from '../CloneEntities';
 import InlineCreateContainer from '../InlineCreateContainer';
 import DeleteContainerConfirm from '../DeleteContainerConfirm';
@@ -75,7 +76,13 @@ export default function ShipmentFocus() {
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const { initHits } = Hits.useContainer();
-  const { initMapping, getRelatedBy, onSetBadges, onSetCloneRelated } = Entities.useContainer();
+  const {
+    initMapping,
+    getRelatedBy,
+    onSetBadges,
+    onSetCloneRelated,
+    onSetSplitBatchRelated,
+  } = Entities.useContainer();
   const { queryVariables } = SortAndFilter.useContainer();
   const lastQueryVariables = usePrevious(queryVariables);
   React.useEffect(() => {
@@ -419,6 +426,34 @@ export default function ShipmentFocus() {
                           );
                         }
                       }
+                    }}
+                  />
+                  <SplitBatches
+                    onSuccess={(_, batchIds) => {
+                      onSetBadges(
+                        Object.keys(batchIds).map(id => ({
+                          id: batchIds[id],
+                          type: 'split',
+                          entity: 'batch',
+                        }))
+                      );
+                      onSetSplitBatchRelated(batchIds);
+                      queryShipmentsDetail(
+                        Object.keys(batchIds)
+                          .map(batchId => findShipmentIdByBatch(batchId, entities))
+                          .filter(Boolean)
+                      );
+                      window.requestIdleCallback(
+                        () => {
+                          dispatch({
+                            type: 'SPLIT_CLOSE',
+                            payload: {},
+                          });
+                        },
+                        {
+                          timeout: 250,
+                        }
+                      );
                     }}
                   />
                   <DeleteBatchConfirm
