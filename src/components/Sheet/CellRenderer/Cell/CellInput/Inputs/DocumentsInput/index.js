@@ -5,6 +5,7 @@ import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import { computeIcon, getFileExtension } from 'components/Form/DocumentsInput/helpers';
 import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
+import type { FilePayload } from 'generated/graphql';
 import InputWrapper from '../InputWrapper';
 import type { InputProps } from '../../types';
 import DocumentsInputDialog from './DocumentsInputDialog';
@@ -17,7 +18,7 @@ const DocumentsInput = ({
   onChange,
   onBlur,
   onFocus,
-}: InputProps<string>) => {
+}: InputProps<Array<FilePayload>>) => {
   return (
     <>
       <InputWrapper>

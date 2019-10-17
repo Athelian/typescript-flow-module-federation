@@ -13,7 +13,6 @@ import { WrapperStyle } from './style';
 type Props = {
   value: any,
   type: string,
-  entityId: string,
   focus: boolean,
   inputFocus: boolean,
   disabled: boolean,
@@ -39,7 +38,6 @@ const inputs = {
 const CellInput = ({
   value,
   type,
-  entityId,
   focus,
   inputFocus,
   disabled,
@@ -105,7 +103,6 @@ const CellInput = ({
     <div className={WrapperStyle(focus)}>
       {React.createElement(inputs[type], {
         value: dirtyValue,
-        entityId,
         readonly: disabled,
         focus: inputFocus,
         onFocus,

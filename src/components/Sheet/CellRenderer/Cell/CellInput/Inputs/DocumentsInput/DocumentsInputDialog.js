@@ -4,8 +4,7 @@ import { Provider } from 'unstated';
 import Dialog from 'components/Dialog';
 import { FormContainer } from 'modules/form';
 import { DocumentsInput as DocumentsSection } from 'components/Form';
-import usePermission from 'hooks/usePermission';
-import usePartnerPermission from 'hooks/usePartnerPermission';
+import type { FilePayload } from 'generated/graphql';
 import {
   ORDER_SET_DOCUMENTS,
   ORDER_DOWNLOAD_DOCUMENTS,
@@ -37,9 +36,9 @@ function usePrevious(value) {
 const formContainer = new FormContainer();
 const documentsContainer = new DocumentsContainer();
 
-const DocumentsInput = ({ value, onChange, onBlur, focus }: InputProps<string>) => {
-  const { isOwner } = usePartnerPermission();
-  const { hasPermission } = usePermission(isOwner);
+const DocumentsInput = ({ value, onChange, onBlur, focus }: InputProps<Array<FilePayload>>) => {
+  // TODO: Maxime said to do dummy permission until he changes it
+  const hasPermission = () => true;
   const canSetDocuments = hasPermission(ORDER_SET_DOCUMENTS);
 
   const { state, setFieldValue, initDetailValues } = documentsContainer;
@@ -52,7 +51,7 @@ const DocumentsInput = ({ value, onChange, onBlur, focus }: InputProps<string>) 
     } else if (prevFocus && !focus) {
       initDetailValues([]);
     }
-  });
+  }, [focus, initDetailValues, prevFocus, value]);
 
   return (
     <Provider inject={[formContainer, documentsContainer]}>
