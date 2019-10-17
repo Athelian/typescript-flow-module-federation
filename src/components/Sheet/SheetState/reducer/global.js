@@ -5,7 +5,10 @@ import { setForeignFocuses } from './foreign-focus';
 import { reFocus } from './focus';
 import { reError } from './error';
 
-function computeMergedCells(rows: Array<Array<CellValue>>): Array<Array<CellValue>> {
+function computeMergedCells(
+  rows: Array<Array<CellValue>>,
+  offset: number = 0
+): Array<Array<CellValue>> {
   const mergedCells = rows.reduce((list, row, x) => {
     row.forEach((cell, y) => {
       if (!cell.parent) {
@@ -46,7 +49,10 @@ function computeMergedCells(rows: Array<Array<CellValue>>): Array<Array<CellValu
 
       return {
         ...cell,
-        merged,
+        merged: {
+          from: { ...merged.from, x: merged.from.x + offset },
+          to: { ...merged.to, x: merged.to.x + offset },
+        },
       };
     });
   });
@@ -156,7 +162,8 @@ export function append(
   return function(state: State, payload: { items: Array<Object> }): State {
     const { items } = payload;
     const rows = computeMergedCells(
-      transformItems(transformer)(state.items.length, sorter(items, state.sorts), state.columns)
+      transformItems(transformer)(state.items.length, sorter(items, state.sorts), state.columns),
+      state.rows.length
     );
     const entities = resolveEntities(rows);
 
