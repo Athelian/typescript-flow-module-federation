@@ -36,6 +36,7 @@ import CloneEntities from '../CloneEntities';
 import InlineCreateContainer from '../InlineCreateContainer';
 import DeleteContainerConfirm from '../DeleteContainerConfirm';
 import RemoveBatchConfirm from '../RemoveBatchConfirm';
+import DeleteBatchConfirm from '../DeleteBatchConfirm';
 import StatusConfirm from '../StatusConfirm';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import AddTags from '../AddTags';
@@ -393,6 +394,47 @@ export default function ShipmentFocus() {
                           );
                         }
                       }
+                    }}
+                  />
+                  <DeleteBatchConfirm
+                    onSuccess={batchId => {
+                      queryShipmentsDetail([findShipmentIdByBatch(batchId, entities)]);
+                      const [itemId, orderId] = findParentIdsByBatch({
+                        batchId,
+                        entities,
+                        viewer: state.viewer,
+                      });
+                      const removeTargets = [];
+                      const remainItemsCount = Object.values(entities.batches).filter(
+                        (currentBatch: Object) =>
+                          currentBatch.container && currentBatch.orderItem === itemId
+                      ).length;
+                      if (!entities.batches?.[batchId]?.container) {
+                        removeTargets.push(`${BATCH}-${batchId}`);
+                      }
+                      if (remainItemsCount === 1 && orderId && itemId) {
+                        removeTargets.push(`${ORDER}-${orderId}`);
+                        removeTargets.push(`${ORDER_ITEM}-${itemId}`);
+                      }
+                      window.requestIdleCallback(
+                        () => {
+                          if (removeTargets.length) {
+                            dispatch({
+                              type: 'REMOVE_TARGETS',
+                              payload: {
+                                targets: removeTargets,
+                              },
+                            });
+                          }
+                          dispatch({
+                            type: 'REMOVE_BATCH_CLOSE',
+                            payload: {},
+                          });
+                        },
+                        {
+                          timeout: 250,
+                        }
+                      );
                     }}
                   />
                   <RemoveBatchConfirm
