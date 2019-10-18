@@ -215,4 +215,4 @@ const Cell = ({
   );
 };
 
-export default Cell;
+export default React.memo<Props>(Cell);

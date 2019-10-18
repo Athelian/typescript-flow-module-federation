@@ -33,16 +33,6 @@ export const focusEventSubscription = gql`
   ${focusFragment}
 `;
 
-export const focusesQuery = gql`
-  query focuses($id: ID!, $entities: [EntityInput!]!) {
-    focuses(id: $id, entities: $entities) {
-      ...focusFragment
-    }
-  }
-
-  ${focusFragment}
-`;
-
 export const focusMutation = gql`
   mutation focus($id: ID!, $input: FocusingInput!) {
     focus(id: $id, input: $input)

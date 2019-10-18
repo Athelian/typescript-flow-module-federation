@@ -35,6 +35,7 @@ import {
   BATCH_SET_PACKAGE_QUANTITY,
   BATCH_SET_PRODUCTION_DATE,
   BATCH_SET_QUANTITY,
+  BATCH_SET_QUANTITY_ADJUSTMENTS,
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
 import {
@@ -492,6 +493,17 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
         batch,
         'quantity',
         hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.quantityRevisions',
+      type: 'quantity_revisions',
+      ...transformValueField(
+        basePath,
+        batch,
+        'batchQuantityRevisions',
+        hasPermission =>
+          hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)
       ),
     },
     {

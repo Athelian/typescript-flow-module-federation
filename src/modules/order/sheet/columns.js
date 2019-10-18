@@ -404,7 +404,15 @@ const batchColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // revised quantities
+  {
+    key: 'order.orderItem.batch.quantityRevisions',
+    exportKey: 'orderItems.batches.quantityRevisions',
+    title: <FormattedMessage {...batchMessages.sectionAdjustments} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 1035,
+    minWidth: 1035,
+  },
   {
     key: 'order.orderItem.batch.packageName',
     exportKey: 'orderItems.batches.packageName',

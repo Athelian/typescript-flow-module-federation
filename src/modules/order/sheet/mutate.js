@@ -1,5 +1,6 @@
 // @flow
 import ApolloClient from 'apollo-client';
+import { removeTypename } from 'utils/data';
 import {
   batchMutation,
   containerMutation,
@@ -68,6 +69,12 @@ function normalizedInput(type: string, field: string, value: any): Object {
         case 'producedAt':
           return {
             [field]: new Date(value),
+          };
+        case 'batchQuantityRevisions':
+          return {
+            batchQuantityRevisions: value.map(({ sort, batch, ...revision }) =>
+              removeTypename(revision)
+            ),
           };
         default:
           return {
