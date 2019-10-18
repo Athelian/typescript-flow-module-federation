@@ -6,19 +6,20 @@ import FormattedNumber from 'components/FormattedNumber';
 import { computeIcon, getFileExtension } from 'components/Form/DocumentsInput/helpers';
 import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
 import type { FilePayload } from 'generated/graphql';
-import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import InputWrapper from '../InputWrapper';
 import DocumentsInputDialog from './DocumentsInputDialog';
 import { DocumentsInputWrapperStyle, DocumentCountWrapperStyle, DocumentIconStyle } from './style';
 
-const DocumentsInput = ({
-  value = [],
-  focus,
-  readonly,
-  onChange,
-  onBlur,
-  onFocus,
-}: InputProps<Array<FilePayload>>) => {
+type Props = {
+  value: Array<FilePayload>,
+  focus: boolean,
+  readonly: boolean,
+  onChange: (Array<FilePayload>) => void,
+  onFocus: () => void,
+  onBlur: () => void,
+};
+
+const DocumentsInput = ({ value = [], focus, readonly, onChange, onBlur, onFocus }: Props) => {
   return (
     <>
       <InputWrapper focus={focus}>

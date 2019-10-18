@@ -5,11 +5,17 @@ import Dialog from 'components/Dialog';
 import { FormContainer } from 'modules/form';
 import { DocumentsInput as DocumentsSection } from 'components/Form';
 import type { FilePayload } from 'generated/graphql';
-import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 
 const formContainer = new FormContainer();
 
-const DocumentsInput = ({ value, onChange, onBlur, focus }: InputProps<Array<FilePayload>>) => {
+type Props = {
+  value: Array<FilePayload>,
+  onChange: (Array<FilePayload>) => void,
+  focus: boolean,
+  onBlur: () => void,
+};
+
+const DocumentsInputDialog = ({ value, onChange, onBlur, focus }: Props) => {
   // TODO: Maxime said to do dummy permission until he changes it
   const canDelete = true;
   const canUpload = true;
@@ -44,4 +50,4 @@ const DocumentsInput = ({ value, onChange, onBlur, focus }: InputProps<Array<Fil
   );
 };
 
-export default DocumentsInput;
+export default DocumentsInputDialog;
