@@ -17,7 +17,7 @@ import {
   RevisionWrapperStyle,
 } from './style';
 
-const QuantityRevisionTypeSelectInput = ({
+const QuantityRevisionTypeSelectInput = (index: number) => ({
   getToggleButtonProps,
   selectedItem,
   isOpen,
@@ -26,7 +26,9 @@ const QuantityRevisionTypeSelectInput = ({
     type="button"
     {...getToggleButtonProps({
       onKeyDown: e => {
-        e.stopPropagation();
+        if (index > 0) {
+          e.stopPropagation();
+        }
       },
     })}
     className={SelectInputStyle(isOpen)}
@@ -93,7 +95,7 @@ const QuantityRevisionsInput = ({
   return (
     <div className={WrapperStyle}>
       {(value || []).map((revision, index) => (
-        <div key={revision.id} className={RevisionWrapperStyle}>
+        <div key={`${revision.id}-${index + 0}`} className={RevisionWrapperStyle}>
           <SelectInput
             value={revision.type}
             onChange={handleTypeChange(index)}
@@ -104,7 +106,7 @@ const QuantityRevisionsInput = ({
             optionWidth={200}
             optionHeight={30}
             toggleRef={index === 0 ? firstElementRef : undefined}
-            renderInput={QuantityRevisionTypeSelectInput}
+            renderInput={QuantityRevisionTypeSelectInput(index)}
             renderOption={QuantityRevisionTypeSelectOption}
           />
           <hr className={SeparatorStyle} />

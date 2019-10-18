@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import isDeepEqual from 'react-fast-compare';
+import { areEqual } from 'react-window';
 import LoadingIcon from 'components/LoadingIcon';
 import { useSheetState } from '../SheetState';
 import type { Area, CellValue } from '../SheetState/types';
@@ -109,4 +109,4 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
   );
 };
 
-export default React.memo<Props>(CellRenderer, isDeepEqual);
+export default React.memo<Props>(CellRenderer, areEqual);

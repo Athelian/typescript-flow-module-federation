@@ -24,6 +24,7 @@ export const SelectInputStyle = (isOpen: boolean): string => css`
   & > span {
     ${fontSizes.MAIN};
     ${presets.ELLIPSIS};
+    color: ${colors.BLACK};
     text-align: left;
     font-weight: bold;
     padding: 0 5px;
@@ -35,11 +36,9 @@ export const SelectInputStyle = (isOpen: boolean): string => css`
     ${fontSizes.SMALL};
     color: ${isOpen ? colors.TEAL : colors.GRAY_LIGHT};
     height: 100%;
-    cursor: pointer;
   }
 
-  &:hover,
-  :focus > i {
+  &:focus > i {
     color: ${colors.TEAL};
   }
 `;
