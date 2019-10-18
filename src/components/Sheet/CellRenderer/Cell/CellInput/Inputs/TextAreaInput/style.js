@@ -1,6 +1,28 @@
 // @flow
 import { css } from 'react-emotion';
-import { fontSizes, colors, borderRadiuses, scrollbars, shadows, transitions } from 'styles/common';
+import {
+  presets,
+  fontSizes,
+  colors,
+  borderRadiuses,
+  scrollbars,
+  shadows,
+  transitions,
+} from 'styles/common';
+
+export const TextAreaInputButtonStyle: string = css`
+  display: flex;
+  width: 100%;
+  cursor: pointer;
+`;
+
+export const TextAreaPlaceholderStyle: string = css`
+  ${fontSizes.MAIN};
+  font-weight: bold;
+  color: ${colors.GRAY_LIGHT};
+  ${presets.ELLIPSIS};
+  padding: 5px;
+`;
 
 export const TextAreaInputDialogWrapperStyle: string = css`
   padding: 20px;
