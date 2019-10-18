@@ -135,7 +135,13 @@ const orderColumns: Array<ColumnConfig> = [
     width: 200,
   }, */
   // total price
-  // documents
+  {
+    key: 'order.files',
+    title: <FormattedMessage {...orderMessages.sectionDocuments} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   // tasks
   // custom fields mask
   // custom fields

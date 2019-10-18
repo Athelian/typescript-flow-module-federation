@@ -25,6 +25,10 @@ function normalizedInput(type: string, field: string, value: any): Object {
           return {
             [field]: new Date(value),
           };
+        case 'files':
+          return {
+            files: value.map(({ __typename, entity, path, uploading, progress, ...rest }) => rest),
+          };
         default:
           return {
             [field]: value,
