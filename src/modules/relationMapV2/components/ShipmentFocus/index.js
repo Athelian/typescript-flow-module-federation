@@ -240,10 +240,10 @@ export default function ShipmentFocus() {
                     onClose={result => {
                       if (state.edit.type === SHIPMENT) {
                         queryShipmentsDetail([state.edit.selectedId]);
-                      } else if (state.edit.orderId) {
-                        queryShipmentsDetail([state.edit.orderId]);
-                      } else if (state.edit.orderIds && state.edit.orderIds.length) {
-                        queryShipmentsDetail(state.edit.orderIds);
+                      } else if (state.edit.shipmentId) {
+                        queryShipmentsDetail([state.edit.shipmentId]);
+                      } else if (state.edit.shipmentIds && state.edit.shipmentIds.length) {
+                        queryShipmentsDetail(state.edit.shipmentIds);
                       }
                       if (result?.moveToTop) {
                         queryShipmentsDetail([result?.id ?? ''].filter(Boolean));
@@ -253,13 +253,20 @@ export default function ShipmentFocus() {
                           type: result?.type ?? '',
                         });
                       }
-                      dispatch({
-                        type: 'EDIT',
-                        payload: {
-                          type: '',
-                          selectedId: '',
+                      window.requestIdleCallback(
+                        () => {
+                          dispatch({
+                            type: 'EDIT',
+                            payload: {
+                              type: '',
+                              selectedId: '',
+                            },
+                          });
                         },
-                      });
+                        {
+                          timeout: 250,
+                        }
+                      );
                     }}
                   />
                   <DeleteConfirm

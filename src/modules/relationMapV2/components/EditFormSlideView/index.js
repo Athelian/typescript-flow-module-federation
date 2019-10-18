@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { useLazyQuery, useMutation } from 'react-apollo';
-import { findKey } from 'lodash';
 import usePrevious from 'hooks/usePrevious';
 import useUser from 'hooks/useUser';
 import SlideView from 'components/SlideView';
@@ -17,7 +16,7 @@ import { prepareParsedContainerInput } from 'modules/container/form/mutation';
 import ShipmentForm from 'modules/shipment/index.form';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
-import { targetedIds } from 'modules/relationMapV2/helpers';
+import { targetedIds, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
 import { encodeId, uuid } from 'utils/id';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
@@ -244,8 +243,10 @@ const EditFormSlideView = ({ onClose }: Props) => {
       ) {
         const { ordersByIDs } = data;
         batchIds.forEach(batchId => {
-          const orderItemId = findKey(mapping.entities?.orderItems, orderItem => {
-            return (orderItem.batches || []).includes(batchId);
+          const [orderItemId] = findParentIdsByBatch({
+            batchId,
+            viewer: state.viewer,
+            entities: mapping.entities,
           });
           const parentOrder = ordersByIDs.find(order =>
             (order?.orderItems ?? []).map(item => item.id).includes(orderItemId)
@@ -342,8 +343,8 @@ const EditFormSlideView = ({ onClose }: Props) => {
                   importer: isImporter() ? importer : null,
                   forwarders: isForwarder() ? [organization] : [],
                   exporter: isExporter() ? exporter : null,
-                  batches: newBatches,
-                  containers: newContainers,
+                  batches: newBatches.map(batch => ({ ...batch, container: null, shipment: null })),
+                  containers: [],
                 }}
                 onSuccessCallback={result => {
                   onSetBadges([
@@ -356,7 +357,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
                   dispatch({
                     type: 'NEW_SHIPMENT',
                     payload: {
-                      orderId: result.shipmentCreate.id,
+                      shipmentId: result.shipmentCreate.id,
                     },
                   });
                   onClose({
