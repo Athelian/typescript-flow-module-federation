@@ -192,7 +192,7 @@ const Cell = ({
         }
 
         if (isReadonly) {
-          return <CellDisplay value={readonlyValue} type={cell.type} />;
+          return <CellDisplay value={readonlyValue} type={cell.type} entity={cell.entity?.type} />;
         }
 
         return (

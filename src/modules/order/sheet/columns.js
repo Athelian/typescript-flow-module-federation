@@ -134,7 +134,13 @@ const orderColumns: Array<ColumnConfig> = [
     color: colors.ORDER,
     width: 200,
   },
-  // total price
+  // {
+  //   key: 'order.totalPrice',
+  //   title: <FormattedMessage {...orderMessages.totalPrice} />,
+  //   icon: 'ORDER',
+  //   color: colors.ORDER,
+  //   width: 200,
+  // },
   {
     key: 'order.files',
     title: <FormattedMessage {...orderMessages.sectionDocuments} />,
@@ -175,7 +181,14 @@ const orderItemColumns: Array<ColumnConfig> = [
       group: 'orderItem',
     },
   },
-  // status
+  {
+    key: 'order.orderItem.archived',
+    exportKey: 'orderItems.archived',
+    title: <FormattedMessage {...orderItemMessages.status} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+  },
   {
     key: 'order.orderItem.productProvider.product.name',
     // TODO: Maxime will check the correct key in backend and supply it
@@ -193,7 +206,7 @@ const orderItemColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.productProvider.product.serial',
     // TODO: Maxime will check the correct key in backend and supply it
-    exportKey: null,
+    exportKey: '',
     title: <FormattedMessage id="components.BatchItem.productSerial" />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
@@ -323,7 +336,14 @@ const batchColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // status
+  {
+    key: 'order.orderItem.batch.archived',
+    exportKey: 'orderItems.batches.archived',
+    title: <FormattedMessage {...orderItemMessages.status} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.no',
     exportKey: 'orderItems.batches.no',
@@ -487,7 +507,14 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // status
+  {
+    key: 'order.orderItem.batch.container.archived',
+    exportKey: 'orderItems.batches.container.archived',
+    title: <FormattedMessage {...containerMessages.status} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.container.no',
     title: <FormattedMessage {...containerMessages.containerNo} />,
