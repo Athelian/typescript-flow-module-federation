@@ -280,9 +280,6 @@ function transformOrderItem(
     {
       columnKey: 'order.orderItem.productProvider.product.name',
       type: 'text',
-      disabled: !hasItems && !orderItem,
-      empty: hasItems && !orderItem,
-      parent: true,
       ...transformReadonlyField(
         `${basePath}.productProvider.product`,
         orderItem?.productProvider?.product ?? null,
@@ -293,9 +290,6 @@ function transformOrderItem(
     {
       columnKey: 'order.orderItem.productProvider.product.serial',
       type: 'text',
-      disabled: !hasItems && !orderItem,
-      empty: hasItems && !orderItem,
-      parent: true,
       ...transformReadonlyField(
         `${basePath}.productProvider.product`,
         orderItem?.productProvider?.product ?? null,
