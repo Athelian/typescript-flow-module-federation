@@ -5,7 +5,7 @@ import Dialog from 'components/Dialog';
 import { FormContainer } from 'modules/form';
 import { DocumentsInput as DocumentsSection } from 'components/Form';
 import type { FilePayload } from 'generated/graphql';
-import type { InputProps } from '../../types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 
 const formContainer = new FormContainer();
 
@@ -36,9 +36,7 @@ const DocumentsInput = ({ value, onChange, onBlur, focus }: InputProps<Array<Fil
           }}
           downloadable={canDownload}
           files={value}
-          onSave={newValue => {
-            onChange(newValue);
-          }}
+          onSave={onChange}
           entity="Order"
         />
       </Dialog>

@@ -6,8 +6,8 @@ import FormattedNumber from 'components/FormattedNumber';
 import { computeIcon, getFileExtension } from 'components/Form/DocumentsInput/helpers';
 import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
 import type { FilePayload } from 'generated/graphql';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import InputWrapper from '../InputWrapper';
-import type { InputProps } from '../../types';
 import DocumentsInputDialog from './DocumentsInputDialog';
 import { DocumentsInputWrapperStyle, DocumentCountWrapperStyle, DocumentIconStyle } from './style';
 
