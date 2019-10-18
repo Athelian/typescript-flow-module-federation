@@ -53,6 +53,30 @@ const orderItemSheetFragment = gql`
       ...documentFragment
       ...forbiddenFragment
     }
+    productProvider {
+      ...forbiddenFragment
+      ... on ProductProvider {
+        id
+        product {
+          ...forbiddenFragment
+          ... on Product {
+            id
+            name
+            serial
+            ownedBy {
+              ... on Organization {
+                id
+              }
+            }
+          }
+        }
+        ownedBy {
+          ... on Organization {
+            id
+          }
+        }
+      }
+    }
     createdAt
     updatedAt
     createdBy {

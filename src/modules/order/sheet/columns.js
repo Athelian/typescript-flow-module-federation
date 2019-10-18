@@ -177,9 +177,37 @@ const orderItemColumns: Array<ColumnConfig> = [
   },
   // status
   {
+    key: 'order.orderItem.productProvider.product.name',
+    // TODO: Maxime will check the correct key in backend and supply it
+    exportKey: null,
+    title: <FormattedMessage id="components.BatchItem.productName" />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+    sort: {
+      local: true,
+      name: 'productProvider.product.name',
+      group: 'orderItem',
+    },
+  },
+  {
+    key: 'order.orderItem.productProvider.product.serial',
+    // TODO: Maxime will check the correct key in backend and supply it
+    exportKey: null,
+    title: <FormattedMessage id="components.BatchItem.productSerial" />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+    sort: {
+      local: true,
+      name: 'productProvider.product.serial',
+      group: 'orderItem',
+    },
+  },
+  {
     key: 'order.orderItem.no',
     exportKey: 'orderItems.no',
-    title: 'Item No',
+    title: <FormattedMessage {...orderItemMessages.no} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
@@ -192,7 +220,7 @@ const orderItemColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.quantity',
     exportKey: 'orderItems.quantity',
-    title: 'Quantity',
+    title: <FormattedMessage {...batchMessages.quantity} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,

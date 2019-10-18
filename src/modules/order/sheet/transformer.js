@@ -278,6 +278,26 @@ function transformOrderItem(
       ...transformReadonlyField(basePath, orderItem, 'updatedAt', orderItem?.updatedAt ?? null),
     },
     {
+      columnKey: 'order.orderItem.productProvider.product.name',
+      type: 'text',
+      ...transformReadonlyField(
+        `${basePath}.productProvider.product`,
+        orderItem?.productProvider?.product ?? null,
+        'name',
+        orderItem?.productProvider?.product?.name ?? ''
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.productProvider.product.serial',
+      type: 'text',
+      ...transformReadonlyField(
+        `${basePath}.productProvider.product`,
+        orderItem?.productProvider?.product ?? null,
+        'serial',
+        orderItem?.productProvider?.product?.serial ?? ''
+      ),
+    },
+    {
       columnKey: 'order.orderItem.no',
       type: 'text',
       ...transformValueField(

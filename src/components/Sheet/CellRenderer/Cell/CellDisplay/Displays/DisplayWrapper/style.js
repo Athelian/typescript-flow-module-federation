@@ -7,6 +7,7 @@ export const DisplayWrapperStyle: string = css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   padding: 5px;
+  width: 100%;
   & > span {
     ${fontSizes.MAIN};
     ${presets.ELLIPSIS};

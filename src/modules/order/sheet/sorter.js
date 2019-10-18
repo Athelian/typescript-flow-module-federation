@@ -32,22 +32,28 @@ function orderItemSorter(sorts: Array<ColumnSort>) {
           result = setDirection(defaultSort(a, b), sort.direction);
           break;
         case 'updatedAt':
-          result = setDirection(dateSort(a.updatedAt, b.updatedAt), sort.direction);
-          break;
         case 'deliveryDate':
-          result = setDirection(dateSort(a.deliveryDate, b.deliveryDate), sort.direction);
+          result = setDirection(dateSort(a[sort.name], b[sort.name]), sort.direction);
+          break;
+        case 'productProvider.product.name':
+          result = setDirection(
+            stringSort(a.productProvider.product.name, b.productProvider.product.name),
+            sort.direction
+          );
+          break;
+        case 'productProvider.product.serial':
+          result = setDirection(
+            stringSort(a.productProvider.product.serial, b.productProvider.product.serial),
+            sort.direction
+          );
           break;
         case 'no':
-          result = setDirection(stringSort(a.no, b.no), sort.direction);
+          result = setDirection(stringSort(a[sort.name], b[sort.name]), sort.direction);
           break;
         case 'quantity':
-          result = setDirection(numberSort(a.quantity, b.quantity), sort.direction);
-          break;
         case 'totalBatched':
-          result = setDirection(numberSort(a.totalBatched, b.totalBatched), sort.direction);
-          break;
         case 'totalShipped':
-          result = setDirection(numberSort(a.totalShipped, b.totalShipped), sort.direction);
+          result = setDirection(numberSort(a[sort.name], b[sort.name]), sort.direction);
           break;
         default:
           break;
