@@ -25,7 +25,7 @@ export function changeValues(
   const cellsToUpdate = changes
     .map(({ entity, field, value }) => {
       return {
-        cells: state.rows
+        cells: state.allRows
           .map(row =>
             row.filter(
               cell =>

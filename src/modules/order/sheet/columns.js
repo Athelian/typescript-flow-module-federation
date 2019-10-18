@@ -22,7 +22,7 @@ const orderColumns: Array<ColumnConfig> = [
       group: 'order',
     },
   },
-  /* {
+  {
     key: 'order.updated',
     title: <FormattedMessage {...orderMessages.updatedAt} />,
     icon: 'ORDER',
@@ -33,7 +33,7 @@ const orderColumns: Array<ColumnConfig> = [
       name: 'updatedAt',
       group: 'order',
     },
-  }, */
+  },
   // status
   {
     key: 'order.poNo',
@@ -113,7 +113,7 @@ const orderColumns: Array<ColumnConfig> = [
     width: 200,
   },
   // in charge
-  /* {
+  {
     key: 'order.totalOrdered',
     title: <FormattedMessage {...orderMessages.totalOrderedQuantity} />,
     icon: 'ORDER',
@@ -133,7 +133,7 @@ const orderColumns: Array<ColumnConfig> = [
     icon: 'ORDER',
     color: colors.ORDER,
     width: 200,
-  }, */
+  },
   // total price
   {
     key: 'order.files',
@@ -163,7 +163,7 @@ const orderItemColumns: Array<ColumnConfig> = [
       group: 'orderItem',
     },
   },
-  /* {
+  {
     key: 'order.orderItem.updated',
     title: <FormattedMessage {...orderItemMessages.updatedAt} />,
     icon: 'ORDER_ITEM',
@@ -174,7 +174,7 @@ const orderItemColumns: Array<ColumnConfig> = [
       name: 'updatedAt',
       group: 'orderItem',
     },
-  }, */
+  },
   // status
   {
     key: 'order.orderItem.no',
@@ -217,7 +217,7 @@ const orderItemColumns: Array<ColumnConfig> = [
   },
   // tags
   // memo
-  /* {
+  {
     key: 'order.orderItem.totalBatched',
     title: 'Total Batched quantity',
     icon: 'ORDER_ITEM',
@@ -240,7 +240,7 @@ const orderItemColumns: Array<ColumnConfig> = [
       name: 'totalShipped',
       group: 'orderItem',
     },
-  }, */
+  },
   {
     key: 'order.orderItem.deliveryDate',
     exportKey: 'orderItems.deliveryDate',
@@ -283,7 +283,7 @@ const batchColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  /* {
+  {
     key: 'order.orderItem.batch.updated',
     title: <FormattedMessage {...batchMessages.updatedAt} />,
     icon: 'BATCH',
@@ -294,7 +294,7 @@ const batchColumns: Array<ColumnConfig> = [
       name: 'updatedAt',
       group: 'batch',
     },
-  }, */
+  },
   // status
   {
     key: 'order.orderItem.batch.no',
@@ -439,7 +439,7 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  /* {
+  {
     key: 'order.orderItem.batch.container.updated',
     title: <FormattedMessage {...containerMessages.updatedAt} />,
     icon: 'CONTAINER',
@@ -450,7 +450,7 @@ const containerColumns: Array<ColumnConfig> = [
       name: 'containerUpdatedAt',
       group: 'batch',
     },
-  }, */
+  },
   // status
   {
     key: 'order.orderItem.batch.container.no',
@@ -583,7 +583,7 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  /* {
+  {
     key: 'order.orderItem.batch.shipment.updated',
     title: <FormattedMessage {...shipmentMessages.updatedAt} />,
     icon: 'SHIPMENT',
@@ -594,7 +594,7 @@ const shipmentColumns: Array<ColumnConfig> = [
       name: 'shipmentUpdatedAt',
       group: 'batch',
     },
-  }, */
+  },
   {
     key: 'order.orderItem.batch.shipment.no',
     exportKey: 'orderItems.batches.shipment.no',

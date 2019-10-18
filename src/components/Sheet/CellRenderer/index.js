@@ -3,7 +3,7 @@ import * as React from 'react';
 import isDeepEqual from 'react-fast-compare';
 import LoadingIcon from 'components/LoadingIcon';
 import { useSheetState } from '../SheetState';
-import type { Area } from '../SheetState/types';
+import type { Area, CellValue } from '../SheetState/types';
 import Deleted from './Announcements/Deleted';
 import Added from './Announcements/Added';
 import Users from './Users';
@@ -29,6 +29,7 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
   const { state } = useSheetState();
   const {
     rows,
+    items,
     addedRows,
     removedRows,
     hoverAt,
@@ -52,7 +53,14 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
     );
   }, [foreignFocusesAt, columnIndex, rowIndex]);
 
-  const cell = rows[rowIndex]?.[columnIndex];
+  const cell: CellValue = rows[rowIndex]?.[columnIndex];
+  const item = React.useMemo<Object | null>(() => {
+    if (!cell || !cell.data) {
+      return null;
+    }
+    const itemIdx = parseFloat(cell.data.path.split('.')[0]);
+    return items[itemIdx];
+  }, [cell, items]);
   const isTop = cell && (!cell.merged || cell.merged.from.x === rowIndex);
   const addedRow = addedRows.find(row => row.from.x === rowIndex && row.from.y === columnIndex);
   const removedRow = removedRows.find(row => row.from.x === rowIndex && row.from.y === columnIndex);
@@ -85,6 +93,7 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
 
           <Cell
             cell={cell}
+            item={item}
             columnIndex={columnIndex}
             rowIndex={rowIndex}
             hover={ishovered}

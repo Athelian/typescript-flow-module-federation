@@ -18,9 +18,6 @@ const orderSheetFragment = gql`
     incoterm
     deliveryPlace
     deliveryDate
-    totalOrdered
-    totalBatched
-    totalShipped
     files {
       ...documentFragment
       ...forbiddenFragment
@@ -52,8 +49,6 @@ const orderItemSheetFragment = gql`
     }
     deliveryDate
     sort
-    totalBatched
-    totalShipped
     files {
       ...documentFragment
       ...forbiddenFragment
