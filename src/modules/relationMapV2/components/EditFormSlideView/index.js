@@ -414,7 +414,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
                       dispatch({
                         type: 'NEW_CONTAINER',
                         payload: {
-                          orderId: result.data.containerCreate.id,
+                          containerId: result.data.containerCreate.id,
                         },
                       });
                       onClose({

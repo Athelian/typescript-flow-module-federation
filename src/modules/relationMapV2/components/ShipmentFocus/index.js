@@ -246,7 +246,13 @@ export default function ShipmentFocus() {
                         queryShipmentsDetail(state.edit.shipmentIds);
                       }
                       if (result?.moveToTop) {
-                        queryShipmentsDetail([result?.id ?? ''].filter(Boolean));
+                        const shipmentId = state.edit.shipment?.id ?? '';
+                        if (result?.type === SHIPMENT) {
+                          queryShipmentsDetail([result?.id ?? ''].filter(Boolean));
+                        } else {
+                          // move to new container
+                          queryShipmentsDetail([shipmentId].filter(Boolean));
+                        }
                         scrollToRow({
                           position: 0,
                           id: result?.id ?? '',
@@ -438,9 +444,6 @@ export default function ShipmentFocus() {
                   />
                   <MoveBatch
                     onSuccess={(_, shipmentIds) => {
-                      console.warn({
-                        shipmentIds,
-                      });
                       queryShipmentsDetail(shipmentIds);
                       // // scroll to first orderId if that is exist on UI
                       const shipmentId = shipmentIds[0];
