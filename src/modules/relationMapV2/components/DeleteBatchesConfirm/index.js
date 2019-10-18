@@ -20,9 +20,9 @@ type Props = {|
 
 export default function DeleteBatchesConfirm({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
+  const { dispatch, state, selectors } = FocusedView.useContainer();
   const [deleteBatch] = useMutation(deleteBatchMutation);
   const [updateEntities] = useMutation(entitiesUpdateManyMutation);
-  const { dispatch, state } = FocusedView.useContainer();
   const { isProcessing, isRemove, isOpen } = state.deleteBatches;
   const batchIds = targetedIds(state.targets, BATCH);
   const isDisableRemovedContainerButton =
@@ -115,7 +115,8 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
           },
         })
           .then(() => {
-            onSuccess(batchIds, false);
+            // should remove targeting batches if that is shipment focused view
+            onSuccess(batchIds, selectors.isShipmentFocus);
           })
           .catch(() => {
             dispatch({

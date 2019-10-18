@@ -40,6 +40,7 @@ import DeleteContainerConfirm from '../DeleteContainerConfirm';
 import DeleteConfirm from '../DeleteConfirm';
 import RemoveBatchConfirm from '../RemoveBatchConfirm';
 import DeleteBatchConfirm from '../DeleteBatchConfirm';
+import DeleteBatchesConfirm from '../DeleteBatchesConfirm';
 import StatusConfirm from '../StatusConfirm';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import AddTags from '../AddTags';
@@ -538,6 +539,33 @@ export default function ShipmentFocus() {
                       );
                     }}
                   />
+                  <DeleteBatchesConfirm
+                    onSuccess={(batchIds, isRemoveTargeting) => {
+                      queryShipmentsDetail(
+                        batchIds.map(batchId => findShipmentIdByBatch(batchId, entities))
+                      );
+                      window.requestIdleCallback(
+                        () => {
+                          if (isRemoveTargeting) {
+                            dispatch({
+                              type: 'REMOVE_TARGETS',
+                              payload: {
+                                targets: batchIds.map(batchId => `${BATCH}-${batchId}`),
+                              },
+                            });
+                          }
+                          dispatch({
+                            type: 'DELETE_BATCHES_CLOSE',
+                            payload: {},
+                          });
+                        },
+                        {
+                          timeout: 250,
+                        }
+                      );
+                    }}
+                  />
+
                   <RemoveBatchConfirm
                     onSuccess={batchId => {
                       queryShipmentsDetail([findShipmentIdByBatch(batchId, entities)]);
