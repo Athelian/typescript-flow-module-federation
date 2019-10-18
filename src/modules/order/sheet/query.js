@@ -54,6 +54,10 @@ const orderItemSheetFragment = gql`
     sort
     totalBatched
     totalShipped
+    files {
+      ...documentFragment
+      ...forbiddenFragment
+    }
     createdAt
     updatedAt
     createdBy {
@@ -112,6 +116,10 @@ const shipmentSheetFragment = gql`
     invoiceNo
     contractNo
     carrier
+    files {
+      ...documentFragment
+      ...forbiddenFragment
+    }
     createdBy {
       ...userAvatarFragment
     }

@@ -19,6 +19,7 @@ import {
   ORDER_ITEMS_SET_PRICE,
   ORDER_ITEMS_UPDATE,
   ORDER_ITEMS_SET_DELIVERY_DATE,
+  ORDER_ITEMS_SET_DOCUMENTS,
 } from 'modules/permission/constants/orderItem';
 import {
   BATCH_SET_DELIVERY_DATE,
@@ -50,6 +51,7 @@ import {
   SHIPMENT_SET_INVOICE_NO,
   SHIPMENT_SET_CONTRACT_NO,
   SHIPMENT_SET_CARRIER,
+  SHIPMENT_SET_DOCUMENTS,
 } from 'modules/permission/constants/shipment';
 
 function transformOrder(basePath: string, order: Object): Array<CellValue> {
@@ -207,7 +209,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     },
     {
       columnKey: 'order.files',
-      type: 'documents',
+      type: 'order_documents',
       empty: !order,
       parent: true,
       ...transformValueField(
@@ -330,6 +332,20 @@ const transformOrderItem = (
         'deliveryDate',
         hasPermission =>
           hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_DELIVERY_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.files',
+      type: 'orderItem_documents',
+      disabled: !hasItems && !orderItem,
+      empty: hasItems && !orderItem,
+      parent: true,
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'files',
+        hasPermission =>
+          hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_DOCUMENTS)
       ),
     },
   ];
@@ -729,6 +745,18 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
         batch ? batch.shipment : null,
         'carrier',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_CARRIER)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.files',
+      type: 'shipment_documents',
+      duplicatable: true,
+      disabled: !(batch ? batch.shipment : null),
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch ? batch.shipment : null,
+        'files',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_DOCUMENTS)
       ),
     },
   ];

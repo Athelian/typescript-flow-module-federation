@@ -255,7 +255,13 @@ const orderItemColumns: Array<ColumnConfig> = [
     },
   },
   // total price
-  // documents
+  {
+    key: 'order.orderItem.files',
+    title: <FormattedMessage {...orderMessages.sectionDocuments} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+  },
   // tasks
   // custom fields mask
   // custom fields
@@ -692,6 +698,13 @@ const shipmentColumns: Array<ColumnConfig> = [
       name: 'shipmentCarrier',
       group: 'batch',
     },
+  },
+  {
+    key: 'order.orderItem.batch.shipment.files',
+    title: <FormattedMessage {...orderMessages.sectionDocuments} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
   },
 ];
 

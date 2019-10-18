@@ -13,9 +13,10 @@ type Props = {
   onChange: (Array<FilePayload>) => void,
   focus: boolean,
   onBlur: () => void,
+  entityType: string,
 };
 
-const DocumentsInputDialog = ({ value, onChange, onBlur, focus }: Props) => {
+const DocumentsInputDialog = ({ value, onChange, onBlur, focus, entityType }: Props) => {
   // TODO: Maxime said to do dummy permission until he changes it
   const canDelete = true;
   const canUpload = true;
@@ -43,7 +44,7 @@ const DocumentsInputDialog = ({ value, onChange, onBlur, focus }: Props) => {
           downloadable={canDownload}
           files={value}
           onSave={onChange}
-          entity="Order"
+          entity={entityType}
         />
       </Dialog>
     </Provider>
