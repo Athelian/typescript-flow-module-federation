@@ -238,6 +238,8 @@ export const orderItemByIDQuery = gql`
   ${shipmentSheetFragment}
   ${containerSheetFragment}
   ${userAvatarFragment}
+  ${documentFragment}
+  ${forbiddenFragment}
 `;
 
 export const batchByIDQuery = gql`
@@ -270,6 +272,8 @@ export const batchByIDQuery = gql`
   ${shipmentSheetFragment}
   ${containerSheetFragment}
   ${userAvatarFragment}
+  ${documentFragment}
+  ${forbiddenFragment}
 `;
 
 export const containerByIDQuery = gql`
@@ -292,6 +296,8 @@ export const shipmentByIDQuery = gql`
 
   ${shipmentSheetFragment}
   ${userAvatarFragment}
+  ${documentFragment}
+  ${forbiddenFragment}
 `;
 
 export const orderMutation = gql`

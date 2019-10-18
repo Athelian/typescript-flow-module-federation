@@ -33,7 +33,7 @@ const inputs = {
   currency: EnumInput.Currency,
   incoterm: EnumInput.Incoterm,
   order_documents: DocumentsInput.Order,
-  orderItem_documents: DocumentsInput.OrderItem,
+  order_item_documents: DocumentsInput.OrderItem,
   shipment_documents: DocumentsInput.Shipment,
 };
 

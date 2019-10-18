@@ -336,7 +336,7 @@ const transformOrderItem = (
     },
     {
       columnKey: 'order.orderItem.files',
-      type: 'orderItem_documents',
+      type: 'order_item_documents',
       disabled: !hasItems && !orderItem,
       empty: hasItems && !orderItem,
       parent: true,
