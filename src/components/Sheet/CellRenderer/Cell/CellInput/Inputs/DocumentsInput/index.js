@@ -10,63 +10,71 @@ import type InputProps from 'components/Sheet/CellRenderer/Cell/CellInput/types'
 import DocumentsInputDialog from './DocumentsInputDialog';
 import { DocumentsInputWrapperStyle, DocumentCountWrapperStyle, DocumentIconStyle } from './style';
 
-const DocumentsInput = ({
-  value = [],
-  focus,
-  readonly,
-  onChange,
-  onBlur,
-  onFocus,
-}: InputProps<Array<FilePayload>>) => {
-  return (
-    <>
-      <button
-        tabIndex="-1"
-        onClick={() => {
-          if (!readonly) {
-            onFocus();
-          }
-        }}
-        type="button"
-        className={DocumentsInputWrapperStyle}
-      >
-        <div className={DocumentIconStyle('DOCUMENT')}>
-          <Icon icon="DOCUMENT" />
-        </div>
+const DocumentsInput = (entityType: string) => {
+  return ({
+    value = [],
+    focus,
+    readonly,
+    onChange,
+    onBlur,
+    onFocus,
+  }: InputProps<Array<FilePayload>>) => {
+    return (
+      <>
+        <button
+          tabIndex="-1"
+          onClick={() => {
+            if (!readonly) {
+              onFocus();
+            }
+          }}
+          type="button"
+          className={DocumentsInputWrapperStyle}
+        >
+          <div className={DocumentIconStyle('DOCUMENT')}>
+            <Icon icon="DOCUMENT" />
+          </div>
 
-        <div className={DocumentCountWrapperStyle}>
-          <DisplayWrapper>
-            <span>
-              {value.length === 1 ? (
-                <FormattedMessage
-                  id="modules.sheet.doc"
-                  defaultMessage="{numOfDocuments} Doc"
-                  values={{ numOfDocuments: <FormattedNumber value={value.length} /> }}
-                />
-              ) : (
-                <FormattedMessage
-                  id="modules.sheet.docs"
-                  defaultMessage="{numOfDocuments} Docs"
-                  values={{ numOfDocuments: <FormattedNumber value={value.length} /> }}
-                />
-              )}
-            </span>
-          </DisplayWrapper>
-        </div>
+          <div className={DocumentCountWrapperStyle}>
+            <DisplayWrapper>
+              <span>
+                {value.length === 1 ? (
+                  <FormattedMessage
+                    id="modules.sheet.doc"
+                    defaultMessage="{numOfDocuments} Doc"
+                    values={{ numOfDocuments: <FormattedNumber value={value.length} /> }}
+                  />
+                ) : (
+                  <FormattedMessage
+                    id="modules.sheet.docs"
+                    defaultMessage="{numOfDocuments} Docs"
+                    values={{ numOfDocuments: <FormattedNumber value={value.length} /> }}
+                  />
+                )}
+              </span>
+            </DisplayWrapper>
+          </div>
 
-        {value.map((document, index) => {
-          const { icon, color } = computeIcon(getFileExtension(document?.name ?? ''));
-          return (
-            <div className={DocumentIconStyle(color)} key={`${document?.name}-${index + 0}`}>
-              <Icon icon={icon} />
-            </div>
-          );
-        })}
-      </button>
+          {value.map((document, index) => {
+            const { icon, color } = computeIcon(getFileExtension(document?.name ?? ''));
+            return (
+              <div className={DocumentIconStyle(color)} key={`${document?.name}-${index + 0}`}>
+                <Icon icon={icon} />
+              </div>
+            );
+          })}
+        </button>
 
-      <DocumentsInputDialog value={value} onChange={onChange} onBlur={onBlur} focus={focus} />
-    </>
-  );
+        <DocumentsInputDialog
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          focus={focus}
+          entityType={entityType}
+        />
+      </>
+    );
+  };
 };
 
 export default {
