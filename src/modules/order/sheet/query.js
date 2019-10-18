@@ -54,6 +54,10 @@ const orderItemSheetFragment = gql`
     sort
     totalBatched
     totalShipped
+    files {
+      ...documentFragment
+      ...forbiddenFragment
+    }
     createdAt
     updatedAt
     createdBy {
@@ -112,6 +116,10 @@ const shipmentSheetFragment = gql`
     invoiceNo
     contractNo
     carrier
+    files {
+      ...documentFragment
+      ...forbiddenFragment
+    }
     createdBy {
       ...userAvatarFragment
     }
@@ -230,6 +238,8 @@ export const orderItemByIDQuery = gql`
   ${shipmentSheetFragment}
   ${containerSheetFragment}
   ${userAvatarFragment}
+  ${documentFragment}
+  ${forbiddenFragment}
 `;
 
 export const batchByIDQuery = gql`
@@ -262,6 +272,8 @@ export const batchByIDQuery = gql`
   ${shipmentSheetFragment}
   ${containerSheetFragment}
   ${userAvatarFragment}
+  ${documentFragment}
+  ${forbiddenFragment}
 `;
 
 export const containerByIDQuery = gql`
@@ -284,6 +296,8 @@ export const shipmentByIDQuery = gql`
 
   ${shipmentSheetFragment}
   ${userAvatarFragment}
+  ${documentFragment}
+  ${forbiddenFragment}
 `;
 
 export const orderMutation = gql`

@@ -32,7 +32,9 @@ const inputs = {
   datetime: DatetimeInput,
   currency: EnumInput.Currency,
   incoterm: EnumInput.Incoterm,
-  documents: DocumentsInput,
+  order_documents: DocumentsInput.Order,
+  order_item_documents: DocumentsInput.OrderItem,
+  shipment_documents: DocumentsInput.Shipment,
 };
 
 const CellInput = ({
