@@ -7,6 +7,8 @@ export const DocumentsInputWrapperStyle: string = css`
   align-items: center;
   ${fontSizes.MAIN};
   overflow: hidden;
+  width: 100%;
+  cursor: pointer;
 `;
 
 export const DocumentCountWrapperStyle: string = css`
