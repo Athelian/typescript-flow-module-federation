@@ -2,19 +2,18 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
+import type InputProps from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import TextAreaInputDialog from './TextAreaInputDialog';
 import { TextAreaInputButtonStyle, TextAreaPlaceholderStyle } from './style';
 
-type Props = {
-  value: string,
-  focus: boolean,
-  readonly: boolean,
-  onChange: string => void,
-  onFocus: () => void,
-  onBlur: () => void,
-};
-
-const TextInput = ({ value, focus, onChange, onFocus, onBlur, readonly }: Props) => {
+const TextAreaInput = ({
+  value,
+  focus,
+  onChange,
+  onFocus,
+  onBlur,
+  readonly,
+}: InputProps<string>) => {
   const intl = useIntl();
 
   return (
@@ -48,4 +47,4 @@ const TextInput = ({ value, focus, onChange, onFocus, onBlur, readonly }: Props)
   );
 };
 
-export default TextInput;
+export default TextAreaInput;
