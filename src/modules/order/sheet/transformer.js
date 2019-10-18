@@ -478,7 +478,6 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
     {
       columnKey: 'order.orderItem.batch.quantityRevisions',
       type: 'quantity_revisions',
-      disabled: !batch,
       ...transformValueField(
         basePath,
         batch,

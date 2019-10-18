@@ -17,7 +17,7 @@ import {
   RevisionWrapperStyle,
 } from './style';
 
-const QuantityRevisionTypeSelectInput = (index: number) => ({
+const QuantityRevisionTypeSelectInput = (index: number, onBlur: () => void) => ({
   getToggleButtonProps,
   selectedItem,
   isOpen,
@@ -26,8 +26,10 @@ const QuantityRevisionTypeSelectInput = (index: number) => ({
     type="button"
     {...getToggleButtonProps({
       onKeyDown: e => {
-        if (index > 0) {
+        if (!(index === 0 && e.key === 'Tab' && e.shiftKey) || e.key === 'ArrowDown') {
           e.stopPropagation();
+        } else {
+          onBlur();
         }
       },
     })}
@@ -50,6 +52,9 @@ const QuantityRevisionsInput = ({
   value,
   focus,
   onChange,
+  onFocus,
+  onBlur,
+  onKeyDown,
   readonly,
 }: InputProps<Array<{ id?: string, type: string, quantity: number }>>) => {
   const firstElementRef = React.useRef<HTMLInputElement | HTMLButtonElement | null>(null);
@@ -77,11 +82,8 @@ const QuantityRevisionsInput = ({
   };
 
   const handleQuantityChange = (index: number) => (e: SyntheticInputEvent<HTMLInputElement>) => {
-    onChange(
-      (value || []).map((v, i) =>
-        i === index ? { ...v, quantity: parseFloat(e.target.value) } : v
-      )
-    );
+    const newQuantity = e.target.value;
+    onChange((value || []).map((v, i) => (i === index ? { ...v, quantity: newQuantity } : v)));
   };
 
   const handleRemove = (index: number) => () => {
@@ -93,12 +95,20 @@ const QuantityRevisionsInput = ({
   };
 
   return (
-    <div className={WrapperStyle}>
+    <div
+      className={WrapperStyle}
+      onBlur={e => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          onBlur();
+        }
+      }}
+    >
       {(value || []).map((revision, index) => (
         <div key={`${revision.id}-${index + 0}`} className={RevisionWrapperStyle}>
           <SelectInput
             value={revision.type}
             onChange={handleTypeChange(index)}
+            onFocus={onFocus}
             items={enums.map(e => e.description || e.name)}
             filterItems={(query, items) => items}
             itemToString={v => v}
@@ -106,7 +116,7 @@ const QuantityRevisionsInput = ({
             optionWidth={200}
             optionHeight={30}
             toggleRef={index === 0 ? firstElementRef : undefined}
-            renderInput={QuantityRevisionTypeSelectInput(index)}
+            renderInput={QuantityRevisionTypeSelectInput(index, onBlur)}
             renderOption={QuantityRevisionTypeSelectOption}
           />
           <hr className={SeparatorStyle} />
@@ -117,8 +127,13 @@ const QuantityRevisionsInput = ({
             readOnly={readonly}
             readOnlyHeight="30px"
             onChange={handleQuantityChange(index)}
+            onFocus={onFocus}
             onKeyDown={e => {
-              e.stopPropagation();
+              if (e.key === 'Tab') {
+                e.stopPropagation();
+              } else {
+                onKeyDown(e);
+              }
             }}
           />
           {!readonly && (
@@ -126,9 +141,12 @@ const QuantityRevisionsInput = ({
               type="button"
               className={RemoveButtonStyle}
               onClick={handleRemove(index)}
+              onFocus={onFocus}
               onKeyDown={e => {
                 if ((value || []).length < 5) {
                   e.stopPropagation();
+                } else {
+                  onBlur();
                 }
               }}
             >
@@ -148,9 +166,12 @@ const QuantityRevisionsInput = ({
           type="button"
           className={AddButtonStyle}
           onClick={handleAdd}
+          onFocus={onFocus}
           onKeyDown={e => {
             if ((value || []).length > 0 && e.key === 'Tab' && e.shiftKey) {
               e.stopPropagation();
+            } else {
+              onBlur();
             }
           }}
         >
