@@ -18,6 +18,7 @@ const initialState: State = {
   initialized: false,
   items: [],
   rows: [],
+  allRows: [],
   columns: [],
   entities: [],
   sorts: [],

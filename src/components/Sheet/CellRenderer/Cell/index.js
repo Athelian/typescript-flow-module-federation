@@ -11,6 +11,7 @@ import { CellStyle, CellBorderStyle, CellPlaceholderStyle, CellShadowStyle } fro
 
 type Props = {
   cell: CellValue,
+  item: Object | null,
   columnIndex: number,
   rowIndex: number,
   hover: boolean,
@@ -23,6 +24,7 @@ type Props = {
 
 const Cell = ({
   cell,
+  item,
   columnIndex,
   rowIndex,
   hover,
@@ -47,6 +49,18 @@ const Cell = ({
   const isBottom = !cell.merged || cell.merged.to.x === rowIndex;
 
   const size = cell.merged ? cell.merged.to.x - cell.merged.from.x + 1 : 1;
+
+  const readonlyValue = React.useMemo(() => {
+    if (cell.empty || cell.forbidden || !cell.entity || !isReadonly) {
+      return null;
+    }
+
+    if (!cell.computed || !item) {
+      return cell.data?.value ?? null;
+    }
+
+    return cell.computed(item);
+  }, [cell, item, isReadonly]);
 
   React.useEffect(() => {
     if (focus && isTop) {
@@ -178,7 +192,7 @@ const Cell = ({
         }
 
         if (isReadonly) {
-          return <CellDisplay value={cell.data?.value ?? null} type={cell.type} />;
+          return <CellDisplay value={readonlyValue} type={cell.type} />;
         }
 
         return (
