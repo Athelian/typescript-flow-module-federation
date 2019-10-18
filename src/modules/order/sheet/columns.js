@@ -186,7 +186,7 @@ const orderItemColumns: Array<ColumnConfig> = [
     width: 200,
     sort: {
       local: true,
-      name: 'name',
+      name: 'productProvider.product.name',
       group: 'orderItem',
     },
   },
@@ -200,7 +200,7 @@ const orderItemColumns: Array<ColumnConfig> = [
     width: 200,
     sort: {
       local: true,
-      name: 'serial',
+      name: 'productProvider.product.serial',
       group: 'orderItem',
     },
   },

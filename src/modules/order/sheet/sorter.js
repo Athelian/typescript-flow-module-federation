@@ -35,8 +35,18 @@ function orderItemSorter(sorts: Array<ColumnSort>) {
         case 'deliveryDate':
           result = setDirection(dateSort(a[sort.name], b[sort.name]), sort.direction);
           break;
-        case 'name':
-        case 'serial':
+        case 'productProvider.product.name':
+          result = setDirection(
+            stringSort(a.productProvider.product.name, b.productProvider.product.name),
+            sort.direction
+          );
+          break;
+        case 'productProvider.product.serial':
+          result = setDirection(
+            stringSort(a.productProvider.product.serial, b.productProvider.product.serial),
+            sort.direction
+          );
+          break;
         case 'no':
           result = setDirection(stringSort(a[sort.name], b[sort.name]), sort.direction);
           break;
