@@ -187,7 +187,7 @@ const orderItemColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...orderItemMessages.status} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
-    width: 200,
+    width: 105,
   },
   {
     key: 'order.orderItem.productProvider.product.name',
@@ -338,7 +338,7 @@ const batchColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...orderItemMessages.status} />,
     icon: 'BATCH',
     color: colors.BATCH,
-    width: 200,
+    width: 105,
   },
   {
     key: 'order.orderItem.batch.no',
@@ -508,7 +508,7 @@ const containerColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...containerMessages.status} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
-    width: 200,
+    width: 105,
   },
   {
     key: 'order.orderItem.batch.container.no',

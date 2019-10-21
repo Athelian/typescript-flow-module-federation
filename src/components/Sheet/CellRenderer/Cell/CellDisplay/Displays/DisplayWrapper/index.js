@@ -4,10 +4,17 @@ import { DisplayWrapperStyle } from './style';
 
 type Props = {
   children: React.Node,
+  width?: string,
 };
 
-const DisplayWrapper = ({ children }: Props) => (
-  <div className={DisplayWrapperStyle}>{children}</div>
+const defaultProps = {
+  width: '100%',
+};
+
+const DisplayWrapper = ({ children, width }: Props) => (
+  <div className={DisplayWrapperStyle(width)}>{children}</div>
 );
+
+DisplayWrapper.defaultProps = defaultProps;
 
 export default DisplayWrapper;
