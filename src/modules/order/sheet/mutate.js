@@ -159,7 +159,18 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             },
           };
         }
-
+        case 'todo':
+          return {
+            todo: {
+              tasks: value.tasks.map(({ isNew, tags, assignedTo, approvers, ...rest }) => ({
+                ...rest,
+                tagIds: tags.map(tag => tag.id),
+                assignedToIds: assignedTo.map(assignment => assignment.id),
+                approverIds: approvers.map(approver => approver.id),
+              })),
+              taskTemplateId: value.taskTemplate?.id,
+            },
+          };
         default:
           return {
             [field]: value,

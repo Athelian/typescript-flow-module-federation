@@ -24,7 +24,8 @@ import {
   ORDER_SET_MEMO,
   ORDER_SET_PI_NO,
   ORDER_SET_PO_NO,
-  ORDER_TASK_SET_TAGS,
+  ORDER_SET_TAGS,
+  ORDER_SET_TASKS,
   ORDER_UPDATE,
 } from 'modules/permission/constants/order';
 import {
@@ -268,7 +269,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
         basePath,
         order,
         'tags',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_TASK_SET_TAGS)
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_TAGS)
       ),
     },
     {
@@ -333,6 +334,16 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
         order,
         'files',
         hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_DOCUMENTS)
+      ),
+    },
+    {
+      columnKey: 'order.todo',
+      type: 'order_tasks',
+      ...transformValueField(
+        basePath,
+        order,
+        'todo',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_TASKS)
       ),
     },
     {

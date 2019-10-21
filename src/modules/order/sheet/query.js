@@ -7,6 +7,11 @@ import {
   documentFragment,
   tagFragment,
   partnerNameFragment,
+  taskWithoutParentInfoFragment,
+  taskTemplateCardFragment,
+  milestoneCardFragment,
+  projectCardFragment,
+  taskFormInTemplateFragment,
 } from 'graphql';
 
 const orderSheetFragment = gql`
@@ -36,6 +41,14 @@ const orderSheetFragment = gql`
     files {
       ...documentFragment
       ...forbiddenFragment
+    }
+    todo {
+      tasks {
+        ...taskWithoutParentInfoFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
     }
     createdAt
     updatedAt
@@ -410,6 +423,11 @@ export const ordersQuery = gql`
   ${warehouseFragment}
   ${documentFragment}
   ${tagFragment}
+  ${taskWithoutParentInfoFragment}
+  ${taskTemplateCardFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskFormInTemplateFragment}
   ${forbiddenFragment}
 `;
 

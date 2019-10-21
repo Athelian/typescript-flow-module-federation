@@ -185,7 +185,13 @@ const orderColumns: Array<ColumnConfig> = [
     color: colors.ORDER,
     width: 200,
   },
-  // tasks
+  {
+    key: 'order.todo',
+    title: <FormattedMessage id="modules.Tasks.tasks" />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   {
     key: 'order.logs',
     title: <FormattedMessage {...orderMessages.logs} />,
