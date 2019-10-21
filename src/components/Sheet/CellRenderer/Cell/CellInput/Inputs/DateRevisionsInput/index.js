@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import SelectInput from 'components/Inputs/SelectInput';
 import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
@@ -8,7 +9,7 @@ import useEnum from 'hooks/useEnum';
 import { uuid } from 'utils/id';
 import type { InputProps } from '../../types';
 import {
-  WrapperStyle,
+  DateRevisionsWrapperStyle,
   SeparatorStyle,
   SelectInputStyle,
   OptionStyle,
@@ -18,7 +19,7 @@ import {
   RevisionWrapperStyle,
 } from './style';
 
-const QuantityRevisionTypeSelectInput = (index: number, onBlur: () => void) => ({
+const DateRevisionTypeSelectInput = (index: number, onBlur: () => void) => ({
   getToggleButtonProps,
   selectedItem,
   isOpen,
@@ -43,7 +44,7 @@ const QuantityRevisionTypeSelectInput = (index: number, onBlur: () => void) => (
   </button>
 );
 
-const QuantityRevisionTypeSelectOption = ({ item, selected, highlighted }: RenderOptionProps) => (
+const DateRevisionTypeSelectOption = ({ item, selected, highlighted }: RenderOptionProps) => (
   <div className={OptionStyle(highlighted, selected)}>
     <span>{item}</span>
   </div>
@@ -82,9 +83,9 @@ const DateRevisionsInput = ({
     onChange((value || []).map((v, i) => (i === index ? { ...v, type: newType } : v)));
   };
 
-  const handleQuantityChange = (index: number) => (e: SyntheticInputEvent<HTMLInputElement>) => {
-    const newQuantity = e.target.value;
-    onChange((value || []).map((v, i) => (i === index ? { ...v, date: newQuantity } : v)));
+  const handleDateChange = (index: number) => (e: SyntheticInputEvent<HTMLInputElement>) => {
+    const newDate = e.target.value;
+    onChange((value || []).map((v, i) => (i === index ? { ...v, date: newDate } : v)));
   };
 
   const handleRemove = (index: number) => () => {
@@ -97,7 +98,7 @@ const DateRevisionsInput = ({
 
   return (
     <div
-      className={WrapperStyle}
+      className={DateRevisionsWrapperStyle}
       onBlur={e => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
           onBlur();
@@ -117,8 +118,8 @@ const DateRevisionsInput = ({
             optionWidth={200}
             optionHeight={30}
             toggleRef={index === 0 ? firstElementRef : undefined}
-            renderInput={QuantityRevisionTypeSelectInput(index, onBlur)}
-            renderOption={QuantityRevisionTypeSelectOption}
+            renderInput={DateRevisionTypeSelectInput(index, onBlur)}
+            renderOption={DateRevisionTypeSelectOption}
           />
           <hr className={SeparatorStyle} />
           <DateInput
@@ -126,7 +127,7 @@ const DateRevisionsInput = ({
             value={revision.date}
             readOnly={readonly}
             readOnlyHeight="30px"
-            onChange={handleQuantityChange(index)}
+            onChange={handleDateChange(index)}
             onFocus={onFocus}
             onKeyDown={e => {
               if (e.key === 'Tab') {
@@ -170,12 +171,12 @@ const DateRevisionsInput = ({
           onKeyDown={e => {
             if ((value || []).length > 0 && e.key === 'Tab' && e.shiftKey) {
               e.stopPropagation();
-            } else {
+            } else if (e.key === 'Tab') {
               onBlur();
             }
           }}
         >
-          New Date <Icon icon="ADD" />
+          <FormattedMessage id="modules.Shipments.newDate" /> <Icon icon="ADD" />
         </button>
       )}
     </div>

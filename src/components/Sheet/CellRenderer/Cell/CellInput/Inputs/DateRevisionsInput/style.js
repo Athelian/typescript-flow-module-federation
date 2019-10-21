@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { layout, colors, fontSizes, borderRadiuses, presets, transitions } from 'styles/common';
 
-export const WrapperStyle = css`
+export const DateRevisionsWrapperStyle = css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   height: 30px;
