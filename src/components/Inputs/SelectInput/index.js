@@ -1,32 +1,42 @@
 // @flow
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { FixedSizeList } from 'react-window';
 import Downshift from 'downshift';
 import { equals } from 'ramda';
-import { WrapperStyle, OptionsWrapperStyle } from './style';
+import usePortalSlot from 'hooks/usePortalSlot';
+import { OptionsWrapperStyle } from './style';
 
 export type RenderInputProps = {
   isOpen: boolean,
   selectedItem: any,
   getInputProps: Function,
   getToggleButtonProps: Function,
+  itemToString: any => string,
+  onFocus?: (SyntheticFocusEvent<any>) => void,
+  onBlur?: (SyntheticFocusEvent<any>) => void,
 };
 
 export type RenderOptionProps = {
   item: any,
   selected: boolean,
   highlighted: boolean,
+  itemToString: any => string,
 };
 
 type Props = {
   value: any,
   onChange: any => void,
+  onFocus?: (SyntheticFocusEvent<any>) => void,
+  onBlur?: (SyntheticFocusEvent<any>) => void,
   items: Array<any>,
   filterItems: (query: string, items: Array<any>) => Array<any>,
   itemToString: any => string,
   itemToValue: any => any,
   optionWidth: number,
   optionHeight: number,
+  inputRef?: { current: any },
+  toggleRef?: { current: any },
   renderInput: RenderInputProps => React.Node,
   renderOption: RenderOptionProps => React.Node,
 };
@@ -37,6 +47,9 @@ type OptionsProps = {
   selectedItem: any,
   items: Array<any>,
   filterItems: (query: string, items: Array<any>) => Array<any>,
+  itemToString: any => string,
+  isOpen: boolean,
+  closeMenu: () => any,
   optionWidth: number,
   optionHeight: number,
   renderOption: RenderOptionProps => React.Node,
@@ -52,6 +65,7 @@ type OptionProps = {
     getItemProps: Function,
     highlightedIndex: ?number,
     selectedItem: any,
+    itemToString: any => string,
     renderOption: RenderOptionProps => React.Node,
   },
 };
@@ -71,6 +85,7 @@ const OptionRenderer = ({ index, style, data }: OptionProps) => {
         item,
         selected: data.selectedItem === item,
         highlighted: data.highlightedIndex === index,
+        itemToString: data.itemToString,
       })}
     </div>
   );
@@ -82,12 +97,44 @@ const SelectOptions = ({
   selectedItem,
   items,
   filterItems,
+  itemToString,
+  isOpen,
+  closeMenu,
   optionWidth,
   optionHeight,
   renderOption,
   getItemProps,
   getMenuProps,
 }: OptionsProps) => {
+  const slot = usePortalSlot();
+  const companionRef = React.useRef<HTMLDivElement | null>(null);
+  const optionsRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    if (!isOpen || !companionRef.current || !optionsRef.current) {
+      return;
+    }
+
+    const viewportOffset: ClientRect = companionRef.current.getBoundingClientRect();
+    // $FlowFixMe
+    optionsRef.current.style.top = `${viewportOffset.top + viewportOffset.height}px`;
+    // $FlowFixMe
+    optionsRef.current.style.left = `${viewportOffset.left}px`;
+  }, [companionRef, optionsRef, isOpen]);
+
+  React.useEffect(() => {
+    const opts = { capture: false, passive: true };
+    const listener: WheelEventHandler = e => {
+      // $FlowFixMe
+      if (optionsRef.current && !optionsRef.current.contains(e.target)) {
+        closeMenu();
+      }
+    };
+
+    document.addEventListener('wheel', listener, opts);
+    return () => document.removeEventListener('wheel', listener, opts);
+  }, [closeMenu]);
+
   const availableItems = React.useMemo(() => {
     const query = (inputValue || '').trim();
     return query === '' ? items : filterItems(query, items);
@@ -95,39 +142,57 @@ const SelectOptions = ({
   const height = Math.min(availableItems.length * optionHeight, 200);
 
   return (
-    <div className={OptionsWrapperStyle(height)} {...getMenuProps()}>
-      <FixedSizeList
-        width={optionWidth}
-        height={height}
-        itemCount={availableItems.length}
-        itemSize={optionHeight}
-        itemData={{
-          items: availableItems,
-          getItemProps,
-          highlightedIndex,
-          selectedItem,
-          renderOption,
-        }}
-      >
-        {OptionRenderer}
-      </FixedSizeList>
-    </div>
+    <>
+      <div ref={companionRef} />
+      {ReactDOM.createPortal(
+        <div
+          className={OptionsWrapperStyle(optionWidth, height)}
+          {...getMenuProps({
+            ref: ref => {
+              optionsRef.current = ref;
+            },
+          })}
+        >
+          <FixedSizeList
+            width={optionWidth}
+            height={height}
+            itemCount={availableItems.length}
+            itemSize={optionHeight}
+            itemData={{
+              items: availableItems,
+              getItemProps,
+              highlightedIndex,
+              selectedItem,
+              itemToString,
+              renderOption,
+            }}
+          >
+            {OptionRenderer}
+          </FixedSizeList>
+        </div>,
+        slot
+      )}
+    </>
   );
 };
 
 const SelectInput = ({
   value,
   onChange,
+  onFocus,
+  onBlur,
   items,
   filterItems,
   itemToString,
   itemToValue,
   optionWidth,
   optionHeight,
+  inputRef,
+  toggleRef,
   renderInput,
   renderOption,
 }: Props) => {
-  const inputRef = React.useRef<HTMLInputElement | null>(null);
+  const internalInputRef = React.useRef<HTMLInputElement | null>(null);
   const handleChange = React.useCallback(item => onChange(itemToValue(item)), [
     onChange,
     itemToValue,
@@ -162,29 +227,47 @@ const SelectInput = ({
         // $FlowFixMe: downshift types is broken
         inputValue,
         openMenu,
+        closeMenu,
         isOpen,
       }) => (
-        <div className={WrapperStyle}>
+        <div>
           {React.createElement(renderInput, {
             isOpen,
             selectedItem,
+            itemToString,
             getInputProps: props =>
               getInputProps({
                 ...props,
-                ref: inputRef,
+                ref: ref => {
+                  if (inputRef) {
+                    // eslint-disable-next-line no-param-reassign
+                    inputRef.current = ref;
+                  }
+                  internalInputRef.current = ref;
+                },
                 onClick: e => {
                   e.target.select();
                   openMenu();
                 },
+                onFocus,
+                onBlur,
               }),
             getToggleButtonProps: props =>
               getToggleButtonProps({
                 ...props,
-                onClick: () => {
-                  if (inputRef.current) {
-                    inputRef.current.focus();
+                ref: ref => {
+                  if (toggleRef) {
+                    // eslint-disable-next-line no-param-reassign
+                    toggleRef.current = ref;
                   }
                 },
+                onClick: () => {
+                  if (internalInputRef.current) {
+                    internalInputRef.current.focus();
+                  }
+                },
+                onFocus,
+                onBlur,
               }),
           })}
           {isOpen && (
@@ -194,6 +277,9 @@ const SelectInput = ({
               selectedItem={selectedItem}
               items={items}
               filterItems={filterItems}
+              itemToString={itemToString}
+              isOpen={isOpen}
+              closeMenu={closeMenu}
               optionWidth={optionWidth}
               optionHeight={optionHeight}
               renderOption={renderOption}

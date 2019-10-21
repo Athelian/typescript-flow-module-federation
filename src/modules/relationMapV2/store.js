@@ -206,19 +206,19 @@ function useEntities(
       case 'Order': {
         setMapping(
           produce(mapping, draft => {
-            const orderId = entity.id || '';
+            const orderId = entity?.id;
             if (!orderId) {
               return;
             }
-            const orderItems = entity.orderItems || [];
+            const orderItems = entity?.orderItems ?? [];
             const previousIds = {
-              orderItemIds: draft.entities.orders?.[orderId].orderItems ?? [],
+              orderItemIds: draft.entities?.orders?.[orderId]?.orderItems ?? [],
               mapping: {},
             };
             previousIds.orderItemIds.forEach(itemId => {
-              previousIds.mapping[itemId] = draft.entities.orderItems?.[itemId]?.batches ?? [];
+              previousIds.mapping[itemId] = draft.entities?.orderItems?.[itemId]?.batches ?? [];
             });
-            const orderItemIds = orderItems.map(item => item.id);
+            const orderItemIds = orderItems.map(item => item?.id);
             const existItemIds = intersection(previousIds.orderItemIds, orderItemIds);
             previousIds.orderItemIds.forEach(itemId => {
               if (!existItemIds.includes(itemId)) {
@@ -229,7 +229,7 @@ function useEntities(
               } else {
                 const existBatchIds = intersection(
                   previousIds.mapping[itemId],
-                  (orderItems?.[itemId]?.batches ?? []).map(batch => batch.id)
+                  (orderItems?.[itemId]?.batches ?? []).map(batch => batch?.id)
                 );
                 previousIds.mapping[itemId].forEach(batchId => {
                   if (!existBatchIds.includes(batchId)) delete draft.entities.batches[batchId];
@@ -244,11 +244,11 @@ function useEntities(
       case 'OrderItem': {
         setMapping(
           produce(mapping, draft => {
-            const itemId = entity.id || '';
-            const batches = entity.batches || [];
+            const itemId = entity?.id;
+            const batches = entity?.batches ?? [];
             const existBatchIds = intersection(
-              draft.entities.orderItems?.[itemId]?.batches ?? [],
-              batches.map(batch => batch.id)
+              draft.entities?.orderItems?.[itemId]?.batches ?? [],
+              batches.map(batch => batch?.id)
             );
 
             (draft.entities.orderItems?.[itemId]?.batches ?? []).forEach(batchId => {
@@ -1032,7 +1032,7 @@ function orderReducer(
           }
           const orderItems = action.payload?.orderUpdate?.orderItems ?? [];
           const previousIds = {
-            orderItemIds: action.payload?.mapping?.orders?.[orderId].orderItems ?? [],
+            orderItemIds: action.payload?.mapping?.orders?.[orderId]?.orderItems ?? [],
             mapping: {},
           };
           previousIds.orderItemIds.forEach(itemId => {

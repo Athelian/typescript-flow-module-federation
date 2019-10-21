@@ -1,5 +1,9 @@
 // @flow
-import { transformValueField, transformReadonlyField } from 'components/Sheet';
+import {
+  transformValueField,
+  transformReadonlyField,
+  transformComputedField,
+} from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
   ORDER_SET_CURRENCY,
@@ -11,6 +15,7 @@ import {
   ORDER_SET_ISSUE_AT,
   ORDER_SET_INCOTERM,
   ORDER_SET_MEMO,
+  ORDER_SET_DOCUMENTS,
 } from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_SET_NO,
@@ -18,6 +23,7 @@ import {
   ORDER_ITEMS_SET_PRICE,
   ORDER_ITEMS_UPDATE,
   ORDER_ITEMS_SET_DELIVERY_DATE,
+  ORDER_ITEMS_SET_DOCUMENTS,
 } from 'modules/permission/constants/orderItem';
 import {
   BATCH_SET_DELIVERY_DATE,
@@ -29,6 +35,7 @@ import {
   BATCH_SET_PACKAGE_QUANTITY,
   BATCH_SET_PRODUCTION_DATE,
   BATCH_SET_QUANTITY,
+  BATCH_SET_QUANTITY_ADJUSTMENTS,
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
 import {
@@ -38,6 +45,7 @@ import {
   CONTAINER_SET_NO,
   CONTAINER_SET_YARD_NAME,
   CONTAINER_UPDATE,
+  CONTAINER_SET_CONTAINER_TYPE,
 } from 'modules/permission/constants/container';
 import {
   SHIPMENT_UPDATE,
@@ -49,6 +57,8 @@ import {
   SHIPMENT_SET_INVOICE_NO,
   SHIPMENT_SET_CONTRACT_NO,
   SHIPMENT_SET_CARRIER,
+  SHIPMENT_SET_DOCUMENTS,
+  SHIPMENT_SET_REVISE_TIMELINE_DATE,
 } from 'modules/permission/constants/shipment';
 
 function transformOrder(basePath: string, order: Object): Array<CellValue> {
@@ -56,42 +66,42 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.created',
       type: 'date_user',
-      empty: !order,
-      parent: true,
-      ...transformReadonlyField(
-        basePath,
-        order,
-        'created',
-        order
-          ? {
-              at: new Date(order.createdAt),
-              by: order.createdBy,
-            }
-          : null
-      ),
+      ...transformComputedField(basePath, order, item => ({
+        at: new Date(item.createdAt),
+        by: item.createdBy,
+      })),
+    },
+    {
+      columnKey: 'order.createdBy',
+      type: 'text',
+      ...transformReadonlyField(basePath, order, 'createdBy', order?.createdBy ?? null),
+    },
+    {
+      columnKey: 'order.createdAt',
+      type: 'text',
+      ...transformReadonlyField(basePath, order, 'createdAt', order?.createdAt ?? null),
     },
     {
       columnKey: 'order.updated',
       type: 'date_user',
-      empty: !order,
-      parent: true,
-      ...transformReadonlyField(
-        basePath,
-        order,
-        'updated',
-        order
-          ? {
-              at: new Date(order.updatedAt),
-              by: order.updatedBy,
-            }
-          : null
-      ),
+      ...transformComputedField(basePath, order, item => ({
+        at: new Date(item.updatedAt),
+        by: item.updatedBy,
+      })),
+    },
+    {
+      columnKey: 'order.updatedBy',
+      type: 'text',
+      ...transformReadonlyField(basePath, order, 'updatedBy', order?.updatedBy ?? null),
+    },
+    {
+      columnKey: 'order.updatedAt',
+      type: 'text',
+      ...transformReadonlyField(basePath, order, 'updatedAt', order?.updatedAt ?? null),
     },
     {
       columnKey: 'order.poNo',
       type: 'text',
-      empty: !order,
-      parent: true,
       ...transformValueField(
         basePath,
         order,
@@ -102,8 +112,6 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.piNo',
       type: 'text',
-      empty: !order,
-      parent: true,
       ...transformValueField(
         basePath,
         order,
@@ -114,8 +122,6 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.issuedAt',
       type: 'date',
-      empty: !order,
-      parent: true,
       ...transformValueField(
         basePath,
         order,
@@ -126,8 +132,6 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.deliveryDate',
       type: 'date',
-      empty: !order,
-      parent: true,
       ...transformValueField(
         basePath,
         order,
@@ -138,8 +142,6 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.currency',
       type: 'currency',
-      empty: !order,
-      parent: true,
       ...transformValueField(
         basePath,
         order,
@@ -150,8 +152,6 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.incoterm',
       type: 'incoterm',
-      empty: !order,
-      parent: true,
       ...transformValueField(
         basePath,
         order,
@@ -162,8 +162,6 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.deliveryPlace',
       type: 'text',
-      empty: !order,
-      parent: true,
       ...transformValueField(
         basePath,
         order,
@@ -174,8 +172,6 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.memo',
       type: 'textarea',
-      empty: !order,
-      parent: true,
       ...transformValueField(
         basePath,
         order,
@@ -186,75 +182,135 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.totalOrdered',
       type: 'number',
-      empty: !order,
-      parent: true,
-      ...transformReadonlyField(basePath, order, 'totalOrdered', order?.totalOrdered ?? 0),
+      ...transformComputedField(basePath, order, item =>
+        item.orderItems.reduce((total, orderItem) => total + orderItem.quantity, 0)
+      ),
     },
     {
       columnKey: 'order.totalBatched',
       type: 'number',
-      empty: !order,
-      parent: true,
-      ...transformReadonlyField(basePath, order, 'totalBatched', order?.totalBatched ?? 0),
+      ...transformComputedField(basePath, order, item =>
+        item.orderItems.reduce(
+          (totalBatched, orderItem) =>
+            totalBatched + orderItem.batches.reduce((total, batch) => batch.quantity + total, 0),
+          0
+        )
+      ),
     },
     {
       columnKey: 'order.totalShipped',
       type: 'number',
-      empty: !order,
-      parent: true,
-      ...transformReadonlyField(basePath, order, 'totalShipped', order?.totalShipped ?? 0),
+      ...transformComputedField(basePath, order, item =>
+        item.orderItems.reduce(
+          (totalBatched, orderItem) =>
+            totalBatched +
+            orderItem.batches
+              .filter(batch => !!batch.shipment)
+              .reduce((total, batch) => batch.quantity + total, 0),
+          0
+        )
+      ),
     },
-  ];
+    {
+      columnKey: 'order.files',
+      type: 'order_documents',
+      ...transformValueField(
+        basePath,
+        order,
+        'files',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_DOCUMENTS)
+      ),
+    },
+  ].map(c => ({
+    ...c,
+    empty: !order,
+    parent: true,
+  }));
 }
 
-const transformOrderItem = (
+function transformOrderItem(
   basePath: string,
   orderItem: Object,
   hasItems: boolean
-): Array<CellValue> => {
+): Array<CellValue> {
   return [
     {
       columnKey: 'order.orderItem.created',
       type: 'date_user',
-      disabled: !hasItems && !orderItem,
-      empty: hasItems && !orderItem,
-      parent: true,
-      ...transformReadonlyField(
-        basePath,
-        orderItem,
-        'created',
-        orderItem
+      ...transformComputedField(basePath, orderItem, item => {
+        const currentOrderItem = item.orderItems.find(oi => oi.id === orderItem?.id);
+        return currentOrderItem
           ? {
-              at: new Date(orderItem.createdAt),
-              by: orderItem.createdBy,
+              at: new Date(currentOrderItem.createdAt),
+              by: currentOrderItem.createdBy,
             }
-          : null
-      ),
+          : null;
+      }),
+    },
+    {
+      columnKey: 'order.orderItem.createdBy',
+      type: 'text',
+      ...transformReadonlyField(basePath, orderItem, 'createdBy', orderItem?.createdBy ?? null),
+    },
+    {
+      columnKey: 'order.orderItem.createdAt',
+      type: 'text',
+      ...transformReadonlyField(basePath, orderItem, 'createdAt', orderItem?.createdAt ?? null),
     },
     {
       columnKey: 'order.orderItem.updated',
       type: 'date_user',
+      ...transformComputedField(basePath, orderItem, item => {
+        const currentOrderItem = item.orderItems.find(oi => oi.id === orderItem?.id);
+        return currentOrderItem
+          ? {
+              at: new Date(currentOrderItem.updatedAt),
+              by: currentOrderItem.updatedBy,
+            }
+          : null;
+      }),
+    },
+    {
+      columnKey: 'order.orderItem.updatedBy',
+      type: 'text',
+      ...transformReadonlyField(basePath, orderItem, 'updatedBy', orderItem?.updatedBy ?? null),
+    },
+    {
+      columnKey: 'order.orderItem.updatedAt',
+      type: 'text',
+      ...transformReadonlyField(basePath, orderItem, 'updatedAt', orderItem?.updatedAt ?? null),
+    },
+    {
+      columnKey: 'order.orderItem.productProvider.product.name',
+      type: 'text',
+      ...transformReadonlyField(
+        `${basePath}.productProvider.product`,
+        orderItem?.productProvider?.product ?? null,
+        'name',
+        orderItem?.productProvider?.product?.name ?? ''
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.productProvider.product.serial',
+      type: 'text',
+      ...transformReadonlyField(
+        `${basePath}.productProvider.product`,
+        orderItem?.productProvider?.product ?? null,
+        'serial',
+        orderItem?.productProvider?.product?.serial ?? ''
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.archived',
+      type: 'status',
       disabled: !hasItems && !orderItem,
       empty: hasItems && !orderItem,
       parent: true,
-      ...transformReadonlyField(
-        basePath,
-        orderItem,
-        'updated',
-        orderItem
-          ? {
-              at: new Date(orderItem.updatedAt),
-              by: orderItem.updatedBy,
-            }
-          : null
-      ),
+      ...transformReadonlyField(basePath, orderItem, 'archived', orderItem?.archived),
     },
     {
       columnKey: 'order.orderItem.no',
       type: 'text',
-      disabled: !hasItems && !orderItem,
-      empty: hasItems && !orderItem,
-      parent: true,
       ...transformValueField(
         basePath,
         orderItem,
@@ -265,9 +321,6 @@ const transformOrderItem = (
     {
       columnKey: 'order.orderItem.quantity',
       type: 'number',
-      disabled: !hasItems && !orderItem,
-      empty: hasItems && !orderItem,
-      parent: true,
       ...transformValueField(
         basePath,
         orderItem,
@@ -279,9 +332,6 @@ const transformOrderItem = (
     {
       columnKey: 'order.orderItem.price',
       type: 'static_metric_value',
-      disabled: !hasItems && !orderItem,
-      empty: hasItems && !orderItem,
-      parent: true,
       ...transformValueField(
         basePath,
         orderItem,
@@ -292,25 +342,28 @@ const transformOrderItem = (
     {
       columnKey: 'order.orderItem.totalBatched',
       type: 'number',
-      disabled: !hasItems && !orderItem,
-      empty: hasItems && !orderItem,
-      parent: true,
-      ...transformReadonlyField(basePath, orderItem, 'totalBatched', orderItem?.totalBatched ?? 0),
+      ...transformComputedField(basePath, orderItem, item => {
+        const currentOrderItem = item.orderItems.find(oi => oi.id === orderItem?.id);
+        // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
+        return currentOrderItem?.batches.reduce((total, batch) => total + batch.quantity, 0) ?? 0;
+      }),
     },
     {
-      columnKey: 'order.orderItem.totalShipped',
+      columnKey: 'order.orderItem.totalBatched',
       type: 'number',
-      disabled: !hasItems && !orderItem,
-      empty: hasItems && !orderItem,
-      parent: true,
-      ...transformReadonlyField(basePath, orderItem, 'totalShipped', orderItem?.totalShipped ?? 0),
+      ...transformComputedField(basePath, orderItem, item => {
+        const currentOrderItem = item.orderItems.find(oi => oi.id === orderItem?.id);
+        return (
+          // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
+          currentOrderItem?.batches
+            .filter(batch => !!batch.shipment)
+            .reduce((total, batch) => total + batch.quantity, 0) ?? 0
+        );
+      }),
     },
     {
       columnKey: 'order.orderItem.deliveryDate',
       type: 'date',
-      disabled: !hasItems && !orderItem,
-      empty: hasItems && !orderItem,
-      parent: true,
       ...transformValueField(
         basePath,
         orderItem,
@@ -319,48 +372,89 @@ const transformOrderItem = (
           hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_DELIVERY_DATE)
       ),
     },
-  ];
-};
+    {
+      columnKey: 'order.orderItem.files',
+      type: 'order_item_documents',
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'files',
+        hasPermission =>
+          hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_DOCUMENTS)
+      ),
+    },
+  ].map(c => ({
+    ...c,
+    disabled: !hasItems && !orderItem,
+    empty: hasItems && !orderItem,
+    parent: true,
+  }));
+}
 
-const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
+function transformBatch(basePath: string, batch: Object): Array<CellValue> {
   return [
-    // BATCH
     {
       columnKey: 'order.orderItem.batch.created',
       type: 'date_user',
-      disabled: !batch,
-      ...transformReadonlyField(
-        basePath,
-        batch,
-        'created',
-        batch
+      ...transformComputedField(basePath, batch, item => {
+        const currentBatch = item.orderItems
+          .map(oi => oi.batches)
+          .flat()
+          .find(oi => oi.id === batch?.id);
+        return currentBatch
           ? {
-              at: new Date(batch.createdAt),
-              by: batch.createdBy,
+              at: new Date(currentBatch.createdAt),
+              by: currentBatch.createdBy,
             }
-          : null
-      ),
+          : null;
+      }),
+    },
+    {
+      columnKey: 'order.orderItem.batch.createdBy',
+      type: 'text',
+      ...transformReadonlyField(basePath, batch, 'createdBy', batch?.createdBy ?? null),
+    },
+    {
+      columnKey: 'order.orderItem.batch.createdAt',
+      type: 'text',
+      ...transformReadonlyField(basePath, batch, 'createdAt', batch?.createdAt ?? null),
     },
     {
       columnKey: 'order.orderItem.batch.updated',
       type: 'date_user',
-      disabled: !batch,
-      ...transformReadonlyField(
-        basePath,
-        batch,
-        'updated',
-        batch
+      ...transformComputedField(basePath, batch, item => {
+        const currentBatch = item.orderItems
+          .map(oi => oi.batches)
+          .flat()
+          .find(oi => oi.id === batch?.id);
+        return currentBatch
           ? {
-              at: new Date(batch.updatedAt),
-              by: batch.updatedBy,
+              at: new Date(currentBatch.updatedAt),
+              by: currentBatch.updatedBy,
             }
-          : null
-      ),
+          : null;
+      }),
+    },
+    {
+      columnKey: 'order.orderItem.batch.updatedBy',
+      type: 'text',
+      ...transformReadonlyField(basePath, batch, 'updatedBy', batch?.updatedBy ?? null),
+    },
+    {
+      columnKey: 'order.orderItem.batch.updatedAt',
+      type: 'text',
+      ...transformReadonlyField(basePath, batch, 'updatedAt', batch?.updatedAt ?? null),
+    },
+    {
+      columnKey: 'order.orderItem.batch.archived',
+      type: 'status',
+      disabled: !batch,
+      parent: true,
+      ...transformReadonlyField(basePath, batch, 'archived', batch?.archived),
     },
     {
       columnKey: 'order.orderItem.batch.no',
       type: 'text',
-      disabled: !batch,
       ...transformValueField(
         basePath,
         batch,
@@ -371,7 +465,6 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.deliveredAt',
       type: 'date',
-      disabled: !batch,
       ...transformValueField(
         basePath,
         batch,
@@ -382,7 +475,6 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.desiredAt',
       type: 'date',
-      disabled: !batch,
       ...transformValueField(
         basePath,
         batch,
@@ -393,7 +485,6 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.expiredAt',
       type: 'date',
-      disabled: !batch,
       ...transformValueField(
         basePath,
         batch,
@@ -404,7 +495,6 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.producedAt',
       type: 'date',
-      disabled: !batch,
       ...transformValueField(
         basePath,
         batch,
@@ -415,7 +505,6 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.quantity',
       type: 'number',
-      disabled: !batch,
       ...transformValueField(
         basePath,
         batch,
@@ -424,9 +513,19 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
       ),
     },
     {
+      columnKey: 'order.orderItem.batch.quantityRevisions',
+      type: 'quantity_revisions',
+      ...transformValueField(
+        basePath,
+        batch,
+        'batchQuantityRevisions',
+        hasPermission =>
+          hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)
+      ),
+    },
+    {
       columnKey: 'order.orderItem.batch.packageName',
       type: 'text',
-      disabled: !batch,
       ...transformValueField(
         basePath,
         batch,
@@ -437,7 +536,6 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.packageCapacity',
       type: 'number',
-      disabled: !batch,
       ...transformValueField(
         basePath,
         batch,
@@ -448,7 +546,6 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.packageQuantity',
       type: 'number',
-      disabled: !batch,
       ...transformValueField(
         basePath,
         batch,
@@ -456,44 +553,100 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
         hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_QUANTITY)
       ),
     },
-    // CONTAINER
+  ].map(c => ({
+    ...c,
+    disabled: !batch,
+  }));
+}
+
+function transformBatchContainer(basePath: string, batch: Object): Array<CellValue> {
+  return [
     {
       columnKey: 'order.orderItem.batch.container.created',
       type: 'date_user',
+      ...transformComputedField(`${basePath}.container`, batch?.container ?? null, item => {
+        const currentBatch = item.orderItems
+          .map(oi => oi.batches)
+          .flat()
+          .find(oi => oi.id === batch?.id);
+        return currentBatch?.container
+          ? {
+              at: new Date(currentBatch?.container.createdAt),
+              by: currentBatch?.container.createdBy,
+            }
+          : null;
+      }),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.createdBy',
+      type: 'text',
+      ...transformReadonlyField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'createdBy',
+        batch?.createdBy ?? null
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.createdAt',
+      type: 'text',
+      ...transformReadonlyField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'createdAt',
+        batch?.createdAt ?? null
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.archived',
+      type: 'status',
       disabled: !batch,
       ...transformReadonlyField(
         `${basePath}.container`,
         batch?.container ?? null,
-        'created',
-        batch?.container
-          ? {
-              at: new Date(batch?.container?.createdAt),
-              by: batch?.container?.createdBy,
-            }
-          : null
+        'archived',
+        batch?.container?.archived
       ),
     },
     {
       columnKey: 'order.orderItem.batch.container.updated',
       type: 'date_user',
-      disabled: !batch,
+      ...transformComputedField(`${basePath}.container`, batch?.container ?? null, item => {
+        const currentBatch = item.orderItems
+          .map(oi => oi.batches)
+          .flat()
+          .find(oi => oi.id === batch?.id);
+        return currentBatch?.container
+          ? {
+              at: new Date(currentBatch?.container.updatedAt),
+              by: currentBatch?.container.updatedBy,
+            }
+          : null;
+      }),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.updatedBy',
+      type: 'text',
       ...transformReadonlyField(
         `${basePath}.container`,
         batch?.container ?? null,
-        'updated',
-        batch?.container
-          ? {
-              at: new Date(batch?.container?.updatedAt),
-              by: batch?.container?.updatedBy,
-            }
-          : null
+        'updatedBy',
+        batch?.updatedBy ?? null
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.updatedAt',
+      type: 'text',
+      ...transformReadonlyField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'updatedAt',
+        batch?.updatedAt ?? null
       ),
     },
     {
       columnKey: 'order.orderItem.batch.container.no',
       type: 'text',
-      duplicatable: true,
-      disabled: !(batch ? batch.container : null),
       ...transformValueField(
         `${basePath}.container`,
         batch ? batch.container : null,
@@ -502,10 +655,19 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
       ),
     },
     {
+      columnKey: 'order.orderItem.batch.container.containerType',
+      type: 'container_type',
+      ...transformValueField(
+        `${basePath}.container`,
+        batch ? batch.container : null,
+        'containerType',
+        hasPermission =>
+          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_CONTAINER_TYPE)
+      ),
+    },
+    {
       columnKey: 'order.orderItem.batch.container.warehouseArrivalAgreedDate',
       type: 'datetime',
-      duplicatable: true,
-      disabled: !(batch ? batch.container : null),
       ...transformValueField(
         `${basePath}.container`,
         batch ? batch.container : null,
@@ -517,8 +679,6 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.container.warehouseArrivalActualDate',
       type: 'datetime',
-      duplicatable: true,
-      disabled: !(batch ? batch.container : null),
       ...transformValueField(
         `${basePath}.container`,
         batch ? batch.container : null,
@@ -531,8 +691,6 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.container.yardName',
       type: 'text',
-      duplicatable: true,
-      disabled: !(batch ? batch.container : null),
       ...transformValueField(
         `${basePath}.container`,
         batch ? batch.container : null,
@@ -543,8 +701,6 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.container.departureDate',
       type: 'date',
-      duplicatable: true,
-      disabled: !(batch ? batch.container : null),
       ...transformValueField(
         `${basePath}.container`,
         batch ? batch.container : null,
@@ -556,8 +712,6 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.container.totalPackageQuantity',
       type: 'number',
-      duplicatable: true,
-      disabled: !(batch ? batch.container : null),
       ...transformReadonlyField(
         `${basePath}.container`,
         batch ? batch.container : null,
@@ -568,8 +722,6 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.container.totalQuantity',
       type: 'number',
-      duplicatable: true,
-      disabled: !(batch ? batch.container : null),
       ...transformReadonlyField(
         `${basePath}.container`,
         batch ? batch.container : null,
@@ -580,8 +732,6 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.container.orderItemCount',
       type: 'number',
-      duplicatable: true,
-      disabled: !(batch ? batch.container : null),
       ...transformReadonlyField(
         `${basePath}.container`,
         batch ? batch.container : null,
@@ -589,47 +739,93 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
         batch?.container?.orderItemCount ?? 0
       ),
     },
-    // SHIPMENT
+  ].map(c => ({
+    ...c,
+    duplicatable: true,
+    disabled: !(batch ? batch.container : null),
+  }));
+}
+
+function transformBatchShipment(basePath: string, batch: Object): Array<CellValue> {
+  return [
     {
       columnKey: 'order.orderItem.batch.shipment.created',
       type: 'date_user',
-      disabled: !batch,
+      ...transformComputedField(`${basePath}.shipment`, batch?.shipment ?? null, item => {
+        const currentBatch = item.orderItems
+          .map(oi => oi.batches)
+          .flat()
+          .find(oi => oi.id === batch?.id);
+        return currentBatch?.shipment
+          ? {
+              at: new Date(currentBatch?.shipment.createdAt),
+              by: currentBatch?.shipment.createdBy,
+            }
+          : null;
+      }),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.createdBy',
+      type: 'text',
       ...transformReadonlyField(
         `${basePath}.shipment`,
         batch?.shipment ?? null,
-        'created',
-        batch?.shipment
-          ? {
-              at: new Date(batch?.shipment?.createdAt),
-              by: batch?.shipment?.createdBy,
-            }
-          : null
+        'createdBy',
+        batch?.createdBy ?? null
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.createdAt',
+      type: 'text',
+      ...transformReadonlyField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'createdAt',
+        batch?.createdAt ?? null
       ),
     },
     {
       columnKey: 'order.orderItem.batch.shipment.updated',
       type: 'date_user',
-      disabled: !batch,
+      ...transformComputedField(`${basePath}.shipment`, batch?.shipment ?? null, item => {
+        const currentBatch = item.orderItems
+          .map(oi => oi.batches)
+          .flat()
+          .find(oi => oi.id === batch?.id);
+        return currentBatch?.shipment
+          ? {
+              at: new Date(currentBatch?.shipment.updatedAt),
+              by: currentBatch?.shipment.updatedBy,
+            }
+          : null;
+      }),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.updatedBy',
+      type: 'text',
       ...transformReadonlyField(
         `${basePath}.shipment`,
         batch?.shipment ?? null,
-        'updated',
-        batch?.shipment
-          ? {
-              at: new Date(batch?.shipment?.updatedAt),
-              by: batch?.shipment?.updatedBy,
-            }
-          : null
+        'updatedBy',
+        batch?.updatedBy ?? null
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.updatedAt',
+      type: 'text',
+      ...transformReadonlyField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'updatedAt',
+        batch?.updatedAt ?? null
       ),
     },
     {
       columnKey: 'order.orderItem.batch.shipment.no',
       type: 'text',
-      duplicatable: true,
-      disabled: !(batch ? batch.shipment : null),
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'no',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_NO)
       ),
@@ -637,11 +833,9 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.shipment.blNo',
       type: 'text',
-      duplicatable: true,
-      disabled: !(batch ? batch.shipment : null),
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'blNo',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BL_NO)
       ),
@@ -649,11 +843,9 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.shipment.blDate',
       type: 'date',
-      duplicatable: true,
-      disabled: !(batch ? batch.shipment : null),
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'blDate',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BL_DATE)
       ),
@@ -661,11 +853,9 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.shipment.bookingNo',
       type: 'text',
-      duplicatable: true,
-      disabled: !(batch ? batch.shipment : null),
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'bookingNo',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BOOKING_NO)
       ),
@@ -673,11 +863,9 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.shipment.bookingDate',
       type: 'date',
-      duplicatable: true,
-      disabled: !(batch ? batch.shipment : null),
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'bookingDate',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BOOKING_DATE)
       ),
@@ -685,11 +873,9 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.shipment.invoiceNo',
       type: 'text',
-      duplicatable: true,
-      disabled: !(batch ? batch.shipment : null),
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'invoiceNo',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_INVOICE_NO)
       ),
@@ -697,11 +883,9 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.shipment.contractNo',
       type: 'text',
-      duplicatable: true,
-      disabled: !(batch ? batch.shipment : null),
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'contractNo',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_CONTRACT_NO)
       ),
@@ -709,17 +893,48 @@ const transformBatch = (basePath: string, batch: Object): Array<CellValue> => {
     {
       columnKey: 'order.orderItem.batch.shipment.carrier',
       type: 'text',
-      duplicatable: true,
-      disabled: !(batch ? batch.shipment : null),
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'carrier',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_CARRIER)
       ),
     },
+    {
+      columnKey: 'order.orderItem.batch.shipment.cargoReady.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.cargoReady`,
+        batch?.shipment?.cargoReady ?? null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.files',
+      type: 'shipment_documents',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'files',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_DOCUMENTS)
+      ),
+    },
+  ].map(c => ({
+    ...c,
+    duplicatable: true,
+    disabled: !(batch?.shipment ?? null),
+  }));
+}
+
+function transformFullBatch(basePath: string, batch: Object): Array<CellValue> {
+  return [
+    ...transformBatch(basePath, batch),
+    ...transformBatchContainer(basePath, batch),
+    ...transformBatchShipment(basePath, batch),
   ];
-};
+}
 
 export default function transformer(index: number, order: Object): Array<Array<CellValue>> {
   const rows = [];
@@ -739,7 +954,7 @@ export default function transformer(index: number, order: Object): Array<Array<C
           rows.push([
             ...orderCells,
             ...orderItemCells,
-            ...transformBatch(`${index}.orderItems.${orderItemIdx}.batches.${batchIdx}`, batch),
+            ...transformFullBatch(`${index}.orderItems.${orderItemIdx}.batches.${batchIdx}`, batch),
           ]);
           orderCells = transformOrder(`${index}`, null);
           orderItemCells = transformOrderItem(`${index}.orderItems.${orderItemIdx}`, null, true);
@@ -748,7 +963,7 @@ export default function transformer(index: number, order: Object): Array<Array<C
         rows.push([
           ...orderCells,
           ...transformOrderItem(`${index}.orderItems.${orderItemIdx}`, orderItem, true),
-          ...transformBatch(`${index}.orderItems.${orderItemIdx}.batches.0`, null),
+          ...transformFullBatch(`${index}.orderItems.${orderItemIdx}.batches.0`, null),
         ]);
         orderCells = transformOrder(`${index}`, null);
       }
@@ -757,7 +972,7 @@ export default function transformer(index: number, order: Object): Array<Array<C
     rows.push([
       ...orderCells,
       ...transformOrderItem(`${index}.orderItems.0`, null, false),
-      ...transformBatch(`${index}.orderItems.0.batches.0`, null),
+      ...transformFullBatch(`${index}.orderItems.0.batches.0`, null),
     ]);
   }
 

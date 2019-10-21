@@ -25,7 +25,7 @@ export function changeValues(
   const cellsToUpdate = changes
     .map(({ entity, field, value }) => {
       return {
-        cells: state.rows
+        cells: state.allRows
           .map(row =>
             row.filter(
               cell =>
@@ -65,7 +65,7 @@ export function changeValues(
       row.map(cell => {
         const update = cellsToUpdate
           .map(({ cells, value }) => ({
-            cell: cells.find(c => c === cell),
+            cell: cells.find(c => c?.data?.path === cell?.data?.path),
             value,
           }))
           .find(c => !!c.cell);

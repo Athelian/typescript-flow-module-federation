@@ -1,6 +1,11 @@
 // @flow
 import gql from 'graphql-tag';
-import { badRequestFragment, forbiddenFragment, userAvatarFragment } from 'graphql';
+import {
+  badRequestFragment,
+  forbiddenFragment,
+  userAvatarFragment,
+  documentFragment,
+} from 'graphql';
 
 const orderSheetFragment = gql`
   fragment orderSheetFragment on Order {
@@ -13,9 +18,10 @@ const orderSheetFragment = gql`
     incoterm
     deliveryPlace
     deliveryDate
-    totalOrdered
-    totalBatched
-    totalShipped
+    files {
+      ...documentFragment
+      ...forbiddenFragment
+    }
     createdAt
     updatedAt
     createdBy {
@@ -35,6 +41,7 @@ const orderSheetFragment = gql`
 const orderItemSheetFragment = gql`
   fragment orderItemSheetFragment on OrderItem {
     id
+    archived
     no
     quantity
     price {
@@ -43,8 +50,34 @@ const orderItemSheetFragment = gql`
     }
     deliveryDate
     sort
-    totalBatched
-    totalShipped
+    files {
+      ...documentFragment
+      ...forbiddenFragment
+    }
+    productProvider {
+      ...forbiddenFragment
+      ... on ProductProvider {
+        id
+        product {
+          ...forbiddenFragment
+          ... on Product {
+            id
+            name
+            serial
+            ownedBy {
+              ... on Organization {
+                id
+              }
+            }
+          }
+        }
+        ownedBy {
+          ... on Organization {
+            id
+          }
+        }
+      }
+    }
     createdAt
     updatedAt
     createdBy {
@@ -64,8 +97,16 @@ const orderItemSheetFragment = gql`
 const batchSheetFragment = gql`
   fragment batchSheetFragment on Batch {
     id
+    archived
     no
     quantity
+    batchQuantityRevisions {
+      ... on BatchQuantityRevision {
+        id
+        quantity
+        type
+      }
+    }
     deliveredAt
     desiredAt
     expiredAt
@@ -103,6 +144,13 @@ const shipmentSheetFragment = gql`
     invoiceNo
     contractNo
     carrier
+    cargoReady {
+      ...timelineDateFragment
+    }
+    files {
+      ...documentFragment
+      ...forbiddenFragment
+    }
     createdBy {
       ...userAvatarFragment
     }
@@ -117,18 +165,45 @@ const shipmentSheetFragment = gql`
   }
 `;
 
+export const timelineDateFragment = gql`
+  fragment timelineDateFragment on TimelineDate {
+    id
+    date
+    assignedTo {
+      ...userAvatarFragment
+    }
+    approvedBy {
+      ...userAvatarFragment
+    }
+    approvedAt
+    timelineDateRevisions {
+      ... on TimelineDateRevision {
+        id
+        date
+        type
+      }
+    }
+    ownedBy {
+      ... on Organization {
+        id
+      }
+    }
+  }
+`;
+
 const containerSheetFragment = gql`
   fragment containerSheetFragment on Container {
     id
+    archived
     no
     warehouseArrivalAgreedDate
     warehouseArrivalActualDate
-
     yardName
     departureDate
     totalPackageQuantity
     totalQuantity
     orderItemCount
+    containerType
     createdAt
     updatedAt
     createdBy {
@@ -185,7 +260,9 @@ export const ordersQuery = gql`
   ${batchSheetFragment}
   ${shipmentSheetFragment}
   ${containerSheetFragment}
+  ${timelineDateFragment}
   ${userAvatarFragment}
+  ${documentFragment}
   ${forbiddenFragment}
 `;
 
@@ -219,7 +296,10 @@ export const orderItemByIDQuery = gql`
   ${batchSheetFragment}
   ${shipmentSheetFragment}
   ${containerSheetFragment}
+  ${timelineDateFragment}
   ${userAvatarFragment}
+  ${documentFragment}
+  ${forbiddenFragment}
 `;
 
 export const batchByIDQuery = gql`
@@ -251,7 +331,28 @@ export const batchByIDQuery = gql`
   ${batchSheetFragment}
   ${shipmentSheetFragment}
   ${containerSheetFragment}
+  ${timelineDateFragment}
   ${userAvatarFragment}
+  ${documentFragment}
+  ${forbiddenFragment}
+`;
+
+export const batchQuantityRevisionByIDQuery = gql`
+  query batchQuantityRevisionByIDQuery($id: ID!) {
+    batchQuantityRevision(id: $id) {
+      ... on BatchQuantityRevision {
+        id
+        quantity
+        type
+        sort
+        batch {
+          ... on Batch {
+            id
+          }
+        }
+      }
+    }
+  }
 `;
 
 export const containerByIDQuery = gql`
@@ -273,7 +374,10 @@ export const shipmentByIDQuery = gql`
   }
 
   ${shipmentSheetFragment}
+  ${timelineDateFragment}
   ${userAvatarFragment}
+  ${documentFragment}
+  ${forbiddenFragment}
 `;
 
 export const orderMutation = gql`

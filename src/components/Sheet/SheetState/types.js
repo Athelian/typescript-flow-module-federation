@@ -26,6 +26,7 @@ export type CellValue = {
     ownedBy: string,
   } | null,
   type: string,
+  computed?: Object => any,
   readonly?: boolean,
   disabled?: boolean,
   empty?: boolean,
@@ -78,6 +79,7 @@ export type State = {
   initialized: boolean,
   items: Array<Object>,
   rows: Array<Array<CellValue>>,
+  allRows: Array<Array<CellValue>>,
   columns: Array<string>,
   entities: Array<{ id: string, type: string }>,
   sorts: Array<ColumnSort>,
@@ -91,3 +93,10 @@ export type State = {
   addedRows: Array<RowChange>,
   removedRows: Array<RowChangeOnRemoved>,
 };
+
+export type Mutator = ({
+  entity: { id: string, type: string },
+  field: string,
+  value: any,
+  item: Object,
+}) => Promise<Array<Object> | null>;

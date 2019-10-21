@@ -1,84 +1,50 @@
 // @flow
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { useIntl } from 'react-intl';
-import Dialog from 'components/Dialog';
-import type { InputProps } from '../../types';
-import InputWrapper from '../InputWrapper';
+import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import TextAreaInputDialog from './TextAreaInputDialog';
+import { TextAreaInputButtonStyle, TextAreaPlaceholderStyle } from './style';
 
-const TextInput = ({
+const TextAreaInput = ({
   value,
   focus,
   onChange,
   onFocus,
   onBlur,
   readonly,
-  onKeyDown,
 }: InputProps<string>) => {
-  const [isOpen, setIsOpen] = React.useState(false);
   const intl = useIntl();
-  const inputRef = useRef(null);
-  useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => {
-        if (inputRef && inputRef.current) {
-          inputRef.current.select();
-        }
-      }, 200);
-    }
-  }, [isOpen]);
 
   return (
     <>
-      <InputWrapper focus={focus}>
-        {({ ref }) => (
-          <>
-            <input
-              ref={ref}
-              readOnly
-              spellCheck={false}
-              value={value || ''}
-              onClick={() => {
-                if (!readonly) {
-                  onFocus();
-                  setIsOpen(true);
-                }
-              }}
-              onKeyDown={e => {
-                if (!readonly && e.key === 'Enter') {
-                  onFocus();
-                  setIsOpen(true);
-                }
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-              placeholder={intl.formatMessage({
-                id: 'components.sheet.textarea.placeholder',
-                defaultMessage: 'Please enter a value',
-              })}
-              onFocus={onFocus}
-            />
-            <Dialog
-              isOpen={isOpen}
-              onRequestClose={() => {
-                onChange(inputRef?.current?.value ?? '');
-                onBlur();
-                setIsOpen(false);
-              }}
-            >
-              {isOpen && (
-                <TextAreaInputDialog
-                  inputRef={inputRef}
-                  value={value || ''}
-                  onKeyDown={onKeyDown}
-                />
-              )}
-            </Dialog>
-          </>
+      <button
+        tabIndex="-1"
+        onClick={() => {
+          if (!readonly) {
+            onFocus();
+          }
+        }}
+        type="button"
+        className={TextAreaInputButtonStyle}
+      >
+        {value === null || value === undefined || value === '' ? (
+          <span className={TextAreaPlaceholderStyle}>
+            {intl.formatMessage({
+              id: 'components.sheet.textarea.placeholder',
+              defaultMessage: 'Please enter a value',
+            })}
+          </span>
+        ) : (
+          <DisplayWrapper>
+            <span>{value}</span>
+          </DisplayWrapper>
         )}
-      </InputWrapper>
+      </button>
+
+      <TextAreaInputDialog value={value || ''} onChange={onChange} focus={focus} onBlur={onBlur} />
     </>
   );
 };
 
-export default TextInput;
+export default TextAreaInput;

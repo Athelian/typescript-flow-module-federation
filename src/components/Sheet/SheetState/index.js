@@ -5,12 +5,12 @@ import { useSheetColumns } from '../SheetColumns';
 import type { ColumnSort } from '../SheetColumns';
 import cellReducer from './reducer';
 import { Actions } from './contants';
-import type { Action, CellValue, State, Position } from './types';
+import type { Action, CellValue, State, Position, Mutator } from './types';
 
 type Props = {
   transformItem: (index: number, item: Object) => Array<Array<CellValue>>,
   onLocalSort: (Array<Object>, Array<ColumnSort>) => Array<Object>,
-  onMutate: ({ entity: Object, field: string, value: any }) => Promise<Array<Object> | null>,
+  onMutate: Mutator,
   children: React.Node,
 };
 
@@ -18,6 +18,7 @@ const initialState: State = {
   initialized: false,
   items: [],
   rows: [],
+  allRows: [],
   columns: [],
   entities: [],
   sorts: [],
@@ -35,7 +36,7 @@ const initialState: State = {
 type Context = {
   state: State,
   dispatch: Action => void,
-  mutate: ({ cell: Position, value: any }) => void,
+  mutate: ({ cell: Position, value: any, item: Object }) => void,
 };
 
 export const SheetStateContext = React.createContext<Context>({
@@ -108,14 +109,16 @@ export const useSheetStateInitializer = (
   }, [columns, onRemoteSort, dispatch]);
 };
 
-export const useSheetStateLoadMore = (onLoadMore: () => Promise<Array<Object>>) => {
+export const useSheetStateLoadMore = (
+  onLoadMore: () => Promise<Array<Object>>
+): [boolean, () => Promise<any>] => {
   const [loadingMore, setLoadingMore] = React.useState<boolean>(false);
   const { dispatch } = useSheetState();
 
   const handleThreshold = React.useCallback(() => {
     setLoadingMore(true);
 
-    onLoadMore()
+    return onLoadMore()
       .then(newItems =>
         dispatch({
           type: Actions.APPEND,
@@ -195,7 +198,7 @@ export const SheetState = ({ transformItem, onMutate, onLocalSort, children }: P
   const addedRowsRef = React.useRef([]);
   const removedRowsRef = React.useRef([]);
   const memoizedMutate = React.useCallback(
-    ({ cell, value }) => {
+    ({ cell, value, item }) => {
       const cellValue = state.rows[cell.x][cell.y];
       if (!cellValue.entity || !cellValue.data) {
         return;
@@ -211,11 +214,12 @@ export const SheetState = ({ transformItem, onMutate, onLocalSort, children }: P
 
       onMutate({
         entity: {
-          id: cellValue?.entity?.id,
-          type: cellValue?.entity?.type,
+          id: cellValue?.entity?.id ?? '',
+          type: cellValue?.entity?.type ?? '',
         },
         field: cellValue?.data?.field ?? '',
         value,
+        item,
       }).then(violations => {
         if (violations === null) {
           return;

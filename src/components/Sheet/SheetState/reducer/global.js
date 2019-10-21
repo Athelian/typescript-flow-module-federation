@@ -16,6 +16,7 @@ function computeMergedCells(
       }
 
       let toX = x;
+      // eslint-disable-next-line no-constant-condition
       while (true) {
         if (rows.length <= toX + 1) {
           break;
@@ -59,20 +60,18 @@ function computeMergedCells(
 }
 
 function transformItems(transformer: (number, Object) => Array<Array<CellValue>>) {
-  return function(from: number, items: Array<Object>, columns: Array<string>) {
-    return (
-      items
-        .map(
-          (item: Object, idx: number) =>
-            transformer(from + idx, item).map(row =>
-              columns.map(column => row.find(cell => column === cell.columnKey))
-            ),
-          {}
-        )
-        // $FlowFixMe flow doesn't support flat()
-        .flat()
-    );
-  };
+  return (from: number, items: Array<Object>): Array<Array<CellValue>> =>
+    items
+      .map((item: Object, idx: number) => transformer(from + idx, item))
+      // $FlowFixMe flow doesn't support flat()
+      .flat();
+}
+
+function mapRowsToColumns(
+  rows: Array<Array<CellValue>>,
+  columns: Array<string>
+): Array<Array<CellValue>> {
+  return rows.map(row => columns.map(column => row.find(cell => column === cell.columnKey) || {}));
 }
 
 function resolveEntities(rows: Array<Array<CellValue>>): Array<{ id: string, type: string }> {
@@ -97,11 +96,10 @@ export function init(
   transformer: (number, Object) => Array<Array<CellValue>>,
   sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
 ) {
-  return function(state: State, payload: { items: Array<Object>, columns: Array<string> }): State {
+  return (state: State, payload: { items: Array<Object>, columns: Array<string> }): State => {
     const { items, columns } = payload;
-    const rows = computeMergedCells(
-      transformItems(transformer)(0, sorter(items, state.sorts), columns)
-    );
+    const allRows = transformItems(transformer)(0, sorter(items, state.sorts));
+    const rows = computeMergedCells(mapRowsToColumns(allRows, columns));
     const entities = resolveEntities(rows);
 
     return {
@@ -110,6 +108,7 @@ export function init(
       items,
       columns,
       rows,
+      allRows,
       entities,
       hoverAt: null,
       focusAt: null,
@@ -128,7 +127,7 @@ export function refresh(
   transformer: (number, Object) => Array<Array<CellValue>>,
   sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
 ) {
-  return function(state: State, payload: { items: Array<Object>, columns: Array<string> }): State {
+  return (state: State, payload: { items: Array<Object>, columns: Array<string> }): State => {
     let newState = init(transformer, sorter)(state, payload);
 
     if (state.foreignFocuses.length > 0) {
@@ -159,12 +158,11 @@ export function append(
   transformer: (number, Object) => Array<Array<CellValue>>,
   sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
 ) {
-  return function(state: State, payload: { items: Array<Object> }): State {
+  return (state: State, payload: { items: Array<Object> }): State => {
     const { items } = payload;
-    const rows = computeMergedCells(
-      transformItems(transformer)(state.items.length, sorter(items, state.sorts), state.columns),
-      state.rows.length
-    );
+
+    const allRows = transformItems(transformer)(state.items.length, sorter(items, state.sorts));
+    const rows = computeMergedCells(mapRowsToColumns(allRows, state.columns), state.rows.length);
     const entities = resolveEntities(rows);
 
     return setForeignFocuses(
@@ -172,6 +170,7 @@ export function append(
         ...state,
         items: [...state.items, ...items],
         rows: [...state.rows, ...rows],
+        allRows: [...state.allRows, ...allRows],
         entities: [...state.entities, ...entities],
       },
       {
@@ -185,7 +184,7 @@ export function rearrange(
   transformer: (number, Object) => Array<Array<CellValue>>,
   sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
 ) {
-  return function(state: State, payload: { columns: Array<string> }): State {
+  return (state: State, payload: { columns: Array<string> }): State => {
     const { columns } = payload;
 
     return refresh(transformer, sorter)(state, {
@@ -199,7 +198,7 @@ export function sort(
   transformer: (number, Object) => Array<Array<CellValue>>,
   sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
 ) {
-  return function(state: State, payload: { sorts: Array<ColumnSort> }): State {
+  return (state: State, payload: { sorts: Array<ColumnSort> }): State => {
     const { sorts } = payload;
 
     return refresh(transformer, sorter)(

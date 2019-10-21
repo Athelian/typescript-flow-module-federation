@@ -1144,7 +1144,9 @@ function BatchCell({
       <div className={ContentStyle}>
         {beforeConnector && (
           <RelationLine
-            isTargeted={isTargetedBatch && (isTargetedContainer || isTargetedShipment)}
+            isTargeted={
+              isTargetedBatch && (isTargetedContainer || (!data?.container && isTargetedShipment))
+            }
             hasRelation={isTargetedBatch}
             type={beforeConnector}
           >
@@ -1480,7 +1482,6 @@ function ContainerCell({
 function ShipmentCell({
   // $FlowIgnore: does not support
   shipment,
-  beforeConnector,
   afterConnector,
 }: CellProps & { shipment: ?ShipmentPayload }) {
   const { state, dispatch } = FocusedView.useContainer();
@@ -1562,7 +1563,10 @@ function ShipmentCell({
   const isTargetedRelateEntity =
     (shipment?.containers ?? []).some(container =>
       state.targets.includes(`${CONTAINER}-${container.id}`)
-    ) || (shipment?.batches ?? []).some(batch => state.targets.includes(`${BATCH}-${batch.id}`));
+    ) ||
+    (shipment?.batches ?? []).some(
+      batch => !batch.container && state.targets.includes(`${BATCH}-${batch.id}`)
+    );
   const entity = `${SHIPMENT}-${shipmentId}`;
   const onTargetTree = () => {
     const targets = [];
@@ -1614,15 +1618,7 @@ function ShipmentCell({
   });
   return (
     <>
-      <div className={ContentStyle}>
-        {beforeConnector && (
-          <RelationLine
-            isTargeted={isTargetedShipment && isTargetedRelateEntity}
-            hasRelation={isTargetedShipment && isTargetedRelateEntity}
-            type={beforeConnector}
-          />
-        )}
-      </div>
+      <div className={ContentStyle} />
 
       <CellWrapper ref={drop}>
         {isDragging ? (
@@ -2102,6 +2098,7 @@ function OrderSummaryCell({
 }
 
 function DuplicateShipmentCell({
+  data,
   // $FlowIgnore: does not support
   shipment,
   beforeConnector,
@@ -2110,9 +2107,78 @@ function DuplicateShipmentCell({
   const { state } = FocusedView.useContainer();
   const shipmentId = shipment?.id;
   const isTargetedShipment = state.targets.includes(`${SHIPMENT}-${shipmentId}`);
+  const { getRelatedBy } = Entities.useContainer();
+  const { getContainersSortByShipmentId, getBatchesSortByShipmentId } = ClientSorts.useContainer();
+  const containerPosition = data?.containerPosition ?? 0;
+  const batchPosition = data?.batchPosition ?? 0;
+  const originalContainers = shipment?.containers ?? [];
+  const batches = shipment?.batches ?? [];
+  const batchesWithoutContainers = batches.filter(batch => !batch?.container);
+  const batchesList = getBatchesSortByShipmentId({
+    id: shipment.id,
+    batches: batchesWithoutContainers,
+    getRelatedBy,
+  }).filter(Boolean);
 
+  let targetBatchOnPoolPosition = -1;
+  for (let index = batchesList.length - 1; index >= 0; index -= 1) {
+    const isTargetedBatch = state.targets.includes(`${BATCH}-${batchesList[index]}`);
+    if (isTargetedBatch) {
+      targetBatchOnPoolPosition = index;
+      break;
+    }
+  }
+
+  const containers = getContainersSortByShipmentId({
+    id: shipmentId,
+    containers: originalContainers,
+    getRelatedBy,
+  });
+  const containerList = [];
+  if (containers.length !== originalContainers.length) {
+    containers.forEach(containerId => {
+      if (!containerList.includes(containerId)) {
+        const relatedContainers = getRelatedBy('container', containerId);
+        containerList.push(containerId);
+        if (relatedContainers.length) {
+          containerList.push(...relatedContainers);
+        }
+      }
+    });
+    originalContainers
+      .map(container => container.id)
+      .forEach(containerId => {
+        if (!containerList.includes(containerId)) {
+          const relatedContainers = getRelatedBy('container', containerId);
+          containerList.push(containerId);
+          if (relatedContainers.length) {
+            containerList.push(...relatedContainers);
+          }
+        }
+      });
+  } else {
+    containerList.push(...containers);
+  }
+
+  let foundPosition = -1;
+  for (let index = containerList.length - 1; index >= 0; index -= 1) {
+    const isTargetedContainer = state.targets.includes(`${CONTAINER}-${containerList[index]}`);
+    if (isTargetedContainer) {
+      foundPosition = index;
+      break;
+    }
+  }
+
+  const highlightBatches =
+    containerPosition === -1 &&
+    ((targetBatchOnPoolPosition >= 0 && batchPosition <= targetBatchOnPoolPosition) ||
+      foundPosition >= 0);
+  const highlightContainers =
+    (foundPosition > containerPosition ||
+      (foundPosition === containerPosition && batchPosition <= 0)) &&
+    containerPosition >= 0;
   const connector = {
-    isTargeted: isTargetedShipment,
+    isTargeted: isTargetedShipment && (highlightBatches || highlightContainers),
     hasRelation: false,
   };
   return (
@@ -2147,19 +2213,26 @@ function DuplicateShipmentCell({
   );
 }
 
-// TODO: fix the card
-function DuplicateContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
+function DuplicateContainerCell({
+  data,
+  // $FlowIgnore: does not support
+  shipment,
+  beforeConnector,
+  afterConnector,
+}: CellProps & { shipment: ?ShipmentPayload }) {
   const { state } = FocusedView.useContainer();
   const { getRelatedBy } = Entities.useContainer();
-  const { getBatchesSortByItemId } = ClientSorts.useContainer();
+  const { getBatchesSortByContainerId } = ClientSorts.useContainer();
   const batchPosition = data?.batchPosition ?? 0;
-  const itemId = data.item?.id;
-  const originalBatches = data.item?.batches ?? [];
-  const batchList = getBatchesSortByItemId({
-    id: itemId,
+  const containerId = data.container?.id;
+  const originalBatches = (shipment?.batches ?? []).filter(
+    batch => batch?.container?.id === containerId
+  );
+  const batchList = getBatchesSortByContainerId({
+    id: containerId,
     batches: originalBatches,
     getRelatedBy,
-  }).filter(batchId => originalBatches.find(batch => batch?.id === batchId));
+  });
 
   let foundPosition = -1;
   for (let index = batchList.length - 1; index > 0; index -= 1) {
@@ -2170,10 +2243,10 @@ function DuplicateContainerCell({ data, beforeConnector, afterConnector }: CellP
     }
   }
 
-  const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${itemId}`);
+  const isTargetedContainer = state.targets.includes(`${CONTAINER}-${containerId}`);
 
   const connector = {
-    isTargeted: isTargetedItem && foundPosition >= batchPosition,
+    isTargeted: isTargetedContainer && foundPosition >= batchPosition,
     hasRelation: false,
   };
   return (
@@ -2247,21 +2320,6 @@ const cellRenderer = (
         </div>
       );
       break;
-    }
-    case 'shipmentPlaceholder': {
-      return (
-        <div
-          style={{
-            display: 'flex',
-            width: SHIPMENT_LONG_WIDTH + 20,
-          }}
-          key={uuid()}
-        >
-          <div className={ContentStyle} />
-          <div className={ContentStyle} />
-          <div className={ContentStyle} />
-        </div>
-      );
     }
     case 'containerPlaceholder': {
       return (

@@ -1,12 +1,17 @@
 // @flow
 import * as React from 'react';
+import { equals } from 'ramda';
 import TextInput from './Inputs/TextInput';
 import TextAreaInput from './Inputs/TextAreaInput';
 import NumberInput from './Inputs/NumberInput';
 import DateInput from './Inputs/DateInput';
 import DatetimeInput from './Inputs/DatetimeInput';
-import EnumInput from './Inputs/EnumInput';
+import SelectEnumInput from './Inputs/SelectEnumInput';
 import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
+import ContainerTypeInput from './Inputs/ContainerTypeInput';
+import DocumentsInput from './Inputs/DocumentsInput';
+import QuantityRevisionsInput from './Inputs/QuantityRevisionsInput';
+import DateRevisionsInput from './Inputs/DateRevisionsInput';
 import { WrapperStyle } from './style';
 
 type Props = {
@@ -29,8 +34,13 @@ const inputs = {
   static_metric_value: StaticMetricValueInput,
   date: DateInput,
   datetime: DatetimeInput,
-  currency: EnumInput.Currency,
-  incoterm: EnumInput.Incoterm,
+  incoterm: SelectEnumInput.Incoterm,
+  container_type: ContainerTypeInput,
+  order_documents: DocumentsInput.Order,
+  order_item_documents: DocumentsInput.OrderItem,
+  shipment_documents: DocumentsInput.Shipment,
+  quantity_revisions: QuantityRevisionsInput,
+  date_revisions: DateRevisionsInput,
 };
 
 const CellInput = ({
@@ -52,7 +62,7 @@ const CellInput = ({
   }, [value, setDirtyValue]);
 
   const handleChange = newValue => {
-    if (newValue !== dirtyValue) {
+    if (!equals(newValue, dirtyValue)) {
       setDirtyValue(newValue);
 
       if (!inputFocus) {
@@ -64,14 +74,14 @@ const CellInput = ({
   const handleBlur = () => {
     onBlur();
 
-    if (dirtyValue === value) {
+    if (equals(dirtyValue, value)) {
       return;
     }
 
     onUpdate(dirtyValue);
   };
 
-  const handleKeyDown = (e: SyntheticKeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (e: SyntheticKeyboardEvent<HTMLElement>) => {
     switch (e.key) {
       case 'ArrowUp':
       case 'ArrowDown':

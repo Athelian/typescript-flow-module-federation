@@ -78,19 +78,19 @@ export function findParentIdsByBatch({
 |}): [?string, ?string] {
   if (viewer === ORDER) {
     const parentItemId = findKey(orderItem => {
-      return (orderItem.batches || []).includes(batchId);
-    }, entities.orderItems);
+      return (orderItem?.batches ?? []).includes(batchId);
+    }, entities?.orderItems ?? {});
 
     const parentOrderId = findKey(currentOrder => {
-      return (currentOrder.orderItems || []).includes(parentItemId);
-    }, entities.orders);
+      return (currentOrder?.orderItems ?? []).includes(parentItemId);
+    }, entities?.orders ?? {});
 
     return [parentItemId, parentOrderId];
   }
 
-  const parentItemId = entities.batches?.[batchId]?.orderItem;
+  const parentItemId = entities?.batches?.[batchId]?.orderItem;
 
-  const parentOrderId = entities.orderItems?.[parentItemId]?.order;
+  const parentOrderId = entities?.orderItems?.[parentItemId]?.order;
 
   return [parentItemId, parentOrderId];
 }
@@ -106,13 +106,13 @@ export function findOrderIdByItem({
 |}): ?string {
   if (viewer === ORDER) {
     const parentOrderId = findKey(currentOrder => {
-      return (currentOrder.orderItems || []).includes(orderItemId);
-    }, entities.orders);
+      return (currentOrder?.orderItems ?? []).includes(orderItemId);
+    }, entities?.orders ?? {});
 
     return parentOrderId;
   }
 
-  const parentOrderId = entities.orderItems?.[orderItemId]?.order;
+  const parentOrderId = entities?.orderItems?.[orderItemId]?.order;
 
   return parentOrderId;
 }
@@ -127,7 +127,7 @@ export function findOrderIdsByContainer({
   entities: Object,
 |}): Array<string> {
   if (viewer === ORDER) {
-    return (Object.keys(entities.orders || {}).filter(orderId => {
+    return (Object.keys(entities?.orders ?? {}).filter(orderId => {
       return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
         (entities?.orderItems?.[itemId]?.batches ?? []).some(
           batchId => entities?.batches?.[batchId]?.container === containerId
@@ -136,13 +136,13 @@ export function findOrderIdsByContainer({
     }): Array<string>);
   }
 
-  const parentOrderIds = (Object.keys(entities.batches || {})
+  const parentOrderIds = (Object.keys(entities?.batches ?? {})
     .filter(batchId => {
       return entities?.batches?.[batchId]?.container === containerId;
     })
     .map(batchId => {
-      const parentItemId = entities.batches?.[batchId]?.orderItem;
-      return entities.orderItems?.[parentItemId]?.order;
+      const parentItemId = entities?.batches?.[batchId]?.orderItem;
+      return entities?.orderItems?.[parentItemId]?.order;
     }): Array<string>);
 
   return [...new Set(parentOrderIds)];
@@ -158,7 +158,7 @@ export const findOrderIdsByShipment = ({
   entities: Object,
 |}) => {
   if (viewer === ORDER) {
-    const parentOrderIds = (Object.keys(entities.orders || {}).filter(orderId => {
+    const parentOrderIds = (Object.keys(entities?.orders ?? {}).filter(orderId => {
       return (entities?.orders?.[orderId]?.orderItems ?? []).some(itemId =>
         (entities?.orderItems?.[itemId]?.batches ?? []).some(
           batchId => entities?.batches?.[batchId]?.shipment === shipmentId
@@ -168,13 +168,13 @@ export const findOrderIdsByShipment = ({
     return [...new Set(parentOrderIds)];
   }
 
-  const parentOrderIds = (Object.keys(entities.batches || {})
+  const parentOrderIds = (Object.keys(entities?.batches ?? {})
     .filter(batchId => {
       return entities?.batches?.[batchId]?.shipment === shipmentId;
     })
     .map(batchId => {
-      const parentItemId = entities.batches?.[batchId]?.orderItem;
-      return entities.orderItems?.[parentItemId]?.order;
+      const parentItemId = entities?.batches?.[batchId]?.orderItem;
+      return entities?.orderItems?.[parentItemId]?.order;
     }): Array<string>);
 
   return [...new Set(parentOrderIds)];
@@ -182,37 +182,37 @@ export const findOrderIdsByShipment = ({
 
 // find shipment id will be called on shipment focused
 export const findShipmentIdByContainer = (containerId: string, entities: Object) => {
-  const parentIds = (Object.keys(entities.containers || {})
+  const parentIds = (Object.keys(entities?.containers ?? {})
     .filter(id => {
       return containerId === id;
     })
-    .map(id => entities.containers?.[id]?.shipment): Array<string>);
+    .map(id => entities?.containers?.[id]?.shipment): Array<string>);
   const [shipmentId] = parentIds || [];
   return shipmentId;
 };
 
 export const findShipmentIdByBatch = (batchId: string, entities: Object) => {
-  return entities.batches?.[batchId]?.shipment;
+  return entities?.batches?.[batchId]?.shipment;
 };
 
 export const findShipmentIdsByOrderItem = (itemId: string, entities: Object) => {
-  const parentIds = (Object.keys(entities.batches || {})
+  const parentIds = (Object.keys(entities?.batches ?? {})
     .filter(id => {
-      return entities.batches?.[id]?.orderItem === itemId;
+      return entities?.batches?.[id]?.orderItem === itemId;
     })
-    .map(id => entities.batches?.[id]?.shipment): Array<string>);
+    .map(id => entities?.batches?.[id]?.shipment): Array<string>);
   return [...new Set(parentIds)];
 };
 
 export const findShipmentIdsByOrder = (orderId: string, entities: Object) => {
-  const parentIds = (Object.keys(entities.batches || {})
+  const parentIds = (Object.keys(entities?.batches ?? {})
     .filter(id => {
       return (
-        entities.batches?.[id]?.orderItem &&
-        entities.orderItems?.[entities.batches?.[id]?.orderItem]?.order === orderId
+        entities?.batches?.[id]?.orderItem &&
+        entities?.orderItems?.[entities?.batches?.[id]?.orderItem]?.order === orderId
       );
     })
-    .map(id => entities.batches?.[id]?.shipment): Array<string>);
+    .map(id => entities?.batches?.[id]?.shipment): Array<string>);
   return [...new Set(parentIds)];
 };
 
@@ -220,9 +220,9 @@ export const targetedIds = (
   targets: Array<string>,
   type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT
 ) => {
-  const ids = targets.filter(item => item.includes(`${type}-`));
-  return (ids.map(orderItem => {
-    const [, id] = orderItem.split('-');
+  const ids = targets.filter(targetItem => targetItem.includes(`${type}-`));
+  return (ids.map(targetItem => {
+    const [, id] = targetItem.split('-');
     return id;
   }): Array<string>);
 };

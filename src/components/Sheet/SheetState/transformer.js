@@ -58,4 +58,12 @@ export const transformReadonlyField = (
   readonly: true,
 });
 
-export default transformValueField;
+export const transformComputedField = (
+  basePath: string,
+  entity: Object | null,
+  computed: Object => any
+) => ({
+  ...transformField(entity, basePath, '__computed__', null),
+  readonly: true,
+  computed,
+});

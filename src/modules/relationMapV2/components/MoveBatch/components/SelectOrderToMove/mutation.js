@@ -1,42 +1,38 @@
 // @flow
 import apolloClient from 'apollo';
-import { findKey } from 'lodash';
-import { getByPathWithDefault } from 'utils/fp';
 import { updateOrderMutation } from 'modules/order/form/mutation';
+import { findShipmentIdByBatch, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
 
 export const moveBatchesToOrder = ({
   batchIds,
   order,
   entities,
+  viewer,
 }: {
   batchIds: Array<string>,
   order: Object,
   entities: Object,
+  viewer: string,
 }) => {
   const orderItems = [];
   const orderIds = [];
   batchIds.forEach(batchId => {
-    const orderItemId = findKey(entities.orderItems, orderItem => {
-      return (orderItem.batches || []).includes(batchId);
-    });
-    const parentOrderId = findKey(entities.orders, currentOrder => {
-      return (currentOrder.orderItems || []).includes(orderItemId);
+    const [orderItemId, parentOrderId] = findParentIdsByBatch({
+      batchId,
+      entities,
+      viewer,
     });
     if (orderItemId && parentOrderId) {
-      const parentItem = getByPathWithDefault(
-        {
-          no: 'N/A',
-          price: {
-            amount: 0,
-            currency: order.currency,
-          },
+      const parentItem = entities?.orderItems?.[orderItemId] ?? {
+        no: 'N/A',
+        price: {
+          amount: 0,
+          currency: order.currency,
         },
-        `orderItems.${orderItemId}`,
-        entities
-      );
-      const parentOrder = getByPathWithDefault({}, `orders.${parentOrderId}`, entities);
+      };
+      const parentOrder = entities?.orders?.[parentOrderId] ?? {};
       if (parentOrder?.id && parentOrder?.id !== order.id) {
-        const batch = getByPathWithDefault({}, `batches.${batchId}`, entities);
+        const batch = entities?.batches?.[batchId];
         orderIds.push(parentOrder?.id);
         orderItems.push({
           productProviderId: parentItem.productProvider.id,
@@ -52,17 +48,31 @@ export const moveBatchesToOrder = ({
     }
   });
 
+  const input = {
+    orderItems: [...(order?.orderItems ?? []).map(({ id }) => ({ id })), ...orderItems],
+  };
   return apolloClient
     .mutate({
       mutation: updateOrderMutation,
       variables: {
         id: order.id,
-        input: {
-          orderItems: [...(order.orderItems || []).map(({ id }) => ({ id })), ...orderItems],
-        },
+        input,
       },
     })
-    .then(() => Promise.resolve([order.id, ...orderIds]));
+    .then(result => {
+      const shipmentIds = batchIds.map(batchId => findShipmentIdByBatch(batchId, entities));
+      (result.data?.batchUpdateMany ?? []).forEach(batch => {
+        const shipmentId = batch?.shipment?.id;
+        if (!shipmentIds.includes(shipmentId)) {
+          shipmentIds.push(shipmentId);
+        }
+      });
+      const ids = {
+        orderIds: [order.id, ...orderIds].filter(Boolean),
+        shipmentIds: shipmentIds.filter(Boolean),
+      };
+      return Promise.resolve(ids);
+    });
 };
 
 export default moveBatchesToOrder;

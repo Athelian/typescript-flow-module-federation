@@ -32,12 +32,15 @@ import {
 } from 'modules/relationMapV2/store';
 import EditFormSlideView from '../EditFormSlideView';
 import SelectedEntity from '../SelectedEntity';
+import SplitBatches from '../SplitBatches';
+import MoveBatch from '../MoveBatch';
 import CloneEntities from '../CloneEntities';
 import InlineCreateContainer from '../InlineCreateContainer';
 import DeleteContainerConfirm from '../DeleteContainerConfirm';
 import DeleteConfirm from '../DeleteConfirm';
 import RemoveBatchConfirm from '../RemoveBatchConfirm';
 import DeleteBatchConfirm from '../DeleteBatchConfirm';
+import DeleteBatchesConfirm from '../DeleteBatchesConfirm';
 import StatusConfirm from '../StatusConfirm';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import AddTags from '../AddTags';
@@ -75,7 +78,13 @@ export default function ShipmentFocus() {
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const { initHits } = Hits.useContainer();
-  const { initMapping, getRelatedBy, onSetBadges, onSetCloneRelated } = Entities.useContainer();
+  const {
+    initMapping,
+    getRelatedBy,
+    onSetBadges,
+    onSetCloneRelated,
+    onSetSplitBatchRelated,
+  } = Entities.useContainer();
   const { queryVariables } = SortAndFilter.useContainer();
   const lastQueryVariables = usePrevious(queryVariables);
   React.useEffect(() => {
@@ -232,26 +241,39 @@ export default function ShipmentFocus() {
                     onClose={result => {
                       if (state.edit.type === SHIPMENT) {
                         queryShipmentsDetail([state.edit.selectedId]);
-                      } else if (state.edit.orderId) {
-                        queryShipmentsDetail([state.edit.orderId]);
-                      } else if (state.edit.orderIds && state.edit.orderIds.length) {
-                        queryShipmentsDetail(state.edit.orderIds);
+                      } else if (state.edit.shipmentId) {
+                        queryShipmentsDetail([state.edit.shipmentId]);
+                      } else if (state.edit.shipmentIds && state.edit.shipmentIds.length) {
+                        queryShipmentsDetail(state.edit.shipmentIds);
                       }
                       if (result?.moveToTop) {
-                        queryShipmentsDetail([result?.id ?? ''].filter(Boolean));
+                        const shipmentId = state.edit.shipment?.id ?? '';
+                        if (result?.type === SHIPMENT) {
+                          queryShipmentsDetail([result?.id ?? ''].filter(Boolean));
+                        } else {
+                          // move to new container
+                          queryShipmentsDetail([shipmentId].filter(Boolean));
+                        }
                         scrollToRow({
                           position: 0,
                           id: result?.id ?? '',
                           type: result?.type ?? '',
                         });
                       }
-                      dispatch({
-                        type: 'EDIT',
-                        payload: {
-                          type: '',
-                          selectedId: '',
+                      window.requestIdleCallback(
+                        () => {
+                          dispatch({
+                            type: 'EDIT',
+                            payload: {
+                              type: '',
+                              selectedId: '',
+                            },
+                          });
                         },
-                      });
+                        {
+                          timeout: 250,
+                        }
+                      );
                     }}
                   />
                   <DeleteConfirm
@@ -421,6 +443,61 @@ export default function ShipmentFocus() {
                       }
                     }}
                   />
+                  <MoveBatch
+                    onSuccess={(_, shipmentIds) => {
+                      queryShipmentsDetail(shipmentIds);
+                      // scroll to first orderId if that is exist on UI
+                      const shipmentId = shipmentIds[0];
+                      const indexPosition = shipmentsData.findIndex((row: Array<any>) => {
+                        const [shipmentCell, , , ,] = row;
+                        return Number(shipmentCell.shipment?.id) === Number(shipmentId);
+                      });
+                      scrollToRow({
+                        position: indexPosition,
+                        id: shipmentId,
+                        type: SHIPMENT,
+                      });
+                      window.requestIdleCallback(
+                        () => {
+                          dispatch({
+                            type: 'MOVE_BATCH_END',
+                            payload: {},
+                          });
+                        },
+                        {
+                          timeout: 250,
+                        }
+                      );
+                    }}
+                  />
+                  <SplitBatches
+                    onSuccess={(_, batchIds) => {
+                      onSetBadges(
+                        Object.keys(batchIds).map(id => ({
+                          id: batchIds[id],
+                          type: 'split',
+                          entity: 'batch',
+                        }))
+                      );
+                      onSetSplitBatchRelated(batchIds);
+                      queryShipmentsDetail(
+                        Object.keys(batchIds)
+                          .map(batchId => findShipmentIdByBatch(batchId, entities))
+                          .filter(Boolean)
+                      );
+                      window.requestIdleCallback(
+                        () => {
+                          dispatch({
+                            type: 'SPLIT_CLOSE',
+                            payload: {},
+                          });
+                        },
+                        {
+                          timeout: 250,
+                        }
+                      );
+                    }}
+                  />
                   <DeleteBatchConfirm
                     onSuccess={batchId => {
                       queryShipmentsDetail([findShipmentIdByBatch(batchId, entities)]);
@@ -462,6 +539,33 @@ export default function ShipmentFocus() {
                       );
                     }}
                   />
+                  <DeleteBatchesConfirm
+                    onSuccess={(batchIds, isRemoveTargeting) => {
+                      queryShipmentsDetail(
+                        batchIds.map(batchId => findShipmentIdByBatch(batchId, entities))
+                      );
+                      window.requestIdleCallback(
+                        () => {
+                          if (isRemoveTargeting) {
+                            dispatch({
+                              type: 'REMOVE_TARGETS',
+                              payload: {
+                                targets: batchIds.map(batchId => `${BATCH}-${batchId}`),
+                              },
+                            });
+                          }
+                          dispatch({
+                            type: 'DELETE_BATCHES_CLOSE',
+                            payload: {},
+                          });
+                        },
+                        {
+                          timeout: 250,
+                        }
+                      );
+                    }}
+                  />
+
                   <RemoveBatchConfirm
                     onSuccess={batchId => {
                       queryShipmentsDetail([findShipmentIdByBatch(batchId, entities)]);

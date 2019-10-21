@@ -1,13 +1,20 @@
 // @flow
 import gql from 'graphql-tag';
 import apolloClient from 'apollo';
-import { findKey } from 'lodash';
 import { badRequestFragment, forbiddenFragment } from 'graphql';
-import { getByPathWithDefault } from 'utils/fp';
+import { findShipmentIdByBatch, findOrderIdsByContainer } from 'modules/relationMapV2/helpers';
 
 const updateBatchesMutation = gql`
   mutation batchUpdateMany($batches: [BatchUpdateWrapperInput!]!) {
     batchUpdateMany(batches: $batches) {
+      ... on Batch {
+        id
+        shipment {
+          ... on Shipment {
+            id
+          }
+        }
+      }
       ...badRequestFragment
       ...forbiddenFragment
     }
@@ -21,11 +28,13 @@ export const moveBatchesToContainer = ({
   container,
   entities,
   orderIds,
+  viewer,
 }: {
   batchIds: Array<string>,
   orderIds: Array<string>,
   container: Object,
   entities: Object,
+  viewer: string,
 }) => {
   const batches = [];
   batchIds.forEach(batchId => {
@@ -48,15 +57,23 @@ export const moveBatchesToContainer = ({
         batches,
       },
     })
-    .then(() => {
-      const parentOrderId = findKey(entities.orders, currentOrder => {
-        return (currentOrder.shipments || []).some(shipmentId =>
-          getByPathWithDefault([], `shipments.${shipmentId}.containers`, entities).includes(
-            container.id
-          )
-        );
+    .then(result => {
+      const parentOrderIds = findOrderIdsByContainer({
+        viewer,
+        entities,
+        containerId: container.id,
       });
-      return Promise.resolve([parentOrderId, ...orderIds].filter(Boolean));
+      const shipmentIds = batchIds.map(batchId => findShipmentIdByBatch(batchId, entities));
+      (result.data?.batchUpdateMany ?? []).forEach(batch => {
+        const shipmentId = batch?.shipment?.id;
+        if (!shipmentIds.includes(shipmentId)) {
+          shipmentIds.push(shipmentId);
+        }
+      });
+      return Promise.resolve({
+        ordersIds: [...parentOrderIds, ...orderIds].filter(Boolean),
+        shipmentIds: shipmentIds.filter(Boolean),
+      });
     });
 };
 

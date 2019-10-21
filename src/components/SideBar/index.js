@@ -2,7 +2,6 @@
 import React from 'react';
 import { Location } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
-import { isEnableBetaFeature } from 'utils/env';
 import {
   RM_ORDER_FOCUS_LIST,
   RM_PRODUCT_FOCUS_LIST,
@@ -111,7 +110,6 @@ const menu: Array<MenuConfig> = [
         icon: 'MAP',
         path: 'map',
         beta: true,
-        hidden: !isEnableBetaFeature,
       },
     ],
   },

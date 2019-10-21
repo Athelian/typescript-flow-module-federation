@@ -22,7 +22,7 @@ const orderColumns: Array<ColumnConfig> = [
       group: 'order',
     },
   },
-  /* {
+  {
     key: 'order.updated',
     title: <FormattedMessage {...orderMessages.updatedAt} />,
     icon: 'ORDER',
@@ -33,7 +33,7 @@ const orderColumns: Array<ColumnConfig> = [
       name: 'updatedAt',
       group: 'order',
     },
-  }, */
+  },
   // status
   {
     key: 'order.poNo',
@@ -113,7 +113,7 @@ const orderColumns: Array<ColumnConfig> = [
     width: 200,
   },
   // in charge
-  /* {
+  {
     key: 'order.totalOrdered',
     title: <FormattedMessage {...orderMessages.totalOrderedQuantity} />,
     icon: 'ORDER',
@@ -133,9 +133,21 @@ const orderColumns: Array<ColumnConfig> = [
     icon: 'ORDER',
     color: colors.ORDER,
     width: 200,
-  }, */
-  // total price
-  // documents
+  },
+  // {
+  //   key: 'order.totalPrice',
+  //   title: <FormattedMessage {...orderMessages.totalPrice} />,
+  //   icon: 'ORDER',
+  //   color: colors.ORDER,
+  //   width: 200,
+  // },
+  {
+    key: 'order.files',
+    title: <FormattedMessage {...orderMessages.sectionDocuments} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   // tasks
   // custom fields mask
   // custom fields
@@ -157,7 +169,7 @@ const orderItemColumns: Array<ColumnConfig> = [
       group: 'orderItem',
     },
   },
-  /* {
+  {
     key: 'order.orderItem.updated',
     title: <FormattedMessage {...orderItemMessages.updatedAt} />,
     icon: 'ORDER_ITEM',
@@ -168,12 +180,43 @@ const orderItemColumns: Array<ColumnConfig> = [
       name: 'updatedAt',
       group: 'orderItem',
     },
-  }, */
-  // status
+  },
+  {
+    key: 'order.orderItem.archived',
+    exportKey: 'orderItems.archived',
+    title: <FormattedMessage {...orderItemMessages.status} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 105,
+  },
+  {
+    key: 'order.orderItem.productProvider.product.name',
+    title: <FormattedMessage id="components.BatchItem.productName" />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+    sort: {
+      local: true,
+      name: 'productProvider.product.name',
+      group: 'orderItem',
+    },
+  },
+  {
+    key: 'order.orderItem.productProvider.product.serial',
+    title: <FormattedMessage id="components.BatchItem.productSerial" />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+    sort: {
+      local: true,
+      name: 'productProvider.product.serial',
+      group: 'orderItem',
+    },
+  },
   {
     key: 'order.orderItem.no',
     exportKey: 'orderItems.no',
-    title: 'Item No',
+    title: <FormattedMessage {...orderItemMessages.no} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
@@ -186,7 +229,7 @@ const orderItemColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.quantity',
     exportKey: 'orderItems.quantity',
-    title: 'Quantity',
+    title: <FormattedMessage {...batchMessages.quantity} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
@@ -211,7 +254,7 @@ const orderItemColumns: Array<ColumnConfig> = [
   },
   // tags
   // memo
-  /* {
+  {
     key: 'order.orderItem.totalBatched',
     title: 'Total Batched quantity',
     icon: 'ORDER_ITEM',
@@ -234,7 +277,7 @@ const orderItemColumns: Array<ColumnConfig> = [
       name: 'totalShipped',
       group: 'orderItem',
     },
-  }, */
+  },
   {
     key: 'order.orderItem.deliveryDate',
     exportKey: 'orderItems.deliveryDate',
@@ -249,7 +292,13 @@ const orderItemColumns: Array<ColumnConfig> = [
     },
   },
   // total price
-  // documents
+  {
+    key: 'order.orderItem.files',
+    title: <FormattedMessage {...orderMessages.sectionDocuments} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+  },
   // tasks
   // custom fields mask
   // custom fields
@@ -271,7 +320,7 @@ const batchColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  /* {
+  {
     key: 'order.orderItem.batch.updated',
     title: <FormattedMessage {...batchMessages.updatedAt} />,
     icon: 'BATCH',
@@ -282,8 +331,15 @@ const batchColumns: Array<ColumnConfig> = [
       name: 'updatedAt',
       group: 'batch',
     },
-  }, */
-  // status
+  },
+  {
+    key: 'order.orderItem.batch.archived',
+    exportKey: 'orderItems.batches.archived',
+    title: <FormattedMessage {...orderItemMessages.status} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 105,
+  },
   {
     key: 'order.orderItem.batch.no',
     exportKey: 'orderItems.batches.no',
@@ -364,7 +420,14 @@ const batchColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // revised quantities
+  {
+    key: 'order.orderItem.batch.quantityRevisions',
+    exportKey: 'orderItems.batches.quantityRevisions',
+    title: <FormattedMessage {...batchMessages.sectionAdjustments} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 1035,
+  },
   {
     key: 'order.orderItem.batch.packageName',
     exportKey: 'orderItems.batches.packageName',
@@ -427,7 +490,7 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  /* {
+  {
     key: 'order.orderItem.batch.container.updated',
     title: <FormattedMessage {...containerMessages.updatedAt} />,
     icon: 'CONTAINER',
@@ -438,8 +501,15 @@ const containerColumns: Array<ColumnConfig> = [
       name: 'containerUpdatedAt',
       group: 'batch',
     },
-  }, */
-  // status
+  },
+  {
+    key: 'order.orderItem.batch.container.archived',
+    exportKey: 'orderItems.batches.container.archived',
+    title: <FormattedMessage {...containerMessages.status} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 105,
+  },
   {
     key: 'order.orderItem.batch.container.no',
     title: <FormattedMessage {...containerMessages.containerNo} />,
@@ -452,7 +522,18 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // ctn type
+  {
+    key: 'order.orderItem.batch.container.containerType',
+    title: <FormattedMessage {...containerMessages.containerType} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+    sort: {
+      local: true,
+      name: 'containerContainerType',
+      group: 'batch',
+    },
+  },
   // ctn option
   {
     key: 'order.orderItem.batch.container.warehouseArrivalAgreedDate',
@@ -571,7 +652,7 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  /* {
+  {
     key: 'order.orderItem.batch.shipment.updated',
     title: <FormattedMessage {...shipmentMessages.updatedAt} />,
     icon: 'SHIPMENT',
@@ -582,7 +663,7 @@ const shipmentColumns: Array<ColumnConfig> = [
       name: 'shipmentUpdatedAt',
       group: 'batch',
     },
-  }, */
+  },
   {
     key: 'order.orderItem.batch.shipment.no',
     exportKey: 'orderItems.batches.shipment.no',
@@ -686,6 +767,27 @@ const shipmentColumns: Array<ColumnConfig> = [
       name: 'shipmentCarrier',
       group: 'batch',
     },
+  },
+  {
+    key: 'order.orderItem.batch.shipment.cargoReady.timelineDateRevisions',
+    exportKey: 'orderItem.batch.shipment.cargoReady.timelineDateRevisions',
+    title: (
+      <FormattedMessage
+        id="modules.sheet.cargoReadyDateRevisions"
+        defaultMessage="Cargo Ready Date Revisions"
+      />
+    ),
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+    minWidth: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.files',
+    title: <FormattedMessage {...orderMessages.sectionDocuments} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
   },
 ];
 

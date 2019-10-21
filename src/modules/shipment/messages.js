@@ -364,7 +364,7 @@ export default defineMessages({
   },
   createdAt: {
     id: 'modules.Shipments.createdAt',
-    defaultMessage: 'CREATED ON',
+    defaultMessage: 'Date Created',
   },
   updatedAt: {
     id: 'modules.Shipments.updatedAt',

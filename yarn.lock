@@ -2221,10 +2221,10 @@
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.2.25"
 
-"@fortawesome/react-fontawesome@^0.1.6":
-  version "0.1.6"
-  resolved "https://npm.fontawesome.com/2BA05F56-27C6-461D-AC06-E2C36EE13541/@fortawesome/react-fontawesome/-/react-fontawesome-0.1.6.tgz#b798b96401e25d07c30bbe1b9ec0e6d8a33760a5"
-  integrity sha512-DNqt2t4JQ0YQKi832XzByk1wlQzgugwwCCNQHsFyz1z/zA9dtypSvsvVwMIaWXMljalYzKAA2zHX13C1DIxKAw==
+"@fortawesome/react-fontawesome@^0.1.7":
+  version "0.1.7"
+  resolved "https://npm.fontawesome.com/2BA05F56-27C6-461D-AC06-E2C36EE13541/@fortawesome/react-fontawesome/-/react-fontawesome-0.1.7.tgz#c004ca75c15c5a1218101e8f042b8da8dec0c4b5"
+  integrity sha512-AHWSzOsHBe5vqOkrvs+CKw+8eLl+0XZsVixOWhTPpGpOA8WQUbVU6J9cmtAvTaxUU5OIf+rgxxF8ZKc3BVldxg==
   dependencies:
     prop-types "^15.5.10"
 
@@ -3374,10 +3374,10 @@
     pretty-format "^24.0.0"
     redent "^3.0.0"
 
-"@testing-library/react-hooks@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/react-hooks/-/react-hooks-3.0.0.tgz#ceffe5e3e0543ca74b5489cb25dbc80af3215870"
-  integrity sha512-WH1QVygUjUCk5ov9FHtvyvjO5YbFdi3+UqYm59e/mA+Rc/1PBVzK5aiUe6dXWdBS0znlnLhtrS/ebzKroXIRbg==
+"@testing-library/react-hooks@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@testing-library/react-hooks/-/react-hooks-3.1.0.tgz#f186c4f3b32db153d30d646faacb043ef4089807"
+  integrity sha512-mwFDHXCQiyr0tQkYU4VkcwlCzR5YQ5k1/TCrL3hPslCM5MvS6pBhbl2z4UnCMV4DOyiUUXIvoMAf5kHT/hibTg==
   dependencies:
     "@babel/runtime" "^7.5.4"
     "@types/testing-library__react-hooks" "^2.0.0"
@@ -4016,10 +4016,10 @@ acorn-jsx@^5.0.0:
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.0.1.tgz#32a064fd925429216a09b141102bfdd185fae40e"
   integrity sha512-HJ7CfNHrfJLlNTzIEUTj43LNWGkqpRLxm3YjAlcD0ACydk9XynzYsCBHxut+iqt+1aBXkx9UP/w/ZqMr13XIzg==
 
-acorn-jsx@^5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.0.2.tgz#84b68ea44b373c4f8686023a551f61a21b7c4a4f"
-  integrity sha512-tiNTrP1MP0QrChmD2DdupCr6HWSFeKVw5d/dHTu4Y7rkAkRhU/Dt7dphAfIUyxtHpl/eBVip5uTNSpQJHylpAw==
+acorn-jsx@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.1.0.tgz#294adb71b57398b0680015f0a38c563ee1db5384"
+  integrity sha512-tMUqwBWfLFbJbizRmEcWSLw6HnFzfdJs2sOJEOwwtVPMoH/0Ay+E703oZz78VSXZiiDcZrQ5XKjPIUQixhmgVw==
 
 acorn-walk@^6.0.1, acorn-walk@^6.1.1:
   version "6.1.1"
@@ -4046,10 +4046,10 @@ acorn@^6.2.1:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.2.1.tgz#3ed8422d6dec09e6121cc7a843ca86a330a86b51"
   integrity sha512-JD0xT5FCRDNyjDda3Lrg/IxFscp9q4tiYtxE1/nOzlKCk7hIRuYjhq1kCNkbPjMRMZuFq20HNQn1I9k8Oj0E+Q==
 
-acorn@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.0.0.tgz#26b8d1cd9a9b700350b71c0905546f64d1284e7a"
-  integrity sha512-PaF/MduxijYYt7unVGRuds1vBC9bFxbNf+VWqhOClfdgy7RlVkQqt610ig1/yxTgsDIfW1cWDel5EBbOy3jdtQ==
+acorn@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.1.0.tgz#949d36f2c292535da602283586c2477c57eb2d6c"
+  integrity sha512-kL5CuoXA/dgxlBbVrflsflzQ3PAas7RYZB52NOm/6839iVYJgKMJ3cQJD+t2i5+qFa8h3MDpEOJiS64E8JLnSQ==
 
 address@1.0.3:
   version "1.0.3"
@@ -7121,10 +7121,10 @@ date-fns@^1.27.2:
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
   integrity sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==
 
-date-fns@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.5.0.tgz#b939f17c2902ce81cffe449702ba22c0781b38ec"
-  integrity sha512-I6Tkis01//nRcmvMQw/MRE1HAtcuA5Ie6jGPb8bJZJub7494LGOObqkV3ParnsSVviAjk5C8mNKDqYVBzCopWg==
+date-fns@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.5.1.tgz#6bd76f01d3a438e9c481d4c18512ddac37585b4c"
+  integrity sha512-ZBrQmuaqH9YqIejbgu8f09ki7wdD2JxWsRTZ/+HnnLNmkI56ty0evnWzKY+ihLT0xX5VdUX0vDNZCxJJGKX2+Q==
 
 date-now@^0.1.4:
   version "0.1.4"
@@ -7597,10 +7597,10 @@ dotenv@^8.0.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.0.0.tgz#ed310c165b4e8a97bb745b0a9d99c31bda566440"
   integrity sha512-30xVGqjLjiUOArT4+M5q9sYdvuR4riM6yK9wMcas9Vbp6zZa+ocC9dp6QoftuhTPhFAiLK/0C5Ni2nou/Bk8lg==
 
-downshift@^3.3.4:
-  version "3.3.4"
-  resolved "https://registry.yarnpkg.com/downshift/-/downshift-3.3.4.tgz#959be157e48be2ec2bbc50f184303647fc719026"
-  integrity sha512-3bM11S3p78p/moyJqDPc1j357dm/C+dN+54HKuc526k5etNXvnXyxsb+Ufd2yLL6qK4QZA62DysAgtMCIsKCNA==
+downshift@^3.3.5:
+  version "3.3.5"
+  resolved "https://registry.yarnpkg.com/downshift/-/downshift-3.3.5.tgz#635f465ab45f577814a98901024873637649ce6f"
+  integrity sha512-OLBKLfP8cUaB7/wF0Al74v+znYOV/BG6hMGIj/JMuPcnNHQ/1WrF3btCZx+KnJcYtfMdQHEwWv0yC1cdPinyXw==
   dependencies:
     "@babel/runtime" "^7.4.5"
     "@reach/auto-id" "^0.2.0"
@@ -8160,12 +8160,12 @@ espree@^5.0.1:
     eslint-visitor-keys "^1.0.0"
 
 espree@^6.1.1:
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/espree/-/espree-6.1.1.tgz#7f80e5f7257fc47db450022d723e356daeb1e5de"
-  integrity sha512-EYbr8XZUhWbYCqQRW0duU5LxzL5bETN6AjKBGy1302qqzPaCH10QbRg3Wvco79Z8x9WbiE8HYB4e75xl6qUYvQ==
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/espree/-/espree-6.1.2.tgz#6c272650932b4f91c3714e5e7b5f5e2ecf47262d"
+  integrity sha512-2iUPuuPP+yW1PZaMSDM9eyVf8D5P0Hi8h83YtZ5bPc/zHYjII5khoixIUTMO794NOY8F/ThF1Bo8ncZILarUTA==
   dependencies:
-    acorn "^7.0.0"
-    acorn-jsx "^5.0.2"
+    acorn "^7.1.0"
+    acorn-jsx "^5.1.0"
     eslint-visitor-keys "^1.1.0"
 
 esprima-fb@^15001.1.0-dev-harmony-fb:
@@ -14839,7 +14839,7 @@ prompts@^2.0.1:
     kleur "^3.0.2"
     sisteransi "^1.0.0"
 
-prop-types@15.7.2, prop-types@^15, prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@15.7.2, prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -15199,13 +15199,13 @@ react-content-loader@^4.3.2:
   resolved "https://registry.yarnpkg.com/react-content-loader/-/react-content-loader-4.3.2.tgz#2f6546c883707d399a2abc2efd00edcb8f584618"
   integrity sha512-Af2RW2G57+mFRXsiSXROtgvz3KmPz0lATRHNUpJ57DyVw6SRzDRNRXo04I2xhcwmwVnXsfx4s2hsHrU+Lq5jRw==
 
-react-debounce-input@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/react-debounce-input/-/react-debounce-input-3.2.0.tgz#6978c6061d898f549f40417fb0d2ebbecf50aaaa"
-  integrity sha1-aXjGBh2Jj1SfQEF/sNLrvs9Qqqo=
+react-debounce-input@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/react-debounce-input/-/react-debounce-input-3.2.2.tgz#d2cc99c1ce47fae89037965f5699edc1b0317197"
+  integrity sha512-RIBu68Cq/gImKz/2h1cE042REDqyqj3D+7SJ3lnnIpJX0ht9D9PfH7KAnL+SgDz6hvKa9pZS2CnAxlkrLmnQlg==
   dependencies:
     lodash.debounce "^4"
-    prop-types "^15"
+    prop-types "^15.7.2"
 
 react-dev-utils@^9.0.0:
   version "9.0.1"
