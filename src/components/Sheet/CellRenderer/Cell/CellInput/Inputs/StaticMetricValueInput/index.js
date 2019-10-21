@@ -37,7 +37,7 @@ const StaticMetricValueInput = ({
             onBlur={onBlur}
             onKeyDown={onKeyDown}
           />
-          <DisplayWrapper>
+          <DisplayWrapper width="min-content">
             <span>{metric}</span>
           </DisplayWrapper>
         </>
