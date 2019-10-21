@@ -1,24 +1,26 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, fontSizes } from 'styles/common';
+import { presets, layout, colors, fontSizes } from 'styles/common';
 
-export const ArchivedStyle = css`
-  display: flex;
-  color: ${colors.GRAY_DARK};
-`;
-
-export const ActiveStyle = css`
-  display: flex;
-  color: ${colors.TEAL};
+export const StatusDisplayWrapperStyle = (isArchived: boolean): string => css`
+  ${presets.ELLIPSIS};
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 5px;
+  color: ${isArchived ? colors.GRAY : colors.TEAL};
+  ${fontSizes.MAIN};
+  font-weight: bold;
+  align-items: center;
+  height: 30px;
+  padding: 0 5px;
 `;
 
 export const InfoIconStyle: string = css`
-  color: ${colors.GRAY_LIGHT};
+  ${presets.BUTTON};
   ${fontSizes.SMALL};
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 11;
+  color: ${colors.GRAY};
+  z-index: 1;
+  &:hover,
+  :focus {
+    color: ${colors.GRAY_DARK};
+  }
 `;
