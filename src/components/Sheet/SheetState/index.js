@@ -109,14 +109,16 @@ export const useSheetStateInitializer = (
   }, [columns, onRemoteSort, dispatch]);
 };
 
-export const useSheetStateLoadMore = (onLoadMore: () => Promise<Array<Object>>) => {
+export const useSheetStateLoadMore = (
+  onLoadMore: () => Promise<Array<Object>>
+): [boolean, () => Promise<any>] => {
   const [loadingMore, setLoadingMore] = React.useState<boolean>(false);
   const { dispatch } = useSheetState();
 
   const handleThreshold = React.useCallback(() => {
     setLoadingMore(true);
 
-    onLoadMore()
+    return onLoadMore()
       .then(newItems =>
         dispatch({
           type: Actions.APPEND,

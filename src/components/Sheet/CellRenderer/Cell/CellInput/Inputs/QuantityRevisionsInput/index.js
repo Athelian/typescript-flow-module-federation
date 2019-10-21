@@ -56,7 +56,7 @@ const QuantityRevisionsInput = ({
   onBlur,
   onKeyDown,
   readonly,
-}: InputProps<Array<{ id?: string, type: string, quantity: number }>>) => {
+}: InputProps<Array<{ id?: string, type: string, quantity: number | string }>>) => {
   const firstElementRef = React.useRef<HTMLInputElement | HTMLButtonElement | null>(null);
   const { enums } = useEnum('BatchQuantityRevisionType');
 
@@ -104,7 +104,7 @@ const QuantityRevisionsInput = ({
       }}
     >
       {(value || []).map((revision, index) => (
-        <div key={`${revision.id}-${index + 0}`} className={RevisionWrapperStyle}>
+        <div key={`${revision.id || ''}-${index + 0}`} className={RevisionWrapperStyle}>
           <SelectInput
             value={revision.type}
             onChange={handleTypeChange(index)}

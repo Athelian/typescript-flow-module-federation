@@ -23,7 +23,7 @@ type Props = {
   hasMore: boolean,
   focusAt: Area | null,
   onSortToggle: string => void,
-  onThreshold: () => void,
+  onThreshold: () => Promise<any>,
   onColumnResize: (key: string, width: number) => void,
   children: React.ComponentType<any>,
 };
@@ -107,33 +107,20 @@ const SheetRenderer = ({
                 isItemLoaded={index => index < rowCount || !hasMore}
                 itemCount={rowCount + hasMore}
                 loadMoreItems={() => {
-                  if (!loading && !loadingMore) {
-                    onThreshold();
+                  if (loading || loadingMore) {
+                    return null;
                   }
+
+                  return onThreshold();
                 }}
               >
                 {({ onItemsRendered, ref }) => {
                   const itemsRendered = gridData => {
-                    const {
-                      visibleRowStartIndex,
-                      visibleRowStopIndex,
-                      visibleColumnStopIndex,
-                      overscanRowStartIndex,
-                      overscanRowStopIndex,
-                      overscanColumnStopIndex,
-                    } = gridData;
-
-                    const endCol =
-                      (loadingMore ? overscanColumnStopIndex : visibleColumnStopIndex) + 1;
-                    const startRow = loadingMore ? overscanRowStartIndex : visibleRowStartIndex;
-                    const endRow = loadingMore ? overscanRowStopIndex : visibleRowStopIndex;
-
-                    const visibleStartIndex = startRow * endCol;
-                    const visibleStopIndex = endRow * endCol;
+                    const { visibleRowStartIndex, visibleRowStopIndex } = gridData;
 
                     return onItemsRendered({
-                      visibleStartIndex,
-                      visibleStopIndex,
+                      visibleStartIndex: visibleRowStartIndex,
+                      visibleStopIndex: visibleRowStopIndex,
                     });
                   };
 

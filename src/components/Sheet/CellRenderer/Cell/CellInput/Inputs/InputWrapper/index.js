@@ -5,7 +5,7 @@ import { InputWrapperStyle } from './style';
 type Props = {
   focus: boolean,
   preselect: boolean,
-  children: ({ ref: { current: HTMLInputElement | HTMLButtonElement | null } }) => React.Node,
+  children: ({ ref: { current: HTMLInputElement | null } }) => React.Node,
 };
 
 const InputWrapper = ({ focus, preselect, children }: Props) => {
