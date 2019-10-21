@@ -73,6 +73,8 @@ export default function Actions({ targets }: Props) {
       },
     });
   };
+  // TODO: remove this flag when API is done
+  const API_IS_READY = false;
 
   return (
     <>
@@ -157,25 +159,27 @@ export default function Actions({ targets }: Props) {
                       />
                     </ActionLabel>
                   </ActionButton>
-                  <ActionButton
-                    onClick={() => {
-                      setCurrentMenu(null);
-                      dispatch({
-                        type: 'CLONE',
-                        payload: {
-                          source: SHIPMENT,
-                        },
-                      });
-                    }}
-                  >
-                    <Icon icon="CLONE" />
-                    <ActionLabel>
-                      <FormattedMessage
-                        id="modules.RelationMaps.label.clone"
-                        defaultMessage="CLONE"
-                      />
-                    </ActionLabel>
-                  </ActionButton>
+                  {API_IS_READY && (
+                    <ActionButton
+                      onClick={() => {
+                        setCurrentMenu(null);
+                        dispatch({
+                          type: 'CLONE',
+                          payload: {
+                            source: SHIPMENT,
+                          },
+                        });
+                      }}
+                    >
+                      <Icon icon="CLONE" />
+                      <ActionLabel>
+                        <FormattedMessage
+                          id="modules.RelationMaps.label.clone"
+                          defaultMessage="CLONE"
+                        />
+                      </ActionLabel>
+                    </ActionButton>
+                  )}
                 </ActionSubMenu>
               </ActionButton>
 
@@ -223,25 +227,27 @@ export default function Actions({ targets }: Props) {
                       />
                     </ActionLabel>
                   </ActionButton>
-                  <ActionButton
-                    onClick={() => {
-                      setCurrentMenu(null);
-                      dispatch({
-                        type: 'CLONE',
-                        payload: {
-                          source: CONTAINER,
-                        },
-                      });
-                    }}
-                  >
-                    <Icon icon="CLONE" />
-                    <ActionLabel>
-                      <FormattedMessage
-                        id="modules.RelationMaps.label.clone"
-                        defaultMessage="CLONE"
-                      />
-                    </ActionLabel>
-                  </ActionButton>
+                  {API_IS_READY && (
+                    <ActionButton
+                      onClick={() => {
+                        setCurrentMenu(null);
+                        dispatch({
+                          type: 'CLONE',
+                          payload: {
+                            source: CONTAINER,
+                          },
+                        });
+                      }}
+                    >
+                      <Icon icon="CLONE" />
+                      <ActionLabel>
+                        <FormattedMessage
+                          id="modules.RelationMaps.label.clone"
+                          defaultMessage="CLONE"
+                        />
+                      </ActionLabel>
+                    </ActionButton>
+                  )}
                 </ActionSubMenu>
               </ActionButton>
 
