@@ -42,7 +42,16 @@ const TasksInputDialog = ({ tasks, taskTemplate, onChange, onBlur, focus, entity
   const canUpdateMilestone = true;
   const canUpdateTaskTemplate = true;
   const canViewProjectForm = true;
-  const editable = true;
+  const editable = {
+    name: true,
+    startDate: true,
+    dueDate: true,
+    inProgress: true,
+    skipped: true,
+    completed: true,
+    approved: true,
+    rejected: true,
+  };
 
   if (!canViewList) return null;
 

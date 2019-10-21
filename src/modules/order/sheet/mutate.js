@@ -181,6 +181,13 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
                   taskTemplate,
                   startDateInterval,
                   dueDateInterval,
+                  dueDate,
+                  startDate,
+                  inProgressAt,
+                  skippedAt,
+                  completedAt,
+                  rejectedAt,
+                  approvedAt,
                   ...rest
                 }) => {
                   const { __typename: startDateIntervalTypename, ...restStartDateInterval } =
@@ -202,6 +209,13 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
                     taskTemplateId: taskTemplate?.id,
                     startDateInterval: startDateInterval ? { ...restStartDateInterval } : null,
                     dueDateInterval: dueDateInterval ? { ...restDueDateInterval } : null,
+                    dueDate: dueDate ? new Date(dueDate) : null,
+                    startDate: startDate ? new Date(startDate) : null,
+                    inProgressAt: inProgressAt ? new Date(inProgressAt) : null,
+                    skippedAt: skippedAt ? new Date(skippedAt) : null,
+                    completedAt: completedAt ? new Date(completedAt) : null,
+                    rejectedAt: rejectedAt ? new Date(rejectedAt) : null,
+                    approvedAt: approvedAt ? new Date(approvedAt) : null,
                   };
                 }
               ),
