@@ -1,9 +1,9 @@
 // @flow
 import logger from 'utils/logger';
 import type { ColumnSort } from '../../SheetColumns';
-import type { Action, CellValue, State, Position } from '../types';
+import type { Action, CellValue, Position, State } from '../types';
 import { Actions } from '../contants';
-import { init, append, rearrange, sort } from './global';
+import { append, init, rearrange, sort } from './global';
 import {
   appendForeignFocuses,
   foreignBlur,
@@ -11,7 +11,7 @@ import {
   setForeignFocuses,
 } from './foreign-focus';
 import { clearError, setError } from './error';
-import { focus, blur, focusUp, focusDown, focusRight, focusLeft } from './focus';
+import { blur, focus, focusDown, focusLeft, focusRight, focusUp } from './focus';
 import { cellUpdate, changeValues, deleteItem, replaceItem } from './mutate';
 import { postAddEntity, postRemoveEntity, preAddEntity, preRemoveEntity } from './announcement';
 import { hover, unhover } from './hover';
@@ -46,7 +46,7 @@ export default function cellReducer(
   transformer: (number, Object) => Array<Array<CellValue>>,
   sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
 ) {
-  function reducer(state: State, action: Action) {
+  return (state: State, action: Action) => {
     logger.info('Sheet state reducer', action);
 
     switch (action.type) {
@@ -105,7 +105,5 @@ export default function cellReducer(
       default:
         throw InvalidAction;
     }
-  }
-
-  return reducer;
+  };
 }

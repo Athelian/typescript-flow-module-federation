@@ -43,7 +43,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
   const [localSortBy, setLocalSortBy] = React.useState<
     Array<{ field: string, direction: SortDirection }>
   >([]);
-  const sorterProxy = React.useCallback(
+  const onLocalSort = React.useCallback(
     (items: Array<Object>, sorts: Array<ColumnSort>): Array<Object> => {
       setLocalSortBy(
         sorts.map(({ group, name, direction }: any) => ({
@@ -55,6 +55,40 @@ const OrderSheetModule = ({ orderIds }: Props) => {
       return sorter(items, sorts);
     },
     [setLocalSortBy]
+  );
+  const onRemoteSort = React.useCallback(
+    sorts =>
+      setSortBy(
+        sorts.reduce((remote, sort) => {
+          return {
+            ...remote,
+            [sort.name]: sort.direction,
+          };
+        }, {})
+      ),
+    [setSortBy]
+  );
+
+  const onLoadMore = React.useCallback(
+    () =>
+      client
+        .query({
+          query: ordersQuery,
+          variables: {
+            page: page.page + 1,
+            perPage: 20,
+            filterBy: { query, ...filterBy },
+            sortBy,
+          },
+        })
+        .then(({ data }) => {
+          setPage({
+            ...page,
+            page: page.page + 1,
+          });
+          return clone(data?.orders?.nodes ?? []);
+        }),
+    [client, page, query, filterBy, sortBy, setPage]
   );
 
   React.useEffect(() => {
@@ -112,36 +146,9 @@ const OrderSheetModule = ({ orderIds }: Props) => {
         transformItem={transformer}
         onMutate={memoizedMutate}
         handleEntityEvent={memoizedHandler}
-        onLocalSort={sorterProxy}
-        onRemoteSort={sorts =>
-          setSortBy(
-            sorts.reduce((remote, sort) => {
-              return {
-                ...remote,
-                [sort.name]: sort.direction,
-              };
-            }, {})
-          )
-        }
-        onLoadMore={() =>
-          client
-            .query({
-              query: ordersQuery,
-              variables: {
-                page: page.page + 1,
-                perPage: 20,
-                filterBy: { query, ...filterBy },
-                sortBy,
-              },
-            })
-            .then(({ data }) => {
-              setPage({
-                ...page,
-                page: page.page + 1,
-              });
-              return clone(data?.orders?.nodes ?? []);
-            })
-        }
+        onLocalSort={onLocalSort}
+        onRemoteSort={onRemoteSort}
+        onLoadMore={onLoadMore}
       />
     </Content>
   );
