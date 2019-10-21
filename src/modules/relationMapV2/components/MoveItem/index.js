@@ -74,7 +74,6 @@ export default function MoveItem({ onSuccess }: Props) {
       exporterIds.push(exporterId);
     }
   });
-  console.warn(importerIds, exporterIds);
 
   const onConfirm = (target: 'existOrder' | 'newOrder') => {
     switch (target) {
