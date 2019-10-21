@@ -769,18 +769,64 @@ const shipmentColumns: Array<ColumnConfig> = [
     },
   },
   {
+    key: 'order.orderItem.batch.shipment.cargoReady.date',
+    exportKey: 'orderItem.batch.shipment.cargoReady.date',
+    title: <FormattedMessage {...shipmentMessages.cargoReady} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 140,
+  },
+  {
     key: 'order.orderItem.batch.shipment.cargoReady.timelineDateRevisions',
-    exportKey: 'orderItem.batch.shipment.cargoReady.timelineDateRevisions',
-    title: (
-      <FormattedMessage
-        id="modules.sheet.cargoReadyDateRevisions"
-        defaultMessage="Cargo Ready Date Revisions"
-      />
-    ),
+    title: <FormattedMessage {...shipmentMessages.cargoReadyRevisions} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 1210,
-    minWidth: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroups.customClearance.date',
+    exportKey: 'orderItem.batch.shipment.containerGroups.customClearance.date',
+    title: <FormattedMessage {...shipmentMessages.customClearance} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 140,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroups.customClearance.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.customClearanceRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroups.warehouseArrival.date',
+    exportKey: 'orderItem.batch.shipment.containerGroups.warehouseArrival.date',
+    title: <FormattedMessage {...shipmentMessages.warehouseArrival} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 140,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroups.warehouseArrival.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.warehouseArrivalRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroups.deliveryReady.date',
+    exportKey: 'orderItem.batch.shipment.containerGroups.deliveryReady.date',
+    title: <FormattedMessage {...shipmentMessages.deliveryReady} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 140,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroups.deliveryReady.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.deliveryReadyRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
   },
   {
     key: 'order.orderItem.batch.shipment.files',
