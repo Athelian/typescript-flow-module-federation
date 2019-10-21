@@ -446,11 +446,11 @@ export default function ShipmentFocus() {
                   <MoveBatch
                     onSuccess={(_, shipmentIds) => {
                       queryShipmentsDetail(shipmentIds);
-                      // // scroll to first orderId if that is exist on UI
+                      // scroll to first orderId if that is exist on UI
                       const shipmentId = shipmentIds[0];
                       const indexPosition = shipmentsData.findIndex((row: Array<any>) => {
                         const [shipmentCell, , , ,] = row;
-                        return Number(shipmentCell.cell?.data?.id) === Number(shipmentId);
+                        return Number(shipmentCell.shipment?.id) === Number(shipmentId);
                       });
                       scrollToRow({
                         position: indexPosition,
