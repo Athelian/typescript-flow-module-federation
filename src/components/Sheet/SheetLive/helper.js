@@ -30,6 +30,10 @@ export const convertEntityToInput = (id: string, type: string): Object => {
       return {
         containerId: id,
       };
+    case 'TimelineDate':
+      return {
+        timelineDateId: id,
+      };
     case 'Project':
       return {
         projectId: id,

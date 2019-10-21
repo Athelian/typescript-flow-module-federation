@@ -93,3 +93,10 @@ export type State = {
   addedRows: Array<RowChange>,
   removedRows: Array<RowChangeOnRemoved>,
 };
+
+export type Mutator = ({
+  entity: { id: string, type: string },
+  field: string,
+  value: any,
+  item: Object,
+}) => Promise<Array<Object> | null>;

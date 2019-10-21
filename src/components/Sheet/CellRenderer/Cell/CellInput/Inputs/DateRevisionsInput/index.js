@@ -4,11 +4,11 @@ import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import SelectInput from 'components/Inputs/SelectInput';
 import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
-import NumberInput from 'components/Form/Inputs/NumberInput';
+import DateInput from 'components/Form/Inputs/DateInput';
 import useEnum from 'hooks/useEnum';
 import type { InputProps } from '../../types';
 import {
-  WrapperStyle,
+  DateRevisionsWrapperStyle,
   SeparatorStyle,
   SelectInputStyle,
   OptionStyle,
@@ -18,7 +18,7 @@ import {
   RevisionWrapperStyle,
 } from './style';
 
-const QuantityRevisionTypeSelectInput = (index: number, onBlur: () => void) => ({
+const DateRevisionTypeSelectInput = (index: number, onBlur: () => void) => ({
   getToggleButtonProps,
   selectedItem,
   isOpen,
@@ -44,7 +44,7 @@ const QuantityRevisionTypeSelectInput = (index: number, onBlur: () => void) => (
   </button>
 );
 
-const QuantityRevisionTypeSelectOption = ({
+const DateRevisionTypeSelectOption = ({
   item,
   selected,
   highlighted,
@@ -55,7 +55,7 @@ const QuantityRevisionTypeSelectOption = ({
   </div>
 );
 
-const QuantityRevisionsInput = ({
+const DateRevisionsInput = ({
   value,
   focus,
   onChange,
@@ -63,9 +63,9 @@ const QuantityRevisionsInput = ({
   onBlur,
   onKeyDown,
   readonly,
-}: InputProps<Array<{ id?: string, type: string, quantity: number | string }>>) => {
+}: InputProps<Array<{ id?: string, type: string, date: string | Date }>>) => {
   const firstElementRef = React.useRef<HTMLInputElement | HTMLButtonElement | null>(null);
-  const { enums } = useEnum('BatchQuantityRevisionType');
+  const { enums } = useEnum('TimelineDateRevisionType');
 
   React.useEffect(() => {
     if (!firstElementRef.current) {
@@ -88,9 +88,9 @@ const QuantityRevisionsInput = ({
     onChange((value || []).map((v, i) => (i === index ? { ...v, type: newType } : v)));
   };
 
-  const handleQuantityChange = (index: number) => (e: SyntheticInputEvent<HTMLInputElement>) => {
-    const newQuantity = e.target.value;
-    onChange((value || []).map((v, i) => (i === index ? { ...v, quantity: newQuantity } : v)));
+  const handleDateChange = (index: number) => (e: SyntheticInputEvent<HTMLInputElement>) => {
+    const newDate = e.target.value;
+    onChange((value || []).map((v, i) => (i === index ? { ...v, date: newDate } : v)));
   };
 
   const handleRemove = (index: number) => () => {
@@ -98,12 +98,12 @@ const QuantityRevisionsInput = ({
   };
 
   const handleAdd = () => {
-    onChange([...(value || []), { type: 'Other', quantity: 0 }]);
+    onChange([...(value || []), { type: 'Other', date: new Date() }]);
   };
 
   return (
     <div
-      className={WrapperStyle}
+      className={DateRevisionsWrapperStyle}
       onBlur={e => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
           onBlur();
@@ -123,17 +123,16 @@ const QuantityRevisionsInput = ({
             optionWidth={200}
             optionHeight={30}
             toggleRef={index === 0 ? firstElementRef : undefined}
-            renderInput={QuantityRevisionTypeSelectInput(index, onBlur)}
-            renderOption={QuantityRevisionTypeSelectOption}
+            renderInput={DateRevisionTypeSelectInput(index, onBlur)}
+            renderOption={DateRevisionTypeSelectOption}
           />
           <hr className={SeparatorStyle} />
-          <NumberInput
+          <DateInput
             className={InputStyle}
-            value={revision.quantity}
-            nullable={false}
+            value={revision.date}
             readOnly={readonly}
             readOnlyHeight="30px"
-            onChange={handleQuantityChange(index)}
+            onChange={handleDateChange(index)}
             onFocus={onFocus}
             onKeyDown={e => {
               if (e.key === 'Tab') {
@@ -182,7 +181,7 @@ const QuantityRevisionsInput = ({
             }
           }}
         >
-          <FormattedMessage id="modules.Batches.newQuantity" defaultMessage="NEW QUANTITY" />
+          <FormattedMessage id="modules.Shipments.newDate" />
           <Icon icon="ADD" />
         </button>
       )}
@@ -190,4 +189,4 @@ const QuantityRevisionsInput = ({
   );
 };
 
-export default QuantityRevisionsInput;
+export default DateRevisionsInput;

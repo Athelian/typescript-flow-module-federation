@@ -15,10 +15,44 @@ const mutations = {
   Batch: batchMutation,
   Container: containerMutation,
   Shipment: shipmentMutation,
+  TimelineDate: shipmentMutation,
 };
 
-function normalizedInput(type: string, field: string, value: any): Object {
-  switch (type) {
+function getShipmentByTimelineDateId(timelineDateId: string, item: Object): Object {
+  return item.orderItems
+    .map(i => i.batches)
+    .flat()
+    .filter(b => !!b.shipment)
+    .map(b => b.shipment)
+    .find(shipment => {
+      if (
+        shipment.cargoReady.id === timelineDateId ||
+        shipment.containerGroups[0].customClearance.id === timelineDateId ||
+        shipment.containerGroups[0].warehouseArrival.id === timelineDateId ||
+        shipment.containerGroups[0].deliveryReady.id === timelineDateId
+      ) {
+        return true;
+      }
+
+      return shipment.voyages.every(
+        voyage => voyage.departure.id === timelineDateId && voyage.arrival.id === timelineDateId
+      );
+    });
+}
+
+function getEntityId(entity: Object, item: Object): string {
+  switch (entity.type) {
+    case 'TimelineDate': {
+      const shipment = getShipmentByTimelineDateId(entity.id, item);
+      return shipment.id;
+    }
+    default:
+      return entity.id;
+  }
+}
+
+function normalizedInput(entity: Object, field: string, value: any, item: Object): Object {
+  switch (entity.type) {
     case 'Order':
       switch (field) {
         case 'deliveryDate':
@@ -28,7 +62,9 @@ function normalizedInput(type: string, field: string, value: any): Object {
           };
         case 'files':
           return {
-            files: value.map(({ __typename, entity, path, uploading, progress, ...rest }) => rest),
+            files: value.map(
+              ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
+            ),
           };
         default:
           return {
@@ -54,7 +90,9 @@ function normalizedInput(type: string, field: string, value: any): Object {
           };
         case 'files':
           return {
-            files: value.map(({ __typename, entity, path, uploading, progress, ...rest }) => rest),
+            files: value.map(
+              ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
+            ),
           };
         default:
           return {
@@ -90,13 +128,95 @@ function normalizedInput(type: string, field: string, value: any): Object {
           };
         case 'files':
           return {
-            files: value.map(({ __typename, entity, path, uploading, progress, ...rest }) => rest),
+            files: value.map(
+              ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
+            ),
           };
         default:
           return {
             [field]: value,
           };
       }
+    case 'TimelineDate': {
+      const shipment = getShipmentByTimelineDateId(entity.id, item);
+      if (!shipment) {
+        return {};
+      }
+
+      const input = (() => {
+        switch (field) {
+          case 'timelineDateRevisions':
+            return {
+              timelineDateRevisions: value.map(({ sort, date, ...revision }) => ({
+                ...removeTypename(revision),
+                date: new Date(date),
+              })),
+            };
+          default:
+            return {
+              [field]: value,
+            };
+        }
+      })();
+
+      if (entity.id === shipment.cargoReady.id) {
+        return {
+          cargoReady: input,
+        };
+      }
+
+      if (entity.id === shipment.containerGroups[0].customClearance.id) {
+        return {
+          containerGroups: [
+            {
+              customClearance: input,
+            },
+          ],
+        };
+      }
+
+      if (entity.id === shipment.containerGroups[0].warehouseArrival.id) {
+        return {
+          containerGroups: [
+            {
+              warehouseArrival: input,
+            },
+          ],
+        };
+      }
+
+      if (entity.id === shipment.containerGroups[0].deliveryReady.id) {
+        return {
+          containerGroups: [
+            {
+              deliveryReady: input,
+            },
+          ],
+        };
+      }
+
+      return {
+        voyages: shipment.voyages.map(voyage => {
+          if (voyage.departure.id === entity.id) {
+            return {
+              id: voyage.id,
+              departure: input,
+            };
+          }
+
+          if (voyage.arrival.id === entity.id) {
+            return {
+              id: voyage.id,
+              arrival: input,
+            };
+          }
+
+          return {
+            id: voyage.id,
+          };
+        }),
+      };
+    }
     default:
       return {
         [field]: value,
@@ -110,17 +230,19 @@ export default function(client: ApolloClient) {
     entity,
     field,
     value,
+    item,
   }: {
     entity: Object,
     field: string,
     value: any,
+    item: Object,
   }): Promise<Array<Object> | null> {
     return client
       .mutate({
         mutation: mutations[entity.type],
         variables: {
-          id: entity.id,
-          input: normalizedInput(entity.type, field, value),
+          id: getEntityId(entity, item),
+          input: normalizedInput(entity, field, value, item),
         },
       })
       .then(({ data }) => {

@@ -9,7 +9,7 @@ import {
   useSheetState,
   useSheetKeyNavigation,
 } from '../SheetState';
-import type { CellValue } from '../SheetState/types';
+import type { CellValue, Mutator } from '../SheetState/types';
 import { Actions } from '../SheetState/contants';
 import SheetRenderer from '../SheetRenderer';
 import CellRenderer from '../CellRenderer';
@@ -32,7 +32,7 @@ type Props = {
   columns: Array<ColumnConfig>,
   onLocalSort: (items: Array<Object>, sorts: Array<ColumnSort>) => Array<Object>,
   transformItem: Object => Array<Array<CellValue>>,
-  onMutate: ({ entity: Object, field: string, value: any }) => Promise<Array<Object> | null>,
+  onMutate: Mutator,
 } & ImplProps;
 
 const SheetImpl = ({

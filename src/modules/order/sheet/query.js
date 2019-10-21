@@ -144,6 +144,9 @@ const shipmentSheetFragment = gql`
     invoiceNo
     contractNo
     carrier
+    cargoReady {
+      ...timelineDateFragment
+    }
     files {
       ...documentFragment
       ...forbiddenFragment
@@ -153,6 +156,32 @@ const shipmentSheetFragment = gql`
     }
     updatedBy {
       ...userAvatarFragment
+    }
+    ownedBy {
+      ... on Organization {
+        id
+      }
+    }
+  }
+`;
+
+export const timelineDateFragment = gql`
+  fragment timelineDateFragment on TimelineDate {
+    id
+    date
+    assignedTo {
+      ...userAvatarFragment
+    }
+    approvedBy {
+      ...userAvatarFragment
+    }
+    approvedAt
+    timelineDateRevisions {
+      ... on TimelineDateRevision {
+        id
+        date
+        type
+      }
     }
     ownedBy {
       ... on Organization {
@@ -231,6 +260,7 @@ export const ordersQuery = gql`
   ${batchSheetFragment}
   ${shipmentSheetFragment}
   ${containerSheetFragment}
+  ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
   ${forbiddenFragment}
@@ -266,6 +296,7 @@ export const orderItemByIDQuery = gql`
   ${batchSheetFragment}
   ${shipmentSheetFragment}
   ${containerSheetFragment}
+  ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
   ${forbiddenFragment}
@@ -300,6 +331,7 @@ export const batchByIDQuery = gql`
   ${batchSheetFragment}
   ${shipmentSheetFragment}
   ${containerSheetFragment}
+  ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
   ${forbiddenFragment}
@@ -342,6 +374,7 @@ export const shipmentByIDQuery = gql`
   }
 
   ${shipmentSheetFragment}
+  ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
   ${forbiddenFragment}

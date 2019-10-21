@@ -769,6 +769,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     },
   },
   {
+    key: 'order.orderItem.batch.shipment.cargoReady.timelineDateRevisions',
+    exportKey: 'orderItem.batch.shipment.cargoReady.timelineDateRevisions',
+    title: (
+      <FormattedMessage
+        id="modules.sheet.cargoReadyDateRevisions"
+        defaultMessage="Cargo Ready Date Revisions"
+      />
+    ),
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+    minWidth: 1210,
+  },
+  {
     key: 'order.orderItem.batch.shipment.files',
     title: <FormattedMessage {...orderMessages.sectionDocuments} />,
     icon: 'SHIPMENT',

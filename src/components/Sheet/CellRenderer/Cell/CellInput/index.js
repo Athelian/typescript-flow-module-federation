@@ -11,6 +11,7 @@ import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
 import ContainerTypeInput from './Inputs/ContainerTypeInput';
 import DocumentsInput from './Inputs/DocumentsInput';
 import QuantityRevisionsInput from './Inputs/QuantityRevisionsInput';
+import DateRevisionsInput from './Inputs/DateRevisionsInput';
 import { WrapperStyle } from './style';
 
 type Props = {
@@ -39,6 +40,7 @@ const inputs = {
   order_item_documents: DocumentsInput.OrderItem,
   shipment_documents: DocumentsInput.Shipment,
   quantity_revisions: QuantityRevisionsInput,
+  date_revisions: DateRevisionsInput,
 };
 
 const CellInput = ({
