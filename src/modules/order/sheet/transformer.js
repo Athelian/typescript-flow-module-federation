@@ -6,6 +6,7 @@ import {
 } from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
+  ORDER_SET_ARCHIVED,
   ORDER_SET_CURRENCY,
   ORDER_SET_PO_NO,
   ORDER_SET_PI_NO,
@@ -49,6 +50,7 @@ import {
 } from 'modules/permission/constants/container';
 import {
   SHIPMENT_UPDATE,
+  SHIPMENT_SET_ARCHIVED,
   SHIPMENT_SET_NO,
   SHIPMENT_SET_BL_NO,
   SHIPMENT_SET_BL_DATE,
@@ -99,6 +101,16 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
       columnKey: 'order.updatedAt',
       type: 'text',
       ...transformReadonlyField(basePath, order, 'updatedAt', order?.updatedAt ?? null),
+    },
+    {
+      columnKey: 'order.archived',
+      type: 'status',
+      ...transformValueField(
+        basePath,
+        order,
+        'archived',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_ARCHIVED)
+      ),
     },
     {
       columnKey: 'order.poNo',
@@ -307,7 +319,7 @@ function transformOrderItem(
       disabled: !hasItems && !orderItem,
       empty: hasItems && !orderItem,
       parent: true,
-      ...transformReadonlyField(basePath, orderItem, 'archived', orderItem?.archived),
+      ...transformComputedField(basePath, orderItem, order => order.archived),
     },
     {
       columnKey: 'order.orderItem.no',
@@ -451,7 +463,17 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
       type: 'status',
       disabled: !batch,
       parent: true,
-      ...transformReadonlyField(basePath, batch, 'archived', batch?.archived),
+      ...transformComputedField(basePath, batch, order => {
+        const currentBatch = order.orderItems
+          .map(oi => oi.batches)
+          .flat()
+          .find(oi => oi.id === batch?.id);
+
+        if (currentBatch.shipment) {
+          return order.archived && currentBatch.shipment.archived;
+        }
+        return order.archived;
+      }),
     },
     {
       columnKey: 'order.orderItem.batch.no',
@@ -599,17 +621,6 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       ),
     },
     {
-      columnKey: 'order.orderItem.batch.container.archived',
-      type: 'status',
-      disabled: !batch,
-      ...transformReadonlyField(
-        `${basePath}.container`,
-        batch?.container ?? null,
-        'archived',
-        batch?.container?.archived
-      ),
-    },
-    {
       columnKey: 'order.orderItem.batch.container.updated',
       type: 'date_user',
       ...transformComputedField(`${basePath}.container`, batch?.container ?? null, item => {
@@ -644,6 +655,18 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         'updatedAt',
         batch?.updatedAt ?? null
       ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.archived',
+      type: 'status',
+      ...transformComputedField(`${basePath}.container`, batch?.container ?? null, item => {
+        const currentBatch = item.orderItems
+          .map(oi => oi.batches)
+          .flat()
+          .find(oi => oi.id === batch?.id);
+
+        return currentBatch?.shipment?.archived ?? true;
+      }),
     },
     {
       columnKey: 'order.orderItem.batch.container.no',
@@ -819,6 +842,16 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         batch?.shipment ?? null,
         'updatedAt',
         batch?.updatedAt ?? null
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.archived',
+      type: 'status',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch ? batch.shipment : null,
+        'archived',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_ARCHIVED)
       ),
     },
     {

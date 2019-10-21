@@ -34,7 +34,14 @@ const orderColumns: Array<ColumnConfig> = [
       group: 'order',
     },
   },
-  // status
+  {
+    key: 'order.archived',
+    exportKey: 'archived',
+    title: <FormattedMessage {...orderMessages.status} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   {
     key: 'order.poNo',
     exportKey: 'poNo',
@@ -663,6 +670,14 @@ const shipmentColumns: Array<ColumnConfig> = [
       name: 'shipmentUpdatedAt',
       group: 'batch',
     },
+  },
+  {
+    key: 'order.orderItem.batch.shipment.archived',
+    exportKey: 'orderItems.batches.shipment.archived',
+    title: <FormattedMessage {...shipmentMessages.status} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
   },
   {
     key: 'order.orderItem.batch.shipment.no',
