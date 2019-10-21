@@ -88,6 +88,12 @@ function normalizedInput(type: string, field: string, value: any): Object {
           return {
             [field]: new Date(value),
           };
+        case 'timelineDateRevisions':
+          return {
+            timelineDateRevisions: value.map(({ sort, batch, ...revision }) =>
+              removeTypename(revision)
+            ),
+          };
         case 'files':
           return {
             files: value.map(({ __typename, entity, path, uploading, progress, ...rest }) => rest),

@@ -57,6 +57,7 @@ import {
   SHIPMENT_SET_CONTRACT_NO,
   SHIPMENT_SET_CARRIER,
   SHIPMENT_SET_DOCUMENTS,
+  SHIPMENT_SET_REVISE_TIMELINE_DATE,
 } from 'modules/permission/constants/shipment';
 
 function transformOrder(basePath: string, order: Object): Array<CellValue> {
@@ -888,10 +889,19 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       ),
     },
     {
+      columnKey: 'order.orderItem.batch.shipment.cargoReady.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.cargoReady`,
+        batch ? batch.shipment : null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
       columnKey: 'order.orderItem.batch.shipment.files',
       type: 'shipment_documents',
-      duplicatable: true,
-      disabled: !(batch ? batch.shipment : null),
       ...transformValueField(
         `${basePath}.shipment`,
         batch ? batch.shipment : null,

@@ -5,6 +5,7 @@ import {
   forbiddenFragment,
   userAvatarFragment,
   documentFragment,
+  timelineDateFullFragment,
 } from 'graphql';
 
 const orderSheetFragment = gql`
@@ -144,6 +145,9 @@ const shipmentSheetFragment = gql`
     invoiceNo
     contractNo
     carrier
+    cargoReady {
+      ...timelineDateFullFragment
+    }
     files {
       ...documentFragment
       ...forbiddenFragment
@@ -233,6 +237,7 @@ export const ordersQuery = gql`
   ${userAvatarFragment}
   ${documentFragment}
   ${forbiddenFragment}
+  ${timelineDateFullFragment}
 `;
 
 export const orderItemByIDQuery = gql`
@@ -268,6 +273,7 @@ export const orderItemByIDQuery = gql`
   ${userAvatarFragment}
   ${documentFragment}
   ${forbiddenFragment}
+  ${timelineDateFullFragment}
 `;
 
 export const batchByIDQuery = gql`
@@ -302,6 +308,7 @@ export const batchByIDQuery = gql`
   ${userAvatarFragment}
   ${documentFragment}
   ${forbiddenFragment}
+  ${timelineDateFullFragment}
 `;
 
 export const batchQuantityRevisionByIDQuery = gql`
@@ -344,6 +351,7 @@ export const shipmentByIDQuery = gql`
   ${userAvatarFragment}
   ${documentFragment}
   ${forbiddenFragment}
+  ${timelineDateFullFragment}
 `;
 
 export const orderMutation = gql`
