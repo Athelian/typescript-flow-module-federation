@@ -174,6 +174,7 @@ const containerSheetFragment = gql`
     totalPackageQuantity
     totalQuantity
     orderItemCount
+    containerType
     createdAt
     updatedAt
     createdBy {

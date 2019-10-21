@@ -123,6 +123,12 @@ function batchSorter(sorts: Array<ColumnSort>) {
             sort.direction
           );
           break;
+        case 'containerContainerType':
+          result = setDirection(
+            stringSort(a.container?.containerType ?? '', b.container?.containerType ?? ''),
+            sort.direction
+          );
+          break;
         case 'containerWarehouseArrivalAgreedDate':
           result = setDirection(
             dateSort(
@@ -141,7 +147,15 @@ function batchSorter(sorts: Array<ColumnSort>) {
             sort.direction
           );
           break;
-        // start date
+        case 'containerFreeTimeStartDate':
+          result = setDirection(
+            dateSort(
+              a.container?.freeTimeStartDate ?? new Date(),
+              b.container?.freeTimeStartDate ?? new Date()
+            ),
+            sort.direction
+          );
+          break;
         case 'containerYardName':
           result = setDirection(
             stringSort(a.container?.yardName ?? '', b.container?.yardName ?? ''),
@@ -241,10 +255,8 @@ function batchSorter(sorts: Array<ColumnSort>) {
         default:
           break;
       }
-
       return result === 0;
     });
-
     return result;
   };
 }

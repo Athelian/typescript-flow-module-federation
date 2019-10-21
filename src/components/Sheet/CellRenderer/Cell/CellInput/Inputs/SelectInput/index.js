@@ -22,7 +22,7 @@ const Select = ({ getToggleButtonProps, selectedItem, isOpen, itemToString }: Re
     className={SelectInputStyle(isOpen)}
     {...getToggleButtonProps({
       onKeyDown: e => {
-        if (e.key === 'ArrowDown') {
+        if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
           e.stopPropagation();
         }
       },
