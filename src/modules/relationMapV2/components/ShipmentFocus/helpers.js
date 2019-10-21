@@ -25,7 +25,7 @@ export function shipmentCell({
       type: 'duplicateShipment',
       data: {
         shipment,
-        totalContainers,
+        containerPosition,
         batchPosition,
       },
       ...(isTheLastItemWithFirstBatch || isNotTheLastItem ? { afterConnector: 'VERTICAL' } : {}),
@@ -44,15 +44,13 @@ export function shipmentCell({
       type: 'duplicateShipment',
       data: {
         shipment,
-        totalContainers,
+        containerPosition,
         batchPosition,
       },
       afterConnector: 'VERTICAL',
     };
 
-  return {
-    type: 'shipmentPlaceholder',
-  };
+  return null;
 }
 
 export const shipmentCoordinates = memoize(
@@ -116,7 +114,7 @@ export const shipmentCoordinates = memoize(
     }
     const result = [
       {
-        type: 'shipmentPlaceholder',
+        type: 'duplicateShipment',
       },
       containerCount
         ? {
@@ -159,7 +157,11 @@ export const shipmentCoordinates = memoize(
             index
               ? {
                   type: 'duplicateShipment',
-                  data: shipment,
+                  data: {
+                    shipment,
+                    batchPosition: index,
+                    containerPosition: -1,
+                  },
                   afterConnector: 'VERTICAL',
                 }
               : {
@@ -266,7 +268,7 @@ export const shipmentCoordinates = memoize(
               index || batchesWithoutContainers.length
                 ? {
                     type: 'duplicateShipment',
-                    data: shipment,
+                    data: { shipment, batchPosition: -1, containerPosition: index },
                     afterConnector: 'VERTICAL',
                   }
                 : {
