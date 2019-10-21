@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import SelectInput from 'components/Inputs/SelectInput';
 import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
@@ -149,7 +150,7 @@ const QuantityRevisionsInput = ({
               onClick={handleRemove(index)}
               onFocus={onFocus}
               onKeyDown={e => {
-                if ((value || []).length < 5) {
+                if ((value || []).length < 5 && e.key === 'Tab') {
                   e.stopPropagation();
                 } else {
                   onBlur();
@@ -176,12 +177,13 @@ const QuantityRevisionsInput = ({
           onKeyDown={e => {
             if ((value || []).length > 0 && e.key === 'Tab' && e.shiftKey) {
               e.stopPropagation();
-            } else {
+            } else if (e.key === 'Tab') {
               onBlur();
             }
           }}
         >
-          New Quantity <Icon icon="ADD" />
+          <FormattedMessage id="modules.Batches.newQuantity" defaultMessage="NEW QUANTITY" />
+          <Icon icon="ADD" />
         </button>
       )}
     </div>

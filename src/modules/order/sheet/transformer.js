@@ -813,7 +813,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'text',
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'no',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_NO)
       ),
@@ -823,7 +823,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'text',
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'blNo',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BL_NO)
       ),
@@ -833,7 +833,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'date',
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'blDate',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BL_DATE)
       ),
@@ -843,7 +843,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'text',
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'bookingNo',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BOOKING_NO)
       ),
@@ -853,7 +853,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'date',
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'bookingDate',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BOOKING_DATE)
       ),
@@ -863,7 +863,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'text',
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'invoiceNo',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_INVOICE_NO)
       ),
@@ -873,7 +873,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'text',
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'contractNo',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_CONTRACT_NO)
       ),
@@ -883,7 +883,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'text',
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'carrier',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_CARRIER)
       ),
@@ -893,7 +893,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'date_revisions',
       ...transformValueField(
         `${basePath}.shipment.cargoReady`,
-        batch ? batch.shipment : null,
+        batch?.shipment?.cargoReady ?? null,
         'timelineDateRevisions',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
@@ -904,7 +904,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'shipment_documents',
       ...transformValueField(
         `${basePath}.shipment`,
-        batch ? batch.shipment : null,
+        batch?.shipment ?? null,
         'files',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_DOCUMENTS)
       ),
@@ -912,7 +912,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
   ].map(c => ({
     ...c,
     duplicatable: true,
-    disabled: !(batch ? batch.shipment : null),
+    disabled: !(batch?.shipment ?? null),
   }));
 }
 

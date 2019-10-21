@@ -5,7 +5,6 @@ import {
   forbiddenFragment,
   userAvatarFragment,
   documentFragment,
-  timelineDateFullFragment,
 } from 'graphql';
 
 const orderSheetFragment = gql`
@@ -146,7 +145,7 @@ const shipmentSheetFragment = gql`
     contractNo
     carrier
     cargoReady {
-      ...timelineDateFullFragment
+      ...timelineDateFragment
     }
     files {
       ...documentFragment
@@ -157,6 +156,32 @@ const shipmentSheetFragment = gql`
     }
     updatedBy {
       ...userAvatarFragment
+    }
+    ownedBy {
+      ... on Organization {
+        id
+      }
+    }
+  }
+`;
+
+export const timelineDateFragment = gql`
+  fragment timelineDateFragment on TimelineDate {
+    id
+    date
+    assignedTo {
+      ...userAvatarFragment
+    }
+    approvedBy {
+      ...userAvatarFragment
+    }
+    approvedAt
+    timelineDateRevisions {
+      ... on TimelineDateRevision {
+        id
+        date
+        type
+      }
     }
     ownedBy {
       ... on Organization {
@@ -234,10 +259,10 @@ export const ordersQuery = gql`
   ${batchSheetFragment}
   ${shipmentSheetFragment}
   ${containerSheetFragment}
+  ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
   ${forbiddenFragment}
-  ${timelineDateFullFragment}
 `;
 
 export const orderItemByIDQuery = gql`
@@ -270,10 +295,10 @@ export const orderItemByIDQuery = gql`
   ${batchSheetFragment}
   ${shipmentSheetFragment}
   ${containerSheetFragment}
+  ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
   ${forbiddenFragment}
-  ${timelineDateFullFragment}
 `;
 
 export const batchByIDQuery = gql`
@@ -305,10 +330,10 @@ export const batchByIDQuery = gql`
   ${batchSheetFragment}
   ${shipmentSheetFragment}
   ${containerSheetFragment}
+  ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
   ${forbiddenFragment}
-  ${timelineDateFullFragment}
 `;
 
 export const batchQuantityRevisionByIDQuery = gql`
@@ -348,10 +373,10 @@ export const shipmentByIDQuery = gql`
   }
 
   ${shipmentSheetFragment}
+  ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
   ${forbiddenFragment}
-  ${timelineDateFullFragment}
 `;
 
 export const orderMutation = gql`

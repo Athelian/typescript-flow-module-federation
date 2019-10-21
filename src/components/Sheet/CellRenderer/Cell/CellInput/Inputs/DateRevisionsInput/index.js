@@ -6,7 +6,6 @@ import SelectInput from 'components/Inputs/SelectInput';
 import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
 import DateInput from 'components/Form/Inputs/DateInput';
 import useEnum from 'hooks/useEnum';
-import { uuid } from 'utils/id';
 import type { InputProps } from '../../types';
 import {
   DateRevisionsWrapperStyle,
@@ -23,6 +22,7 @@ const DateRevisionTypeSelectInput = (index: number, onBlur: () => void) => ({
   getToggleButtonProps,
   selectedItem,
   isOpen,
+  itemToString,
 }: RenderInputProps) => (
   <button
     type="button"
@@ -37,16 +37,21 @@ const DateRevisionTypeSelectInput = (index: number, onBlur: () => void) => ({
     })}
     className={SelectInputStyle(isOpen)}
   >
-    <span>{selectedItem}</span>
+    <span>{itemToString(selectedItem)}</span>
     <i>
       <Icon icon="CHEVRON_DOWN" />
     </i>
   </button>
 );
 
-const DateRevisionTypeSelectOption = ({ item, selected, highlighted }: RenderOptionProps) => (
+const DateRevisionTypeSelectOption = ({
+  item,
+  selected,
+  highlighted,
+  itemToString,
+}: RenderOptionProps) => (
   <div className={OptionStyle(highlighted, selected)}>
-    <span>{item}</span>
+    <span>{itemToString(item)}</span>
   </div>
 );
 
@@ -58,7 +63,7 @@ const DateRevisionsInput = ({
   onBlur,
   onKeyDown,
   readonly,
-}: InputProps<Array<{ id: string, type: string, date: string | Date }>>) => {
+}: InputProps<Array<{ id?: string, type: string, date: string | Date }>>) => {
   const firstElementRef = React.useRef<HTMLInputElement | HTMLButtonElement | null>(null);
   const { enums } = useEnum('TimelineDateRevisionType');
 
@@ -93,7 +98,7 @@ const DateRevisionsInput = ({
   };
 
   const handleAdd = () => {
-    onChange([...(value || []), { id: uuid(), type: 'Other', date: new Date() }]);
+    onChange([...(value || []), { type: 'Other', date: new Date() }]);
   };
 
   return (
@@ -106,7 +111,7 @@ const DateRevisionsInput = ({
       }}
     >
       {(value || []).map((revision, index) => (
-        <div key={`${revision.id}-${index + 0}`} className={RevisionWrapperStyle}>
+        <div key={`${revision.id || ''}-${index + 0}`} className={RevisionWrapperStyle}>
           <SelectInput
             value={revision.type}
             onChange={handleTypeChange(index)}
@@ -144,7 +149,7 @@ const DateRevisionsInput = ({
               onClick={handleRemove(index)}
               onFocus={onFocus}
               onKeyDown={e => {
-                if ((value || []).length < 5) {
+                if ((value || []).length < 5 && e.key === 'Tab') {
                   e.stopPropagation();
                 } else {
                   onBlur();
@@ -176,7 +181,8 @@ const DateRevisionsInput = ({
             }
           }}
         >
-          <FormattedMessage id="modules.Shipments.newDate" /> <Icon icon="ADD" />
+          <FormattedMessage id="modules.Shipments.newDate" />
+          <Icon icon="ADD" />
         </button>
       )}
     </div>

@@ -89,9 +89,10 @@ const Cell = ({
       mutate({
         cell: { x: rowIndex, y: columnIndex },
         value,
+        item,
       });
     },
-    [mutate, columnIndex, rowIndex]
+    [mutate, columnIndex, rowIndex, item]
   );
 
   const handleClick = React.useCallback(() => {
