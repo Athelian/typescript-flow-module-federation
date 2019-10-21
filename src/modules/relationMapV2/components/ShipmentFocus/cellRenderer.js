@@ -2213,7 +2213,6 @@ function DuplicateShipmentCell({
   );
 }
 
-// TODO: fix the card
 function DuplicateContainerCell({
   data,
   // $FlowIgnore: does not support
@@ -2223,13 +2222,13 @@ function DuplicateContainerCell({
 }: CellProps & { shipment: ?ShipmentPayload }) {
   const { state } = FocusedView.useContainer();
   const { getRelatedBy } = Entities.useContainer();
-  const { getBatchesSortByItemId } = ClientSorts.useContainer();
+  const { getBatchesSortByContainerId } = ClientSorts.useContainer();
   const batchPosition = data?.batchPosition ?? 0;
   const containerId = data.container?.id;
   const originalBatches = (shipment?.batches ?? []).filter(
     batch => batch?.container?.id === containerId
   );
-  const batchList = getBatchesSortByItemId({
+  const batchList = getBatchesSortByContainerId({
     id: containerId,
     batches: originalBatches,
     getRelatedBy,
