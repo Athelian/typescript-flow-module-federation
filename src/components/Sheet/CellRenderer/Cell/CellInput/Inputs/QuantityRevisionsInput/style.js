@@ -6,6 +6,7 @@ export const WrapperStyle = css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   height: 30px;
+  overflow: hidden;
 `;
 
 export const RevisionWrapperStyle = css`
@@ -101,7 +102,7 @@ export const AddButtonStyle = css`
   letter-spacing: 2px;
   text-transform: uppercase;
   height: 20px;
-  width: min-content;
+  min-width: min-content;
   padding: 0 10px;
   margin: 0 5px;
   &:hover,

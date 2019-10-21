@@ -21,6 +21,7 @@ const QuantityRevisionTypeSelectInput = (index: number, onBlur: () => void) => (
   getToggleButtonProps,
   selectedItem,
   isOpen,
+  itemToString,
 }: RenderInputProps) => (
   <button
     type="button"
@@ -35,16 +36,21 @@ const QuantityRevisionTypeSelectInput = (index: number, onBlur: () => void) => (
     })}
     className={SelectInputStyle(isOpen)}
   >
-    <span>{selectedItem}</span>
+    <span>{itemToString(selectedItem)}</span>
     <i>
       <Icon icon="CHEVRON_DOWN" />
     </i>
   </button>
 );
 
-const QuantityRevisionTypeSelectOption = ({ item, selected, highlighted }: RenderOptionProps) => (
+const QuantityRevisionTypeSelectOption = ({
+  item,
+  selected,
+  highlighted,
+  itemToString,
+}: RenderOptionProps) => (
   <div className={OptionStyle(highlighted, selected)}>
-    <span>{item}</span>
+    <span>{itemToString(item)}</span>
   </div>
 );
 
