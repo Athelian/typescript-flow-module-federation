@@ -427,7 +427,6 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 1035,
-    minWidth: 1035,
   },
   {
     key: 'order.orderItem.batch.packageName',

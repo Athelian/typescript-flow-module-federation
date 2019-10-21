@@ -6,7 +6,7 @@ import TextAreaInput from './Inputs/TextAreaInput';
 import NumberInput from './Inputs/NumberInput';
 import DateInput from './Inputs/DateInput';
 import DatetimeInput from './Inputs/DatetimeInput';
-import EnumInput from './Inputs/EnumInput';
+import SelectEnumInput from './Inputs/SelectEnumInput';
 import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
 import DocumentsInput from './Inputs/DocumentsInput';
 import QuantityRevisionsInput from './Inputs/QuantityRevisionsInput';
@@ -32,8 +32,7 @@ const inputs = {
   static_metric_value: StaticMetricValueInput,
   date: DateInput,
   datetime: DatetimeInput,
-  currency: EnumInput.Currency,
-  incoterm: EnumInput.Incoterm,
+  incoterm: SelectEnumInput.Incoterm,
   order_documents: DocumentsInput.Order,
   order_item_documents: DocumentsInput.OrderItem,
   shipment_documents: DocumentsInput.Shipment,
