@@ -162,12 +162,49 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'todo':
           return {
             todo: {
-              tasks: value.tasks.map(({ isNew, tags, assignedTo, approvers, ...rest }) => ({
-                ...rest,
-                tagIds: tags.map(tag => tag.id),
-                assignedToIds: assignedTo.map(assignment => assignment.id),
-                approverIds: approvers.map(approver => approver.id),
-              })),
+              tasks: value.tasks.map(
+                ({
+                  __typename,
+                  isNew,
+                  updatedAt,
+                  updatedBy,
+                  ownedBy,
+                  tags,
+                  assignedTo,
+                  approvers,
+                  inProgressBy,
+                  skippedBy,
+                  completedBy,
+                  rejectedBy,
+                  approvedBy,
+                  milestone,
+                  taskTemplate,
+                  startDateInterval,
+                  dueDateInterval,
+                  ...rest
+                }) => {
+                  const { __typename: startDateIntervalTypename, ...restStartDateInterval } =
+                    startDateInterval || {};
+                  const { __typename: dueDateIntervalTypename, ...restDueDateInterval } =
+                    dueDateInterval || {};
+
+                  return {
+                    ...rest,
+                    tagIds: tags.map(tag => tag.id),
+                    assignedToIds: assignedTo.map(assignment => assignment.id),
+                    approverIds: approvers.map(approver => approver.id),
+                    inProgressById: inProgressBy?.id,
+                    skippedById: skippedBy?.id,
+                    completedById: completedBy?.id,
+                    rejectedById: rejectedBy?.id,
+                    approvedById: approvedBy?.id,
+                    milestoneId: milestone?.id,
+                    taskTemplateId: taskTemplate?.id,
+                    startDateInterval: startDateInterval ? { ...restStartDateInterval } : null,
+                    dueDateInterval: dueDateInterval ? { ...restDueDateInterval } : null,
+                  };
+                }
+              ),
               taskTemplateId: value.taskTemplate?.id,
             },
           };

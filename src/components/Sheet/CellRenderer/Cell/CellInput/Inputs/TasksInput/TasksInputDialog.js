@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { Provider } from 'unstated';
 import Dialog from 'components/Dialog';
 import { BooleanValue } from 'react-values';
-import { injectUid } from 'utils/id';
 import { recalculateTaskBindingDate } from 'utils/task';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
@@ -17,12 +16,7 @@ import { FormContainer } from 'modules/form';
 import type { TaskPayload, TaskTemplatePayload } from 'generated/graphql';
 import Tasks from 'modules/task/common/TaskSection/components/Tasks';
 import SelectTaskTemplate from 'modules/task/common/TaskSection/components/SelectTaskTemplate';
-import {
-  TasksSectionWrapperStyle,
-  TasksSectionStyle,
-  TasksSectionTasksAreaStyle,
-  TemplateItemStyle,
-} from './style';
+import { TasksSectionWrapperStyle, TasksSectionStyle, TemplateItemStyle } from './style';
 
 const formContainer = new FormContainer();
 
@@ -70,14 +64,13 @@ const TasksInputDialog = ({ tasks, taskTemplate, onChange, onBlur, focus, entity
                     taskTemplate,
                     tasks: [
                       ...tasks,
-                      injectUid({
-                        isNew: true,
+                      {
                         name: `task - ${tasks.length + 1}`,
                         tags: [],
                         assignedTo: [],
                         approvers: [],
                         approvable: false,
-                      }),
+                      },
                     ],
                   });
                 }}
@@ -142,110 +135,109 @@ const TasksInputDialog = ({ tasks, taskTemplate, onChange, onBlur, focus, entity
           </SectionNavBar>
 
           <div className={TasksSectionStyle}>
-            <div className={TasksSectionTasksAreaStyle}>
-              {
-                <BooleanValue>
-                  {({ value: opened, set: slideToggle }) => (
-                    <>
-                      <div className={TemplateItemStyle}>
-                        <Label height="30px">
-                          <FormattedMessage id="modules.Tasks.template" defaultMessage="TEMPLATE" />
-                        </Label>
-                        {taskTemplate ? (
-                          <TemplateCard
-                            type="TASK"
-                            template={{
-                              id: taskTemplate.id,
-                              title: taskTemplate.name,
-                              description: taskTemplate.description,
-                              count: taskTemplate.tasks && taskTemplate.tasks.length,
-                            }}
-                            onClick={() => {
-                              if (canUpdateTaskTemplate) {
-                                slideToggle(true);
-                              }
-                            }}
-                            readOnly={!canUpdateTaskTemplate}
-                          />
-                        ) : (
-                          <>
-                            {canUpdateTaskTemplate ? (
-                              <DashedPlusButton
-                                width="195px"
-                                height="125px"
-                                onClick={() => slideToggle(true)}
-                              />
-                            ) : (
-                              <GrayCard width="195px" height="125px" />
-                            )}
-                          </>
-                        )}
-                      </div>
+            {
+              <BooleanValue>
+                {({ value: opened, set: slideToggle }) => (
+                  <>
+                    <div className={TemplateItemStyle}>
+                      <Label height="30px">
+                        <FormattedMessage id="modules.Tasks.template" defaultMessage="TEMPLATE" />
+                      </Label>
+                      {taskTemplate ? (
+                        <TemplateCard
+                          type="TASK"
+                          template={{
+                            id: taskTemplate.id,
+                            title: taskTemplate.name,
+                            description: taskTemplate.description,
+                            count: taskTemplate.tasks && taskTemplate.tasks.length,
+                          }}
+                          onClick={() => {
+                            if (canUpdateTaskTemplate) {
+                              slideToggle(true);
+                            }
+                          }}
+                          readOnly={!canUpdateTaskTemplate}
+                        />
+                      ) : (
+                        <>
+                          {canUpdateTaskTemplate ? (
+                            <DashedPlusButton
+                              width="195px"
+                              height="125px"
+                              onClick={() => slideToggle(true)}
+                            />
+                          ) : (
+                            <GrayCard width="195px" height="125px" />
+                          )}
+                        </>
+                      )}
+                    </div>
 
-                      <SlideView
-                        isOpen={opened}
-                        onRequestClose={() => slideToggle(false)}
-                        shouldConfirm={() => {
-                          const button = document.getElementById(
-                            'select_task_template_apply_button'
-                          );
-                          return button;
-                        }}
-                      >
-                        {opened && (
-                          <SelectTaskTemplate
-                            entityType={entityType}
-                            onCancel={() => slideToggle(false)}
-                            onSelect={newValue => {
-                              onChange({
-                                taskTemplate: newValue,
-                                tasks,
-                              });
-                              slideToggle(false);
-                            }}
-                          />
-                        )}
-                      </SlideView>
-                    </>
-                  )}
-                </BooleanValue>
-              }
+                    <SlideView
+                      isOpen={opened}
+                      onRequestClose={() => slideToggle(false)}
+                      shouldConfirm={() => {
+                        const button = document.getElementById('select_task_template_apply_button');
+                        return button;
+                      }}
+                    >
+                      {opened && (
+                        <SelectTaskTemplate
+                          entityType={entityType}
+                          onCancel={() => slideToggle(false)}
+                          onSelect={template => {
+                            const nonTemplateTasks = tasks.filter(task => !task.taskTemplate);
+                            const templateTasks = template.tasks.map(({ id, ...rest }) => ({
+                              ...rest,
+                            }));
+                            const newTaskList = [...nonTemplateTasks, ...templateTasks];
 
-              <Tasks
-                // TODO: Replace with real group ids
-                groupIds={['123', '456']}
-                // TODO: Replace with real parent id
-                entityId="123"
-                type={entityType}
-                editable={editable}
-                navigable={{ project: canViewProjectForm }}
-                sortable={canOrderingTasks}
-                viewForm={canViewForm}
-                removable={canDeleteTasks}
-                tasks={tasks}
-                onSwap={(index: number, direction: 'left' | 'right') => {
-                  const nextIndex = direction === 'left' ? index - 1 : index + 1;
+                            onChange({ taskTemplate: template, tasks: newTaskList });
+                            slideToggle(false);
+                          }}
+                        />
+                      )}
+                    </SlideView>
+                  </>
+                )}
+              </BooleanValue>
+            }
 
-                  if (nextIndex > -1 && nextIndex < tasks.length) {
-                    const clonedTasks = [...tasks];
-                    clonedTasks[nextIndex] = { ...tasks[index] };
-                    clonedTasks[index] = { ...tasks[nextIndex] };
-                    onChange({ taskTemplate, tasks: clonedTasks });
-                  }
-                }}
-                onRemove={({ id }) => {
-                  onChange({
-                    taskTemplate,
-                    tasks: tasks.filter(({ id: itemId }) => id !== itemId),
-                  });
-                }}
-                onSave={(index, newValue) => {
+            <Tasks
+              // TODO: Replace with real group ids
+              groupIds={['123', '456']}
+              // TODO: Replace with real parent id
+              entityId="123"
+              type={entityType}
+              editable={editable}
+              navigable={{ project: canViewProjectForm }}
+              sortable={canOrderingTasks}
+              viewForm={canViewForm}
+              removable={canDeleteTasks}
+              tasks={tasks}
+              onSwap={(index: number, direction: 'left' | 'right') => {
+                const nextIndex = direction === 'left' ? index - 1 : index + 1;
+
+                if (nextIndex > -1 && nextIndex < tasks.length) {
                   const clonedTasks = [...tasks];
-                  clonedTasks[index] = newValue;
+                  clonedTasks[nextIndex] = { ...tasks[index] };
+                  clonedTasks[index] = { ...tasks[nextIndex] };
                   onChange({ taskTemplate, tasks: clonedTasks });
-                }}
-              />
-            </div>
+                }
+              }}
+              onRemove={({ id }) => {
+                onChange({
+                  taskTemplate,
+                  tasks: tasks.filter(({ id: itemId }) => id !== itemId),
+                });
+              }}
+              onSave={(index, newValue) => {
+                const clonedTasks = [...tasks];
+                clonedTasks[index] = newValue;
+                onChange({ taskTemplate, tasks: clonedTasks });
+              }}
+            />
           </div>
         </div>
       </Dialog>

@@ -57,7 +57,7 @@ const Tasks = ({
     );
 
   return (tasks.map((task, index) => (
-    <div id={`task_${task.id}`} className={ItemStyle} key={task.id}>
+    <div className={ItemStyle} key={`task_${task?.id ?? ''}_${index + 0}`}>
       <BooleanValue>
         {({ value: opened, set: selectTaskSlideToggle }) => (
           <>

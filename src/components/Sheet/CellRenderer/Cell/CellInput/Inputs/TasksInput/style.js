@@ -31,13 +31,6 @@ export const TasksSectionWrapperStyle: string = css`
 `;
 
 export const TasksSectionStyle: string = css`
-  display: flex;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
-  max-height: 70vh;
-  min-height: 523px;
-`;
-
-export const TasksSectionTasksAreaStyle: string = css`
   ${borderRadiuses.MAIN};
   border-top-left-radius: 0;
   border-top-right-radius: 0;
@@ -48,6 +41,9 @@ export const TasksSectionTasksAreaStyle: string = css`
   flex-wrap: wrap;
   padding: 15px 0 15px 10px;
   position: relative;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  max-height: 70vh;
+  min-height: 523px;
 `;
 
 export const TemplateItemStyle: string = css`
