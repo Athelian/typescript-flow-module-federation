@@ -62,6 +62,9 @@ import {
   SHIPMENT_SET_DOCUMENTS,
   SHIPMENT_SET_REVISE_TIMELINE_DATE,
   SHIPMENT_SET_TIMELINE_DATE,
+  SHIPMENT_SET_TRANSPORT_TYPE,
+  SHIPMENT_SET_LOAD_TYPE,
+  SHIPMENT_SET_INCOTERM,
 } from 'modules/permission/constants/shipment';
 
 function transformOrder(basePath: string, order: Object): Array<CellValue> {
@@ -673,7 +676,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       type: 'text',
       ...transformValueField(
         `${basePath}.container`,
-        batch ? batch.container : null,
+        batch?.container ?? null,
         'no',
         hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_NO)
       ),
@@ -683,7 +686,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       type: 'container_type',
       ...transformValueField(
         `${basePath}.container`,
-        batch ? batch.container : null,
+        batch?.container ?? null,
         'containerType',
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_CONTAINER_TYPE)
@@ -694,7 +697,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       type: 'datetime',
       ...transformValueField(
         `${basePath}.container`,
-        batch ? batch.container : null,
+        batch?.container ?? null,
         'warehouseArrivalAgreedDate',
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_AGREE_ARRIVAL_DATE)
@@ -705,7 +708,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       type: 'datetime',
       ...transformValueField(
         `${basePath}.container`,
-        batch ? batch.container : null,
+        batch?.container ?? null,
         'warehouseArrivalActualDate',
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_ACTUAL_ARRIVAL_DATE)
@@ -717,7 +720,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       type: 'text',
       ...transformValueField(
         `${basePath}.container`,
-        batch ? batch.container : null,
+        batch?.container ?? null,
         'yardName',
         hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_YARD_NAME)
       ),
@@ -727,7 +730,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       type: 'date',
       ...transformValueField(
         `${basePath}.container`,
-        batch ? batch.container : null,
+        batch?.container ?? null,
         'departureDate',
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_DEPARTURE_DATE)
@@ -738,7 +741,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       type: 'number',
       ...transformReadonlyField(
         `${basePath}.container`,
-        batch ? batch.container : null,
+        batch?.container ?? null,
         'totalPackageQuantity',
         batch?.container?.totalPackageQuantity ?? 0
       ),
@@ -748,7 +751,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       type: 'number',
       ...transformReadonlyField(
         `${basePath}.container`,
-        batch ? batch.container : null,
+        batch?.container ?? null,
         'totalQuantity',
         batch?.container?.totalQuantity ?? 0
       ),
@@ -758,7 +761,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       type: 'number',
       ...transformReadonlyField(
         `${basePath}.container`,
-        batch ? batch.container : null,
+        batch?.container ?? null,
         'orderItemCount',
         batch?.container?.orderItemCount ?? 0
       ),
@@ -766,7 +769,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
   ].map(c => ({
     ...c,
     duplicatable: true,
-    disabled: !(batch ? batch.container : null),
+    disabled: !(batch?.container ?? null),
   }));
 }
 
@@ -922,6 +925,37 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         batch?.shipment ?? null,
         'contractNo',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_CONTRACT_NO)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.transportType',
+      type: 'transport_type',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'transportType',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TRANSPORT_TYPE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.loadType',
+      type: 'load_type',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'loadType',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_LOAD_TYPE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.incoterm',
+      type: 'incoterm',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'incoterm',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_INCOTERM)
       ),
     },
     {
