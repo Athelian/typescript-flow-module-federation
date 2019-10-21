@@ -231,7 +231,7 @@ export const shipmentCoordinates = memoize(
                 counter
                   ? {
                       type: 'duplicateContainer',
-                      data: container,
+                      data: { container, batchPosition: counter },
                       afterConnector: 'VERTICAL',
                     }
                   : {
