@@ -191,8 +191,6 @@ const orderItemColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.productProvider.product.name',
-    // TODO: Maxime will check the correct key in backend and supply it
-    exportKey: null,
     title: <FormattedMessage id="components.BatchItem.productName" />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
@@ -205,8 +203,6 @@ const orderItemColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.productProvider.product.serial',
-    // TODO: Maxime will check the correct key in backend and supply it
-    exportKey: '',
     title: <FormattedMessage id="components.BatchItem.productSerial" />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,

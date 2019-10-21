@@ -6,13 +6,13 @@ import FormattedNumber from 'components/FormattedNumber';
 import { computeIcon, getFileExtension } from 'components/Form/DocumentsInput/helpers';
 import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
 import type { FilePayload } from 'generated/graphql';
-import type InputProps from 'components/Sheet/CellRenderer/Cell/CellInput/types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import DocumentsInputDialog from './DocumentsInputDialog';
 import { DocumentsInputWrapperStyle, DocumentCountWrapperStyle, DocumentIconStyle } from './style';
 
 const DocumentsInput = (entityType: string) => {
   return ({
-    value = [],
+    value,
     focus,
     readonly,
     onChange,
@@ -38,24 +38,24 @@ const DocumentsInput = (entityType: string) => {
           <div className={DocumentCountWrapperStyle}>
             <DisplayWrapper>
               <span>
-                {value.length === 1 ? (
+                {(value || []).length === 1 ? (
                   <FormattedMessage
                     id="modules.sheet.doc"
                     defaultMessage="{numOfDocuments} Doc"
-                    values={{ numOfDocuments: <FormattedNumber value={value.length} /> }}
+                    values={{ numOfDocuments: <FormattedNumber value={(value || []).length} /> }}
                   />
                 ) : (
                   <FormattedMessage
                     id="modules.sheet.docs"
                     defaultMessage="{numOfDocuments} Docs"
-                    values={{ numOfDocuments: <FormattedNumber value={value.length} /> }}
+                    values={{ numOfDocuments: <FormattedNumber value={(value || []).length} /> }}
                   />
                 )}
               </span>
             </DisplayWrapper>
           </div>
 
-          {value.map((document, index) => {
+          {(value || []).map((document, index) => {
             const { icon, color } = computeIcon(getFileExtension(document?.name ?? ''));
             return (
               <div className={DocumentIconStyle(color)} key={`${document?.name}-${index + 0}`}>
@@ -66,7 +66,7 @@ const DocumentsInput = (entityType: string) => {
         </button>
 
         <DocumentsInputDialog
-          value={value}
+          value={value || []}
           onChange={onChange}
           onBlur={onBlur}
           focus={focus}

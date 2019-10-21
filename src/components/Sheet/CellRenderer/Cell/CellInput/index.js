@@ -78,7 +78,7 @@ const CellInput = ({
     onUpdate(dirtyValue);
   };
 
-  const handleKeyDown = (e: SyntheticKeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (e: SyntheticKeyboardEvent<HTMLElement>) => {
     switch (e.key) {
       case 'ArrowUp':
       case 'ArrowDown':

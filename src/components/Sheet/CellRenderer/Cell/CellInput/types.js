@@ -6,6 +6,6 @@ export type InputProps<T> = {
   focus: boolean,
   onFocus: () => void,
   onBlur: () => void,
-  onKeyDown: () => void,
+  onKeyDown: (SyntheticKeyboardEvent<HTMLElement>) => void,
   readonly: boolean,
 };

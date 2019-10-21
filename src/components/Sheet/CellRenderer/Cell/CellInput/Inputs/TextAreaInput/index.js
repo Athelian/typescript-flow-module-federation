@@ -2,7 +2,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
-import type InputProps from 'components/Sheet/CellRenderer/Cell/CellInput/types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import TextAreaInputDialog from './TextAreaInputDialog';
 import { TextAreaInputButtonStyle, TextAreaPlaceholderStyle } from './style';
 
