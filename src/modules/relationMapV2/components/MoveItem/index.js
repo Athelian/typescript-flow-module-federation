@@ -74,6 +74,7 @@ export default function MoveItem({ onSuccess }: Props) {
       exporterIds.push(exporterId);
     }
   });
+  console.warn(importerIds, exporterIds);
 
   const onConfirm = (target: 'existOrder' | 'newOrder') => {
     switch (target) {
@@ -111,11 +112,11 @@ export default function MoveItem({ onSuccess }: Props) {
   };
 
   const hasPermissionMoveToExistOrder = () => {
-    return isSamePartners() && hasPermissions(ORDER_ITEMS_UPDATE);
+    return hasPermissions(ORDER_ITEMS_UPDATE);
   };
 
   const hasPermissionMoveToNewOrder = () => {
-    return isSamePartners() && hasPermissions(ORDER_CREATE) && hasPermissions(ORDER_ITEMS_UPDATE);
+    return hasPermissions(ORDER_CREATE) && hasPermissions(ORDER_ITEMS_UPDATE);
   };
 
   const noPermission = !hasPermissionMoveToExistOrder() && !hasPermissionMoveToNewOrder();
@@ -196,7 +197,7 @@ export default function MoveItem({ onSuccess }: Props) {
               </div>
             </div>
 
-            {!hasPermissionMoveToExistOrder() ? (
+            {!isSamePartners() || !hasPermissionMoveToExistOrder() ? (
               <Tooltip
                 message={
                   !isSamePartners() ? (
@@ -259,7 +260,8 @@ export default function MoveItem({ onSuccess }: Props) {
                 />
               </div>
             </div>
-            {!hasPermissionMoveToNewOrder() ? (
+
+            {!isSamePartners() || !hasPermissionMoveToNewOrder() ? (
               <Tooltip
                 message={
                   !isSamePartners() ? (

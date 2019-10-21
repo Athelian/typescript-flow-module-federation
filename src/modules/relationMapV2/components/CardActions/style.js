@@ -6,7 +6,7 @@ export const CardActionsWrapperStyle: string = css`
   position: absolute;
   top: -10px;
   right: -10px;
-  z-index: 2;
+  z-index: 3;
 `;
 
 export const CardActionsButtonStyle = (dropdownIsOpen: boolean): string => css`
