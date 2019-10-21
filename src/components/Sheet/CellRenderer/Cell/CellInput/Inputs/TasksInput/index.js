@@ -7,7 +7,15 @@ import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displ
 import type { TaskPayload, TaskTemplatePayload } from 'generated/graphql';
 import type InputProps from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import TasksInputDialog from './TasksInputDialog';
-import { TasksInputWrapperStyle, TasksCountWrapperStyle, TaskIconStyle } from './style';
+import {
+  TasksInputWrapperStyle,
+  TasksCountWrapperStyle,
+  TaskIconStyle,
+  TasksChartWrapperStyle,
+  NumCompletedStyle,
+  TasksBarWrapperStyle,
+  TasksBarStyle,
+} from './style';
 
 const TasksInput = (entityType: string) => {
   return ({
@@ -21,6 +29,15 @@ const TasksInput = (entityType: string) => {
     tasks: Array<TaskPayload>,
     taskTemplate: TaskTemplatePayload,
   }>) => {
+    let numCompletedOrSkipped = 0;
+    value.tasks.forEach(task => {
+      if (task.completedAt || task.completedBy || task.skippedAt || task.skippedBy) {
+        numCompletedOrSkipped += 1;
+      }
+    });
+    const completedOrSkippedPercentage =
+      value.tasks.length > 0 ? numCompletedOrSkipped / value.tasks.length : 0;
+
     return (
       <>
         <button
@@ -55,6 +72,19 @@ const TasksInput = (entityType: string) => {
                 )}
               </span>
             </DisplayWrapper>
+          </div>
+
+          <div className={TasksChartWrapperStyle}>
+            <div className={NumCompletedStyle}>
+              <FormattedMessage
+                id="modules.sheet.tasksCompletedOrSkipped"
+                defaultMessage="{numOfTasks} Completed / Skipped"
+                values={{ numOfTasks: <FormattedNumber value={numCompletedOrSkipped} /> }}
+              />
+            </div>
+            <div className={TasksBarWrapperStyle}>
+              <div className={TasksBarStyle(completedOrSkippedPercentage)} />
+            </div>
           </div>
         </button>
 

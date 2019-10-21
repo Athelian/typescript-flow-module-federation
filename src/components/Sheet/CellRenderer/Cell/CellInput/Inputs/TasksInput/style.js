@@ -23,6 +23,38 @@ export const TaskIconStyle: string = css`
   flex-shrink: 0;
 `;
 
+export const TasksChartWrapperStyle: string = css`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 5px 0 0;
+  overflow: hidden;
+`;
+
+export const NumCompletedStyle: string = css`
+  ${fontSizes.SMALL};
+  height: 20px;
+  line-height: 20px;
+  color: ${colors.BLACK};
+  font-weight: bold;
+  ${presets.ELLIPSIS};
+  text-align: left;
+`;
+
+export const TasksBarWrapperStyle: string = css`
+  height: 5px;
+  ${borderRadiuses.MAIN};
+  background-color: rgba(0, 0, 0, 0.1);
+`;
+
+export const TasksBarStyle = (completedOrSkippedPercentage: number): string => css`
+  background-color: ${colors.TEAL};
+  ${borderRadiuses.BUTTON};
+  height: 100%;
+  width: ${completedOrSkippedPercentage > 1 ? 100 : completedOrSkippedPercentage * 100}%;
+  min-width: ${completedOrSkippedPercentage > 0 ? '5px' : '0px'};
+`;
+
 export const TasksSectionWrapperStyle: string = css`
   position: relative;
   ${presets.BOX};
