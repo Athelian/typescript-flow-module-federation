@@ -157,27 +157,6 @@ function batchSorter(sorts: Array<ColumnSort>) {
             sort.direction
           );
           break;
-        case 'containerTotalPackageQuantity':
-          result = setDirection(
-            numberSort(
-              a.container?.totalPackageQuantity ?? 0,
-              b.container?.totalPackageQuantity ?? 0
-            ),
-            sort.direction
-          );
-          break;
-        case 'containerTotalQuantity':
-          result = setDirection(
-            numberSort(a.container?.totalQuantity ?? 0, b.container?.totalQuantity ?? 0),
-            sort.direction
-          );
-          break;
-        case 'containerOrderItemCount':
-          result = setDirection(
-            numberSort(a.container?.orderItemCount ?? 0, b.container?.orderItemCount ?? 0),
-            sort.direction
-          );
-          break;
         case 'shipmentCreatedAt':
           result = setDirection(
             dateSort(a.shipment?.createdAt ?? new Date(), b.shipment?.createdAt ?? new Date()),

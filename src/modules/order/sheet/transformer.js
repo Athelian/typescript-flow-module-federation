@@ -808,36 +808,6 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_TAGS)
       ),
     },
-    {
-      columnKey: 'order.orderItem.batch.container.totalPackageQuantity',
-      type: 'number',
-      ...transformReadonlyField(
-        `${basePath}.container`,
-        batch?.container ?? null,
-        'totalPackageQuantity',
-        batch?.container?.totalPackageQuantity ?? 0
-      ),
-    },
-    {
-      columnKey: 'order.orderItem.batch.container.totalQuantity',
-      type: 'number',
-      ...transformReadonlyField(
-        `${basePath}.container`,
-        batch?.container ?? null,
-        'totalQuantity',
-        batch?.container?.totalQuantity ?? 0
-      ),
-    },
-    {
-      columnKey: 'order.orderItem.batch.container.orderItemCount',
-      type: 'number',
-      ...transformReadonlyField(
-        `${basePath}.container`,
-        batch?.container ?? null,
-        'orderItemCount',
-        batch?.container?.orderItemCount ?? 0
-      ),
-    },
   ].map(c => ({
     ...c,
     duplicatable: true,

@@ -17,6 +17,6 @@ export function defaultSort(a: Object, b: Object): number {
   return a.sort - b.sort;
 }
 
-export function setDirection(result, direction?: SortDirection): number {
+export function setDirection(result: number, direction?: SortDirection): number {
   return direction === 'DESCENDING' ? -result : result;
 }

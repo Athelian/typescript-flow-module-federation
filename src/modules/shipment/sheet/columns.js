@@ -4,6 +4,9 @@ import { FormattedMessage } from 'react-intl';
 import { colors } from 'styles/common';
 import type { ColumnConfig } from 'components/Sheet';
 import shipmentMessages from 'modules/shipment/messages';
+import containerMessages from '../../container/messages';
+import batchMessages from '../../batch/messages';
+import orderItemMessages from '../../orderItem/messages';
 
 const shipmentColumns: Array<ColumnConfig> = [
   {
@@ -183,9 +186,190 @@ const shipmentColumns: Array<ColumnConfig> = [
   },
 ];
 
-const containerColumns: Array<ColumnConfig> = [];
+const containerColumns: Array<ColumnConfig> = [
+  {
+    key: 'shipment.container.created',
+    title: <FormattedMessage {...containerMessages.createdAt} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 110,
+  },
+  {
+    key: 'shipment.container.updated',
+    title: <FormattedMessage {...containerMessages.updatedAt} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 110,
+  },
+  {
+    key: 'shipment.container.archived',
+    title: <FormattedMessage {...containerMessages.status} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 105,
+  },
+  {
+    key: 'shipment.container.no',
+    title: <FormattedMessage {...containerMessages.containerNo} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.containerType',
+    title: <FormattedMessage {...containerMessages.containerType} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
+  // ctn option
+  {
+    key: 'shipment.container.warehouseArrivalAgreedDate',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDate} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 170,
+  },
+  // agreed arrival assigned to
+  // agreed arrival approval
+  {
+    key: 'shipment.container.warehouseArrivalActualDate',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDate} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 170,
+  },
+  // actual arrival assigned to
+  // actual arrival approval
+  // free time
+  // start date
+  // start date auto
+  // duration
+  // due date
+  {
+    key: 'shipment.container.yardName',
+    title: 'Yard Name',
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.departureDate',
+    title: 'Yard Departure Date',
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 140,
+  },
+  // departure assigned to
+  // departure approval
+  // tags
+  // memo
+  // total package quantity
+  // total quantity
+  // total volume
+  // total weight
+  // total price
+  // actions
+];
 
-const batchColumns: Array<ColumnConfig> = [];
+const batchColumns: Array<ColumnConfig> = [
+  {
+    key: 'shipment.container.batch.created',
+    title: <FormattedMessage {...batchMessages.createdAt} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 110,
+  },
+  {
+    key: 'shipment.container.batch.updated',
+    title: <FormattedMessage {...batchMessages.updatedAt} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 110,
+  },
+  {
+    key: 'shipment.container.batch.archived',
+    title: <FormattedMessage {...orderItemMessages.status} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 105,
+  },
+  {
+    key: 'shipment.container.batch.no',
+    title: <FormattedMessage {...batchMessages.batchNo} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.batch.deliveredAt',
+    title: <FormattedMessage {...batchMessages.deliveredAt} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 140,
+  },
+  {
+    key: 'shipment.container.batch.desiredAt',
+    title: <FormattedMessage {...batchMessages.desiredAt} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 140,
+  },
+  {
+    key: 'shipment.container.batch.expiredAt',
+    title: <FormattedMessage {...batchMessages.expiredAt} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 140,
+  },
+  {
+    key: 'shipment.container.batch.producedAt',
+    title: <FormattedMessage {...batchMessages.producedAt} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 140,
+  },
+  // tags
+  // memo
+  {
+    key: 'shipment.container.batch.quantity',
+    title: <FormattedMessage {...batchMessages.initialQuantity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.batch.quantityRevisions',
+    title: <FormattedMessage {...batchMessages.sectionAdjustments} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 1035,
+  },
+  {
+    key: 'shipment.container.batch.packageName',
+    title: <FormattedMessage {...batchMessages.packageName} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.batch.packageCapacity',
+    title: <FormattedMessage {...batchMessages.packageCapacity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  // pkg qty
+  // pkg auto qty
+  // pkg weight
+  // pkg vol
+  // pkg auto vol
+  // pkg size
+  // tasks
+  // custom fields mask
+  // custom fields
+  // actions
+];
 
 const orderItemColumns: Array<ColumnConfig> = [];
 

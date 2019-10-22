@@ -37,6 +37,11 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           return {
             [field]: new Date(value),
           };
+        case 'tags': {
+          return {
+            tagIds: value.map(tag => tag.id),
+          };
+        }
         case 'files':
           return {
             files: value.map(
@@ -50,9 +55,6 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
       }
     case 'TimelineDate': {
       const shipment = item;
-      if (!shipment) {
-        return {};
-      }
 
       const input = (() => {
         switch (field) {
@@ -132,6 +134,31 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         }),
       };
     }
+    case 'Batch':
+      switch (field) {
+        case 'desiredAt':
+        case 'expiredAt':
+        case 'deliveredAt':
+        case 'producedAt':
+          return {
+            [field]: new Date(value),
+          };
+        case 'batchQuantityRevisions':
+          return {
+            batchQuantityRevisions: value.map(({ sort, batch, ...revision }) =>
+              removeTypename(revision)
+            ),
+          };
+        case 'tags': {
+          return {
+            tagIds: value.map(tag => tag.id),
+          };
+        }
+        default:
+          return {
+            [field]: value,
+          };
+      }
     default:
       return {
         [field]: value,

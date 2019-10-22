@@ -637,45 +637,6 @@ const containerColumns: Array<ColumnConfig> = [
     width: 200,
   },
   // memo
-  {
-    key: 'order.orderItem.batch.container.totalPackageQuantity',
-    title: <FormattedMessage {...containerMessages.totalPackages} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'containerTotalPackageQuantity',
-      group: 'batch',
-    },
-  },
-  /* {
-    key: 'order.orderItem.batch.container.totalQuantity',
-    title: <FormattedMessage {...containerMessages.totalBatchQuantity} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'containerTotalQuantity',
-      group: 'batch',
-    },
-  }, */
-  {
-    key: 'order.orderItem.batch.container.orderItemCount',
-    title: <FormattedMessage {...containerMessages.totalUniqueItems} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'containerOrderItemCount',
-      group: 'batch',
-    },
-  },
-  // total volume
-  // total weight
-  // total price
   // actions
 ];
 
