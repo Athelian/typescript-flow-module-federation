@@ -134,6 +134,10 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.inCharges',
       type: 'userAssignment',
+      computed: item => ({
+        importer: item.importer,
+        exporter: item.exporter,
+      }),
       ...transformValueField(
         basePath,
         order,

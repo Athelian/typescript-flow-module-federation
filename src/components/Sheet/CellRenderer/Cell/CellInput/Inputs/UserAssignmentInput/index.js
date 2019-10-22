@@ -6,15 +6,14 @@ import InputWrapper from '../InputWrapper';
 
 const UserAssignmentInput = ({
   value,
+  extra,
   focus,
   onChange,
   onFocus,
   onBlur,
   onKeyDown,
   readonly,
-  importer,
-  exporter,
-}: InputProps<string> & { importer?: Object, exporter?: Object }) => (
+}: InputProps<string, { importer: Object, exporter: Object }>) => (
   <InputWrapper focus={focus}>
     {({ ref }) => (
       <BaseUserAssignmentInput
@@ -22,7 +21,7 @@ const UserAssignmentInput = ({
         name="value"
         onChange={(name, users) => onChange(users)}
         editable={!readonly}
-        groupIds={[importer?.id, exporter?.id].filter(Boolean)}
+        groupIds={[extra?.importer?.id, extra?.exporter?.id].filter(Boolean)}
         inputRef={ref}
         onFocus={onFocus}
         onBlur={onBlur}

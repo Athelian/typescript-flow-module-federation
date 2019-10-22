@@ -51,7 +51,7 @@ const Cell = ({
   const size = cell.merged ? cell.merged.to.x - cell.merged.from.x + 1 : 1;
 
   const readonlyValue = React.useMemo(() => {
-    if (cell.empty || cell.forbidden || !cell.entity || !isReadonly) {
+    if (cell.empty || cell.forbidden || !cell.entity) {
       return null;
     }
 
@@ -60,7 +60,7 @@ const Cell = ({
     }
 
     return cell.computed(item);
-  }, [cell, item, isReadonly]);
+  }, [cell, item]);
 
   React.useEffect(() => {
     if (focus && isTop) {
@@ -199,8 +199,8 @@ const Cell = ({
         return (
           <CellInput
             value={cell.data?.value ?? null}
+            extra={readonlyValue}
             type={cell.type}
-            fullData={item}
             focus={focus}
             inputFocus={inputFocus}
             readonly={isReadonly}

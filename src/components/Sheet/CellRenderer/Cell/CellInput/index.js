@@ -20,8 +20,8 @@ import { WrapperStyle } from './style';
 
 type Props = {
   value: any,
+  extra: any,
   type: string,
-  fullData: Object,
   focus: boolean,
   inputFocus: boolean,
   disabled: boolean,
@@ -64,8 +64,8 @@ const inputs = {
 
 const CellInput = ({
   value,
+  extra,
   type,
-  fullData,
   focus,
   inputFocus,
   disabled,
@@ -126,15 +126,6 @@ const CellInput = ({
         break;
     }
   };
-  let rest = {};
-  if (type === 'userAssignment') {
-    if (fullData.__typename === 'Order') {
-      rest = {
-        importer: fullData.importer,
-        exporter: fullData.exporter,
-      };
-    }
-  }
 
   if (!inputs[type]) {
     throw new Error(`Cell input type of '${type}' doesn't not exist`);
@@ -144,13 +135,13 @@ const CellInput = ({
     <div className={WrapperStyle(focus)}>
       {React.createElement(inputs[type], {
         value: dirtyValue,
+        extra,
         readonly: disabled,
         focus: inputFocus,
         onFocus,
         onBlur: handleBlur,
         onChange: handleChange,
         onKeyDown: handleKeyDown,
-        ...rest,
       })}
     </div>
   );
