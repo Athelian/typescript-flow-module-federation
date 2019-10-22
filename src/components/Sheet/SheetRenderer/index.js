@@ -15,42 +15,6 @@ import {
   InnerGridStyle,
 } from './style';
 
-type InnerElementTypeProps = {
-  columns: Array<ColumnState>,
-  onSortToggle: string => void,
-  onColumnResize: (key: string, width: number) => void,
-  children: React.Node,
-};
-
-const InnerElementType = React.forwardRef(
-  ({ children, columns, onSortToggle, onColumnResize, ...rest }: InnerElementTypeProps, ref) => (
-    <div ref={ref} {...rest} className={InnerGridStyle}>
-      <div className={ColumnsWrapperStyle}>
-        {columns.map(column => (
-          <Column
-            key={column.key}
-            title={column.title}
-            sortable={!!column.sort}
-            direction={column.sort?.direction}
-            onSortToggle={() => {
-              onSortToggle(column.key);
-            }}
-            color={column.color}
-            width={column.width}
-            minWidth={column.minWidth}
-            onResize={width => onColumnResize(column.key, width)}
-          />
-        ))}
-        {columns.length > 0 && (
-          <div className={ColumnFillerStyle(columns[columns.length - 1].color)} />
-        )}
-      </div>
-
-      {children}
-    </div>
-  )
-);
-
 type Props = {
   columns: Array<ColumnState>,
   rowCount: number,
@@ -63,6 +27,51 @@ type Props = {
   onColumnResize: (key: string, width: number) => void,
   children: React.ComponentType<any>,
 };
+
+type InnerGridProps = {
+  children: React.Node,
+};
+
+const GridColumnContext = React.createContext<{
+  columns: Array<ColumnState>,
+  onSortToggle: string => void,
+  onColumnResize: (key: string, width: number) => void,
+}>({
+  columns: [],
+  onSortToggle: () => {},
+  onColumnResize: () => {},
+});
+
+const InnerGrid = React.forwardRef(({ children, ...rest }: InnerGridProps, ref) => (
+  <div ref={ref} {...rest} className={InnerGridStyle}>
+    <GridColumnContext.Consumer>
+      {({ columns, onSortToggle, onColumnResize }) => (
+        <div className={ColumnsWrapperStyle}>
+          {columns.map(column => (
+            <Column
+              key={column.key}
+              title={column.title}
+              sortable={!!column.sort}
+              direction={column.sort?.direction}
+              onSortToggle={() => {
+                onSortToggle(column.key);
+              }}
+              color={column.color}
+              width={column.width}
+              minWidth={column.minWidth}
+              onResize={width => onColumnResize(column.key, width)}
+            />
+          ))}
+          {columns.length > 0 && (
+            <div className={ColumnFillerStyle(columns[columns.length - 1].color)} />
+          )}
+        </div>
+      )}
+    </GridColumnContext.Consumer>
+
+    {children}
+  </div>
+));
 
 const SheetRenderer = ({
   columns,
@@ -133,33 +142,26 @@ const SheetRenderer = ({
                 };
 
                 return (
-                  <VariableSizeGrid
-                    ref={r => {
-                      ref(r);
-                      setGridRef(r);
-                    }}
-                    className={GridStyle}
-                    width={width}
-                    height={height}
-                    columnCount={columns.length}
-                    columnWidth={index => columns[index].width}
-                    estimatedColumnWidth={200}
-                    rowCount={rowCountWithLoading + 1}
-                    rowHeight={() => 30}
-                    estimatedRowHeight={30}
-                    onItemsRendered={itemsRendered}
-                    overscanRowCount={10}
-                    innerElementType={props => (
-                      <InnerElementType
-                        {...props}
-                        columns={columns}
-                        onSortToggle={onSortToggle}
-                        onColumnResize={onColumnResize}
-                      />
-                    )}
-                  >
-                    {children}
-                  </VariableSizeGrid>
+                  <GridColumnContext.Provider value={{ columns, onColumnResize, onSortToggle }}>
+                    <VariableSizeGrid
+                      ref={r => {
+                        ref(r);
+                        setGridRef(r);
+                      }}
+                      className={GridStyle}
+                      width={width}
+                      height={height}
+                      columnCount={columns.length}
+                      columnWidth={index => columns[index].width}
+                      rowCount={rowCountWithLoading + 1}
+                      rowHeight={() => 30}
+                      onItemsRendered={itemsRendered}
+                      overscanRowCount={10}
+                      innerElementType={InnerGrid}
+                    >
+                      {children}
+                    </VariableSizeGrid>
+                  </GridColumnContext.Provider>
                 );
               }}
             </InfiniteLoader>
