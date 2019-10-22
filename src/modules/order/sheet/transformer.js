@@ -49,6 +49,7 @@ import {
   CONTAINER_SET_NO,
   CONTAINER_SET_YARD_NAME,
   CONTAINER_SET_CONTAINER_TYPE,
+  CONTAINER_SET_CONTAINER_OPTION,
   CONTAINER_SET_TAGS,
   CONTAINER_UPDATE,
 } from 'modules/permission/constants/container';
@@ -725,6 +726,17 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         'containerType',
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_CONTAINER_TYPE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.containerOption',
+      type: 'container_option',
+      ...transformValueField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'containerOption',
+        hasPermission =>
+          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_CONTAINER_OPTION)
       ),
     },
     {
