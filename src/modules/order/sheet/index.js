@@ -29,7 +29,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
     client,
   ]);
 
-  const [initialOrders, setInitialOrders] = React.useState<Object>([]);
+  const [initialOrders, setInitialOrders] = React.useState<Array<Object>>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [page, setPage] = React.useState<{ page: number, totalPage: number }>({
     page: 1,

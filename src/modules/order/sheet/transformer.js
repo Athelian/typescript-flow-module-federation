@@ -625,7 +625,7 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
     },
     {
       columnKey: 'order.orderItem.batch.packageQuantity',
-      type: 'number',
+      type: 'number_toggle',
       ...transformValueField(
         basePath,
         batch,

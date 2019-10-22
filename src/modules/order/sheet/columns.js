@@ -488,18 +488,18 @@ const batchColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  /* {
+  {
     key: 'order.orderItem.batch.packageQuantity',
     title: <FormattedMessage {...batchMessages.packageQuantity} />,
     icon: 'BATCH',
     color: colors.BATCH,
-    width: 200,
+    width: 250,
     sort: {
       local: true,
       name: 'packageQuantity',
       group: 'batch',
     },
-  }, */
+  },
   // pkg auto qty
   // pkg weight
   // pkg vol
