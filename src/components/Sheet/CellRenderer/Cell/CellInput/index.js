@@ -18,7 +18,6 @@ import TagsInput from './Inputs/TagsInput';
 import { WrapperStyle } from './style';
 
 type Props = {
-  entity: string,
   value: any,
   type: string,
   focus: boolean,
@@ -49,11 +48,18 @@ const inputs = {
   quantity_revisions: QuantityRevisionsInput,
   date_revisions: DateRevisionsInput,
   status: StatusInput,
-  tags: TagsInput,
+  product_tags: TagsInput.Product,
+  order_tags: TagsInput.Order,
+  order_item_tags: TagsInput.OrderItem,
+  batch_tags: TagsInput.Batch,
+  shipment_tags: TagsInput.Shipment,
+  container_tags: TagsInput.Container,
+  user_tags: TagsInput.User,
+  task_tags: TagsInput.Task,
+  project_tags: TagsInput.Project,
 };
 
 const CellInput = ({
-  entity,
   value,
   type,
   focus,
@@ -117,10 +123,13 @@ const CellInput = ({
     }
   };
 
+  if (!inputs[type]) {
+    throw new Error(`Cell input type of '${type}' doesn't not exist`);
+  }
+
   return (
     <div className={WrapperStyle(focus)}>
       {React.createElement(inputs[type], {
-        entity,
         value: dirtyValue,
         readonly: disabled,
         focus: inputFocus,

@@ -1,128 +1,101 @@
 // @flow
 import * as React from 'react';
+import BaseTagsInput from 'components/Inputs/TagsInput';
+import type { RenderInputProps } from 'components/Inputs/TagsInput';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
-import type { TagsQueryType } from 'providers/TagListProvider/type.js.flow';
-import { useTagsInput } from 'modules/form/hooks';
 import { isForbidden } from 'utils/data';
-import BaseTagsInput from '../BaseTagsInput';
-import InputWrapper from '../InputWrapper';
+import type { InputProps } from '../../types';
 import { TagsSelectStyle, RemoveButtonStyle } from './style';
 
 type Props = {
-  value: Array<Object>,
-  onChange: (Array<Object>) => void,
-  onFocus: () => void,
-  onBlur: any => void,
-  entity: TagsQueryType,
-  focus: boolean,
-  required: boolean,
-  readonly: boolean,
-};
-type SelectProps = {
-  focus: boolean,
-  required: boolean,
-  readonly: boolean,
+  entityType: string,
+} & InputProps<Array<{ id: string, name: string, color: string }>>;
+
+const TagInputRenderer = ({ getInputProps, remove, selectedItems }: RenderInputProps) => {
+  return (
+    <div
+      className={TagsSelectStyle}
+      role="presentation"
+      onClick={() => {
+        // openMenu();
+      }}
+    >
+      {(selectedItems || [])
+        .filter(item => !isForbidden(item))
+        .map(tag => (
+          <Tag
+            key={tag.id}
+            tag={tag}
+            suffix={
+              <button
+                type="button"
+                className={RemoveButtonStyle}
+                onClick={event => {
+                  event.stopPropagation();
+                  remove(tag);
+                }}
+              >
+                <Icon icon="CLEAR" />
+              </button>
+            }
+          />
+        ))}
+
+      <input
+        {...getInputProps({
+          spellCheck: false,
+        })}
+      />
+    </div>
+  );
 };
 
-const Select = ({ focus, readonly }: SelectProps) => {
-  return ({ getInputProps, openMenu, onRemove, values, inputValue }: Object) => {
-    return (
-      <InputWrapper preselect={false} focus={focus}>
-        {({ ref }) => (
-          <>
-            <div
-              className={TagsSelectStyle}
-              role="presentation"
-              onClick={() => {
-                if (!readonly) {
-                  openMenu();
-                }
-              }}
-            >
-              {(values || [])
-                .filter(item => !isForbidden(item))
-                .map(tag => (
-                  <Tag
-                    key={tag.id}
-                    tag={tag}
-                    suffix={
-                      !readonly && (
-                        <button
-                          type="button"
-                          className={RemoveButtonStyle}
-                          onClick={event => {
-                            event.stopPropagation();
-                            onRemove(tag);
-                          }}
-                        >
-                          <Icon icon="CLEAR" />
-                        </button>
-                      )
-                    }
-                  />
-                ))}
-              <input
-                ref={ref}
-                type="text"
-                {...getInputProps({
-                  spellCheck: false,
-                  onKeyDown: e => {
-                    switch (e.key) {
-                      case 'Backspace':
-                        if (!inputValue && values && values.length > 0 && !e.repeat) {
-                          onRemove(values[values.length - 1]);
-                        }
-                        break;
-                      default:
-                        e.stopPropagation();
-                    }
-                  },
-                  onFocus: () => {
-                    openMenu();
-                  },
-                  readonly,
-                })}
-              />
-            </div>
-          </>
-        )}
-      </InputWrapper>
-    );
-  };
-};
+const TagsInputImpl = ({ entityType, value, focus, onChange, onFocus, onBlur }: Props) => {
+  const inputRef = React.useRef<HTMLButtonElement | null>(null);
+  React.useEffect(() => {
+    if (!inputRef.current) {
+      return;
+    }
 
-const TagsInput = ({
-  value,
-  entity,
-  onFocus,
-  onChange,
-  onBlur,
-  focus,
-  required,
-  readonly,
-}: Props) => {
-  const { tags, onChange: onChangeState } = useTagsInput(value);
+    const input = inputRef.current;
+
+    if (focus) {
+      // $FlowIssue: Flow doesn't know focus options
+      input.focus({
+        preventScroll: true,
+      });
+    } else {
+      input.blur();
+    }
+  }, [focus]);
+
   return (
     <BaseTagsInput
-      readonly={readonly}
-      name="value"
-      tabIndex="-1"
-      values={tags}
-      tagType={entity}
-      onChange={onChangeState}
-      onClickRemove={item => {
-        const newTags = value.filter(tag => tag.id !== item.id);
-        onChange(newTags);
-      }}
+      inputRef={inputRef}
+      entityType={entityType}
+      value={value || []}
+      onChange={onChange}
       onFocus={onFocus}
-      onBlur={e => {
-        onChange(tags);
-        onBlur(e);
-      }}
-      renderSelect={Select({ required, focus, readonly })}
+      onBlur={onBlur}
+      optionWidth={200}
+      renderInput={TagInputRenderer}
     />
   );
 };
 
-export default TagsInput;
+const TagsInput = (entityType: string) => (
+  props: InputProps<Array<{ id: string, name: string, color: string }>>
+) => <TagsInputImpl entityType={entityType} {...props} />;
+
+export default {
+  Product: TagsInput('Product'),
+  Order: TagsInput('Order'),
+  OrderItem: TagsInput('OrderItem'),
+  Batch: TagsInput('Batch'),
+  Shipment: TagsInput('Shipment'),
+  Container: TagsInput('Container'),
+  User: TagsInput('User'),
+  Task: TagsInput('Task'),
+  Project: TagsInput('Project'),
+};

@@ -1,36 +1,32 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, transitions, scrollbars, colors, fontSizes } from 'styles/common';
+import { scrollbars, colors, fontSizes, layout } from 'styles/common';
 
 export const RemoveButtonStyle = css`
+  ${fontSizes.MEDIUM};
   cursor: pointer;
   color: inherit;
-  ${fontSizes.MEDIUM};
 `;
 
 export const TagsSelectStyle = css`
-  display: flex;
-  align-items: center;
-  position: relative;
-  ${borderRadiuses.MAIN};
-  ${transitions.MAIN};
-
-  white-space: nowrap;
-  overflow-x: auto;
+  ${layout.HORIZONTAL};
+  ${layout.CENTER};
   ${scrollbars.SMALL};
+  width: 100%;
+  overflow-x: auto;
   padding: 0 0 0 5px;
   & > div {
     margin-right: 5px;
   }
-  input {
-    color: ${colors.BLACK};
+
+  & > input {
     ${fontSizes.MAIN};
+    color: ${colors.BLACK};
     border: none;
     font-weight: bold;
     padding: 5px 0 5px 0;
     background-color: transparent;
     min-width: 80px;
-    flex: 1;
     &:focus {
       outline: none;
     }

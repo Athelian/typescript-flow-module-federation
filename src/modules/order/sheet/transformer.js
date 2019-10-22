@@ -188,7 +188,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     },
     {
       columnKey: 'order.tags',
-      type: 'tags',
+      type: 'order_tags',
       empty: !order,
       parent: true,
       ...transformValueField(

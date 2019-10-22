@@ -198,7 +198,6 @@ const Cell = ({
 
         return (
           <CellInput
-            entity={cell.entity?.type}
             value={cell.data?.value ?? null}
             type={cell.type}
             focus={focus}
