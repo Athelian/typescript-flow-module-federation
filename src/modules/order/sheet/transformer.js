@@ -8,6 +8,7 @@ import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
   ORDER_SET_ARCHIVED,
   ORDER_SET_CURRENCY,
+  ORDER_SET_IN_CHARGES,
   ORDER_SET_PO_NO,
   ORDER_SET_PI_NO,
   ORDER_SET_DELIVERY_PLACE,
@@ -128,6 +129,20 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
         order,
         'poNo',
         hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_PO_NO)
+      ),
+    },
+    {
+      columnKey: 'order.inCharges',
+      type: 'user_assignment',
+      computed: item => ({
+        importer: item.importer,
+        exporter: item.exporter,
+      }),
+      ...transformValueField(
+        basePath,
+        order,
+        'inCharges',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_IN_CHARGES)
       ),
     },
     {

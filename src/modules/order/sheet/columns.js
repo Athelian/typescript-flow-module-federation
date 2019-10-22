@@ -54,6 +54,14 @@ const orderColumns: Array<ColumnConfig> = [
       group: 'order',
     },
   },
+  {
+    key: 'order.inCharges',
+    exportKey: 'inCharges',
+    title: <FormattedMessage {...orderMessages.inCharge} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   // importer
   // exporter
   {
