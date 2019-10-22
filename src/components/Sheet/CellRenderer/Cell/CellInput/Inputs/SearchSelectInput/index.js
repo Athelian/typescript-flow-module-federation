@@ -32,6 +32,11 @@ const Select = ({
   const { ref, ...inputProps } = getInputProps({
     spellCheck: false,
     placeholder: intl.formatMessage(messages.defaultPlaceholder),
+    onKeyDown: e => {
+      if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
+        e.stopPropagation();
+      }
+    },
   });
 
   return (
