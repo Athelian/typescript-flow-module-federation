@@ -1,6 +1,5 @@
 // @flow
 import memoize from 'memoize-one';
-import { ClientSorts, Entities } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import type { CellRender } from 'modules/relationMapV2/type.js.flow';
 
@@ -54,13 +53,21 @@ export function shipmentCell({
 }
 
 export const shipmentCoordinates = memoize(
-  ({ isExpand, shipment }: { isExpand: boolean, shipment: Object }): Array<?CellRender> => {
-    const {
-      getContainersSortByShipmentId,
-      getBatchesSortByShipmentId,
-      getBatchesSortByContainerId,
-    } = ClientSorts.useContainer();
-    const { getRelatedBy } = Entities.useContainer();
+  ({
+    isExpand,
+    shipment,
+    getContainersSortByShipmentId,
+    getBatchesSortByShipmentId,
+    getBatchesSortByContainerId,
+    getRelatedBy,
+  }: {
+    isExpand: boolean,
+    shipment: Object,
+    getContainersSortByShipmentId: Function,
+    getBatchesSortByShipmentId: Function,
+    getBatchesSortByContainerId: Function,
+    getRelatedBy: Function,
+  }): Array<?CellRender> => {
     const containerCount = shipment?.containerCount ?? 0;
     const batchCount = shipment?.batchCount ?? 0;
     const batches = shipment?.batches ?? [];
