@@ -3,10 +3,9 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { ToggleInput } from 'components/Form';
-
 import type { InputProps } from '../../types';
 import InputWrapper from '../InputWrapper';
-import { ArchivedStyle, ActiveStyle } from './style';
+import { StatusInputWrapperStyle } from './style';
 
 const StatusInput = ({
   value,
@@ -20,18 +19,9 @@ const StatusInput = ({
   return (
     <InputWrapper focus={focus}>
       {({ ref }) => (
-        <>
-          {value ? (
-            <div className={ArchivedStyle}>
-              <Icon icon="ARCHIVE" />
-              <FormattedMessage id="components.sheet.archived" defaultMessage="Archived" />
-            </div>
-          ) : (
-            <div className={ActiveStyle}>
-              <Icon icon="ACTIVE" />
-              <FormattedMessage id="components.sheet.active" defaultMessage="Active" />
-            </div>
-          )}
+        <div className={StatusInputWrapperStyle(value)}>
+          <Icon icon={value ? 'ARCHIVE' : 'ACTIVE'} />
+          <FormattedMessage id={`components.form.${value ? 'archived' : 'active'}`} />
 
           <ToggleInput
             inputRef={ref}
@@ -44,7 +34,7 @@ const StatusInput = ({
             onBlur={onBlur}
             onKeyDown={onKeyDown}
           />
-        </>
+        </div>
       )}
     </InputWrapper>
   );
