@@ -3,7 +3,6 @@ import type { BatchPayload } from 'generated/graphql';
 import memoize from 'memoize-one';
 import { getByPathWithDefault } from 'utils/fp';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { ClientSorts, Entities } from 'modules/relationMapV2/store';
 import type { CellRender } from 'modules/relationMapV2/type.js.flow';
 
 export function orderCell({
@@ -67,9 +66,19 @@ export function containerCell(batch: BatchPayload): ?CellRender {
 }
 
 export const orderCoordinates = memoize(
-  ({ isExpand, order }: { isExpand: boolean, order: Object }): Array<?CellRender> => {
-    const { getItemsSortByOrderId, getBatchesSortByItemId } = ClientSorts.useContainer();
-    const { getRelatedBy } = Entities.useContainer();
+  ({
+    isExpand,
+    order,
+    getItemsSortByOrderId,
+    getBatchesSortByItemId,
+    getRelatedBy,
+  }: {
+    isExpand: boolean,
+    order: Object,
+    getItemsSortByOrderId: Function,
+    getBatchesSortByItemId: Function,
+    getRelatedBy: Function,
+  }): Array<?CellRender> => {
     const orderItems = order?.orderItems ?? [];
     const orderItemCount = order?.orderItemCount ?? 0;
     const batchCount = order?.batchCount ?? 0;
