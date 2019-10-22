@@ -27,7 +27,7 @@ import {
 } from 'modules/permission/constants/task';
 import { useViewerHasPermissions, type HasPermissions } from 'contexts/Permissions';
 import { useUI } from 'contexts/UI';
-import { isAppInProduction } from 'utils/env';
+import { isEnableBetaFeature } from 'utils/env';
 import { Logo, MenuItem, SubMenu } from './components';
 import { SideBarWrapperStyle, SideBarBodyStyle } from './style';
 import messages from './messages';
@@ -111,7 +111,7 @@ const menu: Array<MenuConfig> = [
         icon: 'TABLE',
         path: 'table',
         beta: true,
-        hidden: isAppInProduction,
+        hidden: !isEnableBetaFeature,
       },
       {
         label: <FormattedMessage {...messages.map} />,

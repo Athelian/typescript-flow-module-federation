@@ -4,9 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { colors } from 'styles/common';
 import type { ColumnConfig } from 'components/Sheet';
 import shipmentMessages from 'modules/shipment/messages';
-import containerMessages from '../../container/messages';
-import batchMessages from '../../batch/messages';
-import orderItemMessages from '../../orderItem/messages';
+import containerMessages from 'modules/container/messages';
+import batchMessages from 'modules/batch/messages';
 
 const shipmentColumns: Array<ColumnConfig> = [
   {
@@ -289,7 +288,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   {
     key: 'shipment.container.batch.archived',
-    title: <FormattedMessage {...orderItemMessages.status} />,
+    title: <FormattedMessage {...batchMessages.status} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 105,
