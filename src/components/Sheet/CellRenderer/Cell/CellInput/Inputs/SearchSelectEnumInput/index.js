@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 import matchSorter from 'match-sorter';
+import LoadingIcon from 'components/LoadingIcon';
 import { enumToString } from 'components/Form/Factories/helpers';
 import useEnum from 'hooks/useEnum';
 import type { InputProps } from '../../types';
@@ -21,6 +22,14 @@ const SearchSelectEnumInputImpl = ({
 }: Props) => {
   const intl = useIntl();
   const { enums, loading } = useEnum(enumType);
+
+  if (loading) {
+    return (
+      <div style={{ padding: 5 }}>
+        <LoadingIcon size="10" />
+      </div>
+    );
+  }
 
   const itemToString = enumToString(enumType, intl);
 

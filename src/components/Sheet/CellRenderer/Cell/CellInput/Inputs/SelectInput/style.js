@@ -43,4 +43,6 @@ export const SelectOptionStyle = (highlighted: boolean, selected: boolean): stri
   height: 100%;
   font-weight: bold;
   padding: 0 5px;
+  cursor: pointer;
+  ${transitions.MAIN};
 `;

@@ -4,7 +4,6 @@ import { borderRadiuses, colors, scrollbars, shadows } from 'styles/common';
 
 export const OptionsWrapperStyle = (width: number, height: number) => css`
   ${shadows.INPUT};
-  ${scrollbars.SMALL};
   ${borderRadiuses.MAIN};
   position: fixed;
   z-index: 100;
@@ -13,4 +12,9 @@ export const OptionsWrapperStyle = (width: number, height: number) => css`
   width: ${width}px;
   margin-top: 5px;
   overflow: hidden;
+  & > div {
+    ${scrollbars.SMALL};
+  }
 `;
+
+export default OptionsWrapperStyle;

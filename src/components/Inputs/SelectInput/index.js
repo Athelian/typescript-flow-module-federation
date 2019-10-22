@@ -254,7 +254,10 @@ const SelectInput = ({
                   e.target.select();
                   openMenu();
                 },
-                onFocus,
+                onFocus: e => {
+                  onFocus(e);
+                  openMenu();
+                },
                 onBlur,
               }),
             getToggleButtonProps: props =>

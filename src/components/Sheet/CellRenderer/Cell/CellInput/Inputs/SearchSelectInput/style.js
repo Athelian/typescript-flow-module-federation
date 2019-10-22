@@ -7,7 +7,6 @@ export const SelectInputStyle = css`
   ${layout.CENTER};
   padding: 0 5px;
   height: 30px;
-
   & > input {
     ${fontSizes.MAIN};
     ${presets.ELLIPSIS};
@@ -15,8 +14,7 @@ export const SelectInputStyle = css`
     background: transparent;
     width: 100%;
     line-height: 18px;
-    font-weight: 600;
-
+    font-weight: bold;
     &::placeholder {
       color: ${colors.GRAY_LIGHT};
     }
@@ -29,14 +27,16 @@ export const ClearButtonStyle = css`
   ${fontSizes.SMALL};
   color: ${colors.GRAY_LIGHT};
   height: 100%;
-  cursor: pointer;
+  &:hover,
+  :focus {
+    color: ${colors.RED};
+  }
 `;
 
 export const ArrowDownStyle = (isOpen: boolean): string => css`
   ${presets.BUTTON};
   ${transitions.EXPAND};
   ${fontSizes.SMALL};
-  opacity: ${isOpen ? 1 : 0};
   color: ${isOpen ? colors.TEAL : colors.GRAY_LIGHT};
   height: 100%;
   cursor: pointer;
@@ -57,4 +57,6 @@ export const SelectOptionStyle = (highlighted: boolean, selected: boolean): stri
   height: 100%;
   font-weight: bold;
   padding: 0 5px;
+  cursor: pointer;
+  ${transitions.MAIN};
 `;

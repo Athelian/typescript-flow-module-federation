@@ -34,9 +34,14 @@ const Select = ({
 
   const { ref, ...inputProps } = getInputProps({
     spellCheck: false,
-    placeholder: intl.formatMessage(messages.defaultPlaceholder),
+    placeholder: intl.formatMessage(messages.defaultSelectPlaceholder),
     onKeyDown: e => {
-      if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
+      if (
+        e.key === 'ArrowLeft' ||
+        e.key === 'ArrowRight' ||
+        e.key === 'ArrowDown' ||
+        (isOpen && e.key === 'ArrowUp')
+      ) {
         e.stopPropagation();
       }
     },
