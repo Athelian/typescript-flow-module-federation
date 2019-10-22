@@ -10,6 +10,7 @@ import { OptionsWrapperStyle } from './style';
 export type RenderInputProps = {
   isOpen: boolean,
   selectedItem: any,
+  clearSelection: Function,
   getInputProps: Function,
   getToggleButtonProps: Function,
   itemToString: any => string,
@@ -228,6 +229,7 @@ const SelectInput = ({
         inputValue,
         openMenu,
         closeMenu,
+        clearSelection,
         isOpen,
       }) => (
         <div>
@@ -235,6 +237,7 @@ const SelectInput = ({
             isOpen,
             selectedItem,
             itemToString,
+            clearSelection,
             getInputProps: props =>
               getInputProps({
                 ...props,

@@ -84,7 +84,7 @@ const orderColumns: Array<ColumnConfig> = [
     color: colors.ORDER,
     width: 140,
   },
-  /* {
+  {
     key: 'order.currency',
     title: <FormattedMessage {...orderMessages.currency} />,
     icon: 'ORDER',
@@ -94,14 +94,14 @@ const orderColumns: Array<ColumnConfig> = [
       name: 'currency',
       group: 'order',
     },
-  }, */
-  /* {
+  },
+  {
     key: 'order.incoterm',
     title: <FormattedMessage {...orderMessages.incoterm} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 100,
-  }, */
+  },
   {
     key: 'order.deliveryPlace',
     exportKey: 'deliveryPlace',
@@ -671,6 +671,7 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
+  // archived
   {
     key: 'order.orderItem.batch.shipment.archived',
     exportKey: 'orderItems.batches.shipment.archived',
@@ -692,6 +693,10 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
+  // importer
+  // exporter
+  // forwarders
+  // related exporters
   {
     key: 'order.orderItem.batch.shipment.blNo',
     exportKey: 'orderItems.batches.shipment.blNo',
@@ -731,6 +736,7 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
+  // booked
   {
     key: 'order.orderItem.batch.shipment.bookingDate',
     exportKey: 'orderItems.batches.shipment.bookingDate',
@@ -771,6 +777,30 @@ const shipmentColumns: Array<ColumnConfig> = [
     },
   },
   {
+    key: 'order.orderItem.batch.shipment.transportType',
+    exportKey: 'orderItems.batches.shipment.transportType',
+    title: <FormattedMessage {...shipmentMessages.transportType} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.loadType',
+    exportKey: 'orderItems.batches.shipment.loadType',
+    title: <FormattedMessage {...shipmentMessages.loadType} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.incoterm',
+    exportKey: 'orderItems.batches.shipment.incoterm',
+    title: <FormattedMessage {...shipmentMessages.incoterms} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
     key: 'order.orderItem.batch.shipment.carrier',
     exportKey: 'orderItems.batches.shipment.carrier',
     title: <FormattedMessage {...shipmentMessages.carrier} />,
@@ -783,6 +813,14 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
+  // tags
+  // memo
+  // in charges
+  // nb of voyages
+  // cargo ready date
+  // cargo ready date revisions
+  // cargo ready assigned to
+  // cargo ready approval
   {
     key: 'order.orderItem.batch.shipment.cargoReady.date',
     exportKey: 'orderItem.batch.shipment.cargoReady.date',

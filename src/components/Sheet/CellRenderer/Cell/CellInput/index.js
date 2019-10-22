@@ -7,6 +7,7 @@ import NumberInput from './Inputs/NumberInput';
 import DateInput from './Inputs/DateInput';
 import DatetimeInput from './Inputs/DatetimeInput';
 import SelectEnumInput from './Inputs/SelectEnumInput';
+import SearchSelectEnumInput from './Inputs/SearchSelectEnumInput';
 import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
 import ContainerTypeInput from './Inputs/ContainerTypeInput';
 import DocumentsInput from './Inputs/DocumentsInput';
@@ -35,7 +36,10 @@ const inputs = {
   static_metric_value: StaticMetricValueInput,
   date: DateInput,
   datetime: DatetimeInput,
-  incoterm: SelectEnumInput.Incoterm,
+  load_type: SelectEnumInput.LoadType,
+  transport_type: SelectEnumInput.TransportType,
+  incoterm: SearchSelectEnumInput.Incoterm,
+  currency: SearchSelectEnumInput.Currency,
   container_type: ContainerTypeInput,
   order_documents: DocumentsInput.Order,
   order_item_documents: DocumentsInput.OrderItem,

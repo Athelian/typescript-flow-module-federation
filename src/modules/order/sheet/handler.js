@@ -516,6 +516,23 @@ export default function entityEventHandler(
             await onBatchQuantityRevision(event.entity.id, items);
             return;
           }
+          case 'Shipment': {
+            changes = changes.map(change => {
+              switch (change.field) {
+                case 'transportType':
+                  return {
+                    ...change,
+                    new: {
+                      string: change.new.int === 1 ? 'Air' : 'Sea',
+                      __typename: 'StringValue',
+                    },
+                  };
+                default:
+                  return change;
+              }
+            });
+            break;
+          }
           default:
             break;
         }

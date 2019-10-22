@@ -143,6 +143,9 @@ const shipmentSheetFragment = gql`
     bookingDate
     invoiceNo
     contractNo
+    transportType
+    loadType
+    incoterm
     carrier
     cargoReady {
       ...timelineDateFragment

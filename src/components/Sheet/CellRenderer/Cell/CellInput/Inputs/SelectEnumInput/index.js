@@ -33,6 +33,6 @@ const SelectEnumInput = (enumType: string) => (props: InputProps<string>) => {
 };
 
 export default {
-  Currency: SelectEnumInput('Currency'),
-  Incoterm: SelectEnumInput('Incoterm'),
+  LoadType: SelectEnumInput('LoadType'),
+  TransportType: SelectEnumInput('TransportType'),
 };
