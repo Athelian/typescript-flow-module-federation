@@ -523,7 +523,7 @@ export default function entityEventHandler(
                   return {
                     ...change,
                     new: {
-                      string: change.new.int === 1 ? 'Air' : 'Sea',
+                      string: change.new?.int === 1 ? 'Air' : 'Sea',
                       __typename: 'StringValue',
                     },
                   };
