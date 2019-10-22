@@ -10,9 +10,9 @@ import Column from '../Column';
 import {
   ColumnFillerStyle,
   ColumnsWrapperStyle,
-  ContentStyle,
+  SheetWrapperStyle,
   GridStyle,
-  WrapperStyle,
+  InnerGridStyle,
 } from './style';
 
 type Props = {
@@ -40,7 +40,6 @@ const SheetRenderer = ({
   onColumnResize,
   children,
 }: Props) => {
-  const columnsRef = React.useRef(null);
   const gridRef = React.useRef(null);
   const setGridRef = React.useCallback(el => {
     gridRef.current = el;
@@ -69,87 +68,95 @@ const SheetRenderer = ({
 
   const rowCountWithLoading = loadingMore ? rowCount + 1 : rowCount;
 
-  const handleScroll = ({ scrollLeft }: Object) => {
-    if (columnsRef && columnsRef.current) {
-      columnsRef.current.scrollLeft = scrollLeft;
-    }
-  };
+  const innerElementType = React.forwardRef(
+    ({ children: childrens, ...rest }: { children: React.Node }, ref) => (
+      <div ref={ref} {...rest} className={InnerGridStyle}>
+        <div className={ColumnsWrapperStyle}>
+          {columns.map(column => (
+            <Column
+              key={column.key}
+              title={column.title}
+              sortable={!!column.sort}
+              direction={column.sort?.direction}
+              onSortToggle={() => {
+                onSortToggle(column.key);
+              }}
+              color={column.color}
+              width={column.width}
+              minWidth={column.minWidth}
+              onResize={width => onColumnResize(column.key, width)}
+            />
+          ))}
+          {columns.length > 0 && (
+            <div className={ColumnFillerStyle(columns[columns.length - 1].color)} />
+          )}
+        </div>
+
+        {childrens}
+      </div>
+    )
+  );
 
   return (
-    <div className={WrapperStyle}>
-      <div ref={columnsRef} className={ColumnsWrapperStyle}>
-        {columns.map(column => (
-          <Column
-            key={column.key}
-            title={column.title}
-            sortable={!!column.sort}
-            direction={column.sort?.direction}
-            onSortToggle={() => {
-              onSortToggle(column.key);
-            }}
-            color={column.color}
-            width={column.width}
-            minWidth={column.minWidth}
-            onResize={width => onColumnResize(column.key, width)}
-          />
-        ))}
-        {columns.length > 0 && (
-          <div className={ColumnFillerStyle(columns[columns.length - 1].color)} />
-        )}
-      </div>
-      <div className={ContentStyle}>
-        {loading ? (
-          <LoadingIcon />
-        ) : (
-          <AutoSizer>
-            {({ height, width }) => (
-              <InfiniteLoader
-                isItemLoaded={index => index < rowCount || !hasMore}
-                itemCount={rowCount + hasMore}
-                loadMoreItems={() => {
-                  if (loading || loadingMore) {
-                    return null;
-                  }
+    <div className={SheetWrapperStyle}>
+      {loading ? (
+        <LoadingIcon />
+      ) : (
+        <AutoSizer>
+          {({ height, width }) => (
+            <InfiniteLoader
+              isItemLoaded={index => index < rowCount || !hasMore}
+              itemCount={rowCount + hasMore}
+              loadMoreItems={() => {
+                if (loading || loadingMore) {
+                  return null;
+                }
 
-                  return onThreshold();
-                }}
-              >
-                {({ onItemsRendered, ref }) => {
-                  const itemsRendered = gridData => {
-                    const { visibleRowStartIndex, visibleRowStopIndex } = gridData;
+                return onThreshold();
+              }}
+            >
+              {({ onItemsRendered, ref }) => {
+                const itemsRendered = gridData => {
+                  const { visibleRowStartIndex, visibleRowStopIndex } = gridData;
 
-                    return onItemsRendered({
-                      visibleStartIndex: visibleRowStartIndex,
-                      visibleStopIndex: visibleRowStopIndex,
-                    });
-                  };
+                  return onItemsRendered({
+                    visibleStartIndex: visibleRowStartIndex,
+                    visibleStopIndex: visibleRowStopIndex,
+                  });
+                };
 
-                  return (
-                    <VariableSizeGrid
-                      ref={r => {
-                        ref(r);
-                        setGridRef(r);
-                      }}
-                      className={GridStyle}
-                      width={width}
-                      height={height}
-                      columnCount={columns.length}
-                      columnWidth={index => columns[index].width}
-                      rowCount={rowCountWithLoading}
-                      rowHeight={() => 30}
-                      onScroll={handleScroll}
-                      onItemsRendered={itemsRendered}
-                      overscanRowCount={10}
-                    >
-                      {children}
-                    </VariableSizeGrid>
-                  );
-                }}
-              </InfiniteLoader>
-            )}
-          </AutoSizer>
-        )}
-      </div>
+                return (
+                  <VariableSizeGrid
+                    ref={r => {
+                      ref(r);
+                      setGridRef(r);
+                    }}
+                    className={GridStyle}
+                    width={width}
+                    height={height}
+                    columnCount={columns.length}
+                    columnWidth={index => columns[index].width}
+                    estimatedColumnWidth={200}
+                    rowCount={rowCountWithLoading}
+                    rowHeight={index => {
+                      if (index === 0) {
+                        return 44;
+                      }
+                      return 30;
+                    }}
+                    estimatedRowHeight={30}
+                    onItemsRendered={itemsRendered}
+                    overscanRowCount={10}
+                    innerElementType={innerElementType}
+                  >
+                    {children}
+                  </VariableSizeGrid>
+                );
+              }}
+            </InfiniteLoader>
+          )}
+        </AutoSizer>
+      )}
     </div>
   );
 };

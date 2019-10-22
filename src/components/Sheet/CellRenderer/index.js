@@ -25,7 +25,7 @@ function isInArea(area: Area, columnIndex: number, rowIndex: number): boolean {
   );
 }
 
-const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
+const CellRenderer = ({ style, columnIndex, rowIndex: originalRowIndex }: Props) => {
   const { state } = useSheetState();
   const {
     rows,
@@ -40,6 +40,8 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
     weakErrorAt,
   } = state;
   const [users, setUsers] = React.useState<Array<Object>>([]);
+
+  const rowIndex = originalRowIndex - 1;
 
   React.useEffect(() => {
     setUsers(
@@ -73,6 +75,10 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
   const isWeakFocused = !!weakFocusAt.find(f => isInArea(f, columnIndex, rowIndex));
   const isWeakErrored = !!weakErrorAt.find(e => isInArea(e, columnIndex, rowIndex));
   const size = cell && cell.merged ? cell.merged.to.x - cell.merged.from.x + 1 : 1;
+
+  if (originalRowIndex === 0) {
+    return <div style={style} />;
+  }
 
   return (
     <div style={style}>
