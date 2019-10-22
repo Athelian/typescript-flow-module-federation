@@ -98,14 +98,15 @@ export function init(
 ) {
   return (state: State, payload: { items: Array<Object>, columns: Array<string> }): State => {
     const { items, columns } = payload;
-    const allRows = transformItems(transformer)(0, sorter(items, state.sorts));
+    const sortedItems = sorter(items, state.sorts);
+    const allRows = transformItems(transformer)(0, sortedItems);
     const rows = computeMergedCells(mapRowsToColumns(allRows, columns));
     const entities = resolveEntities(rows);
 
     return {
       ...state,
       initialized: true,
-      items,
+      items: sortedItems,
       columns,
       rows,
       allRows,
@@ -161,14 +162,15 @@ export function append(
   return (state: State, payload: { items: Array<Object> }): State => {
     const { items } = payload;
 
-    const allRows = transformItems(transformer)(state.items.length, sorter(items, state.sorts));
+    const sortedItems = sorter(items, state.sorts);
+    const allRows = transformItems(transformer)(state.items.length, sortedItems);
     const rows = computeMergedCells(mapRowsToColumns(allRows, state.columns), state.rows.length);
     const entities = resolveEntities(rows);
 
     return setForeignFocuses(
       {
         ...state,
-        items: [...state.items, ...items],
+        items: [...state.items, ...sortedItems],
         rows: [...state.rows, ...rows],
         allRows: [...state.allRows, ...allRows],
         entities: [...state.entities, ...entities],

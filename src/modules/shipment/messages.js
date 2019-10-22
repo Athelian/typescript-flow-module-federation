@@ -286,10 +286,6 @@ export default defineMessages({
     id: 'modules.Shipments.deliveryOrderFee',
     defaultMessage: 'D/O FEE',
   },
-  deliveryReady: {
-    id: 'modules.Shipments.deliveryReady',
-    defaultMessage: 'DELIVERY READY',
-  },
   exporterMiscFee: {
     id: 'modules.Shipments.exporterMiscFee',
     defaultMessage: 'EXPORTER MISC FEE',
@@ -334,6 +330,10 @@ export default defineMessages({
     id: 'modules.Shipments.cargoReady',
     defaultMessage: 'CARGO READY',
   },
+  cargoReadyRevisions: {
+    id: 'modules.Shipments.cargoReadyRevisions',
+    defaultMessage: 'CARGO READY REVISIONS',
+  },
   departure: {
     id: 'modules.Shipments.departure',
     defaultMessage: 'DEPARTURE',
@@ -354,9 +354,25 @@ export default defineMessages({
     id: 'modules.Shipments.customClearance',
     defaultMessage: 'CUSTOMS CLEARANCE',
   },
+  customClearanceRevisions: {
+    id: 'modules.Shipments.customClearanceRevisions',
+    defaultMessage: 'CUSTOMS CLEARANCE REVISIONS',
+  },
   warehouseArrival: {
     id: 'modules.Shipments.warehouseArrival',
     defaultMessage: 'WAREHOUSE ARRIVAL',
+  },
+  warehouseArrivalRevisions: {
+    id: 'modules.Shipments.warehouseArrivalRevisions',
+    defaultMessage: 'WAREHOUSE ARRIVAL REVISIONS',
+  },
+  deliveryReady: {
+    id: 'modules.Shipments.deliveryReady',
+    defaultMessage: 'DELIVERY READY',
+  },
+  deliveryReadyRevisions: {
+    id: 'modules.Shipments.deliveryReadyRevisions',
+    defaultMessage: 'DELIVERY READY REVISIONS',
   },
   status: {
     id: 'modules.Shipments.status',

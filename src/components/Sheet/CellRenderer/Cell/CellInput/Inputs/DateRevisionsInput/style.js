@@ -6,6 +6,7 @@ export const DateRevisionsWrapperStyle = css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   height: 30px;
+  overflow: hidden;
 `;
 
 export const RevisionWrapperStyle = css`

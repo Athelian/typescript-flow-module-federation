@@ -145,6 +145,10 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
 
       const input = (() => {
         switch (field) {
+          case 'date':
+            return {
+              date: new Date(value),
+            };
           case 'timelineDateRevisions':
             return {
               timelineDateRevisions: value.map(({ sort, date, ...revision }) => ({

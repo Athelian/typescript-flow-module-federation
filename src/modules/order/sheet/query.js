@@ -147,6 +147,31 @@ const shipmentSheetFragment = gql`
     cargoReady {
       ...timelineDateFragment
     }
+    voyages {
+      ... on Voyage {
+        id
+        departure {
+          ...timelineDateFragment
+        }
+        arrival {
+          ...timelineDateFragment
+        }
+      }
+    }
+    containerGroups {
+      ... on ContainerGroup {
+        id
+        customClearance {
+          ...timelineDateFragment
+        }
+        warehouseArrival {
+          ...timelineDateFragment
+        }
+        deliveryReady {
+          ...timelineDateFragment
+        }
+      }
+    }
     files {
       ...documentFragment
       ...forbiddenFragment

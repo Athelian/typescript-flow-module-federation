@@ -59,6 +59,7 @@ import {
   SHIPMENT_SET_CARRIER,
   SHIPMENT_SET_DOCUMENTS,
   SHIPMENT_SET_REVISE_TIMELINE_DATE,
+  SHIPMENT_SET_TIMELINE_DATE,
 } from 'modules/permission/constants/shipment';
 
 function transformOrder(basePath: string, order: Object): Array<CellValue> {
@@ -901,11 +902,87 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       ),
     },
     {
+      columnKey: 'order.orderItem.batch.shipment.cargoReady.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.cargoReady`,
+        batch?.shipment?.cargoReady ?? null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
       columnKey: 'order.orderItem.batch.shipment.cargoReady.timelineDateRevisions',
       type: 'date_revisions',
       ...transformValueField(
         `${basePath}.shipment.cargoReady`,
         batch?.shipment?.cargoReady ?? null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.containerGroups.customClearance.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.customClearance`,
+        batch?.shipment?.containerGroups[0].customClearance ?? null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey:
+        'order.orderItem.batch.shipment.containerGroups.customClearance.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.customClearance`,
+        batch?.shipment?.containerGroups[0].customClearance ?? null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.containerGroups.warehouseArrival.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+        batch?.shipment?.containerGroups[0].warehouseArrival ?? null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey:
+        'order.orderItem.batch.shipment.containerGroups.warehouseArrival.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+        batch?.shipment?.containerGroups[0].warehouseArrival ?? null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.containerGroups.deliveryReady.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.deliveryReady`,
+        batch?.shipment?.containerGroups[0].deliveryReady ?? null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey:
+        'order.orderItem.batch.shipment.containerGroups.deliveryReady.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.deliveryReady`,
+        batch?.shipment?.containerGroups[0].deliveryReady ?? null,
         'timelineDateRevisions',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
