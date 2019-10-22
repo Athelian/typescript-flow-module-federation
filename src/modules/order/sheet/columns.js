@@ -40,7 +40,7 @@ const orderColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...orderMessages.status} />,
     icon: 'ORDER',
     color: colors.ORDER,
-    width: 200,
+    width: 120,
   },
   {
     key: 'order.poNo',
@@ -678,7 +678,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.status} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 200,
+    width: 120,
   },
   {
     key: 'order.orderItem.batch.shipment.no',
