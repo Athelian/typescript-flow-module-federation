@@ -19,6 +19,7 @@ type OptionalProps = {
   name: string,
   onChange: (name: string, users: Array<UserAvatarType>) => void,
   editable: boolean,
+  inputRef: Object,
 };
 
 type Props = OptionalProps & {
@@ -32,7 +33,7 @@ const defaultProps = {
   editable: false,
 };
 
-const UserAssignmentInput = ({ users, name, groupIds, onChange, editable }: Props) => (
+const UserAssignmentInput = ({ users, name, groupIds, onChange, editable, inputRef }: Props) => (
   <div className={AssignmentWrapperStyle}>
     {users.map(({ id, firstName, lastName }) => (
       <div className={AssignmentStyle} key={id}>
@@ -53,6 +54,7 @@ const UserAssignmentInput = ({ users, name, groupIds, onChange, editable }: Prop
         {({ value: isOpen, set: toggleSlide }) => (
           <>
             <button
+              ref={inputRef}
               data-testid="addAssignerButton"
               className={AddAssignmentButtonStyle}
               type="button"

@@ -15,11 +15,13 @@ import QuantityRevisionsInput from './Inputs/QuantityRevisionsInput';
 import DateRevisionsInput from './Inputs/DateRevisionsInput';
 import StatusInput from './Inputs/StatusInput';
 import TagsInput from './Inputs/TagsInput';
+import UserAssignmentInput from './Inputs/UserAssignmentInput';
 import { WrapperStyle } from './style';
 
 type Props = {
   value: any,
   type: string,
+  fullData: Object,
   focus: boolean,
   inputFocus: boolean,
   disabled: boolean,
@@ -57,11 +59,13 @@ const inputs = {
   user_tags: TagsInput.User,
   task_tags: TagsInput.Task,
   project_tags: TagsInput.Project,
+  userAssignment: UserAssignmentInput,
 };
 
 const CellInput = ({
   value,
   type,
+  fullData,
   focus,
   inputFocus,
   disabled,
@@ -122,6 +126,15 @@ const CellInput = ({
         break;
     }
   };
+  let rest = {};
+  if (type === 'userAssignment') {
+    if (fullData.__typename === 'Order') {
+      rest = {
+        importer: fullData.importer,
+        exporter: fullData.exporter,
+      };
+    }
+  }
 
   if (!inputs[type]) {
     throw new Error(`Cell input type of '${type}' doesn't not exist`);
@@ -137,6 +150,7 @@ const CellInput = ({
         onBlur: handleBlur,
         onChange: handleChange,
         onKeyDown: handleKeyDown,
+        ...rest,
       })}
     </div>
   );

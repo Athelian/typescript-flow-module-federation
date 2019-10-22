@@ -6,6 +6,7 @@ import {
   userAvatarFragment,
   documentFragment,
   tagFragment,
+  partnerNameFragment,
 } from 'graphql';
 
 const orderSheetFragment = gql`
@@ -23,6 +24,15 @@ const orderSheetFragment = gql`
     incoterm
     deliveryPlace
     deliveryDate
+    inCharges {
+      ...userAvatarFragment
+    }
+    importer {
+      ...partnerNameFragment
+    }
+    exporter {
+      ...partnerNameFragment
+    }
     files {
       ...documentFragment
       ...forbiddenFragment
@@ -41,6 +51,7 @@ const orderSheetFragment = gql`
       }
     }
   }
+  ${partnerNameFragment}
 `;
 
 const orderItemSheetFragment = gql`

@@ -200,6 +200,7 @@ const Cell = ({
           <CellInput
             value={cell.data?.value ?? null}
             type={cell.type}
+            fullData={item}
             focus={focus}
             inputFocus={inputFocus}
             readonly={isReadonly}
