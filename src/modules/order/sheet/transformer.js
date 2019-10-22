@@ -26,6 +26,7 @@ import {
   ORDER_ITEMS_UPDATE,
   ORDER_ITEMS_SET_DELIVERY_DATE,
   ORDER_ITEMS_SET_DOCUMENTS,
+  ORDER_ITEMS_SET_TAGS,
 } from 'modules/permission/constants/orderItem';
 import {
   BATCH_SET_DELIVERY_DATE,
@@ -38,6 +39,7 @@ import {
   BATCH_SET_PRODUCTION_DATE,
   BATCH_SET_QUANTITY,
   BATCH_SET_QUANTITY_ADJUSTMENTS,
+  BATCH_SET_TAGS,
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
 import {
@@ -46,8 +48,9 @@ import {
   CONTAINER_SET_DEPARTURE_DATE,
   CONTAINER_SET_NO,
   CONTAINER_SET_YARD_NAME,
-  CONTAINER_UPDATE,
   CONTAINER_SET_CONTAINER_TYPE,
+  CONTAINER_SET_TAGS,
+  CONTAINER_UPDATE,
 } from 'modules/permission/constants/container';
 import {
   SHIPMENT_UPDATE,
@@ -66,6 +69,7 @@ import {
   SHIPMENT_SET_TRANSPORT_TYPE,
   SHIPMENT_SET_LOAD_TYPE,
   SHIPMENT_SET_INCOTERM,
+  SHIPMENT_SET_TAGS,
 } from 'modules/permission/constants/shipment';
 
 function transformOrder(basePath: string, order: Object): Array<CellValue> {
@@ -189,8 +193,6 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.tags',
       type: 'order_tags',
-      empty: !order,
-      parent: true,
       ...transformValueField(
         basePath,
         order,
@@ -369,6 +371,16 @@ function transformOrderItem(
       ),
     },
     {
+      columnKey: 'order.orderItem.tags',
+      type: 'order_item_tags',
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'tags',
+        hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_TAGS)
+      ),
+    },
+    {
       columnKey: 'order.orderItem.totalBatched',
       type: 'number',
       ...transformComputedField(basePath, orderItem, item => {
@@ -539,6 +551,16 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
         batch,
         'producedAt',
         hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PRODUCTION_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.tags',
+      type: 'batch_tags',
+      ...transformValueField(
+        basePath,
+        batch,
+        'tags',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_TAGS)
       ),
     },
     {
@@ -747,6 +769,16 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         'departureDate',
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_DEPARTURE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.tags',
+      type: 'container_tags',
+      ...transformValueField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'tags',
+        hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_TAGS)
       ),
     },
     {
@@ -979,6 +1011,16 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         batch?.shipment ?? null,
         'carrier',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_CARRIER)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.tags',
+      type: 'shipment_tags',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'tags',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TAGS)
       ),
     },
     {

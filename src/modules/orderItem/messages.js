@@ -42,6 +42,10 @@ export default defineMessages({
     id: 'modules.orderItems.unitPrice',
     defaultMessage: 'Unit Price',
   },
+  tags: {
+    id: 'modules.OrderItems.tags',
+    defaultMessage: 'TAGS',
+  },
   currency: {
     id: 'modules.OrderItems.list.sort.currency',
     defaultMessage: 'Currency',
