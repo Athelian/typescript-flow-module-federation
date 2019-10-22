@@ -10,6 +10,7 @@ import {
 const orderSheetFragment = gql`
   fragment orderSheetFragment on Order {
     id
+    archived
     poNo
     memo
     issuedAt
@@ -41,7 +42,6 @@ const orderSheetFragment = gql`
 const orderItemSheetFragment = gql`
   fragment orderItemSheetFragment on OrderItem {
     id
-    archived
     no
     quantity
     price {
@@ -97,7 +97,6 @@ const orderItemSheetFragment = gql`
 const batchSheetFragment = gql`
   fragment batchSheetFragment on Batch {
     id
-    archived
     no
     quantity
     batchQuantityRevisions {
@@ -134,6 +133,7 @@ const batchSheetFragment = gql`
 const shipmentSheetFragment = gql`
   fragment shipmentSheetFragment on Shipment {
     id
+    archived
     no
     createdAt
     updatedAt
@@ -219,7 +219,6 @@ export const timelineDateFragment = gql`
 const containerSheetFragment = gql`
   fragment containerSheetFragment on Container {
     id
-    archived
     no
     warehouseArrivalAgreedDate
     warehouseArrivalActualDate
