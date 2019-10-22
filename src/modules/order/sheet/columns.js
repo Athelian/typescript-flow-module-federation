@@ -554,11 +554,6 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 200,
-    sort: {
-      local: true,
-      name: 'containerContainerType',
-      group: 'batch',
-    },
   },
   {
     key: 'order.orderItem.batch.container.containerOption',
@@ -566,11 +561,6 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 200,
-    sort: {
-      local: true,
-      name: 'containerContainerOption',
-      group: 'batch',
-    },
   },
   {
     key: 'order.orderItem.batch.container.warehouseArrivalAgreedDate',
