@@ -11,6 +11,7 @@ import { SelectInputStyle, SelectOptionStyle, ArrowDownStyle, ClearButtonStyle }
 
 type Props = {
   value: any | null,
+  nullable?: boolean,
   onChange: any => void,
   onFocus: () => void,
   onBlur: () => void,
@@ -23,6 +24,7 @@ type Props = {
 
 const Select = ({
   clearSelection,
+  nullable,
   getInputProps,
   getToggleButtonProps,
   selectedItem,
@@ -44,7 +46,7 @@ const Select = ({
     <div className={SelectInputStyle}>
       <DebounceInput debounceTimeout={500} inputRef={ref} {...inputProps} />
 
-      {selectedItem ? (
+      {selectedItem && nullable ? (
         <button className={ClearButtonStyle} type="button" onClick={() => clearSelection()}>
           <Icon icon="CLEAR" />
         </button>
@@ -65,6 +67,7 @@ const Option = ({ selected, highlighted, item, itemToString }: RenderOptionProps
 
 const SearchSelectInput = ({
   value,
+  nullable,
   onChange,
   onFocus,
   onBlur,
@@ -79,6 +82,7 @@ const SearchSelectInput = ({
       <BaseSelectInput
         inputRef={ref}
         value={value}
+        nullable={nullable}
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}

@@ -24,9 +24,12 @@ const SearchSelectEnumInputImpl = ({
 
   const itemToString = enumToString(enumType, intl);
 
+  const nullable = enumType === 'Incoterm';
+
   return (
     <SearchSelectInput
       value={value}
+      nullable={nullable}
       onChange={onChange}
       onFocus={onFocus}
       onBlur={onBlur}

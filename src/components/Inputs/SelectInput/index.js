@@ -9,6 +9,7 @@ import { OptionsWrapperStyle } from './style';
 
 export type RenderInputProps = {
   isOpen: boolean,
+  nullable: boolean,
   selectedItem: any,
   clearSelection: Function,
   getInputProps: Function,
@@ -25,6 +26,7 @@ export type RenderOptionProps = {
 
 type Props = {
   value: any,
+  nullable?: boolean,
   onChange: any => void,
   onFocus?: (SyntheticFocusEvent<any>) => void,
   onBlur?: (SyntheticFocusEvent<any>) => void,
@@ -177,6 +179,7 @@ const SelectOptions = ({
 
 const SelectInput = ({
   value,
+  nullable,
   onChange,
   onFocus,
   onBlur,
@@ -233,6 +236,7 @@ const SelectInput = ({
         <div>
           {React.createElement(renderInput, {
             isOpen,
+            nullable,
             selectedItem,
             itemToString,
             clearSelection,
