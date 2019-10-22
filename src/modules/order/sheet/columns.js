@@ -110,7 +110,14 @@ const orderColumns: Array<ColumnConfig> = [
     color: colors.ORDER,
     width: 200,
   },
-  // tags
+  {
+    key: 'order.tags',
+    exportKey: 'tags',
+    title: <FormattedMessage {...orderMessages.tags} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   {
     key: 'order.memo',
     exportKey: 'memo',
@@ -259,7 +266,13 @@ const orderItemColumns: Array<ColumnConfig> = [
       group: 'orderItem',
     },
   },
-  // tags
+  {
+    key: 'order.orderItem.tags',
+    title: <FormattedMessage {...orderItemMessages.tags} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+  },
   // memo
   {
     key: 'order.orderItem.totalBatched',
@@ -412,7 +425,13 @@ const batchColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // tags
+  {
+    key: 'order.orderItem.batch.tags',
+    title: <FormattedMessage {...batchMessages.tags} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   // memo
   {
     key: 'order.orderItem.batch.quantity',
@@ -601,7 +620,13 @@ const containerColumns: Array<ColumnConfig> = [
   },
   // departure assigned to
   // departure approval
-  // tags
+  {
+    key: 'order.orderItem.batch.container.tags',
+    title: <FormattedMessage {...containerMessages.tags} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   // memo
   {
     key: 'order.orderItem.batch.container.totalPackageQuantity',
@@ -821,6 +846,13 @@ const shipmentColumns: Array<ColumnConfig> = [
   // cargo ready date revisions
   // cargo ready assigned to
   // cargo ready approval
+  {
+    key: 'order.orderItem.batch.shipment.tags',
+    title: <FormattedMessage {...shipmentMessages.tags} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.shipment.cargoReady.date',
     exportKey: 'orderItem.batch.shipment.cargoReady.date',

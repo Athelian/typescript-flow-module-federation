@@ -3,55 +3,45 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { FixedSizeList } from 'react-window';
 import Downshift from 'downshift';
-import { equals } from 'ramda';
+import { useQuery } from '@apollo/react-hooks';
+import Tag from 'components/Tag';
+import Icon from 'components/Icon';
 import usePortalSlot from 'hooks/usePortalSlot';
-import { OptionsWrapperStyle } from './style';
+import { tagsQuery } from './query';
+import { OptionStyle, OptionsWrapperStyle, SelectedStyle } from './style';
+
+type Item = {
+  id: string,
+  name: string,
+  color: string,
+};
 
 export type RenderInputProps = {
   isOpen: boolean,
-  selectedItem: any,
-  clearSelection: Function,
+  selectedItems: Array<Item>,
   getInputProps: Function,
-  getToggleButtonProps: Function,
-  itemToString: any => string,
-};
-
-export type RenderOptionProps = {
-  item: any,
-  selected: boolean,
-  highlighted: boolean,
-  itemToString: any => string,
+  remove: Item => void,
 };
 
 type Props = {
-  value: any,
-  onChange: any => void,
+  entityType: string,
+  value: Array<Item>,
+  onChange: (Array<Item>) => void,
   onFocus?: (SyntheticFocusEvent<any>) => void,
   onBlur?: (SyntheticFocusEvent<any>) => void,
-  items: Array<any>,
-  filterItems: (query: string, items: Array<any>) => Array<any>,
-  itemToString: any => string,
-  itemToValue: any => any,
   optionWidth: number,
-  optionHeight: number,
   inputRef?: { current: any },
-  toggleRef?: { current: any },
   renderInput: RenderInputProps => React.Node,
-  renderOption: RenderOptionProps => React.Node,
 };
 
 type OptionsProps = {
+  entityType: string,
+  selectedItems: Array<Item>,
+  isOpen: boolean,
   inputValue: ?string,
   highlightedIndex: ?number,
-  selectedItem: any,
-  items: Array<any>,
-  filterItems: (query: string, items: Array<any>) => Array<any>,
-  itemToString: any => string,
-  isOpen: boolean,
   closeMenu: () => any,
   optionWidth: number,
-  optionHeight: number,
-  renderOption: RenderOptionProps => React.Node,
   getMenuProps: Function,
   getItemProps: Function,
 };
@@ -60,51 +50,54 @@ type OptionProps = {
   index: number,
   style: Object,
   data: {
-    items: Array<any>,
+    tags: Array<Item>,
     getItemProps: Function,
     highlightedIndex: ?number,
-    selectedItem: any,
-    itemToString: any => string,
-    renderOption: RenderOptionProps => React.Node,
+    selectedItems: Array<Item>,
   },
 };
 
-const OptionRenderer = ({ index, style, data }: OptionProps) => {
-  const item = data.items[index];
+const TagOption = ({ index, style, data }: OptionProps) => {
+  const tag: Item = data.tags[index];
+  const selected = data.selectedItems.map(t => t.id).includes(tag.id);
+  const highlighted = data.highlightedIndex === index;
 
   return (
     <div
+      className={OptionStyle(selected, highlighted)}
       {...data.getItemProps({
         index,
-        item,
+        item: tag,
         style,
       })}
     >
-      {data.renderOption({
-        item,
-        selected: data.selectedItem === item,
-        highlighted: data.highlightedIndex === index,
-        itemToString: data.itemToString,
-      })}
+      <div className={SelectedStyle}>{selected && <Icon icon="CONFIRM" />}</div>
+      <Tag tag={tag} />
     </div>
   );
 };
 
-const SelectOptions = ({
+const TagOptions = ({
+  entityType,
+  selectedItems,
   inputValue,
   highlightedIndex,
-  selectedItem,
-  items,
-  filterItems,
-  itemToString,
   isOpen,
   closeMenu,
   optionWidth,
-  optionHeight,
-  renderOption,
-  getItemProps,
   getMenuProps,
+  getItemProps,
 }: OptionsProps) => {
+  const { data, loading } = useQuery(tagsQuery, {
+    fetchPolicy: 'cache-and-network',
+    variables: {
+      entityType,
+      query: inputValue,
+      page: 1,
+      perPage: 100,
+    },
+  });
+
   const slot = usePortalSlot();
   const companionRef = React.useRef<HTMLDivElement | null>(null);
   const optionsRef = React.useRef<HTMLDivElement | null>(null);
@@ -134,11 +127,8 @@ const SelectOptions = ({
     return () => document.removeEventListener('wheel', listener, opts);
   }, [closeMenu]);
 
-  const availableItems = React.useMemo(() => {
-    const query = (inputValue || '').trim();
-    return query === '' ? items : filterItems(query, items);
-  }, [inputValue, items, filterItems]);
-  const height = Math.min(availableItems.length * optionHeight, 200);
+  const tags = loading ? [] : data?.tags?.nodes ?? [];
+  const height = Math.min(tags.length * 30, 200);
 
   return (
     <>
@@ -155,18 +145,16 @@ const SelectOptions = ({
           <FixedSizeList
             width={optionWidth}
             height={height}
-            itemCount={availableItems.length}
-            itemSize={optionHeight}
+            itemCount={tags.length}
+            itemSize={30}
             itemData={{
-              items: availableItems,
+              tags,
               getItemProps,
               highlightedIndex,
-              selectedItem,
-              itemToString,
-              renderOption,
+              selectedItems,
             }}
           >
-            {OptionRenderer}
+            {TagOption}
           </FixedSizeList>
         </div>,
         slot
@@ -175,50 +163,55 @@ const SelectOptions = ({
   );
 };
 
-const SelectInput = ({
+const itemToString = i => i?.name ?? '';
+const stateReducer = (state: Object, changes: Object) => {
+  switch (changes.type) {
+    case Downshift.stateChangeTypes.keyDownEnter:
+    case Downshift.stateChangeTypes.clickItem:
+      return {
+        ...changes,
+        isOpen: true,
+        inputValue: '',
+      };
+    default:
+      return changes;
+  }
+};
+
+const TagsInput = ({
+  entityType,
   value,
   onChange,
   onFocus,
   onBlur,
-  items,
-  filterItems,
-  itemToString,
-  itemToValue,
   optionWidth,
-  optionHeight,
   inputRef,
-  toggleRef,
   renderInput,
-  renderOption,
 }: Props) => {
   const internalInputRef = React.useRef<HTMLInputElement | null>(null);
-  const handleChange = React.useCallback(item => onChange(itemToValue(item)), [
-    onChange,
-    itemToValue,
-  ]);
-  const itemValues = React.useMemo<Array<any>>(() => items.map(itemToValue), [items, itemToValue]);
-  const selectedItem = React.useMemo<any>(() => {
-    if (!value) {
-      return null;
+
+  const handleAdd = (tag: Item) => onChange([...value, tag]);
+  const handleRemove = (tag: Item) => onChange(value.filter(t => t.id !== tag.id));
+  const handleChange = (selectedItem: ?Item) => {
+    if (!selectedItem) {
+      return;
     }
 
-    const index = itemValues.findIndex(itemValue => equals(itemValue, value));
-    if (index === -1) {
-      return null;
+    if (value.map(t => t.id).includes(selectedItem.id)) {
+      handleRemove(selectedItem);
+    } else {
+      handleAdd(selectedItem);
     }
-
-    return items[index];
-  }, [itemValues, items, value]);
+  };
 
   return (
     <Downshift
-      selectedItem={selectedItem}
+      selectedItem={null}
       onChange={handleChange}
-      initialInputValue={itemToString(selectedItem)}
+      stateReducer={stateReducer}
       itemToString={itemToString}
     >
       {({
-        getToggleButtonProps,
         getInputProps,
         getItemProps,
         getMenuProps,
@@ -227,15 +220,13 @@ const SelectInput = ({
         inputValue,
         openMenu,
         closeMenu,
-        clearSelection,
         isOpen,
       }) => (
         <div>
           {React.createElement(renderInput, {
             isOpen,
-            selectedItem,
-            itemToString,
-            clearSelection,
+            selectedItems: value,
+            remove: handleRemove,
             getInputProps: props =>
               getInputProps({
                 ...props,
@@ -246,25 +237,18 @@ const SelectInput = ({
                   }
                   internalInputRef.current = ref;
                 },
-                onClick: e => {
-                  e.target.select();
+                onClick: () => {
                   openMenu();
                 },
-                onFocus,
-                onBlur,
-              }),
-            getToggleButtonProps: props =>
-              getToggleButtonProps({
-                ...props,
-                ref: ref => {
-                  if (toggleRef) {
-                    // eslint-disable-next-line no-param-reassign
-                    toggleRef.current = ref;
-                  }
-                },
-                onClick: () => {
-                  if (internalInputRef.current) {
-                    internalInputRef.current.focus();
+                onKeyDown: e => {
+                  switch (e.key) {
+                    case 'Backspace':
+                      if (!inputValue && value.length > 0 && !e.repeat) {
+                        handleRemove(value[value.length - 1]);
+                      }
+                      break;
+                    default:
+                      e.stopPropagation();
                   }
                 },
                 onFocus,
@@ -272,20 +256,16 @@ const SelectInput = ({
               }),
           })}
           {isOpen && (
-            <SelectOptions
-              inputValue={inputValue}
+            <TagOptions
+              entityType={entityType}
+              selectedItems={value}
               highlightedIndex={highlightedIndex}
-              selectedItem={selectedItem}
-              items={items}
-              filterItems={filterItems}
-              itemToString={itemToString}
+              inputValue={inputValue}
               isOpen={isOpen}
               closeMenu={closeMenu}
               optionWidth={optionWidth}
-              optionHeight={optionHeight}
-              renderOption={renderOption}
-              getItemProps={getItemProps}
               getMenuProps={getMenuProps}
+              getItemProps={getItemProps}
             />
           )}
         </div>
@@ -294,4 +274,4 @@ const SelectInput = ({
   );
 };
 
-export default SelectInput;
+export default TagsInput;

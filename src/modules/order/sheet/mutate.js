@@ -66,6 +66,11 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
               ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
             ),
           };
+        case 'tags': {
+          return {
+            tagIds: value.map(tag => tag.id),
+          };
+        }
         default:
           return {
             [field]: value,
@@ -88,6 +93,11 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           return {
             [field]: new Date(value),
           };
+        case 'tags': {
+          return {
+            tagIds: value.map(tag => tag.id),
+          };
+        }
         case 'files':
           return {
             files: value.map(
@@ -114,6 +124,11 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
               removeTypename(revision)
             ),
           };
+        case 'tags': {
+          return {
+            tagIds: value.map(tag => tag.id),
+          };
+        }
         default:
           return {
             [field]: value,
@@ -126,6 +141,11 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           return {
             [field]: new Date(value),
           };
+        case 'tags': {
+          return {
+            tagIds: value.map(tag => tag.id),
+          };
+        }
         case 'files':
           return {
             files: value.map(
@@ -137,6 +157,19 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             [field]: value,
           };
       }
+    case 'Container': {
+      switch (field) {
+        case 'tags': {
+          return {
+            tagIds: value.map(tag => tag.id),
+          };
+        }
+        default:
+          return {
+            [field]: value,
+          };
+      }
+    }
     case 'TimelineDate': {
       const shipment = getShipmentByTimelineDateId(entity.id, item);
       if (!shipment) {
