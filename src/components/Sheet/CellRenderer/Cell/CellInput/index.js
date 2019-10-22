@@ -59,7 +59,7 @@ const inputs = {
   user_tags: TagsInput.User,
   task_tags: TagsInput.Task,
   project_tags: TagsInput.Project,
-  userAssignment: UserAssignmentInput,
+  user_assignment: UserAssignmentInput,
 };
 
 const CellInput = ({
