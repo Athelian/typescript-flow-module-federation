@@ -35,4 +35,5 @@ const SelectEnumInput = (enumType: string) => (props: InputProps<string>) => {
 export default {
   LoadType: SelectEnumInput('LoadType'),
   TransportType: SelectEnumInput('TransportType'),
+  ContainerOption: SelectEnumInput('ContainerOption'),
 };

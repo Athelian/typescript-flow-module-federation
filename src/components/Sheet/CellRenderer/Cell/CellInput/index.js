@@ -44,6 +44,7 @@ const inputs = {
   incoterm: SearchSelectEnumInput.Incoterm,
   currency: SearchSelectEnumInput.Currency,
   container_type: ContainerTypeInput,
+  container_option: SelectEnumInput.ContainerOption,
   order_documents: DocumentsInput.Order,
   order_item_documents: DocumentsInput.OrderItem,
   shipment_documents: DocumentsInput.Shipment,

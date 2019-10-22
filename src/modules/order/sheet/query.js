@@ -255,6 +255,7 @@ const containerSheetFragment = gql`
     totalQuantity
     orderItemCount
     containerType
+    containerOption
     tags {
       ...tagFragment
     }
