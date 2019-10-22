@@ -960,7 +960,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'date',
       ...transformValueField(
         `${basePath}.shipment.containerGroups.0.customClearance`,
-        batch?.shipment?.containerGroups[0].customClearance ?? null,
+        batch?.shipment?.containerGroups?.[0]?.customClearance ?? null,
         'date',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
@@ -971,7 +971,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'date_revisions',
       ...transformValueField(
         `${basePath}.shipment.containerGroups.0.customClearance`,
-        batch?.shipment?.containerGroups[0].customClearance ?? null,
+        batch?.shipment?.containerGroups?.[0]?.customClearance ?? null,
         'timelineDateRevisions',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
@@ -982,7 +982,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'date',
       ...transformValueField(
         `${basePath}.shipment.containerGroups.0.warehouseArrival`,
-        batch?.shipment?.containerGroups[0].warehouseArrival ?? null,
+        batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
         'date',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
@@ -993,7 +993,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'date_revisions',
       ...transformValueField(
         `${basePath}.shipment.containerGroups.0.warehouseArrival`,
-        batch?.shipment?.containerGroups[0].warehouseArrival ?? null,
+        batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
         'timelineDateRevisions',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
@@ -1004,7 +1004,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'date',
       ...transformValueField(
         `${basePath}.shipment.containerGroups.0.deliveryReady`,
-        batch?.shipment?.containerGroups[0].deliveryReady ?? null,
+        batch?.shipment?.containerGroups?.[0]?.deliveryReady ?? null,
         'date',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
@@ -1015,7 +1015,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'date_revisions',
       ...transformValueField(
         `${basePath}.shipment.containerGroups.0.deliveryReady`,
-        batch?.shipment?.containerGroups[0].deliveryReady ?? null,
+        batch?.shipment?.containerGroups?.[0]?.deliveryReady ?? null,
         'timelineDateRevisions',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
