@@ -15,6 +15,42 @@ import {
   InnerGridStyle,
 } from './style';
 
+type InnerElementTypeProps = {
+  columns: Array<ColumnState>,
+  onSortToggle: string => void,
+  onColumnResize: (key: string, width: number) => void,
+  children: React.Node,
+};
+
+const InnerElementType = React.forwardRef(
+  ({ children, columns, onSortToggle, onColumnResize, ...rest }: InnerElementTypeProps, ref) => (
+    <div ref={ref} {...rest} className={InnerGridStyle}>
+      <div className={ColumnsWrapperStyle}>
+        {columns.map(column => (
+          <Column
+            key={column.key}
+            title={column.title}
+            sortable={!!column.sort}
+            direction={column.sort?.direction}
+            onSortToggle={() => {
+              onSortToggle(column.key);
+            }}
+            color={column.color}
+            width={column.width}
+            minWidth={column.minWidth}
+            onResize={width => onColumnResize(column.key, width)}
+          />
+        ))}
+        {columns.length > 0 && (
+          <div className={ColumnFillerStyle(columns[columns.length - 1].color)} />
+        )}
+      </div>
+
+      {children}
+    </div>
+  )
+);
+
 type Props = {
   columns: Array<ColumnState>,
   rowCount: number,
@@ -68,35 +104,6 @@ const SheetRenderer = ({
 
   const rowCountWithLoading = loadingMore ? rowCount + 1 : rowCount;
 
-  const innerElementType = React.forwardRef(
-    ({ children: childrens, ...rest }: { children: React.Node }, ref) => (
-      <div ref={ref} {...rest} className={InnerGridStyle}>
-        <div className={ColumnsWrapperStyle}>
-          {columns.map(column => (
-            <Column
-              key={column.key}
-              title={column.title}
-              sortable={!!column.sort}
-              direction={column.sort?.direction}
-              onSortToggle={() => {
-                onSortToggle(column.key);
-              }}
-              color={column.color}
-              width={column.width}
-              minWidth={column.minWidth}
-              onResize={width => onColumnResize(column.key, width)}
-            />
-          ))}
-          {columns.length > 0 && (
-            <div className={ColumnFillerStyle(columns[columns.length - 1].color)} />
-          )}
-        </div>
-
-        {childrens}
-      </div>
-    )
-  );
-
   return (
     <div className={SheetWrapperStyle}>
       {loading ? (
@@ -147,7 +154,14 @@ const SheetRenderer = ({
                     estimatedRowHeight={30}
                     onItemsRendered={itemsRendered}
                     overscanRowCount={10}
-                    innerElementType={innerElementType}
+                    innerElementType={props => (
+                      <InnerElementType
+                        {...props}
+                        columns={columns}
+                        onSortToggle={onSortToggle}
+                        onColumnResize={onColumnResize}
+                      />
+                    )}
                   >
                     {children}
                   </VariableSizeGrid>
