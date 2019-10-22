@@ -41,7 +41,6 @@ const orderSheetFragment = gql`
       }
     }
   }
-  ${tagFragment}
 `;
 
 const orderItemSheetFragment = gql`
@@ -55,6 +54,9 @@ const orderItemSheetFragment = gql`
     }
     deliveryDate
     sort
+    tags {
+      ...tagFragment
+    }
     files {
       ...documentFragment
       ...forbiddenFragment
@@ -118,6 +120,9 @@ const batchSheetFragment = gql`
     packageName
     packageCapacity
     packageQuantity
+    tags {
+      ...tagFragment
+    }
     sort
     createdAt
     updatedAt
@@ -152,6 +157,9 @@ const shipmentSheetFragment = gql`
     loadType
     incoterm
     carrier
+    tags {
+      ...tagFragment
+    }
     cargoReady {
       ...timelineDateFragment
     }
@@ -236,6 +244,9 @@ const containerSheetFragment = gql`
     totalQuantity
     orderItemCount
     containerType
+    tags {
+      ...tagFragment
+    }
     createdAt
     updatedAt
     createdBy {
@@ -295,6 +306,7 @@ export const ordersQuery = gql`
   ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
+  ${tagFragment}
   ${forbiddenFragment}
 `;
 
@@ -331,6 +343,7 @@ export const orderItemByIDQuery = gql`
   ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
+  ${tagFragment}
   ${forbiddenFragment}
 `;
 
@@ -366,6 +379,7 @@ export const batchByIDQuery = gql`
   ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
+  ${tagFragment}
   ${forbiddenFragment}
 `;
 
@@ -396,6 +410,7 @@ export const containerByIDQuery = gql`
 
   ${containerSheetFragment}
   ${userAvatarFragment}
+  ${tagFragment}
 `;
 
 export const shipmentByIDQuery = gql`
@@ -409,6 +424,7 @@ export const shipmentByIDQuery = gql`
   ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
+  ${tagFragment}
   ${forbiddenFragment}
 `;
 

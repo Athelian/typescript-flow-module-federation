@@ -6,11 +6,8 @@ import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import { isForbidden } from 'utils/data';
 import type { InputProps } from '../../types';
+import InputWrapper from '../InputWrapper';
 import { TagsSelectStyle, RemoveButtonStyle } from './style';
-
-type Props = {
-  entityType: string,
-} & InputProps<Array<{ id: string, name: string, color: string }>>;
 
 const TagInputRenderer = ({ getInputProps, remove, selectedItems }: RenderInputProps) => {
   return (
@@ -51,42 +48,28 @@ const TagInputRenderer = ({ getInputProps, remove, selectedItems }: RenderInputP
   );
 };
 
-const TagsInputImpl = ({ entityType, value, focus, onChange, onFocus, onBlur }: Props) => {
-  const inputRef = React.useRef<HTMLButtonElement | null>(null);
-  React.useEffect(() => {
-    if (!inputRef.current) {
-      return;
-    }
-
-    const input = inputRef.current;
-
-    if (focus) {
-      // $FlowIssue: Flow doesn't know focus options
-      input.focus({
-        preventScroll: true,
-      });
-    } else {
-      input.blur();
-    }
-  }, [focus]);
-
-  return (
-    <BaseTagsInput
-      inputRef={inputRef}
-      entityType={entityType}
-      value={value || []}
-      onChange={onChange}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      optionWidth={200}
-      renderInput={TagInputRenderer}
-    />
-  );
-};
-
-const TagsInput = (entityType: string) => (
-  props: InputProps<Array<{ id: string, name: string, color: string }>>
-) => <TagsInputImpl entityType={entityType} {...props} />;
+const TagsInput = (entityType: string) => ({
+  value,
+  focus,
+  onChange,
+  onFocus,
+  onBlur,
+}: InputProps<Array<{ id: string, name: string, color: string }>>) => (
+  <InputWrapper focus={focus} preselect={false}>
+    {({ ref }) => (
+      <BaseTagsInput
+        inputRef={ref}
+        entityType={entityType}
+        value={value || []}
+        onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        optionWidth={200}
+        renderInput={TagInputRenderer}
+      />
+    )}
+  </InputWrapper>
+);
 
 export default {
   Product: TagsInput('Product'),
