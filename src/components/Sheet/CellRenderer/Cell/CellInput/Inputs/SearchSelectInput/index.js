@@ -6,6 +6,7 @@ import Icon from 'components/Icon';
 import BaseSelectInput from 'components/Inputs/SelectInput';
 import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
 import messages from 'components/Form/Inputs/messages';
+import InputWrapper from '../InputWrapper';
 import { SelectInputStyle, SelectOptionStyle, ArrowDownStyle, ClearButtonStyle } from './style';
 
 type Props = {
@@ -72,42 +73,26 @@ const SearchSelectInput = ({
   itemToString,
   itemToValue,
   focus,
-}: Props) => {
-  const inputRef = React.useRef<HTMLButtonElement | null>(null);
-  React.useEffect(() => {
-    if (!inputRef.current) {
-      return;
-    }
-
-    const input = inputRef.current;
-
-    if (focus) {
-      // $FlowIssue: Flow doesn't know focus options
-      input.focus({
-        preventScroll: true,
-      });
-    } else {
-      input.blur();
-    }
-  }, [focus]);
-
-  return (
-    <BaseSelectInput
-      inputRef={inputRef}
-      value={value}
-      onChange={onChange}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      items={items}
-      filterItems={filterItems}
-      itemToString={itemToString}
-      itemToValue={itemToValue}
-      optionHeight={30}
-      optionWidth={200}
-      renderInput={Select}
-      renderOption={Option}
-    />
-  );
-};
+}: Props) => (
+  <InputWrapper focus={focus} preselect>
+    {({ ref }) => (
+      <BaseSelectInput
+        inputRef={ref}
+        value={value}
+        onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        items={items}
+        filterItems={filterItems}
+        itemToString={itemToString}
+        itemToValue={itemToValue}
+        optionHeight={30}
+        optionWidth={200}
+        renderInput={Select}
+        renderOption={Option}
+      />
+    )}
+  </InputWrapper>
+);
 
 export default SearchSelectInput;
