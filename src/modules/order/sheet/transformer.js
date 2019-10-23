@@ -1126,7 +1126,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
     {
       columnKey: 'order.orderItem.batch.shipment.containerGroups.warehouseArrival.date',
       type: 'date',
-      ...(batch?.shipment?.containterCount
+      ...(batch?.shipment?.containerCount
         ? {
             entity: null,
             data: null,
