@@ -18,6 +18,7 @@ const SelectEnumInputImpl = ({
   onBlur,
   focus,
   enumType,
+  required,
 }: SelectEnumInputImplProps) => {
   const intl = useIntl();
 
@@ -30,8 +31,6 @@ const SelectEnumInputImpl = ({
       </div>
     );
   }
-
-  const required = false;
 
   return (
     <SelectInput
@@ -48,12 +47,12 @@ const SelectEnumInputImpl = ({
   );
 };
 
-const SelectEnumInput = (enumType: string) => (props: InputProps<string>) => {
-  return <SelectEnumInputImpl {...props} enumType={enumType} />;
+const SelectEnumInput = (enumType: string, required: boolean) => (props: InputProps<string>) => {
+  return <SelectEnumInputImpl {...props} enumType={enumType} required={required} />;
 };
 
 export default {
-  LoadType: SelectEnumInput('LoadType'),
-  TransportType: SelectEnumInput('TransportType'),
-  ContainerOption: SelectEnumInput('ContainerOption'),
+  LoadType: SelectEnumInput('LoadType', false),
+  TransportType: SelectEnumInput('TransportType', false),
+  ContainerOption: SelectEnumInput('ContainerOption', false),
 };

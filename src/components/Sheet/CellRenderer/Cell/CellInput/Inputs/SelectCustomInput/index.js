@@ -4,7 +4,7 @@ import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import type { InputProps } from '../../types';
 import SelectInput from '../SelectInput';
 
-const SelectEnumInput = (items: Array<{ value: any, label: string }>, required: boolean) => (
+const SelectCustomInput = (items: Array<{ value: any, label: string }>, required: boolean) => (
   props: InputProps<string>
 ) => {
   const itemToStringFunc = item => (item ? item.label : '');
@@ -22,5 +22,5 @@ const SelectEnumInput = (items: Array<{ value: any, label: string }>, required: 
 };
 
 export default {
-  ContainerType: SelectEnumInput(CONTAINER_TYPE_ITEMS, false),
+  ContainerType: SelectCustomInput(CONTAINER_TYPE_ITEMS, false),
 };
