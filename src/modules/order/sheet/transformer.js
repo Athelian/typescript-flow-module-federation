@@ -1126,24 +1126,33 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
     {
       columnKey: 'order.orderItem.batch.shipment.containerGroups.warehouseArrival.date',
       type: 'date',
-      ...transformValueField(
-        `${basePath}.shipment.containerGroups.0.warehouseArrival`,
-        batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
-        'date',
-        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
-      ),
+      ...(batch?.shipment?.containterCount
+        ? {
+            entity: null,
+            data: null,
+            forbidden: false,
+          }
+        : transformValueField(
+            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+            'date',
+            hasPermission =>
+              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+          )),
     },
     {
       columnKey:
         'order.orderItem.batch.shipment.containerGroups.warehouseArrival.timelineDateRevisions',
       type: 'date_revisions',
-      ...transformValueField(
-        `${basePath}.shipment.containerGroups.0.warehouseArrival`,
-        batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
-        'timelineDateRevisions',
-        hasPermission =>
-          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
-      ),
+      ...(batch?.shipment?.containerCount
+        ? { entity: null, data: null, forbidden: false }
+        : transformValueField(
+            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+            'timelineDateRevisions',
+            hasPermission =>
+              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+          )),
     },
     {
       columnKey: 'order.orderItem.batch.shipment.containerGroups.deliveryReady.date',

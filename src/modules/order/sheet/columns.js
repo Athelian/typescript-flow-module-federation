@@ -879,7 +879,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 1210,
   },
-  /* {
+  {
     key: 'order.orderItem.batch.shipment.containerGroups.warehouseArrival.date',
     exportKey: 'orderItem.batch.shipment.containerGroups.warehouseArrival.date',
     title: <FormattedMessage {...shipmentMessages.warehouseArrival} />,
@@ -893,7 +893,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 1210,
-  }, */
+  },
   {
     key: 'order.orderItem.batch.shipment.containerGroups.deliveryReady.date',
     exportKey: 'orderItem.batch.shipment.containerGroups.deliveryReady.date',

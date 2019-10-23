@@ -168,6 +168,7 @@ const shipmentSheetFragment = gql`
     loadType
     incoterm
     carrier
+    containerCount
     inCharges {
       ...userAvatarFragment
     }
