@@ -16,6 +16,7 @@ import entityEventHandler from './handler';
 import sorter from './sorter';
 import mutate from './mutate';
 import { ordersQuery } from './query';
+import { decorate } from './decorator';
 
 type Props = {
   orderIds?: Array<string>,
@@ -86,7 +87,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
             ...page,
             page: page.page + 1,
           });
-          return clone(data?.orders?.nodes ?? []);
+          return decorate(clone(data?.orders?.nodes ?? []));
         }),
     [client, page, query, filterBy, sortBy, setPage]
   );
@@ -109,7 +110,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
         }
 
         setPage({ page: 1, totalPage: data?.orders?.totalPage ?? 1 });
-        setInitialOrders(clone(data?.orders?.nodes ?? []));
+        setInitialOrders(decorate(clone(data?.orders?.nodes ?? [])));
         setLoading(false);
       });
 

@@ -158,7 +158,8 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             ),
           };
         case 'packageQuantity': {
-          const [autoCalculatePackageQuantity = false, packageQuantity = 0] = value || [];
+          const { auto: autoCalculatePackageQuantity = false, value: packageQuantity = 0 } =
+            value || {};
           return {
             autoCalculatePackageQuantity,
             packageQuantity,

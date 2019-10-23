@@ -627,30 +627,18 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
     {
       columnKey: 'order.orderItem.batch.packageQuantity',
       type: 'number_toggle',
-      // NOTE: this input need 2 values from batch, packageQuantity and autoCalculatePackageQuantity
-      // GTV didn't support yet so need to send as manual fields
-      // TODO: consider to refactor to a getter/setter
-      entity: batch?.id
-        ? {
-            id: batch?.id,
-            type: 'Batch',
-          }
-        : null,
-      data: {
-        field: 'packageQuantity',
-        path: basePath,
-        ownedBy: batch?.ownedBy?.id,
-        permissions: hasPermission =>
-          hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_QUANTITY),
-        value: [batch?.autoCalculatePackageQuantity ?? false, batch?.packageQuantity ?? 0],
-        forbidden: ['Forbidden', 'NotFound'].includes(batch?.__typename),
-      },
       computed: order => {
         const currentBatch = getCurrentBatch(batch?.id, order);
         const latestQuantity = getBatchLatestQuantity(currentBatch);
         const packageCapacity = currentBatch?.packageCapacity ?? 0;
         return packageCapacity ? latestQuantity / packageCapacity : 0;
       },
+      ...transformValueField(
+        basePath,
+        batch,
+        'packageQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_QUANTITY)
+      ),
     },
   ].map(c => ({
     ...c,

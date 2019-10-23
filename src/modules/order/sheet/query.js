@@ -124,7 +124,6 @@ const batchSheetFragment = gql`
         type
       }
     }
-    latestQuantity
     deliveredAt
     desiredAt
     expiredAt
