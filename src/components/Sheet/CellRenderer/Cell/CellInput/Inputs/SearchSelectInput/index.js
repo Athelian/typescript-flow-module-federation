@@ -11,6 +11,7 @@ import { SelectInputStyle, SelectOptionStyle, ArrowDownStyle, ClearButtonStyle }
 
 type Props = {
   value: any | null,
+  required?: boolean,
   onChange: any => void,
   onFocus: () => void,
   onBlur: () => void,
@@ -23,6 +24,7 @@ type Props = {
 
 const Select = ({
   clearSelection,
+  required,
   getInputProps,
   getToggleButtonProps,
   selectedItem,
@@ -32,9 +34,14 @@ const Select = ({
 
   const { ref, ...inputProps } = getInputProps({
     spellCheck: false,
-    placeholder: intl.formatMessage(messages.defaultPlaceholder),
+    placeholder: intl.formatMessage(messages.defaultSelectPlaceholder),
     onKeyDown: e => {
-      if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
+      if (
+        e.key === 'ArrowLeft' ||
+        e.key === 'ArrowRight' ||
+        e.key === 'ArrowDown' ||
+        (isOpen && e.key === 'ArrowUp')
+      ) {
         e.stopPropagation();
       }
     },
@@ -44,12 +51,22 @@ const Select = ({
     <div className={SelectInputStyle}>
       <DebounceInput debounceTimeout={500} inputRef={ref} {...inputProps} />
 
-      {selectedItem ? (
+      {selectedItem && !required ? (
         <button className={ClearButtonStyle} type="button" onClick={() => clearSelection()}>
           <Icon icon="CLEAR" />
         </button>
       ) : (
-        <button className={ArrowDownStyle(isOpen)} type="button" {...getToggleButtonProps()}>
+        <button
+          className={ArrowDownStyle(isOpen)}
+          type="button"
+          {...getToggleButtonProps({
+            onKeyDown: e => {
+              if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
+                e.stopPropagation();
+              }
+            },
+          })}
+        >
           <Icon icon="CHEVRON_DOWN" />
         </button>
       )}
@@ -65,6 +82,7 @@ const Option = ({ selected, highlighted, item, itemToString }: RenderOptionProps
 
 const SearchSelectInput = ({
   value,
+  required,
   onChange,
   onFocus,
   onBlur,
@@ -79,6 +97,7 @@ const SearchSelectInput = ({
       <BaseSelectInput
         inputRef={ref}
         value={value}
+        required={required}
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}

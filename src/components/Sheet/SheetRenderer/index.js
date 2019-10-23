@@ -153,7 +153,8 @@ const SheetRenderer = ({
                       height={height}
                       columnCount={columns.length}
                       columnWidth={index => columns[index].width}
-                      rowCount={rowCountWithLoading + 1}
+                      estimatedColumnWidth={200}
+                      rowCount={rowCountWithLoading}
                       rowHeight={() => 30}
                       onItemsRendered={itemsRendered}
                       overscanRowCount={10}
