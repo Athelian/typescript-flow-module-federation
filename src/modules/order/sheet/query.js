@@ -261,6 +261,9 @@ const containerSheetFragment = gql`
       ...userAvatarFragment
     }
     warehouseArrivalActualDate
+    warehouseArrivalActualDateAssignedTo {
+      ...userAvatarFragment
+    }
     yardName
     departureDate
     totalPackageQuantity

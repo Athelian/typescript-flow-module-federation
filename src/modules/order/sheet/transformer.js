@@ -44,9 +44,10 @@ import {
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
 import {
-  CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
   CONTAINER_SET_AGREE_ARRIVAL_DATE,
   CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE,
+  CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
+  CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE,
   CONTAINER_SET_DEPARTURE_DATE,
   CONTAINER_SET_NO,
   CONTAINER_SET_YARD_NAME,
@@ -797,6 +798,27 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         'warehouseArrivalActualDate',
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_ACTUAL_ARRIVAL_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.warehouseArrivalActualDateAssignedTo',
+      type: 'user_assignment',
+      computed: item => {
+        const currentBatch = item.orderItems
+          .map(oi => oi.batches)
+          .flat()
+          .find(oi => oi.id === batch?.id);
+        return {
+          importer: currentBatch.shipment?.importer,
+          exporter: currentBatch.shipment?.exporter,
+        };
+      },
+      ...transformValueField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'warehouseArrivalActualDateAssignedTo',
+        hasPermission =>
+          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE)
       ),
     },
     // start date

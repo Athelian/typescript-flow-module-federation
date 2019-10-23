@@ -602,7 +602,13 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // actual arrival assigned to
+  {
+    key: 'order.orderItem.batch.container.warehouseArrivalActualDateAssignedTo',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDateAssignedTo} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   // actual arrival approval
   // free time
   // start date
