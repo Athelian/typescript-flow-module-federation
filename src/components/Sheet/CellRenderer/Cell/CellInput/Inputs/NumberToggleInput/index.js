@@ -60,7 +60,6 @@ const NumberToggleInput = ({
     );
   }
 
-  // TODO: style coloring for disable, ready only base on figma
   return (
     <div className={NumberToggleInputWrapperStyle}>
       <InputWrapper focus={focus} preselect>
@@ -69,12 +68,17 @@ const NumberToggleInput = ({
             inputRef={ref}
             value={quantity}
             name="numberInput"
-            tabIndex="-1"
             nullable={false}
             onChange={e => onChange([isEnableToggle, e.target.value])}
             onFocus={onFocus}
             onBlur={onBlur}
-            onKeyDown={onKeyDown}
+            onKeyDown={e => {
+              if (e.key === 'Tab' && !e.shiftKey) {
+                e.stopPropagation();
+              } else if (onKeyDown) {
+                onKeyDown(e);
+              }
+            }}
           />
         )}
       </InputWrapper>

@@ -35,7 +35,6 @@ const ToggleInput = ({
     <button
       type="button"
       className={ToggleButtonStyle(toggled, editable)}
-      tabIndex={-1}
       onClick={editable ? onToggle : () => {}}
       ref={inputRef}
       {...rest}
