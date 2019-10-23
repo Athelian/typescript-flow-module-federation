@@ -16,13 +16,11 @@ import DateRevisionsInput from './Inputs/DateRevisionsInput';
 import StatusInput from './Inputs/StatusInput';
 import TagsInput from './Inputs/TagsInput';
 import UserAssignmentInput from './Inputs/UserAssignmentInput';
-import { WrapperStyle } from './style';
 
 type Props = {
   value: any,
   extra: any,
   type: string,
-  focus: boolean,
   inputFocus: boolean,
   disabled: boolean,
   onFocus: () => void,
@@ -67,7 +65,6 @@ const CellInput = ({
   value,
   extra,
   type,
-  focus,
   inputFocus,
   disabled,
   onFocus,
@@ -133,7 +130,7 @@ const CellInput = ({
   }
 
   return (
-    <div className={WrapperStyle(focus)}>
+    <div>
       {React.createElement(inputs[type], {
         value: dirtyValue,
         extra,

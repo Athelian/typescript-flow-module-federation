@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, presets, borderRadiuses, fontSizes, colors, shadows } from 'styles/common';
+import { layout, presets, borderRadiuses, colors, shadows } from 'styles/common';
 
 export const AssignmentWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
@@ -8,6 +8,7 @@ export const AssignmentWrapperStyle: string = css`
   padding: 0 5px;
   width: 200px;
   height: 30px;
+  align-items: center;
 `;
 
 export const AssignmentStyle: string = css`
@@ -19,7 +20,7 @@ export const AssignmentStyle: string = css`
   }
 `;
 
-export const RemoveAssignmentButtonStyle: string = css`
+export const RemoveAssignmentButtonStyle = (size: number): string => css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
   flex-shrink: 0;
@@ -28,10 +29,10 @@ export const RemoveAssignmentButtonStyle: string = css`
   width: 20px;
   background-color: ${colors.WHITE};
   ${shadows.INPUT};
-  ${fontSizes.SMALL};
+  font-size: ${size === 20 ? '10px' : '12px'};
   position: absolute;
-  top: -6px;
-  right: -6px;
+  top: ${size === 20 ? '0' : '-6px'};
+  right: ${size === 20 ? '0' : '-6px'};
   opacity: 0;
   z-index: 1;
   &:hover,
@@ -41,13 +42,13 @@ export const RemoveAssignmentButtonStyle: string = css`
   }
 `;
 
-export const AddAssignmentButtonStyle: string = css`
+export const AddAssignmentButtonStyle = (size: number): string => css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
-  width: 30px;
-  height: 30px;
+  width: ${size}px;
+  height: ${size}px;
   flex-shrink: 0;
-  ${fontSizes.SMALL};
+  font-size: ${size === 20 ? '10px' : '12px'};
   border: 2px dashed ${colors.GRAY_LIGHT};
   color: ${colors.GRAY_LIGHT};
   &:hover,

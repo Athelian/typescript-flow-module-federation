@@ -26,6 +26,7 @@ const UserAssignmentInput = ({
         onFocus={onFocus}
         onBlur={onBlur}
         onKeyDown={onKeyDown}
+        size={20}
       />
     )}
   </InputWrapper>

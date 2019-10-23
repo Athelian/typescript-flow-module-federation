@@ -164,19 +164,6 @@ const Cell = ({
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
     >
-      <div
-        className={CellBorderStyle(
-          isTop,
-          isBottom,
-          hover,
-          focus,
-          foreignFocus,
-          weakFocus,
-          error,
-          weakError
-        )}
-      />
-
       {isTop && inputFocus && <div className={CellShadowStyle(size)} />}
 
       {(() => {
@@ -213,6 +200,19 @@ const Cell = ({
           />
         );
       })()}
+
+      <div
+        className={CellBorderStyle(
+          isTop,
+          isBottom,
+          hover,
+          focus,
+          foreignFocus,
+          weakFocus,
+          error,
+          weakError
+        )}
+      />
     </div>
   );
 };

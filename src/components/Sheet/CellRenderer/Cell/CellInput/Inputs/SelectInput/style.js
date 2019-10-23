@@ -16,7 +16,6 @@ export const SelectInputStyle = (hasValue: boolean): string => css`
   color: ${hasValue ? colors.BLACK : colors.GRAY_LIGHT};
   text-align: left;
   font-weight: bold;
-  padding: 0 5px;
   flex: 1;
   cursor: pointer;
 `;
