@@ -16,6 +16,7 @@ import DateRevisionsInput from './Inputs/DateRevisionsInput';
 import StatusInput from './Inputs/StatusInput';
 import TagsInput from './Inputs/TagsInput';
 import UserAssignmentInput from './Inputs/UserAssignmentInput';
+import PortInput from './Inputs/PortInput';
 
 type Props = {
   value: any,
@@ -59,6 +60,7 @@ const inputs = {
   task_tags: TagsInput.Task,
   project_tags: TagsInput.Project,
   user_assignment: UserAssignmentInput,
+  port: PortInput,
 };
 
 const CellInput = ({

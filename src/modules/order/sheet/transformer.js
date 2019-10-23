@@ -76,6 +76,7 @@ import {
   SHIPMENT_SET_LOAD_TYPE,
   SHIPMENT_SET_INCOTERM,
   SHIPMENT_SET_TAGS,
+  SHIPMENT_SET_PORT,
 } from 'modules/permission/constants/shipment';
 
 function getCurrentBatch(batchId: string, order: Object) {
@@ -1101,8 +1102,54 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
+    // Cargo Ready Assigned To
+    // Cargo Ready Approval
     {
-      columnKey: 'order.orderItem.batch.shipment.containerGroups.customClearance.date',
+      columnKey: 'order.orderItem.batch.shipment.voyage.0.departurePort',
+      type: 'port',
+      computed: item => {
+        const currentBatch = item.orderItems
+          .map(oi => oi.batches)
+          .flat()
+          .find(oi => oi.id === batch?.id);
+
+        return currentBatch?.shipment?.transportType ?? null;
+      },
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0`,
+        batch?.shipment?.voyages?.[0] ?? null,
+        'departurePort',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_PORT)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.0.departure.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0.departure`,
+        batch?.shipment?.voyages?.[0]?.departure ?? null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.0.departure.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0.departure`,
+        batch?.shipment?.voyages?.[0]?.departure ?? null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    // Load Port Departure Assigned To
+    // Load Port Departure Approval
+    // First Voyage Vessel Name
+    // First Voyage Vessel Code
+    // First Transit Port
+    {
+      columnKey: 'order.orderItem.batch.shipment.containerGroup.customClearance.date',
       type: 'date',
       ...transformValueField(
         `${basePath}.shipment.containerGroups.0.customClearance`,
@@ -1113,7 +1160,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
     },
     {
       columnKey:
-        'order.orderItem.batch.shipment.containerGroups.customClearance.timelineDateRevisions',
+        'order.orderItem.batch.shipment.containerGroup.customClearance.timelineDateRevisions',
       type: 'date_revisions',
       ...transformValueField(
         `${basePath}.shipment.containerGroups.0.customClearance`,
@@ -1124,7 +1171,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       ),
     },
     {
-      columnKey: 'order.orderItem.batch.shipment.containerGroups.warehouseArrival.date',
+      columnKey: 'order.orderItem.batch.shipment.containerGroup.warehouseArrival.date',
       type: 'date',
       ...(batch?.shipment?.containerCount
         ? {
@@ -1142,7 +1189,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
     },
     {
       columnKey:
-        'order.orderItem.batch.shipment.containerGroups.warehouseArrival.timelineDateRevisions',
+        'order.orderItem.batch.shipment.containerGroup.warehouseArrival.timelineDateRevisions',
       type: 'date_revisions',
       ...(batch?.shipment?.containerCount
         ? { entity: null, data: null, forbidden: false }
@@ -1155,7 +1202,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
           )),
     },
     {
-      columnKey: 'order.orderItem.batch.shipment.containerGroups.deliveryReady.date',
+      columnKey: 'order.orderItem.batch.shipment.containerGroup.deliveryReady.date',
       type: 'date',
       ...transformValueField(
         `${basePath}.shipment.containerGroups.0.deliveryReady`,
@@ -1166,7 +1213,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
     },
     {
       columnKey:
-        'order.orderItem.batch.shipment.containerGroups.deliveryReady.timelineDateRevisions',
+        'order.orderItem.batch.shipment.containerGroup.deliveryReady.timelineDateRevisions',
       type: 'date_revisions',
       ...transformValueField(
         `${basePath}.shipment.containerGroups.0.deliveryReady`,

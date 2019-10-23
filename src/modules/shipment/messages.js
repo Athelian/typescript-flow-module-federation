@@ -650,6 +650,10 @@ export default defineMessages({
     id: 'modules.Shipments.loadPortDeparture',
     defaultMessage: 'LOAD PORT DEPARTURE',
   },
+  loadPortDepartureRevisions: {
+    id: 'modules.Shipments.loadPortDepartureRevisions',
+    defaultMessage: 'LOAD PORT DEPARTURE REVISIONS',
+  },
   agreedDateLabel: {
     id: 'modules.Shipments.agreedDateLabel',
     defaultMessage: 'AGREED',

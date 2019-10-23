@@ -190,11 +190,24 @@ const shipmentSheetFragment = gql`
     voyages {
       ... on Voyage {
         id
+        departurePort {
+          seaport
+          airport
+        }
+        arrivalPort {
+          seaport
+          airport
+        }
         departure {
           ...timelineDateFragment
         }
         arrival {
           ...timelineDateFragment
+        }
+        ownedBy {
+          ... on Organization {
+            id
+          }
         }
       }
     }
@@ -209,6 +222,11 @@ const shipmentSheetFragment = gql`
         }
         deliveryReady {
           ...timelineDateFragment
+        }
+        ownedBy {
+          ... on Organization {
+            id
+          }
         }
       }
     }
