@@ -9,7 +9,7 @@ import { OptionsWrapperStyle } from './style';
 
 export type RenderInputProps = {
   isOpen: boolean,
-  required: boolean,
+  required?: boolean,
   selectedItem: any,
   clearSelection: Function,
   getInputProps: Function,
@@ -275,9 +275,6 @@ const SelectInput = ({
                     toggleRef.current = ref;
                   }
                 },
-                onClick: () => {},
-                onFocus: () => {},
-                onBlur: () => {},
               }),
           })}
           {isOpen && (

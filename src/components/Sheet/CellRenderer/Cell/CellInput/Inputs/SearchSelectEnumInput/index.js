@@ -10,6 +10,7 @@ import SearchSelectInput from '../SearchSelectInput';
 
 type Props = InputProps<string> & {
   enumType: string,
+  required: boolean,
 };
 
 const SearchSelectEnumInputImpl = ({
@@ -19,6 +20,7 @@ const SearchSelectEnumInputImpl = ({
   onBlur,
   focus,
   enumType,
+  required,
 }: Props) => {
   const intl = useIntl();
   const { enums, loading } = useEnum(enumType);
@@ -32,8 +34,6 @@ const SearchSelectEnumInputImpl = ({
   }
 
   const itemToString = enumToString(enumType, intl);
-
-  const required = enumType === 'Currency';
 
   return (
     <SearchSelectInput
@@ -55,11 +55,13 @@ const SearchSelectEnumInputImpl = ({
   );
 };
 
-const SearchSelectEnumInput = (enumType: string) => (props: InputProps<string>) => {
-  return <SearchSelectEnumInputImpl {...props} enumType={enumType} />;
+const SearchSelectEnumInput = (enumType: string, required: boolean) => (
+  props: InputProps<string>
+) => {
+  return <SearchSelectEnumInputImpl {...props} enumType={enumType} required={required} />;
 };
 
 export default {
-  Currency: SearchSelectEnumInput('Currency'),
-  Incoterm: SearchSelectEnumInput('Incoterm'),
+  Currency: SearchSelectEnumInput('Currency', true),
+  Incoterm: SearchSelectEnumInput('Incoterm', false),
 };
