@@ -13,7 +13,7 @@ const UserAssignmentInput = ({
   onBlur,
   onKeyDown,
   readonly,
-}: InputProps<string, { importer: Object, exporter: Object }>) => (
+}: InputProps<string, Array<string>>) => (
   <InputWrapper focus={focus}>
     {({ ref }) => (
       <BaseUserAssignmentInput
@@ -21,7 +21,7 @@ const UserAssignmentInput = ({
         name="value"
         onChange={(name, users) => onChange(users)}
         editable={!readonly}
-        groupIds={[extra?.importer?.id, extra?.exporter?.id].filter(Boolean)}
+        groupIds={extra}
         inputRef={ref}
         onFocus={onFocus}
         onBlur={onBlur}

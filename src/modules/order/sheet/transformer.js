@@ -147,10 +147,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.inCharges',
       type: 'user_assignment',
-      computed: item => ({
-        importer: item.importer,
-        exporter: item.exporter,
-      }),
+      computed: item => [item.importer?.id, item.exporter?.id].filter(Boolean),
       ...transformValueField(
         basePath,
         order,
@@ -767,10 +764,9 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       type: 'user_assignment',
       computed: item => {
         const currentBatch = getCurrentBatch(batch?.id, item);
-        return {
-          importer: currentBatch.shipment?.importer,
-          exporter: currentBatch.shipment?.exporter,
-        };
+        return [currentBatch.shipment?.importer?.id, currentBatch.shipment?.exporter?.id].filter(
+          Boolean
+        );
       },
       ...transformValueField(
         `${basePath}.container`,
@@ -796,10 +792,9 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       type: 'user_assignment',
       computed: item => {
         const currentBatch = getCurrentBatch(batch?.id, item);
-        return {
-          importer: currentBatch.shipment?.importer,
-          exporter: currentBatch.shipment?.exporter,
-        };
+        return [currentBatch.shipment?.importer?.id, currentBatch.shipment?.exporter?.id].filter(
+          Boolean
+        );
       },
       ...transformValueField(
         `${basePath}.container`,
@@ -836,10 +831,9 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       type: 'user_assignment',
       computed: item => {
         const currentBatch = getCurrentBatch(batch?.id, item);
-        return {
-          importer: currentBatch.shipment?.importer,
-          exporter: currentBatch.shipment?.exporter,
-        };
+        return [currentBatch.shipment?.importer?.id, currentBatch.shipment?.exporter?.id].filter(
+          Boolean
+        );
       },
       ...transformValueField(
         `${basePath}.container`,
@@ -987,10 +981,17 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
     {
       columnKey: 'order.orderItem.batch.shipment.inCharges',
       type: 'user_assignment',
-      computed: item => ({
-        importer: item.importer,
-        exporter: item.exporter,
-      }),
+      computed: item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        if (currentBatch?.shipment) {
+          const { shipment } = currentBatch;
+          const { forwarders } = shipment;
+          const forwarderIds = (forwarders || []).map(group => group.id);
+
+          return [shipment.importer?.id, shipment.exporter?.id, ...forwarderIds].filter(Boolean);
+        }
+        return [];
+      },
       ...transformValueField(
         `${basePath}.shipment`,
         batch?.shipment ?? null,

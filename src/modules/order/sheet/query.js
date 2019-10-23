@@ -177,6 +177,9 @@ const shipmentSheetFragment = gql`
     exporter {
       ...partnerNameFragment
     }
+    forwarders {
+      ...partnerNameFragment
+    }
     tags {
       ...tagFragment
     }
