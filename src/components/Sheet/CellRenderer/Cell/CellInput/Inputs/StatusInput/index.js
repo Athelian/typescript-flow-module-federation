@@ -19,7 +19,7 @@ const StatusInput = ({
   return (
     <InputWrapper focus={focus}>
       {({ ref }) => (
-        <div className={StatusInputWrapperStyle(value)}>
+        <div className={StatusInputWrapperStyle(!!value)}>
           <Icon icon={value ? 'ARCHIVE' : 'ACTIVE'} />
           <FormattedMessage id={`components.form.${value ? 'archived' : 'active'}`} />
 

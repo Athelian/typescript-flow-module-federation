@@ -1,12 +1,21 @@
 // @flow
 import * as React from 'react';
+import { useIntl } from 'react-intl';
 import Icon from 'components/Icon';
 import BaseSelectInput from 'components/Inputs/SelectInput';
 import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
-import { SelectInputStyle, SelectOptionStyle } from './style';
+import messages from 'components/Form/Inputs/messages';
+import {
+  SelectInputWrapperStyle,
+  SelectInputStyle,
+  ClearButtonStyle,
+  ArrowDownStyle,
+  SelectOptionStyle,
+} from './style';
 
 type Props = {
   value: any | null,
+  required: boolean,
   onChange: any => void,
   onFocus: () => void,
   onBlur: () => void,
@@ -16,24 +25,63 @@ type Props = {
   focus: boolean,
 };
 
-const Select = ({ getToggleButtonProps, selectedItem, isOpen, itemToString }: RenderInputProps) => (
-  <button
-    type="button"
-    className={SelectInputStyle(isOpen)}
-    {...getToggleButtonProps({
-      onKeyDown: e => {
-        if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
-          e.stopPropagation();
-        }
-      },
-    })}
-  >
-    <span>{itemToString(selectedItem)}</span>
-    <i>
-      <Icon icon="CHEVRON_DOWN" />
-    </i>
-  </button>
-);
+const Select = ({
+  getToggleButtonProps,
+  selectedItem,
+  isOpen,
+  itemToString,
+  clearSelection,
+  required,
+}: RenderInputProps) => {
+  const intl = useIntl();
+
+  return (
+    <div className={SelectInputWrapperStyle}>
+      <button
+        type="button"
+        className={SelectInputStyle(!!selectedItem)}
+        {...getToggleButtonProps({
+          onKeyDown: e => {
+            if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
+              e.stopPropagation();
+            }
+          },
+        })}
+      >
+        {selectedItem
+          ? itemToString(selectedItem)
+          : intl.formatMessage(messages.defaultSelectPlaceholder)}
+      </button>
+
+      {selectedItem && !required ? (
+        <button
+          className={ClearButtonStyle}
+          type="button"
+          onClick={e => {
+            e.stopPropagation();
+            clearSelection();
+          }}
+        >
+          <Icon icon="CLEAR" />
+        </button>
+      ) : (
+        <button
+          className={ArrowDownStyle(isOpen)}
+          type="button"
+          {...getToggleButtonProps({
+            onKeyDown: e => {
+              if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
+                e.stopPropagation();
+              }
+            },
+          })}
+        >
+          <Icon icon="CHEVRON_DOWN" />
+        </button>
+      )}
+    </div>
+  );
+};
 
 const Option = ({ selected, highlighted, item, itemToString }: RenderOptionProps) => (
   <div className={SelectOptionStyle(highlighted, selected)}>
@@ -43,6 +91,7 @@ const Option = ({ selected, highlighted, item, itemToString }: RenderOptionProps
 
 const SelectInput = ({
   value,
+  required,
   onChange,
   onFocus,
   onBlur,
@@ -73,6 +122,7 @@ const SelectInput = ({
     <BaseSelectInput
       toggleRef={inputRef}
       value={value}
+      required={required}
       onChange={onChange}
       onFocus={onFocus}
       onBlur={onBlur}

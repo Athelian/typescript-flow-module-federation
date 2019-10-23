@@ -11,7 +11,7 @@ import { SelectInputStyle, SelectOptionStyle, ArrowDownStyle, ClearButtonStyle }
 
 type Props = {
   value: any | null,
-  nullable?: boolean,
+  required?: boolean,
   onChange: any => void,
   onFocus: () => void,
   onBlur: () => void,
@@ -24,7 +24,7 @@ type Props = {
 
 const Select = ({
   clearSelection,
-  nullable,
+  required,
   getInputProps,
   getToggleButtonProps,
   selectedItem,
@@ -51,12 +51,22 @@ const Select = ({
     <div className={SelectInputStyle}>
       <DebounceInput debounceTimeout={500} inputRef={ref} {...inputProps} />
 
-      {selectedItem && nullable ? (
+      {selectedItem && !required ? (
         <button className={ClearButtonStyle} type="button" onClick={() => clearSelection()}>
           <Icon icon="CLEAR" />
         </button>
       ) : (
-        <button className={ArrowDownStyle(isOpen)} type="button" {...getToggleButtonProps()}>
+        <button
+          className={ArrowDownStyle(isOpen)}
+          type="button"
+          {...getToggleButtonProps({
+            onKeyDown: e => {
+              if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
+                e.stopPropagation();
+              }
+            },
+          })}
+        >
           <Icon icon="CHEVRON_DOWN" />
         </button>
       )}
@@ -72,7 +82,7 @@ const Option = ({ selected, highlighted, item, itemToString }: RenderOptionProps
 
 const SearchSelectInput = ({
   value,
-  nullable,
+  required,
   onChange,
   onFocus,
   onBlur,
@@ -87,7 +97,7 @@ const SearchSelectInput = ({
       <BaseSelectInput
         inputRef={ref}
         value={value}
-        nullable={nullable}
+        required={required}
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}

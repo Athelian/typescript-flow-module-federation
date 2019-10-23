@@ -26,19 +26,19 @@ const SearchSelectEnumInputImpl = ({
   if (loading) {
     return (
       <div style={{ padding: 5 }}>
-        <LoadingIcon size="10" />
+        <LoadingIcon size={10} />
       </div>
     );
   }
 
   const itemToString = enumToString(enumType, intl);
 
-  const nullable = enumType === 'Incoterm';
+  const required = enumType === 'Currency';
 
   return (
     <SearchSelectInput
       value={value}
-      nullable={nullable}
+      required={required}
       onChange={onChange}
       onFocus={onFocus}
       onBlur={onBlur}

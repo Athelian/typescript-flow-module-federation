@@ -21,7 +21,7 @@ export const SelectInputStyle = css`
   }
 `;
 
-export const ClearButtonStyle = css`
+export const ClearButtonStyle: string = css`
   ${presets.BUTTON};
   ${transitions.EXPAND};
   ${fontSizes.SMALL};
