@@ -3,7 +3,7 @@
 export type InputProps<T, E = any> = {
   value: ?T,
   extra: ?E,
-  onChange: (?T) => void,
+  onChange: (value: ?T, force?: boolean) => void,
   focus: boolean,
   onFocus: () => void,
   onBlur: () => void,
