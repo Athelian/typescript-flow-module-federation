@@ -1,4 +1,5 @@
 // @flow
+import { getBatchLatestQuantity } from 'utils/batch';
 import {
   transformComputedField,
   transformReadonlyField,
@@ -516,8 +517,8 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
           .flat()
           .find(oi => oi.id === batch?.id);
 
-        if (currentBatch.shipment) {
-          return order.archived && currentBatch.shipment.archived;
+        if (currentBatch?.shipment) {
+          return order.archived && currentBatch?.shipment?.archived;
         }
         return order.archived;
       }),
@@ -641,13 +642,14 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
         ownedBy: batch?.ownedBy?.id,
         permissions: hasPermission =>
           hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_QUANTITY),
-        value: [
-          batch?.autoCalculatePackageQuantity ?? false,
-          batch?.packageQuantity ?? 0,
-          batch?.latestQuantity ?? 0,
-        ],
-        isEnableToggle: batch?.autoCalculatePackageQuantity,
-        forbidden: ['Forbidden', 'NOtFound'].includes(batch?.__typename),
+        value: [batch?.autoCalculatePackageQuantity ?? false, batch?.packageQuantity ?? 0],
+        forbidden: ['Forbidden', 'NotFound'].includes(batch?.__typename),
+      },
+      computed: order => {
+        const currentBatch = getCurrentBatch(batch?.id, order);
+        const latestQuantity = getBatchLatestQuantity(currentBatch);
+        const packageCapacity = currentBatch?.packageCapacity ?? 0;
+        return packageCapacity ? latestQuantity / packageCapacity : 0;
       },
     },
   ].map(c => ({

@@ -15,13 +15,12 @@ import {
 } from './style';
 
 type Props = {
-  ...InputProps<number>,
-  value: [boolean, number, number],
-  onChange: ([boolean, number]) => void,
+  ...InputProps<[boolean, number]>,
 };
 
 const NumberToggleInput = ({
   value,
+  extra: computedValue,
   focus,
   onChange,
   onFocus,
@@ -31,7 +30,6 @@ const NumberToggleInput = ({
 }: Props) => {
   const isEnableToggle = value?.[0] ?? false;
   const quantity = value?.[1] ?? 0;
-  const latestQuantity = value?.[2] ?? 0;
   const readOnlyMode = isEnableToggle || readonly;
 
   if (readOnlyMode) {
@@ -39,7 +37,7 @@ const NumberToggleInput = ({
       <div className={NumberToggleInputReadonlyWrapperStyle}>
         <div className={ReadonlyWrapperStyle}>
           <div className={ReadonlyNumberStyle}>
-            <FormattedNumber value={quantity} />
+            <FormattedNumber value={computedValue || 0} />
           </div>
 
           <div className={CalculatorIconStyle}>
@@ -52,7 +50,7 @@ const NumberToggleInput = ({
             <ToggleInput
               inputRef={ref}
               toggled={isEnableToggle}
-              onToggle={() => onChange([!isEnableToggle, quantity ? latestQuantity / quantity : 0])}
+              onToggle={() => onChange([!isEnableToggle, computedValue || 0])}
             />
           )}
         </InputWrapper>
@@ -89,7 +87,7 @@ const NumberToggleInput = ({
 
       <ToggleInput
         toggled={isEnableToggle}
-        onToggle={() => onChange([!isEnableToggle, quantity])}
+        onToggle={() => onChange([!isEnableToggle, computedValue || 0])}
       />
     </div>
   );
