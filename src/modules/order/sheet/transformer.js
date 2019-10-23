@@ -1178,7 +1178,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       ),
     },
     {
-      columnKey: 'order.orderItem.batch.shipment.voyage.2.departure.date',
+      columnKey: 'order.orderItem.batch.shipment.voyage.2.arrival.date',
       type: 'date',
       ...transformValueField(
         `${basePath}.shipment.voyages.${(batch?.shipment?.voyages?.length ?? 0) - 1}.arrival`,
@@ -1188,7 +1188,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       ),
     },
     {
-      columnKey: 'order.orderItem.batch.shipment.voyage.2.departure.timelineDateRevisions',
+      columnKey: 'order.orderItem.batch.shipment.voyage.2.arrival.timelineDateRevisions',
       type: 'date_revisions',
       ...transformValueField(
         `${basePath}.shipment.voyages.${(batch?.shipment?.voyages?.length ?? 0) - 1}.arrival`,
