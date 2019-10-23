@@ -8,11 +8,18 @@ import useEnum from 'hooks/useEnum';
 import type { InputProps } from '../../types';
 import SelectInput from '../SelectInput';
 
-type Props = InputProps<string> & {
-  enumType: string,
+type SelectCustomInputImplProps = InputProps<string> & {
+  type: string,
 };
 
-const SelectCustomInputImpl = ({ value, onChange, onFocus, onBlur, focus, type }: Props) => {
+const SelectCustomInputImpl = ({
+  value,
+  onChange,
+  onFocus,
+  onBlur,
+  focus,
+  type,
+}: SelectCustomInputImplProps) => {
   const itemToStringFunc = item => (item ? item.label : '');
   const itemToValueFunc = item => (item ? item.value : '');
 
@@ -39,7 +46,18 @@ const SelectCustomInputImpl = ({ value, onChange, onFocus, onBlur, focus, type }
   );
 };
 
-const SelectEnumInputImpl = ({ value, onChange, onFocus, onBlur, focus, enumType }: Props) => {
+type SelectEnumInputImplProps = InputProps<string> & {
+  enumType: string,
+};
+
+const SelectEnumInputImpl = ({
+  value,
+  onChange,
+  onFocus,
+  onBlur,
+  focus,
+  enumType,
+}: SelectEnumInputImplProps) => {
   const intl = useIntl();
 
   const { enums, loading } = useEnum(enumType);
