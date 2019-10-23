@@ -1,6 +1,9 @@
 // @flow
 import * as React from 'react';
+import { useIntl } from 'react-intl';
 import useEnum from 'hooks/useEnum';
+import TextDisplay from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/TextDisplay';
+import messages from 'modules/shipment/messages';
 import type { InputProps } from '../../types';
 import SearchSelectInput from '../SearchSelectInput';
 import { filterItems, itemToString, itemToValue } from './helpers';
@@ -13,6 +16,7 @@ const PortInput = ({
   onFocus,
   onBlur,
 }: InputProps<{ seaport: ?string, airport: ?string }, 'Air' | 'Sea' | null>) => {
+  const intl = useIntl();
   const { enums, loading } = useEnum(extra ? `${extra}port` : null);
   const items = React.useMemo(
     () =>
@@ -28,9 +32,9 @@ const PortInput = ({
   const inputValue = (() => {
     switch (extra) {
       case 'Air':
-        return value.airport;
+        return value?.airport ?? null;
       case 'Sea':
-        return value.seaport;
+        return value?.seaport ?? null;
       default:
         return null;
     }
@@ -44,10 +48,17 @@ const PortInput = ({
       case 'Sea':
         onChange({ seaport: newValue, airport: null });
         break;
+      case null:
+        onChange(null);
+        break;
       default:
         break;
     }
   };
+
+  if (!extra) {
+    return <TextDisplay value={intl.formatMessage(messages.transportTypeWarningMessage)} />;
+  }
 
   return (
     <SearchSelectInput

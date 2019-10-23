@@ -143,6 +143,7 @@ const SheetRenderer = ({
 
                 return (
                   <GridColumnContext.Provider value={{ columns, onColumnResize, onSortToggle }}>
+                    {/* $FlowFixMe flow doesn't understand react-window typing for estimatedColumnWidth */}
                     <VariableSizeGrid
                       ref={r => {
                         ref(r);

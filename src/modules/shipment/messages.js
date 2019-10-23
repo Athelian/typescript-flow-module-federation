@@ -630,6 +630,10 @@ export default defineMessages({
     id: 'modules.Shipments.dischargePortArrival',
     defaultMessage: 'DISCHARGE PORT ARRIVAL',
   },
+  dischargePortArrivalRevisions: {
+    id: 'modules.Shipments.dischargePortArrivalRevisions',
+    defaultMessage: 'DISCHARGE PORT ARRIVAL REVISIONS',
+  },
   firstTransitPortArrival: {
     id: 'modules.Shipments.firstTransitPortArrival',
     defaultMessage: 'FIRST TRANSIT PORT ARRIVAL',

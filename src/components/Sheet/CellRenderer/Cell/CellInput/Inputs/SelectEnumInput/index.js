@@ -9,6 +9,7 @@ import SelectInput from '../SelectInput';
 
 type SelectEnumInputImplProps = InputProps<string> & {
   enumType: string,
+  required: boolean,
 };
 
 const SelectEnumInputImpl = ({

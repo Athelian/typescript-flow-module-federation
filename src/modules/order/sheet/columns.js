@@ -883,6 +883,27 @@ const shipmentColumns: Array<ColumnConfig> = [
   },
   // voyages....
   {
+    key: 'order.orderItem.batch.shipment.voyage.2.arrivalPort',
+    title: <FormattedMessage {...shipmentMessages.dischargePort} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.arrival.date',
+    title: <FormattedMessage {...shipmentMessages.dischargePortArrival} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.arrival.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.dischargePortArrivalRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
     key: 'order.orderItem.batch.shipment.containerGroup.customClearance.date',
     title: <FormattedMessage {...shipmentMessages.customClearance} />,
     icon: 'SHIPMENT',
