@@ -1,11 +1,18 @@
 // @flow
 import * as React from 'react';
-import NumberInput from 'components/Form/Inputs/NumberInput';
+import BaseNumberInput from 'components/Form/Inputs/NumberInput';
 import Icon from 'components/Icon';
 import { ToggleInput } from 'components/Form';
+import FormattedNumber from 'components/FormattedNumber';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import InputWrapper from '../InputWrapper';
-import { WrapperStyle, CalculatorIconStyle } from './style';
+import {
+  NumberToggleInputWrapperStyle,
+  NumberToggleInputReadonlyWrapperStyle,
+  ReadonlyWrapperStyle,
+  ReadonlyNumberStyle,
+  CalculatorIconStyle,
+} from './style';
 
 type Props = {
   ...InputProps<number>,
@@ -29,37 +36,36 @@ const NumberToggleInput = ({
 
   if (readOnlyMode) {
     return (
-      <InputWrapper focus={focus}>
-        {({ ref }) => (
-          <div className={WrapperStyle}>
-            <NumberInput
-              value={quantity}
-              name="readOnlyNumber"
-              tabIndex="-1"
-              readOnly
-              readOnlyHeight="25px"
-              readOnlyWidth="100%"
-            />
-            <div className={CalculatorIconStyle}>
-              <Icon icon="CALCULATOR" />
-            </div>
+      <div className={NumberToggleInputReadonlyWrapperStyle}>
+        <div className={ReadonlyWrapperStyle}>
+          <div className={ReadonlyNumberStyle}>
+            <FormattedNumber value={quantity} />
+          </div>
+
+          <div className={CalculatorIconStyle}>
+            <Icon icon="CALCULATOR" />
+          </div>
+        </div>
+
+        <InputWrapper focus={focus}>
+          {({ ref }) => (
             <ToggleInput
               inputRef={ref}
               toggled={isEnableToggle}
               onToggle={() => onChange([!isEnableToggle, quantity ? latestQuantity / quantity : 0])}
             />
-          </div>
-        )}
-      </InputWrapper>
+          )}
+        </InputWrapper>
+      </div>
     );
   }
 
   // TODO: style coloring for disable, ready only base on figma
   return (
-    <InputWrapper focus={focus} preselect>
-      {({ ref }) => (
-        <div className={WrapperStyle}>
-          <NumberInput
+    <div className={NumberToggleInputWrapperStyle}>
+      <InputWrapper focus={focus} preselect>
+        {({ ref }) => (
+          <BaseNumberInput
             inputRef={ref}
             value={quantity}
             name="numberInput"
@@ -70,16 +76,18 @@ const NumberToggleInput = ({
             onBlur={onBlur}
             onKeyDown={onKeyDown}
           />
-          <div className={CalculatorIconStyle}>
-            <Icon icon="CALCULATOR" />
-          </div>
-          <ToggleInput
-            toggled={isEnableToggle}
-            onToggle={() => onChange([!isEnableToggle, quantity])}
-          />
-        </div>
-      )}
-    </InputWrapper>
+        )}
+      </InputWrapper>
+
+      <div className={CalculatorIconStyle}>
+        <Icon icon="CALCULATOR" />
+      </div>
+
+      <ToggleInput
+        toggled={isEnableToggle}
+        onToggle={() => onChange([!isEnableToggle, quantity])}
+      />
+    </div>
   );
 };
 export default NumberToggleInput;

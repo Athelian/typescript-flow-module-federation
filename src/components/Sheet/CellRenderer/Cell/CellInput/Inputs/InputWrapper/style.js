@@ -7,7 +7,7 @@ export const InputWrapperStyle: string = css`
   ${layout.CENTER};
   padding: 0 5px;
   height: 30px;
-
+  width: 100%;
   & > input {
     ${fontSizes.MAIN};
     ${presets.ELLIPSIS};
