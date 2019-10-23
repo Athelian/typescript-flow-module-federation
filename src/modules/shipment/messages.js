@@ -630,6 +630,10 @@ export default defineMessages({
     id: 'modules.Shipments.dischargePortArrival',
     defaultMessage: 'DISCHARGE PORT ARRIVAL',
   },
+  dischargePortArrivalRevisions: {
+    id: 'modules.Shipments.dischargePortArrivalRevisions',
+    defaultMessage: 'DISCHARGE PORT ARRIVAL REVISIONS',
+  },
   firstTransitPortArrival: {
     id: 'modules.Shipments.firstTransitPortArrival',
     defaultMessage: 'FIRST TRANSIT PORT ARRIVAL',
@@ -649,6 +653,10 @@ export default defineMessages({
   loadPortDeparture: {
     id: 'modules.Shipments.loadPortDeparture',
     defaultMessage: 'LOAD PORT DEPARTURE',
+  },
+  loadPortDepartureRevisions: {
+    id: 'modules.Shipments.loadPortDepartureRevisions',
+    defaultMessage: 'LOAD PORT DEPARTURE REVISIONS',
   },
   agreedDateLabel: {
     id: 'modules.Shipments.agreedDateLabel',

@@ -16,6 +16,8 @@ const mutations = {
   Container: containerMutation,
   Shipment: shipmentMutation,
   TimelineDate: shipmentMutation,
+  Voyage: shipmentMutation,
+  ContainerGroup: shipmentMutation,
 };
 
 function getShipmentByTimelineDateId(timelineDateId: string, item: Object): Object {
@@ -40,10 +42,36 @@ function getShipmentByTimelineDateId(timelineDateId: string, item: Object): Obje
     });
 }
 
+function getShipmentByVoyageId(voyageId: string, item: Object): Object {
+  return item.orderItems
+    .map(i => i.batches)
+    .flat()
+    .filter(b => !!b.shipment)
+    .map(b => b.shipment)
+    .find(shipment => shipment.voyages.every(voyage => voyage.id === voyageId));
+}
+
+function getShipmentByContainerGroupId(containerGroupId: string, item: Object): Object {
+  return item.orderItems
+    .map(i => i.batches)
+    .flat()
+    .filter(b => !!b.shipment)
+    .map(b => b.shipment)
+    .find(shipment => shipment.containerGroups.every(cg => cg.id === containerGroupId));
+}
+
 function getEntityId(entity: Object, item: Object): string {
   switch (entity.type) {
     case 'TimelineDate': {
       const shipment = getShipmentByTimelineDateId(entity.id, item);
+      return shipment.id;
+    }
+    case 'Voyage': {
+      const shipment = getShipmentByVoyageId(entity.id, item);
+      return shipment.id;
+    }
+    case 'ContainerGroup': {
+      const shipment = getShipmentByContainerGroupId(entity.id, item);
       return shipment.id;
     }
     default:
@@ -193,6 +221,34 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             [field]: value,
           };
       }
+    }
+    case 'Voyage': {
+      const shipment = getShipmentByVoyageId(entity.id, item);
+      if (!shipment) {
+        return {};
+      }
+
+      return {
+        voyages: shipment.voyages.map(v => {
+          return {
+            id: v.id,
+            ...(() => (v.id !== entity.id ? {} : { [field]: value }))(),
+          };
+        }),
+      };
+    }
+    case 'ContainerGroup': {
+      const shipment = getShipmentByContainerGroupId(entity.id, item);
+      if (!shipment) {
+        return {};
+      }
+
+      return {
+        containerGroups: shipment.containerGroups.map(cg => ({
+          id: cg.id,
+          ...(() => (cg.id !== entity.id ? {} : { [field]: value }))(),
+        })),
+      };
     }
     case 'TimelineDate': {
       const shipment = getShipmentByTimelineDateId(entity.id, item);

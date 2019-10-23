@@ -16,6 +16,7 @@ import DateRevisionsInput from './Inputs/DateRevisionsInput';
 import StatusInput from './Inputs/StatusInput';
 import TagsInput from './Inputs/TagsInput';
 import UserAssignmentInput from './Inputs/UserAssignmentInput';
+import PortInput from './Inputs/PortInput';
 
 type Props = {
   value: any,
@@ -59,6 +60,7 @@ const inputs = {
   task_tags: TagsInput.Task,
   project_tags: TagsInput.Project,
   user_assignment: UserAssignmentInput,
+  port: PortInput,
 };
 
 const CellInput = ({
@@ -129,20 +131,16 @@ const CellInput = ({
     throw new Error(`Cell input type of '${type}' doesn't not exist`);
   }
 
-  return (
-    <div>
-      {React.createElement(inputs[type], {
-        value: dirtyValue,
-        extra,
-        readonly: disabled,
-        focus: inputFocus,
-        onFocus,
-        onBlur: handleBlur,
-        onChange: handleChange,
-        onKeyDown: handleKeyDown,
-      })}
-    </div>
-  );
+  return React.createElement(inputs[type], {
+    value: dirtyValue,
+    extra,
+    readonly: disabled,
+    focus: inputFocus,
+    onFocus,
+    onBlur: handleBlur,
+    onChange: handleChange,
+    onKeyDown: handleKeyDown,
+  });
 };
 
 export default CellInput;

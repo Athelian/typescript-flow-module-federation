@@ -834,14 +834,6 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // tags
-  // memo
-  // in charges
-  // nb of voyages
-  // cargo ready date
-  // cargo ready date revisions
-  // cargo ready assigned to
-  // cargo ready approval
   {
     key: 'order.orderItem.batch.shipment.tags',
     title: <FormattedMessage {...shipmentMessages.tags} />,
@@ -849,9 +841,11 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 200,
   },
+  // memo
+  // in charges
+  // nb of voyages
   {
     key: 'order.orderItem.batch.shipment.cargoReady.date',
-    exportKey: 'orderItem.batch.shipment.cargoReady.date',
     title: <FormattedMessage {...shipmentMessages.cargoReady} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
@@ -864,46 +858,88 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 1210,
   },
+  // cargo ready assigned to
+  // cargo ready approval
   {
-    key: 'order.orderItem.batch.shipment.containerGroups.customClearance.date',
-    exportKey: 'orderItem.batch.shipment.containerGroups.customClearance.date',
+    key: 'order.orderItem.batch.shipment.voyage.0.departurePort',
+    title: <FormattedMessage {...shipmentMessages.loadPort} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.departure.date',
+    title: <FormattedMessage {...shipmentMessages.loadPortDeparture} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 140,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.departure.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.loadPortDepartureRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+  },
+  // voyages....
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.arrivalPort',
+    title: <FormattedMessage {...shipmentMessages.dischargePort} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.arrival.date',
+    title: <FormattedMessage {...shipmentMessages.dischargePortArrival} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.arrival.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.dischargePortArrivalRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroup.customClearance.date',
     title: <FormattedMessage {...shipmentMessages.customClearance} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 140,
   },
   {
-    key: 'order.orderItem.batch.shipment.containerGroups.customClearance.timelineDateRevisions',
+    key: 'order.orderItem.batch.shipment.containerGroup.customClearance.timelineDateRevisions',
     title: <FormattedMessage {...shipmentMessages.customClearanceRevisions} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 1210,
   },
   {
-    key: 'order.orderItem.batch.shipment.containerGroups.warehouseArrival.date',
-    exportKey: 'orderItem.batch.shipment.containerGroups.warehouseArrival.date',
+    key: 'order.orderItem.batch.shipment.containerGroup.warehouseArrival.date',
     title: <FormattedMessage {...shipmentMessages.warehouseArrival} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 140,
   },
   {
-    key: 'order.orderItem.batch.shipment.containerGroups.warehouseArrival.timelineDateRevisions',
+    key: 'order.orderItem.batch.shipment.containerGroup.warehouseArrival.timelineDateRevisions',
     title: <FormattedMessage {...shipmentMessages.warehouseArrivalRevisions} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 1210,
   },
   {
-    key: 'order.orderItem.batch.shipment.containerGroups.deliveryReady.date',
-    exportKey: 'orderItem.batch.shipment.containerGroups.deliveryReady.date',
+    key: 'order.orderItem.batch.shipment.containerGroup.deliveryReady.date',
     title: <FormattedMessage {...shipmentMessages.deliveryReady} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 140,
   },
   {
-    key: 'order.orderItem.batch.shipment.containerGroups.deliveryReady.timelineDateRevisions',
+    key: 'order.orderItem.batch.shipment.containerGroup.deliveryReady.timelineDateRevisions',
     title: <FormattedMessage {...shipmentMessages.deliveryReadyRevisions} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
