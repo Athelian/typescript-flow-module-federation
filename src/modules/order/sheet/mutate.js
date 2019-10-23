@@ -173,6 +173,11 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             tagIds: value.map(tag => tag.id),
           };
         }
+        case 'warehouseArrivalAgreedDateAssignedTo': {
+          return {
+            warehouseArrivalAgreedDateAssignedToIds: value.map(user => user.id),
+          };
+        }
         default:
           return {
             [field]: value,

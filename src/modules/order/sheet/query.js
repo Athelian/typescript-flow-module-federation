@@ -171,6 +171,12 @@ const shipmentSheetFragment = gql`
     inCharges {
       ...userAvatarFragment
     }
+    importer {
+      ...partnerNameFragment
+    }
+    exporter {
+      ...partnerNameFragment
+    }
     tags {
       ...tagFragment
     }
@@ -251,6 +257,9 @@ const containerSheetFragment = gql`
     id
     no
     warehouseArrivalAgreedDate
+    warehouseArrivalAgreedDateAssignedTo {
+      ...userAvatarFragment
+    }
     warehouseArrivalActualDate
     yardName
     departureDate

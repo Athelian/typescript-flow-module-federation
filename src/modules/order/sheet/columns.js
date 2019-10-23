@@ -582,7 +582,13 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // agreed arrival assigned to
+  {
+    key: 'order.orderItem.batch.container.warehouseArrivalAgreedDateAssignedTo',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateAssignedTo} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   // agreed arrival approval
   {
     key: 'order.orderItem.batch.container.warehouseArrivalActualDate',
