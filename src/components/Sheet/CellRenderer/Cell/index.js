@@ -51,7 +51,7 @@ const Cell = ({
   const size = cell.merged ? cell.merged.to.x - cell.merged.from.x + 1 : 1;
 
   const readonlyValue = React.useMemo(() => {
-    if (cell.empty || cell.forbidden || !cell.entity || !isReadonly) {
+    if (cell.empty || cell.forbidden || !cell.entity) {
       return null;
     }
 
@@ -60,7 +60,7 @@ const Cell = ({
     }
 
     return cell.computed(item);
-  }, [cell, item, isReadonly]);
+  }, [cell, item]);
 
   React.useEffect(() => {
     if (focus && isTop) {
@@ -164,19 +164,6 @@ const Cell = ({
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
     >
-      <div
-        className={CellBorderStyle(
-          isTop,
-          isBottom,
-          hover,
-          focus,
-          foreignFocus,
-          weakFocus,
-          error,
-          weakError
-        )}
-      />
-
       {isTop && inputFocus && <div className={CellShadowStyle(size)} />}
 
       {(() => {
@@ -199,6 +186,7 @@ const Cell = ({
         return (
           <CellInput
             value={cell.data?.value ?? null}
+            extra={readonlyValue}
             type={cell.type}
             focus={focus}
             inputFocus={inputFocus}
@@ -212,6 +200,19 @@ const Cell = ({
           />
         );
       })()}
+
+      <div
+        className={CellBorderStyle(
+          isTop,
+          isBottom,
+          hover,
+          focus,
+          foreignFocus,
+          weakFocus,
+          error,
+          weakError
+        )}
+      />
     </div>
   );
 };

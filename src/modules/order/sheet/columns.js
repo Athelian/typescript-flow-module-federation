@@ -34,7 +34,14 @@ const orderColumns: Array<ColumnConfig> = [
       group: 'order',
     },
   },
-  // status
+  {
+    key: 'order.archived',
+    exportKey: 'archived',
+    title: <FormattedMessage {...orderMessages.status} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 120,
+  },
   {
     key: 'order.poNo',
     exportKey: 'poNo',
@@ -46,6 +53,14 @@ const orderColumns: Array<ColumnConfig> = [
       name: 'poNo',
       group: 'order',
     },
+  },
+  {
+    key: 'order.inCharges',
+    exportKey: 'inCharges',
+    title: <FormattedMessage {...orderMessages.inCharge} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
   },
   // importer
   // exporter
@@ -77,7 +92,7 @@ const orderColumns: Array<ColumnConfig> = [
     color: colors.ORDER,
     width: 140,
   },
-  /* {
+  {
     key: 'order.currency',
     title: <FormattedMessage {...orderMessages.currency} />,
     icon: 'ORDER',
@@ -87,14 +102,14 @@ const orderColumns: Array<ColumnConfig> = [
       name: 'currency',
       group: 'order',
     },
-  }, */
-  /* {
+  },
+  {
     key: 'order.incoterm',
     title: <FormattedMessage {...orderMessages.incoterm} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 100,
-  }, */
+  },
   {
     key: 'order.deliveryPlace',
     exportKey: 'deliveryPlace',
@@ -103,7 +118,14 @@ const orderColumns: Array<ColumnConfig> = [
     color: colors.ORDER,
     width: 200,
   },
-  // tags
+  {
+    key: 'order.tags',
+    exportKey: 'tags',
+    title: <FormattedMessage {...orderMessages.tags} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   {
     key: 'order.memo',
     exportKey: 'memo',
@@ -252,7 +274,13 @@ const orderItemColumns: Array<ColumnConfig> = [
       group: 'orderItem',
     },
   },
-  // tags
+  {
+    key: 'order.orderItem.tags',
+    title: <FormattedMessage {...orderItemMessages.tags} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+  },
   // memo
   {
     key: 'order.orderItem.totalBatched',
@@ -405,7 +433,13 @@ const batchColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // tags
+  {
+    key: 'order.orderItem.batch.tags',
+    title: <FormattedMessage {...batchMessages.tags} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   // memo
   {
     key: 'order.orderItem.batch.quantity',
@@ -454,18 +488,18 @@ const batchColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  /* {
+  {
     key: 'order.orderItem.batch.packageQuantity',
     title: <FormattedMessage {...batchMessages.packageQuantity} />,
     icon: 'BATCH',
     color: colors.BATCH,
-    width: 200,
+    width: 250,
     sort: {
       local: true,
       name: 'packageQuantity',
       group: 'batch',
     },
-  }, */
+  },
   // pkg auto qty
   // pkg weight
   // pkg vol
@@ -528,13 +562,14 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 200,
-    sort: {
-      local: true,
-      name: 'containerContainerType',
-      group: 'batch',
-    },
   },
-  // ctn option
+  {
+    key: 'order.orderItem.batch.container.containerOption',
+    title: <FormattedMessage {...containerMessages.containerOption} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.container.warehouseArrivalAgreedDate',
     title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDate} />,
@@ -547,7 +582,13 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // agreed arrival assigned to
+  {
+    key: 'order.orderItem.batch.container.warehouseArrivalAgreedDateAssignedTo',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateAssignedTo} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   // agreed arrival approval
   {
     key: 'order.orderItem.batch.container.warehouseArrivalActualDate',
@@ -561,7 +602,13 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // actual arrival assigned to
+  {
+    key: 'order.orderItem.batch.container.warehouseArrivalActualDateAssignedTo',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDateAssignedTo} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   // actual arrival approval
   // free time
   // start date
@@ -592,49 +639,22 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // departure assigned to
+  {
+    key: 'order.orderItem.batch.container.departureDateAssignedTo',
+    title: <FormattedMessage {...containerMessages.departureDateAssignedTo} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   // departure approval
-  // tags
+  {
+    key: 'order.orderItem.batch.container.tags',
+    title: <FormattedMessage {...containerMessages.tags} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   // memo
-  {
-    key: 'order.orderItem.batch.container.totalPackageQuantity',
-    title: <FormattedMessage {...containerMessages.totalPackages} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'containerTotalPackageQuantity',
-      group: 'batch',
-    },
-  },
-  /* {
-    key: 'order.orderItem.batch.container.totalQuantity',
-    title: <FormattedMessage {...containerMessages.totalBatchQuantity} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'containerTotalQuantity',
-      group: 'batch',
-    },
-  }, */
-  {
-    key: 'order.orderItem.batch.container.orderItemCount',
-    title: <FormattedMessage {...containerMessages.totalUniqueItems} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'containerOrderItemCount',
-      group: 'batch',
-    },
-  },
-  // total volume
-  // total weight
-  // total price
   // actions
 ];
 
@@ -664,6 +684,15 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
+  // archived
+  {
+    key: 'order.orderItem.batch.shipment.archived',
+    exportKey: 'orderItems.batches.shipment.archived',
+    title: <FormattedMessage {...shipmentMessages.status} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 120,
+  },
   {
     key: 'order.orderItem.batch.shipment.no',
     exportKey: 'orderItems.batches.shipment.no',
@@ -677,6 +706,18 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
+  {
+    key: 'order.orderItem.batch.shipment.inCharges',
+    exportKey: 'orderItems.batches.shipment.inCharges',
+    title: <FormattedMessage {...shipmentMessages.inCharge} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  // importer
+  // exporter
+  // forwarders
+  // related exporters
   {
     key: 'order.orderItem.batch.shipment.blNo',
     exportKey: 'orderItems.batches.shipment.blNo',
@@ -716,6 +757,7 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
+  // booked
   {
     key: 'order.orderItem.batch.shipment.bookingDate',
     exportKey: 'orderItems.batches.shipment.bookingDate',
@@ -756,6 +798,30 @@ const shipmentColumns: Array<ColumnConfig> = [
     },
   },
   {
+    key: 'order.orderItem.batch.shipment.transportType',
+    exportKey: 'orderItems.batches.shipment.transportType',
+    title: <FormattedMessage {...shipmentMessages.transportType} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.loadType',
+    exportKey: 'orderItems.batches.shipment.loadType',
+    title: <FormattedMessage {...shipmentMessages.loadType} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.incoterm',
+    exportKey: 'orderItems.batches.shipment.incoterm',
+    title: <FormattedMessage {...shipmentMessages.incoterms} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
     key: 'order.orderItem.batch.shipment.carrier',
     exportKey: 'orderItems.batches.shipment.carrier',
     title: <FormattedMessage {...shipmentMessages.carrier} />,
@@ -769,18 +835,115 @@ const shipmentColumns: Array<ColumnConfig> = [
     },
   },
   {
+    key: 'order.orderItem.batch.shipment.tags',
+    title: <FormattedMessage {...shipmentMessages.tags} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  // memo
+  // in charges
+  // nb of voyages
+  {
+    key: 'order.orderItem.batch.shipment.cargoReady.date',
+    title: <FormattedMessage {...shipmentMessages.cargoReady} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 140,
+  },
+  {
     key: 'order.orderItem.batch.shipment.cargoReady.timelineDateRevisions',
-    exportKey: 'orderItem.batch.shipment.cargoReady.timelineDateRevisions',
-    title: (
-      <FormattedMessage
-        id="modules.sheet.cargoReadyDateRevisions"
-        defaultMessage="Cargo Ready Date Revisions"
-      />
-    ),
+    title: <FormattedMessage {...shipmentMessages.cargoReadyRevisions} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 1210,
-    minWidth: 1210,
+  },
+  // cargo ready assigned to
+  // cargo ready approval
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.departurePort',
+    title: <FormattedMessage {...shipmentMessages.loadPort} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.departure.date',
+    title: <FormattedMessage {...shipmentMessages.loadPortDeparture} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 140,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.departure.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.loadPortDepartureRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+  },
+  // voyages....
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.arrivalPort',
+    title: <FormattedMessage {...shipmentMessages.dischargePort} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.arrival.date',
+    title: <FormattedMessage {...shipmentMessages.dischargePortArrival} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.arrival.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.dischargePortArrivalRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroup.customClearance.date',
+    title: <FormattedMessage {...shipmentMessages.customClearance} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 140,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroup.customClearance.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.customClearanceRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroup.warehouseArrival.date',
+    title: <FormattedMessage {...shipmentMessages.warehouseArrival} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 140,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroup.warehouseArrival.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.warehouseArrivalRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroup.deliveryReady.date',
+    title: <FormattedMessage {...shipmentMessages.deliveryReady} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 140,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroup.deliveryReady.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.deliveryReadyRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
   },
   {
     key: 'order.orderItem.batch.shipment.files',

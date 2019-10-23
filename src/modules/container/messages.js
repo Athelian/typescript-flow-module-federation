@@ -38,6 +38,10 @@ export default defineMessages({
     id: 'modules.container.warehouseArrivalActualDateAssignedTo',
     defaultMessage: 'Warehouse Arrival Actual Assigned To'.toUpperCase(),
   },
+  departureDateAssignedTo: {
+    id: 'modules.container.departureDateAssignedTo',
+    defaultMessage: 'Departure Date Assigned To',
+  },
   createdAt: {
     id: 'modules.container.createdAt',
     defaultMessage: 'Date Created',

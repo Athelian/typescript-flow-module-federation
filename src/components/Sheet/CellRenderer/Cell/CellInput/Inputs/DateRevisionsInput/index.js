@@ -85,7 +85,7 @@ const DateRevisionsInput = ({
   }, [focus]);
 
   const handleTypeChange = (index: number) => (newType: string) => {
-    onChange((value || []).map((v, i) => (i === index ? { ...v, type: newType } : v)));
+    onChange((value || []).map((v, i) => (i === index ? { ...v, type: newType } : v)), true);
   };
 
   const handleDateChange = (index: number) => (e: SyntheticInputEvent<HTMLInputElement>) => {
@@ -94,7 +94,7 @@ const DateRevisionsInput = ({
   };
 
   const handleRemove = (index: number) => () => {
-    onChange((value || []).filter((v, i) => i !== index));
+    onChange((value || []).filter((v, i) => i !== index), true);
   };
 
   const handleAdd = () => {

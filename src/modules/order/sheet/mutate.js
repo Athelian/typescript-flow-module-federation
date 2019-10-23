@@ -16,6 +16,8 @@ const mutations = {
   Container: containerMutation,
   Shipment: shipmentMutation,
   TimelineDate: shipmentMutation,
+  Voyage: shipmentMutation,
+  ContainerGroup: shipmentMutation,
 };
 
 function getShipmentByTimelineDateId(timelineDateId: string, item: Object): Object {
@@ -40,10 +42,36 @@ function getShipmentByTimelineDateId(timelineDateId: string, item: Object): Obje
     });
 }
 
+function getShipmentByVoyageId(voyageId: string, item: Object): Object {
+  return item.orderItems
+    .map(i => i.batches)
+    .flat()
+    .filter(b => !!b.shipment)
+    .map(b => b.shipment)
+    .find(shipment => shipment.voyages.every(voyage => voyage.id === voyageId));
+}
+
+function getShipmentByContainerGroupId(containerGroupId: string, item: Object): Object {
+  return item.orderItems
+    .map(i => i.batches)
+    .flat()
+    .filter(b => !!b.shipment)
+    .map(b => b.shipment)
+    .find(shipment => shipment.containerGroups.every(cg => cg.id === containerGroupId));
+}
+
 function getEntityId(entity: Object, item: Object): string {
   switch (entity.type) {
     case 'TimelineDate': {
       const shipment = getShipmentByTimelineDateId(entity.id, item);
+      return shipment.id;
+    }
+    case 'Voyage': {
+      const shipment = getShipmentByVoyageId(entity.id, item);
+      return shipment.id;
+    }
+    case 'ContainerGroup': {
+      const shipment = getShipmentByContainerGroupId(entity.id, item);
       return shipment.id;
     }
     default:
@@ -66,6 +94,16 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
               ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
             ),
           };
+        case 'tags': {
+          return {
+            tagIds: value.map(tag => tag.id),
+          };
+        }
+        case 'inCharges':
+          return {
+            inChargeIds: value.map(user => user.id),
+          };
+
         default:
           return {
             [field]: value,
@@ -88,6 +126,11 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           return {
             [field]: new Date(value),
           };
+        case 'tags': {
+          return {
+            tagIds: value.map(tag => tag.id),
+          };
+        }
         case 'files':
           return {
             files: value.map(
@@ -114,6 +157,19 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
               removeTypename(revision)
             ),
           };
+        case 'packageQuantity': {
+          const { auto: autoCalculatePackageQuantity = false, value: packageQuantity = 0 } =
+            value || {};
+          return {
+            autoCalculatePackageQuantity,
+            packageQuantity,
+          };
+        }
+        case 'tags': {
+          return {
+            tagIds: value.map(tag => tag.id),
+          };
+        }
         default:
           return {
             [field]: value,
@@ -126,17 +182,82 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           return {
             [field]: new Date(value),
           };
+        case 'tags': {
+          return {
+            tagIds: value.map(tag => tag.id),
+          };
+        }
         case 'files':
           return {
             files: value.map(
               ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
             ),
           };
+        case 'inCharges':
+          return {
+            inChargeIds: value.map(user => user.id),
+          };
         default:
           return {
             [field]: value,
           };
       }
+    case 'Container': {
+      switch (field) {
+        case 'tags': {
+          return {
+            tagIds: value.map(tag => tag.id),
+          };
+        }
+        case 'warehouseArrivalAgreedDateAssignedTo': {
+          return {
+            warehouseArrivalAgreedDateAssignedToIds: value.map(user => user.id),
+          };
+        }
+        case 'warehouseArrivalActualDateAssignedTo': {
+          return {
+            warehouseArrivalActualDateAssignedToIds: value.map(user => user.id),
+          };
+        }
+        case 'departureDateAssignedTo': {
+          return {
+            departureDateAssignedToIds: value.map(user => user.id),
+          };
+        }
+        default:
+          return {
+            [field]: value,
+          };
+      }
+    }
+    case 'Voyage': {
+      const shipment = getShipmentByVoyageId(entity.id, item);
+      if (!shipment) {
+        return {};
+      }
+
+      return {
+        voyages: shipment.voyages.map(v => {
+          return {
+            id: v.id,
+            ...(() => (v.id !== entity.id ? {} : { [field]: value }))(),
+          };
+        }),
+      };
+    }
+    case 'ContainerGroup': {
+      const shipment = getShipmentByContainerGroupId(entity.id, item);
+      if (!shipment) {
+        return {};
+      }
+
+      return {
+        containerGroups: shipment.containerGroups.map(cg => ({
+          id: cg.id,
+          ...(() => (cg.id !== entity.id ? {} : { [field]: value }))(),
+        })),
+      };
+    }
     case 'TimelineDate': {
       const shipment = getShipmentByTimelineDateId(entity.id, item);
       if (!shipment) {
@@ -145,6 +266,10 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
 
       const input = (() => {
         switch (field) {
+          case 'date':
+            return {
+              date: new Date(value),
+            };
           case 'timelineDateRevisions':
             return {
               timelineDateRevisions: value.map(({ sort, date, ...revision }) => ({

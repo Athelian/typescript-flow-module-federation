@@ -87,4 +87,5 @@ export const OptionStyle = ({ onHover, selected, align }: OptionalProps): string
   color: ${selected ? colors.TEAL : colors.BLACK};
   ${fontSizes.MAIN};
   font-weight: bold;
+  z-index: 20;
 `;

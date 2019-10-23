@@ -9,12 +9,12 @@ import { OptionsWrapperStyle } from './style';
 
 export type RenderInputProps = {
   isOpen: boolean,
+  required?: boolean,
   selectedItem: any,
+  clearSelection: Function,
   getInputProps: Function,
   getToggleButtonProps: Function,
   itemToString: any => string,
-  onFocus?: (SyntheticFocusEvent<any>) => void,
-  onBlur?: (SyntheticFocusEvent<any>) => void,
 };
 
 export type RenderOptionProps = {
@@ -26,6 +26,7 @@ export type RenderOptionProps = {
 
 type Props = {
   value: any,
+  required?: boolean,
   onChange: any => void,
   onFocus?: (SyntheticFocusEvent<any>) => void,
   onBlur?: (SyntheticFocusEvent<any>) => void,
@@ -178,6 +179,7 @@ const SelectOptions = ({
 
 const SelectInput = ({
   value,
+  required,
   onChange,
   onFocus,
   onBlur,
@@ -192,7 +194,6 @@ const SelectInput = ({
   renderInput,
   renderOption,
 }: Props) => {
-  const internalInputRef = React.useRef<HTMLInputElement | null>(null);
   const handleChange = React.useCallback(item => onChange(itemToValue(item)), [
     onChange,
     itemToValue,
@@ -228,13 +229,16 @@ const SelectInput = ({
         inputValue,
         openMenu,
         closeMenu,
+        clearSelection,
         isOpen,
       }) => (
         <div>
           {React.createElement(renderInput, {
             isOpen,
+            required,
             selectedItem,
             itemToString,
+            clearSelection,
             getInputProps: props =>
               getInputProps({
                 ...props,
@@ -243,13 +247,23 @@ const SelectInput = ({
                     // eslint-disable-next-line no-param-reassign
                     inputRef.current = ref;
                   }
-                  internalInputRef.current = ref;
                 },
-                onClick: e => {
-                  e.target.select();
-                  openMenu();
+                onClick: () => {
+                  if (!isOpen) {
+                    openMenu();
+                  }
                 },
-                onFocus,
+                onFocus: e => {
+                  if (e.target.select) {
+                    e.target.select();
+                  }
+                  if (onFocus) {
+                    onFocus(e);
+                  }
+                  if (!isOpen) {
+                    openMenu();
+                  }
+                },
                 onBlur,
               }),
             getToggleButtonProps: props =>
@@ -261,13 +275,6 @@ const SelectInput = ({
                     toggleRef.current = ref;
                   }
                 },
-                onClick: () => {
-                  if (internalInputRef.current) {
-                    internalInputRef.current.focus();
-                  }
-                },
-                onFocus,
-                onBlur,
               }),
           })}
           {isOpen && (

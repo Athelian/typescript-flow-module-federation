@@ -57,6 +57,7 @@ export const CellBorderStyle = (
     ${border};
     ${!isTop && `border-top: none`};
     ${!isBottom && `border-bottom: none`};
+    z-index: ${focus ? '-1' : '1'};
   `;
 };
 
@@ -67,6 +68,7 @@ export const CellShadowStyle = (size: number) => css`
   right: 0;
   bottom: ${-(size - 1) * 30}px;
   ${shadows.INPUT};
+  z-index: -1;
 `;
 
 export const CellPlaceholderStyle = css`

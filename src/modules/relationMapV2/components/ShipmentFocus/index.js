@@ -29,6 +29,7 @@ import {
   ExpandRows,
   GlobalExpanded,
   FocusedView,
+  ClientSorts,
 } from 'modules/relationMapV2/store';
 import EditFormSlideView from '../EditFormSlideView';
 import SelectedEntity from '../SelectedEntity';
@@ -74,6 +75,11 @@ export default function ShipmentFocus() {
     id: '',
   });
   const { expandRows, setExpandRows } = ExpandRows.useContainer();
+  const {
+    getContainersSortByShipmentId,
+    getBatchesSortByShipmentId,
+    getBatchesSortByContainerId,
+  } = ClientSorts.useContainer();
   const { expandAll } = GlobalExpanded.useContainer();
   const [scrollPosition, setScrollPosition] = React.useState(-1);
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
@@ -205,6 +211,10 @@ export default function ShipmentFocus() {
                 shipments,
                 expandRows,
                 setExpandRows,
+                getContainersSortByShipmentId,
+                getBatchesSortByShipmentId,
+                getBatchesSortByContainerId,
+                getRelatedBy,
               });
               const rowCount = shipmentsData.length;
               const isItemLoaded = (index: number) =>

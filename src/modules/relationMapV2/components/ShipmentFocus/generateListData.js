@@ -10,10 +10,15 @@ const generateCells = memoize(
     shipment,
     isExpand,
     onExpand,
+    ...helpers
   }: {|
     shipment: Object,
     isExpand: boolean,
     onExpand: Function,
+    getContainersSortByShipmentId: Function,
+    getBatchesSortByShipmentId: Function,
+    getBatchesSortByContainerId: Function,
+    getRelatedBy?: Function,
   |}) => {
     const onClick = () => {
       if (!isExpand) {
@@ -24,7 +29,7 @@ const generateCells = memoize(
         );
       }
     };
-    const cells = shipmentCoordinates({ isExpand, shipment });
+    const cells = shipmentCoordinates({ isExpand, shipment, ...helpers });
     return { cells, onClick, isExpand };
   }
 );
@@ -34,10 +39,15 @@ const generateListData = memoize(
     shipments,
     expandRows,
     setExpandRows,
+    ...helpers
   }: {|
     shipments: Array<OrderPayload>,
     expandRows: Array<string>,
     setExpandRows: Function,
+    getContainersSortByShipmentId: Function,
+    getBatchesSortByShipmentId: Function,
+    getBatchesSortByContainerId: Function,
+    getRelatedBy: Function,
   |}) => {
     const result = [
       [
@@ -79,6 +89,7 @@ const generateListData = memoize(
         shipment,
         isExpand,
         onExpand: setExpandRows,
+        ...helpers,
       });
       let counter = 0;
       let row = [];

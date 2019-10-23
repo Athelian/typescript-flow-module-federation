@@ -1,8 +1,9 @@
 // @flow
 
-export type InputProps<T> = {
+export type InputProps<T, E = any> = {
   value: ?T,
-  onChange: (?T) => void,
+  extra: ?E,
+  onChange: (value: ?T, force?: boolean) => void,
   focus: boolean,
   onFocus: () => void,
   onBlur: () => void,

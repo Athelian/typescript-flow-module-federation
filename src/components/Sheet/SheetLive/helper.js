@@ -26,6 +26,14 @@ export const convertEntityToInput = (id: string, type: string): Object => {
       return {
         shipmentId: id,
       };
+    case 'Voyage':
+      return {
+        voyageId: id,
+      };
+    case 'ContainerGroup':
+      return {
+        containerGroupId: id,
+      };
     case 'Container':
       return {
         containerId: id,

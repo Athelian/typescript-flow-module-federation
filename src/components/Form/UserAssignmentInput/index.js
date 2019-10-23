@@ -19,6 +19,8 @@ type OptionalProps = {
   name: string,
   onChange: (name: string, users: Array<UserAvatarType>) => void,
   editable: boolean,
+  inputRef: Object,
+  size: number,
 };
 
 type Props = OptionalProps & {
@@ -30,16 +32,30 @@ const defaultProps = {
   name: '',
   onChange: () => {},
   editable: false,
+  size: 30,
 };
 
-const UserAssignmentInput = ({ users, name, groupIds, onChange, editable }: Props) => (
+const UserAssignmentInput = ({
+  users,
+  name,
+  groupIds,
+  onChange,
+  editable,
+  inputRef,
+  size,
+}: Props) => (
   <div className={AssignmentWrapperStyle}>
     {users.map(({ id, firstName, lastName }) => (
       <div className={AssignmentStyle} key={id}>
-        <UserAvatar firstName={firstName} lastName={lastName} />
+        <UserAvatar
+          firstName={firstName}
+          lastName={lastName}
+          width={`${size}px`}
+          height={`${size}px`}
+        />
         {editable && (
           <button
-            className={RemoveAssignmentButtonStyle}
+            className={RemoveAssignmentButtonStyle(size)}
             onClick={() => onChange(name, users.filter(({ id: userId }) => id !== userId))}
             type="button"
           >
@@ -53,8 +69,9 @@ const UserAssignmentInput = ({ users, name, groupIds, onChange, editable }: Prop
         {({ value: isOpen, set: toggleSlide }) => (
           <>
             <button
+              ref={inputRef}
               data-testid="addAssignerButton"
-              className={AddAssignmentButtonStyle}
+              className={AddAssignmentButtonStyle(size)}
               type="button"
               onClick={() => toggleSlide(true)}
             >

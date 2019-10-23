@@ -4,7 +4,7 @@ import { DisplayWrapperStyle } from './style';
 
 type Props = {
   children: React.Node,
-  width?: string,
+  width: string,
 };
 
 const defaultProps = {

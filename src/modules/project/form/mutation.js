@@ -92,6 +92,7 @@ const prepareParseMilestone = (originalValues: Object, newValues: Object): Objec
     originalValues?.estimatedCompletionDateBinding,
     newValues?.estimatedCompletionDateBinding
   ),
+  ...parseGenericField('description', originalValues?.description, newValues?.description),
   ...parseParentIdField('completedById', originalValues?.completedBy, newValues.completedBy),
   ...parseDateField('completedAt', originalValues?.completedAt, newValues.completedAt),
   ...parseArrayOfChildrenField(

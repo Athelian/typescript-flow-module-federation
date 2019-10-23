@@ -20,10 +20,15 @@ const displays = {
   status: StatusDisplay,
 };
 
-const CellDisplay = ({ value, type, entity }: Props) =>
-  React.createElement(displays[type], {
+const CellDisplay = ({ value, type, entity }: Props) => {
+  if (!displays[type]) {
+    throw new Error(`Cell display type of '${type}' doesn't not exist`);
+  }
+
+  return React.createElement(displays[type], {
     value,
     entity,
   });
+};
 
 export default CellDisplay;

@@ -75,7 +75,7 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
   const size = cell && cell.merged ? cell.merged.to.x - cell.merged.from.x + 1 : 1;
 
   return (
-    <div style={style}>
+    <div style={{ ...style, top: style.top + 44 }}>
       {rowIndex >= rows.length || !cell ? (
         <LoadingIcon size={10} />
       ) : (

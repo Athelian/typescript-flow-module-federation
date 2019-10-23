@@ -7,6 +7,7 @@ type OptionalProps = {
   onToggle: Function,
   editable: boolean,
   align: 'left' | 'right',
+  inputRef: Object,
 };
 
 type Props = OptionalProps & {
@@ -20,14 +21,22 @@ const defaultProps = {
   align: 'left',
 };
 
-const ToggleInput = ({ toggled, onToggle, align, children, editable, ...rest }: Props) => (
+const ToggleInput = ({
+  toggled,
+  onToggle,
+  align,
+  children,
+  editable,
+  inputRef,
+  ...rest
+}: Props) => (
   <div className={ToggleInputStyle}>
     {align === 'left' && <>{children}</>}
     <button
       type="button"
       className={ToggleButtonStyle(toggled, editable)}
-      tabIndex={-1}
       onClick={editable ? onToggle : () => {}}
+      ref={inputRef}
       {...rest}
     >
       {toggled ? <Icon icon="TOGGLE_ON" /> : <Icon icon="TOGGLE_OFF" />}
@@ -35,7 +44,6 @@ const ToggleInput = ({ toggled, onToggle, align, children, editable, ...rest }: 
     {align === 'right' && <>{children}</>}
   </div>
 );
-
 ToggleInput.defaultProps = defaultProps;
 
 export default ToggleInput;

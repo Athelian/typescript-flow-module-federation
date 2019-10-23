@@ -4,20 +4,25 @@ import { equals } from 'ramda';
 import TextInput from './Inputs/TextInput';
 import TextAreaInput from './Inputs/TextAreaInput';
 import NumberInput from './Inputs/NumberInput';
+import NumberToggleInput from './Inputs/NumberToggleInput';
 import DateInput from './Inputs/DateInput';
 import DatetimeInput from './Inputs/DatetimeInput';
+import SelectCustomInput from './Inputs/SelectCustomInput';
 import SelectEnumInput from './Inputs/SelectEnumInput';
+import SearchSelectEnumInput from './Inputs/SearchSelectEnumInput';
 import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
-import ContainerTypeInput from './Inputs/ContainerTypeInput';
 import DocumentsInput from './Inputs/DocumentsInput';
 import QuantityRevisionsInput from './Inputs/QuantityRevisionsInput';
 import DateRevisionsInput from './Inputs/DateRevisionsInput';
-import { WrapperStyle } from './style';
+import StatusInput from './Inputs/StatusInput';
+import TagsInput from './Inputs/TagsInput';
+import UserAssignmentInput from './Inputs/UserAssignmentInput';
+import PortInput from './Inputs/PortInput';
 
 type Props = {
   value: any,
+  extra: any,
   type: string,
-  focus: boolean,
   inputFocus: boolean,
   disabled: boolean,
   onFocus: () => void,
@@ -31,22 +36,39 @@ const inputs = {
   text: TextInput,
   textarea: TextAreaInput,
   number: NumberInput,
+  number_toggle: NumberToggleInput,
   static_metric_value: StaticMetricValueInput,
   date: DateInput,
   datetime: DatetimeInput,
-  incoterm: SelectEnumInput.Incoterm,
-  container_type: ContainerTypeInput,
+  load_type: SelectEnumInput.LoadType,
+  transport_type: SelectEnumInput.TransportType,
+  incoterm: SearchSelectEnumInput.Incoterm,
+  currency: SearchSelectEnumInput.Currency,
+  container_type: SelectCustomInput.ContainerType,
+  container_option: SelectEnumInput.ContainerOption,
   order_documents: DocumentsInput.Order,
   order_item_documents: DocumentsInput.OrderItem,
   shipment_documents: DocumentsInput.Shipment,
   quantity_revisions: QuantityRevisionsInput,
   date_revisions: DateRevisionsInput,
+  status: StatusInput,
+  product_tags: TagsInput.Product,
+  order_tags: TagsInput.Order,
+  order_item_tags: TagsInput.OrderItem,
+  batch_tags: TagsInput.Batch,
+  shipment_tags: TagsInput.Shipment,
+  container_tags: TagsInput.Container,
+  user_tags: TagsInput.User,
+  task_tags: TagsInput.Task,
+  project_tags: TagsInput.Project,
+  user_assignment: UserAssignmentInput,
+  port: PortInput,
 };
 
 const CellInput = ({
   value,
+  extra,
   type,
-  focus,
   inputFocus,
   disabled,
   onFocus,
@@ -61,11 +83,11 @@ const CellInput = ({
     setDirtyValue(value);
   }, [value, setDirtyValue]);
 
-  const handleChange = newValue => {
+  const handleChange = (newValue, force = false) => {
     if (!equals(newValue, dirtyValue)) {
       setDirtyValue(newValue);
 
-      if (!inputFocus) {
+      if (force || !inputFocus) {
         onUpdate(newValue);
       }
     }
@@ -107,19 +129,20 @@ const CellInput = ({
     }
   };
 
-  return (
-    <div className={WrapperStyle(focus)}>
-      {React.createElement(inputs[type], {
-        value: dirtyValue,
-        readonly: disabled,
-        focus: inputFocus,
-        onFocus,
-        onBlur: handleBlur,
-        onChange: handleChange,
-        onKeyDown: handleKeyDown,
-      })}
-    </div>
-  );
+  if (!inputs[type]) {
+    throw new Error(`Cell input type of '${type}' doesn't not exist`);
+  }
+
+  return React.createElement(inputs[type], {
+    value: dirtyValue,
+    extra,
+    readonly: disabled,
+    focus: inputFocus,
+    onFocus,
+    onBlur: handleBlur,
+    onChange: handleChange,
+    onKeyDown: handleKeyDown,
+  });
 };
 
 export default CellInput;

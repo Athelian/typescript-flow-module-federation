@@ -8,12 +8,17 @@ type Enum = {
   description: string,
 };
 
-export default function useEnum(enumName: string): { enums: Array<Enum>, loading: boolean } {
+export default function useEnum(enumName: ?string): { enums: Array<Enum>, loading: boolean } {
   const client = useApolloClient();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [enums, setEnums] = React.useState<Array<Enum>>([]);
 
   React.useEffect(() => {
+    setEnums([]);
+    if (!enumName) {
+      return;
+    }
+
     setLoading(true);
 
     client

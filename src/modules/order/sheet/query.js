@@ -5,19 +5,34 @@ import {
   forbiddenFragment,
   userAvatarFragment,
   documentFragment,
+  tagFragment,
+  partnerNameFragment,
 } from 'graphql';
 
 const orderSheetFragment = gql`
   fragment orderSheetFragment on Order {
     id
+    archived
     poNo
     memo
+    tags {
+      ...tagFragment
+    }
     issuedAt
     piNo
     currency
     incoterm
     deliveryPlace
     deliveryDate
+    inCharges {
+      ...userAvatarFragment
+    }
+    importer {
+      ...partnerNameFragment
+    }
+    exporter {
+      ...partnerNameFragment
+    }
     files {
       ...documentFragment
       ...forbiddenFragment
@@ -36,12 +51,12 @@ const orderSheetFragment = gql`
       }
     }
   }
+  ${partnerNameFragment}
 `;
 
 const orderItemSheetFragment = gql`
   fragment orderItemSheetFragment on OrderItem {
     id
-    archived
     no
     quantity
     price {
@@ -50,6 +65,9 @@ const orderItemSheetFragment = gql`
     }
     deliveryDate
     sort
+    tags {
+      ...tagFragment
+    }
     files {
       ...documentFragment
       ...forbiddenFragment
@@ -97,7 +115,6 @@ const orderItemSheetFragment = gql`
 const batchSheetFragment = gql`
   fragment batchSheetFragment on Batch {
     id
-    archived
     no
     quantity
     batchQuantityRevisions {
@@ -114,6 +131,10 @@ const batchSheetFragment = gql`
     packageName
     packageCapacity
     packageQuantity
+    autoCalculatePackageQuantity
+    tags {
+      ...tagFragment
+    }
     sort
     createdAt
     updatedAt
@@ -134,6 +155,7 @@ const batchSheetFragment = gql`
 const shipmentSheetFragment = gql`
   fragment shipmentSheetFragment on Shipment {
     id
+    archived
     no
     createdAt
     updatedAt
@@ -143,9 +165,71 @@ const shipmentSheetFragment = gql`
     bookingDate
     invoiceNo
     contractNo
+    transportType
+    loadType
+    incoterm
     carrier
+    containerCount
+    inCharges {
+      ...userAvatarFragment
+    }
+    importer {
+      ...partnerNameFragment
+    }
+    exporter {
+      ...partnerNameFragment
+    }
+    forwarders {
+      ...partnerNameFragment
+    }
+    tags {
+      ...tagFragment
+    }
     cargoReady {
       ...timelineDateFragment
+    }
+    voyages {
+      ... on Voyage {
+        id
+        departurePort {
+          seaport
+          airport
+        }
+        arrivalPort {
+          seaport
+          airport
+        }
+        departure {
+          ...timelineDateFragment
+        }
+        arrival {
+          ...timelineDateFragment
+        }
+        ownedBy {
+          ... on Organization {
+            id
+          }
+        }
+      }
+    }
+    containerGroups {
+      ... on ContainerGroup {
+        id
+        customClearance {
+          ...timelineDateFragment
+        }
+        warehouseArrival {
+          ...timelineDateFragment
+        }
+        deliveryReady {
+          ...timelineDateFragment
+        }
+        ownedBy {
+          ... on Organization {
+            id
+          }
+        }
+      }
     }
     files {
       ...documentFragment
@@ -194,16 +278,28 @@ export const timelineDateFragment = gql`
 const containerSheetFragment = gql`
   fragment containerSheetFragment on Container {
     id
-    archived
     no
     warehouseArrivalAgreedDate
+    warehouseArrivalAgreedDateAssignedTo {
+      ...userAvatarFragment
+    }
     warehouseArrivalActualDate
+    warehouseArrivalActualDateAssignedTo {
+      ...userAvatarFragment
+    }
     yardName
     departureDate
+    departureDateAssignedTo {
+      ...userAvatarFragment
+    }
     totalPackageQuantity
     totalQuantity
     orderItemCount
     containerType
+    containerOption
+    tags {
+      ...tagFragment
+    }
     createdAt
     updatedAt
     createdBy {
@@ -263,6 +359,7 @@ export const ordersQuery = gql`
   ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
+  ${tagFragment}
   ${forbiddenFragment}
 `;
 
@@ -299,6 +396,7 @@ export const orderItemByIDQuery = gql`
   ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
+  ${tagFragment}
   ${forbiddenFragment}
 `;
 
@@ -334,6 +432,7 @@ export const batchByIDQuery = gql`
   ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
+  ${tagFragment}
   ${forbiddenFragment}
 `;
 
@@ -364,6 +463,7 @@ export const containerByIDQuery = gql`
 
   ${containerSheetFragment}
   ${userAvatarFragment}
+  ${tagFragment}
 `;
 
 export const shipmentByIDQuery = gql`
@@ -377,6 +477,7 @@ export const shipmentByIDQuery = gql`
   ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
+  ${tagFragment}
   ${forbiddenFragment}
 `;
 

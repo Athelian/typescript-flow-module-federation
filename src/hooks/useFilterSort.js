@@ -54,7 +54,7 @@ export function useFilterSortInvalidator() {
       }
     }
 
-    cacheKeys.forEach(window.localStorage.removeItem);
+    cacheKeys.forEach(key => window.localStorage.removeItem(key));
   }, [authenticated]);
 }
 

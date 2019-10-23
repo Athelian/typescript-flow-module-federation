@@ -6,7 +6,19 @@ import { TOTAL_COLUMNS } from 'modules/relationMapV2/constants';
 import { orderCoordinates } from './helpers';
 
 const generateCells = memoize(
-  ({ order, isExpand, onExpand }: {| order: Object, isExpand: boolean, onExpand: Function |}) => {
+  ({
+    order,
+    isExpand,
+    onExpand,
+    ...helpers
+  }: {|
+    order: Object,
+    isExpand: boolean,
+    onExpand: Function,
+    getItemsSortByOrderId: Function,
+    getBatchesSortByItemId: Function,
+    getRelatedBy: Function,
+  |}) => {
     const onClick = () => {
       if (!isExpand) {
         onExpand(expandIds => [...expandIds, getByPathWithDefault('', 'id', order)]);
@@ -14,7 +26,7 @@ const generateCells = memoize(
         onExpand(expandIds => expandIds.filter(id => id !== getByPathWithDefault('', 'id', order)));
       }
     };
-    const cells = orderCoordinates({ isExpand, order });
+    const cells = orderCoordinates({ isExpand, order, ...helpers });
     return { cells, onClick, isExpand };
   }
 );
@@ -24,10 +36,14 @@ const generateListData = memoize(
     orders,
     expandRows,
     setExpandRows,
+    ...helpers
   }: {|
     orders: Array<OrderPayload>,
     expandRows: Array<string>,
     setExpandRows: Function,
+    getItemsSortByOrderId: Function,
+    getBatchesSortByItemId: Function,
+    getRelatedBy: Function,
   |}) => {
     const result = [
       [
@@ -69,6 +85,7 @@ const generateListData = memoize(
         order,
         isExpand,
         onExpand: setExpandRows,
+        ...helpers,
       });
       let counter = 0;
       let row = [];

@@ -56,6 +56,9 @@ export const defaultEntityEventChangeTransformer = (
     case 'SizeValue':
       value = change.new?.size;
       break;
+    case 'CustomValue':
+      value = change.new?.custom;
+      break;
     default:
       value = null;
       break;

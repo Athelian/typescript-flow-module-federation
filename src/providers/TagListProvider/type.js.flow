@@ -1,8 +1,12 @@
 // @flow
 
 export type TagsQueryType =
-  | 'productTags'
-  | 'shipmentTags'
-  | 'userTags'
-  | 'batchTags'
-  | 'requestTags';
+  | 'Product'
+  | 'Order'
+  | 'OrderItem'
+  | 'Batch'
+  | 'Shipment'
+  | 'Container'
+  | 'User'
+  | 'Task'
+  | 'Project';

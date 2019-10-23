@@ -510,12 +510,135 @@ export default function entityEventHandler(
                   return true;
               }
             });
+
+            const batch = items
+              .map(order => order.orderItems.map(oi => oi.batches).flat())
+              .flat()
+              .find(b => b.id === event.entity.id);
+            if (batch) {
+              changes = changes.reduce((newChanges, change) => {
+                switch (change.field) {
+                  case 'packageQuantity':
+                  case 'autoCalculatePackageQuantity': {
+                    const hasChange = !!newChanges.find(
+                      c =>
+                        c.field === 'packageQuantity' || c.field === 'autoCalculatePackageQuantity'
+                    );
+                    if (hasChange) {
+                      return newChanges.map(c => {
+                        if (
+                          c.field === 'packageQuantity' ||
+                          c.field === 'autoCalculatePackageQuantity'
+                        ) {
+                          return {
+                            ...change,
+                            field: 'packageQuantity',
+                            new: {
+                              custom: {
+                                ...(() => {
+                                  switch (change.field) {
+                                    case 'packageQuantity':
+                                      return {
+                                        ...c.new.custom,
+                                        value: change.new?.float,
+                                      };
+                                    case 'autoCalculatePackageQuantity':
+                                      return {
+                                        ...c.new.custom,
+                                        auto: change.new?.boolean,
+                                      };
+                                    default:
+                                      return batch.packageQuantity;
+                                  }
+                                })(),
+                              },
+                              __typename: 'CustomValue',
+                            },
+                          };
+                        }
+                        return c;
+                      });
+                    }
+
+                    return [
+                      ...newChanges,
+                      {
+                        ...change,
+                        field: 'packageQuantity',
+                        new: {
+                          custom: {
+                            ...(() => {
+                              switch (change.field) {
+                                case 'packageQuantity':
+                                  return {
+                                    ...batch.packageQuantity,
+                                    value: change.new?.float,
+                                  };
+                                case 'autoCalculatePackageQuantity':
+                                  return {
+                                    ...batch.packageQuantity,
+                                    auto: change.new?.boolean,
+                                  };
+                                default:
+                                  return batch.packageQuantity;
+                              }
+                            })(),
+                          },
+                          __typename: 'CustomValue',
+                        },
+                      },
+                    ];
+                  }
+                  default:
+                    return [...newChanges, change];
+                }
+              }, []);
+            }
+
             break;
           }
           case 'BatchQuantityRevision': {
             await onBatchQuantityRevision(event.entity.id, items);
             return;
           }
+          case 'Shipment': {
+            changes = changes.map(change => {
+              switch (change.field) {
+                case 'transportType':
+                  return {
+                    ...change,
+                    new: {
+                      string: change.new?.int === 1 ? 'Air' : 'Sea',
+                      __typename: 'StringValue',
+                    },
+                  };
+                default:
+                  return change;
+              }
+            });
+            break;
+          }
+          case 'Voyage':
+            changes = changes.map(change => {
+              switch (change.field) {
+                case 'departurePort':
+                case 'arrivalPort': {
+                  return {
+                    ...change,
+                    new: {
+                      custom: {
+                        seaport: change.new?.string,
+                        airport: change.new?.string,
+                      },
+                      __typename: 'CustomValue',
+                    },
+                  };
+                }
+                default:
+                  return change;
+              }
+            });
+            break;
           default:
             break;
         }
