@@ -58,6 +58,7 @@ import {
   SHIPMENT_UPDATE,
   SHIPMENT_SET_ARCHIVED,
   SHIPMENT_SET_NO,
+  SHIPMENT_SET_IN_CHARGE,
   SHIPMENT_SET_BL_NO,
   SHIPMENT_SET_BL_DATE,
   SHIPMENT_SET_BOOKING_NO,
@@ -937,6 +938,20 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         batch?.shipment ?? null,
         'no',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_NO)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.inCharges',
+      type: 'user_assignment',
+      computed: item => ({
+        importer: item.importer,
+        exporter: item.exporter,
+      }),
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'inCharges',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_IN_CHARGE)
       ),
     },
     {

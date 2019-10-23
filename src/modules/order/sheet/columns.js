@@ -727,6 +727,14 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
+  {
+    key: 'order.orderItem.batch.shipment.inCharges',
+    exportKey: 'orderItems.batches.shipment.inCharges',
+    title: <FormattedMessage {...shipmentMessages.inCharge} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
   // importer
   // exporter
   // forwarders

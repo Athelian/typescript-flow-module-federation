@@ -157,6 +157,10 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
               ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
             ),
           };
+        case 'inCharges':
+          return {
+            inChargeIds: value.map(user => user.id),
+          };
         default:
           return {
             [field]: value,
