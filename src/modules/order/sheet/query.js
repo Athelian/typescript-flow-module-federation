@@ -131,6 +131,7 @@ const batchSheetFragment = gql`
     packageName
     packageCapacity
     packageQuantity
+    autoCalculatePackageQuantity
     tags {
       ...tagFragment
     }

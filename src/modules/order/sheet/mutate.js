@@ -157,6 +157,14 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
               removeTypename(revision)
             ),
           };
+        case 'packageQuantity': {
+          const { auto: autoCalculatePackageQuantity = false, value: packageQuantity = 0 } =
+            value || {};
+          return {
+            autoCalculatePackageQuantity,
+            packageQuantity,
+          };
+        }
         case 'tags': {
           return {
             tagIds: value.map(tag => tag.id),

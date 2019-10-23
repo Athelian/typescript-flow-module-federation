@@ -1,4 +1,5 @@
 // @flow
+import { getBatchLatestQuantity } from 'utils/batch';
 import {
   transformComputedField,
   transformReadonlyField,
@@ -516,8 +517,8 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
           .flat()
           .find(oi => oi.id === batch?.id);
 
-        if (currentBatch.shipment) {
-          return order.archived && currentBatch.shipment.archived;
+        if (currentBatch?.shipment) {
+          return order.archived && currentBatch?.shipment?.archived;
         }
         return order.archived;
       }),
@@ -625,7 +626,13 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
     },
     {
       columnKey: 'order.orderItem.batch.packageQuantity',
-      type: 'number',
+      type: 'number_toggle',
+      computed: order => {
+        const currentBatch = getCurrentBatch(batch?.id, order);
+        const latestQuantity = getBatchLatestQuantity(currentBatch);
+        const packageCapacity = currentBatch?.packageCapacity ?? 0;
+        return packageCapacity ? latestQuantity / packageCapacity : 0;
+      },
       ...transformValueField(
         basePath,
         batch,

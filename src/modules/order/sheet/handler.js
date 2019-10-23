@@ -510,6 +510,91 @@ export default function entityEventHandler(
                   return true;
               }
             });
+
+            const batch = items
+              .map(order => order.orderItems.map(oi => oi.batches).flat())
+              .flat()
+              .find(b => b.id === event.entity.id);
+            if (batch) {
+              changes = changes.reduce((newChanges, change) => {
+                switch (change.field) {
+                  case 'packageQuantity':
+                  case 'autoCalculatePackageQuantity': {
+                    const hasChange = !!newChanges.find(
+                      c =>
+                        c.field === 'packageQuantity' || c.field === 'autoCalculatePackageQuantity'
+                    );
+                    if (hasChange) {
+                      return newChanges.map(c => {
+                        if (
+                          c.field === 'packageQuantity' ||
+                          c.field === 'autoCalculatePackageQuantity'
+                        ) {
+                          return {
+                            ...change,
+                            field: 'packageQuantity',
+                            new: {
+                              custom: {
+                                ...(() => {
+                                  switch (change.field) {
+                                    case 'packageQuantity':
+                                      return {
+                                        ...c.new.custom,
+                                        value: change.new?.float,
+                                      };
+                                    case 'autoCalculatePackageQuantity':
+                                      return {
+                                        ...c.new.custom,
+                                        auto: change.new?.boolean,
+                                      };
+                                    default:
+                                      return batch.packageQuantity;
+                                  }
+                                })(),
+                              },
+                              __typename: 'CustomValue',
+                            },
+                          };
+                        }
+                        return c;
+                      });
+                    }
+
+                    return [
+                      ...newChanges,
+                      {
+                        ...change,
+                        field: 'packageQuantity',
+                        new: {
+                          custom: {
+                            ...(() => {
+                              switch (change.field) {
+                                case 'packageQuantity':
+                                  return {
+                                    ...batch.packageQuantity,
+                                    value: change.new?.float,
+                                  };
+                                case 'autoCalculatePackageQuantity':
+                                  return {
+                                    ...batch.packageQuantity,
+                                    auto: change.new?.boolean,
+                                  };
+                                default:
+                                  return batch.packageQuantity;
+                              }
+                            })(),
+                          },
+                          __typename: 'CustomValue',
+                        },
+                      },
+                    ];
+                  }
+                  default:
+                    return [...newChanges, change];
+                }
+              }, []);
+            }
+
             break;
           }
           case 'BatchQuantityRevision': {
