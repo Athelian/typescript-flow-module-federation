@@ -5,7 +5,6 @@ import { colors, fontSizes, layout, presets, transitions } from 'styles/common';
 export const SelectInputStyle = css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
-  padding: 0 5px;
   height: 30px;
   & > input {
     ${fontSizes.MAIN};

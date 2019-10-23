@@ -57,6 +57,7 @@ export const CellBorderStyle = (
     ${border};
     ${!isTop && `border-top: none`};
     ${!isBottom && `border-bottom: none`};
+    z-index: ${focus ? '-1' : '1'};
   `;
 };
 
