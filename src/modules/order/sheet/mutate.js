@@ -157,6 +157,10 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
               ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
             ),
           };
+        case 'inCharges':
+          return {
+            inChargeIds: value.map(user => user.id),
+          };
         default:
           return {
             [field]: value,
@@ -167,6 +171,21 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'tags': {
           return {
             tagIds: value.map(tag => tag.id),
+          };
+        }
+        case 'warehouseArrivalAgreedDateAssignedTo': {
+          return {
+            warehouseArrivalAgreedDateAssignedToIds: value.map(user => user.id),
+          };
+        }
+        case 'warehouseArrivalActualDateAssignedTo': {
+          return {
+            warehouseArrivalActualDateAssignedToIds: value.map(user => user.id),
+          };
+        }
+        case 'departureDateAssignedTo': {
+          return {
+            departureDateAssignedToIds: value.map(user => user.id),
           };
         }
         default:

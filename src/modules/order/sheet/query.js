@@ -168,6 +168,18 @@ const shipmentSheetFragment = gql`
     loadType
     incoterm
     carrier
+    inCharges {
+      ...userAvatarFragment
+    }
+    importer {
+      ...partnerNameFragment
+    }
+    exporter {
+      ...partnerNameFragment
+    }
+    forwarders {
+      ...partnerNameFragment
+    }
     tags {
       ...tagFragment
     }
@@ -248,9 +260,18 @@ const containerSheetFragment = gql`
     id
     no
     warehouseArrivalAgreedDate
+    warehouseArrivalAgreedDateAssignedTo {
+      ...userAvatarFragment
+    }
     warehouseArrivalActualDate
+    warehouseArrivalActualDateAssignedTo {
+      ...userAvatarFragment
+    }
     yardName
     departureDate
+    departureDateAssignedTo {
+      ...userAvatarFragment
+    }
     totalPackageQuantity
     totalQuantity
     orderItemCount

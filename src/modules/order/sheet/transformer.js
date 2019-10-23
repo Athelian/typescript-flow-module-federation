@@ -44,9 +44,12 @@ import {
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
 import {
-  CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
   CONTAINER_SET_AGREE_ARRIVAL_DATE,
+  CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE,
+  CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
+  CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE,
   CONTAINER_SET_DEPARTURE_DATE,
+  CONTAINER_ASSIGN_DEPARTURE_DATE,
   CONTAINER_SET_NO,
   CONTAINER_SET_YARD_NAME,
   CONTAINER_SET_CONTAINER_TYPE,
@@ -58,6 +61,7 @@ import {
   SHIPMENT_UPDATE,
   SHIPMENT_SET_ARCHIVED,
   SHIPMENT_SET_NO,
+  SHIPMENT_SET_IN_CHARGE,
   SHIPMENT_SET_BL_NO,
   SHIPMENT_SET_BL_DATE,
   SHIPMENT_SET_BOOKING_NO,
@@ -73,6 +77,14 @@ import {
   SHIPMENT_SET_INCOTERM,
   SHIPMENT_SET_TAGS,
 } from 'modules/permission/constants/shipment';
+
+function getCurrentBatch(batchId: string, order: Object) {
+  const currentBatch = order.orderItems
+    .map(oi => oi.batches)
+    .flat()
+    .find(oi => oi.id === batchId);
+  return currentBatch;
+}
 
 function transformOrder(basePath: string, order: Object): Array<CellValue> {
   return [
@@ -135,10 +147,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.inCharges',
       type: 'user_assignment',
-      computed: item => ({
-        importer: item.importer,
-        exporter: item.exporter,
-      }),
+      computed: item => [item.importer?.id, item.exporter?.id].filter(Boolean),
       ...transformValueField(
         basePath,
         order,
@@ -454,10 +463,7 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
       columnKey: 'order.orderItem.batch.created',
       type: 'date_user',
       ...transformComputedField(basePath, batch, item => {
-        const currentBatch = item.orderItems
-          .map(oi => oi.batches)
-          .flat()
-          .find(oi => oi.id === batch?.id);
+        const currentBatch = getCurrentBatch(batch?.id, item);
         return currentBatch
           ? {
               at: new Date(currentBatch.createdAt),
@@ -480,10 +486,7 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
       columnKey: 'order.orderItem.batch.updated',
       type: 'date_user',
       ...transformComputedField(basePath, batch, item => {
-        const currentBatch = item.orderItems
-          .map(oi => oi.batches)
-          .flat()
-          .find(oi => oi.id === batch?.id);
+        const currentBatch = getCurrentBatch(batch?.id, item);
         return currentBatch
           ? {
               at: new Date(currentBatch.updatedAt),
@@ -642,10 +645,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       columnKey: 'order.orderItem.batch.container.created',
       type: 'date_user',
       ...transformComputedField(`${basePath}.container`, batch?.container ?? null, item => {
-        const currentBatch = item.orderItems
-          .map(oi => oi.batches)
-          .flat()
-          .find(oi => oi.id === batch?.id);
+        const currentBatch = getCurrentBatch(batch?.id, item);
         return currentBatch?.container
           ? {
               at: new Date(currentBatch?.container.createdAt),
@@ -678,10 +678,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       columnKey: 'order.orderItem.batch.container.updated',
       type: 'date_user',
       ...transformComputedField(`${basePath}.container`, batch?.container ?? null, item => {
-        const currentBatch = item.orderItems
-          .map(oi => oi.batches)
-          .flat()
-          .find(oi => oi.id === batch?.id);
+        const currentBatch = getCurrentBatch(batch?.id, item);
         return currentBatch?.container
           ? {
               at: new Date(currentBatch?.container.updatedAt),
@@ -714,10 +711,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       columnKey: 'order.orderItem.batch.container.archived',
       type: 'status',
       ...transformComputedField(`${basePath}.container`, batch?.container ?? null, item => {
-        const currentBatch = item.orderItems
-          .map(oi => oi.batches)
-          .flat()
-          .find(oi => oi.id === batch?.id);
+        const currentBatch = getCurrentBatch(batch?.id, item);
 
         return currentBatch?.shipment?.archived ?? true;
       }),
@@ -766,6 +760,23 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       ),
     },
     {
+      columnKey: 'order.orderItem.batch.container.warehouseArrivalAgreedDateAssignedTo',
+      type: 'user_assignment',
+      computed: item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        return [currentBatch.shipment?.importer?.id, currentBatch.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'warehouseArrivalAgreedDateAssignedTo',
+        hasPermission =>
+          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE)
+      ),
+    },
+    {
       columnKey: 'order.orderItem.batch.container.warehouseArrivalActualDate',
       type: 'datetime',
       ...transformValueField(
@@ -774,6 +785,23 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         'warehouseArrivalActualDate',
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_ACTUAL_ARRIVAL_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.warehouseArrivalActualDateAssignedTo',
+      type: 'user_assignment',
+      computed: item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        return [currentBatch.shipment?.importer?.id, currentBatch.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'warehouseArrivalActualDateAssignedTo',
+        hasPermission =>
+          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE)
       ),
     },
     // start date
@@ -799,6 +827,23 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       ),
     },
     {
+      columnKey: 'order.orderItem.batch.container.departureDateAssignedTo',
+      type: 'user_assignment',
+      computed: item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        return [currentBatch.shipment?.importer?.id, currentBatch.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'departureDateAssignedTo',
+        hasPermission =>
+          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_ASSIGN_DEPARTURE_DATE)
+      ),
+    },
+    {
       columnKey: 'order.orderItem.batch.container.tags',
       type: 'container_tags',
       ...transformValueField(
@@ -821,10 +866,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       columnKey: 'order.orderItem.batch.shipment.created',
       type: 'date_user',
       ...transformComputedField(`${basePath}.shipment`, batch?.shipment ?? null, item => {
-        const currentBatch = item.orderItems
-          .map(oi => oi.batches)
-          .flat()
-          .find(oi => oi.id === batch?.id);
+        const currentBatch = getCurrentBatch(batch?.id, item);
         return currentBatch?.shipment
           ? {
               at: new Date(currentBatch?.shipment.createdAt),
@@ -857,10 +899,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       columnKey: 'order.orderItem.batch.shipment.updated',
       type: 'date_user',
       ...transformComputedField(`${basePath}.shipment`, batch?.shipment ?? null, item => {
-        const currentBatch = item.orderItems
-          .map(oi => oi.batches)
-          .flat()
-          .find(oi => oi.id === batch?.id);
+        const currentBatch = getCurrentBatch(batch?.id, item);
         return currentBatch?.shipment
           ? {
               at: new Date(currentBatch?.shipment.updatedAt),
@@ -907,6 +946,27 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         batch?.shipment ?? null,
         'no',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_NO)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.inCharges',
+      type: 'user_assignment',
+      computed: item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        if (currentBatch?.shipment) {
+          const { shipment } = currentBatch;
+          const { forwarders } = shipment;
+          const forwarderIds = (forwarders || []).map(group => group.id);
+
+          return [shipment.importer?.id, shipment.exporter?.id, ...forwarderIds].filter(Boolean);
+        }
+        return [];
+      },
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'inCharges',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_IN_CHARGE)
       ),
     },
     {

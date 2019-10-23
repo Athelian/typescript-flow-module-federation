@@ -582,7 +582,13 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // agreed arrival assigned to
+  {
+    key: 'order.orderItem.batch.container.warehouseArrivalAgreedDateAssignedTo',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateAssignedTo} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   // agreed arrival approval
   {
     key: 'order.orderItem.batch.container.warehouseArrivalActualDate',
@@ -596,7 +602,13 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // actual arrival assigned to
+  {
+    key: 'order.orderItem.batch.container.warehouseArrivalActualDateAssignedTo',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDateAssignedTo} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   // actual arrival approval
   // free time
   // start date
@@ -627,7 +639,13 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // departure assigned to
+  {
+    key: 'order.orderItem.batch.container.departureDateAssignedTo',
+    title: <FormattedMessage {...containerMessages.departureDateAssignedTo} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   // departure approval
   {
     key: 'order.orderItem.batch.container.tags',
@@ -687,6 +705,14 @@ const shipmentColumns: Array<ColumnConfig> = [
       name: 'shipmentNo',
       group: 'batch',
     },
+  },
+  {
+    key: 'order.orderItem.batch.shipment.inCharges',
+    exportKey: 'orderItems.batches.shipment.inCharges',
+    title: <FormattedMessage {...shipmentMessages.inCharge} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
   },
   // importer
   // exporter
