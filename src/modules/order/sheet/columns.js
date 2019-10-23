@@ -639,7 +639,13 @@ const containerColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // departure assigned to
+  {
+    key: 'order.orderItem.batch.container.departureDateAssignedTo',
+    title: <FormattedMessage {...containerMessages.departureDateAssignedTo} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   // departure approval
   {
     key: 'order.orderItem.batch.container.tags',

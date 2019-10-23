@@ -183,6 +183,11 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             warehouseArrivalActualDateAssignedToIds: value.map(user => user.id),
           };
         }
+        case 'departureDateAssignedTo': {
+          return {
+            departureDateAssignedToIds: value.map(user => user.id),
+          };
+        }
         default:
           return {
             [field]: value,

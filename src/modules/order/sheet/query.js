@@ -266,6 +266,9 @@ const containerSheetFragment = gql`
     }
     yardName
     departureDate
+    departureDateAssignedTo {
+      ...userAvatarFragment
+    }
     totalPackageQuantity
     totalQuantity
     orderItemCount
