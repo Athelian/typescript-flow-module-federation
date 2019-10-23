@@ -79,11 +79,11 @@ const CellInput = ({
     setDirtyValue(value);
   }, [value, setDirtyValue]);
 
-  const handleChange = newValue => {
+  const handleChange = (newValue, force = false) => {
     if (!equals(newValue, dirtyValue)) {
       setDirtyValue(newValue);
 
-      if (!inputFocus) {
+      if (force || !inputFocus) {
         onUpdate(newValue);
       }
     }

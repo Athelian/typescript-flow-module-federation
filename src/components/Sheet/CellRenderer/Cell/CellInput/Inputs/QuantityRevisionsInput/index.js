@@ -94,7 +94,7 @@ const QuantityRevisionsInput = ({
   };
 
   const handleRemove = (index: number) => () => {
-    onChange((value || []).filter((v, i) => i !== index));
+    onChange((value || []).filter((v, i) => i !== index), true);
   };
 
   const handleAdd = () => {
