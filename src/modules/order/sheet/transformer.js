@@ -641,7 +641,11 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
         ownedBy: batch?.ownedBy?.id,
         permissions: hasPermission =>
           hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_QUANTITY),
-        value: [batch?.autoCalculatePackageQuantity ?? false, batch?.packageQuantity ?? 0],
+        value: [
+          batch?.autoCalculatePackageQuantity ?? false,
+          batch?.packageQuantity ?? 0,
+          batch?.latestQuantity ?? 0,
+        ],
         isEnableToggle: batch?.autoCalculatePackageQuantity,
         forbidden: ['Forbidden', 'NOtFound'].includes(batch?.__typename),
       },

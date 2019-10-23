@@ -9,7 +9,7 @@ import { WrapperStyle, CalculatorIconStyle } from './style';
 
 type Props = {
   ...InputProps<number>,
-  value: [boolean, number],
+  value: [boolean, number, number],
   onChange: ([boolean, number]) => void,
 };
 
@@ -24,6 +24,7 @@ const NumberToggleInput = ({
 }: Props) => {
   const isEnableToggle = value?.[0] ?? false;
   const quantity = value?.[1] ?? 0;
+  const latestQuantity = value?.[2] ?? 0;
   const readOnlyMode = isEnableToggle || readonly;
 
   if (readOnlyMode) {
@@ -45,7 +46,7 @@ const NumberToggleInput = ({
             <ToggleInput
               inputRef={ref}
               toggled={isEnableToggle}
-              onToggle={() => onChange([!isEnableToggle, quantity])}
+              onToggle={() => onChange([!isEnableToggle, quantity ? latestQuantity / quantity : 0])}
             />
           </div>
         )}

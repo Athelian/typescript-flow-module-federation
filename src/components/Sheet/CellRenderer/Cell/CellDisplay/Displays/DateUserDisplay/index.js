@@ -22,15 +22,15 @@ const DateUser = ({ value }: Props) => {
   return (
     <DisplayWrapper>
       <span className={DateUserDisplayStyle}>
-        <FormattedDate value={value.at} />
+        <FormattedDate value={value?.at} />
       </span>
-      {value.by && (
+      {value?.by && (
         <UserAvatar
           width="20px"
           height="20px"
-          firstName={value.by?.firstName || ''}
-          lastName={value.by?.lastName || ''}
-          image={value.by?.avatar?.path}
+          firstName={value?.by?.firstName ?? ''}
+          lastName={value?.by?.lastName ?? ''}
+          image={value?.by?.avatar?.path}
         />
       )}
     </DisplayWrapper>
