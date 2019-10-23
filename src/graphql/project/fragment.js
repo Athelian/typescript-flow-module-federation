@@ -86,7 +86,7 @@ export const projectFormQueryFragment = gql`
         updatedBy {
           ...userAvatarFragment
         }
-
+        description
         name
         dueDate
         dueDateInterval {
