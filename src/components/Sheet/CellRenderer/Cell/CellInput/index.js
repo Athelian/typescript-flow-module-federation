@@ -131,20 +131,16 @@ const CellInput = ({
     throw new Error(`Cell input type of '${type}' doesn't not exist`);
   }
 
-  return (
-    <div>
-      {React.createElement(inputs[type], {
-        value: dirtyValue,
-        extra,
-        readonly: disabled,
-        focus: inputFocus,
-        onFocus,
-        onBlur: handleBlur,
-        onChange: handleChange,
-        onKeyDown: handleKeyDown,
-      })}
-    </div>
-  );
+  return React.createElement(inputs[type], {
+    value: dirtyValue,
+    extra,
+    readonly: disabled,
+    focus: inputFocus,
+    onFocus,
+    onBlur: handleBlur,
+    onChange: handleChange,
+    onKeyDown: handleKeyDown,
+  });
 };
 
 export default CellInput;

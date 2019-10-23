@@ -66,6 +66,14 @@ function getEntityId(entity: Object, item: Object): string {
       const shipment = getShipmentByTimelineDateId(entity.id, item);
       return shipment.id;
     }
+    case 'Voyage': {
+      const shipment = getShipmentByVoyageId(entity.id, item);
+      return shipment.id;
+    }
+    case 'ContainerGroup': {
+      const shipment = getShipmentByContainerGroupId(entity.id, item);
+      return shipment.id;
+    }
     default:
       return entity.id;
   }

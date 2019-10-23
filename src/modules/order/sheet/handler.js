@@ -533,6 +533,27 @@ export default function entityEventHandler(
             });
             break;
           }
+          case 'Voyage':
+            changes = changes.map(change => {
+              switch (change.field) {
+                case 'departurePort':
+                case 'arrivalPort': {
+                  return {
+                    ...change,
+                    new: {
+                      custom: {
+                        seaport: change.new?.string,
+                        airport: change.new?.string,
+                      },
+                      __typename: 'CustomValue',
+                    },
+                  };
+                }
+                default:
+                  return change;
+              }
+            });
+            break;
           default:
             break;
         }
