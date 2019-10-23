@@ -1,26 +1,12 @@
 // @flow
 import type { ColumnSort } from 'components/Sheet/SheetColumns';
-import type { SortDirection } from 'types';
-
-function stringSort(a: string, b: string): number {
-  return a.localeCompare(b);
-}
-
-function numberSort(a: number, b: number): number {
-  return a - b;
-}
-
-function dateSort(a: Date | string, b: Date | string): number {
-  return new Date(a) - new Date(b);
-}
-
-function defaultSort(a: Object, b: Object): number {
-  return a.sort - b.sort;
-}
-
-function setDirection(result, direction?: SortDirection): number {
-  return direction === 'DESCENDING' ? -result : result;
-}
+import {
+  setDirection,
+  dateSort,
+  defaultSort,
+  numberSort,
+  stringSort,
+} from 'components/Sheet/SheetState/sorter';
 
 function orderItemSorter(sorts: Array<ColumnSort>) {
   return (a: Object, b: Object): number => {
@@ -168,27 +154,6 @@ function batchSorter(sorts: Array<ColumnSort>) {
               a.container?.departureDate ?? new Date(),
               b.container?.departureDate ?? new Date()
             ),
-            sort.direction
-          );
-          break;
-        case 'containerTotalPackageQuantity':
-          result = setDirection(
-            numberSort(
-              a.container?.totalPackageQuantity ?? 0,
-              b.container?.totalPackageQuantity ?? 0
-            ),
-            sort.direction
-          );
-          break;
-        case 'containerTotalQuantity':
-          result = setDirection(
-            numberSort(a.container?.totalQuantity ?? 0, b.container?.totalQuantity ?? 0),
-            sort.direction
-          );
-          break;
-        case 'containerOrderItemCount':
-          result = setDirection(
-            numberSort(a.container?.orderItemCount ?? 0, b.container?.orderItemCount ?? 0),
             sort.direction
           );
           break;
