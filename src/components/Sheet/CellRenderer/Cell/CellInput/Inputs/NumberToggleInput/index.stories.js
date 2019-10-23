@@ -11,6 +11,7 @@ storiesOf('GTV/Inputs', module)
       onChange={action('change')}
       onBlur={action('blur')}
       onFocus={action('focus')}
+      value={[false, 0]}
     />
   ))
   .add('NumberToggleInput with read only', () => (
@@ -20,7 +21,7 @@ storiesOf('GTV/Inputs', module)
       onBlur={action('blur')}
       onFocus={action('focus')}
       readOnly
-      value={3}
+      value={[true, 3]}
     />
   ))
   .add('NumberToggleInput with enable toggle', () => (
@@ -29,7 +30,6 @@ storiesOf('GTV/Inputs', module)
       onChange={action('change')}
       onBlur={action('blur')}
       onFocus={action('focus')}
-      isEnableToggle
-      value={3}
+      value={[false, 0]}
     />
   ));

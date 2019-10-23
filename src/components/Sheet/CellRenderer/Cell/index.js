@@ -186,6 +186,7 @@ const Cell = ({
         return (
           <CellInput
             value={cell.data?.value ?? null}
+            // TODO: better naming or remove this prop
             extra={readonlyValue}
             type={cell.type}
             focus={focus}
