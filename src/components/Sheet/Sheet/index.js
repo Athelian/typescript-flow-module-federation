@@ -17,7 +17,7 @@ import { SheetLiveID } from '../SheetLive';
 import { useSheetLiveFocus } from '../SheetLive/focus';
 import { useSheetLiveEntity } from '../SheetLive/entity';
 import type { EntityEventHandlerFactory } from '../SheetLive/entity';
-import { WrapperStyle } from './style';
+import { SheetContentWrapperStyle } from './style';
 
 type ImplProps = {
   items: Array<Object>,
@@ -58,7 +58,7 @@ const SheetImpl = ({
   };
 
   return (
-    <div className={WrapperStyle} onMouseLeave={handleMouseLeave}>
+    <div className={SheetContentWrapperStyle} onMouseLeave={handleMouseLeave}>
       <SheetRenderer
         columns={columns}
         rowCount={state.rows.length}
