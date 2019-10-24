@@ -16,14 +16,14 @@ import {
 
 const NumberToggleInput = ({
   value,
-  extra: computedValue,
+  context,
   focus,
   onChange,
   onFocus,
   onBlur,
   onKeyDown,
   readonly,
-}: InputProps<{ value: number, auto: boolean }>) => {
+}: InputProps<{ value: number, auto: boolean }, number>) => {
   const isEnableToggle = value?.auto ?? false;
   const quantity = value?.value ?? 0;
   const readOnlyMode = isEnableToggle || readonly;
@@ -33,7 +33,7 @@ const NumberToggleInput = ({
       <div className={NumberToggleInputReadonlyWrapperStyle}>
         <div className={ReadonlyWrapperStyle}>
           <div className={ReadonlyNumberStyle}>
-            <FormattedNumber value={computedValue || 0} />
+            <FormattedNumber value={context} />
           </div>
 
           <div className={CalculatorIconStyle}>
@@ -46,7 +46,7 @@ const NumberToggleInput = ({
             <ToggleInput
               inputRef={ref}
               toggled={isEnableToggle}
-              onToggle={() => onChange({ value: computedValue || 0, auto: !isEnableToggle })}
+              onToggle={() => onChange({ value: context || 0, auto: !isEnableToggle })}
             />
           )}
         </InputWrapper>
@@ -83,9 +83,10 @@ const NumberToggleInput = ({
 
       <ToggleInput
         toggled={isEnableToggle}
-        onToggle={() => onChange({ value: computedValue || 0, auto: !isEnableToggle })}
+        onToggle={() => onChange({ value: context || 0, auto: !isEnableToggle })}
       />
     </div>
   );
 };
+
 export default NumberToggleInput;

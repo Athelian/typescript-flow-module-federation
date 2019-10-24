@@ -171,10 +171,10 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.exporter',
       type: 'exporter_selector',
-      computed: () => ({
+      extra: {
         confirmationDialogMessage: <FormattedMessage id="modules.Orders.changeExporterWarning" />,
         isRequired: true,
-      }),
+      },
       ...transformValueField(
         basePath,
         order,

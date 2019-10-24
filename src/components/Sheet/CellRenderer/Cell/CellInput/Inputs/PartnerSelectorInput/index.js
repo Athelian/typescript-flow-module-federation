@@ -12,6 +12,8 @@ import {
   PlusButtonStyle,
 } from './style';
 
+type ExtraProps = { confirmationDialogMessage?: ?string | React.Node, isRequired?: boolean };
+
 const PartnerSelectorInput = (partnerTypes: Array<string>) => ({
   value,
   focus,
@@ -21,9 +23,7 @@ const PartnerSelectorInput = (partnerTypes: Array<string>) => ({
   onKeyDown,
   readonly,
   extra,
-}: InputProps<Object,
-  { confirmationDialogMessage?: ?string | React.Node, isRequired?: boolean }
->) => (
+}: InputProps<Object, any, ExtraProps>) => (
   <div className={PartnerSelectorInputWrapperStyle}>
     {value ? (
       <button
