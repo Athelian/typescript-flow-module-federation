@@ -21,7 +21,9 @@ const PartnerSelectorInput = (partnerTypes: Array<string>) => ({
   onKeyDown,
   readonly,
   extra,
-}: InputProps<Object>) => (
+}: InputProps<Object,
+  { confirmationDialogMessage?: ?string | React.Node, isRequired?: boolean }
+>) => (
   <div className={PartnerSelectorInputWrapperStyle}>
     {value ? (
       <button
@@ -65,7 +67,8 @@ const PartnerSelectorInput = (partnerTypes: Array<string>) => ({
             onChange(newValue, true);
             onBlur();
           }}
-          confirmationDialogMessage={extra || null}
+          confirmationDialogMessage={extra?.confirmationDialogMessage ?? null}
+          isRequired={extra?.isRequired ?? false}
         />
       )}
     </SlideView>
