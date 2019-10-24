@@ -212,7 +212,7 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
               onClick={onClearAll}
             />
             <ResetButton className={ResetActionStyle} onClick={onReset} />
-            <SaveButton onClick={onSave} />
+            <SaveButton onClick={onSave} id="saveFilterButton" />
           </div>
 
           <div className={FiltersListStyle}>
