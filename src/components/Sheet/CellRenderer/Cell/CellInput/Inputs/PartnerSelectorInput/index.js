@@ -3,9 +3,14 @@ import * as React from 'react';
 import SlideView from 'components/SlideView';
 import SelectPartner from 'components/SelectPartner';
 import Icon from 'components/Icon';
-import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
+import { Display } from 'components/Form';
 import type { InputProps } from '../../types';
-import { CardStyle, IconStyle, PlusButtonStyle } from './style';
+import {
+  PartnerSelectorInputWrapperStyle,
+  PartnerSelectorCardStyle,
+  CornerIconStyle,
+  PlusButtonStyle,
+} from './style';
 
 const PartnerSelectorInput = (partnerTypes: Array<string>) => ({
   value,
@@ -16,7 +21,7 @@ const PartnerSelectorInput = (partnerTypes: Array<string>) => ({
   onKeyDown,
   readonly,
 }: InputProps<Object>) => (
-  <>
+  <div className={PartnerSelectorInputWrapperStyle}>
     {value ? (
       <button
         tabIndex="-1"
@@ -27,14 +32,13 @@ const PartnerSelectorInput = (partnerTypes: Array<string>) => ({
           }
         }}
         onKeyDown={onKeyDown}
-        className={CardStyle}
+        className={PartnerSelectorCardStyle}
       >
-        <DisplayWrapper>
-          {value.name}
-          <div className={IconStyle('PARTNER', false, readonly, false, false)}>
-            <Icon icon="PARTNER" />
-          </div>
-        </DisplayWrapper>
+        <Display height="20px">{value.name}</Display>
+
+        <div className={CornerIconStyle}>
+          <Icon icon="PARTNER" />
+        </div>
       </button>
     ) : (
       <button
@@ -63,7 +67,7 @@ const PartnerSelectorInput = (partnerTypes: Array<string>) => ({
         />
       )}
     </SlideView>
-  </>
+  </div>
 );
 
 export default {

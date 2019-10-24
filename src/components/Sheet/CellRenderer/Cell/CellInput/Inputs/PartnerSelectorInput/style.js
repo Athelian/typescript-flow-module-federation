@@ -4,21 +4,35 @@ import {
   colors,
   presets,
   fontSizes,
-  transitions,
   shadows,
   borderRadiuses,
   layout,
+  transitions,
 } from 'styles/common';
 
-export const CardStyle = css`
-  ${transitions.EXPAND};
-  width: 100%;
-  height: 100%;
-  position: relative;
-  cursor: pointer;
+export const PartnerSelectorInputWrapperStyle: string = css`
+  padding: 5px;
 `;
 
-export const PlusButtonStyle = css`
+export const PartnerSelectorCardStyle: string = css`
+  background-color: ${colors.WHITE};
+  ${borderRadiuses.MAIN};
+  border-bottom-right-radius: 0;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-width: 40px;
+  height: 20px;
+  ${transitions.MAIN};
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  &:hover,
+  :focus {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+export const PlusButtonStyle: string = css`
   ${layout.VERTICAL};
   ${presets.BUTTON};
   ${borderRadiuses.MAIN};
@@ -28,62 +42,29 @@ export const PlusButtonStyle = css`
   border: 2px dashed rgba(0, 0, 0, 0.2);
 `;
 
-export const IconStyle = (
-  color: string,
-  disabled: boolean,
-  readOnly: boolean,
-  invert: boolean,
-  flatten: boolean
-): string => {
-  let iconColor = '#fff';
-  if (disabled) {
-    iconColor = 'rgba(0, 0, 0, 0.25)';
-  } else {
-    iconColor = invert ? colors[color] : '#fff';
+export const CornerIconStyle: string = css`
+  ${presets.BUTTON};
+  width: 20px;
+  height: 20px;
+  ${fontSizes.SMALL};
+  color: ${colors.WHITE};
+  background: ${colors.PARTNER};
+  box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.15);
+  border-radius: 0 5px 0 5px;
+  &:hover,
+  :focus {
+    ${shadows.INPUT};
   }
-
-  return css`
-    ${presets.BUTTON};
+  &:before {
+    content: '';
+    display: block;
     position: absolute;
     top: 0;
-    right: 0;
-    width: 20px;
-    height: 20px;
-    ${fontSizes.SMALL};
-    color: ${iconColor};
-    background: ${invert ? '#fff' : colors[color]};
-    cursor: ${readOnly ? 'default' : 'pointer'};
-    ${disabled && 'cursor: not-allowed'};
-    z-index: ${flatten ? 0 : 1};
-    box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.15);
-    border-radius: 0 5px 0 5px;
-    &:hover,
-    :focus {
-      ${shadows.INPUT};
-    }
-    &:before {
-      content: '';
-      display: block;
-      position: absolute;
-      top: 0;
-      right: 20px;
-      width: 10px;
-      height: 10px;
-      border-radius: 0 5px 0 0;
-      box-shadow: 5px 0 0 0 ${invert ? '#fff' : colors[color]};
-      z-index: -1;
-    }
-    &:after {
-      content: '';
-      display: block;
-      position: absolute;
-      top: 20px;
-      right: 0;
-      width: 10px;
-      height: 10px;
-      border-radius: 0 5px 0 0;
-      box-shadow: 0 -5px 0 0 ${invert ? '#fff' : colors[color]};
-      z-index: -1;
-    }
-  `;
-};
+    right: 20px;
+    width: 10px;
+    height: 10px;
+    border-radius: 0 5px 0 0;
+    box-shadow: 5px 0 0 0 ${colors.PARTNER};
+    z-index: 0;
+  }
+`;
