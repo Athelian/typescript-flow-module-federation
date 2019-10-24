@@ -32,6 +32,7 @@ import {
   ORDER_ITEMS_SET_QUANTITY,
   ORDER_ITEMS_SET_TAGS,
   ORDER_ITEMS_UPDATE,
+  ORDER_ITEMS_SET_MEMO,
 } from 'modules/permission/constants/orderItem';
 import {
   BATCH_SET_DELIVERY_DATE,
@@ -46,6 +47,7 @@ import {
   BATCH_SET_QUANTITY_ADJUSTMENTS,
   BATCH_SET_TAGS,
   BATCH_UPDATE,
+  BATCH_SET_MEMO,
 } from 'modules/permission/constants/batch';
 import {
   CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE,
@@ -60,6 +62,7 @@ import {
   CONTAINER_SET_TAGS,
   CONTAINER_SET_YARD_NAME,
   CONTAINER_UPDATE,
+  CONTAINER_SET_MEMO,
 } from 'modules/permission/constants/container';
 import {
   SHIPMENT_SET_ARCHIVED,
@@ -81,6 +84,7 @@ import {
   SHIPMENT_SET_TIMELINE_DATE,
   SHIPMENT_SET_TRANSPORT_TYPE,
   SHIPMENT_UPDATE,
+  SHIPMENT_SET_MEMO,
 } from 'modules/permission/constants/shipment';
 
 function getCurrentBatch(batchId: string, order: Object): ?Object {
@@ -426,6 +430,16 @@ function transformOrderItem(
       ),
     },
     {
+      columnKey: 'order.orderItem.memo',
+      type: 'textarea',
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'memo',
+        hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_MEMO)
+      ),
+    },
+    {
       columnKey: 'order.orderItem.totalBatched',
       type: 'number',
       ...transformComputedField(basePath, orderItem, item => {
@@ -598,6 +612,16 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
         batch,
         'tags',
         hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_TAGS)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.memo',
+      type: 'textarea',
+      ...transformValueField(
+        basePath,
+        batch,
+        'memo',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_MEMO)
       ),
     },
     {
@@ -877,6 +901,16 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_TAGS)
       ),
     },
+    {
+      columnKey: 'order.orderItem.batch.container.memo',
+      type: 'textarea',
+      ...transformValueField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'memo',
+        hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_MEMO)
+      ),
+    },
   ].map(c => ({
     ...c,
     duplicatable: true,
@@ -1100,6 +1134,16 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         batch?.shipment ?? null,
         'tags',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TAGS)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.memo',
+      type: 'textarea',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'memo',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_MEMO)
       ),
     },
     {
