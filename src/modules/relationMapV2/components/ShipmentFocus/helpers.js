@@ -119,33 +119,36 @@ export const shipmentCoordinates = memoize(
             null,
           ];
     }
-    const result = [
-      {
-        type: 'duplicateShipment',
-      },
-      containerCount
-        ? {
-            type: 'containerSummary',
-            data: shipment,
-          }
-        : {
-            type: 'containerPlaceholder',
-          },
-      {
-        type: 'batchSummary',
-        data: shipment,
-      },
-      batchCount
-        ? {
-            type: 'itemSummary',
-            data: shipment,
-          }
-        : null,
-      {
-        type: 'orderSummary',
-        data: shipment,
-      },
-    ];
+    const result =
+      batchCount || containerCount
+        ? [
+            {
+              type: 'duplicateShipment',
+            },
+            containerCount
+              ? {
+                  type: 'containerSummary',
+                  data: shipment,
+                }
+              : {
+                  type: 'containerPlaceholder',
+                },
+            {
+              type: 'batchSummary',
+              data: shipment,
+            },
+            batchCount
+              ? {
+                  type: 'itemSummary',
+                  data: shipment,
+                }
+              : null,
+            {
+              type: 'orderSummary',
+              data: shipment,
+            },
+          ]
+        : [];
 
     if (containerCount || batchCount) {
       // batches without container on the top

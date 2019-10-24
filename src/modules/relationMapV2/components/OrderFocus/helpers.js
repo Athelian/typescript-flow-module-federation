@@ -127,30 +127,32 @@ export const orderCoordinates = memoize(
             null,
           ];
     }
-    const result = [
-      null,
-      {
-        type: 'itemSummary',
-        data: order,
-      },
-      {
-        type: 'batchSummary',
-        data: order,
-      },
-      containerCount
-        ? {
-            type: 'containerSummary',
+    const result = orderItemCount
+      ? [
+          null,
+          {
+            type: 'itemSummary',
             data: order,
-          }
-        : {
-            type: 'containerSummary',
-            data: null,
           },
-      {
-        type: 'shipmentSummary',
-        data: order,
-      },
-    ];
+          {
+            type: 'batchSummary',
+            data: order,
+          },
+          containerCount
+            ? {
+                type: 'containerSummary',
+                data: order,
+              }
+            : {
+                type: 'containerSummary',
+                data: null,
+              },
+          {
+            type: 'shipmentSummary',
+            data: order,
+          },
+        ]
+      : [];
 
     if (orderItemCount > 0) {
       const itemsList = getItemsSortByOrderId({ id: order.id, orderItems, getRelatedBy })
