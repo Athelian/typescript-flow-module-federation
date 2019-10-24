@@ -49,7 +49,14 @@ export function shipmentCell({
       afterConnector: 'VERTICAL',
     };
 
-  return null;
+  return {
+    type: 'duplicateShipment',
+    data: {
+      shipment,
+      containerPosition,
+      batchPosition,
+    },
+  };
 }
 
 export const shipmentCoordinates = memoize(
