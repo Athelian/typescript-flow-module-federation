@@ -44,9 +44,9 @@ const RelationMap = () => {
               onChange={tabId => {
                 if (tabs.length > 1) {
                   if (tabId) {
-                    navigate('/relation-map/products');
+                    navigate('/order/relation-map/products');
                   } else {
-                    navigate('/relation-map/orders');
+                    navigate('/order/relation-map');
                   }
                 }
               }}
