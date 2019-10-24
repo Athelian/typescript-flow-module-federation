@@ -70,9 +70,10 @@ const menu: Array<MenuConfig> = [
         legacy: true,
       },
       {
-        label: <FormattedMessage {...messages.cards} />,
-        icon: 'CARDS',
-        path: 'cards',
+        label: <FormattedMessage {...messages.map} />,
+        icon: 'MAP',
+        path: 'map',
+        beta: true,
       },
       {
         label: <FormattedMessage {...messages.table} />,
@@ -81,10 +82,9 @@ const menu: Array<MenuConfig> = [
         beta: true,
       },
       {
-        label: <FormattedMessage {...messages.map} />,
-        icon: 'MAP',
-        path: 'map',
-        beta: true,
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
       },
     ],
   },
@@ -107,9 +107,10 @@ const menu: Array<MenuConfig> = [
     permitted: hasPermissions => hasPermissions(SHIPMENT_LIST),
     submenu: [
       {
-        label: <FormattedMessage {...messages.cards} />,
-        icon: 'CARDS',
-        path: 'cards',
+        label: <FormattedMessage {...messages.map} />,
+        icon: 'MAP',
+        path: 'map',
+        beta: true,
       },
       {
         label: <FormattedMessage {...messages.table} />,
@@ -119,10 +120,9 @@ const menu: Array<MenuConfig> = [
         hidden: !isEnableBetaFeature,
       },
       {
-        label: <FormattedMessage {...messages.map} />,
-        icon: 'MAP',
-        path: 'map',
-        beta: true,
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
       },
     ],
   },
