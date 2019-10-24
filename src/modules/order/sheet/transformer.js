@@ -164,12 +164,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     },
     {
       columnKey: 'order.exporter',
-      type: 'single_partner',
-      computed: () => {
-        return {
-          partnerTypes: ['Exporter'],
-        };
-      },
+      type: 'exporter_selector',
       ...transformValueField(
         basePath,
         order,

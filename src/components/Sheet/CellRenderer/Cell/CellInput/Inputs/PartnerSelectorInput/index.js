@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-
 import SlideView from 'components/SlideView';
 import SelectPartner from 'components/SelectPartner';
 import Icon from 'components/Icon';
@@ -8,7 +7,7 @@ import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displ
 import type { InputProps } from '../../types';
 import { CardStyle, IconStyle, PlusButtonStyle } from './style';
 
-const SelectSinglePartnerInput = ({
+const PartnerSelectorInput = (partnerTypes: Array<string>) => ({
   value,
   focus,
   onChange,
@@ -16,9 +15,7 @@ const SelectSinglePartnerInput = ({
   onBlur,
   onKeyDown,
   readonly,
-
-  extra,
-}: InputProps<Object, { partnerTypes: Array<string> }>) => (
+}: InputProps<Object>) => (
   <>
     {value ? (
       <button
@@ -56,7 +53,7 @@ const SelectSinglePartnerInput = ({
     <SlideView isOpen={focus} onRequestClose={onBlur}>
       {focus && (
         <SelectPartner
-          partnerTypes={extra?.partnerTypes || []}
+          partnerTypes={partnerTypes || []}
           selected={value}
           onCancel={onBlur}
           onSelect={newValue => {
@@ -69,4 +66,6 @@ const SelectSinglePartnerInput = ({
   </>
 );
 
-export default SelectSinglePartnerInput;
+export default {
+  Exporter: PartnerSelectorInput(['Exporter']),
+};
