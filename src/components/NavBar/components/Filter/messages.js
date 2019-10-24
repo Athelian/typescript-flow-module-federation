@@ -106,6 +106,10 @@ export default defineMessages({
     id: 'components.NavBar.Filter.orders',
     defaultMessage: 'Orders',
   },
+  shipments: {
+    id: 'components.NavBar.Filter.shipments',
+    defaultMessage: 'Shipments',
+  },
   warehouses: {
     id: 'components.NavBar.Filter.warehouses',
     defaultMessage: 'Warehouses',
