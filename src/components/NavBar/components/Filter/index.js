@@ -15,6 +15,7 @@ import Users from './Inputs/Users';
 import OrganizationTypes from './Inputs/OrganizationTypes';
 import TaskTemplateEntityTypes from './Inputs/TaskTemplateEntityTypes';
 import OrderIds from './Inputs/OrderIds';
+import ShipmentIds from './Inputs/ShipmentIds';
 import WarehouseIds from './Inputs/WarehouseIds';
 import { CompletelyBatched, CompletelyShipped, HasShipment } from './Inputs/Bool';
 import OrganizationIds, {
@@ -87,6 +88,7 @@ const inputs = {
   length_range: LengthRange,
   mass_range: MassRange,
   order_ids: OrderIds,
+  shipment_ids: ShipmentIds,
   warehouse_ids: WarehouseIds,
   organization_ids: OrganizationIds,
   importer_ids: ImporterIds,
@@ -210,7 +212,7 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
               onClick={onClearAll}
             />
             <ResetButton className={ResetActionStyle} onClick={onReset} />
-            <SaveButton onClick={onSave} />
+            <SaveButton onClick={onSave} id="saveFilterButton" />
           </div>
 
           <div className={FiltersListStyle}>

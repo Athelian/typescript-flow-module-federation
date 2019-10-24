@@ -44,12 +44,6 @@ const defaultProps = {
   isRequired: false,
 };
 
-const isEquals = (value: ?Object, selected: ?Object): boolean => {
-  const { id: newId } = value || {};
-  const { id: oldId } = selected || {};
-  return newId === oldId;
-};
-
 const chooseMessage = ({
   selected,
   value,
@@ -127,7 +121,7 @@ const SelectExporter = ({
                   <CancelButton onClick={onCancel} />
                   <SaveButton
                     data-testid="btnSaveExporter"
-                    disabled={isEquals(value, selected)}
+                    disabled={value?.id === selected?.id}
                     onClick={() => {
                       if (isRequired) {
                         if (!isNullOrUndefined(selected)) {

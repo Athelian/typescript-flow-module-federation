@@ -59,7 +59,7 @@ const Routes: StatelessFunctionalComponent<{}> = () => {
               <AsyncStaff path="staff/*" />
               <AsyncProject path="project/*" />
               <AsyncTask path="task/*" />
-              <AsyncRelationMap path="relation-map/*" />
+              <AsyncRelationMap path="/order/relation-map/*" />
               <AsyncNotifications path="notifications/*" />
               <AsyncTags path="tags/*" />
               <AsyncMetadata path="templates/metadata/*" />

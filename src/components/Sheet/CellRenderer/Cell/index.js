@@ -50,7 +50,7 @@ const Cell = ({
 
   const size = cell.merged ? cell.merged.to.x - cell.merged.from.x + 1 : 1;
 
-  const readonlyValue = React.useMemo(() => {
+  const computedValue = React.useMemo(() => {
     if (cell.empty || cell.forbidden || !cell.entity) {
       return null;
     }
@@ -180,13 +180,14 @@ const Cell = ({
         }
 
         if (isReadonly) {
-          return <CellDisplay value={readonlyValue} type={cell.type} entity={cell.entity?.type} />;
+          return <CellDisplay value={computedValue} type={cell.type} entity={cell.entity?.type} />;
         }
 
         return (
           <CellInput
             value={cell.data?.value ?? null}
-            extra={readonlyValue}
+            context={computedValue}
+            extra={cell.extra}
             type={cell.type}
             focus={focus}
             inputFocus={inputFocus}

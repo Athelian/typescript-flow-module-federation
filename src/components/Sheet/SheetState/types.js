@@ -27,6 +27,7 @@ export type CellValue = {
   } | null,
   type: string,
   computed?: Object => any,
+  extra?: any,
   readonly?: boolean,
   disabled?: boolean,
   empty?: boolean,

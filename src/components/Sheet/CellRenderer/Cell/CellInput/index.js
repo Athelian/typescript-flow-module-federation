@@ -18,9 +18,11 @@ import StatusInput from './Inputs/StatusInput';
 import TagsInput from './Inputs/TagsInput';
 import UserAssignmentInput from './Inputs/UserAssignmentInput';
 import PortInput from './Inputs/PortInput';
+import PartnerSelectorInput from './Inputs/PartnerSelectorInput';
 
 type Props = {
   value: any,
+  context: any,
   extra: any,
   type: string,
   inputFocus: boolean,
@@ -63,10 +65,12 @@ const inputs = {
   project_tags: TagsInput.Project,
   user_assignment: UserAssignmentInput,
   port: PortInput,
+  exporter_selector: PartnerSelectorInput.Exporter,
 };
 
 const CellInput = ({
   value,
+  context,
   extra,
   type,
   inputFocus,
@@ -135,6 +139,7 @@ const CellInput = ({
 
   return React.createElement(inputs[type], {
     value: dirtyValue,
+    context,
     extra,
     readonly: disabled,
     focus: inputFocus,

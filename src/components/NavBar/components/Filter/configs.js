@@ -456,6 +456,14 @@ export const BatchFilterConfig: Array<FilterConfig> = [
 export const ShipmentFilterConfig: Array<FilterConfig> = [
   {
     entity: 'SHIPMENT',
+    field: 'ids',
+    type: 'shipment_ids',
+    message: shipmentMessages.shipment,
+    defaultValue: [],
+    hidden: true,
+  },
+  {
+    entity: 'SHIPMENT',
     field: 'archived',
     type: 'archived',
     message: shipmentMessages.status,

@@ -65,6 +65,7 @@ const orderItemSheetFragment = gql`
     }
     deliveryDate
     sort
+    memo
     tags {
       ...tagFragment
     }
@@ -132,6 +133,7 @@ const batchSheetFragment = gql`
     packageCapacity
     packageQuantity
     autoCalculatePackageQuantity
+    memo
     tags {
       ...tagFragment
     }
@@ -170,6 +172,7 @@ const shipmentSheetFragment = gql`
     incoterm
     carrier
     containerCount
+    memo
     inCharges {
       ...userAvatarFragment
     }
@@ -300,6 +303,7 @@ const containerSheetFragment = gql`
     tags {
       ...tagFragment
     }
+    memo
     createdAt
     updatedAt
     createdBy {

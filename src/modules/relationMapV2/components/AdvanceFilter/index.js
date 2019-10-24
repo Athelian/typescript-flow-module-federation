@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { isEquals } from 'utils/fp';
 import Filter from 'components/NavBar/components/Filter';
 import {
   OrderFilterConfig,
@@ -25,15 +26,16 @@ export default function AdvanceFilter() {
         <Filter
           config={selectors.isOrderFocus ? OrderFilterConfig : ShipmentFilterConfig}
           filterBy={filters}
-          onChange={filter =>
-            onChangeFilter({
-              ...filterAndSort,
-              filter: {
-                ...filter,
-                query,
-              },
-            })
-          }
+          onChange={filter => {
+            if (!isEquals(filter, filters))
+              onChangeFilter({
+                ...filterAndSort,
+                filter: {
+                  ...filter,
+                  query,
+                },
+              });
+          }}
         />
         <SearchInput
           key={JSON.stringify({ query })}

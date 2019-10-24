@@ -2,6 +2,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  shipment: {
+    id: 'modules.Shipments.shipment',
+    defaultMessage: 'SHIPMENT',
+  },
   shipmentId: {
     id: 'modules.Shipments.no',
     defaultMessage: 'SHIPMENT ID',

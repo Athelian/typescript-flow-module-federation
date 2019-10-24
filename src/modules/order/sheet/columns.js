@@ -54,16 +54,15 @@ const orderColumns: Array<ColumnConfig> = [
       group: 'order',
     },
   },
+  // importer
   {
-    key: 'order.inCharges',
-    exportKey: 'inCharges',
-    title: <FormattedMessage {...orderMessages.inCharge} />,
+    key: 'order.exporter',
+    exportKey: 'exporter',
+    title: <FormattedMessage {...orderMessages.exporter} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 200,
   },
-  // importer
-  // exporter
   {
     key: 'order.piNo',
     exportKey: 'piNo',
@@ -82,7 +81,7 @@ const orderColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...orderMessages.date} />,
     icon: 'ORDER',
     color: colors.ORDER,
-    width: 140,
+    width: 125,
   },
   {
     key: 'order.deliveryDate',
@@ -90,7 +89,7 @@ const orderColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...orderMessages.deliveryDate} />,
     icon: 'ORDER',
     color: colors.ORDER,
-    width: 140,
+    width: 125,
   },
   {
     key: 'order.currency',
@@ -133,6 +132,14 @@ const orderColumns: Array<ColumnConfig> = [
     icon: 'ORDER',
     color: colors.ORDER,
     width: 200,
+  },
+  {
+    key: 'order.inCharges',
+    exportKey: 'inCharges',
+    title: <FormattedMessage {...orderMessages.inCharge} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 160,
   },
   // in charge
   {
@@ -275,13 +282,33 @@ const orderItemColumns: Array<ColumnConfig> = [
     },
   },
   {
+    key: 'order.orderItem.deliveryDate',
+    exportKey: 'orderItems.deliveryDate',
+    title: <FormattedMessage {...orderItemMessages.deliveryDate} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 125,
+    sort: {
+      local: true,
+      name: 'deliveryDate',
+      group: 'orderItem',
+    },
+  },
+  {
     key: 'order.orderItem.tags',
     title: <FormattedMessage {...orderItemMessages.tags} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
   },
-  // memo
+  {
+    key: 'order.orderItem.memo',
+    exportKey: 'orderItems.memo',
+    title: <FormattedMessage {...orderMessages.memo} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+  },
   {
     key: 'order.orderItem.totalBatched',
     title: 'Total Batched quantity',
@@ -303,19 +330,6 @@ const orderItemColumns: Array<ColumnConfig> = [
     sort: {
       local: true,
       name: 'totalShipped',
-      group: 'orderItem',
-    },
-  },
-  {
-    key: 'order.orderItem.deliveryDate',
-    exportKey: 'orderItems.deliveryDate',
-    title: <FormattedMessage {...orderItemMessages.deliveryDate} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 140,
-    sort: {
-      local: true,
-      name: 'deliveryDate',
       group: 'orderItem',
     },
   },
@@ -387,7 +401,7 @@ const batchColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...batchMessages.deliveredAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
-    width: 140,
+    width: 125,
     sort: {
       local: true,
       name: 'deliveredAt',
@@ -400,7 +414,7 @@ const batchColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...batchMessages.desiredAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
-    width: 140,
+    width: 125,
     sort: {
       local: true,
       name: 'desiredAt',
@@ -413,7 +427,7 @@ const batchColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...batchMessages.expiredAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
-    width: 140,
+    width: 125,
     sort: {
       local: true,
       name: 'expiredAt',
@@ -426,7 +440,7 @@ const batchColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...batchMessages.producedAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
-    width: 140,
+    width: 125,
     sort: {
       local: true,
       name: 'producedAt',
@@ -440,7 +454,14 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 200,
   },
-  // memo
+  {
+    key: 'order.orderItem.batch.memo',
+    exportKey: 'orderItems.batches.memo',
+    title: <FormattedMessage {...orderMessages.memo} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.quantity',
     exportKey: 'orderItems.batches.quantity',
@@ -561,14 +582,14 @@ const containerColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...containerMessages.containerType} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
-    width: 200,
+    width: 100,
   },
   {
     key: 'order.orderItem.batch.container.containerOption',
     title: <FormattedMessage {...containerMessages.containerOption} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
-    width: 200,
+    width: 100,
   },
   {
     key: 'order.orderItem.batch.container.warehouseArrivalAgreedDate',
@@ -587,7 +608,7 @@ const containerColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateAssignedTo} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
-    width: 200,
+    width: 160,
   },
   // agreed arrival approval
   {
@@ -607,7 +628,7 @@ const containerColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...containerMessages.warehouseArrivalActualDateAssignedTo} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
-    width: 200,
+    width: 160,
   },
   // actual arrival approval
   // free time
@@ -632,7 +653,7 @@ const containerColumns: Array<ColumnConfig> = [
     title: 'Yard Departure Date',
     icon: 'CONTAINER',
     color: colors.CONTAINER,
-    width: 140,
+    width: 125,
     sort: {
       local: true,
       name: 'containerDepartureDate',
@@ -644,7 +665,7 @@ const containerColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...containerMessages.departureDateAssignedTo} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
-    width: 200,
+    width: 160,
   },
   // departure approval
   {
@@ -654,7 +675,14 @@ const containerColumns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: 200,
   },
-  // memo
+  {
+    key: 'order.orderItem.batch.container.memo',
+    exportKey: 'orderItems.batches.container.memo',
+    title: <FormattedMessage {...orderMessages.memo} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   // actions
 ];
 
@@ -706,14 +734,6 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  {
-    key: 'order.orderItem.batch.shipment.inCharges',
-    exportKey: 'orderItems.batches.shipment.inCharges',
-    title: <FormattedMessage {...shipmentMessages.inCharge} />,
-    icon: 'SHIPMENT',
-    color: colors.SHIPMENT,
-    width: 200,
-  },
   // importer
   // exporter
   // forwarders
@@ -737,7 +757,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.blDate} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 140,
+    width: 125,
     sort: {
       local: true,
       name: 'shipmentBlDate',
@@ -764,7 +784,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.bookingDate} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 140,
+    width: 125,
     sort: {
       local: true,
       name: 'shipmentBookingDate',
@@ -803,7 +823,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.transportType} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 200,
+    width: 100,
   },
   {
     key: 'order.orderItem.batch.shipment.loadType',
@@ -811,7 +831,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.loadType} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 200,
+    width: 100,
   },
   {
     key: 'order.orderItem.batch.shipment.incoterm',
@@ -819,7 +839,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.incoterms} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 200,
+    width: 100,
   },
   {
     key: 'order.orderItem.batch.shipment.carrier',
@@ -841,15 +861,29 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 200,
   },
-  // memo
-  // in charges
+  {
+    key: 'order.orderItem.batch.shipment.memo',
+    exportKey: 'orderItems.batches.shipment.memo',
+    title: <FormattedMessage {...orderMessages.memo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.inCharges',
+    exportKey: 'orderItems.batches.shipment.inCharges',
+    title: <FormattedMessage {...shipmentMessages.inCharge} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 160,
+  },
   // nb of voyages
   {
     key: 'order.orderItem.batch.shipment.cargoReady.date',
     title: <FormattedMessage {...shipmentMessages.cargoReady} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 140,
+    width: 125,
   },
   {
     key: 'order.orderItem.batch.shipment.cargoReady.timelineDateRevisions',
@@ -872,7 +906,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.loadPortDeparture} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 140,
+    width: 125,
   },
   {
     key: 'order.orderItem.batch.shipment.voyage.0.departure.timelineDateRevisions',
@@ -894,7 +928,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.dischargePortArrival} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 200,
+    width: 125,
   },
   {
     key: 'order.orderItem.batch.shipment.voyage.2.arrival.timelineDateRevisions',
@@ -908,7 +942,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.customClearance} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 140,
+    width: 125,
   },
   {
     key: 'order.orderItem.batch.shipment.containerGroup.customClearance.timelineDateRevisions',
@@ -922,7 +956,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.warehouseArrival} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 140,
+    width: 125,
   },
   {
     key: 'order.orderItem.batch.shipment.containerGroup.warehouseArrival.timelineDateRevisions',
@@ -936,7 +970,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.deliveryReady} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 140,
+    width: 125,
   },
   {
     key: 'order.orderItem.batch.shipment.containerGroup.deliveryReady.timelineDateRevisions',

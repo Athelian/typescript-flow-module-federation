@@ -26,6 +26,7 @@ import {
   TASK_TEMPLATE_LIST,
 } from 'modules/permission/constants/task';
 import { useViewerHasPermissions, type HasPermissions } from 'contexts/Permissions';
+import useUser from 'hooks/useUser';
 import { useUI } from 'contexts/UI';
 import { isEnableBetaFeature } from 'utils/env';
 import { Logo, MenuItem, SubMenu } from './components';
@@ -38,6 +39,7 @@ type MenuConfig = {
   path: string,
   permitted?: HasPermissions => boolean,
   hidden?: boolean,
+  legacy?: boolean,
   beta?: boolean,
   submenu?: Array<{
     label: any,
@@ -47,27 +49,31 @@ type MenuConfig = {
     permitted?: HasPermissions => boolean,
     hidden?: boolean,
     beta?: boolean,
+    legacy?: boolean,
   }>,
 };
 
 const menu: Array<MenuConfig> = [
   {
-    label: <FormattedMessage {...messages.relationMap} />,
-    icon: 'RELATION_MAP',
-    path: 'relation-map',
-    permitted: hasPermissions =>
-      hasPermissions(RM_ORDER_FOCUS_LIST) || hasPermissions(RM_PRODUCT_FOCUS_LIST),
-  },
-  {
     label: <FormattedMessage {...messages.order} />,
     icon: 'ORDER',
     path: 'order',
-    permitted: hasPermissions => hasPermissions(ORDER_LIST),
+    permitted: hasPermissions =>
+      hasPermissions(ORDER_LIST) ||
+      hasPermissions(RM_ORDER_FOCUS_LIST) ||
+      hasPermissions(RM_PRODUCT_FOCUS_LIST),
     submenu: [
       {
-        label: <FormattedMessage {...messages.cards} />,
-        icon: 'CARDS',
-        path: 'cards',
+        label: <FormattedMessage {...messages.relationMap} />,
+        icon: 'RELATION_MAP',
+        path: 'relation-map',
+        legacy: true,
+      },
+      {
+        label: <FormattedMessage {...messages.map} />,
+        icon: 'MAP',
+        path: 'map',
+        beta: true,
       },
       {
         label: <FormattedMessage {...messages.table} />,
@@ -76,10 +82,9 @@ const menu: Array<MenuConfig> = [
         beta: true,
       },
       {
-        label: <FormattedMessage {...messages.map} />,
-        icon: 'MAP',
-        path: 'map',
-        beta: true,
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
       },
     ],
   },
@@ -102,9 +107,10 @@ const menu: Array<MenuConfig> = [
     permitted: hasPermissions => hasPermissions(SHIPMENT_LIST),
     submenu: [
       {
-        label: <FormattedMessage {...messages.cards} />,
-        icon: 'CARDS',
-        path: 'cards',
+        label: <FormattedMessage {...messages.map} />,
+        icon: 'MAP',
+        path: 'map',
+        beta: true,
       },
       {
         label: <FormattedMessage {...messages.table} />,
@@ -114,10 +120,9 @@ const menu: Array<MenuConfig> = [
         hidden: !isEnableBetaFeature,
       },
       {
-        label: <FormattedMessage {...messages.map} />,
-        icon: 'MAP',
-        path: 'map',
-        beta: true,
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
       },
     ],
   },
@@ -239,7 +244,7 @@ const menu: Array<MenuConfig> = [
 const SideBar = () => {
   const hasPermissions = useViewerHasPermissions();
   const uiState = useUI();
-
+  const { isUsingLegacyFeatures } = useUser();
   return (
     <Location>
       {({ location }) => {
@@ -256,6 +261,10 @@ const SideBar = () => {
             <div className={SideBarBodyStyle}>
               {menu.map(config => {
                 if (config.hidden) {
+                  return null;
+                }
+
+                if (config.legacy && !isUsingLegacyFeatures() && !isEnableBetaFeature) {
                   return null;
                 }
 
@@ -293,6 +302,9 @@ const SideBar = () => {
                     {/* $FlowFixMe already check if submenu is defined */}
                     {config.submenu.map(subConfig => {
                       if (subConfig.hidden) {
+                        return null;
+                      }
+                      if (subConfig.legacy && !isUsingLegacyFeatures() && !isEnableBetaFeature) {
                         return null;
                       }
 

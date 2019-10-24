@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
+import { isEnableBetaFeature } from 'utils/env';
 import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
@@ -10,6 +11,10 @@ import {
   targetedIds,
   findParentIdsByBatch,
   findOrderIdByItem,
+  findShipmentIdByBatch,
+  findShipmentIdByContainer,
+  findShipmentIdsByOrderItem,
+  findShipmentIdsByOrder,
 } from 'modules/relationMapV2/helpers';
 import ActionButton from './components/ActionButton';
 import ActionSubMenu from './components/ActionSubMenu';
@@ -35,43 +40,76 @@ export default function Actions({ targets }: Props) {
   const containerIsDisabled = containerIds.length === 0;
   const shipmentIsDisabled = shipmentIds.length === 0;
   const navigateToGTV = () => {
-    const ids = [...orderIds];
-    batchIds.forEach(batchId => {
-      const [, parentOrderId] = findParentIdsByBatch({
-        batchId,
-        viewer: state.viewer,
-        entities: mapping.entities,
-      });
-      if (parentOrderId) ids.push(parentOrderId);
-    });
-
-    orderItemIds.forEach(orderItemId => {
-      const parentOrderId = findOrderIdByItem({
-        orderItemId,
-        viewer: state.viewer,
-        entities: mapping.entities,
-      });
-      if (parentOrderId) ids.push(parentOrderId);
-    });
-
-    Object.values(mapping.entities?.batches ?? {}).forEach((batch: Object) => {
-      if (
-        (batch.container && containerIds.includes(batch.container)) ||
-        (batch.shipment && shipmentIds.includes(batch.shipment))
-      ) {
+    if (selectors.isOrderFocus) {
+      const ids = [...shipmentIds];
+      batchIds.forEach(batchId => {
         const [, parentOrderId] = findParentIdsByBatch({
-          batchId: batch.id,
+          batchId,
           viewer: state.viewer,
           entities: mapping.entities,
         });
         if (parentOrderId) ids.push(parentOrderId);
-      }
-    });
-    navigate('/order/table', {
-      state: {
-        orderIds: [...new Set(ids)],
-      },
-    });
+      });
+
+      orderItemIds.forEach(orderItemId => {
+        const parentOrderId = findOrderIdByItem({
+          orderItemId,
+          viewer: state.viewer,
+          entities: mapping.entities,
+        });
+        if (parentOrderId) ids.push(parentOrderId);
+      });
+
+      Object.values(mapping.entities?.batches ?? {}).forEach((batch: Object) => {
+        if (
+          (batch.container && containerIds.includes(batch.container)) ||
+          (batch.shipment && shipmentIds.includes(batch.shipment))
+        ) {
+          const [, parentOrderId] = findParentIdsByBatch({
+            batchId: batch.id,
+            viewer: state.viewer,
+            entities: mapping.entities,
+          });
+          if (parentOrderId) ids.push(parentOrderId);
+        }
+      });
+      navigate('/order/table', {
+        state: { orderIds: [...new Set(ids)] },
+      });
+    } else {
+      const ids = [...shipmentIds];
+      batchIds.forEach(batchId => {
+        const shipmentId = findShipmentIdByBatch(batchId, mapping.entities);
+        if (shipmentId && !ids.includes(shipmentId)) {
+          ids.push(shipmentId);
+        }
+      });
+      containerIds.forEach(containerId => {
+        const shipmentId = findShipmentIdByContainer(containerId, mapping.entities);
+        if (shipmentId && !ids.includes(shipmentId)) {
+          ids.push(shipmentId);
+        }
+      });
+      orderItemIds.forEach(itemId => {
+        const relateIds = findShipmentIdsByOrderItem(itemId, mapping.entities);
+        relateIds.forEach(shipmentId => {
+          if (shipmentId && !ids.includes(shipmentId)) {
+            ids.push(shipmentId);
+          }
+        });
+      });
+      orderIds.forEach(orderId => {
+        const relateIds = findShipmentIdsByOrder(orderId, mapping.entities);
+        relateIds.forEach(shipmentId => {
+          if (shipmentId && !ids.includes(shipmentId)) {
+            ids.push(shipmentId);
+          }
+        });
+      });
+      navigate('/shipment/table', {
+        state: { shipmentIds: [...new Set(ids)] },
+      });
+    }
   };
   // TODO: remove this flag when API is done
   const API_IS_READY = false;
@@ -79,8 +117,7 @@ export default function Actions({ targets }: Props) {
   return (
     <>
       <div className={LeftActionsWrapperStyle}>
-        {/* TODO: should support GTV shipment later */}
-        {!selectors.isShipmentFocus && (
+        {(!selectors.isShipmentFocus || (selectors.isShipmentFocus && isEnableBetaFeature)) && (
           <ActionButton onClick={navigateToGTV}>
             <Icon icon="TABLE" />
           </ActionButton>

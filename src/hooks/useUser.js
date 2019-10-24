@@ -28,6 +28,10 @@ const useUser = () => {
       const { types = [] } = organization;
       return types.includes('Supplier');
     },
+    isUsingLegacyFeatures: (): boolean => {
+      // NOTE: should remove when NRM and GTV are ready
+      return ['b9o2ju6rhpo001fg5hi0', 'bhucejdeqsa2ksd16460'].includes(organization.id);
+    },
   };
 };
 

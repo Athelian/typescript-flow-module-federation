@@ -6,7 +6,7 @@ import InputWrapper from '../InputWrapper';
 
 const UserAssignmentInput = ({
   value,
-  extra,
+  context,
   focus,
   onChange,
   onFocus,
@@ -21,7 +21,7 @@ const UserAssignmentInput = ({
         name="value"
         onChange={(name, users) => onChange(users)}
         editable={!readonly}
-        groupIds={extra}
+        groupIds={context}
         inputRef={ref}
         onFocus={onFocus}
         onBlur={onBlur}
