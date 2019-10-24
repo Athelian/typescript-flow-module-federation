@@ -1,4 +1,6 @@
 // @flow
+import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { getBatchLatestQuantity } from 'utils/batch';
 import {
   transformComputedField,
@@ -7,19 +9,20 @@ import {
 } from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
+  ORDER_UPDATE,
   ORDER_SET_ARCHIVED,
   ORDER_SET_CURRENCY,
-  ORDER_SET_DELIVERY_DATE,
-  ORDER_SET_DELIVERY_PLACE,
-  ORDER_SET_DOCUMENTS,
   ORDER_SET_IN_CHARGES,
+  ORDER_SET_EXPORTER,
+  ORDER_SET_PO_NO,
+  ORDER_SET_PI_NO,
+  ORDER_SET_DELIVERY_PLACE,
+  ORDER_SET_DELIVERY_DATE,
+  ORDER_SET_DOCUMENTS,
   ORDER_SET_INCOTERM,
   ORDER_SET_ISSUE_AT,
   ORDER_SET_MEMO,
-  ORDER_SET_PI_NO,
-  ORDER_SET_PO_NO,
   ORDER_TASK_SET_TAGS,
-  ORDER_UPDATE,
 } from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_SET_DELIVERY_DATE,
@@ -159,6 +162,20 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
         order,
         'inCharges',
         hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_IN_CHARGES)
+      ),
+    },
+    {
+      columnKey: 'order.exporter',
+      type: 'exporter_selector',
+      computed: () => ({
+        confirmationDialogMessage: <FormattedMessage id="modules.Orders.changeExporterWarning" />,
+        isRequired: true,
+      }),
+      ...transformValueField(
+        basePath,
+        order,
+        'exporter',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_EXPORTER)
       ),
     },
     {

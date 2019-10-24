@@ -4,9 +4,11 @@ import { Query } from 'react-apollo';
 import { ObjectValue } from 'react-values';
 import { partnersQuery } from 'graphql/partner/query';
 import loadMore from 'utils/loadMore';
-import { getByPathWithDefault, isEquals } from 'utils/fp';
+import { getByPathWithDefault } from 'utils/fp';
+import { cleanUpData } from 'utils/data';
 import useFilterSort from 'hooks/useFilterSort';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
+import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import {
   EntityIcon,
@@ -27,11 +29,22 @@ type Props = {|
   },
   onSelect: (item: Object) => void,
   onCancel: Function,
+  confirmationDialogMessage?: ?string | React.Node,
+  isRequired?: boolean,
 |};
 
 const partnerPath = 'viewer.user.organization.partners';
 
-const SelectPartner = ({ partnerTypes, selected, onCancel, onSelect }: Props) => {
+const SelectPartner = ({
+  partnerTypes,
+  selected,
+  onCancel,
+  onSelect,
+  confirmationDialogMessage,
+  isRequired,
+}: Props) => {
+  const [confirmationDialogIsOpen, setConfirmationDialogIsOpen] = React.useState(false);
+
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', types: partnerTypes },
     { updatedAt: 'DESCENDING' }
@@ -71,9 +84,28 @@ const SelectPartner = ({ partnerTypes, selected, onCancel, onSelect }: Props) =>
 
                   <CancelButton onClick={onCancel} />
                   <SaveButton
-                    disabled={isEquals(value, selected)}
-                    onClick={() => onSelect(value)}
+                    disabled={value?.id === selected?.id}
+                    onClick={() => {
+                      if (!!confirmationDialogMessage && value?.id !== selected?.id) {
+                        setConfirmationDialogIsOpen(true);
+                      } else {
+                        onSelect(value);
+                      }
+                    }}
                   />
+
+                  {!!confirmationDialogMessage && (
+                    <ConfirmDialog
+                      isOpen={confirmationDialogIsOpen}
+                      onRequestClose={() => setConfirmationDialogIsOpen(false)}
+                      onCancel={() => setConfirmationDialogIsOpen(false)}
+                      onConfirm={() => {
+                        onSelect(value);
+                        setConfirmationDialogIsOpen(false);
+                      }}
+                      message={confirmationDialogMessage}
+                    />
+                  )}
                 </SlideViewNavBar>
 
                 <Content>
@@ -86,10 +118,10 @@ const SelectPartner = ({ partnerTypes, selected, onCancel, onSelect }: Props) =>
                       <PartnerCard
                         partner={item}
                         onSelect={() => {
-                          if (value && item.id === value.id) {
+                          if (!isRequired && (value && item.id === value.id)) {
                             set(null);
                           } else {
-                            set(item);
+                            set(cleanUpData(item));
                           }
                         }}
                         selectable
