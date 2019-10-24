@@ -1,6 +1,14 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, presets, fontSizes, transitions, shadows } from 'styles/common';
+import {
+  colors,
+  presets,
+  fontSizes,
+  transitions,
+  shadows,
+  borderRadiuses,
+  layout,
+} from 'styles/common';
 
 export const CardStyle = css`
   ${transitions.EXPAND};
@@ -8,6 +16,16 @@ export const CardStyle = css`
   height: 100%;
   position: relative;
   cursor: pointer;
+`;
+
+export const PlusButtonStyle = css`
+  ${layout.VERTICAL};
+  ${presets.BUTTON};
+  ${borderRadiuses.MAIN};
+  width: 100%;
+  height: 100%;
+  color: rgba(0, 0, 0, 0.2);
+  border: 2px dashed rgba(0, 0, 0, 0.2);
 `;
 
 export const IconStyle = (

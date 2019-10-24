@@ -105,7 +105,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           };
         case 'exporter': {
           return {
-            exporterId: value.id,
+            exporterId: value?.id ?? null,
           };
         }
 

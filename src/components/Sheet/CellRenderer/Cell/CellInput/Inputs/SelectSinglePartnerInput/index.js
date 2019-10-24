@@ -6,7 +6,7 @@ import SelectPartner from 'components/SelectPartner';
 import Icon from 'components/Icon';
 import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
 import type { InputProps } from '../../types';
-import { CardStyle, IconStyle } from './style';
+import { CardStyle, IconStyle, PlusButtonStyle } from './style';
 
 const SelectSinglePartnerInput = ({
   value,
@@ -42,13 +42,14 @@ const SelectSinglePartnerInput = ({
     ) : (
       <button
         type="button"
+        className={PlusButtonStyle}
         onClick={() => {
           if (!readonly) {
             onFocus();
           }
         }}
       >
-        add
+        <Icon icon="ADD" />
       </button>
     )}
 
