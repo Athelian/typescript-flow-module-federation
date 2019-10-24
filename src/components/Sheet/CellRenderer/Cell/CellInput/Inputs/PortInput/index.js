@@ -10,14 +10,14 @@ import { filterItems, itemToString, itemToValue } from './helpers';
 
 const PortInput = ({
   value,
-  extra,
+  context,
   focus,
   onChange,
   onFocus,
   onBlur,
 }: InputProps<{ seaport: ?string, airport: ?string }, 'Air' | 'Sea' | null>) => {
   const intl = useIntl();
-  const { enums, loading } = useEnum(extra ? `${extra}port` : null);
+  const { enums, loading } = useEnum(context ? `${context}port` : null);
   const items = React.useMemo(
     () =>
       loading
@@ -30,7 +30,7 @@ const PortInput = ({
   );
 
   const inputValue = (() => {
-    switch (extra) {
+    switch (context) {
       case 'Air':
         return value?.airport ?? null;
       case 'Sea':
@@ -41,7 +41,7 @@ const PortInput = ({
   })();
 
   const handleChange = newValue => {
-    switch (extra) {
+    switch (context) {
       case 'Air':
         onChange({ airport: newValue, seaport: null });
         break;
@@ -56,7 +56,7 @@ const PortInput = ({
     }
   };
 
-  if (!extra) {
+  if (!context) {
     return <TextDisplay value={intl.formatMessage(messages.transportTypeWarningMessage)} />;
   }
 

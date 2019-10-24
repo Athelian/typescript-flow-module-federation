@@ -22,6 +22,7 @@ import PartnerSelectorInput from './Inputs/PartnerSelectorInput';
 
 type Props = {
   value: any,
+  context: any,
   extra: any,
   type: string,
   inputFocus: boolean,
@@ -69,6 +70,7 @@ const inputs = {
 
 const CellInput = ({
   value,
+  context,
   extra,
   type,
   inputFocus,
@@ -137,6 +139,7 @@ const CellInput = ({
 
   return React.createElement(inputs[type], {
     value: dirtyValue,
+    context,
     extra,
     readonly: disabled,
     focus: inputFocus,
