@@ -1,4 +1,6 @@
 // @flow
+import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { getBatchLatestQuantity } from 'utils/batch';
 import {
   transformComputedField,
@@ -165,6 +167,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.exporter',
       type: 'exporter_selector',
+      computed: () => <FormattedMessage id="modules.Orders.changeExporterWarning" />,
       ...transformValueField(
         basePath,
         order,

@@ -7,6 +7,7 @@ import loadMore from 'utils/loadMore';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import useFilterSort from 'hooks/useFilterSort';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
+import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import {
   EntityIcon,
@@ -27,11 +28,20 @@ type Props = {|
   },
   onSelect: (item: Object) => void,
   onCancel: Function,
+  confirmationDialogMessage?: ?string | React.Node,
 |};
 
 const partnerPath = 'viewer.user.organization.partners';
 
-const SelectPartner = ({ partnerTypes, selected, onCancel, onSelect }: Props) => {
+const SelectPartner = ({
+  partnerTypes,
+  selected,
+  onCancel,
+  onSelect,
+  confirmationDialogMessage,
+}: Props) => {
+  const [confirmationDialogIsOpen, setConfirmationDialogIsOpen] = React.useState(false);
+
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', types: partnerTypes },
     { updatedAt: 'DESCENDING' }
@@ -72,8 +82,27 @@ const SelectPartner = ({ partnerTypes, selected, onCancel, onSelect }: Props) =>
                   <CancelButton onClick={onCancel} />
                   <SaveButton
                     disabled={isEquals(value, selected)}
-                    onClick={() => onSelect(value)}
+                    onClick={() => {
+                      if (!!confirmationDialogMessage && !isEquals(value, selected)) {
+                        setConfirmationDialogIsOpen(true);
+                      } else {
+                        onSelect(value);
+                      }
+                    }}
                   />
+
+                  {!!confirmationDialogMessage && (
+                    <ConfirmDialog
+                      isOpen={confirmationDialogIsOpen}
+                      onRequestClose={() => setConfirmationDialogIsOpen(false)}
+                      onCancel={() => setConfirmationDialogIsOpen(false)}
+                      onConfirm={() => {
+                        onSelect(value);
+                        setConfirmationDialogIsOpen(false);
+                      }}
+                      message={confirmationDialogMessage}
+                    />
+                  )}
                 </SlideViewNavBar>
 
                 <Content>

@@ -20,6 +20,7 @@ const PartnerSelectorInput = (partnerTypes: Array<string>) => ({
   onBlur,
   onKeyDown,
   readonly,
+  extra,
 }: InputProps<Object>) => (
   <div className={PartnerSelectorInputWrapperStyle}>
     {value ? (
@@ -64,6 +65,7 @@ const PartnerSelectorInput = (partnerTypes: Array<string>) => ({
             onChange(newValue, true);
             onBlur();
           }}
+          confirmationDialogMessage={extra || null}
         />
       )}
     </SlideView>
