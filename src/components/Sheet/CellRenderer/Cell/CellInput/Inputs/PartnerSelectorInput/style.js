@@ -37,9 +37,16 @@ export const PlusButtonStyle: string = css`
   ${presets.BUTTON};
   ${borderRadiuses.MAIN};
   width: 100%;
-  height: 100%;
+  height: 20px;
   color: rgba(0, 0, 0, 0.2);
   border: 2px dashed rgba(0, 0, 0, 0.2);
+  font-size: 10px;
+  &:hover,
+  :focus {
+    border-color: ${colors.TEAL};
+    color: ${colors.TEAL};
+    background-color: rgba(0, 0, 0, 0.1);
+  }
 `;
 
 export const CornerIconStyle: string = css`
