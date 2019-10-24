@@ -264,7 +264,7 @@ const SideBar = () => {
                   return null;
                 }
 
-                if (config.legacy && !isUsingLegacyFeatures()) {
+                if (config.legacy && !isUsingLegacyFeatures() && !isEnableBetaFeature) {
                   return null;
                 }
 
@@ -304,7 +304,7 @@ const SideBar = () => {
                       if (subConfig.hidden) {
                         return null;
                       }
-                      if (subConfig.legacy && !isUsingLegacyFeatures()) {
+                      if (subConfig.legacy && !isUsingLegacyFeatures() && !isEnableBetaFeature) {
                         return null;
                       }
 
