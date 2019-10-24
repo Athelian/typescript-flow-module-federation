@@ -21,12 +21,6 @@ import {
 import { PartnerCard } from 'components/Cards';
 import PartnerGridView from 'modules/partner/list/PartnerGridView';
 
-const isEquals = (value: ?Object, selected: ?Object): boolean => {
-  const { id: newId } = value || {};
-  const { id: oldId } = selected || {};
-  return newId === oldId;
-};
-
 type Props = {|
   partnerTypes: Array<string>,
   selected?: ?{
@@ -90,9 +84,9 @@ const SelectPartner = ({
 
                   <CancelButton onClick={onCancel} />
                   <SaveButton
-                    disabled={isEquals(value, selected)}
+                    disabled={value?.id === selected?.id}
                     onClick={() => {
-                      if (!!confirmationDialogMessage && !isEquals(value, selected)) {
+                      if (!!confirmationDialogMessage && value?.id !== selected?.id) {
                         setConfirmationDialogIsOpen(true);
                       } else {
                         onSelect(value);
