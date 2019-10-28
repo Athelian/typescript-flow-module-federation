@@ -1145,7 +1145,9 @@ function BatchCell({
   const isTargetedContainer =
     batch.container && state.targets.includes(`${CONTAINER}-${batch.container.id}`);
   const isTargetedShipment =
-    batch.shipment && state.targets.includes(`${SHIPMENT}-${batch.shipment.id}`);
+    !batch.container &&
+    batch.shipment &&
+    state.targets.includes(`${SHIPMENT}-${batch.shipment.id}`);
   const onTargetTree = () => {
     const targets = [];
     if (data.container) {
