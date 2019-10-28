@@ -319,8 +319,10 @@ export default function CloneEntities({ onSuccess }: Props) {
             batchId =>
               targets.includes(`${BATCH}-${batchId}`) &&
               (!mapping.entities?.batches?.[batchId]?.container ||
-                (mapping.entities?.[batchId]?.container &&
-                  targets.includes(`${CONTAINER}-${mapping.entities?.[batchId]?.container}`)))
+                (mapping.entities?.batches?.[batchId]?.container &&
+                  targets.includes(
+                    `${CONTAINER}-${mapping.entities?.batches?.[batchId]?.container}`
+                  )))
           );
 
           shipments.push({
