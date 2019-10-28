@@ -136,7 +136,22 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.product} />,
     icon: 'PRODUCT',
     path: 'product',
-    permitted: hasPermissions => hasPermissions(PRODUCT_LIST),
+    permitted: hasPermissions => hasPermissions(PRODUCT_LIST, RM_PRODUCT_FOCUS_LIST),
+    submenu: [
+      {
+        label: <FormattedMessage {...messages.product} />,
+        icon: 'PRODUCT',
+        path: 'product',
+        overrideFullPath: 'product',
+        permitted: hasPermissions => hasPermissions(PRODUCT_LIST),
+      },
+      {
+        label: <FormattedMessage {...messages.map} />,
+        icon: 'MAP',
+        path: 'map',
+        permitted: hasPermissions => hasPermissions(RM_PRODUCT_FOCUS_LIST),
+      },
+    ],
   },
   {
     label: <FormattedMessage {...messages.project} />,
