@@ -5,7 +5,7 @@ import { Router } from '@reach/router';
 import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
 import { RM_PRODUCT_FOCUS_LIST } from 'modules/permission/constants/relationMap';
-import BatchFocusedModule from 'modules/relationMap/product';
+import BatchFocusedModule from 'modules/relationMap/product/index.route';
 import { PRODUCT_CREATE, PRODUCT_LIST } from 'modules/permission/constants/product';
 import ProductListModule from './index.list';
 import ProductFormModule from './index.form';

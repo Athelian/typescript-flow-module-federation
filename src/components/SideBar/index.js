@@ -139,7 +139,7 @@ const menu: Array<MenuConfig> = [
     permitted: hasPermissions => hasPermissions(PRODUCT_LIST, RM_PRODUCT_FOCUS_LIST),
     submenu: [
       {
-        label: <FormattedMessage {...messages.product} />,
+        label: <FormattedMessage {...messages.cards} />,
         icon: 'PRODUCT',
         path: 'product',
         overrideFullPath: 'product',
