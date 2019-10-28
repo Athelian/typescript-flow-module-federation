@@ -2,11 +2,14 @@
 import * as React from 'react';
 import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
+import { BooleanValue } from 'react-values';
 import { Mutation } from 'react-apollo';
 import { QueryForm } from 'components/common';
 import { showToastError } from 'utils/errors';
-import { NavBar, EntityIcon } from 'components/NavBar';
-import { SlideViewNavBar, Content } from 'components/Layout';
+import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
+import Timeline from 'modules/timeline/components/Timeline';
+import SlideView from 'components/SlideView';
+import { SlideViewLayout, SlideViewNavBar, Content } from 'components/Layout';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import { FormContainer } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
@@ -18,7 +21,7 @@ import { NAVIGABLE } from 'modules/batch/constants';
 import BatchForm from './form';
 import { BatchInfoContainer, BatchTasksContainer } from './form/containers';
 import validator from './form/validator';
-import { batchFormQuery } from './form/query';
+import { batchFormQuery, batchTimelineQuery } from './form/query';
 import { updateBatchMutation, prepareParsedBatchInput } from './form/mutation';
 
 type BatchFormState = {
@@ -147,6 +150,42 @@ class BatchFormModule extends React.Component<Props> {
                     icon="ORDER"
                   />
                 </JumpToSection>
+
+                <BooleanValue>
+                  {({ value: isOpen, set: toggleLogs }) => (
+                    <>
+                      <LogsButton
+                        entityType="batch"
+                        entityId={batchId}
+                        onClick={() => toggleLogs(true)}
+                      />
+                      <SlideView isOpen={isOpen} onRequestClose={() => toggleLogs(false)}>
+                        <SlideViewLayout>
+                          {batchId && isOpen && (
+                            <>
+                              <SlideViewNavBar>
+                                <EntityIcon icon="LOGS" color="LOGS" />
+                              </SlideViewNavBar>
+
+                              <Content>
+                                <Timeline
+                                  query={batchTimelineQuery}
+                                  queryField="orderItem"
+                                  variables={{
+                                    id: decodeId(batchId),
+                                  }}
+                                  entity={{
+                                    batchId: decodeId(batchId),
+                                  }}
+                                />
+                              </Content>
+                            </>
+                          )}
+                        </SlideViewLayout>
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
 
                 <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
                   {(batchInfoContainer, batchTasksContainer) => (
