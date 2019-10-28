@@ -74,6 +74,7 @@ import {
   SHIPMENT_SET_CONTRACT_NO,
   SHIPMENT_SET_DOCUMENTS,
   SHIPMENT_SET_IN_CHARGE,
+  SHIPMENT_SET_FORWARDERS,
   SHIPMENT_SET_INCOTERM,
   SHIPMENT_SET_INVOICE_NO,
   SHIPMENT_SET_LOAD_TYPE,
@@ -1023,6 +1024,16 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         batch?.shipment ?? null,
         'inCharges',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_IN_CHARGE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.forwarders',
+      type: 'forwarders',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'forwarders',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_FORWARDERS)
       ),
     },
     {

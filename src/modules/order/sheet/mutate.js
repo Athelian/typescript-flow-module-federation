@@ -250,6 +250,11 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           return {
             inChargeIds: value.map(user => user.id),
           };
+        case 'forwarders': {
+          return {
+            forwarderIds: value.map(({ id }) => id),
+          };
+        }
         default:
           return {
             [field]: value,
