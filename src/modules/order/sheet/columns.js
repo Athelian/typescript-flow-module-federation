@@ -35,6 +35,13 @@ const orderColumns: Array<ColumnConfig> = [
     },
   },
   {
+    key: 'order.logs',
+    title: <FormattedMessage {...orderMessages.logs} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 120,
+  },
+  {
     key: 'order.archived',
     exportKey: 'archived',
     title: <FormattedMessage {...orderMessages.status} />,
