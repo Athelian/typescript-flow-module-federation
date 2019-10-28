@@ -315,15 +315,21 @@ export default function CloneEntities({ onSuccess }: Props) {
 
           // clone container along with batches has been targeted
           processShipmentIds.push(shipmentId);
+          const batchesInPool = (mapping.entities?.shipments?.[shipmentId]?.batches ?? []).filter(
+            batchId =>
+              targets.includes(`${BATCH}-${batchId}`) &&
+              (!mapping.entities?.batches?.[batchId]?.container ||
+                (mapping.entities?.[batchId]?.container &&
+                  targets.includes(`${CONTAINER}-${mapping.entities?.[batchId]?.container}`)))
+          );
+
           shipments.push({
             id: shipmentId,
             input: {
               no: `[cloned][${Date.now()}] ${mapping.entities?.shipments?.[shipmentId]?.no}`,
-              batches: (mapping.entities?.shipments?.[shipmentId]?.batches ?? [])
-                .filter(batchId => targets.includes(`${BATCH}-${batchId}`))
-                .map(id => ({
-                  id,
-                })),
+              batches: batchesInPool.map(id => ({
+                id,
+              })),
               containers: (mapping.entities?.shipments?.[shipmentId]?.containers ?? [])
                 .filter(containerId => targets.includes(`${CONTAINER}-${containerId}`))
                 .map(containerId => ({
