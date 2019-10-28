@@ -136,7 +136,7 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.product} />,
     icon: 'PRODUCT',
     path: 'product',
-    permitted: hasPermissions => hasPermissions(PRODUCT_LIST, RM_PRODUCT_FOCUS_LIST),
+    permitted: hasPermissions => hasPermissions([PRODUCT_LIST, RM_PRODUCT_FOCUS_LIST]),
     submenu: [
       {
         label: <FormattedMessage {...messages.cards} />,

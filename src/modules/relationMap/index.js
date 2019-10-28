@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { Location, navigate } from '@reach/router';
+import { Location } from '@reach/router';
 import { Provider } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import { Content } from 'components/Layout';
@@ -28,28 +28,14 @@ const RelationMap = () => {
         <EntityIcon icon="RELATION_MAP" color="RELATION_MAP" />
         <Location>
           {({ location }) => (
-            <Tabs
-              tabs={tabs}
-              activeIndex={location.pathname.includes('products') ? 1 : 0}
-              onChange={tabId => {
-                if (tabs.length > 1) {
-                  if (tabId) {
-                    navigate('/order/relation-map/products');
-                  } else {
-                    navigate('/order/relation-map');
-                  }
-                }
-              }}
-            />
+            <Tabs tabs={tabs} activeIndex={location.pathname.includes('products') ? 1 : 0} />
           )}
         </Location>
       </NavBar>
 
       <Content>
         <div className={ResetContentWrapperStyle}>
-          {hasPermission(RM_ORDER_FOCUS_LIST) && (
-            <Order path="/orders" default={hasPermission(RM_ORDER_FOCUS_LIST)} />
-          )}
+          {hasPermission(RM_ORDER_FOCUS_LIST) && <Order />}
         </div>
       </Content>
     </Provider>
