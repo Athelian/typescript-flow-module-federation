@@ -13,40 +13,16 @@ import { shipmentTimelineQuery } from 'modules/shipment/query';
 import type { InputProps } from '../../types';
 import { InputWrapperStyle } from './style';
 
-const LogsButton = (entityType: string) => {
+const LogsButton = ({
+  query,
+  queryField,
+  entityKey,
+}: {
+  query: string,
+  queryField: string,
+  entityKey: string,
+}) => {
   return ({ value, focus, onFocus, onBlur, onKeyDown, readonly }: InputProps<string>) => {
-    const timelineQueryPropMap = {
-      Order: {
-        query: orderTimelineQuery,
-        queryField: 'order',
-        entity: {
-          orderId: value,
-        },
-        variables: {
-          id: value,
-        },
-      },
-      OrderItem: {
-        query: orderItemTimelineQuery,
-        queryField: 'orderItem',
-        entity: {
-          orderItemId: value,
-        },
-        variables: {
-          id: value,
-        },
-      },
-      Shipment: {
-        query: shipmentTimelineQuery,
-        queryField: 'shipment',
-        entity: {
-          shipmentId: value,
-        },
-        variables: {
-          id: value,
-        },
-      },
-    };
     return (
       <>
         <button
@@ -75,7 +51,12 @@ const LogsButton = (entityType: string) => {
                 </SlideViewNavBar>
 
                 <Content>
-                  <Timeline {...timelineQueryPropMap[entityType]} />
+                  <Timeline
+                    query={query}
+                    queryField={queryField}
+                    entity={{ [entityKey]: value }}
+                    variables={{ id: value }}
+                  />
                 </Content>
               </>
             )}
@@ -87,7 +68,19 @@ const LogsButton = (entityType: string) => {
 };
 
 export default {
-  Order: LogsButton('Order'),
-  OrderItem: LogsButton('OrderItem'),
-  Shipment: LogsButton('Shipment'),
+  Order: LogsButton({
+    query: orderTimelineQuery,
+    queryField: 'order',
+    entityKey: 'orderId',
+  }),
+  OrderItem: LogsButton({
+    query: orderItemTimelineQuery,
+    queryField: 'orderItem',
+    entityKey: 'orderItemId',
+  }),
+  Shipment: LogsButton({
+    query: shipmentTimelineQuery,
+    queryField: 'shipment',
+    entityKey: 'shipmentId',
+  }),
 };
