@@ -853,7 +853,7 @@ export const MaskEditFilterConfig: Array<FilterConfig> = [
   {
     entity: 'TASK TEMPLATE',
     field: 'type',
-    type: 'mask_edit_types',
+    type: 'mask_edit_type',
     message: tableTemplateMessages.type,
     defaultValue: [],
   },

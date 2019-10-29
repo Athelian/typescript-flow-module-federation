@@ -31,6 +31,7 @@ type Props = OptionalProps & {
 const defaultProps = {
   template: {},
   isNew: false,
+  onSave: () => {},
 };
 
 const formContainer = new FormContainer();

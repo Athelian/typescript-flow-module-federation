@@ -54,7 +54,7 @@ const statesToColumns = (states: { [string]: Array<ColumnState> }) =>
 
 const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
   const [columnStates, setColumnStates] = React.useState<{ [string]: Array<ColumnState> }>({});
-  const [template, setTemplate] = React.useState(null);
+  const [template, setTemplate] = React.useState<?Object>(null);
   const columnStatesRef = React.useRef(columnStates);
   const [isOpen, setOpen] = React.useState(false);
   const groups = React.useMemo<Array<string>>(() => Array.from(new Set(config.map(c => c.icon))), [
@@ -63,7 +63,8 @@ const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
   const currentColumnKeys = React.useMemo<Array<string>>(
     () =>
       Object.values(columnStates)
-        .map(state => state.filter(c => !c.hidden).map(c => c.column.key))
+        .map((state: any) => state.filter(c => !c.hidden).map(c => c.column.key))
+        // $FlowFixMe flat not supported by flow
         .flat(),
     [columnStates]
   );
@@ -101,9 +102,11 @@ const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
   };
 
   const handleTemplateSave = () => {
-    update({ variables: { id: template.id, input: { fields: currentColumnKeys } } }).then(
-      ({ data }) => setTemplate(data.maskEditUpdate)
-    );
+    if (template) {
+      update({ variables: { id: template.id, input: { fields: currentColumnKeys } } }).then(
+        ({ data }) => setTemplate(data.maskEditUpdate)
+      );
+    }
   };
 
   const handleApply = () => {
@@ -114,7 +117,7 @@ const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
 
   const handleDefault = () => {
     setTemplate(null);
-    setColumnStates(columnsToStates(config));
+    setColumnStates(columnsToStates(config, config));
   };
 
   const handleGroup = () => {

@@ -14,7 +14,7 @@ import Ports from './Inputs/Ports';
 import Users from './Inputs/Users';
 import OrganizationTypes from './Inputs/OrganizationTypes';
 import TaskTemplateEntityTypes from './Inputs/TaskTemplateEntityTypes';
-import MaskEditTypes from './Inputs/MaskEditTypes';
+import MaskEditType from './Inputs/MaskEditType';
 import OrderIds from './Inputs/OrderIds';
 import ShipmentIds from './Inputs/ShipmentIds';
 import WarehouseIds from './Inputs/WarehouseIds';
@@ -115,7 +115,7 @@ const inputs = {
   user_tags: UserTags,
   organization_types: OrganizationTypes,
   task_template_entity_types: TaskTemplateEntityTypes,
-  mask_edit_types: MaskEditTypes,
+  mask_edit_type: MaskEditType,
   completely_batched: CompletelyBatched,
   completely_shipped: CompletelyShipped,
   has_shipment: HasShipment,

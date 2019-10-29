@@ -31,7 +31,7 @@ const convertSheetColumns = sheetColumns =>
       }),
       {}
     )
-  ).map(([key, columns]) => ({
+  ).map(([key, columns]: [string, any]) => ({
     columns: [
       {
         id: 0,

@@ -7,9 +7,9 @@ import messages from '../../messages';
 import { RadiosWrapperStyle } from './style';
 
 type Props = {
-  value: Array<string>,
+  value: string,
   readonly: boolean,
-  onChange: (Array<string>) => void,
+  onChange: string => void,
 };
 
 const Types = {
@@ -18,7 +18,7 @@ const Types = {
   ShipmentSheet: tableTemplateMessage.shipmentSheet,
 };
 
-const MaskEditTypes = ({ value, onChange, readonly }: Props) => (
+const MaskEditType = ({ value, onChange, readonly }: Props) => (
   <>
     <Label height="30px">
       <FormattedMessage {...messages.maskEditTypes} />
@@ -39,4 +39,4 @@ const MaskEditTypes = ({ value, onChange, readonly }: Props) => (
   </>
 );
 
-export default MaskEditTypes;
+export default MaskEditType;
