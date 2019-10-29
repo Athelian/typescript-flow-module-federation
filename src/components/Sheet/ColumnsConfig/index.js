@@ -1,14 +1,14 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useMutation } from '@apollo/react-hooks';
 import { cloneDeep } from 'lodash';
 import { difference } from 'ramda';
 import Dialog from 'components/Dialog';
-import { ApplyButton, ResetButton, BaseButton, SaveButton } from 'components/Buttons';
+import { ApplyButton, ResetButton, BaseButton, SaveButton, IconButton } from 'components/Buttons';
 import { Label } from 'components/Form';
 import Icon from 'components/Icon';
 import CornerIcon from 'components/CornerIcon';
+import { Tooltip } from 'components/Tooltip';
 import { colors } from 'styles/common';
 import type { ColumnConfig } from '../SheetColumns';
 import messages from '../messages';
@@ -16,7 +16,6 @@ import Group from './Group';
 import TemplateSelector from './TemplateSelector';
 import TemplateNew from './TemplateNew';
 import type { ColumnState } from './types';
-import { maskEditUpdateMutation } from './query';
 import {
   ButtonStyle,
   ModalWrapperStyle,
@@ -74,13 +73,6 @@ const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
       difference(currentColumnKeys, columns.map(c => c.key)).length > 0,
     [columns, currentColumnKeys]
   );
-  const isDirtyFromTemplate = React.useMemo<boolean>(
-    () =>
-      difference(template?.fields ?? [], currentColumnKeys).length > 0 ||
-      difference(currentColumnKeys, template?.fields ?? []).length > 0,
-    [template, currentColumnKeys]
-  );
-  const [update, { loading: updateLoading }] = useMutation(maskEditUpdateMutation);
 
   React.useEffect(() => {
     const newColumnStates = columnsToStates(columns, config);
@@ -101,23 +93,18 @@ const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
     setColumnStates(columnsToStates(columnsFromTemplate, config));
   };
 
-  const handleTemplateSave = () => {
-    if (template) {
-      update({ variables: { id: template.id, input: { fields: currentColumnKeys } } }).then(
-        ({ data }) => setTemplate(data.maskEditUpdate)
-      );
-    }
-  };
-
   const handleApply = () => {
     columnStatesRef.current = columnStates;
     setOpen(false);
     onChange(statesToColumns(columnStates));
   };
 
-  const handleDefault = () => {
-    setTemplate(null);
+  const handleSelectAll = () => {
     setColumnStates(columnsToStates(config, config));
+  };
+
+  const handleUnselectAll = () => {
+    setColumnStates(columnsToStates([], config));
   };
 
   const handleGroup = () => {
@@ -165,24 +152,38 @@ const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
           <div className={HeaderStyle}>
             <div className={ActionsWrapperStyle}>
               <div className={ButtonsWrapperStyle}>
-                <BaseButton
-                  onClick={handleDefault}
-                  label={<FormattedMessage {...messages.columnsConfigDefaultButton} />}
-                  icon="UNDO"
-                  textColor="GRAY_DARK"
-                  hoverTextColor="WHITE"
-                  backgroundColor="GRAY_SUPER_LIGHT"
-                  hoverBackgroundColor="GRAY_LIGHT"
-                />
-                <BaseButton
-                  onClick={handleGroup}
-                  label={<FormattedMessage {...messages.columnsConfigGroupButton} />}
-                  icon="BRING_FORWARD"
-                  textColor="TEAL"
-                  hoverTextColor="WHITE"
-                  backgroundColor="GRAY_SUPER_LIGHT"
-                  hoverBackgroundColor="TEAL"
-                />
+                <Tooltip
+                  message={<FormattedMessage {...messages.columnsConfigUnselectAllButton} />}
+                >
+                  <IconButton
+                    onClick={handleUnselectAll}
+                    icon="UNCHECKED"
+                    textColor="GRAY_DARK"
+                    hoverTextColor="WHITE"
+                    backgroundColor="GRAY_SUPER_LIGHT"
+                    hoverBackgroundColor="GRAY_LIGHT"
+                  />
+                </Tooltip>
+                <Tooltip message={<FormattedMessage {...messages.columnsConfigSelectAllButton} />}>
+                  <IconButton
+                    onClick={handleSelectAll}
+                    icon="CHECKED"
+                    textColor="GRAY_DARK"
+                    hoverTextColor="WHITE"
+                    backgroundColor="GRAY_SUPER_LIGHT"
+                    hoverBackgroundColor="GRAY_LIGHT"
+                  />
+                </Tooltip>
+                <Tooltip message={<FormattedMessage {...messages.columnsConfigGroupButton} />}>
+                  <IconButton
+                    onClick={handleGroup}
+                    icon="BRING_FORWARD"
+                    textColor="TEAL"
+                    hoverTextColor="WHITE"
+                    backgroundColor="GRAY_SUPER_LIGHT"
+                    hoverBackgroundColor="TEAL"
+                  />
+                </Tooltip>
               </div>
               <div className={ButtonsWrapperStyle}>
                 <ResetButton onClick={handleReset} disabled={!isDirty} />
@@ -210,11 +211,6 @@ const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
                   )
                 }
               </TemplateSelector>
-
-              <SaveButton
-                onClick={handleTemplateSave}
-                disabled={!template || !isDirtyFromTemplate || updateLoading}
-              />
 
               <TemplateNew
                 columns={currentColumnKeys}

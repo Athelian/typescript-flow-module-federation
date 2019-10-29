@@ -22,6 +22,7 @@ import orderSheetColumns from 'modules/order/sheet/columns';
 import shipmentSheetColumns from 'modules/shipment/sheet/columns';
 import { ContentWrapperStyle, BlockStyle } from './style';
 
+// TODO: This convert function should deleted after old RM edit is also deleted
 const convertSheetColumns = sheetColumns =>
   Object.entries(
     sheetColumns.reduce(

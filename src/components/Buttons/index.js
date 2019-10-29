@@ -1,9 +1,11 @@
 // @flow
+import Button from './Button';
+import LabelledButton from './LabelledButton';
+import IconButton from './IconButton';
 import ActivateButton from './ActivateButton';
 import ApplyButton from './ApplyButton';
 import ApproveButton from './ApproveButton';
 import ArchiveButton from './ArchiveButton';
-import BaseButton from './BaseButton';
 import CancelButton from './CancelButton';
 import ResetButton from './ResetButton';
 import CloneButton from './CloneButton';
@@ -19,11 +21,14 @@ import YesButton from './YesButton';
 import SelectTemplateButton from './SelectTemplateButton';
 
 export {
+  Button,
+  LabelledButton,
+  IconButton,
   ActivateButton,
   ApplyButton,
   ApproveButton,
   ArchiveButton,
-  BaseButton,
+  LabelledButton as BaseButton,
   CancelButton,
   ResetButton,
   CloneButton,

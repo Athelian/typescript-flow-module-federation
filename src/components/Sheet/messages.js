@@ -8,11 +8,15 @@ export default defineMessages({
   },
   columnsConfigGroupButton: {
     id: 'components.Sheet.columnsConfigGroupButton',
-    defaultMessage: 'group',
+    defaultMessage: 'Group',
   },
-  columnsConfigDefaultButton: {
-    id: 'components.Sheet.columnsConfigDefaultButton',
-    defaultMessage: 'default',
+  columnsConfigSelectAllButton: {
+    id: 'components.Sheet.columnsConfigSelectAllButton',
+    defaultMessage: 'Select all',
+  },
+  columnsConfigUnselectAllButton: {
+    id: 'components.Sheet.columnsConfigUnselectAllButton',
+    defaultMessage: 'Un select all',
   },
   columnsConfigSelectTemplate: {
     id: 'components.Sheet.columnsConfigSelectTemplate',
