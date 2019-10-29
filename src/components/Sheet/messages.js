@@ -22,4 +22,8 @@ export default defineMessages({
     id: 'components.Sheet.deletedAnnouncement',
     defaultMessage: 'Removed',
   },
+  logs: {
+    id: 'components.Sheet.logs',
+    efaultMessage: 'Logs',
+  },
 });

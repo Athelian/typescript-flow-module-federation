@@ -5,13 +5,12 @@ import SlideView from 'components/SlideView';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon } from 'components/NavBar';
 import Icon from 'components/Icon';
-import { Display } from 'components/Form';
 import Timeline from 'modules/timeline/components/Timeline';
 import { orderTimelineQuery } from 'modules/order/query';
 import { orderItemTimelineQuery } from 'modules/orderItem/form/query';
 import { shipmentTimelineQuery } from 'modules/shipment/query';
 import type { InputProps } from '../../types';
-import { InputWrapperStyle } from './style';
+import { LogsButtonStyle } from './style';
 
 const LogsButton = ({
   query,
@@ -34,12 +33,12 @@ const LogsButton = ({
             }
           }}
           onKeyDown={onKeyDown}
-          className={InputWrapperStyle}
+          className={LogsButtonStyle}
         >
           <Icon icon="LOGS" />
-          <Display>
+          <span>
             <FormattedMessage id="components.sheet.logs" defaultMessage="logs" />
-          </Display>
+          </span>
         </button>
 
         <SlideView isOpen={focus} onRequestClose={onBlur}>
