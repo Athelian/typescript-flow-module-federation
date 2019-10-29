@@ -267,6 +267,13 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             tagIds: value.map(tag => tag.id),
           };
         }
+        case 'freeTimeStartDate': {
+          const { auto: autoCalculatedFreeTimeStartDate = false, value: date = null } = value || {};
+          return {
+            autoCalculatedFreeTimeStartDate,
+            freeTimeStartDate: date ? new Date(date) : null,
+          };
+        }
         case 'warehouseArrivalAgreedDateAssignedTo': {
           return {
             warehouseArrivalAgreedDateAssignedToIds: value.map(user => user.id),

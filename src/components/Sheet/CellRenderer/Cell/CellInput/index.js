@@ -6,6 +6,7 @@ import TextAreaInput from './Inputs/TextAreaInput';
 import NumberInput from './Inputs/NumberInput';
 import NumberToggleInput from './Inputs/NumberToggleInput';
 import DateInput from './Inputs/DateInput';
+import DateToggleInput from './Inputs/DateToggleInput';
 import DatetimeInput from './Inputs/DatetimeInput';
 import SelectCustomInput from './Inputs/SelectCustomInput';
 import SelectEnumInput from './Inputs/SelectEnumInput';
@@ -44,6 +45,7 @@ const inputs = {
   number_toggle: NumberToggleInput,
   static_metric_value: StaticMetricValueInput,
   date: DateInput,
+  date_toggle: DateToggleInput,
   datetime: DatetimeInput,
   load_type: SelectEnumInput.LoadType,
   transport_type: SelectEnumInput.TransportType,

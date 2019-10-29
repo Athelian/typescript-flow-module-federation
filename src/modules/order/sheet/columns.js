@@ -661,6 +661,13 @@ const containerColumns: Array<ColumnConfig> = [
   // actual arrival approval
   // free time
   // start date
+  {
+    key: 'order.orderItem.batch.container.freeTimeStartDate',
+    title: <FormattedMessage {...containerMessages.startDate} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 195,
+  },
   // start date auto
   // duration
   // due date

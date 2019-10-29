@@ -283,6 +283,8 @@ const containerSheetFragment = gql`
   fragment containerSheetFragment on Container {
     id
     no
+    autoCalculatedFreeTimeStartDate
+    freeTimeStartDate
     warehouseArrivalAgreedDate
     warehouseArrivalAgreedDateAssignedTo {
       ...userAvatarFragment
