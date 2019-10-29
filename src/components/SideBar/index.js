@@ -146,9 +146,9 @@ const menu: Array<MenuConfig> = [
         permitted: hasPermissions => hasPermissions(PRODUCT_LIST),
       },
       {
-        label: <FormattedMessage {...messages.map} />,
+        label: <FormattedMessage {...messages.relationMap} />,
         icon: 'MAP',
-        path: 'map',
+        path: 'relation-map',
         permitted: hasPermissions => hasPermissions(RM_PRODUCT_FOCUS_LIST),
       },
     ],

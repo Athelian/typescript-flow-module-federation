@@ -20,7 +20,7 @@ const ProductApp = () => (
     <Router>
       <ProductModuleListWrapper path="/" />
       <ProductFormModuleCreationWrapper path="new" />
-      <ProductModuleMapWrapper path="map" />
+      <ProductModuleMapWrapper path="relation-map" />
       <ProductFormModuleCreationWrapper path="clone/:productId" />
       <ProductFormModuleWrapper path=":productId" />
     </Router>
