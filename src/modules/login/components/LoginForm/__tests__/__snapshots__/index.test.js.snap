@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<LoginForm /> should allow to click on submit button on valid data 1`] = `
-.emotion-16 {
+.emotion-15 {
   box-shadow: 0 10px 30px 0 rgba(0,0,0,0.1);
   border-radius: 5px;
   background-color: #fff;
@@ -15,7 +15,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   justify-items: center;
 }
 
-.emotion-15 {
+.emotion-14 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -29,7 +29,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   align-items: center;
 }
 
-.emotion-14 {
+.emotion-13 {
   font-size: 14px;
   min-height: 20px;
   line-height: 20px;
@@ -37,64 +37,8 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   margin-top: 20px;
 }
 
-.emotion-13 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-transition: all 0.1s linear;
-  transition: all 0.1s linear;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  border: 0;
-  color: #aaa;
-  background-color: #ccc;
-  border-radius: 999px;
-  height: 30px;
-  padding: 0 10px;
-  cursor: default;
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  min-width: 75px;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-}
-
-.emotion-13:focus {
-  outline: 0;
-}
-
 .emotion-11 {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-letter-spacing: 2px;
-  -moz-letter-spacing: 2px;
-  -ms-letter-spacing: 2px;
-  letter-spacing: 2px;
-  font-size: 12px;
-  text-transform: uppercase;
-}
-
-.emotion-12 {
   margin: 0 0 0 5px;
-  font-size: 12px;
 }
 
 .emotion-2 {
@@ -252,12 +196,75 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   color: #ccc;
 }
 
+.emotion-12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 0;
+  border-radius: 999px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  color: #ffffff;
+  background-color: #11d1a6;
+  height: 30px;
+  padding: 0 10px;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  -webkit-letter-spacing: 2px;
+  -moz-letter-spacing: 2px;
+  -ms-letter-spacing: 2px;
+  letter-spacing: 2px;
+  min-width: 75px;
+}
+
+.emotion-12:focus {
+  outline: 0;
+}
+
+.emotion-12:hover,
+.emotion-12:focus {
+  color: #ffffff;
+  background-color: #0bbc94;
+}
+
+.emotion-12[disabled] {
+  color: #aaa;
+  background-color: #ccc;
+  cursor: default;
+}
+
 <div>
   <form
     data-testid="loginForm"
   >
     <div
-      class="emotion-16"
+      class="emotion-15"
     >
       <div
         class="emotion-10"
@@ -320,21 +327,19 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
         </div>
       </div>
       <div
-        class="emotion-15"
+        class="emotion-14"
       >
         <button
-          class="emotion-13"
+          class="emotion-12"
           data-testid="submitButton"
           disabled=""
           type="submit"
         >
+          <span>
+            LOGIN
+          </span>
           <div
             class="emotion-11"
-          >
-            LOGIN
-          </div>
-          <div
-            class="emotion-12"
           >
             <svg
               aria-hidden="true"
@@ -354,7 +359,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
           </div>
         </button>
         <a
-          class="emotion-14"
+          class="emotion-13"
           href="/forgot-password"
         >
           forgot password
@@ -437,18 +442,16 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
         class="css-1q3ffjc"
       >
         <button
-          class="css-1k8nox5"
+          class="css-12nmo3v"
           data-testid="submitButton"
           disabled=""
           type="submit"
         >
-          <div
-            class="css-b2bx41"
-          >
+          <span>
             LOGIN
-          </div>
+          </span>
           <div
-            class="css-x1sjjo"
+            class="css-1d6i4a1"
           >
             <svg
               aria-hidden="true"
@@ -480,7 +483,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
 `;
 
 exports[`<LoginForm /> should render without crash 1`] = `
-.emotion-16 {
+.emotion-15 {
   box-shadow: 0 10px 30px 0 rgba(0,0,0,0.1);
   border-radius: 5px;
   background-color: #fff;
@@ -494,7 +497,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
   justify-items: center;
 }
 
-.emotion-15 {
+.emotion-14 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -508,7 +511,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
   align-items: center;
 }
 
-.emotion-14 {
+.emotion-13 {
   font-size: 14px;
   min-height: 20px;
   line-height: 20px;
@@ -516,64 +519,8 @@ exports[`<LoginForm /> should render without crash 1`] = `
   margin-top: 20px;
 }
 
-.emotion-13 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-transition: all 0.1s linear;
-  transition: all 0.1s linear;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  border: 0;
-  color: #aaa;
-  background-color: #ccc;
-  border-radius: 999px;
-  height: 30px;
-  padding: 0 10px;
-  cursor: default;
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  min-width: 75px;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-}
-
-.emotion-13:focus {
-  outline: 0;
-}
-
 .emotion-11 {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-letter-spacing: 2px;
-  -moz-letter-spacing: 2px;
-  -ms-letter-spacing: 2px;
-  letter-spacing: 2px;
-  font-size: 12px;
-  text-transform: uppercase;
-}
-
-.emotion-12 {
   margin: 0 0 0 5px;
-  font-size: 12px;
 }
 
 .emotion-2 {
@@ -731,12 +678,75 @@ exports[`<LoginForm /> should render without crash 1`] = `
   color: #ccc;
 }
 
+.emotion-12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 0;
+  border-radius: 999px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  color: #ffffff;
+  background-color: #11d1a6;
+  height: 30px;
+  padding: 0 10px;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  -webkit-letter-spacing: 2px;
+  -moz-letter-spacing: 2px;
+  -ms-letter-spacing: 2px;
+  letter-spacing: 2px;
+  min-width: 75px;
+}
+
+.emotion-12:focus {
+  outline: 0;
+}
+
+.emotion-12:hover,
+.emotion-12:focus {
+  color: #ffffff;
+  background-color: #0bbc94;
+}
+
+.emotion-12[disabled] {
+  color: #aaa;
+  background-color: #ccc;
+  cursor: default;
+}
+
 <div>
   <form
     data-testid="loginForm"
   >
     <div
-      class="emotion-16"
+      class="emotion-15"
     >
       <div
         class="emotion-10"
@@ -799,21 +809,19 @@ exports[`<LoginForm /> should render without crash 1`] = `
         </div>
       </div>
       <div
-        class="emotion-15"
+        class="emotion-14"
       >
         <button
-          class="emotion-13"
+          class="emotion-12"
           data-testid="submitButton"
           disabled=""
           type="submit"
         >
+          <span>
+            LOGIN
+          </span>
           <div
             class="emotion-11"
-          >
-            LOGIN
-          </div>
-          <div
-            class="emotion-12"
           >
             <svg
               aria-hidden="true"
@@ -833,7 +841,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
           </div>
         </button>
         <a
-          class="emotion-14"
+          class="emotion-13"
           href="/forgot-password"
         >
           forgot password
