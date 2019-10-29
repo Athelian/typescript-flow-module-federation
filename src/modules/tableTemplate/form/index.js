@@ -21,10 +21,9 @@ const defaultProps = {
 
 function TableTemplateForm({ template, isNew, initDetailValues }: Props) {
   useEffect(() => {
-    if (!isNew) {
-      initDetailValues(template);
-    }
-  });
+    initDetailValues(template);
+  }, [template, initDetailValues]);
+
   return (
     <div className={TemplateFormWrapperStyle}>
       <SectionWrapper id="tableTemplate_templateSection">

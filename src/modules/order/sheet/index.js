@@ -126,7 +126,12 @@ const OrderSheetModule = ({ orderIds }: Props) => {
 
         <Filter config={OrderFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <ColumnsConfig columns={columns} onChange={setCurrentColumns} />
+        <ColumnsConfig
+          config={columns}
+          columns={currentColumns}
+          onChange={setCurrentColumns}
+          templateType="OrderSheet"
+        />
         <ExportButton
           type="Orders"
           exportQuery={ordersExportQuery}

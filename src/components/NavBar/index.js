@@ -27,6 +27,7 @@ import {
   TaskFilterConfig,
   TaskTemplateFilterConfig,
   TagFilterConfig,
+  MaskEditFilterConfig,
 } from './components/Filter/configs';
 import {
   ProductSortConfig,
@@ -44,6 +45,7 @@ import {
   TaskSortConfig,
   TaskTemplateSortConfig,
   TagSortConfig,
+  MaskEditSortConfig,
 } from './components/Sort/configs';
 
 export {
@@ -75,6 +77,7 @@ export {
   TaskFilterConfig,
   TaskTemplateFilterConfig,
   TagFilterConfig,
+  MaskEditFilterConfig,
   // Sort configs
   ProductSortConfig,
   ProductProviderSortConfig,
@@ -91,4 +94,5 @@ export {
   TaskSortConfig,
   TaskTemplateSortConfig,
   TagSortConfig,
+  MaskEditSortConfig,
 };

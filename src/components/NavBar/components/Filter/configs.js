@@ -13,6 +13,7 @@ import fileMessages from 'modules/document/messages';
 import projectMessages from 'modules/project/messages';
 import taskMessages from 'modules/task/messages';
 import tagMessages from 'modules/tags/messages';
+import tableTemplateMessages from 'modules/tableTemplate/messages';
 import type { FilterConfig } from './index';
 
 export const ProductFilterConfig: Array<FilterConfig> = [
@@ -831,5 +832,29 @@ export const TagFilterConfig: Array<FilterConfig> = [
     type: 'date_range',
     message: tagMessages.updatedAt,
     defaultValue: { after: null, before: null },
+  },
+];
+
+export const MaskEditFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'TABLE TEMPLATE',
+    field: 'createdAt',
+    type: 'date_range',
+    message: tableTemplateMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'TABLE TEMPLATE',
+    field: 'updatedAt',
+    type: 'date_range',
+    message: tableTemplateMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'TABLE TEMPLATE',
+    field: 'type',
+    type: 'mask_edit_type',
+    message: tableTemplateMessages.type,
+    defaultValue: [],
   },
 ];

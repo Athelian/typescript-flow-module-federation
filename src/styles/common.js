@@ -274,13 +274,12 @@ layout.GRID_HORIZONTAL = `
 
 export const presets = {
   BUTTON: `
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    ${layout.HORIZONTAL};
+    ${layout.CENTER_CENTER};
+    ${transitions.MAIN};
     cursor: pointer;
     user-select: none;
     border: 0;
-    ${transitions.MAIN};
     &:focus {
       outline: 0;
     }

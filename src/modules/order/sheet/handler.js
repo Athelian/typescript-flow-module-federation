@@ -513,6 +513,7 @@ export default function entityEventHandler(
 
             const batch = items
               .map(order => order.orderItems.map(oi => oi.batches).flat())
+              // $FlowFixMe flat not supported by flow
               .flat()
               .find(b => b.id === event.entity.id);
             if (batch) {
@@ -539,12 +540,12 @@ export default function entityEventHandler(
                                   switch (change.field) {
                                     case 'packageQuantity':
                                       return {
-                                        ...c.new.custom,
+                                        ...(c?.new?.custom ?? {}),
                                         value: change.new?.float,
                                       };
                                     case 'autoCalculatePackageQuantity':
                                       return {
-                                        ...c.new.custom,
+                                        ...(c?.new?.custom ?? {}),
                                         auto: change.new?.boolean,
                                       };
                                     default:
