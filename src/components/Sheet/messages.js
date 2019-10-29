@@ -32,6 +32,6 @@ export default defineMessages({
   },
   logs: {
     id: 'components.Sheet.logs',
-    efaultMessage: 'Logs',
+    defaultMessage: 'Logs',
   },
 });
