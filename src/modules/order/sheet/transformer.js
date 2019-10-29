@@ -171,6 +171,11 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
       ),
     },
     {
+      columnKey: 'order.importer',
+      type: 'partner',
+      ...transformReadonlyField(basePath, order, 'importer', order?.importer ?? null),
+    },
+    {
       columnKey: 'order.exporter',
       type: 'exporter_selector',
       extra: {
