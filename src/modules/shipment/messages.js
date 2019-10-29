@@ -34,6 +34,10 @@ export default defineMessages({
     id: 'modules.Shipments.bookingDate',
     defaultMessage: 'BOOKING DATE',
   },
+  booked: {
+    id: 'modules.Shipments.booked',
+    defaultMessage: 'Booked',
+  },
   invoiceNo: {
     id: 'modules.Shipments.invoiceNo',
     defaultMessage: 'INVOICE NO.',

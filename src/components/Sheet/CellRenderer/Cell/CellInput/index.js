@@ -20,6 +20,7 @@ import UserAssignmentInput from './Inputs/UserAssignmentInput';
 import PortInput from './Inputs/PortInput';
 import PartnerSelectorInput from './Inputs/PartnerSelectorInput';
 import PartnersSelectorInput from './Inputs/PartnersSelectorInput';
+import ToggleInput from './Inputs/ToggleInput';
 
 type Props = {
   value: any,
@@ -68,6 +69,7 @@ const inputs = {
   port: PortInput,
   exporter_selector: PartnerSelectorInput.Exporter,
   forwarders: PartnersSelectorInput.Forwarders,
+  booked: ToggleInput.Booked,
 };
 
 const CellInput = ({

@@ -784,7 +784,14 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // booked
+  {
+    key: 'order.orderItem.batch.shipment.booked',
+    exportKey: 'orderItems.batches.shipment.booked',
+    title: <FormattedMessage {...shipmentMessages.booked} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.shipment.bookingDate',
     exportKey: 'orderItems.batches.shipment.bookingDate',

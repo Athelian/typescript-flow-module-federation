@@ -163,6 +163,7 @@ const shipmentSheetFragment = gql`
     updatedAt
     blNo
     blDate
+    booked
     bookingNo
     bookingDate
     invoiceNo
