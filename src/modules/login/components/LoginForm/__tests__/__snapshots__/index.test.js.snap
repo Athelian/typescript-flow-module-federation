@@ -42,22 +42,25 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
   border: 0;
-  -webkit-transition: all 0.1s linear;
-  transition: all 0.1s linear;
   color: #aaa;
   background-color: #ccc;
   border-radius: 999px;
@@ -434,7 +437,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
         class="css-1q3ffjc"
       >
         <button
-          class="css-1obbnpt"
+          class="css-1k8nox5"
           data-testid="submitButton"
           disabled=""
           type="submit"
@@ -518,22 +521,25 @@ exports[`<LoginForm /> should render without crash 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
   border: 0;
-  -webkit-transition: all 0.1s linear;
-  transition: all 0.1s linear;
   color: #aaa;
   background-color: #ccc;
   border-radius: 999px;

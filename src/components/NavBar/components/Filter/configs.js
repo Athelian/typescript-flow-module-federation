@@ -837,21 +837,21 @@ export const TagFilterConfig: Array<FilterConfig> = [
 
 export const MaskEditFilterConfig: Array<FilterConfig> = [
   {
-    entity: 'TAG',
+    entity: 'TABLE TEMPLATE',
     field: 'createdAt',
     type: 'date_range',
     message: tableTemplateMessages.createdAt,
     defaultValue: { after: null, before: null },
   },
   {
-    entity: 'TAG',
+    entity: 'TABLE TEMPLATE',
     field: 'updatedAt',
     type: 'date_range',
     message: tableTemplateMessages.updatedAt,
     defaultValue: { after: null, before: null },
   },
   {
-    entity: 'TASK TEMPLATE',
+    entity: 'TABLE TEMPLATE',
     field: 'type',
     type: 'mask_edit_type',
     message: tableTemplateMessages.type,

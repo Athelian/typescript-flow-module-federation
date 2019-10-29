@@ -540,12 +540,12 @@ export default function entityEventHandler(
                                   switch (change.field) {
                                     case 'packageQuantity':
                                       return {
-                                        ...c?.new?.custom,
+                                        ...(c?.new?.custom ?? {}),
                                         value: change.new?.float,
                                       };
                                     case 'autoCalculatePackageQuantity':
                                       return {
-                                        ...c?.new?.custom,
+                                        ...(c?.new?.custom ?? {}),
                                         auto: change.new?.boolean,
                                       };
                                     default:
