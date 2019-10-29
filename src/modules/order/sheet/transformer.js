@@ -721,7 +721,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         `${basePath}.container`,
         batch?.container ?? null,
         'createdBy',
-        batch?.createdBy ?? null
+        batch?.container?.createdBy ?? null
       ),
     },
     {
@@ -731,7 +731,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         `${basePath}.container`,
         batch?.container ?? null,
         'createdAt',
-        batch?.createdAt ?? null
+        batch?.container?.createdAt ?? null
       ),
     },
     {
@@ -754,7 +754,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         `${basePath}.container`,
         batch?.container ?? null,
         'updatedBy',
-        batch?.updatedBy ?? null
+        batch?.container?.updatedBy ?? null
       ),
     },
     {
@@ -764,7 +764,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         `${basePath}.container`,
         batch?.container ?? null,
         'updatedAt',
-        batch?.updatedAt ?? null
+        batch?.container?.updatedAt ?? null
       ),
     },
     {
@@ -952,7 +952,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         `${basePath}.shipment`,
         batch?.shipment ?? null,
         'createdBy',
-        batch?.createdBy ?? null
+        batch?.shipment?.createdBy ?? null
       ),
     },
     {
@@ -962,7 +962,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         `${basePath}.shipment`,
         batch?.shipment ?? null,
         'createdAt',
-        batch?.createdAt ?? null
+        batch?.shipment?.createdAt ?? null
       ),
     },
     {
@@ -985,7 +985,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         `${basePath}.shipment`,
         batch?.shipment ?? null,
         'updatedBy',
-        batch?.updatedBy ?? null
+        batch?.shipment?.updatedBy ?? null
       ),
     },
     {
@@ -995,7 +995,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         `${basePath}.shipment`,
         batch?.shipment ?? null,
         'updatedAt',
-        batch?.updatedAt ?? null
+        batch?.shipment?.updatedAt ?? null
       ),
     },
     {
@@ -1016,6 +1016,16 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         batch?.shipment ?? null,
         'no',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_NO)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.importer',
+      type: 'partner',
+      ...transformReadonlyField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'importer',
+        batch?.shipment?.importer ?? null
       ),
     },
     {
