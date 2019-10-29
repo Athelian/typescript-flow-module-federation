@@ -1,73 +1,120 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { useMutation } from '@apollo/react-hooks';
 import { cloneDeep } from 'lodash';
+import { difference } from 'ramda';
 import Dialog from 'components/Dialog';
-import { SaveButton, ResetButton, BaseButton } from 'components/Buttons';
+import { ApplyButton, ResetButton, BaseButton, SaveButton } from 'components/Buttons';
+import { Label } from 'components/Form';
+import Icon from 'components/Icon';
+import CornerIcon from 'components/CornerIcon';
+import { colors } from 'styles/common';
 import type { ColumnConfig } from '../SheetColumns';
 import messages from '../messages';
 import Group from './Group';
-import { ButtonStyle, ModalWrapperStyle, ActionsWrapperStyle, ButtonsWrapperStyle } from './style';
+import TemplateSelector from './TemplateSelector';
+import TemplateNew from './TemplateNew';
 import type { ColumnState } from './types';
+import { maskEditUpdateMutation } from './query';
+import {
+  ButtonStyle,
+  ModalWrapperStyle,
+  ActionsWrapperStyle,
+  ButtonsWrapperStyle,
+  TemplateWrapperStyle,
+  HeaderStyle,
+  TemplateStyle,
+  SelectTemplateStyle,
+} from './style';
 
 type Props = {
+  config: Array<ColumnConfig>,
   columns: Array<ColumnConfig>,
+  templateType: string,
   onChange: (Array<ColumnConfig>) => void,
 };
 
-const ColumnsConfig = ({ columns, onChange }: Props) => {
+const columnsToStates = (columns: Array<ColumnConfig>, config: Array<ColumnConfig>) =>
+  config.reduce(
+    (map, column) => ({
+      ...map,
+      [column.icon]: [
+        ...(map[column.icon] ?? []),
+        { column, hidden: !columns.find(c => c.key === column.key) },
+      ],
+    }),
+    {}
+  );
+
+const statesToColumns = (states: { [string]: Array<ColumnState> }) =>
+  Object.keys(states).reduce((list, key) => {
+    return [...list, ...states[key].filter(state => !state.hidden).map(state => state.column)];
+  }, []);
+
+const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
   const [columnStates, setColumnStates] = React.useState<{ [string]: Array<ColumnState> }>({});
+  const [template, setTemplate] = React.useState(null);
   const columnStatesRef = React.useRef(columnStates);
   const [isOpen, setOpen] = React.useState(false);
+  const groups = React.useMemo<Array<string>>(() => Array.from(new Set(config.map(c => c.icon))), [
+    config,
+  ]);
+  const currentColumnKeys = React.useMemo<Array<string>>(
+    () =>
+      Object.values(columnStates)
+        .map(state => state.filter(c => !c.hidden).map(c => c.column.key))
+        .flat(),
+    [columnStates]
+  );
+  const isDirty = React.useMemo(
+    () =>
+      difference(columns.map(c => c.key), currentColumnKeys).length > 0 ||
+      difference(currentColumnKeys, columns.map(c => c.key)).length > 0,
+    [columns, currentColumnKeys]
+  );
+  const isDirtyFromTemplate = React.useMemo<boolean>(
+    () =>
+      difference(template?.fields ?? [], currentColumnKeys).length > 0 ||
+      difference(currentColumnKeys, template?.fields ?? []).length > 0,
+    [template, currentColumnKeys]
+  );
+  const [update, { loading: updateLoading }] = useMutation(maskEditUpdateMutation);
 
   React.useEffect(() => {
-    const newColumnStates = columns.reduce(
-      (map, column) => ({
-        ...map,
-        [column.icon]: [...(map[column.icon] ?? []), { column, hidden: false }],
-      }),
-      {}
-    );
-
-    setColumnStates(
-      columns.reduce(
-        (map, column) => ({
-          ...map,
-          [column.icon]: [...(map[column.icon] ?? []), { column, hidden: false }],
-        }),
-        {}
-      )
-    );
-
+    const newColumnStates = columnsToStates(columns, config);
+    setColumnStates(newColumnStates);
     columnStatesRef.current = newColumnStates;
-  }, [columns]);
+  }, [columns, config]);
 
-  const handleSave = () => {
-    columnStatesRef.current = columnStates;
-    setOpen(false);
-    onChange(
-      Object.keys(columnStates).reduce((list, key) => {
-        return [
-          ...list,
-          ...columnStates[key].filter(state => !state.hidden).map(state => state.column),
-        ];
-      }, [])
+  const handleTemplateChange = (newTemplate: ?Object) => {
+    setTemplate(newTemplate);
+    if (!newTemplate) {
+      return;
+    }
+
+    const columnsFromTemplate = newTemplate.fields
+      .map(field => config.find(c => c.key === field))
+      .filter(c => !!c);
+
+    setColumnStates(columnsToStates(columnsFromTemplate, config));
+  };
+
+  const handleTemplateSave = () => {
+    update({ variables: { id: template.id, input: { fields: currentColumnKeys } } }).then(
+      ({ data }) => setTemplate(data.maskEditUpdate)
     );
   };
 
+  const handleApply = () => {
+    columnStatesRef.current = columnStates;
+    setOpen(false);
+    onChange(statesToColumns(columnStates));
+  };
+
   const handleDefault = () => {
-    const defaultColumns = {};
-
-    Object.keys(columnStates).forEach(icon => {
-      defaultColumns[icon] = columns
-        .filter(column => column.icon === icon)
-        .map(column => ({ column, hidden: false }));
-    });
-
-    setColumnStates({
-      ...columnStates,
-      ...defaultColumns,
-    });
+    setTemplate(null);
+    setColumnStates(columnsToStates(config));
   };
 
   const handleGroup = () => {
@@ -112,43 +159,80 @@ const ColumnsConfig = ({ columns, onChange }: Props) => {
 
       <Dialog isOpen={isOpen} onRequestClose={() => setOpen(false)}>
         <div className={ModalWrapperStyle}>
-          <div className={ActionsWrapperStyle}>
-            <div className={ButtonsWrapperStyle}>
-              <BaseButton
-                onClick={handleDefault}
-                label={<FormattedMessage {...messages.columnsConfigDefaultButton} />}
-                icon="UNDO"
-                textColor="GRAY_DARK"
-                hoverTextColor="WHITE"
-                backgroundColor="GRAY_SUPER_LIGHT"
-                hoverBackgroundColor="GRAY_LIGHT"
-              />
-              <BaseButton
-                onClick={handleGroup}
-                label={<FormattedMessage {...messages.columnsConfigGroupButton} />}
-                icon="BRING_FORWARD"
-                textColor="TEAL"
-                hoverTextColor="WHITE"
-                backgroundColor="GRAY_SUPER_LIGHT"
-                hoverBackgroundColor="TEAL"
-              />
+          <div className={HeaderStyle}>
+            <div className={ActionsWrapperStyle}>
+              <div className={ButtonsWrapperStyle}>
+                <BaseButton
+                  onClick={handleDefault}
+                  label={<FormattedMessage {...messages.columnsConfigDefaultButton} />}
+                  icon="UNDO"
+                  textColor="GRAY_DARK"
+                  hoverTextColor="WHITE"
+                  backgroundColor="GRAY_SUPER_LIGHT"
+                  hoverBackgroundColor="GRAY_LIGHT"
+                />
+                <BaseButton
+                  onClick={handleGroup}
+                  label={<FormattedMessage {...messages.columnsConfigGroupButton} />}
+                  icon="BRING_FORWARD"
+                  textColor="TEAL"
+                  hoverTextColor="WHITE"
+                  backgroundColor="GRAY_SUPER_LIGHT"
+                  hoverBackgroundColor="TEAL"
+                />
+              </div>
+              <div className={ButtonsWrapperStyle}>
+                <ResetButton onClick={handleReset} disabled={!isDirty} />
+                <ApplyButton onClick={handleApply} />
+              </div>
             </div>
-            <div className={ButtonsWrapperStyle}>
-              <ResetButton onClick={handleReset} />
-              <SaveButton onClick={handleSave} />
+
+            <div className={TemplateWrapperStyle}>
+              <Label>
+                <FormattedMessage {...messages.columnsConfigSelectTemplate} />
+              </Label>
+              <TemplateSelector onChange={handleTemplateChange} templateType={templateType}>
+                {({ onClick }) =>
+                  template ? (
+                    <button type="button" onClick={onClick} className={TemplateStyle}>
+                      {template.name}
+                      <div>
+                        <CornerIcon icon="TEMPLATE" color={colors.TEMPLATE} />
+                      </div>
+                    </button>
+                  ) : (
+                    <button type="button" onClick={onClick} className={SelectTemplateStyle}>
+                      <Icon icon="ADD" />
+                    </button>
+                  )
+                }
+              </TemplateSelector>
+
+              <SaveButton
+                onClick={handleTemplateSave}
+                disabled={!template || !isDirtyFromTemplate || updateLoading}
+              />
+
+              <TemplateNew
+                columns={currentColumnKeys}
+                templateType={templateType}
+                onSave={handleTemplateChange}
+              >
+                {({ onClick }) => <SaveButton label="Save as" onClick={onClick} />}
+              </TemplateNew>
             </div>
           </div>
 
-          {Object.keys(columnStates).map(icon => {
+          {groups.map(group => {
             return (
               <Group
-                key={icon}
-                icon={icon}
-                columns={columnStates[icon]}
+                key={group}
+                icon={group}
+                columns={columnStates[group] || []}
                 onChange={c =>
                   setColumnStates({
                     ...columnStates,
-                    [icon]: c,
+                    [group]: c,
                   })
                 }
               />

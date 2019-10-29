@@ -138,6 +138,10 @@ export default defineMessages({
     id: 'components.NavBar.Filter.taskTemplateEntityTypes',
     defaultMessage: 'Entity types',
   },
+  maskEditTypes: {
+    id: 'components.NavBar.Filter.maskEditTypes',
+    defaultMessage: 'Types',
+  },
   completelyBatched: {
     id: 'components.NavBar.Filter.completelyBatched',
     defaultMessage: 'Fully Batched',

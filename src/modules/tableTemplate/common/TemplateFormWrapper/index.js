@@ -21,6 +21,7 @@ import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 type OptionalProps = {
   template: Object,
   isNew: boolean,
+  onSave: Object => void,
 };
 
 type Props = OptionalProps & {
@@ -47,7 +48,7 @@ class TemplateFormWrapper extends React.Component<Props> {
     onSuccess: Function = () => {},
     onErrors: Function = () => {}
   ) => {
-    const { isNew, template, onCancel: closeSlideView } = this.props;
+    const { isNew, template, onCancel: closeSlideView, onSave } = this.props;
     const { name, memo, type, fields } = formData;
     const input = {
       name,
@@ -66,6 +67,7 @@ class TemplateFormWrapper extends React.Component<Props> {
         onErrors(violations);
       } else {
         closeSlideView();
+        onSave(data.maskEditCreate);
         setTimeout(() => {
           emitter.emit('REFETCH_TABLE_TEMPLATES');
         }, 200);
@@ -82,6 +84,7 @@ class TemplateFormWrapper extends React.Component<Props> {
       } else {
         closeSlideView();
         onSuccess();
+        onSave(data.maskEditUpdate);
       }
     }
   };

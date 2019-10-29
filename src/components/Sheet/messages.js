@@ -14,6 +14,10 @@ export default defineMessages({
     id: 'components.Sheet.columnsConfigDefaultButton',
     defaultMessage: 'default',
   },
+  columnsConfigSelectTemplate: {
+    id: 'components.Sheet.columnsConfigSelectTemplate',
+    defaultMessage: 'Select template',
+  },
   addedAnnouncement: {
     id: 'components.Sheet.addedAnnouncement',
     defaultMessage: 'Added',

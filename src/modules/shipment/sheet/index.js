@@ -125,7 +125,12 @@ const ShipmentSheetModule = ({ shipmentIds }: Props) => {
 
         <Filter config={ShipmentFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <ColumnsConfig columns={columns} onChange={setCurrentColumns} />
+        <ColumnsConfig
+          config={columns}
+          columns={currentColumns}
+          onChange={setCurrentColumns}
+          templateType="ShipmentSheet"
+        />
         <ExportButton
           type="Shipments"
           exportQuery={shipmentsExportQuery}

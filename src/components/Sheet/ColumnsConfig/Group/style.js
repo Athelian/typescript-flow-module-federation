@@ -21,7 +21,7 @@ export const LeftWrapperStyle: string = css`
 
 export const IconStyle = (color: string): string => css`
   position: sticky;
-  top: -50px;
+  top: 0px;
   display: flex;
   align-items: center;
   justify-content: center;
