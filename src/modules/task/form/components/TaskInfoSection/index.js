@@ -44,6 +44,7 @@ import validator, { circleValidator } from 'modules/task/form/validator';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import UserAvatar from 'components/UserAvatar';
+import messages from './messages';
 import { convertBindingToSelection, getFieldsByEntity } from './helpers';
 import {
   TaskSectionWrapperStyle,
@@ -72,31 +73,19 @@ function defaultBindingOptions(intl: IntlShape, isStartDate: boolean) {
     !isStartDate
       ? {
           value: START_DATE,
-          label: intl.formatMessage({
-            id: 'modules.Tasks.startDate',
-            defaultMessage: 'START DATE',
-          }),
+          label: intl.formatMessage(messages.startDate),
         }
       : {
           value: DUE_DATE,
-          label: intl.formatMessage({
-            id: 'modules.Tasks.dueDate',
-            defaultMessage: 'DUE DATE',
-          }),
+          label: intl.formatMessage(messages.dueDate),
         },
     {
       value: PROJECT_DUE_DATE,
-      label: intl.formatMessage({
-        id: 'modules.Tasks.projectDueDate',
-        defaultMessage: 'PROJECT DUE DATE',
-      }),
+      label: intl.formatMessage(messages.projectDueDate),
     },
     {
       value: MILESTONE_DUE_DATE,
-      label: intl.formatMessage({
-        id: 'modules.Tasks.milestoneDueDate',
-        defaultMessage: 'MILESTONE DUE DATE',
-      }),
+      label: intl.formatMessage(messages.milestoneDueDate),
     },
   ];
 }
@@ -878,31 +867,19 @@ const TaskInfoSection = ({
                                   items={[
                                     {
                                       value: 'uncompleted',
-                                      label: intl.formatMessage({
-                                        id: 'modules.milestone.uncompleted',
-                                        defaultMessage: 'Uncompleted',
-                                      }),
+                                      label: intl.formatMessage(messages.uncompleted),
                                     },
                                     {
                                       value: 'inProgress',
-                                      label: intl.formatMessage({
-                                        id: 'modules.milestone.inProgress',
-                                        defaultMessage: 'In Progress',
-                                      }),
+                                      label: intl.formatMessage(messages.inProgress),
                                     },
                                     {
                                       value: 'completed',
-                                      label: intl.formatMessage({
-                                        id: 'modules.milestone.completed',
-                                        defaultMessage: 'Completed',
-                                      }),
+                                      label: intl.formatMessage(messages.completed),
                                     },
                                     {
                                       value: 'skipped',
-                                      label: intl.formatMessage({
-                                        id: 'modules.milestone.skipped',
-                                        defaultMessage: 'Skipped',
-                                      }),
+                                      label: intl.formatMessage(messages.skipped),
                                     },
                                   ]}
                                   onChange={event => {
@@ -1142,24 +1119,15 @@ const TaskInfoSection = ({
                                       items={[
                                         {
                                           value: 'unapproved',
-                                          label: intl.formatMessage({
-                                            id: 'modules.milestone.unapproved',
-                                            defaultMessage: 'Unapproved',
-                                          }),
+                                          label: intl.formatMessage(messages.unapproved),
                                         },
                                         {
                                           value: 'approved',
-                                          label: intl.formatMessage({
-                                            id: 'modules.milestone.approved',
-                                            defaultMessage: 'Approved',
-                                          }),
+                                          label: intl.formatMessage(messages.approved),
                                         },
                                         {
                                           value: 'rejected',
-                                          label: intl.formatMessage({
-                                            id: 'modules.milestone.rejected',
-                                            defaultMessage: 'Rejected',
-                                          }),
+                                          label: intl.formatMessage(messages.rejected),
                                         },
                                       ]}
                                       onChange={event => {

@@ -7,7 +7,6 @@ import { UserConsumer } from 'contexts/Viewer';
 import { MilestoneBaseContainer } from 'modules/milestone/form/containers';
 import validator from 'modules/milestone/form/validator';
 import { FormField } from 'modules/form';
-
 import UserAvatar from 'components/UserAvatar';
 import {
   SectionHeader,
@@ -21,7 +20,6 @@ import {
   Label,
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
-
 import { todayForDateInput } from 'utils/date';
 import { calculateMilestonesEstimatedCompletionDate } from 'utils/project';
 import usePermission from 'hooks/usePermission';
@@ -36,6 +34,7 @@ import {
 } from 'modules/permission/constants/milestone';
 import { FormContext } from 'modules/milestone/form/context';
 import DateBindingInput from '../DateBindingInput';
+import messages from './messages';
 import {
   MilestoneSectionStyle,
   FieldsWrapperStyle,
@@ -118,7 +117,7 @@ const MilestoneSection = ({ intl }: Props) => {
                           dateBindingItems={[
                             {
                               value: 'ProjectDueDate',
-                              label: 'Project Due Date',
+                              label: intl.formatMessage(messages.projectDueDate),
                             },
                           ]}
                           originalValues={originalValues}
@@ -154,7 +153,9 @@ const MilestoneSection = ({ intl }: Props) => {
                           dateBindingItems={[
                             {
                               value: 'MilestoneCompleteDate',
-                              label: "Prev. Milestone's Est. / Compl.",
+                              label: intl.formatMessage(
+                                messages.previousMilestoneEstimationOrCompleted
+                              ),
                             },
                           ]}
                           originalValues={originalValues}
@@ -212,17 +213,11 @@ const MilestoneSection = ({ intl }: Props) => {
                                   items={[
                                     {
                                       value: 'uncompleted',
-                                      label: intl.formatMessage({
-                                        id: 'modules.milestone.uncompleted',
-                                        defaultMessage: 'Uncompleted',
-                                      }),
+                                      label: intl.formatMessage(messages.uncompleted),
                                     },
                                     {
                                       value: 'completed',
-                                      label: intl.formatMessage({
-                                        id: 'modules.milestone.completed',
-                                        defaultMessage: 'Completed',
-                                      }),
+                                      label: intl.formatMessage(messages.completed),
                                     },
                                   ]}
                                   onChange={event => {
