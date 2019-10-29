@@ -142,7 +142,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.logs',
       type: 'order_logs',
-      ...transformComputedField(basePath, order, item => item.id),
+      ...transformValueField(basePath, order, 'id', () => true),
     },
     {
       columnKey: 'order.archived',
