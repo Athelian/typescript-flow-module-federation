@@ -21,6 +21,7 @@ import PortInput from './Inputs/PortInput';
 import PartnerSelectorInput from './Inputs/PartnerSelectorInput';
 import PartnersSelectorInput from './Inputs/PartnersSelectorInput';
 import ToggleInput from './Inputs/ToggleInput';
+import LogsButton from './Inputs/LogsButton';
 
 type Props = {
   value: any,
@@ -70,6 +71,7 @@ const inputs = {
   exporter_selector: PartnerSelectorInput.Exporter,
   forwarders: PartnersSelectorInput.Forwarders,
   booked: ToggleInput.Booked,
+  order_logs: LogsButton.Order,
 };
 
 const CellInput = ({

@@ -140,6 +140,11 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
       ...transformReadonlyField(basePath, order, 'updatedAt', order?.updatedAt ?? null),
     },
     {
+      columnKey: 'order.logs',
+      type: 'order_logs',
+      ...transformValueField(basePath, order, 'id', () => true),
+    },
+    {
       columnKey: 'order.archived',
       type: 'status',
       ...transformValueField(

@@ -438,6 +438,10 @@ export default defineMessages({
     id: 'modules.Orders.sectionPackage',
     defaultMessage: 'PACKAGING',
   },
+  logs: {
+    id: 'modules.order.logs',
+    defaultMessage: 'LOGS',
+  },
   sectionTimeline: {
     id: 'modules.Orders.sectionTimeline',
     defaultMessage: 'LOGS & MESSAGE BOARD',
