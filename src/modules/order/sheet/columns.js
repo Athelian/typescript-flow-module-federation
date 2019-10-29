@@ -54,7 +54,14 @@ const orderColumns: Array<ColumnConfig> = [
       group: 'order',
     },
   },
-  // importer
+  {
+    key: 'order.importer',
+    exportKey: 'importer',
+    title: <FormattedMessage {...orderMessages.importer} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   {
     key: 'order.exporter',
     exportKey: 'exporter',
