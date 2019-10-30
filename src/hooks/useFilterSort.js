@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { useAuthenticated } from 'contexts/Viewer';
+import { getCache, invalidateCache, setCache } from 'utils/cache';
 import type { FilterBy, SortBy } from 'types';
 
 type FilterSort = {
@@ -20,22 +21,17 @@ type FilterSortCache = {
 const KEY_PREFIX = 'zenport_filter_sort';
 
 function getFilterSortCache(key: string): FilterSortCache | null {
-  const result = window.localStorage.getItem(`${KEY_PREFIX}_${key}`);
-  if (!result) {
-    return null;
-  }
-
-  try {
-    const value = JSON.parse(atob(result));
+  const value = getCache<FilterSortCache>(KEY_PREFIX, key);
+  if (value) {
     const { filterBy = {}, sortBy = {} } = value;
     return { filterBy, sortBy };
-  } catch (e) {
-    return null;
   }
+
+  return null;
 }
 
 function setFilterSortCache(key: string, { filterBy, sortBy }: FilterSortCache) {
-  window.localStorage.setItem(`${KEY_PREFIX}_${key}`, btoa(JSON.stringify({ filterBy, sortBy })));
+  setCache(KEY_PREFIX, key, { filterBy, sortBy });
 }
 
 export function useFilterSortInvalidator() {
@@ -46,15 +42,7 @@ export function useFilterSortInvalidator() {
       return;
     }
 
-    const cacheKeys = [];
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < window.localStorage.length; i++) {
-      if (window.localStorage.key(i).indexOf(KEY_PREFIX) === 0) {
-        cacheKeys.push(window.localStorage.key(i));
-      }
-    }
-
-    cacheKeys.forEach(key => window.localStorage.removeItem(key));
+    invalidateCache(KEY_PREFIX);
   }, [authenticated]);
 }
 
