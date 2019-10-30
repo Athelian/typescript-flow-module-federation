@@ -28,6 +28,7 @@ import {
   itemInBatchFormFragment,
   productProviderPackagingFragment,
 } from 'graphql';
+import { commentFragment, eventFragment } from 'modules/timeline/query';
 
 export const batchFormQuery = gql`
   query batchFormQuery($id: ID!) {
@@ -62,6 +63,29 @@ export const batchFormQuery = gql`
   ${itemInBatchFormFragment}
   ${partnerCardFragment}
   ${productProviderPackagingFragment}
+`;
+
+export const batchTimelineQuery = gql`
+  query batchTimeline($id: ID!, $page: Int!, $perPage: Int!) {
+    batch(id: $id) {
+      ... on Batch {
+        id
+        timeline {
+          entries(page: $page, perPage: $perPage) {
+            nodes {
+              ...commentFragment
+              ...eventFragment
+            }
+            page
+            totalPage
+          }
+        }
+      }
+    }
+  }
+
+  ${eventFragment}
+  ${commentFragment}
 `;
 
 export default batchFormQuery;
