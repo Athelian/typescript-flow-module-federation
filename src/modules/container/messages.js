@@ -38,9 +38,25 @@ export default defineMessages({
     id: 'modules.container.warehouseArrivalActualDateAssignedTo',
     defaultMessage: 'Warehouse Arrival Actual Assigned To'.toUpperCase(),
   },
+  departureDate: {
+    id: 'modules.container.departureDate',
+    defaultMessage: 'Departure Date',
+  },
   departureDateAssignedTo: {
     id: 'modules.container.departureDateAssignedTo',
     defaultMessage: 'Departure Date Assigned To',
+  },
+  yardName: {
+    id: 'modules.container.yardName',
+    defaultMessage: 'Yard',
+  },
+  memo: {
+    id: 'modules.container.memo',
+    defaultMessage: 'Memo',
+  },
+  logs: {
+    id: 'modules.container.logs',
+    defaultMessage: 'Logs',
   },
   createdAt: {
     id: 'modules.container.createdAt',

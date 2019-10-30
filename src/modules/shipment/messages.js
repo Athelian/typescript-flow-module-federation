@@ -682,6 +682,10 @@ export default defineMessages({
     id: 'modules.Shipments.totalBatchQuantity',
     defaultMessage: 'TOTAL BATCH QUANTITY',
   },
+  logs: {
+    id: 'modules.Shipments.logs',
+    defaultMessage: 'Logs',
+  },
 });
 
 export const shipmentSortMessages = defineMessages({
