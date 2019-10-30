@@ -2,6 +2,7 @@
 import apolloClient from 'apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import { updateOrderMutation } from 'modules/order/form/mutation';
+import { updateOrderItemMutation } from 'modules/orderItem/form/mutation';
 import { updateBatchMutation } from 'modules/batch/form/mutation';
 import {
   findShipmentIdsByOrder,
@@ -74,6 +75,44 @@ const moveBatchToOrder = ({
 
       return Promise.resolve(
         [order.id, parentOrderId].filter(Boolean).map(id => findShipmentIdsByOrder(id, entities))
+      );
+    });
+};
+
+const moveOrderItemToOrder = ({
+  orderItemId,
+  orderId,
+  entities,
+  isOrderFocus,
+}: {
+  orderItemId: string,
+  orderId: string,
+  entities: Object,
+  isOrderFocus: boolean,
+}) => {
+  const parentOrderId = findOrderIdByItem({
+    entities,
+    orderItemId,
+    viewer: isOrderFocus ? ORDER : SHIPMENT,
+  });
+
+  return apolloClient
+    .mutate({
+      mutation: updateOrderItemMutation,
+      variables: {
+        id: orderItemId,
+        input: {
+          orderId,
+        },
+      },
+    })
+    .then(() => {
+      if (isOrderFocus) {
+        return Promise.resolve([orderId, parentOrderId].filter(Boolean));
+      }
+
+      return Promise.resolve(
+        [orderId, parentOrderId].filter(Boolean).flatMap(id => findShipmentIdsByOrder(id, entities))
       );
     });
 };
@@ -215,6 +254,14 @@ const moveBatchToShipment = ({
 export const moveEntityMutation = (state: State, entities: Object) => {
   const isOrderFocus = state.viewer === 'Order';
   switch (state.moveEntity.detail.from.icon) {
+    case 'ORDER_ITEM': {
+      return moveOrderItemToOrder({
+        entities,
+        isOrderFocus,
+        orderItemId: state.moveEntity.detail.from.id,
+        orderId: state.moveEntity.detail.to.id,
+      });
+    }
     case 'BATCH': {
       const batch = getByPathWithDefault(
         null,
