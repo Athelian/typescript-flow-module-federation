@@ -621,20 +621,89 @@ export default function entityEventHandler(
           }
           case 'Container': {
             console.warn({ changes });
-            changes = changes.map(change => {
-              switch (change.field) {
-                case 'transportType':
-                  return {
-                    ...change,
-                    new: {
-                      string: change.new?.int === 1 ? 'Air' : 'Sea',
-                      __typename: 'StringValue',
-                    },
-                  };
-                default:
-                  return change;
-              }
-            });
+            const container = orders
+              .map(order => order.orderItems.map(oi => oi.batches).flat())
+              // $FlowFixMe flat not supported by flow
+              .flat()
+              .find(batch => batch?.container?.id === event.entity?.id);
+            if (container) {
+              changes = changes.reduce((newChanges, change) => {
+                switch (change.field) {
+                  case 'freeTimeStartDate':
+                  case 'autoCalculatedFreeTimeStartDate': {
+                    const hasChange = !!newChanges.find(({ field }) =>
+                      ['freeTimeStartDate', 'autoCalculatedFreeTimeStartDate'].includes(field)
+                    );
+                    if (hasChange) {
+                      return newChanges.map(currentChange => {
+                        const { field, new: newValue } = currentChange;
+                        if (
+                          ['freeTimeStartDate', 'autoCalculatedFreeTimeStartDate'].includes(field)
+                        ) {
+                          return {
+                            ...change,
+                            field: 'freeTimeStartDate',
+                            new: {
+                              custom: {
+                                ...(() => {
+                                  switch (change.field) {
+                                    case 'freeTimeStartDate':
+                                      return {
+                                        ...(newValue?.custom ?? {}),
+                                        value: change.new?.datetime,
+                                      };
+                                    case 'autoCalculatedFreeTimeStartDate':
+                                      return {
+                                        ...(newValue?.custom ?? {}),
+                                        auto: change.new?.boolean,
+                                      };
+                                    default:
+                                      return container.freeTimeStartDate;
+                                  }
+                                })(),
+                              },
+                              __typename: 'CustomValue',
+                            },
+                          };
+                        }
+                        return currentChange;
+                      });
+                    }
+
+                    return [
+                      ...newChanges,
+                      {
+                        ...change,
+                        field: 'freeTimeStartDate',
+                        new: {
+                          custom: {
+                            ...(() => {
+                              switch (change.field) {
+                                case 'freeTimeStartDate':
+                                  return {
+                                    ...container.freeTimeStartDate,
+                                    value: change.new?.datetime,
+                                  };
+                                case 'autoCalculatedFreeTimeStartDate':
+                                  return {
+                                    ...container.freeTimeStartDate,
+                                    auto: change.new?.boolean,
+                                  };
+                                default:
+                                  return container.freeTimeStartDate;
+                              }
+                            })(),
+                          },
+                          __typename: 'CustomValue',
+                        },
+                      },
+                    ];
+                  }
+                  default:
+                    return [...newChanges, change];
+                }
+              }, []);
+            }
             break;
           }
           case 'Voyage':
