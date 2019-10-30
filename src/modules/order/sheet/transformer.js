@@ -929,8 +929,10 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       type: 'date',
       ...transformComputedField(`${basePath}.container`, batch?.container ?? null, item => {
         const currentBatch = getCurrentBatch(batch?.id, item);
-        const date = currentBatch?.container?.freeTimeStartDate;
-        return date ? addDays(date, currentBatch?.container?.freeTimeDuration ?? 0) : null;
+        const date = currentBatch?.container?.freeTimeStartDate?.value;
+        return date
+          ? addDays(new Date(date), currentBatch?.container?.freeTimeDuration ?? 0)
+          : null;
       }),
     },
     {

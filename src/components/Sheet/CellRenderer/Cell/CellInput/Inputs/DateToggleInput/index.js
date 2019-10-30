@@ -55,8 +55,6 @@ const DateToggleInput = ({
           <BaseDateInput
             inputRef={ref}
             value={date}
-            name="dateInput"
-            nullable={false}
             onChange={e => onChange({ ...value, value: e.target.value })}
             onFocus={onFocus}
             onBlur={onBlur}
