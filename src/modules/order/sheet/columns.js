@@ -671,8 +671,14 @@ const containerColumns: Array<ColumnConfig> = [
     width: 160,
   },
   // actual arrival approval
+  {
+    key: 'order.orderItem.batch.container.warehouse',
+    title: <FormattedMessage {...containerMessages.warehouse} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   // free time
-  // start date
   {
     key: 'order.orderItem.batch.container.freeTimeStartDate',
     title: <FormattedMessage {...containerMessages.startDate} />,
@@ -680,7 +686,6 @@ const containerColumns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: 195,
   },
-  // start date auto
   // duration
   {
     key: 'order.orderItem.batch.container.dueDate',
@@ -1099,6 +1104,13 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroup.warehouse',
+    title: <FormattedMessage {...shipmentMessages.warehouse} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
   },
   {
     key: 'order.orderItem.batch.shipment.containerGroup.warehouseArrival.date',

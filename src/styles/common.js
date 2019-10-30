@@ -283,6 +283,10 @@ export const presets = {
     &:focus {
       outline: 0;
     }
+
+    &[disabled] {
+      cursor: default;
+    }
   `,
   ELLIPSIS: `
     white-space: nowrap;
