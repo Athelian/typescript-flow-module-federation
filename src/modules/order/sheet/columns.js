@@ -171,13 +171,13 @@ const orderColumns: Array<ColumnConfig> = [
     color: colors.ORDER,
     width: 200,
   },
-  // {
-  //   key: 'order.totalPrice',
-  //   title: <FormattedMessage {...orderMessages.totalPrice} />,
-  //   icon: 'ORDER',
-  //   color: colors.ORDER,
-  //   width: 200,
-  // },
+  {
+    key: 'order.totalPrice',
+    title: <FormattedMessage {...orderMessages.totalPrice} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   {
     key: 'order.files',
     title: <FormattedMessage {...orderMessages.sectionDocuments} />,
@@ -348,7 +348,13 @@ const orderItemColumns: Array<ColumnConfig> = [
       group: 'orderItem',
     },
   },
-  // total price
+  {
+    key: 'order.orderItem.totalPrice',
+    title: <FormattedMessage {...orderItemMessages.totalPrice} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+  },
   {
     key: 'order.orderItem.files',
     title: <FormattedMessage {...orderItemMessages.sectionDocuments} />,
@@ -484,7 +490,13 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 200,
   },
-  // current quantity
+  {
+    key: 'order.orderItem.batch.latestQuantity',
+    title: <FormattedMessage {...batchMessages.quantity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.quantity',
     exportKey: 'orderItems.batches.quantity',
@@ -670,7 +682,13 @@ const containerColumns: Array<ColumnConfig> = [
   },
   // start date auto
   // duration
-  // due date
+  {
+    key: 'order.orderItem.batch.container.dueDate',
+    title: <FormattedMessage {...containerMessages.dueDate} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.container.yardName',
     title: <FormattedMessage {...containerMessages.yardName} />,
@@ -977,7 +995,76 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 1210,
   },
-  // voyages....
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.firstTransitPort',
+    title: <FormattedMessage {...shipmentMessages.firstTransitPort} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.firstTransitArrival.date',
+    title: <FormattedMessage {...shipmentMessages.firstTransitPortArrival} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 125,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.firstTransitArrival.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.firstTransitPortArrivalRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.firstTransitDeparture.date',
+    title: <FormattedMessage {...shipmentMessages.firstTransitPortDeparture} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 125,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.firstTransitDeparture.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.firstTransitPortDepartureRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.secondTransitPort',
+    title: <FormattedMessage {...shipmentMessages.secondTransitPort} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.secondTransitArrival.date',
+    title: <FormattedMessage {...shipmentMessages.secondTransitPortArrival} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 125,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.secondTransitArrival.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.secondTransitPortArrivalRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.secondTransitDeparture.date',
+    title: <FormattedMessage {...shipmentMessages.secondTransitPortDeparture} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 125,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.secondTransitDeparture.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.secondTransitPortDepartureRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+  },
   {
     key: 'order.orderItem.batch.shipment.voyage.2.arrivalPort',
     title: <FormattedMessage {...shipmentMessages.dischargePort} />,
@@ -997,7 +1084,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.dischargePortArrivalRevisions} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 200,
+    width: 1210,
   },
   {
     key: 'order.orderItem.batch.shipment.containerGroup.customClearance.date',

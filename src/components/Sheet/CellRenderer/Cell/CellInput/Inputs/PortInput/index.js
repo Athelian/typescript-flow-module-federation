@@ -36,7 +36,7 @@ const PortInput = ({
       case 'Sea':
         return value?.seaport ?? null;
       default:
-        return null;
+        return '';
     }
   })();
 

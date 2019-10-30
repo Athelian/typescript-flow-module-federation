@@ -94,6 +94,10 @@ export default defineMessages({
     id: 'modules.OrderItems.totalShipped',
     defaultMessage: 'Total shipped quantity',
   },
+  totalPrice: {
+    id: 'modules.OrderItems.totalPrice',
+    defaultMessage: 'Total price',
+  },
   sectionDocuments: {
     id: 'modules.OrderItems.sectionDocuments',
     defaultMessage: 'Documents',

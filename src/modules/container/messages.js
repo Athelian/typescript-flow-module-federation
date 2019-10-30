@@ -50,6 +50,10 @@ export default defineMessages({
     id: 'modules.container.yardName',
     defaultMessage: 'Yard',
   },
+  dueDate: {
+    id: 'modules.container.dueDate',
+    defaultMessage: 'Due date',
+  },
   memo: {
     id: 'modules.container.memo',
     defaultMessage: 'Memo',
