@@ -18,7 +18,7 @@ type Props = {
   },
 };
 
-const DateUser = ({ value }: Props) => {
+const DateUserDisplay = ({ value }: Props) => {
   return (
     <DisplayWrapper>
       <span className={DateUserDisplayStyle}>
@@ -37,4 +37,4 @@ const DateUser = ({ value }: Props) => {
   );
 };
 
-export default DateUser;
+export default DateUserDisplay;

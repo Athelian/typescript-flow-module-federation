@@ -670,7 +670,13 @@ const containerColumns: Array<ColumnConfig> = [
   },
   // start date auto
   // duration
-  // due date
+  {
+    key: 'order.orderItem.batch.container.dueDate',
+    title: <FormattedMessage {...containerMessages.dueDate} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.container.yardName',
     title: <FormattedMessage {...containerMessages.yardName} />,

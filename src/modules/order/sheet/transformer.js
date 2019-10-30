@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { addDays } from 'date-fns';
 import { getBatchLatestQuantity } from 'utils/batch';
 import { getLatestDate } from 'utils/shipment';
 import {
@@ -876,7 +877,6 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE)
       ),
     },
-    // start date
     {
       columnKey: 'order.orderItem.batch.container.freeTimeStartDate',
       type: 'date_toggle',
@@ -893,6 +893,15 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_FREE_TIME_START_DATE)
       ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.dueDate',
+      type: 'date',
+      ...transformComputedField(`${basePath}.container`, batch?.container ?? null, item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        const date = currentBatch?.container?.freeTimeStartDate;
+        return date ? addDays(date, currentBatch?.container?.freeTimeDuration ?? 0) : null;
+      }),
     },
     {
       columnKey: 'order.orderItem.batch.container.yardName',

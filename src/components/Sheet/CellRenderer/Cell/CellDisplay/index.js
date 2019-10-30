@@ -1,8 +1,9 @@
 // @flow
 import * as React from 'react';
-import DateUser from './Displays/DateUserDisplay';
+import DateUserDisplay from './Displays/DateUserDisplay';
 import NumberDisplay from './Displays/NumberDisplay';
 import TextDisplay from './Displays/TextDisplay';
+import DateDisplay from './Displays/DateDisplay';
 import MetricValueDisplay from './Displays/MetricValueDisplay';
 import StatusDisplay from './Displays/StatusDisplay';
 import PartnerDisplay from './Displays/PartnerDisplay';
@@ -14,9 +15,10 @@ type Props = {
 };
 
 const displays = {
-  date_user: DateUser,
   number: NumberDisplay,
   text: TextDisplay,
+  date: DateDisplay,
+  date_user: DateUserDisplay,
   price: MetricValueDisplay,
   status: StatusDisplay,
   partner: PartnerDisplay,
