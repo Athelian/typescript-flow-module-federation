@@ -109,7 +109,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.created',
       type: 'date_user',
-      ...transformComputedField(basePath, order, item => ({
+      ...transformComputedField(basePath, order, 'created', item => ({
         at: new Date(item.createdAt),
         by: item.createdBy,
       })),
@@ -127,7 +127,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.updated',
       type: 'date_user',
-      ...transformComputedField(basePath, order, item => ({
+      ...transformComputedField(basePath, order, 'updated', item => ({
         at: new Date(item.updatedAt),
         by: item.updatedBy,
       })),
@@ -275,14 +275,14 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.totalOrdered',
       type: 'number',
-      ...transformComputedField(basePath, order, item =>
+      ...transformComputedField(basePath, order, 'totalOrdered', item =>
         item.orderItems.reduce((total, orderItem) => total + orderItem.quantity, 0)
       ),
     },
     {
       columnKey: 'order.totalBatched',
       type: 'number',
-      ...transformComputedField(basePath, order, item =>
+      ...transformComputedField(basePath, order, 'totalBatched', item =>
         item.orderItems.reduce(
           (totalBatched, orderItem) =>
             totalBatched + orderItem.batches.reduce((total, batch) => batch.quantity + total, 0),
@@ -293,7 +293,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.totalShipped',
       type: 'number',
-      ...transformComputedField(basePath, order, item =>
+      ...transformComputedField(basePath, order, 'totalShipped', item =>
         item.orderItems.reduce(
           (totalBatched, orderItem) =>
             totalBatched +
@@ -307,7 +307,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.totalPrice',
       type: 'metric_value',
-      ...transformComputedField(basePath, order, item => ({
+      ...transformComputedField(basePath, order, 'totalPrice', item => ({
         value: item.orderItems.reduce(
           (totalPrice, orderItem) => totalPrice + orderItem.price.value * orderItem.quantity,
           0
@@ -346,7 +346,7 @@ function transformOrderItem(
     {
       columnKey: 'order.orderItem.created',
       type: 'date_user',
-      ...transformComputedField(basePath, orderItem, item => {
+      ...transformComputedField(basePath, orderItem, 'created', item => {
         const currentOrderItem = item.orderItems.find(oi => oi.id === orderItem?.id);
         return currentOrderItem
           ? {
@@ -369,7 +369,7 @@ function transformOrderItem(
     {
       columnKey: 'order.orderItem.updated',
       type: 'date_user',
-      ...transformComputedField(basePath, orderItem, item => {
+      ...transformComputedField(basePath, orderItem, 'updated', item => {
         const currentOrderItem = item.orderItems.find(oi => oi.id === orderItem?.id);
         return currentOrderItem
           ? {
@@ -412,7 +412,7 @@ function transformOrderItem(
     {
       columnKey: 'order.orderItem.archived',
       type: 'status',
-      ...transformComputedField(basePath, orderItem, order => order.archived),
+      ...transformComputedField(basePath, orderItem, 'archived', order => order.archived),
     },
     {
       columnKey: 'order.orderItem.no',
@@ -479,7 +479,7 @@ function transformOrderItem(
     {
       columnKey: 'order.orderItem.totalBatched',
       type: 'number',
-      ...transformComputedField(basePath, orderItem, item => {
+      ...transformComputedField(basePath, orderItem, 'totalBatched', item => {
         const currentOrderItem = item.orderItems.find(oi => oi.id === orderItem?.id);
         // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
         return currentOrderItem?.batches.reduce((total, batch) => total + batch.quantity, 0) ?? 0;
@@ -488,7 +488,7 @@ function transformOrderItem(
     {
       columnKey: 'order.orderItem.totalShipped',
       type: 'number',
-      ...transformComputedField(basePath, orderItem, item => {
+      ...transformComputedField(basePath, orderItem, 'totalShipped', item => {
         const currentOrderItem = item.orderItems.find(oi => oi.id === orderItem?.id);
         return (
           // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
@@ -501,7 +501,7 @@ function transformOrderItem(
     {
       columnKey: 'order.orderItem.totalPrice',
       type: 'metric_value',
-      ...transformComputedField(basePath, orderItem, item => {
+      ...transformComputedField(basePath, orderItem, 'totalPrice', item => {
         const currentOrderItem = item.orderItems.find(oi => oi.id === orderItem?.id);
         return {
           value: (currentOrderItem?.price?.value ?? 0) * (currentOrderItem?.quantity ?? 0),
@@ -538,7 +538,7 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
     {
       columnKey: 'order.orderItem.batch.created',
       type: 'date_user',
-      ...transformComputedField(basePath, batch, item => {
+      ...transformComputedField(basePath, batch, 'created', item => {
         const currentBatch = getCurrentBatch(batch?.id, item);
         return currentBatch
           ? {
@@ -561,7 +561,7 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
     {
       columnKey: 'order.orderItem.batch.updated',
       type: 'date_user',
-      ...transformComputedField(basePath, batch, item => {
+      ...transformComputedField(basePath, batch, 'updated', item => {
         const currentBatch = getCurrentBatch(batch?.id, item);
         return currentBatch
           ? {
@@ -584,7 +584,7 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
     {
       columnKey: 'order.orderItem.batch.archived',
       type: 'status',
-      ...transformComputedField(basePath, batch, order => {
+      ...transformComputedField(basePath, batch, 'archived', order => {
         const currentBatch = order.orderItems
           .map(oi => oi.batches)
           .flat()
@@ -669,7 +669,7 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
     {
       columnKey: 'order.orderItem.batch.latestQuantity',
       type: 'number',
-      ...transformComputedField(basePath, batch, order => {
+      ...transformComputedField(basePath, batch, 'latestQuantity', order => {
         const currentBatch = getCurrentBatch(batch?.id, order);
         return getBatchLatestQuantity(currentBatch);
       }),
@@ -747,15 +747,20 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
     {
       columnKey: 'order.orderItem.batch.container.created',
       type: 'date_user',
-      ...transformComputedField(`${basePath}.container`, batch?.container ?? null, item => {
-        const currentBatch = getCurrentBatch(batch?.id, item);
-        return currentBatch?.container
-          ? {
-              at: new Date(currentBatch?.container.createdAt ?? ''),
-              by: currentBatch?.container.createdBy,
-            }
-          : null;
-      }),
+      ...transformComputedField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'created',
+        item => {
+          const currentBatch = getCurrentBatch(batch?.id, item);
+          return currentBatch?.container
+            ? {
+                at: new Date(currentBatch?.container.createdAt ?? ''),
+                by: currentBatch?.container.createdBy,
+              }
+            : null;
+        }
+      ),
     },
     {
       columnKey: 'order.orderItem.batch.container.createdBy',
@@ -780,15 +785,20 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
     {
       columnKey: 'order.orderItem.batch.container.updated',
       type: 'date_user',
-      ...transformComputedField(`${basePath}.container`, batch?.container ?? null, item => {
-        const currentBatch = getCurrentBatch(batch?.id, item);
-        return currentBatch?.container
-          ? {
-              at: new Date(currentBatch?.container.updatedAt ?? ''),
-              by: currentBatch?.container.updatedBy,
-            }
-          : null;
-      }),
+      ...transformComputedField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'updated',
+        item => {
+          const currentBatch = getCurrentBatch(batch?.id, item);
+          return currentBatch?.container
+            ? {
+                at: new Date(currentBatch?.container.updatedAt ?? ''),
+                by: currentBatch?.container.updatedBy,
+              }
+            : null;
+        }
+      ),
     },
     {
       columnKey: 'order.orderItem.batch.container.updatedBy',
@@ -813,11 +823,15 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
     {
       columnKey: 'order.orderItem.batch.container.archived',
       type: 'status',
-      ...transformComputedField(`${basePath}.container`, batch?.container ?? null, item => {
-        const currentBatch = getCurrentBatch(batch?.id, item);
-
-        return currentBatch?.shipment?.archived ?? true;
-      }),
+      ...transformComputedField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'archived',
+        item => {
+          const currentBatch = getCurrentBatch(batch?.id, item);
+          return currentBatch?.shipment?.archived ?? true;
+        }
+      ),
     },
     {
       columnKey: 'order.orderItem.batch.container.no',
@@ -927,13 +941,18 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
     {
       columnKey: 'order.orderItem.batch.container.dueDate',
       type: 'date',
-      ...transformComputedField(`${basePath}.container`, batch?.container ?? null, item => {
-        const currentBatch = getCurrentBatch(batch?.id, item);
-        const date = currentBatch?.container?.freeTimeStartDate?.value;
-        return date
-          ? addDays(new Date(date), currentBatch?.container?.freeTimeDuration ?? 0)
-          : null;
-      }),
+      ...transformComputedField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'dueDate',
+        item => {
+          const currentBatch = getCurrentBatch(batch?.id, item);
+          const date = currentBatch?.container?.freeTimeStartDate?.value;
+          return date
+            ? addDays(new Date(date), currentBatch?.container?.freeTimeDuration ?? 0)
+            : null;
+        }
+      ),
     },
     {
       columnKey: 'order.orderItem.batch.container.yardName',
@@ -1012,15 +1031,20 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
     {
       columnKey: 'order.orderItem.batch.shipment.created',
       type: 'date_user',
-      ...transformComputedField(`${basePath}.shipment`, batch?.shipment ?? null, item => {
-        const currentBatch = getCurrentBatch(batch?.id, item);
-        return currentBatch?.shipment
-          ? {
-              at: new Date(currentBatch?.shipment.createdAt ?? ''),
-              by: currentBatch?.shipment.createdBy,
-            }
-          : null;
-      }),
+      ...transformComputedField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'created',
+        item => {
+          const currentBatch = getCurrentBatch(batch?.id, item);
+          return currentBatch?.shipment
+            ? {
+                at: new Date(currentBatch?.shipment.createdAt ?? ''),
+                by: currentBatch?.shipment.createdBy,
+              }
+            : null;
+        }
+      ),
     },
     {
       columnKey: 'order.orderItem.batch.shipment.createdBy',
@@ -1045,15 +1069,20 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
     {
       columnKey: 'order.orderItem.batch.shipment.updated',
       type: 'date_user',
-      ...transformComputedField(`${basePath}.shipment`, batch?.shipment ?? null, item => {
-        const currentBatch = getCurrentBatch(batch?.id, item);
-        return currentBatch?.shipment
-          ? {
-              at: new Date(currentBatch?.shipment.updatedAt ?? ''),
-              by: currentBatch?.shipment.updatedBy,
-            }
-          : null;
-      }),
+      ...transformComputedField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'updated',
+        item => {
+          const currentBatch = getCurrentBatch(batch?.id, item);
+          return currentBatch?.shipment
+            ? {
+                at: new Date(currentBatch?.shipment.updatedAt ?? ''),
+                by: currentBatch?.shipment.updatedBy,
+              }
+            : null;
+        }
+      ),
     },
     {
       columnKey: 'order.orderItem.batch.shipment.updatedBy',
