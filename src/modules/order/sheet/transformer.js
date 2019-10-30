@@ -140,11 +140,6 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
       ...transformReadonlyField(basePath, order, 'updatedAt', order?.updatedAt ?? null),
     },
     {
-      columnKey: 'order.logs',
-      type: 'order_logs',
-      ...transformValueField(basePath, order, 'id', () => true),
-    },
-    {
       columnKey: 'order.archived',
       type: 'status',
       ...transformValueField(
@@ -315,6 +310,11 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
         'files',
         hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_DOCUMENTS)
       ),
+    },
+    {
+      columnKey: 'order.logs',
+      type: 'order_logs',
+      ...transformValueField(basePath, order, 'id', () => true),
     },
   ].map(c => ({
     ...c,
@@ -494,6 +494,11 @@ function transformOrderItem(
         hasPermission =>
           hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_DOCUMENTS)
       ),
+    },
+    {
+      columnKey: 'order.orderItem.logs',
+      type: 'order_item_logs',
+      ...transformValueField(basePath, orderItem, 'id', () => true),
     },
   ].map(c => ({
     ...c,
@@ -692,6 +697,11 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
         'packageQuantity',
         hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_QUANTITY)
       ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.logs',
+      type: 'batch_logs',
+      ...transformValueField(basePath, batch, 'id', () => true),
     },
   ].map(c => ({
     ...c,
@@ -922,6 +932,11 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         'memo',
         hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_MEMO)
       ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.logs',
+      type: 'container_logs',
+      ...transformValueField(`${basePath}.container`, batch?.container ?? null, 'id', () => true),
     },
   ].map(c => ({
     ...c,
@@ -1387,6 +1402,11 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         'files',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_DOCUMENTS)
       ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.logs',
+      type: 'shipment_logs',
+      ...transformValueField(`${basePath}.shipment`, batch?.shipment ?? null, 'id', () => true),
     },
   ].map(c => ({
     ...c,
