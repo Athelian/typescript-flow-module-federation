@@ -170,7 +170,7 @@ class BatchFormModule extends React.Component<Props> {
                               <Content>
                                 <Timeline
                                   query={batchTimelineQuery}
-                                  queryField="orderItem"
+                                  queryField="batch"
                                   variables={{
                                     id: decodeId(batchId),
                                   }}
