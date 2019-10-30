@@ -41,7 +41,7 @@ export default function Actions({ targets }: Props) {
   const shipmentIsDisabled = shipmentIds.length === 0;
   const navigateToGTV = () => {
     if (selectors.isOrderFocus) {
-      const ids = [...shipmentIds];
+      const ids = [...orderIds];
       batchIds.forEach(batchId => {
         const [, parentOrderId] = findParentIdsByBatch({
           batchId,
