@@ -51,7 +51,6 @@ const orderSheetFragment = gql`
       }
     }
   }
-  ${partnerNameFragment}
 `;
 
 const orderItemSheetFragment = gql`
@@ -365,6 +364,7 @@ export const ordersQuery = gql`
   ${containerSheetFragment}
   ${timelineDateFragment}
   ${userAvatarFragment}
+  ${partnerNameFragment}
   ${documentFragment}
   ${tagFragment}
   ${forbiddenFragment}
@@ -400,6 +400,7 @@ export const orderItemByIDQuery = gql`
   ${batchSheetFragment}
   ${shipmentSheetFragment}
   ${containerSheetFragment}
+  ${partnerNameFragment}
   ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
@@ -438,6 +439,7 @@ export const batchByIDQuery = gql`
   ${containerSheetFragment}
   ${timelineDateFragment}
   ${userAvatarFragment}
+  ${partnerNameFragment}
   ${documentFragment}
   ${tagFragment}
   ${forbiddenFragment}
@@ -483,6 +485,7 @@ export const shipmentByIDQuery = gql`
   ${shipmentSheetFragment}
   ${timelineDateFragment}
   ${userAvatarFragment}
+  ${partnerNameFragment}
   ${documentFragment}
   ${tagFragment}
   ${forbiddenFragment}
