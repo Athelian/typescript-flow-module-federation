@@ -974,6 +974,8 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
 }
 
 function transformBatchShipment(basePath: string, batch: Object): Array<CellValue> {
+  const nbOfVoyages = (batch?.shipment?.voyages ?? []).length;
+
   return [
     {
       columnKey: 'order.orderItem.batch.shipment.created',
@@ -1290,24 +1292,124 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
     // Load Port Departure Approval
     // First Voyage Vessel Name
     // First Voyage Vessel Code
-    // First Transit Port
-    // First Transit Port Arrival Initial Date
-    // First Transit Port Arrival Date Revisions
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.0.firstTransitPort',
+      type: 'port',
+      computed: item => getShipmentTransportType(batch?.id, item),
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[0] ?? null : null,
+        'arrivalPort',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_PORT)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.0.firstTransitArrival.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0.arrival`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[0]?.arrival ?? null : null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey:
+        'order.orderItem.batch.shipment.voyage.0.firstTransitArrival.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0.arrival`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[0]?.arrival ?? null : null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
     // First Transit Port Arrival Assigned To
     // First Transit Port Arrival Approval
-    // First Transit Port Departure Initial Date
-    // First Transit Port Departure Date Revisions
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.1.firstTransitDeparture.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.departure`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[1]?.departure ?? null : null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey:
+        'order.orderItem.batch.shipment.voyage.1.firstTransitDeparture.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.departure`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[1]?.departure ?? null : null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
     // First Transit Port Departure Assigned To
     // First Transit Port Departure Approval
     // Second Voyage Vessel Name
     // Second Voyage Vessel Code
-    // Second Transit Port
-    // Second Transit Port Arrival Initial Date
-    // Second Transit Port Arrival Date Revisions
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.1.secondTransitPort',
+      type: 'port',
+      computed: item => getShipmentTransportType(batch?.id, item),
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[1] ?? null : null,
+        'arrivalPort',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_PORT)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.1.secondTransitArrival.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.arrival`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[1]?.arrival ?? null : null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey:
+        'order.orderItem.batch.shipment.voyage.1.secondTransitArrival.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.arrival`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[1]?.arrival ?? null : null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
     // Second Transit Port Arrival  Assigned To
     // Second Transit Port Arrival Approval
-    // Second Transit Port Departure Initial Date
-    // Second Transit Port Departure Date Revisions
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.2.secondTransitDeparture.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.2.departure`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[2]?.departure ?? null : null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey:
+        'order.orderItem.batch.shipment.voyage.2.secondTransitDeparture.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.2.departure`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[2]?.departure ?? null : null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
     // Second Transit Port Departure Assigned To
     // Second Transit Port Departure Approval
     // Third Voyage Vessel Name
