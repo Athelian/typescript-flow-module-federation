@@ -5,7 +5,7 @@ import logger from 'utils/logger';
 import { Mutex } from 'utils/async';
 import { useSheetState } from '../SheetState';
 import type { Action } from '../SheetState/types';
-import { Actions } from '../SheetState/contants';
+import { Actions } from '../SheetState/constants';
 import { useSheetLiveID } from './index';
 import { convertEntityToInput } from './helper';
 import {

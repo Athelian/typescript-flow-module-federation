@@ -2,9 +2,9 @@
 import * as React from 'react';
 import { useHasPermissions } from 'contexts/Permissions';
 import { Blackout } from 'components/Form';
-import type { CellValue } from '../../SheetState/types';
-import { useCell, useSheetState } from '../../SheetState';
-import { Actions } from '../../SheetState/contants';
+import type { CellValue } from 'components/Sheet/SheetState/types';
+import { useCell, useSheetState } from 'components/Sheet/SheetState';
+import { Actions } from 'components/Sheet/SheetState/constants';
 import CellInput from './CellInput';
 import CellDisplay from './CellDisplay';
 import { CellStyle, CellBorderStyle, CellPlaceholderStyle, CellShadowStyle } from './style';

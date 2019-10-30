@@ -2,7 +2,7 @@
 import logger from 'utils/logger';
 import type { ColumnSort } from '../../SheetColumns';
 import type { Action, CellValue, Position, State } from '../types';
-import { Actions } from '../contants';
+import { Actions } from '../constants';
 import { append, init, rearrange, sort } from './global';
 import {
   appendForeignFocuses,
