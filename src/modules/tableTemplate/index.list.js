@@ -6,6 +6,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { TEMPLATE_CREATE } from 'modules/permission/constants/template';
 import usePermission from 'hooks/usePermission';
+import useUser from 'hooks/useUser';
 import SlideView from 'components/SlideView';
 import TemplateFormWrapper from 'modules/tableTemplate/common/TemplateFormWrapper';
 import { Content } from 'components/Layout';
@@ -14,6 +15,7 @@ import FilterToolBar from 'components/common/FilterToolBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { NewButton } from 'components/Buttons';
 import useFilter from 'hooks/useFilter';
+import { isEnableBetaFeature } from 'utils/env';
 import TableTemplateList from './list';
 import messages from './messages';
 
@@ -21,10 +23,10 @@ type Props = {
   intl: IntlShape,
 };
 
-const getInitFilter = {
+const getInitFilter = (type: string) => ({
   viewType: 'grid',
   filter: {
-    type: 'Order',
+    type,
   },
   sort: {
     field: 'updatedAt',
@@ -32,36 +34,74 @@ const getInitFilter = {
   },
   perPage: 10,
   page: 1,
-};
+});
 
 const TableTemplateModule = (props: Props) => {
+  const { isUsingLegacyFeatures } = useUser();
+  const showLegacyMenu = isUsingLegacyFeatures() || isEnableBetaFeature;
   const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter } = useFilter(
-    getInitFilter,
+    getInitFilter(showLegacyMenu ? 'Order' : 'OrderSheet'),
     'filterTableTemplate'
   );
   const { intl } = props;
-
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
   const { hasPermission } = usePermission();
   const canCreate = hasPermission(TEMPLATE_CREATE);
+  const activeType = filtersAndSort.filter?.type;
+  const setActiveType = (type: string) => onChangeFilter({ ...filtersAndSort, filter: { type } });
   return (
     <Provider>
       <Content>
         <NavBar>
           <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+          {showLegacyMenu && (
+            <TabItem
+              active={activeType === 'Order'}
+              label={
+                <FormattedMessage id="modules.TableTemplates.order" defaultMessage="Order Edit" />
+              }
+              icon="RELATION_MAP"
+              onClick={() => {
+                if (activeType !== 'Order') {
+                  setActiveType('Order');
+                }
+              }}
+            />
+          )}
           <TabItem
-            active
+            active={activeType === 'OrderSheet'}
             label={
               <FormattedMessage
-                id="modules.TableTemplates.orderFocus"
-                defaultMessage="ORDER FOCUS"
+                id="modules.TableTemplates.orderSheet"
+                defaultMessage="Order Table"
               />
             }
             icon="ORDER"
+            onClick={() => {
+              if (activeType !== 'OrderSheet') {
+                setActiveType('OrderSheet');
+              }
+            }}
           />
+          <TabItem
+            active={activeType === 'ShipmentSheet'}
+            label={
+              <FormattedMessage
+                id="modules.TableTemplates.shipmentSheet"
+                defaultMessage="Shipment Table"
+              />
+            }
+            icon="SHIPMENT"
+            onClick={() => {
+              if (activeType !== 'ShipmentSheet') {
+                setActiveType('ShipmentSheet');
+              }
+            }}
+          />
+
           <FilterToolBar
             sortFields={sortFields}
             filtersAndSort={filtersAndSort}
@@ -83,7 +123,11 @@ const TableTemplateModule = (props: Props) => {
                     }}
                   >
                     {isOpen && (
-                      <TemplateFormWrapper template={{}} isNew onCancel={() => toggle(false)} />
+                      <TemplateFormWrapper
+                        template={{ type: activeType }}
+                        isNew
+                        onCancel={() => toggle(false)}
+                      />
                     )}
                   </SlideView>
                 </>
