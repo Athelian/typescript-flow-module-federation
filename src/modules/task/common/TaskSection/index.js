@@ -483,9 +483,8 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
             title={
               <>
                 <FormattedMessage id="modules.Tasks.tasks" defaultMessage="TASKS" />
-                 (
-                <FormattedNumber value={tasks.length} />
-                )
+                &nbsp;(
+                <FormattedNumber value={tasks.length} />)
               </>
             }
           />

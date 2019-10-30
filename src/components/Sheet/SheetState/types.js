@@ -54,11 +54,37 @@ type Error = {
   messages: Array<string>,
 } & Area;
 
-export type Action = {
+export type Action = {|
   type: string,
   cell?: Position | null,
-  payload?: any,
-};
+  payload?: {|
+    entity?: Object,
+    value?: mixed,
+    item?: Object,
+    index?: number,
+    changes?: Array<{
+      entity: {
+        id: string,
+        type: string,
+      },
+      field: string,
+      value: any,
+    }>,
+    focus?: mixed,
+    blur?: mixed,
+    foreignFocuses?: Array<mixed>,
+    items?: Array<Object>,
+    columns?: Array<string>,
+    sorts?: Array<any>,
+    messages?: Array<string>,
+    callback?: (
+      Array<Object>
+    ) => ?{
+      item: Object,
+      index: number,
+    },
+  |},
+|};
 
 export type RowChange = {
   entity: {

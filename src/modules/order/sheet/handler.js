@@ -56,7 +56,7 @@ function onCreateOrderItemFactory(client: ApolloClient, dispatch: Action => void
               orderItems.splice(newOrderItem.sort, 0, newOrderItem);
 
               return {
-                order: {
+                item: {
                   ...orders[orderIdx],
                   orderItems,
                 },
@@ -120,7 +120,7 @@ function onCreateBatchFactory(client: ApolloClient, dispatch: Action => void) {
               };
 
               return {
-                order: {
+                item: {
                   ...orders[orderIdx],
                   orderItems,
                 },
@@ -187,7 +187,7 @@ function onBatchQuantityRevisionFactory(client: ApolloClient, dispatch: Action =
               dispatch({
                 type: Actions.REPLACE_ITEM,
                 payload: {
-                  order: {
+                  item: {
                     ...order,
                     orderItems,
                   },
@@ -226,7 +226,7 @@ function onUpdateBatchContainerFactory(client: ApolloClient, dispatch: Action =>
           dispatch({
             type: Actions.REPLACE_ITEM,
             payload: {
-              order: {
+              item: {
                 ...order,
                 orderItems,
               },
@@ -288,7 +288,7 @@ function onUpdateBatchShipmentFactory(client: ApolloClient, dispatch: Action => 
           dispatch({
             type: Actions.REPLACE_ITEM,
             payload: {
-              order: {
+              item: {
                 ...order,
                 orderItems,
               },
@@ -344,7 +344,7 @@ function onDeleteOrderItemFactory(dispatch: Action => void) {
           }
 
           return {
-            order: {
+            item: {
               ...orders[orderIdx],
               orderItems: orders[orderIdx].orderItems.filter(
                 orderItem => orderItem.id !== orderItemId
@@ -379,7 +379,7 @@ function onDeleteBatchFactory(dispatch: Action => void) {
           }
 
           return {
-            order: {
+            item: {
               ...orders[orderIdx],
               orderItems: orders[orderIdx].orderItems.map(orderItem => ({
                 ...orderItem,
@@ -420,7 +420,7 @@ function onDeleteBatchQuantityRevisionFactory(dispatch: Action => void) {
             dispatch({
               type: Actions.REPLACE_ITEM,
               payload: {
-                order: {
+                item: {
                   ...order,
                   orderItems,
                 },
@@ -620,13 +620,12 @@ export default function entityEventHandler(
             break;
           }
           case 'Container': {
-            console.warn({ changes });
-            const container = orders
+            const batch = orders
               .map(order => order.orderItems.map(oi => oi.batches).flat())
               // $FlowFixMe flat not supported by flow
               .flat()
-              .find(batch => batch?.container?.id === event.entity?.id);
-            if (container) {
+              .find(currentBatch => currentBatch?.container?.id === event.entity?.id);
+            if (batch) {
               changes = changes.reduce((newChanges, change) => {
                 switch (change.field) {
                   case 'freeTimeStartDate':
@@ -658,7 +657,7 @@ export default function entityEventHandler(
                                         auto: change.new?.boolean,
                                       };
                                     default:
-                                      return container.freeTimeStartDate;
+                                      return batch.container?.freeTimeStartDate;
                                   }
                                 })(),
                               },
@@ -681,16 +680,16 @@ export default function entityEventHandler(
                               switch (change.field) {
                                 case 'freeTimeStartDate':
                                   return {
-                                    ...container.freeTimeStartDate,
+                                    ...batch.container?.freeTimeStartDate,
                                     value: change.new?.datetime,
                                   };
                                 case 'autoCalculatedFreeTimeStartDate':
                                   return {
-                                    ...container.freeTimeStartDate,
+                                    ...batch.container?.freeTimeStartDate,
                                     auto: change.new?.boolean,
                                   };
                                 default:
-                                  return container.freeTimeStartDate;
+                                  return batch.container?.freeTimeStartDate;
                               }
                             })(),
                           },
