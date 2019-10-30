@@ -36,12 +36,10 @@ const ProjectDueDateDiffToolTip = ({ dueDate, estDate, completedAt }: Props) => 
           {diffDueDateAndEstDate.value}
         </div>
         <div>
-          {
-            <FormattedMessage
-              id="components.cards.lastMilestoneCompletedDate"
-              defaultMessage="Last Milestone's Completed Date"
-            />
-          }
+          <FormattedMessage
+            id="components.cards.lastMilestoneCompletedDate"
+            defaultMessage="Last Milestone's Completed Date"
+          />
         </div>
         <div>{completedAt ? <FormattedDate value={completedAt} /> : 'N/A'}</div>
         <div className={ToolTipDiffDateStyle(diffDueDateAndCompletedAt.color)}>

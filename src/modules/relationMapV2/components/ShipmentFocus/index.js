@@ -9,6 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import apolloClient from 'apollo';
 import usePrevious from 'hooks/usePrevious';
+import useWindowSize from 'hooks/useWindowSize';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { Display } from 'components/Form';
 import { SHIPMENT, CONTAINER, BATCH, ORDER_ITEM, ORDER } from 'modules/relationMapV2/constants';
@@ -47,7 +48,7 @@ import MoveEntityConfirm from '../MoveEntityConfirm';
 import AddTags from '../AddTags';
 import Actions from '../Actions';
 import Header from '../Header';
-import Row from '../Row';
+import { ShipmentFocusedRow } from '../Row';
 import InitLoadingPlaceholder from '../InitLoadingPlaceholder';
 import generateListData from './generateListData';
 import normalize from './normalize';
@@ -69,6 +70,7 @@ const innerElementType = React.forwardRef(
 );
 
 export default function ShipmentFocus() {
+  const [, innerHeight] = useWindowSize();
   const listRef = React.createRef();
   const scrollEntity = React.useRef({
     type: '',
@@ -632,6 +634,7 @@ export default function ShipmentFocus() {
                         isItemLoaded={isItemLoaded}
                         itemCount={hasMoreItems(data, 'shipments') ? rowCount + 1 : rowCount}
                         loadMoreItems={loadMoreItems}
+                        threshold={5}
                       >
                         {({ onItemsRendered, ref }) => (
                           // $FlowIgnore: doesn't support
@@ -649,10 +652,11 @@ export default function ShipmentFocus() {
                               return 75;
                             }}
                             onItemsRendered={onItemsRendered}
-                            height={window.innerHeight - 50}
+                            height={innerHeight - 50}
                             width="100%"
+                            overscanCount={1}
                           >
-                            {Row}
+                            {ShipmentFocusedRow}
                           </List>
                         )}
                       </InfiniteLoader>

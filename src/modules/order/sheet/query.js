@@ -51,7 +51,6 @@ const orderSheetFragment = gql`
       }
     }
   }
-  ${partnerNameFragment}
 `;
 
 const orderItemSheetFragment = gql`
@@ -163,6 +162,7 @@ const shipmentSheetFragment = gql`
     updatedAt
     blNo
     blDate
+    booked
     bookingNo
     bookingDate
     invoiceNo
@@ -282,6 +282,8 @@ const containerSheetFragment = gql`
   fragment containerSheetFragment on Container {
     id
     no
+    autoCalculatedFreeTimeStartDate
+    freeTimeStartDate
     warehouseArrivalAgreedDate
     warehouseArrivalAgreedDateAssignedTo {
       ...userAvatarFragment
@@ -362,6 +364,7 @@ export const ordersQuery = gql`
   ${containerSheetFragment}
   ${timelineDateFragment}
   ${userAvatarFragment}
+  ${partnerNameFragment}
   ${documentFragment}
   ${tagFragment}
   ${forbiddenFragment}
@@ -397,6 +400,7 @@ export const orderItemByIDQuery = gql`
   ${batchSheetFragment}
   ${shipmentSheetFragment}
   ${containerSheetFragment}
+  ${partnerNameFragment}
   ${timelineDateFragment}
   ${userAvatarFragment}
   ${documentFragment}
@@ -435,6 +439,7 @@ export const batchByIDQuery = gql`
   ${containerSheetFragment}
   ${timelineDateFragment}
   ${userAvatarFragment}
+  ${partnerNameFragment}
   ${documentFragment}
   ${tagFragment}
   ${forbiddenFragment}
@@ -480,6 +485,7 @@ export const shipmentByIDQuery = gql`
   ${shipmentSheetFragment}
   ${timelineDateFragment}
   ${userAvatarFragment}
+  ${partnerNameFragment}
   ${documentFragment}
   ${tagFragment}
   ${forbiddenFragment}

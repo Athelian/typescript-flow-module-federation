@@ -33,7 +33,7 @@ const TaskTemplateListModule = () => {
   const canCreate = hasPermission(TASK_TEMPLATE_CREATE);
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     initFilter,
-    `filterTaskTemplate`
+    'filterTaskTemplate'
   );
   const activeType = getByPathWithDefault('Order', 'filter.entityTypes.0', filterAndSort);
 

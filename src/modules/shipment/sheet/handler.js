@@ -1,7 +1,7 @@
 // @flow
 import ApolloClient from 'apollo-client';
 import type { Action } from 'components/Sheet/SheetState/types';
-import { Actions } from 'components/Sheet/SheetState/contants';
+import { Actions } from 'components/Sheet/SheetState/constants';
 import type { EntityEvent, EntityEventHandler } from 'components/Sheet/SheetLive/entity';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
 import { batchQuantityRevisionByIDQuery } from './query';

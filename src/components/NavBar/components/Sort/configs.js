@@ -12,6 +12,7 @@ import fileMessages from 'modules/document/messages';
 import projectMessages from 'modules/project/messages';
 import taskMessages from 'modules/task/messages';
 import tagMessages from 'modules/tags/messages';
+import tableTemplateMessages from 'modules/tableTemplate/messages';
 import type { SortConfig } from './index';
 
 export const ProductSortConfig: Array<SortConfig> = [
@@ -148,4 +149,10 @@ export const TagSortConfig: Array<SortConfig> = [
   { message: tagMessages.updatedAt, field: 'updatedAt' },
   { message: tagMessages.createdAt, field: 'createdAt' },
   { message: tagMessages.name, field: 'name' },
+];
+
+export const MaskEditSortConfig: Array<SortConfig> = [
+  { message: tableTemplateMessages.updatedAt, field: 'updatedAt' },
+  { message: tableTemplateMessages.createdAt, field: 'createdAt' },
+  { message: tableTemplateMessages.name, field: 'name' },
 ];

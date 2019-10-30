@@ -6,6 +6,7 @@ import TextAreaInput from './Inputs/TextAreaInput';
 import NumberInput from './Inputs/NumberInput';
 import NumberToggleInput from './Inputs/NumberToggleInput';
 import DateInput from './Inputs/DateInput';
+import DateToggleInput from './Inputs/DateToggleInput';
 import DatetimeInput from './Inputs/DatetimeInput';
 import SelectCustomInput from './Inputs/SelectCustomInput';
 import SelectEnumInput from './Inputs/SelectEnumInput';
@@ -19,6 +20,9 @@ import TagsInput from './Inputs/TagsInput';
 import UserAssignmentInput from './Inputs/UserAssignmentInput';
 import PortInput from './Inputs/PortInput';
 import PartnerSelectorInput from './Inputs/PartnerSelectorInput';
+import PartnersSelectorInput from './Inputs/PartnersSelectorInput';
+import ToggleInput from './Inputs/ToggleInput';
+import LogsInput from './Inputs/LogsInput';
 
 type Props = {
   value: any,
@@ -41,6 +45,7 @@ const inputs = {
   number_toggle: NumberToggleInput,
   static_metric_value: StaticMetricValueInput,
   date: DateInput,
+  date_toggle: DateToggleInput,
   datetime: DatetimeInput,
   load_type: SelectEnumInput.LoadType,
   transport_type: SelectEnumInput.TransportType,
@@ -66,6 +71,13 @@ const inputs = {
   user_assignment: UserAssignmentInput,
   port: PortInput,
   exporter_selector: PartnerSelectorInput.Exporter,
+  forwarders: PartnersSelectorInput.Forwarders,
+  booked: ToggleInput.Booked,
+  order_logs: LogsInput.Order,
+  order_item_logs: LogsInput.OrderItem,
+  batch_logs: LogsInput.Batch,
+  shipment_logs: LogsInput.Shipment,
+  container_logs: LogsInput.Container,
 };
 
 const CellInput = ({

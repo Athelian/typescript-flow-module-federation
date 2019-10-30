@@ -5,7 +5,7 @@ import FormattedName from 'components/FormattedName';
 import Tag from 'components/Tag';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import User from './components/User';
-import { ARCHIVED, CREATE, IN_CHARGES, TAGS, UNARCHIVED, UPDATE_FIELD } from './contants';
+import { ARCHIVED, CREATE, IN_CHARGES, TAGS, UNARCHIVED, UPDATE_FIELD } from './constants';
 import type { LogItem } from './types';
 import EntityIdentifier from './components/EntityIdentifier';
 import { Value, ValueWrapper } from './components/Value';

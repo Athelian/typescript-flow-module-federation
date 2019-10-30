@@ -9,6 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import apolloClient from 'apollo';
 import usePrevious from 'hooks/usePrevious';
+import useWindowSize from 'hooks/useWindowSize';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { Display } from 'components/Form';
 import { orderFocusedListQuery, orderFullFocusDetailQuery } from 'modules/relationMapV2/query';
@@ -35,7 +36,7 @@ import StatusConfirm from '../StatusConfirm';
 import SelectedEntity from '../SelectedEntity';
 import Actions from '../Actions';
 import Header from '../Header';
-import Row from '../Row';
+import { OrderFocusedRow } from '../Row';
 import generateListData from './generateListData';
 import normalize from './normalize';
 import RemoveBatchConfirm from '../RemoveBatchConfirm';
@@ -64,6 +65,7 @@ const innerElementType = React.forwardRef(
 );
 
 export default function OrderFocus() {
+  const [, innerHeight] = useWindowSize();
   const listRef = React.createRef();
   const scrollEntity = React.useRef({
     type: '',
@@ -91,6 +93,7 @@ export default function OrderFocus() {
   }, [lastQueryVariables, queryVariables, setExpandRows]);
 
   const scrollToRow = React.useCallback(
+    // eslint-disable-next-line
     ({ position, id, type }: { position: number, id: string, type: string }) => {
       scrollEntity.current = {
         id,
@@ -473,9 +476,10 @@ export default function OrderFocus() {
                           // need to find the position base on the order and batch
                           // then use the react-window to navigate to the row
                           // try to get from sort first, if not there, then try to use from entities
-                          const originalBatches = ( // $FlowIgnore this doesn't support yet
-                            entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? []
-                          ).map(batchId => entities.batches?.[batchId]);
+                          const originalBatches = // $FlowIgnore this doesn't support yet
+                          (entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? []).map(
+                            batchId => entities.batches?.[batchId]
+                          );
                           const batchList = getBatchesSortByItemId({
                             // $FlowIgnore this doesn't support yet
                             id: batch?.orderItem?.id,
@@ -771,6 +775,7 @@ export default function OrderFocus() {
                         isItemLoaded={isItemLoaded}
                         itemCount={hasMoreItems(data, 'orders') ? rowCount + 1 : rowCount}
                         loadMoreItems={loadMoreItems}
+                        threshold={5}
                       >
                         {({ onItemsRendered, ref }) => (
                           // $FlowIgnore: doesn't support
@@ -788,10 +793,11 @@ export default function OrderFocus() {
                               return 75;
                             }}
                             onItemsRendered={onItemsRendered}
-                            height={window.innerHeight - 50}
+                            height={innerHeight - 50}
                             width="100%"
+                            overscanCount={1}
                           >
-                            {Row}
+                            {OrderFocusedRow}
                           </List>
                         )}
                       </InfiniteLoader>

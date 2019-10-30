@@ -38,9 +38,29 @@ export default defineMessages({
     id: 'modules.container.warehouseArrivalActualDateAssignedTo',
     defaultMessage: 'Warehouse Arrival Actual Assigned To'.toUpperCase(),
   },
+  departureDate: {
+    id: 'modules.container.departureDate',
+    defaultMessage: 'Departure Date',
+  },
   departureDateAssignedTo: {
     id: 'modules.container.departureDateAssignedTo',
     defaultMessage: 'Departure Date Assigned To',
+  },
+  yardName: {
+    id: 'modules.container.yardName',
+    defaultMessage: 'Yard',
+  },
+  dueDate: {
+    id: 'modules.container.dueDate',
+    defaultMessage: 'Due date',
+  },
+  memo: {
+    id: 'modules.container.memo',
+    defaultMessage: 'Memo',
+  },
+  logs: {
+    id: 'modules.container.logs',
+    defaultMessage: 'Logs',
   },
   createdAt: {
     id: 'modules.container.createdAt',
@@ -49,6 +69,10 @@ export default defineMessages({
   updatedAt: {
     id: 'modules.container.updatedAt',
     defaultMessage: 'Last Modified',
+  },
+  startDate: {
+    id: 'modules.container.startDate',
+    defaultMessage: 'START DATE',
   },
   noContainerFound: {
     id: 'modules.container.noContainerFound',

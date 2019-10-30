@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import logger from 'utils/logger';
 import { useSheetState } from '../SheetState';
-import { Actions } from '../SheetState/contants';
+import { Actions } from '../SheetState/constants';
 import { useSheetLiveID } from './index';
 import { convertEntityToInput } from './helper';
 import {

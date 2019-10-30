@@ -9,7 +9,7 @@ type OptionalProps = {
 type Props = OptionalProps & {
   tabs: Array<{ id: string, icon: string, label: string | React.Node, disabled?: boolean }>,
   disabled?: boolean,
-  onChange: number => void,
+  onChange?: number => void,
 };
 
 type State = {
@@ -39,7 +39,7 @@ class Tabs extends React.Component<Props, State> {
   handleChange = (index: number) => {
     this.setState({ activeIndex: index });
     const { onChange } = this.props;
-    onChange(index);
+    if (onChange) onChange(index);
   };
 
   render() {

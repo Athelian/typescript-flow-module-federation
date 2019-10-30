@@ -483,9 +483,8 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
             title={
               <>
                 <FormattedMessage id="modules.Tasks.tasks" defaultMessage="TASKS" />
-                {' ('}
-                <FormattedNumber value={tasks.length} />
-                {')'}
+                &nbsp;(
+                <FormattedNumber value={tasks.length} />)
               </>
             }
           />
@@ -571,74 +570,69 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
 
             <div className={TasksSectionStyle}>
               <div className={TasksSectionTasksAreaStyle}>
-                {
-                  <BooleanValue>
-                    {({ value: opened, set: slideToggle }) => (
-                      <>
-                        <div className={TemplateItemStyle}>
-                          <Label height="30px">
-                            <FormattedMessage
-                              id="modules.Tasks.template"
-                              defaultMessage="TEMPLATE"
-                            />
-                          </Label>
-                          {taskTemplate ? (
-                            <TemplateCard
-                              type="TASK"
-                              template={{
-                                id: taskTemplate.id,
-                                title: taskTemplate.name,
-                                description: taskTemplate.description,
-                                count: taskTemplate.tasks && taskTemplate.tasks.length,
-                              }}
-                              onClick={() => {
-                                if (canUpdateTaskTemplate) {
-                                  slideToggle(true);
-                                }
-                              }}
-                              readOnly={!canUpdateTaskTemplate}
-                            />
-                          ) : (
-                            <>
-                              {canUpdateTaskTemplate ? (
-                                <DashedPlusButton
-                                  width="195px"
-                                  height="125px"
-                                  onClick={() => slideToggle(true)}
-                                />
-                              ) : (
-                                <GrayCard width="195px" height="125px" />
-                              )}
-                            </>
-                          )}
-                        </div>
+                <BooleanValue>
+                  {({ value: opened, set: slideToggle }) => (
+                    <>
+                      <div className={TemplateItemStyle}>
+                        <Label height="30px">
+                          <FormattedMessage id="modules.Tasks.template" defaultMessage="TEMPLATE" />
+                        </Label>
+                        {taskTemplate ? (
+                          <TemplateCard
+                            type="TASK"
+                            template={{
+                              id: taskTemplate.id,
+                              title: taskTemplate.name,
+                              description: taskTemplate.description,
+                              count: taskTemplate.tasks && taskTemplate.tasks.length,
+                            }}
+                            onClick={() => {
+                              if (canUpdateTaskTemplate) {
+                                slideToggle(true);
+                              }
+                            }}
+                            readOnly={!canUpdateTaskTemplate}
+                          />
+                        ) : (
+                          <>
+                            {canUpdateTaskTemplate ? (
+                              <DashedPlusButton
+                                width="195px"
+                                height="125px"
+                                onClick={() => slideToggle(true)}
+                              />
+                            ) : (
+                              <GrayCard width="195px" height="125px" />
+                            )}
+                          </>
+                        )}
+                      </div>
 
-                        <SlideView
-                          isOpen={opened}
-                          onRequestClose={() => slideToggle(false)}
-                          shouldConfirm={() => {
-                            const button = document.getElementById(
-                              'select_task_template_apply_button'
-                            );
-                            return button;
-                          }}
-                        >
-                          {opened && (
-                            <SelectTaskTemplate
-                              cacheKey={`${type}SelectTaskTemplate`}
-                              entityType={type}
-                              onCancel={() => slideToggle(false)}
-                              onSelect={newValue => {
-                                slideToggle(false);
-                                applyTemplate(newValue);
-                              }}
-                            />
-                          )}
-                        </SlideView>
-                      </>
-                    )}
-                  </BooleanValue>
-                }
+                      <SlideView
+                        isOpen={opened}
+                        onRequestClose={() => slideToggle(false)}
+                        shouldConfirm={() => {
+                          const button = document.getElementById(
+                            'select_task_template_apply_button'
+                          );
+                          return button;
+                        }}
+                      >
+                        {opened && (
+                          <SelectTaskTemplate
+                            cacheKey={`${type}SelectTaskTemplate`}
+                            entityType={type}
+                            onCancel={() => slideToggle(false)}
+                            onSelect={newValue => {
+                              slideToggle(false);
+                              applyTemplate(newValue);
+                            }}
+                          />
+                        )}
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
                 <Tasks
                   groupIds={groupIds}
                   entityId={entityId}

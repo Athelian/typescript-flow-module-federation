@@ -4,7 +4,7 @@ import { equals, clone } from 'ramda';
 import { useSheetColumns } from '../SheetColumns';
 import type { ColumnSort } from '../SheetColumns';
 import cellReducer from './reducer';
-import { Actions } from './contants';
+import { Actions } from './constants';
 import type { Action, CellValue, State, Position, Mutator } from './types';
 
 type Props = {

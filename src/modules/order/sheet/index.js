@@ -4,13 +4,10 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, OrderFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig } from 'components/Sheet';
-import type { ColumnConfig, ColumnSort } from 'components/Sheet';
-import useFilterSort from 'hooks/useFilterSort';
+import { Sheet, ColumnsConfig, useSheet } from 'components/Sheet';
 import { clone } from 'utils/fp';
-import type { SortDirection } from 'types';
 import { ordersExportQuery } from '../query';
-import columns from './columns';
+import orderColumns from './columns';
 import transformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
@@ -24,100 +21,36 @@ type Props = {
 
 const OrderSheetModule = ({ orderIds }: Props) => {
   const client = useApolloClient();
-  const [currentColumns, setCurrentColumns] = React.useState<Array<ColumnConfig>>(columns);
   const memoizedMutate = React.useCallback(mutate(client), [client]);
   const memoizedHandler = React.useCallback(dispatch => entityEventHandler(client, dispatch), [
     client,
   ]);
+  const getItems = React.useCallback(data => decorate(clone(data?.orders?.nodes ?? [])), []);
 
-  const [initialOrders, setInitialOrders] = React.useState<Array<Object>>([]);
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [page, setPage] = React.useState<{ page: number, totalPage: number }>({
-    page: 1,
-    totalPage: 1,
+  const {
+    initialItems,
+    loading,
+    hasMore,
+    onLoadMore,
+    columns,
+    setColumns,
+    query,
+    setQuery,
+    filterBy,
+    setFilterBy,
+    sortBy,
+    localSortBy,
+    onLocalSort,
+    onRemoteSort,
+  } = useSheet({
+    columns: orderColumns,
+    itemsQuery: ordersQuery,
+    initialFilterBy: orderIds ? { query: '', ids: orderIds } : { query: '', archived: false },
+    initialSortBy: { updatedAt: 'DESCENDING' },
+    sorter,
+    getItems,
+    cacheKey: 'order_sheet',
   });
-
-  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
-    orderIds ? { query: '', ids: orderIds } : { query: '', archived: false },
-    { updatedAt: 'DESCENDING' }
-  );
-  const [localSortBy, setLocalSortBy] = React.useState<
-    Array<{ field: string, direction: SortDirection }>
-  >([]);
-  const onLocalSort = React.useCallback(
-    (items: Array<Object>, sorts: Array<ColumnSort>): Array<Object> => {
-      setLocalSortBy(
-        sorts.map(({ group, name, direction }: any) => ({
-          direction,
-          field: `${group}_${name}`,
-        }))
-      );
-
-      return sorter(items, sorts);
-    },
-    [setLocalSortBy]
-  );
-  const onRemoteSort = React.useCallback(
-    sorts =>
-      setSortBy(
-        sorts.reduce((remote, sort) => {
-          return {
-            ...remote,
-            [sort.name]: sort.direction,
-          };
-        }, {})
-      ),
-    [setSortBy]
-  );
-
-  const onLoadMore = React.useCallback(
-    () =>
-      client
-        .query({
-          query: ordersQuery,
-          variables: {
-            page: page.page + 1,
-            perPage: 20,
-            filterBy: { query, ...filterBy },
-            sortBy,
-          },
-        })
-        .then(({ data }) => {
-          setPage({
-            ...page,
-            page: page.page + 1,
-          });
-          return decorate(clone(data?.orders?.nodes ?? []));
-        }),
-    [client, page, query, filterBy, sortBy, setPage]
-  );
-
-  React.useEffect(() => {
-    let cancel = false;
-
-    setLoading(true);
-    setInitialOrders([]);
-    setPage({ page: 1, totalPage: 1 });
-
-    client
-      .query({
-        query: ordersQuery,
-        variables: { page: 1, perPage: 20, filterBy: { query, ...filterBy }, sortBy },
-      })
-      .then(({ data }) => {
-        if (cancel) {
-          return;
-        }
-
-        setPage({ page: 1, totalPage: data?.orders?.totalPage ?? 1 });
-        setInitialOrders(decorate(clone(data?.orders?.nodes ?? [])));
-        setLoading(false);
-      });
-
-    return () => {
-      cancel = true;
-    };
-  }, [client, query, filterBy, sortBy]);
 
   return (
     <Content>
@@ -126,7 +59,12 @@ const OrderSheetModule = ({ orderIds }: Props) => {
 
         <Filter config={OrderFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <ColumnsConfig columns={columns} onChange={setCurrentColumns} />
+        <ColumnsConfig
+          config={orderColumns}
+          columns={columns}
+          onChange={setColumns}
+          templateType="OrderSheet"
+        />
         <ExportButton
           type="Orders"
           exportQuery={ordersExportQuery}
@@ -134,16 +72,16 @@ const OrderSheetModule = ({ orderIds }: Props) => {
             filterBy: { query, ...filterBy },
             sortBy,
             localSortBy,
-            columns: currentColumns.filter(c => !!c.exportKey).map(c => c.exportKey),
+            columns: columns.filter(c => !!c.exportKey).map(c => c.exportKey),
           }}
         />
       </NavBar>
 
       <Sheet
-        columns={currentColumns}
+        columns={columns}
         loading={loading}
-        items={initialOrders}
-        hasMore={page.page < page.totalPage}
+        items={initialItems}
+        hasMore={hasMore}
         transformItem={transformer}
         onMutate={memoizedMutate}
         handleEntityEvent={memoizedHandler}

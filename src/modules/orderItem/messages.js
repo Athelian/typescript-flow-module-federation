@@ -78,4 +78,32 @@ export default defineMessages({
     id: 'modules.orderItem.deliveryDate',
     defaultMessage: 'Delivery Date',
   },
+  quantity: {
+    id: 'modules.OrderItems.quantity',
+    defaultMessage: 'Quantity',
+  },
+  memo: {
+    id: 'modules.OrderItems.memo',
+    defaultMessage: 'Memo',
+  },
+  totalBatched: {
+    id: 'modules.OrderItems.totalBatched',
+    defaultMessage: 'Total batched quantity',
+  },
+  totalShipped: {
+    id: 'modules.OrderItems.totalShipped',
+    defaultMessage: 'Total shipped quantity',
+  },
+  totalPrice: {
+    id: 'modules.OrderItems.totalPrice',
+    defaultMessage: 'Total price',
+  },
+  sectionDocuments: {
+    id: 'modules.OrderItems.sectionDocuments',
+    defaultMessage: 'Documents',
+  },
+  logs: {
+    id: 'modules.OrderItems.logs',
+    defaultMessage: 'Logs',
+  },
 });

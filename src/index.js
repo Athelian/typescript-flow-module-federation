@@ -13,16 +13,18 @@ import PermissionsProvider from './contexts/Permissions';
 import LanguageProvider from './contexts/Language';
 import ViewerProvider from './contexts/Viewer';
 import UIProvider from './contexts/UI';
+import { isEnableStrictMode, isAppInProduction } from './utils/env';
 import { useFilterSortInvalidator } from './hooks/useFilterSort';
+import { useLocalSortInvalidator } from './components/Sheet/useLocalSort';
+import { useColumnsInvalidator } from './components/Sheet/useColumns';
+import DeployNotifier from './components/DeployNotifier';
 import apolloClient from './apollo';
 import Routes from './routes';
 import loadFonts from './fonts';
-import { isEnableStrictMode, isAppInProduction } from './utils/env';
 import logger from './utils/logger';
 import errorReport from './errorReport';
 import './styles/reset.css';
 import * as serviceWorker from './serviceWorker';
-import DeployNotifier from './components/DeployNotifier';
 
 loadFonts();
 errorReport();
@@ -39,6 +41,8 @@ if (!container) {
 
 const AppHooks = () => {
   useFilterSortInvalidator();
+  useLocalSortInvalidator();
+  useColumnsInvalidator();
   return null;
 };
 

@@ -36,7 +36,7 @@ function getShipmentByTimelineDateId(timelineDateId: string, item: Object): Obje
         return true;
       }
 
-      return shipment.voyages.every(
+      return !!shipment.voyages.find(
         voyage => voyage.departure.id === timelineDateId && voyage.arrival.id === timelineDateId
       );
     });
@@ -48,7 +48,7 @@ function getShipmentByVoyageId(voyageId: string, item: Object): Object {
     .flat()
     .filter(b => !!b.shipment)
     .map(b => b.shipment)
-    .find(shipment => shipment.voyages.every(voyage => voyage.id === voyageId));
+    .find(shipment => !!shipment.voyages.find(voyage => voyage.id === voyageId));
 }
 
 function getShipmentByContainerGroupId(containerGroupId: string, item: Object): Object {
@@ -57,7 +57,7 @@ function getShipmentByContainerGroupId(containerGroupId: string, item: Object): 
     .flat()
     .filter(b => !!b.shipment)
     .map(b => b.shipment)
-    .find(shipment => shipment.containerGroups.every(cg => cg.id === containerGroupId));
+    .find(shipment => !!shipment.containerGroups.find(cg => cg.id === containerGroupId));
 }
 
 function getEntityId(entity: Object, item: Object): string {
@@ -250,6 +250,11 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           return {
             inChargeIds: value.map(user => user.id),
           };
+        case 'forwarders': {
+          return {
+            forwarderIds: value.map(({ id }) => id),
+          };
+        }
         default:
           return {
             [field]: value,
@@ -260,6 +265,13 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'tags': {
           return {
             tagIds: value.map(tag => tag.id),
+          };
+        }
+        case 'freeTimeStartDate': {
+          const { auto: autoCalculatedFreeTimeStartDate = false, value: date = null } = value || {};
+          return {
+            autoCalculatedFreeTimeStartDate,
+            freeTimeStartDate: date ? new Date(date) : null,
           };
         }
         case 'warehouseArrivalAgreedDateAssignedTo': {
@@ -289,12 +301,41 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         return {};
       }
 
+      const voyageIdx = shipment.voyages.findIndex(v => v.id === entity.id);
+
       return {
-        voyages: shipment.voyages.map(v => {
-          return {
-            id: v.id,
-            ...(() => (v.id !== entity.id ? {} : { [field]: value }))(),
-          };
+        voyages: shipment.voyages.map((v, idx) => {
+          let input = { id: v.id };
+
+          if (v.id === entity.id) {
+            input = {
+              ...input,
+              [field]: value,
+            };
+          }
+
+          switch (field) {
+            case 'departurePort':
+              if (voyageIdx > 0 && idx + 1 === voyageIdx) {
+                input = {
+                  ...input,
+                  arrivalPort: value,
+                };
+              }
+              break;
+            case 'arrivalPort':
+              if (voyageIdx > 0 && idx - 1 === voyageIdx) {
+                input = {
+                  ...input,
+                  departurePort: value,
+                };
+              }
+              break;
+            default:
+              break;
+          }
+
+          return input;
         }),
       };
     }

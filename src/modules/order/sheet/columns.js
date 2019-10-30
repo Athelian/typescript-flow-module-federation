@@ -1,3 +1,5 @@
+/* eslint-disable */
+/* eslint-disable react/jsx-props-no-spreading */
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -54,7 +56,14 @@ const orderColumns: Array<ColumnConfig> = [
       group: 'order',
     },
   },
-  // importer
+  {
+    key: 'order.importer',
+    exportKey: 'importer',
+    title: <FormattedMessage {...orderMessages.importer} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   {
     key: 'order.exporter',
     exportKey: 'exporter',
@@ -141,7 +150,6 @@ const orderColumns: Array<ColumnConfig> = [
     color: colors.ORDER,
     width: 160,
   },
-  // in charge
   {
     key: 'order.totalOrdered',
     title: <FormattedMessage {...orderMessages.totalOrderedQuantity} />,
@@ -163,13 +171,13 @@ const orderColumns: Array<ColumnConfig> = [
     color: colors.ORDER,
     width: 200,
   },
-  // {
-  //   key: 'order.totalPrice',
-  //   title: <FormattedMessage {...orderMessages.totalPrice} />,
-  //   icon: 'ORDER',
-  //   color: colors.ORDER,
-  //   width: 200,
-  // },
+  {
+    key: 'order.totalPrice',
+    title: <FormattedMessage {...orderMessages.totalPrice} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   {
     key: 'order.files',
     title: <FormattedMessage {...orderMessages.sectionDocuments} />,
@@ -178,6 +186,13 @@ const orderColumns: Array<ColumnConfig> = [
     width: 200,
   },
   // tasks
+  {
+    key: 'order.logs',
+    title: <FormattedMessage {...orderMessages.logs} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 120,
+  },
   // custom fields mask
   // custom fields
   // actions
@@ -220,7 +235,7 @@ const orderItemColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.productProvider.product.name',
-    title: <FormattedMessage id="components.BatchItem.productName" />,
+    title: <FormattedMessage {...orderItemMessages.productName} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
@@ -232,7 +247,7 @@ const orderItemColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.productProvider.product.serial',
-    title: <FormattedMessage id="components.BatchItem.productSerial" />,
+    title: <FormattedMessage {...orderItemMessages.productSerial} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
@@ -258,7 +273,7 @@ const orderItemColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.quantity',
     exportKey: 'orderItems.quantity',
-    title: <FormattedMessage {...batchMessages.quantity} />,
+    title: <FormattedMessage {...orderItemMessages.quantity} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
@@ -304,14 +319,14 @@ const orderItemColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.memo',
     exportKey: 'orderItems.memo',
-    title: <FormattedMessage {...orderMessages.memo} />,
+    title: <FormattedMessage {...orderItemMessages.memo} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
   },
   {
     key: 'order.orderItem.totalBatched',
-    title: 'Total Batched quantity',
+    title: <FormattedMessage {...orderItemMessages.totalBatched} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
@@ -323,7 +338,7 @@ const orderItemColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.totalShipped',
-    title: 'Total Shipped Quantity',
+    title: <FormattedMessage {...orderItemMessages.totalShipped} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
@@ -333,15 +348,28 @@ const orderItemColumns: Array<ColumnConfig> = [
       group: 'orderItem',
     },
   },
-  // total price
+  {
+    key: 'order.orderItem.totalPrice',
+    title: <FormattedMessage {...orderItemMessages.totalPrice} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+  },
   {
     key: 'order.orderItem.files',
-    title: <FormattedMessage {...orderMessages.sectionDocuments} />,
+    title: <FormattedMessage {...orderItemMessages.sectionDocuments} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
   },
   // tasks
+  {
+    key: 'order.orderItem.logs',
+    title: <FormattedMessage {...orderItemMessages.logs} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 120,
+  },
   // custom fields mask
   // custom fields
   // actions
@@ -377,7 +405,7 @@ const batchColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.batch.archived',
     exportKey: 'orderItems.batches.archived',
-    title: <FormattedMessage {...orderItemMessages.status} />,
+    title: <FormattedMessage {...batchMessages.status} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 105,
@@ -457,7 +485,14 @@ const batchColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.batch.memo',
     exportKey: 'orderItems.batches.memo',
-    title: <FormattedMessage {...orderMessages.memo} />,
+    title: <FormattedMessage {...batchMessages.memo} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.latestQuantity',
+    title: <FormattedMessage {...batchMessages.quantity} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
@@ -521,12 +556,17 @@ const batchColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // pkg auto qty
   // pkg weight
-  // pkg vol
-  // pkg auto vol
+  // pkg vol + auto
   // pkg size
   // tasks
+  {
+    key: 'order.orderItem.batch.logs',
+    title: <FormattedMessage {...batchMessages.logs} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 120,
+  },
   // custom fields mask
   // custom fields
   // actions
@@ -633,12 +673,25 @@ const containerColumns: Array<ColumnConfig> = [
   // actual arrival approval
   // free time
   // start date
+  {
+    key: 'order.orderItem.batch.container.freeTimeStartDate',
+    title: <FormattedMessage {...containerMessages.startDate} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 195,
+  },
   // start date auto
   // duration
-  // due date
+  {
+    key: 'order.orderItem.batch.container.dueDate',
+    title: <FormattedMessage {...containerMessages.dueDate} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.container.yardName',
-    title: 'Yard Name',
+    title: <FormattedMessage {...containerMessages.yardName} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 200,
@@ -650,7 +703,7 @@ const containerColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.batch.container.departureDate',
-    title: 'Yard Departure Date',
+    title: <FormattedMessage {...containerMessages.departureDate} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 125,
@@ -678,10 +731,17 @@ const containerColumns: Array<ColumnConfig> = [
   {
     key: 'order.orderItem.batch.container.memo',
     exportKey: 'orderItems.batches.container.memo',
-    title: <FormattedMessage {...orderMessages.memo} />,
+    title: <FormattedMessage {...containerMessages.memo} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.container.logs',
+    title: <FormattedMessage {...containerMessages.logs} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 120,
   },
   // actions
 ];
@@ -712,7 +772,6 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // archived
   {
     key: 'order.orderItem.batch.shipment.archived',
     exportKey: 'orderItems.batches.shipment.archived',
@@ -734,9 +793,23 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // importer
+  {
+    key: 'order.orderItem.batch.shipment.importer',
+    exportKey: 'orderItems.batches.shipment.importer',
+    title: <FormattedMessage {...shipmentMessages.importer} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
   // exporter
-  // forwarders
+  {
+    key: 'order.orderItem.batch.shipment.forwarders',
+    exportKey: 'forwarders',
+    title: <FormattedMessage {...shipmentMessages.forwarder} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 810,
+  },
   // related exporters
   {
     key: 'order.orderItem.batch.shipment.blNo',
@@ -777,7 +850,14 @@ const shipmentColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // booked
+  {
+    key: 'order.orderItem.batch.shipment.booked',
+    exportKey: 'orderItems.batches.shipment.booked',
+    title: <FormattedMessage {...shipmentMessages.booked} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.shipment.bookingDate',
     exportKey: 'orderItems.batches.shipment.bookingDate',
@@ -915,7 +995,76 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 1210,
   },
-  // voyages....
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.firstTransitPort',
+    title: <FormattedMessage {...shipmentMessages.firstTransitPort} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.firstTransitArrival.date',
+    title: <FormattedMessage {...shipmentMessages.firstTransitPortArrival} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 125,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.firstTransitArrival.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.firstTransitPortArrivalRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.firstTransitDeparture.date',
+    title: <FormattedMessage {...shipmentMessages.firstTransitPortDeparture} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 125,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.firstTransitDeparture.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.firstTransitPortDepartureRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.secondTransitPort',
+    title: <FormattedMessage {...shipmentMessages.secondTransitPort} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.secondTransitArrival.date',
+    title: <FormattedMessage {...shipmentMessages.secondTransitPortArrival} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 125,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.secondTransitArrival.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.secondTransitPortArrivalRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.secondTransitDeparture.date',
+    title: <FormattedMessage {...shipmentMessages.secondTransitPortDeparture} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 125,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.secondTransitDeparture.timelineDateRevisions',
+    title: <FormattedMessage {...shipmentMessages.secondTransitPortDepartureRevisions} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 1210,
+  },
   {
     key: 'order.orderItem.batch.shipment.voyage.2.arrivalPort',
     title: <FormattedMessage {...shipmentMessages.dischargePort} />,
@@ -935,7 +1084,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.dischargePortArrivalRevisions} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 200,
+    width: 1210,
   },
   {
     key: 'order.orderItem.batch.shipment.containerGroup.customClearance.date',
@@ -981,10 +1130,18 @@ const shipmentColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.batch.shipment.files',
-    title: <FormattedMessage {...orderMessages.sectionDocuments} />,
+    title: <FormattedMessage {...shipmentMessages.sectionDocuments} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 200,
+  },
+  // tasks
+  {
+    key: 'order.orderItem.batch.shipment.logs',
+    title: <FormattedMessage {...shipmentMessages.logs} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 120,
   },
 ];
 

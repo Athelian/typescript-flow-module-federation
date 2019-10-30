@@ -10,7 +10,7 @@ import {
   useSheetKeyNavigation,
 } from '../SheetState';
 import type { CellValue, Mutator } from '../SheetState/types';
-import { Actions } from '../SheetState/contants';
+import { Actions } from '../SheetState/constants';
 import SheetRenderer from '../SheetRenderer';
 import CellRenderer from '../CellRenderer';
 import { SheetLiveID } from '../SheetLive';

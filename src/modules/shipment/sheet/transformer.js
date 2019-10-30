@@ -72,7 +72,7 @@ function transformShipment(basePath: string, shipment: Object): Array<CellValue>
     {
       columnKey: 'shipment.created',
       type: 'date_user',
-      ...transformComputedField(basePath, shipment, item => {
+      ...transformComputedField(basePath, shipment, 'created', item => {
         return item
           ? {
               at: new Date(item.createdAt),
@@ -94,7 +94,7 @@ function transformShipment(basePath: string, shipment: Object): Array<CellValue>
     {
       columnKey: 'shipment.updated',
       type: 'date_user',
-      ...transformComputedField(basePath, shipment, item => {
+      ...transformComputedField(basePath, shipment, 'updated', item => {
         return item
           ? {
               at: new Date(item.updatedAt),
@@ -344,7 +344,7 @@ function transformContainer(
     {
       columnKey: 'shipment.container.created',
       type: 'date_user',
-      ...transformComputedField(basePath, container, item => {
+      ...transformComputedField(basePath, container, 'created', item => {
         const currentContainer = item.containers.find(c => c.id === container?.id);
 
         return currentContainer
@@ -368,7 +368,7 @@ function transformContainer(
     {
       columnKey: 'shipment.container.updated',
       type: 'date_user',
-      ...transformComputedField(basePath, container, item => {
+      ...transformComputedField(basePath, container, 'updated', item => {
         const currentContainer = item.containers.find(c => c.id === container?.id);
 
         return currentContainer
@@ -392,7 +392,7 @@ function transformContainer(
     {
       columnKey: 'shipment.container.archived',
       type: 'status',
-      ...transformComputedField(basePath, container, item => {
+      ...transformComputedField(basePath, container, 'archived', item => {
         return item.archived ?? true;
       }),
     },
@@ -474,7 +474,7 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
     {
       columnKey: 'shipment.container.batch.created',
       type: 'date_user',
-      ...transformComputedField(basePath, batch, item => {
+      ...transformComputedField(basePath, batch, 'created', item => {
         const currentBatch = [
           ...item.batchesWithoutContainer,
           ...item.containers.map(c => c.batches).flat(),
@@ -501,7 +501,7 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
     {
       columnKey: 'shipment.container.batch.updated',
       type: 'date_user',
-      ...transformComputedField(basePath, batch, item => {
+      ...transformComputedField(basePath, batch, 'updated', item => {
         const currentBatch = [
           ...item.batchesWithoutContainer,
           ...item.containers.map(c => c.batches).flat(),
@@ -530,7 +530,7 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
       type: 'status',
       disabled: !batch,
       parent: true,
-      ...transformComputedField(basePath, batch, item => {
+      ...transformComputedField(basePath, batch, 'archived', item => {
         const currentBatch = [
           ...item.batchesWithoutContainer,
           ...item.containers.map(c => c.batches).flat(),

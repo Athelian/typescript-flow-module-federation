@@ -2,7 +2,7 @@
 import ApolloClient from 'apollo-client';
 import { filterAsync } from 'utils/async';
 import type { Action } from 'components/Sheet/SheetState/types';
-import { Actions } from 'components/Sheet/SheetState/contants';
+import { Actions } from 'components/Sheet/SheetState/constants';
 import type {
   EntityEvent,
   EntityEventChange,
@@ -41,26 +41,26 @@ function onCreateOrderItemFactory(client: ApolloClient, dispatch: Action => void
               id: orderItemId,
               type: 'OrderItem',
             },
-            callback: (items: Array<Object>) => {
+            callback: (orders: Array<Object>) => {
               const orderId = newOrderItem.order?.id;
               if (!orderId) {
                 return null;
               }
 
-              const itemIdx = items.findIndex(item => item.id === orderId);
-              if (itemIdx === -1) {
+              const orderIdx = orders.findIndex(order => order.id === orderId);
+              if (orderIdx === -1) {
                 return null;
               }
 
-              const orderItems = [...items[itemIdx].orderItems];
+              const orderItems = [...orders[orderIdx].orderItems];
               orderItems.splice(newOrderItem.sort, 0, newOrderItem);
 
               return {
                 item: {
-                  ...items[itemIdx],
+                  ...orders[orderIdx],
                   orderItems,
                 },
-                index: itemIdx,
+                index: orderIdx,
               };
             },
           },
@@ -92,26 +92,26 @@ function onCreateBatchFactory(client: ApolloClient, dispatch: Action => void) {
               id: batchId,
               type: 'Batch',
             },
-            callback: (items: Array<Object>) => {
+            callback: (orders: Array<Object>) => {
               const orderItemId = newBatch.orderItem?.id;
               const orderId = newBatch.orderItem?.order?.id;
               if (!orderItemId || !orderId) {
                 return null;
               }
 
-              const itemIdx = items.findIndex(item => item.id === orderId);
-              if (itemIdx === -1) {
+              const orderIdx = orders.findIndex(order => order.id === orderId);
+              if (orderIdx === -1) {
                 return null;
               }
 
-              const orderItemIdx = items[itemIdx].orderItems.findIndex(
+              const orderItemIdx = orders[orderIdx].orderItems.findIndex(
                 orderItem => orderItem.id === orderItemId
               );
               if (orderItemIdx === -1) {
                 return null;
               }
 
-              const orderItems = [...items[itemIdx].orderItems];
+              const orderItems = [...orders[orderIdx].orderItems];
               const batches = [...orderItems[orderItemIdx].batches];
               batches.splice(newBatch.sort, 0, newBatch);
               orderItems[orderItemIdx] = {
@@ -121,10 +121,10 @@ function onCreateBatchFactory(client: ApolloClient, dispatch: Action => void) {
 
               return {
                 item: {
-                  ...items[itemIdx],
+                  ...orders[orderIdx],
                   orderItems,
                 },
-                index: itemIdx,
+                index: orderIdx,
               };
             },
           },
@@ -134,7 +134,7 @@ function onCreateBatchFactory(client: ApolloClient, dispatch: Action => void) {
 
 // $FlowFixMe not compatible with hook implementation
 function onBatchQuantityRevisionFactory(client: ApolloClient, dispatch: Action => void) {
-  return (batchQuantityRevisionId: string, items: Array<Object>) =>
+  return (batchQuantityRevisionId: string, orders: Array<Object>) =>
     client
       .query({
         query: batchQuantityRevisionByIDQuery,
@@ -149,7 +149,7 @@ function onBatchQuantityRevisionFactory(client: ApolloClient, dispatch: Action =
           return;
         }
 
-        items.every((order, orderIdx) =>
+        orders.every((order, orderIdx) =>
           order.orderItems.every((orderItem, orderItemIdx) =>
             orderItem.batches.every((batch, batchIdx) => {
               if (batch.id !== batchQuantityRevision.batch?.id) {
@@ -204,15 +204,15 @@ function onBatchQuantityRevisionFactory(client: ApolloClient, dispatch: Action =
 
 // $FlowFixMe not compatible with hook implementation
 function onUpdateBatchContainerFactory(client: ApolloClient, dispatch: Action => void) {
-  function changeContainer(batchId: string, container: Object | null, items: Array<Object>) {
-    items.every((item, itemIdx) =>
-      item.orderItems.every((orderItem, orderItemIdx) =>
+  function changeContainer(batchId: string, container: Object | null, orders: Array<Object>) {
+    orders.every((order, orderIdx) =>
+      order.orderItems.every((orderItem, orderItemIdx) =>
         orderItem.batches.every((batch, batchIdx) => {
           if (batch.id !== batchId) {
             return true;
           }
 
-          const orderItems = [...item.orderItems];
+          const orderItems = [...order.orderItems];
           const batches = [...orderItem.batches];
           batches[batchIdx] = {
             ...batch,
@@ -227,10 +227,10 @@ function onUpdateBatchContainerFactory(client: ApolloClient, dispatch: Action =>
             type: Actions.REPLACE_ITEM,
             payload: {
               item: {
-                ...item,
+                ...order,
                 orderItems,
               },
-              index: itemIdx,
+              index: orderIdx,
             },
           });
 
@@ -240,7 +240,7 @@ function onUpdateBatchContainerFactory(client: ApolloClient, dispatch: Action =>
     );
   }
 
-  return async (batchId: string, containerId: string | null, items: Array<Object>) => {
+  return async (batchId: string, containerId: string | null, orders: Array<Object>) => {
     if (containerId) {
       await client
         .query({
@@ -256,25 +256,25 @@ function onUpdateBatchContainerFactory(client: ApolloClient, dispatch: Action =>
             return;
           }
 
-          changeContainer(batchId, container, items);
+          changeContainer(batchId, container, orders);
         });
     } else {
-      changeContainer(batchId, null, items);
+      changeContainer(batchId, null, orders);
     }
   };
 }
 
 // $FlowFixMe not compatible with hook implementation
 function onUpdateBatchShipmentFactory(client: ApolloClient, dispatch: Action => void) {
-  function changeShipment(batchId: string, shipment: Object | null, items: Array<Object>) {
-    items.every((item, itemIdx) =>
-      item.orderItems.every((orderItem, orderItemIdx) =>
+  function changeShipment(batchId: string, shipment: Object | null, orders: Array<Object>) {
+    orders.every((order, orderIdx) =>
+      order.orderItems.every((orderItem, orderItemIdx) =>
         orderItem.batches.every((batch, batchIdx) => {
           if (batch.id !== batchId) {
             return true;
           }
 
-          const orderItems = [...item.orderItems];
+          const orderItems = [...order.orderItems];
           const batches = [...orderItem.batches];
           batches[batchIdx] = {
             ...batch,
@@ -289,10 +289,10 @@ function onUpdateBatchShipmentFactory(client: ApolloClient, dispatch: Action => 
             type: Actions.REPLACE_ITEM,
             payload: {
               item: {
-                ...item,
+                ...order,
                 orderItems,
               },
-              index: itemIdx,
+              index: orderIdx,
             },
           });
 
@@ -302,7 +302,7 @@ function onUpdateBatchShipmentFactory(client: ApolloClient, dispatch: Action => 
     );
   }
 
-  return async (batchId: string, shipmentId: string | null, items: Array<Object>) => {
+  return async (batchId: string, shipmentId: string | null, orders: Array<Object>) => {
     if (shipmentId) {
       await client
         .query({
@@ -318,10 +318,10 @@ function onUpdateBatchShipmentFactory(client: ApolloClient, dispatch: Action => 
             return;
           }
 
-          changeShipment(batchId, shipment, items);
+          changeShipment(batchId, shipment, orders);
         });
     } else {
-      changeShipment(batchId, null, items);
+      changeShipment(batchId, null, orders);
     }
   };
 }
@@ -335,22 +335,22 @@ function onDeleteOrderItemFactory(dispatch: Action => void) {
           id: orderItemId,
           type: 'OrderItem',
         },
-        callback: (items: Array<Object>) => {
-          const itemIdx = items.findIndex(
-            item => !!item.orderItems.find(orderItem => orderItem.id === orderItemId)
+        callback: (orders: Array<Object>) => {
+          const orderIdx = orders.findIndex(
+            order => !!order.orderItems.find(orderItem => orderItem.id === orderItemId)
           );
-          if (itemIdx === -1) {
+          if (orderIdx === -1) {
             return null;
           }
 
           return {
             item: {
-              ...items[itemIdx],
-              orderItems: items[itemIdx].orderItems.filter(
+              ...orders[orderIdx],
+              orderItems: orders[orderIdx].orderItems.filter(
                 orderItem => orderItem.id !== orderItemId
               ),
             },
-            index: itemIdx,
+            index: orderIdx,
           };
         },
       },
@@ -367,26 +367,26 @@ function onDeleteBatchFactory(dispatch: Action => void) {
           id: batchId,
           type: 'Batch',
         },
-        callback: (items: Array<Object>) => {
-          const itemIdx = items.findIndex(
-            item =>
-              !!item.orderItems.find(
+        callback: (orders: Array<Object>) => {
+          const orderIdx = orders.findIndex(
+            order =>
+              !!order.orderItems.find(
                 orderItem => !!orderItem.batches.find(batch => batch.id === batchId)
               )
           );
-          if (itemIdx === -1) {
+          if (orderIdx === -1) {
             return null;
           }
 
           return {
             item: {
-              ...items[itemIdx],
-              orderItems: items[itemIdx].orderItems.map(orderItem => ({
+              ...orders[orderIdx],
+              orderItems: orders[orderIdx].orderItems.map(orderItem => ({
                 ...orderItem,
                 batches: orderItem.batches.filter(batch => batch.id !== batchId),
               })),
             },
-            index: itemIdx,
+            index: orderIdx,
           };
         },
       },
@@ -395,8 +395,8 @@ function onDeleteBatchFactory(dispatch: Action => void) {
 }
 
 function onDeleteBatchQuantityRevisionFactory(dispatch: Action => void) {
-  return (batchQuantityRevisionId: string, items: Array<Object>) =>
-    items.every((order, orderIdx) =>
+  return (batchQuantityRevisionId: string, orders: Array<Object>) =>
+    orders.every((order, orderIdx) =>
       order.orderItems.every((orderItem, orderItemIdx) =>
         orderItem.batches.every((batch, batchIdx) =>
           batch.batchQuantityRevisions.every(batchQuantityRevision => {
@@ -449,7 +449,7 @@ export default function entityEventHandler(
   const onDeleteBatch = onDeleteBatchFactory(dispatch);
   const onDeleteBatchQuantityRevision = onDeleteBatchQuantityRevisionFactory(dispatch);
 
-  return async (event: EntityEvent, items: Array<Object>) => {
+  return async (event: EntityEvent, orders: Array<Object>) => {
     switch (event.lifeCycle) {
       case 'Create':
         switch (event.entity.__typename) {
@@ -462,7 +462,7 @@ export default function entityEventHandler(
             break;
           }
           case 'BatchQuantityRevision': {
-            await onBatchQuantityRevision(event.entity.id, items);
+            await onBatchQuantityRevision(event.entity.id, orders);
             break;
           }
           default:
@@ -496,14 +496,14 @@ export default function entityEventHandler(
                   await onUpdateBatchContainer(
                     event.entity.id,
                     change.new?.entity?.id ?? null,
-                    items
+                    orders
                   );
                   return false;
                 case 'shipment':
                   await onUpdateBatchShipment(
                     event.entity.id,
                     change.new?.entity?.id ?? null,
-                    items
+                    orders
                   );
                   return false;
                 default:
@@ -511,8 +511,9 @@ export default function entityEventHandler(
               }
             });
 
-            const batch = items
+            const batch = orders
               .map(order => order.orderItems.map(oi => oi.batches).flat())
+              // $FlowFixMe flat not supported by flow
               .flat()
               .find(b => b.id === event.entity.id);
             if (batch) {
@@ -539,12 +540,12 @@ export default function entityEventHandler(
                                   switch (change.field) {
                                     case 'packageQuantity':
                                       return {
-                                        ...c.new.custom,
+                                        ...(c?.new?.custom ?? {}),
                                         value: change.new?.float,
                                       };
                                     case 'autoCalculatePackageQuantity':
                                       return {
-                                        ...c.new.custom,
+                                        ...(c?.new?.custom ?? {}),
                                         auto: change.new?.boolean,
                                       };
                                     default:
@@ -598,7 +599,7 @@ export default function entityEventHandler(
             break;
           }
           case 'BatchQuantityRevision': {
-            await onBatchQuantityRevision(event.entity.id, items);
+            await onBatchQuantityRevision(event.entity.id, orders);
             return;
           }
           case 'Shipment': {
@@ -616,6 +617,92 @@ export default function entityEventHandler(
                   return change;
               }
             });
+            break;
+          }
+          case 'Container': {
+            const batch = orders
+              .map(order => order.orderItems.map(oi => oi.batches).flat())
+              // $FlowFixMe flat not supported by flow
+              .flat()
+              .find(currentBatch => currentBatch?.container?.id === event.entity?.id);
+            if (batch) {
+              changes = changes.reduce((newChanges, change) => {
+                switch (change.field) {
+                  case 'freeTimeStartDate':
+                  case 'autoCalculatedFreeTimeStartDate': {
+                    const hasChange = !!newChanges.find(({ field }) =>
+                      ['freeTimeStartDate', 'autoCalculatedFreeTimeStartDate'].includes(field)
+                    );
+                    if (hasChange) {
+                      return newChanges.map(currentChange => {
+                        const { field, new: newValue } = currentChange;
+                        if (
+                          ['freeTimeStartDate', 'autoCalculatedFreeTimeStartDate'].includes(field)
+                        ) {
+                          return {
+                            ...change,
+                            field: 'freeTimeStartDate',
+                            new: {
+                              custom: {
+                                ...(() => {
+                                  switch (change.field) {
+                                    case 'freeTimeStartDate':
+                                      return {
+                                        ...(newValue?.custom ?? {}),
+                                        value: change.new?.datetime,
+                                      };
+                                    case 'autoCalculatedFreeTimeStartDate':
+                                      return {
+                                        ...(newValue?.custom ?? {}),
+                                        auto: change.new?.boolean,
+                                      };
+                                    default:
+                                      return batch.container?.freeTimeStartDate;
+                                  }
+                                })(),
+                              },
+                              __typename: 'CustomValue',
+                            },
+                          };
+                        }
+                        return currentChange;
+                      });
+                    }
+
+                    return [
+                      ...newChanges,
+                      {
+                        ...change,
+                        field: 'freeTimeStartDate',
+                        new: {
+                          custom: {
+                            ...(() => {
+                              switch (change.field) {
+                                case 'freeTimeStartDate':
+                                  return {
+                                    ...batch.container?.freeTimeStartDate,
+                                    value: change.new?.datetime,
+                                  };
+                                case 'autoCalculatedFreeTimeStartDate':
+                                  return {
+                                    ...batch.container?.freeTimeStartDate,
+                                    auto: change.new?.boolean,
+                                  };
+                                default:
+                                  return batch.container?.freeTimeStartDate;
+                              }
+                            })(),
+                          },
+                          __typename: 'CustomValue',
+                        },
+                      },
+                    ];
+                  }
+                  default:
+                    return [...newChanges, change];
+                }
+              }, []);
+            }
             break;
           }
           case 'Voyage':
@@ -664,7 +751,7 @@ export default function entityEventHandler(
             onDeleteBatch(event.entity.id);
             break;
           case 'BatchQuantityRevision':
-            onDeleteBatchQuantityRevision(event.entity.id, items);
+            onDeleteBatchQuantityRevision(event.entity.id, orders);
             break;
           default:
             break;

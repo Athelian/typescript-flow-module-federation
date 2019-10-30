@@ -12,7 +12,9 @@ import { timelineReadByEntity } from './mutation';
 
 type Props = {|
   onClick: Function,
+  // prettier-ignore
   entityType: | 'order'
+    | 'batch'
     | 'orderItem'
     | 'product'
     | 'productProvider'

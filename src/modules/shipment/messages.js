@@ -34,6 +34,10 @@ export default defineMessages({
     id: 'modules.Shipments.bookingDate',
     defaultMessage: 'BOOKING DATE',
   },
+  booked: {
+    id: 'modules.Shipments.booked',
+    defaultMessage: 'Booked',
+  },
   invoiceNo: {
     id: 'modules.Shipments.invoiceNo',
     defaultMessage: 'INVOICE NO.',
@@ -642,17 +646,33 @@ export default defineMessages({
     id: 'modules.Shipments.firstTransitPortArrival',
     defaultMessage: 'FIRST TRANSIT PORT ARRIVAL',
   },
+  firstTransitPortArrivalRevisions: {
+    id: 'modules.Shipments.firstTransitPortArrivalRevisions',
+    defaultMessage: 'FIRST TRANSIT PORT ARRIVAL REVISIONS',
+  },
   firstTransitPortDeparture: {
     id: 'modules.Shipments.firstTransitPortDeparture',
     defaultMessage: 'FIRST TRANSIT PORT DEPARTURE',
+  },
+  firstTransitPortDepartureRevisions: {
+    id: 'modules.Shipments.firstTransitPortDepartureRevisions',
+    defaultMessage: 'FIRST TRANSIT PORT DEPARTURE REVISIONS',
   },
   secondTransitPortArrival: {
     id: 'modules.Shipments.secondTransitPortArrival',
     defaultMessage: 'SECOND TRANSIT PORT ARRIVAL',
   },
+  secondTransitPortArrivalRevisions: {
+    id: 'modules.Shipments.secondTransitPortArrivalRevisions',
+    defaultMessage: 'SECOND TRANSIT PORT ARRIVAL REVISIONS',
+  },
   secondTransitPortDeparture: {
     id: 'modules.Shipments.secondTransitPortDeparture',
     defaultMessage: 'SECOND TRANSIT PORT DEPARTURE',
+  },
+  secondTransitPortDepartureRevisions: {
+    id: 'modules.Shipments.secondTransitPortDepartureRevisions',
+    defaultMessage: 'SECOND TRANSIT PORT DEPARTURE REVISIONS',
   },
   loadPortDeparture: {
     id: 'modules.Shipments.loadPortDeparture',
@@ -677,6 +697,10 @@ export default defineMessages({
   totalBatchQuantity: {
     id: 'modules.Shipments.totalBatchQuantity',
     defaultMessage: 'TOTAL BATCH QUANTITY',
+  },
+  logs: {
+    id: 'modules.Shipments.logs',
+    defaultMessage: 'Logs',
   },
 });
 
