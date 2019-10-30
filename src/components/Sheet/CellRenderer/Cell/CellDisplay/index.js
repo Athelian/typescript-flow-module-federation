@@ -19,7 +19,7 @@ const displays = {
   text: TextDisplay,
   date: DateDisplay,
   date_user: DateUserDisplay,
-  price: MetricValueDisplay,
+  metric_value: MetricValueDisplay,
   status: StatusDisplay,
   partner: PartnerDisplay,
 };

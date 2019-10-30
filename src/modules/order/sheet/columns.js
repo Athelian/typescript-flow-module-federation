@@ -171,13 +171,13 @@ const orderColumns: Array<ColumnConfig> = [
     color: colors.ORDER,
     width: 200,
   },
-  // {
-  //   key: 'order.totalPrice',
-  //   title: <FormattedMessage {...orderMessages.totalPrice} />,
-  //   icon: 'ORDER',
-  //   color: colors.ORDER,
-  //   width: 200,
-  // },
+  {
+    key: 'order.totalPrice',
+    title: <FormattedMessage {...orderMessages.totalPrice} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   {
     key: 'order.files',
     title: <FormattedMessage {...orderMessages.sectionDocuments} />,
@@ -348,7 +348,13 @@ const orderItemColumns: Array<ColumnConfig> = [
       group: 'orderItem',
     },
   },
-  // total price
+  {
+    key: 'order.orderItem.totalPrice',
+    title: <FormattedMessage {...orderItemMessages.totalPrice} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+  },
   {
     key: 'order.orderItem.files',
     title: <FormattedMessage {...orderItemMessages.sectionDocuments} />,
@@ -484,7 +490,13 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 200,
   },
-  // current quantity
+  {
+    key: 'order.orderItem.batch.latestQuantity',
+    title: <FormattedMessage {...batchMessages.quantity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.quantity',
     exportKey: 'orderItems.batches.quantity',

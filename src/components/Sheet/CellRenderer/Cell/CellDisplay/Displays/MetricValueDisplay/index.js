@@ -2,6 +2,7 @@
 import * as React from 'react';
 import FormattedNumber from 'components/FormattedNumber';
 import DisplayWrapper from '../DisplayWrapper';
+import { MetricValueStyle } from './style';
 
 type Props = {
   value: {
@@ -10,13 +11,13 @@ type Props = {
   },
 };
 
-const MetricValueDisplay = ({ value: { value, metric } }: Props) => {
-  return (
-    <DisplayWrapper>
+const MetricValueDisplay = ({ value: { value, metric } }: Props) => (
+  <DisplayWrapper>
+    <span className={MetricValueStyle}>
       <FormattedNumber value={value} />
-      {metric}
-    </DisplayWrapper>
-  );
-};
+      <span>{metric}</span>
+    </span>
+  </DisplayWrapper>
+);
 
 export default MetricValueDisplay;
