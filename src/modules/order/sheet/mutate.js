@@ -284,6 +284,10 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             warehouseArrivalActualDateAssignedToIds: value.map(user => user.id),
           };
         }
+        case 'warehouse':
+          return {
+            warehouseId: value?.id ?? null,
+          };
         case 'departureDateAssignedTo': {
           return {
             departureDateAssignedToIds: value.map(user => user.id),
@@ -346,10 +350,24 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
       }
 
       return {
-        containerGroups: shipment.containerGroups.map(cg => ({
-          id: cg.id,
-          ...(() => (cg.id !== entity.id ? {} : { [field]: value }))(),
-        })),
+        containerGroups: shipment.containerGroups.map(cg => {
+          if (cg.id !== entity.id) {
+            return { id: cg.id };
+          }
+
+          switch (field) {
+            case 'warehouse':
+              return {
+                id: cg.id,
+                warehouseId: value?.id ?? null,
+              };
+            default:
+              return {
+                id: cg.id,
+                [field]: value,
+              };
+          }
+        }),
       };
     }
     case 'TimelineDate': {

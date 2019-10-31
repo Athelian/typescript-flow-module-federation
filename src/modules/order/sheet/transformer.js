@@ -64,6 +64,7 @@ import {
   CONTAINER_SET_MEMO,
   CONTAINER_SET_NO,
   CONTAINER_SET_TAGS,
+  CONTAINER_SET_WAREHOUSE,
   CONTAINER_SET_YARD_NAME,
   CONTAINER_UPDATE,
 } from 'modules/permission/constants/container';
@@ -89,6 +90,7 @@ import {
   SHIPMENT_SET_TAGS,
   SHIPMENT_SET_TIMELINE_DATE,
   SHIPMENT_SET_TRANSPORT_TYPE,
+  SHIPMENT_SET_WAREHOUSE,
   SHIPMENT_UPDATE,
 } from 'modules/permission/constants/shipment';
 
@@ -180,7 +182,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     },
     {
       columnKey: 'order.exporter',
-      type: 'exporter_selector',
+      type: 'exporter',
       extra: {
         confirmationDialogMessage: <FormattedMessage id="modules.Orders.changeExporterWarning" />,
         isRequired: true,
@@ -922,6 +924,16 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       ),
     },
     {
+      columnKey: 'order.orderItem.batch.container.warehouse',
+      type: 'warehouse',
+      ...transformValueField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'warehouse',
+        hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_WAREHOUSE)
+      ),
+    },
+    {
       columnKey: 'order.orderItem.batch.container.freeTimeStartDate',
       type: 'date_toggle',
       computed: order => {
@@ -1529,6 +1541,16 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         'timelineDateRevisions',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.containerGroup.warehouse',
+      type: 'warehouse',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0`,
+        batch?.shipment?.containerGroups?.[0] ?? null,
+        'warehouse',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_WAREHOUSE)
       ),
     },
     {

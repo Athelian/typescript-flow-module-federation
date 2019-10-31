@@ -21,6 +21,7 @@ import UserAssignmentInput from './Inputs/UserAssignmentInput';
 import PortInput from './Inputs/PortInput';
 import PartnerSelectorInput from './Inputs/PartnerSelectorInput';
 import PartnersSelectorInput from './Inputs/PartnersSelectorInput';
+import WarehouseSelectorInput from './Inputs/WarehouseSelectorInput';
 import ToggleInput from './Inputs/ToggleInput';
 import LogsInput from './Inputs/LogsInput';
 
@@ -70,8 +71,9 @@ const inputs = {
   project_tags: TagsInput.Project,
   user_assignment: UserAssignmentInput,
   port: PortInput,
-  exporter_selector: PartnerSelectorInput.Exporter,
+  exporter: PartnerSelectorInput.Exporter,
   forwarders: PartnersSelectorInput.Forwarders,
+  warehouse: WarehouseSelectorInput,
   booked: ToggleInput.Booked,
   order_logs: LogsInput.Order,
   order_item_logs: LogsInput.OrderItem,

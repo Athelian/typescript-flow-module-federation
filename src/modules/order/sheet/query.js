@@ -218,6 +218,12 @@ const shipmentSheetFragment = gql`
     containerGroups {
       ... on ContainerGroup {
         id
+        warehouse {
+          ... on Warehouse {
+            id
+            name
+          }
+        }
         customClearance {
           ...timelineDateFragment
         }
@@ -291,6 +297,12 @@ const containerSheetFragment = gql`
     warehouseArrivalActualDate
     warehouseArrivalActualDateAssignedTo {
       ...userAvatarFragment
+    }
+    warehouse {
+      ... on Warehouse {
+        id
+        name
+      }
     }
     yardName
     departureDate

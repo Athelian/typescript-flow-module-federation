@@ -22,6 +22,7 @@ export const CornerIconStyle = (color: string) => css`
   background: ${color};
   box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.15);
   border-radius: 0 5px 0 5px;
+  z-index: 0;
   &:before {
     content: '';
     display: block;
@@ -32,6 +33,7 @@ export const CornerIconStyle = (color: string) => css`
     height: 10px;
     border-radius: 0 5px 0 0;
     box-shadow: 5px 0 0 0 ${color};
+    z-index: -1;
   }
   &:after {
     content: '';
@@ -43,5 +45,6 @@ export const CornerIconStyle = (color: string) => css`
     height: 10px;
     border-radius: 0 5px 0 0;
     box-shadow: 5px 0 0 0 ${color};
+    z-index: -1;
   }
 `;
