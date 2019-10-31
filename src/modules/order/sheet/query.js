@@ -132,6 +132,10 @@ const batchSheetFragment = gql`
     packageCapacity
     packageQuantity
     autoCalculatePackageQuantity
+    packageGrossWeight {
+      value
+      metric
+    }
     memo
     tags {
       ...tagFragment

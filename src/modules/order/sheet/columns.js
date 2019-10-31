@@ -556,7 +556,13 @@ const batchColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // pkg weight
+  {
+    key: 'order.orderItem.batch.packageGrossWeight',
+    title: <FormattedMessage {...batchMessages.packageGrossWeight} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   // pkg vol + auto
   // pkg size
   // tasks

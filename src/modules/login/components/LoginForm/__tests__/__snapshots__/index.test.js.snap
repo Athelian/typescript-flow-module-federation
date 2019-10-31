@@ -247,6 +247,10 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   outline: 0;
 }
 
+.emotion-12[disabled] {
+  cursor: default;
+}
+
 .emotion-12:hover,
 .emotion-12:focus {
   color: #ffffff;
@@ -442,7 +446,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
         class="css-1q3ffjc"
       >
         <button
-          class="css-12nmo3v"
+          class="css-sk8owp"
           data-testid="submitButton"
           disabled=""
           type="submit"
@@ -727,6 +731,10 @@ exports[`<LoginForm /> should render without crash 1`] = `
 
 .emotion-12:focus {
   outline: 0;
+}
+
+.emotion-12[disabled] {
+  cursor: default;
 }
 
 .emotion-12:hover,

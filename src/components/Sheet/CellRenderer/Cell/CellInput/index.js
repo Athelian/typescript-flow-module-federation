@@ -11,6 +11,7 @@ import DatetimeInput from './Inputs/DatetimeInput';
 import SelectCustomInput from './Inputs/SelectCustomInput';
 import SelectEnumInput from './Inputs/SelectEnumInput';
 import SearchSelectEnumInput from './Inputs/SearchSelectEnumInput';
+import MetricValueInput from './Inputs/MetricValueInput';
 import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
 import DocumentsInput from './Inputs/DocumentsInput';
 import QuantityRevisionsInput from './Inputs/QuantityRevisionsInput';
@@ -44,6 +45,10 @@ const inputs = {
   textarea: TextAreaInput,
   number: NumberInput,
   number_toggle: NumberToggleInput,
+  volume: MetricValueInput.Volume,
+  area: MetricValueInput.Area,
+  length: MetricValueInput.Length,
+  mass: MetricValueInput.Mass,
   static_metric_value: StaticMetricValueInput,
   date: DateInput,
   date_toggle: DateToggleInput,

@@ -69,6 +69,10 @@ exports[`TaskApprovalStatusInput approved, showUser, showDate 1`] = `
   outline: 0;
 }
 
+.emotion-5[disabled] {
+  cursor: default;
+}
+
 .emotion-0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -202,6 +206,10 @@ exports[`TaskApprovalStatusInput rejected 1`] = `
 
 .emotion-2:focus {
   outline: 0;
+}
+
+.emotion-2[disabled] {
+  cursor: default;
 }
 
 <div
