@@ -1,4 +1,5 @@
 // @flow
+import type { EntityEventChange } from './types';
 
 export const convertEntityToInput = (id: string, type: string): Object => {
   switch (type) {
@@ -57,6 +58,60 @@ export const convertEntityToInput = (id: string, type: string): Object => {
     default:
       throw new Error('unsupported entity type');
   }
+};
+
+export const newCustomValue = (value: any) => ({
+  custom: value,
+  __typename: 'CustomValue',
+});
+
+export const extractChangeNewValue = (change: EntityEventChange): any => {
+  switch (change.new?.__typename) {
+    case 'StringValue':
+      return change.new?.string;
+    case 'IntValue':
+      return change.new?.int;
+    case 'FloatValue':
+      return change.new?.float;
+    case 'BooleanValue':
+      return change.new?.boolean;
+    case 'DateTimeValue':
+      return change.new?.datetime;
+    case 'MetricValueValue':
+      return change.new?.metricValue;
+    case 'SizeValue':
+      return change.new?.size;
+    case 'CustomValue':
+      return change.new?.custom;
+    default:
+      return null;
+  }
+};
+
+export const mergeChanges = <T>(
+  changes: Array<EntityEventChange>,
+  fields: { [string]: (initialValue: T, value: any) => T },
+  intoField: string,
+  initialValue: T
+): Array<EntityEventChange> => {
+  const changesToMerge = changes.filter(c => Object.keys(fields).includes(c.field));
+  if (changesToMerge.length === 0) {
+    return changes;
+  }
+
+  const mergedChange = {
+    field: intoField,
+    new: newCustomValue(initialValue),
+  };
+
+  changesToMerge.forEach(c => {
+    const field = fields[c.field];
+    mergedChange.new.custom = field(mergedChange.new.custom, extractChangeNewValue(c));
+  });
+
+  const restChanges = changes.filter(c => !Object.keys(fields).includes(c.field));
+
+  return [...restChanges, mergedChange];
 };
 
 export default convertEntityToInput;
