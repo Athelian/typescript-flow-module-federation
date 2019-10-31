@@ -134,6 +134,30 @@ export default defineMessages({
     id: 'modules.Shipments.dischargePort',
     defaultMessage: 'DISCHARGE PORT',
   },
+  firstVesselName: {
+    id: 'modules.Shipments.firstVesselName',
+    defaultMessage: 'FIRST VESSEL NAME',
+  },
+  secondVesselName: {
+    id: 'modules.Shipments.secondVesselName',
+    defaultMessage: 'SECOND VESSEL NAME',
+  },
+  thirdVesselName: {
+    id: 'modules.Shipments.thirdVesselName',
+    defaultMessage: 'THIRD VESSEL NAME',
+  },
+  firstVesselCode: {
+    id: 'modules.Shipments.firstVesselCode',
+    defaultMessage: 'FIRST VESSEL CODE',
+  },
+  secondVesselCode: {
+    id: 'modules.Shipments.secondVesselCode',
+    defaultMessage: 'SECOND VESSEL CODE',
+  },
+  thirdVesselCode: {
+    id: 'modules.Shipments.thirdVesselCode',
+    defaultMessage: 'THIRD VESSEL CODE',
+  },
   transportType: {
     id: 'modules.Shipments.transportType',
     defaultMessage: 'TRANSPORTATION TYPE',

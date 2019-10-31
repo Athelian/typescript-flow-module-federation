@@ -91,6 +91,7 @@ import {
   SHIPMENT_SET_TAGS,
   SHIPMENT_SET_TIMELINE_DATE,
   SHIPMENT_SET_TRANSPORT_TYPE,
+  SHIPMENT_SET_VESSEL_NAME,
   SHIPMENT_SET_WAREHOUSE,
   SHIPMENT_UPDATE,
 } from 'modules/permission/constants/shipment';
@@ -1374,8 +1375,26 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
     },
     // Load Port Departure Assigned To
     // Load Port Departure Approval
-    // First Voyage Vessel Name
-    // First Voyage Vessel Code
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.0.vesselName',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0`,
+        batch?.shipment?.voyages?.[0] ?? null,
+        'vesselName',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.0.vesselCode',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0`,
+        batch?.shipment?.voyages?.[0] ?? null,
+        'vesselCode',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
+      ),
+    },
     {
       columnKey: 'order.orderItem.batch.shipment.voyage.0.firstTransitPort',
       type: 'port',
@@ -1435,8 +1454,26 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
     },
     // First Transit Port Departure Assigned To
     // First Transit Port Departure Approval
-    // Second Voyage Vessel Name
-    // Second Voyage Vessel Code
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.1.vesselName',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1`,
+        batch?.shipment?.voyages?.[1] ?? null,
+        'vesselName',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.1.vesselCode',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1`,
+        batch?.shipment?.voyages?.[1] ?? null,
+        'vesselCode',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
+      ),
+    },
     {
       columnKey: 'order.orderItem.batch.shipment.voyage.1.secondTransitPort',
       type: 'port',
@@ -1496,8 +1533,26 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
     },
     // Second Transit Port Departure Assigned To
     // Second Transit Port Departure Approval
-    // Third Voyage Vessel Name
-    // Third Voyage Vessel Code
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.2.vesselName',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.2`,
+        batch?.shipment?.voyages?.[2] ?? null,
+        'vesselName',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.2.vesselCode',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.2`,
+        batch?.shipment?.voyages?.[2] ?? null,
+        'vesselCode',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
+      ),
+    },
     {
       columnKey: 'order.orderItem.batch.shipment.voyage.2.arrivalPort',
       type: 'port',
