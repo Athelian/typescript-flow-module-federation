@@ -3,8 +3,9 @@
 export const Actions = {
   INIT: 'init',
   APPEND: 'append',
-  REARRANGE: 'rearrange',
-  SORT: 'sort',
+  REARRANGE_COLUMNS: 'rearrange_columns',
+  RESIZE_COLUMN: 'resize_column',
+  SORT_COLUMN: 'sort_column',
   CELL_UPDATE: 'cell_update',
   CHANGE_VALUES: 'change_values',
   REPLACE_ITEM: 'replace_item',

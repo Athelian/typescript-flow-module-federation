@@ -1,8 +1,7 @@
 // @flow
 import { clone, setIn } from 'utils/fp';
-import type { ColumnSort } from '../../SheetColumns';
-import type { CellValue, State } from '../types';
-import { refresh } from './global';
+import type { CellValue, State, ColumnSort } from '../types';
+import { refresh } from './sheet';
 
 export function changeValues(
   state: State,
@@ -117,7 +116,6 @@ export function replaceItem(
 
     return refresh(transformer, sorter)(state, {
       items,
-      columns: state.columns,
     });
   };
 }
@@ -134,7 +132,6 @@ export function deleteItem(
 
     return refresh(transformer, sorter)(state, {
       items,
-      columns: state.columns,
     });
   };
 }

@@ -22,8 +22,8 @@ type RenderSelectProps = {
 };
 
 type Props = {
-  value: { value: number, metric: string } | null,
-  onChange: ({ value: number, metric: string } | null) => void,
+  value: ?{ value: number, metric: string },
+  onChange: ({ value: number, metric: string }) => void,
   onFocus?: (SyntheticFocusEvent<any>) => void,
   onBlur?: (SyntheticFocusEvent<any>) => void,
   metrics: Array<string>,
@@ -45,7 +45,8 @@ const MetricValueInput = ({
   <div className={MetricValueInputStyle}>
     {renderInput({
       value: value?.value ?? 0,
-      onChange: e => onChange({ ...(value || { metric: defaultMetric }), value: e.target.value }),
+      onChange: e =>
+        onChange({ ...(value || { metric: defaultMetric }), value: parseFloat(e.target.value) }),
       onFocus,
       onBlur,
     })}

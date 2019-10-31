@@ -1,5 +1,5 @@
 // @flow
-import type { ColumnConfig } from '../SheetColumns';
+import type { ColumnConfig } from '../SheetState/types';
 
 export type ColumnState = {
   column: ColumnConfig,

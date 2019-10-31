@@ -1,5 +1,5 @@
 // @flow
-import type { ColumnConfig, ColumnSort } from './SheetColumns';
+import type { ColumnConfig, ColumnSort } from './SheetState/types';
 import {
   transformValueField,
   transformReadonlyField,

@@ -1,9 +1,8 @@
 // @flow
 import logger from 'utils/logger';
-import type { ColumnSort } from '../../SheetColumns';
-import type { Action, CellValue, Position, State } from '../types';
+import type { Action, CellValue, Position, State, ColumnSort } from '../types';
 import { Actions } from '../constants';
-import { append, init, rearrange, sort } from './global';
+import { append, init, rearrangeColumns, resizeColumn, sortColumn } from './sheet';
 import {
   appendForeignFocuses,
   foreignBlur,
@@ -54,10 +53,12 @@ export default function cellReducer(
         return init(transformer, sorter)(state, getPayload(action));
       case Actions.APPEND:
         return append(transformer, sorter)(state, getPayload(action));
-      case Actions.REARRANGE:
-        return rearrange(transformer, sorter)(state, getPayload(action));
-      case Actions.SORT:
-        return sort(transformer, sorter)(state, getPayload(action));
+      case Actions.REARRANGE_COLUMNS:
+        return rearrangeColumns(transformer, sorter)(state, getPayload(action));
+      case Actions.RESIZE_COLUMN:
+        return resizeColumn(state, getPayload(action));
+      case Actions.SORT_COLUMN:
+        return sortColumn(transformer, sorter)(state, getPayload(action));
       case Actions.CELL_UPDATE:
         return cellUpdate(state, getPayload(action), getTarget(state, action));
       case Actions.CHANGE_VALUES:

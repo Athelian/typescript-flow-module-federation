@@ -88,8 +88,12 @@ const CellRenderer = ({ style, columnIndex, rowIndex }: Props) => {
             <Errors errors={errorAt?.messages ?? []} isFirstRow={onFirstRow} size={size} />
           )}
 
-          {removedRow && <Deleted area={removedRow} />}
-          {!removedRow && addedRow && <Added area={addedRow} />}
+          {removedRow && (
+            <Deleted area={removedRow} columns={state.columns} columnWidths={state.columnWidths} />
+          )}
+          {!removedRow && addedRow && (
+            <Added area={addedRow} columns={state.columns} columnWidths={state.columnWidths} />
+          )}
 
           <Cell
             cell={cell}
