@@ -3,6 +3,7 @@ import * as React from 'react';
 import { equals } from 'ramda';
 import TextInput from './Inputs/TextInput';
 import TextAreaInput from './Inputs/TextAreaInput';
+import ApprovalInput from './Inputs/ApprovalInput';
 import NumberInput from './Inputs/NumberInput';
 import NumberToggleInput from './Inputs/NumberToggleInput';
 import DateInput from './Inputs/DateInput';
@@ -42,6 +43,7 @@ type Props = {
 };
 
 const inputs = {
+  approval: ApprovalInput,
   text: TextInput,
   textarea: TextAreaInput,
   number: NumberInput,

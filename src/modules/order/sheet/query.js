@@ -299,6 +299,10 @@ const containerSheetFragment = gql`
       ...userAvatarFragment
     }
     warehouseArrivalActualDate
+    warehouseArrivalAgreedDateApprovedBy {
+      ...userAvatarFragment
+    }
+    warehouseArrivalAgreedDateApprovedAt
     warehouseArrivalActualDateAssignedTo {
       ...userAvatarFragment
     }

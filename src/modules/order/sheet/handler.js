@@ -638,6 +638,21 @@ export default function entityEventHandler(
                 'freeTimeStartDate',
                 batch.container?.freeTimeStartDate
               );
+              changes = mergeChanges(
+                changes,
+                {
+                  warehouseArrivalAgreedDateApprovedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  warehouseArrivalAgreedDateApprovedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'warehouseArrivalAgreedDateApprovedBy',
+                batch.container?.warehouseArrivalAgreedDateApprovedBy
+              );
             }
 
             changes = await mapAsync(changes, change => {

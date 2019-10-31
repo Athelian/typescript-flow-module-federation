@@ -58,6 +58,7 @@ import {
   CONTAINER_ASSIGN_DEPARTURE_DATE,
   CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
   CONTAINER_SET_AGREE_ARRIVAL_DATE,
+  CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
   CONTAINER_SET_CONTAINER_OPTION,
   CONTAINER_SET_CONTAINER_TYPE,
   CONTAINER_SET_DEPARTURE_DATE,
@@ -906,6 +907,17 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         'warehouseArrivalAgreedDateAssignedTo',
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.warehouseArrivalAgreedDateApprovedBy',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'warehouseArrivalAgreedDateApprovedBy',
+        hasPermission =>
+          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_APPROVE_AGREE_ARRIVAL_DATE)
       ),
     },
     {

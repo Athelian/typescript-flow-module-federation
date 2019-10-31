@@ -271,6 +271,11 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             tagIds: value.map(tag => tag.id),
           };
         }
+        case 'warehouseArrivalAgreedDateApprovedBy': {
+          return {
+            warehouseArrivalAgreedDateApprovedById: value?.id ?? null,
+          };
+        }
         case 'freeTimeStartDate': {
           const { auto: autoCalculatedFreeTimeStartDate = false, value: date = null } = value || {};
           return {

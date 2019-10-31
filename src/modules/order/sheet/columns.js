@@ -656,7 +656,13 @@ const containerColumns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: 160,
   },
-  // agreed arrival approval
+  {
+    key: 'order.orderItem.batch.container.warehouseArrivalAgreedDateApprovedBy',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateApproved} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 110,
+  },
   {
     key: 'order.orderItem.batch.container.warehouseArrivalActualDate',
     title: <FormattedMessage {...containerMessages.warehouseArrivalActualDate} />,

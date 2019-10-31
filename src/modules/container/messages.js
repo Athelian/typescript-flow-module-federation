@@ -22,6 +22,10 @@ export default defineMessages({
     id: 'modules.container.warehouse',
     defaultMessage: 'WAREHOUSE',
   },
+  warehouseArrivalAgreedDateApproved: {
+    id: 'modules.container.warehouseArrivalAgreedDateApproved',
+    defaultMessage: 'Warehouse Arrival Agree Date Approved',
+  },
   warehouseArrivalAgreedDate: {
     id: 'modules.container.warehouseArrivalAgreedDate',
     defaultMessage: 'Agreed Arrival Date',

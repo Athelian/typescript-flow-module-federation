@@ -39,7 +39,7 @@ const TableTemplateList = ({ ...filtersAndSort }: Props) => {
 
         emitter.removeAllListeners('REFETCH_TABLE_TEMPLATES');
         emitter.addListener('REFETCH_TABLE_TEMPLATES', () => {
-          refetch(tableTemplateQuery);
+          if (refetch) refetch(tableTemplateQuery);
         });
 
         return (
