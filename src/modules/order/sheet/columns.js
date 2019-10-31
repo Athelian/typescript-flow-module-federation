@@ -1000,6 +1000,22 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 1210,
   },
+  // load port assigned to
+  // load port approval
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.vesselName',
+    title: <FormattedMessage {...shipmentMessages.firstVesselName} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.vesselCode',
+    title: <FormattedMessage {...shipmentMessages.firstVesselCode} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.shipment.voyage.0.firstTransitPort',
     title: <FormattedMessage {...shipmentMessages.firstTransitPort} />,
@@ -1036,6 +1052,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     width: 1210,
   },
   {
+    key: 'order.orderItem.batch.shipment.voyage.1.vesselName',
+    title: <FormattedMessage {...shipmentMessages.secondVesselName} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.vesselCode',
+    title: <FormattedMessage {...shipmentMessages.secondVesselCode} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
     key: 'order.orderItem.batch.shipment.voyage.1.secondTransitPort',
     title: <FormattedMessage {...shipmentMessages.secondTransitPort} />,
     icon: 'SHIPMENT',
@@ -1069,6 +1099,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.vesselName',
+    title: <FormattedMessage {...shipmentMessages.thirdVesselName} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.vesselCode',
+    title: <FormattedMessage {...shipmentMessages.thirdVesselCode} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
   },
   {
     key: 'order.orderItem.batch.shipment.voyage.2.arrivalPort',
