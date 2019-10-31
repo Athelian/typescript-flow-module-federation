@@ -4,7 +4,7 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { DocumentNode } from 'graphql';
 import type { FilterBy, SortBy, SortDirection } from 'types';
 import useFilterSort from 'hooks/useFilterSort';
-import type { ColumnConfig, ColumnSort } from './SheetColumns';
+import type { ColumnConfig, ColumnSort } from './SheetState/types';
 import useLocalSort from './useLocalSort';
 import useColumns from './useColumns';
 

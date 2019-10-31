@@ -10,7 +10,7 @@ import Icon from 'components/Icon';
 import CornerIcon from 'components/CornerIcon';
 import { Tooltip } from 'components/Tooltip';
 import { colors } from 'styles/common';
-import type { ColumnConfig } from '../SheetColumns';
+import type { ColumnConfig } from '../SheetState/types';
 import messages from '../messages';
 import Group from './Group';
 import TemplateSelector from './TemplateSelector';

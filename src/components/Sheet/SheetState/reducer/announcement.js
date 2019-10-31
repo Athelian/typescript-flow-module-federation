@@ -1,6 +1,5 @@
 // @flow
-import type { ColumnSort } from '../../SheetColumns';
-import type { Area, CellValue, State } from '../types';
+import type { Area, CellValue, State, ColumnSort } from '../types';
 import { replaceItem } from './mutate';
 
 function isOverlap(a: Area, b: Area) {

@@ -1,6 +1,36 @@
 // @flow
 
-import type { ColumnSort } from '../SheetColumns';
+import type { SortDirection } from 'types';
+
+export type ColumnSortConfig = {
+  local?: boolean,
+  group: string,
+  name: string,
+  default?: boolean,
+};
+
+type Column = {
+  key: string,
+  exportKey?: string,
+  title: any,
+  icon: string,
+  color: string,
+  width: number,
+  minWidth?: number,
+};
+
+export type ColumnConfig = {
+  sort?: ColumnSortConfig,
+} & Column;
+
+export type ColumnSort = {
+  key: string,
+  direction?: SortDirection,
+} & ColumnSortConfig;
+
+export type ColumnState = {
+  sort?: ColumnSort,
+} & Column;
 
 export type Position = {
   x: number,
@@ -74,8 +104,10 @@ export type Action = {|
     blur?: mixed,
     foreignFocuses?: Array<mixed>,
     items?: Array<Object>,
-    columns?: Array<string>,
-    sorts?: Array<any>,
+    columns?: Array<ColumnConfig>,
+    column?: string,
+    width?: number,
+    direction?: SortDirection,
     messages?: Array<string>,
     callback?: (
       Array<Object>
@@ -107,9 +139,10 @@ export type State = {
   items: Array<Object>,
   rows: Array<Array<CellValue>>,
   allRows: Array<Array<CellValue>>,
-  columns: Array<string>,
+  columns: Array<ColumnConfig>,
+  columnSorts: Array<ColumnSort>,
+  columnWidths: { [string]: number },
   entities: Array<{ id: string, type: string }>,
-  sorts: Array<ColumnSort>,
   hoverAt: Area | null,
   focusAt: Focus | null,
   weakFocusAt: Array<Area>,

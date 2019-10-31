@@ -1,6 +1,6 @@
 // @flow
-import type { ColumnSort } from '../../SheetColumns';
-import type { CellValue, State } from '../types';
+import type { SortDirection } from 'types';
+import type { CellValue, ColumnConfig, State, ColumnSort } from '../types';
 import { setForeignFocuses } from './foreign-focus';
 import { reFocus } from './focus';
 import { reError } from './error';
@@ -96,18 +96,17 @@ export function init(
   transformer: (number, Object) => Array<Array<CellValue>>,
   sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
 ) {
-  return (state: State, payload: { items: Array<Object>, columns: Array<string> }): State => {
-    const { items, columns } = payload;
-    const sortedItems = sorter(items, state.sorts);
+  return (state: State, payload: { items: Array<Object> }): State => {
+    const { items } = payload;
+    const sortedItems = sorter(items, state.columnSorts);
     const allRows = transformItems(transformer)(0, sortedItems);
-    const rows = computeMergedCells(mapRowsToColumns(allRows, columns));
+    const rows = computeMergedCells(mapRowsToColumns(allRows, state.columns.map(c => c.key)));
     const entities = resolveEntities(rows);
 
     return {
       ...state,
       initialized: true,
       items: sortedItems,
-      columns,
       rows,
       allRows,
       entities,
@@ -128,7 +127,7 @@ export function refresh(
   transformer: (number, Object) => Array<Array<CellValue>>,
   sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
 ) {
-  return (state: State, payload: { items: Array<Object>, columns: Array<string> }): State => {
+  return (state: State, payload: { items: Array<Object> }): State => {
     let newState = init(transformer, sorter)(state, payload);
 
     if (state.foreignFocuses.length > 0) {
@@ -162,9 +161,12 @@ export function append(
   return (state: State, payload: { items: Array<Object> }): State => {
     const { items } = payload;
 
-    const sortedItems = sorter(items, state.sorts);
+    const sortedItems = sorter(items, state.columnSorts);
     const allRows = transformItems(transformer)(state.items.length, sortedItems);
-    const rows = computeMergedCells(mapRowsToColumns(allRows, state.columns), state.rows.length);
+    const rows = computeMergedCells(
+      mapRowsToColumns(allRows, state.columns.map(c => c.key)),
+      state.rows.length
+    );
     const entities = resolveEntities(rows);
 
     return setForeignFocuses(
@@ -182,36 +184,78 @@ export function append(
   };
 }
 
-export function rearrange(
+export function rearrangeColumns(
   transformer: (number, Object) => Array<Array<CellValue>>,
   sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
 ) {
-  return (state: State, payload: { columns: Array<string> }): State => {
+  return (state: State, payload: { columns: Array<ColumnConfig> }): State => {
     const { columns } = payload;
 
-    return refresh(transformer, sorter)(state, {
-      items: state.items,
-      columns,
-    });
+    const columnSorts = state.columnSorts.filter(s => !!columns.find(c => c.key === s.key));
+
+    const sortGroups = new Set(columnSorts.map(s => s.group));
+    const columnGroups = new Set(columns.filter(c => !!c.sort).map(c => c.sort?.group));
+    if (sortGroups.size !== columnGroups.size) {
+      sortGroups.forEach(g => columnGroups.delete(g));
+
+      columnGroups.forEach(g => {
+        const defaultColumn = columns.find(c => c.sort?.group === g && c.sort?.default);
+        if (defaultColumn) {
+          columnSorts.push({
+            ...defaultColumn.sort,
+            key: defaultColumn.key,
+            direction: 'DESCENDING',
+          });
+          return;
+        }
+
+        const firstColumn = columns.find(c => c.sort?.group === g);
+        if (firstColumn) {
+          columnSorts.push({ ...firstColumn.sort, key: firstColumn.key, direction: 'DESCENDING' });
+        }
+      });
+    }
+
+    return refresh(transformer, sorter)({ ...state, columns, columnSorts }, { items: state.items });
   };
 }
 
-export function sort(
+export function resizeColumn(state: State, payload: { column: string, width: number }): State {
+  const { column, width } = payload;
+
+  return {
+    ...state,
+    columnWidths: {
+      ...state.columnWidths,
+      [column]: width,
+    },
+  };
+}
+
+export function sortColumn(
   transformer: (number, Object) => Array<Array<CellValue>>,
   sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
 ) {
-  return (state: State, payload: { sorts: Array<ColumnSort> }): State => {
-    const { sorts } = payload;
+  return (state: State, payload: { column: string, direction: SortDirection }): State => {
+    const { column, direction } = payload;
+
+    const columnConfig = state.columns.find(c => c.key === column);
+    if (!columnConfig || !columnConfig.sort) {
+      return state;
+    }
+
+    const columnSorts = [
+      ...state.columnSorts.filter(s => s.group !== columnConfig.sort?.group),
+      {
+        ...columnConfig.sort,
+        key: columnConfig.key,
+        direction,
+      },
+    ];
 
     return refresh(transformer, sorter)(
-      {
-        ...state,
-        sorts,
-      },
-      {
-        items: sorter(state.items, sorts),
-        columns: state.columns,
-      }
+      { ...state, columnSorts },
+      { items: sorter(state.items, columnSorts) }
     );
   };
 }
