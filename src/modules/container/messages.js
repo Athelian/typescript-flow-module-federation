@@ -70,6 +70,10 @@ export default defineMessages({
     id: 'modules.container.updatedAt',
     defaultMessage: 'Last Modified',
   },
+  duration: {
+    id: 'modules.container.duration',
+    defaultMessage: 'DURATION',
+  },
   startDate: {
     id: 'modules.container.startDate',
     defaultMessage: 'START DATE',

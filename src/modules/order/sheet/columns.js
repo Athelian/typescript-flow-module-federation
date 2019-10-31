@@ -692,7 +692,13 @@ const containerColumns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: 195,
   },
-  // duration
+  {
+    key: 'order.orderItem.batch.container.freeTimeDuration',
+    title: <FormattedMessage {...containerMessages.duration} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.container.dueDate',
     title: <FormattedMessage {...containerMessages.dueDate} />,

@@ -61,6 +61,7 @@ import {
   CONTAINER_SET_CONTAINER_OPTION,
   CONTAINER_SET_CONTAINER_TYPE,
   CONTAINER_SET_DEPARTURE_DATE,
+  CONTAINER_SET_FREE_TIME_DURATION,
   CONTAINER_SET_FREE_TIME_START_DATE,
   CONTAINER_SET_MEMO,
   CONTAINER_SET_NO,
@@ -960,6 +961,17 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         'freeTimeStartDate',
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_FREE_TIME_START_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.freeTimeDuration',
+      type: 'day',
+      ...transformValueField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'freeTimeDuration',
+        hasPermission =>
+          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_FREE_TIME_DURATION)
       ),
     },
     {

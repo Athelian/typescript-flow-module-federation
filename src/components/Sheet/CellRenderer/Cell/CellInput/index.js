@@ -8,6 +8,7 @@ import NumberToggleInput from './Inputs/NumberToggleInput';
 import DateInput from './Inputs/DateInput';
 import DateToggleInput from './Inputs/DateToggleInput';
 import DatetimeInput from './Inputs/DatetimeInput';
+import DayInput from './Inputs/DayInput';
 import SelectCustomInput from './Inputs/SelectCustomInput';
 import SelectEnumInput from './Inputs/SelectEnumInput';
 import SearchSelectEnumInput from './Inputs/SearchSelectEnumInput';
@@ -53,6 +54,7 @@ const inputs = {
   date: DateInput,
   date_toggle: DateToggleInput,
   datetime: DatetimeInput,
+  day: DayInput,
   load_type: SelectEnumInput.LoadType,
   transport_type: SelectEnumInput.TransportType,
   incoterm: SearchSelectEnumInput.Incoterm,
