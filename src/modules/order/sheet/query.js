@@ -198,6 +198,8 @@ const shipmentSheetFragment = gql`
     voyages {
       ... on Voyage {
         id
+        vesselName
+        vesselCode
         departurePort {
           seaport
           airport
@@ -291,6 +293,7 @@ const containerSheetFragment = gql`
     no
     autoCalculatedFreeTimeStartDate
     freeTimeStartDate
+    freeTimeDuration
     warehouseArrivalAgreedDate
     warehouseArrivalAgreedDateAssignedTo {
       ...userAvatarFragment

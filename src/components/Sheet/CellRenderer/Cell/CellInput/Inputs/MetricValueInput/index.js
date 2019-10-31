@@ -56,7 +56,7 @@ const MetricValueInput = (metrics: Array<string>) => ({
       defaultMetric={metrics[0]}
       metrics={metrics}
       renderInput={inputProps => (
-        <InputWrapper focus={focus}>
+        <InputWrapper focus={focus} preselect>
           {({ ref }) => (
             <NumberInput
               {...inputProps}
