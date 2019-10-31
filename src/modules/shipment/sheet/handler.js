@@ -2,7 +2,7 @@
 import ApolloClient from 'apollo-client';
 import type { Action } from 'components/Sheet/SheetState/types';
 import { Actions } from 'components/Sheet/SheetState/constants';
-import type { EntityEvent, EntityEventHandler } from 'components/Sheet/SheetLive/entity';
+import type { EntityEvent, EntityEventHandler } from 'components/Sheet/SheetLive/types';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
 import { batchQuantityRevisionByIDQuery } from './query';
 

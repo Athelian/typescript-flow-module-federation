@@ -10,13 +10,13 @@ import {
   useSheetKeyNavigation,
 } from '../SheetState';
 import type { CellValue, Mutator } from '../SheetState/types';
+import type { EntityEventHandlerFactory } from '../SheetLive/types';
 import { Actions } from '../SheetState/constants';
 import SheetRenderer from '../SheetRenderer';
 import CellRenderer from '../CellRenderer';
 import { SheetLiveID } from '../SheetLive';
 import { useSheetLiveFocus } from '../SheetLive/focus';
 import { useSheetLiveEntity } from '../SheetLive/entity';
-import type { EntityEventHandlerFactory } from '../SheetLive/entity';
 import { SheetContentWrapperStyle } from './style';
 
 type ImplProps = {

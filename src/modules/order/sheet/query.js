@@ -219,10 +219,7 @@ const shipmentSheetFragment = gql`
       ... on ContainerGroup {
         id
         warehouse {
-          ... on Warehouse {
-            id
-            name
-          }
+          ...warehouseFragment
         }
         customClearance {
           ...timelineDateFragment
@@ -299,10 +296,7 @@ const containerSheetFragment = gql`
       ...userAvatarFragment
     }
     warehouse {
-      ... on Warehouse {
-        id
-        name
-      }
+      ...warehouseFragment
     }
     yardName
     departureDate
@@ -331,6 +325,13 @@ const containerSheetFragment = gql`
         id
       }
     }
+  }
+`;
+
+const warehouseFragment = gql`
+  fragment warehouseFragment on Warehouse {
+    id
+    name
   }
 `;
 
@@ -377,6 +378,7 @@ export const ordersQuery = gql`
   ${timelineDateFragment}
   ${userAvatarFragment}
   ${partnerNameFragment}
+  ${warehouseFragment}
   ${documentFragment}
   ${tagFragment}
   ${forbiddenFragment}
@@ -415,6 +417,7 @@ export const orderItemByIDQuery = gql`
   ${partnerNameFragment}
   ${timelineDateFragment}
   ${userAvatarFragment}
+  ${warehouseFragment}
   ${documentFragment}
   ${tagFragment}
   ${forbiddenFragment}
@@ -452,6 +455,7 @@ export const batchByIDQuery = gql`
   ${timelineDateFragment}
   ${userAvatarFragment}
   ${partnerNameFragment}
+  ${warehouseFragment}
   ${documentFragment}
   ${tagFragment}
   ${forbiddenFragment}
@@ -484,6 +488,7 @@ export const containerByIDQuery = gql`
 
   ${containerSheetFragment}
   ${userAvatarFragment}
+  ${warehouseFragment}
   ${tagFragment}
 `;
 
@@ -498,9 +503,30 @@ export const shipmentByIDQuery = gql`
   ${timelineDateFragment}
   ${userAvatarFragment}
   ${partnerNameFragment}
+  ${warehouseFragment}
   ${documentFragment}
   ${tagFragment}
   ${forbiddenFragment}
+`;
+
+export const organizationByIDQuery = gql`
+  query organizationByIDQuery($id: ID!) {
+    organization(id: $id) {
+      ...partnerNameFragment
+    }
+  }
+
+  ${partnerNameFragment}
+`;
+
+export const warehouseByIDQuery = gql`
+  query warehouseByIDQuery($id: ID!) {
+    warehouse(id: $id) {
+      ...warehouseFragment
+    }
+  }
+
+  ${warehouseFragment}
 `;
 
 export const orderMutation = gql`
