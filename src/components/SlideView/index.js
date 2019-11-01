@@ -101,11 +101,16 @@ const SlideView = ({ isOpen, onRequestClose, shouldConfirm, children }: Props) =
   React.useEffect(() => {
     if (isOpen) {
       setRender(true);
-    } else {
-      setTimeout(() => {
-        setRender(false);
-      }, ANIMATION_FINISHED);
+      return () => {};
     }
+
+    const handler = setTimeout(() => {
+      setRender(false);
+    }, ANIMATION_FINISHED);
+
+    return () => {
+      clearTimeout(handler);
+    };
   }, [isOpen]);
 
   return render ? (

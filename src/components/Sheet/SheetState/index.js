@@ -132,12 +132,6 @@ export const useSheetKeyNavigation = () => {
   }, [handleKey]);
 };
 
-export const useCell = (position: Position): CellValue => {
-  const { state } = useSheetState();
-
-  return state.rows[position.x][position.y];
-};
-
 export const SheetState = ({
   items,
   columns,

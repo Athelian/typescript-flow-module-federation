@@ -160,3 +160,19 @@ export type Mutator = ({
   value: any,
   item: Object,
 }) => Promise<Array<Object> | null>;
+
+export type CellData = {
+  item: Object | null,
+  cell: CellValue,
+  parentCell: CellValue,
+  foreignUsers: Array<Object>,
+  addedRow: RowChange | null,
+  removedRow: RowChangeOnRemoved | null,
+  error: Error | null,
+  focused: boolean,
+  hovered: boolean,
+  weakFocused: boolean,
+  weakErrored: boolean,
+  dispatch: Action => void,
+  mutate: ({ cell: Position, value: any, item: Object }) => void,
+};
