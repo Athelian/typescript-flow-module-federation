@@ -15,6 +15,7 @@ import SelectEnumInput from './Inputs/SelectEnumInput';
 import SearchSelectEnumInput from './Inputs/SearchSelectEnumInput';
 import MetricValueInput from './Inputs/MetricValueInput';
 import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
+import SizeInput from './Inputs/SizeInput';
 import DocumentsInput from './Inputs/DocumentsInput';
 import QuantityRevisionsInput from './Inputs/QuantityRevisionsInput';
 import DateRevisionsInput from './Inputs/DateRevisionsInput';
@@ -52,6 +53,7 @@ const inputs = {
   area: MetricValueInput.Area,
   length: MetricValueInput.Length,
   mass: MetricValueInput.Mass,
+  size: SizeInput,
   static_metric_value: StaticMetricValueInput,
   date: DateInput,
   date_toggle: DateToggleInput,

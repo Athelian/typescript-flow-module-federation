@@ -231,6 +231,10 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           return {
             packageGrossWeight: value ? removeTypename(value) : null,
           };
+        case 'packageSize':
+          return {
+            packageSize: value ? removeTypename(value) : null,
+          };
         case 'tags': {
           return {
             tagIds: value.map(tag => tag.id),

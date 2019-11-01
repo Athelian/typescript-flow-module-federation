@@ -46,7 +46,10 @@ const MetricValueInput = ({
     {renderInput({
       value: value?.value ?? 0,
       onChange: e =>
-        onChange({ ...(value || { metric: defaultMetric }), value: parseFloat(e.target.value) }),
+        onChange({
+          ...(value || { metric: defaultMetric }),
+          value: e.target.value ? parseFloat(e.target.value) : 0,
+        }),
       onFocus,
       onBlur,
     })}

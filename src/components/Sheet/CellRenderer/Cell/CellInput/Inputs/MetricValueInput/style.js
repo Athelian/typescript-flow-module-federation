@@ -8,7 +8,6 @@ export const InputStyle = css`
 
 export const SelectInputStyle = css`
   ${fontSizes.MAIN};
-  ${presets.ELLIPSIS};
   color: ${colors.BLACK};
   width: 30px;
   height: 30px;

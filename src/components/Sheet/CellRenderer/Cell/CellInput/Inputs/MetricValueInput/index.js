@@ -4,8 +4,17 @@ import BaseMetricValueInput from 'components/Inputs/MetricValueInput';
 import NumberInput from 'components/Form/Inputs/NumberInput';
 import SelectInput from 'components/Inputs/SelectInput';
 import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
-import { areaMetrics, distanceMetrics, volumeMetrics, weightMetrics } from 'utils/metric';
-import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
+import {
+  areaMetrics,
+  defaultAreaMetric,
+  defaultDistanceMetric,
+  defaultVolumeMetric,
+  defaultWeightMetric,
+  distanceMetrics,
+  volumeMetrics,
+  weightMetrics,
+} from 'utils/metric';
+import type { InputProps } from '../../types';
 import InputWrapper from '../InputWrapper';
 import { SelectOptionStyle, SelectInputStyle, InputStyle } from './style';
 
@@ -38,7 +47,7 @@ const MetricSelectOption = ({ item, selected, highlighted, itemToString }: Rende
   </div>
 );
 
-const MetricValueInput = (metrics: Array<string>) => ({
+const MetricValueInput = (metrics: Array<string>, defaultMetric: string) => ({
   value,
   onChange,
   focus,
@@ -55,7 +64,7 @@ const MetricValueInput = (metrics: Array<string>) => ({
       onChange={onChange}
       onFocus={onFocus}
       onBlur={onBlur}
-      defaultMetric={metrics[0]}
+      defaultMetric={defaultMetric}
       metrics={metrics}
       renderInput={inputProps => (
         <InputWrapper focus={focus} preselect>
@@ -93,8 +102,8 @@ const MetricValueInput = (metrics: Array<string>) => ({
 };
 
 export default {
-  Volume: MetricValueInput(volumeMetrics),
-  Area: MetricValueInput(areaMetrics),
-  Length: MetricValueInput(distanceMetrics),
-  Mass: MetricValueInput(weightMetrics),
+  Volume: MetricValueInput(volumeMetrics, defaultVolumeMetric),
+  Area: MetricValueInput(areaMetrics, defaultAreaMetric),
+  Length: MetricValueInput(distanceMetrics, defaultDistanceMetric),
+  Mass: MetricValueInput(weightMetrics, defaultWeightMetric),
 };

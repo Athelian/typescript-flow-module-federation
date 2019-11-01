@@ -45,6 +45,7 @@ import {
   BATCH_SET_PACKAGE_CAPACITY,
   BATCH_SET_PACKAGE_NAME,
   BATCH_SET_PACKAGE_QUANTITY,
+  BATCH_SET_PACKAGE_SIZE,
   BATCH_SET_PACKAGE_WEIGHT,
   BATCH_SET_PRODUCTION_DATE,
   BATCH_SET_QUANTITY,
@@ -745,6 +746,16 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
         batch,
         'packageGrossWeight',
         hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_WEIGHT)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.packageSize',
+      type: 'size',
+      ...transformValueField(
+        basePath,
+        batch,
+        'packageSize',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_SIZE)
       ),
     },
     {
