@@ -25,7 +25,9 @@ const defaultProps = {
   onCompleted: logger.warn,
 };
 
+// $FlowFixMe Flow typed is not updated yet
 export default function QueryFormV2({ query, entityId, entityType, render, onCompleted }: Props) {
+  // $FlowFixMe Flow typed is not updated yet
   const { data, loading, error } = useQuery(query, {
     variables: { id: decodeId(entityId) },
     fetchPolicy: 'network-only',

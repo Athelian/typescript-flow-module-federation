@@ -19,8 +19,10 @@ const OrderApp = () => (
   <Location>
     {({ location }) => (
       <Router location={location}>
+        {/* $FlowFixMe Flow typed is not updated yet */}
         <Redirect path="/" from="/" to="/order/cards" noThrow />
         <OrderListModuleWrapper path="/cards" />
+        {/* $FlowFixMe Flow typed is not updated yet */}
         <OrderSheetModuleWrapper path="/table" orderIds={location?.state?.orderIds} />
         <OrderRelationalMapModuleWrapper path="/map" />
         <OrderFormModuleCreationWrapper path="new" />

@@ -122,16 +122,25 @@ const TaskStatusInput = ({ task, update, editable: editableFromProps, width, sho
                         const newTask = { ...task };
                         switch (status) {
                           case 'inProgress': {
+                            /* $FlowFixMe This comment suppresses an error
+                             * found when upgrading Flow to v0.111.0. To view
+                             * the error, delete this comment and run Flow. */
                             newTask.inProgressAt = null;
                             newTask.inProgressBy = null;
                             break;
                           }
                           case 'skipped': {
+                            /* $FlowFixMe This comment suppresses an error
+                             * found when upgrading Flow to v0.111.0. To view
+                             * the error, delete this comment and run Flow. */
                             newTask.skippedAt = null;
                             newTask.skippedBy = null;
                             break;
                           }
                           case 'completed': {
+                            /* $FlowFixMe This comment suppresses an error
+                             * found when upgrading Flow to v0.111.0. To view
+                             * the error, delete this comment and run Flow. */
                             newTask.completedAt = null;
                             newTask.completedBy = null;
 
@@ -204,6 +213,9 @@ const TaskStatusInput = ({ task, update, editable: editableFromProps, width, sho
                   event.stopPropagation();
                   const newTask = { ...task };
                   if (status === 'inProgress') {
+                    /* $FlowFixMe This comment suppresses an error found when
+                     * upgrading Flow to v0.111.0. To view the error, delete
+                     * this comment and run Flow. */
                     newTask.inProgressAt = null;
                     newTask.inProgressBy = null;
                   }

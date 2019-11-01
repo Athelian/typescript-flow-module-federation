@@ -201,6 +201,9 @@ export function rearrangeColumns(
       columnGroups.forEach(g => {
         const defaultColumn = columns.find(c => c.sort?.group === g && c.sort?.default);
         if (defaultColumn) {
+          /* $FlowFixMe This comment suppresses an error found when upgrading
+           * Flow to v0.111.0. To view the error, delete this comment and run
+           * Flow. */
           columnSorts.push({
             ...defaultColumn.sort,
             key: defaultColumn.key,
@@ -211,6 +214,9 @@ export function rearrangeColumns(
 
         const firstColumn = columns.find(c => c.sort?.group === g);
         if (firstColumn) {
+          /* $FlowFixMe This comment suppresses an error found when upgrading
+           * Flow to v0.111.0. To view the error, delete this comment and run
+           * Flow. */
           columnSorts.push({ ...firstColumn.sort, key: firstColumn.key, direction: 'DESCENDING' });
         }
       });
@@ -254,7 +260,11 @@ export function sortColumn(
     ];
 
     return refresh(transformer, sorter)(
+      /* $FlowFixMe This comment suppresses an error found when upgrading Flow
+       * to v0.111.0. To view the error, delete this comment and run Flow. */
       { ...state, columnSorts },
+      /* $FlowFixMe This comment suppresses an error found when upgrading Flow
+       * to v0.111.0. To view the error, delete this comment and run Flow. */
       { items: sorter(state.items, columnSorts) }
     );
   };

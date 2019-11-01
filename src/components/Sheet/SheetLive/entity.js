@@ -77,6 +77,7 @@ export const useSheetLiveEntity = (factory: ?EntityEventHandlerFactory) => {
 
     const mutex = new Mutex();
     const subscription = client
+      // $FlowFixMe Flow typed is not updated yet
       .subscribe({
         query: entityEventSubscription,
         variables: {

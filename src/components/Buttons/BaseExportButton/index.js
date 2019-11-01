@@ -82,7 +82,7 @@ function reducer(state: State, action: { type: string, payload?: any }): State {
       return {
         ...state,
         loading: false,
-        options: action.payload,
+        options: action?.payload ?? [],
       };
     case 'select':
       return {
@@ -99,7 +99,7 @@ function reducer(state: State, action: { type: string, payload?: any }): State {
         ...state,
         open: false,
         exporting: true,
-        exportId: action.payload,
+        exportId: action?.payload ?? '',
         exportVariables: null,
         filePath: null,
       };
@@ -110,7 +110,7 @@ function reducer(state: State, action: { type: string, payload?: any }): State {
         exporting: true,
         exportId: null,
         exportVariables: null,
-        filePath: action.payload,
+        filePath: action?.payload ?? '',
       };
     case 'done':
       return {

@@ -6,7 +6,7 @@ import SlideView from 'components/SlideView';
 import { Display } from 'components/Form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import { colors } from 'styles/common';
-import type { InputProps } from '../../types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import { SelectorWrapperStyle, SelectorCardStyle, PlusButtonStyle, CornerIconStyle } from './style';
 
 const WarehouseSelectorInput = ({

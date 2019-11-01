@@ -26,6 +26,7 @@ const defaultProps = {
 const TimelineIcon = ({ icon, color, linkPath, targetId, boundaryId }: Props) => {
   if (linkPath) {
     return (
+      // $FlowFixMe Flow typed is not updated yet
       <Link
         className={TimelineIconStyle({ icon, color })}
         to={linkPath}

@@ -86,6 +86,9 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'deliveryDate':
         case 'issuedAt':
           return {
+            /* $FlowFixMe This comment suppresses an error found when upgrading
+             * Flow to v0.111.0. To view the error, delete this comment and run
+             * Flow. */
             [field]: new Date(value),
           };
         case 'files':
@@ -177,6 +180,9 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         }
         case 'deliveryDate':
           return {
+            /* $FlowFixMe This comment suppresses an error found when upgrading
+             * Flow to v0.111.0. To view the error, delete this comment and run
+             * Flow. */
             [field]: new Date(value),
           };
         case 'tags': {
@@ -202,6 +208,9 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'deliveredAt':
         case 'producedAt':
           return {
+            /* $FlowFixMe This comment suppresses an error found when upgrading
+             * Flow to v0.111.0. To view the error, delete this comment and run
+             * Flow. */
             [field]: new Date(value),
           };
         case 'batchQuantityRevisions':
@@ -237,6 +246,9 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'blDate':
         case 'bookingDate':
           return {
+            /* $FlowFixMe This comment suppresses an error found when upgrading
+             * Flow to v0.111.0. To view the error, delete this comment and run
+             * Flow. */
             [field]: new Date(value),
           };
         case 'tags': {

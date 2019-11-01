@@ -126,6 +126,8 @@ const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
 
     setColumnStates({
       ...columnStates,
+      /* $FlowFixMe This comment suppresses an error found when upgrading Flow
+       * to v0.111.0. To view the error, delete this comment and run Flow. */
       ...groupedColumns,
     });
   };

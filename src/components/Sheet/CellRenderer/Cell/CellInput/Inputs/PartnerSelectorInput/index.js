@@ -4,7 +4,7 @@ import SlideView from 'components/SlideView';
 import SelectPartner from 'components/SelectPartner';
 import Icon from 'components/Icon';
 import { Display } from 'components/Form';
-import type { InputProps } from '../../types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import {
   PartnerSelectorInputWrapperStyle,
   PartnerSelectorCardStyle,

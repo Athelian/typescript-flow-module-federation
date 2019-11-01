@@ -69,6 +69,7 @@ export default function InlineCreateContainer({ onSuccess }: Props) {
             },
           });
           onSuccess(
+            // $FlowFixMe Flow typed is not updated yet
             containerResult.data?.containerCreate?.shipment?.id,
             containerResult.data?.containerCreate
           );

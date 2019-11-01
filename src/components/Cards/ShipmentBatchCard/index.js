@@ -213,6 +213,7 @@ const ShipmentBatchCard = ({
           <div className={ProductInfoWrapperStyle}>
             <div className={ProductNameWrapperStyle}>
               {mergedNavigable.product && product.id ? (
+                // $FlowFixMe Flow typed is not updated yet
                 <Link
                   className={ProductIconLinkStyle}
                   to={`/product/${encodeId(product.id)}`}

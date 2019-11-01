@@ -284,6 +284,7 @@ const ShipmentContainerCard = ({
               <div className={IconInputStyle}>
                 {warehouse &&
                   (editable.viewWarehouse ? (
+                    // $FlowFixMe Flow typed is not updated yet
                     <Link
                       className={WarehouseIconStyle(true)}
                       to={`/warehouse/${encodeId(warehouse.id)}`}

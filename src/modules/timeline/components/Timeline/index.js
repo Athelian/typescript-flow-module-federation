@@ -41,6 +41,8 @@ const Timeline = ({
     page: 1,
     perPage: Math.ceil((window.innerHeight - 90) / ROW_HEIGHT),
   };
+  /* $FlowFixMe This comment suppresses an error found when upgrading Flow to
+   * v0.111.0. To view the error, delete this comment and run Flow. */
   const formatters = { ...DefaultFormatters, ...customFormatters };
 
   React.useLayoutEffect(() => {

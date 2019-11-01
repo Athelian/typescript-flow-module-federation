@@ -3,7 +3,6 @@ import * as React from 'react';
 import { cx } from 'react-emotion';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
-import useDefaultProps from 'hooks/useDefaultProps';
 import Button from '../Button';
 import { ButtonLoadingStyle, ButtonIconStyle, ButtonStyle } from './style';
 
@@ -46,7 +45,7 @@ const LabelledButton = React.forwardRef<Props, HTMLButtonElement>((props: Props,
     onClick,
     buttonRef,
     ...rest
-  } = useDefaultProps(props, defaultProps);
+  } = { ...defaultProps, ...props };
 
   return (
     <Button

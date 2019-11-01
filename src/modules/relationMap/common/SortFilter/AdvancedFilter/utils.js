@@ -61,6 +61,9 @@ const getFilterValue = (name: string, data: any) => {
       const max = getByPath('max', data);
       return {
         ...(isNullOrUndefined(currency) ? {} : { currency }),
+        /* $FlowFixMe This comment suppresses an error found when upgrading
+         * Flow to v0.111.0. To view the error, delete this comment and run
+         * Flow. */
         ...(isNullOrUndefined(min) ? {} : { min }),
         ...(isNullOrUndefined(max) ? {} : { max }),
       };
@@ -143,6 +146,9 @@ const convertMetricRangeQuery = ({
   isNullOrUndefined(min) && isNullOrUndefined(max)
     ? {}
     : {
+        /* $FlowFixMe This comment suppresses an error found when upgrading
+         * Flow to v0.111.0. To view the error, delete this comment and run
+         * Flow. */
         ...(isNullOrUndefined(min) ? {} : { min }),
         ...(isNullOrUndefined(max) ? {} : { max }),
         metric,
@@ -190,6 +196,8 @@ const convertPortsQuery = (state: Object) => {
           ),
         }
       : {}),
+    /* $FlowFixMe This comment suppresses an error found when upgrading Flow to
+     * v0.111.0. To view the error, delete this comment and run Flow. */
     ...(isValidOfPortsInput(airports.firstTransitPorts) ||
     isValidOfPortsInput(seaports.firstTransitPorts)
       ? {
@@ -244,6 +252,8 @@ const convertPackagingQuery = (state: Object, type: string, prevKey: string) => 
   if (!isEmpty(packageLengthQuery) || !isEmpty(packageWidthQuery) || !isEmpty(packageHeightQuery)) {
     packagingQuery[`${prevKey}PackageSize`] = {
       ...(isEmpty(packageLengthQuery) ? {} : { length: { ...packageLengthQuery } }),
+      /* $FlowFixMe This comment suppresses an error found when upgrading Flow
+       * to v0.111.0. To view the error, delete this comment and run Flow. */
       ...(isEmpty(packageWidthQuery) ? {} : { width: { ...packageWidthQuery } }),
       ...(isEmpty(packageHeightQuery) ? {} : { height: { ...packageHeightQuery } }),
     };

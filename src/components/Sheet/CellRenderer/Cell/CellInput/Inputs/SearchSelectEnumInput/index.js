@@ -5,7 +5,7 @@ import matchSorter from 'match-sorter';
 import LoadingIcon from 'components/LoadingIcon';
 import { enumToString } from 'components/Form/Factories/helpers';
 import useEnum from 'hooks/useEnum';
-import type { InputProps } from '../../types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import SearchSelectInput from '../SearchSelectInput';
 
 type Props = InputProps<string> & {

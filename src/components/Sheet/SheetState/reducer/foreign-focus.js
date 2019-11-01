@@ -12,6 +12,8 @@ function resolveForeignFocuses(focus: Object, rows: Array<Array<CellValue>>): Ar
   ).map(area => ({
     id: focus.id,
     user: focus.user,
+    /* $FlowFixMe This comment suppresses an error found when upgrading Flow to
+     * v0.111.0. To view the error, delete this comment and run Flow. */
     ...area,
   }));
 }

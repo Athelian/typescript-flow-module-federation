@@ -795,6 +795,9 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           ...state,
           expandCards: {
             ...state.expandCards,
+            /* $FlowFixMe This comment suppresses an error found when upgrading
+             * Flow to v0.111.0. To view the error, delete this comment and run
+             * Flow. */
             [field]: state.expandCards[field].includes(payload.id)
               ? (state.expandCards[field].filter(id => id !== payload.id): Array<string>)
               : [...state.expandCards[field], payload.id || ''],

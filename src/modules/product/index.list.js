@@ -37,6 +37,7 @@ const ProductListModule = () => {
         <Sort config={ProductSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
         {hasPermissions(PRODUCT_CREATE) && (
+          // $FlowFixMe Flow typed is not updated yet
           <Link to="/product/new">
             <NewButton data-testid="newButton" />
           </Link>

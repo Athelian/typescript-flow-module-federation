@@ -49,6 +49,7 @@ const TagCard = ({ tag, actions, ...rest }: Props) => {
 
   return (
     <BaseCard icon="TAG" color="TAG" actions={actions} {...rest}>
+      {/* $FlowFixMe Flow typed is not updated yet */}
       <Link className={TagCardWrapperStyle} to={`/tags/${encodeId(tag.id)}`}>
         <div className={TagWrapperStyle}>
           <Tag tag={tag} />

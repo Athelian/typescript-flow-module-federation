@@ -40,6 +40,7 @@ export default function InternalError({ onReportError }: Props) {
         </h3>
       </div>
       <div className={InternalErrorLinkContainerStyle}>
+        {/* $FlowFixMe Flow typed is not updated yet */}
         <Link to="/" className={InternalErrorLinkStyle}>
           <img src={loginIcon} className={InternalErrorLogoStyle} alt="Go home" />
           <span>

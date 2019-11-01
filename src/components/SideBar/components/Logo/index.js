@@ -16,6 +16,7 @@ type Props = { isSideBarExpanded: boolean, toggleSideBarExpansion: Function };
 
 const Logo = ({ isSideBarExpanded, toggleSideBarExpansion }: Props) => (
   <div className={LogoWrapperStyle}>
+    {/* $FlowFixMe Flow typed is not updated yet */}
     <Link to="/" className={LogoButtonWrapperStyle}>
       <div className={IconStyle}>
         <img src={iconWhite} alt="brand logo" />

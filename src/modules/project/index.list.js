@@ -42,6 +42,7 @@ const ProjectListModule = () => {
 
         {hasPermissions(PROJECT_CREATE) && (
           <>
+            {/* $FlowFixMe Flow typed is not updated yet */}
             <Link to="new">
               <NewButton />
             </Link>
@@ -65,6 +66,7 @@ const ProjectListModule = () => {
                       <ProjectTemplateSelector
                         onCancel={() => toggleSlide(false)}
                         onSave={template => {
+                          // $FlowFixMe Flow typed is not updated yet
                           navigate('/project/new', {
                             state: {
                               template: {

@@ -118,6 +118,7 @@ class NotificationsDropdown extends React.Component<Props> {
                   )}
                 </div>
                 <div className={NotificationsFooterStyle}>
+                  {/* $FlowFixMe Flow typed is not updated yet */}
                   <Link to="/notifications">
                     <BaseButton
                       label={

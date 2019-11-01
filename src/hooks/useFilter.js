@@ -27,6 +27,8 @@ function useFilter(state: State, cacheKey: string) {
   const initialFilter = {
     filter: {
       ...state.filter,
+      /* $FlowFixMe This comment suppresses an error found when upgrading Flow
+       * to v0.111.0. To view the error, delete this comment and run Flow. */
       ...(localArchived === undefined ? {} : { archived: localArchived }),
       ...(localQuery === undefined ? {} : { query: localQuery }),
     },

@@ -69,6 +69,8 @@ const defaultFilterMenuItemMap = {
 const removeActiveFilter = (state: State) => ({
   activeFilters: {
     ...state.activeFilters,
+    /* $FlowFixMe This comment suppresses an error found when upgrading Flow to
+     * v0.111.0. To view the error, delete this comment and run Flow. */
     [state.selectedEntityType]: (state.activeFilters[state.selectedEntityType].filter(
       activeFilter => activeFilter !== state.selectedFilterItem
     ): Array<any>),
@@ -165,6 +167,9 @@ export default function reducer(state: State, action: { type: string, payload: O
         ...state,
         selectedItems: {
           ...state.selectedItems,
+          /* $FlowFixMe This comment suppresses an error found when upgrading
+           * Flow to v0.111.0. To view the error, delete this comment and run
+           * Flow. */
           [state.selectedEntityType]: {
             ...state.selectedItems[state.selectedEntityType],
             [state.selectedFilterItem]: newSelected,
@@ -196,6 +201,9 @@ export default function reducer(state: State, action: { type: string, payload: O
         ...state,
         selectedItems: {
           ...state.selectedItems,
+          /* $FlowFixMe This comment suppresses an error found when upgrading
+           * Flow to v0.111.0. To view the error, delete this comment and run
+           * Flow. */
           [state.selectedEntityType]: {
             ...state.selectedItems[state.selectedEntityType],
             [state.selectedFilterItem]: selected,

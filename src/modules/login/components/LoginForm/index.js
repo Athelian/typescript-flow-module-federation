@@ -117,6 +117,7 @@ function LoginForm({ onLogin }: Props) {
               />
             )}
           </Subscribe>
+          {/* $FlowFixMe Flow typed is not updated yet */}
           <Link to="/forgot-password" className={ForgotPasswordStyle}>
             <FormattedMessage id="modules.login.forgotPassword" defaultMessage="forgot password" />
           </Link>

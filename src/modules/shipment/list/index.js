@@ -27,6 +27,9 @@ const ShipmentList = ({ ...filtersAndSort }: Props) => {
       query={shipmentListQuery}
       variables={{
         page: 1,
+        /* $FlowFixMe This comment suppresses an error found when upgrading
+         * Flow to v0.111.0. To view the error, delete this comment and run
+         * Flow. */
         ...filtersAndSort,
       }}
       fetchPolicy="network-only"

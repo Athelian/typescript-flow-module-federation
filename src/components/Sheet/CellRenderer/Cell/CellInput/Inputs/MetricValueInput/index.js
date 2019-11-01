@@ -5,7 +5,7 @@ import NumberInput from 'components/Form/Inputs/NumberInput';
 import SelectInput from 'components/Inputs/SelectInput';
 import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
 import { areaMetrics, distanceMetrics, volumeMetrics, weightMetrics } from 'utils/metric';
-import type { InputProps } from '../../types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import InputWrapper from '../InputWrapper';
 import { SelectOptionStyle, SelectInputStyle, InputStyle } from './style';
 
@@ -49,6 +49,8 @@ const MetricValueInput = (metrics: Array<string>) => ({
 }: InputProps<{ value: number, metric: string }>) => {
   return (
     <BaseMetricValueInput
+      /* $FlowFixMe This comment suppresses an error found when upgrading Flow
+       * to v0.111.0. To view the error, delete this comment and run Flow. */
       value={value}
       onChange={onChange}
       onFocus={onFocus}
