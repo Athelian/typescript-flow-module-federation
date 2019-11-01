@@ -2,8 +2,7 @@
 import * as React from 'react';
 import { useHasPermissions } from 'contexts/Permissions';
 import { Blackout } from 'components/Form';
-import type { CellValue } from 'components/Sheet/SheetState/types';
-import { useCell, useSheetState } from 'components/Sheet/SheetState';
+import type { Action, CellValue, Position } from 'components/Sheet/SheetState/types';
 import { Actions } from 'components/Sheet/SheetState/constants';
 import CellInput from './CellInput';
 import CellDisplay from './CellDisplay';
@@ -11,6 +10,7 @@ import { CellStyle, CellBorderStyle, CellPlaceholderStyle, CellShadowStyle } fro
 
 type Props = {
   cell: CellValue,
+  parentCell: CellValue,
   item: Object | null,
   columnIndex: number,
   rowIndex: number,
@@ -20,10 +20,13 @@ type Props = {
   foreignFocus: boolean,
   error: boolean,
   weakError: boolean,
+  dispatch: Action => void,
+  mutate: ({ cell: Position, value: any, item: Object }) => void,
 };
 
 const Cell = ({
   cell,
+  parentCell,
   item,
   columnIndex,
   rowIndex,
@@ -33,10 +36,10 @@ const Cell = ({
   foreignFocus,
   error,
   weakError,
+  dispatch,
+  mutate,
 }: Props) => {
-  const parentCell = useCell(cell.merged ? cell.merged.from : { x: rowIndex, y: columnIndex });
   const hasPermission = useHasPermissions(parentCell.data?.ownedBy);
-  const { dispatch, mutate } = useSheetState();
   const wrapperRef = React.useRef(null);
   const [inputFocus, setInputFocus] = React.useState(false);
 

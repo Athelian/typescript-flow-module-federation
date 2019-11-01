@@ -5,7 +5,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
 import LoadingIcon from 'components/LoadingIcon';
 import type { SortDirection } from 'types';
-import type { Area, ColumnState } from '../SheetState/types';
+import type { Area, CellData, ColumnState } from '../SheetState/types';
 import Column from '../Column';
 import {
   ColumnFillerStyle,
@@ -17,6 +17,7 @@ import {
 
 type Props = {
   columns: Array<ColumnState>,
+  data: Array<Array<CellData>>,
   rowCount: number,
   loading: boolean,
   loadingMore: boolean,
@@ -78,6 +79,7 @@ const InnerGrid = React.forwardRef(({ children, ...rest }: InnerGridProps, ref) 
 
 const SheetRenderer = ({
   columns,
+  data,
   rowCount,
   loading,
   loadingMore,
@@ -153,6 +155,7 @@ const SheetRenderer = ({
                         setGridRef(r);
                       }}
                       className={GridStyle}
+                      itemData={data}
                       width={width}
                       height={height}
                       columnCount={columns.length}

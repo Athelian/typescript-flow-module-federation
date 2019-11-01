@@ -103,10 +103,12 @@ const CellInput = ({
   onUpdate,
 }: Props) => {
   const [dirtyValue, setDirtyValue] = React.useState<any>(value);
+  const valueRef = React.useRef<any>(value);
 
-  React.useEffect(() => {
+  if (valueRef.current !== value) {
+    valueRef.current = value;
     setDirtyValue(value);
-  }, [value, setDirtyValue]);
+  }
 
   const handleChange = (newValue, force = false) => {
     if (!equals(newValue, dirtyValue)) {

@@ -8,6 +8,7 @@ import {
   useSheetKeyNavigation,
 } from '../SheetState';
 import type {
+  CellData,
   CellValue,
   ColumnConfig,
   ColumnSort,
@@ -22,6 +23,7 @@ import { SheetLiveID } from '../SheetLive';
 import { useSheetLiveFocus } from '../SheetLive/focus';
 import { useSheetLiveEntity } from '../SheetLive/entity';
 import { SheetContentWrapperStyle } from './style';
+import { isInArea } from './helpers';
 
 type ImplProps = {
   loading: boolean,
@@ -41,7 +43,7 @@ type Props = {
 
 const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent }: ImplProps) => {
   const [loadingMore, handleThreshold] = useSheetStateLoadMore(onLoadMore);
-  const { state, dispatch } = useSheetState();
+  const { state, dispatch, mutate } = useSheetState();
   useSheetKeyNavigation();
   useSheetLiveFocus();
   useSheetLiveEntity(handleEntityEvent);
@@ -82,6 +84,71 @@ const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent }: ImplProp
     [state.columns, state.columnSorts, state.columnWidths]
   );
 
+  const data = React.useMemo<Array<Array<CellData>>>(
+    () =>
+      state.rows.map((row, rowIndex) =>
+        row.map((cell: CellValue, columnIndex) => {
+          let item = null;
+          if (cell.data) {
+            const itemIdx = parseFloat(cell.data.path.split('.')[0]);
+            item = state.items[itemIdx];
+          }
+
+          let parentCell = cell;
+          if (cell.merged) {
+            parentCell = state.rows[cell.merged.from.x][cell.merged.from.y];
+          }
+
+          return {
+            item,
+            cell,
+            parentCell,
+            foreignUsers: state.foreignFocusesAt
+              .filter(ff => isInArea(ff, columnIndex, rowIndex))
+              .map(ff => ({
+                id: ff.id,
+                firstName: ff.user.firstName,
+                lastName: ff.user.lastName,
+              })),
+            addedRow:
+              state.addedRows.find(
+                addedRow => addedRow.from.x === rowIndex && addedRow.from.y === columnIndex
+              ) || null,
+            removedRow:
+              state.removedRows.find(
+                removedRow => removedRow.from.x === rowIndex && removedRow.from.y === columnIndex
+              ) || null,
+            error:
+              !!state.errorAt &&
+              state.errorAt.messages.length > 0 &&
+              isInArea(state.errorAt, columnIndex, rowIndex)
+                ? state.errorAt
+                : null,
+            focused: !!state.focusAt && isInArea(state.focusAt, columnIndex, rowIndex),
+            hovered: !!state.hoverAt && isInArea(state.hoverAt, columnIndex, rowIndex),
+            weakFocused: !!state.weakFocusAt.find(f => isInArea(f, columnIndex, rowIndex)),
+            weakErrored: !!state.weakErrorAt.find(e => isInArea(e, columnIndex, rowIndex)),
+            dispatch,
+            mutate,
+          };
+        })
+      ),
+    [
+      state.rows,
+      state.items,
+      state.foreignFocusesAt,
+      state.addedRows,
+      state.removedRows,
+      state.errorAt,
+      state.focusAt,
+      state.hoverAt,
+      state.weakFocusAt,
+      state.weakErrorAt,
+      dispatch,
+      mutate,
+    ]
+  );
+
   const handleMouseLeave = () => {
     dispatch({
       type: Actions.UNHOVER,
@@ -111,6 +178,7 @@ const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent }: ImplProp
     <div className={SheetContentWrapperStyle} onMouseLeave={handleMouseLeave}>
       <SheetRenderer
         columns={columnStates}
+        data={data}
         rowCount={state.rows.length}
         loading={loading}
         loadingMore={loadingMore}
