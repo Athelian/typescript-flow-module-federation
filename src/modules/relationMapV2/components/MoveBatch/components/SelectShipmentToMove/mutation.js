@@ -70,10 +70,11 @@ export const moveBatchesToShipment = ({
           shipmentIds.push(shipmentId);
         }
       });
-      return Promise.resolve({
-        ordersIds: [...parentOrderIds, ...orderIds].filter(Boolean),
+      const ids = {
+        orderIds: [...parentOrderIds, ...orderIds].filter(Boolean),
         shipmentIds: shipmentIds.filter(Boolean),
-      });
+      };
+      return Promise.resolve(ids);
     });
 };
 
