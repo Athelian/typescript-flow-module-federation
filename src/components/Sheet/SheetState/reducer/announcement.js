@@ -47,8 +47,8 @@ export function preAddEntity(
          * This is for correctly detect overlapping announcements.
          */
         const cellArea = {
-          from: { x, y, ...(cell.merged?.from ?? {}) },
-          to: { x, y, ...(cell.merged?.to ?? {}) },
+          from: cell.merged?.from ?? { x, y },
+          to: cell.merged?.to ?? { x, y },
         };
         cellArea.to.y = newState.rows.length - 1;
 
@@ -134,8 +134,8 @@ export function preRemoveEntity(
        * This is for correctly detect overlapping announcements.
        */
       const cellArea = {
-        from: { x, y, ...(cell.merged?.from ?? {}) },
-        to: { x, y, ...(cell.merged?.to ?? {}) },
+        from: cell.merged?.from ?? { x, y },
+        to: cell.merged?.to ?? { x, y },
       };
       cellArea.to.y = state.rows.length - 1;
 

@@ -563,7 +563,13 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 200,
   },
-  // pkg vol + auto
+  {
+    key: 'order.orderItem.batch.packageVolume',
+    title: <FormattedMessage {...batchMessages.packageVolume} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.packageSize',
     title: <FormattedMessage {...batchMessages.packageSize} />,

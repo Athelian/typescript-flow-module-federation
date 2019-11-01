@@ -7,6 +7,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import { Display, Label } from 'components/Form';
 import TaskRing from 'components/TaskRing';
 import Icon from 'components/Icon';
+import type { MetricValue } from 'types';
 import {
   RMBatchCardWrapperStyle,
   InfoWrapperStyle,
@@ -24,10 +25,7 @@ type Props = {
     archived: boolean,
     no: string,
     batchedQuantity: number,
-    totalVolume: ?{
-      value: number,
-      metric: string,
-    },
+    totalVolume: ?MetricValue,
     deliveredAt: ?string,
     shipment: ?Object,
     container: ?Object,

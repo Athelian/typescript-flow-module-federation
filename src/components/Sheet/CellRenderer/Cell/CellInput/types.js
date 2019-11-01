@@ -1,6 +1,6 @@
 // @flow
 
-export type InputProps<T, C = any, E = any> = {
+export type InputProps<T, C = any, E = any> = {|
   value: ?T,
   context: ?C,
   extra: ?E,
@@ -10,4 +10,4 @@ export type InputProps<T, C = any, E = any> = {
   onBlur: () => void,
   onKeyDown: (SyntheticKeyboardEvent<HTMLElement>) => void,
   readonly: boolean,
-};
+|};

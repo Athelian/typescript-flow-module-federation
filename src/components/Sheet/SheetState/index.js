@@ -32,7 +32,6 @@ const initialState: State = {
   columnSorts: [],
   columnWidths: {},
   entities: [],
-  sorts: [],
   hoverAt: null,
   focusAt: null,
   weakFocusAt: [],

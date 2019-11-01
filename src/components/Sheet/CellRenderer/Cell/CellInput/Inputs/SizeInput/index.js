@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { defaultDistanceMetric } from 'utils/metric';
+import type { MetricValue } from 'types';
 import type { InputProps } from '../../types';
 import MetricValueInput from '../MetricValueInput';
 import { SizeInputStyle, SeparatorStyle, SideStyle } from './style';
@@ -14,22 +15,16 @@ const SizeInput = ({
   readonly,
   onKeyDown,
 }: InputProps<{
-  width: { value: number, metric: string },
-  length: { value: number, metric: string },
-  height: { value: number, metric: string },
+  width: MetricValue,
+  length: MetricValue,
+  height: MetricValue,
 }>) => {
   const ref = React.useRef<HTMLDivElement | null>(null);
 
   const handleBlur = e => {
-    if (!ref.current) {
-      return;
+    if (ref.current && !ref.current.contains(e.relatedTarget)) {
+      onBlur();
     }
-
-    if (ref.current.contains(e.relatedTarget)) {
-      return;
-    }
-
-    onBlur();
   };
 
   return (

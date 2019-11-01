@@ -14,6 +14,7 @@ import SelectCustomInput from './Inputs/SelectCustomInput';
 import SelectEnumInput from './Inputs/SelectEnumInput';
 import SearchSelectEnumInput from './Inputs/SearchSelectEnumInput';
 import MetricValueInput from './Inputs/MetricValueInput';
+import MetricValueToggleInput from './Inputs/MetricValueToggleInput';
 import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
 import SizeInput from './Inputs/SizeInput';
 import DocumentsInput from './Inputs/DocumentsInput';
@@ -54,6 +55,10 @@ const inputs = {
   length: MetricValueInput.Length,
   mass: MetricValueInput.Mass,
   size: SizeInput,
+  volume_toggle: MetricValueToggleInput.Volume,
+  area_toggle: MetricValueToggleInput.Area,
+  length_toggle: MetricValueToggleInput.Length,
+  mass_toggle: MetricValueToggleInput.Mass,
   static_metric_value: StaticMetricValueInput,
   date: DateInput,
   date_toggle: DateToggleInput,

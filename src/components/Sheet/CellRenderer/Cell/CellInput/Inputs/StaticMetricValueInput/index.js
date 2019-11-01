@@ -3,6 +3,7 @@ import * as React from 'react';
 import BaseNumberInput from 'components/Form/Inputs/NumberInput';
 import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
+import type { MetricValue } from 'types';
 import InputWrapper from '../InputWrapper';
 
 const StaticMetricValueInput = ({
@@ -13,7 +14,7 @@ const StaticMetricValueInput = ({
   onBlur,
   onKeyDown,
   readonly,
-}: InputProps<{ value: number, metric: string }>) => {
+}: InputProps<MetricValue>) => {
   const { value = 0, metric = '' } = metricValue || {};
   return (
     <InputWrapper focus={focus} preselect>

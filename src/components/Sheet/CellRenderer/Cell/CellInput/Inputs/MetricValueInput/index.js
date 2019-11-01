@@ -4,8 +4,13 @@ import BaseMetricValueInput from 'components/Inputs/MetricValueInput';
 import NumberInput from 'components/Form/Inputs/NumberInput';
 import SelectInput from 'components/Inputs/SelectInput';
 import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
+import type { MetricValue } from 'types';
 import {
   areaMetrics,
+  convertArea,
+  convertDistance,
+  convertVolume,
+  convertWeight,
   defaultAreaMetric,
   defaultDistanceMetric,
   defaultVolumeMetric,
@@ -47,7 +52,11 @@ const MetricSelectOption = ({ item, selected, highlighted, itemToString }: Rende
   </div>
 );
 
-const MetricValueInput = (metrics: Array<string>, defaultMetric: string) => ({
+const MetricValueInput = (
+  metrics: Array<string>,
+  defaultMetric: string,
+  valueConverter: (value: number, from: any, to: any) => number
+) => ({
   value,
   onChange,
   focus,
@@ -55,7 +64,7 @@ const MetricValueInput = (metrics: Array<string>, defaultMetric: string) => ({
   onBlur,
   readonly,
   onKeyDown,
-}: InputProps<{ value: number, metric: string }>) => {
+}: InputProps<MetricValue>) => {
   return (
     <BaseMetricValueInput
       value={value}
@@ -63,6 +72,7 @@ const MetricValueInput = (metrics: Array<string>, defaultMetric: string) => ({
       onFocus={onFocus}
       onBlur={onBlur}
       defaultMetric={defaultMetric}
+      valueConverter={valueConverter}
       metrics={metrics}
       renderInput={inputProps => (
         <InputWrapper focus={focus} preselect>
@@ -82,6 +92,7 @@ const MetricValueInput = (metrics: Array<string>, defaultMetric: string) => ({
               nullable={false}
               readOnly={readonly}
               readOnlyHeight="30px"
+              readOnlyWidth="100%"
             />
           )}
         </InputWrapper>
@@ -100,8 +111,8 @@ const MetricValueInput = (metrics: Array<string>, defaultMetric: string) => ({
 };
 
 export default {
-  Volume: MetricValueInput(volumeMetrics, defaultVolumeMetric),
-  Area: MetricValueInput(areaMetrics, defaultAreaMetric),
-  Length: MetricValueInput(distanceMetrics, defaultDistanceMetric),
-  Mass: MetricValueInput(weightMetrics, defaultWeightMetric),
+  Volume: MetricValueInput(volumeMetrics, defaultVolumeMetric, convertVolume),
+  Area: MetricValueInput(areaMetrics, defaultAreaMetric, convertArea),
+  Length: MetricValueInput(distanceMetrics, defaultDistanceMetric, convertDistance),
+  Mass: MetricValueInput(weightMetrics, defaultWeightMetric, convertWeight),
 };

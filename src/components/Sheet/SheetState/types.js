@@ -2,14 +2,14 @@
 
 import type { SortDirection } from 'types';
 
-export type ColumnSortConfig = {
+export type ColumnSortConfig = {|
   local?: boolean,
   group: string,
   name: string,
   default?: boolean,
-};
+|};
 
-type Column = {
+type Column = {|
   key: string,
   exportKey?: string,
   title: any,
@@ -17,32 +17,35 @@ type Column = {
   color: string,
   width: number,
   minWidth?: number,
-};
+|};
 
-export type ColumnConfig = {
+export type ColumnConfig = {|
+  ...Column,
   sort?: ColumnSortConfig,
-} & Column;
+|};
 
-export type ColumnSort = {
+export type ColumnSort = {|
+  ...ColumnSortConfig,
   key: string,
   direction?: SortDirection,
-} & ColumnSortConfig;
+|};
 
-export type ColumnState = {
+export type ColumnState = {|
+  ...Column,
   sort?: ColumnSort,
-} & Column;
+|};
 
-export type Position = {
+export type Position = {|
   x: number,
   y: number,
-};
+|};
 
 export type Area = {
   from: Position,
   to: Position,
 };
 
-export type CellValue = {
+export type CellValue = {|
   columnKey: string,
   entity: {
     id: string,
@@ -65,24 +68,27 @@ export type CellValue = {
   forbidden?: boolean,
   duplicatable?: boolean,
   parent?: boolean,
-};
+|};
 
 type Focus = {
+  ...Area,
   cell: CellValue,
-} & Area;
+};
 
 export type ForeignFocus = {
+  ...Area,
   id: string,
   user: {
     firstName: string,
     lastName: string,
   },
-} & Area;
+};
 
 type Error = {
+  ...Area,
   cell: CellValue,
   messages: Array<string>,
-} & Area;
+};
 
 export type Action = {|
   type: string,
@@ -119,22 +125,24 @@ export type Action = {|
 |};
 
 export type RowChange = {
+  ...Area,
   entity: {
     id: string,
     type: string,
   },
-} & Area;
+};
 
-type RowChangeOnRemoved = {
+export type RowChangeOnRemoved = {
+  ...RowChange,
   callback: (
     items: Array<Object>
   ) => {
     item: Object,
     index: number,
   } | null,
-} & RowChange;
+};
 
-export type State = {
+export type State = {|
   initialized: boolean,
   items: Array<Object>,
   rows: Array<Array<CellValue>>,
@@ -152,7 +160,7 @@ export type State = {
   weakErrorAt: Array<Area>,
   addedRows: Array<RowChange>,
   removedRows: Array<RowChangeOnRemoved>,
-};
+|};
 
 export type Mutator = ({
   entity: { id: string, type: string },
@@ -161,7 +169,7 @@ export type Mutator = ({
   item: Object,
 }) => Promise<Array<Object> | null>;
 
-export type CellData = {
+export type CellData = {|
   item: Object | null,
   cell: CellValue,
   parentCell: CellValue,
@@ -175,4 +183,4 @@ export type CellData = {
   weakErrored: boolean,
   dispatch: Action => void,
   mutate: ({ cell: Position, value: any, item: Object }) => void,
-};
+|};

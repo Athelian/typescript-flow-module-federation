@@ -3,11 +3,7 @@ import { Container } from 'unstated';
 import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
 import { defaultAreaMetric } from 'utils/metric';
-
-type Metric = {
-  value: number,
-  metric: string,
-};
+import type { MetricValue } from 'types';
 
 export type FormState = {
   name?: string,
@@ -16,7 +12,7 @@ export type FormState = {
   region?: string,
   postalCode?: string,
   country?: string,
-  surface: Metric,
+  surface: MetricValue,
   customFields: Object,
   inCharges: Array<{ id: string, firstName: string, lastName: string }>,
   organizations: Array<Object>,

@@ -4,30 +4,26 @@ import { set, cloneDeep } from 'lodash';
 import update from 'immutability-helper';
 import { isEquals } from 'utils/fp';
 import { extractForbiddenId } from 'utils/data';
+import type { MetricValue } from 'types';
 
 type Price = {
   amount: number,
   currency: string,
 };
 
-type Metric = {
-  value: number,
-  metric: string,
-};
-
 type FormState = {
   productProviders: Array<{
     exporter: { id: string, name: string },
     supplier: { id: string, name: string },
-    unitVolume: Metric,
-    unitWeight: Metric,
+    unitVolume: MetricValue,
+    unitWeight: MetricValue,
     unitPrice: Price,
-    packageGrossWeight: Metric,
-    packageVolume: Metric,
+    packageGrossWeight: MetricValue,
+    packageVolume: MetricValue,
     packageSize: {
-      width: Metric,
-      height: Metric,
-      length: Metric,
+      width: MetricValue,
+      height: MetricValue,
+      length: MetricValue,
     },
   }>,
 };

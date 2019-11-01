@@ -136,6 +136,10 @@ const batchSheetFragment = gql`
       value
       metric
     }
+    packageVolume {
+      value
+      metric
+    }
     packageSize {
       width {
         value
