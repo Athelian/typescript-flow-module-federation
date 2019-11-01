@@ -1,6 +1,6 @@
 // @flow
 import type { SortDirection } from 'types';
-import type { CellValue, ColumnConfig, State, ColumnSort } from '../types';
+import type { CellValue, ColumnConfig, State, ColumnSort } from 'components/Sheet/SheetState/types';
 import { setForeignFocuses } from './foreign-focus';
 import { reFocus } from './focus';
 import { reError } from './error';
@@ -200,10 +200,7 @@ export function rearrangeColumns(
 
       columnGroups.forEach(g => {
         const defaultColumn = columns.find(c => c.sort?.group === g && c.sort?.default);
-        if (defaultColumn) {
-          /* $FlowFixMe This comment suppresses an error found when upgrading
-           * Flow to v0.111.0. To view the error, delete this comment and run
-           * Flow. */
+        if (defaultColumn && defaultColumn.sort) {
           columnSorts.push({
             ...defaultColumn.sort,
             key: defaultColumn.key,
@@ -213,10 +210,7 @@ export function rearrangeColumns(
         }
 
         const firstColumn = columns.find(c => c.sort?.group === g);
-        if (firstColumn) {
-          /* $FlowFixMe This comment suppresses an error found when upgrading
-           * Flow to v0.111.0. To view the error, delete this comment and run
-           * Flow. */
+        if (firstColumn && firstColumn.sort) {
           columnSorts.push({ ...firstColumn.sort, key: firstColumn.key, direction: 'DESCENDING' });
         }
       });
@@ -249,22 +243,19 @@ export function sortColumn(
     if (!columnConfig || !columnConfig.sort) {
       return state;
     }
+    const { sort } = columnConfig;
 
     const columnSorts = [
-      ...state.columnSorts.filter(s => s.group !== columnConfig.sort?.group),
+      ...state.columnSorts.filter(s => s.group !== sort.group),
       {
-        ...columnConfig.sort,
+        ...sort,
         key: columnConfig.key,
         direction,
       },
     ];
 
     return refresh(transformer, sorter)(
-      /* $FlowFixMe This comment suppresses an error found when upgrading Flow
-       * to v0.111.0. To view the error, delete this comment and run Flow. */
       { ...state, columnSorts },
-      /* $FlowFixMe This comment suppresses an error found when upgrading Flow
-       * to v0.111.0. To view the error, delete this comment and run Flow. */
       { items: sorter(state.items, columnSorts) }
     );
   };

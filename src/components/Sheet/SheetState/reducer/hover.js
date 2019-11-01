@@ -1,5 +1,5 @@
 // @flow
-import type { CellValue, State, Position } from '../types';
+import type { CellValue, State, Position } from 'components/Sheet/SheetState/types';
 
 export function hover(state: State, target: CellValue, pos: Position): State {
   return {

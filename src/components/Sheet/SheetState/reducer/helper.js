@@ -1,5 +1,5 @@
 // @flow
-import type { Area, CellValue, Position } from '../types';
+import type { Area, CellValue, Position } from 'components/Sheet/SheetState/types';
 
 export function resolveAreasBy(
   rows: Array<Array<CellValue>>,

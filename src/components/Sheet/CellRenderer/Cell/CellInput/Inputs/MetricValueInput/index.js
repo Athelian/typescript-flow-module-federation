@@ -58,8 +58,6 @@ const MetricValueInput = (metrics: Array<string>, defaultMetric: string) => ({
 }: InputProps<{ value: number, metric: string }>) => {
   return (
     <BaseMetricValueInput
-      /* $FlowFixMe This comment suppresses an error found when upgrading Flow
-       * to v0.111.0. To view the error, delete this comment and run Flow. */
       value={value}
       onChange={onChange}
       onFocus={onFocus}
