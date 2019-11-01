@@ -17809,6 +17809,7 @@ export type Batch = {|
     desiredAt?: ?$ElementType<Scalars, 'DateTime'>,
     totalVolume: MetricValue,
     batchQuantityRevisions: Array<BatchQuantityRevisionPayload>,
+    timeline: Timeline,
     todo: Todo,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
@@ -18098,6 +18099,7 @@ export type Container = {|
     orderItemCount: $ElementType<Scalars, 'Int'>,
     batchCount: $ElementType<Scalars, 'Int'>,
     batches: Array<BatchPayload>,
+    timeline: Timeline,
     todo: Todo,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
@@ -19232,7 +19234,10 @@ export type EntityInput = {|
   orderItemId?: ?$ElementType<Scalars, 'ID'>,
   batchId?: ?$ElementType<Scalars, 'ID'>,
   shipmentId?: ?$ElementType<Scalars, 'ID'>,
+  voyageId?: ?$ElementType<Scalars, 'ID'>,
+  containerGroupId?: ?$ElementType<Scalars, 'ID'>,
   containerId?: ?$ElementType<Scalars, 'ID'>,
+  timelineDateId?: ?$ElementType<Scalars, 'ID'>,
   projectId?: ?$ElementType<Scalars, 'ID'>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
   taskId?: ?$ElementType<Scalars, 'ID'>,
@@ -20347,7 +20352,11 @@ export type MaskEditSortInput = {|
 
 export const MaskEditTypeValues = Object.freeze({
   /** Order */
-  Order: 'Order'
+  Order: 'Order', 
+  /** OrderSheet */
+  OrderSheet: 'OrderSheet', 
+  /** ShipmentSheet */
+  ShipmentSheet: 'ShipmentSheet'
 });
 
 
@@ -20663,6 +20672,7 @@ export type Mutation = {|
   integrationLinkExecute?: ?EmptyPayload,
   integrationLinkDelete?: ?EmptyPayload,
   import: ImportPayload,
+  aitImport?: ?EmptyPayload,
   focus: $ElementType<Scalars, 'Void'>,
   blur: $ElementType<Scalars, 'Void'>,
   entitySubscribe: $ElementType<Scalars, 'Void'>,
@@ -21175,6 +21185,11 @@ export type MutationIntegrationLinkDeleteArgs = {|
 
 
 export type MutationImportArgs = {|
+  file: $ElementType<Scalars, 'Upload'>
+|};
+
+
+export type MutationAitImportArgs = {|
   file: $ElementType<Scalars, 'Upload'>
 |};
 
@@ -22451,6 +22466,9 @@ export type Query = {|
   authenticated: $ElementType<Scalars, 'Boolean'>,
   user: UserPayload,
   users: UserPayloadPaginatedSearch,
+  usersByIDs: Array<UserPayload>,
+  organization: OrganizationPayload,
+  organizationsByIDs: Array<OrganizationPayload>,
   partnership: PartnershipPayload,
   partnerships: PartnershipPayloadPaginatedSearch,
   product: ProductPayload,
@@ -22475,6 +22493,8 @@ export type Query = {|
   batches: BatchPayloadPaginatedSearch,
   batchesByIDs: Array<BatchPayload>,
   batchesTable: Array<BatchPayload>,
+  batchQuantityRevision: BatchQuantityRevisionPayload,
+  batchQuantityRevisionsByIDs: Array<BatchQuantityRevisionPayload>,
   shipment: ShipmentPayload,
   shipments: ShipmentPayloadPaginatedSearch,
   shipmentsByIDs: Array<ShipmentPayload>,
@@ -22492,6 +22512,7 @@ export type Query = {|
   warehousesByIDs: Array<WarehousePayload>,
   tag: TagPayload,
   tags: TagPayloadPaginatedSearch,
+  tagsByIDs: Array<TagPayload>,
   tagExport: ExportPayload,
   tagsExport: ExportPayload,
   tagsByIDsExport: ExportPayload,
@@ -22554,6 +22575,21 @@ export type QueryUsersArgs = {|
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?UserFilterInput,
   sortBy?: ?UserSortInput
+|};
+
+
+export type QueryUsersByIDsArgs = {|
+  ids: Array<$ElementType<Scalars, 'ID'>>
+|};
+
+
+export type QueryOrganizationArgs = {|
+  id: $ElementType<Scalars, 'ID'>
+|};
+
+
+export type QueryOrganizationsByIDsArgs = {|
+  ids: Array<$ElementType<Scalars, 'ID'>>
 |};
 
 
@@ -22715,6 +22751,16 @@ export type QueryBatchesTableArgs = {|
 |};
 
 
+export type QueryBatchQuantityRevisionArgs = {|
+  id: $ElementType<Scalars, 'ID'>
+|};
+
+
+export type QueryBatchQuantityRevisionsByIDsArgs = {|
+  ids: Array<$ElementType<Scalars, 'ID'>>
+|};
+
+
 export type QueryShipmentArgs = {|
   id: $ElementType<Scalars, 'ID'>
 |};
@@ -22829,6 +22875,11 @@ export type QueryTagsArgs = {|
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?TagFilterInput,
   sortBy?: ?TagSortInput
+|};
+
+
+export type QueryTagsByIDsArgs = {|
+  ids: Array<$ElementType<Scalars, 'ID'>>
 |};
 
 
@@ -60421,6 +60472,7 @@ export type ShipmentFilterInput = {|
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
+  ids?: ?Array<$ElementType<Scalars, 'ID'>>,
   importerId?: ?$ElementType<Scalars, 'ID'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   forwarderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -61604,6 +61656,22 @@ export type BatchCardWithOwnedFragmentFragment = ({
   ...BatchCardFragmentFragment
 });
 
+export type EnumQueryQueryVariables = {
+  enum: $ElementType<Scalars, 'String'>
+};
+
+
+export type EnumQueryQuery = ({
+    ...{ __typename?: 'Query' },
+  ...{| __type: ?({
+      ...{ __typename?: '__Type' },
+    ...{| enumValues: ?Array<({
+        ...{ __typename?: '__EnumValue' },
+      ...$Pick<__EnumValue, {| name: *, description: * |}>
+    })> |}
+  }) |}
+});
+
 export type MetricFragmentFragment = ({
     ...{ __typename?: 'MetricValue' },
   ...$Pick<MetricValue, {| value: *, metric: * |}>
@@ -61717,7 +61785,11 @@ export type DocumentFragmentFragment = ({
     ...$Pick<Project, {| id: * |}>
   }) | ({
       ...{ __typename?: 'Milestone' },
-    ...$Pick<Milestone, {| id: * |}>
+    ...$Pick<Milestone, {| id: *, name: * |}>,
+    ...{| project: ({
+        ...{ __typename?: 'Project' },
+      ...$Pick<Project, {| id: * |}>
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
 });
 
@@ -61802,7 +61874,7 @@ export type FieldValuesFragmentFragment = ({
   }) | { __typename?: 'IntValue' } | { __typename?: 'FloatValue' } | { __typename?: 'BooleanValue' } | { __typename?: 'DateTimeValue' } | { __typename?: 'IntervalValue' } | { __typename?: 'DurationValue' } | { __typename?: 'MetricValueValue' } | { __typename?: 'SizeValue' } | { __typename?: 'EntityValue' } | { __typename?: 'Values' }, fieldDefinition: ({
       ...{ __typename?: 'FieldDefinition' },
     ...FieldDefinitionFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, entity: { __typename?: 'Product' } | { __typename?: 'ProductProvider' } | { __typename?: 'ProductProviderPackage' } | { __typename?: 'Order' } | { __typename?: 'OrderItem' } | { __typename?: 'Batch' } | { __typename?: 'BatchQuantityRevision' } | { __typename?: 'Shipment' } | { __typename?: 'Voyage' } | { __typename?: 'Container' } | { __typename?: 'ContainerGroup' } | { __typename?: 'TimelineDate' } | { __typename?: 'TimelineDateRevision' } | { __typename?: 'Warehouse' } | { __typename?: 'Tag' } | { __typename?: 'User' } | { __typename?: 'Organization' } | { __typename?: 'Partnership' } | { __typename?: 'Role' } | { __typename?: 'File' } | { __typename?: 'Task' } | { __typename?: 'TaskTemplate' } | { __typename?: 'Project' } | { __typename?: 'Milestone' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, entity: { __typename: 'Product' } | { __typename: 'ProductProvider' } | { __typename: 'ProductProviderPackage' } | { __typename: 'Order' } | { __typename: 'OrderItem' } | { __typename: 'Batch' } | { __typename: 'BatchQuantityRevision' } | { __typename: 'Shipment' } | { __typename: 'Voyage' } | { __typename: 'Container' } | { __typename: 'ContainerGroup' } | { __typename: 'TimelineDate' } | { __typename: 'TimelineDateRevision' } | { __typename: 'Warehouse' } | { __typename: 'Tag' } | { __typename: 'User' } | { __typename: 'Organization' } | { __typename: 'Partnership' } | { __typename: 'Role' } | { __typename: 'File' } | { __typename: 'Task' } | { __typename: 'TaskTemplate' } | { __typename: 'Project' } | { __typename: 'Milestone' } | { __typename: 'BadRequest' } | { __typename: 'Forbidden' } | { __typename: 'NotFound' } |}
 });
 
 export type FieldDefinitionFragmentFragment = ({
@@ -62628,7 +62700,7 @@ export type ProjectFormQueryFragmentFragment = ({
     ...TagFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, milestones: Array<({
       ...{ __typename?: 'Milestone' },
-    ...$Pick<Milestone, {| id: *, updatedAt: *, name: *, dueDate: *, dueDateBinding: *, estimatedCompletionDate: *, estimatedCompletionDateBinding: *, completedAt: * |}>,
+    ...$Pick<Milestone, {| id: *, updatedAt: *, description: *, name: *, dueDate: *, dueDateBinding: *, estimatedCompletionDate: *, estimatedCompletionDateBinding: *, completedAt: * |}>,
     ...{| updatedBy: ?({
         ...{ __typename?: 'User' },
       ...UserAvatarFragmentFragment
@@ -62648,7 +62720,13 @@ export type ProjectFormQueryFragmentFragment = ({
         ...{ __typename?: 'Task' },
       ...$Pick<Task, {| milestoneSort: * |}>,
       ...TaskFormInProjectFragmentFragment
-    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, files: Array<({
+        ...{ __typename?: 'File' },
+      ...DocumentFragmentFragment
+    }) | { __typename?: 'BadRequest' } | ({
+        ...{ __typename?: 'Forbidden' },
+      ...ForbiddenFragmentFragment
+    }) | { __typename?: 'NotFound' }> |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
 });
 
@@ -62696,11 +62774,17 @@ export type ProjectTemplateFormFragmentFragment = ({
 
 export type ShipmentFormQueryFragmentFragment = ({
     ...{ __typename?: 'Shipment' },
-  ...$Pick<Shipment, {| id: *, archived: *, updatedAt: *, memo: *, no: *, blNo: *, blDate: *, booked: *, bookingNo: *, bookingDate: *, invoiceNo: *, contractNo: *, incoterm: *, loadType: *, transportType: *, carrier: * |}>,
+  ...$Pick<Shipment, {| id: *, archived: *, updatedAt: *, memo: *, no: *, blNo: *, blDate: *, booked: *, bookingNo: *, bookingDate: *, invoiceNo: *, contractNo: *, incoterm: *, loadType: *, transportType: *, carrier: *, totalPackageQuantityOverride: *, totalPackageQuantityOverriding: *, totalVolumeOverriding: *, totalWeightOverriding: * |}>,
   ...{| updatedBy: ?({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, totalVolumeOverride: ?({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), totalWeightOverride: ?({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), ownedBy: ({
       ...{ __typename?: 'Organization' },
     ...OwnedByFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, customFields: ({
@@ -62729,7 +62813,7 @@ export type ShipmentFormQueryFragmentFragment = ({
 
 export type ShipmentFormFragmentFragment = ({
     ...{ __typename?: 'Shipment' },
-  ...$Pick<Shipment, {| id: *, archived: *, updatedAt: *, memo: *, no: *, blNo: *, blDate: *, booked: *, bookingNo: *, bookingDate: *, invoiceNo: *, contractNo: *, incoterm: *, loadType: *, transportType: *, carrier: * |}>,
+  ...$Pick<Shipment, {| id: *, archived: *, updatedAt: *, memo: *, no: *, blNo: *, blDate: *, booked: *, bookingNo: *, bookingDate: *, invoiceNo: *, contractNo: *, incoterm: *, loadType: *, transportType: *, carrier: *, totalPackageQuantityOverride: *, totalPackageQuantityOverriding: *, totalVolumeOverriding: *, totalWeightOverriding: * |}>,
   ...{| updatedBy: ?({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
@@ -62760,7 +62844,13 @@ export type ShipmentFormFragmentFragment = ({
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, inCharges: Array<({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, tags: Array<({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, totalVolumeOverride: ?({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), totalWeightOverride: ?({
+      ...{ __typename?: 'MetricValue' },
+    ...MetricFragmentFragment
+  }), tags: Array<({
       ...{ __typename?: 'Tag' },
     ...TagFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, files: Array<({
