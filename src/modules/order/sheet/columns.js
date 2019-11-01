@@ -556,9 +556,21 @@ const batchColumns: Array<ColumnConfig> = [
       group: 'batch',
     },
   },
-  // pkg weight
+  {
+    key: 'order.orderItem.batch.packageGrossWeight',
+    title: <FormattedMessage {...batchMessages.packageGrossWeight} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   // pkg vol + auto
-  // pkg size
+  {
+    key: 'order.orderItem.batch.packageSize',
+    title: <FormattedMessage {...batchMessages.packageSize} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 280,
+  },
   // tasks
   {
     key: 'order.orderItem.batch.logs',
@@ -650,7 +662,13 @@ const containerColumns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: 160,
   },
-  // agreed arrival approval
+  {
+    key: 'order.orderItem.batch.container.warehouseArrivalAgreedDateApproved',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateApproved} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 110,
+  },
   {
     key: 'order.orderItem.batch.container.warehouseArrivalActualDate',
     title: <FormattedMessage {...containerMessages.warehouseArrivalActualDate} />,
@@ -671,8 +689,14 @@ const containerColumns: Array<ColumnConfig> = [
     width: 160,
   },
   // actual arrival approval
+  {
+    key: 'order.orderItem.batch.container.warehouse',
+    title: <FormattedMessage {...containerMessages.warehouse} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   // free time
-  // start date
   {
     key: 'order.orderItem.batch.container.freeTimeStartDate',
     title: <FormattedMessage {...containerMessages.startDate} />,
@@ -680,8 +704,13 @@ const containerColumns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: 195,
   },
-  // start date auto
-  // duration
+  {
+    key: 'order.orderItem.batch.container.freeTimeDuration',
+    title: <FormattedMessage {...containerMessages.duration} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.container.dueDate',
     title: <FormattedMessage {...containerMessages.dueDate} />,
@@ -995,6 +1024,22 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 1210,
   },
+  // load port assigned to
+  // load port approval
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.vesselName',
+    title: <FormattedMessage {...shipmentMessages.firstVesselName} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.vesselCode',
+    title: <FormattedMessage {...shipmentMessages.firstVesselCode} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.shipment.voyage.0.firstTransitPort',
     title: <FormattedMessage {...shipmentMessages.firstTransitPort} />,
@@ -1029,6 +1074,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.vesselName',
+    title: <FormattedMessage {...shipmentMessages.secondVesselName} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.vesselCode',
+    title: <FormattedMessage {...shipmentMessages.secondVesselCode} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
   },
   {
     key: 'order.orderItem.batch.shipment.voyage.1.secondTransitPort',
@@ -1066,6 +1125,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     width: 1210,
   },
   {
+    key: 'order.orderItem.batch.shipment.voyage.2.vesselName',
+    title: <FormattedMessage {...shipmentMessages.thirdVesselName} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.vesselCode',
+    title: <FormattedMessage {...shipmentMessages.thirdVesselCode} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
+  {
     key: 'order.orderItem.batch.shipment.voyage.2.arrivalPort',
     title: <FormattedMessage {...shipmentMessages.dischargePort} />,
     icon: 'SHIPMENT',
@@ -1099,6 +1172,13 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroup.warehouse',
+    title: <FormattedMessage {...shipmentMessages.warehouse} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
   },
   {
     key: 'order.orderItem.batch.shipment.containerGroup.warehouseArrival.date',

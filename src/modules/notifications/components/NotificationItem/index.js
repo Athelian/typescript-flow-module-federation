@@ -35,6 +35,7 @@ const NotificationItem = ({ notification }: Props) => (
       <>
         {loading && <LoadingIcon />}
         {error && error.message}
+        {/* $FlowFixMe Flow typed is not updated yet */}
         <Link
           to={parseUrl(notification)}
           className={WrapperStyle(notification.read)}

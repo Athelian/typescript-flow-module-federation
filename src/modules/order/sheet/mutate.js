@@ -86,6 +86,9 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'deliveryDate':
         case 'issuedAt':
           return {
+            /* $FlowFixMe This comment suppresses an error found when upgrading
+             * Flow to v0.111.0. To view the error, delete this comment and run
+             * Flow. */
             [field]: new Date(value),
           };
         case 'files':
@@ -177,6 +180,9 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         }
         case 'deliveryDate':
           return {
+            /* $FlowFixMe This comment suppresses an error found when upgrading
+             * Flow to v0.111.0. To view the error, delete this comment and run
+             * Flow. */
             [field]: new Date(value),
           };
         case 'tags': {
@@ -202,6 +208,9 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'deliveredAt':
         case 'producedAt':
           return {
+            /* $FlowFixMe This comment suppresses an error found when upgrading
+             * Flow to v0.111.0. To view the error, delete this comment and run
+             * Flow. */
             [field]: new Date(value),
           };
         case 'batchQuantityRevisions':
@@ -218,6 +227,14 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             packageQuantity,
           };
         }
+        case 'packageGrossWeight':
+          return {
+            packageGrossWeight: value ? removeTypename(value) : null,
+          };
+        case 'packageSize':
+          return {
+            packageSize: value ? removeTypename(value) : null,
+          };
         case 'tags': {
           return {
             tagIds: value.map(tag => tag.id),
@@ -233,6 +250,9 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'blDate':
         case 'bookingDate':
           return {
+            /* $FlowFixMe This comment suppresses an error found when upgrading
+             * Flow to v0.111.0. To view the error, delete this comment and run
+             * Flow. */
             [field]: new Date(value),
           };
         case 'tags': {
@@ -267,6 +287,11 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             tagIds: value.map(tag => tag.id),
           };
         }
+        case 'warehouseArrivalAgreedDateApproved': {
+          return {
+            warehouseArrivalAgreedDateApprovedById: value?.user?.id ?? null,
+          };
+        }
         case 'freeTimeStartDate': {
           const { auto: autoCalculatedFreeTimeStartDate = false, value: date = null } = value || {};
           return {
@@ -284,6 +309,10 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             warehouseArrivalActualDateAssignedToIds: value.map(user => user.id),
           };
         }
+        case 'warehouse':
+          return {
+            warehouseId: value?.id ?? null,
+          };
         case 'departureDateAssignedTo': {
           return {
             departureDateAssignedToIds: value.map(user => user.id),
@@ -346,10 +375,24 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
       }
 
       return {
-        containerGroups: shipment.containerGroups.map(cg => ({
-          id: cg.id,
-          ...(() => (cg.id !== entity.id ? {} : { [field]: value }))(),
-        })),
+        containerGroups: shipment.containerGroups.map(cg => {
+          if (cg.id !== entity.id) {
+            return { id: cg.id };
+          }
+
+          switch (field) {
+            case 'warehouse':
+              return {
+                id: cg.id,
+                warehouseId: value?.id ?? null,
+              };
+            default:
+              return {
+                id: cg.id,
+                [field]: value,
+              };
+          }
+        }),
       };
     }
     case 'TimelineDate': {

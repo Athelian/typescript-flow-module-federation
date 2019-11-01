@@ -21,6 +21,8 @@ const formatTimeline = (timeline: Object) => {
   return {
     memo,
     date: date ? new Date(date) : null,
+    /* $FlowFixMe This comment suppresses an error found when upgrading Flow to
+     * v0.111.0. To view the error, delete this comment and run Flow. */
     ...(Array.isArray(assignedTo) ? { assignedToIds: assignedTo.map(({ id }) => id) } : {}),
     ...(Array.isArray(timelineDateRevisions)
       ? {

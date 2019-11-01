@@ -57,6 +57,7 @@ export default function ResetPasswordModule({ token }: Props) {
                       )}
 
                       {(passwordChanged || hasError) && (
+                        // $FlowFixMe Flow typed is not updated yet
                         <Link to="/login" className={LinkStyle}>
                           <FormattedMessage
                             id="modules.resetPassword.login"

@@ -173,10 +173,16 @@ const DateBindingInput = ({
                 const realValue =
                   value === 'before' ? -Math.abs(dateBindingValue) : Math.abs(dateBindingValue);
                 setFieldValue(dateInterval, {
+                  /* $FlowFixMe This comment suppresses an error found when
+                   * upgrading Flow to v0.111.0. To view the error, delete this
+                   * comment and run Flow. */
                   [dateBindingMetric]: realValue,
                 });
                 setFieldValue(
                   dateName,
+                  /* $FlowFixMe This comment suppresses an error found when
+                   * upgrading Flow to v0.111.0. To view the error, delete this
+                   * comment and run Flow. */
                   calculateBindingDate(baseDate, { [dateBindingMetric]: realValue })
                 );
                 setDateBindingSign(value);

@@ -3,15 +3,19 @@ import * as React from 'react';
 import { equals } from 'ramda';
 import TextInput from './Inputs/TextInput';
 import TextAreaInput from './Inputs/TextAreaInput';
+import ApprovalInput from './Inputs/ApprovalInput';
 import NumberInput from './Inputs/NumberInput';
 import NumberToggleInput from './Inputs/NumberToggleInput';
 import DateInput from './Inputs/DateInput';
 import DateToggleInput from './Inputs/DateToggleInput';
 import DatetimeInput from './Inputs/DatetimeInput';
+import DayInput from './Inputs/DayInput';
 import SelectCustomInput from './Inputs/SelectCustomInput';
 import SelectEnumInput from './Inputs/SelectEnumInput';
 import SearchSelectEnumInput from './Inputs/SearchSelectEnumInput';
+import MetricValueInput from './Inputs/MetricValueInput';
 import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
+import SizeInput from './Inputs/SizeInput';
 import DocumentsInput from './Inputs/DocumentsInput';
 import QuantityRevisionsInput from './Inputs/QuantityRevisionsInput';
 import DateRevisionsInput from './Inputs/DateRevisionsInput';
@@ -21,6 +25,7 @@ import UserAssignmentInput from './Inputs/UserAssignmentInput';
 import PortInput from './Inputs/PortInput';
 import PartnerSelectorInput from './Inputs/PartnerSelectorInput';
 import PartnersSelectorInput from './Inputs/PartnersSelectorInput';
+import WarehouseSelectorInput from './Inputs/WarehouseSelectorInput';
 import ToggleInput from './Inputs/ToggleInput';
 import LogsInput from './Inputs/LogsInput';
 
@@ -39,14 +44,21 @@ type Props = {
 };
 
 const inputs = {
+  approval: ApprovalInput,
   text: TextInput,
   textarea: TextAreaInput,
   number: NumberInput,
   number_toggle: NumberToggleInput,
+  volume: MetricValueInput.Volume,
+  area: MetricValueInput.Area,
+  length: MetricValueInput.Length,
+  mass: MetricValueInput.Mass,
+  size: SizeInput,
   static_metric_value: StaticMetricValueInput,
   date: DateInput,
   date_toggle: DateToggleInput,
   datetime: DatetimeInput,
+  day: DayInput,
   load_type: SelectEnumInput.LoadType,
   transport_type: SelectEnumInput.TransportType,
   incoterm: SearchSelectEnumInput.Incoterm,
@@ -70,8 +82,9 @@ const inputs = {
   project_tags: TagsInput.Project,
   user_assignment: UserAssignmentInput,
   port: PortInput,
-  exporter_selector: PartnerSelectorInput.Exporter,
+  exporter: PartnerSelectorInput.Exporter,
   forwarders: PartnersSelectorInput.Forwarders,
+  warehouse: WarehouseSelectorInput,
   booked: ToggleInput.Booked,
   order_logs: LogsInput.Order,
   order_item_logs: LogsInput.OrderItem,
@@ -94,10 +107,12 @@ const CellInput = ({
   onUpdate,
 }: Props) => {
   const [dirtyValue, setDirtyValue] = React.useState<any>(value);
+  const valueRef = React.useRef<any>(value);
 
-  React.useEffect(() => {
+  if (valueRef.current !== value) {
+    valueRef.current = value;
     setDirtyValue(value);
-  }, [value, setDirtyValue]);
+  }
 
   const handleChange = (newValue, force = false) => {
     if (!equals(newValue, dirtyValue)) {

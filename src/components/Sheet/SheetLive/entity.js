@@ -6,73 +6,31 @@ import { Mutex } from 'utils/async';
 import { useSheetState } from '../SheetState';
 import type { Action } from '../SheetState/types';
 import { Actions } from '../SheetState/constants';
-import { useSheetLiveID } from './index';
-import { convertEntityToInput } from './helper';
+import type {
+  EntityEvent,
+  EntityEventChange,
+  EntityEventHandlerFactory,
+  EntityEventHandler,
+} from './types';
+import { convertEntityToInput, extractChangeNewValue } from './helper';
 import {
   entityEventSubscription,
   entitySubscribeMutation,
   entityUnsubscribeMutation,
 } from './query';
-
-export type EntityEventChange = {
-  field: string,
-  new: Object | null,
-  old: Object | null,
-};
-
-export type EntityEvent = {
-  lifeCycle: 'Create' | 'Update' | 'Delete',
-  entity: Object,
-  changes: Array<EntityEventChange>,
-};
-
-export type EntityEventHandler = (event: EntityEvent, items: Array<Object>) => Promise<void> | void;
-export type EntityEventHandlerFactory = (dispatch: (Action) => void) => EntityEventHandler;
+import { useSheetLiveID } from './index';
 
 export const defaultEntityEventChangeTransformer = (
   event: EntityEvent,
   change: EntityEventChange
-) => {
-  let value = null;
-  switch (change.new?.__typename) {
-    case 'StringValue':
-      value = change.new?.string;
-      break;
-    case 'IntValue':
-      value = change.new?.int;
-      break;
-    case 'FloatValue':
-      value = change.new?.float;
-      break;
-    case 'BooleanValue':
-      value = change.new?.boolean;
-      break;
-    case 'DateTimeValue':
-      value = change.new?.datetime;
-      break;
-    case 'MetricValueValue':
-      value = change.new?.metricValue;
-      break;
-    case 'SizeValue':
-      value = change.new?.size;
-      break;
-    case 'CustomValue':
-      value = change.new?.custom;
-      break;
-    default:
-      value = null;
-      break;
-  }
-
-  return {
-    entity: {
-      id: event.entity.id,
-      type: event.entity.__typename,
-    },
-    field: change.field,
-    value,
-  };
-};
+) => ({
+  entity: {
+    id: event.entity.id,
+    type: event.entity.__typename,
+  },
+  field: change.field,
+  value: extractChangeNewValue(change),
+});
 
 export const defaultEntityEventHandlerFactory: EntityEventHandlerFactory = (
   dispatch: Action => void
@@ -119,6 +77,7 @@ export const useSheetLiveEntity = (factory: ?EntityEventHandlerFactory) => {
 
     const mutex = new Mutex();
     const subscription = client
+      // $FlowFixMe Flow typed is not updated yet
       .subscribe({
         query: entityEventSubscription,
         variables: {

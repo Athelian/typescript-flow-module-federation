@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import BaseDateTimeInput from 'components/Form/Inputs/DateTimeInput';
-import type { InputProps } from '../../types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import InputWrapper from '../InputWrapper';
 
 const DatetimeInput = ({

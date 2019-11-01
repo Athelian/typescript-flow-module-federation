@@ -1,12 +1,16 @@
 // @flow
 
+export const mapAsync = <T, U>(
+  array: Array<T>,
+  callbackfn: (item: T, index: number, array: Array<T>) => Promise<U> | U
+): Promise<Array<U>> =>
+  Promise.all(array.map((item, index) => Promise.resolve(callbackfn(item, index, array))));
+
 export const filterAsync = <T>(
   array: Array<T>,
   callbackfn: (item: T, index: number, array: Array<T>) => Promise<boolean> | boolean
 ): Promise<Array<T>> =>
-  Promise.all(array.map((item, index) => Promise.resolve(callbackfn(item, index, array)))).then(
-    result => array.filter((item, index) => result[index])
-  );
+  mapAsync(array, callbackfn).then(result => array.filter((item, index) => result[index]));
 
 export class Mutex {
   mutex = Promise.resolve();

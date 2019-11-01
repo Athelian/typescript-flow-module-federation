@@ -1,8 +1,7 @@
 // @flow
 import { clone, setIn } from 'utils/fp';
-import type { ColumnSort } from '../../SheetColumns';
-import type { CellValue, State } from '../types';
-import { refresh } from './global';
+import type { CellValue, State, ColumnSort } from 'components/Sheet/SheetState/types';
+import { refresh } from './sheet';
 
 export function changeValues(
   state: State,
@@ -63,9 +62,14 @@ export function changeValues(
     items,
     rows: state.rows.map(row =>
       row.map(cell => {
+        if (!cell.data) {
+          return cell;
+        }
+
+        const { data } = cell;
         const update = cellsToUpdate
           .map(({ cells, value }) => ({
-            cell: cells.find(c => c?.data?.path === cell?.data?.path),
+            cell: cells.find(c => c?.data?.path === data.path),
             value,
           }))
           .find(c => !!c.cell);
@@ -77,7 +81,7 @@ export function changeValues(
         return {
           ...cell,
           data: {
-            ...cell.data,
+            ...data,
             value: update.value,
           },
         };
@@ -117,7 +121,6 @@ export function replaceItem(
 
     return refresh(transformer, sorter)(state, {
       items,
-      columns: state.columns,
     });
   };
 }
@@ -134,7 +137,6 @@ export function deleteItem(
 
     return refresh(transformer, sorter)(state, {
       items,
-      columns: state.columns,
     });
   };
 }

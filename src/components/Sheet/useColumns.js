@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useAuthenticated } from 'contexts/Viewer';
 import { getCache, invalidateCache, setCache } from 'utils/cache';
-import type { ColumnConfig } from './SheetColumns';
+import type { ColumnConfig } from './SheetState/types';
 
 const KEY_PREFIX = 'zenport_sheet_columns';
 

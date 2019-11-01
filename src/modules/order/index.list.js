@@ -37,6 +37,7 @@ const OrderModule = () => {
         <Sort config={OrderSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
         {hasPermissions(ORDER_CREATE) && (
+          // $FlowFixMe Flow typed is not updated yet
           <Link to="/order/new">
             <NewButton />
           </Link>

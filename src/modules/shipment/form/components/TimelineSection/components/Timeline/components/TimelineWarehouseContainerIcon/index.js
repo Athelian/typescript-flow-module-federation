@@ -63,6 +63,7 @@ const TimelineWarehouseContainerIcon = ({ containers, linkPath, targetId, bounda
 
   if (linkPath) {
     return (
+      // $FlowFixMe Flow typed is not updated yet
       <Link
         className={TimelineIconStyle}
         to={linkPath}

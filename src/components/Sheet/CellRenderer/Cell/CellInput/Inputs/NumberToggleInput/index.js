@@ -63,7 +63,7 @@ const NumberToggleInput = ({
             value={quantity}
             name="numberInput"
             nullable={false}
-            onChange={e => onChange({ ...value, value: e.target.value })}
+            onChange={e => onChange({ ...(value || { auto: false }), value: e.target.value })}
             onFocus={onFocus}
             onBlur={onBlur}
             onKeyDown={e => {

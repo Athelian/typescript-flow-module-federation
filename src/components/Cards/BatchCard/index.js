@@ -88,6 +88,7 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
             {product && product.id && (
               <>
                 <div className={ProductNameWrapperStyle}>
+                  {/* $FlowFixMe Flow typed is not updated yet */}
                   <Link
                     className={ProductIconLinkStyle}
                     to={`/product/${encodeId(product.id)}`}

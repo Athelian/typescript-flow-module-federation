@@ -8,4 +8,4 @@ export type UserAvatarType = {
 
 export type SortDirection = 'ASCENDING' | 'DESCENDING';
 export type SortBy = { [string]: SortDirection };
-export type FilterBy = { [string]: any };
+export type FilterBy = Object;

@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import LoadingIcon from 'components/LoadingIcon';
 import { enumToString } from 'components/Form/Factories/helpers';
 import useEnum from 'hooks/useEnum';
-import type { InputProps } from '../../types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import SelectInput from '../SelectInput';
 
 type SelectEnumInputImplProps = InputProps<string> & {

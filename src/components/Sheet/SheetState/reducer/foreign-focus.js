@@ -1,5 +1,5 @@
 // @flow
-import type { CellValue, ForeignFocus, State } from '../types';
+import type { CellValue, ForeignFocus, State } from 'components/Sheet/SheetState/types';
 import { resolveAreasBy } from './helper';
 
 function resolveForeignFocuses(focus: Object, rows: Array<Array<CellValue>>): Array<ForeignFocus> {
@@ -10,9 +10,9 @@ function resolveForeignFocuses(focus: Object, rows: Array<Array<CellValue>>): Ar
       cell.entity?.type === focus.entity.__typename &&
       cell.data?.field === focus.field
   ).map(area => ({
+    ...area,
     id: focus.id,
     user: focus.user,
-    ...area,
   }));
 }
 

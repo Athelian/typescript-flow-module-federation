@@ -36,6 +36,7 @@ const WarehouseListModule = () => {
         <Sort config={WarehouseSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
         {hasPermissions(WAREHOUSE_CREATE) && (
+          // $FlowFixMe Flow typed is not updated yet
           <Link to="/warehouse/new">
             <NewButton />
           </Link>

@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import useEnum from 'hooks/useEnum';
 import TextDisplay from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/TextDisplay';
 import messages from 'modules/shipment/messages';
-import type { InputProps } from '../../types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import SearchSelectInput from '../SearchSelectInput';
 import { filterItems, itemToString, itemToValue } from './helpers';
 

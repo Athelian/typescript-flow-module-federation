@@ -99,12 +99,18 @@ export const orderCoordinates = memoize(
               ...(batchCount ? { afterConnector: 'HORIZONTAL' } : {}),
             },
             {
+              /* $FlowFixMe This comment suppresses an error found when
+               * upgrading Flow to v0.111.0. To view the error, delete this
+               * comment and run Flow. */
               ...(batchCount ? { beforeConnector: 'HORIZONTAL' } : {}),
               type: 'batchSummary',
               data: order,
               ...(containerCount || shipmentCount ? { afterConnector: 'HORIZONTAL' } : {}),
             },
             {
+              /* $FlowFixMe This comment suppresses an error found when
+               * upgrading Flow to v0.111.0. To view the error, delete this
+               * comment and run Flow. */
               ...(shipmentCount ? { beforeConnector: 'HORIZONTAL' } : {}),
               type: 'containerSummary',
               data: order,

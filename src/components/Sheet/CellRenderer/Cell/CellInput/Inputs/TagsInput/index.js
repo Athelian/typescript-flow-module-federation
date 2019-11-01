@@ -5,7 +5,7 @@ import type { RenderInputProps } from 'components/Inputs/TagsInput';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import { isForbidden } from 'utils/data';
-import type { InputProps } from '../../types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import InputWrapper from '../InputWrapper';
 import { TagsSelectStyle, RemoveButtonStyle } from './style';
 

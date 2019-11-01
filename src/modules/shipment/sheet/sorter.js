@@ -1,5 +1,5 @@
 // @flow
-import type { ColumnSort } from 'components/Sheet/SheetColumns';
+import type { ColumnSort } from 'components/Sheet/SheetState/types';
 import {
   dateSort,
   defaultSort,

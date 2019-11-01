@@ -23,6 +23,7 @@ type Props = OptionalProps & {
 };
 
 export default function QueryForm({ query, entityId, entityType, render, onCompleted }: Props) {
+  // $FlowFixMe Flow typed is not updated yet
   const { data, loading, error } = useQuery(query, {
     variables: { id: decodeId(entityId) },
     fetchPolicy: 'network-only',

@@ -58,6 +58,7 @@ export const useSheetLiveFocus = () => {
     }
 
     const subscription = client
+      // $FlowFixMe Flow typed is not updated yet
       .subscribe({
         query: focusEventSubscription,
         variables: {

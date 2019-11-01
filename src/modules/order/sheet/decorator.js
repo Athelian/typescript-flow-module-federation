@@ -22,6 +22,10 @@ export function decorate(orders: Array<Object>): Array<Object> {
                 value: batch?.container?.freeTimeStartDate,
                 auto: batch?.container?.autoCalculatedFreeTimeStartDate ?? false,
               },
+              warehouseArrivalAgreedDateApproved: {
+                user: batch?.container?.warehouseArrivalAgreedDateApprovedBy,
+                date: batch?.container?.warehouseArrivalAgreedDateApprovedAt,
+              },
             }
           : null,
       })),

@@ -27,6 +27,7 @@ export default function RelateEntity({ entity, value, blackout, link, width }: P
   return (
     <div className={WrapperStyle(width)}>
       {link && !isNotAvailable ? (
+        // $FlowFixMe Flow typed is not updated yet
         <Link
           className={IconColorStyle(entityColor, isNotAvailable)}
           to={link}

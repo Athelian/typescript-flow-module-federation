@@ -1,15 +1,24 @@
 // @flow
 import * as React from 'react';
-import { equals, clone } from 'ramda';
-import { useSheetColumns } from '../SheetColumns';
-import type { ColumnSort } from '../SheetColumns';
+import { equals } from 'ramda';
 import cellReducer from './reducer';
 import { Actions } from './constants';
-import type { Action, CellValue, State, Position, Mutator } from './types';
+import type {
+  Action,
+  CellValue,
+  State,
+  Position,
+  Mutator,
+  ColumnConfig,
+  ColumnSort,
+} from './types';
 
 type Props = {
+  items: Array<Object>,
+  columns: Array<ColumnConfig>,
   transformItem: (index: number, item: Object) => Array<Array<CellValue>>,
   onLocalSort: (Array<Object>, Array<ColumnSort>) => Array<Object>,
+  onRemoteSort: (sorts: Array<ColumnSort>) => void,
   onMutate: Mutator,
   children: React.Node,
 };
@@ -20,6 +29,8 @@ const initialState: State = {
   rows: [],
   allRows: [],
   columns: [],
+  columnSorts: [],
+  columnWidths: {},
   entities: [],
   sorts: [],
   hoverAt: null,
@@ -46,68 +57,6 @@ export const SheetStateContext = React.createContext<Context>({
 });
 
 export const useSheetState = (): Context => React.useContext(SheetStateContext);
-
-export const useSheetStateInitializer = (
-  items: Array<Object>,
-  onRemoteSort: (sorts: Array<ColumnSort>) => void
-) => {
-  const { state, dispatch } = useSheetState();
-  const { columns } = useSheetColumns();
-  const columnKeysRef = React.useRef<Array<string>>([]);
-  const remoteSortsRef = React.useRef<Array<ColumnSort>>([]);
-  const localSortsRef = React.useRef<Array<ColumnSort>>([]);
-
-  React.useEffect(() => {
-    const columnKeys = columns.map(c => c.key);
-    const needRearrange =
-      columnKeys.length !== columnKeysRef.current.length ||
-      !columnKeys.every((value, index) => value === columnKeysRef.current[index]);
-
-    if (state.initialized && needRearrange) {
-      dispatch({
-        type: Actions.REARRANGE,
-        payload: {
-          columns: columns.map(c => c.key),
-        },
-      });
-    }
-
-    columnKeysRef.current = columnKeys;
-  }, [columns, dispatch, state.initialized]);
-
-  React.useEffect(() => {
-    dispatch({
-      type: Actions.INIT,
-      payload: {
-        items,
-        columns: columnKeysRef.current,
-      },
-    });
-  }, [dispatch, items]);
-
-  React.useEffect(() => {
-    const sorts = columns.filter(c => !!c.sort?.direction).map(c => c.sort);
-    const localSorts = sorts.filter(s => s?.local);
-    const remoteSorts = sorts.filter(s => !s?.local);
-
-    if (!equals(localSorts, localSortsRef.current)) {
-      localSortsRef.current = localSorts;
-
-      dispatch({
-        type: Actions.SORT,
-        payload: {
-          sorts: localSorts,
-        },
-      });
-    }
-
-    if (!equals(remoteSorts, remoteSortsRef.current)) {
-      remoteSortsRef.current = clone(remoteSorts);
-
-      onRemoteSort(remoteSorts);
-    }
-  }, [columns, onRemoteSort, dispatch]);
-};
 
 export const useSheetStateLoadMore = (
   onLoadMore: () => Promise<Array<Object>>
@@ -183,13 +132,15 @@ export const useSheetKeyNavigation = () => {
   }, [handleKey]);
 };
 
-export const useCell = (position: Position): CellValue => {
-  const { state } = useSheetState();
-
-  return state.rows[position.x][position.y];
-};
-
-export const SheetState = ({ transformItem, onMutate, onLocalSort, children }: Props) => {
+export const SheetState = ({
+  items,
+  columns,
+  transformItem,
+  onMutate,
+  onLocalSort,
+  onRemoteSort,
+  children,
+}: Props) => {
   const memoizedReducer = React.useCallback(cellReducer(transformItem, onLocalSort), [
     transformItem,
     onLocalSort,
@@ -197,6 +148,7 @@ export const SheetState = ({ transformItem, onMutate, onLocalSort, children }: P
   const [state, dispatch] = React.useReducer<State, Action>(memoizedReducer, initialState);
   const addedRowsRef = React.useRef([]);
   const removedRowsRef = React.useRef([]);
+  const remoteSortsRef = React.useRef<Array<ColumnSort>>([]);
   const memoizedMutate = React.useCallback(
     ({ cell, value, item }) => {
       const cellValue = state.rows[cell.x][cell.y];
@@ -244,6 +196,33 @@ export const SheetState = ({ transformItem, onMutate, onLocalSort, children }: P
     },
     [onMutate, state.rows, dispatch]
   );
+
+  React.useEffect(() => {
+    dispatch({
+      type: Actions.INIT,
+      payload: {
+        items,
+      },
+    });
+  }, [items]);
+
+  React.useEffect(() => {
+    dispatch({
+      type: Actions.REARRANGE_COLUMNS,
+      payload: {
+        columns,
+      },
+    });
+  }, [columns]);
+
+  React.useEffect(() => {
+    const remoteSorts = state.columnSorts.filter(s => !s?.local);
+
+    if (!equals(remoteSorts, remoteSortsRef.current)) {
+      remoteSortsRef.current = remoteSorts;
+      onRemoteSort(remoteSorts);
+    }
+  }, [state.columnSorts, onRemoteSort]);
 
   React.useEffect(() => {
     if (!state.errorAt) {

@@ -88,12 +88,18 @@ export const shipmentCoordinates = memoize(
               afterConnector: 'HORIZONTAL',
             },
             {
+              /* $FlowFixMe This comment suppresses an error found when
+               * upgrading Flow to v0.111.0. To view the error, delete this
+               * comment and run Flow. */
               ...(containerCount || batchCount ? { beforeConnector: 'HORIZONTAL' } : {}),
               type: 'containerSummary',
               data: shipment,
               ...(batchCount ? { afterConnector: 'HORIZONTAL' } : {}),
             },
             {
+              /* $FlowFixMe This comment suppresses an error found when
+               * upgrading Flow to v0.111.0. To view the error, delete this
+               * comment and run Flow. */
               ...(batchCount ? { beforeConnector: 'HORIZONTAL' } : {}),
               type: 'batchSummary',
               data: shipment,
@@ -101,6 +107,9 @@ export const shipmentCoordinates = memoize(
             },
             batchCount
               ? {
+                  /* $FlowFixMe This comment suppresses an error found when
+                   * upgrading Flow to v0.111.0. To view the error, delete this
+                   * comment and run Flow. */
                   ...(batchCount ? { beforeConnector: 'HORIZONTAL' } : {}),
                   type: 'itemSummary',
                   data: shipment,

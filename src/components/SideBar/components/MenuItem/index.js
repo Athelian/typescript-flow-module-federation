@@ -13,6 +13,7 @@ type Props = {
 };
 
 const MenuItem = ({ path, isActive, isBeta, icon, label }: Props): React.Node => (
+  // $FlowFixMe Flow typed is not updated yet
   <Link tabIndex={-1} to={path} className={MenuItemStyle(isActive)}>
     <span />
 

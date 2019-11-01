@@ -4,8 +4,8 @@ import { VariableSizeGrid } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
 import LoadingIcon from 'components/LoadingIcon';
-import type { Area } from '../SheetState/types';
-import type { ColumnState } from '../SheetColumns';
+import type { SortDirection } from 'types';
+import type { Area, CellData, ColumnState } from '../SheetState/types';
 import Column from '../Column';
 import {
   ColumnFillerStyle,
@@ -17,12 +17,13 @@ import {
 
 type Props = {
   columns: Array<ColumnState>,
+  data: Array<Array<CellData>>,
   rowCount: number,
   loading: boolean,
   loadingMore: boolean,
   hasMore: boolean,
   focusAt: Area | null,
-  onSortToggle: string => void,
+  onColumnSort: (key: string, direction: SortDirection) => void,
   onThreshold: () => Promise<any>,
   onColumnResize: (key: string, width: number) => void,
   children: React.ComponentType<any>,
@@ -34,18 +35,18 @@ type InnerGridProps = {
 
 const GridColumnContext = React.createContext<{
   columns: Array<ColumnState>,
-  onSortToggle: string => void,
+  onColumnSort: (key: string, direction: SortDirection) => void,
   onColumnResize: (key: string, width: number) => void,
 }>({
   columns: [],
-  onSortToggle: () => {},
+  onColumnSort: () => {},
   onColumnResize: () => {},
 });
 
 const InnerGrid = React.forwardRef(({ children, ...rest }: InnerGridProps, ref) => (
   <div ref={ref} {...rest} className={InnerGridStyle}>
     <GridColumnContext.Consumer>
-      {({ columns, onSortToggle, onColumnResize }) => (
+      {({ columns, onColumnSort, onColumnResize }) => (
         <div className={ColumnsWrapperStyle}>
           {columns.map(column => (
             <Column
@@ -54,7 +55,10 @@ const InnerGrid = React.forwardRef(({ children, ...rest }: InnerGridProps, ref) 
               sortable={!!column.sort}
               direction={column.sort?.direction}
               onSortToggle={() => {
-                onSortToggle(column.key);
+                onColumnSort(
+                  column.key,
+                  column.sort?.direction === 'DESCENDING' ? 'ASCENDING' : 'DESCENDING'
+                );
               }}
               color={column.color}
               width={column.width}
@@ -75,12 +79,13 @@ const InnerGrid = React.forwardRef(({ children, ...rest }: InnerGridProps, ref) 
 
 const SheetRenderer = ({
   columns,
+  data,
   rowCount,
   loading,
   loadingMore,
   hasMore,
   focusAt,
-  onSortToggle,
+  onColumnSort,
   onThreshold,
   onColumnResize,
   children,
@@ -142,7 +147,7 @@ const SheetRenderer = ({
                 };
 
                 return (
-                  <GridColumnContext.Provider value={{ columns, onColumnResize, onSortToggle }}>
+                  <GridColumnContext.Provider value={{ columns, onColumnResize, onColumnSort }}>
                     {/* $FlowFixMe flow doesn't understand react-window typing for estimatedColumnWidth */}
                     <VariableSizeGrid
                       ref={r => {
@@ -150,6 +155,7 @@ const SheetRenderer = ({
                         setGridRef(r);
                       }}
                       className={GridStyle}
+                      itemData={data}
                       width={width}
                       height={height}
                       columnCount={columns.length}

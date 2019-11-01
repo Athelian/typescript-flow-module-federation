@@ -168,6 +168,8 @@ const ItemCard = ({
 
   const quantityChartData = getItemQuantityChartData({ orderItem, batches });
 
+  /* $FlowFixMe This comment suppresses an error found when upgrading Flow to
+   * v0.111.0. To view the error, delete this comment and run Flow. */
   const mergedEditable = { ...editableDefault, ...editable };
   const mergedViewable = { ...viewableDefault, ...viewable };
   const mergedNavigable = { ...navigableDefault, ...navigable };
@@ -196,6 +198,7 @@ const ItemCard = ({
               <>
                 <div className={ProductNameWrapperStyle}>
                   {mergedNavigable.product ? (
+                    // $FlowFixMe Flow typed is not updated yet
                     <Link
                       className={ProductIconLinkStyle}
                       to={`/product/${encodeId(productId)}`}

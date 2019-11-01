@@ -55,7 +55,7 @@ const DateToggleInput = ({
           <BaseDateInput
             inputRef={ref}
             value={date}
-            onChange={e => onChange({ ...value, value: e.target.value })}
+            onChange={e => onChange({ ...(value || { auto: false }), value: e.target.value })}
             onFocus={onFocus}
             onBlur={onBlur}
             onKeyDown={e => {

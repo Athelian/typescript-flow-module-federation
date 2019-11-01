@@ -37,6 +37,7 @@ const TagListModule = () => {
         <Sort config={TagSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
         {hasPermissions(TAG_CREATE) && (
+          // $FlowFixMe Flow typed is not updated yet
           <Link to="/tags/new">
             <NewButton data-testid="newButton" />
           </Link>

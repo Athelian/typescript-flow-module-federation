@@ -166,6 +166,9 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
     onChange({
       ...states.reduce(
         (f, state) => ({
+          /* $FlowFixMe This comment suppresses an error found when upgrading
+           * Flow to v0.111.0. To view the error, delete this comment and run
+           * Flow. */
           ...f,
           [state.field || '']: state.value,
         }),
@@ -302,6 +305,9 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
                       ? {
                           ...fs,
                           field,
+                          /* $FlowFixMe This comment suppresses an error found
+                           * when upgrading Flow to v0.111.0. To view the
+                           * error, delete this comment and run Flow. */
                           type: config.find(c => c.field === field)?.type,
                           value: config.find(c => c.field === field)?.defaultValue ?? null,
                         }

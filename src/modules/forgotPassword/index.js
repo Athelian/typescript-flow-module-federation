@@ -90,6 +90,7 @@ export default function ForgotPasswordModule() {
                             onClick={() => requestResetPassword({ variables: { input: values } })}
                           />
                         )}
+                        {/* $FlowFixMe Flow typed is not updated yet */}
                         <Link to="/login" className={LinkStyle}>
                           <FormattedMessage
                             id="modules.forgotPassword.login"

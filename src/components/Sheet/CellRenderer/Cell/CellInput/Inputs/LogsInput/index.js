@@ -11,7 +11,7 @@ import { orderItemTimelineQuery } from 'modules/orderItem/form/query';
 import { batchTimelineQuery } from 'modules/batch/form/query';
 import { shipmentTimelineQuery } from 'modules/shipment/query';
 import { containerTimelineQuery } from 'modules/container/query';
-import type { InputProps } from '../../types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import { LogsButtonStyle } from './style';
 
 const LogsInput = ({

@@ -73,6 +73,7 @@ export default function Actions({ targets }: Props) {
           if (parentOrderId) ids.push(parentOrderId);
         }
       });
+      // $FlowFixMe Flow typed is not updated yet
       navigate('/order/table', {
         state: { orderIds: [...new Set(ids)] },
       });
@@ -106,6 +107,7 @@ export default function Actions({ targets }: Props) {
           }
         });
       });
+      // $FlowFixMe Flow typed is not updated yet
       navigate('/shipment/table', {
         state: { shipmentIds: [...new Set(ids)] },
       });

@@ -56,6 +56,8 @@ type Props = {
 };
 
 const Order = ({ intl }: Props) => {
+  /* $FlowFixMe This comment suppresses an error found when upgrading Flow to
+   * v0.111.0. To view the error, delete this comment and run Flow. */
   const [state, dispatch] = React.useReducer(uiReducer, uiInitState());
   const actions = actionCreators(dispatch);
   const uiSelectors = selectors(state);

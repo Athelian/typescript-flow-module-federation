@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { cloneDeep } from 'lodash';
 import { difference } from 'ramda';
 import Dialog from 'components/Dialog';
 import { ApplyButton, ResetButton, BaseButton, SaveButton, IconButton } from 'components/Buttons';
@@ -10,7 +9,7 @@ import Icon from 'components/Icon';
 import CornerIcon from 'components/CornerIcon';
 import { Tooltip } from 'components/Tooltip';
 import { colors } from 'styles/common';
-import type { ColumnConfig } from '../SheetColumns';
+import type { ColumnConfig } from '../SheetState/types';
 import messages from '../messages';
 import Group from './Group';
 import TemplateSelector from './TemplateSelector';
@@ -108,26 +107,25 @@ const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
   };
 
   const handleGroup = () => {
-    const groupedColumns = cloneDeep(columnStates);
+    setColumnStates(
+      Object.entries(columnStates).reduce(
+        (newColumnStates, [icon, states]: [string, any]) => ({
+          ...newColumnStates,
+          [icon]: (states: Array<ColumnState>).sort((a, b) => {
+            if (a.hidden && !b.hidden) {
+              return 1;
+            }
 
-    Object.keys(columnStates).forEach(icon => {
-      groupedColumns[icon].sort((a, b) => {
-        if (a.hidden && !b.hidden) {
-          return 1;
-        }
+            if (!a.hidden && b.hidden) {
+              return -1;
+            }
 
-        if (!a.hidden && b.hidden) {
-          return -1;
-        }
-
-        return 0;
-      });
-    });
-
-    setColumnStates({
-      ...columnStates,
-      ...groupedColumns,
-    });
+            return 0;
+          }),
+        }),
+        {}
+      )
+    );
   };
 
   const handleReset = () => {

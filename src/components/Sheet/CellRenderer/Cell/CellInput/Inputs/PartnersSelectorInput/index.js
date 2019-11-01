@@ -5,7 +5,7 @@ import SelectPartners from 'components/SelectPartners';
 import Icon from 'components/Icon';
 import { Display } from 'components/Form';
 import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
-import type { InputProps } from '../../types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import { IconStyle, PartnerCardStyle } from './style';
 
 const PartnersSelectorInput = (partnerTypes: Array<string>) => ({

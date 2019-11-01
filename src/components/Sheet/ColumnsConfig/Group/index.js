@@ -64,33 +64,31 @@ const Group = ({ icon, columns, onChange }: Props) => {
               ref={dropProvided.innerRef}
               className={ColumnsWrapperStyle}
             >
-              {columns.map((column, index) => {
-                return (
-                  <Draggable key={column.column.key} draggableId={column.column.key} index={index}>
-                    {(dragProvided, snapshot) => (
-                      <div
-                        ref={dragProvided.innerRef}
-                        {...dragProvided.draggableProps}
-                        {...dragProvided.dragHandleProps}
-                        style={dragProvided.draggableProps.style}
-                        className={ColumnStyle(snapshot.isDragging)}
-                      >
-                        <i>
-                          <Icon icon="DRAG_HANDLE" />
-                        </i>
-                        <CheckboxInput
-                          checked={!column.hidden}
-                          onToggle={(e: SyntheticEvent<HTMLButtonElement>) => {
-                            e.stopPropagation();
-                            handleToggle(index);
-                          }}
-                        />
-                        <span>{column.column.title}</span>
-                      </div>
-                    )}
-                  </Draggable>
-                );
-              })}
+              {columns.map((column, index) => (
+                <Draggable key={column.column.key} draggableId={column.column.key} index={index}>
+                  {(dragProvided, snapshot) => (
+                    <div
+                      ref={dragProvided.innerRef}
+                      {...dragProvided.draggableProps}
+                      {...dragProvided.dragHandleProps}
+                      style={dragProvided.draggableProps.style}
+                      className={ColumnStyle(snapshot.isDragging)}
+                    >
+                      <i>
+                        <Icon icon="DRAG_HANDLE" />
+                      </i>
+                      <CheckboxInput
+                        checked={!column.hidden}
+                        onToggle={(e: SyntheticEvent<HTMLButtonElement>) => {
+                          e.stopPropagation();
+                          handleToggle(index);
+                        }}
+                      />
+                      <span>{column.column.title}</span>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
               {dropProvided.placeholder}
             </div>
           )}

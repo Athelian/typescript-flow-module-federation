@@ -1,20 +1,23 @@
 // @flow
 import ApolloClient from 'apollo-client';
-import { filterAsync } from 'utils/async';
+import { filterAsync, mapAsync } from 'utils/async';
 import type { Action } from 'components/Sheet/SheetState/types';
 import { Actions } from 'components/Sheet/SheetState/constants';
 import type {
   EntityEvent,
   EntityEventChange,
   EntityEventHandler,
-} from 'components/Sheet/SheetLive/entity';
+} from 'components/Sheet/SheetLive/types';
+import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
 import {
   batchByIDQuery,
   batchQuantityRevisionByIDQuery,
   containerByIDQuery,
   orderItemByIDQuery,
+  organizationByIDQuery,
   shipmentByIDQuery,
+  warehouseByIDQuery,
 } from './query';
 
 // $FlowFixMe not compatible with hook implementation
@@ -473,6 +476,37 @@ export default function entityEventHandler(
         let { changes } = event;
 
         switch (event.entity.__typename) {
+          case 'Order': {
+            changes = await mapAsync(changes, change => {
+              switch (change.field) {
+                case 'importer':
+                  return client
+                    .query({
+                      query: organizationByIDQuery,
+                      variables: { id: change.new?.entity?.id },
+                    })
+                    .then(({ data }) => ({
+                      field: 'importer',
+                      new: newCustomValue(data.organization),
+                    }));
+                case 'exporter':
+                  return client
+                    .query({
+                      query: organizationByIDQuery,
+                      variables: { id: change.new?.entity?.id },
+                    })
+                    .then(({ data }) => ({
+                      field: 'exporter',
+                      new: newCustomValue(data.organization),
+                    }));
+                default:
+                  break;
+              }
+
+              return change;
+            });
+            break;
+          }
           case 'OrderItem': {
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               if (change.field === 'order') {
@@ -517,83 +551,21 @@ export default function entityEventHandler(
               .flat()
               .find(b => b.id === event.entity.id);
             if (batch) {
-              changes = changes.reduce((newChanges, change) => {
-                switch (change.field) {
-                  case 'packageQuantity':
-                  case 'autoCalculatePackageQuantity': {
-                    const hasChange = !!newChanges.find(
-                      c =>
-                        c.field === 'packageQuantity' || c.field === 'autoCalculatePackageQuantity'
-                    );
-                    if (hasChange) {
-                      return newChanges.map(c => {
-                        if (
-                          c.field === 'packageQuantity' ||
-                          c.field === 'autoCalculatePackageQuantity'
-                        ) {
-                          return {
-                            ...change,
-                            field: 'packageQuantity',
-                            new: {
-                              custom: {
-                                ...(() => {
-                                  switch (change.field) {
-                                    case 'packageQuantity':
-                                      return {
-                                        ...(c?.new?.custom ?? {}),
-                                        value: change.new?.float,
-                                      };
-                                    case 'autoCalculatePackageQuantity':
-                                      return {
-                                        ...(c?.new?.custom ?? {}),
-                                        auto: change.new?.boolean,
-                                      };
-                                    default:
-                                      return batch.packageQuantity;
-                                  }
-                                })(),
-                              },
-                              __typename: 'CustomValue',
-                            },
-                          };
-                        }
-                        return c;
-                      });
-                    }
-
-                    return [
-                      ...newChanges,
-                      {
-                        ...change,
-                        field: 'packageQuantity',
-                        new: {
-                          custom: {
-                            ...(() => {
-                              switch (change.field) {
-                                case 'packageQuantity':
-                                  return {
-                                    ...batch.packageQuantity,
-                                    value: change.new?.float,
-                                  };
-                                case 'autoCalculatePackageQuantity':
-                                  return {
-                                    ...batch.packageQuantity,
-                                    auto: change.new?.boolean,
-                                  };
-                                default:
-                                  return batch.packageQuantity;
-                              }
-                            })(),
-                          },
-                          __typename: 'CustomValue',
-                        },
-                      },
-                    ];
-                  }
-                  default:
-                    return [...newChanges, change];
-                }
-              }, []);
+              changes = mergeChanges(
+                changes,
+                {
+                  packageQuantity: (i, v) => ({
+                    ...i,
+                    value: v,
+                  }),
+                  autoCalculatePackageQuantity: (i, v) => ({
+                    ...i,
+                    auto: v,
+                  }),
+                },
+                'packageQuantity',
+                batch.packageQuantity
+              );
             }
 
             break;
@@ -603,8 +575,31 @@ export default function entityEventHandler(
             return;
           }
           case 'Shipment': {
-            changes = changes.map(change => {
+            changes = await mapAsync(changes, change => {
               switch (change.field) {
+                case 'importer':
+                  return client
+                    .query({
+                      query: organizationByIDQuery,
+                      variables: { id: change.new?.entity?.id },
+                    })
+                    .then(({ data }) => ({
+                      field: 'importer',
+                      new: newCustomValue(data.organization),
+                    }));
+                case 'exporter':
+                  if (change.new?.entity) {
+                    return client
+                      .query({
+                        query: organizationByIDQuery,
+                        variables: { id: change.new?.entity?.id },
+                      })
+                      .then(({ data }) => ({
+                        field: 'exporter',
+                        new: newCustomValue(data.organization),
+                      }));
+                  }
+                  break;
                 case 'transportType':
                   return {
                     ...change,
@@ -614,8 +609,10 @@ export default function entityEventHandler(
                     },
                   };
                 default:
-                  return change;
+                  break;
               }
+
+              return change;
             });
             break;
           }
@@ -626,83 +623,59 @@ export default function entityEventHandler(
               .flat()
               .find(currentBatch => currentBatch?.container?.id === event.entity?.id);
             if (batch) {
-              changes = changes.reduce((newChanges, change) => {
-                switch (change.field) {
-                  case 'freeTimeStartDate':
-                  case 'autoCalculatedFreeTimeStartDate': {
-                    const hasChange = !!newChanges.find(({ field }) =>
-                      ['freeTimeStartDate', 'autoCalculatedFreeTimeStartDate'].includes(field)
-                    );
-                    if (hasChange) {
-                      return newChanges.map(currentChange => {
-                        const { field, new: newValue } = currentChange;
-                        if (
-                          ['freeTimeStartDate', 'autoCalculatedFreeTimeStartDate'].includes(field)
-                        ) {
-                          return {
-                            ...change,
-                            field: 'freeTimeStartDate',
-                            new: {
-                              custom: {
-                                ...(() => {
-                                  switch (change.field) {
-                                    case 'freeTimeStartDate':
-                                      return {
-                                        ...(newValue?.custom ?? {}),
-                                        value: change.new?.datetime,
-                                      };
-                                    case 'autoCalculatedFreeTimeStartDate':
-                                      return {
-                                        ...(newValue?.custom ?? {}),
-                                        auto: change.new?.boolean,
-                                      };
-                                    default:
-                                      return batch.container?.freeTimeStartDate;
-                                  }
-                                })(),
-                              },
-                              __typename: 'CustomValue',
-                            },
-                          };
-                        }
-                        return currentChange;
-                      });
-                    }
-
-                    return [
-                      ...newChanges,
-                      {
-                        ...change,
-                        field: 'freeTimeStartDate',
-                        new: {
-                          custom: {
-                            ...(() => {
-                              switch (change.field) {
-                                case 'freeTimeStartDate':
-                                  return {
-                                    ...batch.container?.freeTimeStartDate,
-                                    value: change.new?.datetime,
-                                  };
-                                case 'autoCalculatedFreeTimeStartDate':
-                                  return {
-                                    ...batch.container?.freeTimeStartDate,
-                                    auto: change.new?.boolean,
-                                  };
-                                default:
-                                  return batch.container?.freeTimeStartDate;
-                              }
-                            })(),
-                          },
-                          __typename: 'CustomValue',
-                        },
-                      },
-                    ];
-                  }
-                  default:
-                    return [...newChanges, change];
-                }
-              }, []);
+              changes = mergeChanges(
+                changes,
+                {
+                  freeTimeStartDate: (i, v) => ({
+                    ...i,
+                    value: v,
+                  }),
+                  autoCalculatedFreeTimeStartDate: (i, v) => ({
+                    ...i,
+                    auto: v,
+                  }),
+                },
+                'freeTimeStartDate',
+                batch.container?.freeTimeStartDate
+              );
+              changes = mergeChanges(
+                changes,
+                {
+                  warehouseArrivalAgreedDateApprovedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  warehouseArrivalAgreedDateApprovedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'warehouseArrivalAgreedDateApproved',
+                batch.container?.warehouseArrivalAgreedDateApproved
+              );
             }
+
+            changes = await mapAsync(changes, change => {
+              switch (change.field) {
+                case 'warehouse':
+                  if (change.new?.entity) {
+                    return client
+                      .query({
+                        query: warehouseByIDQuery,
+                        variables: { id: change.new?.entity?.id },
+                      })
+                      .then(({ data }) => ({
+                        field: 'warehouse',
+                        new: newCustomValue(data.warehouse),
+                      }));
+                  }
+                  break;
+                default:
+                  break;
+              }
+
+              return change;
+            });
             break;
           }
           case 'Voyage':
@@ -724,6 +697,29 @@ export default function entityEventHandler(
                 default:
                   return change;
               }
+            });
+            break;
+          case 'ContainerGroup':
+            changes = await mapAsync(changes, change => {
+              switch (change.field) {
+                case 'warehouse':
+                  if (change.new?.entity) {
+                    return client
+                      .query({
+                        query: warehouseByIDQuery,
+                        variables: { id: change.new?.entity?.id },
+                      })
+                      .then(({ data }) => ({
+                        field: 'warehouse',
+                        new: newCustomValue(data.warehouse),
+                      }));
+                  }
+                  break;
+                default:
+                  break;
+              }
+
+              return change;
             });
             break;
           default:

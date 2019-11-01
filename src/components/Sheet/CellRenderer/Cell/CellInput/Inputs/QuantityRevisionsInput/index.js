@@ -6,7 +6,7 @@ import SelectInput from 'components/Inputs/SelectInput';
 import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
 import NumberInput from 'components/Form/Inputs/NumberInput';
 import useEnum from 'hooks/useEnum';
-import type { InputProps } from '../../types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import {
   WrapperStyle,
   SeparatorStyle,

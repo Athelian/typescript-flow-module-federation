@@ -2,7 +2,7 @@
 import * as React from 'react';
 import BaseNumberInput from 'components/Form/Inputs/NumberInput';
 import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
-import type { InputProps } from '../../types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import InputWrapper from '../InputWrapper';
 
 const StaticMetricValueInput = ({

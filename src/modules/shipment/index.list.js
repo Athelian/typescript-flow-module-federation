@@ -37,6 +37,7 @@ const ShipmentListModule = () => {
         <Sort config={ShipmentSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
         {hasPermissions(SHIPMENT_CREATE) && (
+          // $FlowFixMe Flow typed is not updated yet
           <Link to="/shipment/new">
             <NewButton />
           </Link>
