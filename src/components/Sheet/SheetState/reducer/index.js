@@ -1,6 +1,12 @@
 // @flow
 import logger from 'utils/logger';
-import type { Action, CellValue, Position, State, ColumnSort } from '../types';
+import type {
+  Action,
+  CellValue,
+  Position,
+  State,
+  ColumnSort,
+} from 'components/Sheet/SheetState/types';
 import { Actions } from '../constants';
 import { append, init, rearrangeColumns, resizeColumn, sortColumn } from './sheet';
 import {

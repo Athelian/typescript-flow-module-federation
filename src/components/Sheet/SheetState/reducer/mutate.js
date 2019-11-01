@@ -1,6 +1,6 @@
 // @flow
 import { clone, setIn } from 'utils/fp';
-import type { CellValue, State, ColumnSort } from '../types';
+import type { CellValue, State, ColumnSort } from 'components/Sheet/SheetState/types';
 import { refresh } from './sheet';
 
 export function changeValues(
@@ -62,9 +62,14 @@ export function changeValues(
     items,
     rows: state.rows.map(row =>
       row.map(cell => {
+        if (!cell.data) {
+          return cell;
+        }
+
+        const { data } = cell;
         const update = cellsToUpdate
           .map(({ cells, value }) => ({
-            cell: cells.find(c => c?.data?.path === cell?.data?.path),
+            cell: cells.find(c => c?.data?.path === data.path),
             value,
           }))
           .find(c => !!c.cell);
@@ -75,11 +80,8 @@ export function changeValues(
 
         return {
           ...cell,
-          /* $FlowFixMe This comment suppresses an error found when upgrading
-           * Flow to v0.111.0. To view the error, delete this comment and run
-           * Flow. */
           data: {
-            ...cell.data,
+            ...data,
             value: update.value,
           },
         };
