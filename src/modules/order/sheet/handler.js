@@ -650,8 +650,8 @@ export default function entityEventHandler(
                     date: v,
                   }),
                 },
-                'warehouseArrivalAgreedDateApprovedBy',
-                batch.container?.warehouseArrivalAgreedDateApprovedBy
+                'warehouseArrivalAgreedDateApproved',
+                batch.container?.warehouseArrivalAgreedDateApproved
               );
             }
 

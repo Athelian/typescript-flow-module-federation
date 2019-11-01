@@ -657,7 +657,7 @@ const containerColumns: Array<ColumnConfig> = [
     width: 160,
   },
   {
-    key: 'order.orderItem.batch.container.warehouseArrivalAgreedDateApprovedBy',
+    key: 'order.orderItem.batch.container.warehouseArrivalAgreedDateApproved',
     title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateApproved} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,

@@ -910,12 +910,12 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       ),
     },
     {
-      columnKey: 'order.orderItem.batch.container.warehouseArrivalAgreedDateApprovedBy',
+      columnKey: 'order.orderItem.batch.container.warehouseArrivalAgreedDateApproved',
       type: 'approval',
       ...transformValueField(
         `${basePath}.container`,
         batch?.container ?? null,
-        'warehouseArrivalAgreedDateApprovedBy',
+        'warehouseArrivalAgreedDateApproved',
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_APPROVE_AGREE_ARRIVAL_DATE)
       ),

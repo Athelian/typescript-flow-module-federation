@@ -1,45 +1,61 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, presets, borderRadiuses, fontSizes, colors, shadows } from 'styles/common';
+import {
+  layout,
+  presets,
+  borderRadiuses,
+  fontSizes,
+  colors,
+  shadows,
+  transitions,
+  fontSizesWithHeights,
+} from 'styles/common';
 
 export const ApprovalWrapperStyle: string = css`
-  position: relative;
   ${layout.GRID_HORIZONTAL};
-  justify-content: left;
+  ${layout.CENTER};
   grid-gap: 10px;
-  padding: 0 5px;
   width: 100%;
-  & > button {
+`;
+
+export const ApprovedDateStyle: string = css`
+  ${fontSizes.MAIN};
+  ${presets.ELLIPSIS};
+  color: ${colors.BLACK};
+  width: 70px;
+  font-weight: bold;
+`;
+
+export const ApproveButtonStyle: string = css`
+  ${fontSizesWithHeights.SMALL};
+  height: 20px;
+`;
+
+export const DisapproveButtonStyle: string = css`
+  ${presets.BUTTON};
+  ${borderRadiuses.CIRCLE};
+  position: relative;
+  height: 20px;
+  width: 20px;
+  &:hover > div,
+  :focus > div {
     opacity: 1;
   }
 `;
 
-export const ApprovedAtStyle: string = css`
-  ${fontSizes.MAIN};
-  min-height: 18px;
-  max-height: 18px;
-  line-height: 18px;
-  color: ${colors.BLACK};
-  ${presets.ELLIPSIS};
-  font-weight: bold;
-  text-align: right;
-`;
-
-export const UnapproveButtonStyle: string = css`
+export const HoverDisapproveButtonStyle: string = css`
+  ${layout.HORIZONTAL};
+  ${layout.CENTER_CENTER};
+  ${borderRadiuses.CIRCLE};
+  ${shadows.DROPDOWN};
+  ${transitions.MAIN};
+  background-color: ${colors.WHITE};
+  color: ${colors.RED};
   position: absolute;
   top: 0;
-  right: 5px;
-  ${presets.BUTTON};
+  right: 0;
+  left: 0;
+  bottom: 0;
+  cursor: pointer;
   opacity: 0;
-  ${borderRadiuses.CIRCLE};
-  background-color: ${colors.WHITE};
-  color: ${colors.GRAY_LIGHT};
-  height: 20px;
-  width: 20px;
-  flex-shrink: 0;
-  ${shadows.DROPDOWN};
-  &:hover,
-  :focus {
-    color: ${colors.RED};
-  }
 `;

@@ -3,62 +3,75 @@ import * as React from 'react';
 import type { User } from 'generated/graphql';
 import { useAuthorizedViewer } from 'contexts/Viewer';
 import Icon from 'components/Icon';
-
 import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
 import { ApproveButton } from 'components/Buttons';
-import { ApprovalWrapperStyle, ApprovedAtStyle, UnapproveButtonStyle } from './style';
+import {
+  ApprovalWrapperStyle,
+  ApprovedDateStyle,
+  ApproveButtonStyle,
+  DisapproveButtonStyle,
+  HoverDisapproveButtonStyle,
+} from './style';
 
 type Props = {|
-  approvedAt: ?(string | Date),
-  approvedBy: ?User,
-  onApprove: Object => void,
-  onUnapprove: () => void,
-  editable: boolean,
+  approved: ?{ user: ?User, date: ?(string | Date) },
+  onApprove: User => void,
+  onDisapprove: () => void,
+  readonly: boolean,
   inputRef: React.Ref<any>,
 |};
 
-const BaseApprovalInput = ({
-  approvedAt,
-  approvedBy,
-  onApprove,
-  onUnapprove,
-  editable,
-  inputRef,
-}: Props) => {
+const BaseApprovalInput = ({ approved, onApprove, onDisapprove, readonly, inputRef }: Props) => {
   const { user } = useAuthorizedViewer();
-  if (!editable) {
-    return (
-      <div className={ApprovalWrapperStyle}>
-        <div className={ApprovedAtStyle}>
-          <FormattedDate value={approvedAt} />
-        </div>
-        <UserAvatar
-          ref={inputRef}
-          firstName={approvedBy?.firstName}
-          lastName={approvedBy?.lastName}
-        />
-      </div>
-    );
-  }
+
   return (
     <div className={ApprovalWrapperStyle}>
-      {approvedBy && (
+      {readonly ? (
         <>
-          <div className={ApprovedAtStyle}>
-            <FormattedDate value={approvedAt} />
+          <div className={ApprovedDateStyle}>
+            <FormattedDate value={approved?.date} />
           </div>
-          <button
-            className={UnapproveButtonStyle}
-            onClick={onUnapprove}
-            type="button"
-            ref={inputRef}
-          >
-            <Icon icon="CLEAR" />
-          </button>
+          <UserAvatar
+            width="20px"
+            height="20px"
+            firstName={approved?.user?.firstName}
+            lastName={approved?.user?.lastName}
+          />
+        </>
+      ) : (
+        <>
+          {approved?.date && approved?.user ? (
+            <>
+              <div className={ApprovedDateStyle}>
+                <FormattedDate value={approved?.date} />
+              </div>
+              <button
+                className={DisapproveButtonStyle}
+                onClick={onDisapprove}
+                type="button"
+                ref={inputRef}
+              >
+                <UserAvatar
+                  width="20px"
+                  height="20px"
+                  firstName={approved?.user?.firstName}
+                  lastName={approved?.user?.lastName}
+                />
+                <div className={HoverDisapproveButtonStyle}>
+                  <Icon icon="CLEAR" />
+                </div>
+              </button>
+            </>
+          ) : (
+            <ApproveButton
+              buttonRef={inputRef}
+              onClick={() => onApprove(user)}
+              className={ApproveButtonStyle}
+            />
+          )}
         </>
       )}
-      {!approvedBy && <ApproveButton buttonRef={inputRef} onClick={() => onApprove(user)} />}
     </div>
   );
 };

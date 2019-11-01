@@ -10,20 +10,19 @@ const ApprovalInput = ({
   focus,
   readonly,
   onChange,
-}: InputProps<{ user: ?User, date: ?Date }>) => {
+}: InputProps<{ user: ?User, date: ?(string | Date) }>) => {
   return (
     <InputWrapper focus={focus}>
       {({ ref }) => (
         <BaseApprovalInput
-          approvedAt={value?.date}
-          approvedBy={value?.user}
+          approved={value}
           onApprove={(user: User) => {
             onChange({ user, date: new Date() });
           }}
-          onUnapprove={() => {
+          onDisapprove={() => {
             onChange({ user: null, date: null });
           }}
-          editable={!readonly}
+          readonly={readonly}
           inputRef={ref}
         />
       )}
