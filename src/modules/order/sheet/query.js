@@ -136,6 +136,20 @@ const batchSheetFragment = gql`
       value
       metric
     }
+    packageSize {
+      width {
+        value
+        metric
+      }
+      length {
+        value
+        metric
+      }
+      height {
+        value
+        metric
+      }
+    }
     memo
     tags {
       ...tagFragment
