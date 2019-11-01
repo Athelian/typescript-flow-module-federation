@@ -42,6 +42,10 @@ export default defineMessages({
     id: 'modules.container.warehouseArrivalActualDateAssignedTo',
     defaultMessage: 'Warehouse Arrival Actual Assigned To'.toUpperCase(),
   },
+  warehouseArrivalActualDateApproved: {
+    id: 'modules.container.warehouseArrivalActualDateApproved',
+    defaultMessage: 'Warehouse Arrival Actual Approved'.toUpperCase(),
+  },
   departureDate: {
     id: 'modules.container.departureDate',
     defaultMessage: 'Departure Date',
@@ -49,6 +53,10 @@ export default defineMessages({
   departureDateAssignedTo: {
     id: 'modules.container.departureDateAssignedTo',
     defaultMessage: 'Departure Date Assigned To',
+  },
+  departureDateApproved: {
+    id: 'modules.container.departureDateApproved',
+    defaultMessage: 'Departure Date Approved',
   },
   yardName: {
     id: 'modules.container.yardName',

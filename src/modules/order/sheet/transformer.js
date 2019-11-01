@@ -57,6 +57,8 @@ import {
 } from 'modules/permission/constants/batch';
 import {
   CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
+  CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
+  CONTAINER_APPROVE_DEPARTURE_DATE,
   CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE,
   CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE,
   CONTAINER_ASSIGN_DEPARTURE_DATE,
@@ -1001,6 +1003,17 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       ),
     },
     {
+      columnKey: 'order.orderItem.batch.container.warehouseArrivalActualDateApproved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'warehouseArrivalActualDateApproved',
+        hasPermission =>
+          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE)
+      ),
+    },
+    {
       columnKey: 'order.orderItem.batch.container.warehouse',
       type: 'warehouse',
       ...transformValueField(
@@ -1090,6 +1103,17 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         'departureDateAssignedTo',
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_ASSIGN_DEPARTURE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.departureDateApproved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'departureDateApproved',
+        hasPermission =>
+          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_APPROVE_DEPARTURE_DATE)
       ),
     },
     {

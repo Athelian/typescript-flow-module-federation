@@ -668,6 +668,36 @@ export default function entityEventHandler(
                 'warehouseArrivalAgreedDateApproved',
                 batch.container?.warehouseArrivalAgreedDateApproved
               );
+              changes = mergeChanges(
+                changes,
+                {
+                  warehouseArrivalActualDateApprovedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  warehouseArrivalActualDateApprovedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'warehouseArrivalActualDateApproved',
+                batch.container?.warehouseArrivalActualDateApproved
+              );
+              changes = mergeChanges(
+                changes,
+                {
+                  departureDateApprovedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  departureDateApprovedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'departureDateApproved',
+                batch.container?.departureDateApproved
+              );
             }
 
             changes = await mapAsync(changes, change => {

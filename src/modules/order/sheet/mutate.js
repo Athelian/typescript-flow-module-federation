@@ -300,6 +300,16 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             warehouseArrivalAgreedDateApprovedById: value?.user?.id ?? null,
           };
         }
+        case 'warehouseArrivalActualDateApproved': {
+          return {
+            warehouseArrivalActualDateApprovedById: value?.user?.id ?? null,
+          };
+        }
+        case 'departureDateApproved': {
+          return {
+            departureDateApprovedById: value?.user?.id ?? null,
+          };
+        }
         case 'freeTimeStartDate': {
           const { auto: autoCalculatedFreeTimeStartDate = false, value: date = null } = value || {};
           return {

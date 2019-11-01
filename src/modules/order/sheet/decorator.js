@@ -11,6 +11,7 @@ export function decorate(orders: Array<Object>): Array<Object> {
       ...orderItem,
       batches: orderItem.batches.map(batch => ({
         ...batch,
+        // TODO: consider to rename this field
         packageQuantity: {
           value: batch.packageQuantity || 0,
           auto: batch.autoCalculatePackageQuantity || false,
@@ -22,6 +23,7 @@ export function decorate(orders: Array<Object>): Array<Object> {
         container: batch?.container
           ? {
               ...batch?.container,
+              // TODO: consider to rename this field
               freeTimeStartDate: {
                 value: batch?.container?.freeTimeStartDate,
                 auto: batch?.container?.autoCalculatedFreeTimeStartDate ?? false,
@@ -29,6 +31,14 @@ export function decorate(orders: Array<Object>): Array<Object> {
               warehouseArrivalAgreedDateApproved: {
                 user: batch?.container?.warehouseArrivalAgreedDateApprovedBy,
                 date: batch?.container?.warehouseArrivalAgreedDateApprovedAt,
+              },
+              warehouseArrivalActualDateApproved: {
+                user: batch?.container?.warehouseArrivalActualDateApprovedBy,
+                date: batch?.container?.warehouseArrivalActualDateApprovedAt,
+              },
+              departureDateApproved: {
+                user: batch?.container?.departureDateApprovedBy,
+                date: batch?.container?.departureDateApprovedAt,
               },
             }
           : null,

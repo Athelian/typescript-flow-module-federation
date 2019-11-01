@@ -324,6 +324,10 @@ const containerSheetFragment = gql`
     warehouseArrivalActualDateAssignedTo {
       ...userAvatarFragment
     }
+    warehouseArrivalActualDateApprovedBy {
+      ...userAvatarFragment
+    }
+    warehouseArrivalActualDateApprovedAt
     warehouse {
       ...warehouseFragment
     }
@@ -332,6 +336,10 @@ const containerSheetFragment = gql`
     departureDateAssignedTo {
       ...userAvatarFragment
     }
+    departureDateApprovedBy {
+      ...userAvatarFragment
+    }
+    departureDateApprovedAt
     totalPackageQuantity
     totalQuantity
     orderItemCount

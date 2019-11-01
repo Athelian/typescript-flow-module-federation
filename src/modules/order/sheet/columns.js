@@ -701,7 +701,13 @@ const containerColumns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: 160,
   },
-  // actual arrival approval
+  {
+    key: 'order.orderItem.batch.container.warehouseArrivalActualDateApproved',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDateApproved} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 110,
+  },
   {
     key: 'order.orderItem.batch.container.warehouse',
     title: <FormattedMessage {...containerMessages.warehouse} />,
@@ -762,7 +768,13 @@ const containerColumns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: 160,
   },
-  // departure approval
+  {
+    key: 'order.orderItem.batch.container.departureDateApproved',
+    title: <FormattedMessage {...containerMessages.departureDateApproved} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 110,
+  },
   {
     key: 'order.orderItem.batch.container.tags',
     title: <FormattedMessage {...containerMessages.tags} />,
