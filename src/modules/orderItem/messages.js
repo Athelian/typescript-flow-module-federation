@@ -86,6 +86,10 @@ export default defineMessages({
     id: 'modules.OrderItems.memo',
     defaultMessage: 'Memo',
   },
+  remainQuantity: {
+    id: 'modules.OrderItems.remainQuantity',
+    defaultMessage: 'Remain quantity',
+  },
   totalBatched: {
     id: 'modules.OrderItems.totalBatched',
     defaultMessage: 'Total batched quantity',

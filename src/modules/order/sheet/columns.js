@@ -325,6 +325,13 @@ const orderItemColumns: Array<ColumnConfig> = [
     width: 200,
   },
   {
+    key: 'order.orderItem.remainQuantity',
+    title: <FormattedMessage {...orderItemMessages.remainQuantity} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+  },
+  {
     key: 'order.orderItem.totalBatched',
     title: <FormattedMessage {...orderItemMessages.totalBatched} />,
     icon: 'ORDER_ITEM',
