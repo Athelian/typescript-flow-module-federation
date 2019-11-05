@@ -10,21 +10,23 @@ const TextAreaInput = ({
   value,
   focus,
   onChange,
-  onFocus,
-  onBlur,
+  forceFocus,
+  forceBlur,
   readonly,
 }: InputProps<string>) => {
   const intl = useIntl();
+  const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
+    if (focus) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  };
 
   return (
-    <>
+    <div onBlur={handleBlur}>
       <button
-        tabIndex="-1"
-        onClick={() => {
-          if (!readonly) {
-            onFocus();
-          }
-        }}
+        disabled={readonly}
+        onClick={forceFocus}
         type="button"
         className={TextAreaInputButtonStyle}
       >
@@ -42,8 +44,13 @@ const TextAreaInput = ({
         )}
       </button>
 
-      <TextAreaInputDialog value={value || ''} onChange={onChange} focus={focus} onBlur={onBlur} />
-    </>
+      <TextAreaInputDialog
+        value={value || ''}
+        onChange={onChange}
+        focus={focus}
+        onBlur={forceBlur}
+      />
+    </div>
   );
 };
 

@@ -2,34 +2,24 @@
 import * as React from 'react';
 import { UserAssignmentInput as BaseUserAssignmentInput } from 'components/Form';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import InputWrapper from '../InputWrapper';
+import { CellInputWrapperStyle } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
 
 const UserAssignmentInput = ({
   value,
   context,
-  focus,
   onChange,
-  onFocus,
-  onBlur,
-  onKeyDown,
   readonly,
 }: InputProps<string, Array<string>>) => (
-  <InputWrapper focus={focus}>
-    {({ ref }) => (
-      <BaseUserAssignmentInput
-        users={value || []}
-        name="value"
-        onChange={(name, users) => onChange(users)}
-        editable={!readonly}
-        groupIds={context}
-        inputRef={ref}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        onKeyDown={onKeyDown}
-        size={20}
-      />
-    )}
-  </InputWrapper>
+  <div className={CellInputWrapperStyle}>
+    <BaseUserAssignmentInput
+      users={value || []}
+      name="value"
+      onChange={(name, users) => onChange(users)}
+      editable={!readonly}
+      groupIds={context}
+      size={20}
+    />
+  </div>
 );
 
 export default UserAssignmentInput;

@@ -22,28 +22,24 @@ const LogsInput = ({
   query: string,
   queryField: string,
   entityKey: string,
-}) => {
-  return ({ value, focus, onFocus, onBlur, onKeyDown, readonly }: InputProps<string>) => (
-    <>
-      <button
-        tabIndex="-1"
-        type="button"
-        disabled={readonly}
-        onClick={() => {
-          if (!readonly) {
-            onFocus();
-          }
-        }}
-        onKeyDown={onKeyDown}
-        className={LogsButtonStyle}
-      >
+}) => ({ value, focus, forceFocus, forceBlur, readonly }: InputProps<string>) => {
+  const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
+    if (focus) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  };
+
+  return (
+    <div onBlur={handleBlur}>
+      <button type="button" disabled={readonly} onClick={forceFocus} className={LogsButtonStyle}>
         <Icon icon="LOGS" />
         <span>
           <FormattedMessage id="components.sheet.logs" defaultMessage="logs" />
         </span>
       </button>
 
-      <SlideView isOpen={focus} onRequestClose={onBlur}>
+      <SlideView isOpen={focus} onRequestClose={forceBlur}>
         <SlideViewLayout>
           {focus && (
             <>
@@ -63,7 +59,7 @@ const LogsInput = ({
           )}
         </SlideViewLayout>
       </SlideView>
-    </>
+    </div>
   );
 };
 

@@ -34,6 +34,7 @@ const ToggleInput = ({
     {align === 'left' && <>{children}</>}
     <button
       type="button"
+      disabled={!editable}
       className={ToggleButtonStyle(toggled, editable)}
       onClick={editable ? onToggle : () => {}}
       ref={inputRef}

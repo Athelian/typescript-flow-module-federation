@@ -8,6 +8,7 @@ export const WrapperStyle = (auto: boolean) => css`
   grid-template-columns: 1fr 30px 35px;
   justify-items: center;
   ${auto && 'background-color: rgba(0, 0, 0, 0.025)'};
+  padding: 0 5px;
 `;
 
 export const CalculatorIconStyle: string = css`

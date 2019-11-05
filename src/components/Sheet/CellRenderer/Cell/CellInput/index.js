@@ -111,6 +111,7 @@ const CellInput = ({
   onDown,
   onUpdate,
 }: Props) => {
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
   const [dirtyValue, setDirtyValue] = React.useState<any>(value);
   const valueRef = React.useRef<any>(value);
 
@@ -118,6 +119,38 @@ const CellInput = ({
     valueRef.current = value;
     setDirtyValue(value);
   }
+
+  React.useEffect(() => {
+    if (!containerRef.current) {
+      return;
+    }
+
+    if (inputFocus) {
+      const focusableElement = containerRef.current.querySelector(
+        [
+          'input:not([disabled]):not([tabindex="-1"])',
+          'button:not([disabled]):not([tabindex="-1"])',
+          '[tabindex]:not([disabled]):not([tabindex="-1"])',
+        ].join(',')
+      );
+      if (focusableElement) {
+        focusableElement.focus({
+          preventScroll: true,
+        });
+
+        if (
+          focusableElement instanceof HTMLInputElement &&
+          (focusableElement.type === 'text' || focusableElement.type === 'number')
+        ) {
+          focusableElement.select();
+        }
+      }
+    } else {
+      containerRef.current.focus({
+        preventScroll: true,
+      });
+    }
+  }, [inputFocus]);
 
   const handleChange = (newValue, force = false) => {
     if (!equals(newValue, dirtyValue)) {
@@ -129,7 +162,14 @@ const CellInput = ({
     }
   };
 
-  const handleBlur = () => {
+  const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
+    if (
+      !containerRef.current ||
+      (e.relatedTarget instanceof Node && containerRef.current.contains(e.relatedTarget))
+    ) {
+      return;
+    }
+
     onBlur();
 
     if (equals(dirtyValue, value)) {
@@ -147,9 +187,35 @@ const CellInput = ({
       case 'ArrowLeft':
         e.stopPropagation();
         break;
-      case 'Tab':
-        onBlur();
+      case 'Tab': {
+        if (containerRef.current) {
+          const focusableElements = Array.from(
+            containerRef.current.querySelectorAll(
+              [
+                'input:not([disabled]):not([tabindex="-1"])',
+                'button:not([disabled]):not([tabindex="-1"])',
+                '[tabindex]:not([disabled]):not([tabindex="-1"])',
+              ].join(',')
+            )
+          );
+          const index = focusableElements.indexOf(document.activeElement);
+          /**
+           * If on tab event and the current focused element is the last one in the cell,
+           * or on shift+tab event and the current focused element is the first one in the cell,
+           * we prevent to focus some other element outside of the cell.
+           * So we let the sheet navigation control to focus the next cell instead.
+           */
+          if (
+            (e.shiftKey && index === 0) ||
+            (!e.shiftKey && focusableElements.length - 1 === index)
+          ) {
+            e.preventDefault();
+          } else {
+            e.stopPropagation();
+          }
+        }
         break;
+      }
       case 'Enter':
         e.stopPropagation();
         onBlur();
@@ -169,17 +235,26 @@ const CellInput = ({
     throw new Error(`Cell input type of '${type}' doesn't not exist`);
   }
 
-  return React.createElement(inputs[type], {
-    value: dirtyValue,
-    context,
-    extra,
-    readonly: disabled,
-    focus: inputFocus,
-    onFocus,
-    onBlur: handleBlur,
-    onChange: handleChange,
-    onKeyDown: handleKeyDown,
-  });
+  return (
+    <div
+      ref={containerRef}
+      role="presentation"
+      onFocus={onFocus}
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
+    >
+      {React.createElement(inputs[type], {
+        value: dirtyValue,
+        context,
+        extra,
+        readonly: disabled,
+        focus: inputFocus,
+        forceFocus: onFocus,
+        forceBlur: onBlur,
+        onChange: handleChange,
+      })}
+    </div>
+  );
 };
 
 export default CellInput;
