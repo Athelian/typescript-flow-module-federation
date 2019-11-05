@@ -1145,7 +1145,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
     },
   ].map(c => ({
     ...c,
-    duplicate: true,
+    duplicable: true,
     disabled: !(batch?.container ?? null),
   }));
 }
@@ -1734,7 +1734,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       type: 'approval',
       ...transformValueField(
         `${basePath}.shipment.voyages.1.arrival`,
-        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[1]?.arrival ?? null : null,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[1]?.arrival ?? null : null,
         'approved',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
@@ -2060,7 +2060,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
     },
   ].map(c => ({
     ...c,
-    duplicate: true,
+    duplicable: true,
     disabled: !(batch?.shipment ?? null),
   }));
 }

@@ -61,6 +61,13 @@ export function decorate(orders: Array<Object>): Array<Object> {
                     date: voyage?.approvedAt,
                   },
                 },
+                arrival: {
+                  ...voyage.departure,
+                  approved: {
+                    user: voyage?.approvedBy,
+                    date: voyage?.approvedAt,
+                  },
+                },
               })),
             }
           : null,
