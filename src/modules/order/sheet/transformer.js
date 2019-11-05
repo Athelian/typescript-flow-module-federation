@@ -294,7 +294,8 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
       ...transformComputedField(basePath, order, 'totalBatched', item =>
         item.orderItems.reduce(
           (totalBatched, orderItem) =>
-            totalBatched + orderItem.batches.reduce((total, batch) => batch.quantity + total, 0),
+            totalBatched +
+            orderItem.batches.reduce((total, batch) => getBatchLatestQuantity(batch) + total, 0),
           0
         )
       ),
@@ -308,7 +309,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
             totalBatched +
             orderItem.batches
               .filter(batch => !!batch.shipment)
-              .reduce((total, batch) => batch.quantity + total, 0),
+              .reduce((total, batch) => getBatchLatestQuantity(batch) + total, 0),
           0
         )
       ),
@@ -486,12 +487,33 @@ function transformOrderItem(
       ),
     },
     {
+      columnKey: 'order.orderItem.remainQuantity',
+      type: 'number',
+      ...transformComputedField(basePath, orderItem, 'remainQuantity', item => {
+        const currentOrderItem = item.orderItems.find(oi => oi.id === orderItem?.id);
+        return Math.max(
+          0,
+          currentOrderItem.quantity -
+            // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
+            (currentOrderItem?.batches.reduce(
+              (total, batch) => total + getBatchLatestQuantity(batch),
+              0
+            ) ?? 0)
+        );
+      }),
+    },
+    {
       columnKey: 'order.orderItem.totalBatched',
       type: 'number',
       ...transformComputedField(basePath, orderItem, 'totalBatched', item => {
         const currentOrderItem = item.orderItems.find(oi => oi.id === orderItem?.id);
-        // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
-        return currentOrderItem?.batches.reduce((total, batch) => total + batch.quantity, 0) ?? 0;
+        return (
+          // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
+          currentOrderItem?.batches.reduce(
+            (total, batch) => total + getBatchLatestQuantity(batch),
+            0
+          ) ?? 0
+        );
       }),
     },
     {
@@ -503,7 +525,7 @@ function transformOrderItem(
           // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
           currentOrderItem?.batches
             .filter(batch => !!batch.shipment)
-            .reduce((total, batch) => total + batch.quantity, 0) ?? 0
+            .reduce((total, batch) => total + getBatchLatestQuantity(batch), 0) ?? 0
         );
       }),
     },
