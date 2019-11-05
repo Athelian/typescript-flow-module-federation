@@ -2,8 +2,9 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { addDays } from 'date-fns';
-import { getBatchLatestQuantity } from 'utils/batch';
+import { calculateVolume, getBatchLatestQuantity } from 'utils/batch';
 import { getLatestDate } from 'utils/shipment';
+import { defaultVolumeMetric } from 'utils/metric';
 import {
   transformComputedField,
   transformReadonlyField,
@@ -46,6 +47,7 @@ import {
   BATCH_SET_PACKAGE_NAME,
   BATCH_SET_PACKAGE_QUANTITY,
   BATCH_SET_PACKAGE_SIZE,
+  BATCH_SET_PACKAGE_VOLUME,
   BATCH_SET_PACKAGE_WEIGHT,
   BATCH_SET_PRODUCTION_DATE,
   BATCH_SET_QUANTITY,
@@ -54,12 +56,12 @@ import {
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
 import {
+  CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
   CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE,
   CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE,
   CONTAINER_ASSIGN_DEPARTURE_DATE,
   CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
   CONTAINER_SET_AGREE_ARRIVAL_DATE,
-  CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
   CONTAINER_SET_CONTAINER_OPTION,
   CONTAINER_SET_CONTAINER_TYPE,
   CONTAINER_SET_DEPARTURE_DATE,
@@ -746,6 +748,23 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
         batch,
         'packageGrossWeight',
         hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_WEIGHT)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.packageVolume',
+      type: 'volume_toggle',
+      computed: order => {
+        const currentBatch = getCurrentBatch(batch?.id, order);
+        return calculateVolume(
+          currentBatch?.packageVolume?.value ?? { value: 0, metric: defaultVolumeMetric },
+          currentBatch?.packageSize
+        );
+      },
+      ...transformValueField(
+        basePath,
+        batch,
+        'packageVolume',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_VOLUME)
       ),
     },
     {

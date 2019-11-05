@@ -566,6 +566,21 @@ export default function entityEventHandler(
                 'packageQuantity',
                 batch.packageQuantity
               );
+              changes = mergeChanges(
+                changes,
+                {
+                  packageVolume: (i, v) => ({
+                    ...i,
+                    value: v,
+                  }),
+                  autoCalculatePackageVolume: (i, v) => ({
+                    ...i,
+                    auto: v,
+                  }),
+                },
+                'packageVolume',
+                batch.packageVolume
+              );
             }
 
             break;

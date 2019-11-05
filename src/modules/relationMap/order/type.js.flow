@@ -1,11 +1,10 @@
 // @flow
+import type { MetricValue } from 'types';
+
 export type ShipmentProps = {
   id: string,
   no: string,
-  totalVolume: {
-    value: number,
-    metric: string,
-  },
+  totalVolume: MetricValue,
   tags: Array<Object>,
   importer: {
     id: string,
@@ -21,10 +20,7 @@ export type BatchProps = {
   no: string,
   latestQuantity: number,
   tags: Array<Object>,
-  totalVolume: ?{
-    value: number,
-    metric: string,
-  },
+  totalVolume: ?MetricValue,
   deliveredAt: ?string,
   shipment: ?{
     id: string,

@@ -231,6 +231,14 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           return {
             packageGrossWeight: value ? removeTypename(value) : null,
           };
+        case 'packageVolume': {
+          const { auto: autoCalculatePackageVolume = false, value: packageVolume = 0 } =
+            value || {};
+          return {
+            autoCalculatePackageVolume,
+            packageVolume: removeTypename(packageVolume),
+          };
+        }
         case 'packageSize':
           return {
             packageSize: value ? removeTypename(value) : null,

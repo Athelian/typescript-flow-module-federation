@@ -2,9 +2,8 @@
 
 import { useState, useCallback } from 'react';
 import { number } from 'yup';
+import type { MetricValue } from 'types';
 import type { ValidationObject } from './type.js.flow';
-
-type MetricValue = { value: number, metric: string };
 
 function useMetricInput(initialValue: ?MetricValue, schema: ValidationObject) {
   const [metric, setMetric] = useState(initialValue || { value: 0, metric: '' });

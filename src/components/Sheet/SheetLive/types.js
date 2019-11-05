@@ -1,4 +1,5 @@
 // @flow
+import type { MetricValue } from 'types';
 import type { Action } from 'components/Sheet/SheetState/types';
 
 export type EntityEventChange = {
@@ -19,11 +20,11 @@ export type EntityEventChange = {
     float?: number | null,
     boolean?: boolean | null,
     datetime?: string | Date | null,
-    metricValue?: { value: number, metric: string } | null,
+    metricValue?: MetricValue | null,
     size?: {
-      width: { value: number, metric: string },
-      height: { value: number, metric: string },
-      length: { value: number, metric: string },
+      width: MetricValue,
+      height: MetricValue,
+      length: MetricValue,
     } | null,
     entity?: { id: string },
     custom?: any,

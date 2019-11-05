@@ -15,6 +15,10 @@ export function decorate(orders: Array<Object>): Array<Object> {
           value: batch.packageQuantity || 0,
           auto: batch.autoCalculatePackageQuantity || false,
         },
+        packageVolume: {
+          value: batch.packageVolume,
+          auto: batch.autoCalculatePackageVolume || false,
+        },
         container: batch?.container
           ? {
               ...batch?.container,

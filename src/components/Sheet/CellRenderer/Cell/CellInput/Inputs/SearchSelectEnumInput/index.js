@@ -8,7 +8,8 @@ import useEnum from 'hooks/useEnum';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import SearchSelectInput from '../SearchSelectInput';
 
-type Props = InputProps<string> & {
+type Props = {
+  ...InputProps<string>,
   enumType: string,
   required: boolean,
 };

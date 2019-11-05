@@ -3,6 +3,7 @@ import * as React from 'react';
 import DefaultMetricStyle from 'components/Form/Inputs/MetricInput/DefaultMetricStyle';
 import MetricInput from 'components/Form/Inputs/MetricInput';
 import { useMetricInput } from 'modules/form/hooks';
+import type { MetricValue as MetricInputType } from 'types';
 import { getByPath } from 'utils/fp';
 import emitter from 'utils/emitter';
 
@@ -14,7 +15,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   name: string,
-  value: ?{ value: number, metric: string },
+  value: ?MetricInputType,
   metrics: Array<string>,
   convert: Function,
   values: Object,

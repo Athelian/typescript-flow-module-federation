@@ -3,26 +3,22 @@ import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { cleanFalsyAndTypeName } from 'utils/data';
+import type { MetricValue } from 'types';
 
 type Price = {
   amount: number,
   currency: string,
 };
 
-export type Metric = {
-  value: number,
-  metric: string,
-};
-
 export type ProductProvider = {
   packageName: string,
   packageCapacity: number,
-  packageGrossWeight: Metric,
-  packageVolume: Metric,
+  packageGrossWeight: MetricValue,
+  packageVolume: MetricValue,
   packageSize: {
-    width: Metric,
-    height: Metric,
-    length: Metric,
+    width: MetricValue,
+    height: MetricValue,
+    length: MetricValue,
   },
 };
 

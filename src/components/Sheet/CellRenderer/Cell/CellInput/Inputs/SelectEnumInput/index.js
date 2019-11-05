@@ -7,7 +7,8 @@ import useEnum from 'hooks/useEnum';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import SelectInput from '../SelectInput';
 
-type SelectEnumInputImplProps = InputProps<string> & {
+type Props = {
+  ...InputProps<string>,
   enumType: string,
   required: boolean,
 };
@@ -20,7 +21,7 @@ const SelectEnumInputImpl = ({
   focus,
   enumType,
   required,
-}: SelectEnumInputImplProps) => {
+}: Props) => {
   const intl = useIntl();
 
   const { enums, loading } = useEnum(enumType);
