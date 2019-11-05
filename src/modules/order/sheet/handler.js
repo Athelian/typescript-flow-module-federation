@@ -438,6 +438,21 @@ function onDeleteBatchQuantityRevisionFactory(dispatch: Action => void) {
     );
 }
 
+function isBelongToShipment(shipment: Object, timelineDateId: string) {
+  if (
+    shipment.cargoReady.id === timelineDateId ||
+    shipment.containerGroups[0].customClearance.id === timelineDateId ||
+    shipment.containerGroups[0].warehouseArrival.id === timelineDateId ||
+    shipment.containerGroups[0].deliveryReady.id === timelineDateId
+  ) {
+    return true;
+  }
+
+  return !!shipment.voyages.find(
+    voyage => voyage.departure.id === timelineDateId || voyage.arrival.id === timelineDateId
+  );
+}
+
 export default function entityEventHandler(
   // $FlowFixMe not compatible with hook implementation
   client: ApolloClient,
@@ -590,11 +605,57 @@ export default function entityEventHandler(
             return;
           }
           case 'Shipment': {
+            changes = await mapAsync(changes, change => {
+              switch (change.field) {
+                case 'importer':
+                  return client
+                    .query({
+                      query: organizationByIDQuery,
+                      variables: { id: change.new?.entity?.id },
+                    })
+                    .then(({ data }) => ({
+                      field: 'importer',
+                      new: newCustomValue(data.organization),
+                    }));
+                case 'exporter':
+                  if (change.new?.entity) {
+                    return client
+                      .query({
+                        query: organizationByIDQuery,
+                        variables: { id: change.new?.entity?.id },
+                      })
+                      .then(({ data }) => ({
+                        field: 'exporter',
+                        new: newCustomValue(data.organization),
+                      }));
+                  }
+                  break;
+                case 'transportType':
+                  return {
+                    ...change,
+                    new: {
+                      string: change.new?.int === 1 ? 'Air' : 'Sea',
+                      __typename: 'StringValue',
+                    },
+                  };
+                default:
+                  break;
+              }
+
+              return change;
+            });
+            break;
+          }
+          case 'TimelineDate': {
             const batch = orders
               .map(order => order.orderItems.map(oi => oi.batches).flat())
               // $FlowFixMe flat not supported by flow
               .flat()
-              .find(currentBatch => currentBatch?.shipment?.id === event.entity?.id);
+              .find(
+                currentBatch =>
+                  currentBatch?.shipment?.id &&
+                  isBelongToShipment(currentBatch?.shipment, event.entity?.id)
+              );
             if (batch) {
               changes = mergeChanges(
                 changes,
@@ -747,45 +808,7 @@ export default function entityEventHandler(
                 batch.shipment?.voyages?.[0]?.arrival
               );
             }
-            changes = await mapAsync(changes, change => {
-              switch (change.field) {
-                case 'importer':
-                  return client
-                    .query({
-                      query: organizationByIDQuery,
-                      variables: { id: change.new?.entity?.id },
-                    })
-                    .then(({ data }) => ({
-                      field: 'importer',
-                      new: newCustomValue(data.organization),
-                    }));
-                case 'exporter':
-                  if (change.new?.entity) {
-                    return client
-                      .query({
-                        query: organizationByIDQuery,
-                        variables: { id: change.new?.entity?.id },
-                      })
-                      .then(({ data }) => ({
-                        field: 'exporter',
-                        new: newCustomValue(data.organization),
-                      }));
-                  }
-                  break;
-                case 'transportType':
-                  return {
-                    ...change,
-                    new: {
-                      string: change.new?.int === 1 ? 'Air' : 'Sea',
-                      __typename: 'StringValue',
-                    },
-                  };
-                default:
-                  break;
-              }
 
-              return change;
-            });
             break;
           }
           case 'Container': {
