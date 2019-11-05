@@ -28,6 +28,30 @@ export function decorate(orders: Array<Object>): Array<Object> {
                     },
                   }
                 : null,
+              containerGroups: (batch?.shipment?.containerGroups ?? []).map(containerGroup => ({
+                ...containerGroup,
+                customClearance: {
+                  ...containerGroup.customClearance,
+                  approved: {
+                    user: containerGroup.customClearance?.approvedBy,
+                    date: containerGroup.customClearance?.approvedAt,
+                  },
+                },
+                warehouseArrival: {
+                  ...containerGroup.warehouseArrival,
+                  approved: {
+                    user: containerGroup.warehouseArrival?.approvedBy,
+                    date: containerGroup.warehouseArrival?.approvedAt,
+                  },
+                },
+                deliveryReady: {
+                  ...containerGroup.deliveryReady,
+                  approved: {
+                    user: containerGroup.deliveryReady?.approvedBy,
+                    date: containerGroup.deliveryReady?.approvedAt,
+                  },
+                },
+              })),
               voyages: (batch?.shipment?.voyages ?? []).map(voyage => ({
                 ...voyage,
                 departure: {

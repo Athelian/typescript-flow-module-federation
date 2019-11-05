@@ -66,7 +66,7 @@ export type CellValue = {|
   empty?: boolean,
   merged?: Area,
   forbidden?: boolean,
-  duplicatable?: boolean,
+  duplicate?: boolean,
   parent?: boolean,
 |};
 

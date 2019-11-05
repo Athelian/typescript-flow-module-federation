@@ -623,8 +623,128 @@ export default function entityEventHandler(
                     date: v,
                   }),
                 },
+                'customClearance',
+                batch.shipment?.containerGroups?.[0]?.customClearance
+              );
+              changes = mergeChanges(
+                changes,
+                {
+                  approvedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  approvedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'warehouseArrival',
+                batch.shipment?.containerGroups?.[0]?.warehouseArrival
+              );
+              changes = mergeChanges(
+                changes,
+                {
+                  approvedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  approvedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'deliveryReady',
+                batch.shipment?.containerGroups?.[0]?.deliveryReady
+              );
+              changes = mergeChanges(
+                changes,
+                {
+                  approvedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  approvedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
                 'departure',
-                batch.shipment?.voyages?.[0]?.depature
+                batch.shipment?.voyages?.[0]?.departure
+              );
+              changes = mergeChanges(
+                changes,
+                {
+                  approvedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  approvedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'arrival',
+                batch.shipment?.voyages?.[1]?.arrival
+              );
+              changes = mergeChanges(
+                changes,
+                {
+                  approvedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  approvedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'departure',
+                batch.shipment?.voyages?.[1]?.departure
+              );
+              changes = mergeChanges(
+                changes,
+                {
+                  approvedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  approvedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'arrival',
+                batch.shipment?.voyages?.[2]?.arrival
+              );
+              changes = mergeChanges(
+                changes,
+                {
+                  approvedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  approvedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'departure',
+                batch.shipment?.voyages?.[2]?.departure
+              );
+              changes = mergeChanges(
+                changes,
+                {
+                  approvedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  approvedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'arrival',
+                batch.shipment?.voyages?.[0]?.arrival
               );
             }
             changes = await mapAsync(changes, change => {

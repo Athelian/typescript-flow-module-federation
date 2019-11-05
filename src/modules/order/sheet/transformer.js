@@ -1145,7 +1145,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
     },
   ].map(c => ({
     ...c,
-    duplicatable: true,
+    duplicate: true,
     disabled: !(batch?.container ?? null),
   }));
 }
@@ -1581,8 +1581,34 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
-    // First Transit Port Arrival Assigned To
-    // First Transit Port Arrival Approval
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.0.firstTransitArrival.assignedTo',
+      type: 'user_assignment',
+      computed: item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0.arrival`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[0]?.arrival ?? null : null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.0.firstTransitArrival.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0.arrival`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[0]?.arrival ?? null : null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
     {
       columnKey: 'order.orderItem.batch.shipment.voyage.1.firstTransitDeparture.date',
       type: 'date',
@@ -1605,8 +1631,34 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
-    // First Transit Port Departure Assigned To
-    // First Transit Port Departure Approval
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.1.firstTransitDeparture.assignedTo',
+      type: 'user_assignment',
+      computed: item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.departure`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[1]?.departure ?? null : null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.1.firstTransitDeparture.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.departure`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[1]?.departure ?? null : null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
     {
       columnKey: 'order.orderItem.batch.shipment.voyage.1.vesselName',
       type: 'text',
@@ -1660,8 +1712,34 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
-    // Second Transit Port Arrival  Assigned To
-    // Second Transit Port Arrival Approval
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.1.secondTransitArrival.assignedTo',
+      type: 'user_assignment',
+      computed: item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.arrival`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[1]?.arrival ?? null : null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.1.secondTransitArrival.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.arrival`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[1]?.arrival ?? null : null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
     {
       columnKey: 'order.orderItem.batch.shipment.voyage.2.secondTransitDeparture.date',
       type: 'date',
@@ -1684,8 +1762,34 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
-    // Second Transit Port Departure Assigned To
-    // Second Transit Port Departure Approval
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.2.secondTransitDeparture.assignedTo',
+      type: 'user_assignment',
+      computed: item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.voyages.2.departure`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[2]?.departure ?? null : null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.2.secondTransitDeparture.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.2.departure`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[2]?.departure ?? null : null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
     {
       columnKey: 'order.orderItem.batch.shipment.voyage.2.vesselName',
       type: 'text',
@@ -1738,8 +1842,34 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
-    // Discharge Port Arrival Assigned To
-    // Discharge Port Arrival Approval
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.2.arrival.assignedTo',
+      type: 'user_assignment',
+      computed: item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.voyages.${(batch?.shipment?.voyages?.length ?? 0) - 1}.arrival`,
+        batch?.shipment?.voyages?.[(batch?.shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.voyage.2.arrival.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.${(batch?.shipment?.voyages?.length ?? 0) - 1}.arrival`,
+        batch?.shipment?.voyages?.[(batch?.shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
     {
       columnKey: 'order.orderItem.batch.shipment.containerGroup.customClearance.date',
       type: 'date',
@@ -1760,6 +1890,34 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         'timelineDateRevisions',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.containerGroup.customClearance.assignedTo',
+      type: 'user_assignment',
+      computed: item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.customClearance`,
+        batch?.shipment?.containerGroups?.[0]?.customClearance ?? null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.containerGroup.customClearance.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.customClearance`,
+        batch?.shipment?.containerGroups?.[0]?.customClearance ?? null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
       ),
     },
     {
@@ -1804,6 +1962,38 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
           )),
     },
     {
+      columnKey: 'order.orderItem.batch.shipment.containerGroup.warehouseArrival.assignedTo',
+      type: 'user_assignment',
+      computed: item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...(batch?.shipment?.containerCount
+        ? { entity: null, data: null, forbidden: false }
+        : transformValueField(
+            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+            'assignedTo',
+            hasPermission =>
+              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+          )),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.containerGroup.warehouseArrival.approved',
+      type: 'approval',
+      ...(batch?.shipment?.containerCount
+        ? { entity: null, data: null, forbidden: false }
+        : transformValueField(
+            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+            'approved',
+            hasPermission =>
+              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+          )),
+    },
+    {
       columnKey: 'order.orderItem.batch.shipment.containerGroup.deliveryReady.date',
       type: 'date',
       ...transformValueField(
@@ -1826,6 +2016,34 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       ),
     },
     {
+      columnKey: 'order.orderItem.batch.shipment.containerGroup.deliveryReady.assignedTo',
+      type: 'user_assignment',
+      computed: item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.deliveryReady`,
+        batch?.shipment?.containerGroups?.[0]?.deliveryReady ?? null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.containerGroup.deliveryReady.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.deliveryReady`,
+        batch?.shipment?.containerGroups?.[0]?.deliveryReady ?? null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
+    {
       columnKey: 'order.orderItem.batch.shipment.files',
       type: 'shipment_documents',
       ...transformValueField(
@@ -1842,7 +2060,7 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
     },
   ].map(c => ({
     ...c,
-    duplicatable: true,
+    duplicate: true,
     disabled: !(batch?.shipment ?? null),
   }));
 }

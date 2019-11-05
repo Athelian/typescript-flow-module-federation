@@ -456,6 +456,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           containerGroups: [
             {
               customClearance: input,
+              id: shipment.containerGroups[0].id,
             },
           ],
         };
@@ -466,6 +467,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           containerGroups: [
             {
               warehouseArrival: input,
+              id: shipment.containerGroups[0].id,
             },
           ],
         };
@@ -476,6 +478,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           containerGroups: [
             {
               deliveryReady: input,
+              id: shipment.containerGroups[0].id,
             },
           ],
         };
