@@ -68,7 +68,7 @@ export const CellShadowStyle = (size: number) => css`
   right: 0;
   bottom: ${-(size - 1) * 30}px;
   ${shadows.INPUT};
-  z-index: -1;
+  z-index: -2;
 `;
 
 export const CellPlaceholderStyle = css`

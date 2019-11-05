@@ -349,6 +349,10 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.logs',
       type: 'order_logs',
+      computed: item => ({
+        entityId: item.id,
+        groupIds: [item.importer?.id, item.exporter?.id].filter(Boolean),
+      }),
       ...transformValueField(basePath, order, 'id', () => true),
     },
   ].map(c => ({

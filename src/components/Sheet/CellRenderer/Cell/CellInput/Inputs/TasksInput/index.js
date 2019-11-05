@@ -5,7 +5,7 @@ import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
 import type { TaskPayload, TaskTemplatePayload } from 'generated/graphql';
-import type InputProps from 'components/Sheet/CellRenderer/Cell/CellInput/types';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import TasksInputDialog from './TasksInputDialog';
 import {
   TasksInputWrapperStyle,
@@ -17,36 +17,46 @@ import {
   TasksBarStyle,
 } from './style';
 
+type Todo = {
+  tasks: Array<TaskPayload>,
+  taskTemplate: TaskTemplatePayload,
+};
+
+type Context = {
+  entityId: string,
+  groupIds: Array<string>,
+};
+
 const TasksInput = (entityType: string) => {
   return ({
     value = { tasks: [], taskTemplate: null },
+    context: { entityId, groupIds },
     focus,
     readonly,
     onChange,
-    onBlur,
-    onFocus,
-  }: InputProps<{
-    tasks: Array<TaskPayload>,
-    taskTemplate: TaskTemplatePayload,
-  }>) => {
-    let numCompletedOrSkipped = 0;
-    value.tasks.forEach(task => {
-      if (task.completedAt || task.completedBy || task.skippedAt || task.skippedBy) {
-        numCompletedOrSkipped += 1;
-      }
-    });
+    forceFocus,
+    forceBlur,
+  }: InputProps<Todo, Context>) => {
+    const numCompletedOrSkipped = value.tasks.reduce(
+      (num, task) =>
+        num + (task.completedAt || task.completedBy || task.skippedAt || task.skippedBy) ? 1 : 0,
+      0
+    );
     const completedOrSkippedPercentage =
       value.tasks.length > 0 ? numCompletedOrSkipped / value.tasks.length : 0;
 
+    const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
+      if (focus) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    };
+
     return (
-      <>
+      <div onBlur={handleBlur}>
         <button
-          tabIndex="-1"
-          onClick={() => {
-            if (!readonly) {
-              onFocus();
-            }
-          }}
+          disabled={readonly}
+          onClick={forceFocus}
           type="button"
           className={TasksInputWrapperStyle}
         >
@@ -92,11 +102,13 @@ const TasksInput = (entityType: string) => {
           tasks={value?.tasks || []}
           taskTemplate={value?.taskTemplate}
           onChange={onChange}
-          onBlur={onBlur}
-          focus={focus}
+          onClose={forceBlur}
+          open={focus}
           entityType={entityType}
+          entityId={entityId}
+          groupIds={groupIds}
         />
-      </>
+      </div>
     );
   };
 };

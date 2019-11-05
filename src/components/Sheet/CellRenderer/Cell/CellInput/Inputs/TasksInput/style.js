@@ -1,10 +1,10 @@
 // @flow
 import { css } from 'react-emotion';
-import { fontSizes, colors, borderRadiuses, presets, scrollbars } from 'styles/common';
+import { fontSizes, layout, colors, borderRadiuses, presets, scrollbars } from 'styles/common';
 
 export const TasksInputWrapperStyle: string = css`
-  display: flex;
-  align-items: center;
+  ${layout.HORIZONTAL};
+  ${layout.CENTER};
   ${fontSizes.MAIN};
   overflow: hidden;
   width: 100%;
@@ -24,67 +24,65 @@ export const TaskIconStyle: string = css`
 `;
 
 export const TasksChartWrapperStyle: string = css`
+  ${layout.VERTICAL};
   flex: 1;
-  display: flex;
-  flex-direction: column;
   padding: 0 5px 0 0;
   overflow: hidden;
 `;
 
 export const NumCompletedStyle: string = css`
   ${fontSizes.SMALL};
+  ${presets.ELLIPSIS};
+  color: ${colors.BLACK};
   height: 20px;
   line-height: 20px;
-  color: ${colors.BLACK};
   font-weight: bold;
-  ${presets.ELLIPSIS};
   text-align: left;
 `;
 
 export const TasksBarWrapperStyle: string = css`
-  height: 5px;
   ${borderRadiuses.MAIN};
+  height: 5px;
   background-color: rgba(0, 0, 0, 0.1);
 `;
 
 export const TasksBarStyle = (completedOrSkippedPercentage: number): string => css`
-  background-color: ${colors.TEAL};
   ${borderRadiuses.BUTTON};
+  background-color: ${colors.TEAL};
   height: 100%;
   width: ${completedOrSkippedPercentage > 1 ? 100 : completedOrSkippedPercentage * 100}%;
   min-width: ${completedOrSkippedPercentage > 0 ? '5px' : '0px'};
 `;
 
 export const TasksSectionWrapperStyle: string = css`
-  position: relative;
   ${presets.BOX};
+  position: relative;
   width: 880px;
   height: min-content;
 `;
 
 export const TasksSectionStyle: string = css`
   ${borderRadiuses.MAIN};
+  ${scrollbars.SMALL};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   overflow-x: hidden;
   overflow-y: overlay;
-  ${scrollbars.SMALL};
   display: flex;
   flex-wrap: wrap;
   padding: 15px 0 15px 10px;
   position: relative;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
   max-height: 70vh;
   min-height: 523px;
 `;
 
 export const TemplateItemStyle: string = css`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: 5px 0;
-  background: ${colors.GRAY_VERY_LIGHT};
+  ${layout.VERTICAL};
+  ${layout.JUSTIFIED_CENTER};
   ${borderRadiuses.MAIN};
+  background: ${colors.GRAY_VERY_LIGHT};
+  margin: 5px 0;
   padding: 0 7.5px;
   height: 260px;
 `;
