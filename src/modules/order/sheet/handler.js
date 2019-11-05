@@ -590,6 +590,43 @@ export default function entityEventHandler(
             return;
           }
           case 'Shipment': {
+            const batch = orders
+              .map(order => order.orderItems.map(oi => oi.batches).flat())
+              // $FlowFixMe flat not supported by flow
+              .flat()
+              .find(currentBatch => currentBatch?.shipment?.id === event.entity?.id);
+            if (batch) {
+              changes = mergeChanges(
+                changes,
+                {
+                  approvedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  approvedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'cargoReady',
+                batch.shipment?.cargoReady
+              );
+              changes = mergeChanges(
+                changes,
+                {
+                  approvedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  approvedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'departure',
+                batch.shipment?.voyages?.[0]?.depature
+              );
+            }
             changes = await mapAsync(changes, change => {
               switch (change.field) {
                 case 'importer':

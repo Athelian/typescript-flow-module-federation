@@ -366,6 +366,14 @@ export default defineMessages({
     id: 'modules.Shipments.cargoReadyRevisions',
     defaultMessage: 'CARGO READY REVISIONS',
   },
+  cargoReadyAssignedTo: {
+    id: 'modules.Shipments.cargoReadyAssignedTo',
+    defaultMessage: 'CARGO READY ASSIGNED TO',
+  },
+  cargoReadyApproved: {
+    id: 'modules.Shipments.cargoReadyApproved',
+    defaultMessage: 'CARGO READY APPROVED',
+  },
   departure: {
     id: 'modules.Shipments.departure',
     defaultMessage: 'DEPARTURE',
@@ -705,6 +713,14 @@ export default defineMessages({
   loadPortDepartureRevisions: {
     id: 'modules.Shipments.loadPortDepartureRevisions',
     defaultMessage: 'LOAD PORT DEPARTURE REVISIONS',
+  },
+  loadPortDepartureAssignedTo: {
+    id: 'modules.Shipments.loadPortDepartureAssignedTo',
+    defaultMessage: 'LOAD PORT ASSIGNED TO',
+  },
+  loadPortDepartureApproved: {
+    id: 'modules.Shipments.loadPortDepartureApproved',
+    defaultMessage: 'LOAD PORT APPROVED',
   },
   agreedDateLabel: {
     id: 'modules.Shipments.agreedDateLabel',

@@ -16,10 +16,30 @@ export function decorate(orders: Array<Object>): Array<Object> {
           value: batch.packageQuantity || 0,
           auto: batch.autoCalculatePackageQuantity || false,
         },
-        packageVolume: {
-          value: batch.packageVolume,
-          auto: batch.autoCalculatePackageVolume || false,
-        },
+        shipment: batch?.shipment
+          ? {
+              ...batch?.shipment,
+              cargoReady: batch?.shipment?.cargoReady
+                ? {
+                    ...batch?.shipment?.cargoReady,
+                    approved: {
+                      user: batch?.shipment?.cargoReady?.approvedBy,
+                      date: batch?.shipment?.cargoReady?.approvedAt,
+                    },
+                  }
+                : null,
+              voyages: (batch?.shipment?.voyages ?? []).map(voyage => ({
+                ...voyage,
+                departure: {
+                  ...voyage.departure,
+                  approved: {
+                    user: voyage?.approvedBy,
+                    date: voyage?.approvedAt,
+                  },
+                },
+              })),
+            }
+          : null,
         container: batch?.container
           ? {
               ...batch?.container,

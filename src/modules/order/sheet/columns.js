@@ -1026,8 +1026,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 1210,
   },
-  // cargo ready assigned to
-  // cargo ready approval
+  {
+    key: 'order.orderItem.batch.shipment.cargoReady.assignedTo',
+    title: <FormattedMessage {...shipmentMessages.cargoReadyAssignedTo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 160,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.cargoReady.approved',
+    title: <FormattedMessage {...shipmentMessages.cargoReadyApproved} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 110,
+  },
   {
     key: 'order.orderItem.batch.shipment.voyage.0.departurePort',
     title: <FormattedMessage {...shipmentMessages.loadPort} />,
@@ -1049,8 +1061,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 1210,
   },
-  // load port assigned to
-  // load port approval
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.departure.assignedTo',
+    title: <FormattedMessage {...shipmentMessages.loadPortDepartureAssignedTo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 160,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.departure.approved',
+    title: <FormattedMessage {...shipmentMessages.loadPortDepartureApproved} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 110,
+  },
   {
     key: 'order.orderItem.batch.shipment.voyage.0.vesselName',
     title: <FormattedMessage {...shipmentMessages.firstVesselName} />,

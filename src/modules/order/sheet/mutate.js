@@ -37,7 +37,7 @@ function getShipmentByTimelineDateId(timelineDateId: string, item: Object): Obje
       }
 
       return !!shipment.voyages.find(
-        voyage => voyage.departure.id === timelineDateId && voyage.arrival.id === timelineDateId
+        voyage => voyage.departure.id === timelineDateId || voyage.arrival.id === timelineDateId
       );
     });
 }
@@ -425,6 +425,12 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             return {
               date: new Date(value),
             };
+          case 'assignedTo': {
+            return { assignedToIds: value.map(user => user?.id) };
+          }
+          case 'approved': {
+            return { approvedById: value?.user?.id };
+          }
           case 'timelineDateRevisions':
             return {
               timelineDateRevisions: value.map(({ sort, date, ...revision }) => ({
