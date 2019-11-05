@@ -722,6 +722,10 @@ export default defineMessages({
     id: 'modules.Shipments.totalBatchQuantity',
     defaultMessage: 'TOTAL BATCH QUANTITY',
   },
+  tasks: {
+    id: 'modules.Shipments.tasks',
+    defaultMessage: 'Tasks',
+  },
   logs: {
     id: 'modules.Shipments.logs',
     defaultMessage: 'Logs',

@@ -377,6 +377,10 @@ export default defineMessages({
     id: 'components.BatchItem.completed',
     defaultMessage: 'COMPLETED',
   },
+  tasks: {
+    id: 'components.BatchItem.tasks',
+    defaultMessage: 'Tasks',
+  },
   logs: {
     id: 'components.BatchItem.logs',
     defaultMessage: 'Logs',

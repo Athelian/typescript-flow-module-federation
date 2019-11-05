@@ -187,7 +187,7 @@ const orderColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.todo',
-    title: <FormattedMessage id="modules.Tasks.tasks" />,
+    title: <FormattedMessage {...orderMessages.tasks} />,
     icon: 'ORDER',
     color: colors.ORDER,
     width: 200,
@@ -375,7 +375,13 @@ const orderItemColumns: Array<ColumnConfig> = [
     color: colors.ORDER_ITEM,
     width: 200,
   },
-  // tasks
+  {
+    key: 'order.orderItem.todo',
+    title: <FormattedMessage {...orderItemMessages.tasks} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+  },
   {
     key: 'order.orderItem.logs',
     title: <FormattedMessage {...orderItemMessages.logs} />,
@@ -590,7 +596,13 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 280,
   },
-  // tasks
+  {
+    key: 'order.orderItem.batch.todo',
+    title: <FormattedMessage {...batchMessages.tasks} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.logs',
     title: <FormattedMessage {...batchMessages.logs} />,
@@ -1234,7 +1246,13 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 200,
   },
-  // tasks
+  {
+    key: 'order.orderItem.batch.shipment.todo',
+    title: <FormattedMessage {...shipmentMessages.tasks} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.shipment.logs',
     title: <FormattedMessage {...shipmentMessages.logs} />,

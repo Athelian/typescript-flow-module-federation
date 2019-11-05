@@ -36,6 +36,7 @@ import {
   ORDER_ITEMS_SET_PRICE,
   ORDER_ITEMS_SET_QUANTITY,
   ORDER_ITEMS_SET_TAGS,
+  ORDER_ITEMS_SET_TASKS,
   ORDER_ITEMS_UPDATE,
 } from 'modules/permission/constants/orderItem';
 import {
@@ -54,6 +55,7 @@ import {
   BATCH_SET_QUANTITY,
   BATCH_SET_QUANTITY_ADJUSTMENTS,
   BATCH_SET_TAGS,
+  BATCH_SET_TASKS,
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
 import {
@@ -339,6 +341,10 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.todo',
       type: 'order_tasks',
+      computed: item => ({
+        entityId: item.id,
+        groupIds: [item.importer?.id, item.exporter?.id].filter(Boolean),
+      }),
       ...transformValueField(
         basePath,
         order,
@@ -349,10 +355,6 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.logs',
       type: 'order_logs',
-      computed: item => ({
-        entityId: item.id,
-        groupIds: [item.importer?.id, item.exporter?.id].filter(Boolean),
-      }),
       ...transformValueField(basePath, order, 'id', () => true),
     },
   ].map(c => ({
@@ -564,6 +566,20 @@ function transformOrderItem(
         'files',
         hasPermission =>
           hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_DOCUMENTS)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.todo',
+      type: 'order_item_tasks',
+      computed: item => ({
+        entityId: orderItem?.id,
+        groupIds: [item.importer?.id, item.exporter?.id].filter(Boolean),
+      }),
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'todo',
+        hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_TASKS)
       ),
     },
     {
@@ -812,6 +828,20 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
         batch,
         'packageSize',
         hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_SIZE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.todo',
+      type: 'batch_tasks',
+      computed: item => ({
+        entityId: batch?.id,
+        groupIds: [item.importer?.id, item.exporter?.id].filter(Boolean),
+      }),
+      ...transformValueField(
+        basePath,
+        batch,
+        'todo',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_TASKS)
       ),
     },
     {
@@ -1771,6 +1801,27 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         batch?.shipment ?? null,
         'files',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_DOCUMENTS)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.todo',
+      type: 'shipment_tasks',
+      computed: item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        return {
+          entityId: batch?.shipment?.id ?? null,
+          groupIds: [
+            currentBatch?.shipment?.importer?.id,
+            currentBatch?.shipment?.exporter?.id,
+            ...(currentBatch?.shipment?.forwarders ?? []).map(f => f.id),
+          ].filter(Boolean),
+        };
+      },
+      ...transformValueField(
+        basePath,
+        batch,
+        'todo',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_TASKS)
       ),
     },
     {

@@ -19,7 +19,7 @@ import {
 
 type Todo = {
   tasks: Array<TaskPayload>,
-  taskTemplate: TaskTemplatePayload,
+  taskTemplate: ?TaskTemplatePayload,
 };
 
 type Context = {
@@ -29,21 +29,26 @@ type Context = {
 
 const TasksInput = (entityType: string) => {
   return ({
-    value = { tasks: [], taskTemplate: null },
-    context: { entityId, groupIds },
+    value,
+    context,
     focus,
     readonly,
     onChange,
     forceFocus,
     forceBlur,
   }: InputProps<Todo, Context>) => {
-    const numCompletedOrSkipped = value.tasks.reduce(
+    const tasks = value?.tasks ?? [];
+    const taskTemplate = value?.taskTemplate ?? null;
+    const entityId = context?.entityId ?? '';
+    const groupIds = context?.groupIds ?? [];
+
+    const numCompletedOrSkipped = tasks.reduce(
       (num, task) =>
         num + (task.completedAt || task.completedBy || task.skippedAt || task.skippedBy) ? 1 : 0,
       0
     );
     const completedOrSkippedPercentage =
-      value.tasks.length > 0 ? numCompletedOrSkipped / value.tasks.length : 0;
+      tasks.length > 0 ? numCompletedOrSkipped / tasks.length : 0;
 
     const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
       if (focus) {
@@ -67,17 +72,17 @@ const TasksInput = (entityType: string) => {
           <div className={TasksCountWrapperStyle}>
             <DisplayWrapper>
               <span>
-                {value.tasks.length === 1 ? (
+                {tasks.length === 1 ? (
                   <FormattedMessage
                     id="modules.sheet.task"
                     defaultMessage="{numOfTasks} Task"
-                    values={{ numOfTasks: <FormattedNumber value={value.tasks.length} /> }}
+                    values={{ numOfTasks: <FormattedNumber value={tasks.length} /> }}
                   />
                 ) : (
                   <FormattedMessage
                     id="modules.sheet.tasks"
                     defaultMessage="{numOfTasks} Tasks"
-                    values={{ numOfTasks: <FormattedNumber value={value.tasks.length} /> }}
+                    values={{ numOfTasks: <FormattedNumber value={tasks.length} /> }}
                   />
                 )}
               </span>
@@ -99,8 +104,8 @@ const TasksInput = (entityType: string) => {
         </button>
 
         <TasksInputDialog
-          tasks={value?.tasks || []}
-          taskTemplate={value?.taskTemplate}
+          tasks={tasks}
+          taskTemplate={taskTemplate}
           onChange={onChange}
           onClose={forceBlur}
           open={focus}
