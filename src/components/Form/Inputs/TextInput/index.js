@@ -2,9 +2,8 @@
 import * as React from 'react';
 import { injectIntl, type IntlShape } from 'react-intl';
 import { Display } from 'components/Form';
+import BaseTextInput from 'components/Inputs/TextInput';
 import { type InputProps, defaultInputProps } from 'components/Form/Inputs/type';
-import { isNullOrUndefined } from 'utils/fp';
-import messages from 'components/Form/Inputs/messages';
 
 type Props = InputProps & {
   intl: IntlShape,
@@ -26,18 +25,12 @@ const TextInput = ({
       {value}
     </Display>
   ) : (
-    <input
+    <BaseTextInput
       ref={inputRef}
       value={value}
       style={{ textAlign: align }}
-      placeholder={
-        isNullOrUndefined(placeholder)
-          ? intl.formatMessage(messages.defaultPlaceholder)
-          : placeholder
-      }
+      placeholder={placeholder}
       {...rest}
-      type="text"
-      spellCheck={false}
     />
   );
 

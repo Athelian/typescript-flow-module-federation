@@ -6,18 +6,12 @@ import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import { isForbidden } from 'utils/data';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import InputWrapper from '../InputWrapper';
+import { CellInputWrapperStyle } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
 import { TagsSelectStyle, RemoveButtonStyle } from './style';
 
 const TagInputRenderer = ({ getInputProps, remove, selectedItems }: RenderInputProps) => {
   return (
-    <div
-      className={TagsSelectStyle}
-      role="presentation"
-      onClick={() => {
-        // openMenu();
-      }}
-    >
+    <div className={TagsSelectStyle}>
       {(selectedItems || [])
         .filter(item => !isForbidden(item))
         .map(tag => (
@@ -26,6 +20,7 @@ const TagInputRenderer = ({ getInputProps, remove, selectedItems }: RenderInputP
             tag={tag}
             suffix={
               <button
+                tabIndex="-1"
                 type="button"
                 className={RemoveButtonStyle}
                 onClick={event => {
@@ -50,25 +45,17 @@ const TagInputRenderer = ({ getInputProps, remove, selectedItems }: RenderInputP
 
 const TagsInput = (entityType: string) => ({
   value,
-  focus,
   onChange,
-  onFocus,
-  onBlur,
 }: InputProps<Array<{ id: string, name: string, color: string }>>) => (
-  <InputWrapper focus={focus} preselect={false}>
-    {({ ref }) => (
-      <BaseTagsInput
-        inputRef={ref}
-        entityType={entityType}
-        value={value || []}
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        optionWidth={200}
-        renderInput={TagInputRenderer}
-      />
-    )}
-  </InputWrapper>
+  <div className={CellInputWrapperStyle}>
+    <BaseTagsInput
+      entityType={entityType}
+      value={value || []}
+      onChange={onChange}
+      optionWidth={200}
+      renderInput={TagInputRenderer}
+    />
+  </div>
 );
 
 export default {

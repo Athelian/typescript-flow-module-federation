@@ -13,22 +13,24 @@ const WarehouseSelectorInput = ({
   value,
   onChange,
   focus,
-  onFocus,
-  onBlur,
-  onKeyDown,
+  forceFocus,
+  forceBlur,
   readonly,
 }: InputProps<{ id: string, name: string }>) => {
+  const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
+    if (focus) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  };
+
   return (
-    <div className={SelectorWrapperStyle}>
+    <div className={SelectorWrapperStyle} onBlur={handleBlur}>
       {value ? (
         <button
-          tabIndex="-1"
           type="button"
           disabled={readonly}
-          onClick={() => {
-            onFocus();
-          }}
-          onKeyDown={onKeyDown}
+          onClick={forceFocus}
           className={SelectorCardStyle}
         >
           <Display height="20px">{value.name}</Display>
@@ -41,20 +43,20 @@ const WarehouseSelectorInput = ({
           className={PlusButtonStyle}
           disabled={readonly}
           onClick={() => {
-            onFocus();
+            forceFocus();
           }}
         >
           <Icon icon="ADD" />
         </button>
       )}
 
-      <SlideView isOpen={focus} onRequestClose={onBlur}>
+      <SlideView isOpen={focus} onRequestClose={forceBlur}>
         <SelectWareHouse
           selected={value}
-          onCancel={onBlur}
+          onCancel={forceBlur}
           onSelect={newValue => {
             onChange(newValue, true);
-            onBlur();
+            forceBlur();
           }}
         />
       </SlideView>

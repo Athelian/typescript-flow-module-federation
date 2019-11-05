@@ -5,7 +5,7 @@ import useEnum from 'hooks/useEnum';
 import TextDisplay from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/TextDisplay';
 import messages from 'modules/shipment/messages';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import SearchSelectInput from '../SearchSelectInput';
+import SearchSelectInput from 'components/Sheet/CellRenderer/Cell/CellInput/Common/SearchSelectInput';
 import { filterItems, itemToString, itemToValue } from './helpers';
 
 const PortInput = ({
@@ -13,8 +13,6 @@ const PortInput = ({
   context,
   focus,
   onChange,
-  onFocus,
-  onBlur,
 }: InputProps<{ seaport: ?string, airport: ?string }, 'Air' | 'Sea' | null>) => {
   const intl = useIntl();
   const { enums, loading } = useEnum(context ? `${context}port` : null);
@@ -66,8 +64,6 @@ const PortInput = ({
       required={false}
       onChange={handleChange}
       focus={focus}
-      onFocus={onFocus}
-      onBlur={onBlur}
       items={items}
       itemToString={itemToString}
       itemToValue={itemToValue}

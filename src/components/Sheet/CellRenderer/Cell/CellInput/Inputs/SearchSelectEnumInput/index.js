@@ -6,7 +6,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import { enumToString } from 'components/Form/Factories/helpers';
 import useEnum from 'hooks/useEnum';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import SearchSelectInput from '../SearchSelectInput';
+import SearchSelectInput from 'components/Sheet/CellRenderer/Cell/CellInput/Common/SearchSelectInput';
 
 type Props = {
   ...InputProps<string>,
@@ -14,15 +14,7 @@ type Props = {
   required: boolean,
 };
 
-const SearchSelectEnumInputImpl = ({
-  value,
-  onChange,
-  onFocus,
-  onBlur,
-  focus,
-  enumType,
-  required,
-}: Props) => {
+const SearchSelectEnumInputImpl = ({ value, onChange, focus, enumType, required }: Props) => {
   const intl = useIntl();
   const { enums, loading } = useEnum(enumType);
 
@@ -41,8 +33,6 @@ const SearchSelectEnumInputImpl = ({
       value={value}
       required={required}
       onChange={onChange}
-      onFocus={onFocus}
-      onBlur={onBlur}
       items={loading ? [] : enums}
       filterItems={(q: string, options: Array<Object>): Array<Object> => {
         return matchSorter(options, q, {

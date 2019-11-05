@@ -5,7 +5,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import { enumToString } from 'components/Form/Factories/helpers';
 import useEnum from 'hooks/useEnum';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import SelectInput from '../SelectInput';
+import SelectInput from 'components/Sheet/CellRenderer/Cell/CellInput/Common/SelectInput';
 
 type Props = {
   ...InputProps<string>,
@@ -13,15 +13,7 @@ type Props = {
   required: boolean,
 };
 
-const SelectEnumInputImpl = ({
-  value,
-  onChange,
-  onFocus,
-  onBlur,
-  focus,
-  enumType,
-  required,
-}: Props) => {
+const SelectEnumInputImpl = ({ value, onChange, focus, enumType, required }: Props) => {
   const intl = useIntl();
 
   const { enums, loading } = useEnum(enumType);
@@ -39,8 +31,6 @@ const SelectEnumInputImpl = ({
       value={value}
       required={required}
       onChange={onChange}
-      onFocus={onFocus}
-      onBlur={onBlur}
       items={loading ? [] : enums}
       itemToString={enumToString(enumType, intl)}
       itemToValue={item => item?.name ?? null}

@@ -1,49 +1,34 @@
 // @flow
 import * as React from 'react';
-import BaseNumberInput from 'components/Form/Inputs/NumberInput';
+import BaseNumberInput from 'components/Inputs/NumberInput';
 import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
+import {
+  CellInputWrapperStyle,
+  InputStyle,
+} from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
 import type { MetricValue } from 'types';
-import InputWrapper from '../InputWrapper';
 
 const StaticMetricValueInput = ({
   value: metricValue,
-  focus,
   onChange,
-  onFocus,
-  onBlur,
-  onKeyDown,
   readonly,
 }: InputProps<MetricValue>) => {
   const { value = 0, metric = '' } = metricValue || {};
+
   return (
-    <InputWrapper focus={focus} preselect>
-      {({ ref }) => (
-        <>
-          <BaseNumberInput
-            inputRef={ref}
-            value={value}
-            name="value"
-            tabIndex="-1"
-            nullable={false}
-            readOnly={readonly}
-            readOnlyHeight="30px"
-            onChange={e => {
-              onChange({
-                value: e.target.value,
-                metric,
-              });
-            }}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            onKeyDown={onKeyDown}
-          />
-          <DisplayWrapper width="min-content">
-            <span>{metric}</span>
-          </DisplayWrapper>
-        </>
-      )}
-    </InputWrapper>
+    <div className={CellInputWrapperStyle}>
+      <BaseNumberInput
+        className={InputStyle}
+        value={value}
+        required
+        onChange={e => onChange(e.target.value)}
+        disabled={readonly}
+      />
+      <DisplayWrapper width="min-content">
+        <span>{metric}</span>
+      </DisplayWrapper>
+    </div>
   );
 };
 

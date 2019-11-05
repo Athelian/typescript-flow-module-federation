@@ -12,49 +12,48 @@ const PartnersSelectorInput = (partnerTypes: Array<string>) => ({
   value,
   focus,
   onChange,
-  onFocus,
-  onBlur,
-  onKeyDown,
+  forceFocus,
+  forceBlur,
   readonly,
-}: InputProps<Array<Object>>) => (
-  <div>
-    <button
-      tabIndex="-1"
-      type="button"
-      onClick={() => {
-        if (!readonly) {
-          onFocus();
-        }
-      }}
-      onKeyDown={onKeyDown}
-    >
-      <DisplayWrapper>
-        {(value || []).map(item => (
-          <div key={item.id} className={PartnerCardStyle}>
-            <Display height="20px">{item.name}</Display>
-            <div className={IconStyle('PARTNER', false, readonly, false, false)}>
-              <Icon icon="PARTNER" />
-            </div>
-          </div>
-        ))}
-      </DisplayWrapper>
-    </button>
+}: InputProps<Array<Object>>) => {
+  const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
+    if (focus) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  };
 
-    <SlideView isOpen={focus} onRequestClose={onBlur}>
-      {focus && (
-        <SelectPartners
-          partnerTypes={partnerTypes || []}
-          selected={value || []}
-          onCancel={onBlur}
-          onSelect={newValue => {
-            onChange(newValue, true);
-            onBlur();
-          }}
-        />
-      )}
-    </SlideView>
-  </div>
-);
+  return (
+    <div onBlur={handleBlur}>
+      <button disabled={readonly} type="button" onClick={forceFocus}>
+        <DisplayWrapper>
+          {(value || []).map(item => (
+            <div key={item.id} className={PartnerCardStyle}>
+              <Display height="20px">{item.name}</Display>
+              <div className={IconStyle('PARTNER', false, readonly, false, false)}>
+                <Icon icon="PARTNER" />
+              </div>
+            </div>
+          ))}
+        </DisplayWrapper>
+      </button>
+
+      <SlideView isOpen={focus} onRequestClose={forceBlur}>
+        {focus && (
+          <SelectPartners
+            partnerTypes={partnerTypes || []}
+            selected={value || []}
+            onCancel={forceBlur}
+            onSelect={newValue => {
+              onChange(newValue, true);
+              forceBlur();
+            }}
+          />
+        )}
+      </SlideView>
+    </div>
+  );
+};
 
 export default {
   Forwarders: PartnersSelectorInput(['Forwarder']),
