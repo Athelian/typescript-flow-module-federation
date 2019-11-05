@@ -4,6 +4,7 @@
 <PROJECT_ROOT>/node_modules/memoizerific
 
 [untyped]
+<PROJECT_ROOT>/node_modules/react-window
 <PROJECT_ROOT>/node_modules/react-beautiful-dnd
 <PROJECT_ROOT>/node_modules/date-fns-tz
 <PROJECT_ROOT>/node_modules/unstated
