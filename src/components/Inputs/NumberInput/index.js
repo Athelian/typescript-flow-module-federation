@@ -26,13 +26,18 @@ const NumberInput = React.forwardRef<Props, HTMLInputElement>(
 
     const handleBlur = (e: SyntheticFocusEvent<HTMLInputElement>) => {
       // $FlowFixMe
-      if (required && e.target.value === '') {
-        // $FlowFixMe
-        e.target.value = 0; // eslint-disable-line no-param-reassign
-      }
+      const value = toFloatNullable(required && e.target.value === '' ? 0 : e.target.value);
+      // $FlowFixMe
+      e.target.value = value; // eslint-disable-line no-param-reassign
 
       if (onBlur) {
-        onBlur(e);
+        onBlur({
+          ...e,
+          target: {
+            ...e.target,
+            value,
+          },
+        });
       }
     };
 

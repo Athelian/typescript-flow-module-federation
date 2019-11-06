@@ -13,7 +13,7 @@ const DayInput = ({ value, onChange, readonly }: InputProps<number>) => (
   <div className={CellInputWrapperStyle}>
     <BaseNumberInput
       className={InputStyle}
-      value={value || ''}
+      value={value === null ? '' : value}
       onChange={e => onChange(e.target.value)}
       disabled={readonly}
     />
