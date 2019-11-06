@@ -94,6 +94,10 @@ export default defineMessages({
     id: 'modules.Shipments.exporter',
     defaultMessage: 'EXPORTER',
   },
+  mainExporter: {
+    id: 'modules.Shipments.mainExporter',
+    defaultMessage: 'MAIN EXPORTER',
+  },
   importer: {
     id: 'modules.Shipments.importer',
     defaultMessage: 'IMPORTER',

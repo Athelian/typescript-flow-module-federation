@@ -879,7 +879,14 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 200,
   },
-  // exporter
+  {
+    key: 'order.orderItem.batch.shipment.exporter',
+    exportKey: 'orderItems.batches.shipment.exporter',
+    title: <FormattedMessage {...shipmentMessages.mainExporter} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.shipment.forwarders',
     exportKey: 'forwarders',
