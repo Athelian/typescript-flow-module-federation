@@ -429,7 +429,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             return { assignedToIds: value.map(user => user?.id) };
           }
           case 'approved': {
-            return { approvedById: value?.user?.id };
+            return { approvedById: value?.user?.id ?? null };
           }
           case 'timelineDateRevisions':
             return {

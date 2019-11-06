@@ -546,6 +546,16 @@ export const shipmentByIDQuery = gql`
   ${forbiddenFragment}
 `;
 
+export const userByIDQuery = gql`
+  query userByIDQuery($id: ID!) {
+    user(id: $id) {
+      ...userAvatarFragment
+    }
+  }
+
+  ${userAvatarFragment}
+`;
+
 export const organizationByIDQuery = gql`
   query organizationByIDQuery($id: ID!) {
     organization(id: $id) {

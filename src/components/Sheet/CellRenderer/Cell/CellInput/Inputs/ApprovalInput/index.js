@@ -9,20 +9,19 @@ const ApprovalInput = ({
   value,
   readonly,
   onChange,
-}: InputProps<{ user: ?User, date: ?(string | Date) }>) => {
-  return (
-    <div className={CellInputWrapperStyle}>
-      <BaseApprovalInput
-        approved={value}
-        onApprove={(user: User) => {
-          onChange({ user, date: new Date() });
-        }}
-        onDisapprove={() => {
-          onChange({ user: null, date: null });
-        }}
-        readonly={readonly}
-      />
-    </div>
-  );
-};
+}: InputProps<{ user: ?User, date: ?(string | Date) }>) => (
+  <div className={CellInputWrapperStyle}>
+    <BaseApprovalInput
+      approved={value}
+      onApprove={(user: User) => {
+        onChange({ user, date: new Date() }, true);
+      }}
+      onDisapprove={() => {
+        onChange({ user: null, date: null }, true);
+      }}
+      readonly={readonly}
+    />
+  </div>
+);
+
 export default ApprovalInput;

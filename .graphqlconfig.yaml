@@ -6,3 +6,4 @@ projects:
         dev:
           url: 'https://graphql-staging.zenport.io/graphql'
           subscription: 'https://graphql-staging.zenport.io/graphql'
+          introspect: true
