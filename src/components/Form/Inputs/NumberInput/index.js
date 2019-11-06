@@ -40,7 +40,6 @@ class NumberInput extends React.Component<Props> {
       readOnlySuffix,
       placeholder,
       nullable,
-      onBlur,
       inputRef,
       ...rest
     } = this.props;

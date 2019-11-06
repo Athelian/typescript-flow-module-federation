@@ -11,7 +11,7 @@ const NumberInput = ({ value, onChange, readonly }: InputProps<string>) => (
   <div className={CellInputWrapperStyle}>
     <BaseNumberInput
       className={InputStyle}
-      value={value || ''}
+      value={value === null ? '' : value}
       onChange={e => onChange(e.target.value)}
       disabled={readonly}
     />
