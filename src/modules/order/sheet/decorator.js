@@ -4,7 +4,7 @@
  * This is used to do clean up the data for cell input
  * Eg: toggle input which combine 2 values
  */
-export function decorate(orders: Array<Object>): Array<Object> {
+export default function decorate(orders: Array<Object>): Array<Object> {
   return orders.map(order => ({
     ...order,
     orderItems: order.orderItems.map(orderItem => ({
@@ -97,5 +97,3 @@ export function decorate(orders: Array<Object>): Array<Object> {
     })),
   }));
 }
-
-export default decorate;

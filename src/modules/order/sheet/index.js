@@ -12,8 +12,8 @@ import transformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
 import mutate from './mutate';
+import decorate from './decorator';
 import { ordersQuery } from './query';
-import { decorate } from './decorator';
 
 type Props = {
   orderIds?: Array<string>,
@@ -82,9 +82,6 @@ const OrderSheetModule = ({ orderIds }: Props) => {
         loading={loading}
         items={initialItems}
         hasMore={hasMore}
-        /* $FlowFixMe This comment suppresses an error found when upgrading
-         * Flow to v0.111.0. To view the error, delete this comment and run
-         * Flow. */
         transformItem={transformer}
         onMutate={memoizedMutate}
         handleEntityEvent={memoizedHandler}
