@@ -130,9 +130,33 @@ export default defineMessages({
     id: 'modules.Shipments.secondTransitPort',
     defaultMessage: 'SECOND TRANSIT PORT',
   },
+  secondTransitArrivalAssignedTo: {
+    id: 'modules.Shipments.secondTransitArrivalAssignedTo',
+    defaultMessage: 'SECOND TRANSIT ARRIVAL ASSIGNED TO',
+  },
+  secondTransitArrivalApproved: {
+    id: 'modules.Shipments.secondTransitArrivalApproved',
+    defaultMessage: 'SECOND TRANSIT ARRIVAL APPROVED',
+  },
+  secondTransitDepartureAssignedTo: {
+    id: 'modules.Shipments.secondTransitDepartureAssignedTo',
+    defaultMessage: 'SECOND TRANSIT DEPARTURE ASSIGNED TO',
+  },
+  secondTransitDepartureApproved: {
+    id: 'modules.Shipments.secondTransitDepartureApproved',
+    defaultMessage: 'SECOND TRANSIT DEPARTURE APPROVED',
+  },
   dischargePort: {
     id: 'modules.Shipments.dischargePort',
     defaultMessage: 'DISCHARGE PORT',
+  },
+  dischargePortArrivalAssignedTo: {
+    id: 'modules.Shipments.dischargePortArrivalAssignedTo',
+    defaultMessage: 'DISCHARGE PORT ARRIVAL ASSIGNED TO',
+  },
+  dischargePortArrivalApproved: {
+    id: 'modules.Shipments.dischargePortArrivalApproved',
+    defaultMessage: 'DISCHARGE PORT ARRIVAL APPROVED',
   },
   firstVesselName: {
     id: 'modules.Shipments.firstVesselName',
@@ -366,6 +390,14 @@ export default defineMessages({
     id: 'modules.Shipments.cargoReadyRevisions',
     defaultMessage: 'CARGO READY REVISIONS',
   },
+  cargoReadyAssignedTo: {
+    id: 'modules.Shipments.cargoReadyAssignedTo',
+    defaultMessage: 'CARGO READY ASSIGNED TO',
+  },
+  cargoReadyApproved: {
+    id: 'modules.Shipments.cargoReadyApproved',
+    defaultMessage: 'CARGO READY APPROVED',
+  },
   departure: {
     id: 'modules.Shipments.departure',
     defaultMessage: 'DEPARTURE',
@@ -390,6 +422,14 @@ export default defineMessages({
     id: 'modules.Shipments.customClearanceRevisions',
     defaultMessage: 'CUSTOMS CLEARANCE REVISIONS',
   },
+  customClearanceAssignedTo: {
+    id: 'modules.Shipments.customClearanceAssignedTo',
+    defaultMessage: 'CUSTOMS CLEARANCE ASSIGNED TO',
+  },
+  customClearanceApproved: {
+    id: 'modules.Shipments.customClearanceApproved',
+    defaultMessage: 'CUSTOMS CLEARANCE APPROVED',
+  },
   warehouseArrival: {
     id: 'modules.Shipments.warehouseArrival',
     defaultMessage: 'WAREHOUSE ARRIVAL',
@@ -398,6 +438,14 @@ export default defineMessages({
     id: 'modules.Shipments.warehouseArrivalRevisions',
     defaultMessage: 'WAREHOUSE ARRIVAL REVISIONS',
   },
+  warehouseArrivalAssignedTo: {
+    id: 'modules.Shipments.warehouseArrivalAssignedTo',
+    defaultMessage: 'WAREHOUSE ARRIVAL ASSIGNED TO',
+  },
+  warehouseArrivalApproved: {
+    id: 'modules.Shipments.warehouseArrivalApproved',
+    defaultMessage: 'WAREHOUSE ARRIVAL APPROVED',
+  },
   deliveryReady: {
     id: 'modules.Shipments.deliveryReady',
     defaultMessage: 'DELIVERY READY',
@@ -405,6 +453,14 @@ export default defineMessages({
   deliveryReadyRevisions: {
     id: 'modules.Shipments.deliveryReadyRevisions',
     defaultMessage: 'DELIVERY READY REVISIONS',
+  },
+  deliveryReadyAssignedTo: {
+    id: 'modules.Shipments.deliveryReadyAssignedTo',
+    defaultMessage: 'DELIVERY READY ASSIGNED TO',
+  },
+  deliveryReadyApproved: {
+    id: 'modules.Shipments.deliveryReadyApproved',
+    defaultMessage: 'DELIVERY READY ARRIVAL APPROVED',
   },
   status: {
     id: 'modules.Shipments.status',
@@ -668,35 +724,35 @@ export default defineMessages({
   },
   firstTransitPortArrival: {
     id: 'modules.Shipments.firstTransitPortArrival',
-    defaultMessage: 'FIRST TRANSIT PORT ARRIVAL',
+    defaultMessage: 'FIRST TRANSIT ARRIVAL',
   },
   firstTransitPortArrivalRevisions: {
     id: 'modules.Shipments.firstTransitPortArrivalRevisions',
-    defaultMessage: 'FIRST TRANSIT PORT ARRIVAL REVISIONS',
+    defaultMessage: 'FIRST TRANSIT ARRIVAL REVISIONS',
   },
   firstTransitPortDeparture: {
     id: 'modules.Shipments.firstTransitPortDeparture',
-    defaultMessage: 'FIRST TRANSIT PORT DEPARTURE',
+    defaultMessage: 'FIRST TRANSIT DEPARTURE',
   },
   firstTransitPortDepartureRevisions: {
     id: 'modules.Shipments.firstTransitPortDepartureRevisions',
-    defaultMessage: 'FIRST TRANSIT PORT DEPARTURE REVISIONS',
+    defaultMessage: 'FIRST TRANSIT DEPARTURE REVISIONS',
   },
   secondTransitPortArrival: {
     id: 'modules.Shipments.secondTransitPortArrival',
-    defaultMessage: 'SECOND TRANSIT PORT ARRIVAL',
+    defaultMessage: 'SECOND TRANSIT ARRIVAL',
   },
   secondTransitPortArrivalRevisions: {
     id: 'modules.Shipments.secondTransitPortArrivalRevisions',
-    defaultMessage: 'SECOND TRANSIT PORT ARRIVAL REVISIONS',
+    defaultMessage: 'SECOND TRANSIT ARRIVAL REVISIONS',
   },
   secondTransitPortDeparture: {
     id: 'modules.Shipments.secondTransitPortDeparture',
-    defaultMessage: 'SECOND TRANSIT PORT DEPARTURE',
+    defaultMessage: 'SECOND TRANSIT DEPARTURE',
   },
   secondTransitPortDepartureRevisions: {
     id: 'modules.Shipments.secondTransitPortDepartureRevisions',
-    defaultMessage: 'SECOND TRANSIT PORT DEPARTURE REVISIONS',
+    defaultMessage: 'SECOND TRANSIT DEPARTURE REVISIONS',
   },
   loadPortDeparture: {
     id: 'modules.Shipments.loadPortDeparture',
@@ -705,6 +761,30 @@ export default defineMessages({
   loadPortDepartureRevisions: {
     id: 'modules.Shipments.loadPortDepartureRevisions',
     defaultMessage: 'LOAD PORT DEPARTURE REVISIONS',
+  },
+  loadPortDepartureAssignedTo: {
+    id: 'modules.Shipments.loadPortDepartureAssignedTo',
+    defaultMessage: 'LOAD PORT ASSIGNED TO',
+  },
+  loadPortDepartureApproved: {
+    id: 'modules.Shipments.loadPortDepartureApproved',
+    defaultMessage: 'LOAD PORT APPROVED',
+  },
+  firstTransitArrivalAssignedTo: {
+    id: 'modules.Shipments.firstTransitArrivalAssignedTo',
+    defaultMessage: 'FIRST TRANSIT ARRIVAL ASSIGNED TO',
+  },
+  firstTransitArrivalApproved: {
+    id: 'modules.Shipments.firstTransitArrivalApproved',
+    defaultMessage: 'FIRST TRANSIT ARRIVAL APPROVED',
+  },
+  firstTransitDepartureAssignedTo: {
+    id: 'modules.Shipments.firstTransitDepartureAssignedTo',
+    defaultMessage: 'FIRST TRANSIT DEPARTURE ASSIGNED TO',
+  },
+  firstTransitDepartureApproved: {
+    id: 'modules.Shipments.firstTransitDepartureApproved',
+    defaultMessage: 'FIRST TRANSIT DEPARTURE APPROVED',
   },
   agreedDateLabel: {
     id: 'modules.Shipments.agreedDateLabel',

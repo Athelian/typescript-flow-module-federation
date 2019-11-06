@@ -37,7 +37,7 @@ function getShipmentByTimelineDateId(timelineDateId: string, item: Object): Obje
       }
 
       return !!shipment.voyages.find(
-        voyage => voyage.departure.id === timelineDateId && voyage.arrival.id === timelineDateId
+        voyage => voyage.departure.id === timelineDateId || voyage.arrival.id === timelineDateId
       );
     });
 }
@@ -301,6 +301,16 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             warehouseArrivalAgreedDateApprovedById: value?.user?.id ?? null,
           };
         }
+        case 'warehouseArrivalActualDateApproved': {
+          return {
+            warehouseArrivalActualDateApprovedById: value?.user?.id ?? null,
+          };
+        }
+        case 'departureDateApproved': {
+          return {
+            departureDateApprovedById: value?.user?.id ?? null,
+          };
+        }
         case 'freeTimeStartDate': {
           const { auto: autoCalculatedFreeTimeStartDate = false, value: date = null } = value || {};
           return {
@@ -416,6 +426,12 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             return {
               date: new Date(value),
             };
+          case 'assignedTo': {
+            return { assignedToIds: value.map(user => user?.id) };
+          }
+          case 'approved': {
+            return { approvedById: value?.user?.id ?? null };
+          }
           case 'timelineDateRevisions':
             return {
               timelineDateRevisions: value.map(({ sort, date, ...revision }) => ({
@@ -441,6 +457,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           containerGroups: [
             {
               customClearance: input,
+              id: shipment.containerGroups[0].id,
             },
           ],
         };
@@ -451,6 +468,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           containerGroups: [
             {
               warehouseArrival: input,
+              id: shipment.containerGroups[0].id,
             },
           ],
         };
@@ -461,6 +479,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           containerGroups: [
             {
               deliveryReady: input,
+              id: shipment.containerGroups[0].id,
             },
           ],
         };

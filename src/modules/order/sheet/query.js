@@ -361,6 +361,10 @@ const containerSheetFragment = gql`
     warehouseArrivalActualDateAssignedTo {
       ...userAvatarFragment
     }
+    warehouseArrivalActualDateApprovedBy {
+      ...userAvatarFragment
+    }
+    warehouseArrivalActualDateApprovedAt
     warehouse {
       ...warehouseFragment
     }
@@ -369,6 +373,10 @@ const containerSheetFragment = gql`
     departureDateAssignedTo {
       ...userAvatarFragment
     }
+    departureDateApprovedBy {
+      ...userAvatarFragment
+    }
+    departureDateApprovedAt
     totalPackageQuantity
     totalQuantity
     orderItemCount
@@ -593,6 +601,16 @@ export const shipmentByIDQuery = gql`
   ${projectCardFragment}
   ${taskFormInTemplateFragment}
   ${forbiddenFragment}
+`;
+
+export const userByIDQuery = gql`
+  query userByIDQuery($id: ID!) {
+    user(id: $id) {
+      ...userAvatarFragment
+    }
+  }
+
+  ${userAvatarFragment}
 `;
 
 export const organizationByIDQuery = gql`
