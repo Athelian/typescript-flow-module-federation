@@ -888,7 +888,6 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 810,
   },
-  // related exporters
   {
     key: 'order.orderItem.batch.shipment.blNo',
     exportKey: 'orderItems.batches.shipment.blNo',

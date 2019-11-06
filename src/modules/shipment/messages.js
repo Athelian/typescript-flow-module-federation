@@ -810,6 +810,10 @@ export default defineMessages({
     id: 'modules.Shipments.logs',
     defaultMessage: 'Logs',
   },
+  relatedExporters: {
+    id: 'modules.Shipments.relatedExporters',
+    defaultMessage: 'RELATED EXPORTERS',
+  },
 });
 
 export const shipmentSortMessages = defineMessages({

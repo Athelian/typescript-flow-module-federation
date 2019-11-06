@@ -152,6 +152,28 @@ function transformShipment(basePath: string, shipment: Object): Array<CellValue>
       ...transformReadonlyField(basePath, shipment, 'importer', shipment?.importer ?? null),
     },
     {
+      columnKey: 'shipment.relatedExporters',
+      type: 'partners',
+      ...transformComputedField(basePath, shipment, 'relatedExporters', () => {
+        const { batchesWithoutContainer = [], containers = [] } = shipment;
+        const exporters = [];
+        batchesWithoutContainer.forEach(({ orderItem }) => {
+          if (!exporters.includes(orderItem?.order?.exporter)) {
+            exporters.push(orderItem?.order?.exporter);
+          }
+        });
+        containers.forEach(({ batches = [] }) => {
+          batches.forEach(({ orderItem }) => {
+            if (!exporters.includes(orderItem?.order?.exporter)) {
+              exporters.push(orderItem?.order?.exporter);
+            }
+          });
+        });
+
+        return exporters.filter(Boolean);
+      }),
+    },
+    {
       columnKey: 'shipment.inCharges',
       type: 'user_assignment',
       computed: item =>

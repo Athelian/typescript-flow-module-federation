@@ -52,7 +52,14 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 810,
   },
-  // related exporters
+  {
+    key: 'shipment.relatedExporters',
+    exportKey: 'relatedExporters',
+    title: <FormattedMessage {...shipmentMessages.relatedExporters} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 810,
+  },
   {
     key: 'shipment.blNo',
     title: <FormattedMessage {...shipmentMessages.blNo} />,

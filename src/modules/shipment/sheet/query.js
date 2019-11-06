@@ -179,21 +179,42 @@ export const timelineDateFragment = gql`
   }
 `;
 
+// TODO: consider to pull out to common for different view
 const orderSheetFragment = gql`
   fragment orderSheetFragment on Order {
     id
     archived
     poNo
     memo
+    tags {
+      ...tagFragment
+    }
     issuedAt
     piNo
     currency
     incoterm
     deliveryPlace
     deliveryDate
+    inCharges {
+      ...userAvatarFragment
+    }
+    importer {
+      ...partnerNameFragment
+    }
+    exporter {
+      ...partnerNameFragment
+    }
     files {
       ...documentFragment
       ...forbiddenFragment
+    }
+    todo {
+      tasks {
+        ...taskWithoutParentInfoFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
     }
     createdAt
     updatedAt
