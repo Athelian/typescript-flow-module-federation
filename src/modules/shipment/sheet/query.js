@@ -129,14 +129,43 @@ const containerSheetFragment = gql`
   fragment containerSheetFragment on Container {
     id
     no
+    autoCalculatedFreeTimeStartDate
+    freeTimeStartDate
+    freeTimeDuration
     warehouseArrivalAgreedDate
+    warehouseArrivalAgreedDateAssignedTo {
+      ...userAvatarFragment
+    }
     warehouseArrivalActualDate
+    warehouseArrivalAgreedDateApprovedBy {
+      ...userAvatarFragment
+    }
+    warehouseArrivalAgreedDateApprovedAt
+    warehouseArrivalActualDateAssignedTo {
+      ...userAvatarFragment
+    }
+    warehouseArrivalActualDateApprovedBy {
+      ...userAvatarFragment
+    }
+    warehouseArrivalActualDateApprovedAt
+    warehouse {
+      ...warehouseFragment
+    }
     yardName
     departureDate
-    totalPackageQuantity
-    totalQuantity
-    orderItemCount
+    departureDateAssignedTo {
+      ...userAvatarFragment
+    }
+    departureDateApprovedBy {
+      ...userAvatarFragment
+    }
+    departureDateApprovedAt
     containerType
+    containerOption
+    tags {
+      ...tagFragment
+    }
+    memo
     createdAt
     updatedAt
     createdBy {
@@ -383,6 +412,11 @@ export const containerByIDQuery = gql`
     container(id: $id) {
       ...containerSheetFragment
       ... on Container {
+        shipment {
+          ... on Shipment {
+            id
+          }
+        }
         batches {
           ...batchSheetFragment
           ... on Batch {
@@ -406,6 +440,7 @@ export const containerByIDQuery = gql`
   ${batchSheetFragment}
   ${timelineDateFragment}
   ${userAvatarFragment}
+  ${warehouseFragment}
   ${documentFragment}
   ${userAvatarFragment}
 `;

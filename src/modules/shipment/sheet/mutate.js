@@ -208,6 +208,53 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
         }),
       };
     }
+    case 'Container': {
+      switch (field) {
+        case 'tags':
+          return {
+            tagIds: value.map(tag => tag.id),
+          };
+        case 'warehouseArrivalAgreedDateApproved':
+          return {
+            warehouseArrivalAgreedDateApprovedById: value?.user?.id ?? null,
+          };
+        case 'warehouseArrivalActualDateApproved':
+          return {
+            warehouseArrivalActualDateApprovedById: value?.user?.id ?? null,
+          };
+        case 'departureDateApproved':
+          return {
+            departureDateApprovedById: value?.user?.id ?? null,
+          };
+        case 'freeTimeStartDate': {
+          const { auto: autoCalculatedFreeTimeStartDate = false, value: date = null } = value || {};
+          return {
+            autoCalculatedFreeTimeStartDate,
+            freeTimeStartDate: date ? new Date(date) : null,
+          };
+        }
+        case 'warehouseArrivalAgreedDateAssignedTo':
+          return {
+            warehouseArrivalAgreedDateAssignedToIds: value.map(user => user.id),
+          };
+        case 'warehouseArrivalActualDateAssignedTo':
+          return {
+            warehouseArrivalActualDateAssignedToIds: value.map(user => user.id),
+          };
+        case 'warehouse':
+          return {
+            warehouseId: value?.id ?? null,
+          };
+        case 'departureDateAssignedTo':
+          return {
+            departureDateAssignedToIds: value.map(user => user.id),
+          };
+        default:
+          return {
+            [field]: value,
+          };
+      }
+    }
     case 'Batch':
       switch (field) {
         case 'desiredAt':

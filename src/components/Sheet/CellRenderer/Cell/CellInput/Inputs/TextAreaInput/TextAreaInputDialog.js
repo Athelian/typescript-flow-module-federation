@@ -18,13 +18,17 @@ const TextAreaInputDialog = ({ value, onChange, focus, onBlur }: Props) => {
   const prevFocus = usePrevious(focus);
 
   useEffect(() => {
-    if (!prevFocus && focus) {
-      setTimeout(() => {
-        if (inputRef && inputRef.current) {
-          inputRef.current.select();
-        }
-      }, 200);
+    if (prevFocus && !focus) {
+      return () => {};
     }
+
+    const handler = setTimeout(() => {
+      if (inputRef && inputRef.current) {
+        inputRef.current.select();
+      }
+    }, 200);
+
+    return () => clearTimeout(handler);
   }, [focus, prevFocus]);
 
   return (

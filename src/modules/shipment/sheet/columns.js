@@ -567,9 +567,15 @@ const containerColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...containerMessages.containerType} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
-    width: 200,
+    width: 100,
   },
-  // ctn option
+  {
+    key: 'shipment.container.containerOption',
+    title: <FormattedMessage {...containerMessages.containerOption} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 100,
+  },
   {
     key: 'shipment.container.warehouseArrivalAgreedDate',
     title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDate} />,
@@ -577,8 +583,20 @@ const containerColumns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: 170,
   },
-  // agreed arrival assigned to
-  // agreed arrival approval
+  {
+    key: 'shipment.container.warehouseArrivalAgreedDateAssignedTo',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateAssignedTo} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 160,
+  },
+  {
+    key: 'shipment.container.warehouseArrivalAgreedDateApproved',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateApproved} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 110,
+  },
   {
     key: 'shipment.container.warehouseArrivalActualDate',
     title: <FormattedMessage {...containerMessages.warehouseArrivalActualDate} />,
@@ -586,36 +604,109 @@ const containerColumns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: 170,
   },
-  // actual arrival assigned to
-  // actual arrival approval
-  // free time
-  // start date
-  // start date auto
-  // duration
-  // due date
+  {
+    key: 'shipment.container.warehouseArrivalActualDateAssignedTo',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDateAssignedTo} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 160,
+  },
+  {
+    key: 'shipment.container.warehouseArrivalActualDateApproved',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDateApproved} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 110,
+  },
+  {
+    key: 'shipment.container.warehouse',
+    title: <FormattedMessage {...containerMessages.warehouse} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.freeTime',
+    title: <FormattedMessage {...containerMessages.freeTime} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 195,
+  },
+  {
+    key: 'shipment.container.freeTimeStartDate',
+    title: <FormattedMessage {...containerMessages.startDate} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 195,
+  },
+  {
+    key: 'shipment.container.freeTimeDuration',
+    title: <FormattedMessage {...containerMessages.duration} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.dueDate',
+    title: <FormattedMessage {...containerMessages.dueDate} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   {
     key: 'shipment.container.yardName',
-    title: 'Yard Name',
+    title: <FormattedMessage {...containerMessages.yardName} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 200,
   },
   {
     key: 'shipment.container.departureDate',
-    title: 'Yard Departure Date',
+    title: <FormattedMessage {...containerMessages.departureDate} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
-    width: 140,
+    width: 125,
   },
-  // departure assigned to
-  // departure approval
-  // tags
-  // memo
+  {
+    key: 'shipment.container.departureDateAssignedTo',
+    title: <FormattedMessage {...containerMessages.departureDateAssignedTo} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 160,
+  },
+  {
+    key: 'shipment.container.departureDateApproved',
+    title: <FormattedMessage {...containerMessages.departureDateApproved} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 110,
+  },
+  {
+    key: 'shipment.container.tags',
+    title: <FormattedMessage {...containerMessages.tags} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.memo',
+    title: <FormattedMessage {...containerMessages.memo} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 200,
+  },
   // total package quantity
   // total quantity
   // total volume
   // total weight
   // total price
+  {
+    key: 'shipment.container.logs',
+    title: <FormattedMessage {...containerMessages.logs} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 120,
+  },
   // actions
 ];
 

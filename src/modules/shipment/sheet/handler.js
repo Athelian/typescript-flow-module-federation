@@ -10,8 +10,60 @@ import {
   batchQuantityRevisionByIDQuery,
   organizationByIDQuery,
   userByIDQuery,
+  containerByIDQuery,
   warehouseByIDQuery,
 } from './query';
+
+// $FlowFixMe not compatible with hook implementation
+function onCreateContainerFactory(client: ApolloClient, dispatch: Action => void) {
+  return (containerId: string) =>
+    client
+      .query({
+        query: containerByIDQuery,
+        fetchPolicy: 'network-only',
+        variables: {
+          id: containerId,
+        },
+      })
+      .then(({ data }) => {
+        const newContainer = data?.container;
+        if (newContainer?.__typename !== 'Container') {
+          return;
+        }
+
+        dispatch({
+          type: Actions.PRE_ADD_ENTITY,
+          payload: {
+            entity: {
+              id: containerId,
+              type: 'Container',
+            },
+            callback: (shipments: Array<Object>) => {
+              const shipmentId = newContainer.shipment?.id;
+              if (!shipmentId) {
+                return null;
+              }
+
+              const shipmentIdx = shipments.findIndex(shipment => shipment.id === shipmentId);
+              if (shipmentIdx === -1) {
+                return null;
+              }
+
+              const containers = [...shipments[shipmentIdx].containers];
+              containers.splice(newContainer.sort, 0, newContainer);
+
+              return {
+                item: {
+                  ...shipments[shipmentIdx],
+                  containers,
+                },
+                index: shipmentIdx,
+              };
+            },
+          },
+        });
+      });
+}
 
 // $FlowFixMe not compatible with hook implementation
 function onBatchQuantityRevisionFactory(client: ApolloClient, dispatch: Action => void) {
@@ -128,6 +180,38 @@ function onBatchQuantityRevisionFactory(client: ApolloClient, dispatch: Action =
       });
 }
 
+function onDeleteContainerFactory(dispatch: Action => void) {
+  return (containerId: string) => {
+    dispatch({
+      type: Actions.PRE_REMOVE_ENTITY,
+      payload: {
+        entity: {
+          id: containerId,
+          type: 'Container',
+        },
+        callback: (shipments: Array<Object>) => {
+          const shipmentIdx = shipments.findIndex(
+            shipment => !!shipment.containers.find(container => container.id === containerId)
+          );
+          if (shipmentIdx === -1) {
+            return null;
+          }
+
+          return {
+            item: {
+              ...shipments[shipmentIdx],
+              containers: shipments[shipmentIdx].containers.filter(
+                container => container.id !== containerId
+              ),
+            },
+            index: shipmentIdx,
+          };
+        },
+      },
+    });
+  };
+}
+
 function onDeleteBatchQuantityRevisionFactory(dispatch: Action => void) {
   return (batchQuantityRevisionId: string, items: Array<Object>) =>
     items.every((shipment, shipmentIdx) => {
@@ -202,13 +286,19 @@ export default function entityEventHandler(
   client: ApolloClient,
   dispatch: Action => void
 ): EntityEventHandler {
+  const onCreateContainer = onCreateContainerFactory(client, dispatch);
   const onBatchQuantityRevision = onBatchQuantityRevisionFactory(client, dispatch);
+  const onDeleteContainer = onDeleteContainerFactory(dispatch);
   const onDeleteBatchQuantityRevision = onDeleteBatchQuantityRevisionFactory(dispatch);
 
   return async (event: EntityEvent, shipments: Array<Object>) => {
     switch (event.lifeCycle) {
       case 'Create':
         switch (event.entity.__typename) {
+          case 'Container': {
+            await onCreateContainer(event.entity.id);
+            break;
+          }
           case 'BatchQuantityRevision': {
             await onBatchQuantityRevision(event.entity.id, shipments);
             break;
@@ -379,6 +469,120 @@ export default function entityEventHandler(
               return change;
             });
             break;
+          case 'Container': {
+            changes = await mapAsync(changes, change => {
+              switch (change.field) {
+                case 'warehouseArrivalAgreedDateApprovedBy':
+                case 'warehouseArrivalActualDateApprovedBy':
+                case 'departureDateApprovedBy':
+                  return client
+                    .query({
+                      query: userByIDQuery,
+                      variables: { id: change.new?.entity?.id },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.user),
+                    }));
+                default:
+                  break;
+              }
+
+              return change;
+            });
+
+            const container = shipments
+              .map(shipment => shipment.containers)
+              // $FlowFixMe flat not supported by flow
+              .flat()
+              .find(c => c.id === event.entity?.id);
+
+            if (container) {
+              changes = mergeChanges(
+                changes,
+                {
+                  freeTimeStartDate: (i, v) => ({
+                    ...i,
+                    value: v,
+                  }),
+                  autoCalculatedFreeTimeStartDate: (i, v) => ({
+                    ...i,
+                    auto: v,
+                  }),
+                },
+                'freeTimeStartDate',
+                container.freeTimeStartDate
+              );
+              changes = mergeChanges(
+                changes,
+                {
+                  warehouseArrivalAgreedDateApprovedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  warehouseArrivalAgreedDateApprovedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'warehouseArrivalAgreedDateApproved',
+                container.warehouseArrivalAgreedDateApproved
+              );
+              changes = mergeChanges(
+                changes,
+                {
+                  warehouseArrivalActualDateApprovedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  warehouseArrivalActualDateApprovedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'warehouseArrivalActualDateApproved',
+                container.warehouseArrivalActualDateApproved
+              );
+              changes = mergeChanges(
+                changes,
+                {
+                  departureDateApprovedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  departureDateApprovedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'departureDateApproved',
+                container.departureDateApproved
+              );
+            }
+
+            changes = await mapAsync(changes, change => {
+              switch (change.field) {
+                case 'warehouse':
+                  if (change.new?.entity) {
+                    return client
+                      .query({
+                        query: warehouseByIDQuery,
+                        variables: { id: change.new?.entity?.id },
+                      })
+                      .then(({ data }) => ({
+                        field: 'warehouse',
+                        new: newCustomValue(data.warehouse),
+                      }));
+                  }
+                  break;
+                default:
+                  break;
+              }
+
+              return change;
+            });
+            break;
+          }
           case 'BatchQuantityRevision': {
             await onBatchQuantityRevision(event.entity.id, shipments);
             return;
@@ -401,6 +605,9 @@ export default function entityEventHandler(
       }
       case 'Delete':
         switch (event.entity.__typename) {
+          case 'Container':
+            onDeleteContainer(event.entity.id);
+            break;
           case 'BatchQuantityRevision':
             onDeleteBatchQuantityRevision(event.entity.id, shipments);
             break;
