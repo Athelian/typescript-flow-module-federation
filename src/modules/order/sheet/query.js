@@ -377,9 +377,6 @@ const containerSheetFragment = gql`
       ...userAvatarFragment
     }
     departureDateApprovedAt
-    totalPackageQuantity
-    totalQuantity
-    orderItemCount
     containerType
     containerOption
     tags {

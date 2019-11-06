@@ -1000,9 +1000,11 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       type: 'user_assignment',
       computed: item => {
         const currentBatch = getCurrentBatch(batch?.id, item);
-        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
-          Boolean
-        );
+        return [
+          currentBatch?.shipment?.importer?.id,
+          currentBatch?.shipment?.exporter?.id,
+          ...(currentBatch?.shipment?.forwarders ?? []).map(f => f.id),
+        ].filter(Boolean);
       },
       ...transformValueField(
         `${basePath}.container`,
@@ -1039,9 +1041,11 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
       type: 'user_assignment',
       computed: item => {
         const currentBatch = getCurrentBatch(batch?.id, item);
-        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
-          Boolean
-        );
+        return [
+          currentBatch?.shipment?.importer?.id,
+          currentBatch?.shipment?.exporter?.id,
+          ...(currentBatch?.shipment?.forwarders ?? []).map(f => f.id),
+        ].filter(Boolean);
       },
       ...transformValueField(
         `${basePath}.container`,

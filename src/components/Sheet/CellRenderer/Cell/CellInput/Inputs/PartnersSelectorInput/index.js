@@ -37,14 +37,9 @@ const PartnersSelectorInput = (partnerTypes: Array<string>) => ({
               </div>
             ))
           ) : (
-            <button
-              disabled={readonly}
-              type="button"
-              className={PlusButtonStyle}
-              onClick={forceFocus}
-            >
+            <div className={PlusButtonStyle}>
               <Icon icon="ADD" />
-            </button>
+            </div>
           )}
         </div>
       </button>
