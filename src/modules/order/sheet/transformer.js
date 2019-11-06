@@ -1086,7 +1086,7 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
             value: null,
           };
           const dueDate = freeTimeStartDate
-            ? calculateDueDate(freeTimeStartDate, currentBatch?.container?.freeTimeDuration)
+            ? calculateDueDate(freeTimeStartDate, currentBatch?.container?.freeTimeDuration ?? 0)
             : null;
 
           return dueDate ? differenceInCalendarDays(dueDate, startOfToday()) : 0;
@@ -1326,6 +1326,16 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         batch?.shipment ?? null,
         'importer',
         batch?.shipment?.importer ?? null
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.exporter',
+      type: 'partner',
+      ...transformReadonlyField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'exporter',
+        batch?.shipment?.exporter ?? null
       ),
     },
     {
