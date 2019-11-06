@@ -335,6 +335,41 @@ const batchSheetFragment = gql`
     packageName
     packageCapacity
     packageQuantity
+    autoCalculatePackageQuantity
+    packageGrossWeight {
+      value
+      metric
+    }
+    packageVolume {
+      value
+      metric
+    }
+    packageSize {
+      width {
+        value
+        metric
+      }
+      length {
+        value
+        metric
+      }
+      height {
+        value
+        metric
+      }
+    }
+    memo
+    tags {
+      ...tagFragment
+    }
+    todo {
+      tasks {
+        ...taskWithoutParentInfoFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
+    }
     sort
     createdAt
     updatedAt
@@ -466,31 +501,21 @@ export const containerByIDQuery = gql`
   ${userAvatarFragment}
 `;
 
-export const orderItemByIDQuery = gql`
-  query orderItemByIDQuery($id: ID!) {
-    orderItem(id: $id) {
-      ...orderItemSheetFragment
-      ... on OrderItem {
-        order {
-          ...orderSheetFragment
-        }
-      }
-    }
-  }
-
-  ${batchSheetFragment}
-  ${orderItemSheetFragment}
-  ${orderSheetFragment}
-  ${userAvatarFragment}
-  ${documentFragment}
-  ${forbiddenFragment}
-`;
-
 export const batchByIDQuery = gql`
   query batchByIDQuery($id: ID!) {
     batch(id: $id) {
       ...batchSheetFragment
       ... on Batch {
+        shipment {
+          ... on Shipment {
+            id
+          }
+        }
+        container {
+          ... on Container {
+            id
+          }
+        }
         orderItem {
           ...orderItemSheetFragment
           ... on OrderItem {
@@ -504,10 +529,15 @@ export const batchByIDQuery = gql`
   }
 
   ${batchSheetFragment}
-  ${orderItemSheetFragment}
-  ${orderSheetFragment}
   ${userAvatarFragment}
+  ${partnerNameFragment}
   ${documentFragment}
+  ${tagFragment}
+  ${taskWithoutParentInfoFragment}
+  ${taskTemplateCardFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskFormInTemplateFragment}
   ${forbiddenFragment}
 `;
 

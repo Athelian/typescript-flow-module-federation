@@ -273,11 +273,36 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
               removeTypename(revision)
             ),
           };
-        case 'tags': {
+        case 'packageQuantity': {
+          const { auto: autoCalculatePackageQuantity = false, value: packageQuantity = 0 } =
+            value || {};
+          return {
+            autoCalculatePackageQuantity,
+            packageQuantity,
+          };
+        }
+        case 'packageGrossWeight':
+          return {
+            packageGrossWeight: value ? removeTypename(value) : null,
+          };
+        case 'packageVolume': {
+          const { auto: autoCalculatePackageVolume = false, value: packageVolume = 0 } =
+            value || {};
+          return {
+            autoCalculatePackageVolume,
+            packageVolume: removeTypename(packageVolume),
+          };
+        }
+        case 'packageSize':
+          return {
+            packageSize: value ? removeTypename(value) : null,
+          };
+        case 'tags':
           return {
             tagIds: value.map(tag => tag.id),
           };
-        }
+        case 'todo':
+          return parseTodoField(null, value);
         default:
           return {
             [field]: value,
