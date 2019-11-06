@@ -81,10 +81,6 @@ const orderItemSheetFragment = gql`
     tags {
       ...tagFragment
     }
-    files {
-      ...documentFragment
-      ...forbiddenFragment
-    }
     productProvider {
       ...forbiddenFragment
       ... on ProductProvider {
@@ -107,6 +103,18 @@ const orderItemSheetFragment = gql`
             id
           }
         }
+      }
+    }
+    files {
+      ...documentFragment
+      ...forbiddenFragment
+    }
+    todo {
+      tasks {
+        ...taskWithoutParentInfoFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
       }
     }
     createdAt
@@ -170,6 +178,14 @@ const batchSheetFragment = gql`
     memo
     tags {
       ...tagFragment
+    }
+    todo {
+      tasks {
+        ...taskWithoutParentInfoFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
     }
     sort
     createdAt
@@ -277,6 +293,14 @@ const shipmentSheetFragment = gql`
     files {
       ...documentFragment
       ...forbiddenFragment
+    }
+    todo {
+      tasks {
+        ...taskWithoutParentInfoFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
     }
     createdBy {
       ...userAvatarFragment
@@ -467,6 +491,11 @@ export const orderItemByIDQuery = gql`
   ${warehouseFragment}
   ${documentFragment}
   ${tagFragment}
+  ${taskWithoutParentInfoFragment}
+  ${taskTemplateCardFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskFormInTemplateFragment}
   ${forbiddenFragment}
 `;
 
@@ -505,6 +534,11 @@ export const batchByIDQuery = gql`
   ${warehouseFragment}
   ${documentFragment}
   ${tagFragment}
+  ${taskWithoutParentInfoFragment}
+  ${taskTemplateCardFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskFormInTemplateFragment}
   ${forbiddenFragment}
 `;
 
@@ -553,6 +587,11 @@ export const shipmentByIDQuery = gql`
   ${warehouseFragment}
   ${documentFragment}
   ${tagFragment}
+  ${taskWithoutParentInfoFragment}
+  ${taskTemplateCardFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskFormInTemplateFragment}
   ${forbiddenFragment}
 `;
 

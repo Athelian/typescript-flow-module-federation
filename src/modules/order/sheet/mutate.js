@@ -1,6 +1,6 @@
 // @flow
 import ApolloClient from 'apollo-client';
-import { removeTypename } from 'utils/data';
+import { removeTypename, parseTodoField } from 'utils/data';
 import {
   batchMutation,
   containerMutation,
@@ -160,68 +160,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           };
         }
         case 'todo':
-          return {
-            todo: {
-              tasks: value.tasks.map(
-                ({
-                  __typename,
-                  isNew,
-                  updatedAt,
-                  updatedBy,
-                  ownedBy,
-                  tags,
-                  assignedTo,
-                  approvers,
-                  inProgressBy,
-                  skippedBy,
-                  completedBy,
-                  rejectedBy,
-                  approvedBy,
-                  milestone,
-                  taskTemplate,
-                  startDateInterval,
-                  dueDateInterval,
-                  dueDate,
-                  startDate,
-                  inProgressAt,
-                  skippedAt,
-                  completedAt,
-                  rejectedAt,
-                  approvedAt,
-                  ...rest
-                }) => {
-                  const { __typename: startDateIntervalTypename, ...restStartDateInterval } =
-                    startDateInterval || {};
-                  const { __typename: dueDateIntervalTypename, ...restDueDateInterval } =
-                    dueDateInterval || {};
-
-                  return {
-                    ...rest,
-                    tagIds: tags.map(tag => tag.id),
-                    assignedToIds: assignedTo.map(assignment => assignment.id),
-                    approverIds: approvers.map(approver => approver.id),
-                    inProgressById: inProgressBy?.id,
-                    skippedById: skippedBy?.id,
-                    completedById: completedBy?.id,
-                    rejectedById: rejectedBy?.id,
-                    approvedById: approvedBy?.id,
-                    milestoneId: milestone?.id,
-                    taskTemplateId: taskTemplate?.id,
-                    startDateInterval: startDateInterval ? { ...restStartDateInterval } : null,
-                    dueDateInterval: dueDateInterval ? { ...restDueDateInterval } : null,
-                    dueDate: dueDate ? new Date(dueDate) : null,
-                    startDate: startDate ? new Date(startDate) : null,
-                    inProgressAt: inProgressAt ? new Date(inProgressAt) : null,
-                    skippedAt: skippedAt ? new Date(skippedAt) : null,
-                    completedAt: completedAt ? new Date(completedAt) : null,
-                    rejectedAt: rejectedAt ? new Date(rejectedAt) : null,
-                    approvedAt: approvedAt ? new Date(approvedAt) : null,
-                  };
-                }
-              ),
-              taskTemplateId: value.taskTemplate?.id,
-            },
-          };
+          return parseTodoField(null, value);
         default:
           return {
             [field]: value,

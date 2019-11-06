@@ -107,7 +107,10 @@ const TasksInput = (entityType: string) => {
           tasks={tasks}
           taskTemplate={taskTemplate}
           onChange={onChange}
-          onClose={forceBlur}
+          onClose={() => {
+            onChange({ tasks, taskTemplate }, true);
+            forceBlur();
+          }}
           open={focus}
           entityType={entityType}
           entityId={entityId}

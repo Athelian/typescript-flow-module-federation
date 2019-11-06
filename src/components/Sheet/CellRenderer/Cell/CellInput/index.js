@@ -158,7 +158,7 @@ const CellInput = ({
   }, [inputFocus]);
 
   const handleChange = (newValue, force = false) => {
-    if (!equals(newValue, dirtyValue)) {
+    if (force || !equals(newValue, dirtyValue)) {
       setDirtyValue(newValue);
 
       if (force || !inputFocus) {

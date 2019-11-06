@@ -97,6 +97,7 @@ import {
   SHIPMENT_SET_PORT,
   SHIPMENT_SET_REVISE_TIMELINE_DATE,
   SHIPMENT_SET_TAGS,
+  SHIPMENT_SET_TASKS,
   SHIPMENT_SET_TIMELINE_DATE,
   SHIPMENT_SET_TRANSPORT_TYPE,
   SHIPMENT_SET_VESSEL_NAME,
@@ -1819,9 +1820,9 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       },
       ...transformValueField(
         basePath,
-        batch,
+        batch?.shipment ?? null,
         'todo',
-        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_TASKS)
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TASKS)
       ),
     },
     {
