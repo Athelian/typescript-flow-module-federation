@@ -1,6 +1,6 @@
 // @flow
 import ApolloClient from 'apollo-client';
-import { removeTypename } from 'utils/data';
+import { removeTypename, parseTodoField } from 'utils/data';
 import {
   batchMutation,
   containerMutation,
@@ -159,7 +159,8 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             },
           };
         }
-
+        case 'todo':
+          return parseTodoField(null, value);
         default:
           return {
             [field]: value,

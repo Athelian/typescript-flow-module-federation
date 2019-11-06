@@ -443,12 +443,10 @@ export const parseTodoField = (
   originalTodo: ?{
     tasks: Array<Task>,
     taskTemplate: ?{ id: string },
-    milestone?: { id: string },
   },
   newTodo: {
     tasks: Array<Task>,
     taskTemplate: ?{ id: string },
-    milestone?: { id: string },
   }
 ): Object => {
   if (isEquals(originalTodo, newTodo)) return {};

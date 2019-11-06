@@ -24,7 +24,8 @@ import {
   ORDER_SET_MEMO,
   ORDER_SET_PI_NO,
   ORDER_SET_PO_NO,
-  ORDER_TASK_SET_TAGS,
+  ORDER_SET_TAGS,
+  ORDER_SET_TASKS,
   ORDER_UPDATE,
 } from 'modules/permission/constants/order';
 import {
@@ -35,6 +36,7 @@ import {
   ORDER_ITEMS_SET_PRICE,
   ORDER_ITEMS_SET_QUANTITY,
   ORDER_ITEMS_SET_TAGS,
+  ORDER_ITEMS_SET_TASKS,
   ORDER_ITEMS_UPDATE,
 } from 'modules/permission/constants/orderItem';
 import {
@@ -53,6 +55,7 @@ import {
   BATCH_SET_QUANTITY,
   BATCH_SET_QUANTITY_ADJUSTMENTS,
   BATCH_SET_TAGS,
+  BATCH_SET_TASKS,
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
 import {
@@ -94,6 +97,7 @@ import {
   SHIPMENT_SET_PORT,
   SHIPMENT_SET_REVISE_TIMELINE_DATE,
   SHIPMENT_SET_TAGS,
+  SHIPMENT_SET_TASKS,
   SHIPMENT_SET_TIMELINE_DATE,
   SHIPMENT_SET_TRANSPORT_TYPE,
   SHIPMENT_SET_VESSEL_NAME,
@@ -268,7 +272,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
         basePath,
         order,
         'tags',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_TASK_SET_TAGS)
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_TAGS)
       ),
     },
     {
@@ -333,6 +337,20 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
         order,
         'files',
         hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_DOCUMENTS)
+      ),
+    },
+    {
+      columnKey: 'order.todo',
+      type: 'order_tasks',
+      computed: item => ({
+        entityId: item.id,
+        groupIds: [item.importer?.id, item.exporter?.id].filter(Boolean),
+      }),
+      ...transformValueField(
+        basePath,
+        order,
+        'todo',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_TASKS)
       ),
     },
     {
@@ -549,6 +567,20 @@ function transformOrderItem(
         'files',
         hasPermission =>
           hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_DOCUMENTS)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.todo',
+      type: 'order_item_tasks',
+      computed: item => ({
+        entityId: orderItem?.id,
+        groupIds: [item.importer?.id, item.exporter?.id].filter(Boolean),
+      }),
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'todo',
+        hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_TASKS)
       ),
     },
     {
@@ -797,6 +829,20 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
         batch,
         'packageSize',
         hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_SIZE)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.todo',
+      type: 'batch_tasks',
+      computed: item => ({
+        entityId: batch?.id,
+        groupIds: [item.importer?.id, item.exporter?.id].filter(Boolean),
+      }),
+      ...transformValueField(
+        basePath,
+        batch,
+        'todo',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_TASKS)
       ),
     },
     {
@@ -1756,6 +1802,27 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
         batch?.shipment ?? null,
         'files',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_DOCUMENTS)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.todo',
+      type: 'shipment_tasks',
+      computed: item => {
+        const currentBatch = getCurrentBatch(batch?.id, item);
+        return {
+          entityId: batch?.shipment?.id ?? null,
+          groupIds: [
+            currentBatch?.shipment?.importer?.id,
+            currentBatch?.shipment?.exporter?.id,
+            ...(currentBatch?.shipment?.forwarders ?? []).map(f => f.id),
+          ].filter(Boolean),
+        };
+      },
+      ...transformValueField(
+        basePath,
+        batch?.shipment ?? null,
+        'todo',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TASKS)
       ),
     },
     {

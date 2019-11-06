@@ -438,6 +438,10 @@ export default defineMessages({
     id: 'modules.Orders.sectionPackage',
     defaultMessage: 'PACKAGING',
   },
+  tasks: {
+    id: 'modules.order.tasks',
+    defaultMessage: 'TASKS',
+  },
   logs: {
     id: 'modules.order.logs',
     defaultMessage: 'LOGS',

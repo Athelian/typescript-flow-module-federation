@@ -29,6 +29,7 @@ import PartnersSelectorInput from './Inputs/PartnersSelectorInput';
 import WarehouseSelectorInput from './Inputs/WarehouseSelectorInput';
 import ToggleInput from './Inputs/ToggleInput';
 import LogsInput from './Inputs/LogsInput';
+import TasksInput from './Inputs/TasksInput';
 
 type Props = {
   value: any,
@@ -96,6 +97,10 @@ const inputs = {
   batch_logs: LogsInput.Batch,
   shipment_logs: LogsInput.Shipment,
   container_logs: LogsInput.Container,
+  order_tasks: TasksInput.Order,
+  order_item_tasks: TasksInput.OrderItem,
+  batch_tasks: TasksInput.Batch,
+  shipment_tasks: TasksInput.Shipment,
 };
 
 const CellInput = ({
@@ -153,7 +158,7 @@ const CellInput = ({
   }, [inputFocus]);
 
   const handleChange = (newValue, force = false) => {
-    if (!equals(newValue, dirtyValue)) {
+    if (force || !equals(newValue, dirtyValue)) {
       setDirtyValue(newValue);
 
       if (force || !inputFocus) {

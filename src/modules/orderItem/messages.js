@@ -106,6 +106,10 @@ export default defineMessages({
     id: 'modules.OrderItems.sectionDocuments',
     defaultMessage: 'Documents',
   },
+  tasks: {
+    id: 'modules.OrderItems.tasks',
+    defaultMessage: 'Tasks',
+  },
   logs: {
     id: 'modules.OrderItems.logs',
     defaultMessage: 'Logs',

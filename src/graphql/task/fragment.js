@@ -17,7 +17,6 @@ const taskInfoFragment = gql`
     tags {
       ...tagFragment
     }
-
     startDate
     startDateInterval {
       months
@@ -32,7 +31,6 @@ const taskInfoFragment = gql`
       days
     }
     dueDateBinding
-
     inProgressAt
     inProgressBy {
       ...userAvatarFragment
@@ -48,7 +46,6 @@ const taskInfoFragment = gql`
     assignedTo {
       ...userAvatarFragment
     }
-
     approvable
     rejectedAt
     rejectedBy {
@@ -58,7 +55,6 @@ const taskInfoFragment = gql`
     approvedBy {
       ...userAvatarFragment
     }
-
     approvers {
       ...userAvatarFragment
     }
