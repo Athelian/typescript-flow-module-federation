@@ -118,4 +118,8 @@ export default defineMessages({
     id: 'modules.container.status',
     defaultMessage: 'STATUS',
   },
+  freeTime: {
+    id: 'modules.container.freeTime',
+    defaultMessage: 'FREE TIME',
+  },
 });

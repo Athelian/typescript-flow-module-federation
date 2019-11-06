@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { addDays } from 'date-fns';
 import { calculateVolume, getBatchLatestQuantity } from 'utils/batch';
+import { startOfToday, differenceInCalendarDays, calculateDueDate } from 'utils/date';
 import { getLatestDate } from 'utils/shipment';
 import { defaultVolumeMetric } from 'utils/metric';
 import {
@@ -1055,6 +1056,27 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
         'warehouse',
         hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_WAREHOUSE)
       ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.container.freeTime',
+      type: 'text',
+      ...transformComputedField(
+        `${basePath}.container`,
+        batch?.container ?? null,
+        'freeTime',
+        order => {
+          const currentBatch = getCurrentBatch(batch?.id, order);
+          const { value: freeTimeStartDate } = currentBatch?.container?.freeTimeStartDate ?? {
+            value: null,
+          };
+          const dueDate = freeTimeStartDate
+            ? calculateDueDate(freeTimeStartDate, currentBatch?.container?.freeTimeDuration)
+            : null;
+
+          return dueDate ? differenceInCalendarDays(dueDate, startOfToday()) : 0;
+        }
+      ),
+      readonly: true,
     },
     {
       columnKey: 'order.orderItem.batch.container.freeTimeStartDate',
