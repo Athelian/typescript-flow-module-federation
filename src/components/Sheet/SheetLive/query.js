@@ -117,6 +117,17 @@ export const entityEventSubscription = gql`
               }
             }
           }
+          ... on Values {
+            values {
+              ... on EntityValue {
+                entity {
+                  ... on Model {
+                    id
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

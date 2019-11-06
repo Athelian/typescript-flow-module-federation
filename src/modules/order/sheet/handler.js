@@ -16,8 +16,11 @@ import {
   containerByIDQuery,
   orderItemByIDQuery,
   organizationByIDQuery,
+  organizationsByIDsQuery,
   shipmentByIDQuery,
+  tagsByIDsQuery,
   userByIDQuery,
+  usersByIDsQuery,
   warehouseByIDQuery,
 } from './query';
 
@@ -506,6 +509,26 @@ export default function entityEventHandler(
                       field: change.field,
                       new: newCustomValue(data.organization),
                     }));
+                case 'inCharges':
+                  return client
+                    .query({
+                      query: usersByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.usersByIDs),
+                    }));
+                case 'tags':
+                  return client
+                    .query({
+                      query: tagsByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.tagsByIDs),
+                    }));
                 default:
                   break;
               }
@@ -523,6 +546,25 @@ export default function entityEventHandler(
                 return false;
               }
               return true;
+            });
+
+            changes = await mapAsync(changes, change => {
+              switch (change.field) {
+                case 'tags':
+                  return client
+                    .query({
+                      query: tagsByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.tagsByIDs),
+                    }));
+                default:
+                  break;
+              }
+
+              return change;
             });
             break;
           }
@@ -550,6 +592,25 @@ export default function entityEventHandler(
                 default:
                   return true;
               }
+            });
+
+            changes = await mapAsync(changes, change => {
+              switch (change.field) {
+                case 'tags':
+                  return client
+                    .query({
+                      query: tagsByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.tagsByIDs),
+                    }));
+                default:
+                  break;
+              }
+
+              return change;
             });
 
             const batch = orders
@@ -613,6 +674,16 @@ export default function entityEventHandler(
                       }));
                   }
                   break;
+                case 'forwarders':
+                  return client
+                    .query({
+                      query: organizationsByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.organizationsByIDs),
+                    }));
                 case 'transportType':
                   return {
                     ...change,
@@ -621,6 +692,26 @@ export default function entityEventHandler(
                       __typename: 'StringValue',
                     },
                   };
+                case 'inCharges':
+                  return client
+                    .query({
+                      query: usersByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.usersByIDs),
+                    }));
+                case 'tags':
+                  return client
+                    .query({
+                      query: tagsByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.tagsByIDs),
+                    }));
                 default:
                   break;
               }
@@ -641,6 +732,16 @@ export default function entityEventHandler(
                     .then(({ data }) => ({
                       field: 'approvedBy',
                       new: newCustomValue(data.user),
+                    }));
+                case 'assignedTo':
+                  return client
+                    .query({
+                      query: usersByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.usersByIDs),
                     }));
                 default:
                   break;
@@ -718,6 +819,28 @@ export default function entityEventHandler(
                     .then(({ data }) => ({
                       field: change.field,
                       new: newCustomValue(data.user),
+                    }));
+                case 'warehouseArrivalAgreedDateAssignedTo':
+                case 'warehouseArrivalActualDateAssignedTo':
+                case 'departureDateAssignedTo':
+                  return client
+                    .query({
+                      query: usersByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.usersByIDs),
+                    }));
+                case 'tags':
+                  return client
+                    .query({
+                      query: tagsByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.tagsByIDs),
                     }));
                 default:
                   break;

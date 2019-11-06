@@ -610,9 +610,29 @@ export const userByIDQuery = gql`
   ${userAvatarFragment}
 `;
 
+export const usersByIDsQuery = gql`
+  query usersByIDsQuery($ids: [ID!]!) {
+    usersByIDs(ids: $ids) {
+      ...userAvatarFragment
+    }
+  }
+
+  ${userAvatarFragment}
+`;
+
 export const organizationByIDQuery = gql`
   query organizationByIDQuery($id: ID!) {
     organization(id: $id) {
+      ...partnerNameFragment
+    }
+  }
+
+  ${partnerNameFragment}
+`;
+
+export const organizationsByIDsQuery = gql`
+  query organizationsByIDsQuery($ids: [ID!]!) {
+    organizationsByIDs(ids: $ids) {
       ...partnerNameFragment
     }
   }
@@ -628,6 +648,16 @@ export const warehouseByIDQuery = gql`
   }
 
   ${warehouseFragment}
+`;
+
+export const tagsByIDsQuery = gql`
+  query tagsByIDsQuery($ids: [ID!]!) {
+    tagsByIDs(ids: $ids) {
+      ...tagFragment
+    }
+  }
+
+  ${tagFragment}
 `;
 
 export const orderMutation = gql`

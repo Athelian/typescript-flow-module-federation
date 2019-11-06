@@ -1,13 +1,11 @@
 // @flow
 import * as React from 'react';
-import { cx } from 'react-emotion';
 import BaseTagsInput from 'components/Inputs/TagsInput';
 import type { RenderInputProps } from 'components/Inputs/TagsInput';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import { isForbidden } from 'utils/data';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import { CellInputWrapperStyle } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
 import { TagsSelectStyle, RemoveButtonStyle, TagsInputWrapperStyle } from './style';
 
 const TagInputRenderer = ({ getInputProps, remove, selectedItems }: RenderInputProps) => (
@@ -46,7 +44,7 @@ const TagsInput = (entityType: string) => ({
   value,
   onChange,
 }: InputProps<Array<{ id: string, name: string, color: string }>>) => (
-  <div className={cx(CellInputWrapperStyle, TagsInputWrapperStyle)}>
+  <div className={TagsInputWrapperStyle}>
     <BaseTagsInput
       entityType={entityType}
       value={value || []}
