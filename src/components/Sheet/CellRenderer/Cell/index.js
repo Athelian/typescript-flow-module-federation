@@ -170,7 +170,7 @@ const Cell = ({
       {isTop && inputFocus && <div className={CellShadowStyle(size)} />}
 
       {(() => {
-        if (cell.empty) {
+        if (cell.empty && !!parentCell.entity) {
           return null;
         }
 

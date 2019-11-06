@@ -1,16 +1,13 @@
 // @flow
 import * as React from 'react';
+import { colors } from 'styles/common';
 import SlideView from 'components/SlideView';
 import SelectPartner from 'components/SelectPartner';
 import Icon from 'components/Icon';
 import { Display } from 'components/Form';
+import CornerIcon from 'components/CornerIcon';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import {
-  PartnerSelectorInputWrapperStyle,
-  PartnerSelectorCardStyle,
-  CornerIconStyle,
-  PlusButtonStyle,
-} from './style';
+import { PartnerSelectorInputWrapperStyle, PartnerCardStyle, PlusButtonStyle } from './style';
 
 type ExtraProps = { confirmationDialogMessage?: ?string | React.Node, isRequired?: boolean };
 
@@ -33,17 +30,10 @@ const PartnerSelectorInput = (partnerTypes: Array<string>) => ({
   return (
     <div className={PartnerSelectorInputWrapperStyle} onBlur={handleBlur}>
       {value ? (
-        <button
-          disabled={readonly}
-          type="button"
-          onClick={forceFocus}
-          className={PartnerSelectorCardStyle}
-        >
+        <button disabled={readonly} type="button" onClick={forceFocus} className={PartnerCardStyle}>
           <Display height="20px">{value.name}</Display>
 
-          <div className={CornerIconStyle}>
-            <Icon icon="PARTNER" />
-          </div>
+          <CornerIcon icon="PARTNER" color={colors.PARTNER} />
         </button>
       ) : (
         <button disabled={readonly} type="button" className={PlusButtonStyle} onClick={forceFocus}>
