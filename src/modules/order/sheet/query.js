@@ -85,9 +85,6 @@ const orderItemSheetFragment = gql`
       ...forbiddenFragment
       ... on ProductProvider {
         id
-        exporter {
-          ...partnerNameFragment
-        }
         product {
           ...forbiddenFragment
           ... on Product {

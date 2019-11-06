@@ -1328,36 +1328,6 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       ),
     },
     {
-      columnKey: 'order.orderItem.batch.shipment.relatedExporters',
-      type: 'partners',
-      ...transformComputedField(
-        `${basePath}.shipment`,
-        batch?.shipment ?? null,
-        'relatedExporters',
-        order => {
-          const currentBatch = getCurrentBatch(batch?.id, order);
-          if (currentBatch?.shipment?.id) {
-            const exporters = [];
-            const orderItems = order?.orderItems ?? [];
-            orderItems.forEach(({ batches = [], productProvider }) => {
-              batches.forEach(({ shipment }) => {
-                if (shipment?.id === currentBatch?.shipment?.id) {
-                  if (!exporters.includes(productProvider.exporter)) {
-                    exporters.push(productProvider.exporter);
-                  }
-                }
-              });
-            });
-
-            return exporters;
-          }
-
-          return [];
-        }
-      ),
-      readonly: true,
-    },
-    {
       columnKey: 'order.orderItem.batch.shipment.inCharges',
       type: 'user_assignment',
       computed: item => {
