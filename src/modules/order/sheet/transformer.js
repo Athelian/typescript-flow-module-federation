@@ -1091,7 +1091,6 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
           return dueDate ? differenceInCalendarDays(dueDate, startOfToday()) : 0;
         }
       ),
-      readonly: true,
     },
     {
       columnKey: 'order.orderItem.batch.container.freeTimeStartDate',

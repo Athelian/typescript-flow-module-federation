@@ -97,16 +97,15 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
               ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
             ),
           };
-        case 'tags': {
+        case 'tags':
           return {
             tagIds: value.map(tag => tag.id),
           };
-        }
         case 'inCharges':
           return {
             inChargeIds: value.map(user => user.id),
           };
-        case 'exporter': {
+        case 'exporter':
           return {
             exporterId: value?.id ?? null,
             inChargeIds: (item?.inCharges ?? [])
@@ -158,7 +157,6 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
               })),
             },
           };
-        }
         case 'todo':
           return parseTodoField(null, value);
         default:
@@ -168,7 +166,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
       }
     case 'OrderItem':
       switch (field) {
-        case 'price': {
+        case 'price':
           if (value.value === null) {
             return { price: null };
           }
@@ -178,7 +176,6 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
               currency: value.metric,
             },
           };
-        }
         case 'deliveryDate':
           return {
             /* $FlowFixMe This comment suppresses an error found when upgrading
@@ -186,17 +183,18 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
              * Flow. */
             [field]: new Date(value),
           };
-        case 'tags': {
+        case 'tags':
           return {
             tagIds: value.map(tag => tag.id),
           };
-        }
         case 'files':
           return {
             files: value.map(
               ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
             ),
           };
+        case 'todo':
+          return parseTodoField(null, value);
         default:
           return {
             [field]: value,
@@ -244,11 +242,12 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           return {
             packageSize: value ? removeTypename(value) : null,
           };
-        case 'tags': {
+        case 'tags':
           return {
             tagIds: value.map(tag => tag.id),
           };
-        }
+        case 'todo':
+          return parseTodoField(null, value);
         default:
           return {
             [field]: value,
@@ -264,11 +263,10 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
              * Flow. */
             [field]: new Date(value),
           };
-        case 'tags': {
+        case 'tags':
           return {
             tagIds: value.map(tag => tag.id),
           };
-        }
         case 'files':
           return {
             files: value.map(
@@ -279,11 +277,12 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           return {
             inChargeIds: value.map(user => user.id),
           };
-        case 'forwarders': {
+        case 'forwarders':
           return {
             forwarderIds: value.map(({ id }) => id),
           };
-        }
+        case 'todo':
+          return parseTodoField(null, value);
         default:
           return {
             [field]: value,
@@ -291,26 +290,22 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
       }
     case 'Container': {
       switch (field) {
-        case 'tags': {
+        case 'tags':
           return {
             tagIds: value.map(tag => tag.id),
           };
-        }
-        case 'warehouseArrivalAgreedDateApproved': {
+        case 'warehouseArrivalAgreedDateApproved':
           return {
             warehouseArrivalAgreedDateApprovedById: value?.user?.id ?? null,
           };
-        }
-        case 'warehouseArrivalActualDateApproved': {
+        case 'warehouseArrivalActualDateApproved':
           return {
             warehouseArrivalActualDateApprovedById: value?.user?.id ?? null,
           };
-        }
-        case 'departureDateApproved': {
+        case 'departureDateApproved':
           return {
             departureDateApprovedById: value?.user?.id ?? null,
           };
-        }
         case 'freeTimeStartDate': {
           const { auto: autoCalculatedFreeTimeStartDate = false, value: date = null } = value || {};
           return {
@@ -318,25 +313,22 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             freeTimeStartDate: date ? new Date(date) : null,
           };
         }
-        case 'warehouseArrivalAgreedDateAssignedTo': {
+        case 'warehouseArrivalAgreedDateAssignedTo':
           return {
             warehouseArrivalAgreedDateAssignedToIds: value.map(user => user.id),
           };
-        }
-        case 'warehouseArrivalActualDateAssignedTo': {
+        case 'warehouseArrivalActualDateAssignedTo':
           return {
             warehouseArrivalActualDateAssignedToIds: value.map(user => user.id),
           };
-        }
         case 'warehouse':
           return {
             warehouseId: value?.id ?? null,
           };
-        case 'departureDateAssignedTo': {
+        case 'departureDateAssignedTo':
           return {
             departureDateAssignedToIds: value.map(user => user.id),
           };
-        }
         default:
           return {
             [field]: value,
@@ -426,12 +418,10 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             return {
               date: new Date(value),
             };
-          case 'assignedTo': {
+          case 'assignedTo':
             return { assignedToIds: value.map(user => user?.id) };
-          }
-          case 'approved': {
+          case 'approved':
             return { approvedById: value?.user?.id ?? null };
-          }
           case 'timelineDateRevisions':
             return {
               timelineDateRevisions: value.map(({ sort, date, ...revision }) => ({
