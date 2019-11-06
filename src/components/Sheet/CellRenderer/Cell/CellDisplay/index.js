@@ -7,6 +7,7 @@ import DateDisplay from './Displays/DateDisplay';
 import MetricValueDisplay from './Displays/MetricValueDisplay';
 import StatusDisplay from './Displays/StatusDisplay';
 import PartnerDisplay from './Displays/PartnerDisplay';
+import PartnersDisplay from './Displays/PartnersDisplay';
 
 type Props = {
   value: any,
@@ -22,6 +23,7 @@ const displays = {
   metric_value: MetricValueDisplay,
   status: StatusDisplay,
   partner: PartnerDisplay,
+  partners: PartnersDisplay,
 };
 
 const CellDisplay = ({ value, type, entity }: Props) => {
