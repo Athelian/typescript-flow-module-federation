@@ -137,7 +137,7 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
                 approvedAt:
                   task?.approvedBy?.organization?.id === exporterId ? null : task?.approvedAt,
                 approvedById:
-                  task?.approvedBy?.organization?.id === exporterId ? null : task?.approvedAt?.id,
+                  task?.approvedBy?.organization?.id === exporterId ? null : task?.approvedBy?.id,
               })),
             };
 
