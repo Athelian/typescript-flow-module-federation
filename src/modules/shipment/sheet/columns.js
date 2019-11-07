@@ -751,31 +751,50 @@ const batchColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...batchMessages.deliveredAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
-    width: 140,
+    width: 125,
   },
   {
     key: 'shipment.container.batch.desiredAt',
     title: <FormattedMessage {...batchMessages.desiredAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
-    width: 140,
+    width: 125,
   },
   {
     key: 'shipment.container.batch.expiredAt',
     title: <FormattedMessage {...batchMessages.expiredAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
-    width: 140,
+    width: 125,
   },
   {
     key: 'shipment.container.batch.producedAt',
     title: <FormattedMessage {...batchMessages.producedAt} />,
     icon: 'BATCH',
     color: colors.BATCH,
-    width: 140,
+    width: 125,
   },
-  // tags
-  // memo
+  {
+    key: 'shipment.container.batch.tags',
+    title: <FormattedMessage {...batchMessages.tags} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.batch.memo',
+    title: <FormattedMessage {...batchMessages.memo} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.batch.latestQuantity',
+    title: <FormattedMessage {...batchMessages.quantity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   {
     key: 'shipment.container.batch.quantity',
     title: <FormattedMessage {...batchMessages.initialQuantity} />,
@@ -804,13 +823,48 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 200,
   },
-  // pkg qty
-  // pkg auto qty
-  // pkg weight
-  // pkg vol
-  // pkg auto vol
-  // pkg size
-  // tasks
+  {
+    key: 'shipment.container.batch.packageQuantity',
+    title: <FormattedMessage {...batchMessages.packageQuantity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 250,
+  },
+  {
+    key: 'shipment.container.batch.packageGrossWeight',
+    title: <FormattedMessage {...batchMessages.packageGrossWeight} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.batch.packageVolume',
+    title: <FormattedMessage {...batchMessages.packageVolume} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.batch.packageSize',
+    title: <FormattedMessage {...batchMessages.packageSize} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 280,
+  },
+  {
+    key: 'shipment.container.batch.todo',
+    title: <FormattedMessage {...batchMessages.tasks} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.batch.logs',
+    title: <FormattedMessage {...batchMessages.logs} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 120,
+  },
   // custom fields mask
   // custom fields
   // actions

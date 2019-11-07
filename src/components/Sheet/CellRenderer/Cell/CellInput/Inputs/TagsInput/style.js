@@ -3,6 +3,11 @@ import { css } from 'react-emotion';
 import { scrollbars, colors, fontSizes, layout } from 'styles/common';
 
 export const TagsInputWrapperStyle = css`
+  ${layout.HORIZONTAL};
+  ${layout.CENTER};
+  height: 30px;
+  width: 100%;
+
   & > div {
     width: 100%;
     height: 30px;
@@ -21,7 +26,7 @@ export const TagsSelectStyle = css`
   ${scrollbars.SMALL};
   width: 100%;
   overflow-x: auto;
-  padding: 5px 0 0 0;
+  padding: 5px 0 0 5px;
 
   &::-webkit-scrollbar {
     height: 3px;

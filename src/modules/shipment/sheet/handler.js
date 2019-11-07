@@ -1,9 +1,13 @@
 // @flow
 import ApolloClient from 'apollo-client';
-import { mapAsync } from 'utils/async';
+import { filterAsync, mapAsync } from 'utils/async';
 import type { Action } from 'components/Sheet/SheetState/types';
 import { Actions } from 'components/Sheet/SheetState/constants';
-import type { EntityEvent, EntityEventHandler } from 'components/Sheet/SheetLive/types';
+import type {
+  EntityEvent,
+  EntityEventChange,
+  EntityEventHandler,
+} from 'components/Sheet/SheetLive/types';
 import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
 import {
@@ -13,6 +17,7 @@ import {
   containerByIDQuery,
   warehouseByIDQuery,
 } from './query';
+import { organizationsByIDsQuery, tagsByIDsQuery, usersByIDsQuery } from '../../order/sheet/query';
 
 // $FlowFixMe not compatible with hook implementation
 function onCreateContainerFactory(client: ApolloClient, dispatch: Action => void) {
@@ -328,6 +333,16 @@ export default function entityEventHandler(
                       }));
                   }
                   break;
+                case 'forwarders':
+                  return client
+                    .query({
+                      query: organizationsByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.organizationsByIDs),
+                    }));
                 case 'transportType':
                   return {
                     ...change,
@@ -336,6 +351,26 @@ export default function entityEventHandler(
                       __typename: 'StringValue',
                     },
                   };
+                case 'inCharges':
+                  return client
+                    .query({
+                      query: usersByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.usersByIDs),
+                    }));
+                case 'tags':
+                  return client
+                    .query({
+                      query: tagsByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.tagsByIDs),
+                    }));
                 default:
                   break;
               }
@@ -356,6 +391,16 @@ export default function entityEventHandler(
                     .then(({ data }) => ({
                       field: 'approvedBy',
                       new: newCustomValue(data.user),
+                    }));
+                case 'assignedTo':
+                  return client
+                    .query({
+                      query: usersByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.usersByIDs),
                     }));
                 default:
                   break;
@@ -484,6 +529,28 @@ export default function entityEventHandler(
                       field: change.field,
                       new: newCustomValue(data.user),
                     }));
+                case 'warehouseArrivalAgreedDateAssignedTo':
+                case 'warehouseArrivalActualDateAssignedTo':
+                case 'departureDateAssignedTo':
+                  return client
+                    .query({
+                      query: usersByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.usersByIDs),
+                    }));
+                case 'tags':
+                  return client
+                    .query({
+                      query: tagsByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.tagsByIDs),
+                    }));
                 default:
                   break;
               }
@@ -581,6 +648,82 @@ export default function entityEventHandler(
 
               return change;
             });
+            break;
+          }
+          case 'Batch': {
+            changes = await filterAsync(changes, async (change: EntityEventChange) => {
+              switch (change.field) {
+                case 'orderItem':
+                  // TODO: handle replace order item
+                  return false;
+                case 'container':
+                case 'shipment':
+                  // TODO: handle move batch
+                  return false;
+                default:
+                  return true;
+              }
+            });
+
+            changes = await mapAsync(changes, change => {
+              switch (change.field) {
+                case 'tags':
+                  return client
+                    .query({
+                      query: tagsByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.tagsByIDs),
+                    }));
+                default:
+                  break;
+              }
+
+              return change;
+            });
+
+            const batch = shipments
+              .map(shipment => [
+                ...shipment.batchesWithoutContainer,
+                ...shipment.containers.map(c => c.batches).flat(),
+              ])
+              .flat()
+              .find(b => b.id === event.entity.id);
+            if (batch) {
+              changes = mergeChanges(
+                changes,
+                {
+                  packageQuantity: (i, v) => ({
+                    ...i,
+                    value: v,
+                  }),
+                  autoCalculatePackageQuantity: (i, v) => ({
+                    ...i,
+                    auto: v,
+                  }),
+                },
+                'packageQuantity',
+                batch.packageQuantity
+              );
+              changes = mergeChanges(
+                changes,
+                {
+                  packageVolume: (i, v) => ({
+                    ...i,
+                    value: v,
+                  }),
+                  autoCalculatePackageVolume: (i, v) => ({
+                    ...i,
+                    auto: v,
+                  }),
+                },
+                'packageVolume',
+                batch.packageVolume
+              );
+            }
+
             break;
           }
           case 'BatchQuantityRevision': {

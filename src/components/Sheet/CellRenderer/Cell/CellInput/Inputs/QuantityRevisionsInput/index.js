@@ -87,7 +87,7 @@ const QuantityRevisionsInput = ({
           <NumberInput
             className={InputStyle}
             value={revision.quantity}
-            nullable={false}
+            required
             disabled={readonly}
             onChange={handleQuantityChange(index)}
           />

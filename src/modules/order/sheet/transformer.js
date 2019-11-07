@@ -653,10 +653,7 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
       columnKey: 'order.orderItem.batch.archived',
       type: 'status',
       ...transformComputedField(basePath, batch, 'archived', order => {
-        const currentBatch = order.orderItems
-          .map(oi => oi.batches)
-          .flat()
-          .find(oi => oi.id === batch?.id);
+        const currentBatch = getCurrentBatch(batch?.id, order);
 
         if (currentBatch?.shipment) {
           return order.archived && currentBatch?.shipment?.archived;

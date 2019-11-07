@@ -2,6 +2,8 @@
 import { addDays, differenceInCalendarDays } from 'date-fns';
 import { calculateDueDate, startOfToday } from 'utils/date';
 import { getLatestDate } from 'utils/shipment';
+import { calculateVolume, getBatchLatestQuantity } from 'utils/batch';
+import { defaultVolumeMetric } from 'utils/metric';
 import {
   transformValueField,
   transformReadonlyField,
@@ -33,13 +35,19 @@ import {
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
   BATCH_SET_EXPIRY,
+  BATCH_SET_MEMO,
   BATCH_SET_NO,
   BATCH_SET_PACKAGE_CAPACITY,
   BATCH_SET_PACKAGE_NAME,
   BATCH_SET_PACKAGE_QUANTITY,
+  BATCH_SET_PACKAGE_SIZE,
+  BATCH_SET_PACKAGE_VOLUME,
+  BATCH_SET_PACKAGE_WEIGHT,
   BATCH_SET_PRODUCTION_DATE,
   BATCH_SET_QUANTITY,
   BATCH_SET_QUANTITY_ADJUSTMENTS,
+  BATCH_SET_TAGS,
+  BATCH_SET_TASKS,
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
 import {
@@ -92,6 +100,13 @@ import {
   SHIPMENT_SET_WAREHOUSE,
   SHIPMENT_SET_TASKS,
 } from 'modules/permission/constants/shipment';
+
+function getCurrentBatch(batchId: string, shipemnt: Object): ?Object {
+  return [
+    ...shipemnt.batchesWithoutContainer,
+    ...shipemnt.containers.map(c => c.batches).flat(),
+  ].find(b => b.id === batchId);
+}
 
 function transformShipment(basePath: string, shipment: Object): Array<CellValue> {
   const nbOfVoyages = (shipment?.voyages ?? []).length;
@@ -1258,12 +1273,8 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
     {
       columnKey: 'shipment.container.batch.created',
       type: 'date_user',
-      ...transformComputedField(basePath, batch, 'created', item => {
-        const currentBatch = [
-          ...item.batchesWithoutContainer,
-          ...item.containers.map(c => c.batches).flat(),
-        ].find(b => b.id === batch?.id);
-
+      ...transformComputedField(basePath, batch, 'created', shipment => {
+        const currentBatch = getCurrentBatch(batch?.id, shipment);
         return currentBatch
           ? {
               at: new Date(currentBatch.createdAt),
@@ -1285,12 +1296,8 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
     {
       columnKey: 'shipment.container.batch.updated',
       type: 'date_user',
-      ...transformComputedField(basePath, batch, 'updated', item => {
-        const currentBatch = [
-          ...item.batchesWithoutContainer,
-          ...item.containers.map(c => c.batches).flat(),
-        ].find(b => b.id === batch?.id);
-
+      ...transformComputedField(basePath, batch, 'updated', shipment => {
+        const currentBatch = getCurrentBatch(batch?.id, shipment);
         return currentBatch
           ? {
               at: new Date(currentBatch.updatedAt),
@@ -1314,13 +1321,9 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
       type: 'status',
       disabled: !batch,
       parent: true,
-      ...transformComputedField(basePath, batch, 'archived', item => {
-        const currentBatch = [
-          ...item.batchesWithoutContainer,
-          ...item.containers.map(c => c.batches).flat(),
-        ].find(b => b.id === batch?.id);
-
-        return item.archived && currentBatch.orderItem.order.archived;
+      ...transformComputedField(basePath, batch, 'archived', shipment => {
+        const currentBatch = getCurrentBatch(batch?.id, shipment);
+        return shipment.archived && currentBatch.orderItem.order.archived;
       }),
     },
     {
@@ -1374,6 +1377,14 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
       ),
     },
     {
+      columnKey: 'shipment.container.batch.latestQuantity',
+      type: 'number',
+      ...transformComputedField(basePath, batch, 'latestQuantity', shipment => {
+        const currentBatch = getCurrentBatch(batch?.id, shipment);
+        return getBatchLatestQuantity(currentBatch);
+      }),
+    },
+    {
       columnKey: 'shipment.container.batch.quantity',
       type: 'number',
       ...transformValueField(
@@ -1416,13 +1427,101 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
     },
     {
       columnKey: 'shipment.container.batch.packageQuantity',
-      type: 'number',
+      type: 'number_toggle',
+      computed: shipment => {
+        const currentBatch = getCurrentBatch(batch?.id, shipment);
+        const latestQuantity = getBatchLatestQuantity(currentBatch);
+        const packageCapacity = currentBatch?.packageCapacity ?? 0;
+        return packageCapacity ? latestQuantity / packageCapacity : 0;
+      },
       ...transformValueField(
         basePath,
         batch,
         'packageQuantity',
         hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_QUANTITY)
       ),
+    },
+    {
+      columnKey: 'shipment.container.batch.packageGrossWeight',
+      type: 'mass',
+      ...transformValueField(
+        basePath,
+        batch,
+        'packageGrossWeight',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_WEIGHT)
+      ),
+    },
+    {
+      columnKey: 'shipment.container.batch.packageVolume',
+      type: 'volume_toggle',
+      computed: shipment => {
+        const currentBatch = getCurrentBatch(batch?.id, shipment);
+        return calculateVolume(
+          currentBatch?.packageVolume?.value ?? { value: 0, metric: defaultVolumeMetric },
+          currentBatch?.packageSize
+        );
+      },
+      ...transformValueField(
+        basePath,
+        batch,
+        'packageVolume',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_VOLUME)
+      ),
+    },
+    {
+      columnKey: 'shipment.container.batch.packageSize',
+      type: 'size',
+      ...transformValueField(
+        basePath,
+        batch,
+        'packageSize',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_PACKAGE_SIZE)
+      ),
+    },
+    {
+      columnKey: 'shipment.container.batch.tags',
+      type: 'batch_tags',
+      ...transformValueField(
+        basePath,
+        batch,
+        'tags',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_TAGS)
+      ),
+    },
+    {
+      columnKey: 'shipment.container.batch.memo',
+      type: 'textarea',
+      ...transformValueField(
+        basePath,
+        batch,
+        'memo',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_MEMO)
+      ),
+    },
+    {
+      columnKey: 'shipment.container.batch.todo',
+      type: 'batch_tasks',
+      computed: shipment => {
+        const currentBatch = getCurrentBatch(batch?.id, shipment);
+        return {
+          entityId: batch?.id,
+          groupIds: [
+            currentBatch?.orderItem?.order?.importer?.id,
+            currentBatch?.orderItem?.order?.exporter?.id,
+          ].filter(Boolean),
+        };
+      },
+      ...transformValueField(
+        basePath,
+        batch,
+        'todo',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_TASKS)
+      ),
+    },
+    {
+      columnKey: 'shipment.container.batch.logs',
+      type: 'batch_logs',
+      ...transformValueField(basePath, batch, 'id', () => true),
     },
   ].map(c => ({
     ...c,
