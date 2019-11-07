@@ -30,6 +30,7 @@ import WarehouseSelectorInput from './Inputs/WarehouseSelectorInput';
 import ToggleInput from './Inputs/ToggleInput';
 import LogsInput from './Inputs/LogsInput';
 import TasksInput from './Inputs/TasksInput';
+import MainExporterInput from './Inputs/MainExporterInput';
 
 type Props = {
   value: any,
@@ -89,6 +90,7 @@ const inputs = {
   user_assignment: UserAssignmentInput,
   port: PortInput,
   exporter: PartnerSelectorInput.Exporter,
+  main_exporter: MainExporterInput,
   forwarders: PartnersSelectorInput.Forwarders,
   warehouse: WarehouseSelectorInput,
   booked: ToggleInput.Booked,

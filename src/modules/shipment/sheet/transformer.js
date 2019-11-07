@@ -105,6 +105,7 @@ import {
   SHIPMENT_SET_VESSEL_NAME,
   SHIPMENT_SET_WAREHOUSE,
   SHIPMENT_SET_TASKS,
+  SHIPMENT_SET_EXPORTER,
 } from 'modules/permission/constants/shipment';
 
 function getCurrentBatch(batchId: string, shipment: Object): ?Object {
@@ -198,6 +199,18 @@ function transformShipment(basePath: string, shipment: Object): Array<CellValue>
       columnKey: 'shipment.importer',
       type: 'partner',
       ...transformReadonlyField(basePath, shipment, 'importer', shipment?.importer ?? null),
+    },
+    {
+      columnKey: 'shipment.exporter',
+      type: 'main_exporter',
+      ...transformValueField(
+        basePath,
+        shipment,
+        'exporter',
+        hasPermission =>
+          hasPermission(PARTNER_LIST) &&
+          (hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_EXPORTER))
+      ),
     },
     {
       columnKey: 'shipment.relatedExporters',
@@ -2056,8 +2069,8 @@ export default function transformer(index: number, shipment: Object): Array<Arra
           ...shipmentCells,
           ...containerCells,
           ...transformBatch(`${index}.containers.${containerIdx}.batches.-1`, null),
-          ...transformBatchOrderItem(`${index}.containers.${containerIdx}.batches.-1`, null),
-          ...transformBatchOrderItemOrder(`${index}.containers.${containerIdx}.batches.-1`, null),
+          // ...transformBatchOrderItem(`${index}.containers.${containerIdx}.batches.-1`, null),
+          // ...transformBatchOrderItemOrder(`${index}.containers.${containerIdx}.batches.-1`, null),
         ]);
 
         shipmentCells = transformShipment(`${index}`, null);

@@ -45,7 +45,13 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 200,
   },
-  // exporter
+  {
+    key: 'shipment.exporter',
+    title: <FormattedMessage {...shipmentMessages.mainExporter} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
   {
     key: 'shipment.forwarders',
     title: <FormattedMessage {...shipmentMessages.forwarder} />,
