@@ -241,14 +241,10 @@ const TagsInput = ({
                   openMenu();
                 },
                 onKeyDown: e => {
-                  switch (e.key) {
-                    case 'Backspace':
-                      if (!inputValue && value.length > 0 && !e.repeat) {
-                        handleRemove(value[value.length - 1]);
-                      }
-                      break;
-                    default:
-                      e.stopPropagation();
+                  if (e.key === 'Backspace') {
+                    if (!inputValue && value.length > 0 && !e.repeat) {
+                      handleRemove(value[value.length - 1]);
+                    }
                   }
                 },
                 onFocus,

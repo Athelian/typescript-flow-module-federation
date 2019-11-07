@@ -44,7 +44,10 @@ const TasksInput = (entityType: string) => {
 
     const numCompletedOrSkipped = tasks.reduce(
       (num, task) =>
-        num + (task.completedAt || task.completedBy || task.skippedAt || task.skippedBy) ? 1 : 0,
+        num +
+        Number(
+          (!!task.completedAt && !!task.completedBy) || (!!task.skippedAt && !!task.skippedBy)
+        ),
       0
     );
     const completedOrSkippedPercentage =
