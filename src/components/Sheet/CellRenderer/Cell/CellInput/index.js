@@ -225,7 +225,9 @@ const CellInput = ({
       }
       case 'Enter':
         e.stopPropagation();
-        onBlur();
+        if (!equals(dirtyValue, value)) {
+          onUpdate(dirtyValue);
+        }
 
         if (e.shiftKey) {
           onUp();
