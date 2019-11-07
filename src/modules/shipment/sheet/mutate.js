@@ -308,6 +308,70 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
             [field]: value,
           };
       }
+    case 'OrderItem':
+      switch (field) {
+        case 'price':
+          if (value.value === null) {
+            return { price: null };
+          }
+          return {
+            price: {
+              amount: value.value,
+              currency: value.metric,
+            },
+          };
+        case 'deliveryDate':
+          return {
+            /* $FlowFixMe This comment suppresses an error found when upgrading
+             * Flow to v0.111.0. To view the error, delete this comment and run
+             * Flow. */
+            [field]: new Date(value),
+          };
+        case 'tags':
+          return {
+            tagIds: value.map(tag => tag.id),
+          };
+        case 'files':
+          return {
+            files: value.map(
+              ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
+            ),
+          };
+        case 'todo':
+          return parseTodoField(null, value);
+        default:
+          return {
+            [field]: value,
+          };
+      }
+    case 'Order':
+      switch (field) {
+        case 'deliveryDate':
+        case 'issuedAt':
+          return {
+            [(field: string)]: new Date(value),
+          };
+        case 'files':
+          return {
+            files: value.map(
+              ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
+            ),
+          };
+        case 'tags':
+          return {
+            tagIds: value.map(tag => tag.id),
+          };
+        case 'inCharges':
+          return {
+            inChargeIds: value.map(user => user.id),
+          };
+        case 'todo':
+          return parseTodoField(null, value);
+        default:
+          return {
+            [field]: value,
+          };
+      }
     default:
       return {
         [field]: value,
