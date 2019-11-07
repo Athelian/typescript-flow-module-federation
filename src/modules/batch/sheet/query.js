@@ -9,8 +9,18 @@ import {
   milestoneCardFragment,
   projectCardFragment,
   taskFormInTemplateFragment,
+  partnerNameFragment,
+  documentFragment,
 } from 'graphql';
-import { batchSheetFragment } from 'modules/gtv/fragment';
+import {
+  batchSheetFragment,
+  containerSheetFragment,
+  shipmentSheetFragment,
+  orderItemSheetFragment,
+  orderSheetFragment,
+  warehouseFragment,
+  timelineDateFragment,
+} from 'modules/gtv/fragment';
 
 export const batchesQuery = gql`
   query batchesQuery(
@@ -21,7 +31,23 @@ export const batchesQuery = gql`
   ) {
     batches(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...batchSheetFragment
+        ... on Batch {
+          ...batchSheetFragment
+          orderItem {
+            ... on OrderItem {
+              ...orderItemSheetFragment
+              order {
+                ...orderSheetFragment
+              }
+            }
+          }
+          container {
+            ...containerSheetFragment
+          }
+          shipment {
+            ...shipmentSheetFragment
+          }
+        }
         ...forbiddenFragment
       }
       page
@@ -30,6 +56,10 @@ export const batchesQuery = gql`
   }
 
   ${batchSheetFragment}
+  ${orderItemSheetFragment}
+  ${orderSheetFragment}
+  ${containerSheetFragment}
+  ${shipmentSheetFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${taskWithoutParentInfoFragment}
@@ -37,6 +67,10 @@ export const batchesQuery = gql`
   ${milestoneCardFragment}
   ${projectCardFragment}
   ${taskFormInTemplateFragment}
+  ${partnerNameFragment}
+  ${documentFragment}
+  ${warehouseFragment}
+  ${timelineDateFragment}
   ${forbiddenFragment}
 `;
 
