@@ -82,4 +82,5 @@ export default {
   Order: DocumentsInput('Order'),
   OrderItem: DocumentsInput('OrderItem'),
   Shipment: DocumentsInput('Shipment'),
+  Milestone: DocumentsInput('Milestone'),
 };

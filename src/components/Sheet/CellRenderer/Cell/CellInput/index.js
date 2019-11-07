@@ -47,37 +47,44 @@ type Props = {
 };
 
 const inputs = {
-  approval: ApprovalInput,
+  // Simple
   text: TextInput,
-  textarea: TextAreaInput,
   number: NumberInput,
-  number_toggle: NumberToggleInput,
+  date: DateInput,
+  datetime: DatetimeInput,
+  day: DayInput,
+  status: StatusInput,
+  toggle: ToggleInput.Default,
+  booked: ToggleInput.Booked,
+  textarea: TextAreaInput,
+  // Metric
   volume: MetricValueInput.Volume,
   area: MetricValueInput.Area,
   length: MetricValueInput.Length,
   mass: MetricValueInput.Mass,
+  static_metric_value: StaticMetricValueInput,
   size: SizeInput,
+  // Computed with toggle
+  number_toggle: NumberToggleInput,
+  date_toggle: DateToggleInput,
   volume_toggle: MetricValueToggleInput.Volume,
   area_toggle: MetricValueToggleInput.Area,
   length_toggle: MetricValueToggleInput.Length,
   mass_toggle: MetricValueToggleInput.Mass,
-  static_metric_value: StaticMetricValueInput,
-  date: DateInput,
-  date_toggle: DateToggleInput,
-  datetime: DatetimeInput,
-  day: DayInput,
+  // Select
   load_type: SelectEnumInput.LoadType,
   transport_type: SelectEnumInput.TransportType,
   incoterm: SearchSelectEnumInput.Incoterm,
   currency: SearchSelectEnumInput.Currency,
   container_type: SelectCustomInput.ContainerType,
   container_option: SelectEnumInput.ContainerOption,
+  port: PortInput,
+  // Files
   order_documents: DocumentsInput.Order,
   order_item_documents: DocumentsInput.OrderItem,
   shipment_documents: DocumentsInput.Shipment,
-  quantity_revisions: QuantityRevisionsInput,
-  date_revisions: DateRevisionsInput,
-  status: StatusInput,
+  milestone_documents: DocumentsInput.Milestone,
+  // Tags
   product_tags: TagsInput.Product,
   order_tags: TagsInput.Order,
   order_item_tags: TagsInput.OrderItem,
@@ -87,22 +94,29 @@ const inputs = {
   user_tags: TagsInput.User,
   task_tags: TagsInput.Task,
   project_tags: TagsInput.Project,
+  // Selector
   user_assignment: UserAssignmentInput,
-  port: PortInput,
   exporter: PartnerSelectorInput.Exporter,
   main_exporter: MainExporterInput,
   forwarders: PartnersSelectorInput.Forwarders,
   warehouse: WarehouseSelectorInput,
-  booked: ToggleInput.Booked,
+  // Logs
   order_logs: LogsInput.Order,
   order_item_logs: LogsInput.OrderItem,
   batch_logs: LogsInput.Batch,
   shipment_logs: LogsInput.Shipment,
   container_logs: LogsInput.Container,
+  project_logs: LogsInput.Project,
+  // Tasks
+  task_logs: LogsInput.Task,
   order_tasks: TasksInput.Order,
   order_item_tasks: TasksInput.OrderItem,
   batch_tasks: TasksInput.Batch,
   shipment_tasks: TasksInput.Shipment,
+  // Other
+  approval: ApprovalInput,
+  quantity_revisions: QuantityRevisionsInput,
+  date_revisions: DateRevisionsInput,
 };
 
 const CellInput = ({

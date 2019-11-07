@@ -117,7 +117,6 @@ const menu: Array<MenuConfig> = [
         icon: 'TABLE',
         path: 'table',
         beta: true,
-        hidden: !isEnableBetaFeature,
       },
       {
         label: <FormattedMessage {...messages.cards} />,
@@ -164,6 +163,14 @@ const menu: Array<MenuConfig> = [
         icon: 'PROJECT',
         path: 'project',
         overrideFullPath: 'project',
+        permitted: hasPermissions => hasPermissions(PROJECT_LIST),
+      },
+      {
+        label: <FormattedMessage {...messages.table} />,
+        icon: 'TABLE',
+        path: 'table',
+        beta: true,
+        hidden: !isEnableBetaFeature,
         permitted: hasPermissions => hasPermissions(PROJECT_LIST),
       },
       {

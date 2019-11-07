@@ -6,7 +6,7 @@ import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/ty
 import { CellInputWrapperStyle } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
 import { ToggleInputWrapperStyle } from './style';
 
-const ToggleInput = ({ on, off }: { on: React.Node, off: React.Node }) => ({
+const ToggleInput = ({ on, off }: { on: ?React.Node, off: ?React.Node }) => ({
   value,
   onChange,
   readonly,
@@ -26,6 +26,10 @@ const ToggleInput = ({ on, off }: { on: React.Node, off: React.Node }) => ({
 );
 
 export default {
+  Default: ToggleInput({
+    on: null,
+    off: null,
+  }),
   Booked: ToggleInput({
     on: <FormattedMessage id="components.sheet.booked" defaultMessage="Booked" />,
     off: <FormattedMessage id="components.sheet.unbooked" defaultMessage="Unbooked" />,

@@ -11,6 +11,8 @@ import { orderItemTimelineQuery } from 'modules/orderItem/form/query';
 import { batchTimelineQuery } from 'modules/batch/form/query';
 import { shipmentTimelineQuery } from 'modules/shipment/query';
 import { containerTimelineQuery } from 'modules/container/query';
+import { projectTimelineQuery } from 'modules/project/query';
+import { taskTimelineQuery } from 'modules/task/query';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import { LogsButtonStyle } from './style';
 
@@ -88,5 +90,15 @@ export default {
     query: containerTimelineQuery,
     queryField: 'container',
     entityKey: 'containerId',
+  }),
+  Project: LogsInput({
+    query: projectTimelineQuery,
+    queryField: 'project',
+    entityKey: 'projectId',
+  }),
+  Task: LogsInput({
+    query: taskTimelineQuery,
+    queryField: 'task',
+    entityKey: 'taskId',
   }),
 };
