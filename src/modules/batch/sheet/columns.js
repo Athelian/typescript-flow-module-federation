@@ -18,10 +18,6 @@ const orderColumns: Array<ColumnConfig> = [
     icon: 'ORDER',
     color: colors.ORDER,
     width: 110,
-    sort: {
-      name: 'createdAt',
-      group: 'order',
-    },
   },
   {
     key: 'order.updated',
@@ -29,11 +25,6 @@ const orderColumns: Array<ColumnConfig> = [
     icon: 'ORDER',
     color: colors.ORDER,
     width: 110,
-    sort: {
-      default: true,
-      name: 'updatedAt',
-      group: 'order',
-    },
   },
   {
     key: 'order.archived',
@@ -52,7 +43,7 @@ const orderColumns: Array<ColumnConfig> = [
     width: 200,
     sort: {
       name: 'poNo',
-      group: 'order',
+      group: 'batch',
     },
   },
   {
@@ -78,10 +69,6 @@ const orderColumns: Array<ColumnConfig> = [
     icon: 'ORDER',
     color: colors.ORDER,
     width: 200,
-    sort: {
-      name: 'piNo',
-      group: 'order',
-    },
   },
   {
     key: 'order.issuedAt',
@@ -105,10 +92,6 @@ const orderColumns: Array<ColumnConfig> = [
     icon: 'ORDER',
     color: colors.ORDER,
     width: 100,
-    sort: {
-      name: 'currency',
-      group: 'order',
-    },
   },
   {
     key: 'order.incoterm',
@@ -183,12 +166,6 @@ const orderItemColumns: Array<ColumnConfig> = [
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 110,
-    sort: {
-      local: true,
-      default: true,
-      name: 'createdAt',
-      group: 'orderItem',
-    },
   },
   {
     key: 'orderItem.updated',
@@ -196,11 +173,6 @@ const orderItemColumns: Array<ColumnConfig> = [
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 110,
-    sort: {
-      local: true,
-      name: 'updatedAt',
-      group: 'orderItem',
-    },
   },
   {
     key: 'orderItem.archived',
@@ -217,9 +189,8 @@ const orderItemColumns: Array<ColumnConfig> = [
     color: colors.ORDER_ITEM,
     width: 200,
     sort: {
-      local: true,
-      name: 'productProvider.product.name',
-      group: 'orderItem',
+      name: 'productName',
+      group: 'batch',
     },
   },
   {
@@ -229,9 +200,8 @@ const orderItemColumns: Array<ColumnConfig> = [
     color: colors.ORDER_ITEM,
     width: 200,
     sort: {
-      local: true,
-      name: 'productProvider.product.serial',
-      group: 'orderItem',
+      name: 'productSerial',
+      group: 'batch',
     },
   },
   {
@@ -241,11 +211,6 @@ const orderItemColumns: Array<ColumnConfig> = [
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
-    sort: {
-      local: true,
-      name: 'no',
-      group: 'orderItem',
-    },
   },
   {
     key: 'orderItem.quantity',
@@ -254,11 +219,6 @@ const orderItemColumns: Array<ColumnConfig> = [
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
-    sort: {
-      local: true,
-      name: 'quantity',
-      group: 'orderItem',
-    },
   },
   {
     key: 'orderItem.price',
@@ -267,11 +227,6 @@ const orderItemColumns: Array<ColumnConfig> = [
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 200,
-    sort: {
-      local: true,
-      name: 'price',
-      group: 'orderItem',
-    },
   },
   {
     key: 'orderItem.deliveryDate',
@@ -280,11 +235,6 @@ const orderItemColumns: Array<ColumnConfig> = [
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: 125,
-    sort: {
-      local: true,
-      name: 'deliveryDate',
-      group: 'orderItem',
-    },
   },
   {
     key: 'orderItem.tags',
@@ -343,8 +293,6 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 110,
     sort: {
-      local: true,
-      default: true,
       name: 'createdAt',
       group: 'batch',
     },
@@ -356,7 +304,7 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 110,
     sort: {
-      local: true,
+      default: true,
       name: 'updatedAt',
       group: 'batch',
     },
@@ -377,7 +325,6 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 200,
     sort: {
-      local: true,
       name: 'no',
       group: 'batch',
     },
@@ -390,7 +337,6 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 125,
     sort: {
-      local: true,
       name: 'deliveredAt',
       group: 'batch',
     },
@@ -402,11 +348,6 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 125,
-    sort: {
-      local: true,
-      name: 'desiredAt',
-      group: 'batch',
-    },
   },
   {
     key: 'batch.expiredAt',
@@ -416,7 +357,6 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 125,
     sort: {
-      local: true,
       name: 'expiredAt',
       group: 'batch',
     },
@@ -429,7 +369,6 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 125,
     sort: {
-      local: true,
       name: 'producedAt',
       group: 'batch',
     },
@@ -463,11 +402,6 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
-    sort: {
-      local: true,
-      name: 'quantity',
-      group: 'batch',
-    },
   },
   {
     key: 'batch.quantityRevisions',
@@ -484,11 +418,6 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
-    sort: {
-      local: true,
-      name: 'packageName',
-      group: 'batch',
-    },
   },
   {
     key: 'batch.packageCapacity',
@@ -497,11 +426,6 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
-    sort: {
-      local: true,
-      name: 'packageCapacity',
-      group: 'batch',
-    },
   },
   {
     key: 'batch.packageQuantity',
@@ -509,11 +433,6 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 250,
-    sort: {
-      local: true,
-      name: 'packageQuantity',
-      group: 'batch',
-    },
   },
   {
     key: 'batch.packageGrossWeight',
@@ -562,11 +481,6 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 110,
-    sort: {
-      local: true,
-      name: 'containerCreatedAt',
-      group: 'batch',
-    },
   },
   {
     key: 'container.updated',
@@ -574,11 +488,6 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 110,
-    sort: {
-      local: true,
-      name: 'containerUpdatedAt',
-      group: 'batch',
-    },
   },
   {
     key: 'container.archived',
@@ -594,11 +503,6 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 200,
-    sort: {
-      local: true,
-      name: 'containerNo',
-      group: 'batch',
-    },
   },
   {
     key: 'container.containerType',
@@ -620,11 +524,6 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 170,
-    sort: {
-      local: true,
-      name: 'containerWarehouseArrivalAgreedDate',
-      group: 'batch',
-    },
   },
   {
     key: 'container.warehouseArrivalAgreedDateAssignedTo',
@@ -646,11 +545,6 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 170,
-    sort: {
-      local: true,
-      name: 'containerWarehouseArrivalActualDate',
-      group: 'batch',
-    },
   },
   {
     key: 'container.warehouseArrivalActualDateAssignedTo',
@@ -707,11 +601,6 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 200,
-    sort: {
-      local: true,
-      name: 'containerYardName',
-      group: 'batch',
-    },
   },
   {
     key: 'container.departureDate',
@@ -719,11 +608,6 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 125,
-    sort: {
-      local: true,
-      name: 'containerDepartureDate',
-      group: 'batch',
-    },
   },
   {
     key: 'container.departureDateAssignedTo',
@@ -772,11 +656,6 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 110,
-    sort: {
-      local: true,
-      name: 'shipmentCreatedAt',
-      group: 'batch',
-    },
   },
   {
     key: 'shipment.updated',
@@ -784,11 +663,6 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 110,
-    sort: {
-      local: true,
-      name: 'shipmentUpdatedAt',
-      group: 'batch',
-    },
   },
   {
     key: 'shipment.archived',
@@ -805,11 +679,6 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 200,
-    sort: {
-      local: true,
-      name: 'shipmentNo',
-      group: 'batch',
-    },
   },
   {
     key: 'shipment.importer',
@@ -842,11 +711,6 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 200,
-    sort: {
-      local: true,
-      name: 'shipmentBlNo',
-      group: 'batch',
-    },
   },
   {
     key: 'shipment.blDate',
@@ -855,11 +719,6 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
-    sort: {
-      local: true,
-      name: 'shipmentBlDate',
-      group: 'batch',
-    },
   },
   {
     key: 'shipment.bookingNo',
@@ -868,11 +727,6 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 200,
-    sort: {
-      local: true,
-      name: 'shipmentBookingNo',
-      group: 'batch',
-    },
   },
   {
     key: 'shipment.booked',
@@ -889,11 +743,6 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
-    sort: {
-      local: true,
-      name: 'shipmentBookingDate',
-      group: 'batch',
-    },
   },
   {
     key: 'shipment.invoiceNo',
@@ -902,11 +751,6 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 200,
-    sort: {
-      local: true,
-      name: 'shipmentInvoiceNo',
-      group: 'batch',
-    },
   },
   {
     key: 'shipment.contractNo',
@@ -915,11 +759,6 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 200,
-    sort: {
-      local: true,
-      name: 'shipmentContractNo',
-      group: 'batch',
-    },
   },
   {
     key: 'shipment.transportType',
@@ -952,11 +791,6 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 200,
-    sort: {
-      local: true,
-      name: 'shipmentCarrier',
-      group: 'batch',
-    },
   },
   {
     key: 'shipment.tags',

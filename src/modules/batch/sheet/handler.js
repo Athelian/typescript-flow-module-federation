@@ -7,7 +7,7 @@ import type { EntityEvent, EntityEventHandler } from 'components/Sheet/SheetLive
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
 
 export default function entityEventHandler(
-  // $FlowFixMe ignore type
+  // $FlowFixMe Cannot use  `ApolloClient` [1] without 1 type argument.Flow(InferError)
   client: ApolloClient,
   dispatch: Action => void
 ): EntityEventHandler {
