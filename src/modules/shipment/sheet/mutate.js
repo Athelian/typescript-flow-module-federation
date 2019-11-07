@@ -28,14 +28,14 @@ const cleanUpExporter = ({
   exporterId: string,
 }) => ({
   assignedToIds: (selectedEntity?.[field]?.assignedTo ?? [])
-    .filter(user => user?.organization?.id !== exporterId)
+    .filter(user => user?.organization?.id === exporterId)
     .map(user => user.id),
   approvedAt:
-    selectedEntity?.[field]?.approvedBy?.organization?.id === exporterId
+    selectedEntity?.[field]?.approvedBy?.organization?.id !== exporterId
       ? null
       : selectedEntity?.[field]?.approvedAt,
   approvedById:
-    selectedEntity?.[field]?.approvedBy?.organization?.id === exporterId
+    selectedEntity?.[field]?.approvedBy?.organization?.id !== exporterId
       ? null
       : selectedEntity?.[field]?.approvedBy?.id,
 });
@@ -82,7 +82,7 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
           if (exporterId) {
             const batches = [];
             (shipment?.batchesWithoutContainer ?? []).forEach(batch => {
-              if (batch?.orderItem?.order?.exporter?.id !== exporterId) {
+              if (batch?.orderItem?.order?.exporter?.id === exporterId) {
                 batches.push({
                   id: batch?.id,
                 });
@@ -93,7 +93,7 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
               const { representativeBatch } = container;
               const newBatches = [];
               (container?.batches ?? []).forEach(batch => {
-                if (batch?.orderItem?.order?.exporter?.id !== exporterId) {
+                if (batch?.orderItem?.order?.exporter?.id === exporterId) {
                   newBatches.push({
                     id: batch?.id,
                   });
@@ -115,29 +115,29 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
               tasks: (shipment?.todo?.tasks ?? []).map(task => ({
                 id: task.id,
                 assignedToIds: (task?.assignedTo ?? [])
-                  .filter(user => user?.organization?.id !== exporterId)
+                  .filter(user => user?.organization?.id === exporterId)
                   .map(user => user.id),
                 approverIds: (task?.approvers ?? [])
-                  .filter(user => user?.organization?.id !== exporterId)
+                  .filter(user => user?.organization?.id === exporterId)
                   .map(user => user.id),
                 inProgressAt:
-                  task?.inProgressBy?.organization?.id === exporterId ? null : task?.inProgressAt,
+                  task?.inProgressBy?.organization?.id !== exporterId ? null : task?.inProgressAt,
                 inProgressById:
-                  task?.inProgressBy?.organization?.id === exporterId
+                  task?.inProgressBy?.organization?.id !== exporterId
                     ? null
                     : task?.inProgressBy?.id,
                 completedAt:
-                  task?.completedBy?.organization?.id === exporterId ? null : task?.completedAt,
+                  task?.completedBy?.organization?.id !== exporterId ? null : task?.completedAt,
                 completedById:
-                  task?.completedBy?.organization?.id === exporterId ? null : task?.completedBy?.id,
+                  task?.completedBy?.organization?.id !== exporterId ? null : task?.completedBy?.id,
                 rejectedAt:
-                  task?.rejectedBy?.organization?.id === exporterId ? null : task?.rejectedAt,
+                  task?.rejectedBy?.organization?.id !== exporterId ? null : task?.rejectedAt,
                 rejectedById:
-                  task?.rejectedBy?.organization?.id === exporterId ? null : task?.rejectedBy?.id,
+                  task?.rejectedBy?.organization?.id !== exporterId ? null : task?.rejectedBy?.id,
                 approvedAt:
-                  task?.approvedBy?.organization?.id === exporterId ? null : task?.approvedAt,
+                  task?.approvedBy?.organization?.id !== exporterId ? null : task?.approvedAt,
                 approvedById:
-                  task?.approvedBy?.organization?.id === exporterId ? null : task?.approvedBy?.id,
+                  task?.approvedBy?.organization?.id !== exporterId ? null : task?.approvedBy?.id,
               })),
             };
 
