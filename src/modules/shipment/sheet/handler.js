@@ -14,10 +14,12 @@ import {
   batchQuantityRevisionByIDQuery,
   organizationByIDQuery,
   userByIDQuery,
+  organizationsByIDsQuery,
+  tagsByIDsQuery,
+  usersByIDsQuery,
   containerByIDQuery,
   warehouseByIDQuery,
 } from './query';
-import { organizationsByIDsQuery, tagsByIDsQuery, usersByIDsQuery } from '../../order/sheet/query';
 
 // $FlowFixMe not compatible with hook implementation
 function onCreateContainerFactory(client: ApolloClient, dispatch: Action => void) {
@@ -689,6 +691,7 @@ export default function entityEventHandler(
                 ...shipment.batchesWithoutContainer,
                 ...shipment.containers.map(c => c.batches).flat(),
               ])
+              // $FlowFixMe flat not supported by flow
               .flat()
               .find(b => b.id === event.entity.id);
             if (batch) {
@@ -730,6 +733,78 @@ export default function entityEventHandler(
             await onBatchQuantityRevision(event.entity.id, shipments);
             return;
           }
+          case 'OrderItem': {
+            changes = await filterAsync(changes, async (change: EntityEventChange) => {
+              switch (change.field) {
+                case 'order':
+                  // TODO: handle replace order
+                  return false;
+                default:
+                  return true;
+              }
+            });
+
+            changes = await mapAsync(changes, change => {
+              switch (change.field) {
+                case 'tags':
+                  return client
+                    .query({
+                      query: tagsByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.tagsByIDs),
+                    }));
+                default:
+                  break;
+              }
+
+              return change;
+            });
+            break;
+          }
+          case 'Order':
+            changes = await mapAsync(changes, change => {
+              switch (change.field) {
+                case 'importer':
+                case 'exporter':
+                  return client
+                    .query({
+                      query: organizationByIDQuery,
+                      variables: { id: change.new?.entity?.id },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.organization),
+                    }));
+                case 'inCharges':
+                  return client
+                    .query({
+                      query: usersByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.usersByIDs),
+                    }));
+                case 'tags':
+                  return client
+                    .query({
+                      query: tagsByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.tagsByIDs),
+                    }));
+                default:
+                  break;
+              }
+
+              return change;
+            });
+            break;
           default:
             break;
         }

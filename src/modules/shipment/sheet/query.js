@@ -272,9 +272,9 @@ const orderItemSheetFragment = gql`
     }
     deliveryDate
     sort
-    files {
-      ...documentFragment
-      ...forbiddenFragment
+    memo
+    tags {
+      ...tagFragment
     }
     productProvider {
       ...forbiddenFragment
@@ -298,6 +298,18 @@ const orderItemSheetFragment = gql`
             id
           }
         }
+      }
+    }
+    files {
+      ...documentFragment
+      ...forbiddenFragment
+    }
+    todo {
+      tasks {
+        ...taskWithoutParentInfoFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
       }
     }
     createdAt
@@ -557,6 +569,32 @@ export const batchQuantityRevisionByIDQuery = gql`
       }
     }
   }
+`;
+
+export const orderItemByIDQuery = gql`
+  query orderItemByIDQuery($id: ID!) {
+    orderItem(id: $id) {
+      ...orderItemSheetFragment
+      ... on OrderItem {
+        order {
+          ...orderSheetFragment
+        }
+      }
+    }
+  }
+
+  ${orderItemSheetFragment}
+  ${orderSheetFragment}
+  ${partnerNameFragment}
+  ${userAvatarFragment}
+  ${documentFragment}
+  ${tagFragment}
+  ${taskWithoutParentInfoFragment}
+  ${taskTemplateCardFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskFormInTemplateFragment}
+  ${forbiddenFragment}
 `;
 
 export const userByIDQuery = gql`
