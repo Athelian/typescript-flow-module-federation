@@ -19,6 +19,8 @@ import {
   usersByIDsQuery,
   containerByIDQuery,
   warehouseByIDQuery,
+  orderItemByIDQuery,
+  orderByIDQuery,
 } from './query';
 
 // $FlowFixMe not compatible with hook implementation
@@ -187,6 +189,176 @@ function onBatchQuantityRevisionFactory(client: ApolloClient, dispatch: Action =
       });
 }
 
+// $FlowFixMe not compatible with hook implementation
+function onUpdateBatchOrderItemFactory(client: ApolloClient, dispatch: Action => void) {
+  return async (batchId: string, orderItemId: string | null, shipments: Array<Object>) => {
+    await client
+      .query({
+        query: orderItemByIDQuery,
+        fetchPolicy: 'network-only',
+        variables: {
+          id: orderItemId,
+        },
+      })
+      .then(({ data }) => {
+        const orderItem = data?.orderItem;
+        if (orderItem?.__typename !== 'OrderItem') {
+          return;
+        }
+
+        shipments.every((shipment, shipmentIdx) => {
+          const result = shipment.batchesWithoutContainer.every((batch, batchIdx) => {
+            if (batch.id !== batchId) {
+              return true;
+            }
+
+            const batches = [...shipment.batchesWithoutContainer];
+            batches[batchIdx] = {
+              ...batch,
+              orderItem,
+            };
+
+            dispatch({
+              type: Actions.REPLACE_ITEM,
+              payload: {
+                item: {
+                  ...shipment,
+                  batchesWithoutContainer: batches,
+                },
+                index: shipmentIdx,
+              },
+            });
+
+            return false;
+          });
+          if (!result) {
+            return false;
+          }
+
+          return shipment.containers.every((container, containerIdx) =>
+            container.batches.every((batch, batchIdx) => {
+              if (batch.id !== batchId) {
+                return true;
+              }
+
+              const containers = [...shipment.containers];
+              const batches = [...container.batches];
+              batches[batchIdx] = {
+                ...batch,
+                orderItem,
+              };
+              containers[containerIdx] = {
+                ...container,
+                batches,
+              };
+
+              dispatch({
+                type: Actions.REPLACE_ITEM,
+                payload: {
+                  item: {
+                    ...shipment,
+                    containers,
+                  },
+                  index: shipmentIdx,
+                },
+              });
+
+              return false;
+            })
+          );
+        });
+      });
+  };
+}
+
+// $FlowFixMe not compatible with hook implementation
+function onUpdateBatchOrderItemOrderFactory(client: ApolloClient, dispatch: Action => void) {
+  return async (batchId: string, orderId: string | null, shipments: Array<Object>) => {
+    await client
+      .query({
+        query: orderByIDQuery,
+        fetchPolicy: 'network-only',
+        variables: {
+          id: orderId,
+        },
+      })
+      .then(({ data }) => {
+        const order = data?.order;
+        if (order?.__typename !== 'Order') {
+          return;
+        }
+
+        shipments.every((shipment, shipmentIdx) => {
+          const result = shipment.batchesWithoutContainer.every((batch, batchIdx) => {
+            if (batch.id !== batchId) {
+              return true;
+            }
+
+            const batches = [...shipment.batchesWithoutContainer];
+            batches[batchIdx] = {
+              ...batch,
+              orderItem: {
+                ...batch.orderItem,
+                order,
+              },
+            };
+
+            dispatch({
+              type: Actions.REPLACE_ITEM,
+              payload: {
+                item: {
+                  ...shipment,
+                  batchesWithoutContainer: batches,
+                },
+                index: shipmentIdx,
+              },
+            });
+
+            return false;
+          });
+          if (!result) {
+            return false;
+          }
+
+          return shipment.containers.every((container, containerIdx) =>
+            container.batches.every((batch, batchIdx) => {
+              if (batch.id !== batchId) {
+                return true;
+              }
+
+              const containers = [...shipment.containers];
+              const batches = [...container.batches];
+              batches[batchIdx] = {
+                ...batch,
+                orderItem: {
+                  ...batch.orderItem,
+                  order,
+                },
+              };
+              containers[containerIdx] = {
+                ...container,
+                batches,
+              };
+
+              dispatch({
+                type: Actions.REPLACE_ITEM,
+                payload: {
+                  item: {
+                    ...shipment,
+                    containers,
+                  },
+                  index: shipmentIdx,
+                },
+              });
+
+              return false;
+            })
+          );
+        });
+      });
+  };
+}
+
 function onDeleteContainerFactory(dispatch: Action => void) {
   return (containerId: string) => {
     dispatch({
@@ -295,6 +467,8 @@ export default function entityEventHandler(
 ): EntityEventHandler {
   const onCreateContainer = onCreateContainerFactory(client, dispatch);
   const onBatchQuantityRevision = onBatchQuantityRevisionFactory(client, dispatch);
+  const onUpdateBatchOrderItem = onUpdateBatchOrderItemFactory(client, dispatch);
+  const onUpdateBatchOrderItemOrder = onUpdateBatchOrderItemOrderFactory(client, dispatch);
   const onDeleteContainer = onDeleteContainerFactory(dispatch);
   const onDeleteBatchQuantityRevision = onDeleteBatchQuantityRevisionFactory(dispatch);
 
@@ -656,7 +830,11 @@ export default function entityEventHandler(
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               switch (change.field) {
                 case 'orderItem':
-                  // TODO: handle replace order item
+                  await onUpdateBatchOrderItem(
+                    event.entity.id,
+                    change.new?.entity?.id ?? null,
+                    shipments
+                  );
                   return false;
                 case 'container':
                 case 'shipment':
@@ -726,7 +904,6 @@ export default function entityEventHandler(
                 batch.packageVolume
               );
             }
-
             break;
           }
           case 'BatchQuantityRevision': {
@@ -737,7 +914,11 @@ export default function entityEventHandler(
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               switch (change.field) {
                 case 'order':
-                  // TODO: handle replace order
+                  await onUpdateBatchOrderItemOrder(
+                    event.entity.id,
+                    change.new?.entity?.id ?? null,
+                    shipments
+                  );
                   return false;
                 default:
                   return true;
