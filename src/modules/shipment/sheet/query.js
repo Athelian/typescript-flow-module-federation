@@ -597,6 +597,26 @@ export const orderItemByIDQuery = gql`
   ${forbiddenFragment}
 `;
 
+export const orderByIDQuery = gql`
+  query orderByIDQuery($id: ID!) {
+    order(id: $id) {
+      ...orderSheetFragment
+    }
+  }
+
+  ${orderSheetFragment}
+  ${partnerNameFragment}
+  ${userAvatarFragment}
+  ${documentFragment}
+  ${tagFragment}
+  ${taskWithoutParentInfoFragment}
+  ${taskTemplateCardFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskFormInTemplateFragment}
+  ${forbiddenFragment}
+`;
+
 export const userByIDQuery = gql`
   query userByIDQuery($id: ID!) {
     user(id: $id) {
