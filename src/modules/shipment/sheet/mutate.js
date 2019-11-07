@@ -1,5 +1,6 @@
 // @flow
 import ApolloClient from 'apollo-client';
+import type { User } from 'generated/graphql';
 import { parseTodoField, removeTypename } from 'utils/data';
 import {
   batchMutation,
@@ -18,6 +19,8 @@ const mutations = {
   Order: orderMutation,
 };
 
+const isExporter = (user: User) => (user?.organization?.types ?? []).includes('Exporter');
+
 const cleanUpExporter = ({
   selectedEntity,
   field,
@@ -28,14 +31,16 @@ const cleanUpExporter = ({
   exporterId: string,
 }) => ({
   assignedToIds: (selectedEntity?.[field]?.assignedTo ?? [])
-    .filter(user => user?.organization?.id === exporterId)
+    .filter(user => user?.organization?.id === exporterId || !isExporter(user))
     .map(user => user.id),
   approvedAt:
-    selectedEntity?.[field]?.approvedBy?.organization?.id !== exporterId
+    selectedEntity?.[field]?.approvedBy?.organization?.id !== exporterId &&
+    isExporter(selectedEntity?.[field]?.approvedBy)
       ? null
       : selectedEntity?.[field]?.approvedAt,
   approvedById:
-    selectedEntity?.[field]?.approvedBy?.organization?.id !== exporterId
+    selectedEntity?.[field]?.approvedBy?.organization?.id !== exporterId &&
+    isExporter(selectedEntity?.[field]?.approvedBy)
       ? null
       : selectedEntity?.[field]?.approvedBy?.id,
 });
@@ -76,7 +81,7 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
         case 'exporter': {
           const exporterId = value?.id ?? null;
           const inChargeIds = (shipment?.inCharges ?? [])
-            .filter(user => user?.organization?.id !== exporterId)
+            .filter(user => user?.organization?.id !== exporterId || !isExporter(user))
             .map(user => user?.id);
 
           if (exporterId) {
@@ -115,29 +120,47 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
               tasks: (shipment?.todo?.tasks ?? []).map(task => ({
                 id: task.id,
                 assignedToIds: (task?.assignedTo ?? [])
-                  .filter(user => user?.organization?.id === exporterId)
+                  .filter(user => user?.organization?.id === exporterId || !isExporter(user))
                   .map(user => user.id),
                 approverIds: (task?.approvers ?? [])
-                  .filter(user => user?.organization?.id === exporterId)
+                  .filter(user => user?.organization?.id === exporterId || !isExporter(user))
                   .map(user => user.id),
                 inProgressAt:
-                  task?.inProgressBy?.organization?.id !== exporterId ? null : task?.inProgressAt,
+                  task?.inProgressBy?.organization?.id !== exporterId &&
+                  isExporter(task?.inProgressBy)
+                    ? null
+                    : task?.inProgressAt,
                 inProgressById:
-                  task?.inProgressBy?.organization?.id !== exporterId
+                  task?.inProgressBy?.organization?.id !== exporterId &&
+                  isExporter(task?.inProgressBy)
                     ? null
                     : task?.inProgressBy?.id,
                 completedAt:
-                  task?.completedBy?.organization?.id !== exporterId ? null : task?.completedAt,
+                  task?.completedBy?.organization?.id !== exporterId &&
+                  isExporter(task?.completedBy)
+                    ? null
+                    : task?.completedAt,
                 completedById:
-                  task?.completedBy?.organization?.id !== exporterId ? null : task?.completedBy?.id,
+                  task?.completedBy?.organization?.id !== exporterId &&
+                  isExporter(task?.completedBy)
+                    ? null
+                    : task?.completedBy?.id,
                 rejectedAt:
-                  task?.rejectedBy?.organization?.id !== exporterId ? null : task?.rejectedAt,
+                  task?.rejectedBy?.organization?.id !== exporterId && isExporter(task?.rejectedBy)
+                    ? null
+                    : task?.rejectedAt,
                 rejectedById:
-                  task?.rejectedBy?.organization?.id !== exporterId ? null : task?.rejectedBy?.id,
+                  task?.rejectedBy?.organization?.id !== exporterId && isExporter(task?.rejectedBy)
+                    ? null
+                    : task?.rejectedBy?.id,
                 approvedAt:
-                  task?.approvedBy?.organization?.id !== exporterId ? null : task?.approvedAt,
+                  task?.approvedBy?.organization?.id !== exporterId && isExporter(task?.approvedBy)
+                    ? null
+                    : task?.approvedAt,
                 approvedById:
-                  task?.approvedBy?.organization?.id !== exporterId ? null : task?.approvedBy?.id,
+                  task?.approvedBy?.organization?.id !== exporterId && isExporter(task?.approvedBy)
+                    ? null
+                    : task?.approvedBy?.id,
               })),
             };
 

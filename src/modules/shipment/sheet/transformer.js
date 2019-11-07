@@ -10,6 +10,7 @@ import {
   transformComputedField,
 } from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
+import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import {
   ORDER_SET_ARCHIVED,
   ORDER_SET_CURRENCY,
