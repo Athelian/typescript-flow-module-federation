@@ -3,8 +3,8 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import useUser from 'hooks/useUser';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
+import messages from 'modules/shipment/messages';
 import PartnerSelectorInput from '../PartnerSelectorInput';
-import messages from './messages';
 
 function MainExporterInput(props: InputProps<Object>): React$Node {
   const { value, readonly } = props;
