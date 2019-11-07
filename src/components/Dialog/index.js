@@ -74,11 +74,14 @@ const Dialog = ({ isOpen, onRequestClose, onCancel, width, showCancelButton, chi
   React.useEffect(() => {
     if (isOpen) {
       setRender(true);
-    } else {
-      setTimeout(() => {
-        setRender(false);
-      }, ANIMATION_FINISHED);
+      return () => {};
     }
+
+    const handler = setTimeout(() => {
+      setRender(false);
+    }, ANIMATION_FINISHED);
+
+    return () => clearTimeout(handler);
   }, [isOpen]);
 
   return render ? (

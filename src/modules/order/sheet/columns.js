@@ -1,4 +1,3 @@
-/* eslint-disable */
 /* eslint-disable react/jsx-props-no-spreading */
 // @flow
 import * as React from 'react';
