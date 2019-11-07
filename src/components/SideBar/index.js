@@ -99,6 +99,19 @@ const menu: Array<MenuConfig> = [
     icon: 'BATCH',
     path: 'batch',
     permitted: hasPermissions => hasPermissions(BATCH_LIST),
+    submenu: [
+      {
+        label: <FormattedMessage {...messages.table} />,
+        icon: 'TABLE',
+        path: 'table',
+        beta: true,
+      },
+      {
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
+      },
+    ],
   },
   {
     label: <FormattedMessage {...messages.shipment} />,
