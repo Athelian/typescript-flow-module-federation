@@ -144,13 +144,13 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
                     ? null
                     : task?.rejectedBy?.id,
                 approvedAt:
-                  task?.approvedAt?.organization?.id === item?.exporter?.id
+                  task?.approvedBy?.organization?.id === item?.exporter?.id
                     ? null
                     : task?.approvedAt,
-                approvedAtId:
-                  task?.approvedAt?.organization?.id === item?.exporter?.id
+                approvedById:
+                  task?.approvedBy?.organization?.id === item?.exporter?.id
                     ? null
-                    : task?.approvedAt?.id,
+                    : task?.approvedBy?.id,
               })),
             },
           };

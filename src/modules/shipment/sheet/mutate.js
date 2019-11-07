@@ -1,5 +1,6 @@
 // @flow
 import ApolloClient from 'apollo-client';
+import type { User } from 'generated/graphql';
 import { parseTodoField, removeTypename } from 'utils/data';
 import {
   batchMutation,
@@ -17,6 +18,32 @@ const mutations = {
   OrderItem: orderItemMutation,
   Order: orderMutation,
 };
+
+const isExporter = (user: User) => (user?.organization?.types ?? []).includes('Exporter');
+
+const cleanUpExporter = ({
+  selectedEntity,
+  field,
+  exporterId,
+}: {
+  selectedEntity: Object,
+  field: string,
+  exporterId: string,
+}) => ({
+  assignedToIds: (selectedEntity?.[field]?.assignedTo ?? [])
+    .filter(user => user?.organization?.id === exporterId || !isExporter(user))
+    .map(user => user.id),
+  approvedAt:
+    selectedEntity?.[field]?.approvedBy?.organization?.id !== exporterId &&
+    isExporter(selectedEntity?.[field]?.approvedBy)
+      ? null
+      : selectedEntity?.[field]?.approvedAt,
+  approvedById:
+    selectedEntity?.[field]?.approvedBy?.organization?.id !== exporterId &&
+    isExporter(selectedEntity?.[field]?.approvedBy)
+      ? null
+      : selectedEntity?.[field]?.approvedBy?.id,
+});
 
 function getEntityId(entity: Object, item: Object): string {
   switch (entity.type) {
@@ -51,6 +78,142 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
           return {
             inChargeIds: value.map(user => user.id),
           };
+        case 'exporter': {
+          const exporterId = value?.id ?? null;
+          const inChargeIds = (shipment?.inCharges ?? [])
+            .filter(user => user?.organization?.id !== exporterId || !isExporter(user))
+            .map(user => user?.id);
+
+          if (exporterId) {
+            const batches = [];
+            (shipment?.batchesWithoutContainer ?? []).forEach(batch => {
+              if (batch?.orderItem?.order?.exporter?.id === exporterId) {
+                batches.push({
+                  id: batch?.id,
+                });
+              }
+            });
+            const containers = [];
+            (shipment?.containers ?? []).forEach(container => {
+              const { representativeBatch } = container;
+              const newBatches = [];
+              (container?.batches ?? []).forEach(batch => {
+                if (batch?.orderItem?.order?.exporter?.id === exporterId) {
+                  newBatches.push({
+                    id: batch?.id,
+                  });
+                  batches.push({
+                    id: batch?.id,
+                  });
+                }
+              });
+              const newRepresentativeBatch = newBatches
+                .map(batch => batch.id)
+                .indexOf(representativeBatch?.id);
+              containers.push({
+                batches: newBatches,
+                representativeBatchIndex: newRepresentativeBatch >= 0 ? newRepresentativeBatch : 0,
+              });
+            });
+
+            const todo = {
+              tasks: (shipment?.todo?.tasks ?? []).map(task => ({
+                id: task.id,
+                assignedToIds: (task?.assignedTo ?? [])
+                  .filter(user => user?.organization?.id === exporterId || !isExporter(user))
+                  .map(user => user.id),
+                approverIds: (task?.approvers ?? [])
+                  .filter(user => user?.organization?.id === exporterId || !isExporter(user))
+                  .map(user => user.id),
+                inProgressAt:
+                  task?.inProgressBy?.organization?.id !== exporterId &&
+                  isExporter(task?.inProgressBy)
+                    ? null
+                    : task?.inProgressAt,
+                inProgressById:
+                  task?.inProgressBy?.organization?.id !== exporterId &&
+                  isExporter(task?.inProgressBy)
+                    ? null
+                    : task?.inProgressBy?.id,
+                completedAt:
+                  task?.completedBy?.organization?.id !== exporterId &&
+                  isExporter(task?.completedBy)
+                    ? null
+                    : task?.completedAt,
+                completedById:
+                  task?.completedBy?.organization?.id !== exporterId &&
+                  isExporter(task?.completedBy)
+                    ? null
+                    : task?.completedBy?.id,
+                rejectedAt:
+                  task?.rejectedBy?.organization?.id !== exporterId && isExporter(task?.rejectedBy)
+                    ? null
+                    : task?.rejectedAt,
+                rejectedById:
+                  task?.rejectedBy?.organization?.id !== exporterId && isExporter(task?.rejectedBy)
+                    ? null
+                    : task?.rejectedBy?.id,
+                approvedAt:
+                  task?.approvedBy?.organization?.id !== exporterId && isExporter(task?.approvedBy)
+                    ? null
+                    : task?.approvedAt,
+                approvedById:
+                  task?.approvedBy?.organization?.id !== exporterId && isExporter(task?.approvedBy)
+                    ? null
+                    : task?.approvedBy?.id,
+              })),
+            };
+
+            const cargoReady = cleanUpExporter({
+              selectedEntity: shipment,
+              field: 'cargoReady',
+              exporterId,
+            });
+
+            const voyages = (shipment?.voyages ?? []).map(voyage => ({
+              id: voyage.id,
+              arrival: cleanUpExporter({ selectedEntity: voyage, field: 'arrival', exporterId }),
+              departure: cleanUpExporter({
+                selectedEntity: voyage,
+                field: 'departure',
+                exporterId,
+              }),
+            }));
+
+            const containerGroups = (shipment?.containerGroups ?? []).map(group => ({
+              id: group.id,
+              customClearance: cleanUpExporter({
+                selectedEntity: group,
+                field: 'customClearance',
+                exporterId,
+              }),
+              warehouseArrival: cleanUpExporter({
+                selectedEntity: group,
+                field: 'warehouseArrival',
+                exporterId,
+              }),
+              deliveryReady: cleanUpExporter({
+                selectedEntity: group,
+                field: 'deliveryReady',
+                exporterId,
+              }),
+            }));
+            return {
+              exporterId,
+              inChargeIds,
+              batches,
+              containers,
+              cargoReady,
+              voyages,
+              containerGroups,
+              todo,
+            };
+          }
+          return {
+            exporterId,
+            inChargeIds,
+          };
+        }
         case 'forwarders':
           return {
             forwarderIds: value.map(({ id }) => id),
