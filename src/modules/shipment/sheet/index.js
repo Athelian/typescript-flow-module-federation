@@ -4,17 +4,15 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ShipmentFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig } from 'components/Sheet';
-import type { ColumnConfig, ColumnSort } from 'components/Sheet';
-import useFilterSort from 'hooks/useFilterSort';
+import { Sheet, ColumnsConfig, useSheet } from 'components/Sheet';
 import { clone } from 'utils/fp';
-import type { SortDirection } from 'types';
 import { shipmentsExportQuery } from '../query';
-import columns from './columns';
+import shipmentColumns from './columns';
 import transformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
 import mutate from './mutate';
+import decorate from './decorator';
 import { shipmentsQuery } from './query';
 
 type Props = {
@@ -23,100 +21,36 @@ type Props = {
 
 const ShipmentSheetModule = ({ shipmentIds }: Props) => {
   const client = useApolloClient();
-  const [currentColumns, setCurrentColumns] = React.useState<Array<ColumnConfig>>(columns);
   const memoizedMutate = React.useCallback(mutate(client), [client]);
   const memoizedHandler = React.useCallback(dispatch => entityEventHandler(client, dispatch), [
     client,
   ]);
+  const getItems = React.useCallback(data => decorate(clone(data?.shipments?.nodes ?? [])), []);
 
-  const [initialShipments, setInitialShipments] = React.useState<Object>([]);
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [page, setPage] = React.useState<{ page: number, totalPage: number }>({
-    page: 1,
-    totalPage: 1,
+  const {
+    initialItems,
+    loading,
+    hasMore,
+    onLoadMore,
+    columns,
+    setColumns,
+    query,
+    setQuery,
+    filterBy,
+    setFilterBy,
+    sortBy,
+    localSortBy,
+    onLocalSort,
+    onRemoteSort,
+  } = useSheet({
+    columns: shipmentColumns,
+    itemsQuery: shipmentsQuery,
+    initialFilterBy: shipmentIds ? { query: '', ids: shipmentIds } : { query: '', archived: false },
+    initialSortBy: { updatedAt: 'DESCENDING' },
+    sorter,
+    getItems,
+    cacheKey: 'shipment_sheet',
   });
-
-  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
-    shipmentIds ? { query: '', ids: shipmentIds } : { query: '', archived: false },
-    { updatedAt: 'DESCENDING' }
-  );
-  const [localSortBy, setLocalSortBy] = React.useState<
-    Array<{ field: string, direction: SortDirection }>
-  >([]);
-  const onLocalSort = React.useCallback(
-    (items: Array<Object>, sorts: Array<ColumnSort>): Array<Object> => {
-      setLocalSortBy(
-        sorts.map(({ group, name, direction }: any) => ({
-          direction,
-          field: `${group}_${name}`,
-        }))
-      );
-
-      return sorter(items, sorts);
-    },
-    [setLocalSortBy]
-  );
-  const onRemoteSort = React.useCallback(
-    sorts =>
-      setSortBy(
-        sorts.reduce((remote, sort) => {
-          return {
-            ...remote,
-            [sort.name]: sort.direction,
-          };
-        }, {})
-      ),
-    [setSortBy]
-  );
-
-  const onLoadMore = React.useCallback(
-    () =>
-      client
-        .query({
-          query: shipmentsQuery,
-          variables: {
-            page: page.page + 1,
-            perPage: 20,
-            filterBy: { query, ...filterBy },
-            sortBy,
-          },
-        })
-        .then(({ data }) => {
-          setPage({
-            ...page,
-            page: page.page + 1,
-          });
-          return clone(data?.shipments?.nodes ?? []);
-        }),
-    [client, page, query, filterBy, sortBy, setPage]
-  );
-
-  React.useEffect(() => {
-    let cancel = false;
-
-    setLoading(true);
-    setInitialShipments([]);
-    setPage({ page: 1, totalPage: 1 });
-
-    client
-      .query({
-        query: shipmentsQuery,
-        variables: { page: 1, perPage: 20, filterBy: { query, ...filterBy }, sortBy },
-      })
-      .then(({ data }) => {
-        if (cancel) {
-          return;
-        }
-
-        setPage({ page: 1, totalPage: data?.shipments?.totalPage ?? 1 });
-        setInitialShipments(clone(data?.shipments?.nodes ?? []));
-        setLoading(false);
-      });
-
-    return () => {
-      cancel = true;
-    };
-  }, [client, query, filterBy, sortBy]);
 
   return (
     <Content>
@@ -126,9 +60,9 @@ const ShipmentSheetModule = ({ shipmentIds }: Props) => {
         <Filter config={ShipmentFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig
-          config={columns}
-          columns={currentColumns}
-          onChange={setCurrentColumns}
+          config={shipmentColumns}
+          columns={columns}
+          onChange={setColumns}
           templateType="ShipmentSheet"
         />
         <ExportButton
@@ -138,16 +72,16 @@ const ShipmentSheetModule = ({ shipmentIds }: Props) => {
             filterBy: { query, ...filterBy },
             sortBy,
             localSortBy,
-            columns: currentColumns.filter(c => !!c.exportKey).map(c => c.exportKey),
+            columns: columns.filter(c => !!c.exportKey).map(c => c.exportKey),
           }}
         />
       </NavBar>
 
       <Sheet
-        columns={currentColumns}
+        columns={columns}
         loading={loading}
-        items={initialShipments}
-        hasMore={page.page < page.totalPage}
+        items={initialItems}
+        hasMore={hasMore}
         transformItem={transformer}
         onMutate={memoizedMutate}
         handleEntityEvent={memoizedHandler}

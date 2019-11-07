@@ -170,7 +170,7 @@ const Cell = ({
       {isTop && inputFocus && <div className={CellShadowStyle(size)} />}
 
       {(() => {
-        if (cell.empty) {
+        if (cell.empty && !!parentCell.entity) {
           return null;
         }
 
@@ -192,9 +192,7 @@ const Cell = ({
             context={computedValue}
             extra={cell.extra}
             type={cell.type}
-            focus={focus}
             inputFocus={inputFocus}
-            readonly={isReadonly}
             disabled={isDisabled}
             onFocus={handleInputFocus}
             onBlur={handleInputBlur}

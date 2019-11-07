@@ -47,7 +47,7 @@ export function focus(state: State, target: CellValue, position: Position): Stat
   const area = target.merged || { from: position, to: position };
 
   const weakFocusAt =
-    target.duplicatable && target.entity && target.data
+    target.duplicable && target.entity && target.data
       ? resolveAreasBy(
           state.rows,
           (cell: CellValue): boolean =>

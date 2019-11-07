@@ -6,14 +6,16 @@ import DisplayWrapper from '../DisplayWrapper';
 import { PartnerSelectorCardStyle, CornerIconStyle } from './style';
 
 type Props = {
-  value: Object,
+  value: ?Object,
 };
 
 const PartnerDisplay = ({ value }: Props) => {
+  if (!value) return null;
+
   return (
     <DisplayWrapper>
       <div className={PartnerSelectorCardStyle}>
-        <Display height="20px">{value.name}</Display>
+        <Display height="20px">{value?.name}</Display>
 
         <div className={CornerIconStyle}>
           <Icon icon="PARTNER" />

@@ -11,6 +11,8 @@ import { orderItemTimelineQuery } from 'modules/orderItem/form/query';
 import { batchTimelineQuery } from 'modules/batch/form/query';
 import { shipmentTimelineQuery } from 'modules/shipment/query';
 import { containerTimelineQuery } from 'modules/container/query';
+import { projectTimelineQuery } from 'modules/project/query';
+import { taskTimelineQuery } from 'modules/task/query';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import { LogsButtonStyle } from './style';
 
@@ -22,28 +24,24 @@ const LogsInput = ({
   query: string,
   queryField: string,
   entityKey: string,
-}) => {
-  return ({ value, focus, onFocus, onBlur, onKeyDown, readonly }: InputProps<string>) => (
-    <>
-      <button
-        tabIndex="-1"
-        type="button"
-        disabled={readonly}
-        onClick={() => {
-          if (!readonly) {
-            onFocus();
-          }
-        }}
-        onKeyDown={onKeyDown}
-        className={LogsButtonStyle}
-      >
+}) => ({ value, focus, forceFocus, forceBlur, readonly }: InputProps<string>) => {
+  const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
+    if (focus) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  };
+
+  return (
+    <div onBlur={handleBlur}>
+      <button type="button" disabled={readonly} onClick={forceFocus} className={LogsButtonStyle}>
         <Icon icon="LOGS" />
         <span>
           <FormattedMessage id="components.sheet.logs" defaultMessage="logs" />
         </span>
       </button>
 
-      <SlideView isOpen={focus} onRequestClose={onBlur}>
+      <SlideView isOpen={focus} onRequestClose={forceBlur}>
         <SlideViewLayout>
           {focus && (
             <>
@@ -63,7 +61,7 @@ const LogsInput = ({
           )}
         </SlideViewLayout>
       </SlideView>
-    </>
+    </div>
   );
 };
 
@@ -92,5 +90,15 @@ export default {
     query: containerTimelineQuery,
     queryField: 'container',
     entityKey: 'containerId',
+  }),
+  Project: LogsInput({
+    query: projectTimelineQuery,
+    queryField: 'project',
+    entityKey: 'projectId',
+  }),
+  Task: LogsInput({
+    query: taskTimelineQuery,
+    queryField: 'task',
+    entityKey: 'taskId',
   }),
 };

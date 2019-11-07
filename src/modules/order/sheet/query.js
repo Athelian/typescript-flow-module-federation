@@ -7,6 +7,11 @@ import {
   documentFragment,
   tagFragment,
   partnerNameFragment,
+  taskWithoutParentInfoFragment,
+  taskTemplateCardFragment,
+  milestoneCardFragment,
+  projectCardFragment,
+  taskFormInTemplateFragment,
 } from 'graphql';
 
 const orderSheetFragment = gql`
@@ -36,6 +41,14 @@ const orderSheetFragment = gql`
     files {
       ...documentFragment
       ...forbiddenFragment
+    }
+    todo {
+      tasks {
+        ...taskWithoutParentInfoFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
     }
     createdAt
     updatedAt
@@ -68,10 +81,6 @@ const orderItemSheetFragment = gql`
     tags {
       ...tagFragment
     }
-    files {
-      ...documentFragment
-      ...forbiddenFragment
-    }
     productProvider {
       ...forbiddenFragment
       ... on ProductProvider {
@@ -94,6 +103,18 @@ const orderItemSheetFragment = gql`
             id
           }
         }
+      }
+    }
+    files {
+      ...documentFragment
+      ...forbiddenFragment
+    }
+    todo {
+      tasks {
+        ...taskWithoutParentInfoFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
       }
     }
     createdAt
@@ -136,6 +157,10 @@ const batchSheetFragment = gql`
       value
       metric
     }
+    packageVolume {
+      value
+      metric
+    }
     packageSize {
       width {
         value
@@ -153,6 +178,14 @@ const batchSheetFragment = gql`
     memo
     tags {
       ...tagFragment
+    }
+    todo {
+      tasks {
+        ...taskWithoutParentInfoFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
     }
     sort
     createdAt
@@ -261,6 +294,14 @@ const shipmentSheetFragment = gql`
       ...documentFragment
       ...forbiddenFragment
     }
+    todo {
+      tasks {
+        ...taskWithoutParentInfoFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
+    }
     createdBy {
       ...userAvatarFragment
     }
@@ -320,6 +361,10 @@ const containerSheetFragment = gql`
     warehouseArrivalActualDateAssignedTo {
       ...userAvatarFragment
     }
+    warehouseArrivalActualDateApprovedBy {
+      ...userAvatarFragment
+    }
+    warehouseArrivalActualDateApprovedAt
     warehouse {
       ...warehouseFragment
     }
@@ -328,9 +373,10 @@ const containerSheetFragment = gql`
     departureDateAssignedTo {
       ...userAvatarFragment
     }
-    totalPackageQuantity
-    totalQuantity
-    orderItemCount
+    departureDateApprovedBy {
+      ...userAvatarFragment
+    }
+    departureDateApprovedAt
     containerType
     containerOption
     tags {
@@ -406,6 +452,11 @@ export const ordersQuery = gql`
   ${warehouseFragment}
   ${documentFragment}
   ${tagFragment}
+  ${taskWithoutParentInfoFragment}
+  ${taskTemplateCardFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskFormInTemplateFragment}
   ${forbiddenFragment}
 `;
 
@@ -445,6 +496,11 @@ export const orderItemByIDQuery = gql`
   ${warehouseFragment}
   ${documentFragment}
   ${tagFragment}
+  ${taskWithoutParentInfoFragment}
+  ${taskTemplateCardFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskFormInTemplateFragment}
   ${forbiddenFragment}
 `;
 
@@ -483,6 +539,11 @@ export const batchByIDQuery = gql`
   ${warehouseFragment}
   ${documentFragment}
   ${tagFragment}
+  ${taskWithoutParentInfoFragment}
+  ${taskTemplateCardFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskFormInTemplateFragment}
   ${forbiddenFragment}
 `;
 
@@ -531,12 +592,47 @@ export const shipmentByIDQuery = gql`
   ${warehouseFragment}
   ${documentFragment}
   ${tagFragment}
+  ${taskWithoutParentInfoFragment}
+  ${taskTemplateCardFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskFormInTemplateFragment}
   ${forbiddenFragment}
+`;
+
+export const userByIDQuery = gql`
+  query userByIDQuery($id: ID!) {
+    user(id: $id) {
+      ...userAvatarFragment
+    }
+  }
+
+  ${userAvatarFragment}
+`;
+
+export const usersByIDsQuery = gql`
+  query usersByIDsQuery($ids: [ID!]!) {
+    usersByIDs(ids: $ids) {
+      ...userAvatarFragment
+    }
+  }
+
+  ${userAvatarFragment}
 `;
 
 export const organizationByIDQuery = gql`
   query organizationByIDQuery($id: ID!) {
     organization(id: $id) {
+      ...partnerNameFragment
+    }
+  }
+
+  ${partnerNameFragment}
+`;
+
+export const organizationsByIDsQuery = gql`
+  query organizationsByIDsQuery($ids: [ID!]!) {
+    organizationsByIDs(ids: $ids) {
       ...partnerNameFragment
     }
   }
@@ -552,6 +648,16 @@ export const warehouseByIDQuery = gql`
   }
 
   ${warehouseFragment}
+`;
+
+export const tagsByIDsQuery = gql`
+  query tagsByIDsQuery($ids: [ID!]!) {
+    tagsByIDs(ids: $ids) {
+      ...tagFragment
+    }
+  }
+
+  ${tagFragment}
 `;
 
 export const orderMutation = gql`

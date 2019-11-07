@@ -26,6 +26,22 @@ export default defineMessages({
     id: 'modules.Tasks.name',
     defaultMessage: 'Name',
   },
+  description: {
+    id: 'modules.Tasks.description',
+    defaultMessage: 'Description',
+  },
+  approvable: {
+    id: 'modules.Tasks.approvable',
+    defaultMessage: 'Approvable',
+  },
+  tags: {
+    id: 'modules.Tasks.tags',
+    defaultMessage: 'Tags',
+  },
+  logs: {
+    id: 'modules.Tasks.logs',
+    defaultMessage: 'Logs',
+  },
   hierarchy: {
     id: 'modules.Tasks.hierarchy',
     defaultMessage: 'HIERARCHY',

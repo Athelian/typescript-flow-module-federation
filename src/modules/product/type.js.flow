@@ -1,10 +1,5 @@
 // @flow
 
-export type MetricValue = {
-  value: number,
-  metric: string,
-};
-
 export type Price = {
   amount: number,
   currency: string,

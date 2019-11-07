@@ -6,69 +6,53 @@ import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import { isForbidden } from 'utils/data';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import InputWrapper from '../InputWrapper';
-import { TagsSelectStyle, RemoveButtonStyle } from './style';
+import { TagsSelectStyle, RemoveButtonStyle, TagsInputWrapperStyle } from './style';
 
-const TagInputRenderer = ({ getInputProps, remove, selectedItems }: RenderInputProps) => {
-  return (
-    <div
-      className={TagsSelectStyle}
-      role="presentation"
-      onClick={() => {
-        // openMenu();
-      }}
-    >
-      {(selectedItems || [])
-        .filter(item => !isForbidden(item))
-        .map(tag => (
-          <Tag
-            key={tag.id}
-            tag={tag}
-            suffix={
-              <button
-                type="button"
-                className={RemoveButtonStyle}
-                onClick={event => {
-                  event.stopPropagation();
-                  remove(tag);
-                }}
-              >
-                <Icon icon="CLEAR" />
-              </button>
-            }
-          />
-        ))}
+const TagInputRenderer = ({ getInputProps, remove, selectedItems }: RenderInputProps) => (
+  <div className={TagsSelectStyle}>
+    {(selectedItems || [])
+      .filter(item => !isForbidden(item))
+      .map(tag => (
+        <Tag
+          key={tag.id}
+          tag={tag}
+          suffix={
+            <button
+              tabIndex="-1"
+              type="button"
+              className={RemoveButtonStyle}
+              onClick={event => {
+                event.stopPropagation();
+                remove(tag);
+              }}
+            >
+              <Icon icon="CLEAR" />
+            </button>
+          }
+        />
+      ))}
 
-      <input
-        {...getInputProps({
-          spellCheck: false,
-        })}
-      />
-    </div>
-  );
-};
+    <input
+      {...getInputProps({
+        spellCheck: false,
+      })}
+    />
+  </div>
+);
 
 const TagsInput = (entityType: string) => ({
   value,
-  focus,
   onChange,
-  onFocus,
-  onBlur,
 }: InputProps<Array<{ id: string, name: string, color: string }>>) => (
-  <InputWrapper focus={focus} preselect={false}>
-    {({ ref }) => (
-      <BaseTagsInput
-        inputRef={ref}
-        entityType={entityType}
-        value={value || []}
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        optionWidth={200}
-        renderInput={TagInputRenderer}
-      />
-    )}
-  </InputWrapper>
+  <div className={TagsInputWrapperStyle}>
+    <BaseTagsInput
+      entityType={entityType}
+      value={value || []}
+      onChange={onChange}
+      optionWidth={200}
+      renderInput={TagInputRenderer}
+    />
+  </div>
 );
 
 export default {

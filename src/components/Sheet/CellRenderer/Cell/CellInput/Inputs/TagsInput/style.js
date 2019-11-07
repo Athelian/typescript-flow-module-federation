@@ -2,6 +2,18 @@
 import { css } from 'react-emotion';
 import { scrollbars, colors, fontSizes, layout } from 'styles/common';
 
+export const TagsInputWrapperStyle = css`
+  ${layout.HORIZONTAL};
+  ${layout.CENTER};
+  height: 30px;
+  width: 100%;
+
+  & > div {
+    width: 100%;
+    height: 30px;
+  }
+`;
+
 export const RemoveButtonStyle = css`
   ${fontSizes.MEDIUM};
   cursor: pointer;
@@ -14,7 +26,16 @@ export const TagsSelectStyle = css`
   ${scrollbars.SMALL};
   width: 100%;
   overflow-x: auto;
-  padding: 0 0 0 5px;
+  padding: 5px 0 0 5px;
+
+  &::-webkit-scrollbar {
+    height: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border: none;
+  }
+
   & > div {
     margin-right: 5px;
   }
@@ -24,7 +45,6 @@ export const TagsSelectStyle = css`
     color: ${colors.BLACK};
     border: none;
     font-weight: bold;
-    padding: 5px 0 5px 0;
     background-color: transparent;
     min-width: 80px;
     &:focus {

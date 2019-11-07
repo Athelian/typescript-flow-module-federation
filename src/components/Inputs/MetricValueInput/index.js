@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { MetricValue } from 'types';
 import { MetricValueInputStyle } from './style';
 
 type RenderInputProps = {
@@ -22,12 +23,13 @@ type RenderSelectProps = {
 };
 
 type Props = {
-  value: ?{ value: number, metric: string },
-  onChange: ({ value: number, metric: string }) => void,
+  value: ?MetricValue,
+  onChange: MetricValue => void,
   onFocus?: (SyntheticFocusEvent<any>) => void,
   onBlur?: (SyntheticFocusEvent<any>) => void,
   metrics: Array<string>,
   defaultMetric: string,
+  valueConverter: (value: number, from: string, to: string) => number,
   renderInput: RenderInputProps => React.Node,
   renderSelect: RenderSelectProps => React.Node,
 };
@@ -39,6 +41,7 @@ const MetricValueInput = ({
   onBlur,
   metrics,
   defaultMetric,
+  valueConverter,
   renderInput,
   renderSelect,
 }: Props) => (
@@ -56,7 +59,11 @@ const MetricValueInput = ({
     {renderSelect({
       value: value?.metric ?? defaultMetric,
       required: true,
-      onChange: newMetric => onChange({ ...(value || { value: 0 }), metric: newMetric }),
+      onChange: newMetric =>
+        onChange({
+          value: valueConverter(value?.value ?? 0, value?.metric ?? defaultMetric, newMetric),
+          metric: newMetric,
+        }),
       onFocus,
       onBlur,
       items: metrics,

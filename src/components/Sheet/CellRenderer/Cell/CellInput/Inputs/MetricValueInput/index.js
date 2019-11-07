@@ -1,11 +1,12 @@
 // @flow
 import * as React from 'react';
-import BaseMetricValueInput from 'components/Inputs/MetricValueInput';
-import NumberInput from 'components/Form/Inputs/NumberInput';
-import SelectInput from 'components/Inputs/SelectInput';
-import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
+import type { MetricValue } from 'types';
 import {
   areaMetrics,
+  convertArea,
+  convertDistance,
+  convertVolume,
+  convertWeight,
   defaultAreaMetric,
   defaultDistanceMetric,
   defaultVolumeMetric,
@@ -14,32 +15,37 @@ import {
   volumeMetrics,
   weightMetrics,
 } from 'utils/metric';
-import type { InputProps } from '../../types';
-import InputWrapper from '../InputWrapper';
-import { SelectOptionStyle, SelectInputStyle, InputStyle } from './style';
+import BaseMetricValueInput from 'components/Inputs/MetricValueInput';
+import NumberInput from 'components/Inputs/NumberInput';
+import SelectInput from 'components/Inputs/SelectInput';
+import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
+import {
+  CellInputWrapperStyle,
+  InputStyle,
+} from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
+import { SelectOptionStyle, SelectInputStyle } from './style';
 
 const MetricSelectInput = ({
   isOpen,
   selectedItem,
   getToggleButtonProps,
   itemToString,
-}: RenderInputProps) => {
-  return (
-    <button
-      type="button"
-      className={SelectInputStyle}
-      {...getToggleButtonProps({
-        onKeyDown: e => {
-          if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
-            e.stopPropagation();
-          }
-        },
-      })}
-    >
-      {itemToString(selectedItem)}
-    </button>
-  );
-};
+}: RenderInputProps) => (
+  <button
+    type="button"
+    className={SelectInputStyle}
+    {...getToggleButtonProps({
+      onKeyDown: e => {
+        if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
+          e.stopPropagation();
+        }
+      },
+    })}
+  >
+    {itemToString(selectedItem)}
+  </button>
+);
 
 const MetricSelectOption = ({ item, selected, highlighted, itemToString }: RenderOptionProps) => (
   <div className={SelectOptionStyle(highlighted, selected)}>
@@ -47,44 +53,20 @@ const MetricSelectOption = ({ item, selected, highlighted, itemToString }: Rende
   </div>
 );
 
-const MetricValueInput = (metrics: Array<string>, defaultMetric: string) => ({
-  value,
-  onChange,
-  focus,
-  onFocus,
-  onBlur,
-  readonly,
-  onKeyDown,
-}: InputProps<{ value: number, metric: string }>) => {
-  return (
+const MetricValueInput = (
+  metrics: Array<string>,
+  defaultMetric: string,
+  valueConverter: (value: number, from: any, to: any) => number
+) => ({ value, onChange, readonly }: InputProps<MetricValue>) => (
+  <div className={CellInputWrapperStyle}>
     <BaseMetricValueInput
       value={value}
       onChange={onChange}
-      onFocus={onFocus}
-      onBlur={onBlur}
       defaultMetric={defaultMetric}
+      valueConverter={valueConverter}
       metrics={metrics}
       renderInput={inputProps => (
-        <InputWrapper focus={focus} preselect>
-          {({ ref }) => (
-            <NumberInput
-              {...inputProps}
-              className={InputStyle}
-              inputRef={ref}
-              onKeyDown={e => {
-                if (e.key === 'Tab') {
-                  e.stopPropagation();
-                } else {
-                  onKeyDown(e);
-                }
-              }}
-              tabIndex="-1"
-              nullable={false}
-              readOnly={readonly}
-              readOnlyHeight="30px"
-            />
-          )}
-        </InputWrapper>
+        <NumberInput {...inputProps} className={InputStyle} disabled={readonly} />
       )}
       renderSelect={selectProps => (
         <SelectInput
@@ -96,12 +78,12 @@ const MetricValueInput = (metrics: Array<string>, defaultMetric: string) => ({
         />
       )}
     />
-  );
-};
+  </div>
+);
 
 export default {
-  Volume: MetricValueInput(volumeMetrics, defaultVolumeMetric),
-  Area: MetricValueInput(areaMetrics, defaultAreaMetric),
-  Length: MetricValueInput(distanceMetrics, defaultDistanceMetric),
-  Mass: MetricValueInput(weightMetrics, defaultWeightMetric),
+  Volume: MetricValueInput(volumeMetrics, defaultVolumeMetric, convertVolume),
+  Area: MetricValueInput(areaMetrics, defaultAreaMetric, convertArea),
+  Length: MetricValueInput(distanceMetrics, defaultDistanceMetric, convertDistance),
+  Mass: MetricValueInput(weightMetrics, defaultWeightMetric, convertWeight),
 };

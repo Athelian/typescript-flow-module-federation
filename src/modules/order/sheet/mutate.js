@@ -1,6 +1,6 @@
 // @flow
 import ApolloClient from 'apollo-client';
-import { removeTypename } from 'utils/data';
+import { removeTypename, parseTodoField } from 'utils/data';
 import {
   batchMutation,
   containerMutation,
@@ -37,7 +37,7 @@ function getShipmentByTimelineDateId(timelineDateId: string, item: Object): Obje
       }
 
       return !!shipment.voyages.find(
-        voyage => voyage.departure.id === timelineDateId && voyage.arrival.id === timelineDateId
+        voyage => voyage.departure.id === timelineDateId || voyage.arrival.id === timelineDateId
       );
     });
 }
@@ -86,10 +86,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'deliveryDate':
         case 'issuedAt':
           return {
-            /* $FlowFixMe This comment suppresses an error found when upgrading
-             * Flow to v0.111.0. To view the error, delete this comment and run
-             * Flow. */
-            [field]: new Date(value),
+            [(field: string)]: new Date(value),
           };
         case 'files':
           return {
@@ -97,16 +94,15 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
               ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
             ),
           };
-        case 'tags': {
+        case 'tags':
           return {
             tagIds: value.map(tag => tag.id),
           };
-        }
         case 'inCharges':
           return {
             inChargeIds: value.map(user => user.id),
           };
-        case 'exporter': {
+        case 'exporter':
           return {
             exporterId: value?.id ?? null,
             inChargeIds: (item?.inCharges ?? [])
@@ -148,18 +144,18 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
                     ? null
                     : task?.rejectedBy?.id,
                 approvedAt:
-                  task?.approvedAt?.organization?.id === item?.exporter?.id
+                  task?.approvedBy?.organization?.id === item?.exporter?.id
                     ? null
                     : task?.approvedAt,
-                approvedAtId:
-                  task?.approvedAt?.organization?.id === item?.exporter?.id
+                approvedById:
+                  task?.approvedBy?.organization?.id === item?.exporter?.id
                     ? null
-                    : task?.approvedAt?.id,
+                    : task?.approvedBy?.id,
               })),
             },
           };
-        }
-
+        case 'todo':
+          return parseTodoField(null, value);
         default:
           return {
             [field]: value,
@@ -167,7 +163,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
       }
     case 'OrderItem':
       switch (field) {
-        case 'price': {
+        case 'price':
           if (value.value === null) {
             return { price: null };
           }
@@ -177,7 +173,6 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
               currency: value.metric,
             },
           };
-        }
         case 'deliveryDate':
           return {
             /* $FlowFixMe This comment suppresses an error found when upgrading
@@ -185,17 +180,18 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
              * Flow. */
             [field]: new Date(value),
           };
-        case 'tags': {
+        case 'tags':
           return {
             tagIds: value.map(tag => tag.id),
           };
-        }
         case 'files':
           return {
             files: value.map(
               ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
             ),
           };
+        case 'todo':
+          return parseTodoField(null, value);
         default:
           return {
             [field]: value,
@@ -231,15 +227,24 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           return {
             packageGrossWeight: value ? removeTypename(value) : null,
           };
+        case 'packageVolume': {
+          const { auto: autoCalculatePackageVolume = false, value: packageVolume = 0 } =
+            value || {};
+          return {
+            autoCalculatePackageVolume,
+            packageVolume: removeTypename(packageVolume),
+          };
+        }
         case 'packageSize':
           return {
             packageSize: value ? removeTypename(value) : null,
           };
-        case 'tags': {
+        case 'tags':
           return {
             tagIds: value.map(tag => tag.id),
           };
-        }
+        case 'todo':
+          return parseTodoField(null, value);
         default:
           return {
             [field]: value,
@@ -250,16 +255,12 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'blDate':
         case 'bookingDate':
           return {
-            /* $FlowFixMe This comment suppresses an error found when upgrading
-             * Flow to v0.111.0. To view the error, delete this comment and run
-             * Flow. */
-            [field]: new Date(value),
+            [(field: string)]: new Date(value),
           };
-        case 'tags': {
+        case 'tags':
           return {
             tagIds: value.map(tag => tag.id),
           };
-        }
         case 'files':
           return {
             files: value.map(
@@ -270,11 +271,12 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           return {
             inChargeIds: value.map(user => user.id),
           };
-        case 'forwarders': {
+        case 'forwarders':
           return {
             forwarderIds: value.map(({ id }) => id),
           };
-        }
+        case 'todo':
+          return parseTodoField(null, value);
         default:
           return {
             [field]: value,
@@ -282,16 +284,22 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
       }
     case 'Container': {
       switch (field) {
-        case 'tags': {
+        case 'tags':
           return {
             tagIds: value.map(tag => tag.id),
           };
-        }
-        case 'warehouseArrivalAgreedDateApproved': {
+        case 'warehouseArrivalAgreedDateApproved':
           return {
             warehouseArrivalAgreedDateApprovedById: value?.user?.id ?? null,
           };
-        }
+        case 'warehouseArrivalActualDateApproved':
+          return {
+            warehouseArrivalActualDateApprovedById: value?.user?.id ?? null,
+          };
+        case 'departureDateApproved':
+          return {
+            departureDateApprovedById: value?.user?.id ?? null,
+          };
         case 'freeTimeStartDate': {
           const { auto: autoCalculatedFreeTimeStartDate = false, value: date = null } = value || {};
           return {
@@ -299,25 +307,22 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             freeTimeStartDate: date ? new Date(date) : null,
           };
         }
-        case 'warehouseArrivalAgreedDateAssignedTo': {
+        case 'warehouseArrivalAgreedDateAssignedTo':
           return {
             warehouseArrivalAgreedDateAssignedToIds: value.map(user => user.id),
           };
-        }
-        case 'warehouseArrivalActualDateAssignedTo': {
+        case 'warehouseArrivalActualDateAssignedTo':
           return {
             warehouseArrivalActualDateAssignedToIds: value.map(user => user.id),
           };
-        }
         case 'warehouse':
           return {
             warehouseId: value?.id ?? null,
           };
-        case 'departureDateAssignedTo': {
+        case 'departureDateAssignedTo':
           return {
             departureDateAssignedToIds: value.map(user => user.id),
           };
-        }
         default:
           return {
             [field]: value,
@@ -407,6 +412,10 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
             return {
               date: new Date(value),
             };
+          case 'assignedTo':
+            return { assignedToIds: value.map(user => user?.id) };
+          case 'approved':
+            return { approvedById: value?.user?.id ?? null };
           case 'timelineDateRevisions':
             return {
               timelineDateRevisions: value.map(({ sort, date, ...revision }) => ({
@@ -432,6 +441,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           containerGroups: [
             {
               customClearance: input,
+              id: shipment.containerGroups[0].id,
             },
           ],
         };
@@ -442,6 +452,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           containerGroups: [
             {
               warehouseArrival: input,
+              id: shipment.containerGroups[0].id,
             },
           ],
         };
@@ -452,6 +463,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           containerGroups: [
             {
               deliveryReady: input,
+              id: shipment.containerGroups[0].id,
             },
           ],
         };

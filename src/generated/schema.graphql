@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Oct 04 2019 18:28:01 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Nov 01 2019 16:24:16 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26647,6 +26647,7 @@ type Batch implements Model & Owned & Package & Tagged & Customizable & Memoriza
   desiredAt: DateTime
   totalVolume: MetricValue!
   batchQuantityRevisions: [BatchQuantityRevisionPayload!]!
+  timeline: Timeline!
   todo: Todo!
   id: ID!
   createdAt: DateTime!
@@ -26910,6 +26911,7 @@ type Container implements Model & Owned & Tagged & Sortable & Memorizable {
   orderItemCount: Int!
   batchCount: Int!
   batches: [BatchPayload!]!
+  timeline: Timeline!
   todo: Todo!
   id: ID!
   createdAt: DateTime!
@@ -28432,7 +28434,10 @@ input EntityInput {
   orderItemId: ID
   batchId: ID
   shipmentId: ID
+  voyageId: ID
+  containerGroupId: ID
   containerId: ID
+  timelineDateId: ID
   projectId: ID
   milestoneId: ID
   taskId: ID
@@ -29655,6 +29660,12 @@ input MaskEditSortInput {
 enum MaskEditType {
   """Order"""
   Order
+
+  """OrderSheet"""
+  OrderSheet
+
+  """ShipmentSheet"""
+  ShipmentSheet
 }
 
 input MaskEditUpdateInput {
@@ -29944,6 +29955,7 @@ type Mutation {
   integrationLinkExecute(id: ID!): EmptyPayload
   integrationLinkDelete(id: ID!): EmptyPayload
   import(file: Upload!): ImportPayload!
+  aitImport(file: Upload!): EmptyPayload
   focus(id: ID!, input: FocusingInput!): Void!
   blur(id: ID!): Void!
   entitySubscribe(id: ID!, input: SubscriptionInput!): Void!
@@ -31092,6 +31104,8 @@ type Query {
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPaginatedSearch!
   batchesByIDs(ids: [ID!]!): [BatchPayload!]!
   batchesTable(entities: [EntityInput!]!): [BatchPayload!]!
+  batchQuantityRevision(id: ID!): BatchQuantityRevisionPayload!
+  batchQuantityRevisionsByIDs(ids: [ID!]!): [BatchQuantityRevisionPayload!]!
   shipment(id: ID!): ShipmentPayload!
   shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPaginatedSearch!
   shipmentsByIDs(ids: [ID!]!): [ShipmentPayload!]!
@@ -86940,6 +86954,7 @@ input ShipmentFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
+  ids: [ID!]
   importerId: ID
   tagIds: [ID!]
   forwarderIds: [ID!]

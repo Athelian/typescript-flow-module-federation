@@ -19,10 +19,9 @@ type Props = {|
   onApprove: User => void,
   onDisapprove: () => void,
   readonly: boolean,
-  inputRef: React.Ref<any>,
 |};
 
-const BaseApprovalInput = ({ approved, onApprove, onDisapprove, readonly, inputRef }: Props) => {
+const BaseApprovalInput = ({ approved, onApprove, onDisapprove, readonly }: Props) => {
   const { user } = useAuthorizedViewer();
 
   return (
@@ -46,12 +45,7 @@ const BaseApprovalInput = ({ approved, onApprove, onDisapprove, readonly, inputR
               <div className={ApprovedDateStyle}>
                 <FormattedDate value={approved?.date} />
               </div>
-              <button
-                className={DisapproveButtonStyle}
-                onClick={onDisapprove}
-                type="button"
-                ref={inputRef}
-              >
+              <button className={DisapproveButtonStyle} onClick={onDisapprove} type="button">
                 <UserAvatar
                   width="20px"
                   height="20px"
@@ -64,11 +58,7 @@ const BaseApprovalInput = ({ approved, onApprove, onDisapprove, readonly, inputR
               </button>
             </>
           ) : (
-            <ApproveButton
-              buttonRef={inputRef}
-              onClick={() => onApprove(user)}
-              className={ApproveButtonStyle}
-            />
+            <ApproveButton onClick={() => onApprove(user)} className={ApproveButtonStyle} />
           )}
         </>
       )}

@@ -1,14 +1,12 @@
 // @flow
 import * as React from 'react';
 import FormattedNumber from 'components/FormattedNumber';
+import type { MetricValue } from 'types';
 import DisplayWrapper from '../DisplayWrapper';
 import { MetricValueStyle } from './style';
 
 type Props = {
-  value: {
-    value: number,
-    metric: string,
-  },
+  value: MetricValue,
 };
 
 const MetricValueDisplay = ({ value: { value, metric } }: Props) => (

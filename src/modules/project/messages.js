@@ -12,11 +12,11 @@ export default defineMessages({
   },
   name: {
     id: 'modules.Projects.name',
-    defaultMessage: 'Project Name',
+    defaultMessage: 'Name',
   },
   dueDate: {
     id: 'modules.Projects.dueDate',
-    defaultMessage: 'Project Due Date',
+    defaultMessage: 'Due Date',
   },
   lastMilestoneDueDate: {
     id: 'modules.Projects.lastMilestoneDueDate',
@@ -25,6 +25,10 @@ export default defineMessages({
   tags: {
     id: 'modules.Projects.tags',
     defaultMessage: 'Tags',
+  },
+  logs: {
+    id: 'modules.Projects.logs',
+    defaultMessage: 'Logs',
   },
   description: {
     id: 'modules.Projects.description',

@@ -86,6 +86,10 @@ export default defineMessages({
     id: 'modules.OrderItems.memo',
     defaultMessage: 'Memo',
   },
+  remainQuantity: {
+    id: 'modules.OrderItems.remainQuantity',
+    defaultMessage: 'Remain quantity',
+  },
   totalBatched: {
     id: 'modules.OrderItems.totalBatched',
     defaultMessage: 'Total batched quantity',
@@ -101,6 +105,10 @@ export default defineMessages({
   sectionDocuments: {
     id: 'modules.OrderItems.sectionDocuments',
     defaultMessage: 'Documents',
+  },
+  tasks: {
+    id: 'modules.OrderItems.tasks',
+    defaultMessage: 'Tasks',
   },
   logs: {
     id: 'modules.OrderItems.logs',

@@ -11,12 +11,12 @@ const formContainer = new FormContainer();
 type Props = {
   value: Array<FilePayload>,
   onChange: (Array<FilePayload>) => void,
-  focus: boolean,
-  onBlur: () => void,
+  open: boolean,
+  onClose: () => void,
   entityType: string,
 };
 
-const DocumentsInputDialog = ({ value, onChange, onBlur, focus, entityType }: Props) => {
+const DocumentsInputDialog = ({ value, onChange, onClose, open, entityType }: Props) => {
   // TODO: Maxime said to do dummy permission until he changes it
   const canDelete = true;
   const canUpload = true;
@@ -27,12 +27,7 @@ const DocumentsInputDialog = ({ value, onChange, onBlur, focus, entityType }: Pr
 
   return (
     <Provider inject={[formContainer]}>
-      <Dialog
-        isOpen={focus}
-        onRequestClose={() => {
-          onBlur();
-        }}
-      >
+      <Dialog isOpen={open} onRequestClose={onClose}>
         <DocumentsSection
           removable={canDelete}
           uploadable={canUpload}

@@ -17,12 +17,9 @@ type Props = {
   value: any | null,
   required: boolean,
   onChange: any => void,
-  onFocus: () => void,
-  onBlur: () => void,
   items: Array<any>,
   itemToString: any => string,
   itemToValue: any => any,
-  focus: boolean,
 };
 
 const Select = ({
@@ -89,53 +86,20 @@ const Option = ({ selected, highlighted, item, itemToString }: RenderOptionProps
   </div>
 );
 
-const SelectInput = ({
-  value,
-  required,
-  onChange,
-  onFocus,
-  onBlur,
-  items,
-  itemToString,
-  itemToValue,
-  focus,
-}: Props) => {
-  const inputRef = React.useRef<HTMLButtonElement | null>(null);
-  React.useEffect(() => {
-    if (!inputRef.current) {
-      return;
-    }
-
-    const input = inputRef.current;
-
-    if (focus) {
-      // $FlowIssue: Flow doesn't know focus options
-      input.focus({
-        preventScroll: true,
-      });
-    } else {
-      input.blur();
-    }
-  }, [focus]);
-
-  return (
-    <BaseSelectInput
-      toggleRef={inputRef}
-      value={value}
-      required={required}
-      onChange={onChange}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      items={items}
-      filterItems={(q, i) => i}
-      itemToString={itemToString}
-      itemToValue={itemToValue}
-      optionHeight={30}
-      optionWidth={200}
-      renderInput={Select}
-      renderOption={Option}
-    />
-  );
-};
+const SelectInput = ({ value, required, onChange, items, itemToString, itemToValue }: Props) => (
+  <BaseSelectInput
+    value={value}
+    required={required}
+    onChange={onChange}
+    items={items}
+    filterItems={(q, i) => i}
+    itemToString={itemToString}
+    itemToValue={itemToValue}
+    optionHeight={30}
+    optionWidth={200}
+    renderInput={Select}
+    renderOption={Option}
+  />
+);
 
 export default SelectInput;

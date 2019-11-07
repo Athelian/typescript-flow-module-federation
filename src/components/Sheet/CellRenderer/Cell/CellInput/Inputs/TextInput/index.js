@@ -1,34 +1,21 @@
 // @flow
 import * as React from 'react';
-import BaseTextInput from 'components/Form/Inputs/TextInput';
+import BaseTextInput from 'components/Inputs/TextInput';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import InputWrapper from '../InputWrapper';
+import {
+  CellInputWrapperStyle,
+  InputStyle,
+} from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
 
-const TextInput = ({
-  value,
-  focus,
-  onChange,
-  onFocus,
-  onBlur,
-  onKeyDown,
-  readonly,
-}: InputProps<string>) => (
-  <InputWrapper focus={focus} preselect>
-    {({ ref }) => (
-      <BaseTextInput
-        inputRef={ref}
-        value={value || ''}
-        name="value"
-        tabIndex="-1"
-        readOnly={readonly}
-        readOnlyHeight="30px"
-        onChange={e => onChange(e.target.value)}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        onKeyDown={onKeyDown}
-      />
-    )}
-  </InputWrapper>
+const TextInput = ({ value, onChange, readonly }: InputProps<string>) => (
+  <div className={CellInputWrapperStyle}>
+    <BaseTextInput
+      className={InputStyle}
+      value={value || ''}
+      onChange={e => onChange(e.target.value)}
+      disabled={readonly}
+    />
+  </div>
 );
 
 export default TextInput;

@@ -1,4 +1,3 @@
-/* eslint-disable */
 /* eslint-disable react/jsx-props-no-spreading */
 // @flow
 import * as React from 'react';
@@ -185,7 +184,13 @@ const orderColumns: Array<ColumnConfig> = [
     color: colors.ORDER,
     width: 200,
   },
-  // tasks
+  {
+    key: 'order.todo',
+    title: <FormattedMessage {...orderMessages.tasks} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   {
     key: 'order.logs',
     title: <FormattedMessage {...orderMessages.logs} />,
@@ -325,6 +330,13 @@ const orderItemColumns: Array<ColumnConfig> = [
     width: 200,
   },
   {
+    key: 'order.orderItem.remainQuantity',
+    title: <FormattedMessage {...orderItemMessages.remainQuantity} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+  },
+  {
     key: 'order.orderItem.totalBatched',
     title: <FormattedMessage {...orderItemMessages.totalBatched} />,
     icon: 'ORDER_ITEM',
@@ -362,7 +374,13 @@ const orderItemColumns: Array<ColumnConfig> = [
     color: colors.ORDER_ITEM,
     width: 200,
   },
-  // tasks
+  {
+    key: 'order.orderItem.todo',
+    title: <FormattedMessage {...orderItemMessages.tasks} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+  },
   {
     key: 'order.orderItem.logs',
     title: <FormattedMessage {...orderItemMessages.logs} />,
@@ -563,7 +581,13 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 200,
   },
-  // pkg vol + auto
+  {
+    key: 'order.orderItem.batch.packageVolume',
+    title: <FormattedMessage {...batchMessages.packageVolume} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.packageSize',
     title: <FormattedMessage {...batchMessages.packageSize} />,
@@ -571,7 +595,13 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 280,
   },
-  // tasks
+  {
+    key: 'order.orderItem.batch.todo',
+    title: <FormattedMessage {...batchMessages.tasks} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.logs',
     title: <FormattedMessage {...batchMessages.logs} />,
@@ -688,7 +718,13 @@ const containerColumns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: 160,
   },
-  // actual arrival approval
+  {
+    key: 'order.orderItem.batch.container.warehouseArrivalActualDateApproved',
+    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDateApproved} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 110,
+  },
   {
     key: 'order.orderItem.batch.container.warehouse',
     title: <FormattedMessage {...containerMessages.warehouse} />,
@@ -696,7 +732,13 @@ const containerColumns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: 200,
   },
-  // free time
+  {
+    key: 'order.orderItem.batch.container.freeTime',
+    title: <FormattedMessage {...containerMessages.freeTime} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 195,
+  },
   {
     key: 'order.orderItem.batch.container.freeTimeStartDate',
     title: <FormattedMessage {...containerMessages.startDate} />,
@@ -749,7 +791,13 @@ const containerColumns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: 160,
   },
-  // departure approval
+  {
+    key: 'order.orderItem.batch.container.departureDateApproved',
+    title: <FormattedMessage {...containerMessages.departureDateApproved} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: 110,
+  },
   {
     key: 'order.orderItem.batch.container.tags',
     title: <FormattedMessage {...containerMessages.tags} />,
@@ -830,7 +878,14 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 200,
   },
-  // exporter
+  {
+    key: 'order.orderItem.batch.shipment.exporter',
+    exportKey: 'orderItems.batches.shipment.exporter',
+    title: <FormattedMessage {...shipmentMessages.mainExporter} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.shipment.forwarders',
     exportKey: 'forwarders',
@@ -839,7 +894,6 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 810,
   },
-  // related exporters
   {
     key: 'order.orderItem.batch.shipment.blNo',
     exportKey: 'orderItems.batches.shipment.blNo',
@@ -1001,8 +1055,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 1210,
   },
-  // cargo ready assigned to
-  // cargo ready approval
+  {
+    key: 'order.orderItem.batch.shipment.cargoReady.assignedTo',
+    title: <FormattedMessage {...shipmentMessages.cargoReadyAssignedTo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 160,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.cargoReady.approved',
+    title: <FormattedMessage {...shipmentMessages.cargoReadyApproved} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 110,
+  },
   {
     key: 'order.orderItem.batch.shipment.voyage.0.departurePort',
     title: <FormattedMessage {...shipmentMessages.loadPort} />,
@@ -1024,8 +1090,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 1210,
   },
-  // load port assigned to
-  // load port approval
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.departure.assignedTo',
+    title: <FormattedMessage {...shipmentMessages.loadPortDepartureAssignedTo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 160,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.departure.approved',
+    title: <FormattedMessage {...shipmentMessages.loadPortDepartureApproved} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 110,
+  },
   {
     key: 'order.orderItem.batch.shipment.voyage.0.vesselName',
     title: <FormattedMessage {...shipmentMessages.firstVesselName} />,
@@ -1062,6 +1140,21 @@ const shipmentColumns: Array<ColumnConfig> = [
     width: 1210,
   },
   {
+    key: 'order.orderItem.batch.shipment.voyage.0.firstTransitArrival.assignedTo',
+    title: <FormattedMessage {...shipmentMessages.firstTransitArrivalAssignedTo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 160,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.0.firstTransitArrival.approved',
+    title: <FormattedMessage {...shipmentMessages.firstTransitArrivalApproved} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 110,
+  },
+
+  {
     key: 'order.orderItem.batch.shipment.voyage.1.firstTransitDeparture.date',
     title: <FormattedMessage {...shipmentMessages.firstTransitPortDeparture} />,
     icon: 'SHIPMENT',
@@ -1074,6 +1167,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.firstTransitDeparture.assignedTo',
+    title: <FormattedMessage {...shipmentMessages.firstTransitDepartureAssignedTo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 160,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.firstTransitDeparture.approved',
+    title: <FormattedMessage {...shipmentMessages.firstTransitDepartureApproved} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 110,
   },
   {
     key: 'order.orderItem.batch.shipment.voyage.1.vesselName',
@@ -1111,6 +1218,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     width: 1210,
   },
   {
+    key: 'order.orderItem.batch.shipment.voyage.1.secondTransitArrival.assignedTo',
+    title: <FormattedMessage {...shipmentMessages.secondTransitArrivalAssignedTo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 160,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.1.secondTransitArrival.approved',
+    title: <FormattedMessage {...shipmentMessages.secondTransitArrivalApproved} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 110,
+  },
+  {
     key: 'order.orderItem.batch.shipment.voyage.2.secondTransitDeparture.date',
     title: <FormattedMessage {...shipmentMessages.secondTransitPortDeparture} />,
     icon: 'SHIPMENT',
@@ -1123,6 +1244,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.secondTransitDeparture.assignedTo',
+    title: <FormattedMessage {...shipmentMessages.secondTransitDepartureAssignedTo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 160,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.secondTransitDeparture.approved',
+    title: <FormattedMessage {...shipmentMessages.secondTransitDepartureAssignedTo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 110,
   },
   {
     key: 'order.orderItem.batch.shipment.voyage.2.vesselName',
@@ -1160,6 +1295,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     width: 1210,
   },
   {
+    key: 'order.orderItem.batch.shipment.voyage.2.arrival.assignedTo',
+    title: <FormattedMessage {...shipmentMessages.dischargePortArrivalAssignedTo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 160,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.voyage.2.arrival.approved',
+    title: <FormattedMessage {...shipmentMessages.dischargePortArrivalApproved} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 110,
+  },
+  {
     key: 'order.orderItem.batch.shipment.containerGroup.customClearance.date',
     title: <FormattedMessage {...shipmentMessages.customClearance} />,
     icon: 'SHIPMENT',
@@ -1172,6 +1321,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 1210,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroup.customClearance.assignedTo',
+    title: <FormattedMessage {...shipmentMessages.customClearanceAssignedTo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 160,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroup.customClearance.approved',
+    title: <FormattedMessage {...shipmentMessages.customClearanceApproved} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 110,
   },
   {
     key: 'order.orderItem.batch.shipment.containerGroup.warehouse',
@@ -1195,6 +1358,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     width: 1210,
   },
   {
+    key: 'order.orderItem.batch.shipment.containerGroup.warehouseArrival.assignedTo',
+    title: <FormattedMessage {...shipmentMessages.warehouseArrivalAssignedTo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 160,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroup.warehouseArrival.approved',
+    title: <FormattedMessage {...shipmentMessages.warehouseArrivalApproved} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 110,
+  },
+  {
     key: 'order.orderItem.batch.shipment.containerGroup.deliveryReady.date',
     title: <FormattedMessage {...shipmentMessages.deliveryReady} />,
     icon: 'SHIPMENT',
@@ -1209,13 +1386,33 @@ const shipmentColumns: Array<ColumnConfig> = [
     width: 1210,
   },
   {
+    key: 'order.orderItem.batch.shipment.containerGroup.deliveryReady.assignedTo',
+    title: <FormattedMessage {...shipmentMessages.deliveryReadyAssignedTo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 160,
+  },
+  {
+    key: 'order.orderItem.batch.shipment.containerGroup.deliveryReady.approved',
+    title: <FormattedMessage {...shipmentMessages.deliveryReadyApproved} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 110,
+  },
+  {
     key: 'order.orderItem.batch.shipment.files',
     title: <FormattedMessage {...shipmentMessages.sectionDocuments} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 200,
   },
-  // tasks
+  {
+    key: 'order.orderItem.batch.shipment.todo',
+    title: <FormattedMessage {...shipmentMessages.tasks} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
   {
     key: 'order.orderItem.batch.shipment.logs',
     title: <FormattedMessage {...shipmentMessages.logs} />,

@@ -13,7 +13,7 @@ export function setError(
   const { messages } = payload;
 
   const weakErrorAt =
-    target.duplicatable && target.entity && target.data
+    target.duplicable && target.entity && target.data
       ? resolveAreasBy(
           state.rows,
           (cell: CellValue): boolean =>

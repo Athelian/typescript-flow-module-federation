@@ -71,7 +71,17 @@ function mapRowsToColumns(
   rows: Array<Array<CellValue>>,
   columns: Array<string>
 ): Array<Array<CellValue>> {
-  return rows.map(row => columns.map(column => row.find(cell => column === cell.columnKey) || {}));
+  return rows.map(row =>
+    columns.map(
+      column =>
+        row.find(cell => column === cell.columnKey) || {
+          columnKey: column,
+          entity: null,
+          data: null,
+          type: '',
+        }
+    )
+  );
 }
 
 function resolveEntities(rows: Array<Array<CellValue>>): Array<{ id: string, type: string }> {

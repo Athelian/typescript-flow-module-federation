@@ -2,12 +2,12 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useSheetState } from 'components/Sheet/SheetState';
-import type { Area } from 'components/Sheet/SheetState/types';
+import type { RowChange } from 'components/Sheet/SheetState/types';
 import messages from '../../../messages';
 import { AddedStyle, LabelStyle } from './style';
 
 type Props = {
-  area: Area,
+  area: RowChange,
 };
 
 const Added = ({ area }: Props) => {
