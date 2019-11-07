@@ -87,6 +87,21 @@ const TableTemplateModule = (props: Props) => {
             }}
           />
           <TabItem
+            active={activeType === 'BatchSheet'}
+            label={
+              <FormattedMessage
+                id="modules.TableTemplates.batchSheet"
+                defaultMessage="Batch Table"
+              />
+            }
+            icon="BATCH"
+            onClick={() => {
+              if (activeType !== 'BatchSheet') {
+                setActiveType('BatchSheet');
+              }
+            }}
+          />
+          <TabItem
             active={activeType === 'ShipmentSheet'}
             label={
               <FormattedMessage
@@ -98,6 +113,21 @@ const TableTemplateModule = (props: Props) => {
             onClick={() => {
               if (activeType !== 'ShipmentSheet') {
                 setActiveType('ShipmentSheet');
+              }
+            }}
+          />
+          <TabItem
+            active={activeType === 'ProjectSheet'}
+            label={
+              <FormattedMessage
+                id="modules.TableTemplates.projectSheet"
+                defaultMessage="Project Table"
+              />
+            }
+            icon="PROJECT"
+            onClick={() => {
+              if (activeType !== 'ProjectSheet') {
+                setActiveType('ProjectSheet');
               }
             }}
           />

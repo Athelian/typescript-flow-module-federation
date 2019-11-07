@@ -19,7 +19,9 @@ import {
   containerColumns,
 } from 'modules/tableTemplate/constants';
 import orderSheetColumns from 'modules/order/sheet/columns';
+import batchSheetColumns from 'modules/batch/sheet/columns';
 import shipmentSheetColumns from 'modules/shipment/sheet/columns';
+import projectSheetColumns from 'modules/project/sheet/columns';
 import { ContentWrapperStyle, BlockStyle } from './style';
 
 // TODO: This convert function should deleted after old RM edit is also deleted
@@ -145,7 +147,9 @@ const SelectFieldsSection = () => {
             { columns: containerColumns },
           ],
           OrderSheet: convertSheetColumns(orderSheetColumns),
+          BatchSheet: convertSheetColumns(batchSheetColumns),
           ShipmentSheet: convertSheetColumns(shipmentSheetColumns),
+          ProjectSheet: convertSheetColumns(projectSheetColumns),
         };
 
         return (

@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Location } from '@reach/router';
 import { Query } from 'react-apollo';
 import emitter from 'utils/emitter';
 import { getByPathWithDefault } from 'utils/fp';
@@ -20,38 +21,42 @@ type Props = {
 
 const TableTemplateList = ({ ...filtersAndSort }: Props) => {
   return (
-    <Query
-      query={tableTemplateQuery}
-      variables={{
-        page: 1,
-        ...filtersAndSort,
-      }}
-      fetchPolicy="network-only"
-    >
-      {({ loading, data, fetchMore, refetch, error }) => {
-        if (error) {
-          return error.message;
-        }
+    <Location>
+      {({ location }) => (
+        <Query
+          query={tableTemplateQuery}
+          variables={{
+            page: 1,
+            ...filtersAndSort,
+          }}
+          fetchPolicy="network-only"
+        >
+          {({ loading, data, fetchMore, refetch, error }) => {
+            if (error) {
+              return error.message;
+            }
 
-        const nextPage = getByPathWithDefault(1, `maskEdits.page`, data) + 1;
-        const totalPage = getByPathWithDefault(1, `maskEdits.totalPage`, data);
-        const hasMore = nextPage <= totalPage;
+            const nextPage = getByPathWithDefault(1, `maskEdits.page`, data) + 1;
+            const totalPage = getByPathWithDefault(1, `maskEdits.totalPage`, data);
+            const hasMore = nextPage <= totalPage;
 
-        emitter.removeAllListeners('REFETCH_TABLE_TEMPLATES');
-        emitter.addListener('REFETCH_TABLE_TEMPLATES', () => {
-          if (refetch) refetch(tableTemplateQuery);
-        });
+            emitter.removeAllListeners('REFETCH_TABLE_TEMPLATES');
+            emitter.addListener('REFETCH_TABLE_TEMPLATES', () => {
+              if (location.pathname.includes('templates')) refetch(tableTemplateQuery);
+            });
 
-        return (
-          <TableTemplateGridView
-            items={getByPathWithDefault([], 'maskEdits.nodes', data)}
-            onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'maskEdits')}
-            hasMore={hasMore}
-            isLoading={loading}
-          />
-        );
-      }}
-    </Query>
+            return (
+              <TableTemplateGridView
+                items={getByPathWithDefault([], 'maskEdits.nodes', data)}
+                onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'maskEdits')}
+                hasMore={hasMore}
+                isLoading={loading}
+              />
+            );
+          }}
+        </Query>
+      )}
+    </Location>
   );
 };
 

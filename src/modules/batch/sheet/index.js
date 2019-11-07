@@ -4,6 +4,7 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, BatchFilterConfig } from 'components/NavBar';
 import { Sheet, ColumnsConfig, useSheet } from 'components/Sheet';
+import { ExportButton } from 'components/Buttons';
 import { clone } from 'utils/fp';
 import batchColumns from './columns';
 import transformer from './transformer';
@@ -12,6 +13,7 @@ import sorter from './sorter';
 import mutate from './mutate';
 import decorate from './decorator';
 import { batchesQuery } from './query';
+import { batchesExportQuery } from '../query';
 
 type Props = {
   batchIds?: Array<string>,
@@ -35,6 +37,8 @@ const BatchSheetModule = ({ batchIds }: Props) => {
     query,
     setQuery,
     filterBy,
+    sortBy,
+    localSortBy,
     setFilterBy,
     onLocalSort,
     onRemoteSort,
@@ -60,6 +64,16 @@ const BatchSheetModule = ({ batchIds }: Props) => {
           columns={columns}
           onChange={setColumns}
           templateType="BatchSheet"
+        />
+        <ExportButton
+          type="Batches"
+          exportQuery={batchesExportQuery}
+          variables={{
+            filterBy: { query, ...filterBy },
+            sortBy,
+            localSortBy,
+            columns: columns.filter(c => !!c.exportKey).map(c => c.exportKey),
+          }}
         />
       </NavBar>
 
