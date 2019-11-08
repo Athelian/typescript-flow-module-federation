@@ -187,7 +187,8 @@ const batchSheetFragment = gql`
         ...taskTemplateCardFragment
       }
     }
-    sort
+    shipmentSort
+    containerSort
     createdAt
     updatedAt
     createdBy {
