@@ -7,6 +7,17 @@ import {
   transformValueField,
 } from 'components/Sheet';
 import {
+  ORDER_ITEMS_SET_DELIVERY_DATE,
+  ORDER_ITEMS_SET_DOCUMENTS,
+  ORDER_ITEMS_SET_MEMO,
+  ORDER_ITEMS_SET_NO,
+  ORDER_ITEMS_SET_PRICE,
+  ORDER_ITEMS_SET_QUANTITY,
+  ORDER_ITEMS_SET_TAGS,
+  ORDER_ITEMS_SET_TASKS,
+  ORDER_ITEMS_UPDATE,
+} from 'modules/permission/constants/orderItem';
+import {
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
   BATCH_SET_EXPIRY,
@@ -278,8 +289,177 @@ function transformBatch(basePath: string, batch: Batch): Array<CellValue> {
   }));
 }
 
+function transformOrderItem(basePath: string, orderItem: Object): Array<CellValue> {
+  return [
+    {
+      columnKey: 'orderItem.created',
+      type: 'date_user',
+      ...transformComputedField(basePath, orderItem, 'created', batch => {
+        const currentOrderItem = batch.orderItem;
+        return currentOrderItem
+          ? {
+              at: new Date(currentOrderItem.createdAt),
+              by: currentOrderItem.createdBy,
+            }
+          : null;
+      }),
+    },
+    {
+      columnKey: 'orderItem.createdBy',
+      type: 'text',
+      ...transformReadonlyField(basePath, orderItem, 'createdBy', orderItem?.createdBy ?? null),
+    },
+    {
+      columnKey: 'orderItem.createdAt',
+      type: 'text',
+      ...transformReadonlyField(basePath, orderItem, 'createdAt', orderItem?.createdAt ?? null),
+    },
+    {
+      columnKey: 'orderItem.updated',
+      type: 'date_user',
+      ...transformComputedField(basePath, orderItem, 'updated', batch => {
+        const currentOrderItem = batch.orderItem;
+        return currentOrderItem
+          ? {
+              at: new Date(currentOrderItem.updatedAt),
+              by: currentOrderItem.updatedBy,
+            }
+          : null;
+      }),
+    },
+    {
+      columnKey: 'orderItem.updatedBy',
+      type: 'text',
+      ...transformReadonlyField(basePath, orderItem, 'updatedBy', orderItem?.updatedBy ?? null),
+    },
+    {
+      columnKey: 'orderItem.updatedAt',
+      type: 'text',
+      ...transformReadonlyField(basePath, orderItem, 'updatedAt', orderItem?.updatedAt ?? null),
+    },
+    {
+      columnKey: 'orderItem.productProvider.product.name',
+      type: 'text',
+      ...transformReadonlyField(
+        `${basePath}.productProvider.product`,
+        orderItem?.productProvider?.product ?? null,
+        'name',
+        orderItem?.productProvider?.product?.name ?? ''
+      ),
+    },
+    {
+      columnKey: 'orderItem.productProvider.product.serial',
+      type: 'text',
+      ...transformReadonlyField(
+        `${basePath}.productProvider.product`,
+        orderItem?.productProvider?.product ?? null,
+        'serial',
+        orderItem?.productProvider?.product?.serial ?? ''
+      ),
+    },
+    {
+      columnKey: 'orderItem.archived',
+      type: 'status',
+      ...transformComputedField(basePath, orderItem, 'archived', order => order.archived),
+    },
+    {
+      columnKey: 'orderItem.no',
+      type: 'text',
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'no',
+        hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_NO)
+      ),
+    },
+    {
+      columnKey: 'orderItem.quantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'quantity',
+        hasPermission =>
+          hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'orderItem.price',
+      type: 'static_metric_value',
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'price',
+        hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_PRICE)
+      ),
+    },
+    {
+      columnKey: 'orderItem.deliveryDate',
+      type: 'date',
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'deliveryDate',
+        hasPermission =>
+          hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_DELIVERY_DATE)
+      ),
+    },
+    {
+      columnKey: 'orderItem.tags',
+      type: 'order_item_tags',
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'tags',
+        hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_TAGS)
+      ),
+    },
+    {
+      columnKey: 'orderItem.memo',
+      type: 'textarea',
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'memo',
+        hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_MEMO)
+      ),
+    },
+    {
+      columnKey: 'orderItem.files',
+      type: 'order_item_documents',
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'files',
+        hasPermission =>
+          hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_DOCUMENTS)
+      ),
+    },
+    {
+      columnKey: 'orderItem.todo',
+      type: 'order_item_tasks',
+      computed: item => ({
+        entityId: orderItem?.id,
+        groupIds: [item.importer?.id, item.exporter?.id].filter(Boolean),
+      }),
+      ...transformValueField(
+        basePath,
+        orderItem,
+        'todo',
+        hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_TASKS)
+      ),
+    },
+    {
+      columnKey: 'orderItem.logs',
+      type: 'order_item_logs',
+      ...transformValueField(basePath, orderItem, 'id', () => true),
+    },
+  ];
+}
+
 export default function transformer(index: number, batch: Batch): Array<Array<CellValue>> {
   const batchCells = transformBatch(`${index}`, batch);
+  const orderItemCells = transformOrderItem(`${index}`, batch.orderItem);
 
-  return [batchCells];
+  return [[...batchCells, ...orderItemCells]];
 }

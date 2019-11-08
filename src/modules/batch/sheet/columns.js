@@ -252,13 +252,6 @@ const orderItemColumns: Array<ColumnConfig> = [
     width: 200,
   },
   {
-    key: 'orderItem.remainQuantity',
-    title: <FormattedMessage {...orderItemMessages.remainQuantity} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-  {
     key: 'orderItem.files',
     title: <FormattedMessage {...orderItemMessages.sectionDocuments} />,
     icon: 'ORDER_ITEM',

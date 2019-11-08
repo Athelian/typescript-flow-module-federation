@@ -16,29 +16,32 @@ export default function decorate(batches: Array<Batch>): Array<Object> {
       };
       if (batch.container) {
         batch.container.freeTimeStartDate = {
-          value: batch?.container?.freeTimeStartDate,
-          auto: batch?.container?.autoCalculatedFreeTimeStartDate ?? false,
+          value: batch.container.freeTimeStartDate,
+          auto: batch.container.autoCalculatedFreeTimeStartDate,
         };
         batch.container.warehouseArrivalAgreedDateApproved = {
-          user: batch?.container?.warehouseArrivalAgreedDateApprovedBy,
-          date: batch?.container?.warehouseArrivalAgreedDateApprovedAt,
+          user: batch.container.warehouseArrivalAgreedDateApprovedBy,
+          date: batch.container.warehouseArrivalAgreedDateApprovedAt,
         };
         batch.container.warehouseArrivalActualDateApproved = {
-          user: batch?.container?.warehouseArrivalActualDateApprovedBy,
-          date: batch?.container?.warehouseArrivalActualDateApprovedAt,
+          user: batch.container.warehouseArrivalActualDateApprovedBy,
+          date: batch.container.warehouseArrivalActualDateApprovedAt,
         };
         batch.container.departureDateApproved = {
-          user: batch?.container?.departureDateApprovedBy,
-          date: batch?.container?.departureDateApprovedAt,
+          user: batch.container.departureDateApprovedBy,
+          date: batch.container.departureDateApprovedAt,
         };
       }
 
       if (batch.shipment) {
-        batch.shipment.cargoReady.approved = {
-          user: batch?.shipment?.cargoReady?.approvedBy,
-          date: batch?.shipment?.cargoReady?.approvedAt,
-        };
-        if (batch.shipment?.containerGroups?.length) {
+        if (batch.shipment.cargoReady) {
+          batch.shipment.cargoReady.approved = {
+            user: batch.shipment.cargoReady.approvedBy,
+            date: batch.shipment.cargoReady.approvedAt,
+          };
+        }
+
+        if (batch.shipment.containerGroups?.length) {
           batch.shipment.containerGroups.forEach(containerGroup => {
             if (containerGroup.customClearance) {
               containerGroup.customClearance.approved = {
@@ -60,7 +63,7 @@ export default function decorate(batches: Array<Batch>): Array<Object> {
             }
           });
         }
-        if (batch.shipment?.voyages?.length) {
+        if (batch.shipment.voyages?.length) {
           batch.shipment.voyages.forEach(voyage => {
             if (voyage.departure) {
               voyage.departure.approved = {
