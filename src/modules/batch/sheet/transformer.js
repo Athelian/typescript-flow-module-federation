@@ -81,6 +81,35 @@ import {
   CONTAINER_SET_YARD_NAME,
   CONTAINER_UPDATE,
 } from 'modules/permission/constants/container';
+import {
+  SHIPMENT_SET_ARCHIVED,
+  SHIPMENT_SET_BL_DATE,
+  SHIPMENT_SET_BL_NO,
+  SHIPMENT_SET_BOOKED,
+  SHIPMENT_SET_BOOKING_DATE,
+  SHIPMENT_SET_BOOKING_NO,
+  SHIPMENT_SET_CARRIER,
+  SHIPMENT_SET_CONTRACT_NO,
+  SHIPMENT_SET_DOCUMENTS,
+  SHIPMENT_SET_FORWARDERS,
+  SHIPMENT_SET_IN_CHARGE,
+  SHIPMENT_SET_INCOTERM,
+  SHIPMENT_SET_INVOICE_NO,
+  SHIPMENT_SET_LOAD_TYPE,
+  SHIPMENT_SET_MEMO,
+  SHIPMENT_SET_NO,
+  SHIPMENT_SET_PORT,
+  SHIPMENT_SET_REVISE_TIMELINE_DATE,
+  SHIPMENT_SET_TAGS,
+  SHIPMENT_SET_TASKS,
+  SHIPMENT_SET_TIMELINE_DATE,
+  SHIPMENT_SET_TRANSPORT_TYPE,
+  SHIPMENT_SET_VESSEL_NAME,
+  SHIPMENT_SET_WAREHOUSE,
+  SHIPMENT_ASSIGN_TIMELINE_DATE,
+  SHIPMENT_APPROVE_TIMELINE_DATE,
+  SHIPMENT_UPDATE,
+} from 'modules/permission/constants/shipment';
 import orderMessages from 'modules/order/messages';
 
 function transformBatch(basePath: string, batch: Batch): Array<CellValue> {
@@ -704,7 +733,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
   }));
 }
 
-function transformContainer(basePath: string, batch: Object): Array<CellValue> {
+function transformContainer(basePath: string, batch: Batch): Array<CellValue> {
   return [
     {
       columnKey: 'container.created',
@@ -1055,11 +1084,937 @@ function transformContainer(basePath: string, batch: Object): Array<CellValue> {
   }));
 }
 
+function transformShipment(basePath: string, batch: Batch): Array<CellValue> {
+  const nbOfVoyages = (batch?.shipment?.voyages ?? []).length;
+
+  return [
+    {
+      columnKey: 'shipment.created',
+      type: 'date_user',
+      ...transformComputedField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'created',
+        currentBatch => {
+          return currentBatch?.shipment
+            ? {
+                at: new Date(currentBatch?.shipment.createdAt ?? ''),
+                by: currentBatch?.shipment.createdBy,
+              }
+            : null;
+        }
+      ),
+    },
+    {
+      columnKey: 'shipment.createdBy',
+      type: 'text',
+      ...transformReadonlyField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'createdBy',
+        batch?.shipment?.createdBy ?? null
+      ),
+    },
+    {
+      columnKey: 'shipment.createdAt',
+      type: 'text',
+      ...transformReadonlyField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'createdAt',
+        batch?.shipment?.createdAt ?? null
+      ),
+    },
+    {
+      columnKey: 'shipment.updated',
+      type: 'date_user',
+      ...transformComputedField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'updated',
+        currentBatch => {
+          return currentBatch?.shipment
+            ? {
+                at: new Date(currentBatch?.shipment.updatedAt ?? ''),
+                by: currentBatch?.shipment.updatedBy,
+              }
+            : null;
+        }
+      ),
+    },
+    {
+      columnKey: 'shipment.updatedBy',
+      type: 'text',
+      ...transformReadonlyField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'updatedBy',
+        batch?.shipment?.updatedBy ?? null
+      ),
+    },
+    {
+      columnKey: 'shipment.updatedAt',
+      type: 'text',
+      ...transformReadonlyField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'updatedAt',
+        batch?.shipment?.updatedAt ?? null
+      ),
+    },
+    {
+      columnKey: 'shipment.archived',
+      type: 'status',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch ? batch.shipment : null,
+        'archived',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_ARCHIVED)
+      ),
+    },
+    {
+      columnKey: 'shipment.no',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'no',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_NO)
+      ),
+    },
+    {
+      columnKey: 'shipment.importer',
+      type: 'partner',
+      ...transformReadonlyField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'importer',
+        batch?.shipment?.importer ?? null
+      ),
+    },
+    {
+      columnKey: 'shipment.exporter',
+      type: 'partner',
+      ...transformReadonlyField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'exporter',
+        batch?.shipment?.exporter ?? null
+      ),
+    },
+    {
+      columnKey: 'shipment.inCharges',
+      type: 'user_assignment',
+      computed: currentBatch => {
+        return [
+          currentBatch?.shipment?.importer?.id,
+          currentBatch?.shipment?.exporter?.id,
+          ...(currentBatch?.shipment?.forwarders ?? []).map(f => f.id),
+        ].filter(Boolean);
+      },
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'inCharges',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_IN_CHARGE)
+      ),
+    },
+    {
+      columnKey: 'shipment.forwarders',
+      type: 'forwarders',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'forwarders',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_FORWARDERS)
+      ),
+    },
+    {
+      columnKey: 'shipment.blNo',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'blNo',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BL_NO)
+      ),
+    },
+    {
+      columnKey: 'shipment.blDate',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'blDate',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BL_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.bookingNo',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'bookingNo',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BOOKING_NO)
+      ),
+    },
+    {
+      columnKey: 'shipment.booked',
+      type: 'booked',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'booked',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BOOKED)
+      ),
+    },
+    {
+      columnKey: 'shipment.bookingDate',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'bookingDate',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_BOOKING_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.invoiceNo',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'invoiceNo',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_INVOICE_NO)
+      ),
+    },
+    {
+      columnKey: 'shipment.contractNo',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'contractNo',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_CONTRACT_NO)
+      ),
+    },
+    {
+      columnKey: 'shipment.transportType',
+      type: 'transport_type',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'transportType',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TRANSPORT_TYPE)
+      ),
+    },
+    {
+      columnKey: 'shipment.loadType',
+      type: 'load_type',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'loadType',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_LOAD_TYPE)
+      ),
+    },
+    {
+      columnKey: 'shipment.incoterm',
+      type: 'incoterm',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'incoterm',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_INCOTERM)
+      ),
+    },
+    {
+      columnKey: 'shipment.carrier',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'carrier',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_CARRIER)
+      ),
+    },
+    {
+      columnKey: 'shipment.tags',
+      type: 'shipment_tags',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'tags',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TAGS)
+      ),
+    },
+    {
+      columnKey: 'shipment.memo',
+      type: 'textarea',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'memo',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_MEMO)
+      ),
+    },
+    {
+      columnKey: 'shipment.cargoReady.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.cargoReady`,
+        batch?.shipment?.cargoReady ?? null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.cargoReady.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.cargoReady`,
+        batch?.shipment?.cargoReady ?? null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.cargoReady.assignedTo',
+      type: 'user_assignment',
+      computed: currentBatch => {
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.cargoReady`,
+        batch?.shipment?.cargoReady ?? null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.cargoReady.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.cargoReady`,
+        batch?.shipment?.cargoReady ?? null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.departurePort',
+      type: 'port',
+      computed: currentBatch => currentBatch?.shipment?.transportType ?? null,
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0`,
+        batch?.shipment?.voyages?.[0] ?? null,
+        'departurePort',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_PORT)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.departure.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0.departure`,
+        batch?.shipment?.voyages?.[0]?.departure ?? null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.departure.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0.departure`,
+        batch?.shipment?.voyages?.[0]?.departure ?? null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.departure.assignedTo',
+      type: 'user_assignment',
+      computed: currentBatch => {
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0.departure`,
+        batch?.shipment?.voyages?.[0]?.departure ?? null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.departure.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0.departure`,
+        batch?.shipment?.voyages?.[0]?.departure ?? null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.vesselName',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0`,
+        batch?.shipment?.voyages?.[0] ?? null,
+        'vesselName',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.vesselCode',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0`,
+        batch?.shipment?.voyages?.[0] ?? null,
+        'vesselCode',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.firstTransitPort',
+      type: 'port',
+      computed: currentBatch => currentBatch?.shipment?.transportType ?? null,
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[0] ?? null : null,
+        'arrivalPort',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_PORT)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.firstTransitArrival.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0.arrival`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[0]?.arrival ?? null : null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.firstTransitArrival.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0.arrival`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[0]?.arrival ?? null : null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.firstTransitArrival.assignedTo',
+      type: 'user_assignment',
+      computed: currentBatch => {
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0.arrival`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[0]?.arrival ?? null : null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.firstTransitArrival.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.0.arrival`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[0]?.arrival ?? null : null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.1.firstTransitDeparture.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.departure`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[1]?.departure ?? null : null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.1.firstTransitDeparture.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.departure`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[1]?.departure ?? null : null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.1.firstTransitDeparture.assignedTo',
+      type: 'user_assignment',
+      computed: currentBatch => {
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.departure`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[1]?.departure ?? null : null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.1.firstTransitDeparture.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.departure`,
+        nbOfVoyages > 1 ? batch?.shipment?.voyages?.[1]?.departure ?? null : null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.1.vesselName',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1`,
+        batch?.shipment?.voyages?.[1] ?? null,
+        'vesselName',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.1.vesselCode',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1`,
+        batch?.shipment?.voyages?.[1] ?? null,
+        'vesselCode',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.1.secondTransitPort',
+      type: 'port',
+      computed: currentBatch => currentBatch?.shipment?.transportType ?? null,
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[1] ?? null : null,
+        'arrivalPort',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_PORT)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.1.secondTransitArrival.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.arrival`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[1]?.arrival ?? null : null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.1.secondTransitArrival.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.arrival`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[1]?.arrival ?? null : null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.1.secondTransitArrival.assignedTo',
+      type: 'user_assignment',
+      computed: currentBatch => {
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.arrival`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[1]?.arrival ?? null : null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.1.secondTransitArrival.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.1.arrival`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[1]?.arrival ?? null : null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.2.secondTransitDeparture.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.2.departure`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[2]?.departure ?? null : null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.2.secondTransitDeparture.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.2.departure`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[2]?.departure ?? null : null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.2.secondTransitDeparture.assignedTo',
+      type: 'user_assignment',
+      computed: currentBatch => {
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.voyages.2.departure`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[2]?.departure ?? null : null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.2.secondTransitDeparture.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.2.departure`,
+        nbOfVoyages > 2 ? batch?.shipment?.voyages?.[2]?.departure ?? null : null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.2.vesselName',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.2`,
+        batch?.shipment?.voyages?.[2] ?? null,
+        'vesselName',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.2.vesselCode',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.2`,
+        batch?.shipment?.voyages?.[2] ?? null,
+        'vesselCode',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.2.arrivalPort',
+      type: 'port',
+      computed: currentBatch => currentBatch?.shipment?.transportType ?? null,
+      ...transformValueField(
+        `${basePath}.shipment.voyages.${(batch?.shipment?.voyages?.length ?? 0) - 1}`,
+        batch?.shipment?.voyages?.[(batch?.shipment?.voyages?.length ?? 0) - 1] ?? null,
+        'arrivalPort',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_PORT)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.2.arrival.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.${(batch?.shipment?.voyages?.length ?? 0) - 1}.arrival`,
+        batch?.shipment?.voyages?.[(batch?.shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.2.arrival.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.${(batch?.shipment?.voyages?.length ?? 0) - 1}.arrival`,
+        batch?.shipment?.voyages?.[(batch?.shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.2.arrival.assignedTo',
+      type: 'user_assignment',
+      computed: currentBatch => {
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.voyages.${(batch?.shipment?.voyages?.length ?? 0) - 1}.arrival`,
+        batch?.shipment?.voyages?.[(batch?.shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.2.arrival.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.voyages.${(batch?.shipment?.voyages?.length ?? 0) - 1}.arrival`,
+        batch?.shipment?.voyages?.[(batch?.shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.customClearance.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.customClearance`,
+        batch?.shipment?.containerGroups?.[0]?.customClearance ?? null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.customClearance.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.customClearance`,
+        batch?.shipment?.containerGroups?.[0]?.customClearance ?? null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.customClearance.assignedTo',
+      type: 'user_assignment',
+      computed: currentBatch => {
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.customClearance`,
+        batch?.shipment?.containerGroups?.[0]?.customClearance ?? null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.customClearance.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.customClearance`,
+        batch?.shipment?.containerGroups?.[0]?.customClearance ?? null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.warehouse',
+      type: 'warehouse',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0`,
+        batch?.shipment?.containerGroups?.[0] ?? null,
+        'warehouse',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_WAREHOUSE)
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.warehouseArrival.date',
+      type: 'date',
+      ...(batch?.shipment?.containerCount
+        ? {
+            entity: null,
+            data: null,
+            forbidden: false,
+          }
+        : transformValueField(
+            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+            'date',
+            hasPermission =>
+              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+          )),
+    },
+    {
+      columnKey: 'shipment.containerGroup.warehouseArrival.timelineDateRevisions',
+      type: 'date_revisions',
+      ...(batch?.shipment?.containerCount
+        ? { entity: null, data: null, forbidden: false }
+        : transformValueField(
+            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+            'timelineDateRevisions',
+            hasPermission =>
+              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+          )),
+    },
+    {
+      columnKey: 'shipment.containerGroup.warehouseArrival.assignedTo',
+      type: 'user_assignment',
+      computed: currentBatch => {
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...(batch?.shipment?.containerCount
+        ? { entity: null, data: null, forbidden: false }
+        : transformValueField(
+            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+            'assignedTo',
+            hasPermission =>
+              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+          )),
+    },
+    {
+      columnKey: 'shipment.containerGroup.warehouseArrival.approved',
+      type: 'approval',
+      ...(batch?.shipment?.containerCount
+        ? { entity: null, data: null, forbidden: false }
+        : transformValueField(
+            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+            'approved',
+            hasPermission =>
+              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+          )),
+    },
+    {
+      columnKey: 'shipment.containerGroup.deliveryReady.date',
+      type: 'date',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.deliveryReady`,
+        batch?.shipment?.containerGroups?.[0]?.deliveryReady ?? null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.deliveryReady.timelineDateRevisions',
+      type: 'date_revisions',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.deliveryReady`,
+        batch?.shipment?.containerGroups?.[0]?.deliveryReady ?? null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.deliveryReady.assignedTo',
+      type: 'user_assignment',
+      computed: currentBatch => {
+        return [currentBatch?.shipment?.importer?.id, currentBatch?.shipment?.exporter?.id].filter(
+          Boolean
+        );
+      },
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.deliveryReady`,
+        batch?.shipment?.containerGroups?.[0]?.deliveryReady ?? null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.deliveryReady.approved',
+      type: 'approval',
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.deliveryReady`,
+        batch?.shipment?.containerGroups?.[0]?.deliveryReady ?? null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.files',
+      type: 'shipment_documents',
+      ...transformValueField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'files',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_DOCUMENTS)
+      ),
+    },
+    {
+      columnKey: 'shipment.todo',
+      type: 'shipment_tasks',
+      computed: currentBatch => {
+        return {
+          entityId: batch?.shipment?.id ?? null,
+          groupIds: [
+            currentBatch?.shipment?.importer?.id,
+            currentBatch?.shipment?.exporter?.id,
+            ...(currentBatch?.shipment?.forwarders ?? []).map(f => f.id),
+          ].filter(Boolean),
+        };
+      },
+      ...transformValueField(
+        basePath,
+        batch?.shipment ?? null,
+        'todo',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TASKS)
+      ),
+    },
+    {
+      columnKey: 'shipment.logs',
+      type: 'shipment_logs',
+      ...transformValueField(`${basePath}.shipment`, batch?.shipment ?? null, 'id', () => true),
+    },
+  ].map(c => ({
+    ...c,
+    duplicable: true,
+    disabled: !(batch?.shipment ?? null),
+  }));
+}
+
 export default function transformer(index: number, batch: Batch): Array<Array<CellValue>> {
   const batchCells = transformBatch(`${index}`, batch);
   const orderItemCells = transformOrderItem(`${index}`, batch.orderItem);
   const orderCells = transformOrder(`${index}`, batch.orderItem.order);
   const containerCells = transformContainer(`${index}`, batch);
+  const shipmentCells = transformShipment(`${index}`, batch);
 
-  return [[...batchCells, ...orderItemCells, ...orderCells, ...containerCells]];
+  return [[...batchCells, ...orderItemCells, ...orderCells, ...containerCells, ...shipmentCells]];
 }
