@@ -14,6 +14,12 @@ function containerSorter(sorts: Array<ColumnSort>) {
 
     sorts.every(sort => {
       switch (sort.name) {
+        case 'createdAt':
+          result = setDirection(defaultSort(a, b), sort.direction);
+          break;
+        case 'updatedAt':
+          result = setDirection(dateSort(a.updatedAt, b.updatedAt), sort.direction);
+          break;
         case 'no':
           result = setDirection(stringSort(a?.no ?? '', b?.no ?? ''), sort.direction);
           break;
@@ -67,14 +73,16 @@ function containerSorter(sorts: Array<ColumnSort>) {
   };
 }
 
-function batchSorter(sorts: Array<ColumnSort>) {
+function batchSorter(sorts: Array<ColumnSort>, underContainer: boolean = false) {
   return (a: Object, b: Object): number => {
     let result = 0;
 
     sorts.every(sort => {
       switch (sort.name) {
         case 'createdAt':
-          result = setDirection(defaultSort(a, b), sort.direction);
+          result = underContainer
+            ? setDirection(a.containerSort - b.containerSort, sort.direction)
+            : setDirection(a.shipmentSort - b.shipmentSort, sort.direction);
           break;
         case 'updatedAt':
           result = setDirection(dateSort(a.updatedAt, b.updatedAt), sort.direction);
@@ -138,7 +146,7 @@ export default function sorter(items: Array<Object>, sorts: Array<ColumnSort>): 
                 default:
                   return {
                     ...container,
-                    batches: container.batches.sort(batchSorter(batchSorts)),
+                    batches: container.batches.sort(batchSorter(batchSorts, true)),
                   };
               }
             })
