@@ -120,7 +120,7 @@ export default function useSheet({
         query: itemsQuery,
         variables: { page: 1, perPage: 20, filterBy: { query, ...filterBy }, sortBy },
       })
-      .subscribe(({ data }) => {
+      .subscribe(({ data }: { data: Object }) => {
         const { totalPage, nodes } = getItems(data);
 
         setPage({ page: 1, totalPage });

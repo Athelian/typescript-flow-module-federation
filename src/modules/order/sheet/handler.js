@@ -475,18 +475,15 @@ export default function entityEventHandler(
     switch (event.lifeCycle) {
       case 'Create':
         switch (event.entity.__typename) {
-          case 'OrderItem': {
+          case 'OrderItem':
             await onCreateOrderItem(event.entity.id);
             break;
-          }
-          case 'Batch': {
+          case 'Batch':
             await onCreateBatch(event.entity.id);
             break;
-          }
-          case 'BatchQuantityRevision': {
+          case 'BatchQuantityRevision':
             await onBatchQuantityRevision(event.entity.id, orders);
             break;
-          }
           default:
             break;
         }
@@ -662,7 +659,7 @@ export default function entityEventHandler(
               switch (change.field) {
                 case 'importer':
                 case 'exporter':
-                  if (change.new?.entity) {
+                  if (change.new) {
                     return client
                       .query({
                         query: organizationByIDQuery,
@@ -724,15 +721,18 @@ export default function entityEventHandler(
             changes = await mapAsync(changes, change => {
               switch (change.field) {
                 case 'approvedBy':
-                  return client
-                    .query({
-                      query: userByIDQuery,
-                      variables: { id: change.new?.entity?.id },
-                    })
-                    .then(({ data }) => ({
-                      field: 'approvedBy',
-                      new: newCustomValue(data.user),
-                    }));
+                  if (change.new) {
+                    return client
+                      .query({
+                        query: userByIDQuery,
+                        variables: { id: change.new?.entity?.id },
+                      })
+                      .then(({ data }) => ({
+                        field: 'approvedBy',
+                        new: newCustomValue(data.user),
+                      }));
+                  }
+                  break;
                 case 'assignedTo':
                   return client
                     .query({
@@ -811,15 +811,18 @@ export default function entityEventHandler(
                 case 'warehouseArrivalAgreedDateApprovedBy':
                 case 'warehouseArrivalActualDateApprovedBy':
                 case 'departureDateApprovedBy':
-                  return client
-                    .query({
-                      query: userByIDQuery,
-                      variables: { id: change.new?.entity?.id },
-                    })
-                    .then(({ data }) => ({
-                      field: change.field,
-                      new: newCustomValue(data.user),
-                    }));
+                  if (change.new) {
+                    return client
+                      .query({
+                        query: userByIDQuery,
+                        variables: { id: change.new?.entity?.id },
+                      })
+                      .then(({ data }) => ({
+                        field: change.field,
+                        new: newCustomValue(data.user),
+                      }));
+                  }
+                  break;
                 case 'warehouseArrivalAgreedDateAssignedTo':
                 case 'warehouseArrivalActualDateAssignedTo':
                 case 'departureDateAssignedTo':
@@ -920,7 +923,7 @@ export default function entityEventHandler(
             changes = await mapAsync(changes, change => {
               switch (change.field) {
                 case 'warehouse':
-                  if (change.new?.entity) {
+                  if (change.new) {
                     return client
                       .query({
                         query: warehouseByIDQuery,
@@ -965,7 +968,7 @@ export default function entityEventHandler(
             changes = await mapAsync(changes, change => {
               switch (change.field) {
                 case 'warehouse':
-                  if (change.new?.entity) {
+                  if (change.new) {
                     return client
                       .query({
                         query: warehouseByIDQuery,

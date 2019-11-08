@@ -27,7 +27,7 @@ export default function useEnum(enumName: ?string): { enums: Array<Enum>, loadin
         variables: { enum: enumName },
         fetchPolicy: 'cache-first',
       })
-      .subscribe(({ data }) => {
+      .subscribe(({ data }: { data: Object }) => {
         setEnums(data?.__type?.enumValues ?? []);
         setLoading(false);
       });

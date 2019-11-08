@@ -66,6 +66,10 @@ export const useSheetLiveEntity = (factory: ?EntityEventHandlerFactory) => {
   const entitiesRef = React.useRef([]);
 
   React.useEffect(() => {
+    entitiesRef.current = [];
+  }, [id]);
+
+  React.useEffect(() => {
     itemsRef.current = items;
   }, [items]);
 

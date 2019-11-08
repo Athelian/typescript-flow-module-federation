@@ -3,28 +3,218 @@ import ApolloClient from 'apollo-client';
 import { filterAsync, mapAsync } from 'utils/async';
 import type { Action } from 'components/Sheet/SheetState/types';
 import { Actions } from 'components/Sheet/SheetState/constants';
-import type { EntityEvent, EntityEventHandler } from 'components/Sheet/SheetLive/types';
+import type {
+  EntityEvent,
+  EntityEventChange,
+  EntityEventHandler,
+} from 'components/Sheet/SheetLive/types';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
-import { newCustomValue } from 'components/Sheet/SheetLive/helper';
-import { tagsByIDsQuery } from './query';
+import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
+import { milestoneByIDQuery, tagsByIDsQuery, taskByIDQuery, userByIDQuery } from './query';
+
+// $FlowFixMe not compatible with hook implementation
+function onCreateMilestoneFactory(client: ApolloClient, dispatch: Action => void) {
+  return (milestoneId: string) =>
+    client
+      .query({
+        query: milestoneByIDQuery,
+        fetchPolicy: 'network-only',
+        variables: {
+          id: milestoneId,
+        },
+      })
+      .then(({ data }) => {
+        const newMilestone = data?.milestone;
+        if (newMilestone?.__typename !== 'Milestone') {
+          return;
+        }
+
+        dispatch({
+          type: Actions.PRE_ADD_ENTITY,
+          payload: {
+            entity: {
+              id: milestoneId,
+              type: 'Milestone',
+            },
+            callback: (projects: Array<Object>) => {
+              const projectId = newMilestone.project?.id;
+              if (!projectId) {
+                return null;
+              }
+
+              const projectIdx = projects.findIndex(project => project.id === projectId);
+              if (projectIdx === -1) {
+                return null;
+              }
+
+              const milestones = [...projects[projectIdx].milestones];
+              milestones.splice(newMilestone.sort, 0, newMilestone);
+
+              return {
+                item: {
+                  ...projects[projectIdx],
+                  milestones,
+                },
+                index: projectIdx,
+              };
+            },
+          },
+        });
+      });
+}
+
+// $FlowFixMe not compatible with hook implementation
+function onCreateTaskFactory(client: ApolloClient, dispatch: Action => void) {
+  return (taskId: string) =>
+    client
+      .query({
+        query: taskByIDQuery,
+        fetchPolicy: 'network-only',
+        variables: {
+          id: taskId,
+        },
+      })
+      .then(({ data }) => {
+        const newTask = data?.task;
+        if (newTask?.__typename !== 'Task') {
+          return;
+        }
+
+        dispatch({
+          type: Actions.PRE_ADD_ENTITY,
+          payload: {
+            entity: {
+              id: taskId,
+              type: 'Task',
+            },
+            callback: (projects: Array<Object>) => {
+              const milestoneId = newTask.milestone?.id;
+              const projectId = newTask.milestone?.project?.id;
+              if (!milestoneId || !projectId) {
+                return null;
+              }
+
+              const projectIdx = projects.findIndex(project => project.id === projectId);
+              if (projectIdx === -1) {
+                return null;
+              }
+
+              const milestoneIdx = projects[projectIdx].milestones.findIndex(
+                milestone => milestone.id === milestoneId
+              );
+              if (milestoneIdx === -1) {
+                return null;
+              }
+
+              const milestones = [...projects[projectIdx].milestones];
+              const tasks = [...milestones[milestoneIdx].tasks];
+              tasks.splice(newTask.sort, 0, newTask);
+              milestones[milestoneIdx] = {
+                ...milestones[milestoneIdx],
+                tasks,
+              };
+
+              return {
+                item: {
+                  ...projects[projectIdx],
+                  milestones,
+                },
+                index: projectIdx,
+              };
+            },
+          },
+        });
+      });
+}
+
+function onDeleteMilestoneFactory(dispatch: Action => void) {
+  return (milestoneId: string) => {
+    dispatch({
+      type: Actions.PRE_REMOVE_ENTITY,
+      payload: {
+        entity: {
+          id: milestoneId,
+          type: 'Milestone',
+        },
+        callback: (projects: Array<Object>) => {
+          const projectIdx = projects.findIndex(
+            project => !!project.milestones.find(milestone => milestone.id === milestoneId)
+          );
+          if (projectIdx === -1) {
+            return null;
+          }
+
+          return {
+            item: {
+              ...projects[projectIdx],
+              milestones: projects[projectIdx].milestones.filter(
+                milestone => milestone.id !== milestoneId
+              ),
+            },
+            index: projectIdx,
+          };
+        },
+      },
+    });
+  };
+}
+
+function onDeleteTaskFactory(dispatch: Action => void) {
+  return (taskId: string) => {
+    dispatch({
+      type: Actions.PRE_REMOVE_ENTITY,
+      payload: {
+        entity: {
+          id: taskId,
+          type: 'Task',
+        },
+        callback: (projects: Array<Object>) => {
+          const projectIdx = projects.findIndex(
+            project =>
+              !!project.milestones.find(
+                milestone => !!milestone.tasks.find(task => task.id === taskId)
+              )
+          );
+          if (projectIdx === -1) {
+            return null;
+          }
+
+          return {
+            item: {
+              ...projects[projectIdx],
+              milestones: projects[projectIdx].milestones.map(milestone => ({
+                ...milestone,
+                tasks: milestone.tasks.filter(task => task.id !== taskId),
+              })),
+            },
+            index: projectIdx,
+          };
+        },
+      },
+    });
+  };
+}
 
 export default function entityEventHandler(
   // $FlowFixMe not compatible with hook implementation
   client: ApolloClient,
   dispatch: Action => void
 ): EntityEventHandler {
-  return async (event: EntityEvent /* , projects: Array<Object> */) => {
+  const onCreateMilestone = onCreateMilestoneFactory(client, dispatch);
+  const onCreateTask = onCreateTaskFactory(client, dispatch);
+  const onDeleteMilestone = onDeleteMilestoneFactory(dispatch);
+  const onDeleteTask = onDeleteTaskFactory(dispatch);
+
+  return async (event: EntityEvent, projects: Array<Object>) => {
     switch (event.lifeCycle) {
       case 'Create':
         switch (event.entity.__typename) {
-          case 'Milestone': {
-            // TODO: handle new milestone
+          case 'Milestone':
+            await onCreateMilestone(event.entity.id);
             break;
-          }
-          case 'Task': {
-            // TODO: handle new task
+          case 'Task':
+            await onCreateTask(event.entity.id);
             break;
-          }
           default:
             break;
         }
@@ -55,11 +245,12 @@ export default function entityEventHandler(
             break;
           case 'Milestone':
             break;
-          case 'Task':
-            changes = await filterAsync(changes, change => {
+          case 'Task': {
+            changes = await filterAsync(changes, async (change: EntityEventChange) => {
               switch (change.field) {
                 case 'milestone':
-                  // TODO: handle task move from milestone
+                  onDeleteTask(event.entity.id);
+                  await onCreateTask(event.entity.id);
                   return false;
                 default:
                   return true;
@@ -78,13 +269,50 @@ export default function entityEventHandler(
                       field: change.field,
                       new: newCustomValue(data.tagsByIDs),
                     }));
+                case 'approvedBy':
+                  if (change.new) {
+                    return client
+                      .query({
+                        query: userByIDQuery,
+                        variables: { id: change.new?.entity?.id },
+                      })
+                      .then(({ data }) => ({
+                        field: change.field,
+                        new: newCustomValue(data.user),
+                      }));
+                  }
+                  break;
                 default:
                   break;
               }
 
               return change;
             });
+
+            const task = projects
+              .map(project => project.milestones.map(milestone => milestone.tasks).flat())
+              // $FlowFixMe flat not supported by flow
+              .flat()
+              .find(t => t.id === event.entity?.id);
+            if (task) {
+              changes = mergeChanges(
+                changes,
+                {
+                  approvedBy: (i, v) => ({
+                    ...i,
+                    user: v,
+                  }),
+                  approvedAt: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                },
+                'approved',
+                task.approved
+              );
+            }
             break;
+          }
           default:
             break;
         }
@@ -104,10 +332,10 @@ export default function entityEventHandler(
       case 'Delete':
         switch (event.entity.__typename) {
           case 'Milestone':
-            // TODO: handle delete milestone
+            onDeleteMilestone(event.entity.id);
             break;
           case 'Task':
-            // TODO: handle delete task
+            await onDeleteTask(event.entity.id);
             break;
           default:
             break;

@@ -1848,32 +1848,25 @@ function transformShipment(basePath: string, batch: Batch): Array<CellValue> {
     {
       columnKey: 'shipment.containerGroup.warehouseArrival.date',
       type: 'date',
-      ...(batch?.shipment?.containerCount
-        ? {
-            entity: null,
-            data: null,
-            forbidden: false,
-          }
-        : transformValueField(
-            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
-            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
-            'date',
-            hasPermission =>
-              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
-          )),
+      hide: currentBatch => (currentBatch?.shipment?.containerCount ?? 0) > 0,
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+        batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
     },
     {
       columnKey: 'shipment.containerGroup.warehouseArrival.timelineDateRevisions',
       type: 'date_revisions',
-      ...(batch?.shipment?.containerCount
-        ? { entity: null, data: null, forbidden: false }
-        : transformValueField(
-            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
-            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
-            'timelineDateRevisions',
-            hasPermission =>
-              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
-          )),
+      hide: currentBatch => (currentBatch?.shipment?.containerCount ?? 0) > 0,
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+        batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
     },
     {
       columnKey: 'shipment.containerGroup.warehouseArrival.assignedTo',
@@ -1883,28 +1876,26 @@ function transformShipment(basePath: string, batch: Batch): Array<CellValue> {
           Boolean
         );
       },
-      ...(batch?.shipment?.containerCount
-        ? { entity: null, data: null, forbidden: false }
-        : transformValueField(
-            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
-            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
-            'assignedTo',
-            hasPermission =>
-              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
-          )),
+      hide: currentBatch => (currentBatch?.shipment?.containerCount ?? 0) > 0,
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+        batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
     },
     {
       columnKey: 'shipment.containerGroup.warehouseArrival.approved',
       type: 'approval',
-      ...(batch?.shipment?.containerCount
-        ? { entity: null, data: null, forbidden: false }
-        : transformValueField(
-            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
-            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
-            'approved',
-            hasPermission =>
-              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
-          )),
+      hide: currentBatch => (currentBatch?.shipment?.containerCount ?? 0) > 0,
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+        batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
     },
     {
       columnKey: 'shipment.containerGroup.deliveryReady.date',

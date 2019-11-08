@@ -173,6 +173,11 @@ export const milestoneByIDQuery = gql`
     milestone(id: $id) {
       ...milestoneSheetFragment
       ... on Milestone {
+        project {
+          ... on Project {
+            id
+          }
+        }
         tasks {
           ...taskSheetFragment
         }
@@ -192,6 +197,18 @@ export const taskByIDQuery = gql`
   query taskByIDQuery($id: ID!) {
     task(id: $id) {
       ...taskSheetFragment
+      ... on Task {
+        milestone {
+          ... on Milestone {
+            id
+            project {
+              ... on Project {
+                id
+              }
+            }
+          }
+        }
+      }
     }
   }
 

@@ -15,6 +15,10 @@ const projectColumns: Array<ColumnConfig> = [
     icon: 'PROJECT',
     color: colors.PROJECT,
     width: 110,
+    sort: {
+      name: 'createdAt',
+      group: 'project',
+    },
   },
   {
     key: 'project.updated',
@@ -22,6 +26,11 @@ const projectColumns: Array<ColumnConfig> = [
     icon: 'PROJECT',
     color: colors.PROJECT,
     width: 110,
+    sort: {
+      default: true,
+      name: 'updatedAt',
+      group: 'project',
+    },
   },
   {
     key: 'project.name',
@@ -29,6 +38,10 @@ const projectColumns: Array<ColumnConfig> = [
     icon: 'PROJECT',
     color: colors.PROJECT,
     width: 200,
+    sort: {
+      name: 'name',
+      group: 'project',
+    },
   },
   {
     key: 'project.description',
@@ -43,6 +56,10 @@ const projectColumns: Array<ColumnConfig> = [
     icon: 'PROJECT',
     color: colors.PROJECT,
     width: 125,
+    sort: {
+      name: 'dueDate',
+      group: 'project',
+    },
   },
   {
     key: 'project.tags',
@@ -145,7 +162,13 @@ const taskColumns: Array<ColumnConfig> = [
     color: colors.TASK,
     width: 200,
   },
-  // approved
+  {
+    key: 'project.milestone.task.approved',
+    title: <FormattedMessage {...taskMessages.approved} />,
+    icon: 'TASK',
+    color: colors.TASK,
+    width: 110,
+  },
   // approvers
   {
     key: 'project.milestone.task.tags',
