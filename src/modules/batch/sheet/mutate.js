@@ -102,58 +102,6 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           return {
             inChargeIds: value.map(user => user.id),
           };
-        case 'exporter':
-          return {
-            exporterId: value?.id ?? null,
-            inChargeIds: (item?.inCharges ?? [])
-              .filter(user => user?.organization?.id !== item?.exporter?.id)
-              .map(user => user.id),
-            orderItems: [],
-            todo: {
-              ...(item?.todo ?? {}),
-              tasks: (item?.todo?.tasks ?? []).map(task => ({
-                ...task,
-                assignedToIds: (task?.assignedTo ?? [])
-                  .filter(user => user?.organization?.id !== item?.exporter?.id)
-                  .map(user => user.id),
-                approverIds: (task?.approvers ?? [])
-                  .filter(user => user?.organization?.id !== item?.exporter?.id)
-                  .map(user => user.id),
-                inProgressAt:
-                  task?.inProgressBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.inProgressAt,
-                inProgressById:
-                  task?.inProgressBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.inProgressBy?.id,
-                completedAt:
-                  task?.completedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.completedAt,
-                completedById:
-                  task?.completedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.completedBy?.id,
-                rejectedAt:
-                  task?.rejectedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.rejectedAt,
-                rejectedById:
-                  task?.rejectedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.rejectedBy?.id,
-                approvedAt:
-                  task?.approvedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.approvedAt,
-                approvedById:
-                  task?.approvedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.approvedBy?.id,
-              })),
-            },
-          };
         case 'todo':
           return parseTodoField(null, value);
         default:
