@@ -15,7 +15,7 @@ type Input = {
   initialSortBy: SortBy,
   cacheKey: string,
   sorter: (items: Array<Object>, sorts: Array<ColumnSort>) => Array<Object>,
-  getItems: (data: Object) => Array<Object>,
+  getItems: (data: Object) => { page: number, totalPage: number, nodes: Array<Object> },
 };
 
 type Output = {
@@ -104,7 +104,8 @@ export default function useSheet({
             ...page,
             page: page.page + 1,
           });
-          return getItems(data);
+          const { nodes } = getItems(data);
+          return nodes;
         }),
     [client, page, query, filterBy, sortBy, setPage, itemsQuery, getItems]
   );
@@ -126,8 +127,10 @@ export default function useSheet({
           return;
         }
 
-        setPage({ page: 1, totalPage: data?.orders?.totalPage ?? 1 });
-        setInitialItems(getItems(data));
+        const { totalPage, nodes } = getItems(data);
+
+        setPage({ page: 1, totalPage });
+        setInitialItems(nodes);
         setLoading(false);
       });
 

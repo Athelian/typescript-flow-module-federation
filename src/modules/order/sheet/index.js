@@ -25,7 +25,10 @@ const OrderSheetModule = ({ orderIds }: Props) => {
   const memoizedHandler = React.useCallback(dispatch => entityEventHandler(client, dispatch), [
     client,
   ]);
-  const getItems = React.useCallback(data => decorate(clone(data?.orders?.nodes ?? [])), []);
+  const getItems = React.useCallback(
+    data => ({ ...data?.orders, nodes: decorate(clone(data?.orders?.nodes ?? [])) }),
+    []
+  );
 
   const {
     initialItems,
