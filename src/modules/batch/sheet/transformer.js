@@ -1,7 +1,5 @@
 // @flow
-import * as React from 'react';
 import type { Batch } from 'generated/graphql';
-import { FormattedMessage } from 'react-intl';
 import { addDays } from 'date-fns';
 import { calculateVolume, getBatchLatestQuantity } from 'utils/batch';
 import { getLatestDate } from 'utils/shipment';
@@ -19,7 +17,6 @@ import {
   ORDER_SET_DELIVERY_DATE,
   ORDER_SET_DELIVERY_PLACE,
   ORDER_SET_DOCUMENTS,
-  ORDER_SET_EXPORTER,
   ORDER_SET_IN_CHARGES,
   ORDER_SET_INCOTERM,
   ORDER_SET_ISSUE_AT,
@@ -110,7 +107,6 @@ import {
   SHIPMENT_APPROVE_TIMELINE_DATE,
   SHIPMENT_UPDATE,
 } from 'modules/permission/constants/shipment';
-import orderMessages from 'modules/order/messages';
 
 function transformBatch(basePath: string, batch: Batch): Array<CellValue> {
   return [
@@ -607,16 +603,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     {
       columnKey: 'order.exporter',
       type: 'exporter',
-      extra: {
-        confirmationDialogMessage: <FormattedMessage {...orderMessages.changeExporterWarning} />,
-        isRequired: true,
-      },
-      ...transformValueField(
-        basePath,
-        order,
-        'exporter',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_EXPORTER)
-      ),
+      ...transformReadonlyField(basePath, order, 'exporter', order?.exporter ?? null),
     },
     {
       columnKey: 'order.piNo',
