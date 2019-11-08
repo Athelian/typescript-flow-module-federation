@@ -25,7 +25,10 @@ const BatchSheetModule = ({ batchIds }: Props) => {
   const memorizedHandler = React.useCallback(dispatch => entityEventHandler(client, dispatch), [
     client,
   ]);
-  const getItems = React.useCallback(data => decorate(clone(data?.batches?.nodes ?? [])), []);
+  const getItems = React.useCallback(
+    data => ({ ...data?.batches, nodes: decorate(clone(data?.batches?.nodes ?? [])) }),
+    []
+  );
 
   const {
     initialItems,
