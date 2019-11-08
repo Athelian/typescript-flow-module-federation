@@ -111,22 +111,16 @@ export default function useSheet({
   );
 
   React.useEffect(() => {
-    let cancel = false;
-
     setLoading(true);
     setInitialItems([]);
     setPage({ page: 1, totalPage: 1 });
 
-    client
-      .query({
+    const watchedQuery = client
+      .watchQuery({
         query: itemsQuery,
         variables: { page: 1, perPage: 20, filterBy: { query, ...filterBy }, sortBy },
       })
-      .then(({ data }) => {
-        if (cancel) {
-          return;
-        }
-
+      .subscribe(({ data }) => {
         const { totalPage, nodes } = getItems(data);
 
         setPage({ page: 1, totalPage });
@@ -134,9 +128,7 @@ export default function useSheet({
         setLoading(false);
       });
 
-    return () => {
-      cancel = true;
-    };
+    return () => watchedQuery.unsubscribe();
   }, [client, query, filterBy, sortBy, itemsQuery, getItems]);
 
   return {
