@@ -109,6 +109,7 @@ import {
   SHIPMENT_APPROVE_TIMELINE_DATE,
   SHIPMENT_UPDATE,
 } from 'modules/permission/constants/shipment';
+import orderMessages from 'modules/order/messages';
 
 function getCurrentBatch(batchId: string, order: Object): ?Object {
   return order.orderItems
@@ -200,7 +201,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
       columnKey: 'order.exporter',
       type: 'exporter',
       extra: {
-        confirmationDialogMessage: <FormattedMessage id="modules.Orders.changeExporterWarning" />,
+        confirmationDialogMessage: <FormattedMessage {...orderMessages.changeExporterWarning} />,
         isRequired: true,
       },
       ...transformValueField(
