@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Nov 01 2019 16:24:16 GMT+0900 (Japan Standard Time)
+# timestamp: Thu Nov 07 2019 18:52:12 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28551,6 +28551,12 @@ enum ExportType {
 
   """Projects"""
   Projects
+
+  """Batch"""
+  Batch
+
+  """Batches"""
+  Batches
 }
 
 type FieldDefinition implements Model & Owned & Sortable {
@@ -29666,6 +29672,12 @@ enum MaskEditType {
 
   """ShipmentSheet"""
   ShipmentSheet
+
+  """BatchSheet"""
+  BatchSheet
+
+  """ProjectSheet"""
+  ProjectSheet
 }
 
 input MaskEditUpdateInput {
@@ -31103,6 +31115,9 @@ type Query {
   batch(id: ID!): BatchPayload!
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPaginatedSearch!
   batchesByIDs(ids: [ID!]!): [BatchPayload!]!
+  batchExport(id: ID!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
+  batchesExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: BatchFilterInput, sortBy: BatchSortInput): ExportPayload!
+  batchesByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   batchesTable(entities: [EntityInput!]!): [BatchPayload!]!
   batchQuantityRevision(id: ID!): BatchQuantityRevisionPayload!
   batchQuantityRevisionsByIDs(ids: [ID!]!): [BatchQuantityRevisionPayload!]!

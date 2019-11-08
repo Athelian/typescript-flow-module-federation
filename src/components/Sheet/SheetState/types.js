@@ -60,6 +60,7 @@ export type CellValue = {|
   } | null,
   type: string,
   computed?: Object => any,
+  hide?: Object => boolean,
   extra?: any,
   readonly?: boolean,
   disabled?: boolean,

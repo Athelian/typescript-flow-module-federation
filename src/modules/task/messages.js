@@ -34,6 +34,10 @@ export default defineMessages({
     id: 'modules.Tasks.approvable',
     defaultMessage: 'Approvable',
   },
+  approved: {
+    id: 'modules.Tasks.approved',
+    defaultMessage: 'Approved',
+  },
   tags: {
     id: 'modules.Tasks.tags',
     defaultMessage: 'Tags',

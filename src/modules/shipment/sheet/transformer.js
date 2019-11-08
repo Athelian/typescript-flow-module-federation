@@ -865,11 +865,10 @@ function transformShipment(basePath: string, shipment: Object): Array<CellValue>
     {
       columnKey: 'shipment.containerGroup.warehouseArrival.date',
       type: 'date',
+      hide: currentShipment => currentShipment.containers.length > 0,
       ...transformValueField(
         `${basePath}.containerGroups.0.warehouseArrival`,
-        (shipment?.containers ?? []).length
-          ? shipment?.containerGroups?.[0]?.warehouseArrival ?? null
-          : null,
+        shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
         'date',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
@@ -877,11 +876,10 @@ function transformShipment(basePath: string, shipment: Object): Array<CellValue>
     {
       columnKey: 'shipment.containerGroup.warehouseArrival.timelineDateRevisions',
       type: 'date_revisions',
+      hide: currentShipment => currentShipment.containers.length > 0,
       ...transformValueField(
         `${basePath}.containerGroups.0.warehouseArrival`,
-        (shipment?.containers ?? []).length
-          ? shipment?.containerGroups?.[0]?.warehouseArrival ?? null
-          : null,
+        shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
         'timelineDateRevisions',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
@@ -892,11 +890,10 @@ function transformShipment(basePath: string, shipment: Object): Array<CellValue>
       type: 'user_assignment',
       computed: item =>
         [item.importer?.id, item.exporter?.id, ...item.forwarders.map(f => f.id)].filter(Boolean),
+      hide: currentShipment => currentShipment.containers.length > 0,
       ...transformValueField(
         `${basePath}.containerGroups.0.warehouseArrival`,
-        (shipment?.containers ?? []).length
-          ? shipment?.containerGroups?.[0]?.warehouseArrival ?? null
-          : null,
+        shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
         'assignedTo',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
@@ -905,11 +902,10 @@ function transformShipment(basePath: string, shipment: Object): Array<CellValue>
     {
       columnKey: 'shipment.containerGroup.warehouseArrival.approved',
       type: 'approval',
+      hide: currentShipment => currentShipment.containers.length > 0,
       ...transformValueField(
         `${basePath}.containerGroups.0.warehouseArrival`,
-        (shipment?.containers ?? []).length
-          ? shipment?.containerGroups?.[0]?.warehouseArrival ?? null
-          : null,
+        shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
         'approved',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)

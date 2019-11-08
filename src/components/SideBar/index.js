@@ -99,6 +99,20 @@ const menu: Array<MenuConfig> = [
     icon: 'BATCH',
     path: 'batch',
     permitted: hasPermissions => hasPermissions(BATCH_LIST),
+    submenu: [
+      {
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
+      },
+      {
+        label: <FormattedMessage {...messages.table} />,
+        icon: 'TABLE',
+        path: 'table',
+        beta: true,
+        hidden: !isEnableBetaFeature,
+      },
+    ],
   },
   {
     label: <FormattedMessage {...messages.shipment} />,
@@ -156,31 +170,27 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.project} />,
     icon: 'PROJECT',
     path: 'project',
-    permitted: hasPermissions => hasPermissions([PROJECT_LIST, TASK_LIST]),
+    permitted: hasPermissions => hasPermissions(PROJECT_LIST),
     submenu: [
-      {
-        label: <FormattedMessage {...messages.project} />,
-        icon: 'PROJECT',
-        path: 'project',
-        overrideFullPath: 'project',
-        permitted: hasPermissions => hasPermissions(PROJECT_LIST),
-      },
       {
         label: <FormattedMessage {...messages.table} />,
         icon: 'TABLE',
         path: 'table',
         beta: true,
-        hidden: !isEnableBetaFeature,
         permitted: hasPermissions => hasPermissions(PROJECT_LIST),
       },
       {
-        label: <FormattedMessage {...messages.task} />,
-        icon: 'TASK',
-        path: 'task',
-        overrideFullPath: 'task',
-        permitted: hasPermissions => hasPermissions(TASK_LIST),
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
       },
     ],
+  },
+  {
+    label: <FormattedMessage {...messages.task} />,
+    icon: 'TASK',
+    path: 'task',
+    permitted: hasPermissions => hasPermissions(TASK_LIST),
   },
   {
     label: <FormattedMessage {...messages.documents} />,

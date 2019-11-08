@@ -109,6 +109,7 @@ import {
   SHIPMENT_APPROVE_TIMELINE_DATE,
   SHIPMENT_UPDATE,
 } from 'modules/permission/constants/shipment';
+import orderMessages from 'modules/order/messages';
 
 function getCurrentBatch(batchId: string, order: Object): ?Object {
   return order.orderItems
@@ -200,7 +201,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
       columnKey: 'order.exporter',
       type: 'exporter',
       extra: {
-        confirmationDialogMessage: <FormattedMessage id="modules.Orders.changeExporterWarning" />,
+        confirmationDialogMessage: <FormattedMessage {...orderMessages.changeExporterWarning} />,
         isRequired: true,
       },
       ...transformValueField(
@@ -2011,33 +2012,32 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
     {
       columnKey: 'order.orderItem.batch.shipment.containerGroup.warehouseArrival.date',
       type: 'date',
-      ...(batch?.shipment?.containerCount
-        ? {
-            entity: null,
-            data: null,
-            forbidden: false,
-          }
-        : transformValueField(
-            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
-            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
-            'date',
-            hasPermission =>
-              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
-          )),
+      hide: order => {
+        const currentBatch = getCurrentBatch(batch?.id, order);
+        return (currentBatch?.shipment?.containerCount ?? 0) > 0;
+      },
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+        batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+        'date',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
     },
     {
       columnKey:
         'order.orderItem.batch.shipment.containerGroup.warehouseArrival.timelineDateRevisions',
       type: 'date_revisions',
-      ...(batch?.shipment?.containerCount
-        ? { entity: null, data: null, forbidden: false }
-        : transformValueField(
-            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
-            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
-            'timelineDateRevisions',
-            hasPermission =>
-              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
-          )),
+      hide: order => {
+        const currentBatch = getCurrentBatch(batch?.id, order);
+        return (currentBatch?.shipment?.containerCount ?? 0) > 0;
+      },
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+        batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+        'timelineDateRevisions',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+      ),
     },
     {
       columnKey: 'order.orderItem.batch.shipment.containerGroup.warehouseArrival.assignedTo',
@@ -2048,28 +2048,32 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
           Boolean
         );
       },
-      ...(batch?.shipment?.containerCount
-        ? { entity: null, data: null, forbidden: false }
-        : transformValueField(
-            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
-            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
-            'assignedTo',
-            hasPermission =>
-              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
-          )),
+      hide: order => {
+        const currentBatch = getCurrentBatch(batch?.id, order);
+        return (currentBatch?.shipment?.containerCount ?? 0) > 0;
+      },
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+        batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+        'assignedTo',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
+      ),
     },
     {
       columnKey: 'order.orderItem.batch.shipment.containerGroup.warehouseArrival.approved',
       type: 'approval',
-      ...(batch?.shipment?.containerCount
-        ? { entity: null, data: null, forbidden: false }
-        : transformValueField(
-            `${basePath}.shipment.containerGroups.0.warehouseArrival`,
-            batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
-            'approved',
-            hasPermission =>
-              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
-          )),
+      hide: order => {
+        const currentBatch = getCurrentBatch(batch?.id, order);
+        return (currentBatch?.shipment?.containerCount ?? 0) > 0;
+      },
+      ...transformValueField(
+        `${basePath}.shipment.containerGroups.0.warehouseArrival`,
+        batch?.shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+        'approved',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
     },
     {
       columnKey: 'order.orderItem.batch.shipment.containerGroup.deliveryReady.date',

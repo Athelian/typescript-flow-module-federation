@@ -16,6 +16,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 110,
+    sort: {
+      name: 'createdAt',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.updated',
@@ -23,6 +27,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 110,
+    sort: {
+      name: 'updatedAt',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.archived',
@@ -37,6 +45,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 200,
+    sort: {
+      name: 'no',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.importer',
@@ -73,6 +85,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 200,
+    sort: {
+      name: 'blNo',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.blDate',
@@ -172,6 +188,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'cargoReady',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.cargoReady.timelineDateRevisions',
@@ -207,6 +227,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'loadPortDeparture',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.voyage.0.departure.timelineDateRevisions',
@@ -256,6 +280,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'firstTransitPortArrival',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.voyage.0.firstTransitArrival.timelineDateRevisions',
@@ -285,6 +313,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'firstTransitPortDeparture',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.voyage.1.firstTransitDeparture.timelineDateRevisions',
@@ -334,6 +366,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'secondTransitPortArrival',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.voyage.1.secondTransitArrival.timelineDateRevisions',
@@ -362,6 +398,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'secondTransitPortDeparture',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.voyage.2.secondTransitDeparture.timelineDateRevisions',
@@ -411,6 +451,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'dischargePortArrival',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.voyage.2.arrival.timelineDateRevisions',
@@ -439,6 +483,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'customClearance',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.containerGroup.customClearance.timelineDateRevisions',
@@ -474,6 +522,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'warehouseArrival',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.containerGroup.warehouseArrival.timelineDateRevisions',
@@ -502,6 +554,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'deliveryReady',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.containerGroup.deliveryReady.timelineDateRevisions',
@@ -554,6 +610,12 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 110,
+    sort: {
+      local: true,
+      default: true,
+      name: 'createdAt',
+      group: 'container',
+    },
   },
   {
     key: 'shipment.container.updated',
@@ -561,6 +623,11 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 110,
+    sort: {
+      local: true,
+      name: 'updatedAt',
+      group: 'container',
+    },
   },
   {
     key: 'shipment.container.archived',
@@ -575,6 +642,11 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 200,
+    sort: {
+      local: true,
+      name: 'no',
+      group: 'container',
+    },
   },
   {
     key: 'shipment.container.containerType',
@@ -582,6 +654,11 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 100,
+    sort: {
+      local: true,
+      name: 'containerType',
+      group: 'container',
+    },
   },
   {
     key: 'shipment.container.containerOption',
@@ -596,6 +673,11 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 170,
+    sort: {
+      local: true,
+      name: 'warehouseArrivalAgreedDate',
+      group: 'container',
+    },
   },
   {
     key: 'shipment.container.warehouseArrivalAgreedDateAssignedTo',
@@ -617,6 +699,11 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 170,
+    sort: {
+      local: true,
+      name: 'warehouseArrivalActualDate',
+      group: 'container',
+    },
   },
   {
     key: 'shipment.container.warehouseArrivalActualDateAssignedTo',
@@ -652,6 +739,11 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 195,
+    sort: {
+      local: true,
+      name: 'freeTimeStartDate',
+      group: 'container',
+    },
   },
   {
     key: 'shipment.container.freeTimeDuration',
@@ -673,6 +765,11 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 200,
+    sort: {
+      local: true,
+      name: 'yardName',
+      group: 'container',
+    },
   },
   {
     key: 'shipment.container.departureDate',
@@ -680,6 +777,11 @@ const containerColumns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: 125,
+    sort: {
+      local: true,
+      name: 'departureDate',
+      group: 'container',
+    },
   },
   {
     key: 'shipment.container.departureDateAssignedTo',
@@ -731,6 +833,12 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 110,
+    sort: {
+      local: true,
+      default: true,
+      name: 'createdAt',
+      group: 'batch',
+    },
   },
   {
     key: 'shipment.container.batch.updated',
@@ -738,6 +846,11 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 110,
+    sort: {
+      local: true,
+      name: 'updatedAt',
+      group: 'batch',
+    },
   },
   {
     key: 'shipment.container.batch.archived',
@@ -752,6 +865,11 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
+    sort: {
+      local: true,
+      name: 'no',
+      group: 'batch',
+    },
   },
   {
     key: 'shipment.container.batch.deliveredAt',
@@ -759,6 +877,11 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 125,
+    sort: {
+      local: true,
+      name: 'deliveredAt',
+      group: 'batch',
+    },
   },
   {
     key: 'shipment.container.batch.desiredAt',
@@ -766,6 +889,11 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 125,
+    sort: {
+      local: true,
+      name: 'desiredAt',
+      group: 'batch',
+    },
   },
   {
     key: 'shipment.container.batch.expiredAt',
@@ -773,6 +901,11 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 125,
+    sort: {
+      local: true,
+      name: 'expiredAt',
+      group: 'batch',
+    },
   },
   {
     key: 'shipment.container.batch.producedAt',
@@ -780,6 +913,11 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 125,
+    sort: {
+      local: true,
+      name: 'producedAt',
+      group: 'batch',
+    },
   },
   {
     key: 'shipment.container.batch.tags',
@@ -808,6 +946,11 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
+    sort: {
+      local: true,
+      name: 'quantity',
+      group: 'batch',
+    },
   },
   {
     key: 'shipment.container.batch.quantityRevisions',
@@ -822,6 +965,11 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
+    sort: {
+      local: true,
+      name: 'packageName',
+      group: 'batch',
+    },
   },
   {
     key: 'shipment.container.batch.packageCapacity',
@@ -829,6 +977,11 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
+    sort: {
+      local: true,
+      name: 'packageCapacity',
+      group: 'batch',
+    },
   },
   {
     key: 'shipment.container.batch.packageQuantity',
@@ -836,6 +989,11 @@ const batchColumns: Array<ColumnConfig> = [
     icon: 'BATCH',
     color: colors.BATCH,
     width: 250,
+    sort: {
+      local: true,
+      name: 'packageQuantity',
+      group: 'batch',
+    },
   },
   {
     key: 'shipment.container.batch.packageGrossWeight',

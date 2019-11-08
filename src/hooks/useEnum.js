@@ -16,21 +16,23 @@ export default function useEnum(enumName: ?string): { enums: Array<Enum>, loadin
   React.useEffect(() => {
     setEnums([]);
     if (!enumName) {
-      return;
+      return () => {};
     }
 
     setLoading(true);
 
-    client
-      .query({
+    const watchedQuery = client
+      .watchQuery({
         query: enumQuery,
         variables: { enum: enumName },
         fetchPolicy: 'cache-first',
       })
-      .then(({ data }) => {
+      .subscribe(({ data }: { data: Object }) => {
         setEnums(data?.__type?.enumValues ?? []);
         setLoading(false);
       });
+
+    return () => watchedQuery.unsubscribe();
   }, [client, enumName]);
 
   return {

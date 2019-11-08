@@ -19353,7 +19353,11 @@ export const ExportTypeValues = Object.freeze({
   /** Project */
   Project: 'Project', 
   /** Projects */
-  Projects: 'Projects'
+  Projects: 'Projects', 
+  /** Batch */
+  Batch: 'Batch', 
+  /** Batches */
+  Batches: 'Batches'
 });
 
 
@@ -20356,7 +20360,11 @@ export const MaskEditTypeValues = Object.freeze({
   /** OrderSheet */
   OrderSheet: 'OrderSheet', 
   /** ShipmentSheet */
-  ShipmentSheet: 'ShipmentSheet'
+  ShipmentSheet: 'ShipmentSheet', 
+  /** BatchSheet */
+  BatchSheet: 'BatchSheet', 
+  /** ProjectSheet */
+  ProjectSheet: 'ProjectSheet'
 });
 
 
@@ -22492,6 +22500,9 @@ export type Query = {|
   batch: BatchPayload,
   batches: BatchPayloadPaginatedSearch,
   batchesByIDs: Array<BatchPayload>,
+  batchExport: ExportPayload,
+  batchesExport: ExportPayload,
+  batchesByIDsExport: ExportPayload,
   batchesTable: Array<BatchPayload>,
   batchQuantityRevision: BatchQuantityRevisionPayload,
   batchQuantityRevisionsByIDs: Array<BatchQuantityRevisionPayload>,
@@ -22743,6 +22754,31 @@ export type QueryBatchesArgs = {|
 
 export type QueryBatchesByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
+|};
+
+
+export type QueryBatchExportArgs = {|
+  id: $ElementType<Scalars, 'ID'>,
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
+|};
+
+
+export type QueryBatchesExportArgs = {|
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>,
+  filterBy?: ?BatchFilterInput,
+  sortBy?: ?BatchSortInput
+|};
+
+
+export type QueryBatchesByIDsExportArgs = {|
+  ids: Array<$ElementType<Scalars, 'ID'>>,
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>
 |};
 
 
