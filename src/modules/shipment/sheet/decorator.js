@@ -1,7 +1,46 @@
 // @flow
 
-export default function decorate(shipments: Array<Object>): Array<Object> {
-  return shipments.map(shipment => ({
+function decorateBatch(batch: Object): Object {
+  return {
+    ...batch,
+    packageQuantity: {
+      value: batch.packageQuantity || 0,
+      auto: batch.autoCalculatePackageQuantity || false,
+    },
+  };
+}
+
+function decorateContainer(container: Object): Object {
+  return {
+    ...container,
+    freeTimeStartDate: {
+      value: container.freeTimeStartDate,
+      auto: container.autoCalculatedFreeTimeStartDate ?? false,
+    },
+    warehouseArrivalAgreedDateApproved: {
+      user: container.warehouseArrivalAgreedDateApprovedBy,
+      date: container.warehouseArrivalAgreedDateApprovedAt,
+    },
+    warehouseArrivalActualDateApproved: {
+      user: container.warehouseArrivalActualDateApprovedBy,
+      date: container.warehouseArrivalActualDateApprovedAt,
+    },
+    departureDateApproved: {
+      user: container.departureDateApprovedBy,
+      date: container.departureDateApprovedAt,
+    },
+    batches: container.batches.map(batch => {
+      if (batch.__typename === 'Batch') {
+        return decorateBatch(batch);
+      }
+
+      return batch;
+    }),
+  };
+}
+
+function decorateShipment(shipment: Object): Object {
+  return {
     ...shipment,
     cargoReady: {
       ...shipment.cargoReady,
@@ -51,38 +90,23 @@ export default function decorate(shipments: Array<Object>): Array<Object> {
         },
       },
     })),
-    batchesWithoutContainer: shipment.batchesWithoutContainer.map(batch => ({
-      ...batch,
-      packageQuantity: {
-        value: batch.packageQuantity || 0,
-        auto: batch.autoCalculatePackageQuantity || false,
-      },
-    })),
-    containers: shipment.containers.map(container => ({
-      ...container,
-      freeTimeStartDate: {
-        value: container.freeTimeStartDate,
-        auto: container.autoCalculatedFreeTimeStartDate ?? false,
-      },
-      warehouseArrivalAgreedDateApproved: {
-        user: container.warehouseArrivalAgreedDateApprovedBy,
-        date: container.warehouseArrivalAgreedDateApprovedAt,
-      },
-      warehouseArrivalActualDateApproved: {
-        user: container.warehouseArrivalActualDateApprovedBy,
-        date: container.warehouseArrivalActualDateApprovedAt,
-      },
-      departureDateApproved: {
-        user: container.departureDateApprovedBy,
-        date: container.departureDateApprovedAt,
-      },
-      batches: container.batches.map(batch => ({
-        ...batch,
-        packageQuantity: {
-          value: batch.packageQuantity || 0,
-          auto: batch.autoCalculatePackageQuantity || false,
-        },
-      })),
-    })),
-  }));
+    batchesWithoutContainer: shipment.batchesWithoutContainer.map(batch => {
+      if (batch.__typename === 'Batch') {
+        return decorateBatch(batch);
+      }
+
+      return batch;
+    }),
+    containers: shipment.containers.map(decorateContainer),
+  };
+}
+
+export default function decorate(shipments: Array<Object>): Array<Object> {
+  return shipments.map(shipment => {
+    if (shipment.__typename === 'Shipment') {
+      return decorateShipment(shipment);
+    }
+
+    return shipment;
+  });
 }
