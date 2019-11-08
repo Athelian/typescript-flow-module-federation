@@ -21,7 +21,10 @@ const ProjectSheetModule = () => {
   const memoizedHandler = React.useCallback(dispatch => entityEventHandler(client, dispatch), [
     client,
   ]);
-  const getItems = React.useCallback(data => decorate(clone(data?.projects?.nodes ?? [])), []);
+  const getItems = React.useCallback(
+    data => ({ ...data?.projects, nodes: decorate(clone(data?.projects?.nodes ?? [])) }),
+    []
+  );
 
   const {
     initialItems,

@@ -15,7 +15,7 @@ const validator: Object = Yup.object().shape({
     .min(6)
     .oneOf(
       // $FlowFixMe type not support yet
-      [Yup.ref('password'), null],
+      [Yup.ref('newPassword'), null],
       ((
         <FormattedMessage
           id="modules.profile.passwordNotMatch"
