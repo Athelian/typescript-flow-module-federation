@@ -43,7 +43,7 @@ const ProjectListModule = () => {
         {hasPermissions(PROJECT_CREATE) && (
           <>
             {/* $FlowFixMe Flow typed is not updated yet */}
-            <Link to="new">
+            <Link to="/project/new">
               <NewButton />
             </Link>
             <BooleanValue>

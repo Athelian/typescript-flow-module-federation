@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router } from '@reach/router';
+import { Redirect, Router } from '@reach/router';
 import withForbidden from 'hoc/withForbidden';
 import { PROJECT_LIST } from 'modules/permission/constants/project';
 import ProjectListModule from './index.list';
@@ -10,10 +10,12 @@ const ProjectSheetModuleWrapper = withForbidden(ProjectSheetModule, PROJECT_LIST
 
 const ProjectApp = () => (
   <Router>
-    <ProjectListModule path="/" />
+    {/* $FlowFixMe Flow typed is not updated yet */}
+    <Redirect path="/" from="/" to="/project/cards" noThrow />
+    <ProjectListModule path="/cards" />
     <ProjectSheetModuleWrapper path="/table" />
-    <ProjectFormModule path="new" />
-    <ProjectFormModule path=":projectId" />
+    <ProjectFormModule path="/new" />
+    <ProjectFormModule path="/:projectId" />
   </Router>
 );
 
