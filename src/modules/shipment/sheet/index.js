@@ -25,7 +25,10 @@ const ShipmentSheetModule = ({ shipmentIds }: Props) => {
   const memoizedHandler = React.useCallback(dispatch => entityEventHandler(client, dispatch), [
     client,
   ]);
-  const getItems = React.useCallback(data => decorate(clone(data?.shipments?.nodes ?? [])), []);
+  const getItems = React.useCallback(
+    data => ({ ...data?.shipments, nodes: decorate(clone(data?.shipments?.nodes ?? [])) }),
+    []
+  );
 
   const {
     initialItems,
