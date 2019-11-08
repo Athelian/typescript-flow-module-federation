@@ -16,6 +16,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 110,
+    sort: {
+      name: 'createdAt',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.updated',
@@ -23,6 +27,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 110,
+    sort: {
+      name: 'updatedAt',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.archived',
@@ -37,6 +45,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 200,
+    sort: {
+      name: 'no',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.importer',
@@ -73,6 +85,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 200,
+    sort: {
+      name: 'blNo',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.blDate',
@@ -172,6 +188,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'cargoReady',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.cargoReady.timelineDateRevisions',
@@ -207,6 +227,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'loadPortDeparture',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.voyage.0.departure.timelineDateRevisions',
@@ -256,6 +280,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'firstTransitPortArrival',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.voyage.0.firstTransitArrival.timelineDateRevisions',
@@ -285,6 +313,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'firstTransitPortDeparture',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.voyage.1.firstTransitDeparture.timelineDateRevisions',
@@ -334,6 +366,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'secondTransitPortArrival',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.voyage.1.secondTransitArrival.timelineDateRevisions',
@@ -362,6 +398,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'secondTransitPortDeparture',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.voyage.2.secondTransitDeparture.timelineDateRevisions',
@@ -411,6 +451,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'dischargePortArrival',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.voyage.2.arrival.timelineDateRevisions',
@@ -439,6 +483,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'customClearance',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.containerGroup.customClearance.timelineDateRevisions',
@@ -474,6 +522,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'warehouseArrival',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.containerGroup.warehouseArrival.timelineDateRevisions',
@@ -502,6 +554,10 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 125,
+    sort: {
+      name: 'deliveryReady',
+      group: 'shipment',
+    },
   },
   {
     key: 'shipment.containerGroup.deliveryReady.timelineDateRevisions',
