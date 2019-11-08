@@ -24,6 +24,10 @@ export const useSheetLiveFocus = () => {
   const entitiesRef = React.useRef([]);
 
   React.useEffect(() => {
+    entitiesRef.current = [];
+  }, [id]);
+
+  React.useEffect(() => {
     let entity = null;
     let field = null;
 

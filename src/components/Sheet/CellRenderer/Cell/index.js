@@ -65,6 +65,10 @@ const Cell = ({
     return cell.computed(item);
   }, [cell, item]);
 
+  const hidden = React.useMemo(() => {
+    return cell.hide && item ? cell.hide(item) : false;
+  }, [cell, item]);
+
   React.useEffect(() => {
     if (focus && isTop) {
       if (wrapperRef.current) {
@@ -178,7 +182,7 @@ const Cell = ({
           return <Blackout width="100%" height="100%" />;
         }
 
-        if (!cell.entity) {
+        if (!cell.entity || hidden) {
           return <div className={CellPlaceholderStyle} />;
         }
 

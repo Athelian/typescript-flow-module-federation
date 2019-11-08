@@ -50,6 +50,11 @@ function normalizedInput(
           return {
             tagIds: value.map(tag => tag.id),
           };
+        case 'approved':
+          return {
+            approvedById: value?.user?.id ?? null,
+            approvedAt: value?.date ?? null,
+          };
         default:
           return {
             [field]: value,

@@ -20,6 +20,7 @@ import {
 } from 'modules/permission/constants/milestone';
 import {
   TASK_SET_APPROVABLE,
+  TASK_SET_APPROVED,
   TASK_SET_DESCRIPTION,
   TASK_SET_NAME,
   TASK_SET_TAGS,
@@ -300,7 +301,20 @@ function transformTask(basePath: string, task: Object): Array<CellValue> {
         hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_APPROVABLE)
       ),
     },
-    // approved
+    {
+      columnKey: 'project.milestone.task.approved',
+      type: 'approval',
+      hide: project => {
+        const currentTask = getCurrentTask(task?.id, project);
+        return !(currentTask?.approvable ?? true);
+      },
+      ...transformValueField(
+        basePath,
+        task,
+        'approved',
+        hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_APPROVED)
+      ),
+    },
     // approvers
     {
       columnKey: 'project.milestone.task.tags',
