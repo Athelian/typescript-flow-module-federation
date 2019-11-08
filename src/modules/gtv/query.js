@@ -13,6 +13,7 @@ import {
   taskFormInTemplateFragment,
 } from 'graphql';
 import {
+  orderSheetFragment,
   batchSheetFragment,
   containerSheetFragment,
   orderItemSheetFragment,
@@ -219,4 +220,31 @@ export const tagsByIDsQuery = gql`
   }
 
   ${tagFragment}
+`;
+
+export const orderByIDQuery = gql`
+  query orderByIDQuery($id: ID!) {
+    order(id: $id) {
+      ...orderSheetFragment
+      ... on Order {
+        orderItems {
+          ... on OrderItem {
+            id
+          }
+        }
+      }
+    }
+  }
+
+  ${orderSheetFragment}
+  ${partnerNameFragment}
+  ${userAvatarFragment}
+  ${documentFragment}
+  ${tagFragment}
+  ${taskWithoutParentInfoFragment}
+  ${taskTemplateCardFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskFormInTemplateFragment}
+  ${forbiddenFragment}
 `;
