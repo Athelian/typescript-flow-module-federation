@@ -89,22 +89,21 @@ function replaceBatch({
   field: string,
   data: mixed,
   batches: Array<Batch>,
-  dispatch: Function,
+  dispatch: Action => void,
 }) {
-  batches.forEach((batch, batchIdx) => {
-    if (batch.id === batchId) {
-      dispatch({
-        type: Actions.REPLACE_ITEM,
-        payload: {
-          item: {
-            ...batch,
-            [field]: data,
-          },
-          index: batchIdx,
+  const batchIdx = batches.findIndex(({ id }) => batchId === id);
+  if (batchIdx >= 0) {
+    dispatch({
+      type: Actions.REPLACE_ITEM,
+      payload: {
+        item: {
+          ...batches[batchIdx],
+          [field]: data,
         },
-      });
-    }
-  });
+        index: batchIdx,
+      },
+    });
+  }
 }
 
 function onUpdateBatchContainerFactory(client: ApolloClient<any>, dispatch: Action => void) {
@@ -248,6 +247,31 @@ function onUpdateBatchOrderItemOrderFactory(client: ApolloClient<any>, dispatch:
   };
 }
 
+function onDeleteBatchFactory(dispatch: Action => void) {
+  return (batchId: string) => {
+    dispatch({
+      type: Actions.PRE_REMOVE_ENTITY,
+      payload: {
+        entity: {
+          id: batchId,
+          type: 'Batch',
+        },
+        callback: (batches: Array<Batch>) => {
+          const batchIdx = batches.findIndex(({ id }) => id === batchId);
+          if (batchIdx === -1) {
+            return null;
+          }
+
+          return {
+            item: null,
+            index: batchIdx,
+          };
+        },
+      },
+    });
+  };
+}
+
 function isBelongToShipment(shipment: Object, timelineDateId: string) {
   if (
     shipment.cargoReady.id === timelineDateId ||
@@ -273,12 +297,12 @@ export default function entityEventHandler(
   const onBatchQuantityRevision = onBatchQuantityRevisionFactory(client, dispatch);
   const onUpdateBatchContainer = onUpdateBatchContainerFactory(client, dispatch);
   const onUpdateBatchShipment = onUpdateBatchShipmentFactory(client, dispatch);
+  const onDeleteBatch = onDeleteBatchFactory(dispatch);
 
   return async (event: EntityEvent, batches: Array<Batch>) => {
     switch (event.lifeCycle) {
       case 'Create':
         switch (event.entity.__typename) {
-          // TODO: batch quantity revision
           default:
             break;
         }
@@ -801,7 +825,9 @@ export default function entityEventHandler(
       }
       case 'Delete':
         switch (event.entity.__typename) {
-          // TODO: remove the whole row when delete a batch
+          case 'Batch':
+            onDeleteBatch(event.entity.id);
+            break;
           default:
             break;
         }

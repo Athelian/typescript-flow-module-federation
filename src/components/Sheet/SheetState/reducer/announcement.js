@@ -1,6 +1,6 @@
 // @flow
 import type { Area, CellValue, State, ColumnSort } from 'components/Sheet/SheetState/types';
-import { replaceItem } from './mutate';
+import { replaceItem, deleteItem } from './mutate';
 
 function isOverlap(a: Area, b: Area) {
   return a.from.x <= b.from.x && a.from.y <= b.from.y && a.to.x >= b.to.x && a.to.y >= b.to.y;
@@ -189,8 +189,9 @@ export function postRemoveEntity(
     if (!item) {
       return state;
     }
-
-    const newState = replaceItem(transformer, sorter)(state, item);
+    const newState = item.item
+      ? replaceItem(transformer, sorter)(state, item)
+      : deleteItem(transformer, sorter)(state, item);
 
     return {
       ...newState,
