@@ -101,16 +101,16 @@ const menu: Array<MenuConfig> = [
     permitted: hasPermissions => hasPermissions(BATCH_LIST),
     submenu: [
       {
-        label: <FormattedMessage {...messages.cards} />,
-        icon: 'CARDS',
-        path: 'cards',
-      },
-      {
         label: <FormattedMessage {...messages.table} />,
         icon: 'TABLE',
         path: 'table',
         beta: true,
         hidden: !isEnableBetaFeature,
+      },
+      {
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
       },
     ],
   },
@@ -152,17 +152,16 @@ const menu: Array<MenuConfig> = [
     permitted: hasPermissions => hasPermissions([PRODUCT_LIST, RM_PRODUCT_FOCUS_LIST]),
     submenu: [
       {
-        label: <FormattedMessage {...messages.cards} />,
-        icon: 'PRODUCT',
-        path: 'product',
-        overrideFullPath: 'product',
-        permitted: hasPermissions => hasPermissions(PRODUCT_LIST),
-      },
-      {
         label: <FormattedMessage {...messages.relationMap} />,
-        icon: 'MAP',
+        icon: 'RELATION_MAP',
         path: 'relation-map',
         permitted: hasPermissions => hasPermissions(RM_PRODUCT_FOCUS_LIST),
+      },
+      {
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
+        permitted: hasPermissions => hasPermissions(PRODUCT_LIST),
       },
     ],
   },

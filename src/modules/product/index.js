@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Provider } from 'unstated';
-import { Router } from '@reach/router';
+import { Redirect, Router } from '@reach/router';
 import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
 import { RM_PRODUCT_FOCUS_LIST } from 'modules/permission/constants/relationMap';
@@ -18,7 +18,8 @@ const ProductModuleMapWrapper = withForbidden(BatchFocusedModule, RM_PRODUCT_FOC
 const ProductApp = () => (
   <Provider>
     <Router>
-      <ProductModuleListWrapper path="/" />
+      <Redirect path="/" from="/" to="/product/cards" noThrow />
+      <ProductModuleListWrapper path="/cards" />
       <ProductFormModuleCreationWrapper path="new" />
       <ProductModuleMapWrapper path="relation-map" />
       <ProductFormModuleCreationWrapper path="clone/:productId" />
