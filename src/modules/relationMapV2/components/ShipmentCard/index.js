@@ -192,12 +192,12 @@ export default function ShipmentCard({
   }
 
   // TODO: Replace with real permissions
-  const canViewNo = true;
-  const canViewTags = true;
-  const canViewPlace = true;
-  const canViewTimeline = true;
-  const canViewDate = true;
-  const canViewTasks = true;
+  const canViewNo = false;
+  const canViewTags = false;
+  const canViewPlace = false;
+  const canViewTimeline = false;
+  const canViewDate = false;
+  const canViewTasks = false;
 
   return (
     <div className={ShipmentCardWrapperStyle(selectors.isShipmentFocus)}>
@@ -218,7 +218,7 @@ export default function ShipmentCard({
           <Label width="55px">
             <FormattedMessage id="components.cards.place" defaultMessage="PLACE" />
           </Label>
-          <Display blackout={!canViewPlace} width={selectors.isShipmentFocus ? '235px' : '130px'}>
+          <Display blackout={!canViewPlace} width={selectors.isShipmentFocus ? '240px' : '130px'}>
             {place}
           </Display>
         </div>
@@ -260,7 +260,7 @@ export default function ShipmentCard({
               </div>
             </>
           ) : (
-            <Blackout width={selectors.isShipmentFocus ? '235px' : '130px'} />
+            <Blackout width={selectors.isShipmentFocus ? '240px' : '130px'} />
           )}
         </div>
 

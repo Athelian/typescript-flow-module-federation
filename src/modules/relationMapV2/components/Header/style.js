@@ -46,7 +46,7 @@ export const TitleWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 135px;
+  width: 140px;
 `;
 
 export const CreateNewTitleWrapperStyle = (canAdd: boolean) => css`
