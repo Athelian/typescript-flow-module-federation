@@ -22,6 +22,10 @@ export default defineMessages({
     id: 'components.Sheet.columnsConfigSelectTemplate',
     defaultMessage: 'Select template',
   },
+  columnsConfigSaveAsNew: {
+    id: 'components.Sheet.columnsConfigSaveAsNew',
+    defaultMessage: 'Save as new template',
+  },
   addedAnnouncement: {
     id: 'components.Sheet.addedAnnouncement',
     defaultMessage: 'Added',

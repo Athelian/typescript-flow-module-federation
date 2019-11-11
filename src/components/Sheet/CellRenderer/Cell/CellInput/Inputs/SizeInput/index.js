@@ -45,12 +45,12 @@ const SizeInput = ({
       <hr className={SeparatorStyle} />
       <div className={SideStyle}>
         <MetricValueInput.Length
-          value={value?.length}
+          value={value?.height}
           readonly={readonly}
           focus={false}
           context={null}
           extra={null}
-          onChange={handleChange('length')}
+          onChange={handleChange('height')}
           forceFocus={forceFocus}
           forceBlur={forceBlur}
         />
@@ -58,12 +58,12 @@ const SizeInput = ({
       <hr className={SeparatorStyle} />
       <div className={SideStyle}>
         <MetricValueInput.Length
-          value={value?.height}
+          value={value?.length}
           readonly={readonly}
           focus={false}
           context={null}
           extra={null}
-          onChange={handleChange('height')}
+          onChange={handleChange('length')}
           forceFocus={forceFocus}
           forceBlur={forceBlur}
         />

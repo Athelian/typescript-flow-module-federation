@@ -34,7 +34,7 @@ const ProjectListModule = () => {
   return (
     <Content>
       <NavBar>
-        <EntityIcon icon="PROJECT" color="PROJECT" />
+        <EntityIcon icon="PROJECT" color="PROJECT" subIcon="CARDS" />
 
         <Filter config={ProjectFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />

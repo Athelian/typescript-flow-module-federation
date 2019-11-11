@@ -38,14 +38,19 @@ export const ButtonsWrapperStyle: string = css`
 `;
 
 export const TemplateWrapperStyle: string = css`
-  ${layout.GRID_HORIZONTAL};
-  ${layout.CENTER};
+  display: flex;
+  align-items: center;
   ${shadows.HEADER};
-  background-color: ${colors.ALMOST_WHITE};
+  background-color: ${colors.GRAY_VERY_LIGHT};
   position: sticky;
   height: 50px;
   padding: 10px 20px;
-  grid-gap: 20px;
+  justify-content: space-between;
+`;
+
+export const TemplateSelectWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 15px;
 `;
 
 export const SelectTemplateStyle: string = css`
