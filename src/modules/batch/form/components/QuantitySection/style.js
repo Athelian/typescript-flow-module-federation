@@ -22,12 +22,6 @@ export const InitialQuantityStyle: string = css`
   line-height: 30px;
 `;
 
-export const AddAdjustmentButtonWrapperStyle: string = css`
-  display: flex;
-  justify-content: flex-end;
-  width: 410px;
-`;
-
 export const CurrentQuantityStyle: string = css`
   ${fontSizes.HUGE};
   color: ${colors.BLACK};
@@ -36,14 +30,4 @@ export const CurrentQuantityStyle: string = css`
   font-weight: bold;
   min-width: 200px;
   text-align: right;
-`;
-
-export const QuantityRevisionItemStyle: string = css`
-  position: relative;
-`;
-
-export const QuantityRevisionDiffStyle: string = css`
-  position: absolute;
-  left: calc(100% + 30px);
-  top: 0;
 `;

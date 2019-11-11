@@ -117,16 +117,6 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
     });
   };
 
-  removeBatchQuantityRevisionByIndex = (index: number) => {
-    this.setState(prevState => {
-      const batchQuantityRevisions = cloneDeep(prevState.batchQuantityRevisions);
-      batchQuantityRevisions.splice(index, 1);
-      return {
-        batchQuantityRevisions,
-      };
-    });
-  };
-
   syncPackaging = (pkg: ProductProviderPackagePayload) => {
     this.setState(prevState =>
       update(prevState, {
