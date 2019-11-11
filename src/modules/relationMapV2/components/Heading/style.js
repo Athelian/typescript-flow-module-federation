@@ -50,7 +50,7 @@ export const LeftWrapperStyle: string = css`
   grid-template-rows: 20px 20px;
   grid-gap: 5px;
   padding: 5px;
-  grid-template-columns: 135px;
+  grid-template-columns: 140px;
 `;
 
 export const TotalWrapperStyle: string = css`

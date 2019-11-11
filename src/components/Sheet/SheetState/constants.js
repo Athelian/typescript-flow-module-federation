@@ -9,6 +9,7 @@ export const Actions = {
   CELL_UPDATE: 'cell_update',
   CHANGE_VALUES: 'change_values',
   REPLACE_ITEM: 'replace_item',
+  REPLACE_ITEMS: 'replace_items',
   DELETE_ITEM: 'delete_item',
   SET_ERROR: 'set_error',
   CLEAR_ERROR: 'clear_error',

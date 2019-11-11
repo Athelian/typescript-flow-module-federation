@@ -1,5 +1,6 @@
 // @flow
 import ApolloClient from 'apollo-client';
+import type { Batch, Shipment } from 'generated/graphql';
 import { removeTypename, parseTodoField } from 'utils/data';
 import {
   batchMutation,
@@ -20,66 +21,67 @@ const mutations = {
   ContainerGroup: shipmentMutation,
 };
 
-function getShipmentByTimelineDateId(timelineDateId: string, item: Object): Object {
-  return item.orderItems
-    .map(i => i.batches)
-    .flat()
-    .filter(b => !!b.shipment)
-    .map(b => b.shipment)
-    .find(shipment => {
-      if (
-        shipment.cargoReady.id === timelineDateId ||
-        shipment.containerGroups[0].customClearance.id === timelineDateId ||
-        shipment.containerGroups[0].warehouseArrival.id === timelineDateId ||
-        shipment.containerGroups[0].deliveryReady.id === timelineDateId
-      ) {
-        return true;
-      }
+function getShipmentByTimelineDateId(timelineDateId: string, batch: Batch): ?Shipment {
+  const { shipment } = batch;
+  if (!shipment) return null;
 
-      return !!shipment.voyages.find(
-        voyage => voyage.departure.id === timelineDateId || voyage.arrival.id === timelineDateId
-      );
-    });
+  if (
+    shipment.cargoReady.id === timelineDateId ||
+    shipment.containerGroups[0].customClearance.id === timelineDateId ||
+    shipment.containerGroups[0].warehouseArrival.id === timelineDateId ||
+    shipment.containerGroups[0].deliveryReady.id === timelineDateId
+  ) {
+    return shipment;
+  }
+
+  if (
+    shipment.voyages.find(
+      voyage => voyage.departure.id === timelineDateId || voyage.arrival.id === timelineDateId
+    )
+  )
+    return shipment;
+
+  return null;
 }
 
-function getShipmentByVoyageId(voyageId: string, item: Object): Object {
-  return item.orderItems
-    .map(i => i.batches)
-    .flat()
-    .filter(b => !!b.shipment)
-    .map(b => b.shipment)
-    .find(shipment => !!shipment.voyages.find(voyage => voyage.id === voyageId));
+function getShipmentByVoyageId(voyageId: string, batch: Batch): ?Shipment {
+  const { shipment } = batch;
+  if (!shipment) return null;
+
+  if (shipment.voyages.find(voyage => voyage.id === voyageId)) return shipment;
+
+  return null;
 }
 
-function getShipmentByContainerGroupId(containerGroupId: string, item: Object): Object {
-  return item.orderItems
-    .map(i => i.batches)
-    .flat()
-    .filter(b => !!b.shipment)
-    .map(b => b.shipment)
-    .find(shipment => !!shipment.containerGroups.find(cg => cg.id === containerGroupId));
+function getShipmentByContainerGroupId(containerGroupId: string, batch: Batch): ?Shipment {
+  const { shipment } = batch;
+  if (!shipment) return null;
+
+  if (shipment.containerGroups.find(cg => cg.id === containerGroupId)) return shipment;
+
+  return null;
 }
 
-function getEntityId(entity: Object, item: Object): string {
+function getEntityId(entity: Object, batch: Batch): string {
   switch (entity.type) {
     case 'TimelineDate': {
-      const shipment = getShipmentByTimelineDateId(entity.id, item);
-      return shipment.id;
+      const shipment = getShipmentByTimelineDateId(entity.id, batch);
+      return shipment?.id ?? '';
     }
     case 'Voyage': {
-      const shipment = getShipmentByVoyageId(entity.id, item);
-      return shipment.id;
+      const shipment = getShipmentByVoyageId(entity.id, batch);
+      return shipment?.id ?? '';
     }
     case 'ContainerGroup': {
-      const shipment = getShipmentByContainerGroupId(entity.id, item);
-      return shipment.id;
+      const shipment = getShipmentByContainerGroupId(entity.id, batch);
+      return shipment?.id ?? '';
     }
     default:
       return entity.id;
   }
 }
 
-function normalizedInput(entity: Object, field: string, value: any, item: Object): Object {
+function normalizedInput(entity: Object, field: string, value: any, batch: Batch): Object {
   switch (entity.type) {
     case 'Order':
       switch (field) {
@@ -123,10 +125,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
           };
         case 'deliveryDate':
           return {
-            /* $FlowFixMe This comment suppresses an error found when upgrading
-             * Flow to v0.111.0. To view the error, delete this comment and run
-             * Flow. */
-            [field]: new Date(value),
+            deliveryDate: new Date(value),
           };
         case 'tags':
           return {
@@ -152,14 +151,11 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'deliveredAt':
         case 'producedAt':
           return {
-            /* $FlowFixMe This comment suppresses an error found when upgrading
-             * Flow to v0.111.0. To view the error, delete this comment and run
-             * Flow. */
-            [field]: new Date(value),
+            [(field: string)]: new Date(value),
           };
         case 'batchQuantityRevisions':
           return {
-            batchQuantityRevisions: value.map(({ sort, batch, ...revision }) =>
+            batchQuantityRevisions: value.map(({ sort, batch: currentBatch, ...revision }) =>
               removeTypename(revision)
             ),
           };
@@ -278,7 +274,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
       }
     }
     case 'Voyage': {
-      const shipment = getShipmentByVoyageId(entity.id, item);
+      const shipment = getShipmentByVoyageId(entity.id, batch);
       if (!shipment) {
         return {};
       }
@@ -322,7 +318,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
       };
     }
     case 'ContainerGroup': {
-      const shipment = getShipmentByContainerGroupId(entity.id, item);
+      const shipment = getShipmentByContainerGroupId(entity.id, batch);
       if (!shipment) {
         return {};
       }
@@ -349,7 +345,7 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
       };
     }
     case 'TimelineDate': {
-      const shipment = getShipmentByTimelineDateId(entity.id, item);
+      const shipment = getShipmentByTimelineDateId(entity.id, batch);
       if (!shipment) {
         return {};
       }

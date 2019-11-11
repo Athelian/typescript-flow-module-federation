@@ -602,7 +602,7 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
     },
     {
       columnKey: 'order.exporter',
-      type: 'exporter',
+      type: 'partner',
       ...transformReadonlyField(basePath, order, 'exporter', order?.exporter ?? null),
     },
     {

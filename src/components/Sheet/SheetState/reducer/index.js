@@ -17,7 +17,7 @@ import {
 } from './foreign-focus';
 import { clearError, setError } from './error';
 import { blur, focus, focusDown, focusLeft, focusRight, focusUp } from './focus';
-import { cellUpdate, changeValues, deleteItem, replaceItem } from './mutate';
+import { cellUpdate, changeValues, deleteItem, replaceItem, replaceItems } from './mutate';
 import { postAddEntity, postRemoveEntity, preAddEntity, preRemoveEntity } from './announcement';
 import { hover, unhover } from './hover';
 
@@ -71,6 +71,8 @@ export default function cellReducer(
         return changeValues(state, getPayload(action));
       case Actions.REPLACE_ITEM:
         return replaceItem(transformer, sorter)(state, getPayload(action));
+      case Actions.REPLACE_ITEMS:
+        return replaceItems(transformer, sorter)(state, getPayload(action));
       case Actions.DELETE_ITEM:
         return deleteItem(transformer, sorter)(state, getPayload(action));
       case Actions.SET_ERROR:

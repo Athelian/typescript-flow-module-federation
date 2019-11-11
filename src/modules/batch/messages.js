@@ -155,6 +155,10 @@ export default defineMessages({
     id: 'components.BatchItem.packageSize',
     defaultMessage: 'PACKAGE SIZE (m)',
   },
+  packageSizeGrouped: {
+    id: 'components.BatchItem.packageSizeGrouped',
+    defaultMessage: 'PACKAGE SIZE (L x H x D)',
+  },
   productName: {
     id: 'components.BatchItem.productName',
     defaultMessage: 'Product Name',
