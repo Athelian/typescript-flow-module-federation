@@ -6,7 +6,7 @@ export const WrapperStyle = css`
   position: relative;
   overflow: hidden;
   width: 25px;
-  height: 25px;
+  height: 20px;
 `;
 
 export const CornerIconStyle = (color: string) => css`

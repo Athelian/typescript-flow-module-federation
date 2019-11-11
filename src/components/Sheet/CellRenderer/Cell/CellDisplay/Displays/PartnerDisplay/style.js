@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, presets, fontSizes, shadows, borderRadiuses, transitions } from 'styles/common';
+import { colors, presets, fontSizes, shadows, borderRadiuses } from 'styles/common';
 
 export const PartnerSelectorCardStyle: string = css`
   background-color: ${colors.WHITE};
@@ -11,12 +11,7 @@ export const PartnerSelectorCardStyle: string = css`
   width: 100%;
   min-width: 40px;
   height: 20px;
-  ${transitions.MAIN};
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  &:hover,
-  :focus {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  }
 `;
 
 export const CornerIconStyle: string = css`
