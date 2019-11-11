@@ -630,6 +630,14 @@ export default function entityEventHandler(
           case 'Container': {
             changes = await mapAsync(changes, change => {
               switch (change.field) {
+                case 'containerOption':
+                  return {
+                    ...change,
+                    new: {
+                      string: change.new?.int === 1 ? 'Hanger' : '',
+                      __typename: 'StringValue',
+                    },
+                  };
                 case 'warehouseArrivalAgreedDateApprovedBy':
                 case 'warehouseArrivalActualDateApprovedBy':
                 case 'departureDateApprovedBy':
