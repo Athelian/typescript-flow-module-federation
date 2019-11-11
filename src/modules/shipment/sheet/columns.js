@@ -1011,7 +1011,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   {
     key: 'shipment.container.batch.packageSize',
-    title: <FormattedMessage {...batchMessages.packageSize} />,
+    title: <FormattedMessage {...batchMessages.packageSizeGrouped} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 280,
