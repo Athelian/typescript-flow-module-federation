@@ -13,6 +13,32 @@ import validator from 'modules/batch/form/validator';
 import CurrentQuantity from './CurrentQuantity';
 import { QuantitySectionWrapperStyle } from './style';
 
+const findActiveQuantityField = ({
+  producedQuantity,
+  preShippedQuantity,
+  shippedQuantity,
+  postShippedQuantity,
+  deliveredQuantity,
+}: {
+  producedQuantity: ?number,
+  preShippedQuantity: ?number,
+  shippedQuantity: ?number,
+  postShippedQuantity: ?number,
+  deliveredQuantity: ?number,
+}) => {
+  if (deliveredQuantity) return 'deliveredQuantity';
+
+  if (postShippedQuantity) return 'postShippedQuantity';
+
+  if (shippedQuantity) return 'shippedQuantity';
+
+  if (preShippedQuantity) return 'preShippedQuantity';
+
+  if (producedQuantity) return 'producedQuantity';
+
+  return 'quantity';
+};
+
 const QuantitySection = () => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
@@ -30,8 +56,22 @@ const QuantitySection = () => {
               {({ originalValues, state, setFieldArrayValue, calculatePackageQuantity }) => {
                 const values = { ...originalValues, ...state };
 
-                const { quantity } = values;
+                const {
+                  quantity,
+                  producedQuantity,
+                  preShippedQuantity,
+                  shippedQuantity,
+                  postShippedQuantity,
+                  deliveredQuantity,
+                } = values;
 
+                const activeQuantity = findActiveQuantityField({
+                  producedQuantity,
+                  preShippedQuantity,
+                  shippedQuantity,
+                  postShippedQuantity,
+                  deliveredQuantity,
+                });
                 return (
                   <GridColumn gap="10px">
                     <FormField
@@ -59,13 +99,15 @@ const QuantitySection = () => {
                             />
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
-                          InputWrapperComponent={CurrentQuantity}
+                          InputWrapperComponent={
+                            activeQuantity === 'quantity' ? CurrentQuantity : React.Fragment
+                          }
                         />
                       )}
                     </FormField>
                     <FormField
-                      name="quantity"
-                      initValue={quantity}
+                      name="producedQuantity"
+                      initValue={producedQuantity}
                       setFieldValue={setFieldArrayValue}
                       values={values}
                       validator={validator}
@@ -73,10 +115,11 @@ const QuantitySection = () => {
                       {({ name, ...inputHandlers }) => (
                         <NumberInputFactory
                           name={name}
+                          nullable
                           {...inputHandlers}
                           onBlur={evt => {
                             inputHandlers.onBlur(evt);
-                            setFieldArrayValue('quantity', evt.target.value);
+                            setFieldArrayValue('producedQuantity', evt.target.value);
                             calculatePackageQuantity(setFieldTouched);
                           }}
                           originalValue={originalValues[name]}
@@ -87,12 +130,15 @@ const QuantitySection = () => {
                             />
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
+                          InputWrapperComponent={
+                            activeQuantity === 'producedQuantity' ? CurrentQuantity : React.Fragment
+                          }
                         />
                       )}
                     </FormField>
                     <FormField
-                      name="quantity"
-                      initValue={quantity}
+                      name="preShippedQuantity"
+                      initValue={preShippedQuantity}
                       setFieldValue={setFieldArrayValue}
                       values={values}
                       validator={validator}
@@ -100,10 +146,11 @@ const QuantitySection = () => {
                       {({ name, ...inputHandlers }) => (
                         <NumberInputFactory
                           name={name}
+                          nullable
                           {...inputHandlers}
                           onBlur={evt => {
                             inputHandlers.onBlur(evt);
-                            setFieldArrayValue('quantity', evt.target.value);
+                            setFieldArrayValue('preShippedQuantity', evt.target.value);
                             calculatePackageQuantity(setFieldTouched);
                           }}
                           originalValue={originalValues[name]}
@@ -114,12 +161,17 @@ const QuantitySection = () => {
                             />
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
+                          InputWrapperComponent={
+                            activeQuantity === 'preShippedQuantity'
+                              ? CurrentQuantity
+                              : React.Fragment
+                          }
                         />
                       )}
                     </FormField>
                     <FormField
-                      name="quantity"
-                      initValue={quantity}
+                      name="shippedQuantity"
+                      initValue={shippedQuantity}
                       setFieldValue={setFieldArrayValue}
                       values={values}
                       validator={validator}
@@ -127,10 +179,11 @@ const QuantitySection = () => {
                       {({ name, ...inputHandlers }) => (
                         <NumberInputFactory
                           name={name}
+                          nullable
                           {...inputHandlers}
                           onBlur={evt => {
                             inputHandlers.onBlur(evt);
-                            setFieldArrayValue('quantity', evt.target.value);
+                            setFieldArrayValue('shippedQuantity', evt.target.value);
                             calculatePackageQuantity(setFieldTouched);
                           }}
                           originalValue={originalValues[name]}
@@ -141,12 +194,15 @@ const QuantitySection = () => {
                             />
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
+                          InputWrapperComponent={
+                            activeQuantity === 'shippedQuantity' ? CurrentQuantity : React.Fragment
+                          }
                         />
                       )}
                     </FormField>
                     <FormField
-                      name="quantity"
-                      initValue={quantity}
+                      name="postShippedQuantity"
+                      initValue={postShippedQuantity}
                       setFieldValue={setFieldArrayValue}
                       values={values}
                       validator={validator}
@@ -154,10 +210,11 @@ const QuantitySection = () => {
                       {({ name, ...inputHandlers }) => (
                         <NumberInputFactory
                           name={name}
+                          nullable
                           {...inputHandlers}
                           onBlur={evt => {
                             inputHandlers.onBlur(evt);
-                            setFieldArrayValue('quantity', evt.target.value);
+                            setFieldArrayValue('postShippedQuantity', evt.target.value);
                             calculatePackageQuantity(setFieldTouched);
                           }}
                           originalValue={originalValues[name]}
@@ -168,12 +225,17 @@ const QuantitySection = () => {
                             />
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
+                          InputWrapperComponent={
+                            activeQuantity === 'postShippedQuantity'
+                              ? CurrentQuantity
+                              : React.Fragment
+                          }
                         />
                       )}
                     </FormField>
                     <FormField
-                      name="quantity"
-                      initValue={quantity}
+                      name="deliveredQuantity"
+                      initValue={deliveredQuantity}
                       setFieldValue={setFieldArrayValue}
                       values={values}
                       validator={validator}
@@ -181,10 +243,11 @@ const QuantitySection = () => {
                       {({ name, ...inputHandlers }) => (
                         <NumberInputFactory
                           name={name}
+                          nullable
                           {...inputHandlers}
                           onBlur={evt => {
                             inputHandlers.onBlur(evt);
-                            setFieldArrayValue('quantity', evt.target.value);
+                            setFieldArrayValue('deliveredQuantity', evt.target.value);
                             calculatePackageQuantity(setFieldTouched);
                           }}
                           originalValue={originalValues[name]}
@@ -195,6 +258,11 @@ const QuantitySection = () => {
                             />
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
+                          InputWrapperComponent={
+                            activeQuantity === 'deliveredQuantity'
+                              ? CurrentQuantity
+                              : React.Fragment
+                          }
                         />
                       )}
                     </FormField>

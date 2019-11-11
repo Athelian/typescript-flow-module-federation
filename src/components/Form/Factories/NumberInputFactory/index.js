@@ -132,7 +132,6 @@ const NumberInputFactory = ({
     onBlur,
     onFocus,
     align: inputAlign,
-
     nullable,
   };
   const inputReadOnly = !editable || autoCalculateIsToggled;
