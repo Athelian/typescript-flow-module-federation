@@ -171,7 +171,7 @@ function onUpdateBatchShipmentFactory(client: ApolloClient<any>, dispatch: Actio
         batchId,
         batches,
         dispatch,
-        field: 'container',
+        field: 'shipment',
         data: null,
       });
     }
