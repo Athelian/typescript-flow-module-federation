@@ -21,6 +21,7 @@ import {
   ActionsWrapperStyle,
   ButtonsWrapperStyle,
   TemplateWrapperStyle,
+  TemplateSelectWrapperStyle,
   HeaderStyle,
   TemplateStyle,
   SelectTemplateStyle,
@@ -176,10 +177,10 @@ const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
                   <IconButton
                     onClick={handleGroup}
                     icon="BRING_FORWARD"
-                    textColor="TEAL"
+                    textColor="GRAY_DARK"
                     hoverTextColor="WHITE"
                     backgroundColor="GRAY_SUPER_LIGHT"
-                    hoverBackgroundColor="TEAL"
+                    hoverBackgroundColor="GRAY_LIGHT"
                   />
                 </Tooltip>
               </div>
@@ -190,32 +191,39 @@ const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
             </div>
 
             <div className={TemplateWrapperStyle}>
-              <Label>
-                <FormattedMessage {...messages.columnsConfigSelectTemplate} />
-              </Label>
-              <TemplateSelector onChange={handleTemplateChange} templateType={templateType}>
-                {({ onClick }) =>
-                  template ? (
-                    <button type="button" onClick={onClick} className={TemplateStyle}>
-                      {template.name}
-                      <div>
-                        <CornerIcon icon="TEMPLATE" color={colors.TEMPLATE} />
-                      </div>
-                    </button>
-                  ) : (
-                    <button type="button" onClick={onClick} className={SelectTemplateStyle}>
-                      <Icon icon="ADD" />
-                    </button>
-                  )
-                }
-              </TemplateSelector>
+              <div className={TemplateSelectWrapperStyle}>
+                <Label height="30px" width="min-content">
+                  <FormattedMessage {...messages.columnsConfigSelectTemplate} />
+                </Label>
+                <TemplateSelector onChange={handleTemplateChange} templateType={templateType}>
+                  {({ onClick }) =>
+                    template ? (
+                      <button type="button" onClick={onClick} className={TemplateStyle}>
+                        {template.name}
+                        <div>
+                          <CornerIcon icon="TEMPLATE" color={colors.TEMPLATE} />
+                        </div>
+                      </button>
+                    ) : (
+                      <button type="button" onClick={onClick} className={SelectTemplateStyle}>
+                        <Icon icon="ADD" />
+                      </button>
+                    )
+                  }
+                </TemplateSelector>
+              </div>
 
               <TemplateNew
                 columns={currentColumnKeys}
                 templateType={templateType}
                 onSave={handleTemplateChange}
               >
-                {({ onClick }) => <SaveButton label="Save as" onClick={onClick} />}
+                {({ onClick }) => (
+                  <SaveButton
+                    label={<FormattedMessage {...messages.columnsConfigSaveAsNew} />}
+                    onClick={onClick}
+                  />
+                )}
               </TemplateNew>
             </div>
           </div>
