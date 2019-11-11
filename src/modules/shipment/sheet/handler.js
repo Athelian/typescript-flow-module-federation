@@ -21,6 +21,7 @@ import {
   warehouseByIDQuery,
   orderItemByIDQuery,
   orderByIDQuery,
+  batchByIDQuery,
 } from './query';
 
 // $FlowFixMe not compatible with hook implementation
@@ -65,6 +66,87 @@ function onCreateContainerFactory(client: ApolloClient, dispatch: Action => void
                 item: {
                   ...shipments[shipmentIdx],
                   containers,
+                },
+                index: shipmentIdx,
+              };
+            },
+          },
+        });
+      });
+}
+
+// $FlowFixMe not compatible with hook implementation
+function onCreateBatchFactory(client: ApolloClient, dispatch: Action => void) {
+  return (batchId: string) =>
+    client
+      .query({
+        query: batchByIDQuery,
+        fetchPolicy: 'network-only',
+        variables: {
+          id: batchId,
+        },
+      })
+      .then(({ data }) => {
+        const newBatch = data?.batch;
+        if (newBatch?.__typename !== 'Batch') {
+          return;
+        }
+
+        dispatch({
+          type: Actions.PRE_ADD_ENTITY,
+          payload: {
+            entity: {
+              id: batchId,
+              type: 'Batch',
+            },
+            callback: (shipments: Array<Object>) => {
+              const shipmentId = newBatch.shipment?.id;
+              const containerId = newBatch.container?.id;
+              if (!shipmentId) {
+                return null;
+              }
+
+              const shipmentIdx = shipments.findIndex(shipment => shipment.id === shipmentId);
+              if (shipmentIdx === -1) {
+                return null;
+              }
+
+              if (containerId) {
+                const containerIdx = shipments[shipmentIdx].containers.findIndex(
+                  container => container.id === containerId
+                );
+
+                if (containerIdx === -1) {
+                  return null;
+                }
+
+                const containers = [...shipments[shipmentIdx].containers];
+                const batches = [...containers[containerIdx].batches];
+
+                batches.splice(newBatch.containerSort, 0, newBatch);
+
+                containers[containerIdx] = {
+                  ...containers[containerIdx],
+                  batches,
+                };
+
+                return {
+                  item: {
+                    ...shipments[shipmentIdx],
+                    containers,
+                  },
+                  index: shipmentIdx,
+                };
+              }
+
+              const batches = [...shipments[shipmentIdx].batchesWithoutContainer];
+
+              batches.splice(newBatch.shipmentSort, 0, newBatch);
+
+              return {
+                item: {
+                  ...shipments[shipmentIdx],
+                  batchesWithoutContainer: batches,
                 },
                 index: shipmentIdx,
               };
@@ -391,6 +473,45 @@ function onDeleteContainerFactory(dispatch: Action => void) {
   };
 }
 
+function onDeleteBatchFactory(dispatch: Action => void) {
+  return (batchId: string) => {
+    dispatch({
+      type: Actions.PRE_REMOVE_ENTITY,
+      payload: {
+        entity: {
+          id: batchId,
+          type: 'Batch',
+        },
+        callback: (shipments: Array<Object>) => {
+          const shipmentIdx = shipments.findIndex(
+            shipment =>
+              !!shipment.containers.find(
+                container => !!container.batches.find(batch => batch.id === batchId)
+              ) || !!shipment.batchesWithoutContainer.find(batch => batch.id === batchId)
+          );
+          if (shipmentIdx === -1) {
+            return null;
+          }
+
+          return {
+            item: {
+              ...shipments[shipmentIdx],
+              batchesWithoutContainer: shipments[shipmentIdx].batchesWithoutContainer.filter(
+                batch => batch.id !== batchId
+              ),
+              containers: shipments[shipmentIdx].containers.map(container => ({
+                ...container,
+                batches: container.batches.filter(batch => batch.id !== batchId),
+              })),
+            },
+            index: shipmentIdx,
+          };
+        },
+      },
+    });
+  };
+}
+
 function onDeleteBatchQuantityRevisionFactory(dispatch: Action => void) {
   return (batchQuantityRevisionId: string, items: Array<Object>) =>
     items.every((shipment, shipmentIdx) => {
@@ -466,10 +587,12 @@ export default function entityEventHandler(
   dispatch: Action => void
 ): EntityEventHandler {
   const onCreateContainer = onCreateContainerFactory(client, dispatch);
+  const onCreateBatch = onCreateBatchFactory(client, dispatch);
   const onBatchQuantityRevision = onBatchQuantityRevisionFactory(client, dispatch);
   const onUpdateBatchOrderItem = onUpdateBatchOrderItemFactory(client, dispatch);
   const onUpdateBatchOrderItemOrder = onUpdateBatchOrderItemOrderFactory(client, dispatch);
   const onDeleteContainer = onDeleteContainerFactory(dispatch);
+  const onDeleteBatch = onDeleteBatchFactory(dispatch);
   const onDeleteBatchQuantityRevision = onDeleteBatchQuantityRevisionFactory(dispatch);
 
   return async (event: EntityEvent, shipments: Array<Object>) => {
@@ -480,6 +603,9 @@ export default function entityEventHandler(
             await onCreateContainer(event.entity.id);
             break;
           }
+          case 'Batch':
+            onCreateBatch(event.entity.id);
+            break;
           case 'BatchQuantityRevision': {
             await onBatchQuantityRevision(event.entity.id, shipments);
             break;
@@ -844,7 +970,8 @@ export default function entityEventHandler(
                   return false;
                 case 'container':
                 case 'shipment':
-                  // TODO: handle move batch
+                  onDeleteBatch(event.entity.id);
+                  await onCreateBatch(event.entity.id);
                   return false;
                 default:
                   return true;
@@ -1012,6 +1139,9 @@ export default function entityEventHandler(
         switch (event.entity.__typename) {
           case 'Container':
             onDeleteContainer(event.entity.id);
+            break;
+          case 'Batch':
+            onDeleteBatch(event.entity.id);
             break;
           case 'BatchQuantityRevision':
             onDeleteBatchQuantityRevision(event.entity.id, shipments);
