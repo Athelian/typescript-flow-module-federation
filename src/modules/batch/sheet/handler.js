@@ -91,23 +91,19 @@ function replaceBatch({
   batches: Array<Batch>,
   dispatch: Function,
 }) {
-  batches.every((batch, batchIdx) => {
-    if (batch.id !== batchId) {
-      return true;
-    }
-
-    dispatch({
-      type: Actions.REPLACE_ITEM,
-      payload: {
-        item: {
-          ...batch,
-          [field]: data,
+  batches.forEach((batch, batchIdx) => {
+    if (batch.id === batchId) {
+      dispatch({
+        type: Actions.REPLACE_ITEM,
+        payload: {
+          item: {
+            ...batch,
+            [field]: data,
+          },
+          index: batchIdx,
         },
-        index: batchIdx,
-      },
-    });
-
-    return false;
+      });
+    }
   });
 }
 
@@ -225,20 +221,28 @@ function onUpdateBatchOrderItemOrderFactory(client: ApolloClient<any>, dispatch:
           return;
         }
 
-        const itemIds = (order?.orderItem ?? []).map(item => item?.id).filter(Boolean);
-        batches.forEach(batch => {
+        const itemIds = (order?.orderItems ?? []).map(item => item?.id).filter(Boolean);
+        const replaceItems = [];
+
+        batches.forEach((batch, batchIdx) => {
           if (itemIds.includes(batch?.orderItem?.id)) {
-            replaceBatch({
-              batches,
-              dispatch,
-              batchId: batch.id,
-              field: 'orderItem',
-              data: {
-                ...batch.orderItem,
-                order,
+            replaceItems.push({
+              item: {
+                ...batch,
+                orderItem: {
+                  ...batch.orderItem,
+                  order,
+                },
               },
+              index: batchIdx,
             });
           }
+        });
+        dispatch({
+          type: Actions.REPLACE_ITEMS,
+          payload: {
+            items: replaceItems,
+          },
         });
       });
   };

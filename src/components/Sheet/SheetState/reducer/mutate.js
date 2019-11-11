@@ -125,6 +125,22 @@ export function replaceItem(
   };
 }
 
+export function replaceItems(
+  transformer: (number, Object) => Array<Array<CellValue>>,
+  sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
+) {
+  return (state: State, payload: { items: Array<{ item: Object, index: number }> }): State => {
+    const items = [...state.items];
+    (payload?.items ?? []).forEach(({ item, index }) => {
+      items[index] = item;
+    });
+
+    return refresh(transformer, sorter)(state, {
+      items,
+    });
+  };
+}
+
 export function deleteItem(
   transformer: (number, Object) => Array<Array<CellValue>>,
   sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
