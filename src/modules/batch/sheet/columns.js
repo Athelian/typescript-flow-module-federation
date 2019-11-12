@@ -383,7 +383,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   {
     key: 'batch.latestQuantity',
-    title: <FormattedMessage {...batchMessages.quantity} />,
+    title: <FormattedMessage {...batchMessages.currentQuantity} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
