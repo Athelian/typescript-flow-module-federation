@@ -146,7 +146,14 @@ const SelectFieldsSection = () => {
             { columns: productColumns, customFields: productCustomFields },
             { columns: containerColumns },
           ],
-          OrderSheet: convertSheetColumns(orderSheetColumns),
+          OrderSheet: convertSheetColumns(
+            orderSheetColumns({
+              orderFieldDefinitions: orderCustomFields,
+              orderItemFieldDefinitions: orderItemCustomFields,
+              batchFieldDefinitions: batchCustomFields,
+              shipmentFieldDefinitions: shipmentCustomFields,
+            })
+          ),
           BatchSheet: convertSheetColumns(batchSheetColumns),
           ShipmentSheet: convertSheetColumns(shipmentSheetColumns),
           ProjectSheet: convertSheetColumns(projectSheetColumns),

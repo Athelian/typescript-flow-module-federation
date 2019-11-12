@@ -10,19 +10,16 @@ import type {
 } from 'components/Sheet/SheetLive/types';
 import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
+import { batchQuantityRevisionByIDQuery } from 'modules/sheet/batch/query';
 import {
-  batchByIDQuery,
-  batchQuantityRevisionByIDQuery,
-  containerByIDQuery,
-  orderItemByIDQuery,
   organizationByIDQuery,
   organizationsByIDsQuery,
-  shipmentByIDQuery,
   tagsByIDsQuery,
   userByIDQuery,
   usersByIDsQuery,
   warehouseByIDQuery,
-} from './query';
+} from 'modules/sheet/common/query';
+import { batchByIDQuery, containerByIDQuery, orderItemByIDQuery, shipmentByIDQuery } from './query';
 
 // $FlowFixMe not compatible with hook implementation
 function onCreateOrderItemFactory(client: ApolloClient, dispatch: Action => void) {
@@ -995,6 +992,27 @@ export default function entityEventHandler(
               return change;
             });
             break;
+          case 'FieldValue': {
+            const change = changes.find(c => c.field === 'value');
+            if (change) {
+              dispatch({
+                type: Actions.CHANGE_VALUES,
+                payload: {
+                  changes: [
+                    {
+                      entity: {
+                        id: event.entity.entity.id,
+                        type: event.entity.entity.__typename,
+                      },
+                      field: `@${event.entity.fieldDefinition.id}`,
+                      value: change.new?.string ?? null,
+                    },
+                  ],
+                },
+              });
+            }
+            return;
+          }
           default:
             break;
         }

@@ -1,5 +1,5 @@
 // @flow
-import { clone, setIn } from 'utils/fp';
+import { clone, getByPathWithDefault, setIn } from 'utils/fp';
 import type { CellValue, State, ColumnSort } from 'components/Sheet/SheetState/types';
 import { refresh } from './sheet';
 
@@ -45,7 +45,35 @@ export function changeValues(
   let items = clone(state.items);
   cellsToUpdate.forEach(({ cells, value }) => {
     cells.forEach(cell => {
-      items = setIn(cell.data.path, value, items);
+      if (cell.data.field.charAt(0) === '@') {
+        const fieldDefinitionId = cell.data.field.substr(1);
+        let fieldValues = [
+          ...getByPathWithDefault([], `${cell.data.path}.customFields.fieldValues`, items),
+        ];
+
+        if (!fieldValues.find(fv => fv.fieldDefinition.id === fieldDefinitionId)) {
+          fieldValues = [
+            ...fieldValues,
+            {
+              value: { string: value },
+              fieldDefinition: { id: fieldDefinitionId },
+            },
+          ];
+        } else {
+          fieldValues = fieldValues.map(fv =>
+            fv.fieldDefinition.id === fieldDefinitionId
+              ? {
+                  value: { string: value },
+                  fieldDefinition: { id: fieldDefinitionId },
+                }
+              : fv
+          );
+        }
+
+        items = setIn(`${cell.data.path}.customFields.fieldValues`, fieldValues, items);
+      } else {
+        items = setIn(cell.data.path, value, items);
+      }
     });
   });
 
@@ -69,7 +97,7 @@ export function changeValues(
         const { data } = cell;
         const update = cellsToUpdate
           .map(({ cells, value }) => ({
-            cell: cells.find(c => c?.data?.path === data.path),
+            cell: cells.find(c => c?.data?.path === data.path && c?.data?.field === data.field),
             value,
           }))
           .find(c => !!c.cell);

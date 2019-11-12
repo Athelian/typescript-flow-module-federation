@@ -63,7 +63,7 @@ export const mapOver = map;
 /**
  * Return value from object with path
  */
-export const getByPath = useWith(path, [split('.')]);
+export const getByPath: (path: string, subject: any) => any = useWith(path, [split('.')]);
 
 export const pickByProps = pick;
 
@@ -73,7 +73,10 @@ export const isNullOrUndefined = isNil;
 /**
  * Return value from object with path, return default value if undefined
  */
-export const getByPathWithDefault = useWith(pathOr, [identity, split('.')]);
+export const getByPathWithDefault: (defaultValue: any, path: string, subject: any) => any = useWith(
+  pathOr,
+  [identity, split('.')]
+);
 
 export const isValuable = (val: any) => val != null;
 export const isValuables = (...arr: Array<any>) => arr.every(val => val != null);

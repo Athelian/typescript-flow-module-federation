@@ -106,6 +106,10 @@ export default defineMessages({
     id: 'modules.Shipments.PO',
     defaultMessage: 'PO NO.',
   },
+  numOfVoyages: {
+    id: 'modules.Shipments.numOfVoyages',
+    defaultMessage: 'NUMBER OF VOYAGES',
+  },
   voyageCode: {
     id: 'modules.Voyages.voyageCode',
     defaultMessage: 'VOYAGE CODE',
@@ -665,6 +669,10 @@ export default defineMessages({
   transportTypeWarningMessage: {
     id: 'modules.Shipments.transportTypeRequired',
     defaultMessage: 'Choose Transportation type.',
+  },
+  selectTransportType: {
+    id: 'modules.Shipments.selectTransportType',
+    defaultMessage: 'Please select a transport type',
   },
   addMultiBatchItems: {
     id: 'modules.Shipments.addMultiBatchItems',

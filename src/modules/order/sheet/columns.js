@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { colors } from 'styles/common';
+import type { FieldDefinition } from 'types';
 import type { ColumnConfig } from 'components/Sheet';
 import orderMessages from 'modules/order/messages';
 import orderItemMessages from 'modules/orderItem/messages';
@@ -512,7 +513,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   {
     key: 'order.orderItem.batch.latestQuantity',
-    title: <FormattedMessage {...batchMessages.quantity} />,
+    title: <FormattedMessage {...batchMessages.currentQuantity} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
@@ -893,7 +894,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.forwarder} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 810,
+    width: 825,
   },
   {
     key: 'order.orderItem.batch.shipment.blNo',
@@ -1040,7 +1041,19 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 160,
   },
-  // nb of voyages
+  // TODO: Replace with real selector later
+  {
+    key: 'order.orderItem.batch.shipment.numOfVoyages',
+    title: <FormattedMessage {...shipmentMessages.numOfVoyages} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 100,
+    sort: {
+      local: true,
+      name: 'shipmentNumOfVoyages',
+      group: 'batch',
+    },
+  },
   {
     key: 'order.orderItem.batch.shipment.cargoReady.date',
     exportKey: 'orderItems.batches.shipment.cargoReady.date',
@@ -1437,12 +1450,58 @@ const shipmentColumns: Array<ColumnConfig> = [
   },
 ];
 
-const columns: Array<ColumnConfig> = [
-  ...orderColumns,
-  ...orderItemColumns,
-  ...batchColumns,
-  ...containerColumns,
-  ...shipmentColumns,
-];
+export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment'];
 
-export default columns;
+type Props = {
+  orderFieldDefinitions: Array<FieldDefinition>,
+  orderItemFieldDefinitions: Array<FieldDefinition>,
+  batchFieldDefinitions: Array<FieldDefinition>,
+  shipmentFieldDefinitions: Array<FieldDefinition>,
+};
+
+export default function({
+  orderFieldDefinitions,
+  orderItemFieldDefinitions,
+  batchFieldDefinitions,
+  shipmentFieldDefinitions,
+}: Props): Array<ColumnConfig> {
+  return [
+    ...orderColumns,
+    ...orderFieldDefinitions.map(fieldDefinition => ({
+      key: `order.customField.${fieldDefinition.id}`,
+      exportKey: `customFields.${fieldDefinition.id}`,
+      title: fieldDefinition.name,
+      icon: 'ORDER',
+      color: colors.ORDER,
+      width: 200,
+    })),
+    ...orderItemColumns,
+    ...orderItemFieldDefinitions.map(fieldDefinition => ({
+      key: `order.orderItem.customField.${fieldDefinition.id}`,
+      exportKey: `orderItems.customFields.${fieldDefinition.id}`,
+      title: fieldDefinition.name,
+      icon: 'ORDER_ITEM',
+      color: colors.ORDER_ITEM,
+      width: 200,
+    })),
+    ...batchColumns,
+    ...batchFieldDefinitions.map(fieldDefinition => ({
+      key: `order.orderItem.batch.customField.${fieldDefinition.id}`,
+      exportKey: `orderItems.batches.customFields.${fieldDefinition.id}`,
+      title: fieldDefinition.name,
+      icon: 'BATCH',
+      color: colors.BATCH,
+      width: 200,
+    })),
+    ...containerColumns,
+    ...shipmentColumns,
+    ...shipmentFieldDefinitions.map(fieldDefinition => ({
+      key: `order.orderItem.batch.shipment.customField.${fieldDefinition.id}`,
+      exportKey: `orderItems.batches.shipment.customFields.${fieldDefinition.id}`,
+      title: fieldDefinition.name,
+      icon: 'SHIPMENT',
+      color: colors.SHIPMENT,
+      width: 200,
+    })),
+  ];
+}

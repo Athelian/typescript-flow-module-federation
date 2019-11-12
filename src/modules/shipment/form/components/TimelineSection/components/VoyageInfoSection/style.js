@@ -16,7 +16,7 @@ export const SelectTransportTypeMessageStyle: string = css`
   color: ${colors.GRAY_DARK};
   font-weight: bold;
   ${fontSizes.MAIN};
-  text-align: right;
+  text-align: left;
   width: 200px;
   flex-shrink: 0;
   height: 30px;

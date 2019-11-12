@@ -205,6 +205,7 @@
   "components.Sheet.columnsConfigSelectAllButton": "Select all",
   "components.Sheet.columnsConfigUnselectAllButton": "Un select all",
   "components.Sheet.columnsConfigSelectTemplate": "Select template",
+  "components.Sheet.columnsConfigSaveAsNe": "Save as new template",
   "components.Sheet.addedAnnouncement": "Added",
   "components.Sheet.deletedAnnouncement": "Removed",
   "components.Sheet.logs": "Logs",
