@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { colors } from 'styles/common';
+import type { FieldDefinition } from 'types';
 import type { ColumnConfig } from 'components/Sheet';
 import orderMessages from 'modules/order/messages';
 import orderItemMessages from 'modules/orderItem/messages';
@@ -1197,12 +1198,54 @@ const shipmentColumns: Array<ColumnConfig> = [
   },
 ];
 
-const columns: Array<ColumnConfig> = [
-  ...batchColumns,
-  ...orderItemColumns,
-  ...orderColumns,
-  ...containerColumns,
-  ...shipmentColumns,
-];
+export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment'];
 
-export default columns;
+type Props = {
+  orderFieldDefinitions: Array<FieldDefinition>,
+  orderItemFieldDefinitions: Array<FieldDefinition>,
+  batchFieldDefinitions: Array<FieldDefinition>,
+  shipmentFieldDefinitions: Array<FieldDefinition>,
+};
+
+export default function({
+  orderFieldDefinitions,
+  orderItemFieldDefinitions,
+  batchFieldDefinitions,
+  shipmentFieldDefinitions,
+}: Props): Array<ColumnConfig> {
+  return [
+    ...batchColumns,
+    ...batchFieldDefinitions.map(fieldDefinition => ({
+      key: `batch.customField.${fieldDefinition.id}`,
+      title: fieldDefinition.name,
+      icon: 'BATCH',
+      color: colors.BATCH,
+      width: 200,
+    })),
+    ...orderItemColumns,
+    ...orderItemFieldDefinitions.map(fieldDefinition => ({
+      key: `orderItem.customField.${fieldDefinition.id}`,
+      title: fieldDefinition.name,
+      icon: 'ORDER_ITEM',
+      color: colors.ORDER_ITEM,
+      width: 200,
+    })),
+    ...orderColumns,
+    ...orderFieldDefinitions.map(fieldDefinition => ({
+      key: `order.customField.${fieldDefinition.id}`,
+      title: fieldDefinition.name,
+      icon: 'ORDER',
+      color: colors.ORDER,
+      width: 200,
+    })),
+    ...containerColumns,
+    ...shipmentColumns,
+    ...shipmentFieldDefinitions.map(fieldDefinition => ({
+      key: `shipment.customField.${fieldDefinition.id}`,
+      title: fieldDefinition.name,
+      icon: 'SHIPMENT',
+      color: colors.SHIPMENT,
+      width: 200,
+    })),
+  ];
+}

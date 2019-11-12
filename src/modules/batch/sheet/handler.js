@@ -812,6 +812,27 @@ export default function entityEventHandler(
               return change;
             });
             break;
+          case 'FieldValue': {
+            const change = changes.find(c => c.field === 'value');
+            if (change) {
+              dispatch({
+                type: Actions.CHANGE_VALUES,
+                payload: {
+                  changes: [
+                    {
+                      entity: {
+                        id: event.entity.entity.id,
+                        type: event.entity.entity.__typename,
+                      },
+                      field: `@${event.entity.fieldDefinition.id}`,
+                      value: change.new?.string ?? null,
+                    },
+                  ],
+                },
+              });
+            }
+            return;
+          }
           default:
             break;
         }
