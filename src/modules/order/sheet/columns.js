@@ -1043,7 +1043,6 @@ const shipmentColumns: Array<ColumnConfig> = [
   // TODO: Replace with real selector later
   {
     key: 'order.orderItem.batch.shipment.numOfVoyages',
-    exportKey: 'orderItems.batches.shipment.numOfVoyages',
     title: <FormattedMessage {...shipmentMessages.numOfVoyages} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
