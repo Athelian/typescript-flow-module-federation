@@ -894,7 +894,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.forwarder} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 810,
+    width: 825,
   },
   {
     key: 'order.orderItem.batch.shipment.blNo',
