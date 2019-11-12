@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 import useEnum from 'hooks/useEnum';
-import TextDisplay from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/TextDisplay';
+import { Display } from 'components/Form';
 import messages from 'modules/shipment/messages';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import SearchSelectInput from 'components/Sheet/CellRenderer/Cell/CellInput/Common/SearchSelectInput';
@@ -55,7 +55,11 @@ const PortInput = ({
   };
 
   if (!context) {
-    return <TextDisplay value={intl.formatMessage(messages.transportTypeWarningMessage)} />;
+    return (
+      <Display height="30px" color="GRAY_DARK">
+        {intl.formatMessage(messages.selectTransportType)}
+      </Display>
+    );
   }
 
   return (

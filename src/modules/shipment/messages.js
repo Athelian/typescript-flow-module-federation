@@ -670,6 +670,10 @@ export default defineMessages({
     id: 'modules.Shipments.transportTypeRequired',
     defaultMessage: 'Choose Transportation type.',
   },
+  selectTransportType: {
+    id: 'modules.Shipments.selectTransportType',
+    defaultMessage: 'Please select a transport type',
+  },
   addMultiBatchItems: {
     id: 'modules.Shipments.addMultiBatchItems',
     defaultMessage: 'ADD MULTI BATCHES',
