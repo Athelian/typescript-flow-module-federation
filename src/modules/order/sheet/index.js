@@ -5,10 +5,14 @@ import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, OrderFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
 import { Sheet, ColumnsConfig, useSheet } from 'components/Sheet';
+import type { CellValue } from 'components/Sheet/SheetState/types';
+import LoadingIcon from 'components/LoadingIcon';
+import type { ColumnConfig } from 'components/Sheet';
+import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
-import orderColumns from './columns';
-import transformer from './transformer';
+import orderColumns, { FieldDefinitionEntityTypes } from './columns';
+import orderTransformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
 import mutate from './mutate';
@@ -19,7 +23,13 @@ type Props = {
   orderIds?: Array<string>,
 };
 
-const OrderSheetModule = ({ orderIds }: Props) => {
+type ImplProps = {
+  ...Props,
+  columns: Array<ColumnConfig>,
+  transformer: Object => Array<Array<CellValue>>,
+};
+
+const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }: ImplProps) => {
   const client = useApolloClient();
   const memoizedMutate = React.useCallback(mutate(client), [client]);
   const memoizedHandler = React.useCallback(dispatch => entityEventHandler(client, dispatch), [
@@ -46,7 +56,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
     onLocalSort,
     onRemoteSort,
   } = useSheet({
-    columns: orderColumns,
+    columns: columnConfigs,
     itemsQuery: ordersQuery,
     initialFilterBy: orderIds ? { query: '', ids: orderIds } : { query: '', archived: false },
     initialSortBy: { updatedAt: 'DESCENDING' },
@@ -63,7 +73,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
         <Filter config={OrderFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig
-          config={orderColumns}
+          config={columnConfigs}
           columns={columns}
           onChange={setColumns}
           templateType="OrderSheet"
@@ -93,6 +103,29 @@ const OrderSheetModule = ({ orderIds }: Props) => {
         onLoadMore={onLoadMore}
       />
     </Content>
+  );
+};
+
+const OrderSheetModule = ({ orderIds }: Props) => {
+  const { fieldDefinitions, loading } = useFieldDefinitions(FieldDefinitionEntityTypes);
+
+  if (loading) {
+    return <LoadingIcon />;
+  }
+
+  const allFieldDefinitions = {
+    orderFieldDefinitions: fieldDefinitions?.Order ?? [],
+    orderItemFieldDefinitions: fieldDefinitions?.OrderItem ?? [],
+    batchFieldDefinitions: fieldDefinitions?.Batch ?? [],
+    shipmentFieldDefinitions: fieldDefinitions?.Shipment ?? [],
+  };
+
+  return (
+    <OrderSheetModuleImpl
+      columns={orderColumns(allFieldDefinitions)}
+      transformer={orderTransformer(allFieldDefinitions)}
+      orderIds={orderIds}
+    />
   );
 };
 

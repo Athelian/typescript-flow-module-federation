@@ -69,6 +69,18 @@ export const entityEventSubscription = gql`
         ... on Model {
           id
         }
+        ... on FieldValue {
+          fieldDefinition {
+            ... on FieldDefinition {
+              id
+            }
+          }
+          entity {
+            ... on Model {
+              id
+            }
+          }
+        }
       }
       changes {
         field

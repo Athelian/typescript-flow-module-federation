@@ -63,6 +63,22 @@ const orderSheetFragment = gql`
         id
       }
     }
+    customFields {
+      fieldValues {
+        ... on FieldValue {
+          value {
+            ... on StringValue {
+              string
+            }
+          }
+          fieldDefinition {
+            ... on FieldDefinition {
+              id
+            }
+          }
+        }
+      }
+    }
   }
 `;
 
@@ -128,6 +144,22 @@ const orderItemSheetFragment = gql`
     ownedBy {
       ... on Organization {
         id
+      }
+    }
+    customFields {
+      fieldValues {
+        ... on FieldValue {
+          value {
+            ... on StringValue {
+              string
+            }
+          }
+          fieldDefinition {
+            ... on FieldDefinition {
+              id
+            }
+          }
+        }
       }
     }
   }
@@ -200,6 +232,22 @@ const batchSheetFragment = gql`
     ownedBy {
       ... on Organization {
         id
+      }
+    }
+    customFields {
+      fieldValues {
+        ... on FieldValue {
+          value {
+            ... on StringValue {
+              string
+            }
+          }
+          fieldDefinition {
+            ... on FieldDefinition {
+              id
+            }
+          }
+        }
       }
     }
   }
@@ -312,6 +360,22 @@ const shipmentSheetFragment = gql`
     ownedBy {
       ... on Organization {
         id
+      }
+    }
+    customFields {
+      fieldValues {
+        ... on FieldValue {
+          value {
+            ... on StringValue {
+              string
+            }
+          }
+          fieldDefinition {
+            ... on FieldDefinition {
+              id
+            }
+          }
+        }
       }
     }
   }

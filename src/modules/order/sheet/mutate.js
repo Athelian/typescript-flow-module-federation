@@ -79,7 +79,46 @@ function getEntityId(entity: Object, item: Object): string {
   }
 }
 
-function normalizedInput(entity: Object, field: string, value: any, item: Object): Object {
+function normalizeCustomValuesInput(fieldDefinitionId: string, value: any, entity: Object): Object {
+  let hasFieldValue = false;
+  const fieldValues = (entity?.customFields?.fieldValues ?? []).map(fv => {
+    if (fv.fieldDefinition.id === fieldDefinitionId) {
+      hasFieldValue = true;
+      return {
+        value: value
+          ? {
+              string: value,
+            }
+          : null,
+        fieldDefinitionId,
+      };
+    }
+
+    return {
+      value: removeTypename(fv.value),
+      fieldDefinitionId: fv.fieldDefinition.id,
+    };
+  });
+
+  if (!hasFieldValue) {
+    fieldValues.push({
+      value: value
+        ? {
+            string: value,
+          }
+        : null,
+      fieldDefinitionId,
+    });
+  }
+
+  return {
+    customFields: {
+      fieldValues,
+    },
+  };
+}
+
+function normalizeInput(entity: Object, field: string, value: any, item: Object): Object {
   switch (entity.type) {
     case 'Order':
       switch (field) {
@@ -157,6 +196,10 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'todo':
           return parseTodoField(null, value);
         default:
+          if (field.charAt(0) === '@') {
+            return normalizeCustomValuesInput(field.substr(1), value, item);
+          }
+
           return {
             [field]: value,
           };
@@ -193,6 +236,15 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'todo':
           return parseTodoField(null, value);
         default:
+          if (field.charAt(0) === '@') {
+            const orderItem = item.orderItems.find(oi => oi.id === entity.id);
+            if (!orderItem) {
+              return {};
+            }
+
+            return normalizeCustomValuesInput(field.substr(1), value, orderItem);
+          }
+
           return {
             [field]: value,
           };
@@ -246,6 +298,18 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'todo':
           return parseTodoField(null, value);
         default:
+          if (field.charAt(0) === '@') {
+            const batch = item.orderItems
+              .map(oi => oi.batches)
+              .flat()
+              .find(b => b.id === entity.id);
+            if (!batch) {
+              return {};
+            }
+
+            return normalizeCustomValuesInput(field.substr(1), value, batch);
+          }
+
           return {
             [field]: value,
           };
@@ -278,6 +342,20 @@ function normalizedInput(entity: Object, field: string, value: any, item: Object
         case 'todo':
           return parseTodoField(null, value);
         default:
+          if (field.charAt(0) === '@') {
+            const shipment = item.orderItems
+              .map(oi => oi.batches)
+              .flat()
+              .map(b => b.shipment)
+              .filter(Boolean)
+              .find(s => s?.id === entity.id);
+            if (!shipment) {
+              return {};
+            }
+
+            return normalizeCustomValuesInput(field.substr(1), value, shipment);
+          }
+
           return {
             [field]: value,
           };
@@ -516,7 +594,7 @@ export default function(client: ApolloClient) {
         mutation: mutations[entity.type],
         variables: {
           id: getEntityId(entity, item),
-          input: normalizedInput(entity, field, value, item),
+          input: normalizeInput(entity, field, value, item),
         },
       })
       .then(({ data }) => {
