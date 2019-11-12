@@ -1,5 +1,4 @@
 // @flow
-import { set, cloneDeep } from 'lodash';
 import type {
   MetricValue,
   Size,
@@ -94,8 +93,8 @@ export const findVolume = (batch: BatchPayload) => {
 
 // DEPRECATED will be removed after remove old RM
 export const oldGetBatchLatestQuantity = (batch: BatchPayload): number => {
-  const quantity = getByPathWithDefault(0, 'quantity', batch);
-  const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', batch);
+  const quantity = batch?.quantity ?? 0;
+  const batchQuantityRevisions = batch?.batchQuantityRevisions ?? [];
   return batchQuantityRevisions.length > 0
     ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
     : quantity;
@@ -112,7 +111,7 @@ export const totalBatchPriceAmount = ({
 }): number => {
   return times(
     getBatchLatestQuantity({ quantity, batchQuantityRevisions }),
-    getByPathWithDefault(0, 'price.amount', orderItem)
+    orderItem?.price?.amount ?? 0
   );
 };
 
@@ -176,7 +175,6 @@ export const generateCloneBatch = (
     id: uuid(),
     isNew: true,
     no: `${no} - clone`,
-    batchQuantityRevisions: [],
     todo: {
       tasks: [],
     },
@@ -212,51 +210,33 @@ export const findTotalAutoFillBatches = ({
 };
 
 export const generateBatchByOrderItem = (orderItem: OrderItemPayload): Batch => {
-  const packageName = getByPathWithDefault('', 'productProvider.defaultPackage.name', orderItem);
-  const packageCapacity = getByPathWithDefault(
-    0,
-    'productProvider.defaultPackage.capacity',
-    orderItem
-  );
-  const packageGrossWeight = getByPathWithDefault(
-    {
-      metric: defaultWeightMetric,
+  const packageName = orderItem?.productProvider?.defaultPackage?.name ?? '';
+  const packageCapacity = orderItem?.productProvider?.defaultPackage?.capacity ?? 0;
+  const packageGrossWeight = orderItem?.productProvider?.defaultPackage?.grossWeight ?? {
+    metric: defaultWeightMetric,
+    value: 0,
+  };
+  const packageVolume = orderItem?.productProvider?.defaultPackage?.volume ?? {
+    metric: defaultVolumeMetric,
+    value: 0,
+  };
+  const packageSize = orderItem?.productProvider?.defaultPackage?.size ?? {
+    width: {
+      metric: defaultDistanceMetric,
       value: 0,
     },
-    'productProvider.defaultPackage.grossWeight',
-    orderItem
-  );
-  const packageVolume = getByPathWithDefault(
-    {
-      metric: defaultVolumeMetric,
+    height: {
+      metric: defaultDistanceMetric,
       value: 0,
     },
-    'productProvider.defaultPackage.volume',
-    orderItem
-  );
-  const packageSize = getByPathWithDefault(
-    {
-      width: {
-        metric: defaultDistanceMetric,
-        value: 0,
-      },
-      height: {
-        metric: defaultDistanceMetric,
-        value: 0,
-      },
-      length: {
-        metric: defaultDistanceMetric,
-        value: 0,
-      },
+    length: {
+      metric: defaultDistanceMetric,
+      value: 0,
     },
-    'productProvider.defaultPackage.size',
-    orderItem
-  );
-  const autoCalculatePackageVolume = getByPathWithDefault(
-    true,
-    'productProvider.defaultPackage.autoCalculateVolume',
-    orderItem
-  );
+  };
+
+  const autoCalculatePackageVolume =
+    orderItem?.productProvider?.defaultPackage?.autoCalculateVolume ?? true;
   return {
     packageName,
     packageCapacity,
@@ -319,25 +299,19 @@ export const autoFillBatch = (orderItem: OrderItemPayload, quantity: number): Ba
 };
 
 export const updateBatchCardQuantity = (batch: Batch, quantity: number): Batch => {
-  const autoCalculatePackageQuantity = getByPathWithDefault(
-    true,
-    'autoCalculatePackageQuantity',
-    batch
-  );
-  const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', batch);
+  const autoCalculatePackageQuantity = batch?.autoCalculatePackageQuantity ?? true;
+  const field: string = findActiveQuantityField({
+    producedQuantity: batch?.producedQuantity,
+    preShippedQuantity: batch?.preShippedQuantity,
+    shippedQuantity: batch?.shippedQuantity,
+    postShippedQuantity: batch?.postShippedQuantity,
+    deliveredQuantity: batch?.deliveredQuantity,
+  });
+  const newBatch = { ...batch, [field]: quantity };
 
-  const newBatch = cloneDeep(batch);
-  if (batchQuantityRevisions.length > 0) {
-    set(
-      newBatch,
-      `batchQuantityRevisions[${batchQuantityRevisions.length - 1}].quantity`,
-      quantity
-    );
-  } else {
-    set(newBatch, `quantity`, quantity);
-  }
   if (autoCalculatePackageQuantity) {
-    set(newBatch, `packageQuantity`, calculatePackageQuantity(newBatch));
+    return { ...newBatch, packageQuantity: calculatePackageQuantity(newBatch) };
   }
+
   return newBatch;
 };
