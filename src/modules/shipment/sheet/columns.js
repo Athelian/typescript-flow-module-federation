@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { colors } from 'styles/common';
+import type { FieldDefinition } from 'types';
 import type { ColumnConfig } from 'components/Sheet';
 import shipmentMessages from 'modules/shipment/messages';
 import containerMessages from 'modules/container/messages';
@@ -1326,12 +1327,56 @@ const orderColumns: Array<ColumnConfig> = [
   // actions
 ];
 
-const columns: Array<ColumnConfig> = [
-  ...shipmentColumns,
-  ...containerColumns,
-  ...batchColumns,
-  ...orderItemColumns,
-  ...orderColumns,
-];
+export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment'];
 
-export default columns;
+type Props = {
+  orderFieldDefinitions: Array<FieldDefinition>,
+  orderItemFieldDefinitions: Array<FieldDefinition>,
+  batchFieldDefinitions: Array<FieldDefinition>,
+  shipmentFieldDefinitions: Array<FieldDefinition>,
+};
+
+export default function({
+  orderFieldDefinitions,
+  orderItemFieldDefinitions,
+  batchFieldDefinitions,
+  shipmentFieldDefinitions,
+}: Props): Array<ColumnConfig> {
+  return [
+    ...shipmentColumns,
+    ...shipmentFieldDefinitions.map(fieldDefinition => ({
+      key: `shipment.customField.${fieldDefinition.id}`,
+      exportKey: `customFields.${fieldDefinition.id}`,
+      title: fieldDefinition.name,
+      icon: 'SHIPMENT',
+      color: colors.SHIPMENT,
+      width: 200,
+    })),
+    ...containerColumns,
+    ...batchColumns,
+    ...batchFieldDefinitions.map(fieldDefinition => ({
+      key: `shipment.container.batch.customField.${fieldDefinition.id}`,
+      exportKey: `containers.batches.customFields.${fieldDefinition.id}`,
+      title: fieldDefinition.name,
+      icon: 'BATCH',
+      color: colors.BATCH,
+      width: 200,
+    })),
+    ...orderItemColumns,
+    ...orderItemFieldDefinitions.map(fieldDefinition => ({
+      key: `shipment.container.batch.orderItem.customField.${fieldDefinition.id}`,
+      title: fieldDefinition.name,
+      icon: 'ORDER_ITEM',
+      color: colors.ORDER_ITEM,
+      width: 200,
+    })),
+    ...orderColumns,
+    ...orderFieldDefinitions.map(fieldDefinition => ({
+      key: `shipment.container.batch..orderItem.order.customField.${fieldDefinition.id}`,
+      title: fieldDefinition.name,
+      icon: 'ORDER',
+      color: colors.ORDER,
+      width: 200,
+    })),
+  ];
+}
