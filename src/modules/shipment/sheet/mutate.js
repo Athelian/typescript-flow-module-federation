@@ -1,22 +1,30 @@
 // @flow
 import ApolloClient from 'apollo-client';
 import type { User } from 'generated/graphql';
-import { parseTodoField, removeTypename } from 'utils/data';
-import {
-  batchMutation,
-  containerMutation,
-  orderItemMutation,
-  orderMutation,
-  shipmentMutation,
-} from './query';
+import normalizeSheetOrderInput from 'modules/sheet/order/normalize';
+import normalizeSheetOrderItemInput from 'modules/sheet/orderItem/normalize';
+import normalizeSheetBatchInput from 'modules/sheet/batch/normalize';
+import normalizeSheetShipmentInput, {
+  normalizeSheetContainerGroupInput,
+  normalizeSheetTimelineDateInput,
+  normalizeSheetVoyageInput,
+} from 'modules/sheet/shipment/normalize';
+import normalizeSheetContainerInput from 'modules/sheet/container/normalize';
+import sheetOrderMutation from 'modules/sheet/order/mutation';
+import sheetOrderItemMutation from 'modules/sheet/orderItem/mutation';
+import sheetBatchMutation from 'modules/sheet/batch/mutation';
+import sheetContainerMutation from 'modules/sheet/container/mutation';
+import sheetShipmentMutation from 'modules/sheet/shipment/mutation';
 
 const mutations = {
-  Shipment: shipmentMutation,
-  Container: containerMutation,
-  TimelineDate: shipmentMutation,
-  Batch: batchMutation,
-  OrderItem: orderItemMutation,
-  Order: orderMutation,
+  Order: sheetOrderMutation,
+  OrderItem: sheetOrderItemMutation,
+  Batch: sheetBatchMutation,
+  Container: sheetContainerMutation,
+  Shipment: sheetShipmentMutation,
+  TimelineDate: sheetShipmentMutation,
+  Voyage: sheetShipmentMutation,
+  ContainerGroup: sheetShipmentMutation,
 };
 
 const isExporter = (user: User) => (user?.organization?.types ?? []).includes('Exporter');
@@ -59,25 +67,6 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
   switch (entity.type) {
     case 'Shipment':
       switch (field) {
-        case 'blDate':
-        case 'bookingDate':
-          return {
-            [(field: string)]: new Date(value),
-          };
-        case 'tags':
-          return {
-            tagIds: value.map(tag => tag.id),
-          };
-        case 'files':
-          return {
-            files: value.map(
-              ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
-            ),
-          };
-        case 'inCharges':
-          return {
-            inChargeIds: value.map(user => user.id),
-          };
         case 'exporter': {
           const exporterId = value?.id ?? null;
           const inChargeIds = (shipment?.inCharges ?? [])
@@ -214,327 +203,60 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
             inChargeIds,
           };
         }
-        case 'forwarders':
-          return {
-            forwarderIds: value.map(({ id }) => id),
-          };
-        case 'todo':
-          return parseTodoField(null, value);
         default:
-          return {
-            [field]: value,
-          };
+          return normalizeSheetShipmentInput(shipment, field, value);
       }
-    case 'Voyage': {
-      const voyageIdx = shipment.voyages.findIndex(v => v.id === entity.id);
-
-      return {
-        voyages: shipment.voyages.map((v, idx) => {
-          let input = { id: v.id };
-
-          if (v.id === entity.id) {
-            input = {
-              ...input,
-              [field]: value,
-            };
-          }
-
-          switch (field) {
-            case 'departurePort':
-              if (voyageIdx > 0 && idx + 1 === voyageIdx) {
-                input = {
-                  ...input,
-                  arrivalPort: value,
-                };
-              }
-              break;
-            case 'arrivalPort':
-              if (voyageIdx > 0 && idx - 1 === voyageIdx) {
-                input = {
-                  ...input,
-                  departurePort: value,
-                };
-              }
-              break;
-            default:
-              break;
-          }
-
-          return input;
-        }),
-      };
-    }
+    case 'Voyage':
+      return normalizeSheetVoyageInput(shipment, entity.id, field, value);
     case 'ContainerGroup':
-      return {
-        containerGroups: shipment.containerGroups.map(cg => {
-          if (cg.id !== entity.id) {
-            return { id: cg.id };
-          }
-
-          switch (field) {
-            case 'warehouse':
-              return {
-                id: cg.id,
-                warehouseId: value?.id ?? null,
-              };
-            default:
-              return {
-                id: cg.id,
-                [field]: value,
-              };
-          }
-        }),
-      };
-    case 'TimelineDate': {
-      const input = (() => {
-        switch (field) {
-          case 'date':
-            return {
-              date: new Date(value),
-            };
-          case 'assignedTo':
-            return { assignedToIds: value.map(user => user?.id) };
-          case 'approved':
-            return { approvedById: value?.user?.id ?? null };
-          case 'timelineDateRevisions':
-            return {
-              timelineDateRevisions: value.map(({ sort, date, ...revision }) => ({
-                ...removeTypename(revision),
-                date: new Date(date),
-              })),
-            };
-          default:
-            return {
-              [field]: value,
-            };
-        }
-      })();
-
-      if (entity.id === shipment.cargoReady.id) {
-        return {
-          cargoReady: input,
-        };
-      }
-
-      if (entity.id === shipment.containerGroups[0].customClearance.id) {
-        return {
-          containerGroups: [
-            {
-              customClearance: input,
-              id: shipment.containerGroups[0].id,
-            },
-          ],
-        };
-      }
-
-      if (entity.id === shipment.containerGroups[0].warehouseArrival.id) {
-        return {
-          containerGroups: [
-            {
-              warehouseArrival: input,
-              id: shipment.containerGroups[0].id,
-            },
-          ],
-        };
-      }
-
-      if (entity.id === shipment.containerGroups[0].deliveryReady.id) {
-        return {
-          containerGroups: [
-            {
-              deliveryReady: input,
-              id: shipment.containerGroups[0].id,
-            },
-          ],
-        };
-      }
-
-      return {
-        voyages: shipment.voyages.map(voyage => {
-          if (voyage.departure.id === entity.id) {
-            return {
-              id: voyage.id,
-              departure: input,
-            };
-          }
-
-          if (voyage.arrival.id === entity.id) {
-            return {
-              id: voyage.id,
-              arrival: input,
-            };
-          }
-
-          return {
-            id: voyage.id,
-          };
-        }),
-      };
-    }
+      return normalizeSheetContainerGroupInput(shipment, entity.id, field, value);
+    case 'TimelineDate':
+      return normalizeSheetTimelineDateInput(shipment, entity.id, field, value);
     case 'Container': {
-      switch (field) {
-        case 'tags':
-          return {
-            tagIds: value.map(tag => tag.id),
-          };
-        case 'warehouseArrivalAgreedDateApproved':
-          return {
-            warehouseArrivalAgreedDateApprovedById: value?.user?.id ?? null,
-          };
-        case 'warehouseArrivalActualDateApproved':
-          return {
-            warehouseArrivalActualDateApprovedById: value?.user?.id ?? null,
-          };
-        case 'departureDateApproved':
-          return {
-            departureDateApprovedById: value?.user?.id ?? null,
-          };
-        case 'freeTimeStartDate': {
-          const { auto: autoCalculatedFreeTimeStartDate = false, value: date = null } = value || {};
-          return {
-            autoCalculatedFreeTimeStartDate,
-            freeTimeStartDate: date ? new Date(date) : null,
-          };
-        }
-        case 'warehouseArrivalAgreedDateAssignedTo':
-          return {
-            warehouseArrivalAgreedDateAssignedToIds: value.map(user => user.id),
-          };
-        case 'warehouseArrivalActualDateAssignedTo':
-          return {
-            warehouseArrivalActualDateAssignedToIds: value.map(user => user.id),
-          };
-        case 'warehouse':
-          return {
-            warehouseId: value?.id ?? null,
-          };
-        case 'departureDateAssignedTo':
-          return {
-            departureDateAssignedToIds: value.map(user => user.id),
-          };
-        default:
-          return {
-            [field]: value,
-          };
+      const container = shipment.containers.find(c => c.id === entity.id);
+      if (!container) {
+        return {};
       }
+
+      return normalizeSheetContainerInput(container, field, value);
     }
-    case 'Batch':
-      switch (field) {
-        case 'desiredAt':
-        case 'expiredAt':
-        case 'deliveredAt':
-        case 'producedAt':
-          return {
-            /* $FlowFixMe This comment suppresses an error found when upgrading
-             * Flow to v0.111.0. To view the error, delete this comment and run
-             * Flow. */
-            [field]: new Date(value),
-          };
-        case 'batchQuantityRevisions':
-          return {
-            batchQuantityRevisions: value.map(({ sort, batch, ...revision }) =>
-              removeTypename(revision)
-            ),
-          };
-        case 'packageQuantity': {
-          const { auto: autoCalculatePackageQuantity = false, value: packageQuantity = 0 } =
-            value || {};
-          return {
-            autoCalculatePackageQuantity,
-            packageQuantity,
-          };
-        }
-        case 'packageGrossWeight':
-          return {
-            packageGrossWeight: value ? removeTypename(value) : null,
-          };
-        case 'packageVolume': {
-          const { auto: autoCalculatePackageVolume = false, value: packageVolume = 0 } =
-            value || {};
-          return {
-            autoCalculatePackageVolume,
-            packageVolume: removeTypename(packageVolume),
-          };
-        }
-        case 'packageSize':
-          return {
-            packageSize: value ? removeTypename(value) : null,
-          };
-        case 'tags':
-          return {
-            tagIds: value.map(tag => tag.id),
-          };
-        case 'todo':
-          return parseTodoField(null, value);
-        default:
-          return {
-            [field]: value,
-          };
+    case 'Batch': {
+      const batch = [
+        ...shipment.batchesWithoutContainer,
+        ...shipment.containers.map(c => c.batches).flat(),
+      ].find(b => b.id === entity.id);
+      if (!batch) {
+        return {};
       }
-    case 'OrderItem':
-      switch (field) {
-        case 'price':
-          if (value.value === null) {
-            return { price: null };
-          }
-          return {
-            price: {
-              amount: value.value,
-              currency: value.metric,
-            },
-          };
-        case 'deliveryDate':
-          return {
-            /* $FlowFixMe This comment suppresses an error found when upgrading
-             * Flow to v0.111.0. To view the error, delete this comment and run
-             * Flow. */
-            [field]: new Date(value),
-          };
-        case 'tags':
-          return {
-            tagIds: value.map(tag => tag.id),
-          };
-        case 'files':
-          return {
-            files: value.map(
-              ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
-            ),
-          };
-        case 'todo':
-          return parseTodoField(null, value);
-        default:
-          return {
-            [field]: value,
-          };
+
+      return normalizeSheetBatchInput(batch, field, value);
+    }
+    case 'OrderItem': {
+      const orderItem = [
+        ...shipment.batchesWithoutContainer,
+        ...shipment.containers.map(c => c.batches).flat(),
+      ]
+        .map(b => b.orderItem)
+        .find(oi => oi.id === entity.id);
+      if (!orderItem) {
+        return {};
       }
-    case 'Order':
-      switch (field) {
-        case 'deliveryDate':
-        case 'issuedAt':
-          return {
-            [(field: string)]: new Date(value),
-          };
-        case 'files':
-          return {
-            files: value.map(
-              ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
-            ),
-          };
-        case 'tags':
-          return {
-            tagIds: value.map(tag => tag.id),
-          };
-        case 'inCharges':
-          return {
-            inChargeIds: value.map(user => user.id),
-          };
-        case 'todo':
-          return parseTodoField(null, value);
-        default:
-          return {
-            [field]: value,
-          };
+
+      return normalizeSheetOrderItemInput(orderItem, field, value);
+    }
+    case 'Order': {
+      const order = [
+        ...shipment.batchesWithoutContainer,
+        ...shipment.containers.map(c => c.batches).flat(),
+      ]
+        .map(b => b.orderItem.order)
+        .find(o => o.id === entity.id);
+      if (!order) {
+        return {};
       }
+
+      return normalizeSheetOrderInput(order, field, value);
+    }
     default:
       return {
         [field]: value,

@@ -1,7 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  badRequestFragment,
   forbiddenFragment,
   userAvatarFragment,
   documentFragment,
@@ -13,398 +12,19 @@ import {
   projectCardFragment,
   taskFormInTemplateFragment,
 } from 'graphql';
-
-const shipmentSheetFragment = gql`
-  fragment shipmentSheetFragment on Shipment {
-    id
-    archived
-    no
-    createdAt
-    updatedAt
-    blNo
-    blDate
-    booked
-    bookingNo
-    bookingDate
-    invoiceNo
-    contractNo
-    transportType
-    loadType
-    incoterm
-    carrier
-    memo
-    inCharges {
-      ...userAvatarFragment
-    }
-    importer {
-      ...partnerNameFragment
-    }
-    exporter {
-      ...partnerNameFragment
-    }
-    forwarders {
-      ...partnerNameFragment
-    }
-    tags {
-      ...tagFragment
-    }
-    cargoReady {
-      ...timelineDateFragment
-    }
-    voyages {
-      ... on Voyage {
-        id
-        vesselName
-        vesselCode
-        departurePort {
-          seaport
-          airport
-        }
-        arrivalPort {
-          seaport
-          airport
-        }
-        departure {
-          ...timelineDateFragment
-        }
-        arrival {
-          ...timelineDateFragment
-        }
-        ownedBy {
-          ... on Organization {
-            id
-          }
-        }
-      }
-    }
-    containerGroups {
-      ... on ContainerGroup {
-        id
-        warehouse {
-          ...warehouseFragment
-        }
-        customClearance {
-          ...timelineDateFragment
-        }
-        warehouseArrival {
-          ...timelineDateFragment
-        }
-        deliveryReady {
-          ...timelineDateFragment
-        }
-        ownedBy {
-          ... on Organization {
-            id
-          }
-        }
-      }
-    }
-    files {
-      ...documentFragment
-      ...forbiddenFragment
-    }
-    todo {
-      tasks {
-        ...taskWithoutParentInfoFragment
-      }
-      taskTemplate {
-        ...taskTemplateCardFragment
-      }
-    }
-    createdBy {
-      ...userAvatarFragment
-    }
-    updatedBy {
-      ...userAvatarFragment
-    }
-    ownedBy {
-      ... on Organization {
-        id
-      }
-    }
-  }
-`;
-
-const containerSheetFragment = gql`
-  fragment containerSheetFragment on Container {
-    id
-    no
-    autoCalculatedFreeTimeStartDate
-    freeTimeStartDate
-    freeTimeDuration
-    warehouseArrivalAgreedDate
-    warehouseArrivalAgreedDateAssignedTo {
-      ...userAvatarFragment
-    }
-    warehouseArrivalActualDate
-    warehouseArrivalAgreedDateApprovedBy {
-      ...userAvatarFragment
-    }
-    warehouseArrivalAgreedDateApprovedAt
-    warehouseArrivalActualDateAssignedTo {
-      ...userAvatarFragment
-    }
-    warehouseArrivalActualDateApprovedBy {
-      ...userAvatarFragment
-    }
-    warehouseArrivalActualDateApprovedAt
-    warehouse {
-      ...warehouseFragment
-    }
-    yardName
-    departureDate
-    departureDateAssignedTo {
-      ...userAvatarFragment
-    }
-    departureDateApprovedBy {
-      ...userAvatarFragment
-    }
-    departureDateApprovedAt
-    containerType
-    containerOption
-    tags {
-      ...tagFragment
-    }
-    memo
-    createdAt
-    updatedAt
-    createdBy {
-      ...userAvatarFragment
-    }
-    updatedBy {
-      ...userAvatarFragment
-    }
-    ownedBy {
-      ... on Organization {
-        id
-      }
-    }
-  }
-`;
-
-export const timelineDateFragment = gql`
-  fragment timelineDateFragment on TimelineDate {
-    id
-    date
-    assignedTo {
-      ...userAvatarFragment
-    }
-    approvedBy {
-      ...userAvatarFragment
-    }
-    approvedAt
-    timelineDateRevisions {
-      ... on TimelineDateRevision {
-        id
-        date
-        type
-      }
-    }
-    ownedBy {
-      ... on Organization {
-        id
-      }
-    }
-  }
-`;
-
-// TODO: consider to pull out to common for different view
-const orderSheetFragment = gql`
-  fragment orderSheetFragment on Order {
-    id
-    archived
-    poNo
-    memo
-    tags {
-      ...tagFragment
-    }
-    issuedAt
-    piNo
-    currency
-    incoterm
-    deliveryPlace
-    deliveryDate
-    inCharges {
-      ...userAvatarFragment
-    }
-    importer {
-      ...partnerNameFragment
-    }
-    exporter {
-      ...partnerNameFragment
-    }
-    files {
-      ...documentFragment
-      ...forbiddenFragment
-    }
-    todo {
-      tasks {
-        ...taskWithoutParentInfoFragment
-      }
-      taskTemplate {
-        ...taskTemplateCardFragment
-      }
-    }
-    createdAt
-    updatedAt
-    createdBy {
-      ...userAvatarFragment
-    }
-    updatedBy {
-      ...userAvatarFragment
-    }
-    ownedBy {
-      ... on Organization {
-        id
-      }
-    }
-  }
-`;
-
-const orderItemSheetFragment = gql`
-  fragment orderItemSheetFragment on OrderItem {
-    id
-    no
-    quantity
-    price {
-      value: amount
-      metric: currency
-    }
-    deliveryDate
-    sort
-    memo
-    tags {
-      ...tagFragment
-    }
-    productProvider {
-      ...forbiddenFragment
-      ... on ProductProvider {
-        id
-        product {
-          ...forbiddenFragment
-          ... on Product {
-            id
-            name
-            serial
-            ownedBy {
-              ... on Organization {
-                id
-              }
-            }
-          }
-        }
-        ownedBy {
-          ... on Organization {
-            id
-          }
-        }
-      }
-    }
-    files {
-      ...documentFragment
-      ...forbiddenFragment
-    }
-    todo {
-      tasks {
-        ...taskWithoutParentInfoFragment
-      }
-      taskTemplate {
-        ...taskTemplateCardFragment
-      }
-    }
-    createdAt
-    updatedAt
-    createdBy {
-      ...userAvatarFragment
-    }
-    updatedBy {
-      ...userAvatarFragment
-    }
-    ownedBy {
-      ... on Organization {
-        id
-      }
-    }
-  }
-`;
-
-const batchSheetFragment = gql`
-  fragment batchSheetFragment on Batch {
-    id
-    no
-    quantity
-    batchQuantityRevisions {
-      ... on BatchQuantityRevision {
-        id
-        quantity
-        type
-      }
-    }
-    deliveredAt
-    desiredAt
-    expiredAt
-    producedAt
-    packageName
-    packageCapacity
-    packageQuantity
-    autoCalculatePackageQuantity
-    packageGrossWeight {
-      value
-      metric
-    }
-    packageVolume {
-      value
-      metric
-    }
-    packageSize {
-      width {
-        value
-        metric
-      }
-      length {
-        value
-        metric
-      }
-      height {
-        value
-        metric
-      }
-    }
-    memo
-    tags {
-      ...tagFragment
-    }
-    todo {
-      tasks {
-        ...taskWithoutParentInfoFragment
-      }
-      taskTemplate {
-        ...taskTemplateCardFragment
-      }
-    }
-    sort
-    createdAt
-    updatedAt
-    createdBy {
-      ...userAvatarFragment
-    }
-    updatedBy {
-      ...userAvatarFragment
-    }
-    ownedBy {
-      ... on Organization {
-        id
-      }
-    }
-  }
-`;
-
-const warehouseFragment = gql`
-  fragment warehouseFragment on Warehouse {
-    id
-    name
-  }
-`;
+import {
+  sheetModelFragment,
+  sheetOwnedFragment,
+  sheetWarehouseFragment,
+} from 'modules/sheet/common/fragment';
+import { sheetOrderFragment } from 'modules/sheet/order/fragment';
+import { sheetOrderItemFragment } from 'modules/sheet/orderItem/fragment';
+import {
+  sheetBatchFragment,
+  sheetBatchQuantityRevisionFragment,
+} from 'modules/sheet/batch/fragment';
+import { sheetShipmentFragment, sheetTimelineDateFragment } from 'modules/sheet/shipment/fragment';
+import { sheetContainerFragment } from 'modules/sheet/container/fragment';
 
 export const shipmentsQuery = gql`
   query shipmentsQuery(
@@ -415,32 +35,48 @@ export const shipmentsQuery = gql`
   ) {
     shipments(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...shipmentSheetFragment
+        ...sheetShipmentFragment
+        ...sheetModelFragment
+        ...sheetOwnedFragment
         ... on Shipment {
           batchesWithoutContainer {
-            ...batchSheetFragment
+            ...sheetBatchFragment
+            ...sheetModelFragment
+            ...sheetOwnedFragment
             ... on Batch {
               orderItem {
-                ...orderItemSheetFragment
+                ...sheetOrderItemFragment
+                ...sheetModelFragment
+                ...sheetOwnedFragment
                 ... on OrderItem {
                   order {
-                    ...orderSheetFragment
+                    ...sheetOrderFragment
+                    ...sheetModelFragment
+                    ...sheetOwnedFragment
                   }
                 }
               }
             }
           }
           containers {
+            ...sheetContainerFragment
+            ...sheetModelFragment
+            ...sheetOwnedFragment
             ... on Container {
-              ...containerSheetFragment
               batches {
-                ...batchSheetFragment
+                ...sheetBatchFragment
+                ...sheetModelFragment
+                ...sheetOwnedFragment
                 ... on Batch {
                   orderItem {
-                    ...orderItemSheetFragment
+                    ...sheetOrderItemFragment
+                    ...sheetModelFragment
+                    ...sheetOwnedFragment
                     ... on OrderItem {
                       order {
-                        ...orderSheetFragment
+                        ...sheetOrderFragment
+                        ...sheetModelFragment
+                        ...sheetOwnedFragment
                       }
                     }
                   }
@@ -456,15 +92,19 @@ export const shipmentsQuery = gql`
     }
   }
 
-  ${shipmentSheetFragment}
-  ${containerSheetFragment}
-  ${orderSheetFragment}
-  ${orderItemSheetFragment}
-  ${batchSheetFragment}
-  ${timelineDateFragment}
+  ${sheetOrderFragment}
+  ${sheetOrderItemFragment}
+  ${sheetBatchFragment}
+  ${sheetBatchQuantityRevisionFragment}
+  ${sheetShipmentFragment}
+  ${sheetContainerFragment}
+  ${sheetTimelineDateFragment}
+  ${sheetModelFragment}
+  ${sheetOwnedFragment}
+  ${sheetWarehouseFragment}
+
   ${userAvatarFragment}
   ${partnerNameFragment}
-  ${warehouseFragment}
   ${documentFragment}
   ${tagFragment}
   ${taskWithoutParentInfoFragment}
@@ -478,21 +118,29 @@ export const shipmentsQuery = gql`
 export const containerByIDQuery = gql`
   query containerByIDQuery($id: ID!) {
     container(id: $id) {
-      ...containerSheetFragment
+      ...sheetContainerFragment
+      ...sheetModelFragment
+      ...sheetOwnedFragment
       ... on Container {
-        shipment {
-          ... on Shipment {
-            id
-          }
-        }
         batches {
-          ...batchSheetFragment
+          ...sheetBatchFragment
+          ...sheetModelFragment
+          ...sheetOwnedFragment
           ... on Batch {
+            shipment {
+              ... on Shipment {
+                id
+              }
+            }
             orderItem {
-              ...orderItemSheetFragment
+              ...sheetOrderItemFragment
+              ...sheetModelFragment
+              ...sheetOwnedFragment
               ... on OrderItem {
                 order {
-                  ...orderSheetFragment
+                  ...sheetOrderFragment
+                  ...sheetModelFragment
+                  ...sheetOwnedFragment
                 }
               }
             }
@@ -502,45 +150,15 @@ export const containerByIDQuery = gql`
     }
   }
 
-  ${containerSheetFragment}
-  ${orderSheetFragment}
-  ${orderItemSheetFragment}
-  ${batchSheetFragment}
-  ${timelineDateFragment}
-  ${userAvatarFragment}
-  ${warehouseFragment}
-  ${documentFragment}
-  ${userAvatarFragment}
-`;
+  ${sheetOrderFragment}
+  ${sheetOrderItemFragment}
+  ${sheetBatchFragment}
+  ${sheetBatchQuantityRevisionFragment}
+  ${sheetContainerFragment}
+  ${sheetModelFragment}
+  ${sheetOwnedFragment}
+  ${sheetWarehouseFragment}
 
-export const batchByIDQuery = gql`
-  query batchByIDQuery($id: ID!) {
-    batch(id: $id) {
-      ...batchSheetFragment
-      ... on Batch {
-        shipment {
-          ... on Shipment {
-            id
-          }
-        }
-        container {
-          ... on Container {
-            id
-          }
-        }
-        orderItem {
-          ...orderItemSheetFragment
-          ... on OrderItem {
-            order {
-              ...orderSheetFragment
-            }
-          }
-        }
-      }
-    }
-  }
-
-  ${batchSheetFragment}
   ${userAvatarFragment}
   ${partnerNameFragment}
   ${documentFragment}
@@ -553,40 +171,81 @@ export const batchByIDQuery = gql`
   ${forbiddenFragment}
 `;
 
-export const batchQuantityRevisionByIDQuery = gql`
-  query batchQuantityRevisionByIDQuery($id: ID!) {
-    batchQuantityRevision(id: $id) {
-      ... on BatchQuantityRevision {
-        id
-        quantity
-        type
-        sort
-        batch {
-          ... on Batch {
+export const batchByIDQuery = gql`
+  query batchByIDQuery($id: ID!) {
+    batch(id: $id) {
+      ...sheetBatchFragment
+      ...sheetModelFragment
+      ...sheetOwnedFragment
+      ... on Batch {
+        shipment {
+          ... on Shipment {
             id
+          }
+        }
+        container {
+          ... on Container {
+            id
+          }
+        }
+        orderItem {
+          ...sheetOrderItemFragment
+          ...sheetModelFragment
+          ...sheetOwnedFragment
+          ... on OrderItem {
+            order {
+              ...sheetOrderFragment
+              ...sheetModelFragment
+              ...sheetOwnedFragment
+            }
           }
         }
       }
     }
   }
+
+  ${sheetOrderFragment}
+  ${sheetOrderItemFragment}
+  ${sheetBatchFragment}
+  ${sheetBatchQuantityRevisionFragment}
+  ${sheetModelFragment}
+  ${sheetOwnedFragment}
+
+  ${userAvatarFragment}
+  ${partnerNameFragment}
+  ${documentFragment}
+  ${tagFragment}
+  ${taskWithoutParentInfoFragment}
+  ${taskTemplateCardFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskFormInTemplateFragment}
+  ${forbiddenFragment}
 `;
 
 export const orderItemByIDQuery = gql`
   query orderItemByIDQuery($id: ID!) {
     orderItem(id: $id) {
-      ...orderItemSheetFragment
+      ...sheetOrderItemFragment
+      ...sheetModelFragment
+      ...sheetOwnedFragment
       ... on OrderItem {
         order {
-          ...orderSheetFragment
+          ...sheetOrderFragment
+          ...sheetModelFragment
+          ...sheetOwnedFragment
         }
       }
     }
   }
 
-  ${orderItemSheetFragment}
-  ${orderSheetFragment}
-  ${partnerNameFragment}
+  ${sheetOrderFragment}
+  ${sheetOrderItemFragment}
+  ${sheetModelFragment}
+  ${sheetOwnedFragment}
+
   ${userAvatarFragment}
+  ${partnerNameFragment}
   ${documentFragment}
   ${tagFragment}
   ${taskWithoutParentInfoFragment}
@@ -600,13 +259,18 @@ export const orderItemByIDQuery = gql`
 export const orderByIDQuery = gql`
   query orderByIDQuery($id: ID!) {
     order(id: $id) {
-      ...orderSheetFragment
+      ...sheetOrderFragment
+      ...sheetModelFragment
+      ...sheetOwnedFragment
     }
   }
 
-  ${orderSheetFragment}
-  ${partnerNameFragment}
+  ${sheetOrderFragment}
+  ${sheetModelFragment}
+  ${sheetOwnedFragment}
+
   ${userAvatarFragment}
+  ${partnerNameFragment}
   ${documentFragment}
   ${tagFragment}
   ${taskWithoutParentInfoFragment}
@@ -614,125 +278,5 @@ export const orderByIDQuery = gql`
   ${milestoneCardFragment}
   ${projectCardFragment}
   ${taskFormInTemplateFragment}
-  ${forbiddenFragment}
-`;
-
-export const userByIDQuery = gql`
-  query userByIDQuery($id: ID!) {
-    user(id: $id) {
-      ...userAvatarFragment
-    }
-  }
-
-  ${userAvatarFragment}
-`;
-
-export const usersByIDsQuery = gql`
-  query usersByIDsQuery($ids: [ID!]!) {
-    usersByIDs(ids: $ids) {
-      ...userAvatarFragment
-    }
-  }
-
-  ${userAvatarFragment}
-`;
-
-export const organizationByIDQuery = gql`
-  query organizationByIDQuery($id: ID!) {
-    organization(id: $id) {
-      ...partnerNameFragment
-    }
-  }
-
-  ${partnerNameFragment}
-`;
-
-export const organizationsByIDsQuery = gql`
-  query organizationsByIDsQuery($ids: [ID!]!) {
-    organizationsByIDs(ids: $ids) {
-      ...partnerNameFragment
-    }
-  }
-
-  ${partnerNameFragment}
-`;
-
-export const warehouseByIDQuery = gql`
-  query warehouseByIDQuery($id: ID!) {
-    warehouse(id: $id) {
-      ...warehouseFragment
-    }
-  }
-
-  ${warehouseFragment}
-`;
-
-export const tagsByIDsQuery = gql`
-  query tagsByIDsQuery($ids: [ID!]!) {
-    tagsByIDs(ids: $ids) {
-      ...tagFragment
-    }
-  }
-
-  ${tagFragment}
-`;
-
-export const shipmentMutation = gql`
-  mutation shipmentMutation($id: ID!, $input: ShipmentUpdateInput!) {
-    shipmentUpdate(id: $id, input: $input) {
-      ...forbiddenFragment
-      ...badRequestFragment
-    }
-  }
-
-  ${badRequestFragment}
-  ${forbiddenFragment}
-`;
-
-export const containerMutation = gql`
-  mutation containerMutation($id: ID!, $input: ContainerUpdateInput!) {
-    containerUpdate(id: $id, input: $input) {
-      ...forbiddenFragment
-      ...badRequestFragment
-    }
-  }
-
-  ${badRequestFragment}
-  ${forbiddenFragment}
-`;
-
-export const orderMutation = gql`
-  mutation orderMutation($id: ID!, $input: OrderUpdateInput!) {
-    orderUpdate(id: $id, input: $input) {
-      ...forbiddenFragment
-      ...badRequestFragment
-    }
-  }
-
-  ${badRequestFragment}
-  ${forbiddenFragment}
-`;
-
-export const orderItemMutation = gql`
-  mutation orderItemMutation($id: ID!, $input: OrderItemUpdateInput!) {
-    orderItemUpdate(id: $id, input: $input) {
-      ...forbiddenFragment
-      ...badRequestFragment
-    }
-  }
-
-  ${badRequestFragment}
-  ${forbiddenFragment}
-`;
-
-export const batchMutation = gql`
-  mutation batchMutation($id: ID!, $input: BatchUpdateInput!) {
-    batchUpdate(id: $id, input: $input) {
-      ...forbiddenFragment
-      ...badRequestFragment
-    }
-  }
-
-  ${badRequestFragment}
   ${forbiddenFragment}
 `;

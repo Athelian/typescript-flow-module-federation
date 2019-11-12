@@ -10,19 +10,16 @@ import type {
 } from 'components/Sheet/SheetLive/types';
 import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
+import { batchQuantityRevisionByIDQuery } from 'modules/sheet/batch/query';
 import {
-  batchByIDQuery,
-  batchQuantityRevisionByIDQuery,
-  containerByIDQuery,
-  orderItemByIDQuery,
   organizationByIDQuery,
   organizationsByIDsQuery,
-  shipmentByIDQuery,
   tagsByIDsQuery,
   userByIDQuery,
   usersByIDsQuery,
   warehouseByIDQuery,
-} from './query';
+} from 'modules/sheet/common/query';
+import { batchByIDQuery, containerByIDQuery, orderItemByIDQuery, shipmentByIDQuery } from './query';
 
 // $FlowFixMe not compatible with hook implementation
 function onCreateOrderItemFactory(client: ApolloClient, dispatch: Action => void) {

@@ -11,6 +11,7 @@ import type {
 } from 'components/Sheet/SheetLive/types';
 import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
+import { batchQuantityRevisionByIDQuery } from 'modules/sheet/batch/query';
 import {
   organizationByIDQuery,
   organizationsByIDsQuery,
@@ -18,12 +19,8 @@ import {
   userByIDQuery,
   usersByIDsQuery,
   warehouseByIDQuery,
-  batchQuantityRevisionByIDQuery,
-  containerByIDQuery,
-  shipmentByIDQuery,
-  orderByIDQuery,
-  orderItemByIDQuery,
-} from 'modules/gtv/query';
+} from 'modules/sheet/common/query';
+import { orderByIDQuery, containerByIDQuery, orderItemByIDQuery, shipmentByIDQuery } from './query';
 
 function onBatchQuantityRevisionFactory(client: ApolloClient<any>, dispatch: Action => void) {
   return (batchQuantityRevisionId: string, batches: Array<Batch>) =>
