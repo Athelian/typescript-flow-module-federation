@@ -1040,7 +1040,20 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 160,
   },
-  // nb of voyages
+  // TODO: Replace with real selector later
+  {
+    key: 'order.orderItem.batch.shipment.numOfVoyages',
+    exportKey: 'orderItems.batches.shipment.numOfVoyages',
+    title: <FormattedMessage {...shipmentMessages.numOfVoyages} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 100,
+    sort: {
+      local: true,
+      name: 'shipmentNumOfVoyages',
+      group: 'batch',
+    },
+  },
   {
     key: 'order.orderItem.batch.shipment.cargoReady.date',
     exportKey: 'orderItems.batches.shipment.cargoReady.date',

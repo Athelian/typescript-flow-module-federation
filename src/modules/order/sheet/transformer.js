@@ -1358,6 +1358,19 @@ function transformBatchShipment(basePath: string, batch: Object): Array<CellValu
       ),
     },
     {
+      columnKey: 'order.orderItem.batch.shipment.numOfVoyages',
+      type: 'number',
+      ...transformComputedField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'voyages',
+        order => {
+          const currentBatch = getCurrentBatch(batch?.id, order);
+          return currentBatch?.shipment?.voyages?.length ?? 0;
+        }
+      ),
+    },
+    {
       columnKey: 'order.orderItem.batch.shipment.forwarders',
       type: 'forwarders',
       ...transformValueField(
