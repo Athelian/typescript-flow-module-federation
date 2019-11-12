@@ -232,7 +232,7 @@ const SelectInput = ({
         clearSelection,
         isOpen,
       }) => (
-        <div>
+        <div style={{ width: '100%' }}>
           {React.createElement(renderInput, {
             isOpen,
             required,
