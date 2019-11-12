@@ -114,8 +114,6 @@ export const BatchNoWrapperStyle: string = css`
 `;
 
 export const QuantityWrapperStyle: string = css`
-  display: grid;
-  grid-template-columns: 95px 90px;
   width: 100%;
   padding: 0 5px;
 `;

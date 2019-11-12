@@ -1,5 +1,5 @@
 // @flow
-import { totalVolume, getBatchLatestQuantity } from 'utils/batch';
+import { totalVolume, oldGetBatchLatestQuantity as getBatchLatestQuantity } from 'utils/batch';
 
 export function calculateOrderTotalVolume(orderItems: Array<string>, editData: Object) {
   const allBatchIds = [];

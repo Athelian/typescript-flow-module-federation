@@ -59,7 +59,6 @@ import {
   BATCH_SET_PACKAGE_WEIGHT,
   BATCH_SET_PRODUCTION_DATE,
   BATCH_SET_QUANTITY,
-  BATCH_SET_QUANTITY_ADJUSTMENTS,
   BATCH_SET_TAGS,
   BATCH_SET_TASKS,
   BATCH_UPDATE,
@@ -798,12 +797,8 @@ function transformBatch(
     {
       columnKey: 'order.orderItem.batch.quantityRevisions',
       type: 'quantity_revisions',
-      ...transformValueField(
-        basePath,
-        batch,
-        'batchQuantityRevisions',
-        hasPermission =>
-          hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)
+      ...transformValueField(basePath, batch, 'batchQuantityRevisions', hasPermission =>
+        hasPermission(BATCH_UPDATE)
       ),
     },
     {

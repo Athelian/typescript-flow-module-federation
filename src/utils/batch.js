@@ -1,12 +1,7 @@
+/* eslint-disable no-param-reassign */
 // @flow
-import type {
-  MetricValue,
-  Size,
-  Batch,
-  BatchPayload,
-  OrderItemPayload,
-  BatchQuantityRevision,
-} from 'generated/graphql';
+import type { MetricValue, Size, Batch, BatchPayload, OrderItemPayload } from 'generated/graphql';
+import produce from 'immer';
 import {
   BATCH_UPDATE,
   BATCH_SET_CUSTOM_FIELDS,
@@ -100,19 +95,9 @@ export const oldGetBatchLatestQuantity = (batch: BatchPayload): number => {
     : quantity;
 };
 
-export const totalBatchPriceAmount = ({
-  quantity = 0,
-  batchQuantityRevisions = [],
-  orderItem,
-}: {
-  quantity: number,
-  batchQuantityRevisions: Array<BatchQuantityRevision>,
-  orderItem: OrderItemPayload,
-}): number => {
-  return times(
-    getBatchLatestQuantity({ quantity, batchQuantityRevisions }),
-    orderItem?.price?.amount ?? 0
-  );
+export const totalBatchPriceAmount = (batch: Batch): number => {
+  const quantity = getBatchLatestQuantity(batch);
+  return times(quantity, batch?.orderItem?.price?.amount ?? 0);
 };
 
 export const calculateVolume = (volume: MetricValue, size: Size): Object => {
@@ -307,11 +292,11 @@ export const updateBatchCardQuantity = (batch: Batch, quantity: number): Batch =
     postShippedQuantity: batch?.postShippedQuantity,
     deliveredQuantity: batch?.deliveredQuantity,
   });
-  const newBatch = { ...batch, [field]: quantity };
 
-  if (autoCalculatePackageQuantity) {
-    return { ...newBatch, packageQuantity: calculatePackageQuantity(newBatch) };
-  }
-
-  return newBatch;
+  return produce(batch, draft => {
+    draft[field] = quantity;
+    if (autoCalculatePackageQuantity) {
+      draft.packageQuantity = calculatePackageQuantity(draft);
+    }
+  });
 };

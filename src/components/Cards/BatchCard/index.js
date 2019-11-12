@@ -58,7 +58,6 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
     tags = [],
     shipment,
     container,
-
     todo,
   } = batch;
 

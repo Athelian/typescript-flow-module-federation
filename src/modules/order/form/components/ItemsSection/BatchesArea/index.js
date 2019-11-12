@@ -24,7 +24,6 @@ import {
   BATCH_SET_QUANTITY,
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
-  BATCH_SET_QUANTITY_ADJUSTMENTS,
 } from 'modules/permission/constants/batch';
 import { NewButton, BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
@@ -212,9 +211,7 @@ function BatchesArea({
   const allowCloneBatch = hasPermission(BATCH_CREATE);
   const allowDeleteBatch = hasPermission(BATCH_DELETE);
   const allowUpdateBatchNo = hasPermission([BATCH_UPDATE, BATCH_SET_NO]);
-  const allowUpdateBatchQuantity =
-    hasPermission(BATCH_UPDATE) ||
-    (hasPermission(BATCH_SET_QUANTITY) && hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS));
+  const allowUpdateBatchQuantity = hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY);
   const allowUpdateBatchDelivery = hasPermission([BATCH_UPDATE, BATCH_SET_DELIVERY_DATE]);
   const allowUpdateBatchDesired = hasPermission([BATCH_UPDATE, BATCH_SET_DESIRED_DATE]);
 
@@ -241,8 +238,7 @@ function BatchesArea({
                 <FormattedMessage id="modules.Orders.batches" defaultMessage="BATCHES" />
               )}
               {' ('}
-              <FormattedNumber value={batches.length} />
-              {')'}
+              <FormattedNumber value={batches.length} />)
             </div>
           </div>
 

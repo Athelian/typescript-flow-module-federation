@@ -14,7 +14,7 @@ import { trackingError } from 'utils/trackingError';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
 import {
   oldCalculatePackageQuantity as calculatePackageQuantity,
-  getBatchLatestQuantity,
+  oldGetBatchLatestQuantity as getBatchLatestQuantity,
 } from 'utils/batch';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import SlideView from 'components/SlideView';

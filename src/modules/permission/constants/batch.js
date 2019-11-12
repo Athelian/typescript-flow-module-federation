@@ -16,7 +16,6 @@ export const BATCH_SET_CUSTOM_FIELDS_MASK = 'batch.batches.setCustomFieldsMask';
 export const BATCH_SET_TAGS = 'batch.batches.setTags';
 export const BATCH_SET_MEMO = 'batch.batches.setMemo';
 export const BATCH_SET_ORDER_ITEM = 'batch.batches.setOrderItem';
-export const BATCH_SET_QUANTITY_ADJUSTMENTS = 'batch.batches.adjustQuantity';
 export const BATCH_SET_PACKAGE_NAME = 'batch.batches.setPackageName';
 export const BATCH_SET_PACKAGE_CAPACITY = 'batch.batches.setPackageCapacity';
 export const BATCH_SET_PACKAGE_QUANTITY = 'batch.batches.setPackageQuantity';

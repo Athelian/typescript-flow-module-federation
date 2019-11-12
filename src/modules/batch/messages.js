@@ -19,6 +19,26 @@ export default defineMessages({
     id: 'components.BatchItem.initialQuantity',
     defaultMessage: 'INITIAL QUANTITY',
   },
+  producedQuantity: {
+    id: 'components.BatchItem.producedQuantity',
+    defaultMessage: 'PRODUCED QUANTITY',
+  },
+  preShippedQuantity: {
+    id: 'components.BatchItem.preShippedQuantity',
+    defaultMessage: 'PRE-SHIPPED QUANTITY',
+  },
+  shippedQuantity: {
+    id: 'components.BatchItem.shippedQuantity',
+    defaultMessage: 'SHIPPED QUANTITY',
+  },
+  postShippedQuantity: {
+    id: 'components.BatchItem.postShippedQuantity',
+    defaultMessage: 'POST SHIPPED QUANTITY',
+  },
+  deliveredQuantity: {
+    id: 'components.BatchItem.deliveredQuantity',
+    defaultMessage: 'DELIVERED QUANTITY',
+  },
   shortQuantity: {
     id: 'components.BatchItem.shortQuantity',
     defaultMessage: 'QTY',
