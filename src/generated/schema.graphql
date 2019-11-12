@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Nov 07 2019 18:52:12 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Nov 12 2019 14:34:48 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28443,7 +28443,7 @@ input EntityInput {
   taskId: ID
 }
 
-union EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | BatchQuantityRevision | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | Milestone | BadRequest | Forbidden | NotFound
+union EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | BatchQuantityRevision | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | BadRequest | Forbidden | NotFound
 
 type EntityValue {
   entity: EntityPayload
