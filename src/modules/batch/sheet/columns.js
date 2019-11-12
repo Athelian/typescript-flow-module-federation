@@ -383,7 +383,7 @@ const batchColumns: Array<ColumnConfig> = [
   },
   {
     key: 'batch.latestQuantity',
-    title: <FormattedMessage {...batchMessages.quantity} />,
+    title: <FormattedMessage {...batchMessages.currentQuantity} />,
     icon: 'BATCH',
     color: colors.BATCH,
     width: 200,
@@ -695,7 +695,7 @@ const shipmentColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.forwarder} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 810,
+    width: 825,
   },
   {
     key: 'shipment.blNo',

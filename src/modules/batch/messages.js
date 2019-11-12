@@ -7,6 +7,10 @@ export default defineMessages({
     id: 'components.BatchItem.batchNo',
     defaultMessage: 'Batch No.',
   },
+  currentQuantity: {
+    id: 'components.BatchItem.currentQuantity',
+    defaultMessage: 'Current Quantity',
+  },
   quantity: {
     id: 'components.BatchItem.quantity',
     defaultMessage: 'QUANTITY',
