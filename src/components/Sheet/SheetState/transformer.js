@@ -48,6 +48,22 @@ export const transformValueField = (
   permissions: ((string) => boolean) => boolean
 ) => transformField(entity, `${basePath}.${field}`, field, entity?.[field], permissions);
 
+export const transformCustomField = (
+  basePath: string,
+  entity: Object | null,
+  fieldDefinitionId: string,
+  permissions: ((string) => boolean) => boolean
+) =>
+  transformField(
+    entity,
+    basePath,
+    `@${fieldDefinitionId}`,
+    (entity?.customFields?.fieldValues ?? []).find(
+      fv => fv.fieldDefinition.id === fieldDefinitionId
+    )?.value?.string ?? null,
+    permissions
+  );
+
 export const transformReadonlyField = (
   basePath: string,
   entity: Object | null,

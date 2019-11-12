@@ -2,6 +2,7 @@
 import type { ColumnConfig, ColumnSort } from './SheetState/types';
 import {
   transformValueField,
+  transformCustomField,
   transformReadonlyField,
   transformComputedField,
 } from './SheetState/transformer';
@@ -15,6 +16,7 @@ export {
   useSheet,
   ColumnsConfig,
   transformValueField,
+  transformCustomField,
   transformReadonlyField,
   transformComputedField,
 };
