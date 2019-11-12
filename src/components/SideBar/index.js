@@ -105,7 +105,6 @@ const menu: Array<MenuConfig> = [
         icon: 'TABLE',
         path: 'table',
         beta: true,
-        hidden: !isEnableBetaFeature,
       },
       {
         label: <FormattedMessage {...messages.cards} />,
