@@ -4,23 +4,33 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { equals } from 'ramda';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, BatchFilterConfig } from 'components/NavBar';
-import { Sheet, ColumnsConfig, useSheet } from 'components/Sheet';
 import { ExportButton } from 'components/Buttons';
+import { Sheet, ColumnsConfig, useSheet } from 'components/Sheet';
+import type { CellValue } from 'components/Sheet/SheetState/types';
+import LoadingIcon from 'components/LoadingIcon';
+import type { ColumnConfig } from 'components/Sheet';
+import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
-import batchColumns from './columns';
-import transformer from './transformer';
+import { batchesExportQuery } from '../query';
+import batchColumns, { FieldDefinitionEntityTypes } from './columns';
+import batchTransformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
 import mutate from './mutate';
 import decorate from './decorator';
 import { batchesQuery } from './query';
-import { batchesExportQuery } from '../query';
 
 type Props = {
   batchIds?: Array<string>,
 };
 
-const BatchSheetModule = ({ batchIds }: Props) => {
+type ImplProps = {
+  ...Props,
+  columns: Array<ColumnConfig>,
+  transformer: Object => Array<Array<CellValue>>,
+};
+
+const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }: ImplProps) => {
   const client = useApolloClient();
   const memorizedMutate = React.useCallback(mutate(client), [client]);
   const memorizedHandler = React.useCallback(dispatch => entityEventHandler(client, dispatch), [
@@ -48,7 +58,7 @@ const BatchSheetModule = ({ batchIds }: Props) => {
     onLocalSort,
     onRemoteSort,
   } = useSheet({
-    columns: batchColumns,
+    columns: columnConfigs,
     itemsQuery: batchesQuery,
     initialFilterBy: { query: '', archived: false },
     initialSortBy: { updatedAt: 'DESCENDING' },
@@ -70,7 +80,7 @@ const BatchSheetModule = ({ batchIds }: Props) => {
         <Filter config={BatchFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig
-          config={batchColumns}
+          config={columnConfigs}
           columns={columns}
           onChange={setColumns}
           templateType="BatchSheet"
@@ -100,6 +110,29 @@ const BatchSheetModule = ({ batchIds }: Props) => {
         onLoadMore={onLoadMore}
       />
     </Content>
+  );
+};
+
+const BatchSheetModule = ({ batchIds }: Props) => {
+  const { fieldDefinitions, loading } = useFieldDefinitions(FieldDefinitionEntityTypes);
+
+  if (loading) {
+    return <LoadingIcon />;
+  }
+
+  const allFieldDefinitions = {
+    orderFieldDefinitions: fieldDefinitions?.Order ?? [],
+    orderItemFieldDefinitions: fieldDefinitions?.OrderItem ?? [],
+    batchFieldDefinitions: fieldDefinitions?.Batch ?? [],
+    shipmentFieldDefinitions: fieldDefinitions?.Shipment ?? [],
+  };
+
+  return (
+    <BatchSheetModuleImpl
+      columns={batchColumns(allFieldDefinitions)}
+      transformer={batchTransformer(allFieldDefinitions)}
+      batchIds={batchIds}
+    />
   );
 };
 

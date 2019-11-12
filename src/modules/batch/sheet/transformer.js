@@ -4,16 +4,19 @@ import { addDays } from 'date-fns';
 import { calculateVolume, getBatchLatestQuantity } from 'utils/batch';
 import { getLatestDate } from 'utils/shipment';
 import { defaultVolumeMetric } from 'utils/metric';
+import type { FieldDefinition } from 'types';
 import { startOfToday, differenceInCalendarDays, calculateDueDate } from 'utils/date';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
   transformComputedField,
   transformReadonlyField,
+  transformCustomField,
   transformValueField,
 } from 'components/Sheet';
 import {
   ORDER_SET_ARCHIVED,
   ORDER_SET_CURRENCY,
+  ORDER_SET_CUSTOM_FIELDS,
   ORDER_SET_DELIVERY_DATE,
   ORDER_SET_DELIVERY_PLACE,
   ORDER_SET_DOCUMENTS,
@@ -28,6 +31,7 @@ import {
   ORDER_UPDATE,
 } from 'modules/permission/constants/order';
 import {
+  ORDER_ITEMS_SET_CUSTOM_FIELDS,
   ORDER_ITEMS_SET_DELIVERY_DATE,
   ORDER_ITEMS_SET_DOCUMENTS,
   ORDER_ITEMS_SET_MEMO,
@@ -39,6 +43,7 @@ import {
   ORDER_ITEMS_UPDATE,
 } from 'modules/permission/constants/orderItem';
 import {
+  BATCH_SET_CUSTOM_FIELDS,
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
   BATCH_SET_EXPIRY,
@@ -106,9 +111,14 @@ import {
   SHIPMENT_ASSIGN_TIMELINE_DATE,
   SHIPMENT_APPROVE_TIMELINE_DATE,
   SHIPMENT_UPDATE,
+  SHIPMENT_SET_CUSTOM_FIELDS,
 } from 'modules/permission/constants/shipment';
 
-function transformBatch(basePath: string, batch: Batch): Array<CellValue> {
+function transformBatch(
+  fieldDefinitions: Array<FieldDefinition>,
+  basePath: string,
+  batch: Batch
+): Array<CellValue> {
   return [
     {
       columnKey: 'batch.created',
@@ -352,10 +362,28 @@ function transformBatch(basePath: string, batch: Batch): Array<CellValue> {
       type: 'batch_logs',
       ...transformValueField(basePath, batch, 'id', () => true),
     },
+    ...fieldDefinitions.map(fieldDefinition => ({
+      columnKey: `batch.customField.${fieldDefinition.id}`,
+      type: 'text',
+      hide: currentBatch => {
+        const mask = currentBatch?.customFields?.mask ?? null;
+        return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
+      },
+      ...transformCustomField(
+        basePath,
+        batch,
+        fieldDefinition.id,
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_CUSTOM_FIELDS)
+      ),
+    })),
   ];
 }
 
-function transformOrderItem(basePath: string, orderItem: Object): Array<CellValue> {
+function transformOrderItem(
+  fieldDefinitions: Array<FieldDefinition>,
+  basePath: string,
+  orderItem: Object
+): Array<CellValue> {
   return [
     {
       columnKey: 'orderItem.created',
@@ -520,13 +548,32 @@ function transformOrderItem(basePath: string, orderItem: Object): Array<CellValu
       type: 'order_item_logs',
       ...transformValueField(basePath, orderItem, 'id', () => true),
     },
+    ...fieldDefinitions.map(fieldDefinition => ({
+      columnKey: `orderItem.customField.${fieldDefinition.id}`,
+      type: 'text',
+      hide: currentBatch => {
+        const mask = currentBatch?.orderItem?.customFields?.mask ?? null;
+        return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
+      },
+      ...transformCustomField(
+        basePath,
+        orderItem,
+        fieldDefinition.id,
+        hasPermission =>
+          hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_CUSTOM_FIELDS)
+      ),
+    })),
   ].map(c => ({
     ...c,
     duplicable: true,
   }));
 }
 
-function transformOrder(basePath: string, order: Object): Array<CellValue> {
+function transformOrder(
+  fieldDefinitions: Array<FieldDefinition>,
+  basePath: string,
+  order: Object
+): Array<CellValue> {
   return [
     {
       columnKey: 'order.created',
@@ -714,6 +761,20 @@ function transformOrder(basePath: string, order: Object): Array<CellValue> {
       type: 'order_logs',
       ...transformValueField(basePath, order, 'id', () => true),
     },
+    ...fieldDefinitions.map(fieldDefinition => ({
+      columnKey: `order.customField.${fieldDefinition.id}`,
+      type: 'text',
+      hide: currentBatch => {
+        const mask = currentBatch?.orderItem?.order?.customFields?.mask ?? null;
+        return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
+      },
+      ...transformCustomField(
+        basePath,
+        order,
+        fieldDefinition.id,
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_CUSTOM_FIELDS)
+      ),
+    })),
   ].map(c => ({
     ...c,
     duplicable: true,
@@ -1071,7 +1132,11 @@ function transformContainer(basePath: string, batch: Batch): Array<CellValue> {
   }));
 }
 
-function transformShipment(basePath: string, batch: Batch): Array<CellValue> {
+function transformShipment(
+  fieldDefinitions: Array<FieldDefinition>,
+  basePath: string,
+  batch: Batch
+): Array<CellValue> {
   const nbOfVoyages = (batch?.shipment?.voyages ?? []).length;
 
   return [
@@ -1992,6 +2057,20 @@ function transformShipment(basePath: string, batch: Batch): Array<CellValue> {
       type: 'shipment_logs',
       ...transformValueField(`${basePath}.shipment`, batch?.shipment ?? null, 'id', () => true),
     },
+    ...fieldDefinitions.map(fieldDefinition => ({
+      columnKey: `shipment.customField.${fieldDefinition.id}`,
+      type: 'text',
+      hide: currentBatch => {
+        const mask = currentBatch?.shipment?.customFields?.mask ?? null;
+        return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
+      },
+      ...transformCustomField(
+        basePath,
+        batch?.shipment ?? null,
+        fieldDefinition.id,
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_CUSTOM_FIELDS)
+      ),
+    })),
   ].map(c => ({
     ...c,
     duplicable: true,
@@ -1999,12 +2078,30 @@ function transformShipment(basePath: string, batch: Batch): Array<CellValue> {
   }));
 }
 
-export default function transformer(index: number, batch: Batch): Array<Array<CellValue>> {
-  const batchCells = transformBatch(`${index}`, batch);
-  const orderItemCells = transformOrderItem(`${index}`, batch.orderItem);
-  const orderCells = transformOrder(`${index}`, batch.orderItem.order);
-  const containerCells = transformContainer(`${index}`, batch);
-  const shipmentCells = transformShipment(`${index}`, batch);
+type Props = {
+  orderFieldDefinitions: Array<FieldDefinition>,
+  orderItemFieldDefinitions: Array<FieldDefinition>,
+  batchFieldDefinitions: Array<FieldDefinition>,
+  shipmentFieldDefinitions: Array<FieldDefinition>,
+};
 
-  return [[...batchCells, ...orderItemCells, ...orderCells, ...containerCells, ...shipmentCells]];
+export default function transformer({
+  orderFieldDefinitions,
+  orderItemFieldDefinitions,
+  batchFieldDefinitions,
+  shipmentFieldDefinitions,
+}: Props) {
+  return (index: number, batch: Batch): Array<Array<CellValue>> => {
+    const batchCells = transformBatch(batchFieldDefinitions, `${index}`, batch);
+    const orderItemCells = transformOrderItem(
+      orderItemFieldDefinitions,
+      `${index}`,
+      batch.orderItem
+    );
+    const orderCells = transformOrder(orderFieldDefinitions, `${index}`, batch.orderItem.order);
+    const containerCells = transformContainer(`${index}`, batch);
+    const shipmentCells = transformShipment(shipmentFieldDefinitions, `${index}`, batch);
+
+    return [[...batchCells, ...orderItemCells, ...orderCells, ...containerCells, ...shipmentCells]];
+  };
 }
