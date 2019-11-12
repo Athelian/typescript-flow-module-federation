@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
-import { getBatchLatestQuantity } from 'utils/batch';
+import { oldGetBatchLatestQuantity as getBatchLatestQuantity } from 'utils/batch';
 import Icon from 'components/Icon';
 import { Tooltip } from 'components/Tooltip';
 import { NewButton } from 'components/Buttons';

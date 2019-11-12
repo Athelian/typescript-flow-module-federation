@@ -12,7 +12,10 @@ import { UserConsumer } from 'contexts/Viewer';
 import emitter from 'utils/emitter';
 import { trackingError } from 'utils/trackingError';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
-import { calculatePackageQuantity, getBatchLatestQuantity } from 'utils/batch';
+import {
+  oldCalculatePackageQuantity as calculatePackageQuantity,
+  getBatchLatestQuantity,
+} from 'utils/batch';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import SlideView from 'components/SlideView';
 import { EntityIcon } from 'components/NavBar';
