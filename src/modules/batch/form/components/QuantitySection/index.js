@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BATCH_UPDATE, BATCH_SET_QUANTITY } from 'modules/permission/constants/batch';
+import { findActiveQuantityField } from 'utils/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { BatchInfoContainer } from 'modules/batch/form/containers';
@@ -12,32 +13,6 @@ import GridColumn from 'components/GridColumn';
 import validator from 'modules/batch/form/validator';
 import CurrentQuantity from './CurrentQuantity';
 import { QuantitySectionWrapperStyle } from './style';
-
-const findActiveQuantityField = ({
-  producedQuantity,
-  preShippedQuantity,
-  shippedQuantity,
-  postShippedQuantity,
-  deliveredQuantity,
-}: {
-  producedQuantity: ?number,
-  preShippedQuantity: ?number,
-  shippedQuantity: ?number,
-  postShippedQuantity: ?number,
-  deliveredQuantity: ?number,
-}) => {
-  if (deliveredQuantity) return 'deliveredQuantity';
-
-  if (postShippedQuantity) return 'postShippedQuantity';
-
-  if (shippedQuantity) return 'shippedQuantity';
-
-  if (preShippedQuantity) return 'preShippedQuantity';
-
-  if (producedQuantity) return 'producedQuantity';
-
-  return 'quantity';
-};
 
 const QuantitySection = () => {
   const { isOwner } = usePartnerPermission();

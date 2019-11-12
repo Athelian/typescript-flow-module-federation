@@ -26,9 +26,56 @@ import {
 } from './metric';
 import { getByPathWithDefault } from './fp';
 
+export const findActiveQuantityField = ({
+  producedQuantity,
+  preShippedQuantity,
+  shippedQuantity,
+  postShippedQuantity,
+  deliveredQuantity,
+}: {
+  producedQuantity: ?number,
+  preShippedQuantity: ?number,
+  shippedQuantity: ?number,
+  postShippedQuantity: ?number,
+  deliveredQuantity: ?number,
+}) => {
+  if (deliveredQuantity) return 'deliveredQuantity';
+
+  if (postShippedQuantity) return 'postShippedQuantity';
+
+  if (shippedQuantity) return 'shippedQuantity';
+
+  if (preShippedQuantity) return 'preShippedQuantity';
+
+  if (producedQuantity) return 'producedQuantity';
+
+  return 'quantity';
+};
+
+export const getBatchLatestQuantity = (batch: BatchPayload) => {
+  const quantity = batch?.quantity ?? 0;
+  const deliveredQuantity = batch?.deliveredQuantity;
+  const postShippedQuantity = batch?.postShippedQuantity;
+  const shippedQuantity = batch?.shippedQuantity;
+  const preShippedQuantity = batch?.preShippedQuantity;
+  const producedQuantity = batch?.producedQuantity;
+
+  if (deliveredQuantity) return deliveredQuantity;
+
+  if (postShippedQuantity) return postShippedQuantity;
+
+  if (shippedQuantity) return shippedQuantity;
+
+  if (preShippedQuantity) return preShippedQuantity;
+
+  if (producedQuantity) return producedQuantity;
+
+  return quantity;
+};
+
 export const findWeight = (batch: BatchPayload) => {
-  const packageGrossWeight = getByPathWithDefault(null, 'packageGrossWeight', batch);
-  const packageQuantity = getByPathWithDefault(0, 'packageQuantity', batch);
+  const packageGrossWeight = batch?.packageGrossWeight;
+  const packageQuantity = batch?.packageQuantity ?? 0;
   return packageQuantity && packageGrossWeight
     ? times(
         packageQuantity,
@@ -38,14 +85,15 @@ export const findWeight = (batch: BatchPayload) => {
 };
 
 export const findVolume = (batch: BatchPayload) => {
-  const volume = getByPathWithDefault(null, 'packageVolume', batch);
-  const packageQuantity = getByPathWithDefault(0, 'packageQuantity', batch);
+  const volume = batch?.packageVolume;
+  const packageQuantity = batch?.packageQuantity ?? 0;
   return packageQuantity && volume
     ? times(packageQuantity, convertVolume(volume.value, volume.metric, 'm³'))
     : 0;
 };
 
-export const getBatchLatestQuantity = (batch: BatchPayload): number => {
+// DEPRECATED will be removed after remove old RM
+export const oldGetBatchLatestQuantity = (batch: BatchPayload): number => {
   const quantity = getByPathWithDefault(0, 'quantity', batch);
   const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', batch);
   return batchQuantityRevisions.length > 0
@@ -94,7 +142,8 @@ export const calculateVolume = (volume: MetricValue, size: Size): Object => {
   };
 };
 
-export const calculatePackageQuantity = (batch: Batch) => {
+// DEPRECATED will be removed after remove old RM
+export const oldCalculatePackageQuantity = (batch: Batch) => {
   const quantity = getByPathWithDefault(0, 'quantity', batch);
   const packageCapacity = getByPathWithDefault(0, 'packageCapacity', batch);
   const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', batch);
@@ -105,6 +154,15 @@ export const calculatePackageQuantity = (batch: Batch) => {
         : quantity;
 
     return divide(validQuantity, packageCapacity);
+  }
+  return 0;
+};
+
+export const calculatePackageQuantity = (batch: Batch) => {
+  const quantity = getBatchLatestQuantity(batch);
+  const packageCapacity = batch?.packageCapacity;
+  if (packageCapacity > 0) {
+    return divide(quantity, packageCapacity);
   }
   return 0;
 };
@@ -219,7 +277,6 @@ export const generateBatchByOrderItem = (orderItem: OrderItemPayload): Batch => 
     shipmentSort: 0,
     quantity: 0,
     latestQuantity: 0,
-    batchQuantityRevisions: [],
     customFields: {
       mask: null,
       fieldValues: [],
@@ -238,10 +295,6 @@ export const generateBatchByOrderItem = (orderItem: OrderItemPayload): Batch => 
         skipped: 0,
         delayed: 0,
       },
-      // TODO: remove deprecated field
-      completedCount: 0,
-      inProgressCount: 0,
-      remainingCount: 0,
     },
     createdAt: null,
     updatedAt: null,
