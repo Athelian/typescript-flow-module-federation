@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
+import { equals } from 'ramda';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, BatchFilterConfig } from 'components/NavBar';
 import { Sheet, ColumnsConfig, useSheet } from 'components/Sheet';
@@ -29,6 +30,7 @@ const BatchSheetModule = ({ batchIds }: Props) => {
     data => ({ ...data?.batches, nodes: decorate(clone(data?.batches?.nodes ?? [])) }),
     []
   );
+  const batchIdsRef = React.useRef<?Array<string>>(null);
 
   const {
     initialItems,
@@ -48,12 +50,17 @@ const BatchSheetModule = ({ batchIds }: Props) => {
   } = useSheet({
     columns: batchColumns,
     itemsQuery: batchesQuery,
-    initialFilterBy: batchIds ? { query: '', ids: batchIds } : { query: '', archived: false },
+    initialFilterBy: { query: '', archived: false },
     initialSortBy: { updatedAt: 'DESCENDING' },
     sorter,
     getItems,
     cacheKey: 'batch_sheet',
   });
+
+  if (!equals(batchIdsRef.current, batchIds)) {
+    setFilterBy({ query: '', ids: batchIds });
+    batchIdsRef.current = batchIds;
+  }
 
   return (
     <Content>

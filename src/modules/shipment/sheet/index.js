@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
+import { equals } from 'ramda';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ShipmentFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
@@ -29,6 +30,7 @@ const ShipmentSheetModule = ({ shipmentIds }: Props) => {
     data => ({ ...data?.shipments, nodes: decorate(clone(data?.shipments?.nodes ?? [])) }),
     []
   );
+  const shipmentIdsRef = React.useRef<?Array<string>>(null);
 
   const {
     initialItems,
@@ -48,12 +50,17 @@ const ShipmentSheetModule = ({ shipmentIds }: Props) => {
   } = useSheet({
     columns: shipmentColumns,
     itemsQuery: shipmentsQuery,
-    initialFilterBy: shipmentIds ? { query: '', ids: shipmentIds } : { query: '', archived: false },
+    initialFilterBy: { query: '', archived: false },
     initialSortBy: { updatedAt: 'DESCENDING' },
     sorter,
     getItems,
     cacheKey: 'shipment_sheet',
   });
+
+  if (!equals(shipmentIdsRef.current, shipmentIds)) {
+    setFilterBy({ query: '', ids: shipmentIds });
+    shipmentIdsRef.current = shipmentIds;
+  }
 
   return (
     <Content>

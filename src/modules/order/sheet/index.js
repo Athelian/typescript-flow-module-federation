@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
+import { equals } from 'ramda';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, OrderFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
@@ -39,6 +40,7 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
     data => ({ ...data?.orders, nodes: decorate(clone(data?.orders?.nodes ?? [])) }),
     []
   );
+  const orderIdsRef = React.useRef<?Array<string>>(null);
 
   const {
     initialItems,
@@ -58,12 +60,17 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
   } = useSheet({
     columns: columnConfigs,
     itemsQuery: ordersQuery,
-    initialFilterBy: orderIds ? { query: '', ids: orderIds } : { query: '', archived: false },
+    initialFilterBy: { query: '', archived: false },
     initialSortBy: { updatedAt: 'DESCENDING' },
     sorter,
     getItems,
     cacheKey: 'order_sheet',
   });
+
+  if (!equals(orderIdsRef.current, orderIds)) {
+    setFilterBy({ query: '', ids: orderIds });
+    orderIdsRef.current = orderIds;
+  }
 
   return (
     <Content>
