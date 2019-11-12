@@ -106,6 +106,10 @@ export default defineMessages({
     id: 'modules.Shipments.PO',
     defaultMessage: 'PO NO.',
   },
+  numOfVoyages: {
+    id: 'modules.Shipments.numOfVoyages',
+    defaultMessage: 'NUMBER OF VOYAGES',
+  },
   voyageCode: {
     id: 'modules.Voyages.voyageCode',
     defaultMessage: 'VOYAGE CODE',

@@ -62,34 +62,20 @@ function batchSorter(sorts: Array<ColumnSort>) {
           result = setDirection(defaultSort(a, b), sort.direction);
           break;
         case 'updatedAt':
-          result = setDirection(dateSort(a.updatedAt, b.updatedAt), sort.direction);
+        case 'deliveredAt':
+        case 'desiredAt':
+        case 'expiredAt':
+        case 'producedAt':
+          result = setDirection(dateSort(a[sort.name], b[sort.name]), sort.direction);
           break;
         case 'no':
-          result = setDirection(stringSort(a.no, b.no), sort.direction);
-          break;
-        case 'deliveredAt':
-          result = setDirection(dateSort(a.deliveredAt, b.deliveredAt), sort.direction);
-          break;
-        case 'desiredAt':
-          result = setDirection(dateSort(a.desiredAt, b.desiredAt), sort.direction);
-          break;
-        case 'expiredAt':
-          result = setDirection(dateSort(a.expiredAt, b.expiredAt), sort.direction);
-          break;
-        case 'producedAt':
-          result = setDirection(dateSort(a.producedAt, b.producedAt), sort.direction);
+        case 'packageName':
+          result = setDirection(stringSort(a[sort.name], b[sort.name]), sort.direction);
           break;
         case 'quantity':
-          result = setDirection(numberSort(a.quantity, b.quantity), sort.direction);
-          break;
-        case 'packageName':
-          result = setDirection(stringSort(a.packageName, b.packageName), sort.direction);
-          break;
         case 'packageCapacity':
-          result = setDirection(numberSort(a.packageCapacity, b.packageCapacity), sort.direction);
-          break;
         case 'packageQuantity':
-          result = setDirection(numberSort(a.packageQuantity, b.packageQuantity), sort.direction);
+          result = setDirection(numberSort(a[sort.name], b[sort.name]), sort.direction);
           break;
         case 'containerCreatedAt':
           result = setDirection(
@@ -214,6 +200,12 @@ function batchSorter(sorts: Array<ColumnSort>) {
         case 'shipmentCarrier':
           result = setDirection(
             stringSort(a.shipment?.carrier ?? '', b.shipment?.carrier ?? ''),
+            sort.direction
+          );
+          break;
+        case 'shipmentNumOfVoyages':
+          result = setDirection(
+            numberSort(a.shipment?.voyages?.length ?? 0, b.shipment?.voyages?.length ?? 0),
             sort.direction
           );
           break;
