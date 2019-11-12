@@ -2,7 +2,11 @@
 import { css } from 'react-emotion';
 import { borderRadiuses, colors, scrollbars, shadows } from 'styles/common';
 
-export const OptionsWrapperStyle = (width: number, height: number) => css`
+export const DownshiftStyle: string = css`
+  width: 100%;
+`;
+
+export const OptionsWrapperStyle = (width: number, height: number): string => css`
   ${shadows.INPUT};
   ${borderRadiuses.MAIN};
   position: fixed;
@@ -16,5 +20,3 @@ export const OptionsWrapperStyle = (width: number, height: number) => css`
     ${scrollbars.SMALL};
   }
 `;
-
-export default OptionsWrapperStyle;

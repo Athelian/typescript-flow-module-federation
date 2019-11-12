@@ -5,7 +5,7 @@ import { FixedSizeList } from 'react-window';
 import Downshift from 'downshift';
 import { equals } from 'ramda';
 import usePortalSlot from 'hooks/usePortalSlot';
-import { OptionsWrapperStyle } from './style';
+import { DownshiftStyle, OptionsWrapperStyle } from './style';
 
 export type RenderInputProps = {
   isOpen: boolean,
@@ -232,7 +232,7 @@ const SelectInput = ({
         clearSelection,
         isOpen,
       }) => (
-        <div style={{ width: '100%' }}>
+        <div className={DownshiftStyle}>
           {React.createElement(renderInput, {
             isOpen,
             required,
