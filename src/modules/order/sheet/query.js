@@ -64,6 +64,15 @@ const orderSheetFragment = gql`
       }
     }
     customFields {
+      mask {
+        ... on Mask {
+          fieldDefinitions {
+            ... on FieldDefinition {
+              id
+            }
+          }
+        }
+      }
       fieldValues {
         ... on FieldValue {
           value {
@@ -147,6 +156,15 @@ const orderItemSheetFragment = gql`
       }
     }
     customFields {
+      mask {
+        ... on Mask {
+          fieldDefinitions {
+            ... on FieldDefinition {
+              id
+            }
+          }
+        }
+      }
       fieldValues {
         ... on FieldValue {
           value {
@@ -235,6 +253,15 @@ const batchSheetFragment = gql`
       }
     }
     customFields {
+      mask {
+        ... on Mask {
+          fieldDefinitions {
+            ... on FieldDefinition {
+              id
+            }
+          }
+        }
+      }
       fieldValues {
         ... on FieldValue {
           value {

@@ -377,6 +377,10 @@ function transformOrder(
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `order.customField.${fieldDefinition.id}`,
       type: 'text',
+      hide: currentOrder => {
+        const mask = currentOrder?.customFields?.mask ?? null;
+        return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
+      },
       ...transformCustomField(
         basePath,
         order,
@@ -618,6 +622,11 @@ function transformOrderItem(
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `order.orderItem.customField.${fieldDefinition.id}`,
       type: 'text',
+      hide: order => {
+        const currentOrderItem = order.orderItems.find(oi => oi.id === orderItem?.id);
+        const mask = currentOrderItem?.customFields?.mask ?? null;
+        return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
+      },
       ...transformCustomField(
         basePath,
         orderItem,
@@ -892,6 +901,11 @@ function transformBatch(
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `order.orderItem.batch.customField.${fieldDefinition.id}`,
       type: 'text',
+      hide: order => {
+        const currentBatch = getCurrentBatch(batch?.id, order);
+        const mask = currentBatch?.customFields?.mask ?? null;
+        return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
+      },
       ...transformCustomField(
         basePath,
         batch,
@@ -2153,8 +2167,8 @@ function transformBatchShipment(
     {
       columnKey: 'order.orderItem.batch.shipment.todo',
       type: 'shipment_tasks',
-      computed: item => {
-        const currentBatch = getCurrentBatch(batch?.id, item);
+      computed: order => {
+        const currentBatch = getCurrentBatch(batch?.id, order);
         return {
           entityId: batch?.shipment?.id ?? null,
           groupIds: [
@@ -2179,6 +2193,11 @@ function transformBatchShipment(
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `order.orderItem.batch.shipment.customField.${fieldDefinition.id}`,
       type: 'text',
+      hide: order => {
+        const currentBatch = getCurrentBatch(batch?.id, order);
+        const mask = currentBatch?.shipment?.customFields?.mask ?? null;
+        return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
+      },
       ...transformCustomField(
         basePath,
         batch?.shipment ?? null,
