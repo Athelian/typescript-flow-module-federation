@@ -1,9 +1,11 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useAllHasPermission } from 'contexts/Permissions';
 import { useMutation } from '@apollo/react-hooks';
+import { useAllHasPermission } from 'contexts/Permissions';
+import { getBatchLatestQuantity, findActiveQuantityField } from 'utils/batch';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
+import messages from 'modules/batch/messages';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import { BATCH } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE } from 'modules/permission/constants/batch';
@@ -25,51 +27,71 @@ const DEFAULT_QTY = 0;
 function SplitBatch({
   id,
   no,
+  field,
   latestQuantity,
   onChange,
 }: {|
   id: string,
   no: string,
+  field: string,
   latestQuantity: number,
   onChange: (quantity: number) => void,
 |}) {
   const validation = validator(DEFAULT_QTY, latestQuantity);
   const { hasError, touch, ...inputHandlers } = useNumberInput(DEFAULT_QTY, { isRequire: false });
   return (
-    <div className={SplitRowStyle}>
-      <Display height="30px">{no}</Display>
+    <>
+      <div className={SplitRowStyle}>
+        <Label>
+          <FormattedMessage id="components.BatchItem.batchNo" />
+        </Label>
 
-      <Display height="30px">
-        <FormattedNumber value={latestQuantity} />
-      </Display>
+        <Label>
+          <FormattedMessage {...messages[field]} />
+        </Label>
 
-      <NumberInputFactory
-        name={`split-batch-${id}`}
-        originalValue={DEFAULT_QTY}
-        isNew
-        editable
-        inputWidth="200px"
-        inputHeight="30px"
-        {...inputHandlers}
-        onBlur={evt => {
-          inputHandlers.onBlur(evt);
-          onChange(inputHandlers.value || DEFAULT_QTY);
-        }}
-        isTouched={touch}
-        errorMessage={
-          !validation.isValidSync({ quantity: inputHandlers.value }) && (
-            <FormattedMessage
-              id="modules.RelationMap.split.validationError"
-              defaultMessage="Please enter the number between {min} and {max}"
-              values={{
-                min: 1,
-                max: latestQuantity,
-              }}
-            />
-          )
-        }
-      />
-    </div>
+        <Label>
+          <FormattedMessage
+            id="modules.RelationMap.label.splitInto"
+            defaultMessage="Quantity to Split Into"
+          />
+        </Label>
+      </div>
+      <div className={SplitRowStyle}>
+        <Display height="30px">{no}</Display>
+
+        <Display height="30px">
+          <FormattedNumber value={latestQuantity} />
+        </Display>
+
+        <NumberInputFactory
+          name={`split-batch-${id}`}
+          originalValue={DEFAULT_QTY}
+          isNew
+          editable
+          inputWidth="200px"
+          inputHeight="30px"
+          {...inputHandlers}
+          onBlur={evt => {
+            inputHandlers.onBlur(evt);
+            onChange(inputHandlers.value || DEFAULT_QTY);
+          }}
+          isTouched={touch}
+          errorMessage={
+            !validation.isValidSync({ quantity: inputHandlers.value }) && (
+              <FormattedMessage
+                id="modules.RelationMap.split.validationError"
+                defaultMessage="Please enter the number between {min} and {max}"
+                values={{
+                  min: 1,
+                  max: latestQuantity,
+                }}
+              />
+            )
+          }
+        />
+      </div>
+    </>
   );
 }
 
@@ -251,26 +273,17 @@ export default function SplitBatches({ onSuccess }: Props) {
       >
         {!allHasNoQuantity && (
           <div className={SplitInputsWrapperStyle}>
-            <div className={SplitRowStyle}>
-              <Label>
-                <FormattedMessage id="components.BatchItem.batchNo" />
-              </Label>
-
-              <Label>
-                <FormattedMessage id="components.BatchItem.quantity" />
-              </Label>
-
-              <Label>
-                <FormattedMessage
-                  id="modules.RelationMap.label.splitInto"
-                  defaultMessage="Quantity to Split Into"
-                />
-              </Label>
-            </div>
             {batchIds.map(batchId => (
               <SplitBatch
                 key={batchId}
                 id={batchId}
+                field={findActiveQuantityField({
+                  producedQuantity: mapping.entities?.batches?.[batchId]?.producedQuantity,
+                  preShippedQuantity: mapping.entities?.batches?.[batchId]?.preShippedQuantity,
+                  shippedQuantity: mapping.entities?.batches?.[batchId]?.shippedQuantity,
+                  postShippedQuantity: mapping.entities?.batches?.[batchId]?.postShippedQuantity,
+                  deliveredQuantity: mapping.entities?.batches?.[batchId]?.deliveredQuantity,
+                })}
                 onChange={quantity =>
                   setBatches([
                     ...batches.filter(batch => batch?.id !== batchId),
@@ -278,7 +291,9 @@ export default function SplitBatches({ onSuccess }: Props) {
                   ])
                 }
                 no={mapping.entities?.batches?.[batchId]?.no ?? ''}
-                latestQuantity={mapping.entities?.batches?.[batchId]?.latestQuantity ?? DEFAULT_QTY}
+                latestQuantity={
+                  getBatchLatestQuantity(mapping.entities?.batches?.[batchId]) ?? DEFAULT_QTY
+                }
               />
             ))}
           </div>
