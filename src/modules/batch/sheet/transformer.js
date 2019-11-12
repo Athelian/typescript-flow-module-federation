@@ -1207,6 +1207,18 @@ function transformShipment(basePath: string, batch: Batch): Array<CellValue> {
       ),
     },
     {
+      columnKey: 'shipment.numOfVoyages',
+      type: 'number',
+      ...transformComputedField(
+        `${basePath}.shipment`,
+        batch?.shipment ?? null,
+        'voyages',
+        item => {
+          return item?.shipment?.voyages?.length ?? 0;
+        }
+      ),
+    },
+    {
       columnKey: 'shipment.forwarders',
       type: 'forwarders',
       ...transformValueField(

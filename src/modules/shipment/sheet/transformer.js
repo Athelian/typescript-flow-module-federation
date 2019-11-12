@@ -248,6 +248,13 @@ function transformShipment(basePath: string, shipment: Object): Array<CellValue>
       ),
     },
     {
+      columnKey: 'shipment.numOfVoyages',
+      type: 'number',
+      ...transformComputedField(basePath, shipment, 'voyages', item => {
+        return item?.voyages?.length ?? 0;
+      }),
+    },
+    {
       columnKey: 'shipment.forwarders',
       type: 'forwarders',
       ...transformValueField(

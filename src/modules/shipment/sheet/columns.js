@@ -197,7 +197,14 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 160,
   },
-  // nb of voyages
+  // TODO: Replace with real selector later
+  {
+    key: 'shipment.numOfVoyages',
+    title: <FormattedMessage {...shipmentMessages.numOfVoyages} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 100,
+  },
   {
     key: 'shipment.cargoReady.date',
     exportKey: 'cargoReady.date',
