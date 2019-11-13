@@ -20,7 +20,7 @@ export const SelectInputStyle = (isOpen: boolean): string => css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   ${presets.BUTTON};
-  width: 100px;
+  width: 100%;
 
   & > span {
     ${fontSizes.MAIN};
@@ -59,7 +59,7 @@ export const OptionStyle = (highlighted: boolean, selected: boolean): string => 
 
 export const SeparatorStyle = css`
   height: 20px;
-  width: 1px;
+  min-width: 1px;
   background-color: rgba(0, 0, 0, 0.1);
   margin: 0 5px;
   border: none;
@@ -70,7 +70,7 @@ export const InputStyle = css`
   ${presets.ELLIPSIS};
   color: ${colors.BLACK};
   background: transparent;
-  width: 105px;
+  min-width: 105px;
   line-height: 18px;
   font-weight: 600;
 

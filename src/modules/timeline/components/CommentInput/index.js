@@ -88,7 +88,8 @@ const CommentInput = ({ entity, query, queryField, variables, onCompleted }: Pro
                     onChange={e => set(e.target.value)}
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
-                    onKeyPress={e => {
+                    onKeyDown={e => {
+                      e.stopPropagation();
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
                         submit();
