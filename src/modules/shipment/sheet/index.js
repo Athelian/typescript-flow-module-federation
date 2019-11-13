@@ -71,7 +71,7 @@ const ShipmentSheetModuleImpl = ({
     cacheKey: 'shipment_sheet',
   });
 
-  if (!equals(shipmentIdsRef.current, shipmentIds)) {
+  if (!!shipmentIds && !equals(shipmentIdsRef.current, shipmentIds)) {
     setFilterBy({ query: '', ids: shipmentIds });
     shipmentIdsRef.current = shipmentIds;
   }

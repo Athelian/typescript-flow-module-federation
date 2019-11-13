@@ -67,7 +67,7 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
     cacheKey: 'batch_sheet',
   });
 
-  if (!equals(batchIdsRef.current, batchIds)) {
+  if (!!batchIds && !equals(batchIdsRef.current, batchIds)) {
     setFilterBy({ query: '', ids: batchIds });
     batchIdsRef.current = batchIds;
   }
