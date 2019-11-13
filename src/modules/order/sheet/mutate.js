@@ -97,14 +97,8 @@ function normalizeInput(entity: Object, field: string, value: any, item: Object)
               .map(user => user.id),
             orderItems: [],
             todo: {
-              taskTemplateId: item?.todo?.taskTemplate?.id,
               tasks: (item?.todo?.tasks ?? []).map(
                 ({
-                  updatedAt,
-                  updatedBy,
-                  ownedBy,
-                  __typename,
-                  tags,
                   assignedTo,
                   approvers,
                   inProgressAt,
@@ -117,12 +111,7 @@ function normalizeInput(entity: Object, field: string, value: any, item: Object)
                   rejectedBy,
                   approvedAt,
                   approvedBy,
-                  milestone,
-                  taskTemplate,
-                  ...rest
                 }) => ({
-                  ...rest,
-                  tagIds: (tags ?? []).map(tag => tag.id),
                   assignedToIds: (assignedTo ?? [])
                     .filter(user => user?.organization?.id !== item?.exporter?.id)
                     .map(user => user.id),
@@ -148,7 +137,6 @@ function normalizeInput(entity: Object, field: string, value: any, item: Object)
                     approvedBy?.organization?.id === item?.exporter?.id ? null : approvedAt,
                   approvedById:
                     approvedBy?.organization?.id === item?.exporter?.id ? null : approvedBy?.id,
-                  milestoneId: milestone?.id,
                 })
               ),
             },
