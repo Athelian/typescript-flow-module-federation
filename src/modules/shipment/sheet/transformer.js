@@ -2106,6 +2106,13 @@ function transformBatchOrderItemOrder(
   }));
 }
 
+type Props = {
+  orderFieldDefinitions: Array<FieldDefinition>,
+  orderItemFieldDefinitions: Array<FieldDefinition>,
+  batchFieldDefinitions: Array<FieldDefinition>,
+  shipmentFieldDefinitions: Array<FieldDefinition>,
+};
+
 export default function transformer({
   orderFieldDefinitions,
   orderItemFieldDefinitions,
