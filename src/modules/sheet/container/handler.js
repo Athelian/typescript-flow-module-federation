@@ -32,10 +32,14 @@ export async function handleContainerChanges(
         }
         break;
       case 'containerOption':
+        if (change.new === null) {
+          return change;
+        }
+
         return {
           ...change,
           new: {
-            string: change.new?.int === 1 ? 'Hanger' : '',
+            string: 'Hanger',
             __typename: 'StringValue',
           },
         };

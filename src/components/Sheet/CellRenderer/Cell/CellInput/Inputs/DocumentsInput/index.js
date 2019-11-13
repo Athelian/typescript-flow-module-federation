@@ -10,14 +10,24 @@ import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/ty
 import DocumentsInputDialog from './DocumentsInputDialog';
 import { DocumentsInputWrapperStyle, DocumentCountWrapperStyle, DocumentIconStyle } from './style';
 
-const DocumentsInput = (entityType: string) => ({
+type Props = {
+  ...InputProps<Array<FilePayload>>,
+  entityType: string,
+};
+
+const DocumentsInputImpl = ({
   value,
   focus,
   readonly,
   onChange,
   forceFocus,
   forceBlur,
-}: InputProps<Array<FilePayload>>) => {
+  entityType,
+}: Props) => {
+  const [filesValue, setFilesValue] = React.useState(value);
+
+  React.useEffect(() => setFilesValue(value), [value]);
+
   const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
     if (focus) {
       e.stopPropagation();
@@ -40,24 +50,24 @@ const DocumentsInput = (entityType: string) => ({
         <div className={DocumentCountWrapperStyle}>
           <DisplayWrapper>
             <span>
-              {(value || []).length === 1 ? (
+              {(filesValue || []).length === 1 ? (
                 <FormattedMessage
                   id="modules.sheet.doc"
                   defaultMessage="{numOfDocuments} Doc"
-                  values={{ numOfDocuments: <FormattedNumber value={(value || []).length} /> }}
+                  values={{ numOfDocuments: <FormattedNumber value={(filesValue || []).length} /> }}
                 />
               ) : (
                 <FormattedMessage
                   id="modules.sheet.docs"
                   defaultMessage="{numOfDocuments} Docs"
-                  values={{ numOfDocuments: <FormattedNumber value={(value || []).length} /> }}
+                  values={{ numOfDocuments: <FormattedNumber value={(filesValue || []).length} /> }}
                 />
               )}
             </span>
           </DisplayWrapper>
         </div>
 
-        {(value || []).map((document, index) => {
+        {(filesValue || []).map((document, index) => {
           const { icon, color } = computeIcon(getFileExtension(document?.name ?? ''));
           return (
             <div className={DocumentIconStyle(color)} key={`${document?.name}-${index + 0}`}>
@@ -68,15 +78,22 @@ const DocumentsInput = (entityType: string) => ({
       </button>
 
       <DocumentsInputDialog
-        value={value || []}
-        onChange={onChange}
-        onClose={forceBlur}
+        value={filesValue || []}
+        onChange={setFilesValue}
+        onClose={() => {
+          onChange(filesValue, true);
+          forceBlur();
+        }}
         open={focus}
         entityType={entityType}
       />
     </div>
   );
 };
+
+const DocumentsInput = (entityType: string) => (props: InputProps<Array<FilePayload>>) => (
+  <DocumentsInputImpl {...props} entityType={entityType} />
+);
 
 export default {
   Order: DocumentsInput('Order'),

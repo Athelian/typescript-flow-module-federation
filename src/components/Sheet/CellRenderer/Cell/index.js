@@ -196,6 +196,7 @@ const Cell = ({
             context={computedValue}
             extra={cell.extra}
             type={cell.type}
+            focus={focus}
             inputFocus={inputFocus}
             disabled={isDisabled}
             onFocus={handleInputFocus}

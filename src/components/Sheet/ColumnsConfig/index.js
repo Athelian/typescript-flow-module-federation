@@ -69,8 +69,14 @@ const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
   );
   const isDirty = React.useMemo(
     () =>
-      difference(columns.map(c => c.key), currentColumnKeys).length > 0 ||
-      difference(currentColumnKeys, columns.map(c => c.key)).length > 0,
+      difference(
+        columns.map(c => c.key),
+        currentColumnKeys
+      ).length > 0 ||
+      difference(
+        currentColumnKeys,
+        columns.map(c => c.key)
+      ).length > 0,
     [columns, currentColumnKeys]
   );
 

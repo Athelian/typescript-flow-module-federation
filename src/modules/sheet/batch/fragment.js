@@ -23,6 +23,7 @@ export const sheetBatchFragment = gql`
       value
       metric
     }
+    autoCalculatePackageVolume
     packageSize {
       width {
         value

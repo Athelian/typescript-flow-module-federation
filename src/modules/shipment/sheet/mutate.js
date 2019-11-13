@@ -63,12 +63,18 @@ function getEntityId(entity: Object, item: Object): string {
   }
 }
 
-function normalizedInput(entity: Object, field: string, value: any, shipment: Object): Object {
+function normalizedInput(
+  entity: Object,
+  field: string,
+  oldValue: any,
+  newValue: any,
+  shipment: Object
+): Object {
   switch (entity.type) {
     case 'Shipment':
       switch (field) {
         case 'exporter': {
-          const exporterId = value?.id ?? null;
+          const exporterId = newValue?.id ?? null;
           const inChargeIds = (shipment?.inCharges ?? [])
             .filter(user => user?.organization?.id !== exporterId || !isExporter(user))
             .map(user => user?.id);
@@ -204,21 +210,21 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
           };
         }
         default:
-          return normalizeSheetShipmentInput(shipment, field, value);
+          return normalizeSheetShipmentInput(shipment, field, oldValue, newValue);
       }
     case 'Voyage':
-      return normalizeSheetVoyageInput(shipment, entity.id, field, value);
+      return normalizeSheetVoyageInput(shipment, entity.id, field, newValue);
     case 'ContainerGroup':
-      return normalizeSheetContainerGroupInput(shipment, entity.id, field, value);
+      return normalizeSheetContainerGroupInput(shipment, entity.id, field, newValue);
     case 'TimelineDate':
-      return normalizeSheetTimelineDateInput(shipment, entity.id, field, value);
+      return normalizeSheetTimelineDateInput(shipment, entity.id, field, newValue);
     case 'Container': {
       const container = shipment.containers.find(c => c.id === entity.id);
       if (!container) {
         return {};
       }
 
-      return normalizeSheetContainerInput(container, field, value);
+      return normalizeSheetContainerInput(container, field, newValue);
     }
     case 'Batch': {
       const batch = [
@@ -229,7 +235,7 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
         return {};
       }
 
-      return normalizeSheetBatchInput(batch, field, value);
+      return normalizeSheetBatchInput(batch, field, oldValue, newValue);
     }
     case 'OrderItem': {
       const orderItem = [
@@ -242,7 +248,7 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
         return {};
       }
 
-      return normalizeSheetOrderItemInput(orderItem, field, value);
+      return normalizeSheetOrderItemInput(orderItem, field, oldValue, newValue);
     }
     case 'Order': {
       const order = [
@@ -255,11 +261,11 @@ function normalizedInput(entity: Object, field: string, value: any, shipment: Ob
         return {};
       }
 
-      return normalizeSheetOrderInput(order, field, value);
+      return normalizeSheetOrderInput(order, field, oldValue, newValue);
     }
     default:
       return {
-        [field]: value,
+        [field]: newValue,
       };
   }
 }
@@ -269,12 +275,14 @@ export default function(client: ApolloClient) {
   return function mutate({
     entity,
     field,
-    value,
+    oldValue,
+    newValue,
     item,
   }: {
     entity: Object,
     field: string,
-    value: any,
+    oldValue: any,
+    newValue: any,
     item: Object,
   }): Promise<Array<Object> | null> {
     return client
@@ -282,7 +290,7 @@ export default function(client: ApolloClient) {
         mutation: mutations[entity.type],
         variables: {
           id: getEntityId(entity, item),
-          input: normalizedInput(entity, field, value, item),
+          input: normalizedInput(entity, field, oldValue, newValue, item),
         },
       })
       .then(({ data }) => {

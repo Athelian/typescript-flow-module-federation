@@ -7,6 +7,12 @@ export default function normalizeSheetContainerInput(
   value: any
 ): Object {
   switch (field) {
+    case 'warehouseArrivalAgreedDate':
+    case 'warehouseArrivalActualDate':
+    case 'departureDate':
+      return {
+        [(field: string)]: new Date(value),
+      };
     case 'tags':
       return {
         tagIds: value.map(tag => tag.id),

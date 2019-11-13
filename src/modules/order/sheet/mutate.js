@@ -85,64 +85,70 @@ function getEntityId(entity: Object, item: Object): string {
   }
 }
 
-function normalizeInput(entity: Object, field: string, value: any, item: Object): Object {
+function normalizeInput(
+  entity: Object,
+  field: string,
+  oldValue: any,
+  newValue: any,
+  item: Object
+): Object {
   switch (entity.type) {
     case 'Order':
       switch (field) {
         case 'exporter':
           return {
-            exporterId: value?.id ?? null,
+            exporterId: newValue?.id ?? null,
             inChargeIds: (item?.inCharges ?? [])
               .filter(user => user?.organization?.id !== item?.exporter?.id)
               .map(user => user.id),
             orderItems: [],
             todo: {
-              ...(item?.todo ?? {}),
-              tasks: (item?.todo?.tasks ?? []).map(task => ({
-                ...task,
-                assignedToIds: (task?.assignedTo ?? [])
-                  .filter(user => user?.organization?.id !== item?.exporter?.id)
-                  .map(user => user.id),
-                approverIds: (task?.approvers ?? [])
-                  .filter(user => user?.organization?.id !== item?.exporter?.id)
-                  .map(user => user.id),
-                inProgressAt:
-                  task?.inProgressBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.inProgressAt,
-                inProgressById:
-                  task?.inProgressBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.inProgressBy?.id,
-                completedAt:
-                  task?.completedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.completedAt,
-                completedById:
-                  task?.completedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.completedBy?.id,
-                rejectedAt:
-                  task?.rejectedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.rejectedAt,
-                rejectedById:
-                  task?.rejectedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.rejectedBy?.id,
-                approvedAt:
-                  task?.approvedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.approvedAt,
-                approvedById:
-                  task?.approvedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.approvedBy?.id,
-              })),
+              tasks: (item?.todo?.tasks ?? []).map(
+                ({
+                  assignedTo,
+                  approvers,
+                  inProgressAt,
+                  inProgressBy,
+                  completedAt,
+                  completedBy,
+                  skippedAt,
+                  skippedBy,
+                  rejectedAt,
+                  rejectedBy,
+                  approvedAt,
+                  approvedBy,
+                }) => ({
+                  assignedToIds: (assignedTo ?? [])
+                    .filter(user => user?.organization?.id !== item?.exporter?.id)
+                    .map(user => user.id),
+                  approverIds: (approvers ?? [])
+                    .filter(user => user?.organization?.id !== item?.exporter?.id)
+                    .map(user => user.id),
+                  inProgressAt:
+                    inProgressBy?.organization?.id === item?.exporter?.id ? null : inProgressAt,
+                  inProgressById:
+                    inProgressBy?.organization?.id === item?.exporter?.id ? null : inProgressBy?.id,
+                  completedAt:
+                    completedBy?.organization?.id === item?.exporter?.id ? null : completedAt,
+                  completedById:
+                    completedBy?.organization?.id === item?.exporter?.id ? null : completedBy?.id,
+                  skippedAt: skippedBy?.organization?.id === item?.exporter?.id ? null : skippedAt,
+                  skippedById:
+                    skippedBy?.organization?.id === item?.exporter?.id ? null : skippedBy?.id,
+                  rejectedAt:
+                    rejectedBy?.organization?.id === item?.exporter?.id ? null : rejectedAt,
+                  rejectedById:
+                    rejectedBy?.organization?.id === item?.exporter?.id ? null : rejectedBy?.id,
+                  approvedAt:
+                    approvedBy?.organization?.id === item?.exporter?.id ? null : approvedAt,
+                  approvedById:
+                    approvedBy?.organization?.id === item?.exporter?.id ? null : approvedBy?.id,
+                })
+              ),
             },
           };
         default:
-          return normalizeSheetOrderInput(item, field, value);
+          return normalizeSheetOrderInput(item, field, oldValue, newValue);
       }
     case 'OrderItem': {
       const orderItem = item.orderItems.find(oi => oi.id === entity.id);
@@ -150,7 +156,7 @@ function normalizeInput(entity: Object, field: string, value: any, item: Object)
         return {};
       }
 
-      return normalizeSheetOrderItemInput(orderItem, field, value);
+      return normalizeSheetOrderItemInput(orderItem, field, oldValue, newValue);
     }
     case 'Batch': {
       const batch = item.orderItems
@@ -161,7 +167,7 @@ function normalizeInput(entity: Object, field: string, value: any, item: Object)
         return {};
       }
 
-      return normalizeSheetBatchInput(batch, field, value);
+      return normalizeSheetBatchInput(batch, field, oldValue, newValue);
     }
     case 'Shipment': {
       const shipment = item.orderItems
@@ -174,7 +180,7 @@ function normalizeInput(entity: Object, field: string, value: any, item: Object)
         return {};
       }
 
-      return normalizeSheetShipmentInput(shipment, field, value);
+      return normalizeSheetShipmentInput(shipment, field, oldValue, newValue);
     }
     case 'Container': {
       const container = item.orderItems
@@ -187,7 +193,7 @@ function normalizeInput(entity: Object, field: string, value: any, item: Object)
         return {};
       }
 
-      return normalizeSheetContainerInput(container, field, value);
+      return normalizeSheetContainerInput(container, field, newValue);
     }
     case 'Voyage': {
       const shipment = getShipmentByVoyageId(entity.id, item);
@@ -195,7 +201,7 @@ function normalizeInput(entity: Object, field: string, value: any, item: Object)
         return {};
       }
 
-      return normalizeSheetVoyageInput(shipment, entity.id, field, value);
+      return normalizeSheetVoyageInput(shipment, entity.id, field, newValue);
     }
     case 'ContainerGroup': {
       const shipment = getShipmentByContainerGroupId(entity.id, item);
@@ -203,7 +209,7 @@ function normalizeInput(entity: Object, field: string, value: any, item: Object)
         return {};
       }
 
-      return normalizeSheetContainerGroupInput(shipment, entity.id, field, value);
+      return normalizeSheetContainerGroupInput(shipment, entity.id, field, newValue);
     }
     case 'TimelineDate': {
       const shipment = getShipmentByTimelineDateId(entity.id, item);
@@ -211,11 +217,11 @@ function normalizeInput(entity: Object, field: string, value: any, item: Object)
         return {};
       }
 
-      return normalizeSheetTimelineDateInput(shipment, entity.id, field, value);
+      return normalizeSheetTimelineDateInput(shipment, entity.id, field, newValue);
     }
     default:
       return {
-        [field]: value,
+        [field]: newValue,
       };
   }
 }
@@ -225,12 +231,14 @@ export default function(client: ApolloClient) {
   return function mutate({
     entity,
     field,
-    value,
+    oldValue,
+    newValue,
     item,
   }: {
     entity: Object,
     field: string,
-    value: any,
+    oldValue: any,
+    newValue: any,
     item: Object,
   }): Promise<Array<Object> | null> {
     return client
@@ -238,7 +246,7 @@ export default function(client: ApolloClient) {
         mutation: mutations[entity.type],
         variables: {
           id: getEntityId(entity, item),
-          input: normalizeInput(entity, field, value, item),
+          input: normalizeInput(entity, field, oldValue, newValue, item),
         },
       })
       .then(({ data }) => {

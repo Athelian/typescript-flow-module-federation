@@ -3,8 +3,13 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import TextAreaInputDialog from './TextAreaInputDialog';
-import { TextAreaInputButtonStyle, TextAreaPlaceholderStyle } from './style';
+import Dialog from 'components/Dialog';
+import {
+  TextAreaInputButtonStyle,
+  TextAreaInputDialogWrapperStyle,
+  TextAreaInputStyle,
+  TextAreaPlaceholderStyle,
+} from './style';
 
 const TextAreaInput = ({
   value,
@@ -15,6 +20,18 @@ const TextAreaInput = ({
   readonly,
 }: InputProps<string>) => {
   const intl = useIntl();
+  const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
+  const [textValue, setTextValue] = React.useState(value);
+
+  React.useEffect(() => setTextValue(value), [value]);
+  React.useEffect(() => {
+    if (!focus) {
+      return () => {};
+    }
+    const handler = setTimeout(() => inputRef.current && inputRef.current.select(), 200);
+    return () => clearTimeout(handler);
+  }, [focus]);
+
   const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
     if (focus) {
       e.stopPropagation();
@@ -44,12 +61,40 @@ const TextAreaInput = ({
         )}
       </button>
 
-      <TextAreaInputDialog
-        value={value || ''}
-        onChange={onChange}
-        focus={focus}
-        onBlur={forceBlur}
-      />
+      <Dialog
+        isOpen={focus}
+        onRequestClose={() => {
+          onChange(textValue, true);
+          forceBlur();
+        }}
+      >
+        <div className={TextAreaInputDialogWrapperStyle}>
+          <textarea
+            ref={inputRef}
+            className={TextAreaInputStyle}
+            value={textValue}
+            placeholder={intl.formatMessage({
+              id: 'components.sheet.textarea.placeholder',
+              defaultMessage: 'Please enter a value',
+            })}
+            spellCheck={false}
+            onChange={event => setTextValue(event.target.value)}
+            onKeyDown={event => {
+              switch (event.key) {
+                case 'Tab':
+                  event.preventDefault();
+                  event.stopPropagation();
+                  break;
+                case 'Enter':
+                  event.stopPropagation();
+                  break;
+                default:
+                  break;
+              }
+            }}
+          />
+        </div>
+      </Dialog>
     </div>
   );
 };
