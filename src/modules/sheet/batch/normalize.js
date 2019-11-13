@@ -2,24 +2,29 @@
 import { parseTodoField, removeTypename } from 'utils/data';
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
 
-export default function normalizeSheetBatchInput(batch: Object, field: string, value: any): Object {
+export default function normalizeSheetBatchInput(
+  batch: Object,
+  field: string,
+  oldValue: any,
+  newValue: any
+): Object {
   switch (field) {
     case 'desiredAt':
     case 'expiredAt':
     case 'deliveredAt':
     case 'producedAt':
       return {
-        [(field: string)]: new Date(value),
+        [(field: string)]: new Date(newValue),
       };
     case 'batchQuantityRevisions':
       return {
-        batchQuantityRevisions: value.map(({ sort, batch: b, ...revision }) =>
+        batchQuantityRevisions: newValue.map(({ sort, batch: b, ...revision }) =>
           removeTypename(revision)
         ),
       };
     case 'packageQuantity': {
       const { auto: autoCalculatePackageQuantity = false, value: packageQuantity = 0 } =
-        value || {};
+        newValue || {};
       return {
         autoCalculatePackageQuantity,
         packageQuantity,
@@ -27,10 +32,10 @@ export default function normalizeSheetBatchInput(batch: Object, field: string, v
     }
     case 'packageGrossWeight':
       return {
-        packageGrossWeight: value ? removeTypename(value) : null,
+        packageGrossWeight: newValue ? removeTypename(newValue) : null,
       };
     case 'packageVolume': {
-      const { auto: autoCalculatePackageVolume = false, value: packageVolume = 0 } = value || {};
+      const { auto: autoCalculatePackageVolume = false, value: packageVolume = 0 } = newValue || {};
       return {
         autoCalculatePackageVolume,
         packageVolume: removeTypename(packageVolume),
@@ -38,15 +43,15 @@ export default function normalizeSheetBatchInput(batch: Object, field: string, v
     }
     case 'packageSize':
       return {
-        packageSize: value ? removeTypename(value) : null,
+        packageSize: newValue ? removeTypename(newValue) : null,
       };
     case 'tags':
       return {
-        tagIds: value.map(tag => tag.id),
+        tagIds: newValue.map(tag => tag.id),
       };
     case 'todo':
-      return parseTodoField(null, value);
+      return parseTodoField(oldValue, newValue);
     default:
-      return normalizeSheetInput(batch, field, value);
+      return normalizeSheetInput(batch, field, newValue);
   }
 }

@@ -169,7 +169,8 @@ export const SheetState = ({
           type: cellValue?.entity?.type ?? '',
         },
         field: cellValue?.data?.field ?? '',
-        value,
+        oldValue: cellValue?.data?.value,
+        newValue: value,
         item,
       }).then(violations => {
         if (violations === null) {

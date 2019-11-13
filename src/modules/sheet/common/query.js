@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { partnerNameFragment, tagFragment, userAvatarFragment } from 'graphql';
+import { documentFragment, partnerNameFragment, tagFragment, userAvatarFragment } from 'graphql';
 import { sheetWarehouseFragment } from './fragment';
 
 export const userByIDQuery = gql`
@@ -60,4 +60,14 @@ export const tagsByIDsQuery = gql`
   }
 
   ${tagFragment}
+`;
+
+export const filesByIDsQuery = gql`
+  query filesByIDsQuery($ids: [ID!]!) {
+    filesByIDs(ids: $ids) {
+      ...documentFragment
+    }
+  }
+
+  ${documentFragment}
 `;

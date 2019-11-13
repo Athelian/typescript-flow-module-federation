@@ -5,34 +5,37 @@ import { normalizeSheetInput } from 'modules/sheet/common/normalize';
 export default function normalizeSheetOrderItemInput(
   orderItem: Object,
   field: string,
-  value: any
+  oldValue: any,
+  newValue: any
 ): Object {
   switch (field) {
     case 'price':
-      if (value.value === null) {
+      if (newValue.value === null) {
         return { price: null };
       }
       return {
         price: {
-          amount: value.value,
-          currency: value.metric,
+          amount: newValue.value,
+          currency: newValue.metric,
         },
       };
     case 'deliveryDate':
       return {
-        deliveryDate: new Date(value),
+        deliveryDate: new Date(newValue),
       };
     case 'tags':
       return {
-        tagIds: value.map(tag => tag.id),
+        tagIds: newValue.map(tag => tag.id),
       };
     case 'files':
       return {
-        files: value.map(({ __typename, entity: e, path, uploading, progress, ...rest }) => rest),
+        files: newValue.map(
+          ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
+        ),
       };
     case 'todo':
-      return parseTodoField(null, value);
+      return parseTodoField(oldValue, newValue);
     default:
-      return normalizeSheetInput(orderItem, field, value);
+      return normalizeSheetInput(orderItem, field, newValue);
   }
 }

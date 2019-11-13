@@ -17,7 +17,11 @@ function getColumnsCache(key: string, columns: Array<ColumnConfig>): Array<Colum
 }
 
 function setColumnsCache(key: string, columns: Array<ColumnConfig>) {
-  setCache(KEY_PREFIX, key, columns.map(c => c.key));
+  setCache(
+    KEY_PREFIX,
+    key,
+    columns.map(c => c.key)
+  );
 }
 
 export function useColumnsInvalidator() {

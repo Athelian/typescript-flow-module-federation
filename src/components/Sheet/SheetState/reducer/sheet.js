@@ -110,7 +110,12 @@ export function init(
     const { items } = payload;
     const sortedItems = sorter(items, state.columnSorts);
     const allRows = transformItems(transformer)(0, sortedItems);
-    const rows = computeMergedCells(mapRowsToColumns(allRows, state.columns.map(c => c.key)));
+    const rows = computeMergedCells(
+      mapRowsToColumns(
+        allRows,
+        state.columns.map(c => c.key)
+      )
+    );
     const entities = resolveEntities(rows);
 
     return {
@@ -174,7 +179,10 @@ export function append(
     const sortedItems = sorter(items, state.columnSorts);
     const allRows = transformItems(transformer)(state.items.length, sortedItems);
     const rows = computeMergedCells(
-      mapRowsToColumns(allRows, state.columns.map(c => c.key)),
+      mapRowsToColumns(
+        allRows,
+        state.columns.map(c => c.key)
+      ),
       state.rows.length
     );
     const entities = resolveEntities(rows);
