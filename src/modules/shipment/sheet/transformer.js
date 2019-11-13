@@ -2117,7 +2117,7 @@ export default function transformer({
 
     let shipmentCells = transformShipment(shipmentFieldDefinitions, `${index}`, shipment);
 
-    shipment.batchesWithoutContainer.forEach((batch, batchIdx) => {
+    (shipment?.batchesWithoutContainer ?? []).forEach((batch, batchIdx) => {
       rows.push([
         ...shipmentCells,
         ...transformContainer(`${index}.containers.-1`, null, false),
