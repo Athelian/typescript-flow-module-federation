@@ -97,48 +97,48 @@ function normalizeInput(entity: Object, field: string, value: any, item: Object)
               .map(user => user.id),
             orderItems: [],
             todo: {
-              ...(item?.todo ?? {}),
-              tasks: (item?.todo?.tasks ?? []).map(task => ({
-                ...task,
-                assignedToIds: (task?.assignedTo ?? [])
-                  .filter(user => user?.organization?.id !== item?.exporter?.id)
-                  .map(user => user.id),
-                approverIds: (task?.approvers ?? [])
-                  .filter(user => user?.organization?.id !== item?.exporter?.id)
-                  .map(user => user.id),
-                inProgressAt:
-                  task?.inProgressBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.inProgressAt,
-                inProgressById:
-                  task?.inProgressBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.inProgressBy?.id,
-                completedAt:
-                  task?.completedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.completedAt,
-                completedById:
-                  task?.completedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.completedBy?.id,
-                rejectedAt:
-                  task?.rejectedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.rejectedAt,
-                rejectedById:
-                  task?.rejectedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.rejectedBy?.id,
-                approvedAt:
-                  task?.approvedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.approvedAt,
-                approvedById:
-                  task?.approvedBy?.organization?.id === item?.exporter?.id
-                    ? null
-                    : task?.approvedBy?.id,
-              })),
+              tasks: (item?.todo?.tasks ?? []).map(
+                ({
+                  assignedTo,
+                  approvers,
+                  inProgressAt,
+                  inProgressBy,
+                  completedAt,
+                  completedBy,
+                  skippedAt,
+                  skippedBy,
+                  rejectedAt,
+                  rejectedBy,
+                  approvedAt,
+                  approvedBy,
+                }) => ({
+                  assignedToIds: (assignedTo ?? [])
+                    .filter(user => user?.organization?.id !== item?.exporter?.id)
+                    .map(user => user.id),
+                  approverIds: (approvers ?? [])
+                    .filter(user => user?.organization?.id !== item?.exporter?.id)
+                    .map(user => user.id),
+                  inProgressAt:
+                    inProgressBy?.organization?.id === item?.exporter?.id ? null : inProgressAt,
+                  inProgressById:
+                    inProgressBy?.organization?.id === item?.exporter?.id ? null : inProgressBy?.id,
+                  completedAt:
+                    completedBy?.organization?.id === item?.exporter?.id ? null : completedAt,
+                  completedById:
+                    completedBy?.organization?.id === item?.exporter?.id ? null : completedBy?.id,
+                  skippedAt: skippedBy?.organization?.id === item?.exporter?.id ? null : skippedAt,
+                  skippedById:
+                    skippedBy?.organization?.id === item?.exporter?.id ? null : skippedBy?.id,
+                  rejectedAt:
+                    rejectedBy?.organization?.id === item?.exporter?.id ? null : rejectedAt,
+                  rejectedById:
+                    rejectedBy?.organization?.id === item?.exporter?.id ? null : rejectedBy?.id,
+                  approvedAt:
+                    approvedBy?.organization?.id === item?.exporter?.id ? null : approvedAt,
+                  approvedById:
+                    approvedBy?.organization?.id === item?.exporter?.id ? null : approvedBy?.id,
+                })
+              ),
             },
           };
         default:
