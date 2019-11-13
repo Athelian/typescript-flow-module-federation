@@ -166,7 +166,8 @@ export type State = {|
 export type Mutator = ({
   entity: { id: string, type: string },
   field: string,
-  value: any,
+  oldValue: any,
+  newValue: any,
   item: Object,
 }) => Promise<Array<Object> | null>;
 

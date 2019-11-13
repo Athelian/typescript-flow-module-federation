@@ -72,12 +72,13 @@ export default function(client: ApolloClient) {
   return function mutate({
     entity,
     field,
-    value,
+    newValue,
     item,
   }: {
     entity: Object,
     field: string,
-    value: any,
+    oldValue: any,
+    newValue: any,
     item: Object,
   }): Promise<Array<Object> | null> {
     return client
@@ -85,7 +86,7 @@ export default function(client: ApolloClient) {
         mutation: mutations[entity.type],
         variables: {
           id: entity.id,
-          input: normalizedInput(entity, field, value, item),
+          input: normalizedInput(entity, field, newValue, item),
         },
       })
       .then(({ data }) => {

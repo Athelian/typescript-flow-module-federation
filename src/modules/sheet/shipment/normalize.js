@@ -5,34 +5,37 @@ import { normalizeSheetInput } from 'modules/sheet/common/normalize';
 export default function normalizeSheetShipmentInput(
   shipment: Object,
   field: string,
-  value: any
+  oldValue: any,
+  newValue: any
 ): Object {
   switch (field) {
     case 'blDate':
     case 'bookingDate':
       return {
-        [(field: string)]: new Date(value),
+        [(field: string)]: new Date(newValue),
       };
     case 'tags':
       return {
-        tagIds: value.map(tag => tag.id),
+        tagIds: newValue.map(tag => tag.id),
       };
     case 'files':
       return {
-        files: value.map(({ __typename, entity: e, path, uploading, progress, ...rest }) => rest),
+        files: newValue.map(
+          ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
+        ),
       };
     case 'inCharges':
       return {
-        inChargeIds: value.map(user => user.id),
+        inChargeIds: newValue.map(user => user.id),
       };
     case 'forwarders':
       return {
-        forwarderIds: value.map(({ id }) => id),
+        forwarderIds: newValue.map(({ id }) => id),
       };
     case 'todo':
-      return parseTodoField(null, value);
+      return parseTodoField(oldValue, newValue);
     default:
-      return normalizeSheetInput(shipment, field, value);
+      return normalizeSheetInput(shipment, field, newValue);
   }
 }
 

@@ -67,33 +67,39 @@ function getEntityId(entity: Object, batch: Batch): string {
   }
 }
 
-function normalizedInput(entity: Object, field: string, value: any, batch: Batch): Object {
+function normalizedInput(
+  entity: Object,
+  field: string,
+  oldValue: any,
+  newValue: any,
+  batch: Batch
+): Object {
   switch (entity.type) {
     case 'Order':
-      return normalizeSheetOrderInput(batch.orderItem.order, field, value);
+      return normalizeSheetOrderInput(batch.orderItem.order, field, oldValue, newValue);
     case 'OrderItem':
-      return normalizeSheetOrderItemInput(batch.orderItem, field, value);
+      return normalizeSheetOrderItemInput(batch.orderItem, field, oldValue, newValue);
     case 'Batch':
-      return normalizeSheetBatchInput(batch, field, value);
+      return normalizeSheetBatchInput(batch, field, oldValue, newValue);
     case 'Shipment':
-      return normalizeSheetShipmentInput(batch.shipment, field, value);
+      return normalizeSheetShipmentInput(batch.shipment, field, oldValue, newValue);
     case 'Container':
-      return normalizeSheetContainerInput(batch.container, field, value);
+      return normalizeSheetContainerInput(batch.container, field, newValue);
     case 'Voyage':
-      return normalizeSheetVoyageInput(batch.shipment, entity.id, field, value);
+      return normalizeSheetVoyageInput(batch.shipment, entity.id, field, newValue);
     case 'ContainerGroup':
-      return normalizeSheetContainerGroupInput(batch.shipment, entity.id, field, value);
+      return normalizeSheetContainerGroupInput(batch.shipment, entity.id, field, newValue);
     case 'TimelineDate': {
       const shipment = getShipmentByTimelineDateId(entity.id, batch);
       if (!shipment) {
         return {};
       }
 
-      return normalizeSheetTimelineDateInput(shipment, entity.id, field, value);
+      return normalizeSheetTimelineDateInput(shipment, entity.id, field, newValue);
     }
     default:
       return {
-        [field]: value,
+        [field]: newValue,
       };
   }
 }
@@ -103,12 +109,14 @@ export default function(client: ApolloClient) {
   return function mutate({
     entity,
     field,
-    value,
+    oldValue,
+    newValue,
     item,
   }: {
     entity: Object,
     field: string,
-    value: any,
+    oldValue: any,
+    newValue: any,
     item: Object,
   }): Promise<Array<Object> | null> {
     return client
@@ -116,7 +124,7 @@ export default function(client: ApolloClient) {
         mutation: mutations[entity.type],
         variables: {
           id: getEntityId(entity, item),
-          input: normalizedInput(entity, field, value, item),
+          input: normalizedInput(entity, field, oldValue, newValue, item),
         },
       })
       .then(({ data }) => {
