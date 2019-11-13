@@ -7,19 +7,29 @@ import { CellInputWrapperStyle } from 'components/Sheet/CellRenderer/Cell/CellIn
 const UserAssignmentInput = ({
   value,
   context,
+  focus,
   onChange,
   readonly,
-}: InputProps<string, Array<string>>) => (
-  <div className={CellInputWrapperStyle}>
-    <BaseUserAssignmentInput
-      users={value || []}
-      name="value"
-      onChange={(name, users) => onChange(users)}
-      editable={!readonly}
-      groupIds={context}
-      size={20}
-    />
-  </div>
-);
+}: InputProps<string, Array<string>>) => {
+  const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
+    if (focus) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  };
+
+  return (
+    <div className={CellInputWrapperStyle} onBlur={handleBlur}>
+      <BaseUserAssignmentInput
+        users={value || []}
+        name="value"
+        onChange={(name, users) => onChange(users, true)}
+        editable={!readonly}
+        groupIds={context}
+        size={20}
+      />
+    </div>
+  );
+};
 
 export default UserAssignmentInput;
