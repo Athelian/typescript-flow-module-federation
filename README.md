@@ -278,12 +278,10 @@ src/generated
 ```
 
 ```sh
-#1. Generate fragmentTypes.json for apollo client
-yarn apollo-fragments
+#1. Generate typings for apollo client
+yarn gql-gen
 #2. Download latest schema from our graphql server
-npx graphql-cli get-schema --endpoint dev -p zenport
-#3. Generate fragments
-yarn post:install
+npx graphql-cli get-schema
 ```
 
 ### Configuration
@@ -328,10 +326,11 @@ yarn post:install
 ├── src                                   // main app, refer app documentation
 │
 ├── scripts                               // folder to organise custom scripts
-│   ├── apolloFragment.js                 // script to generate apollo fragment
 │   ├── build.js                          // script to build the project
 │   ├── checkTranslation.js               // script to check missing locale on the project
 │   ├── start.js                          // script to start development server
+│   ├── migrate.js                        // script to migrate translation
+│   ├── translate.js                      // script to build translation files from code
 │   └── test.js                           // script for running tests using jest
 │
 ├── package.json                          // managing depenecies, script and few configurations│
@@ -395,8 +394,6 @@ src                                        // app code
 │
 │
 ├── styles                               // folder for global and common styles
-│
-├── translations                         // contains translations files seperated by languages
 │
 └── utils                                // helper and utilty functions
 │
