@@ -69,7 +69,7 @@ const DocumentsInput = (entityType: string) => ({
 
       <DocumentsInputDialog
         value={value || []}
-        onChange={onChange}
+        onChange={newValue => onChange(newValue, true)}
         onClose={forceBlur}
         open={focus}
         entityType={entityType}

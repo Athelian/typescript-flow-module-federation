@@ -48,6 +48,12 @@ const DialogRender = ({
         event.stopPropagation();
         onRequestClose();
       }}
+      onKeyDown={event => {
+        if (event.key === 'Escape') {
+          event.stopPropagation();
+          onRequestClose();
+        }
+      }}
       role="presentation"
     >
       <div
