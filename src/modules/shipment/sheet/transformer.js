@@ -2124,7 +2124,7 @@ export default function transformer({
 
     let shipmentCells = transformShipment(shipmentFieldDefinitions, `${index}`, shipment);
 
-    shipment.batchesWithoutContainer.forEach((batch, batchIdx) => {
+    (shipment?.batchesWithoutContainer ?? []).forEach((batch, batchIdx) => {
       rows.push([
         ...shipmentCells,
         ...transformContainer(`${index}.containers.-1`, null, false),
@@ -2148,16 +2148,16 @@ export default function transformer({
       shipmentCells = transformShipment(shipmentFieldDefinitions, `${index}`, null);
     });
 
-    if (shipment.containers.length > 0) {
-      shipment.containers.forEach((container, containerIdx) => {
+    if ((shipment?.containers?.length ?? 0) > 0) {
+      (shipment?.containers ?? []).forEach((container, containerIdx) => {
         let containerCells = transformContainer(
           `${index}.containers.${containerIdx}`,
           container,
           true
         );
 
-        if (container.batches.length > 0) {
-          container.batches.forEach((batch, batchIdx) => {
+        if ((container?.batches?.length ?? 0) > 0) {
+          (container?.batches ?? []).forEach((batch, batchIdx) => {
             rows.push([
               ...shipmentCells,
               ...containerCells,
@@ -2205,7 +2205,7 @@ export default function transformer({
           shipmentCells = transformShipment(shipmentFieldDefinitions, `${index}`, null);
         }
       });
-    } else if (shipment.batchesWithoutContainer.length === 0) {
+    } else if ((shipment?.batchesWithoutContainer?.length ?? 0) === 0) {
       rows.push([
         ...shipmentCells,
         ...transformContainer(`${index}.containers.-1`, null, false),
