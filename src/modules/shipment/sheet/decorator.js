@@ -1,4 +1,5 @@
 // @flow
+import { defaultVolumeMetric } from 'utils/metric';
 
 function decorateBatch(batch: Object): Object {
   return {
@@ -6,6 +7,13 @@ function decorateBatch(batch: Object): Object {
     packageQuantity: {
       value: batch.packageQuantity || 0,
       auto: batch.autoCalculatePackageQuantity || false,
+    },
+    packageVolume: {
+      value: {
+        value: batch.packageVolume?.value ?? 0,
+        metric: batch.packageVolume?.metric ?? defaultVolumeMetric,
+      },
+      auto: batch.autoCalculatePackageVolume ?? false,
     },
   };
 }
