@@ -2,6 +2,7 @@
 // @flow
 import type { Batch } from 'generated/graphql';
 import produce from 'immer';
+import { defaultVolumeMetric } from 'utils/metric';
 
 /**
  * This is used to do clean up the data for cell input
@@ -13,6 +14,13 @@ export default function decorate(batches: Array<Batch>): Array<Object> {
       batch.packageQuantity = {
         value: batch.packageQuantity || 0,
         auto: batch.autoCalculatePackageQuantity || false,
+      };
+      batch.packageVolume = {
+        value: {
+          value: batch.packageVolume?.value ?? 0,
+          metric: batch.packageVolume?.metric ?? defaultVolumeMetric,
+        },
+        auto: batch.autoCalculatePackageVolume ?? false,
       };
       if (batch.container) {
         batch.container.freeTimeStartDate = {
