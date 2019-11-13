@@ -15,14 +15,18 @@ const StaticMetricValueInput = ({
   readonly,
 }: InputProps<MetricValue>) => {
   const { value = 0, metric = '' } = metricValue || {};
-
   return (
     <div className={CellInputWrapperStyle}>
       <BaseNumberInput
         className={InputStyle}
-        value={value}
+        value={value === null ? '' : value}
         required
-        onChange={e => onChange(e.target.value)}
+        onChange={e =>
+          onChange({
+            value: e.target.value,
+            metric,
+          })
+        }
         disabled={readonly}
       />
       <DisplayWrapper width="min-content">
