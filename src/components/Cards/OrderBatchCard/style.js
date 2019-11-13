@@ -7,7 +7,7 @@ export const OrderBatchCardWrapperStyle: string = css`
   grid-gap: 5px;
   padding: 5px 0 10px 0;
   width: 195px;
-  height: 291px;
+  height: 311px;
 `;
 
 export const BatchNoWrapperStyle: string = css`

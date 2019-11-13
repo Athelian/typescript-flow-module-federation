@@ -14,7 +14,7 @@ export const ContainerBatchCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 371px;
+  height: 391px;
 `;
 
 export const ProductWrapperStyle: string = css`

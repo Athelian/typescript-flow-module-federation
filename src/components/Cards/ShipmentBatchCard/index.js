@@ -509,7 +509,7 @@ ShipmentBatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ShipmentBatchCard, 'batch', {
   width: '195px',
-  height: '417px',
+  height: '437px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });

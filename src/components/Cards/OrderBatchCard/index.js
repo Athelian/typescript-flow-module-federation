@@ -442,7 +442,7 @@ OrderBatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(OrderBatchCard, 'batch', {
   width: '195px',
-  height: '291px',
+  height: '311px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });
