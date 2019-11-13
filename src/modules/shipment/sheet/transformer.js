@@ -1457,13 +1457,6 @@ function transformBatch(
       ),
     },
     {
-      columnKey: 'shipment.container.batch.quantityRevisions',
-      type: 'quantity_revisions',
-      ...transformValueField(basePath, batch, 'batchQuantityRevisions', hasPermission =>
-        hasPermission(BATCH_UPDATE)
-      ),
-    },
-    {
       columnKey: 'shipment.container.batch.packageName',
       type: 'text',
       ...transformValueField(

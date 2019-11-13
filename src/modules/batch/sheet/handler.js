@@ -21,61 +21,7 @@ import {
   handleVoyageChanges,
 } from 'modules/sheet/shipment/handler';
 import { handleContainerChanges } from 'modules/sheet/container/handler';
-import { batchQuantityRevisionByIDQuery } from 'modules/sheet/batch/query';
 import { orderByIDQuery, containerByIDQuery, orderItemByIDQuery, shipmentByIDQuery } from './query';
-
-function onBatchQuantityRevisionFactory(client: ApolloClient<any>, dispatch: Action => void) {
-  return (batchQuantityRevisionId: string, batches: Array<Batch>) =>
-    client
-      .query({
-        query: batchQuantityRevisionByIDQuery,
-        fetchPolicy: 'network-only',
-        variables: {
-          id: batchQuantityRevisionId,
-        },
-      })
-      .then(({ data }) => {
-        const batchQuantityRevision = data?.batchQuantityRevision;
-        if (batchQuantityRevision?.__typename !== 'BatchQuantityRevision') {
-          return;
-        }
-
-        batches.every((batch, batchIdx) => {
-          if (batch.id !== batchQuantityRevision.batch?.id) {
-            return true;
-          }
-
-          let found = false;
-          const batchQuantityRevisions = batch.batchQuantityRevisions
-            .filter(bqr => !!bqr.id)
-            .map(bqr => {
-              if (bqr.id === batchQuantityRevision.id) {
-                found = true;
-                return batchQuantityRevision;
-              }
-
-              return bqr;
-            });
-
-          if (!found) {
-            batchQuantityRevisions.splice(batchQuantityRevision.sort, 0, batchQuantityRevision);
-          }
-
-          dispatch({
-            type: Actions.REPLACE_ITEM,
-            payload: {
-              item: {
-                ...batch,
-                batchQuantityRevisions,
-              },
-              index: batchIdx,
-            },
-          });
-
-          return false;
-        });
-      });
-}
 
 function replaceBatch({
   batchId,
@@ -293,7 +239,6 @@ export default function entityEventHandler(
 ): EntityEventHandler {
   const onUpdateBatchOrderItem = onUpdateBatchOrderItemFactory(client, dispatch);
   const onUpdateBatchOrderItemOrder = onUpdateBatchOrderItemOrderFactory(client, dispatch);
-  const onBatchQuantityRevision = onBatchQuantityRevisionFactory(client, dispatch);
   const onUpdateBatchContainer = onUpdateBatchContainerFactory(client, dispatch);
   const onUpdateBatchShipment = onUpdateBatchShipmentFactory(client, dispatch);
   const onDeleteBatch = onDeleteBatchFactory(dispatch);
@@ -368,10 +313,6 @@ export default function entityEventHandler(
             const batch = batches.find(({ id }) => id === event.entity.id);
             changes = await handleBatchChanges(client, changes, batch);
             break;
-          }
-          case 'BatchQuantityRevision': {
-            await onBatchQuantityRevision(event.entity.id, batches);
-            return;
           }
           case 'Shipment': {
             changes = await handleShipmentChanges(client, changes);

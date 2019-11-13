@@ -261,13 +261,6 @@ function transformBatch(
       ),
     },
     {
-      columnKey: 'batch.quantityRevisions',
-      type: 'quantity_revisions',
-      ...transformValueField(basePath, batch, 'batchQuantityRevisions', hasPermission =>
-        hasPermission(BATCH_UPDATE)
-      ),
-    },
-    {
       columnKey: 'batch.packageName',
       type: 'text',
       ...transformValueField(

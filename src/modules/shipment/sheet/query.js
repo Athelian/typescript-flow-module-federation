@@ -20,10 +20,7 @@ import {
 } from 'modules/sheet/common/fragment';
 import { sheetOrderFragment } from 'modules/sheet/order/fragment';
 import { sheetOrderItemFragment } from 'modules/sheet/orderItem/fragment';
-import {
-  sheetBatchFragment,
-  sheetBatchQuantityRevisionFragment,
-} from 'modules/sheet/batch/fragment';
+import { sheetBatchFragment } from 'modules/sheet/batch/fragment';
 import { sheetShipmentFragment, sheetTimelineDateFragment } from 'modules/sheet/shipment/fragment';
 import { sheetContainerFragment } from 'modules/sheet/container/fragment';
 
@@ -103,7 +100,6 @@ export const shipmentsQuery = gql`
   ${sheetOrderFragment}
   ${sheetOrderItemFragment}
   ${sheetBatchFragment}
-  ${sheetBatchQuantityRevisionFragment}
   ${sheetShipmentFragment}
   ${sheetContainerFragment}
   ${sheetTimelineDateFragment}
@@ -165,7 +161,6 @@ export const containerByIDQuery = gql`
   ${sheetOrderFragment}
   ${sheetOrderItemFragment}
   ${sheetBatchFragment}
-  ${sheetBatchQuantityRevisionFragment}
   ${sheetContainerFragment}
   ${sheetModelFragment}
   ${sheetOwnedFragment}
@@ -223,7 +218,6 @@ export const batchByIDQuery = gql`
   ${sheetOrderFragment}
   ${sheetOrderItemFragment}
   ${sheetBatchFragment}
-  ${sheetBatchQuantityRevisionFragment}
   ${sheetModelFragment}
   ${sheetOwnedFragment}
   ${sheetCustomizableFragment}

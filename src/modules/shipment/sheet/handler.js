@@ -20,7 +20,6 @@ import {
   handleVoyageChanges,
 } from 'modules/sheet/shipment/handler';
 import { handleContainerChanges } from 'modules/sheet/container/handler';
-import { batchQuantityRevisionByIDQuery } from 'modules/sheet/batch/query';
 import { batchByIDQuery, containerByIDQuery, orderByIDQuery, orderItemByIDQuery } from './query';
 
 function onCreateContainerFactory(client: ApolloClient<any>, dispatch: Action => void) {
@@ -149,120 +148,6 @@ function onCreateBatchFactory(client: ApolloClient<any>, dispatch: Action => voi
               };
             },
           },
-        });
-      });
-}
-
-function onBatchQuantityRevisionFactory(client: ApolloClient<any>, dispatch: Action => void) {
-  return (batchQuantityRevisionId: string, items: Array<Object>) =>
-    client
-      .query({
-        query: batchQuantityRevisionByIDQuery,
-        fetchPolicy: 'network-only',
-        variables: {
-          id: batchQuantityRevisionId,
-        },
-      })
-      .then(({ data }) => {
-        const batchQuantityRevision = data?.batchQuantityRevision;
-        if (batchQuantityRevision?.__typename !== 'BatchQuantityRevision') {
-          return;
-        }
-
-        items.every((shipment, shipmentIdx) => {
-          const done = !shipment.batchesWithoutContainer.every((batch, batchIdx) => {
-            if (batch.id !== batchQuantityRevision.batch?.id) {
-              return true;
-            }
-
-            const batches = [...shipment.batchesWithoutContainer];
-
-            let found = false;
-            const batchQuantityRevisions = batch.batchQuantityRevisions
-              .filter(bqr => !!bqr.id)
-              .map(bqr => {
-                if (bqr.id === batchQuantityRevision.id) {
-                  found = true;
-                  return batchQuantityRevision;
-                }
-
-                return bqr;
-              });
-
-            if (!found) {
-              batchQuantityRevisions.splice(batchQuantityRevision.sort, 0, batchQuantityRevision);
-            }
-
-            batches[batchIdx] = {
-              ...batch,
-              batchQuantityRevisions,
-            };
-
-            dispatch({
-              type: Actions.REPLACE_ITEM,
-              payload: {
-                item: {
-                  ...shipment,
-                  batchesWithoutContainer: batches,
-                },
-                index: shipmentIdx,
-              },
-            });
-
-            return false;
-          });
-          if (done) {
-            return false;
-          }
-
-          return shipment.containers.every((container, containerIdx) =>
-            container.batches.every((batch, batchIdx) => {
-              if (batch.id !== batchQuantityRevision.batch?.id) {
-                return true;
-              }
-
-              const containers = [...shipment.containers];
-              const batches = [...container.batches];
-
-              let found = false;
-              const batchQuantityRevisions = batch.batchQuantityRevisions
-                .filter(bqr => !!bqr.id)
-                .map(bqr => {
-                  if (bqr.id === batchQuantityRevision.id) {
-                    found = true;
-                    return batchQuantityRevision;
-                  }
-
-                  return bqr;
-                });
-
-              if (!found) {
-                batchQuantityRevisions.splice(batchQuantityRevision.sort, 0, batchQuantityRevision);
-              }
-
-              batches[batchIdx] = {
-                ...batch,
-                batchQuantityRevisions,
-              };
-              containers[containerIdx] = {
-                ...container,
-                batches,
-              };
-
-              dispatch({
-                type: Actions.REPLACE_ITEM,
-                payload: {
-                  item: {
-                    ...shipment,
-                    containers,
-                  },
-                  index: shipmentIdx,
-                },
-              });
-
-              return false;
-            })
-          );
         });
       });
 }
@@ -506,75 +391,6 @@ function onDeleteBatchFactory(dispatch: Action => void) {
   };
 }
 
-function onDeleteBatchQuantityRevisionFactory(dispatch: Action => void) {
-  return (batchQuantityRevisionId: string, items: Array<Object>) =>
-    items.every((shipment, shipmentIdx) => {
-      const done = !shipment.batchesWithoutContainer.every((batch, batchIdx) => {
-        if (batch.id !== batchQuantityRevisionId) {
-          return true;
-        }
-
-        const batches = [...shipment.batchesWithoutContainer];
-        batches[batchIdx] = {
-          ...batch,
-          batchQuantityRevisions: batch.batchQuantityRevisions.filter(
-            bqr => bqr.id !== batchQuantityRevisionId
-          ),
-        };
-
-        dispatch({
-          type: Actions.REPLACE_ITEM,
-          payload: {
-            item: {
-              ...shipment,
-              batchesWithoutContainer: batches,
-            },
-            index: shipmentIdx,
-          },
-        });
-
-        return false;
-      });
-      if (done) {
-        return false;
-      }
-
-      return shipment.containers.every((container, containerIdx) =>
-        container.batches.every((batch, batchIdx) => {
-          if (batch.id !== batchQuantityRevisionId) {
-            return true;
-          }
-
-          const containers = [...shipment.containers];
-          const batches = [...container.batches];
-          batches[batchIdx] = {
-            ...batch,
-            batchQuantityRevisions: batch.batchQuantityRevisions.filter(
-              bqr => bqr.id !== batchQuantityRevisionId
-            ),
-          };
-          containers[containerIdx] = {
-            ...container,
-            batches,
-          };
-
-          dispatch({
-            type: Actions.REPLACE_ITEM,
-            payload: {
-              item: {
-                ...shipment,
-                containers,
-              },
-              index: shipmentIdx,
-            },
-          });
-
-          return false;
-        })
-      );
-    });
-}
-
 export default function entityEventHandler(
   // $FlowFixMe not compatible with hook implementation
   client: ApolloClient,
@@ -582,12 +398,10 @@ export default function entityEventHandler(
 ): EntityEventHandler {
   const onCreateContainer = onCreateContainerFactory(client, dispatch);
   const onCreateBatch = onCreateBatchFactory(client, dispatch);
-  const onBatchQuantityRevision = onBatchQuantityRevisionFactory(client, dispatch);
   const onUpdateBatchOrderItem = onUpdateBatchOrderItemFactory(client, dispatch);
   const onUpdateBatchOrderItemOrder = onUpdateBatchOrderItemOrderFactory(client, dispatch);
   const onDeleteContainer = onDeleteContainerFactory(dispatch);
   const onDeleteBatch = onDeleteBatchFactory(dispatch);
-  const onDeleteBatchQuantityRevision = onDeleteBatchQuantityRevisionFactory(dispatch);
 
   return async (event: EntityEvent, shipments: Array<Object>) => {
     switch (event.lifeCycle) {
@@ -600,10 +414,6 @@ export default function entityEventHandler(
           case 'Batch':
             await onCreateBatch(event.entity.id);
             break;
-          case 'BatchQuantityRevision': {
-            await onBatchQuantityRevision(event.entity.id, shipments);
-            break;
-          }
           default:
             break;
         }
@@ -681,10 +491,6 @@ export default function entityEventHandler(
             changes = await handleBatchChanges(client, changes, batch);
             break;
           }
-          case 'BatchQuantityRevision': {
-            await onBatchQuantityRevision(event.entity.id, shipments);
-            return;
-          }
           case 'OrderItem': {
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               switch (change.field) {
@@ -731,9 +537,6 @@ export default function entityEventHandler(
             break;
           case 'Batch':
             onDeleteBatch(event.entity.id);
-            break;
-          case 'BatchQuantityRevision':
-            onDeleteBatchQuantityRevision(event.entity.id, shipments);
             break;
           default:
             break;

@@ -16,12 +16,6 @@ export default function normalizeSheetBatchInput(
       return {
         [(field: string)]: new Date(newValue),
       };
-    case 'batchQuantityRevisions':
-      return {
-        batchQuantityRevisions: newValue.map(({ sort, batch: b, ...revision }) =>
-          removeTypename(revision)
-        ),
-      };
     case 'packageQuantity': {
       const { auto: autoCalculatePackageQuantity = false, value: packageQuantity = 0 } =
         newValue || {};

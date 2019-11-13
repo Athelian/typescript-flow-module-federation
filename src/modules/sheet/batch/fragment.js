@@ -4,9 +4,6 @@ export const sheetBatchFragment = gql`
   fragment sheetBatchFragment on Batch {
     no
     quantity
-    batchQuantityRevisions {
-      ...sheetBatchQuantityRevisionFragment
-    }
     deliveredAt
     desiredAt
     expiredAt
@@ -56,11 +53,4 @@ export const sheetBatchFragment = gql`
   }
 `;
 
-export const sheetBatchQuantityRevisionFragment = gql`
-  fragment sheetBatchQuantityRevisionFragment on BatchQuantityRevision {
-    id
-    quantity
-    type
-    sort
-  }
-`;
+export default sheetBatchFragment;

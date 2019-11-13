@@ -795,13 +795,6 @@ function transformBatch(
       ),
     },
     {
-      columnKey: 'order.orderItem.batch.quantityRevisions',
-      type: 'quantity_revisions',
-      ...transformValueField(basePath, batch, 'batchQuantityRevisions', hasPermission =>
-        hasPermission(BATCH_UPDATE)
-      ),
-    },
-    {
       columnKey: 'order.orderItem.batch.packageName',
       type: 'text',
       ...transformValueField(

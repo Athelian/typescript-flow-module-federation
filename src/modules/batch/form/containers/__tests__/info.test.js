@@ -19,7 +19,6 @@ describe('batch info container', () => {
       no: faker.name.findName(),
       quantity: 0,
       latestQuantity: 0,
-      batchQuantityRevisions: [],
       producedAt: '2019-07-18T00:00:00Z',
       deliveredAt: '2019-07-12T00:00:00Z',
       desiredAt: '2019-07-25T00:00:00Z',
