@@ -10,6 +10,7 @@ describe('Order update action', () => {
     // select first order
     cy.visit('/order')
       .get('.InfiniteScroll')
+      .should('have.length', 1)
       .children()
       .first()
       .click();
@@ -26,6 +27,7 @@ describe('Order update action', () => {
         .findByTestId('addAssignerButton')
         .click()
         .get('.InfiniteScroll')
+        .should('have.length', 1)
         .children()
         .first()
         .click()
@@ -38,7 +40,7 @@ describe('Order update action', () => {
         .blur()
         .get('input[aria-labelledby="incotermSearchSelectInput"]')
         .clear()
-        .type(incoterm)
+        .type(`${incoterm}{downarrow}{enter}`)
         .should('have.value', incoterm)
         .get('input[name="deliveryPlace"]')
         .clear()

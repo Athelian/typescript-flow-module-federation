@@ -10,18 +10,19 @@ describe('Order items section', () => {
     // select first order
     cy.visit('/order')
       .get('.InfiniteScroll')
+      .should('have.length', 1)
       .children()
       .first()
       .click();
 
     cy.url().should('include', '/order/emV');
 
-    // FIXME: should use scrollTo() method, but it doesn't work.
-    cy.contains('DOCUMENTS').click();
+    cy.get('#navbar-root > div > button:nth-child(3)').click();
 
     cy.findByTestId('btnNewItems')
       .click()
       .get('.InfiniteScroll')
+      .should('have.length', 1)
       .children()
       .first()
       .click()

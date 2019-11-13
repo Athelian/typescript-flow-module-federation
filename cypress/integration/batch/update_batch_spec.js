@@ -9,6 +9,7 @@ describe('Batch', () => {
   it('update a batch', () => {
     cy.visit('/batch')
       .get('.InfiniteScroll')
+      .should('have.length', 1)
       .children()
       .first()
       .click();

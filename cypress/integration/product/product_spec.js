@@ -124,21 +124,14 @@ describe('Product', () => {
     );
   });
 
-  it.skip('archive a product', () => {
+  it('archive a product', () => {
     cy.findByTestId('archivedStatusToggle').click();
-    cy.get('#dialog-root')
-      .children()
-      .should('have.length', 1);
     cy.findByTestId('archiveButton').click();
-
     cy.get('svg[data-icon="toggle-off"]').should('be.exist');
   });
 
-  it.skip('activate a product', () => {
+  it('activate a product', () => {
     cy.findByTestId('archivedStatusToggle').click();
-    cy.get('#dialog-root')
-      .children()
-      .should('have.length', 1);
     cy.findByTestId('activeButton').click();
     cy.get('svg[data-icon="toggle-on"]').should('be.exist');
   });

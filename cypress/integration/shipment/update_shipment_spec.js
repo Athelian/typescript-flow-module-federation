@@ -9,6 +9,7 @@ describe('Shipment', () => {
   it('should update shipment basic field', () => {
     cy.visit('/shipment')
       .get('.InfiniteScroll')
+      .should('have.length', 1)
       .children()
       .first()
       .click();

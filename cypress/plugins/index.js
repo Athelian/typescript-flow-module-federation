@@ -97,7 +97,7 @@ module.exports = on => {
             issueAt: faker.date.future(),
             deliveryPlace: faker.address.city(),
             memo: faker.lorem.paragraph(),
-            currency: 'ALL',
+            currency: 'USD',
             incoterm: 'FAS',
           };
 
