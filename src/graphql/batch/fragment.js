@@ -19,6 +19,11 @@ export const batchFormFragment = gql`
     memo
     no
     quantity
+    producedQuantity
+    preShippedQuantity
+    shippedQuantity
+    postShippedQuantity
+    deliveredQuantity
     latestQuantity
     batchQuantityRevisions {
       ... on BatchQuantityRevision {

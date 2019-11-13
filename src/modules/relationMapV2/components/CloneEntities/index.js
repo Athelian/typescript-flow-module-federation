@@ -170,7 +170,6 @@ export default function CloneEntities({ onSuccess }: Props) {
               expiredAt: null,
               customFields: null,
               producedAt: null,
-              batchQuantityRevisions: [],
             },
           });
         });

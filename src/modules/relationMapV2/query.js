@@ -142,6 +142,12 @@ const batchEntityCardFragment = gql`
     }
     archived
     no
+    quantity
+    producedQuantity
+    preShippedQuantity
+    shippedQuantity
+    postShippedQuantity
+    deliveredQuantity
     latestQuantity
     totalVolume {
       value
