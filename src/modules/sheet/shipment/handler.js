@@ -5,6 +5,7 @@ import type { EntityEventChange } from 'components/Sheet/SheetLive/types';
 import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
 import { mapAsync } from 'utils/async';
 import {
+  filesByIDsQuery,
   organizationByIDQuery,
   organizationsByIDsQuery,
   tagsByIDsQuery,
@@ -70,6 +71,16 @@ export async function handleShipmentChanges(
           .then(({ data }) => ({
             field: change.field,
             new: newCustomValue(data.tagsByIDs),
+          }));
+      case 'files':
+        return client
+          .query({
+            query: filesByIDsQuery,
+            variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+          })
+          .then(({ data }) => ({
+            field: change.field,
+            new: newCustomValue(data.filesByIDs),
           }));
       default:
         break;

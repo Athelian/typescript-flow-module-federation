@@ -3,7 +3,12 @@ import { ApolloClient } from 'apollo-client';
 import { mapAsync } from 'utils/async';
 import { newCustomValue } from 'components/Sheet/SheetLive/helper';
 import type { EntityEventChange } from 'components/Sheet/SheetLive/types';
-import { tagsByIDsQuery, usersByIDsQuery, organizationByIDQuery } from 'modules/sheet/common/query';
+import {
+  tagsByIDsQuery,
+  usersByIDsQuery,
+  organizationByIDQuery,
+  filesByIDsQuery,
+} from 'modules/sheet/common/query';
 
 export function handleOrderChanges(
   client: ApolloClient<any>,
@@ -41,6 +46,16 @@ export function handleOrderChanges(
           .then(({ data }) => ({
             field: change.field,
             new: newCustomValue(data.tagsByIDs),
+          }));
+      case 'files':
+        return client
+          .query({
+            query: filesByIDsQuery,
+            variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+          })
+          .then(({ data }) => ({
+            field: change.field,
+            new: newCustomValue(data.filesByIDs),
           }));
       default:
         break;
