@@ -2256,8 +2256,8 @@ export default function transformer({
 
     let orderCells = transformOrder(orderFieldDefinitions, `${index}`, order);
 
-    if (order.orderItems.length > 0) {
-      order.orderItems.forEach((orderItem, orderItemIdx) => {
+    if ((order?.orderItems?.length ?? 0) > 0) {
+      (order?.orderItems ?? []).forEach((orderItem, orderItemIdx) => {
         let orderItemCells = transformOrderItem(
           orderItemFieldDefinitions,
           `${index}.orderItems.${orderItemIdx}`,
@@ -2265,8 +2265,8 @@ export default function transformer({
           true
         );
 
-        if (orderItem.batches.length > 0) {
-          orderItem.batches.forEach((batch, batchIdx) => {
+        if ((orderItem?.batches?.length ?? 0) > 0) {
+          (orderItem?.batches ?? []).forEach((batch, batchIdx) => {
             rows.push([
               ...orderCells,
               ...orderItemCells,

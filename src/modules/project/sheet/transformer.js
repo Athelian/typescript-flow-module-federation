@@ -342,16 +342,16 @@ export default function transformer(index: number, project: Object): Array<Array
 
   let projectCells = transformProject(`${index}`, project);
 
-  if (project.milestones.length > 0) {
-    project.milestones.forEach((milestone, milestoneIdx) => {
+  if ((project?.milestones?.length ?? 0) > 0) {
+    (project?.milestones ?? []).forEach((milestone, milestoneIdx) => {
       let milestoneCells = transformMilestone(
         `${index}.milestones.${milestoneIdx}`,
         milestone,
         true
       );
 
-      if (milestone.tasks.length > 0) {
-        milestone.tasks.forEach((task, taskIdx) => {
+      if ((milestone?.tasks?.length ?? 0) > 0) {
+        (milestone?.tasks ?? []).forEach((task, taskIdx) => {
           rows.push([
             ...projectCells,
             ...milestoneCells,
