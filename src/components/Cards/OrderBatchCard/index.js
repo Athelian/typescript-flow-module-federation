@@ -223,7 +223,7 @@ const OrderBatchCard = ({
           onClick={evt => evt.stopPropagation()}
           role="presentation"
         >
-          <Label required={currentQuantity === 'quantity'}>
+          <Label required={currentQuantity === 'initialQuantity'}>
             <FormattedMessage {...messages[currentQuantity]} />
           </Label>
           <FormField

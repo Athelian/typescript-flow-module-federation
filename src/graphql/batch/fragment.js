@@ -155,6 +155,12 @@ export const batchCardFragment = gql`
     id
     no
     archived
+    quantity
+    producedQuantity
+    preShippedQuantity
+    shippedQuantity
+    postShippedQuantity
+    deliveredQuantity
     latestQuantity
     deliveredAt
     desiredAt

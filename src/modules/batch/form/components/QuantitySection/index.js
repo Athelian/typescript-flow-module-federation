@@ -75,7 +75,7 @@ const QuantitySection = () => {
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
                           InputWrapperComponent={
-                            activeQuantity === 'quantity' ? CurrentQuantity : React.Fragment
+                            activeQuantity === 'initialQuantity' ? CurrentQuantity : React.Fragment
                           }
                         />
                       )}
