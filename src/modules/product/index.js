@@ -18,6 +18,7 @@ const ProductModuleMapWrapper = withForbidden(BatchFocusedModule, RM_PRODUCT_FOC
 const ProductApp = () => (
   <Provider>
     <Router>
+      {/* $FlowFixMe Flow typed is not updated yet */}
       <Redirect path="/" from="/" to="/product/cards" noThrow />
       <ProductModuleListWrapper path="/cards" />
       <ProductFormModuleCreationWrapper path="new" />

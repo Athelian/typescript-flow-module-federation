@@ -67,7 +67,7 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
     cacheKey: 'order_sheet',
   });
 
-  if (!equals(orderIdsRef.current, orderIds)) {
+  if (!!orderIds && !equals(orderIdsRef.current, orderIds)) {
     setFilterBy({ query: '', ids: orderIds });
     orderIdsRef.current = orderIds;
   }

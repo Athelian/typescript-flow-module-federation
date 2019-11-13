@@ -6,10 +6,14 @@ import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ShipmentFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
 import { Sheet, ColumnsConfig, useSheet } from 'components/Sheet';
+import type { CellValue } from 'components/Sheet/SheetState/types';
+import LoadingIcon from 'components/LoadingIcon';
+import type { ColumnConfig } from 'components/Sheet';
+import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { shipmentsExportQuery } from '../query';
-import shipmentColumns from './columns';
-import transformer from './transformer';
+import shipmentColumns, { FieldDefinitionEntityTypes } from './columns';
+import shipmentTransformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
 import mutate from './mutate';
@@ -20,7 +24,17 @@ type Props = {
   shipmentIds?: Array<string>,
 };
 
-const ShipmentSheetModule = ({ shipmentIds }: Props) => {
+type ImplProps = {
+  ...Props,
+  columns: Array<ColumnConfig>,
+  transformer: Object => Array<Array<CellValue>>,
+};
+
+const ShipmentSheetModuleImpl = ({
+  shipmentIds,
+  columns: columnConfigs,
+  transformer,
+}: ImplProps) => {
   const client = useApolloClient();
   const memoizedMutate = React.useCallback(mutate(client), [client]);
   const memoizedHandler = React.useCallback(dispatch => entityEventHandler(client, dispatch), [
@@ -48,7 +62,7 @@ const ShipmentSheetModule = ({ shipmentIds }: Props) => {
     onLocalSort,
     onRemoteSort,
   } = useSheet({
-    columns: shipmentColumns,
+    columns: columnConfigs,
     itemsQuery: shipmentsQuery,
     initialFilterBy: { query: '', archived: false },
     initialSortBy: { updatedAt: 'DESCENDING' },
@@ -57,7 +71,7 @@ const ShipmentSheetModule = ({ shipmentIds }: Props) => {
     cacheKey: 'shipment_sheet',
   });
 
-  if (!equals(shipmentIdsRef.current, shipmentIds)) {
+  if (!!shipmentIds && !equals(shipmentIdsRef.current, shipmentIds)) {
     setFilterBy({ query: '', ids: shipmentIds });
     shipmentIdsRef.current = shipmentIds;
   }
@@ -70,7 +84,7 @@ const ShipmentSheetModule = ({ shipmentIds }: Props) => {
         <Filter config={ShipmentFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig
-          config={shipmentColumns}
+          config={columnConfigs}
           columns={columns}
           onChange={setColumns}
           templateType="ShipmentSheet"
@@ -100,6 +114,29 @@ const ShipmentSheetModule = ({ shipmentIds }: Props) => {
         onLoadMore={onLoadMore}
       />
     </Content>
+  );
+};
+
+const ShipmentSheetModule = ({ shipmentIds }: Props) => {
+  const { fieldDefinitions, loading } = useFieldDefinitions(FieldDefinitionEntityTypes);
+
+  if (loading) {
+    return <LoadingIcon />;
+  }
+
+  const allFieldDefinitions = {
+    orderFieldDefinitions: fieldDefinitions?.Order ?? [],
+    orderItemFieldDefinitions: fieldDefinitions?.OrderItem ?? [],
+    batchFieldDefinitions: fieldDefinitions?.Batch ?? [],
+    shipmentFieldDefinitions: fieldDefinitions?.Shipment ?? [],
+  };
+
+  return (
+    <ShipmentSheetModuleImpl
+      columns={shipmentColumns(allFieldDefinitions)}
+      transformer={shipmentTransformer(allFieldDefinitions)}
+      shipmentIds={shipmentIds}
+    />
   );
 };
 

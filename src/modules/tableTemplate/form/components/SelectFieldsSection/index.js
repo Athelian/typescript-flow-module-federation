@@ -154,7 +154,14 @@ const SelectFieldsSection = () => {
               shipmentFieldDefinitions: shipmentCustomFields,
             })
           ),
-          BatchSheet: convertSheetColumns(batchSheetColumns),
+          BatchSheet: convertSheetColumns(
+            batchSheetColumns({
+              orderFieldDefinitions: orderCustomFields,
+              orderItemFieldDefinitions: orderItemCustomFields,
+              batchFieldDefinitions: batchCustomFields,
+              shipmentFieldDefinitions: shipmentCustomFields,
+            })
+          ),
           ShipmentSheet: convertSheetColumns(shipmentSheetColumns),
           ProjectSheet: convertSheetColumns(projectSheetColumns),
         };

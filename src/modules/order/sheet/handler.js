@@ -1,6 +1,6 @@
 // @flow
 import ApolloClient from 'apollo-client';
-import { filterAsync, mapAsync } from 'utils/async';
+import { filterAsync } from 'utils/async';
 import type { Action } from 'components/Sheet/SheetState/types';
 import { Actions } from 'components/Sheet/SheetState/constants';
 import type {
@@ -8,21 +8,22 @@ import type {
   EntityEventChange,
   EntityEventHandler,
 } from 'components/Sheet/SheetLive/types';
-import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
-import { batchQuantityRevisionByIDQuery } from 'modules/sheet/batch/query';
+import { handleFieldValueEvent } from 'modules/sheet/common/handler';
+import { handleOrderChanges } from 'modules/sheet/order/handler';
+import { handleOrderItemChanges } from 'modules/sheet/orderItem/handler';
+import { handleBatchChanges } from 'modules/sheet/batch/handler';
+import { handleContainerChanges } from 'modules/sheet/container/handler';
 import {
-  organizationByIDQuery,
-  organizationsByIDsQuery,
-  tagsByIDsQuery,
-  userByIDQuery,
-  usersByIDsQuery,
-  warehouseByIDQuery,
-} from 'modules/sheet/common/query';
+  handleContainerGroupChanges,
+  handleTimelineDateChanges,
+  handleVoyageChanges,
+  handleShipmentChanges,
+} from 'modules/sheet/shipment/handler';
+import { batchQuantityRevisionByIDQuery } from 'modules/sheet/batch/query';
 import { batchByIDQuery, containerByIDQuery, orderItemByIDQuery, shipmentByIDQuery } from './query';
 
-// $FlowFixMe not compatible with hook implementation
-function onCreateOrderItemFactory(client: ApolloClient, dispatch: Action => void) {
+function onCreateOrderItemFactory(client: ApolloClient<any>, dispatch: Action => void) {
   return (orderItemId: string) =>
     client
       .query({
@@ -72,8 +73,7 @@ function onCreateOrderItemFactory(client: ApolloClient, dispatch: Action => void
       });
 }
 
-// $FlowFixMe not compatible with hook implementation
-function onCreateBatchFactory(client: ApolloClient, dispatch: Action => void) {
+function onCreateBatchFactory(client: ApolloClient<any>, dispatch: Action => void) {
   return (batchId: string) =>
     client
       .query({
@@ -136,8 +136,7 @@ function onCreateBatchFactory(client: ApolloClient, dispatch: Action => void) {
       });
 }
 
-// $FlowFixMe not compatible with hook implementation
-function onBatchQuantityRevisionFactory(client: ApolloClient, dispatch: Action => void) {
+function onBatchQuantityRevisionFactory(client: ApolloClient<any>, dispatch: Action => void) {
   return (batchQuantityRevisionId: string, orders: Array<Object>) =>
     client
       .query({
@@ -206,8 +205,7 @@ function onBatchQuantityRevisionFactory(client: ApolloClient, dispatch: Action =
       });
 }
 
-// $FlowFixMe not compatible with hook implementation
-function onUpdateBatchContainerFactory(client: ApolloClient, dispatch: Action => void) {
+function onUpdateBatchContainerFactory(client: ApolloClient<any>, dispatch: Action => void) {
   function changeContainer(batchId: string, container: Object | null, orders: Array<Object>) {
     orders.every((order, orderIdx) =>
       order.orderItems.every((orderItem, orderItemIdx) =>
@@ -268,8 +266,7 @@ function onUpdateBatchContainerFactory(client: ApolloClient, dispatch: Action =>
   };
 }
 
-// $FlowFixMe not compatible with hook implementation
-function onUpdateBatchShipmentFactory(client: ApolloClient, dispatch: Action => void) {
+function onUpdateBatchShipmentFactory(client: ApolloClient<any>, dispatch: Action => void) {
   function changeShipment(batchId: string, shipment: Object | null, orders: Array<Object>) {
     orders.every((order, orderIdx) =>
       order.orderItems.every((orderItem, orderItemIdx) =>
@@ -490,45 +487,7 @@ export default function entityEventHandler(
 
         switch (event.entity.__typename) {
           case 'Order': {
-            changes = await mapAsync(changes, change => {
-              switch (change.field) {
-                case 'importer':
-                case 'exporter':
-                  return client
-                    .query({
-                      query: organizationByIDQuery,
-                      variables: { id: change.new?.entity?.id },
-                    })
-                    .then(({ data }) => ({
-                      field: change.field,
-                      new: newCustomValue(data.organization),
-                    }));
-                case 'inCharges':
-                  return client
-                    .query({
-                      query: usersByIDsQuery,
-                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
-                    })
-                    .then(({ data }) => ({
-                      field: change.field,
-                      new: newCustomValue(data.usersByIDs),
-                    }));
-                case 'tags':
-                  return client
-                    .query({
-                      query: tagsByIDsQuery,
-                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
-                    })
-                    .then(({ data }) => ({
-                      field: change.field,
-                      new: newCustomValue(data.tagsByIDs),
-                    }));
-                default:
-                  break;
-              }
-
-              return change;
-            });
+            changes = await handleOrderChanges(client, changes);
             break;
           }
           case 'OrderItem': {
@@ -542,24 +501,7 @@ export default function entityEventHandler(
               return true;
             });
 
-            changes = await mapAsync(changes, change => {
-              switch (change.field) {
-                case 'tags':
-                  return client
-                    .query({
-                      query: tagsByIDsQuery,
-                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
-                    })
-                    .then(({ data }) => ({
-                      field: change.field,
-                      new: newCustomValue(data.tagsByIDs),
-                    }));
-                default:
-                  break;
-              }
-
-              return change;
-            });
+            changes = await handleOrderItemChanges(client, changes);
             break;
           }
           case 'Batch': {
@@ -588,63 +530,12 @@ export default function entityEventHandler(
               }
             });
 
-            changes = await mapAsync(changes, change => {
-              switch (change.field) {
-                case 'tags':
-                  return client
-                    .query({
-                      query: tagsByIDsQuery,
-                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
-                    })
-                    .then(({ data }) => ({
-                      field: change.field,
-                      new: newCustomValue(data.tagsByIDs),
-                    }));
-                default:
-                  break;
-              }
-
-              return change;
-            });
-
             const batch = orders
               .map(order => order.orderItems.map(oi => oi.batches).flat())
               // $FlowFixMe flat not supported by flow
               .flat()
               .find(b => b.id === event.entity.id);
-            if (batch) {
-              changes = mergeChanges(
-                changes,
-                {
-                  packageQuantity: (i, v) => ({
-                    ...i,
-                    value: v,
-                  }),
-                  autoCalculatePackageQuantity: (i, v) => ({
-                    ...i,
-                    auto: v,
-                  }),
-                },
-                'packageQuantity',
-                batch.packageQuantity
-              );
-              changes = mergeChanges(
-                changes,
-                {
-                  packageVolume: (i, v) => ({
-                    ...i,
-                    value: v,
-                  }),
-                  autoCalculatePackageVolume: (i, v) => ({
-                    ...i,
-                    auto: v,
-                  }),
-                },
-                'packageVolume',
-                batch.packageVolume
-              );
-            }
-
+            changes = await handleBatchChanges(client, changes, batch);
             break;
           }
           case 'BatchQuantityRevision': {
@@ -652,367 +543,41 @@ export default function entityEventHandler(
             return;
           }
           case 'Shipment': {
-            changes = await mapAsync(changes, change => {
-              switch (change.field) {
-                case 'importer':
-                case 'exporter':
-                  if (change.new) {
-                    return client
-                      .query({
-                        query: organizationByIDQuery,
-                        variables: { id: change.new?.entity?.id },
-                      })
-                      .then(({ data }) => ({
-                        field: change.field,
-                        new: newCustomValue(data.organization),
-                      }));
-                  }
-                  break;
-                case 'forwarders':
-                  return client
-                    .query({
-                      query: organizationsByIDsQuery,
-                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
-                    })
-                    .then(({ data }) => ({
-                      field: change.field,
-                      new: newCustomValue(data.organizationsByIDs),
-                    }));
-                case 'transportType':
-                  return {
-                    ...change,
-                    new: {
-                      string: change.new?.int === 1 ? 'Air' : 'Sea',
-                      __typename: 'StringValue',
-                    },
-                  };
-                case 'inCharges':
-                  return client
-                    .query({
-                      query: usersByIDsQuery,
-                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
-                    })
-                    .then(({ data }) => ({
-                      field: change.field,
-                      new: newCustomValue(data.usersByIDs),
-                    }));
-                case 'tags':
-                  return client
-                    .query({
-                      query: tagsByIDsQuery,
-                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
-                    })
-                    .then(({ data }) => ({
-                      field: change.field,
-                      new: newCustomValue(data.tagsByIDs),
-                    }));
-                default:
-                  break;
-              }
-
-              return change;
-            });
+            changes = await handleShipmentChanges(client, changes);
             break;
           }
           case 'TimelineDate': {
-            changes = await mapAsync(changes, change => {
-              switch (change.field) {
-                case 'approvedBy':
-                  if (change.new) {
-                    return client
-                      .query({
-                        query: userByIDQuery,
-                        variables: { id: change.new?.entity?.id },
-                      })
-                      .then(({ data }) => ({
-                        field: 'approvedBy',
-                        new: newCustomValue(data.user),
-                      }));
-                  }
-                  break;
-                case 'assignedTo':
-                  return client
-                    .query({
-                      query: usersByIDsQuery,
-                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
-                    })
-                    .then(({ data }) => ({
-                      field: change.field,
-                      new: newCustomValue(data.usersByIDs),
-                    }));
-                default:
-                  break;
-              }
-
-              return change;
-            });
-
-            const batch = orders
+            const shipment = orders
               .map(order => order.orderItems.map(oi => oi.batches).flat())
               // $FlowFixMe flat not supported by flow
               .flat()
-              .find(
-                currentBatch =>
-                  currentBatch?.shipment?.id &&
-                  isBelongToShipment(currentBatch?.shipment, event.entity?.id)
-              );
-            if (batch) {
-              const shipment = batch?.shipment;
-              const timelineDate = (() => {
-                if (shipment.cargoReady?.id === event.entity?.id) {
-                  return shipment.cargoReady;
-                }
-                if (shipment.containerGroups[0].customClearance.id === event.entity?.id) {
-                  return shipment.containerGroups[0].customClearance;
-                }
-                if (shipment.containerGroups[0].warehouseArrival.id === event.entity?.id) {
-                  return shipment.containerGroups[0].warehouseArrival;
-                }
-                if (shipment.containerGroups[0].deliveryReady.id === event.entity?.id) {
-                  return shipment.containerGroups[0].deliveryReady;
-                }
-
-                const voyage = shipment.voyages.find(
-                  v => v.departure.id === event.entity?.id || v.arrival.id === event.entity?.id
-                );
-
-                if (voyage.departure.id === event.entity?.id) {
-                  return voyage.departure;
-                }
-
-                return voyage.arrival;
-              })();
-
-              changes = mergeChanges(
-                changes,
-                {
-                  approvedBy: (i, v) => ({
-                    ...i,
-                    user: v,
-                  }),
-                  approvedAt: (i, v) => ({
-                    ...i,
-                    date: v,
-                  }),
-                },
-                'approved',
-                timelineDate.approved
-              );
-            }
-
+              .map(b => b.shipment)
+              .filter(Boolean)
+              .find(s => isBelongToShipment(s, event.entity?.id));
+            changes = await handleTimelineDateChanges(client, changes, event.entity.id, shipment);
             break;
           }
           case 'Container': {
-            changes = await mapAsync(changes, change => {
-              switch (change.field) {
-                case 'containerOption':
-                  return {
-                    ...change,
-                    new: {
-                      string: change.new?.int === 1 ? 'Hanger' : '',
-                      __typename: 'StringValue',
-                    },
-                  };
-                case 'warehouseArrivalAgreedDateApprovedBy':
-                case 'warehouseArrivalActualDateApprovedBy':
-                case 'departureDateApprovedBy':
-                  if (change.new) {
-                    return client
-                      .query({
-                        query: userByIDQuery,
-                        variables: { id: change.new?.entity?.id },
-                      })
-                      .then(({ data }) => ({
-                        field: change.field,
-                        new: newCustomValue(data.user),
-                      }));
-                  }
-                  break;
-                case 'warehouseArrivalAgreedDateAssignedTo':
-                case 'warehouseArrivalActualDateAssignedTo':
-                case 'departureDateAssignedTo':
-                  return client
-                    .query({
-                      query: usersByIDsQuery,
-                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
-                    })
-                    .then(({ data }) => ({
-                      field: change.field,
-                      new: newCustomValue(data.usersByIDs),
-                    }));
-                case 'tags':
-                  return client
-                    .query({
-                      query: tagsByIDsQuery,
-                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
-                    })
-                    .then(({ data }) => ({
-                      field: change.field,
-                      new: newCustomValue(data.tagsByIDs),
-                    }));
-                default:
-                  break;
-              }
-
-              return change;
-            });
-
-            const batch = orders
+            const container = orders
               .map(order => order.orderItems.map(oi => oi.batches).flat())
               // $FlowFixMe flat not supported by flow
               .flat()
-              .find(currentBatch => currentBatch?.container?.id === event.entity?.id);
-            if (batch) {
-              changes = mergeChanges(
-                changes,
-                {
-                  freeTimeStartDate: (i, v) => ({
-                    ...i,
-                    value: v,
-                  }),
-                  autoCalculatedFreeTimeStartDate: (i, v) => ({
-                    ...i,
-                    auto: v,
-                  }),
-                },
-                'freeTimeStartDate',
-                batch.container?.freeTimeStartDate
-              );
-              changes = mergeChanges(
-                changes,
-                {
-                  warehouseArrivalAgreedDateApprovedBy: (i, v) => ({
-                    ...i,
-                    user: v,
-                  }),
-                  warehouseArrivalAgreedDateApprovedAt: (i, v) => ({
-                    ...i,
-                    date: v,
-                  }),
-                },
-                'warehouseArrivalAgreedDateApproved',
-                batch.container?.warehouseArrivalAgreedDateApproved
-              );
-              changes = mergeChanges(
-                changes,
-                {
-                  warehouseArrivalActualDateApprovedBy: (i, v) => ({
-                    ...i,
-                    user: v,
-                  }),
-                  warehouseArrivalActualDateApprovedAt: (i, v) => ({
-                    ...i,
-                    date: v,
-                  }),
-                },
-                'warehouseArrivalActualDateApproved',
-                batch.container?.warehouseArrivalActualDateApproved
-              );
-              changes = mergeChanges(
-                changes,
-                {
-                  departureDateApprovedBy: (i, v) => ({
-                    ...i,
-                    user: v,
-                  }),
-                  departureDateApprovedAt: (i, v) => ({
-                    ...i,
-                    date: v,
-                  }),
-                },
-                'departureDateApproved',
-                batch.container?.departureDateApproved
-              );
-            }
+              .map(b => b.container)
+              .filter(Boolean)
+              .find(c => c?.id === event.entity?.id);
 
-            changes = await mapAsync(changes, change => {
-              switch (change.field) {
-                case 'warehouse':
-                  if (change.new) {
-                    return client
-                      .query({
-                        query: warehouseByIDQuery,
-                        variables: { id: change.new?.entity?.id },
-                      })
-                      .then(({ data }) => ({
-                        field: 'warehouse',
-                        new: newCustomValue(data.warehouse),
-                      }));
-                  }
-                  break;
-                default:
-                  break;
-              }
-
-              return change;
-            });
+            changes = await handleContainerChanges(client, changes, container);
             break;
           }
           case 'Voyage':
-            changes = changes.map(change => {
-              switch (change.field) {
-                case 'departurePort':
-                case 'arrivalPort': {
-                  return {
-                    ...change,
-                    new: {
-                      custom: {
-                        seaport: change.new?.string,
-                        airport: change.new?.string,
-                      },
-                      __typename: 'CustomValue',
-                    },
-                  };
-                }
-                default:
-                  return change;
-              }
-            });
+            changes = handleVoyageChanges(changes);
             break;
           case 'ContainerGroup':
-            changes = await mapAsync(changes, change => {
-              switch (change.field) {
-                case 'warehouse':
-                  if (change.new) {
-                    return client
-                      .query({
-                        query: warehouseByIDQuery,
-                        variables: { id: change.new?.entity?.id },
-                      })
-                      .then(({ data }) => ({
-                        field: 'warehouse',
-                        new: newCustomValue(data.warehouse),
-                      }));
-                  }
-                  break;
-                default:
-                  break;
-              }
-
-              return change;
-            });
+            changes = await handleContainerGroupChanges(client, changes);
             break;
-          case 'FieldValue': {
-            const change = changes.find(c => c.field === 'value');
-            if (change) {
-              dispatch({
-                type: Actions.CHANGE_VALUES,
-                payload: {
-                  changes: [
-                    {
-                      entity: {
-                        id: event.entity.entity.id,
-                        type: event.entity.entity.__typename,
-                      },
-                      field: `@${event.entity.fieldDefinition.id}`,
-                      value: change.new?.string ?? null,
-                    },
-                  ],
-                },
-              });
-            }
+          case 'FieldValue':
+            handleFieldValueEvent(dispatch, event);
             return;
-          }
           default:
             break;
         }

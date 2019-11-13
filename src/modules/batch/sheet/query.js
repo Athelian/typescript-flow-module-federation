@@ -13,6 +13,7 @@ import {
   taskFormInTemplateFragment,
 } from 'graphql';
 import {
+  sheetCustomizableFragment,
   sheetModelFragment,
   sheetOwnedFragment,
   sheetWarehouseFragment,
@@ -44,16 +45,19 @@ export const batchesQuery = gql`
         ...sheetBatchFragment
         ...sheetModelFragment
         ...sheetOwnedFragment
+        ...sheetCustomizableFragment
         ... on Batch {
           orderItem {
             ...sheetOrderItemFragment
             ...sheetModelFragment
             ...sheetOwnedFragment
+            ...sheetCustomizableFragment
             ... on OrderItem {
               order {
                 ...sheetOrderFragment
                 ...sheetModelFragment
                 ...sheetOwnedFragment
+                ...sheetCustomizableFragment
               }
             }
           }
@@ -67,6 +71,7 @@ export const batchesQuery = gql`
             ...sheetShipmentExtraFragment
             ...sheetModelFragment
             ...sheetOwnedFragment
+            ...sheetCustomizableFragment
           }
         }
         ...forbiddenFragment
@@ -86,6 +91,7 @@ export const batchesQuery = gql`
   ${sheetTimelineDateFragment}
   ${sheetModelFragment}
   ${sheetOwnedFragment}
+  ${sheetCustomizableFragment}
   ${sheetWarehouseFragment}
 
   ${userAvatarFragment}
@@ -106,11 +112,13 @@ export const orderItemByIDQuery = gql`
       ...sheetOrderItemFragment
       ...sheetModelFragment
       ...sheetOwnedFragment
+      ...sheetCustomizableFragment
       ... on OrderItem {
         order {
           ...sheetOrderFragment
           ...sheetModelFragment
           ...sheetOwnedFragment
+          ...sheetCustomizableFragment
         }
         batches {
           ... on Batch {
@@ -125,6 +133,7 @@ export const orderItemByIDQuery = gql`
   ${sheetOrderItemFragment}
   ${sheetModelFragment}
   ${sheetOwnedFragment}
+  ${sheetCustomizableFragment}
 
   ${userAvatarFragment}
   ${partnerNameFragment}
@@ -165,6 +174,7 @@ export const shipmentByIDQuery = gql`
       ...sheetShipmentExtraFragment
       ...sheetModelFragment
       ...sheetOwnedFragment
+      ...sheetCustomizableFragment
     }
   }
 
@@ -173,6 +183,7 @@ export const shipmentByIDQuery = gql`
   ${sheetTimelineDateFragment}
   ${sheetModelFragment}
   ${sheetOwnedFragment}
+  ${sheetCustomizableFragment}
   ${sheetWarehouseFragment}
 
   ${userAvatarFragment}
@@ -193,6 +204,7 @@ export const orderByIDQuery = gql`
       ...sheetOrderFragment
       ...sheetModelFragment
       ...sheetOwnedFragment
+      ...sheetCustomizableFragment
       ... on Order {
         orderItems {
           ... on OrderItem {
@@ -206,6 +218,7 @@ export const orderByIDQuery = gql`
   ${sheetOrderFragment}
   ${sheetModelFragment}
   ${sheetOwnedFragment}
+  ${sheetCustomizableFragment}
 
   ${userAvatarFragment}
   ${partnerNameFragment}

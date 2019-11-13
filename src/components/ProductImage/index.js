@@ -20,7 +20,7 @@ const defaultProps = {
 
 export default function ProductImage({ className, file, path, height }: Props) {
   const alt = getByPathWithDefault('product image', 'name', file);
-  const src = getByPathWithDefault(FALLBACK_IMAGE, path, file);
+  const src = getByPathWithDefault(FALLBACK_IMAGE, path || '', file);
   if (isForbidden(file)) {
     return <Display className={className} blackout height={height} />;
   }

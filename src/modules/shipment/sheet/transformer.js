@@ -4,16 +4,19 @@ import { calculateDueDate, startOfToday } from 'utils/date';
 import { getLatestDate } from 'utils/shipment';
 import { calculateVolume, getBatchLatestQuantity } from 'utils/batch';
 import { defaultVolumeMetric } from 'utils/metric';
+import type { FieldDefinition } from 'types';
 import {
   transformValueField,
   transformReadonlyField,
   transformComputedField,
+  transformCustomField,
 } from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import {
   ORDER_SET_ARCHIVED,
   ORDER_SET_CURRENCY,
+  ORDER_SET_CUSTOM_FIELDS,
   ORDER_SET_DELIVERY_DATE,
   ORDER_SET_DELIVERY_PLACE,
   ORDER_SET_DOCUMENTS,
@@ -37,8 +40,10 @@ import {
   ORDER_ITEMS_SET_TAGS,
   ORDER_ITEMS_SET_MEMO,
   ORDER_ITEMS_SET_TASKS,
+  ORDER_ITEMS_SET_CUSTOM_FIELDS,
 } from 'modules/permission/constants/orderItem';
 import {
+  BATCH_SET_CUSTOM_FIELDS,
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
   BATCH_SET_EXPIRY,
@@ -107,6 +112,7 @@ import {
   SHIPMENT_SET_WAREHOUSE,
   SHIPMENT_SET_TASKS,
   SHIPMENT_SET_EXPORTER,
+  SHIPMENT_SET_CUSTOM_FIELDS,
 } from 'modules/permission/constants/shipment';
 
 function getCurrentBatch(batchId: string, shipment: Object): ?Object {
@@ -128,7 +134,11 @@ function getCurrentOrder(orderId: string, shipment: Object): ?Object {
     .find(o => o.id === orderId);
 }
 
-function transformShipment(basePath: string, shipment: Object): Array<CellValue> {
+function transformShipment(
+  fieldDefinitions: Array<FieldDefinition>,
+  basePath: string,
+  shipment: Object
+): Array<CellValue> {
   const nbOfVoyages = (shipment?.voyages ?? []).length;
 
   return [
@@ -996,6 +1006,20 @@ function transformShipment(basePath: string, shipment: Object): Array<CellValue>
       type: 'shipment_logs',
       ...transformValueField(basePath, shipment, 'id', () => true),
     },
+    ...fieldDefinitions.map(fieldDefinition => ({
+      columnKey: `shipment.customField.${fieldDefinition.id}`,
+      type: 'text',
+      hide: currentShipment => {
+        const mask = currentShipment?.customFields?.mask ?? null;
+        return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
+      },
+      ...transformCustomField(
+        basePath,
+        shipment,
+        fieldDefinition.id,
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_CUSTOM_FIELDS)
+      ),
+    })),
   ].map(c => ({
     ...c,
     empty: !shipment,
@@ -1303,7 +1327,11 @@ function transformContainer(
   }));
 }
 
-function transformBatch(basePath: string, batch: Object): Array<CellValue> {
+function transformBatch(
+  fieldDefinitions: Array<FieldDefinition>,
+  basePath: string,
+  batch: Object
+): Array<CellValue> {
   return [
     {
       columnKey: 'shipment.container.batch.created',
@@ -1558,13 +1586,32 @@ function transformBatch(basePath: string, batch: Object): Array<CellValue> {
       type: 'batch_logs',
       ...transformValueField(basePath, batch, 'id', () => true),
     },
+    ...fieldDefinitions.map(fieldDefinition => ({
+      columnKey: `shipment.container.batch.customField.${fieldDefinition.id}`,
+      type: 'text',
+      hide: shipment => {
+        const currentBatch = getCurrentBatch(batch?.id, shipment);
+        const mask = currentBatch?.customFields?.mask ?? null;
+        return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
+      },
+      ...transformCustomField(
+        basePath,
+        batch,
+        fieldDefinition.id,
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_CUSTOM_FIELDS)
+      ),
+    })),
   ].map(c => ({
     ...c,
     disabled: !batch,
   }));
 }
 
-function transformBatchOrderItem(basePath: string, batch: Object): Array<CellValue> {
+function transformBatchOrderItem(
+  fieldDefinitions: Array<FieldDefinition>,
+  basePath: string,
+  batch: Object
+): Array<CellValue> {
   return [
     {
       columnKey: 'shipment.container.batch.orderItem.created',
@@ -1767,6 +1814,22 @@ function transformBatchOrderItem(basePath: string, batch: Object): Array<CellVal
       type: 'order_item_logs',
       ...transformValueField(`${basePath}.orderItem`, batch?.orderItem ?? null, 'id', () => true),
     },
+    ...fieldDefinitions.map(fieldDefinition => ({
+      columnKey: `shipment.container.batch.orderItem.customField.${fieldDefinition.id}`,
+      type: 'text',
+      hide: shipment => {
+        const currentOrderItem = getCurrentOrderItem(batch?.orderItem?.id, shipment);
+        const mask = currentOrderItem?.customFields?.mask ?? null;
+        return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
+      },
+      ...transformCustomField(
+        `${basePath}.orderItem`,
+        batch?.orderItem ?? null,
+        fieldDefinition.id,
+        hasPermission =>
+          hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_CUSTOM_FIELDS)
+      ),
+    })),
   ].map(c => ({
     ...c,
     duplicable: true,
@@ -1774,7 +1837,11 @@ function transformBatchOrderItem(basePath: string, batch: Object): Array<CellVal
   }));
 }
 
-function transformBatchOrderItemOrder(basePath: string, batch: Object): Array<CellValue> {
+function transformBatchOrderItemOrder(
+  fieldDefinitions: Array<FieldDefinition>,
+  basePath: string,
+  batch: Object
+): Array<CellValue> {
   return [
     {
       columnKey: 'shipment.container.batch.orderItem.order.created',
@@ -2017,6 +2084,21 @@ function transformBatchOrderItemOrder(basePath: string, batch: Object): Array<Ce
         () => true
       ),
     },
+    ...fieldDefinitions.map(fieldDefinition => ({
+      columnKey: `shipment.container.batch.orderItem.order.customField.${fieldDefinition.id}`,
+      type: 'text',
+      hide: shipment => {
+        const currentOrder = getCurrentOrder(batch?.orderItem?.order?.id, shipment);
+        const mask = currentOrder?.customFields?.mask ?? null;
+        return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
+      },
+      ...transformCustomField(
+        `${basePath}.orderItem.order`,
+        batch?.orderItem?.order ?? null,
+        fieldDefinition.id,
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_CUSTOM_FIELDS)
+      ),
+    })),
   ].map(c => ({
     ...c,
     duplicable: true,
@@ -2024,71 +2106,116 @@ function transformBatchOrderItemOrder(basePath: string, batch: Object): Array<Ce
   }));
 }
 
-export default function transformer(index: number, shipment: Object): Array<Array<CellValue>> {
-  const rows = [];
+export default function transformer({
+  orderFieldDefinitions,
+  orderItemFieldDefinitions,
+  batchFieldDefinitions,
+  shipmentFieldDefinitions,
+}: Props) {
+  return (index: number, shipment: Object): Array<Array<CellValue>> => {
+    const rows = [];
 
-  let shipmentCells = transformShipment(`${index}`, shipment);
+    let shipmentCells = transformShipment(shipmentFieldDefinitions, `${index}`, shipment);
 
-  shipment.batchesWithoutContainer.forEach((batch, batchIdx) => {
-    rows.push([
-      ...shipmentCells,
-      ...transformContainer(`${index}.containers.-1`, null, false),
-      ...transformBatch(`${index}.batchesWithoutContainer.${batchIdx}`, batch),
-      ...transformBatchOrderItem(`${index}.batchesWithoutContainer.${batchIdx}`, batch),
-      ...transformBatchOrderItemOrder(`${index}.batchesWithoutContainer.${batchIdx}`, batch),
-    ]);
+    shipment.batchesWithoutContainer.forEach((batch, batchIdx) => {
+      rows.push([
+        ...shipmentCells,
+        ...transformContainer(`${index}.containers.-1`, null, false),
+        ...transformBatch(
+          batchFieldDefinitions,
+          `${index}.batchesWithoutContainer.${batchIdx}`,
+          batch
+        ),
+        ...transformBatchOrderItem(
+          orderItemFieldDefinitions,
+          `${index}.batchesWithoutContainer.${batchIdx}`,
+          batch
+        ),
+        ...transformBatchOrderItemOrder(
+          orderFieldDefinitions,
+          `${index}.batchesWithoutContainer.${batchIdx}`,
+          batch
+        ),
+      ]);
 
-    shipmentCells = transformShipment(`${index}`, null);
-  });
+      shipmentCells = transformShipment(shipmentFieldDefinitions, `${index}`, null);
+    });
 
-  if (shipment.containers.length > 0) {
-    shipment.containers.forEach((container, containerIdx) => {
-      let containerCells = transformContainer(
-        `${index}.containers.${containerIdx}`,
-        container,
-        true
-      );
+    if (shipment.containers.length > 0) {
+      shipment.containers.forEach((container, containerIdx) => {
+        let containerCells = transformContainer(
+          `${index}.containers.${containerIdx}`,
+          container,
+          true
+        );
 
-      if (container.batches.length > 0) {
-        container.batches.forEach((batch, batchIdx) => {
+        if (container.batches.length > 0) {
+          container.batches.forEach((batch, batchIdx) => {
+            rows.push([
+              ...shipmentCells,
+              ...containerCells,
+              ...transformBatch(
+                batchFieldDefinitions,
+                `${index}.containers.${containerIdx}.batches.${batchIdx}`,
+                batch
+              ),
+              ...transformBatchOrderItem(
+                orderItemFieldDefinitions,
+                `${index}.containers.${containerIdx}.batches.${batchIdx}`,
+                batch
+              ),
+              ...transformBatchOrderItemOrder(
+                orderFieldDefinitions,
+                `${index}.containers.${containerIdx}.batches.${batchIdx}`,
+                batch
+              ),
+            ]);
+
+            containerCells = transformContainer(`${index}.containers.${containerIdx}`, null, true);
+            shipmentCells = transformShipment(shipmentFieldDefinitions, `${index}`, null);
+          });
+        } else {
           rows.push([
             ...shipmentCells,
             ...containerCells,
-            ...transformBatch(`${index}.containers.${containerIdx}.batches.${batchIdx}`, batch),
+            ...transformBatch(
+              batchFieldDefinitions,
+              `${index}.containers.${containerIdx}.batches.-1`,
+              null
+            ),
             ...transformBatchOrderItem(
-              `${index}.containers.${containerIdx}.batches.${batchIdx}`,
-              batch
+              orderItemFieldDefinitions,
+              `${index}.containers.${containerIdx}.batches.-1`,
+              null
             ),
             ...transformBatchOrderItemOrder(
-              `${index}.containers.${containerIdx}.batches.${batchIdx}`,
-              batch
+              orderFieldDefinitions,
+              `${index}.containers.${containerIdx}.batches.-1`,
+              null
             ),
           ]);
 
-          containerCells = transformContainer(`${index}.containers.${containerIdx}`, null, true);
-          shipmentCells = transformShipment(`${index}`, null);
-        });
-      } else {
-        rows.push([
-          ...shipmentCells,
-          ...containerCells,
-          ...transformBatch(`${index}.containers.${containerIdx}.batches.-1`, null),
-          // ...transformBatchOrderItem(`${index}.containers.${containerIdx}.batches.-1`, null),
-          // ...transformBatchOrderItemOrder(`${index}.containers.${containerIdx}.batches.-1`, null),
-        ]);
+          shipmentCells = transformShipment(shipmentFieldDefinitions, `${index}`, null);
+        }
+      });
+    } else if (shipment.batchesWithoutContainer.length === 0) {
+      rows.push([
+        ...shipmentCells,
+        ...transformContainer(`${index}.containers.-1`, null, false),
+        ...transformBatch(batchFieldDefinitions, `${index}.containers.-1.batches.-1`, null),
+        ...transformBatchOrderItem(
+          orderItemFieldDefinitions,
+          `${index}.containers.-1.batches.-1`,
+          null
+        ),
+        ...transformBatchOrderItemOrder(
+          orderFieldDefinitions,
+          `${index}.containers.-1.batches.-1`,
+          null
+        ),
+      ]);
+    }
 
-        shipmentCells = transformShipment(`${index}`, null);
-      }
-    });
-  } else if (shipment.batchesWithoutContainer.length === 0) {
-    rows.push([
-      ...shipmentCells,
-      ...transformContainer(`${index}.containers.-1`, null, false),
-      ...transformBatch(`${index}.containers.-1.batches.-1`, null),
-      ...transformBatchOrderItem(`${index}.containers.-1.batches.-1`, null),
-      ...transformBatchOrderItemOrder(`${index}.containers.-1.batches.-1`, null),
-    ]);
-  }
-
-  return rows;
+    return rows;
+  };
 }
