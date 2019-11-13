@@ -19,7 +19,7 @@ describe('Tag', () => {
 
   it('new a tag', () => {
     cy.visit('/tags')
-      .getByTestId('newButton')
+      .findByTestId('newButton')
       .click();
 
     cy.url().should('include', 'new');
@@ -29,9 +29,9 @@ describe('Tag', () => {
     cy.get('input[name="color"]')
       .clear()
       .type(TAG.color);
-    cy.getByTestId('orderRadio').click();
+    cy.findByTestId('orderRadio').click();
 
-    cy.getByTestId('saveButton')
+    cy.findByTestId('saveButton')
       .click()
       .should('not.exist');
 
@@ -47,25 +47,25 @@ describe('Tag', () => {
     cy.get('input[name="name"]')
       .clear()
       .blur();
-    cy.getByTestId('saveButton').should('be.disabled');
+    cy.findByTestId('saveButton').should('be.disabled');
     cy.get('input[name="name"]')
       .type(TAG.updatedName)
       .blur();
 
-    cy.getByTestId('saveButton')
+    cy.findByTestId('saveButton')
       .click()
       .should('not.exist');
   });
 
   it('clone a tag', () => {
-    cy.getByTestId('cloneButton').click();
+    cy.findByTestId('cloneButton').click();
     cy.url().should('include', 'clone');
     cy.get('input[name="name"]')
       .clear()
       .type(TAG.clonedName)
       .blur();
 
-    cy.getByTestId('saveButton')
+    cy.findByTestId('saveButton')
       .click()
       .should('not.exist');
   });

@@ -10,7 +10,7 @@ describe('Product', () => {
     cy.task('fixture', 'product').then(
       ({ name, serial, janCode, hsCode, material, endProductName }) => {
         cy.visit('/product')
-          .getByTestId('newButton')
+          .findByTestId('newButton')
           .click()
           .url()
           .should('include', 'new');
@@ -29,14 +29,14 @@ describe('Product', () => {
           .type(material);
 
         // end product
-        cy.getByTestId('newProviderButton')
+        cy.findByTestId('newProviderButton')
           .click()
-          .getByTestId('selectExportersButton')
+          .findByTestId('selectExportersButton')
           .click()
           .get('[data-testid="partnerCard"]')
           .first()
           .click()
-          .getByTestId('btnSaveExporter')
+          .findByTestId('btnSaveExporter')
           .click();
 
         cy.get('input[name="name"]')
@@ -44,9 +44,9 @@ describe('Product', () => {
           .type(endProductName)
           .blur();
 
-        cy.getByTestId('saveProviderButton').click();
+        cy.findByTestId('saveProviderButton').click();
 
-        cy.getByTestId('saveButton').click();
+        cy.findByTestId('saveButton').click();
 
         cy.url().should('include', '/product/emV');
 
@@ -69,12 +69,12 @@ describe('Product', () => {
       cy.get('input[name="name"]')
         .clear()
         .blur();
-      cy.getByTestId('saveButton').should('be.disabled');
+      cy.findByTestId('saveButton').should('be.disabled');
 
       cy.get('input[name="name"]')
         .type(updatedName)
         .blur();
-      cy.getByTestId('saveButton')
+      cy.findByTestId('saveButton')
         .click()
         .should('not.exist');
 
@@ -85,7 +85,7 @@ describe('Product', () => {
   it('clone a product', () => {
     cy.task('fixture', 'product').then(
       ({ clonedName, clonedSerial, clonedJanCode, clonedHsCode, material }) => {
-        cy.getByTestId('cloneButton').click();
+        cy.findByTestId('cloneButton').click();
 
         cy.url().should('include', 'clone');
 
@@ -106,7 +106,7 @@ describe('Product', () => {
           .type(material)
           .blur();
 
-        cy.getByTestId('saveButton').click();
+        cy.findByTestId('saveButton').click();
 
         cy.url().should('include', '/product/emV');
 
@@ -125,21 +125,21 @@ describe('Product', () => {
   });
 
   it.skip('archive a product', () => {
-    cy.getByTestId('archivedStatusToggle').click();
+    cy.findByTestId('archivedStatusToggle').click();
     cy.get('#dialog-root')
       .children()
       .should('have.length', 1);
-    cy.getByTestId('archiveButton').click();
+    cy.findByTestId('archiveButton').click();
 
     cy.get('svg[data-icon="toggle-off"]').should('be.exist');
   });
 
   it.skip('activate a product', () => {
-    cy.getByTestId('archivedStatusToggle').click();
+    cy.findByTestId('archivedStatusToggle').click();
     cy.get('#dialog-root')
       .children()
       .should('have.length', 1);
-    cy.getByTestId('activeButton').click();
+    cy.findByTestId('activeButton').click();
     cy.get('svg[data-icon="toggle-on"]').should('be.exist');
   });
 });

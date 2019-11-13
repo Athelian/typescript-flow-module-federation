@@ -27,7 +27,7 @@ describe('Shipment', () => {
         .type(incoterm)
         .should('have.value', incoterm)
         .blur()
-        .getByTestId('saveButton')
+        .findByTestId('saveButton')
         .click();
     });
   });

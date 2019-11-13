@@ -19,13 +19,13 @@ describe('Order items section', () => {
     // FIXME: should use scrollTo() method, but it doesn't work.
     cy.contains('DOCUMENTS').click();
 
-    cy.getByTestId('btnNewItems')
+    cy.findByTestId('btnNewItems')
       .click()
       .get('.InfiniteScroll')
       .children()
       .first()
       .click()
-      .getByTestId('increaseButton')
+      .findByTestId('increaseButton')
       .click()
       .click()
       .get('[data-testid="btnSaveSelectProductProviders"]')

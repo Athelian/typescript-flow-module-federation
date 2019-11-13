@@ -6,13 +6,13 @@ describe('Login', () => {
   it('Show error message when login failed', function loginFailed() {
     const { username } = this.userJSON;
     cy.visit('/login');
-    cy.getByTestId('email')
+    cy.findByTestId('email')
       .type(username)
       .should('have.value', username);
-    cy.getByTestId('password')
+    cy.findByTestId('password')
       .type('wrong')
       .should('have.value', 'wrong');
-    cy.getByTestId('submitButton')
+    cy.findByTestId('submitButton')
       .click()
       .get('#errorMsg')
       .contains('Invalid username/password');
@@ -21,13 +21,13 @@ describe('Login', () => {
   it('Redirect to home page after successful login', function loginSuccess() {
     const { username, password } = this.userJSON;
     cy.visit('/login');
-    cy.getByTestId('email')
+    cy.findByTestId('email')
       .type(username)
       .should('have.value', username);
-    cy.getByTestId('password')
+    cy.findByTestId('password')
       .type(`${password}`)
       .should('have.value', password);
-    cy.getByTestId('submitButton')
+    cy.findByTestId('submitButton')
       .click()
       .url()
       .should('include', '/order');

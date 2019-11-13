@@ -9,7 +9,7 @@ describe('Shipment', () => {
   it('should create a shipment without timeline', () => {
     cy.task('fixture', 'shipment').then(({ shipmentNo }) => {
       cy.visit('/shipment')
-        .getByTestId('newButton')
+        .findByTestId('newButton')
         .click()
         .url()
         .should('include', 'new');
@@ -18,15 +18,15 @@ describe('Shipment', () => {
       cy.get('input[name="no"]')
         .type(shipmentNo)
         .should('have.value', shipmentNo)
-        .getByTestId('btnSelectBatches')
+        .findByTestId('btnSelectBatches')
         .click()
         .get('.InfiniteScroll')
         .children()
         .first()
         .click()
-        .getByTestId('btnSaveSelectBatches')
+        .findByTestId('btnSaveSelectBatches')
         .click()
-        .getByTestId('saveButton')
+        .findByTestId('saveButton')
         .click()
         .should('not.exist');
 
@@ -37,7 +37,7 @@ describe('Shipment', () => {
   it('should create a shipment with timeline information', () => {
     cy.task('fixture', 'shipment').then(({ shipmentNo, cargoReadyDate }) => {
       cy.visit('/shipment')
-        .getByTestId('newButton')
+        .findByTestId('newButton')
         .click()
         .url()
         .should('include', 'new');
@@ -46,33 +46,33 @@ describe('Shipment', () => {
       cy.get('input[name="no"]')
         .type(shipmentNo)
         .should('have.value', shipmentNo)
-        .getByTestId('btnSelectBatches')
+        .findByTestId('btnSelectBatches')
         .click()
         .get('.InfiniteScroll')
         .children()
         .first()
         .click()
-        .getByTestId('btnSaveSelectBatches')
+        .findByTestId('btnSaveSelectBatches')
         .click();
 
       const cargoReadyDateMoment = Cypress.moment(cargoReadyDate).format('YYYY-MM-DD');
 
-      cy.getByTestId('cargoReady_approveButton').click();
-      cy.getByTestId('cargoReady_unApproveButton').should('be.visible');
-      cy.getByTestId('cargoReady_DateRevisions')
+      cy.findByTestId('cargoReady_approveButton').click();
+      cy.findByTestId('cargoReady_unApproveButton').should('be.visible');
+      cy.findByTestId('cargoReady_DateRevisions')
         .children()
         .should('have.length', 2);
       cy.get('input[name="cargoReady.date"]')
         .type(cargoReadyDateMoment)
         .should('have.value', cargoReadyDateMoment);
 
-      cy.getByTestId('cargoReady_addDateButton').click();
-      cy.getByTestId('cargoReady_DateRevisions')
+      cy.findByTestId('cargoReady_addDateButton').click();
+      cy.findByTestId('cargoReady_DateRevisions')
         .children()
         .should('have.length', 3);
 
-      cy.getByTestId('voyageSelector').click();
-      cy.getByTestId('voyageOptions')
+      cy.findByTestId('voyageSelector').click();
+      cy.findByTestId('voyageOptions')
         .children()
         .should('have.length', 3);
       cy.get('input[name="no"]').should('have.value', shipmentNo);
