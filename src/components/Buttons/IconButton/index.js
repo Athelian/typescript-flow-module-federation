@@ -6,7 +6,7 @@ import Icon from 'components/Icon';
 import Button from '../Button';
 import { ButtonStyle } from './style';
 
-type OptionalProps = {
+type Props = {|
   className?: string,
   disabled?: boolean,
   isLoading?: boolean,
@@ -15,11 +15,8 @@ type OptionalProps = {
   backgroundColor?: string,
   hoverBackgroundColor?: string,
   onClick?: (SyntheticEvent<HTMLButtonElement>) => void,
-};
-
-type Props = OptionalProps & {
   icon: string,
-};
+|};
 
 const defaultProps = {
   textColor: 'WHITE',

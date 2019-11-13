@@ -14,16 +14,13 @@ import {
 } from 'components/Form/ColorInput/style';
 import Icon from 'components/Icon';
 
-type OptionalProps = {
+type Props = {|
   onChange: Object => void,
   onBlur: (event: any) => void,
   editable: boolean,
-};
-
-type Props = OptionalProps & {
   name: string,
   value: string,
-};
+|};
 
 const defaultProps = {
   onChange: () => {},

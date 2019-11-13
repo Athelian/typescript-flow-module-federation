@@ -3,12 +3,12 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 
-type OptionalProps = {
+type Props = {|
   disabled: boolean,
   onClick: Function,
-};
-
-type Props = OptionalProps;
+  className?: string,
+  'data-testid'?: string,
+|};
 
 const defaultProps = {
   disabled: false,

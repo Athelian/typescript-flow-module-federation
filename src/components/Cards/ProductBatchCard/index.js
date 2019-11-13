@@ -28,13 +28,10 @@ import {
   TagsLineStyle,
 } from './style';
 
-type OptionalProps = {
-  onClick: Function,
-};
-
-type Props = OptionalProps & {
+type Props = {|
   batch: Object,
-};
+  onClick: Function,
+|};
 
 const defaultProps = {
   onClick: () => {},

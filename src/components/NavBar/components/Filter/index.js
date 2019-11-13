@@ -216,6 +216,9 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
               hoverBackgroundColor="GRAY_LIGHT"
               onClick={onClearAll}
             />
+            {/* $FlowFixMe This comment suppresses an error found when
+             * upgrading Flow to v0.112.0. To view the error, delete this
+             * comment and run Flow. */}
             <ResetButton className={ResetActionStyle} onClick={onReset} />
             <SaveButton onClick={onSave} id="saveFilterButton" />
           </div>

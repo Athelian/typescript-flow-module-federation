@@ -3,13 +3,11 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 
-type OptionalProps = {
+type Props = {|
   label: React.Node,
   disabled: boolean,
   onClick: Function,
-};
-
-type Props = OptionalProps;
+|};
 
 const defaultProps = {
   label: <FormattedMessage id="components.button.move" defaultMessage="MOVE" />,
@@ -25,7 +23,7 @@ const MoveButton = ({ label, disabled, onClick, ...rest }: Props): React.Node =>
     hoverBackgroundColor="BLUE_DARK"
     disabled={disabled}
     onClick={onClick}
-    data-testid="newButton"
+    data-testid="moveButton"
     {...rest}
   />
 );

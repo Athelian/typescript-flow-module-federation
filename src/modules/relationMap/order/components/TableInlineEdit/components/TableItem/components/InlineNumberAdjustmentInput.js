@@ -88,6 +88,9 @@ export default function InlineNumberAdjustmentInput({
       }
     >
       <div>
+        {/* $FlowFixMe This comment suppresses an error found when upgrading
+         * Flow to v0.112.0. To view the error, delete this comment and run
+         * Flow. */}
         <NewButton
           label={
             <FormattedMessage id="components.button.newQuantity" defaultMessage="NEW QUANTITY" />

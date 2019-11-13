@@ -37,7 +37,7 @@ const CompleteButton = ({
     <div className={UserAvatarWrapperStyle}>
       {completedAt && (
         <>
-          <UserAvatar {...completedBy} />
+          <UserAvatar firstName={completedBy?.firstName} lastName={completedBy?.lastName} />
           {editable && (
             <button
               type="button"

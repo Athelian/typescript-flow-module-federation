@@ -1,5 +1,5 @@
-// flow-typed signature: 0f1a9c6ea7893ac0eda0adfd9cdc851b
-// flow-typed version: 76d209a40d/ramda_v0.26.x/flow_>=v0.104.x
+// flow-typed signature: ecd12ba08d83e1cf0131093c2f432f73
+// flow-typed version: 313c0f9ce8/ramda_v0.26.x/flow_>=v0.104.x
 
 /* eslint-disable no-unused-vars, no-redeclare */
 
@@ -665,9 +665,12 @@ declare module ramda {
   declare function concat(x: string): CurriedFunction1<string, string>;
 
   declare type Includes =
-  (<A, T: Array<A> | string>(a: A) => (b: T) => boolean) &
-  (<A, T: Array<A> | string>(a: A, b: T) => boolean);
+    & ((string, string) => boolean)
+    & ((string) => ((string => boolean)))
+    & (<A, T: $ReadOnlyArray<A> | Array<A>>(a: A) => (b: T) => boolean)
+    & (<A, T: $ReadOnlyArray<A> | Array<A>>(a: A, b: T) => boolean)
 
+  // Contains is deprecated, and is a synonym for includes.
   declare var contains: Includes;
   declare var includes: Includes;
 

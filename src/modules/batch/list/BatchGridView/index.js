@@ -8,16 +8,13 @@ import { BatchCard } from 'components/Cards';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import { BATCH_FORM } from 'modules/permission/constants/batch';
 
-type OptionalProps = {
-  renderItem: Function,
-};
-
-type Props = OptionalProps & {
+type Props = {|
   items: Array<Object>,
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
-};
+  renderItem: Function,
+|};
 
 const defaultRenderItem = (item: Object) => (
   <PartnerPermissionsWrapper data={item} key={item.id}>

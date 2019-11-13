@@ -14,7 +14,7 @@ import {
   OwnedByStyle,
 } from './style';
 
-type OptionalProps = {
+type Props = {|
   warehouse: {
     id: string,
     name: string,
@@ -25,9 +25,7 @@ type OptionalProps = {
     region: ?string,
   },
   onClick: Function,
-};
-
-type Props = OptionalProps & {};
+|};
 
 const defaultProps = {
   onClick: () => {},

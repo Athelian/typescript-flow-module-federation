@@ -7,7 +7,7 @@ import { CardStyle, SelectableCardStyle, BadgeStyle } from './style';
 import Actions from './Actions';
 import CornerIcon from './CornerIcon';
 
-type OptionalProps = {
+type Props = {|
   icon: ?string,
   color: string,
   actions: Array<React.Node>,
@@ -24,11 +24,9 @@ type OptionalProps = {
   id: ?string,
   showBadge: boolean,
   flattenCornerIcon: boolean,
-};
-
-type Props = OptionalProps & {
   children: React.Node,
-};
+  onClick?: Function,
+|};
 
 type State = {
   actionsAreShown: boolean,

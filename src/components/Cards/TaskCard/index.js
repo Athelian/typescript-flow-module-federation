@@ -56,7 +56,7 @@ import {
   UnapprovedButtonStyle,
 } from './style';
 
-type OptionalProps = {
+type Props = {|
   entity: Object,
   task: Object,
   hideParentInfo: boolean,
@@ -70,9 +70,7 @@ type OptionalProps = {
   },
   actions: Array<React.Node>,
   isInTemplate: boolean,
-};
-
-type Props = OptionalProps;
+|};
 
 const defaultEditable = {
   name: false,

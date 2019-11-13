@@ -14,18 +14,15 @@ import {
   TaskWrapperStyle,
 } from './style';
 
-type OptionalProps = {
+type Props = {|
   onClick: Function,
   onSelect: Function,
   onClone: Function,
   onRemove: Function,
   saveOnBlur: Function,
   selectable: boolean,
-};
-
-type Props = OptionalProps & {
   productProvider: Object,
-};
+|};
 
 const defaultProps = {
   onClick: () => {},

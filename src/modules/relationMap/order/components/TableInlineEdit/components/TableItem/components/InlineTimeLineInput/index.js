@@ -37,6 +37,9 @@ export default function InlineTimeLineInput({ name, value, id }: Props) {
           id={`input-${id}`}
           className={DateInputWrapperStyle}
           name={name}
+          /* $FlowFixMe This comment suppresses an error found when upgrading
+           * Flow to v0.112.0. To view the error, delete this comment and run
+           * Flow. */
           {...inputHandlers}
           onBlur={() => {
             inputHandlers.onBlur();

@@ -15,16 +15,13 @@ import {
   PartnerCodeStyle,
 } from './style';
 
-type OptionalProps = {
+type Props = {|
   onClick: Function,
   size: 'full' | 'half' | 'quarter',
   selectable: boolean,
   readOnly: boolean,
-};
-
-type Props = OptionalProps & {
   partner: Partner,
-};
+|};
 
 const defaultProps = {
   onClick: () => {},

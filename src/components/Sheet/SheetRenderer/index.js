@@ -29,9 +29,9 @@ type Props = {
   children: React.ComponentType<any>,
 };
 
-type InnerGridProps = {
+type InnerGridProps = {|
   children: React.Node,
-};
+|};
 
 const GridColumnContext = React.createContext<{
   columns: Array<ColumnState>,

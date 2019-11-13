@@ -1,17 +1,14 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import Icon from 'components/Icon';
 import { DashedPlusButtonWrapperStyle, LabelStyle } from './style';
 
-type OptionalProps = {
-  label: *,
-};
-
-type Props = OptionalProps & {
+type Props = {|
   width: string,
   height: string,
   onClick: Function,
-};
+  label: React$Node,
+|};
 
 const defaultProps = {
   width: '100px',

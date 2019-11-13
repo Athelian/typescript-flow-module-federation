@@ -2,14 +2,11 @@
 import * as React from 'react';
 import { FormattedNumber as FormattedNumberIntl } from 'react-intl';
 
-type OptionalProps = {
+type Props = {|
+  value: ?number | '',
   suffix?: ?string,
   prefix?: ?string,
-};
-
-type Props = OptionalProps & {
-  value: ?number | '',
-};
+|};
 
 const FormattedNumber = ({ value, suffix, prefix, ...rest }: Props) => (
   <>

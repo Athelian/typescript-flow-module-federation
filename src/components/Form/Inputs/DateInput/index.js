@@ -8,10 +8,11 @@ import { type InputProps, defaultInputProps } from 'components/Form/Inputs/type'
 import { isNullOrUndefined } from 'utils/fp';
 import messages from 'components/Form/Inputs/messages';
 
-type Props = InputProps & {
+type Props = {|
+  ...InputProps,
   intl: IntlShape,
   color?: string,
-};
+|};
 
 const DateInput = ({
   intl,

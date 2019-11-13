@@ -50,6 +50,9 @@ export default function InlineInChargeInput({ name, values, max, id: inputId, gr
           >
             <Icon icon="REMOVE" />
           </button>
+          {/* $FlowFixMe This comment suppresses an error found when upgrading
+           * Flow to v0.112.0. To view the error, delete this comment and run
+           * Flow. */}
           <UserAvatar firstName={firstName} lastName={lastName} a11y={false} />
         </div>
       ))}

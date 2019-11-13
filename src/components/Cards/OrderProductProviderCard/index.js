@@ -29,16 +29,13 @@ import {
   ProductPriceStyle,
 } from './style';
 
-type OptionalProps = {
+type Props = {|
   onClick?: ?Function,
   selectable: boolean,
   selected: boolean,
   orderCurrency?: string,
-};
-
-type Props = OptionalProps & {
   productProvider: Object,
-};
+|};
 
 type State = {
   activeImage: number,

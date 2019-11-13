@@ -3,13 +3,12 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 
-type OptionalProps = {
+type Props = {|
   label: React.Node,
   disabled: boolean,
   onClick: Function,
-};
-
-type Props = OptionalProps;
+  id?: string,
+|};
 
 const defaultProps = {
   label: <FormattedMessage id="components.button.apply" defaultMessage="APPLY" />,

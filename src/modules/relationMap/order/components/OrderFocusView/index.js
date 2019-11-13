@@ -147,6 +147,9 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
             uiSelectors.isTarget(ORDER, item.id),
             highlight.type === ORDER && highlight.selectedId === item.id
           )}
+          /* $FlowFixMe This comment suppresses an error found when upgrading
+           * Flow to v0.112.0. To view the error, delete this comment and run
+           * Flow. */
           {...item}
         />
         <div />
@@ -163,6 +166,9 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
           uiSelectors.isTarget(ORDER, item.id),
           highlight.type === ORDER && highlight.selectedId === item.id
         )}
+        /* $FlowFixMe This comment suppresses an error found when upgrading
+         * Flow to v0.112.0. To view the error, delete this comment and run
+         * Flow. */
         {...item}
       />
       <RelationLine

@@ -50,7 +50,7 @@ import {
 } from './style';
 import validator from './validator';
 
-type Props = {
+type Props = {|
   order: OrderPayload,
   batches: Array<BatchPayload>,
   index: number,
@@ -78,7 +78,7 @@ type Props = {
   orderItem: OrderItemPayload,
   productProvider: ProductProviderPayload,
   product: ProductPayload,
-};
+|};
 
 const defaultProps = {
   order: {

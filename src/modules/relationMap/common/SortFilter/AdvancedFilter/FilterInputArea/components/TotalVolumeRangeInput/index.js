@@ -47,6 +47,9 @@ function TotalVolumeRangeInput({ value, onChange }: Props) {
           <Label>
             <FormattedMessage id="modules.relationMap.totalVolume" defaultMessage="TOTAL VOLUME" />
           </Label>
+          {/* $FlowFixMe This comment suppresses an error found when upgrading
+           * Flow to v0.112.0. To view the error, delete this comment and run
+           * Flow. */}
           <MetricRangeInput metrics={['cm³', 'm³']} onChange={onChange} {...value} />
         </div>
       </div>

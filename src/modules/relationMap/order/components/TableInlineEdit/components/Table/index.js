@@ -30,6 +30,8 @@ type Props = {|
 
 const innerElementType = React.forwardRef(
   ({ style, children, ...rest }: { style: Object, children: React.Node }, ref) => (
+    /* $FlowFixMe This comment suppresses an error found when upgrading Flow to
+     * v0.112.0. To view the error, delete this comment and run Flow. */
     <div ref={ref} style={{ ...style, position: 'relative' }} {...rest}>
       {children}
     </div>

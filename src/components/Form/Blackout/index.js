@@ -3,12 +3,10 @@ import * as React from 'react';
 import Icon from 'components/Icon';
 import { BlackoutWrapperStyle } from './style';
 
-type OptionalProps = {
+type Props = {|
   width: string,
   height: string,
-};
-
-type Props = OptionalProps;
+|};
 
 const defaultProps = {
   width: '100%',
