@@ -9,11 +9,12 @@ import CornerIcon from 'components/CornerIcon';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import { PartnerSelectorInputWrapperStyle, PartnerCardStyle, PlusButtonStyle } from './style';
 
-type ExtraProps = {
+export type ExtraProps = {|
   partnerTypes: Array<string>,
   confirmationDialogMessage?: ?string | React.Node,
+  deselectDialogMessage?: ?string | React.Node,
   isRequired?: boolean,
-};
+|};
 
 const PartnerSelectorInput = ({
   value,
@@ -49,6 +50,7 @@ const PartnerSelectorInput = ({
         <SelectPartner
           partnerTypes={extra?.partnerTypes ?? []}
           confirmationDialogMessage={extra?.confirmationDialogMessage ?? null}
+          deselectDialogMessage={extra?.deselectDialogMessage ?? null}
           isRequired={extra?.isRequired ?? false}
           selected={value}
           onCancel={forceBlur}

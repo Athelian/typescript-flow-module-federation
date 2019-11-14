@@ -41,11 +41,6 @@ const cleanUpExporter = ({
   assignedToIds: (selectedEntity?.[field]?.assignedTo ?? [])
     .filter(user => user?.organization?.id === exporterId || !isExporter(user))
     .map(user => user.id),
-  approvedAt:
-    selectedEntity?.[field]?.approvedBy?.organization?.id !== exporterId &&
-    isExporter(selectedEntity?.[field]?.approvedBy)
-      ? null
-      : selectedEntity?.[field]?.approvedAt,
   approvedById:
     selectedEntity?.[field]?.approvedBy?.organization?.id !== exporterId &&
     isExporter(selectedEntity?.[field]?.approvedBy)
@@ -106,6 +101,7 @@ function normalizedInput(
                 .map(batch => batch.id)
                 .indexOf(representativeBatch?.id);
               containers.push({
+                id: container.id,
                 batches: newBatches,
                 representativeBatchIndex: newRepresentativeBatch >= 0 ? newRepresentativeBatch : 0,
               });

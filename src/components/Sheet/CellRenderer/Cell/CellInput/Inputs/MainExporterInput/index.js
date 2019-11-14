@@ -4,21 +4,23 @@ import { FormattedMessage } from 'react-intl';
 import useUser from 'hooks/useUser';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import messages from 'modules/shipment/messages';
-import PartnerSelectorInput from '../PartnerSelectorInput';
+import PartnerSelectorInput, { type ExtraProps } from '../PartnerSelectorInput';
 
-function MainExporterInput(props: InputProps<Object>): React$Node {
+function MainExporterInput(props: InputProps<Object, any, ExtraProps>): React$Node {
   const { value, readonly } = props;
   const { isExporter } = useUser();
   return (
-    <PartnerSelectorInput.Exporter
+    <PartnerSelectorInput
       {...props}
       readonly={readonly || isExporter()}
       extra={{
+        partnerTypes: ['Exporter'],
         confirmationDialogMessage: value ? (
           <FormattedMessage {...messages.mainExporterChangeMessage} />
         ) : (
           <FormattedMessage {...messages.mainExporterSelectMessage} />
         ),
+        deselectDialogMessage: <FormattedMessage {...messages.mainExporterDeselectMessage} />,
       }}
     />
   );
