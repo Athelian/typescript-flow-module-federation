@@ -13,18 +13,15 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import { masksQuery } from 'modules/metadata/query';
 import { countMaskFieldDefinitions } from 'utils/customFields';
 
-type OptionalProps = {
-  saveButtonId: string,
+type Props = {
+  entityType: string,
+  onCancel: Function,
+  onSave: Function,
+  saveButtonId?: string,
   selected: ?{
     id: string,
     name: string,
   },
-};
-
-type Props = OptionalProps & {
-  entityType: string,
-  onCancel: Function,
-  onSave: Function,
 };
 
 const defaultProps = {
