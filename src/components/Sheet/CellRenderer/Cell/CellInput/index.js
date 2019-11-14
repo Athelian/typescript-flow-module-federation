@@ -209,6 +209,9 @@ const CellInput = ({
       case 'ArrowRight':
       case 'ArrowLeft':
         e.stopPropagation();
+        if (!(e.target instanceof HTMLInputElement)) {
+          e.preventDefault();
+        }
         break;
       case 'Tab': {
         if (containerRef.current) {
