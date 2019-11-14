@@ -213,8 +213,9 @@ function transformOrder(
     },
     {
       columnKey: 'order.exporter',
-      type: 'exporter',
+      type: 'partner',
       extra: {
+        partnerTypes: ['Exporter'],
         confirmationDialogMessage: <FormattedMessage {...orderMessages.changeExporterWarning} />,
         isRequired: true,
       },
@@ -823,6 +824,56 @@ function transformBatch(
         basePath,
         batch,
         'quantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.producedQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'producedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.preShippedQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'preShippedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shippedQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'shippedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.postShippedQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'postShippedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.deliveredQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'deliveredQuantity',
         hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
       ),
     },

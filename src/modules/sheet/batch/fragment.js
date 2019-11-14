@@ -4,6 +4,11 @@ export const sheetBatchFragment = gql`
   fragment sheetBatchFragment on Batch {
     no
     quantity
+    producedQuantity
+    preShippedQuantity
+    shippedQuantity
+    postShippedQuantity
+    deliveredQuantity
     deliveredAt
     desiredAt
     expiredAt

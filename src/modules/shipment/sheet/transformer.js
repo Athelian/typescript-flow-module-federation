@@ -1477,6 +1477,56 @@ function transformBatch(
       ),
     },
     {
+      columnKey: 'shipment.container.batch.producedQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'producedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'shipment.container.batch.preShippedQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'preShippedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'shipment.container.batch.shippedQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'shippedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'shipment.container.batch.postShippedQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'postShippedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'shipment.container.batch.deliveredQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'deliveredQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
       columnKey: 'shipment.container.batch.packageName',
       type: 'text',
       ...transformValueField(

@@ -53,7 +53,7 @@ const MaskSelectorInput = ({
 
       <SlideView isOpen={focus} onRequestClose={forceBlur}>
         <CustomFieldsTemplateSelector
-          entityType={extra?.entityType}
+          entityType={extra?.entityType ?? ''}
           selected={value}
           onCancel={forceBlur}
           onSave={newValue => {

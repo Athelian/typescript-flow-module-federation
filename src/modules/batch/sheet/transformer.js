@@ -266,6 +266,56 @@ function transformBatch(
       ),
     },
     {
+      columnKey: 'batch.producedQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'producedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'batch.preShippedQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'preShippedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'batch.shippedQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'shippedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'batch.postShippedQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'postShippedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'batch.deliveredQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'deliveredQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
       columnKey: 'batch.packageName',
       type: 'text',
       ...transformValueField(

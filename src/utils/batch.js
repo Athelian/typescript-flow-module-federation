@@ -48,21 +48,21 @@ export const findActiveQuantityField = ({
 
 export const getBatchLatestQuantity = (batch: BatchPayload) => {
   const quantity = batch?.quantity ?? 0;
-  const deliveredQuantity = batch?.deliveredQuantity;
-  const postShippedQuantity = batch?.postShippedQuantity;
-  const shippedQuantity = batch?.shippedQuantity;
-  const preShippedQuantity = batch?.preShippedQuantity;
-  const producedQuantity = batch?.producedQuantity;
+  const deliveredQuantity = batch?.deliveredQuantity ?? null;
+  const postShippedQuantity = batch?.postShippedQuantity ?? null;
+  const shippedQuantity = batch?.shippedQuantity ?? null;
+  const preShippedQuantity = batch?.preShippedQuantity ?? null;
+  const producedQuantity = batch?.producedQuantity ?? null;
 
-  if (deliveredQuantity) return deliveredQuantity;
+  if (deliveredQuantity !== null) return deliveredQuantity;
 
-  if (postShippedQuantity) return postShippedQuantity;
+  if (postShippedQuantity !== null) return postShippedQuantity;
 
-  if (shippedQuantity) return shippedQuantity;
+  if (shippedQuantity !== null) return shippedQuantity;
 
-  if (preShippedQuantity) return preShippedQuantity;
+  if (preShippedQuantity !== null) return preShippedQuantity;
 
-  if (producedQuantity) return producedQuantity;
+  if (producedQuantity !== null) return producedQuantity;
 
   return quantity;
 };
