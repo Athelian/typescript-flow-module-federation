@@ -9,7 +9,7 @@ import CornerIcon from 'components/CornerIcon';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import { PartnerSelectorInputWrapperStyle, PartnerCardStyle, PlusButtonStyle } from './style';
 
-export type ExtraProps = {|
+type ExtraProps = {|
   partnerTypes: Array<string>,
   confirmationDialogMessage?: ?string | React.Node,
   deselectDialogMessage?: ?string | React.Node,
