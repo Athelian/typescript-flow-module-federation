@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -640,6 +641,13 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 120,
   },
+  {
+    key: 'shipment.mask',
+    title: <FormattedMessage {...shipmentMessages.mask} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
 ];
 
 const containerColumns: Array<ColumnConfig> = [
@@ -1075,8 +1083,13 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 120,
   },
-  // custom fields mask
-  // custom fields
+  {
+    key: 'shipment.container.batch.mask',
+    title: <FormattedMessage {...batchMessages.mask} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   // actions
 ];
 
@@ -1182,8 +1195,13 @@ const orderItemColumns: Array<ColumnConfig> = [
     color: colors.ORDER_ITEM,
     width: 120,
   },
-  // custom fields mask
-  // custom fields
+  {
+    key: 'shipment.container.batch.orderItem.mask',
+    title: <FormattedMessage {...batchMessages.mask} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   // actions
 ];
 
@@ -1315,8 +1333,13 @@ const orderColumns: Array<ColumnConfig> = [
     color: colors.ORDER,
     width: 120,
   },
-  // custom fields mask
-  // custom fields
+  {
+    key: 'shipment.container.batch.orderItem.order.mask',
+    title: <FormattedMessage {...orderMessages.mask} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   // actions
 ];
 

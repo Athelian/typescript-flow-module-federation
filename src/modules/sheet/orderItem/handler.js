@@ -3,7 +3,7 @@ import { ApolloClient } from 'apollo-client';
 import { mapAsync } from 'utils/async';
 import { newCustomValue } from 'components/Sheet/SheetLive/helper';
 import type { EntityEventChange } from 'components/Sheet/SheetLive/types';
-import { filesByIDsQuery, tagsByIDsQuery } from 'modules/sheet/common/query';
+import { filesByIDsQuery, maskByIDQuery, tagsByIDsQuery } from 'modules/sheet/common/query';
 
 export async function handleOrderItemChanges(
   client: ApolloClient<any>,
@@ -31,6 +31,19 @@ export async function handleOrderItemChanges(
             field: change.field,
             new: newCustomValue(data.filesByIDs),
           }));
+      case 'mask':
+        if (change.new) {
+          return client
+            .query({
+              query: maskByIDQuery,
+              variables: { id: change.new?.entity?.id },
+            })
+            .then(({ data }) => ({
+              field: change.field,
+              new: newCustomValue(data.mask),
+            }));
+        }
+        break;
       default:
         break;
     }

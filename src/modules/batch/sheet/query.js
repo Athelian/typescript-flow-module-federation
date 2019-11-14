@@ -14,6 +14,7 @@ import {
 } from 'graphql';
 import {
   sheetCustomizableFragment,
+  sheetMaskFragment,
   sheetModelFragment,
   sheetOwnedFragment,
   sheetWarehouseFragment,
@@ -89,6 +90,7 @@ export const batchesQuery = gql`
   ${sheetOwnedFragment}
   ${sheetCustomizableFragment}
   ${sheetWarehouseFragment}
+  ${sheetMaskFragment}
 
   ${userAvatarFragment}
   ${partnerNameFragment}
@@ -130,6 +132,7 @@ export const orderItemByIDQuery = gql`
   ${sheetModelFragment}
   ${sheetOwnedFragment}
   ${sheetCustomizableFragment}
+  ${sheetMaskFragment}
 
   ${userAvatarFragment}
   ${partnerNameFragment}
@@ -181,6 +184,7 @@ export const shipmentByIDQuery = gql`
   ${sheetOwnedFragment}
   ${sheetCustomizableFragment}
   ${sheetWarehouseFragment}
+  ${sheetMaskFragment}
 
   ${userAvatarFragment}
   ${partnerNameFragment}
@@ -215,6 +219,7 @@ export const orderByIDQuery = gql`
   ${sheetModelFragment}
   ${sheetOwnedFragment}
   ${sheetCustomizableFragment}
+  ${sheetMaskFragment}
 
   ${userAvatarFragment}
   ${partnerNameFragment}

@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { documentFragment, partnerNameFragment, tagFragment, userAvatarFragment } from 'graphql';
-import { sheetWarehouseFragment } from './fragment';
+import { sheetWarehouseFragment, sheetMaskFragment } from './fragment';
 
 export const userByIDQuery = gql`
   query userByIDQuery($id: ID!) {
@@ -70,4 +70,14 @@ export const filesByIDsQuery = gql`
   }
 
   ${documentFragment}
+`;
+
+export const maskByIDQuery = gql`
+  query maskByIDQuery($id: ID!) {
+    mask(id: $id) {
+      ...sheetMaskFragment
+    }
+  }
+
+  ${sheetMaskFragment}
 `;

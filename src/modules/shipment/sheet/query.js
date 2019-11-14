@@ -17,6 +17,7 @@ import {
   sheetModelFragment,
   sheetOwnedFragment,
   sheetWarehouseFragment,
+  sheetMaskFragment,
 } from 'modules/sheet/common/fragment';
 import { sheetOrderFragment } from 'modules/sheet/order/fragment';
 import { sheetOrderItemFragment } from 'modules/sheet/orderItem/fragment';
@@ -107,6 +108,7 @@ export const shipmentsQuery = gql`
   ${sheetOwnedFragment}
   ${sheetCustomizableFragment}
   ${sheetWarehouseFragment}
+  ${sheetMaskFragment}
 
   ${userAvatarFragment}
   ${partnerNameFragment}
@@ -166,6 +168,7 @@ export const containerByIDQuery = gql`
   ${sheetOwnedFragment}
   ${sheetCustomizableFragment}
   ${sheetWarehouseFragment}
+  ${sheetMaskFragment}
 
   ${userAvatarFragment}
   ${partnerNameFragment}
@@ -221,6 +224,7 @@ export const batchByIDQuery = gql`
   ${sheetModelFragment}
   ${sheetOwnedFragment}
   ${sheetCustomizableFragment}
+  ${sheetMaskFragment}
 
   ${userAvatarFragment}
   ${partnerNameFragment}
@@ -257,6 +261,7 @@ export const orderItemByIDQuery = gql`
   ${sheetModelFragment}
   ${sheetOwnedFragment}
   ${sheetCustomizableFragment}
+  ${sheetMaskFragment}
 
   ${userAvatarFragment}
   ${partnerNameFragment}
@@ -284,6 +289,7 @@ export const orderByIDQuery = gql`
   ${sheetModelFragment}
   ${sheetOwnedFragment}
   ${sheetCustomizableFragment}
+  ${sheetMaskFragment}
 
   ${userAvatarFragment}
   ${partnerNameFragment}

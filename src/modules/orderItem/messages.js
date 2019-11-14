@@ -114,4 +114,8 @@ export default defineMessages({
     id: 'modules.OrderItems.logs',
     defaultMessage: 'Logs',
   },
+  mask: {
+    id: 'modules.OrderItems.mask',
+    defaultMessage: 'Custom fields template',
+  },
 });

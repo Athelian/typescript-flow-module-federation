@@ -8,6 +8,7 @@ import {
   usersByIDsQuery,
   organizationByIDQuery,
   filesByIDsQuery,
+  maskByIDQuery,
 } from 'modules/sheet/common/query';
 
 export function handleOrderChanges(
@@ -57,6 +58,19 @@ export function handleOrderChanges(
             field: change.field,
             new: newCustomValue(data.filesByIDs),
           }));
+      case 'mask':
+        if (change.new) {
+          return client
+            .query({
+              query: maskByIDQuery,
+              variables: { id: change.new?.entity?.id },
+            })
+            .then(({ data }) => ({
+              field: change.field,
+              new: newCustomValue(data.mask),
+            }));
+        }
+        break;
       default:
         break;
     }

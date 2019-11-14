@@ -25,17 +25,23 @@ export const sheetOwnedFragment = gql`
   }
 `;
 
+export const sheetMaskFragment = gql`
+  fragment sheetMaskFragment on Mask {
+    id
+    name
+    fieldDefinitions {
+      ... on FieldDefinition {
+        id
+      }
+    }
+  }
+`;
+
 export const sheetCustomizableFragment = gql`
   fragment sheetCustomizableFragment on Customizable {
     customFields {
       mask {
-        ... on Mask {
-          fieldDefinitions {
-            ... on FieldDefinition {
-              id
-            }
-          }
-        }
+        ...sheetMaskFragment
       }
       fieldValues {
         ... on FieldValue {

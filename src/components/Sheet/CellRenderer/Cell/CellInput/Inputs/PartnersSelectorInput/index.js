@@ -9,14 +9,19 @@ import CornerIcon from 'components/CornerIcon';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import { PartnerCardStyle, CardsWrapperStyle, ButtonStyle, PlusButtonStyle } from './style';
 
-const PartnersSelectorInput = (partnerTypes: Array<string>) => ({
+type ExtraProps = {
+  partnerTypes: Array<string>,
+};
+
+const PartnersSelectorInput = ({
   value,
   focus,
   onChange,
   forceFocus,
   forceBlur,
   readonly,
-}: InputProps<Array<Object>>) => {
+  extra,
+}: InputProps<Array<Object>, any, ExtraProps>) => {
   const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
     if (focus) {
       e.stopPropagation();
@@ -45,22 +50,18 @@ const PartnersSelectorInput = (partnerTypes: Array<string>) => ({
       </button>
 
       <SlideView isOpen={focus} onRequestClose={forceBlur}>
-        {focus && (
-          <SelectPartners
-            partnerTypes={partnerTypes || []}
-            selected={value || []}
-            onCancel={forceBlur}
-            onSelect={newValue => {
-              onChange(newValue, true);
-              forceBlur();
-            }}
-          />
-        )}
+        <SelectPartners
+          partnerTypes={extra?.partnerTypes ?? []}
+          selected={value || []}
+          onCancel={forceBlur}
+          onSelect={newValue => {
+            onChange(newValue, true);
+            forceBlur();
+          }}
+        />
       </SlideView>
     </div>
   );
 };
 
-export default {
-  Forwarders: PartnersSelectorInput(['Forwarder']),
-};
+export default PartnersSelectorInput;

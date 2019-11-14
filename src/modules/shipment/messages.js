@@ -822,6 +822,10 @@ export default defineMessages({
     id: 'modules.Shipments.logs',
     defaultMessage: 'Logs',
   },
+  mask: {
+    id: 'modules.Shipments.mask',
+    defaultMessage: 'Custom fields template',
+  },
   relatedExporters: {
     id: 'modules.Shipments.relatedExporters',
     defaultMessage: 'RELATED EXPORTERS',

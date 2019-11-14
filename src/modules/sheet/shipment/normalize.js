@@ -50,6 +50,12 @@ export default function normalizeSheetShipmentInput(
       };
     case 'todo':
       return parseTodoField(oldValue, newValue);
+    case 'mask':
+      return {
+        customFields: {
+          maskId: newValue?.id ?? null,
+        },
+      };
     default:
       return normalizeSheetInput(shipment, field, newValue);
   }
