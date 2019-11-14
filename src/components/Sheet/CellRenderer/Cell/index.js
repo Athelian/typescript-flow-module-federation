@@ -130,8 +130,6 @@ const Cell = ({
         case 'Enter':
           if (isInputFocusable) {
             setInputFocus(true);
-          } else {
-            handleFocusDown();
           }
           break;
         case 'Escape':
@@ -146,7 +144,7 @@ const Cell = ({
           break;
       }
     },
-    [handleFocusDown, isInputFocusable]
+    [isInputFocusable]
   );
 
   const handleInputFocus = React.useCallback(() => {
