@@ -6,6 +6,7 @@ import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper'
 import { mapAsync } from 'utils/async';
 import {
   filesByIDsQuery,
+  maskByIDQuery,
   organizationByIDQuery,
   organizationsByIDsQuery,
   tagsByIDsQuery,
@@ -86,6 +87,19 @@ export async function handleShipmentChanges(
             field: change.field,
             new: newCustomValue(data.filesByIDs),
           }));
+      case 'mask':
+        if (change.new) {
+          return client
+            .query({
+              query: maskByIDQuery,
+              variables: { id: change.new?.entity?.id },
+            })
+            .then(({ data }) => ({
+              field: change.field,
+              new: newCustomValue(data.mask),
+            }));
+        }
+        break;
       default:
         break;
     }

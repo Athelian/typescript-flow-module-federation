@@ -30,6 +30,12 @@ export default function normalizeSheetOrderInput(
       };
     case 'todo':
       return parseTodoField(oldValue, newValue);
+    case 'mask':
+      return {
+        customFields: {
+          maskId: newValue?.id ?? null,
+        },
+      };
     default:
       return normalizeSheetInput(order, field, newValue);
   }

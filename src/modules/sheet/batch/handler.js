@@ -4,7 +4,7 @@ import { ApolloClient } from 'apollo-client';
 import type { EntityEventChange } from 'components/Sheet/SheetLive/types';
 import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
 import { mapAsync } from 'utils/async';
-import { tagsByIDsQuery } from 'modules/sheet/common/query';
+import { maskByIDQuery, tagsByIDsQuery } from 'modules/sheet/common/query';
 
 export async function handleBatchChanges(
   client: ApolloClient<any>,
@@ -23,6 +23,19 @@ export async function handleBatchChanges(
             field: change.field,
             new: newCustomValue(data.tagsByIDs),
           }));
+      case 'mask':
+        if (change.new) {
+          return client
+            .query({
+              query: maskByIDQuery,
+              variables: { id: change.new?.entity?.id },
+            })
+            .then(({ data }) => ({
+              field: change.field,
+              new: newCustomValue(data.mask),
+            }));
+        }
+        break;
       default:
         break;
     }

@@ -31,6 +31,7 @@ import ToggleInput from './Inputs/ToggleInput';
 import LogsInput from './Inputs/LogsInput';
 import TasksInput from './Inputs/TasksInput';
 import MainExporterInput from './Inputs/MainExporterInput';
+import MaskSelectorInput from './Inputs/MaskSelectorInput';
 
 type Props = {
   value: any,
@@ -95,11 +96,12 @@ const inputs = {
   task_tags: TagsInput.Task,
   project_tags: TagsInput.Project,
   // Selector
+  partner: PartnerSelectorInput,
+  partners: PartnersSelectorInput,
   user_assignment: UserAssignmentInput,
-  exporter: PartnerSelectorInput.Exporter,
   main_exporter: MainExporterInput,
-  forwarders: PartnersSelectorInput.Forwarders,
   warehouse: WarehouseSelectorInput,
+  mask: MaskSelectorInput,
   // Logs
   order_logs: LogsInput.Order,
   order_item_logs: LogsInput.OrderItem,

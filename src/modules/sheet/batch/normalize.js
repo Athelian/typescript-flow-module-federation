@@ -45,6 +45,12 @@ export default function normalizeSheetBatchInput(
       };
     case 'todo':
       return parseTodoField(oldValue, newValue);
+    case 'mask':
+      return {
+        customFields: {
+          maskId: newValue?.id ?? null,
+        },
+      };
     default:
       return normalizeSheetInput(batch, field, newValue);
   }

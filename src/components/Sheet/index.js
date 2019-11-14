@@ -1,6 +1,7 @@
 // @flow
 import type { ColumnConfig, ColumnSort } from './SheetState/types';
 import {
+  transformField,
   transformValueField,
   transformCustomField,
   transformReadonlyField,
@@ -15,6 +16,7 @@ export {
   Sheet,
   useSheet,
   ColumnsConfig,
+  transformField,
   transformValueField,
   transformCustomField,
   transformReadonlyField,

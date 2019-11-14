@@ -66,8 +66,8 @@ const Cell = ({
   }, [cell, item]);
 
   const hidden = React.useMemo(() => {
-    return cell.hide && item ? cell.hide(item) : false;
-  }, [cell, item]);
+    return parentCell.hide && item ? parentCell.hide(item) : false;
+  }, [parentCell, item]);
 
   React.useEffect(() => {
     if (focus && isTop) {
@@ -174,7 +174,7 @@ const Cell = ({
       {isTop && inputFocus && <div className={CellShadowStyle(size)} />}
 
       {(() => {
-        if (cell.empty && !!parentCell.entity) {
+        if (cell.empty && !!parentCell.entity && !hidden) {
           return null;
         }
 

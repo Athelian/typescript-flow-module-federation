@@ -154,8 +154,13 @@ const orderColumns: Array<ColumnConfig> = [
     color: colors.ORDER,
     width: 120,
   },
-  // custom fields mask
-  // custom fields
+  {
+    key: 'order.mask',
+    title: <FormattedMessage {...orderMessages.mask} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: 200,
+  },
   // actions
 ];
 
@@ -273,8 +278,13 @@ const orderItemColumns: Array<ColumnConfig> = [
     color: colors.ORDER_ITEM,
     width: 120,
   },
-  // custom fields mask
-  // custom fields
+  {
+    key: 'orderItem.mask',
+    title: <FormattedMessage {...orderItemMessages.mask} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+  },
   // actions
 ];
 
@@ -455,8 +465,13 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 120,
   },
-  // custom fields mask
-  // custom fields
+  {
+    key: 'batch.mask',
+    title: <FormattedMessage {...batchMessages.mask} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   // actions
 ];
 
@@ -1187,6 +1202,13 @@ const shipmentColumns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: 120,
+  },
+  {
+    key: 'shipment.mask',
+    title: <FormattedMessage {...shipmentMessages.mask} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
   },
 ];
 

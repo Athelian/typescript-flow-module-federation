@@ -349,4 +349,8 @@ export default defineMessages({
     id: 'components.BatchItem.logs',
     defaultMessage: 'Logs',
   },
+  mask: {
+    id: 'components.BatchItem.mask',
+    defaultMessage: 'Custom fields template',
+  },
 });

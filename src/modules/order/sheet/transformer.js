@@ -12,12 +12,14 @@ import {
   transformReadonlyField,
   transformCustomField,
   transformValueField,
+  transformField,
 } from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
   ORDER_SET_ARCHIVED,
   ORDER_SET_CURRENCY,
   ORDER_SET_CUSTOM_FIELDS,
+  ORDER_SET_CUSTOM_FIELDS_MASK,
   ORDER_SET_DELIVERY_DATE,
   ORDER_SET_DELIVERY_PLACE,
   ORDER_SET_DOCUMENTS,
@@ -34,6 +36,7 @@ import {
 } from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_SET_CUSTOM_FIELDS,
+  ORDER_ITEMS_SET_CUSTOM_FIELDS_MASK,
   ORDER_ITEMS_SET_DELIVERY_DATE,
   ORDER_ITEMS_SET_DOCUMENTS,
   ORDER_ITEMS_SET_MEMO,
@@ -46,6 +49,7 @@ import {
 } from 'modules/permission/constants/orderItem';
 import {
   BATCH_SET_CUSTOM_FIELDS,
+  BATCH_SET_CUSTOM_FIELDS_MASK,
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
   BATCH_SET_EXPIRY,
@@ -113,6 +117,7 @@ import {
   SHIPMENT_APPROVE_TIMELINE_DATE,
   SHIPMENT_UPDATE,
   SHIPMENT_SET_CUSTOM_FIELDS,
+  SHIPMENT_SET_CUSTOM_FIELDS_MASK,
 } from 'modules/permission/constants/shipment';
 import orderMessages from 'modules/order/messages';
 
@@ -373,6 +378,18 @@ function transformOrder(
       type: 'order_logs',
       ...transformValueField(basePath, order, 'id', () => true),
     },
+    {
+      columnKey: 'order.mask',
+      type: 'mask',
+      extra: { entityType: 'Order' },
+      ...transformField(
+        order,
+        `${basePath}.customFields.mask`,
+        'mask',
+        order?.customFields?.mask ?? null,
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_CUSTOM_FIELDS_MASK)
+      ),
+    },
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `order.customField.${fieldDefinition.id}`,
       type: 'text',
@@ -617,6 +634,19 @@ function transformOrderItem(
       columnKey: 'order.orderItem.logs',
       type: 'order_item_logs',
       ...transformValueField(basePath, orderItem, 'id', () => true),
+    },
+    {
+      columnKey: 'order.orderItem.mask',
+      type: 'mask',
+      extra: { entityType: 'OrderItem' },
+      ...transformField(
+        orderItem,
+        `${basePath}.customFields.mask`,
+        'mask',
+        orderItem?.customFields?.mask ?? null,
+        hasPermission =>
+          hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_CUSTOM_FIELDS_MASK)
+      ),
     },
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `order.orderItem.customField.${fieldDefinition.id}`,
@@ -885,6 +915,18 @@ function transformBatch(
       columnKey: 'order.orderItem.batch.logs',
       type: 'batch_logs',
       ...transformValueField(basePath, batch, 'id', () => true),
+    },
+    {
+      columnKey: 'order.orderItem.batch.mask',
+      type: 'mask',
+      extra: { entityType: 'Batch' },
+      ...transformField(
+        batch,
+        `${basePath}.customFields.mask`,
+        'mask',
+        batch?.customFields?.mask ?? null,
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_CUSTOM_FIELDS_MASK)
+      ),
     },
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `order.orderItem.batch.customField.${fieldDefinition.id}`,
@@ -1389,7 +1431,8 @@ function transformBatchShipment(
     },
     {
       columnKey: 'order.orderItem.batch.shipment.forwarders',
-      type: 'forwarders',
+      type: 'partners',
+      extra: { partnerTypes: ['Forwarder'] },
       ...transformValueField(
         basePath,
         batch?.shipment ?? null,
@@ -2190,6 +2233,19 @@ function transformBatchShipment(
       columnKey: 'order.orderItem.batch.shipment.logs',
       type: 'shipment_logs',
       ...transformValueField(basePath, batch?.shipment ?? null, 'id', () => true),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.mask',
+      type: 'mask',
+      extra: { entityType: 'Shipment' },
+      ...transformField(
+        batch,
+        `${basePath}.customFields.mask`,
+        'mask',
+        batch?.shipment?.customFields?.mask ?? null,
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_CUSTOM_FIELDS_MASK)
+      ),
     },
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `order.orderItem.batch.shipment.customField.${fieldDefinition.id}`,

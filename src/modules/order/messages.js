@@ -446,6 +446,10 @@ export default defineMessages({
     id: 'modules.order.logs',
     defaultMessage: 'LOGS',
   },
+  mask: {
+    id: 'modules.order.mask',
+    defaultMessage: 'Custom fields template',
+  },
   sectionTimeline: {
     id: 'modules.Orders.sectionTimeline',
     defaultMessage: 'LOGS & MESSAGE BOARD',
