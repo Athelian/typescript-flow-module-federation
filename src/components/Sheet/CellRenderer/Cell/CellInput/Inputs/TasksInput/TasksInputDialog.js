@@ -5,7 +5,7 @@ import { Provider } from 'unstated';
 import { useHasPermissions } from 'contexts/Permissions';
 import Dialog from 'components/Dialog';
 import { BooleanValue } from 'react-values';
-import { recalculateTaskBindingDate, getConfig } from 'utils/task';
+import { recalculateTaskBindingDate, getTasksPermissions } from 'utils/task';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { BaseButton, NewButton } from 'components/Buttons';
@@ -55,7 +55,7 @@ const TasksInputDialog = ({
     canUpdateTaskTemplate,
     canViewProjectForm,
     editable,
-  } = getConfig(entityType, hasPermission);
+  } = getTasksPermissions(entityType, hasPermission);
 
   return (
     <Provider inject={[formContainer]}>

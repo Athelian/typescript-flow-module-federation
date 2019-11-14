@@ -945,7 +945,7 @@ export const recalculateTaskBindingDate = (task: Object) => {
   };
 };
 
-export const getConfig = (
+export const getTasksPermissions = (
   type: string,
   hasPermission: Function
 ): {

@@ -6,7 +6,7 @@ import { lowerFirst } from 'lodash';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
-import { recalculateTaskBindingDate, getConfig } from 'utils/task';
+import { recalculateTaskBindingDate, getTasksPermissions } from 'utils/task';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { BaseButton, NewButton } from 'components/Buttons';
@@ -55,7 +55,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
     canUpdateTaskTemplate,
     tasksContainer,
     editable,
-  } = getConfig(type, hasPermission);
+  } = getTasksPermissions(type, hasPermission);
 
   if (!canViewList) return null;
 
