@@ -200,10 +200,6 @@ export default defineMessages({
     id: 'components.BatchItem.sectionPackage',
     defaultMessage: 'PACKAGING',
   },
-  sectionAdjustments: {
-    id: 'components.BatchItem.sectionAdjustments',
-    defaultMessage: 'QUANTITY ADJUSTMENTS',
-  },
   sectionAssignments: {
     id: 'components.BatchItem.sectionAssignments',
     defaultMessage: 'ASSIGNMENTS',

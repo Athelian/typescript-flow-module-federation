@@ -1005,13 +1005,6 @@ const batchColumns: Array<ColumnConfig> = [
     },
   },
   {
-    key: 'shipment.container.batch.quantityRevisions',
-    title: <FormattedMessage {...batchMessages.sectionAdjustments} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 1035,
-  },
-  {
     key: 'shipment.container.batch.packageName',
     title: <FormattedMessage {...batchMessages.packageName} />,
     icon: 'BATCH',

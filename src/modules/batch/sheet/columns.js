@@ -398,14 +398,6 @@ const batchColumns: Array<ColumnConfig> = [
     width: 200,
   },
   {
-    key: 'batch.quantityRevisions',
-    exportKey: 'batches.quantityRevisions',
-    title: <FormattedMessage {...batchMessages.sectionAdjustments} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 1035,
-  },
-  {
     key: 'batch.packageName',
     exportKey: 'batches.packageName',
     title: <FormattedMessage {...batchMessages.packageName} />,
