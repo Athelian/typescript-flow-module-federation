@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { Shipment } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { getByPathWithDefault } from 'utils/fp';
 import Tag from 'components/Tag';
@@ -42,20 +43,19 @@ import {
   ContainerTypeCountStyle,
 } from './style';
 
-type OptionalProps = {
+type Props = {|
   actions: Array<React.Node>,
   onClick: Function,
-};
-
-type Props = OptionalProps & {
-  shipment: Object,
-};
+  shipment: Shipment,
+  navigable?: boolean,
+|};
 
 const defaultProps = {
   actions: [],
+  navigable: true,
 };
 
-const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
+const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props) => {
   const {
     archived,
     no,
@@ -254,7 +254,7 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
           </div>
         </div>
         <div className={DividerStyle} />
-        <HorizontalLayout shipment={shipment} />
+        <HorizontalLayout shipment={shipment} navigable={Boolean(navigable)} />
       </div>
     </BaseCard>
   );

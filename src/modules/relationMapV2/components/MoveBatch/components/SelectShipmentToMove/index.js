@@ -111,6 +111,7 @@ function ShipmentRenderer({
         </div>
       )}
       <ShipmentCard
+        navigable={false}
         shipment={shipment}
         selectable={shipment.id === selected?.id}
         selected={shipment.id === selected?.id}

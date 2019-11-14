@@ -10,9 +10,10 @@ import { HorizontalLayoutWrapperStyle } from './style';
 
 type Props = {|
   shipment: ShipmentPayload,
+  navigable: boolean,
 |};
-// FIXME: move to shipment card folder
-const HorizontalLayout = ({ shipment }: Props) => {
+
+const HorizontalLayout = ({ shipment, navigable }: Props) => {
   return (
     <PartnerPermissionsWrapper data={shipment}>
       {permissions => (
@@ -21,7 +22,7 @@ const HorizontalLayout = ({ shipment }: Props) => {
           <HorizontalTimeline
             shipment={shipment}
             navigable={{
-              form: permissions.includes(SHIPMENT_FORM),
+              form: navigable && permissions.includes(SHIPMENT_FORM),
             }}
           />
           <HorizontalDates shipment={shipment} />
