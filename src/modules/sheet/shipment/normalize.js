@@ -1,6 +1,17 @@
 // @flow
+import type { Shipment } from 'generated/graphql';
 import { parseTodoField, removeTypename } from 'utils/data';
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
+
+const cleanUpPorts = (shipment: Shipment) => {
+  return {
+    voyages: (shipment?.voyages ?? []).map(voyage => ({
+      id: voyage.id,
+      arrivalPort: null,
+      departurePort: null,
+    })),
+  };
+};
 
 export default function normalizeSheetShipmentInput(
   shipment: Object,
@@ -9,6 +20,11 @@ export default function normalizeSheetShipmentInput(
   newValue: any
 ): Object {
   switch (field) {
+    case 'transportType':
+      return {
+        [field]: newValue,
+        ...cleanUpPorts(shipment),
+      };
     case 'blDate':
     case 'bookingDate':
       return {
