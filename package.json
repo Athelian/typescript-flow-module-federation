@@ -36,6 +36,7 @@
     "fuse.js": "^3.4.5",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
+    "hotkeys-js": "^3.7.2",
     "immer": "^5.0.0",
     "immutability-helper": "^3.0.1",
     "lodash": "^4.17.15",

@@ -943,18 +943,29 @@ export default function MoveBatch({ onSuccess }: Props) {
                     </div>
                   </Tooltip>
                 ) : (
-                  <BaseButton
-                    label={
+                  <Tooltip
+                    message={
                       <FormattedMessage
-                        id="modules.RelationMap.label.moveTo"
-                        defaultMessage="MOVE TO"
+                        id="modules.RelationMap.move.moveToShipmentHotKey"
+                        defaultMessage="Hotkey: `Alt + 1`"
                       />
                     }
-                    icon="SHIPMENT"
-                    onClick={() =>
-                      onConfirm('existShipment') || !hasPermissionMoveToExistShipment()
-                    }
-                  />
+                  >
+                    <div>
+                      <BaseButton
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMap.label.moveTo"
+                            defaultMessage="MOVE TO"
+                          />
+                        }
+                        icon="SHIPMENT"
+                        onClick={() =>
+                          onConfirm('existShipment') || !hasPermissionMoveToExistShipment()
+                        }
+                      />
+                    </div>
+                  </Tooltip>
                 )}
               </div>
               <div className={MoveWrapperStyle}>
