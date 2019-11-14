@@ -2,9 +2,10 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider } from 'unstated';
+import { useHasPermissions } from 'contexts/Permissions';
 import Dialog from 'components/Dialog';
 import { BooleanValue } from 'react-values';
-import { recalculateTaskBindingDate } from 'utils/task';
+import { recalculateTaskBindingDate, getConfig } from 'utils/task';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { BaseButton, NewButton } from 'components/Buttons';
@@ -20,7 +21,7 @@ import { TasksSectionStyle, TasksSectionWrapperStyle, TemplateItemStyle } from '
 
 const formContainer = new FormContainer();
 
-type Props = {
+type Props = {|
   tasks: Array<TaskPayload>,
   taskTemplate: TaskTemplatePayload,
   onChange: ({
@@ -31,8 +32,9 @@ type Props = {
   onClose: () => void,
   entityType: string,
   entityId: string,
+  ownerId: string,
   groupIds: Array<string>,
-};
+|};
 
 const TasksInputDialog = ({
   tasks,
@@ -41,25 +43,19 @@ const TasksInputDialog = ({
   onClose,
   open,
   entityType,
+  ownerId,
   entityId,
   groupIds,
 }: Props) => {
-  // TODO: Maxime said to do dummy permission until he changes it
-  const canViewForm = true;
-  const canAddTasks = true;
-  const canUpdateMilestone = true;
-  const canUpdateTaskTemplate = true;
-  const canViewProjectForm = true;
-  const editable = {
-    name: true,
-    startDate: true,
-    dueDate: true,
-    inProgress: true,
-    skipped: true,
-    completed: true,
-    approved: true,
-    rejected: true,
-  };
+  const hasPermission = useHasPermissions(ownerId);
+  const {
+    canViewForm,
+    canAddTasks,
+    canUpdateMilestone,
+    canUpdateTaskTemplate,
+    canViewProjectForm,
+    editable,
+  } = getConfig(entityType, hasPermission);
 
   return (
     <Provider inject={[formContainer]}>

@@ -359,6 +359,7 @@ function transformOrder(
       type: 'order_tasks',
       computed: item => ({
         entityId: item.id,
+        ownerId: item.ownedBy?.id,
         groupIds: [item.importer?.id, item.exporter?.id].filter(Boolean),
       }),
       ...transformValueField(
@@ -604,6 +605,7 @@ function transformOrderItem(
       type: 'order_item_tasks',
       computed: item => ({
         entityId: orderItem?.id,
+        ownerId: orderItem.ownedBy?.id,
         groupIds: [item.importer?.id, item.exporter?.id].filter(Boolean),
       }),
       ...transformValueField(
@@ -872,6 +874,7 @@ function transformBatch(
       type: 'batch_tasks',
       computed: item => ({
         entityId: batch?.id,
+        ownerId: batch?.ownedBy?.id,
         groupIds: [item.importer?.id, item.exporter?.id].filter(Boolean),
       }),
       ...transformValueField(
@@ -2172,6 +2175,7 @@ function transformBatchShipment(
         const currentBatch = getCurrentBatch(batch?.id, order);
         return {
           entityId: batch?.shipment?.id ?? null,
+          ownerId: batch?.shipment?.ownedBy?.id,
           groupIds: [
             currentBatch?.shipment?.importer?.id,
             currentBatch?.shipment?.exporter?.id,

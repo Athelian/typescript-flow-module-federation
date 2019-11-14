@@ -22,10 +22,11 @@ type Todo = {
   taskTemplate: ?TaskTemplatePayload,
 };
 
-type Context = {
+type Context = {|
+  ownerId: string,
   entityId: string,
   groupIds: Array<string>,
-};
+|};
 
 const TasksInput = (entityType: string) => {
   return ({
@@ -40,6 +41,7 @@ const TasksInput = (entityType: string) => {
     const tasks = value?.tasks ?? [];
     const taskTemplate = value?.taskTemplate ?? null;
     const entityId = context?.entityId ?? '';
+    const ownerId = context?.ownerId ?? '';
     const groupIds = context?.groupIds ?? [];
 
     const numCompletedOrSkipped = tasks.reduce(
@@ -117,6 +119,7 @@ const TasksInput = (entityType: string) => {
           open={focus}
           entityType={entityType}
           entityId={entityId}
+          ownerId={ownerId}
           groupIds={groupIds}
         />
       </div>
