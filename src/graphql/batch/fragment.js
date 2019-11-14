@@ -25,19 +25,6 @@ export const batchFormFragment = gql`
     postShippedQuantity
     deliveredQuantity
     latestQuantity
-    batchQuantityRevisions {
-      ... on BatchQuantityRevision {
-        id
-        sort
-        updatedAt
-        updatedBy {
-          ...userAvatarFragment
-        }
-        quantity
-        type
-        memo
-      }
-    }
     producedAt
     deliveredAt
     desiredAt

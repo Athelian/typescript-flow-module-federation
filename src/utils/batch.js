@@ -86,15 +86,6 @@ export const findVolume = (batch: BatchPayload) => {
     : 0;
 };
 
-// DEPRECATED will be removed after remove old RM
-export const oldGetBatchLatestQuantity = (batch: BatchPayload): number => {
-  const quantity = batch?.quantity ?? 0;
-  const batchQuantityRevisions = batch?.batchQuantityRevisions ?? [];
-  return batchQuantityRevisions.length > 0
-    ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
-    : quantity;
-};
-
 export const totalBatchPriceAmount = (batch: Batch): number => {
   const quantity = getBatchLatestQuantity(batch);
   return times(quantity, batch?.orderItem?.price?.amount ?? 0);
@@ -124,22 +115,6 @@ export const calculateVolume = (volume: MetricValue, size: Size): Object => {
     metric: volume.metric,
     value: calculatedVolume,
   };
-};
-
-// DEPRECATED will be removed after remove old RM
-export const oldCalculatePackageQuantity = (batch: Batch) => {
-  const quantity = getByPathWithDefault(0, 'quantity', batch);
-  const packageCapacity = getByPathWithDefault(0, 'packageCapacity', batch);
-  const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', batch);
-  if (packageCapacity > 0) {
-    const validQuantity =
-      batchQuantityRevisions.length > 0
-        ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
-        : quantity;
-
-    return divide(validQuantity, packageCapacity);
-  }
-  return 0;
 };
 
 export const calculatePackageQuantity = (batch: Batch) => {

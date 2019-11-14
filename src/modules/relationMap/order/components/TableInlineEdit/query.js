@@ -100,18 +100,16 @@ export const batchEntityFragment = gql`
     archived
     no
     quantity
+    producedQuantity
+    preShippedQuantity
+    shippedQuantity
+    postShippedQuantity
+    deliveredQuantity
     deliveredAt
     desiredAt
     expiredAt
     producedAt
     latestQuantity
-    batchQuantityRevisions {
-      ... on BatchQuantityRevision {
-        id
-        quantity
-        type
-      }
-    }
     customFields {
       ...customFieldsFragment
     }

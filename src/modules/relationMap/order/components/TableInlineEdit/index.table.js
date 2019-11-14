@@ -12,10 +12,7 @@ import { UserConsumer } from 'contexts/Viewer';
 import emitter from 'utils/emitter';
 import { trackingError } from 'utils/trackingError';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
-import {
-  oldCalculatePackageQuantity as calculatePackageQuantity,
-  oldGetBatchLatestQuantity as getBatchLatestQuantity,
-} from 'utils/batch';
+import { calculatePackageQuantity } from 'utils/batch';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import SlideView from 'components/SlideView';
 import { EntityIcon } from 'components/NavBar';
@@ -115,7 +112,7 @@ const isModifyPort = (field: string) => {
 const TableInlineEdit = ({ allId, targetIds, intl, entities, ...dataSource }: Props) => {
   const initShowAll = window.localStorage.getItem('filterRMEditViewShowAll');
   const initTemplateColumn = window.localStorage.getItem('rmTemplateFilterColumns');
-  const [errors, setErrors] = useState({});
+  const [errors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const [templateColumns, setTemplateColumns] = useState(
     initTemplateColumn ? JSON.parse(initTemplateColumn) : [...allColumnIds]
@@ -124,7 +121,6 @@ const TableInlineEdit = ({ allId, targetIds, intl, entities, ...dataSource }: Pr
   const [showAll, setShowAll] = useState(Number.isInteger(+initShowAll) ? !!+initShowAll : true);
   const [loading, setLoading] = useState(false);
   const [showTemplate, setShowTemplate] = useState(false);
-  const [touched, setTouched] = useState({});
   const [editData, setEditData] = useState({
     orders: {},
     orderItems: {},
@@ -165,10 +161,9 @@ const TableInlineEdit = ({ allId, targetIds, intl, entities, ...dataSource }: Pr
         setErrorMessage('');
         const name = getByPathWithDefault('', 'name', newData);
         const value = getByPathWithDefault(null, 'value', newData);
-        const hasError = getByPathWithDefault(false, 'hasError', newData);
         let newEditData = cloneDeep(editData);
         const [entityType, id, ...fields] = name.split('.');
-        const [field, subField] = fields || [];
+        const [field] = fields || [];
         // init empty values for custom field in case there is empty from api
         if (field === 'customFields') {
           if (
@@ -224,86 +219,6 @@ const TableInlineEdit = ({ allId, targetIds, intl, entities, ...dataSource }: Pr
                   ...(field === 'quantity' ? { quantity: value } : { packageCapacity: value }),
                 })
               );
-            }
-          }
-
-          if (field === 'batchQuantityRevisions') {
-            const batch = getByPath(`batches.${id}`, editData);
-            // trigger auto calculate when delete quantity
-            if (batch && batch.autoCalculatePackageQuantity && Array.isArray(value)) {
-              newEditData = set(
-                newEditData,
-                `batches.${id}.packageQuantity`,
-                calculatePackageQuantity({
-                  ...batch,
-                  batchQuantityRevisions: value,
-                })
-              );
-            }
-
-            // trigger auto calculate for last quantity revision
-            if (
-              batch &&
-              Number(subField) >= 0 &&
-              Number(value) >= 0 &&
-              Number(subField) === batch.batchQuantityRevisions.length - 1 &&
-              batch.autoCalculatePackageQuantity
-            ) {
-              newEditData = set(
-                newEditData,
-                `batches.${id}.packageQuantity`,
-                calculatePackageQuantity({
-                  ...batch,
-                  batchQuantityRevisions: [
-                    {
-                      quantity: value,
-                    },
-                  ],
-                })
-              );
-            }
-          }
-
-          if (field === 'batchQuantityRevisionsHeader') {
-            if (subField === 'create') {
-              const { batches } = newEditData;
-              const newBatchEntries = (Object.entries(batches || {}): Array<any>).map(entries => {
-                const [batchId, batch] = entries;
-                const { quantity, batchQuantityRevisions } = batch;
-                const lastQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
-                for (let i = 0; i < Number(value); i += 1) {
-                  if (!batchQuantityRevisions[i]) {
-                    batchQuantityRevisions[i] = {
-                      type: 'Other',
-                      quantity: lastQuantity,
-                    };
-                  }
-                }
-                return [
-                  batchId,
-                  {
-                    ...batch,
-                    batchQuantityRevisions,
-                  },
-                ];
-              });
-              const newBatches = Object.fromEntries(newBatchEntries);
-              set(newEditData, `batches`, newBatches);
-            }
-
-            if (subField === 'apply') {
-              const { batches } = newEditData;
-              const { index, type } = value;
-              const newBatchEntries = (Object.entries(batches || {}): Array<any>).map(entries => {
-                const [batchId, batch] = entries;
-                const { batchQuantityRevisions } = batch;
-                if (batchQuantityRevisions.length >= index) {
-                  set(batch, `batchQuantityRevisions[${index - 1}].type`, type);
-                }
-                return [batchId, batch];
-              });
-              const newBatches = Object.fromEntries(newBatchEntries);
-              set(newEditData, `batches`, newBatches);
             }
           }
         }
@@ -363,21 +278,7 @@ const TableInlineEdit = ({ allId, targetIds, intl, entities, ...dataSource }: Pr
             );
           }
         }
-        if (field !== 'batchQuantityRevisionsHeader') {
-          newEditData = set(newEditData, name, value);
-          if (!touched[name]) {
-            setTouched({
-              ...touched,
-              [name]: true,
-            });
-          }
-          if (hasError) {
-            setErrors({ ...errors, [name]: true });
-          } else {
-            delete errors[name];
-            setErrors(errors);
-          }
-        }
+
         setEditData(newEditData);
       });
       return () => {

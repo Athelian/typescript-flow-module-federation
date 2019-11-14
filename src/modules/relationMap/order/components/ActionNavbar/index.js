@@ -432,7 +432,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                       expiredAt: null,
                                       customFields: null,
                                       producedAt: null,
-                                      batchQuantityRevisions: [],
                                     },
                                   },
                                   refetchQueries: allOrderIds.map(orderId => ({
@@ -701,7 +700,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   }}
                   onMoveToNewShipment={() => {
                     const defaultBatchInput = {
-                      batchQuantityRevisions: [],
                       todo: {
                         tasks: [],
                       },
@@ -839,7 +837,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                   ...inputBatchFields,
                                   orderItem: generateOrderItem(orderItem),
                                   quantity: inputBatchFields.latestQuantity || 0,
-                                  batchQuantityRevisions: [],
+
                                   shipment: inputBatchFields.shipment
                                     ? shipments[inputBatchFields.shipment.id]
                                     : null,
@@ -871,7 +869,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 orderItem: generateOrderItem(orderItem),
                                 shipment: batch.shipment ? shipments[batch.shipment.id] : null,
                                 quantity: batch.latestQuantity || 0,
-                                batchQuantityRevisions: [],
                               },
                             ],
                             quantity: batch.latestQuantity || 0,
@@ -1020,7 +1017,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                               .map(batchId => ({
                                 ...batches[batchId],
                                 quantity: batches[batchId].latestQuantity || 0,
-                                batchQuantityRevisions: [],
                               })),
                           });
                           processBatchIds.push(...orderItem.batches);
@@ -1052,7 +1048,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                               {
                                 ...batch,
                                 quantity: batch.latestQuantity || 0,
-                                batchQuantityRevisions: [],
                               },
                             ],
                             quantity: batch.latestQuantity || 0,
@@ -1090,7 +1085,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             batches: orderItem.batches.map(batchId => ({
                               ...batches[batchId],
                               quantity: batches[batchId].latestQuantity || 0,
-                              batchQuantityRevisions: [],
                             })),
                           };
                         }),
@@ -1113,7 +1107,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 .map(batchId => ({
                                   ...batches[batchId],
                                   quantity: batches[batchId].latestQuantity || 0,
-                                  batchQuantityRevisions: [],
                                 })),
                             };
                           }),

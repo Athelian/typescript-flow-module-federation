@@ -18,7 +18,6 @@ import useUser from 'hooks/useUser';
 import {
   InlineTextInput,
   InlineNumberInput,
-  InlineNumberAdjustmentInput,
   InlineDateInput,
   InlineSearchEnumInput,
   InlineInChargeInput,
@@ -105,17 +104,6 @@ function renderItem({
       /* $FlowFixMe This comment suppresses an error found when upgrading Flow
        * to v0.112.0. To view the error, delete this comment and run Flow. */
       return <InlineStatusButton {...meta} name={name} toggled={value} id={id} />;
-
-    case 'numberAdjustment': {
-      const position = Number(name.substr(-1, 1));
-      const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', values);
-
-      if (position > batchQuantityRevisions.length) return <TableDisableCell />;
-
-      return (
-        <InlineNumberAdjustmentInput name={name} value={value} {...meta} id={id} values={values} />
-      );
-    }
 
     case 'date':
       return <InlineDateInput name={name} value={value} {...meta} id={id} />;

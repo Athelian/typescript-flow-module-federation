@@ -61564,7 +61564,7 @@ type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $Elem
 
 export type BatchFormFragmentFragment = ({
     ...{ __typename?: 'Batch' },
-  ...$Pick<Batch, {| id: *, sort: *, shipmentSort: *, archived: *, autoCalculatePackageQuantity: *, autoCalculatePackageVolume: *, updatedAt: *, memo: *, no: *, quantity: *, latestQuantity: *, producedAt: *, deliveredAt: *, desiredAt: *, expiredAt: *, packageName: *, packageCapacity: *, packageQuantity: * |}>,
+  ...$Pick<Batch, {| id: *, sort: *, shipmentSort: *, archived: *, autoCalculatePackageQuantity: *, autoCalculatePackageVolume: *, updatedAt: *, memo: *, no: *, quantity: *, producedQuantity: *, preShippedQuantity: *, shippedQuantity: *, postShippedQuantity: *, deliveredQuantity: *, latestQuantity: *, producedAt: *, deliveredAt: *, desiredAt: *, expiredAt: *, packageName: *, packageCapacity: *, packageQuantity: * |}>,
   ...{| updatedBy: ?({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
@@ -61663,7 +61663,7 @@ export type BatchFormFragmentFragment = ({
 
 export type BatchCardFragmentFragment = ({
     ...{ __typename?: 'Batch' },
-  ...$Pick<Batch, {| id: *, no: *, archived: *, latestQuantity: *, deliveredAt: *, desiredAt: *, packageQuantity: * |}>,
+  ...$Pick<Batch, {| id: *, no: *, archived: *, quantity: *, producedQuantity: *, preShippedQuantity: *, shippedQuantity: *, postShippedQuantity: *, deliveredQuantity: *, latestQuantity: *, deliveredAt: *, desiredAt: *, packageQuantity: * |}>,
   ...{| todo: ({
       ...{ __typename?: 'Todo' },
     ...{| taskCount: ({
