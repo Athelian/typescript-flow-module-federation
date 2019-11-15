@@ -18,7 +18,6 @@ const TagInputRenderer = ({ getInputProps, remove, selectedItems }: RenderInputP
           tag={tag}
           suffix={
             <button
-              tabIndex="-1"
               type="button"
               className={RemoveButtonStyle}
               onClick={event => {
@@ -35,6 +34,7 @@ const TagInputRenderer = ({ getInputProps, remove, selectedItems }: RenderInputP
     <input
       {...getInputProps({
         spellCheck: false,
+        'data-focus-first': true,
       })}
     />
   </div>
