@@ -147,11 +147,12 @@ const CellInput = ({
     if (!containerRef.current) {
       return;
     }
+    const container = containerRef.current;
 
     if (inputFocus) {
       const focusableElement =
-        containerRef.current.querySelector('[data-focus-first]:not([disabled])') ||
-        containerRef.current.querySelector(
+        container.querySelector('[data-focus-first]:not([disabled])') ||
+        container.querySelector(
           [
             'input:not([disabled]):not([tabindex="-1"])',
             'button:not([disabled]):not([tabindex="-1"])',
@@ -171,7 +172,7 @@ const CellInput = ({
         }
       }
     } else {
-      containerRef.current.focus({
+      container.focus({
         preventScroll: true,
       });
     }

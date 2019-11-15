@@ -10,6 +10,7 @@ import containerMessages from 'modules/container/messages';
 import batchMessages from 'modules/batch/messages';
 import orderItemMessages from 'modules/orderItem/messages';
 import orderMessages from 'modules/order/messages';
+import orderColumns from 'modules/sheet/order/columns';
 
 const shipmentColumns: Array<ColumnConfig> = [
   {
@@ -1240,144 +1241,6 @@ const orderItemColumns: Array<ColumnConfig> = [
   // actions
 ];
 
-const orderColumns: Array<ColumnConfig> = [
-  {
-    key: 'shipment.container.batch.orderItem.order.created',
-    title: <FormattedMessage {...orderMessages.createdAt} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 110,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.updated',
-    title: <FormattedMessage {...orderMessages.updatedAt} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 110,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.archived',
-    title: <FormattedMessage {...orderMessages.status} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 120,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.poNo',
-    exportKey: 'containers.batches.orderItem.order.poNo',
-    title: <FormattedMessage {...orderMessages.PO} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.importer',
-    title: <FormattedMessage {...orderMessages.importer} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.exporter',
-    title: <FormattedMessage {...orderMessages.exporter} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.piNo',
-    title: <FormattedMessage {...orderMessages.PI} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.issuedAt',
-    title: <FormattedMessage {...orderMessages.date} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 125,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.deliveryDate',
-    title: <FormattedMessage {...orderMessages.deliveryDate} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 125,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.currency',
-    title: <FormattedMessage {...orderMessages.currency} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 100,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.incoterm',
-    title: <FormattedMessage {...orderMessages.incoterm} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 100,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.deliveryPlace',
-    title: <FormattedMessage {...orderMessages.deliveryPlace} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.tags',
-    title: <FormattedMessage {...orderMessages.tags} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.memo',
-    title: <FormattedMessage {...orderMessages.memo} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.inCharges',
-    title: <FormattedMessage {...orderMessages.inCharge} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 160,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.files',
-    title: <FormattedMessage {...orderMessages.sectionDocuments} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.todo',
-    title: <FormattedMessage {...orderMessages.tasks} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.logs',
-    title: <FormattedMessage {...orderMessages.logs} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 120,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.mask',
-    title: <FormattedMessage {...orderMessages.mask} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  // actions
-];
-
 export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment'];
 
 type Props = {
@@ -1421,7 +1284,20 @@ export default function({
       color: colors.ORDER_ITEM,
       width: 200,
     })),
-    ...orderColumns,
+    ...orderColumns(
+      {
+        'order.poNo': 'containers.batches.orderItem.order.poNo',
+      },
+      {}
+    ).filter(
+      c =>
+        ![
+          'order.totalOrdered',
+          'order.totalBatched',
+          'order.totalShipped',
+          'order.totalPrice',
+        ].includes(c.key)
+    ),
     ...orderFieldDefinitions.map(fieldDefinition => ({
       key: `shipment.container.batch..orderItem.order.customField.${fieldDefinition.id}`,
       title: fieldDefinition.name,

@@ -206,9 +206,11 @@ export default class TagsInput extends React.Component<Props, State> {
                         />
                       ))}
                   <input
-                    ref={this.inputRef}
-                    type="text"
                     {...getInputProps({
+                      ref: ref => {
+                        this.inputRef = ref;
+                      },
+                      type: 'text',
                       spellCheck: false,
                       disabled,
                       onKeyDown: e => {

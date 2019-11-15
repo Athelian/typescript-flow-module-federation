@@ -10,159 +10,7 @@ import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
 import containerMessages from 'modules/container/messages';
 import shipmentMessages from 'modules/shipment/messages';
-
-const orderColumns: Array<ColumnConfig> = [
-  {
-    key: 'order.created',
-    exportKey: 'createdAt',
-    title: <FormattedMessage {...orderMessages.createdAt} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 110,
-  },
-  {
-    key: 'order.updated',
-    title: <FormattedMessage {...orderMessages.updatedAt} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 110,
-  },
-  {
-    key: 'order.archived',
-    exportKey: 'archived',
-    title: <FormattedMessage {...orderMessages.status} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 120,
-  },
-  {
-    key: 'order.poNo',
-    exportKey: 'poNo',
-    title: <FormattedMessage {...orderMessages.PO} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-    sort: {
-      name: 'poNo',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'order.importer',
-    exportKey: 'importer',
-    title: <FormattedMessage {...orderMessages.importer} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.exporter',
-    exportKey: 'exporter',
-    title: <FormattedMessage {...orderMessages.exporter} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.piNo',
-    exportKey: 'piNo',
-    title: <FormattedMessage {...orderMessages.PI} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.issuedAt',
-    exportKey: 'issuedAt',
-    title: <FormattedMessage {...orderMessages.date} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 125,
-  },
-  {
-    key: 'order.deliveryDate',
-    exportKey: 'deliveryDate',
-    title: <FormattedMessage {...orderMessages.deliveryDate} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 125,
-  },
-  {
-    key: 'order.currency',
-    title: <FormattedMessage {...orderMessages.currency} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 100,
-  },
-  {
-    key: 'order.incoterm',
-    title: <FormattedMessage {...orderMessages.incoterm} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 100,
-  },
-  {
-    key: 'order.deliveryPlace',
-    exportKey: 'deliveryPlace',
-    title: <FormattedMessage {...orderMessages.deliveryPlace} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.tags',
-    exportKey: 'tags',
-    title: <FormattedMessage {...orderMessages.tags} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.memo',
-    exportKey: 'memo',
-    title: <FormattedMessage {...orderMessages.memo} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.inCharges',
-    exportKey: 'inCharges',
-    title: <FormattedMessage {...orderMessages.inCharge} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 160,
-  },
-  {
-    key: 'order.files',
-    title: <FormattedMessage {...orderMessages.sectionDocuments} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.todo',
-    title: <FormattedMessage {...orderMessages.tasks} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.logs',
-    title: <FormattedMessage {...orderMessages.logs} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 120,
-  },
-  {
-    key: 'order.mask',
-    title: <FormattedMessage {...orderMessages.mask} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  // actions
-];
+import orderColumns from 'modules/sheet/order/columns';
 
 const orderItemColumns: Array<ColumnConfig> = [
   {
@@ -1279,7 +1127,15 @@ export default function({
       color: colors.ORDER_ITEM,
       width: 200,
     })),
-    ...orderColumns,
+    ...orderColumns({}, {}).filter(
+      c =>
+        ![
+          'order.totalOrdered',
+          'order.totalBatched',
+          'order.totalShipped',
+          'order.totalPrice',
+        ].includes(c.key)
+    ),
     ...orderFieldDefinitions.map(fieldDefinition => ({
       key: `order.customField.${fieldDefinition.id}`,
       title: fieldDefinition.name,

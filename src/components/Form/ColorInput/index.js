@@ -68,7 +68,13 @@ class ColorInput extends React.Component<Props> {
       <Downshift onStateChange={this.handleStateChange}>
         {({ isOpen, getToggleButtonProps }) => (
           <div className={WrapperStyle}>
-            <button type="button" className={ColorPreviewStyle(value)} {...getToggleButtonProps()}>
+            {/* eslint-disable-next-line react/button-has-type */}
+            <button
+              {...getToggleButtonProps({
+                type: 'button',
+                className: ColorPreviewStyle(value),
+              })}
+            >
               <Icon icon="COLOR" />
             </button>
             {isOpen && (
