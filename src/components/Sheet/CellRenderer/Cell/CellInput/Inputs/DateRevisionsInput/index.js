@@ -51,7 +51,10 @@ const DateRevisionsInput = ({
   const { enums } = useEnum('TimelineDateRevisionType');
 
   const handleTypeChange = (index: number) => (newType: string) => {
-    onChange((value || []).map((v, i) => (i === index ? { ...v, type: newType } : v)), true);
+    onChange(
+      (value || []).map((v, i) => (i === index ? { ...v, type: newType } : v)),
+      true
+    );
   };
 
   const handleDateChange = (index: number) => (e: SyntheticInputEvent<HTMLInputElement>) => {
@@ -60,7 +63,10 @@ const DateRevisionsInput = ({
   };
 
   const handleRemove = (index: number) => () => {
-    onChange((value || []).filter((v, i) => i !== index), true);
+    onChange(
+      (value || []).filter((v, i) => i !== index),
+      true
+    );
   };
 
   const handleAdd = () => {

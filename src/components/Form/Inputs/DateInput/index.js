@@ -28,11 +28,12 @@ const DateInput = ({
   ...rest
 }: Props) => {
   const handleBlur = e => {
+    e.target.value = e.target.value ? formatToDateInput(e.target.value) : '';
     if (onBlur) {
       onBlur(e);
-      e.target.value = e.target.value ? formatToDateInput(e.target.value) : '';
     }
   };
+
   return readOnly ? (
     <Display align={align} width={readOnlyWidth} height={readOnlyHeight} color={color}>
       <FormattedDate value={value} />
