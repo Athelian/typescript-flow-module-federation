@@ -202,6 +202,10 @@ const CellInput = ({
     onUpdate(dirtyValue);
   };
 
+  const handleClick = (e: SyntheticEvent<HTMLElement>) => {
+    e.stopPropagation();
+  };
+
   const handleKeyDown = (e: SyntheticKeyboardEvent<HTMLElement>) => {
     switch (e.key) {
       case 'ArrowUp':
@@ -269,6 +273,7 @@ const CellInput = ({
       role="presentation"
       onFocus={onFocus}
       onBlur={handleBlur}
+      onClick={handleClick}
       onKeyDown={handleKeyDown}
     >
       {React.createElement(inputs[type], {
