@@ -57,8 +57,12 @@ function HotKeyHandlers() {
   }, [importerIds.length]);
 
   const hasPermissionMoveToExistShipment = React.useCallback(() => {
-    return isSameImporter() && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
-  }, [hasPermissions, isSameImporter]);
+    return (
+      batchIds.length > 0 &&
+      isSameImporter() &&
+      hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM])
+    );
+  }, [batchIds.length, hasPermissions, isSameImporter]);
 
   const openShipments = React.useCallback(() => {
     dispatch({
