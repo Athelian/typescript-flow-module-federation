@@ -264,7 +264,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
               )}
               {activeAction && (
                 <OutsideClickHandler ignoreClick onOutsideClick={() => {}}>
-                  <Dialog isOpen={state.loading} options={{ width: 300 }} onRequestClose={() => {}}>
+                  <Dialog isOpen={state.loading} onRequestClose={() => {}}>
                     <div className={LoadingContainerStyle}>
                       <LoadingIcon />
                       <Label align="center">

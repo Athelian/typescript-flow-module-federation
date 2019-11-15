@@ -12,15 +12,12 @@ const WidthStep = 10; // vw
 const StartMinWidth = 1030; // px
 const MinWidthStep = 50; // px
 
-type RenderProps = {
+type Props = {|
+  isOpen: boolean,
   onRequestClose: () => void,
   shouldConfirm: Function,
   children: React.Node,
-};
-
-type Props = {
-  isOpen: boolean,
-} & RenderProps;
+|};
 
 const defaultProps = {
   isOpen: false,

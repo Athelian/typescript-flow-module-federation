@@ -11,17 +11,14 @@ import {
   CancelButtonStyle,
 } from './style';
 
-type OptionalProps = {
+type Props = {|
   width: string,
   showCancelButton: boolean,
-  onRequestClose: Function,
-};
-
-type Props = OptionalProps & {
   isOpen: boolean,
   onCancel?: Function,
+  onRequestClose: Function,
   children: React.Node,
-};
+|};
 
 const defaultProps = {
   width: 'min-content',
