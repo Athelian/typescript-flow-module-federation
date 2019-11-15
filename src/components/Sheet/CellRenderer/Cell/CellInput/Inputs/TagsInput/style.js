@@ -18,10 +18,10 @@ export const RemoveButtonStyle = css`
   ${presets.BUTTON};
   ${fontSizes.MEDIUM};
   color: ${colors.WHITE};
-
   &:focus,
   &:hover {
-    color: ${colors.GRAY_SUPER_LIGHT};
+    color: ${colors.RED};
+    opacity: 0.8;
   }
 `;
 
