@@ -1,9 +1,8 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import type { IntlShape } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Query } from 'react-apollo';
-import useFilter from 'hooks/useFilter';
+import useFilterSort from 'hooks/useFilterSort';
 import loadMore from 'utils/loadMore';
 import { useEntityHasPermissions } from 'contexts/Permissions';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
@@ -11,8 +10,14 @@ import { targetedIds } from 'modules/relationMapV2/helpers';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
-import FilterToolBar from 'components/common/FilterToolBar';
-import messages from 'modules/order/messages';
+import {
+  EntityIcon,
+  Filter,
+  OrderFilterConfig,
+  OrderSortConfig,
+  Search,
+  Sort,
+} from 'components/NavBar';
 import OrderGridView from 'modules/order/list/OrderGridView';
 import { OrderCard } from 'components/Cards';
 import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
@@ -21,10 +26,9 @@ import { OverlayStyle } from './style';
 import { orderListQuery } from './query';
 import { moveOrderItemsToOrder } from './mutation';
 
-type Props = {
-  intl: IntlShape,
+type Props = {|
   onSuccess: (orderIds: Array<string>) => void,
-};
+|};
 
 function OrderRenderer({
   order,
@@ -117,7 +121,7 @@ function OrderRenderer({
   );
 }
 
-function SelectOrderToMoveItem({ intl, onSuccess }: Props) {
+function SelectOrderToMoveItem({ onSuccess }: Props) {
   const { dispatch, state } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
   const itemIds = targetedIds(state.targets, ORDER_ITEM);
@@ -149,32 +153,11 @@ function SelectOrderToMoveItem({ intl, onSuccess }: Props) {
       .catch(onCancel);
   };
 
-  const sortFields = [
-    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-    { title: intl.formatMessage(messages.poSort), value: 'poNo' },
-    { title: intl.formatMessage(messages.piSort), value: 'piNo' },
-    { title: intl.formatMessage(messages.date), value: 'issuedAt' },
-    { title: intl.formatMessage(messages.exporterName), value: 'exporterName' },
-    { title: intl.formatMessage(messages.currency), value: 'currency' },
-    { title: intl.formatMessage(messages.incoterm), value: 'incoterm' },
-    { title: intl.formatMessage(messages.deliveryPlace), value: 'deliveryPlace' },
-  ];
-  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
-    {
-      filter: {
-        query: '',
-        archived: false,
-      },
-      sort: {
-        field: 'updatedAt',
-        direction: 'DESCENDING',
-      },
-      perPage: 10,
-      page: 1,
-    },
-    'filterOrderOnMoveNRMFromItem'
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    { query: '', archived: false },
+    { updatedAt: 'DESCENDING' }
   );
+  const queryVariables = { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 10 };
   return (
     <SlideView
       shouldConfirm={() => !!selected}
@@ -184,14 +167,10 @@ function SelectOrderToMoveItem({ intl, onSuccess }: Props) {
       {isOpen && isMoveFromItem && (
         <SlideViewLayout>
           <SlideViewNavBar>
-            <FilterToolBar
-              icon="ORDER"
-              sortFields={sortFields}
-              filtersAndSort={filterAndSort}
-              onChange={onChangeFilter}
-              canArchive
-              canSearch
-            />
+            <EntityIcon icon="ORDER" color="ORDER" subIcon="CARDS" />
+            <Filter config={OrderFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
+            <Search query={query} onChange={setQuery} />
+            <Sort config={OrderSortConfig} sortBy={sortBy} onChange={setSortBy} />
             <CancelButton onClick={onCancel} />
             <SaveButton
               disabled={!selected || isProcessing}
@@ -199,6 +178,7 @@ function SelectOrderToMoveItem({ intl, onSuccess }: Props) {
               onClick={onConfirm}
             />
           </SlideViewNavBar>
+
           <Content>
             <Query query={orderListQuery} variables={queryVariables} fetchPolicy="network-only">
               {({ loading, data, fetchMore, error }) => {
@@ -238,4 +218,4 @@ function SelectOrderToMoveItem({ intl, onSuccess }: Props) {
   );
 }
 
-export default injectIntl(SelectOrderToMoveItem);
+export default SelectOrderToMoveItem;

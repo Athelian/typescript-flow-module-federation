@@ -1,18 +1,23 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import type { IntlShape } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Query } from 'react-apollo';
-import useFilter from 'hooks/useFilter';
+import useFilterSort from 'hooks/useFilterSort';
 import loadMore from 'utils/loadMore';
 import { useEntityHasPermissions } from 'contexts/Permissions';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
+import {
+  ContainerFilterConfig,
+  ContainerSortConfig,
+  EntityIcon,
+  Filter,
+  Search,
+  Sort,
+} from 'components/NavBar';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
-import FilterToolBar from 'components/common/FilterToolBar';
-import messages from 'modules/container/messages';
 import ContainerGridView from 'modules/container/list/ContainerGridView';
 import { ContainerCard } from 'components/Cards';
 import { BATCH_UPDATE } from 'modules/permission/constants/batch';
@@ -22,10 +27,9 @@ import { OverlayStyle } from './style';
 import { containerListQuery } from './query';
 import { moveBatchesToContainer } from './mutation';
 
-type Props = {
-  intl: IntlShape,
+type Props = {|
   onSuccess: (orderIds: Array<string>, shipmentIds: Array<string>) => void,
-};
+|};
 
 function ContainerRenderer({
   container,
@@ -121,7 +125,7 @@ function ContainerRenderer({
   );
 }
 
-function SelectContainerToMove({ intl, onSuccess }: Props) {
+function SelectContainerToMove({ onSuccess }: Props) {
   const { dispatch, state } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
@@ -156,34 +160,11 @@ function SelectContainerToMove({ intl, onSuccess }: Props) {
       .catch(onCancel);
   };
 
-  const sortFields = [
-    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-    { title: intl.formatMessage(messages.warehouseName), value: 'warehouseName' },
-    {
-      title: intl.formatMessage(messages.warehouseArrivalActualDate),
-      value: 'warehouseArrivalActualDate',
-    },
-    {
-      title: intl.formatMessage(messages.warehouseArrivalAgreedDate),
-      value: 'warehouseArrivalAgreedDate',
-    },
-  ];
-  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
-    {
-      filter: {
-        query: '',
-        archived: false,
-      },
-      sort: {
-        field: 'updatedAt',
-        direction: 'DESCENDING',
-      },
-      perPage: 10,
-      page: 1,
-    },
-    'filterContainerOnMoveNRM'
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    { query: '', archived: false },
+    { updatedAt: 'DESCENDING' }
   );
+  const queryVariables = { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 10 };
   return (
     <SlideView
       shouldConfirm={() => !!selected}
@@ -193,14 +174,10 @@ function SelectContainerToMove({ intl, onSuccess }: Props) {
       {isOpen && isMoveToContainer && isMoveFromBatch && (
         <SlideViewLayout>
           <SlideViewNavBar>
-            <FilterToolBar
-              icon="CONTAINER"
-              sortFields={sortFields}
-              filtersAndSort={filterAndSort}
-              onChange={onChangeFilter}
-              canArchive
-              canSearch
-            />
+            <EntityIcon icon="CONTAINER" color="CONTAINER" subIcon="CARDS" />
+            <Filter config={ContainerFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
+            <Search query={query} onChange={setQuery} />
+            <Sort config={ContainerSortConfig} sortBy={sortBy} onChange={setSortBy} />
             <CancelButton onClick={onCancel} />
             <SaveButton
               disabled={!selected || isProcessing}
@@ -247,4 +224,4 @@ function SelectContainerToMove({ intl, onSuccess }: Props) {
   );
 }
 
-export default injectIntl(SelectContainerToMove);
+export default SelectContainerToMove;
