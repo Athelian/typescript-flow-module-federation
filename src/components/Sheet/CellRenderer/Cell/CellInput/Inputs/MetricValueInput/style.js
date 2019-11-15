@@ -2,8 +2,8 @@
 import { css } from 'react-emotion';
 import { colors, fontSizes, layout, presets, transitions } from 'styles/common';
 
-export const InputStyle = css`
-  flex: 1;
+export const SelectStyle = css`
+  width: 30px;
 `;
 
 export const SelectInputStyle = css`
