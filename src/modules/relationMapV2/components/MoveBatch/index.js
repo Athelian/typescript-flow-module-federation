@@ -262,7 +262,7 @@ export default function MoveBatch({ onSuccess }: Props) {
         dialogMessage={dialogMessage}
         dialogSubMessage={dialogSubMessage}
       >
-        <div className={BatchMoveButtonsWrapperStyle}>
+        <div className={BatchMoveButtonsWrapperStyle} id="moveBatches">
           {selectors.isShipmentFocus ? (
             <>
               <div className={MoveWrapperStyle}>

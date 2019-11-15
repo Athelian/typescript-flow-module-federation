@@ -48,6 +48,7 @@ import MoveEntityConfirm from '../MoveEntityConfirm';
 import AddTags from '../AddTags';
 import Actions from '../Actions';
 import Header from '../Header';
+import HotKeyHandlers from '../HotKeyHandlers';
 import { ShipmentFocusedRow } from '../Row';
 import InitLoadingPlaceholder from '../InitLoadingPlaceholder';
 import generateListData from './generateListData';
@@ -156,6 +157,7 @@ export default function ShipmentFocus() {
   return (
     <>
       <div className={WrapperStyle}>
+        <HotKeyHandlers />
         <DndProvider backend={HTML5Backend}>
           <Query
             query={shipmentFocusedListQuery}

@@ -81,7 +81,9 @@ function HotKeyHandlers() {
 
   React.useEffect(() => {
     hotkeys('alt+1', () => {
-      if (hasPermissionMoveToExistShipment()) openShipments();
+      const slideViewStack = document.querySelector('#portal-root')?.childElementCount ?? 0;
+      const isAllow = slideViewStack === 0 || !!document.querySelector('#moveBatches');
+      if (hasPermissionMoveToExistShipment() && isAllow) openShipments();
     });
   }, [hasPermissionMoveToExistShipment, openShipments]);
 
