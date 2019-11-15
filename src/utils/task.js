@@ -1,21 +1,34 @@
 // @flow
 import type { User, Task } from 'generated/graphql';
+import type { TaskCardEditableProps } from 'components/Cards/TaskCard/type.js.flow';
 import { sumBy } from 'lodash';
-import { isBefore, calculateDate, findDuration } from 'utils/date';
-import { encodeId } from 'utils/id';
-import { getByPath, getByPathWithDefault } from 'utils/fp';
-import { TASK_UPDATE } from 'modules/permission/constants/task';
+import { PROJECT_FORM, PROJECT_LIST } from 'modules/permission/constants/project';
 import {
+  TASK_FORM,
+  TASK_CREATE,
+  TASK_UPDATE,
+  TASK_DELETE,
+  TASK_LIST,
+} from 'modules/permission/constants/task';
+import {
+  ORDER_UPDATE,
+  ORDER_TASK_CREATE,
+  ORDER_TASK_DELETE,
   ORDER_TASK_UPDATE,
+  ORDER_TASK_FORM,
+  ORDER_TASK_LIST,
+  ORDER_SET_TASKS,
+  ORDER_SET_MILESTONE,
+  ORDER_SET_TASK_TEMPLATE,
   ORDER_TASK_SET_NAME,
   ORDER_TASK_SET_DUE_DATE,
   ORDER_TASK_SET_START_DATE,
   ORDER_TASK_SET_IN_PROGRESS,
   ORDER_TASK_SET_SKIPPED,
   ORDER_TASK_SET_COMPLETED,
-  ORDER_TASK_SET_ASSIGNEES,
   ORDER_TASK_SET_APPROVED,
   ORDER_TASK_SET_REJECTED,
+  ORDER_TASK_SET_ASSIGNEES,
   ORDER_TASK_SET_APPROVERS,
   ORDER_TASK_SET_START_DATE_BINDING,
   ORDER_TASK_SET_DUE_DATE_BINDING,
@@ -26,16 +39,24 @@ import {
   ORDER_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/order';
 import {
+  ORDER_ITEMS_UPDATE,
+  ORDER_ITEMS_TASK_CREATE,
+  ORDER_ITEMS_TASK_DELETE,
   ORDER_ITEMS_TASK_UPDATE,
+  ORDER_ITEMS_TASK_FORM,
+  ORDER_ITEMS_TASK_LIST,
+  ORDER_ITEMS_SET_TASKS,
+  ORDER_ITEMS_SET_MILESTONE,
+  ORDER_ITEMS_SET_TASK_TEMPLATE,
   ORDER_ITEMS_TASK_SET_NAME,
   ORDER_ITEMS_TASK_SET_DUE_DATE,
   ORDER_ITEMS_TASK_SET_START_DATE,
   ORDER_ITEMS_TASK_SET_IN_PROGRESS,
   ORDER_ITEMS_TASK_SET_SKIPPED,
   ORDER_ITEMS_TASK_SET_COMPLETED,
-  ORDER_ITEMS_TASK_SET_ASSIGNEES,
   ORDER_ITEMS_TASK_SET_APPROVED,
   ORDER_ITEMS_TASK_SET_REJECTED,
+  ORDER_ITEMS_TASK_SET_ASSIGNEES,
   ORDER_ITEMS_TASK_SET_APPROVERS,
   ORDER_ITEMS_TASK_SET_START_DATE_BINDING,
   ORDER_ITEMS_TASK_SET_DUE_DATE_BINDING,
@@ -46,16 +67,24 @@ import {
   ORDER_ITEMS_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/orderItem';
 import {
+  BATCH_UPDATE,
+  BATCH_TASK_CREATE,
+  BATCH_TASK_DELETE,
   BATCH_TASK_UPDATE,
+  BATCH_TASK_FORM,
+  BATCH_TASK_LIST,
+  BATCH_SET_TASKS,
+  BATCH_SET_MILESTONE,
+  BATCH_SET_TASK_TEMPLATE,
   BATCH_TASK_SET_NAME,
   BATCH_TASK_SET_DUE_DATE,
   BATCH_TASK_SET_START_DATE,
   BATCH_TASK_SET_IN_PROGRESS,
   BATCH_TASK_SET_SKIPPED,
   BATCH_TASK_SET_COMPLETED,
-  BATCH_TASK_SET_ASSIGNEES,
   BATCH_TASK_SET_APPROVED,
   BATCH_TASK_SET_REJECTED,
+  BATCH_TASK_SET_ASSIGNEES,
   BATCH_TASK_SET_APPROVERS,
   BATCH_TASK_SET_START_DATE_BINDING,
   BATCH_TASK_SET_DUE_DATE_BINDING,
@@ -66,16 +95,41 @@ import {
   BATCH_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/batch';
 import {
+  PRODUCT_UPDATE,
+  PRODUCT_TASK_CREATE,
+  PRODUCT_TASK_DELETE,
   PRODUCT_TASK_UPDATE,
+  PRODUCT_TASK_FORM,
+  PRODUCT_TASK_LIST,
+  PRODUCT_SET_TASKS,
+  PRODUCT_SET_MILESTONE,
+  PRODUCT_SET_TASK_TEMPLATE,
   PRODUCT_TASK_SET_NAME,
   PRODUCT_TASK_SET_DUE_DATE,
   PRODUCT_TASK_SET_START_DATE,
   PRODUCT_TASK_SET_IN_PROGRESS,
   PRODUCT_TASK_SET_SKIPPED,
   PRODUCT_TASK_SET_COMPLETED,
-  PRODUCT_TASK_SET_ASSIGNEES,
   PRODUCT_TASK_SET_APPROVED,
   PRODUCT_TASK_SET_REJECTED,
+  PRODUCT_PROVIDER_UPDATE,
+  PRODUCT_PROVIDER_TASK_CREATE,
+  PRODUCT_PROVIDER_TASK_DELETE,
+  PRODUCT_PROVIDER_TASK_UPDATE,
+  PRODUCT_PROVIDER_TASK_FORM,
+  PRODUCT_PROVIDER_TASK_LIST,
+  PRODUCT_PROVIDER_SET_TASKS,
+  PRODUCT_PROVIDER_SET_MILESTONE,
+  PRODUCT_PROVIDER_SET_TASK_TEMPLATE,
+  PRODUCT_PROVIDER_TASK_SET_NAME,
+  PRODUCT_PROVIDER_TASK_SET_DUE_DATE,
+  PRODUCT_PROVIDER_TASK_SET_START_DATE,
+  PRODUCT_PROVIDER_TASK_SET_IN_PROGRESS,
+  PRODUCT_PROVIDER_TASK_SET_SKIPPED,
+  PRODUCT_PROVIDER_TASK_SET_COMPLETED,
+  PRODUCT_PROVIDER_TASK_SET_APPROVED,
+  PRODUCT_PROVIDER_TASK_SET_REJECTED,
+  PRODUCT_TASK_SET_ASSIGNEES,
   PRODUCT_TASK_SET_APPROVERS,
   PRODUCT_TASK_SET_START_DATE_BINDING,
   PRODUCT_TASK_SET_DUE_DATE_BINDING,
@@ -84,16 +138,7 @@ import {
   PRODUCT_TASK_SET_MEMO,
   PRODUCT_TASK_SET_TAGS,
   PRODUCT_TASK_SET_MILESTONE,
-  PRODUCT_PROVIDER_TASK_UPDATE,
-  PRODUCT_PROVIDER_TASK_SET_NAME,
-  PRODUCT_PROVIDER_TASK_SET_DUE_DATE,
-  PRODUCT_PROVIDER_TASK_SET_START_DATE,
-  PRODUCT_PROVIDER_TASK_SET_IN_PROGRESS,
-  PRODUCT_PROVIDER_TASK_SET_SKIPPED,
-  PRODUCT_PROVIDER_TASK_SET_COMPLETED,
   PRODUCT_PROVIDER_TASK_SET_ASSIGNEES,
-  PRODUCT_PROVIDER_TASK_SET_APPROVED,
-  PRODUCT_PROVIDER_TASK_SET_REJECTED,
   PRODUCT_PROVIDER_TASK_SET_APPROVERS,
   PRODUCT_PROVIDER_TASK_SET_START_DATE_BINDING,
   PRODUCT_PROVIDER_TASK_SET_DUE_DATE_BINDING,
@@ -104,16 +149,24 @@ import {
   PRODUCT_PROVIDER_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/product';
 import {
+  SHIPMENT_UPDATE,
+  SHIPMENT_TASK_CREATE,
+  SHIPMENT_TASK_DELETE,
   SHIPMENT_TASK_UPDATE,
+  SHIPMENT_TASK_FORM,
+  SHIPMENT_TASK_LIST,
+  SHIPMENT_SET_TASKS,
+  SHIPMENT_SET_MILESTONE,
+  SHIPMENT_SET_TASK_TEMPLATE,
   SHIPMENT_TASK_SET_NAME,
   SHIPMENT_TASK_SET_DUE_DATE,
   SHIPMENT_TASK_SET_START_DATE,
   SHIPMENT_TASK_SET_IN_PROGRESS,
   SHIPMENT_TASK_SET_SKIPPED,
   SHIPMENT_TASK_SET_COMPLETED,
-  SHIPMENT_TASK_SET_ASSIGNEES,
   SHIPMENT_TASK_SET_APPROVED,
   SHIPMENT_TASK_SET_REJECTED,
+  SHIPMENT_TASK_SET_ASSIGNEES,
   SHIPMENT_TASK_SET_APPROVERS,
   SHIPMENT_TASK_SET_START_DATE_BINDING,
   SHIPMENT_TASK_SET_DUE_DATE_BINDING,
@@ -123,8 +176,17 @@ import {
   SHIPMENT_TASK_SET_TAGS,
   SHIPMENT_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/shipment';
-
-import emitter from 'utils/emitter';
+import { MILESTONE_LIST } from 'modules/permission/constants/milestone';
+import { ProductTasksContainer } from 'modules/product/form/containers';
+import { ProductProviderTasksContainer } from 'modules/productProvider/form/containers';
+import { OrderTasksContainer } from 'modules/order/form/containers';
+import { OrderItemTasksContainer } from 'modules/orderItem/form/containers';
+import { BatchTasksContainer } from 'modules/batch/form/containers';
+import { ShipmentTasksContainer } from 'modules/shipment/form/containers';
+import { isBefore, calculateDate, findDuration } from './date';
+import { encodeId } from './id';
+import { getByPath, getByPathWithDefault } from './fp';
+import emitter from './emitter';
 
 export const START_DATE = 'TaskStartDate';
 export const DUE_DATE = 'TaskDueDate';
@@ -881,4 +943,284 @@ export const recalculateTaskBindingDate = (task: Object) => {
     startDate: newStartDate,
     dueDate: newDueDate,
   };
+};
+
+export const getTasksPermissions = (
+  type: string,
+  hasPermission: Function
+): {
+  canViewProjectForm: boolean,
+  canViewList: boolean,
+  canViewForm: boolean,
+  canAddTasks: boolean,
+  canDeleteTasks: boolean,
+  canOrderingTasks: boolean,
+  canUpdateMilestone: boolean,
+  canUpdateTaskTemplate: boolean,
+  tasksContainer: Object,
+  editable: TaskCardEditableProps,
+} => {
+  switch (type) {
+    case 'Order':
+      return {
+        canViewProjectForm: hasPermission(PROJECT_FORM),
+        canViewList: hasPermission([ORDER_TASK_LIST, TASK_LIST]),
+        canViewForm: hasPermission([TASK_FORM, ORDER_TASK_FORM]),
+        canAddTasks: hasPermission([ORDER_TASK_CREATE, ORDER_SET_TASKS, TASK_CREATE]),
+        canOrderingTasks: hasPermission([ORDER_UPDATE, ORDER_SET_TASKS]),
+        canDeleteTasks: hasPermission([ORDER_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(ORDER_UPDATE) ||
+            (hasPermission(ORDER_SET_MILESTONE) && hasPermission(ORDER_SET_TASKS))),
+        canUpdateTaskTemplate:
+          hasPermission([ORDER_UPDATE, ORDER_SET_TASK_TEMPLATE]) &&
+          hasPermission([ORDER_UPDATE, ORDER_SET_TASKS]) &&
+          hasPermission([ORDER_TASK_CREATE, TASK_CREATE]) &&
+          hasPermission([ORDER_TASK_DELETE, TASK_DELETE]),
+        tasksContainer: OrderTasksContainer,
+        editable: {
+          name: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_NAME]),
+          startDate: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_START_DATE]),
+          dueDate: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_DUE_DATE]),
+          inProgress: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_IN_PROGRESS]),
+          skipped: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_SKIPPED]),
+          completed: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_COMPLETED]),
+          approved: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_APPROVED]),
+          rejected: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_REJECTED]),
+        },
+      };
+    case 'OrderItem':
+      return {
+        canViewProjectForm: hasPermission(PROJECT_FORM),
+        canViewList: hasPermission([ORDER_ITEMS_TASK_LIST, TASK_LIST]),
+        canViewForm: hasPermission([ORDER_ITEMS_TASK_FORM, TASK_FORM]),
+        canAddTasks: hasPermission([ORDER_ITEMS_TASK_CREATE, ORDER_ITEMS_SET_TASKS, TASK_CREATE]),
+        canOrderingTasks: hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASKS]),
+        canDeleteTasks: hasPermission([ORDER_ITEMS_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(ORDER_ITEMS_UPDATE) ||
+            (hasPermission(ORDER_ITEMS_SET_MILESTONE) && hasPermission(ORDER_ITEMS_SET_TASKS))),
+        canUpdateTaskTemplate:
+          hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASK_TEMPLATE]) &&
+          hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASKS]) &&
+          hasPermission([ORDER_ITEMS_TASK_CREATE, TASK_CREATE]) &&
+          hasPermission([ORDER_ITEMS_TASK_DELETE, TASK_DELETE]),
+        tasksContainer: OrderItemTasksContainer,
+        editable: {
+          name: hasPermission([TASK_UPDATE, ORDER_ITEMS_TASK_UPDATE, ORDER_ITEMS_TASK_SET_NAME]),
+          startDate: hasPermission([
+            TASK_UPDATE,
+            ORDER_ITEMS_TASK_UPDATE,
+            ORDER_ITEMS_TASK_SET_START_DATE,
+          ]),
+          dueDate: hasPermission([
+            TASK_UPDATE,
+            ORDER_ITEMS_TASK_UPDATE,
+            ORDER_ITEMS_TASK_SET_DUE_DATE,
+          ]),
+          inProgress: hasPermission([
+            TASK_UPDATE,
+            ORDER_ITEMS_TASK_UPDATE,
+            ORDER_ITEMS_TASK_SET_IN_PROGRESS,
+          ]),
+          skipped: hasPermission([
+            TASK_UPDATE,
+            ORDER_ITEMS_TASK_UPDATE,
+            ORDER_ITEMS_TASK_SET_SKIPPED,
+          ]),
+          completed: hasPermission([
+            TASK_UPDATE,
+            ORDER_ITEMS_TASK_UPDATE,
+            ORDER_ITEMS_TASK_SET_COMPLETED,
+          ]),
+          approved: hasPermission([
+            TASK_UPDATE,
+            ORDER_ITEMS_TASK_UPDATE,
+            ORDER_ITEMS_TASK_SET_APPROVED,
+          ]),
+          rejected: hasPermission([
+            TASK_UPDATE,
+            ORDER_ITEMS_TASK_UPDATE,
+            ORDER_ITEMS_TASK_SET_REJECTED,
+          ]),
+        },
+      };
+    case 'Batch':
+      return {
+        canViewProjectForm: hasPermission(PROJECT_FORM),
+        canViewList: hasPermission([BATCH_TASK_LIST, TASK_LIST]),
+        canViewForm: hasPermission([BATCH_TASK_FORM, TASK_FORM]),
+        canAddTasks: hasPermission([BATCH_TASK_CREATE, BATCH_SET_TASKS, TASK_CREATE]),
+        canOrderingTasks: hasPermission([BATCH_UPDATE, BATCH_SET_TASKS]),
+        canDeleteTasks: hasPermission([BATCH_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(BATCH_UPDATE) ||
+            (hasPermission(BATCH_SET_MILESTONE) && hasPermission(BATCH_SET_TASKS))),
+        canUpdateTaskTemplate:
+          hasPermission([BATCH_UPDATE, BATCH_SET_TASK_TEMPLATE]) &&
+          hasPermission([BATCH_UPDATE, BATCH_SET_TASKS]) &&
+          hasPermission([BATCH_TASK_CREATE, TASK_CREATE]) &&
+          hasPermission([BATCH_TASK_DELETE, TASK_DELETE]),
+        tasksContainer: BatchTasksContainer,
+        editable: {
+          name: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_NAME]),
+          startDate: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_START_DATE]),
+          dueDate: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_DUE_DATE]),
+          inProgress: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_IN_PROGRESS]),
+          skipped: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_SKIPPED]),
+          completed: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_COMPLETED]),
+          approved: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_APPROVED]),
+          rejected: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_REJECTED]),
+        },
+      };
+    case 'Product':
+      return {
+        canViewProjectForm: hasPermission(PROJECT_FORM),
+        canViewList: hasPermission([PRODUCT_TASK_LIST, TASK_LIST]),
+        canViewForm: hasPermission([PRODUCT_TASK_FORM, TASK_FORM]),
+        canAddTasks: hasPermission([PRODUCT_TASK_CREATE, PRODUCT_SET_TASKS, TASK_CREATE]),
+        canOrderingTasks: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASKS]),
+        canDeleteTasks: hasPermission([PRODUCT_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(PRODUCT_UPDATE) ||
+            (hasPermission(PRODUCT_SET_MILESTONE) && hasPermission(PRODUCT_SET_TASKS))),
+        canUpdateTaskTemplate:
+          hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASK_TEMPLATE]) &&
+          hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASKS]) &&
+          hasPermission([PRODUCT_TASK_CREATE, TASK_CREATE]) &&
+          hasPermission([PRODUCT_TASK_DELETE, TASK_DELETE]),
+        tasksContainer: ProductTasksContainer,
+        editable: {
+          name: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_NAME]),
+          startDate: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_START_DATE]),
+          dueDate: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_DUE_DATE]),
+          inProgress: hasPermission([
+            TASK_UPDATE,
+            PRODUCT_TASK_UPDATE,
+            PRODUCT_TASK_SET_IN_PROGRESS,
+          ]),
+          skipped: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_SKIPPED]),
+          completed: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_COMPLETED]),
+          approved: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_APPROVED]),
+          rejected: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_REJECTED]),
+        },
+      };
+    case 'ProductProvider':
+      return {
+        canViewProjectForm: hasPermission(PROJECT_FORM),
+        canViewList: hasPermission([PRODUCT_PROVIDER_TASK_LIST, TASK_LIST]),
+        canViewForm: hasPermission([PRODUCT_PROVIDER_TASK_FORM, TASK_FORM]),
+        canAddTasks: hasPermission([
+          PRODUCT_PROVIDER_TASK_CREATE,
+          PRODUCT_PROVIDER_SET_TASKS,
+          TASK_CREATE,
+        ]),
+        canOrderingTasks: hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASKS]),
+        canDeleteTasks: hasPermission([PRODUCT_PROVIDER_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(PRODUCT_PROVIDER_UPDATE) ||
+            (hasPermission(PRODUCT_PROVIDER_SET_MILESTONE) &&
+              hasPermission(PRODUCT_PROVIDER_SET_TASKS))),
+        canUpdateTaskTemplate:
+          hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASK_TEMPLATE]) &&
+          hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASKS]) &&
+          hasPermission([PRODUCT_PROVIDER_TASK_CREATE, TASK_CREATE]) &&
+          hasPermission([PRODUCT_PROVIDER_TASK_DELETE, TASK_DELETE]),
+        tasksContainer: ProductProviderTasksContainer,
+        editable: {
+          name: hasPermission([
+            TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_SET_NAME,
+          ]),
+          startDate: hasPermission([
+            TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_SET_START_DATE,
+          ]),
+          dueDate: hasPermission([
+            TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_SET_DUE_DATE,
+          ]),
+          inProgress: hasPermission([
+            TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_SET_IN_PROGRESS,
+          ]),
+          skipped: hasPermission([
+            TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_SET_SKIPPED,
+          ]),
+          completed: hasPermission([
+            TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_SET_COMPLETED,
+          ]),
+          approved: hasPermission([
+            TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_SET_APPROVED,
+          ]),
+          rejected: hasPermission([
+            TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_SET_REJECTED,
+          ]),
+        },
+      };
+    default:
+      return {
+        canViewProjectForm: hasPermission(PROJECT_FORM),
+        canViewList: hasPermission([SHIPMENT_TASK_LIST, TASK_LIST]),
+        canViewForm: hasPermission([SHIPMENT_TASK_FORM, TASK_FORM]),
+        canAddTasks: hasPermission([SHIPMENT_TASK_CREATE, SHIPMENT_SET_TASKS, TASK_CREATE]),
+        canOrderingTasks: hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TASKS]),
+        canDeleteTasks: hasPermission([SHIPMENT_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(SHIPMENT_UPDATE) ||
+            (hasPermission(SHIPMENT_SET_MILESTONE) && hasPermission(SHIPMENT_SET_TASKS))),
+        canUpdateTaskTemplate:
+          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TASK_TEMPLATE]) &&
+          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TASKS]) &&
+          hasPermission([SHIPMENT_TASK_CREATE, TASK_CREATE]) &&
+          hasPermission([SHIPMENT_TASK_DELETE, TASK_DELETE]),
+        tasksContainer: ShipmentTasksContainer,
+        editable: {
+          name: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_NAME]),
+          startDate: hasPermission([
+            TASK_UPDATE,
+            SHIPMENT_TASK_UPDATE,
+            SHIPMENT_TASK_SET_START_DATE,
+          ]),
+          dueDate: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_DUE_DATE]),
+          inProgress: hasPermission([
+            TASK_UPDATE,
+            SHIPMENT_TASK_UPDATE,
+            SHIPMENT_TASK_SET_IN_PROGRESS,
+          ]),
+          skipped: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_SKIPPED]),
+          completed: hasPermission([
+            TASK_UPDATE,
+            SHIPMENT_TASK_UPDATE,
+            SHIPMENT_TASK_SET_COMPLETED,
+          ]),
+          approved: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_APPROVED]),
+          rejected: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_REJECTED]),
+        },
+      };
+  }
 };

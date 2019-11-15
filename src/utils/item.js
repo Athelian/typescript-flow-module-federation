@@ -23,9 +23,7 @@ export const getItemQuantityChartData = ({
   if (batches && batches.length > 0) {
     batches.forEach(batch => {
       const shipment = getByPathWithDefault(null, 'shipment', batch);
-      const quantity = getByPathWithDefault(0, 'quantity', batch);
-      const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', batch);
-      const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+      const latestQuantity = getBatchLatestQuantity(batch);
       batchedQuantity += latestQuantity;
       batched += 1;
       if (shipment) {

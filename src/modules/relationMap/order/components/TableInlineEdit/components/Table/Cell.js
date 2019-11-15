@@ -18,7 +18,6 @@ import useUser from 'hooks/useUser';
 import {
   InlineTextInput,
   InlineNumberInput,
-  InlineNumberAdjustmentInput,
   InlineDateInput,
   InlineSearchEnumInput,
   InlineInChargeInput,
@@ -102,18 +101,9 @@ function renderItem({
       return <InlineToggleButton name={name} toggled={value} id={id} />;
 
     case 'status':
+      /* $FlowFixMe This comment suppresses an error found when upgrading Flow
+       * to v0.112.0. To view the error, delete this comment and run Flow. */
       return <InlineStatusButton {...meta} name={name} toggled={value} id={id} />;
-
-    case 'numberAdjustment': {
-      const position = Number(name.substr(-1, 1));
-      const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', values);
-
-      if (position > batchQuantityRevisions.length) return <TableDisableCell />;
-
-      return (
-        <InlineNumberAdjustmentInput name={name} value={value} {...meta} id={id} values={values} />
-      );
-    }
 
     case 'date':
       return <InlineDateInput name={name} value={value} {...meta} id={id} />;
@@ -128,12 +118,18 @@ function renderItem({
     }
 
     case 'metric':
+      /* $FlowFixMe This comment suppresses an error found when upgrading Flow
+       * to v0.112.0. To view the error, delete this comment and run Flow. */
       return <InlineMetricInput name={name} value={value} values={values} {...meta} id={id} />;
 
     case 'select':
+      /* $FlowFixMe This comment suppresses an error found when upgrading Flow
+       * to v0.112.0. To view the error, delete this comment and run Flow. */
       return <InlineSelectInput name={name} value={value} {...meta} id={id} />;
 
     case 'enum':
+      /* $FlowFixMe This comment suppresses an error found when upgrading Flow
+       * to v0.112.0. To view the error, delete this comment and run Flow. */
       return <InlineSearchEnumInput name={name} value={value} {...meta} id={id} />;
 
     case 'enumSelect':
@@ -185,6 +181,8 @@ function renderItem({
         remove: canUpdate || hasPermission(TagsSettingPermissionMap[entityType]),
       };
 
+      /* $FlowFixMe This comment suppresses an error found when upgrading Flow
+       * to v0.112.0. To view the error, delete this comment and run Flow. */
       return <InlineTagInput name={name} values={value} {...meta} id={id} editable={editable} />;
     }
 
@@ -231,6 +229,9 @@ function renderItem({
           value={value}
           {...meta}
           id={id}
+          /* $FlowFixMe This comment suppresses an error found when upgrading
+           * Flow to v0.112.0. To view the error, delete this comment and run
+           * Flow. */
           enumType={capitalize(portType)}
         />
       );

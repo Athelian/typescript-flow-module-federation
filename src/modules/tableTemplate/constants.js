@@ -202,11 +202,6 @@ export const batchColumns = [
       'batch.archived',
       'batch.batchNo',
       'batch.quantity',
-      'batch.newQuantity1',
-      'batch.newQuantity2',
-      'batch.newQuantity3',
-      'batch.newQuantity4',
-      'batch.newQuantity5',
       'batch.deliveredAt',
       'batch.desiredAt',
       'batch.expiredAt',
@@ -217,12 +212,7 @@ export const batchColumns = [
     columns: [
       <FormattedMessage {...batchMessages.status} />,
       <FormattedMessage {...batchMessages.batchNo} />,
-      <FormattedMessage {...batchMessages.initialQuantity} />,
-      <FormattedMessage {...batchMessages.newQuantity1} />,
-      <FormattedMessage {...batchMessages.newQuantity2} />,
-      <FormattedMessage {...batchMessages.newQuantity3} />,
-      <FormattedMessage {...batchMessages.newQuantity4} />,
-      <FormattedMessage {...batchMessages.newQuantity5} />,
+      <FormattedMessage {...batchMessages.quantity} />,
       <FormattedMessage {...batchMessages.deliveredAt} />,
       <FormattedMessage {...batchMessages.desiredAt} />,
       <FormattedMessage {...batchMessages.expiredAt} />,
@@ -905,71 +895,6 @@ export const batchColumnFields = [
     type: 'number',
     meta: {
       isRequired: true,
-    },
-  },
-  {
-    messageId: batchMessages.newQuantity1.id,
-    name: 'batchQuantityRevisions.0',
-    columnName: 'batch.newQuantity1',
-    type: 'numberAdjustment',
-    getExportValue: (values: Object) => {
-      const revision = getByPath(`batchQuantityRevisions.0`, values);
-      if (!revision) return '';
-
-      const { type, quantity } = revision;
-      return `${type}-${quantity}`;
-    },
-  },
-  {
-    messageId: batchMessages.newQuantity2.id,
-    name: 'batchQuantityRevisions.1',
-    columnName: 'batch.newQuantity2',
-    type: 'numberAdjustment',
-    getExportValue: (values: Object) => {
-      const revision = getByPath(`batchQuantityRevisions.1`, values);
-      if (!revision) return '';
-
-      const { type, quantity } = revision;
-      return `${type}-${quantity}`;
-    },
-  },
-  {
-    messageId: batchMessages.newQuantity3.id,
-    name: 'batchQuantityRevisions.2',
-    columnName: 'batch.newQuantity3',
-    type: 'numberAdjustment',
-    getExportValue: (values: Object) => {
-      const revision = getByPath(`batchQuantityRevisions.2`, values);
-      if (!revision) return '';
-
-      const { type, quantity } = revision;
-      return `${type}-${quantity}`;
-    },
-  },
-  {
-    messageId: batchMessages.newQuantity4.id,
-    name: 'batchQuantityRevisions.3',
-    columnName: 'batch.newQuantity4',
-    type: 'numberAdjustment',
-    getExportValue: (values: Object) => {
-      const revision = getByPath(`batchQuantityRevisions.3`, values);
-      if (!revision) return '';
-
-      const { type, quantity } = revision;
-      return `${type}-${quantity}`;
-    },
-  },
-  {
-    messageId: batchMessages.newQuantity5.id,
-    name: 'batchQuantityRevisions.4',
-    columnName: 'batch.newQuantity5',
-    type: 'numberAdjustment',
-    getExportValue: (values: Object) => {
-      const revision = getByPath(`batchQuantityRevisions.4`, values);
-      if (!revision) return '';
-
-      const { type, quantity } = revision;
-      return `${type}-${quantity}`;
     },
   },
   {

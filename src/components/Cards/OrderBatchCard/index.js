@@ -2,10 +2,16 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
+import type { Batch } from 'generated/graphql';
 import { isForbidden } from 'utils/data';
 import { encodeId } from 'utils/id';
 import { getByPath } from 'utils/fp';
-import { updateBatchCardQuantity, getBatchLatestQuantity } from 'utils/batch';
+import messages from 'modules/batch/messages';
+import {
+  updateBatchCardQuantity,
+  getBatchLatestQuantity,
+  findActiveQuantityField,
+} from 'utils/batch';
 import {
   Label,
   Display,
@@ -43,7 +49,7 @@ import {
 } from './style';
 
 type OptionalProps = {
-  onClick: (batch: Object) => void,
+  onClick: (batch: Batch) => void,
   editable: {
     clone: boolean,
     delete: boolean,
@@ -55,15 +61,15 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  batch: Object,
+  batch: Batch,
   currency: string,
   price: ?{
     amount: number,
     currency: string,
   },
   saveOnBlur: Function,
-  onClone: (batch: Object) => void,
-  onRemove: (batch: Object) => void,
+  onClone: (batch: Batch) => void,
+  onRemove: (batch: Batch) => void,
 };
 
 const defaultProps = {
@@ -141,12 +147,10 @@ const OrderBatchCard = ({
     id,
     archived,
     no,
-    quantity,
     deliveredAt,
     desiredAt,
     packageVolume,
     packageQuantity,
-    batchQuantityRevisions,
     shipment,
     container,
     todo,
@@ -154,7 +158,14 @@ const OrderBatchCard = ({
 
   const hasContainers = shipment && shipment.containers && shipment.containers.length > 0;
 
-  const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+  const latestQuantity = getBatchLatestQuantity(batch);
+  const currentQuantity: string = findActiveQuantityField({
+    producedQuantity: batch?.producedQuantity,
+    preShippedQuantity: batch?.preShippedQuantity,
+    shippedQuantity: batch?.shippedQuantity,
+    postShippedQuantity: batch?.postShippedQuantity,
+    deliveredQuantity: batch?.deliveredQuantity,
+  });
 
   const quantityName = `batches.${id}.latestQuantity`;
 
@@ -164,6 +175,7 @@ const OrderBatchCard = ({
 
   const values = {
     [`batch.${batch.id}.no`]: no,
+    latestQuantity,
   };
 
   return (
@@ -211,8 +223,8 @@ const OrderBatchCard = ({
           onClick={evt => evt.stopPropagation()}
           role="presentation"
         >
-          <Label required>
-            <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
+          <Label required={currentQuantity === 'initialQuantity'}>
+            <FormattedMessage {...messages[currentQuantity]} />
           </Label>
           <FormField
             name={quantityName}
@@ -222,14 +234,14 @@ const OrderBatchCard = ({
           >
             {({ name: fieldName, ...inputHandlers }) => (
               <NumberInputFactory
-                inputWidth="90px"
+                inputWidth="185px"
                 inputHeight="20px"
                 editable={editable.quantity}
                 {...{
                   ...inputHandlers,
                   onBlur: evt => {
                     inputHandlers.onBlur(evt);
-                    const newBatch = updateBatchCardQuantity(batch, evt.target.value);
+                    const newBatch = updateBatchCardQuantity(batch, evt.target.value || 0);
                     saveOnBlur(newBatch);
                   },
                 }}
@@ -430,7 +442,7 @@ OrderBatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(OrderBatchCard, 'batch', {
   width: '195px',
-  height: '291px',
+  height: '311px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });

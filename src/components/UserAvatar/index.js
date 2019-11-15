@@ -5,7 +5,7 @@ import Icon from 'components/Icon';
 import { Tooltip } from 'components/Tooltip';
 import { AvatarWrapperStyle } from './style';
 
-type OptionalProps = {
+type Props = {|
   width: string,
   height: string,
   firstName: string,
@@ -13,9 +13,7 @@ type OptionalProps = {
   image: ?string,
   showBothInitials: boolean,
   hideTooltip: boolean,
-};
-
-type Props = OptionalProps;
+|};
 
 const defaultProps = {
   width: '30px',

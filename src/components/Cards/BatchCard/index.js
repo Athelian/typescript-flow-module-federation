@@ -2,10 +2,13 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
+import type { Batch } from 'generated/graphql';
 import { encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import { defaultVolumeMetric } from 'utils/metric';
 import { isForbidden } from 'utils/data';
+import messages from 'modules/batch/messages';
+import { findActiveQuantityField } from 'utils/batch';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import ProductImage from 'components/ProductImage';
@@ -35,11 +38,11 @@ import {
   TagsAndTaskWrapperStyle,
   BatchTagsWrapperStyle,
   ImporterWrapperStyle,
+  QuantityWrapperStyle,
 } from './style';
 
 type Props = {|
-  // TODO: should have better typing later
-  batch: Object,
+  batch: Batch,
   onClick?: Function,
 |};
 
@@ -58,10 +61,16 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
     tags = [],
     shipment,
     container,
-
     todo,
   } = batch;
 
+  const currentQuantity: string = findActiveQuantityField({
+    producedQuantity: batch?.producedQuantity,
+    preShippedQuantity: batch?.preShippedQuantity,
+    shippedQuantity: batch?.shippedQuantity,
+    postShippedQuantity: batch?.postShippedQuantity,
+    deliveredQuantity: batch?.deliveredQuantity,
+  });
   const packageVolume = batch.packageVolume || {
     metric: defaultVolumeMetric,
     value: 0,
@@ -124,18 +133,14 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
             {exporter && exporter.name}
           </div>
 
-          <FieldItem
-            label={
-              <Label>
-                <FormattedMessage id="components.cards.quantity" defaultMessage="QUANTITY" />
-              </Label>
-            }
-            input={
-              <Display>
-                <FormattedNumber value={latestQuantity} />
-              </Display>
-            }
-          />
+          <div className={QuantityWrapperStyle}>
+            <Label>
+              <FormattedMessage {...messages[currentQuantity]} />
+            </Label>
+            <Display>
+              <FormattedNumber value={latestQuantity} />
+            </Display>
+          </div>
 
           <FieldItem
             label={
@@ -256,7 +261,7 @@ BatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(BatchCard, 'batch', {
   width: '195px',
-  height: '406px',
+  height: '426px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });

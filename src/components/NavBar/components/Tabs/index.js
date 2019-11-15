@@ -52,6 +52,9 @@ class Tabs extends React.Component<Props, State> {
             key={tab.id}
             active={index === activeIndex}
             onClick={() => this.handleChange(index)}
+            /* $FlowFixMe This comment suppresses an error found when upgrading
+             * Flow to v0.112.0. To view the error, delete this comment and run
+             * Flow. */
             {...tab}
             {...rest}
             {...(tab.disabled ? { disabled: tab.disabled } : {})}

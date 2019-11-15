@@ -14,6 +14,9 @@ const TextInput = React.forwardRef<Props, HTMLInputElement>(
         placeholder={placeholder || intl.formatMessage(messages.defaultPlaceholder)}
         type="text"
         spellCheck={false}
+        /* $FlowFixMe This comment suppresses an error found when upgrading
+         * Flow to v0.112.0. To view the error, delete this comment and run
+         * Flow. */
         {...rest}
       />
     );

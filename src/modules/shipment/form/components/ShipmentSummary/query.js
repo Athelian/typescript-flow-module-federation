@@ -50,12 +50,6 @@ export const shipmentFormSummaryQuery = gql`
             packageGrossWeight {
               ...metricFragment
             }
-            batchQuantityRevisions {
-              ... on BatchQuantityRevision {
-                id
-                quantity
-              }
-            }
             orderItem {
               ... on OrderItem {
                 id

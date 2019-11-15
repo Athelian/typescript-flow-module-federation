@@ -1,39 +1,22 @@
 // @flow
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
 import { addDays } from 'date-fns';
 import { calculateVolume, getBatchLatestQuantity } from 'utils/batch';
 import { startOfToday, differenceInCalendarDays, calculateDueDate } from 'utils/date';
 import { getLatestDate } from 'utils/shipment';
 import { defaultVolumeMetric } from 'utils/metric';
 import type { FieldDefinition } from 'types';
+import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
   transformComputedField,
   transformReadonlyField,
   transformCustomField,
   transformValueField,
+  transformField,
 } from 'components/Sheet';
-import type { CellValue } from 'components/Sheet/SheetState/types';
-import {
-  ORDER_SET_ARCHIVED,
-  ORDER_SET_CURRENCY,
-  ORDER_SET_CUSTOM_FIELDS,
-  ORDER_SET_DELIVERY_DATE,
-  ORDER_SET_DELIVERY_PLACE,
-  ORDER_SET_DOCUMENTS,
-  ORDER_SET_EXPORTER,
-  ORDER_SET_IN_CHARGES,
-  ORDER_SET_INCOTERM,
-  ORDER_SET_ISSUE_AT,
-  ORDER_SET_MEMO,
-  ORDER_SET_PI_NO,
-  ORDER_SET_PO_NO,
-  ORDER_SET_TAGS,
-  ORDER_SET_TASKS,
-  ORDER_UPDATE,
-} from 'modules/permission/constants/order';
+import transformSheetOrder from 'modules/sheet/order/transformer';
 import {
   ORDER_ITEMS_SET_CUSTOM_FIELDS,
+  ORDER_ITEMS_SET_CUSTOM_FIELDS_MASK,
   ORDER_ITEMS_SET_DELIVERY_DATE,
   ORDER_ITEMS_SET_DOCUMENTS,
   ORDER_ITEMS_SET_MEMO,
@@ -46,6 +29,7 @@ import {
 } from 'modules/permission/constants/orderItem';
 import {
   BATCH_SET_CUSTOM_FIELDS,
+  BATCH_SET_CUSTOM_FIELDS_MASK,
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
   BATCH_SET_EXPIRY,
@@ -59,7 +43,6 @@ import {
   BATCH_SET_PACKAGE_WEIGHT,
   BATCH_SET_PRODUCTION_DATE,
   BATCH_SET_QUANTITY,
-  BATCH_SET_QUANTITY_ADJUSTMENTS,
   BATCH_SET_TAGS,
   BATCH_SET_TASKS,
   BATCH_UPDATE,
@@ -114,8 +97,8 @@ import {
   SHIPMENT_APPROVE_TIMELINE_DATE,
   SHIPMENT_UPDATE,
   SHIPMENT_SET_CUSTOM_FIELDS,
+  SHIPMENT_SET_CUSTOM_FIELDS_MASK,
 } from 'modules/permission/constants/shipment';
-import orderMessages from 'modules/order/messages';
 
 function getCurrentBatch(batchId: string, order: Object): ?Object {
   return order.orderItems
@@ -134,261 +117,13 @@ function transformOrder(
   basePath: string,
   order: Object
 ): Array<CellValue> {
-  return [
-    {
-      columnKey: 'order.created',
-      type: 'date_user',
-      ...transformComputedField(basePath, order, 'created', item => ({
-        at: new Date(item.createdAt),
-        by: item.createdBy,
-      })),
-    },
-    {
-      columnKey: 'order.createdBy',
-      type: 'text',
-      ...transformReadonlyField(basePath, order, 'createdBy', order?.createdBy ?? null),
-    },
-    {
-      columnKey: 'order.createdAt',
-      type: 'text',
-      ...transformReadonlyField(basePath, order, 'createdAt', order?.createdAt ?? null),
-    },
-    {
-      columnKey: 'order.updated',
-      type: 'date_user',
-      ...transformComputedField(basePath, order, 'updated', item => ({
-        at: new Date(item.updatedAt),
-        by: item.updatedBy,
-      })),
-    },
-    {
-      columnKey: 'order.updatedBy',
-      type: 'text',
-      ...transformReadonlyField(basePath, order, 'updatedBy', order?.updatedBy ?? null),
-    },
-    {
-      columnKey: 'order.updatedAt',
-      type: 'text',
-      ...transformReadonlyField(basePath, order, 'updatedAt', order?.updatedAt ?? null),
-    },
-    {
-      columnKey: 'order.archived',
-      type: 'status',
-      ...transformValueField(
-        basePath,
-        order,
-        'archived',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_ARCHIVED)
-      ),
-    },
-    {
-      columnKey: 'order.poNo',
-      type: 'text',
-      ...transformValueField(
-        basePath,
-        order,
-        'poNo',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_PO_NO)
-      ),
-    },
-    {
-      columnKey: 'order.inCharges',
-      type: 'user_assignment',
-      computed: item => [item.importer?.id, item.exporter?.id].filter(Boolean),
-      ...transformValueField(
-        basePath,
-        order,
-        'inCharges',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_IN_CHARGES)
-      ),
-    },
-    {
-      columnKey: 'order.importer',
-      type: 'partner',
-      ...transformReadonlyField(basePath, order, 'importer', order?.importer ?? null),
-    },
-    {
-      columnKey: 'order.exporter',
-      type: 'exporter',
-      extra: {
-        confirmationDialogMessage: <FormattedMessage {...orderMessages.changeExporterWarning} />,
-        isRequired: true,
-      },
-      ...transformValueField(
-        basePath,
-        order,
-        'exporter',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_EXPORTER)
-      ),
-    },
-    {
-      columnKey: 'order.piNo',
-      type: 'text',
-      ...transformValueField(
-        basePath,
-        order,
-        'piNo',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_PI_NO)
-      ),
-    },
-    {
-      columnKey: 'order.issuedAt',
-      type: 'date',
-      ...transformValueField(
-        basePath,
-        order,
-        'issuedAt',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_ISSUE_AT)
-      ),
-    },
-    {
-      columnKey: 'order.deliveryDate',
-      type: 'date',
-      ...transformValueField(
-        basePath,
-        order,
-        'deliveryDate',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_DELIVERY_DATE)
-      ),
-    },
-    {
-      columnKey: 'order.currency',
-      type: 'currency',
-      ...transformValueField(
-        basePath,
-        order,
-        'currency',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_CURRENCY)
-      ),
-    },
-    {
-      columnKey: 'order.incoterm',
-      type: 'incoterm',
-      ...transformValueField(
-        basePath,
-        order,
-        'incoterm',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_INCOTERM)
-      ),
-    },
-    {
-      columnKey: 'order.deliveryPlace',
-      type: 'text',
-      ...transformValueField(
-        basePath,
-        order,
-        'deliveryPlace',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_DELIVERY_PLACE)
-      ),
-    },
-    {
-      columnKey: 'order.tags',
-      type: 'order_tags',
-      ...transformValueField(
-        basePath,
-        order,
-        'tags',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_TAGS)
-      ),
-    },
-    {
-      columnKey: 'order.memo',
-      type: 'textarea',
-      ...transformValueField(
-        basePath,
-        order,
-        'memo',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_MEMO)
-      ),
-    },
-    {
-      columnKey: 'order.totalOrdered',
-      type: 'number',
-      ...transformComputedField(basePath, order, 'totalOrdered', item =>
-        item.orderItems.reduce((total, orderItem) => total + orderItem.quantity, 0)
-      ),
-    },
-    {
-      columnKey: 'order.totalBatched',
-      type: 'number',
-      ...transformComputedField(basePath, order, 'totalBatched', item =>
-        item.orderItems.reduce(
-          (totalBatched, orderItem) =>
-            totalBatched +
-            orderItem.batches.reduce((total, batch) => getBatchLatestQuantity(batch) + total, 0),
-          0
-        )
-      ),
-    },
-    {
-      columnKey: 'order.totalShipped',
-      type: 'number',
-      ...transformComputedField(basePath, order, 'totalShipped', item =>
-        item.orderItems.reduce(
-          (totalBatched, orderItem) =>
-            totalBatched +
-            orderItem.batches
-              .filter(batch => !!batch.shipment)
-              .reduce((total, batch) => getBatchLatestQuantity(batch) + total, 0),
-          0
-        )
-      ),
-    },
-    {
-      columnKey: 'order.totalPrice',
-      type: 'metric_value',
-      ...transformComputedField(basePath, order, 'totalPrice', item => ({
-        value: item.orderItems.reduce(
-          (totalPrice, orderItem) => totalPrice + orderItem.price.value * orderItem.quantity,
-          0
-        ),
-        metric: item.currency,
-      })),
-    },
-    {
-      columnKey: 'order.files',
-      type: 'order_documents',
-      ...transformValueField(
-        basePath,
-        order,
-        'files',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_DOCUMENTS)
-      ),
-    },
-    {
-      columnKey: 'order.todo',
-      type: 'order_tasks',
-      computed: item => ({
-        entityId: item.id,
-        groupIds: [item.importer?.id, item.exporter?.id].filter(Boolean),
-      }),
-      ...transformValueField(
-        basePath,
-        order,
-        'todo',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_TASKS)
-      ),
-    },
-    {
-      columnKey: 'order.logs',
-      type: 'order_logs',
-      ...transformValueField(basePath, order, 'id', () => true),
-    },
-    ...fieldDefinitions.map(fieldDefinition => ({
-      columnKey: `order.customField.${fieldDefinition.id}`,
-      type: 'text',
-      hide: currentOrder => {
-        const mask = currentOrder?.customFields?.mask ?? null;
-        return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
-      },
-      ...transformCustomField(
-        basePath,
-        order,
-        fieldDefinition.id,
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_CUSTOM_FIELDS)
-      ),
-    })),
-  ].map(c => ({
+  return transformSheetOrder({
+    fieldDefinitions,
+    basePath,
+    order,
+    getOrderFromRoot: root => root,
+    readonlyExporter: false,
+  }).map(c => ({
     ...c,
     empty: !order,
     parent: true,
@@ -605,6 +340,7 @@ function transformOrderItem(
       type: 'order_item_tasks',
       computed: item => ({
         entityId: orderItem?.id,
+        ownerId: orderItem.ownedBy?.id,
         groupIds: [item.importer?.id, item.exporter?.id].filter(Boolean),
       }),
       ...transformValueField(
@@ -618,6 +354,19 @@ function transformOrderItem(
       columnKey: 'order.orderItem.logs',
       type: 'order_item_logs',
       ...transformValueField(basePath, orderItem, 'id', () => true),
+    },
+    {
+      columnKey: 'order.orderItem.mask',
+      type: 'mask',
+      extra: { entityType: 'OrderItem' },
+      ...transformField(
+        orderItem,
+        `${basePath}.customFields.mask`,
+        'mask',
+        orderItem?.customFields?.mask ?? null,
+        hasPermission =>
+          hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_CUSTOM_FIELDS_MASK)
+      ),
     },
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `order.orderItem.customField.${fieldDefinition.id}`,
@@ -796,14 +545,53 @@ function transformBatch(
       ),
     },
     {
-      columnKey: 'order.orderItem.batch.quantityRevisions',
-      type: 'quantity_revisions',
+      columnKey: 'order.orderItem.batch.producedQuantity',
+      type: 'number',
       ...transformValueField(
         basePath,
         batch,
-        'batchQuantityRevisions',
-        hasPermission =>
-          hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)
+        'producedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.preShippedQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'preShippedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shippedQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'shippedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.postShippedQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'postShippedQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
+      ),
+    },
+    {
+      columnKey: 'order.orderItem.batch.deliveredQuantity',
+      type: 'number',
+      ...transformValueField(
+        basePath,
+        batch,
+        'deliveredQuantity',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY)
       ),
     },
     {
@@ -884,6 +672,7 @@ function transformBatch(
       type: 'batch_tasks',
       computed: item => ({
         entityId: batch?.id,
+        ownerId: batch?.ownedBy?.id,
         groupIds: [item.importer?.id, item.exporter?.id].filter(Boolean),
       }),
       ...transformValueField(
@@ -897,6 +686,18 @@ function transformBatch(
       columnKey: 'order.orderItem.batch.logs',
       type: 'batch_logs',
       ...transformValueField(basePath, batch, 'id', () => true),
+    },
+    {
+      columnKey: 'order.orderItem.batch.mask',
+      type: 'mask',
+      extra: { entityType: 'Batch' },
+      ...transformField(
+        batch,
+        `${basePath}.customFields.mask`,
+        'mask',
+        batch?.customFields?.mask ?? null,
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_CUSTOM_FIELDS_MASK)
+      ),
     },
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `order.orderItem.batch.customField.${fieldDefinition.id}`,
@@ -1401,7 +1202,8 @@ function transformBatchShipment(
     },
     {
       columnKey: 'order.orderItem.batch.shipment.forwarders',
-      type: 'forwarders',
+      type: 'partners',
+      extra: { partnerTypes: ['Forwarder'] },
       ...transformValueField(
         basePath,
         batch?.shipment ?? null,
@@ -2184,6 +1986,7 @@ function transformBatchShipment(
         const currentBatch = getCurrentBatch(batch?.id, order);
         return {
           entityId: batch?.shipment?.id ?? null,
+          ownerId: batch?.shipment?.ownedBy?.id,
           groupIds: [
             currentBatch?.shipment?.importer?.id,
             currentBatch?.shipment?.exporter?.id,
@@ -2202,6 +2005,19 @@ function transformBatchShipment(
       columnKey: 'order.orderItem.batch.shipment.logs',
       type: 'shipment_logs',
       ...transformValueField(basePath, batch?.shipment ?? null, 'id', () => true),
+    },
+    {
+      columnKey: 'order.orderItem.batch.shipment.mask',
+      type: 'mask',
+      extra: { entityType: 'Shipment' },
+      ...transformField(
+        batch,
+        `${basePath}.customFields.mask`,
+        'mask',
+        batch?.shipment?.customFields?.mask ?? null,
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_CUSTOM_FIELDS_MASK)
+      ),
     },
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `order.orderItem.batch.shipment.customField.${fieldDefinition.id}`,

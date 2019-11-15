@@ -30,6 +30,7 @@ type Props = {|
   onSelect: (item: Object) => void,
   onCancel: Function,
   confirmationDialogMessage?: ?string | React.Node,
+  deselectDialogMessage?: ?string | React.Node,
   isRequired?: boolean,
 |};
 
@@ -41,9 +42,11 @@ const SelectPartner = ({
   onCancel,
   onSelect,
   confirmationDialogMessage,
+  deselectDialogMessage,
   isRequired,
 }: Props) => {
   const [confirmationDialogIsOpen, setConfirmationDialogIsOpen] = React.useState(false);
+  const [deselectDialogIsOpen, setDeselectDialogIsOpen] = React.useState(false);
 
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', types: partnerTypes },
@@ -86,7 +89,13 @@ const SelectPartner = ({
                   <SaveButton
                     disabled={value?.id === selected?.id}
                     onClick={() => {
-                      if (!!confirmationDialogMessage && value?.id !== selected?.id) {
+                      if (!value) {
+                        if (!!deselectDialogMessage && value?.id !== selected?.id) {
+                          setDeselectDialogIsOpen(true);
+                        } else {
+                          onSelect(value);
+                        }
+                      } else if (!!confirmationDialogMessage && value?.id !== selected?.id) {
                         setConfirmationDialogIsOpen(true);
                       } else {
                         onSelect(value);
@@ -106,6 +115,19 @@ const SelectPartner = ({
                       message={confirmationDialogMessage}
                     />
                   )}
+
+                  {!!deselectDialogMessage && (
+                    <ConfirmDialog
+                      isOpen={deselectDialogIsOpen}
+                      onRequestClose={() => setDeselectDialogIsOpen(false)}
+                      onCancel={() => setDeselectDialogIsOpen(false)}
+                      onConfirm={() => {
+                        onSelect(value);
+                        setDeselectDialogIsOpen(false);
+                      }}
+                      message={deselectDialogMessage}
+                    />
+                  )}
                 </SlideViewNavBar>
 
                 <Content>
@@ -118,7 +140,7 @@ const SelectPartner = ({
                       <PartnerCard
                         partner={item}
                         onSelect={() => {
-                          if (!isRequired && (value && item.id === value.id)) {
+                          if (!isRequired && value && item.id === value.id) {
                             set(null);
                           } else {
                             set(cleanUpData(item));

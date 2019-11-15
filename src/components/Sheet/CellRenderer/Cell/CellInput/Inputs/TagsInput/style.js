@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { scrollbars, colors, fontSizes, layout } from 'styles/common';
+import { scrollbars, colors, fontSizes, layout, presets } from 'styles/common';
 
 export const TagsInputWrapperStyle = css`
   ${layout.HORIZONTAL};
@@ -15,9 +15,14 @@ export const TagsInputWrapperStyle = css`
 `;
 
 export const RemoveButtonStyle = css`
+  ${presets.BUTTON};
   ${fontSizes.MEDIUM};
-  cursor: pointer;
-  color: inherit;
+  color: ${colors.WHITE};
+  &:focus,
+  &:hover {
+    color: ${colors.RED};
+    opacity: 0.8;
+  }
 `;
 
 export const TagsSelectStyle = css`

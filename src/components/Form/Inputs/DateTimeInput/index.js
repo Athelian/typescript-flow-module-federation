@@ -25,9 +25,9 @@ const DateTimeInput = ({
   ...rest
 }: Props) => {
   const handleBlur = e => {
+    e.target.value = e.target.value ? formatToDateTimeInput(e.target.value) : '';
     if (onBlur) {
       onBlur(e);
-      e.target.value = e.target.value ? formatToDateTimeInput(e.target.value) : '';
     }
   };
 

@@ -19,17 +19,14 @@ import type {
   OrderConfigType,
 } from 'modules/batch/type';
 
-type OptionalProps = {
+type Props = {|
   itemConfig: ItemConfigType,
   shipmentConfig: ShipmentConfigType,
   containerConfig: ContainerConfigType,
   orderConfig: OrderConfigType,
-};
-
-type Props = OptionalProps & {
   batch: Object,
   onSave: Function,
-};
+|};
 
 const defaultProps = {
   itemConfig: READONLY,

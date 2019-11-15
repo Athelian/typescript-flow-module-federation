@@ -10,15 +10,17 @@ function MainExporterInput(props: InputProps<Object>): React$Node {
   const { value, readonly } = props;
   const { isExporter } = useUser();
   return (
-    <PartnerSelectorInput.Exporter
+    <PartnerSelectorInput
       {...props}
       readonly={readonly || isExporter()}
       extra={{
+        partnerTypes: ['Exporter'],
         confirmationDialogMessage: value ? (
           <FormattedMessage {...messages.mainExporterChangeMessage} />
         ) : (
           <FormattedMessage {...messages.mainExporterSelectMessage} />
         ),
+        deselectDialogMessage: <FormattedMessage {...messages.mainExporterDeselectMessage} />,
       }}
     />
   );

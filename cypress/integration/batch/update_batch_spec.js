@@ -9,6 +9,7 @@ describe('Batch', () => {
   it('update a batch', () => {
     cy.visit('/batch')
       .get('.InfiniteScroll')
+      .should('have.length', 1)
       .children()
       .first()
       .click();
@@ -23,7 +24,7 @@ describe('Batch', () => {
         .should('have.value', batchNo)
         .blur();
 
-      cy.getByTestId('btnSaveBatch')
+      cy.findByTestId('btnSaveBatch')
         .click()
         .get('input[name="no"]')
         .should('have.value', batchNo);

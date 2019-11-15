@@ -22,7 +22,7 @@ export const findSummary = (values: Object) => {
   const baseCurrency = getByPath('orderItem.price.currency', batches.length > 0 && batches[0]);
 
   batches.forEach(batch => {
-    const { orderItem = {}, packageQuantity = 0, quantity, batchQuantityRevisions } = batch;
+    const { orderItem = {}, packageQuantity = 0 } = batch;
     const { price, id: orderItemId } = orderItem;
     if (!uniqueItems.includes(orderItem && orderItemId)) {
       uniqueItems.push(orderItemId);
@@ -30,7 +30,7 @@ export const findSummary = (values: Object) => {
     if (baseCurrency !== price.currency) {
       diffCurrency = true;
     }
-    const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+    const latestQuantity = getBatchLatestQuantity(batch);
     totalBatchQuantity += latestQuantity;
     totalBatchPackages += packageQuantity;
     totalPriceAmount += findPriceAmount(batch, latestQuantity);

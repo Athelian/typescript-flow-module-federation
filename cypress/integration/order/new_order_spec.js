@@ -10,7 +10,7 @@ describe('Order create action', () => {
     cy.task('fixture', 'order').then(({ poNo, piNo, currency }) => {
       // Open order detail
       cy.visit('/order')
-        .getByTestId('newButton')
+        .findByTestId('newButton')
         .click()
         .url()
         .should('include', 'new');
@@ -23,13 +23,14 @@ describe('Order create action', () => {
         .type(piNo)
         .should('have.value', piNo)
         .get('input[aria-labelledby="currencySearchSelectInput"]')
-        .type(currency)
+        .type(`${currency}{downarrow}{enter}`)
         .should('have.value', currency)
         .get('input[aria-labelledby="tagsTagInputs"]')
         .type('{downarrow}{enter}')
-        .getByTestId('dashedButton')
+        .findByTestId('dashedButton')
         .click()
         .get('.InfiniteScroll')
+        .should('have.length', 1)
         .children()
         .first()
         .click()

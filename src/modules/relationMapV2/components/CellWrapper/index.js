@@ -2,10 +2,10 @@
 import * as React from 'react';
 import { CellWrapperStyle } from './style';
 
-type Props = {
+type Props = {|
   isExpandedHeading?: boolean,
   children: React.Node,
-};
+|};
 
 const CellWrapper = React.forwardRef<Props, HTMLElement>(
   ({ isExpandedHeading, children, ...rest }: Props, ref) => {

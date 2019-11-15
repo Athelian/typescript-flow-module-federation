@@ -3,15 +3,14 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 
-type OptionalProps = {
+type Props = {|
   disabled: boolean,
   isLoading: boolean,
   onClick: Function,
   label: React.Node,
   id: string,
-};
-
-type Props = OptionalProps;
+  'data-testid'?: string,
+|};
 
 const defaultProps = {
   disabled: false,

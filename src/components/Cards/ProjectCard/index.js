@@ -20,13 +20,12 @@ import {
   ProjectCardBodyStyle,
 } from './style';
 
-type OptionalProps = {
-  onClick: Function,
-};
-
-type Props = OptionalProps & {
+type Props = {|
   project: Object,
-};
+  onClick: Function,
+  selectable?: boolean,
+  selected?: boolean,
+|};
 
 const ProjectCard = ({ project, onClick, ...rest }: Props) => {
   const { name, dueDate, tags = [], milestones = [] } = project;

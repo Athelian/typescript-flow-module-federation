@@ -17800,6 +17800,11 @@ export type Batch = {|
     container?: ?ContainerPayload,
     containerSort: $ElementType<Scalars, 'Int'>,
     quantity: $ElementType<Scalars, 'Float'>,
+    producedQuantity?: ?$ElementType<Scalars, 'Float'>,
+    preShippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+    shippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+    postShippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+    deliveredQuantity?: ?$ElementType<Scalars, 'Float'>,
     latestQuantity: $ElementType<Scalars, 'Float'>,
     packageQuantity?: ?$ElementType<Scalars, 'Float'>,
     autoCalculatePackageQuantity: $ElementType<Scalars, 'Boolean'>,
@@ -17835,6 +17840,11 @@ export type Batch = {|
 export type BatchCreateInput = {|
   no: $ElementType<Scalars, 'String'>,
   quantity: $ElementType<Scalars, 'Float'>,
+  producedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  preShippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  shippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  postShippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  deliveredQuantity?: ?$ElementType<Scalars, 'Float'>,
   producedAt?: ?$ElementType<Scalars, 'DateTime'>,
   deliveredAt?: ?$ElementType<Scalars, 'DateTime'>,
   expiredAt?: ?$ElementType<Scalars, 'DateTime'>,
@@ -17981,6 +17991,11 @@ export type BatchSortInput = {|
 export type BatchUpdateInput = {|
   no?: ?$ElementType<Scalars, 'String'>,
   quantity?: ?$ElementType<Scalars, 'Float'>,
+  producedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  preShippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  shippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  postShippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  deliveredQuantity?: ?$ElementType<Scalars, 'Float'>,
   producedAt?: ?$ElementType<Scalars, 'DateTime'>,
   deliveredAt?: ?$ElementType<Scalars, 'DateTime'>,
   expiredAt?: ?$ElementType<Scalars, 'DateTime'>,
@@ -18118,6 +18133,11 @@ export type Container = {|
 export type ContainerBatchInput = {|
   no?: ?$ElementType<Scalars, 'String'>,
   quantity?: ?$ElementType<Scalars, 'Float'>,
+  producedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  preShippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  shippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  postShippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  deliveredQuantity?: ?$ElementType<Scalars, 'Float'>,
   producedAt?: ?$ElementType<Scalars, 'DateTime'>,
   deliveredAt?: ?$ElementType<Scalars, 'DateTime'>,
   expiredAt?: ?$ElementType<Scalars, 'DateTime'>,
@@ -19243,7 +19263,7 @@ export type EntityInput = {|
   taskId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
-export type EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | BatchQuantityRevision | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | Milestone | BadRequest | Forbidden | NotFound;
+export type EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | BatchQuantityRevision | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | BadRequest | Forbidden | NotFound;
 
 export type EntityValue = {|
    __typename?: 'EntityValue',
@@ -21554,6 +21574,11 @@ export type OrderItem = {|
 export type OrderItemBatchInput = {|
   no?: ?$ElementType<Scalars, 'String'>,
   quantity?: ?$ElementType<Scalars, 'Float'>,
+  producedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  preShippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  shippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  postShippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  deliveredQuantity?: ?$ElementType<Scalars, 'Float'>,
   producedAt?: ?$ElementType<Scalars, 'DateTime'>,
   deliveredAt?: ?$ElementType<Scalars, 'DateTime'>,
   expiredAt?: ?$ElementType<Scalars, 'DateTime'>,
@@ -60391,6 +60416,11 @@ export type Shipment = {|
 export type ShipmentBatchInput = {|
   no?: ?$ElementType<Scalars, 'String'>,
   quantity?: ?$ElementType<Scalars, 'Float'>,
+  producedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  preShippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  shippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  postShippedQuantity?: ?$ElementType<Scalars, 'Float'>,
+  deliveredQuantity?: ?$ElementType<Scalars, 'Float'>,
   producedAt?: ?$ElementType<Scalars, 'DateTime'>,
   deliveredAt?: ?$ElementType<Scalars, 'DateTime'>,
   expiredAt?: ?$ElementType<Scalars, 'DateTime'>,
@@ -61534,7 +61564,7 @@ type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $Elem
 
 export type BatchFormFragmentFragment = ({
     ...{ __typename?: 'Batch' },
-  ...$Pick<Batch, {| id: *, sort: *, shipmentSort: *, archived: *, autoCalculatePackageQuantity: *, autoCalculatePackageVolume: *, updatedAt: *, memo: *, no: *, quantity: *, latestQuantity: *, producedAt: *, deliveredAt: *, desiredAt: *, expiredAt: *, packageName: *, packageCapacity: *, packageQuantity: * |}>,
+  ...$Pick<Batch, {| id: *, sort: *, shipmentSort: *, archived: *, autoCalculatePackageQuantity: *, autoCalculatePackageVolume: *, updatedAt: *, memo: *, no: *, quantity: *, producedQuantity: *, preShippedQuantity: *, shippedQuantity: *, postShippedQuantity: *, deliveredQuantity: *, latestQuantity: *, producedAt: *, deliveredAt: *, desiredAt: *, expiredAt: *, packageName: *, packageCapacity: *, packageQuantity: * |}>,
   ...{| updatedBy: ?({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
@@ -61633,7 +61663,7 @@ export type BatchFormFragmentFragment = ({
 
 export type BatchCardFragmentFragment = ({
     ...{ __typename?: 'Batch' },
-  ...$Pick<Batch, {| id: *, no: *, archived: *, latestQuantity: *, deliveredAt: *, desiredAt: *, packageQuantity: * |}>,
+  ...$Pick<Batch, {| id: *, no: *, archived: *, quantity: *, producedQuantity: *, preShippedQuantity: *, shippedQuantity: *, postShippedQuantity: *, deliveredQuantity: *, latestQuantity: *, deliveredAt: *, desiredAt: *, packageQuantity: * |}>,
   ...{| todo: ({
       ...{ __typename?: 'Todo' },
     ...{| taskCount: ({
@@ -61820,13 +61850,28 @@ export type DocumentFragmentFragment = ({
       ...{ __typename?: 'Project' },
     ...$Pick<Project, {| id: * |}>
   }) | ({
+      ...{ __typename?: 'ProjectTemplate' },
+    ...$Pick<ProjectTemplate, {| id: * |}>
+  }) | ({
       ...{ __typename?: 'Milestone' },
     ...$Pick<Milestone, {| id: *, name: * |}>,
     ...{| project: ({
         ...{ __typename?: 'Project' },
       ...$Pick<Project, {| id: * |}>
     }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | ({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Mask' },
+    ...$Pick<Mask, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MaskEdit' },
+    ...$Pick<MaskEdit, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...$Pick<FieldDefinition, {| id: * |}>
+  }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
 });
 
 export type UserAvatarFragmentFragment = ({
@@ -61910,7 +61955,7 @@ export type FieldValuesFragmentFragment = ({
   }) | { __typename?: 'IntValue' } | { __typename?: 'FloatValue' } | { __typename?: 'BooleanValue' } | { __typename?: 'DateTimeValue' } | { __typename?: 'IntervalValue' } | { __typename?: 'DurationValue' } | { __typename?: 'MetricValueValue' } | { __typename?: 'SizeValue' } | { __typename?: 'EntityValue' } | { __typename?: 'Values' }, fieldDefinition: ({
       ...{ __typename?: 'FieldDefinition' },
     ...FieldDefinitionFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, entity: { __typename: 'Product' } | { __typename: 'ProductProvider' } | { __typename: 'ProductProviderPackage' } | { __typename: 'Order' } | { __typename: 'OrderItem' } | { __typename: 'Batch' } | { __typename: 'BatchQuantityRevision' } | { __typename: 'Shipment' } | { __typename: 'Voyage' } | { __typename: 'Container' } | { __typename: 'ContainerGroup' } | { __typename: 'TimelineDate' } | { __typename: 'TimelineDateRevision' } | { __typename: 'Warehouse' } | { __typename: 'Tag' } | { __typename: 'User' } | { __typename: 'Organization' } | { __typename: 'Partnership' } | { __typename: 'Role' } | { __typename: 'File' } | { __typename: 'Task' } | { __typename: 'TaskTemplate' } | { __typename: 'Project' } | { __typename: 'Milestone' } | { __typename: 'BadRequest' } | { __typename: 'Forbidden' } | { __typename: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, entity: { __typename: 'Product' } | { __typename: 'ProductProvider' } | { __typename: 'ProductProviderPackage' } | { __typename: 'Order' } | { __typename: 'OrderItem' } | { __typename: 'Batch' } | { __typename: 'BatchQuantityRevision' } | { __typename: 'Shipment' } | { __typename: 'Voyage' } | { __typename: 'Container' } | { __typename: 'ContainerGroup' } | { __typename: 'TimelineDate' } | { __typename: 'TimelineDateRevision' } | { __typename: 'Warehouse' } | { __typename: 'Tag' } | { __typename: 'User' } | { __typename: 'Organization' } | { __typename: 'Partnership' } | { __typename: 'Role' } | { __typename: 'File' } | { __typename: 'Task' } | { __typename: 'TaskTemplate' } | { __typename: 'Project' } | { __typename: 'ProjectTemplate' } | { __typename: 'Milestone' } | { __typename: 'MilestoneTemplate' } | { __typename: 'Mask' } | { __typename: 'MaskEdit' } | { __typename: 'FieldDefinition' } | { __typename: 'FieldValue' } | { __typename: 'BadRequest' } | { __typename: 'Forbidden' } | { __typename: 'NotFound' } |}
 });
 
 export type FieldDefinitionFragmentFragment = ({
@@ -63216,9 +63261,24 @@ export type TaskEntityCardFragmentFragment = ({
       ...{ __typename?: 'Project' },
     ...$Pick<Project, {| id: * |}>
   }) | ({
+      ...{ __typename?: 'ProjectTemplate' },
+    ...$Pick<ProjectTemplate, {| id: * |}>
+  }) | ({
       ...{ __typename?: 'Milestone' },
     ...$Pick<Milestone, {| id: * |}>
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, order: ?({
+  }) | ({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Mask' },
+    ...$Pick<Mask, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MaskEdit' },
+    ...$Pick<MaskEdit, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...$Pick<FieldDefinition, {| id: * |}>
+  }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, order: ?({
       ...{ __typename?: 'Product' },
     ...$Pick<Product, {| id: * |}>
   }) | ({
@@ -63289,9 +63349,24 @@ export type TaskEntityCardFragmentFragment = ({
       ...{ __typename?: 'Project' },
     ...$Pick<Project, {| id: * |}>
   }) | ({
+      ...{ __typename?: 'ProjectTemplate' },
+    ...$Pick<ProjectTemplate, {| id: * |}>
+  }) | ({
       ...{ __typename?: 'Milestone' },
     ...$Pick<Milestone, {| id: * |}>
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, orderItem: ?({
+  }) | ({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Mask' },
+    ...$Pick<Mask, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MaskEdit' },
+    ...$Pick<MaskEdit, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...$Pick<FieldDefinition, {| id: * |}>
+  }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, orderItem: ?({
       ...{ __typename?: 'Product' },
     ...$Pick<Product, {| id: * |}>
   }) | ({
@@ -63362,9 +63437,24 @@ export type TaskEntityCardFragmentFragment = ({
       ...{ __typename?: 'Project' },
     ...$Pick<Project, {| id: * |}>
   }) | ({
+      ...{ __typename?: 'ProjectTemplate' },
+    ...$Pick<ProjectTemplate, {| id: * |}>
+  }) | ({
       ...{ __typename?: 'Milestone' },
     ...$Pick<Milestone, {| id: * |}>
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, batch: ?({
+  }) | ({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Mask' },
+    ...$Pick<Mask, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MaskEdit' },
+    ...$Pick<MaskEdit, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...$Pick<FieldDefinition, {| id: * |}>
+  }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, batch: ?({
       ...{ __typename?: 'Product' },
     ...$Pick<Product, {| id: * |}>
   }) | ({
@@ -63435,9 +63525,24 @@ export type TaskEntityCardFragmentFragment = ({
       ...{ __typename?: 'Project' },
     ...$Pick<Project, {| id: * |}>
   }) | ({
+      ...{ __typename?: 'ProjectTemplate' },
+    ...$Pick<ProjectTemplate, {| id: * |}>
+  }) | ({
       ...{ __typename?: 'Milestone' },
     ...$Pick<Milestone, {| id: * |}>
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, product: ?({
+  }) | ({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Mask' },
+    ...$Pick<Mask, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MaskEdit' },
+    ...$Pick<MaskEdit, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...$Pick<FieldDefinition, {| id: * |}>
+  }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, product: ?({
       ...{ __typename?: 'Product' },
     ...$Pick<Product, {| id: * |}>,
     ...ProductCardFragmentFragment
@@ -63508,9 +63613,24 @@ export type TaskEntityCardFragmentFragment = ({
       ...{ __typename?: 'Project' },
     ...$Pick<Project, {| id: * |}>
   }) | ({
+      ...{ __typename?: 'ProjectTemplate' },
+    ...$Pick<ProjectTemplate, {| id: * |}>
+  }) | ({
       ...{ __typename?: 'Milestone' },
     ...$Pick<Milestone, {| id: * |}>
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, productProvider: ?({
+  }) | ({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Mask' },
+    ...$Pick<Mask, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MaskEdit' },
+    ...$Pick<MaskEdit, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...$Pick<FieldDefinition, {| id: * |}>
+  }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, productProvider: ?({
       ...{ __typename?: 'Product' },
     ...$Pick<Product, {| id: * |}>
   }) | ({
@@ -63581,9 +63701,24 @@ export type TaskEntityCardFragmentFragment = ({
       ...{ __typename?: 'Project' },
     ...$Pick<Project, {| id: * |}>
   }) | ({
+      ...{ __typename?: 'ProjectTemplate' },
+    ...$Pick<ProjectTemplate, {| id: * |}>
+  }) | ({
       ...{ __typename?: 'Milestone' },
     ...$Pick<Milestone, {| id: * |}>
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, shipment: ?({
+  }) | ({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Mask' },
+    ...$Pick<Mask, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MaskEdit' },
+    ...$Pick<MaskEdit, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...$Pick<FieldDefinition, {| id: * |}>
+  }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, shipment: ?({
       ...{ __typename?: 'Product' },
     ...$Pick<Product, {| id: * |}>
   }) | ({
@@ -63654,9 +63789,24 @@ export type TaskEntityCardFragmentFragment = ({
       ...{ __typename?: 'Project' },
     ...$Pick<Project, {| id: * |}>
   }) | ({
+      ...{ __typename?: 'ProjectTemplate' },
+    ...$Pick<ProjectTemplate, {| id: * |}>
+  }) | ({
       ...{ __typename?: 'Milestone' },
     ...$Pick<Milestone, {| id: * |}>
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | ({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Mask' },
+    ...$Pick<Mask, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MaskEdit' },
+    ...$Pick<MaskEdit, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...$Pick<FieldDefinition, {| id: * |}>
+  }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
 });
 
 export type TaskCardFragmentFragment = ({
@@ -63736,9 +63886,24 @@ export type TaskCardFragmentFragment = ({
       ...{ __typename?: 'Project' },
     ...$Pick<Project, {| id: * |}>
   }) | ({
+      ...{ __typename?: 'ProjectTemplate' },
+    ...$Pick<ProjectTemplate, {| id: * |}>
+  }) | ({
       ...{ __typename?: 'Milestone' },
     ...$Pick<Milestone, {| id: * |}>
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, assignedTo: Array<({
+  }) | ({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Mask' },
+    ...$Pick<Mask, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MaskEdit' },
+    ...$Pick<MaskEdit, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...$Pick<FieldDefinition, {| id: * |}>
+  }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, assignedTo: Array<({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, approvers: Array<({
@@ -64018,9 +64183,6 @@ export type WarehouseCardFragmentFragment = ({
             "name": "Role"
           },
           {
-            "name": "Partner"
-          },
-          {
             "name": "ProjectTemplate"
           },
           {
@@ -64028,6 +64190,9 @@ export type WarehouseCardFragmentFragment = ({
           },
           {
             "name": "MaskEdit"
+          },
+          {
+            "name": "Partner"
           },
           {
             "name": "ExportTemplate"
@@ -64348,7 +64513,25 @@ export type WarehouseCardFragmentFragment = ({
             "name": "Project"
           },
           {
+            "name": "ProjectTemplate"
+          },
+          {
             "name": "Milestone"
+          },
+          {
+            "name": "MilestoneTemplate"
+          },
+          {
+            "name": "Mask"
+          },
+          {
+            "name": "MaskEdit"
+          },
+          {
+            "name": "FieldDefinition"
+          },
+          {
+            "name": "FieldValue"
           },
           {
             "name": "BadRequest"
@@ -65092,6 +65275,42 @@ export type WarehouseCardFragmentFragment = ({
       },
       {
         "kind": "UNION",
+        "name": "MilestoneTemplatePayload",
+        "possibleTypes": [
+          {
+            "name": "MilestoneTemplate"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "ProjectTemplatePayload",
+        "possibleTypes": [
+          {
+            "name": "ProjectTemplate"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
         "name": "PartnerPayload",
         "possibleTypes": [
           {
@@ -65132,42 +65351,6 @@ export type WarehouseCardFragmentFragment = ({
         "possibleTypes": [
           {
             "name": "Export"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "ProjectTemplatePayload",
-        "possibleTypes": [
-          {
-            "name": "ProjectTemplate"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "MilestoneTemplatePayload",
-        "possibleTypes": [
-          {
-            "name": "MilestoneTemplate"
           },
           {
             "name": "BadRequest"

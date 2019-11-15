@@ -1,7 +1,6 @@
 // @flow
 import InlineTextInput from './InlineTextInput';
 import InlineNumberInput from './InlineNumberInput';
-import InlineNumberAdjustmentInput from './InlineNumberAdjustmentInput';
 import InlineDateInput from './InlineDateInput';
 import InlineSearchEnumInput from './InlineSearchEnumInput';
 import InlineInChargeInput from './InlineInChargeInput';
@@ -19,7 +18,6 @@ import InlineToggleButton from './InlineToggleButton';
 export {
   InlineTextInput,
   InlineNumberInput,
-  InlineNumberAdjustmentInput,
   InlineDateInput,
   InlineSearchEnumInput,
   InlineInChargeInput,

@@ -10,199 +10,7 @@ import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
 import containerMessages from 'modules/container/messages';
 import shipmentMessages from 'modules/shipment/messages';
-
-const orderColumns: Array<ColumnConfig> = [
-  {
-    key: 'order.created',
-    exportKey: 'createdAt',
-    title: <FormattedMessage {...orderMessages.createdAt} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 110,
-    sort: {
-      name: 'createdAt',
-      group: 'order',
-    },
-  },
-  {
-    key: 'order.updated',
-    exportKey: 'updatedAt',
-    title: <FormattedMessage {...orderMessages.updatedAt} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 110,
-    sort: {
-      default: true,
-      name: 'updatedAt',
-      group: 'order',
-    },
-  },
-  {
-    key: 'order.archived',
-    title: <FormattedMessage {...orderMessages.status} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 120,
-  },
-  {
-    key: 'order.poNo',
-    exportKey: 'poNo',
-    title: <FormattedMessage {...orderMessages.PO} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-    sort: {
-      name: 'poNo',
-      group: 'order',
-    },
-  },
-  {
-    key: 'order.importer',
-    title: <FormattedMessage {...orderMessages.importer} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.exporter',
-    exportKey: 'exporter.name',
-    title: <FormattedMessage {...orderMessages.exporter} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.piNo',
-    exportKey: 'piNo',
-    title: <FormattedMessage {...orderMessages.PI} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-    sort: {
-      name: 'piNo',
-      group: 'order',
-    },
-  },
-  {
-    key: 'order.issuedAt',
-    exportKey: 'issuedAt',
-    title: <FormattedMessage {...orderMessages.date} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 125,
-  },
-  {
-    key: 'order.deliveryDate',
-    exportKey: 'deliveryDate',
-    title: <FormattedMessage {...orderMessages.deliveryDate} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 125,
-  },
-  {
-    key: 'order.currency',
-    exportKey: 'currency',
-    title: <FormattedMessage {...orderMessages.currency} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 100,
-    sort: {
-      name: 'currency',
-      group: 'order',
-    },
-  },
-  {
-    key: 'order.incoterm',
-    exportKey: 'incoterm',
-    title: <FormattedMessage {...orderMessages.incoterm} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 100,
-  },
-  {
-    key: 'order.deliveryPlace',
-    exportKey: 'deliveryPlace',
-    title: <FormattedMessage {...orderMessages.deliveryPlace} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.tags',
-    exportKey: 'tags',
-    title: <FormattedMessage {...orderMessages.tags} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.memo',
-    exportKey: 'memo',
-    title: <FormattedMessage {...orderMessages.memo} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.inCharges',
-    title: <FormattedMessage {...orderMessages.inCharge} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 160,
-  },
-  {
-    key: 'order.totalOrdered',
-    title: <FormattedMessage {...orderMessages.totalOrderedQuantity} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.totalBatched',
-    title: <FormattedMessage {...orderMessages.totalBatchedQuantity} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.totalShipped',
-    title: <FormattedMessage {...orderMessages.totalShippedQuantity} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.totalPrice',
-    title: <FormattedMessage {...orderMessages.totalPrice} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.files',
-    title: <FormattedMessage {...orderMessages.sectionDocuments} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.todo',
-    title: <FormattedMessage {...orderMessages.tasks} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'order.logs',
-    title: <FormattedMessage {...orderMessages.logs} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 120,
-  },
-  // custom fields mask
-  // custom fields
-  // actions
-];
+import orderColumns from 'modules/sheet/order/columns';
 
 const orderItemColumns: Array<ColumnConfig> = [
   {
@@ -390,8 +198,13 @@ const orderItemColumns: Array<ColumnConfig> = [
     color: colors.ORDER_ITEM,
     width: 120,
   },
-  // custom fields mask
-  // custom fields
+  {
+    key: 'order.orderItem.mask',
+    title: <FormattedMessage {...orderItemMessages.mask} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: 200,
+  },
   // actions
 ];
 
@@ -532,11 +345,39 @@ const batchColumns: Array<ColumnConfig> = [
     },
   },
   {
-    key: 'order.orderItem.batch.quantityRevisions',
-    title: <FormattedMessage {...batchMessages.sectionAdjustments} />,
+    key: 'order.orderItem.batch.producedQuantity',
+    title: <FormattedMessage {...batchMessages.producedQuantity} />,
     icon: 'BATCH',
     color: colors.BATCH,
-    width: 1035,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.preShippedQuantity',
+    title: <FormattedMessage {...batchMessages.preShippedQuantity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.shippedQuantity',
+    title: <FormattedMessage {...batchMessages.shippedQuantity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.postShippedQuantity',
+    title: <FormattedMessage {...batchMessages.postShippedQuantity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  {
+    key: 'order.orderItem.batch.deliveredQuantity',
+    title: <FormattedMessage {...batchMessages.deliveredQuantity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
   },
   {
     key: 'order.orderItem.batch.packageName',
@@ -614,8 +455,13 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 120,
   },
-  // custom fields mask
-  // custom fields
+  {
+    key: 'order.orderItem.batch.mask',
+    title: <FormattedMessage {...batchMessages.mask} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   // actions
 ];
 
@@ -1448,6 +1294,13 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 120,
   },
+  {
+    key: 'order.orderItem.batch.shipment.mask',
+    title: <FormattedMessage {...shipmentMessages.mask} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
 ];
 
 export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment'];
@@ -1466,7 +1319,45 @@ export default function({
   shipmentFieldDefinitions,
 }: Props): Array<ColumnConfig> {
   return [
-    ...orderColumns,
+    ...orderColumns(
+      {
+        'order.created': 'createdAt',
+        'order.updated': 'updatedAt',
+        'order.poNo': 'poNo',
+        'order.exporter': 'exporter.name',
+        'order.piNo': 'piNo',
+        'order.issuedAt': 'issuedAt',
+        'order.deliveryDate': 'deliveryDate',
+        'order.currency': 'currency',
+        'order.incoterm': 'incoterm',
+        'order.deliveryPlace': 'deliveryPlace',
+        'order.tags': 'tags',
+        'order.memo': 'memo',
+      },
+      {
+        'order.created': {
+          name: 'createdAt',
+          group: 'order',
+        },
+        'order.updated': {
+          default: true,
+          name: 'updatedAt',
+          group: 'order',
+        },
+        'order.poNo': {
+          name: 'poNo',
+          group: 'order',
+        },
+        'order.piNo': {
+          name: 'piNo',
+          group: 'order',
+        },
+        'order.currency': {
+          name: 'currency',
+          group: 'order',
+        },
+      }
+    ),
     ...orderFieldDefinitions.map(fieldDefinition => ({
       key: `order.customField.${fieldDefinition.id}`,
       exportKey: `customFields.${fieldDefinition.id}`,

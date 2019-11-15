@@ -34,7 +34,7 @@ const DefaultStyle = ({
   tabIndex,
 }: Props): React.Node => (
   <div
-    {...(id ? { id } : {})}
+    id={id}
     {...(tabIndex ? { tabIndex } : {})}
     className={DefaultStyleWrapperStyle({
       type,

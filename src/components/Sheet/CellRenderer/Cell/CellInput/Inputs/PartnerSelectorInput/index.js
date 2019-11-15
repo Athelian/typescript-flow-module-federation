@@ -9,9 +9,14 @@ import CornerIcon from 'components/CornerIcon';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import { PartnerSelectorInputWrapperStyle, PartnerCardStyle, PlusButtonStyle } from './style';
 
-type ExtraProps = { confirmationDialogMessage?: ?string | React.Node, isRequired?: boolean };
+type ExtraProps = {|
+  partnerTypes: Array<string>,
+  confirmationDialogMessage?: ?string | React.Node,
+  deselectDialogMessage?: ?string | React.Node,
+  isRequired?: boolean,
+|};
 
-const PartnerSelectorInput = (partnerTypes: Array<string>) => ({
+const PartnerSelectorInput = ({
   value,
   focus,
   onChange,
@@ -42,24 +47,21 @@ const PartnerSelectorInput = (partnerTypes: Array<string>) => ({
       )}
 
       <SlideView isOpen={focus} onRequestClose={forceBlur}>
-        {focus && (
-          <SelectPartner
-            partnerTypes={partnerTypes || []}
-            selected={value}
-            onCancel={forceBlur}
-            onSelect={newValue => {
-              onChange(newValue, true);
-              forceBlur();
-            }}
-            confirmationDialogMessage={extra?.confirmationDialogMessage ?? null}
-            isRequired={extra?.isRequired ?? false}
-          />
-        )}
+        <SelectPartner
+          partnerTypes={extra?.partnerTypes ?? []}
+          confirmationDialogMessage={extra?.confirmationDialogMessage ?? null}
+          deselectDialogMessage={extra?.deselectDialogMessage ?? null}
+          isRequired={extra?.isRequired ?? false}
+          selected={value}
+          onCancel={forceBlur}
+          onSelect={newValue => {
+            onChange(newValue, true);
+            forceBlur();
+          }}
+        />
       </SlideView>
     </div>
   );
 };
 
-export default {
-  Exporter: PartnerSelectorInput(['Exporter']),
-};
+export default PartnerSelectorInput;

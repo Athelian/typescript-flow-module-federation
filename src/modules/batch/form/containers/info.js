@@ -6,7 +6,6 @@ import type {
   TaskPayload,
   TagPayload,
   OrderItemPayload,
-  BatchQuantityRevisionPayload,
 } from 'generated/graphql';
 import { Container } from 'unstated';
 import update from 'immutability-helper';
@@ -27,7 +26,6 @@ export type BatchFormState = {
   tags?: Array<TagPayload>,
   memo: ?string,
   orderItem: ?OrderItemPayload,
-  batchQuantityRevisions: Array<BatchQuantityRevisionPayload>,
   packageName?: ?string,
   packageCapacity?: number,
   packageQuantity: number,
@@ -55,7 +53,6 @@ export const initValues: BatchFormState = {
   tags: [],
   memo: null,
   orderItem: null,
-  batchQuantityRevisions: [],
   packageName: null,
   packageCapacity: 0,
   packageQuantity: 0,
@@ -114,16 +111,6 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
     this.setState(prevState => {
       const newState = set(cloneDeep(prevState), path, value);
       return newState;
-    });
-  };
-
-  removeBatchQuantityRevisionByIndex = (index: number) => {
-    this.setState(prevState => {
-      const batchQuantityRevisions = cloneDeep(prevState.batchQuantityRevisions);
-      batchQuantityRevisions.splice(index, 1);
-      return {
-        batchQuantityRevisions,
-      };
     });
   };
 

@@ -174,6 +174,9 @@ const FormField = (props: {
           setActiveField={setActiveField}
           setFieldValue={setFieldValue}
           onValidate={newValue => onValidation({ ...values, ...newValue }, validator)}
+          /* $FlowFixMe This comment suppresses an error found when upgrading
+           * Flow to v0.112.0. To view the error, delete this comment and run
+           * Flow. */
           {...rest}
         />
       )}

@@ -19,65 +19,25 @@ export default defineMessages({
     id: 'components.BatchItem.initialQuantity',
     defaultMessage: 'INITIAL QUANTITY',
   },
-  newQuantity1: {
-    id: 'components.BatchItem.newQuantity1',
-    defaultMessage: 'NEW QUANTITY #1',
+  producedQuantity: {
+    id: 'components.BatchItem.producedQuantity',
+    defaultMessage: 'PRODUCED QUANTITY',
   },
-  newQuantityType1Type: {
-    id: 'components.BatchItem.newQuantity1.type',
-    defaultMessage: 'NEW QUANTITY #1 - TYPE',
+  preShippedQuantity: {
+    id: 'components.BatchItem.preShippedQuantity',
+    defaultMessage: 'PRE-SHIPPED QUANTITY',
   },
-  newQuantityType1Quantity: {
-    id: 'components.BatchItem.newQuantity1.quantity',
-    defaultMessage: 'NEW QUANTITY #1 - QUANTITY',
+  shippedQuantity: {
+    id: 'components.BatchItem.shippedQuantity',
+    defaultMessage: 'SHIPPED QUANTITY',
   },
-  newQuantity2: {
-    id: 'components.BatchItem.newQuantity2',
-    defaultMessage: 'NEW QUANTITY #2',
+  postShippedQuantity: {
+    id: 'components.BatchItem.postShippedQuantity',
+    defaultMessage: 'POST SHIPPED QUANTITY',
   },
-  newQuantityType2Type: {
-    id: 'components.BatchItem.newQuantity2.type',
-    defaultMessage: 'NEW QUANTITY #2 - TYPE',
-  },
-  newQuantityType2Quantity: {
-    id: 'components.BatchItem.newQuantity2.quantity',
-    defaultMessage: 'NEW QUANTITY #2 - QUANTITY',
-  },
-  newQuantity3: {
-    id: 'components.BatchItem.newQuantity3',
-    defaultMessage: 'NEW QUANTITY #3',
-  },
-  newQuantityType3Type: {
-    id: 'components.BatchItem.newQuantity3.type',
-    defaultMessage: 'NEW QUANTITY #3 - TYPE',
-  },
-  newQuantityType3Quantity: {
-    id: 'components.BatchItem.newQuantity3.quantity',
-    defaultMessage: 'NEW QUANTITY #3 - QUANTITY',
-  },
-  newQuantity4: {
-    id: 'components.BatchItem.newQuantity4',
-    defaultMessage: 'NEW QUANTITY #4',
-  },
-  newQuantityType4Type: {
-    id: 'components.BatchItem.newQuantity4.type',
-    defaultMessage: 'NEW QUANTITY #4 - TYPE',
-  },
-  newQuantityType4Quantity: {
-    id: 'components.BatchItem.newQuantity4.quantity',
-    defaultMessage: 'NEW QUANTITY #4 - QUANTITY',
-  },
-  newQuantity5: {
-    id: 'components.BatchItem.newQuantity5',
-    defaultMessage: 'NEW QUANTITY #5',
-  },
-  newQuantityType5Type: {
-    id: 'components.BatchItem.newQuantity5.type',
-    defaultMessage: 'NEW QUANTITY #5 - TYPE',
-  },
-  newQuantityType5Quantity: {
-    id: 'components.BatchItem.newQuantity5.quantity',
-    defaultMessage: 'NEW QUANTITY #5 - QUANTITY',
+  deliveredQuantity: {
+    id: 'components.BatchItem.deliveredQuantity',
+    defaultMessage: 'DELIVERED QUANTITY',
   },
   shortQuantity: {
     id: 'components.BatchItem.shortQuantity',
@@ -240,10 +200,6 @@ export default defineMessages({
     id: 'components.BatchItem.sectionPackage',
     defaultMessage: 'PACKAGING',
   },
-  sectionAdjustments: {
-    id: 'components.BatchItem.sectionAdjustments',
-    defaultMessage: 'QUANTITY ADJUSTMENTS',
-  },
   sectionAssignments: {
     id: 'components.BatchItem.sectionAssignments',
     defaultMessage: 'ASSIGNMENTS',
@@ -392,5 +348,9 @@ export default defineMessages({
   logs: {
     id: 'components.BatchItem.logs',
     defaultMessage: 'Logs',
+  },
+  mask: {
+    id: 'components.BatchItem.mask',
+    defaultMessage: 'Custom fields template',
   },
 });

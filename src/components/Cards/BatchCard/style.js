@@ -14,7 +14,7 @@ export const BatchCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 406px;
+  height: 426px;
 `;
 
 export const ProductWrapperStyle: string = css`
@@ -153,4 +153,8 @@ export const ImporterWrapperStyle: string = css`
     margin: 0 5px 0 0;
     color: ${colors.GRAY_DARK};
   }
+`;
+
+export const QuantityWrapperStyle: string = css`
+  width: 100%;
 `;

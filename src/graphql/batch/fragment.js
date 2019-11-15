@@ -19,20 +19,12 @@ export const batchFormFragment = gql`
     memo
     no
     quantity
+    producedQuantity
+    preShippedQuantity
+    shippedQuantity
+    postShippedQuantity
+    deliveredQuantity
     latestQuantity
-    batchQuantityRevisions {
-      ... on BatchQuantityRevision {
-        id
-        sort
-        updatedAt
-        updatedBy {
-          ...userAvatarFragment
-        }
-        quantity
-        type
-        memo
-      }
-    }
     producedAt
     deliveredAt
     desiredAt
@@ -150,6 +142,12 @@ export const batchCardFragment = gql`
     id
     no
     archived
+    quantity
+    producedQuantity
+    preShippedQuantity
+    shippedQuantity
+    postShippedQuantity
+    deliveredQuantity
     latestQuantity
     deliveredAt
     desiredAt

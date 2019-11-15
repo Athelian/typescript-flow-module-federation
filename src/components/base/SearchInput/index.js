@@ -48,6 +48,8 @@ function SearchInput(props: Props) {
   return (
     <div className={className}>
       {searchIcon && searchIcon}
+      {/* $FlowFixMe This comment suppresses an error found when upgrading Flow
+       * to v0.112.0. To view the error, delete this comment and run Flow. */}
       <CInput className={inputClassName} value={query} onInputChange={handleOnChange} {...rest} />
       {hasContent &&
         clearButton &&

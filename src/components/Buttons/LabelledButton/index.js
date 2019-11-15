@@ -6,7 +6,7 @@ import Icon from 'components/Icon';
 import Button from '../Button';
 import { ButtonLoadingStyle, ButtonIconStyle, ButtonStyle } from './style';
 
-type OptionalProps = {
+type Props = {|
   className?: string,
   icon?: string,
   disabled?: boolean,
@@ -18,11 +18,11 @@ type OptionalProps = {
   onClick?: Function,
   // @deprecated
   buttonRef?: any,
-};
-
-type Props = OptionalProps & {
   label: React.Node,
-};
+  id?: string,
+  type?: string,
+  'data-testid'?: string,
+|};
 
 const defaultProps = {
   textColor: 'WHITE',

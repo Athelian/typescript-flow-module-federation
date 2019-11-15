@@ -34,10 +34,8 @@ import {
   parseGenericField,
   parseMemoField,
   parseDateField,
-  parseEnumField,
   parseArrayOfIdsField,
   parseParentIdField,
-  parseArrayOfChildrenField,
   parseCustomFieldsField,
   parseTodoField,
   parseSizeField,
@@ -110,6 +108,31 @@ export const prepareParsedBatchInput = (
       getByPathWithDefault(null, 'quantity', originalValues),
       newValues.quantity
     ),
+    ...parseGenericField(
+      'producedQuantity',
+      getByPathWithDefault(null, 'producedQuantity', originalValues),
+      newValues.producedQuantity
+    ),
+    ...parseGenericField(
+      'preShippedQuantity',
+      getByPathWithDefault(null, 'preShippedQuantity', originalValues),
+      newValues.preShippedQuantity
+    ),
+    ...parseGenericField(
+      'shippedQuantity',
+      getByPathWithDefault(null, 'shippedQuantity', originalValues),
+      newValues.shippedQuantity
+    ),
+    ...parseGenericField(
+      'postShippedQuantity',
+      getByPathWithDefault(null, 'postShippedQuantity', originalValues),
+      newValues.postShippedQuantity
+    ),
+    ...parseGenericField(
+      'deliveredQuantity',
+      getByPathWithDefault(null, 'deliveredQuantity', originalValues),
+      newValues.deliveredQuantity
+    ),
     ...parseDateField(
       'deliveredAt',
       getByPathWithDefault(null, 'deliveredAt', originalValues),
@@ -162,29 +185,6 @@ export const prepareParsedBatchInput = (
           getByPathWithDefault(null, 'container', originalValues),
           newValues.container
         )),
-    ...parseArrayOfChildrenField(
-      'batchQuantityRevisions',
-      getByPathWithDefault([], 'batchQuantityRevisions', originalValues),
-      newValues.batchQuantityRevisions,
-      (oldQuantities: ?Object, newQuantities: Object) => ({
-        ...(!oldQuantities ? {} : { id: oldQuantities.id }),
-        ...parseGenericField(
-          'quantity',
-          getByPathWithDefault(null, 'quantity', oldQuantities),
-          newQuantities.quantity
-        ),
-        ...parseEnumField(
-          'type',
-          getByPathWithDefault(null, 'type', oldQuantities),
-          newQuantities.type
-        ),
-        ...parseMemoField(
-          'memo',
-          getByPathWithDefault(null, 'memo', oldQuantities),
-          newQuantities.memo
-        ),
-      })
-    ),
     ...parseGenericField(
       'packageName',
       getByPathWithDefault(null, 'packageName', originalValues),

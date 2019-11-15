@@ -24,7 +24,7 @@ import {
   CellInputWrapperStyle,
   InputStyle,
 } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
-import { SelectOptionStyle, SelectInputStyle } from './style';
+import { SelectOptionStyle, SelectInputStyle, SelectStyle } from './style';
 
 const MetricSelectInput = ({
   isOpen,
@@ -69,13 +69,15 @@ const MetricValueInput = (
         <NumberInput {...inputProps} className={InputStyle} disabled={readonly} />
       )}
       renderSelect={selectProps => (
-        <SelectInput
-          {...selectProps}
-          optionWidth={30}
-          optionHeight={30}
-          renderInput={MetricSelectInput}
-          renderOption={MetricSelectOption}
-        />
+        <div className={SelectStyle}>
+          <SelectInput
+            {...selectProps}
+            optionWidth={30}
+            optionHeight={30}
+            renderInput={MetricSelectInput}
+            renderOption={MetricSelectOption}
+          />
+        </div>
       )}
     />
   </div>

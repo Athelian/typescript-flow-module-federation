@@ -49,6 +49,9 @@ const NumberInput = React.forwardRef<Props, HTMLInputElement>(
         type="number"
         onChange={handleChange}
         onBlur={handleBlur}
+        /* $FlowFixMe This comment suppresses an error found when upgrading
+         * Flow to v0.112.0. To view the error, delete this comment and run
+         * Flow. */
         {...rest}
       />
     );

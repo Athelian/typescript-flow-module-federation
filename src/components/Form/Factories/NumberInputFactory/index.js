@@ -46,6 +46,7 @@ type Props = LabelProps &
     editable: boolean,
     blackout: boolean,
     suffix: ?(string | React.Node),
+    InputWrapperComponent: ({ children: React$Node }) => React$Node,
   };
 
 const defaultProps = {
@@ -61,6 +62,7 @@ const defaultProps = {
   vertical: false,
   showExtraToggleButton: false,
   autoCalculateIsToggled: false,
+  InputWrapperComponent: React.Fragment,
 };
 
 const NumberInputFactory = ({
@@ -97,6 +99,7 @@ const NumberInputFactory = ({
   blackout,
   nullable,
   suffix,
+  InputWrapperComponent,
 }: Props): React.Node => {
   const labelConfig = { required, align: labelAlign, width: labelWidth, height: labelHeight };
 
@@ -129,7 +132,6 @@ const NumberInputFactory = ({
     onBlur,
     onFocus,
     align: inputAlign,
-
     nullable,
   };
   const inputReadOnly = !editable || autoCalculateIsToggled;
@@ -143,7 +145,7 @@ const NumberInputFactory = ({
 
   if (!blackout) {
     renderedInput = (
-      <>
+      <InputWrapperComponent>
         {inputReadOnly ? (
           <NumberInput
             {...inputConfig}
@@ -174,7 +176,7 @@ const NumberInputFactory = ({
             />
           </div>
         )}
-      </>
+      </InputWrapperComponent>
     );
   }
 

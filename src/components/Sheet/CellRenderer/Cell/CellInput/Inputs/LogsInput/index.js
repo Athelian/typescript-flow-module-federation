@@ -43,22 +43,18 @@ const LogsInput = ({
 
       <SlideView isOpen={focus} onRequestClose={forceBlur}>
         <SlideViewLayout>
-          {focus && (
-            <>
-              <SlideViewNavBar>
-                <EntityIcon icon="LOGS" color="LOGS" />
-              </SlideViewNavBar>
+          <SlideViewNavBar>
+            <EntityIcon icon="LOGS" color="LOGS" />
+          </SlideViewNavBar>
 
-              <Content>
-                <Timeline
-                  query={query}
-                  queryField={queryField}
-                  entity={{ [entityKey]: value }}
-                  variables={{ id: value }}
-                />
-              </Content>
-            </>
-          )}
+          <Content>
+            <Timeline
+              query={query}
+              queryField={queryField}
+              entity={{ [entityKey]: value }}
+              variables={{ id: value }}
+            />
+          </Content>
         </SlideViewLayout>
       </SlideView>
     </div>

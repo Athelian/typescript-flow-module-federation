@@ -27,6 +27,7 @@ const defaultProps = {
   height: '30px',
 };
 
+// TODO: remove this when old RM is removing
 const DefaultMetricStyle = ({
   isFocused,
   hasError,
@@ -39,7 +40,7 @@ const DefaultMetricStyle = ({
   tabIndex,
 }: Props): React.Node => (
   <div
-    {...(id ? { id } : {})}
+    id={id}
     {...(tabIndex ? { tabIndex } : {})}
     className={DefaultStyleWrapperStyle({
       type: 'number',

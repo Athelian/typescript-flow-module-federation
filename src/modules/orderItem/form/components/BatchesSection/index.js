@@ -14,7 +14,6 @@ import {
   BATCH_SET_QUANTITY,
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
-  BATCH_SET_QUANTITY_ADJUSTMENTS,
 } from 'modules/permission/constants/batch';
 import { getByPathWithDefault } from 'utils/fp';
 import FormattedNumber from 'components/FormattedNumber';
@@ -55,9 +54,7 @@ function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
   const allowCloneBatch = hasPermission(BATCH_CREATE);
   const allowDeleteBatch = hasPermission(BATCH_DELETE);
   const allowUpdateBatchNo = hasPermission([BATCH_UPDATE, BATCH_SET_NO]);
-  const allowUpdateBatchQuantity =
-    hasPermission(BATCH_UPDATE) ||
-    (hasPermission(BATCH_SET_QUANTITY) && hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS));
+  const allowUpdateBatchQuantity = hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_QUANTITY);
   const allowUpdateBatchDelivery = hasPermission([BATCH_UPDATE, BATCH_SET_DELIVERY_DATE]);
   const allowUpdateBatchDesired = hasPermission([BATCH_UPDATE, BATCH_SET_DESIRED_DATE]);
 

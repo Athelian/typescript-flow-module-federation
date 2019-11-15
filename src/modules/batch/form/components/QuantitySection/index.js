@@ -2,38 +2,21 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import {
-  BATCH_UPDATE,
-  BATCH_SET_QUANTITY_ADJUSTMENTS,
-  BATCH_SET_QUANTITY,
-} from 'modules/permission/constants/batch';
+import { BATCH_UPDATE, BATCH_SET_QUANTITY } from 'modules/permission/constants/batch';
+import { findActiveQuantityField } from 'utils/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { BatchInfoContainer } from 'modules/batch/form/containers';
-import { Tooltip } from 'components/Tooltip';
-import { NewButton } from 'components/Buttons';
-import { injectUid } from 'utils/id';
 import { FormField, FormContainer } from 'modules/form';
-import {
-  SectionHeader,
-  SectionWrapper,
-  DefaultAdjustmentStyle,
-  NumberInputFactory,
-} from 'components/Form';
+import { SectionHeader, SectionWrapper, NumberInputFactory } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import validator from 'modules/batch/form/validator';
-import Diff from './Diff';
-import {
-  QuantitySectionWrapperStyle,
-  AddAdjustmentButtonWrapperStyle,
-  QuantityRevisionItemStyle,
-  QuantityRevisionDiffStyle,
-} from './style';
+import CurrentQuantity from './CurrentQuantity';
+import { QuantitySectionWrapperStyle } from './style';
 
 const QuantitySection = () => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const allowUpdate = hasPermission(BATCH_UPDATE);
 
   return (
     <SectionWrapper id="batch_quantitySection">
@@ -45,17 +28,25 @@ const QuantitySection = () => {
         <Subscribe to={[FormContainer]}>
           {({ setFieldTouched }) => (
             <Subscribe to={[BatchInfoContainer]}>
-              {({
-                originalValues,
-                state,
-                setFieldArrayValue,
-                removeBatchQuantityRevisionByIndex,
-                calculatePackageQuantity,
-              }) => {
+              {({ originalValues, state, setFieldArrayValue, calculatePackageQuantity }) => {
                 const values = { ...originalValues, ...state };
 
-                const { quantity, batchQuantityRevisions = [] } = values;
+                const {
+                  quantity,
+                  producedQuantity,
+                  preShippedQuantity,
+                  shippedQuantity,
+                  postShippedQuantity,
+                  deliveredQuantity,
+                } = values;
 
+                const activeQuantity = findActiveQuantityField({
+                  producedQuantity,
+                  preShippedQuantity,
+                  shippedQuantity,
+                  postShippedQuantity,
+                  deliveredQuantity,
+                });
                 return (
                   <GridColumn gap="10px">
                     <FormField
@@ -83,114 +74,173 @@ const QuantitySection = () => {
                             />
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
+                          InputWrapperComponent={
+                            activeQuantity === 'initialQuantity' ? CurrentQuantity : React.Fragment
+                          }
                         />
                       )}
                     </FormField>
-
-                    {batchQuantityRevisions &&
-                      batchQuantityRevisions.map((item, index) => (
-                        <div key={item.id} className={QuantityRevisionItemStyle}>
-                          <DefaultAdjustmentStyle
-                            editable={allowUpdate || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)}
-                            index={index}
-                            adjustment={item}
-                            setFieldArrayValue={setFieldArrayValue}
-                            removeArrayItem={() => {
-                              removeBatchQuantityRevisionByIndex(index);
-                              calculatePackageQuantity(setFieldTouched);
-                            }}
-                            enumType="BatchQuantityRevisionType"
-                            targetName="batchQuantityRevisions"
-                            typeName="type"
-                            memoName="memo"
-                            valueInput={
-                              <FormField
-                                name={`batchQuantityRevisions.${index}.quantity`}
-                                initValue={item.quantity}
-                                setFieldValue={setFieldArrayValue}
-                              >
-                                {({ name, ...inputHandlers }) => (
-                                  <>
-                                    <NumberInputFactory
-                                      name={name}
-                                      {...inputHandlers}
-                                      onBlur={evt => {
-                                        inputHandlers.onBlur(evt);
-                                        setFieldArrayValue(name, evt.target.value);
-                                        calculatePackageQuantity(setFieldTouched);
-                                      }}
-                                      originalValue={item.quantity}
-                                      editable={
-                                        allowUpdate || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)
-                                      }
-                                    />
-                                  </>
-                                )}
-                              </FormField>
-                            }
-                          />
-                          <div className={QuantityRevisionDiffStyle}>
-                            {index === 0 && <Diff before={quantity} after={item.quantity} />}
-                            {index > 0 && index < 5 && (
-                              <Diff
-                                before={batchQuantityRevisions[index - 1].quantity}
-                                after={item.quantity}
-                              />
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    {(allowUpdate || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)) && (
-                      <div className={AddAdjustmentButtonWrapperStyle}>
-                        {batchQuantityRevisions.length < 5 ? (
-                          <NewButton
-                            data-testid="btnNewQuantity"
-                            label={
-                              <FormattedMessage
-                                id="modules.Batches.newQuantity"
-                                defaultMessage="NEW QUANTITY"
-                              />
-                            }
-                            onClick={() => {
-                              setFieldArrayValue(
-                                `batchQuantityRevisions[${batchQuantityRevisions.length}]`,
-                                injectUid({
-                                  type: 'Other',
-                                  quantity:
-                                    batchQuantityRevisions.length === 0
-                                      ? quantity
-                                      : batchQuantityRevisions[batchQuantityRevisions.length - 1]
-                                          .quantity,
-                                  memo: '',
-                                })
-                              );
-                              calculatePackageQuantity(setFieldTouched);
-                            }}
-                          />
-                        ) : (
-                          <Tooltip
-                            message={
-                              <FormattedMessage
-                                id="modules.batch.batchQuantityRevisionMaxMessage"
-                                defaultMessage="Only a maximum of 5 new quantities is allowed."
-                              />
-                            }
-                          >
-                            <div>
-                              <NewButton
-                                label={
-                                  <FormattedMessage
-                                    id="modules.Batches.newQuantity"
-                                    defaultMessage="NEW QUANTITY"
-                                  />
-                                }
-                                disabled
-                              />
-                            </div>
-                          </Tooltip>
-                        )}
-                      </div>
-                    )}
+                    <FormField
+                      name="producedQuantity"
+                      initValue={producedQuantity}
+                      setFieldValue={setFieldArrayValue}
+                      values={values}
+                      validator={validator}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <NumberInputFactory
+                          name={name}
+                          nullable
+                          {...inputHandlers}
+                          onBlur={evt => {
+                            inputHandlers.onBlur(evt);
+                            setFieldArrayValue('producedQuantity', evt.target.value);
+                            calculatePackageQuantity(setFieldTouched);
+                          }}
+                          originalValue={originalValues[name]}
+                          label={
+                            <FormattedMessage
+                              id="modules.Batches.producedQuantity"
+                              defaultMessage="PRODUCED QUANTITY"
+                            />
+                          }
+                          editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
+                          InputWrapperComponent={
+                            activeQuantity === 'producedQuantity' ? CurrentQuantity : React.Fragment
+                          }
+                        />
+                      )}
+                    </FormField>
+                    <FormField
+                      name="preShippedQuantity"
+                      initValue={preShippedQuantity}
+                      setFieldValue={setFieldArrayValue}
+                      values={values}
+                      validator={validator}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <NumberInputFactory
+                          name={name}
+                          nullable
+                          {...inputHandlers}
+                          onBlur={evt => {
+                            inputHandlers.onBlur(evt);
+                            setFieldArrayValue('preShippedQuantity', evt.target.value);
+                            calculatePackageQuantity(setFieldTouched);
+                          }}
+                          originalValue={originalValues[name]}
+                          label={
+                            <FormattedMessage
+                              id="modules.Batches.preShippedQuantity"
+                              defaultMessage="PRE-SHIPPED QUANTITY"
+                            />
+                          }
+                          editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
+                          InputWrapperComponent={
+                            activeQuantity === 'preShippedQuantity'
+                              ? CurrentQuantity
+                              : React.Fragment
+                          }
+                        />
+                      )}
+                    </FormField>
+                    <FormField
+                      name="shippedQuantity"
+                      initValue={shippedQuantity}
+                      setFieldValue={setFieldArrayValue}
+                      values={values}
+                      validator={validator}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <NumberInputFactory
+                          name={name}
+                          nullable
+                          {...inputHandlers}
+                          onBlur={evt => {
+                            inputHandlers.onBlur(evt);
+                            setFieldArrayValue('shippedQuantity', evt.target.value);
+                            calculatePackageQuantity(setFieldTouched);
+                          }}
+                          originalValue={originalValues[name]}
+                          label={
+                            <FormattedMessage
+                              id="modules.Batches.shippedQuantity"
+                              defaultMessage="SHIPPED QUANTITY"
+                            />
+                          }
+                          editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
+                          InputWrapperComponent={
+                            activeQuantity === 'shippedQuantity' ? CurrentQuantity : React.Fragment
+                          }
+                        />
+                      )}
+                    </FormField>
+                    <FormField
+                      name="postShippedQuantity"
+                      initValue={postShippedQuantity}
+                      setFieldValue={setFieldArrayValue}
+                      values={values}
+                      validator={validator}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <NumberInputFactory
+                          name={name}
+                          nullable
+                          {...inputHandlers}
+                          onBlur={evt => {
+                            inputHandlers.onBlur(evt);
+                            setFieldArrayValue('postShippedQuantity', evt.target.value);
+                            calculatePackageQuantity(setFieldTouched);
+                          }}
+                          originalValue={originalValues[name]}
+                          label={
+                            <FormattedMessage
+                              id="modules.Batches.postShippedQuantity"
+                              defaultMessage="POST SHIPPED QUANTITY"
+                            />
+                          }
+                          editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
+                          InputWrapperComponent={
+                            activeQuantity === 'postShippedQuantity'
+                              ? CurrentQuantity
+                              : React.Fragment
+                          }
+                        />
+                      )}
+                    </FormField>
+                    <FormField
+                      name="deliveredQuantity"
+                      initValue={deliveredQuantity}
+                      setFieldValue={setFieldArrayValue}
+                      values={values}
+                      validator={validator}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <NumberInputFactory
+                          name={name}
+                          nullable
+                          {...inputHandlers}
+                          onBlur={evt => {
+                            inputHandlers.onBlur(evt);
+                            setFieldArrayValue('deliveredQuantity', evt.target.value);
+                            calculatePackageQuantity(setFieldTouched);
+                          }}
+                          originalValue={originalValues[name]}
+                          label={
+                            <FormattedMessage
+                              id="modules.Batches.deliveredQuantity"
+                              defaultMessage="DELIVERED QUANTITY"
+                            />
+                          }
+                          editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
+                          InputWrapperComponent={
+                            activeQuantity === 'deliveredQuantity'
+                              ? CurrentQuantity
+                              : React.Fragment
+                          }
+                        />
+                      )}
+                    </FormField>
                   </GridColumn>
                 );
               }}

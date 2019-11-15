@@ -31,6 +31,7 @@ import ToggleInput from './Inputs/ToggleInput';
 import LogsInput from './Inputs/LogsInput';
 import TasksInput from './Inputs/TasksInput';
 import MainExporterInput from './Inputs/MainExporterInput';
+import MaskSelectorInput from './Inputs/MaskSelectorInput';
 
 type Props = {
   value: any,
@@ -95,11 +96,12 @@ const inputs = {
   task_tags: TagsInput.Task,
   project_tags: TagsInput.Project,
   // Selector
+  partner: PartnerSelectorInput,
+  partners: PartnersSelectorInput,
   user_assignment: UserAssignmentInput,
-  exporter: PartnerSelectorInput.Exporter,
   main_exporter: MainExporterInput,
-  forwarders: PartnersSelectorInput.Forwarders,
   warehouse: WarehouseSelectorInput,
+  mask: MaskSelectorInput,
   // Logs
   order_logs: LogsInput.Order,
   order_item_logs: LogsInput.OrderItem,
@@ -145,15 +147,18 @@ const CellInput = ({
     if (!containerRef.current) {
       return;
     }
+    const container = containerRef.current;
 
     if (inputFocus) {
-      const focusableElement = containerRef.current.querySelector(
-        [
-          'input:not([disabled]):not([tabindex="-1"])',
-          'button:not([disabled]):not([tabindex="-1"])',
-          '[tabindex]:not([disabled]):not([tabindex="-1"])',
-        ].join(',')
-      );
+      const focusableElement =
+        container.querySelector('[data-focus-first]:not([disabled])') ||
+        container.querySelector(
+          [
+            'input:not([disabled]):not([tabindex="-1"])',
+            'button:not([disabled]):not([tabindex="-1"])',
+            '[tabindex]:not([disabled]):not([tabindex="-1"])',
+          ].join(',')
+        );
       if (focusableElement) {
         focusableElement.focus({
           preventScroll: true,
@@ -167,7 +172,7 @@ const CellInput = ({
         }
       }
     } else {
-      containerRef.current.focus({
+      container.focus({
         preventScroll: true,
       });
     }
@@ -200,6 +205,10 @@ const CellInput = ({
     onUpdate(dirtyValue);
   };
 
+  const handleClick = (e: SyntheticEvent<HTMLElement>) => {
+    e.stopPropagation();
+  };
+
   const handleKeyDown = (e: SyntheticKeyboardEvent<HTMLElement>) => {
     switch (e.key) {
       case 'ArrowUp':
@@ -207,6 +216,9 @@ const CellInput = ({
       case 'ArrowRight':
       case 'ArrowLeft':
         e.stopPropagation();
+        if (!(e.target instanceof HTMLInputElement)) {
+          e.preventDefault();
+        }
         break;
       case 'Tab': {
         if (containerRef.current) {
@@ -264,6 +276,7 @@ const CellInput = ({
       role="presentation"
       onFocus={onFocus}
       onBlur={handleBlur}
+      onClick={handleClick}
       onKeyDown={handleKeyDown}
     >
       {React.createElement(inputs[type], {

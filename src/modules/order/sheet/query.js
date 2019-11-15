@@ -14,16 +14,14 @@ import {
 } from 'graphql';
 import {
   sheetCustomizableFragment,
+  sheetMaskFragment,
   sheetModelFragment,
   sheetOwnedFragment,
   sheetWarehouseFragment,
 } from 'modules/sheet/common/fragment';
 import { sheetOrderFragment } from 'modules/sheet/order/fragment';
 import { sheetOrderItemFragment } from 'modules/sheet/orderItem/fragment';
-import {
-  sheetBatchFragment,
-  sheetBatchQuantityRevisionFragment,
-} from 'modules/sheet/batch/fragment';
+import { sheetBatchFragment } from 'modules/sheet/batch/fragment';
 import { sheetShipmentFragment, sheetTimelineDateFragment } from 'modules/sheet/shipment/fragment';
 import { sheetContainerFragment } from 'modules/sheet/container/fragment';
 
@@ -86,7 +84,6 @@ export const ordersQuery = gql`
   ${sheetOrderFragment}
   ${sheetOrderItemFragment}
   ${sheetBatchFragment}
-  ${sheetBatchQuantityRevisionFragment}
   ${sheetShipmentFragment}
   ${sheetShipmentExtraFragment}
   ${sheetContainerFragment}
@@ -95,6 +92,7 @@ export const ordersQuery = gql`
   ${sheetOwnedFragment}
   ${sheetCustomizableFragment}
   ${sheetWarehouseFragment}
+  ${sheetMaskFragment}
 
   ${userAvatarFragment}
   ${partnerNameFragment}
@@ -147,7 +145,6 @@ export const orderItemByIDQuery = gql`
 
   ${sheetOrderItemFragment}
   ${sheetBatchFragment}
-  ${sheetBatchQuantityRevisionFragment}
   ${sheetShipmentFragment}
   ${sheetShipmentExtraFragment}
   ${sheetContainerFragment}
@@ -156,6 +153,7 @@ export const orderItemByIDQuery = gql`
   ${sheetOwnedFragment}
   ${sheetCustomizableFragment}
   ${sheetWarehouseFragment}
+  ${sheetMaskFragment}
 
   ${userAvatarFragment}
   ${partnerNameFragment}
@@ -204,7 +202,6 @@ export const batchByIDQuery = gql`
   }
 
   ${sheetBatchFragment}
-  ${sheetBatchQuantityRevisionFragment}
   ${sheetShipmentFragment}
   ${sheetShipmentExtraFragment}
   ${sheetContainerFragment}
@@ -213,6 +210,7 @@ export const batchByIDQuery = gql`
   ${sheetOwnedFragment}
   ${sheetCustomizableFragment}
   ${sheetWarehouseFragment}
+  ${sheetMaskFragment}
 
   ${userAvatarFragment}
   ${partnerNameFragment}
@@ -263,6 +261,7 @@ export const shipmentByIDQuery = gql`
   ${sheetOwnedFragment}
   ${sheetCustomizableFragment}
   ${sheetWarehouseFragment}
+  ${sheetMaskFragment}
 
   ${userAvatarFragment}
   ${partnerNameFragment}

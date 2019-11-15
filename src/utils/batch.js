@@ -1,13 +1,7 @@
+/* eslint-disable no-param-reassign */
 // @flow
-import { set, cloneDeep } from 'lodash';
-import type {
-  MetricValue,
-  Size,
-  Batch,
-  BatchPayload,
-  OrderItemPayload,
-  BatchQuantityRevision,
-} from 'generated/graphql';
+import type { MetricValue, Size, Batch, BatchPayload, OrderItemPayload } from 'generated/graphql';
+import produce from 'immer';
 import {
   BATCH_UPDATE,
   BATCH_SET_CUSTOM_FIELDS,
@@ -26,9 +20,56 @@ import {
 } from './metric';
 import { getByPathWithDefault } from './fp';
 
+export const findActiveQuantityField = ({
+  producedQuantity,
+  preShippedQuantity,
+  shippedQuantity,
+  postShippedQuantity,
+  deliveredQuantity,
+}: {
+  producedQuantity: ?number,
+  preShippedQuantity: ?number,
+  shippedQuantity: ?number,
+  postShippedQuantity: ?number,
+  deliveredQuantity: ?number,
+}) => {
+  if (deliveredQuantity) return 'deliveredQuantity';
+
+  if (postShippedQuantity) return 'postShippedQuantity';
+
+  if (shippedQuantity) return 'shippedQuantity';
+
+  if (preShippedQuantity) return 'preShippedQuantity';
+
+  if (producedQuantity) return 'producedQuantity';
+
+  return 'initialQuantity';
+};
+
+export const getBatchLatestQuantity = (batch: BatchPayload) => {
+  const quantity = batch?.quantity ?? 0;
+  const deliveredQuantity = batch?.deliveredQuantity ?? null;
+  const postShippedQuantity = batch?.postShippedQuantity ?? null;
+  const shippedQuantity = batch?.shippedQuantity ?? null;
+  const preShippedQuantity = batch?.preShippedQuantity ?? null;
+  const producedQuantity = batch?.producedQuantity ?? null;
+
+  if (deliveredQuantity !== null) return deliveredQuantity;
+
+  if (postShippedQuantity !== null) return postShippedQuantity;
+
+  if (shippedQuantity !== null) return shippedQuantity;
+
+  if (preShippedQuantity !== null) return preShippedQuantity;
+
+  if (producedQuantity !== null) return producedQuantity;
+
+  return quantity;
+};
+
 export const findWeight = (batch: BatchPayload) => {
-  const packageGrossWeight = getByPathWithDefault(null, 'packageGrossWeight', batch);
-  const packageQuantity = getByPathWithDefault(0, 'packageQuantity', batch);
+  const packageGrossWeight = batch?.packageGrossWeight;
+  const packageQuantity = batch?.packageQuantity ?? 0;
   return packageQuantity && packageGrossWeight
     ? times(
         packageQuantity,
@@ -38,34 +79,16 @@ export const findWeight = (batch: BatchPayload) => {
 };
 
 export const findVolume = (batch: BatchPayload) => {
-  const volume = getByPathWithDefault(null, 'packageVolume', batch);
-  const packageQuantity = getByPathWithDefault(0, 'packageQuantity', batch);
+  const volume = batch?.packageVolume;
+  const packageQuantity = batch?.packageQuantity ?? 0;
   return packageQuantity && volume
     ? times(packageQuantity, convertVolume(volume.value, volume.metric, 'm³'))
     : 0;
 };
 
-export const getBatchLatestQuantity = (batch: BatchPayload): number => {
-  const quantity = getByPathWithDefault(0, 'quantity', batch);
-  const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', batch);
-  return batchQuantityRevisions.length > 0
-    ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
-    : quantity;
-};
-
-export const totalBatchPriceAmount = ({
-  quantity = 0,
-  batchQuantityRevisions = [],
-  orderItem,
-}: {
-  quantity: number,
-  batchQuantityRevisions: Array<BatchQuantityRevision>,
-  orderItem: OrderItemPayload,
-}): number => {
-  return times(
-    getBatchLatestQuantity({ quantity, batchQuantityRevisions }),
-    getByPathWithDefault(0, 'price.amount', orderItem)
-  );
+export const totalBatchPriceAmount = (batch: Batch): number => {
+  const quantity = getBatchLatestQuantity(batch);
+  return times(quantity, batch?.orderItem?.price?.amount ?? 0);
 };
 
 export const calculateVolume = (volume: MetricValue, size: Size): Object => {
@@ -95,16 +118,10 @@ export const calculateVolume = (volume: MetricValue, size: Size): Object => {
 };
 
 export const calculatePackageQuantity = (batch: Batch) => {
-  const quantity = getByPathWithDefault(0, 'quantity', batch);
-  const packageCapacity = getByPathWithDefault(0, 'packageCapacity', batch);
-  const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', batch);
+  const quantity = getBatchLatestQuantity(batch);
+  const packageCapacity = batch?.packageCapacity;
   if (packageCapacity > 0) {
-    const validQuantity =
-      batchQuantityRevisions.length > 0
-        ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
-        : quantity;
-
-    return divide(validQuantity, packageCapacity);
+    return divide(quantity, packageCapacity);
   }
   return 0;
 };
@@ -118,7 +135,6 @@ export const generateCloneBatch = (
     id: uuid(),
     isNew: true,
     no: `${no} - clone`,
-    batchQuantityRevisions: [],
     todo: {
       tasks: [],
     },
@@ -154,51 +170,33 @@ export const findTotalAutoFillBatches = ({
 };
 
 export const generateBatchByOrderItem = (orderItem: OrderItemPayload): Batch => {
-  const packageName = getByPathWithDefault('', 'productProvider.defaultPackage.name', orderItem);
-  const packageCapacity = getByPathWithDefault(
-    0,
-    'productProvider.defaultPackage.capacity',
-    orderItem
-  );
-  const packageGrossWeight = getByPathWithDefault(
-    {
-      metric: defaultWeightMetric,
+  const packageName = orderItem?.productProvider?.defaultPackage?.name ?? '';
+  const packageCapacity = orderItem?.productProvider?.defaultPackage?.capacity ?? 0;
+  const packageGrossWeight = orderItem?.productProvider?.defaultPackage?.grossWeight ?? {
+    metric: defaultWeightMetric,
+    value: 0,
+  };
+  const packageVolume = orderItem?.productProvider?.defaultPackage?.volume ?? {
+    metric: defaultVolumeMetric,
+    value: 0,
+  };
+  const packageSize = orderItem?.productProvider?.defaultPackage?.size ?? {
+    width: {
+      metric: defaultDistanceMetric,
       value: 0,
     },
-    'productProvider.defaultPackage.grossWeight',
-    orderItem
-  );
-  const packageVolume = getByPathWithDefault(
-    {
-      metric: defaultVolumeMetric,
+    height: {
+      metric: defaultDistanceMetric,
       value: 0,
     },
-    'productProvider.defaultPackage.volume',
-    orderItem
-  );
-  const packageSize = getByPathWithDefault(
-    {
-      width: {
-        metric: defaultDistanceMetric,
-        value: 0,
-      },
-      height: {
-        metric: defaultDistanceMetric,
-        value: 0,
-      },
-      length: {
-        metric: defaultDistanceMetric,
-        value: 0,
-      },
+    length: {
+      metric: defaultDistanceMetric,
+      value: 0,
     },
-    'productProvider.defaultPackage.size',
-    orderItem
-  );
-  const autoCalculatePackageVolume = getByPathWithDefault(
-    true,
-    'productProvider.defaultPackage.autoCalculateVolume',
-    orderItem
-  );
+  };
+
+  const autoCalculatePackageVolume =
+    orderItem?.productProvider?.defaultPackage?.autoCalculateVolume ?? true;
   return {
     packageName,
     packageCapacity,
@@ -219,7 +217,6 @@ export const generateBatchByOrderItem = (orderItem: OrderItemPayload): Batch => 
     shipmentSort: 0,
     quantity: 0,
     latestQuantity: 0,
-    batchQuantityRevisions: [],
     customFields: {
       mask: null,
       fieldValues: [],
@@ -238,10 +235,6 @@ export const generateBatchByOrderItem = (orderItem: OrderItemPayload): Batch => 
         skipped: 0,
         delayed: 0,
       },
-      // TODO: remove deprecated field
-      completedCount: 0,
-      inProgressCount: 0,
-      remainingCount: 0,
     },
     createdAt: null,
     updatedAt: null,
@@ -266,25 +259,19 @@ export const autoFillBatch = (orderItem: OrderItemPayload, quantity: number): Ba
 };
 
 export const updateBatchCardQuantity = (batch: Batch, quantity: number): Batch => {
-  const autoCalculatePackageQuantity = getByPathWithDefault(
-    true,
-    'autoCalculatePackageQuantity',
-    batch
-  );
-  const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', batch);
+  const autoCalculatePackageQuantity = batch?.autoCalculatePackageQuantity ?? true;
+  const field: string = findActiveQuantityField({
+    producedQuantity: batch?.producedQuantity,
+    preShippedQuantity: batch?.preShippedQuantity,
+    shippedQuantity: batch?.shippedQuantity,
+    postShippedQuantity: batch?.postShippedQuantity,
+    deliveredQuantity: batch?.deliveredQuantity,
+  });
 
-  const newBatch = cloneDeep(batch);
-  if (batchQuantityRevisions.length > 0) {
-    set(
-      newBatch,
-      `batchQuantityRevisions[${batchQuantityRevisions.length - 1}].quantity`,
-      quantity
-    );
-  } else {
-    set(newBatch, `quantity`, quantity);
-  }
-  if (autoCalculatePackageQuantity) {
-    set(newBatch, `packageQuantity`, calculatePackageQuantity(newBatch));
-  }
-  return newBatch;
+  return produce(batch, draft => {
+    draft[field] = quantity;
+    if (autoCalculatePackageQuantity) {
+      draft.packageQuantity = calculatePackageQuantity(draft);
+    }
+  });
 };

@@ -21,9 +21,9 @@ function getQuantitySummary(item: Object) {
   let numOfShipped = 0;
   if (item.batches.nodes) {
     item.batches.nodes.forEach(batch => {
-      const { quantity, batchQuantityRevisions, orderItem } = batch;
+      const { orderItem } = batch;
 
-      const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+      const latestQuantity = getBatchLatestQuantity(batch);
 
       batchedQuantity += latestQuantity;
       numOfBatched += 1;

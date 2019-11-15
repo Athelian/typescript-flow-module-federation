@@ -36,7 +36,7 @@ describe('Warehouse', () => {
           .get('input[name="surface"]')
           .should('have.value', `${surface}`);
 
-        cy.getByTestId('saveButton')
+        cy.findByTestId('saveButton')
           .click()
           .should('not.exist');
 
@@ -60,7 +60,7 @@ describe('Warehouse', () => {
         .clear()
         .blur();
 
-      cy.getByTestId('saveButton').should('be.disabled');
+      cy.findByTestId('saveButton').should('be.disabled');
 
       cy.get('input[name="name"]')
         .type(updatedName)
@@ -68,7 +68,7 @@ describe('Warehouse', () => {
         .should('have.value', updatedName)
         .blur();
 
-      cy.getByTestId('saveButton')
+      cy.findByTestId('saveButton')
         .click()
         .should('not.exist');
     });
@@ -76,14 +76,14 @@ describe('Warehouse', () => {
 
   it('clone a warehouse', () => {
     cy.task('fixture', 'warehouse').then(({ clonedName }) => {
-      cy.getByTestId('cloneButton').click();
+      cy.findByTestId('cloneButton').click();
       cy.url().should('include', 'clone');
       cy.get('input[name="name"]')
         .clear()
         .type(clonedName)
         .blur();
 
-      cy.getByTestId('saveButton')
+      cy.findByTestId('saveButton')
         .click()
         .should('not.exist');
     });

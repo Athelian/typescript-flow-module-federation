@@ -49,21 +49,18 @@ import {
   TagsWrapperStyle,
 } from './style';
 
-type OptionalProps = {
+type Props = {|
   onSelectWarehouse: Function,
   onClick: (container: mixed) => void,
   onRemove: (container: mixed) => void,
   selectable: boolean,
   editable: Object,
   actions: Array<React$Node>,
-};
-
-type Props = OptionalProps & {
   intl: IntlShape,
   field: string,
   container: ContainerPayload,
   update: Function,
-};
+|};
 
 const defaultProps = {
   onSelectWarehouse: () => {},

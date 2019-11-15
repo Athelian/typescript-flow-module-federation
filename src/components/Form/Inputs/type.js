@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 
-type OptionalProps = {
+export type InputProps = {|
   value: any,
   name: string,
   placeholder: ?React.Node,
@@ -13,9 +13,7 @@ type OptionalProps = {
   readOnly: boolean,
   readOnlyWidth: string,
   readOnlyHeight: string,
-};
-
-export type InputProps = OptionalProps;
+|};
 
 export const defaultInputProps = {
   value: '',

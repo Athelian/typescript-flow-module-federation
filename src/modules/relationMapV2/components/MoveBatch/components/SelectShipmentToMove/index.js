@@ -1,18 +1,23 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import type { IntlShape } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Query } from 'react-apollo';
-import useFilter from 'hooks/useFilter';
+import useFilterSort from 'hooks/useFilterSort';
 import loadMore from 'utils/loadMore';
 import { useEntityHasPermissions } from 'contexts/Permissions';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
+import {
+  EntityIcon,
+  Filter,
+  ShipmentFilterConfig,
+  ShipmentSortConfig,
+  Search,
+  Sort,
+} from 'components/NavBar';
 import SlideView from 'components/SlideView';
-import FilterToolBar from 'components/common/FilterToolBar';
-import { shipmentSortMessages } from 'modules/shipment/messages';
 import ShipmentGridView from 'modules/shipment/list/ShipmentGridView';
 import { ShipmentCard } from 'components/Cards';
 import { BATCH_UPDATE } from 'modules/permission/constants/batch';
@@ -22,11 +27,10 @@ import { OverlayStyle } from './style';
 import { shipmentListQuery } from './query';
 import { moveBatchesToShipment } from './mutation';
 
-type Props = {
-  intl: IntlShape,
+type Props = {|
   onSuccess: (orderIds: Array<string>, shipmentIds: Array<string>) => void,
   onNewContainer: (shipment: Object) => void,
-};
+|};
 
 function ShipmentRenderer({
   shipment,
@@ -111,6 +115,7 @@ function ShipmentRenderer({
         </div>
       )}
       <ShipmentCard
+        navigable={false}
         shipment={shipment}
         selectable={shipment.id === selected?.id}
         selected={shipment.id === selected?.id}
@@ -122,7 +127,7 @@ function ShipmentRenderer({
   );
 }
 
-function SelectShipmentToMove({ intl, onSuccess, onNewContainer }: Props) {
+function SelectShipmentToMove({ onSuccess, onNewContainer }: Props) {
   const { dispatch, state } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
@@ -162,63 +167,14 @@ function SelectShipmentToMove({ intl, onSuccess, onNewContainer }: Props) {
     }
   };
 
-  const sortFields = [
-    { title: intl.formatMessage(shipmentSortMessages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(shipmentSortMessages.createdAt), value: 'createdAt' },
-    { title: intl.formatMessage(shipmentSortMessages.shipmentId), value: 'no' },
-    { title: intl.formatMessage(shipmentSortMessages.blNo), value: 'blNo' },
-    { title: intl.formatMessage(shipmentSortMessages.vesselName), value: 'vesselName' },
-    { title: intl.formatMessage(shipmentSortMessages.cargoReady), value: 'cargoReady' },
-    {
-      title: intl.formatMessage(shipmentSortMessages.loadPortDeparture),
-      value: 'loadPortDeparture',
-    },
-    {
-      title: intl.formatMessage(shipmentSortMessages.firstTransitPortArrival),
-      value: 'firstTransitPortArrival',
-    },
-    {
-      title: intl.formatMessage(shipmentSortMessages.firstTransitPortDeparture),
-      value: 'firstTransitPortDeparture',
-    },
-    {
-      title: intl.formatMessage(shipmentSortMessages.secondTransitPortArrival),
-      value: 'secondTransitPortArrival',
-    },
-    {
-      title: intl.formatMessage(shipmentSortMessages.secondTransitPortDeparture),
-      value: 'secondTransitPortDeparture',
-    },
-    {
-      title: intl.formatMessage(shipmentSortMessages.dischargePortArrival),
-      value: 'dischargePortArrival',
-    },
-    {
-      title: intl.formatMessage(shipmentSortMessages.customClearance),
-      value: 'customClearance',
-    },
-    { title: intl.formatMessage(shipmentSortMessages.warehouseArrival), value: 'warehouseArrival' },
-    {
-      title: intl.formatMessage(shipmentSortMessages.deliveryReady),
-      value: 'deliveryReady',
-    },
-  ];
-  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
-    {
-      filter: {
-        query: '',
-        archived: false,
-      },
-      sort: {
-        field: 'updatedAt',
-        direction: 'DESCENDING',
-      },
-      perPage: 10,
-      page: 1,
-    },
-    'filterShipmentOnMoveNRM'
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+    { query: '', archived: false },
+    { updatedAt: 'DESCENDING' },
+    'shipment_cards'
   );
+  const queryVariables = { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 10 };
   const isValid = (isMoveToContainer || isMoveToShipment) && isMoveFromBatch;
+
   return (
     <SlideView
       shouldConfirm={() => !!selected}
@@ -228,14 +184,10 @@ function SelectShipmentToMove({ intl, onSuccess, onNewContainer }: Props) {
       {isOpen && isValid && (
         <SlideViewLayout>
           <SlideViewNavBar>
-            <FilterToolBar
-              icon="SHIPMENT"
-              sortFields={sortFields}
-              filtersAndSort={filterAndSort}
-              onChange={onChangeFilter}
-              canArchive
-              canSearch
-            />
+            <EntityIcon icon="SHIPMENT" color="SHIPMENT" subIcon="CARDS" />
+            <Filter config={ShipmentFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
+            <Search query={query} onChange={setQuery} />
+            <Sort config={ShipmentSortConfig} sortBy={sortBy} onChange={setSortBy} />
             <CancelButton onClick={onCancel} />
             <SaveButton
               disabled={!selected || isProcessing}
@@ -282,4 +234,4 @@ function SelectShipmentToMove({ intl, onSuccess, onNewContainer }: Props) {
   );
 }
 
-export default injectIntl(SelectShipmentToMove);
+export default SelectShipmentToMove;

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -9,6 +10,7 @@ import containerMessages from 'modules/container/messages';
 import batchMessages from 'modules/batch/messages';
 import orderItemMessages from 'modules/orderItem/messages';
 import orderMessages from 'modules/order/messages';
+import orderColumns from 'modules/sheet/order/columns';
 
 const shipmentColumns: Array<ColumnConfig> = [
   {
@@ -640,6 +642,13 @@ const shipmentColumns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: 120,
   },
+  {
+    key: 'shipment.mask',
+    title: <FormattedMessage {...shipmentMessages.mask} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: 200,
+  },
 ];
 
 const containerColumns: Array<ColumnConfig> = [
@@ -1005,11 +1014,39 @@ const batchColumns: Array<ColumnConfig> = [
     },
   },
   {
-    key: 'shipment.container.batch.quantityRevisions',
-    title: <FormattedMessage {...batchMessages.sectionAdjustments} />,
+    key: 'shipment.container.batch.producedQuantity',
+    title: <FormattedMessage {...batchMessages.producedQuantity} />,
     icon: 'BATCH',
     color: colors.BATCH,
-    width: 1035,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.batch.preShippedQuantity',
+    title: <FormattedMessage {...batchMessages.preShippedQuantity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.batch.shippedQuantity',
+    title: <FormattedMessage {...batchMessages.shippedQuantity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.batch.postShippedQuantity',
+    title: <FormattedMessage {...batchMessages.postShippedQuantity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
+  {
+    key: 'shipment.container.batch.deliveredQuantity',
+    title: <FormattedMessage {...batchMessages.deliveredQuantity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
   },
   {
     key: 'shipment.container.batch.packageName',
@@ -1082,8 +1119,13 @@ const batchColumns: Array<ColumnConfig> = [
     color: colors.BATCH,
     width: 120,
   },
-  // custom fields mask
-  // custom fields
+  {
+    key: 'shipment.container.batch.mask',
+    title: <FormattedMessage {...batchMessages.mask} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: 200,
+  },
   // actions
 ];
 
@@ -1189,141 +1231,13 @@ const orderItemColumns: Array<ColumnConfig> = [
     color: colors.ORDER_ITEM,
     width: 120,
   },
-  // custom fields mask
-  // custom fields
-  // actions
-];
-
-const orderColumns: Array<ColumnConfig> = [
   {
-    key: 'shipment.container.batch.orderItem.order.created',
-    title: <FormattedMessage {...orderMessages.createdAt} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 110,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.updated',
-    title: <FormattedMessage {...orderMessages.updatedAt} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 110,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.archived',
-    title: <FormattedMessage {...orderMessages.status} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 120,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.poNo',
-    exportKey: 'containers.batches.orderItem.order.poNo',
-    title: <FormattedMessage {...orderMessages.PO} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
+    key: 'shipment.container.batch.orderItem.mask',
+    title: <FormattedMessage {...batchMessages.mask} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
     width: 200,
   },
-  {
-    key: 'shipment.container.batch.orderItem.order.importer',
-    title: <FormattedMessage {...orderMessages.importer} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.exporter',
-    title: <FormattedMessage {...orderMessages.exporter} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.piNo',
-    title: <FormattedMessage {...orderMessages.PI} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.issuedAt',
-    title: <FormattedMessage {...orderMessages.date} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 125,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.deliveryDate',
-    title: <FormattedMessage {...orderMessages.deliveryDate} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 125,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.currency',
-    title: <FormattedMessage {...orderMessages.currency} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 100,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.incoterm',
-    title: <FormattedMessage {...orderMessages.incoterm} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 100,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.deliveryPlace',
-    title: <FormattedMessage {...orderMessages.deliveryPlace} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.tags',
-    title: <FormattedMessage {...orderMessages.tags} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.memo',
-    title: <FormattedMessage {...orderMessages.memo} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.inCharges',
-    title: <FormattedMessage {...orderMessages.inCharge} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 160,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.files',
-    title: <FormattedMessage {...orderMessages.sectionDocuments} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.todo',
-    title: <FormattedMessage {...orderMessages.tasks} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.orderItem.order.logs',
-    title: <FormattedMessage {...orderMessages.logs} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: 120,
-  },
-  // custom fields mask
-  // custom fields
   // actions
 ];
 
@@ -1370,7 +1284,20 @@ export default function({
       color: colors.ORDER_ITEM,
       width: 200,
     })),
-    ...orderColumns,
+    ...orderColumns(
+      {
+        'order.poNo': 'containers.batches.orderItem.order.poNo',
+      },
+      {}
+    ).filter(
+      c =>
+        ![
+          'order.totalOrdered',
+          'order.totalBatched',
+          'order.totalShipped',
+          'order.totalPrice',
+        ].includes(c.key)
+    ),
     ...orderFieldDefinitions.map(fieldDefinition => ({
       key: `shipment.container.batch..orderItem.order.customField.${fieldDefinition.id}`,
       title: fieldDefinition.name,

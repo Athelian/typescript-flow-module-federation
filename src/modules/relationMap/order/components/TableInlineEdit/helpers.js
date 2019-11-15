@@ -374,35 +374,43 @@ export const parseChangedData = ({
       const order = editData.orders[orderId];
       if (existUpdateOrder) {
         if (existUpdateOrder.input && existUpdateOrder.input.orderItems) {
-          orders.splice(orders.findIndex(currentOrder => currentOrder.id === orderId), 1, {
-            input: {
-              ...existUpdateOrder.input,
-              orderItems: [
-                ...existUpdateOrder.input.orderItems.filter(orderItemId => orderItemId.id !== id),
-                {
-                  ...existUpdateOrder.input.orderItems.find(orderItemId => orderItemId.id === id),
-                  ...changedOrderItem,
-                },
-              ],
-            },
-            id: orderId,
-          });
+          orders.splice(
+            orders.findIndex(currentOrder => currentOrder.id === orderId),
+            1,
+            {
+              input: {
+                ...existUpdateOrder.input,
+                orderItems: [
+                  ...existUpdateOrder.input.orderItems.filter(orderItemId => orderItemId.id !== id),
+                  {
+                    ...existUpdateOrder.input.orderItems.find(orderItemId => orderItemId.id === id),
+                    ...changedOrderItem,
+                  },
+                ],
+              },
+              id: orderId,
+            }
+          );
         } else {
-          orders.splice(orders.findIndex(currentOrder => currentOrder.id === orderId), 1, {
-            input: {
-              ...existUpdateOrder.input,
-              orderItems: [
-                ...(order.orderItems || [])
-                  .filter(orderItemId => orderItemId !== id)
-                  .map(orderItemId => ({ id: orderItemId })),
-                {
-                  ...changedOrderItem,
-                  id,
-                },
-              ],
-            },
-            id: orderId,
-          });
+          orders.splice(
+            orders.findIndex(currentOrder => currentOrder.id === orderId),
+            1,
+            {
+              input: {
+                ...existUpdateOrder.input,
+                orderItems: [
+                  ...(order.orderItems || [])
+                    .filter(orderItemId => orderItemId !== id)
+                    .map(orderItemId => ({ id: orderItemId })),
+                  {
+                    ...changedOrderItem,
+                    id,
+                  },
+                ],
+              },
+              id: orderId,
+            }
+          );
         }
       } else {
         orders.push({
@@ -466,13 +474,6 @@ export const parseChangedData = ({
 
           case 'tags':
             changedBatch.tagIds = updateValue.map(({ id: tagId }) => tagId);
-            break;
-          case 'batchQuantityRevisions':
-            changedBatch.batchQuantityRevisions = updateValue.map(revision => ({
-              id: revision.id,
-              quantity: revision.quantity,
-              type: revision.type,
-            }));
             break;
 
           case 'customFields':
@@ -581,10 +582,7 @@ function getFieldValues(fields: Array<Object>, values: Array<Object>, editData: 
       typeof getExportValue === 'function'
         ? partialRight(getExportValue, [editData])
         : getByPathWithDefault('', name);
-    const value = compose(
-      getFieldValueByType(type),
-      getValueFunction
-    )(values);
+    const value = compose(getFieldValueByType(type), getValueFunction)(values);
     if (isExpandRow(field)) {
       return value.split(',');
     }
@@ -633,18 +631,12 @@ const expandQuantityColumn = (batchColumnFieldsFilter: Array<Object>) => {
       ? [
           {
             ...batchField,
-            getExportValue: compose(
-              parseTypeFromValue,
-              batchField.getExportValue
-            ),
+            getExportValue: compose(parseTypeFromValue, batchField.getExportValue),
             messageId: `${batchField.messageId}.type`,
           },
           {
             ...batchField,
-            getExportValue: compose(
-              parseQuantityFromValue,
-              batchField.getExportValue
-            ),
+            getExportValue: compose(parseQuantityFromValue, batchField.getExportValue),
             messageId: `${batchField.messageId}.quantity`,
           },
         ]

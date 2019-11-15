@@ -89,14 +89,19 @@ const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent }: ImplProp
       state.rows.map((row, rowIndex) =>
         row.map((cell: CellValue, columnIndex) => {
           let item = null;
+          let parentCell = cell;
+
           if (cell.data) {
             const itemIdx = parseFloat(cell.data.path.split('.')[0]);
             item = state.items[itemIdx];
           }
 
-          let parentCell = cell;
           if (cell.merged) {
             parentCell = state.rows[cell.merged.from.x][cell.merged.from.y];
+            if (parentCell.data) {
+              const itemIdx = parseFloat(parentCell.data.path.split('.')[0]);
+              item = state.items[itemIdx];
+            }
           }
 
           return {

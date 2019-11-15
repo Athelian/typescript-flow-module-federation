@@ -1,5 +1,6 @@
 // @flow
 import { Container } from 'unstated';
+import { set, cloneDeep } from 'lodash';
 import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
 import { defaultAreaMetric } from 'utils/metric';
@@ -53,6 +54,13 @@ export default class WarehouseInfoContainer extends Container<FormState> {
   setFieldValue = (name: string, value: mixed) => {
     this.setState({
       [name]: value,
+    });
+  };
+
+  setFieldArrayValue = (path: string, value: any) => {
+    this.setState(prevState => {
+      const newState = set(cloneDeep(prevState), path, value);
+      return newState;
     });
   };
 

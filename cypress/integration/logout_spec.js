@@ -1,11 +1,11 @@
 describe('Logout', () => {
   it('login and logout then redirect back to login page', () => {
     cy.visit('/order')
-      .getByTestId('setting-button')
+      .findByTestId('setting-button')
       .click()
-      .getByTestId('logout-button')
+      .findByTestId('logout-button')
       .click()
-      .getByTestId('logout-confirm-button')
+      .findByTestId('logout-confirm-button')
       .click();
 
     cy.url().should('include', '/login');

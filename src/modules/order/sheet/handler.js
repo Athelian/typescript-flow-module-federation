@@ -20,7 +20,6 @@ import {
   handleVoyageChanges,
   handleShipmentChanges,
 } from 'modules/sheet/shipment/handler';
-import { batchQuantityRevisionByIDQuery } from 'modules/sheet/batch/query';
 import { batchByIDQuery, containerByIDQuery, orderItemByIDQuery, shipmentByIDQuery } from './query';
 
 function onCreateOrderItemFactory(client: ApolloClient<any>, dispatch: Action => void) {
@@ -133,75 +132,6 @@ function onCreateBatchFactory(client: ApolloClient<any>, dispatch: Action => voi
             },
           },
         });
-      });
-}
-
-function onBatchQuantityRevisionFactory(client: ApolloClient<any>, dispatch: Action => void) {
-  return (batchQuantityRevisionId: string, orders: Array<Object>) =>
-    client
-      .query({
-        query: batchQuantityRevisionByIDQuery,
-        fetchPolicy: 'network-only',
-        variables: {
-          id: batchQuantityRevisionId,
-        },
-      })
-      .then(({ data }) => {
-        const batchQuantityRevision = data?.batchQuantityRevision;
-        if (batchQuantityRevision?.__typename !== 'BatchQuantityRevision') {
-          return;
-        }
-
-        orders.every((order, orderIdx) =>
-          order.orderItems.every((orderItem, orderItemIdx) =>
-            orderItem.batches.every((batch, batchIdx) => {
-              if (batch.id !== batchQuantityRevision.batch?.id) {
-                return true;
-              }
-
-              const orderItems = [...order.orderItems];
-              const batches = [...orderItem.batches];
-
-              let found = false;
-              const batchQuantityRevisions = batch.batchQuantityRevisions
-                .filter(bqr => !!bqr.id)
-                .map(bqr => {
-                  if (bqr.id === batchQuantityRevision.id) {
-                    found = true;
-                    return batchQuantityRevision;
-                  }
-
-                  return bqr;
-                });
-
-              if (!found) {
-                batchQuantityRevisions.splice(batchQuantityRevision.sort, 0, batchQuantityRevision);
-              }
-
-              batches[batchIdx] = {
-                ...batch,
-                batchQuantityRevisions,
-              };
-              orderItems[orderItemIdx] = {
-                ...orderItem,
-                batches,
-              };
-
-              dispatch({
-                type: Actions.REPLACE_ITEM,
-                payload: {
-                  item: {
-                    ...order,
-                    orderItems,
-                  },
-                  index: orderIdx,
-                },
-              });
-
-              return false;
-            })
-          )
-        );
       });
 }
 
@@ -395,47 +325,6 @@ function onDeleteBatchFactory(dispatch: Action => void) {
   };
 }
 
-function onDeleteBatchQuantityRevisionFactory(dispatch: Action => void) {
-  return (batchQuantityRevisionId: string, orders: Array<Object>) =>
-    orders.every((order, orderIdx) =>
-      order.orderItems.every((orderItem, orderItemIdx) =>
-        orderItem.batches.every((batch, batchIdx) =>
-          batch.batchQuantityRevisions.every(batchQuantityRevision => {
-            if (batchQuantityRevision.id !== batchQuantityRevisionId) {
-              return true;
-            }
-
-            const orderItems = [...order.orderItems];
-            const batches = [...orderItem.batches];
-            batches[batchIdx] = {
-              ...batch,
-              batchQuantityRevisions: batch.batchQuantityRevisions.filter(
-                bqr => bqr.id !== batchQuantityRevisionId
-              ),
-            };
-            orderItems[orderItemIdx] = {
-              ...orderItem,
-              batches,
-            };
-
-            dispatch({
-              type: Actions.REPLACE_ITEM,
-              payload: {
-                item: {
-                  ...order,
-                  orderItems,
-                },
-                index: orderIdx,
-              },
-            });
-
-            return false;
-          })
-        )
-      )
-    );
-}
-
 function isBelongToShipment(shipment: Object, timelineDateId: string) {
   if (
     shipment.cargoReady.id === timelineDateId ||
@@ -458,12 +347,10 @@ export default function entityEventHandler(
 ): EntityEventHandler {
   const onCreateOrderItem = onCreateOrderItemFactory(client, dispatch);
   const onCreateBatch = onCreateBatchFactory(client, dispatch);
-  const onBatchQuantityRevision = onBatchQuantityRevisionFactory(client, dispatch);
   const onUpdateBatchContainer = onUpdateBatchContainerFactory(client, dispatch);
   const onUpdateBatchShipment = onUpdateBatchShipmentFactory(client, dispatch);
   const onDeleteOrderItem = onDeleteOrderItemFactory(dispatch);
   const onDeleteBatch = onDeleteBatchFactory(dispatch);
-  const onDeleteBatchQuantityRevision = onDeleteBatchQuantityRevisionFactory(dispatch);
 
   return async (event: EntityEvent, orders: Array<Object>) => {
     switch (event.lifeCycle) {
@@ -474,9 +361,6 @@ export default function entityEventHandler(
             break;
           case 'Batch':
             await onCreateBatch(event.entity.id);
-            break;
-          case 'BatchQuantityRevision':
-            await onBatchQuantityRevision(event.entity.id, orders);
             break;
           default:
             break;
@@ -538,10 +422,6 @@ export default function entityEventHandler(
             changes = await handleBatchChanges(client, changes, batch);
             break;
           }
-          case 'BatchQuantityRevision': {
-            await onBatchQuantityRevision(event.entity.id, orders);
-            return;
-          }
           case 'Shipment': {
             changes = await handleShipmentChanges(client, changes);
             break;
@@ -601,9 +481,6 @@ export default function entityEventHandler(
             break;
           case 'Batch':
             onDeleteBatch(event.entity.id);
-            break;
-          case 'BatchQuantityRevision':
-            onDeleteBatchQuantityRevision(event.entity.id, orders);
             break;
           default:
             break;

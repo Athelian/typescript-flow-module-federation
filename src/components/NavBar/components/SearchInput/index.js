@@ -4,17 +4,14 @@ import Icon from 'components/Icon';
 import { SearchInput as StylelessSearchInput } from 'components/base';
 import { SearchInputStyle, SearchIconStyle, InputStyle, ClearButtonStyle } from './style';
 
-type OptionalProps = {
+type Props = {|
   round: boolean,
   onBlur: Function,
-};
-
-type Props = OptionalProps & {
   onChange: Function,
   onClear: Function,
   name: string,
   value: string,
-};
+|};
 
 function SearchInput({ round, ...rest }: Props) {
   return (

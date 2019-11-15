@@ -5,8 +5,13 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { defaultVolumeMetric } from 'utils/metric';
-import { updateBatchCardQuantity, getBatchLatestQuantity } from 'utils/batch';
+import {
+  updateBatchCardQuantity,
+  getBatchLatestQuantity,
+  findActiveQuantityField,
+} from 'utils/batch';
 import { FormField } from 'modules/form';
+import messages from 'modules/batch/messages';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
@@ -149,7 +154,6 @@ const ContainerBatchCard = ({
   const id = getByPathWithDefault('', 'id', batch);
   const no = getByPathWithDefault('', 'no', batch);
   const quantity = getByPathWithDefault(0, 'quantity', batch);
-  const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', batch);
   const deliveredAt = getByPathWithDefault('', 'deliveredAt', batch);
   const desiredAt = getByPathWithDefault('', 'desiredAt', batch);
   const packageQuantity = getByPathWithDefault(0, 'packageQuantity', batch);
@@ -169,10 +173,15 @@ const ContainerBatchCard = ({
   const productProviderName = getByPathWithDefault('', 'orderItem.productProvider.name', batch);
   const shipment = getByPathWithDefault(null, 'shipment', batch);
   const todo = getByPathWithDefault(null, 'todo', batch);
-  const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
-
+  const latestQuantity = getBatchLatestQuantity(batch);
+  const currentQuantity: string = findActiveQuantityField({
+    producedQuantity: batch?.producedQuantity,
+    preShippedQuantity: batch?.preShippedQuantity,
+    shippedQuantity: batch?.shippedQuantity,
+    postShippedQuantity: batch?.postShippedQuantity,
+    deliveredQuantity: batch?.deliveredQuantity,
+  });
   const quantityName = `batches.${id}.quantity`;
-
   const validation = validator({
     no: `batches.${id}.no`,
   });
@@ -288,8 +297,8 @@ const ContainerBatchCard = ({
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
-            <Label required>
-              <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
+            <Label required={currentQuantity === 'initialQuantity'}>
+              <FormattedMessage {...messages[currentQuantity]} />
             </Label>
             <FormField
               name={quantityName}
@@ -304,13 +313,13 @@ const ContainerBatchCard = ({
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
-                      const newBatch = updateBatchCardQuantity(batch, evt.target.value);
+                      const newBatch = updateBatchCardQuantity(batch, evt.target.value || 0);
                       saveOnBlur(newBatch);
                     },
                   }}
                   originalValue={latestQuantity}
                   editable={mergedEditable.quantity}
-                  inputWidth="90px"
+                  inputWidth="185px"
                   inputHeight="20px"
                 />
               )}
@@ -468,7 +477,7 @@ ContainerBatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ContainerBatchCard, 'batch', {
   width: '195px',
-  height: '371px',
+  height: '391px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });

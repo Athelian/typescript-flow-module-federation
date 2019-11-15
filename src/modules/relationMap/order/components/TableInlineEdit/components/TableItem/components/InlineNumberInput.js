@@ -36,17 +36,16 @@ export default function InlineNumberInput({ name, value, isRequired, disabled, w
         id={`input-${id}`}
         disabled={disabled}
         name={name}
-        {...(disabled ? { placeholder: '' } : {})}
-        {...{
-          ...inputHandlers,
-          onBlur: evt => {
-            inputHandlers.onBlur(evt);
-            emitter.emit('INLINE_CHANGE', {
-              name,
-              hasError,
-              value: evt.target.value,
-            });
-          },
+        value={inputHandlers.value}
+        onChange={inputHandlers.onChange}
+        onFocus={inputHandlers.onFocus}
+        onBlur={evt => {
+          inputHandlers.onBlur(evt);
+          emitter.emit('INLINE_CHANGE', {
+            name,
+            hasError,
+            value: evt.target.value,
+          });
         }}
         align="left"
         width={width}

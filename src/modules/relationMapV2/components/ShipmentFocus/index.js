@@ -48,6 +48,7 @@ import MoveEntityConfirm from '../MoveEntityConfirm';
 import AddTags from '../AddTags';
 import Actions from '../Actions';
 import Header from '../Header';
+import HotKeyHandlers from '../HotKeyHandlers';
 import { ShipmentFocusedRow } from '../Row';
 import InitLoadingPlaceholder from '../InitLoadingPlaceholder';
 import generateListData from './generateListData';
@@ -61,7 +62,7 @@ const hasMoreItems = (data: Object, model: string = 'shipments') => {
 };
 
 const innerElementType = React.forwardRef(
-  ({ children, ...rest }: { children: React.Node }, ref) => (
+  ({ children, ...rest }: {| children: React.Node |}, ref) => (
     <div ref={ref} {...rest}>
       <Header />
       {children}
@@ -156,6 +157,7 @@ export default function ShipmentFocus() {
   return (
     <>
       <div className={WrapperStyle}>
+        <HotKeyHandlers />
         <DndProvider backend={HTML5Backend}>
           <Query
             query={shipmentFocusedListQuery}
@@ -458,17 +460,19 @@ export default function ShipmentFocus() {
                   <MoveBatch
                     onSuccess={(_, shipmentIds) => {
                       queryShipmentsDetail(shipmentIds);
-                      // scroll to first orderId if that is exist on UI
-                      const shipmentId = shipmentIds[0];
-                      const indexPosition = shipmentsData.findIndex((row: Array<any>) => {
-                        const [shipmentCell, , , ,] = row;
-                        return Number(shipmentCell.shipment?.id) === Number(shipmentId);
-                      });
-                      scrollToRow({
-                        position: indexPosition,
-                        id: shipmentId,
-                        type: SHIPMENT,
-                      });
+                      if (state.moveActions?.type?.includes('Shipment')) {
+                        // scroll to first orderId if that is exist on UI
+                        const shipmentId = shipmentIds[0];
+                        const indexPosition = shipmentsData.findIndex((row: Array<any>) => {
+                          const [shipmentCell, , , ,] = row;
+                          return Number(shipmentCell.shipment?.id) === Number(shipmentId);
+                        });
+                        scrollToRow({
+                          position: indexPosition,
+                          id: shipmentId,
+                          type: SHIPMENT,
+                        });
+                      }
                       window.requestIdleCallback(
                         () => {
                           dispatch({

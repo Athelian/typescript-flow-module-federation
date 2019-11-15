@@ -36,6 +36,7 @@ import StatusConfirm from '../StatusConfirm';
 import SelectedEntity from '../SelectedEntity';
 import Actions from '../Actions';
 import Header from '../Header';
+import HotKeyHandlers from '../HotKeyHandlers';
 import { OrderFocusedRow } from '../Row';
 import generateListData from './generateListData';
 import normalize from './normalize';
@@ -56,7 +57,7 @@ const hasMoreItems = (data: Object, model: string = 'orders') => {
 };
 
 const innerElementType = React.forwardRef(
-  ({ children, ...rest }: { children: React.Node }, ref) => (
+  ({ children, ...rest }: {| children: React.Node |}, ref) => (
     <div ref={ref} {...rest}>
       <Header />
       {children}
@@ -148,6 +149,7 @@ export default function OrderFocus() {
   return (
     <>
       <div className={WrapperStyle}>
+        <HotKeyHandlers />
         <DndProvider backend={HTML5Backend}>
           <Query
             query={orderFocusedListQuery}
@@ -413,17 +415,19 @@ export default function OrderFocus() {
                   <MoveBatch
                     onSuccess={orderIds => {
                       queryOrdersDetail(orderIds);
-                      // scroll to first orderId if that is exist on UI
-                      const orderId = orderIds[0];
-                      const indexPosition = ordersData.findIndex((row: Array<any>) => {
-                        const [orderCell, , , ,] = row;
-                        return Number(orderCell.cell?.data?.id) === Number(orderId);
-                      });
-                      scrollToRow({
-                        position: indexPosition,
-                        id: orderId,
-                        type: ORDER,
-                      });
+                      if (state.moveActions?.type?.includes('Order')) {
+                        // scroll to first orderId if that is exist on UI
+                        const orderId = orderIds[0];
+                        const indexPosition = ordersData.findIndex((row: Array<any>) => {
+                          const [orderCell, , , ,] = row;
+                          return Number(orderCell.cell?.data?.id) === Number(orderId);
+                        });
+                        scrollToRow({
+                          position: indexPosition,
+                          id: orderId,
+                          type: ORDER,
+                        });
+                      }
                       window.requestIdleCallback(
                         () => {
                           dispatch({

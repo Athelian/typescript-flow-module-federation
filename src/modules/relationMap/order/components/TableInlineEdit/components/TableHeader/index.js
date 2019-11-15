@@ -3,7 +3,6 @@ import * as React from 'react';
 import { intersection } from 'lodash';
 import { CheckboxInput } from 'components/Form';
 import { uuid } from 'utils/id';
-import BatchQuantityHelper from './BatchQuantityHelper';
 import {
   TableHeaderWrapperStyle,
   TableHeaderTitleStyle,
@@ -61,11 +60,6 @@ export default function TableHeader({ entity, info, onToggle, templateColumns, s
                       />
                     )}
                     <div className={TableColumnStyle}>{column}</div>
-                    {fieldId.startsWith('batch.newQuantity') && (
-                      <BatchQuantityHelper
-                        index={Number(fieldId.replace('batch.newQuantity', ''))}
-                      />
-                    )}
                   </div>
                 );
               })}

@@ -14,14 +14,11 @@ import {
   OwnedByStyle,
 } from './style';
 
-type OptionalProps = {
+type Props = {|
   onClick: Function,
   selectable: boolean,
   readOnly: boolean,
   actions: Array<React.Node>,
-};
-
-type Props = OptionalProps & {
   warehouse: {
     id: string,
     name: string,
@@ -29,7 +26,7 @@ type Props = OptionalProps & {
       name: string,
     },
   },
-};
+|};
 
 const defaultProps = {
   onClick: () => {},
