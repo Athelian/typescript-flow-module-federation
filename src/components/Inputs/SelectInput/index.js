@@ -275,6 +275,11 @@ const SelectInput = ({
                     toggleRef.current = ref;
                   }
                 },
+                onFocus: () => {
+                  if (!isOpen) {
+                    setTimeout(() => openMenu(), 100);
+                  }
+                },
               }),
           })}
           {isOpen && (
