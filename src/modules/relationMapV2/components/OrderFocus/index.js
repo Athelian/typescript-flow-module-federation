@@ -415,17 +415,19 @@ export default function OrderFocus() {
                   <MoveBatch
                     onSuccess={orderIds => {
                       queryOrdersDetail(orderIds);
-                      // scroll to first orderId if that is exist on UI
-                      const orderId = orderIds[0];
-                      const indexPosition = ordersData.findIndex((row: Array<any>) => {
-                        const [orderCell, , , ,] = row;
-                        return Number(orderCell.cell?.data?.id) === Number(orderId);
-                      });
-                      scrollToRow({
-                        position: indexPosition,
-                        id: orderId,
-                        type: ORDER,
-                      });
+                      if (state.moveActions?.type?.includes('Order')) {
+                        // scroll to first orderId if that is exist on UI
+                        const orderId = orderIds[0];
+                        const indexPosition = ordersData.findIndex((row: Array<any>) => {
+                          const [orderCell, , , ,] = row;
+                          return Number(orderCell.cell?.data?.id) === Number(orderId);
+                        });
+                        scrollToRow({
+                          position: indexPosition,
+                          id: orderId,
+                          type: ORDER,
+                        });
+                      }
                       window.requestIdleCallback(
                         () => {
                           dispatch({
