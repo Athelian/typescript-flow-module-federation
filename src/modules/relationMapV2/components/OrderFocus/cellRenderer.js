@@ -1136,7 +1136,7 @@ function OrderItemCell({
           <div
             style={{
               background: '#AAAAAA',
-              width: ORDER_ITEM_WIDTH - 20,
+              width: ORDER_ITEM_WIDTH,
               height: '100%',
               borderRadius: '5px',
             }}
