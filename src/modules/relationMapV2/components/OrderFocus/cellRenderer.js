@@ -645,6 +645,125 @@ const shipmentDropMessage = ({
 |}) => {
   const type = item?.type ?? '';
   switch (type) {
+    case BATCHES: {
+      const shipment = entities?.shipments?.[shipmentId];
+      const batchIds = item?.id.split(',') ?? [];
+      const shipmentIds = [
+        ...new Set(batchIds.map(batchId => entities?.batches?.[batchId]?.shipment).filter(Boolean)),
+      ];
+      const orderIds = [
+        ...new Set(
+          batchIds
+            .map(batchId => {
+              const [, parentOrderId] = findParentIdsByBatch({
+                batchId,
+                entities,
+                viewer: ORDER,
+              });
+              return parentOrderId;
+            })
+            .filter(Boolean)
+        ),
+      ];
+
+      const importerIds = [];
+      const exporterIds = [];
+      orderIds.forEach(orderId => {
+        const order = entities?.orders?.[orderId];
+        const importId = order?.importer?.id;
+        const exporterId = order?.exporter?.id;
+        if (importId && !importerIds.includes(importId)) {
+          importerIds.push(importId);
+        }
+        if (exporterId && !exporterIds.includes(exporterId)) {
+          exporterIds.push(exporterId);
+        }
+      });
+      const isSameParent = shipmentIds.length === 1 && shipmentIds.includes(shipmentId);
+      if (isSameParent)
+        return (
+          <div>
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noShipmentPermission"
+              defaultMessage="CANNOT MOVE TO SHIPMENT"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.sameShipment"
+              defaultMessage="SAME SHIPMENT"
+            />
+            )
+          </div>
+        );
+
+      const isDifferentImporter = !importerIds.includes(shipment.importer?.id);
+      if (isDifferentImporter)
+        return (
+          <div>
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noShipmentPermission"
+              defaultMessage="CANNOT MOVE TO SHIPMENT"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.importerMismatch"
+              defaultMessage="IMPORTER MISMATCHED"
+            />
+            )
+          </div>
+        );
+
+      const isDifferentExporter =
+        (exporterIds.length === 1 &&
+          !exporterIds.includes(shipment.exporter?.id) &&
+          shipment.exporter?.id) ||
+        (exporterIds.length > 1 && shipment.exporter?.id);
+      if (isDifferentExporter)
+        return (
+          <div>
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noShipmentPermission"
+              defaultMessage="CANNOT MOVE TO SHIPMENT"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.exporterMismatch"
+              defaultMessage="EXPORTER MISMATCHED"
+            />
+            )
+          </div>
+        );
+
+      const noPermission = !hasPermissions([BATCH_UPDATE, SHIPMENT_ADD_BATCH]);
+      if (noPermission)
+        return (
+          <div>
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noShipmentPermission"
+              defaultMessage="CANNOT MOVE TO SHIPMENT"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noPermission"
+              defaultMessage="NO PERMISSION"
+            />
+            )
+          </div>
+        );
+
+      return (
+        <div>
+          <FormattedMessage
+            id="modules.RelationMap.dnd.moveShipment"
+            defaultMessage="MOVE TO SHIPMENT"
+          />
+        </div>
+      );
+    }
     case BATCH: {
       const batchId = item?.id ?? '';
       const [, parentOrderId] = findParentIdsByBatch({ batchId, entities, viewer: ORDER });
@@ -1278,10 +1397,17 @@ function BatchCell({
         dispatch({
           type: 'DND',
           payload: {
-            from: getIdentifier({
-              ...item,
-              entities,
-            }),
+            from:
+              item?.type === BATCH
+                ? getIdentifier({
+                    ...item,
+                    entities,
+                  })
+                : {
+                    id: item?.id,
+                    icon: 'BATCH',
+                    value: batchIds.length,
+                  },
             to: getIdentifier({
               ...dropResult,
               entities,
@@ -1353,7 +1479,10 @@ function BatchCell({
 
   const showDraggingPlaceholder =
     isDragging || (state.isDragging && isTargetedBatch && selectors.isDragMultiEntities(BATCH));
-
+  const totalMoveItems =
+    state.isDragging && isTargetedBatch && selectors.isDragMultiEntities(BATCH)
+      ? batchIds.length
+      : 0;
   return (
     <>
       <div className={ContentStyle}>
@@ -1391,6 +1520,8 @@ function BatchCell({
           style={{ visibility: showDraggingPlaceholder ? 'hidden' : 'visible' }}
         >
           <div ref={drag} id={`${BATCH}-${batchId}`}>
+            {/* TODO: style for move batches */}
+            {totalMoveItems > 0 && <span>Move {totalMoveItems} batches </span>}
             <Badge label={badge.batch?.[batchId] || ''} />
             <BatchCard
               organizationId={data?.ownedBy?.id}
@@ -1715,6 +1846,56 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
             type: SHIPMENT,
           });
           return !isOwnShipment && !isDifferentImporter && !isDifferentExporter && !noPermission;
+        }
+
+        case BATCHES: {
+          const batchIds = item.id.split(',');
+          const shipmentIds = [
+            ...new Set(
+              batchIds
+                .map(batchId => mapping.entities?.batches?.[batchId]?.shipment)
+                .filter(Boolean)
+            ),
+          ];
+          const orderIds = [
+            ...new Set(
+              batchIds
+                .map(batchId => {
+                  const [, parentOrderId] = findParentIdsByBatch({
+                    batchId,
+                    viewer: state.viewer,
+                    entities: mapping.entities,
+                  });
+                  return parentOrderId;
+                })
+                .filter(Boolean)
+            ),
+          ];
+
+          const importerIds = [];
+          const exporterIds = [];
+          orderIds.forEach(orderId => {
+            const order = mapping.entities?.orders?.[orderId];
+            const importId = order?.importer?.id;
+            const exporterId = order?.exporter?.id;
+            if (importId && !importerIds.includes(importId)) {
+              importerIds.push(importId);
+            }
+            if (exporterId && !exporterIds.includes(exporterId)) {
+              exporterIds.push(exporterId);
+            }
+          });
+          const isSameParent = shipmentIds.length === 1 && shipmentIds.includes(shipment.id);
+          const isDifferentImporter = !importerIds.includes(shipment.importer?.id);
+          const isDifferentExporter =
+            (exporterIds.length === 1 &&
+              !exporterIds.includes(shipment.exporter?.id) &&
+              shipment.exporter?.id) ||
+            (exporterIds.length > 1 && shipment.exporter?.id);
+          const noPermission = !hasPermissions([BATCH_UPDATE, SHIPMENT_ADD_BATCH]);
+          const isInvalid =
+            isSameParent || isDifferentImporter || isDifferentExporter || noPermission;
+          return !isInvalid;
         }
 
         default:
