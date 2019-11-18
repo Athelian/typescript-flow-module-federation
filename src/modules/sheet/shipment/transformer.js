@@ -1,5 +1,6 @@
 // @flow
 import type { FieldDefinition } from 'types';
+import { getBatchLatestQuantity } from 'utils/batch';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
   transformComputedField,
@@ -8,6 +9,7 @@ import {
   transformReadonlyField,
   transformValueField,
 } from 'components/Sheet';
+import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import {
   SHIPMENT_APPROVE_TIMELINE_DATE,
   SHIPMENT_ASSIGN_TIMELINE_DATE,
@@ -40,7 +42,6 @@ import {
   SHIPMENT_SET_WAREHOUSE,
   SHIPMENT_UPDATE,
 } from 'modules/permission/constants/shipment';
-import { PARTNER_LIST } from 'modules/permission/constants/partner';
 
 type Props = {|
   fieldDefinitions: Array<FieldDefinition>,
@@ -171,32 +172,6 @@ export default function transformSheetShipment({
         });
 
         return exporters.filter(Boolean);
-      }),
-    },
-    {
-      columnKey: 'shipment.inCharges',
-      type: 'user_assignment',
-      computed: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [
-          currentShipment?.importer?.id,
-          currentShipment?.exporter?.id,
-          ...(currentShipment?.forwarders ?? []).map(f => f.id),
-        ].filter(Boolean);
-      },
-      ...transformValueField(
-        basePath,
-        shipment,
-        'inCharges',
-        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_IN_CHARGE)
-      ),
-    },
-    {
-      columnKey: 'shipment.numOfVoyages',
-      type: 'number',
-      ...transformComputedField(`${basePath}.shipment`, shipment, 'voyages', root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return currentShipment?.voyages?.length ?? 0;
       }),
     },
     {
@@ -340,6 +315,91 @@ export default function transformSheetShipment({
         'memo',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_MEMO)
       ),
+    },
+    {
+      columnKey: 'shipment.inCharges',
+      type: 'user_assignment',
+      computed: root => {
+        const currentShipment = getShipmentFromRoot(root);
+        return [
+          currentShipment?.importer?.id,
+          currentShipment?.exporter?.id,
+          ...(currentShipment?.forwarders ?? []).map(f => f.id),
+        ].filter(Boolean);
+      },
+      ...transformValueField(
+        basePath,
+        shipment,
+        'inCharges',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_IN_CHARGE)
+      ),
+    },
+    {
+      columnKey: 'shipment.totalBatchQuantity',
+      type: 'number',
+      ...transformComputedField(basePath, shipment, 'totalBatchQuantity', root => {
+        const currentShipment = getShipmentFromRoot(root);
+        return [
+          ...(currentShipment?.batchesWithoutContainer ?? []),
+          // $FlowFixMe flow doesn't know flat
+          ...(currentShipment?.container ?? []).map(c => c.batches).flat(),
+        ].reduce((total, batch) => total + getBatchLatestQuantity(batch), 0);
+      }),
+    },
+    {
+      columnKey: 'shipment.totalProducts',
+      type: 'number',
+      ...transformComputedField(basePath, shipment, 'totalProducts', root => {
+        const currentShipment = getShipmentFromRoot(root);
+        return [
+          ...(currentShipment?.batchesWithoutContainer ?? []),
+          // $FlowFixMe flow doesn't know flat
+          ...(currentShipment?.container ?? []).map(c => c.batches).flat(),
+        ].reduce(
+          (products, batch) => products.add(batch.orderItem.productProvider.product.id),
+          new Set()
+        ).size;
+      }),
+    },
+    {
+      columnKey: 'shipment.totalOrders',
+      type: 'number',
+      ...transformComputedField(basePath, shipment, 'totalOrders', root => {
+        const currentShipment = getShipmentFromRoot(root);
+        return [
+          ...(currentShipment?.batchesWithoutContainer ?? []),
+          // $FlowFixMe flow doesn't know flat
+          ...(currentShipment?.container ?? []).map(c => c.batches).flat(),
+        ].reduce((orders, batch) => orders.add(batch.orderItem.order.id), new Set()).size;
+      }),
+    },
+    {
+      columnKey: 'shipment.totalBatches',
+      type: 'number',
+      ...transformComputedField(basePath, shipment, 'totalBatches', root => {
+        const currentShipment = getShipmentFromRoot(root);
+        return [
+          ...(currentShipment?.batchesWithoutContainer ?? []),
+          // $FlowFixMe flow doesn't know flat
+          ...(currentShipment?.container ?? []).map(c => c.batches).flat(),
+        ].length;
+      }),
+    },
+    {
+      columnKey: 'shipment.totalContainers',
+      type: 'number',
+      ...transformComputedField(basePath, shipment, 'totalContainers', root => {
+        const currentShipment = getShipmentFromRoot(root);
+        return (currentShipment?.container ?? []).length;
+      }),
+    },
+    {
+      columnKey: 'shipment.numOfVoyages',
+      type: 'number',
+      ...transformComputedField(`${basePath}.shipment`, shipment, 'voyages', root => {
+        const currentShipment = getShipmentFromRoot(root);
+        return currentShipment?.voyages?.length ?? 0;
+      }),
     },
     {
       columnKey: 'shipment.cargoReady.date',

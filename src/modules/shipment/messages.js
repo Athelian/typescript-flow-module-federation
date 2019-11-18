@@ -214,6 +214,10 @@ export default defineMessages({
     id: 'modules.Shipments.totalWeight',
     defaultMessage: 'TOTAL WEIGHT',
   },
+  totalPackages: {
+    id: 'modules.Shipments.totalPackages',
+    defaultMessage: 'TOTAL PACKAGES',
+  },
   containerNo: {
     id: 'modules.Shipments.containerNo',
     defaultMessage: 'CONTAINER NO.',
@@ -805,6 +809,18 @@ export default defineMessages({
   actualDateLabel: {
     id: 'modules.Shipments.actualDateLabel',
     defaultMessage: 'ACTUAL',
+  },
+  totalProducts: {
+    id: 'modules.Shipments.totalProducts',
+    defaultMessage: 'TOTAL PRODUCTS',
+  },
+  totalBatches: {
+    id: 'modules.Shipments.totalBatches',
+    defaultMessage: 'TOTAL BATCHES',
+  },
+  totalOrders: {
+    id: 'modules.Shipments.totalOrders',
+    defaultMessage: 'TOTAL ORDERS',
   },
   totalContainers: {
     id: 'modules.Shipments.totalContainers',

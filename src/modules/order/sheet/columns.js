@@ -848,6 +848,20 @@ export default function({
         },
       },
       shipmentFieldDefinitions
-    ).filter(c => !['shipment.relatedExporters'].includes(c.key)),
+    ).filter(
+      c =>
+        ![
+          'shipment.relatedExporters',
+          'shipment.totalBatchQuantity',
+          'shipment.totalPrice',
+          'shipment.totalVolume',
+          'shipment.totalWeight',
+          'shipment.totalPackages',
+          'shipment.totalProducts',
+          'shipment.totalOrders',
+          'shipment.totalBatches',
+          'shipment.totalContainers',
+        ].includes(c.key)
+    ),
   ];
 }
