@@ -1,5 +1,5 @@
-// flow-typed signature: ecd12ba08d83e1cf0131093c2f432f73
-// flow-typed version: 313c0f9ce8/ramda_v0.26.x/flow_>=v0.104.x
+// flow-typed signature: 4c9d0c331e2b054e81d322cfb6edc981
+// flow-typed version: b38de1436c/ramda_v0.26.x/flow_>=v0.104.x
 
 /* eslint-disable no-unused-vars, no-redeclare */
 
@@ -2058,9 +2058,56 @@ declare module ramda {
     y: (...args: Array<T>) => boolean
   ): (...args: Array<T>) => boolean;
 
-  declare function complement<T>(
-    x: (...args: Array<T>) => boolean
-  ): (...args: Array<T>) => boolean;
+  // The following code is generated from
+  // https://github.com/LoganBarnett/typedef-gen due to Flow not being able to
+  // preserve the input function's form as a return type.
+  //
+  // Begin generated complement declaration.
+
+  declare function complement< Fn: () => boolean>(
+    f: Fn
+  ): Fn;
+
+  declare function complement<A, Fn: (A) => boolean>(
+    f: Fn
+  ): Fn;
+
+  declare function complement<A, B, Fn: (A, B) => boolean>(
+    f: Fn
+  ): Fn;
+
+  declare function complement<A, B, C, Fn: (A, B, C) => boolean>(
+    f: Fn
+  ): Fn;
+
+  declare function complement<A, B, C, D, Fn: (A, B, C, D) => boolean>(
+    f: Fn
+  ): Fn;
+
+  declare function complement<A, B, C, D, E, Fn: (A, B, C, D, E) => boolean>(
+    f: Fn
+  ): Fn;
+
+  declare function complement<A, B, C, D, E, F, Fn: (A, B, C, D, E, F) => boolean>(
+    f: Fn
+  ): Fn;
+
+  declare function complement<A, B, C, D, E, F, G, Fn: (A, B, C, D, E, F, G) => boolean>(
+    f: Fn
+  ): Fn;
+
+  declare function complement<A, B, C, D, E, F, G, H, Fn: (A, B, C, D, E, F, G, H) => boolean>(
+    f: Fn
+  ): Fn;
+
+  declare function complement<A, B, C, D, E, F, G, H, I, Fn: (A, B, C, D, E, F, G, H, I) => boolean>(
+    f: Fn
+  ): Fn;
+
+  declare function complement<A, B, C, D, E, F, G, H, I, J, Fn: (A, B, C, D, E, F, G, H, I, J) => boolean>(
+    f: Fn
+  ): Fn;
+  // End generated complement declaration.
 
   declare function cond<A, B>(
     fns: Array<[(...args: Array<A>) => boolean, (...args: Array<A>) => B]>
