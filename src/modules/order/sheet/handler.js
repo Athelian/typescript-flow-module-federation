@@ -423,7 +423,14 @@ export default function entityEventHandler(
             break;
           }
           case 'Shipment': {
-            changes = await handleShipmentChanges(client, changes);
+            const shipment = orders
+              .map(order => order.orderItems.map(oi => oi.batches).flat())
+              // $FlowFixMe flat not supported by flow
+              .flat()
+              .map(b => b.shipment)
+              .filter(Boolean)
+              .find(s => isBelongToShipment(s, event.entity?.id));
+            changes = await handleShipmentChanges(client, changes, shipment);
             break;
           }
           case 'TimelineDate': {

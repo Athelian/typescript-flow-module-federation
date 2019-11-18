@@ -200,6 +200,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Default,
   },
   {
+    key: 'shipment.totalWeight',
+    title: <FormattedMessage {...shipmentMessages.totalWeight} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Default,
+  },
+  {
     key: 'shipment.numOfVoyages',
     title: <FormattedMessage {...shipmentMessages.numOfVoyages} />,
     icon: 'SHIPMENT',

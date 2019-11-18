@@ -315,7 +315,11 @@ export default function entityEventHandler(
             break;
           }
           case 'Shipment': {
-            changes = await handleShipmentChanges(client, changes);
+            const shipment = batches
+              .map(b => b.shipment)
+              .filter(Boolean)
+              .find(s => isBelongToShipment(s, event.entity?.id));
+            changes = await handleShipmentChanges(client, changes, shipment);
             break;
           }
           case 'TimelineDate': {

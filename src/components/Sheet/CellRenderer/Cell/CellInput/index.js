@@ -16,6 +16,7 @@ import SearchSelectEnumInput from './Inputs/SearchSelectEnumInput';
 import MetricValueInput from './Inputs/MetricValueInput';
 import MetricValueToggleInput from './Inputs/MetricValueToggleInput';
 import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
+import OverridableMetricValueInput from './Inputs/OverridableMetricValueInput';
 import SizeInput from './Inputs/SizeInput';
 import DocumentsInput from './Inputs/DocumentsInput';
 import QuantityRevisionsInput from './Inputs/QuantityRevisionsInput';
@@ -72,6 +73,11 @@ const inputs = {
   area_toggle: MetricValueToggleInput.Area,
   length_toggle: MetricValueToggleInput.Length,
   mass_toggle: MetricValueToggleInput.Mass,
+  // Overridable computed with toggle
+  volume_overridable_toggle: OverridableMetricValueInput.Volume,
+  area_overridable_toggle: OverridableMetricValueInput.Area,
+  length_overridable_toggle: OverridableMetricValueInput.Length,
+  mass_overridable_toggle: OverridableMetricValueInput.Mass,
   // Select
   load_type: SelectEnumInput.LoadType,
   transport_type: SelectEnumInput.TransportType,
