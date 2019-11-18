@@ -16,6 +16,7 @@ import {
   ORDER,
   ORDER_ITEM,
   BATCH,
+  BATCHES,
   CONTAINER,
   SHIPMENT,
   PRODUCT,
@@ -1235,23 +1236,33 @@ function BatchCell({
   afterConnector,
 }: CellProps & { order: OrderPayload }) {
   const hasPermissions = useEntityHasPermissions(data);
-  const { state, dispatch } = FocusedView.useContainer();
+  const { state, dispatch, selectors } = FocusedView.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { matches } = Hits.useContainer();
-  const batchId = getByPathWithDefault('', 'id', data);
+  const batchId = data?.id;
+  const isTargetedBatch = selectors.isTargeted(batchId, BATCH);
+  const batchIds = selectors.targetedBatchIds();
   const { entities } = mapping;
   const [{ isOver, canDrop, isSameItem }, drop] = useDrop({
-    accept: [BATCH, ORDER_ITEM],
+    accept: [BATCH, BATCHES, ORDER_ITEM],
     canDrop: () => false,
-    drop: () => ({ type: BATCH, id: batchId }),
+    drop: () =>
+      isTargetedBatch && selectors.isDragMultiEntities(BATCH)
+        ? { type: BATCHES, id: batchIds.join(',') }
+        : { type: BATCH, id: batchId },
     collect: monitor => ({
       isOver: !!monitor.isOver(),
       canDrop: !!monitor.canDrop(),
-      isSameItem: monitor.getItem() && monitor.getItem().id === batchId,
+      isSameItem: monitor.getItem()?.id === batchId,
     }),
   });
+  const selectedItem =
+    isTargetedBatch && selectors.isDragMultiEntities(BATCH)
+      ? { type: BATCHES, id: batchIds.join(',') }
+      : { type: BATCH, id: batchId };
+
   const [{ isDragging }, drag] = useDrag({
-    item: { type: BATCH, id: batchId },
+    item: selectedItem,
     begin: () => {
       dispatch({
         type: 'START_DND',
@@ -1263,6 +1274,7 @@ function BatchCell({
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
       if (item && dropResult) {
+        // TODO: new dialog for move batches to shipment
         dispatch({
           type: 'DND',
           payload: {
@@ -1287,27 +1299,24 @@ function BatchCell({
   });
 
   const entity = `${BATCH}-${batchId}`;
-  const orderId = getByPathWithDefault('', 'id', order);
-  const orderItems = getByPathWithDefault([], 'orderItems', order);
+  const orderId = order?.id;
+  const orderItems = order?.orderItems ?? [];
   const foundParentItem = orderItems.find(item =>
     item.batches.map(batch => batch.id).includes(batchId)
   );
   const batch = foundParentItem.batches.find(item => item.id === batchId);
-  const isTargetedBatch = state.targets.includes(`${BATCH}-${batchId}`);
-  const isTargetedItem = state.targets.includes(`${ORDER_ITEM}-${foundParentItem.id}`);
+  const isTargetedItem = selectors.isTargeted(foundParentItem.id, ORDER_ITEM);
   const isTargetedContainer =
-    batch.container && state.targets.includes(`${CONTAINER}-${batch.container.id}`);
+    batch.container && selectors.isTargeted(batch.container.id, CONTAINER);
   const isTargetedShipment =
-    !batch.container &&
-    batch.shipment &&
-    state.targets.includes(`${SHIPMENT}-${batch.shipment.id}`);
+    !batch.container && batch.shipment && selectors.isTargeted(batch.shipment.id, SHIPMENT);
   const onTargetTree = () => {
     const targets = [];
-    if (data.container) {
-      targets.push(`${CONTAINER}-${getByPathWithDefault('', 'container.id', data)}`);
+    if (data?.container) {
+      targets.push(`${CONTAINER}-${data?.container.id}`);
     }
-    if (data.shipment) {
-      targets.push(`${SHIPMENT}-${getByPathWithDefault('', 'shipment.id', data)}`);
+    if (data?.shipment) {
+      targets.push(`${SHIPMENT}-${data?.shipment.id}`);
     }
     dispatch({
       type: 'TARGET_TREE',
@@ -1341,6 +1350,10 @@ function BatchCell({
         },
       }),
   });
+
+  const showDraggingPlaceholder =
+    isDragging || (state.isDragging && isTargetedBatch && selectors.isDragMultiEntities(BATCH));
+
   return (
     <>
       <div className={ContentStyle}>
@@ -1354,67 +1367,70 @@ function BatchCell({
       </div>
 
       <CellWrapper ref={drop}>
-        {isDragging ? (
+        {showDraggingPlaceholder && (
           <div
             style={{
               background: '#DDD',
               width: BATCH_WIDTH,
-              height: '100%',
+              height: '55px',
               borderRadius: '5px',
+              position: 'absolute',
+              left: '0px',
+              top: '10px',
             }}
           />
-        ) : (
-          <BaseCard
-            icon="BATCH"
-            color="BATCH"
-            isArchived={getByPathWithDefault(false, 'archived', data)}
-            selected={state.targets.includes(`${BATCH}-${getByPathWithDefault('', 'id', data)}`)}
-            selectable={state.targets.includes(`${BATCH}-${getByPathWithDefault('', 'id', data)}`)}
-            onClick={handleClick}
-            flattenCornerIcon
-          >
-            <div ref={drag} id={`${BATCH}-${batchId}`}>
-              <Badge label={badge.batch?.[batchId] || ''} />
-              <BatchCard
-                organizationId={data?.ownedBy?.id}
-                batch={data}
-                onViewForm={evt => {
-                  evt.stopPropagation();
-                  dispatch({
-                    type: 'EDIT',
-                    payload: {
-                      type: BATCH,
-                      selectedId: batchId,
-                      orderId,
-                    },
-                  });
-                }}
-                onDeleteBatch={evt => {
-                  evt.stopPropagation();
-                  dispatch({
-                    type: 'DELETE_BATCH',
-                    payload: {
-                      entity: {
-                        id: data?.id,
-                        no: data?.no,
-                      },
-                    },
-                  });
-                }}
-              />
-              <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
-              {(isOver || state.isDragging) && !isSameItem && !canDrop && (
-                <Overlay
-                  color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
-                  message={isOver && 'CANNOT MOVE TO BATCH'}
-                  icon={<Icon icon="CANCEL" />}
-                />
-              )}
-              {!isOver && canDrop && <Overlay color="rgba(17, 209, 166, 0.25)" />}
-              {isOver && canDrop && <Overlay color="#11D1A6" />}
-            </div>
-          </BaseCard>
         )}
+        <BaseCard
+          icon="BATCH"
+          color="BATCH"
+          isArchived={data?.archived ?? false}
+          selected={isTargetedBatch}
+          selectable={isTargetedBatch}
+          onClick={handleClick}
+          flattenCornerIcon
+          style={{ visibility: showDraggingPlaceholder ? 'hidden' : 'visible' }}
+        >
+          <div ref={drag} id={`${BATCH}-${batchId}`}>
+            <Badge label={badge.batch?.[batchId] || ''} />
+            <BatchCard
+              organizationId={data?.ownedBy?.id}
+              batch={data}
+              onViewForm={evt => {
+                evt.stopPropagation();
+                dispatch({
+                  type: 'EDIT',
+                  payload: {
+                    type: BATCH,
+                    selectedId: batchId,
+                    orderId,
+                  },
+                });
+              }}
+              onDeleteBatch={evt => {
+                evt.stopPropagation();
+                dispatch({
+                  type: 'DELETE_BATCH',
+                  payload: {
+                    entity: {
+                      id: data?.id,
+                      no: data?.no,
+                    },
+                  },
+                });
+              }}
+            />
+            <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
+            {(isOver || state.isDragging) && !isSameItem && !canDrop && (
+              <Overlay
+                color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
+                message={isOver && 'CANNOT MOVE TO BATCH'}
+                icon={<Icon icon="CANCEL" />}
+              />
+            )}
+            {!isOver && canDrop && <Overlay color="rgba(17, 209, 166, 0.25)" />}
+            {isOver && canDrop && <Overlay color="#11D1A6" />}
+          </div>
+        </BaseCard>
       </CellWrapper>
 
       <div className={ContentStyle}>
@@ -1671,7 +1687,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
   const shipment = entities.shipments?.[shipmentId] ?? { id: shipmentId };
   const hasPermissions = useHasPermissions(shipment.ownedBy);
   const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
-    accept: [BATCH, ORDER_ITEM],
+    accept: [BATCH, BATCHES, ORDER_ITEM],
     canDrop: item => {
       const { type } = item;
       switch (type) {

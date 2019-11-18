@@ -4,6 +4,7 @@ export const MARGIN = 20;
 export const ORDER = 'Order';
 export const ORDER_ITEM = 'OrderItem';
 export const BATCH = 'Batch';
+export const BATCHES = 'Batches';
 export const SHIPMENT = 'Shipment';
 export const CONTAINER = 'Container';
 export const PRODUCT = 'Product';
