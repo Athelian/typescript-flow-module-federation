@@ -1,17 +1,15 @@
 // @flow
 import * as React from 'react';
-import DisplayWrapper from '../DisplayWrapper';
+import type { DisplayProps } from 'components/Sheet/CellRenderer/Cell/CellDisplay/types';
+import {
+  CellDisplayWrapperStyle,
+  DisplayContentStyle,
+} from 'components/Sheet/CellRenderer/Cell/CellDisplay/Common/style';
 
-type Props = {
-  value: string | null,
-};
-
-const TextDisplay = ({ value }: Props) => {
-  return (
-    <DisplayWrapper>
-      <span>{value}</span>
-    </DisplayWrapper>
-  );
-};
+const TextDisplay = ({ value }: DisplayProps<string | null>) => (
+  <div className={CellDisplayWrapperStyle}>
+    <span className={DisplayContentStyle}>{value}</span>
+  </div>
+);
 
 export default TextDisplay;

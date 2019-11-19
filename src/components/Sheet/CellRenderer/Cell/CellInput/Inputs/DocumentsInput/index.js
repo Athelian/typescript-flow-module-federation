@@ -1,12 +1,15 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import type { FilePayload } from 'generated/graphql';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import { computeIcon, getFileExtension } from 'components/Form/DocumentsInput/helpers';
-import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
-import type { FilePayload } from 'generated/graphql';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
+import {
+  CellDisplayWrapperStyle,
+  DisplayContentStyle,
+} from 'components/Sheet/CellRenderer/Cell/CellDisplay/Common/style';
 import DocumentsInputDialog from './DocumentsInputDialog';
 import { DocumentsInputWrapperStyle, DocumentCountWrapperStyle, DocumentIconStyle } from './style';
 
@@ -48,8 +51,8 @@ const DocumentsInputImpl = ({
         </div>
 
         <div className={DocumentCountWrapperStyle}>
-          <DisplayWrapper>
-            <span>
+          <div className={CellDisplayWrapperStyle}>
+            <span className={DisplayContentStyle}>
               {(filesValue || []).length === 1 ? (
                 <FormattedMessage
                   id="modules.sheet.doc"
@@ -64,7 +67,7 @@ const DocumentsInputImpl = ({
                 />
               )}
             </span>
-          </DisplayWrapper>
+          </div>
         </div>
 
         {(filesValue || []).map((document, index) => {

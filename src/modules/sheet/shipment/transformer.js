@@ -1,4 +1,6 @@
 // @flow
+import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import type { FieldDefinition } from 'types';
 import { calculatePackageQuantity, getBatchLatestQuantity } from 'utils/batch';
 import type { CellValue } from 'components/Sheet/SheetState/types';
@@ -364,6 +366,38 @@ export default function transformSheetShipment({
             new Set()
           ).size
       ),
+    },
+    {
+      columnKey: 'shipment.totalPrice',
+      type: 'maskable_metric_value',
+      extra: {
+        message: (
+          <FormattedMessage
+            id="modules.Shipments.totalPriceInvalidMessage"
+            defaultMessage="Cannot compute this field because this Shipment contains Cargo with different Currencies"
+          />
+        ),
+      },
+      ...transformComputedField(basePath, shipment, 'totalPrice', root => {
+        const totalPrice = getBatchesFromRoot(root).reduce(
+          (total, batch) => total + getBatchLatestQuantity(batch) * batch.orderItem.price.value,
+          0
+        );
+        const currencies = getBatchesFromRoot(root).reduce(
+          (list, batch) => list.add(batch.orderItem.price.metric),
+          new Set()
+        );
+
+        if (currencies.size === 0) {
+          return { value: 0, metric: '' };
+        }
+
+        if (currencies.size === 1) {
+          return { value: totalPrice, metric: Array.from(currencies)[0] };
+        }
+
+        return null;
+      }),
     },
     {
       columnKey: 'shipment.totalOrders',

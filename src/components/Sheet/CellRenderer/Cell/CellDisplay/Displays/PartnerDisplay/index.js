@@ -1,28 +1,22 @@
 // @flow
 import * as React from 'react';
+import { colors } from 'styles/common';
 import { Display } from 'components/Form';
-import Icon from 'components/Icon';
-import DisplayWrapper from '../DisplayWrapper';
-import { PartnerSelectorCardStyle, CornerIconStyle } from './style';
+import CornerIcon from 'components/CornerIcon';
+import type { DisplayProps } from 'components/Sheet/CellRenderer/Cell/CellDisplay/types';
+import { CellDisplayWrapperStyle } from 'components/Sheet/CellRenderer/Cell/CellDisplay/Common/style';
+import { CardStyle } from './style';
 
-type Props = {
-  value: ?Object,
-};
-
-const PartnerDisplay = ({ value }: Props) => {
-  if (!value) return null;
-
-  return (
-    <DisplayWrapper>
-      <div className={PartnerSelectorCardStyle}>
+const PartnerDisplay = ({ value }: DisplayProps<Object | null>) => (
+  <div className={CellDisplayWrapperStyle}>
+    {value && (
+      <div className={CardStyle}>
         <Display height="20px">{value?.name}</Display>
 
-        <div className={CornerIconStyle}>
-          <Icon icon="PARTNER" />
-        </div>
+        <CornerIcon icon="PARTNER" color={colors.PARTNER} />
       </div>
-    </DisplayWrapper>
-  );
-};
+    )}
+  </div>
+);
 
 export default PartnerDisplay;

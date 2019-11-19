@@ -5,6 +5,7 @@ import NumberDisplay from './Displays/NumberDisplay';
 import TextDisplay from './Displays/TextDisplay';
 import DateDisplay from './Displays/DateDisplay';
 import MetricValueDisplay from './Displays/MetricValueDisplay';
+import MaskableMetricValueDisplay from './Displays/MaskableMetricValueDisplay';
 import StatusDisplay from './Displays/StatusDisplay';
 import PartnerDisplay from './Displays/PartnerDisplay';
 import PartnersDisplay from './Displays/PartnersDisplay';
@@ -12,7 +13,11 @@ import PartnersDisplay from './Displays/PartnersDisplay';
 type Props = {
   value: any,
   type: string,
-  entity?: string,
+  entity: {
+    id: string,
+    type: string,
+  } | null,
+  extra: any,
 };
 
 const displays = {
@@ -21,12 +26,13 @@ const displays = {
   date: DateDisplay,
   date_user: DateUserDisplay,
   metric_value: MetricValueDisplay,
+  maskable_metric_value: MaskableMetricValueDisplay,
   status: StatusDisplay,
   partner: PartnerDisplay,
   partners: PartnersDisplay,
 };
 
-const CellDisplay = ({ value, type, entity }: Props) => {
+const CellDisplay = ({ value, type, entity, extra }: Props) => {
   if (!displays[type]) {
     throw new Error(`Cell display type of '${type}' doesn't not exist`);
   }
@@ -34,6 +40,7 @@ const CellDisplay = ({ value, type, entity }: Props) => {
   return React.createElement(displays[type], {
     value,
     entity,
+    extra,
   });
 };
 

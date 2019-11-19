@@ -172,6 +172,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Default,
   },
   {
+    key: 'shipment.totalPrice',
+    title: <FormattedMessage {...shipmentMessages.totalPrice} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Default,
+  },
+  {
     key: 'shipment.totalProducts',
     title: <FormattedMessage {...shipmentMessages.totalProducts} />,
     icon: 'SHIPMENT',

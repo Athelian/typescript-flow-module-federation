@@ -170,7 +170,17 @@ const columns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: ColumnWidths.Default,
   },
-  // total price
+  {
+    key: 'container.totalPrice',
+    title: <FormattedMessage {...containerMessages.totalPrice} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: ColumnWidths.Default,
+  },
+  // total package quantity
+  // total quantity
+  // total volume
+  // total weight
   {
     key: 'container.totalBatchQuantity',
     title: <FormattedMessage {...containerMessages.totalBatchQuantity} />,
