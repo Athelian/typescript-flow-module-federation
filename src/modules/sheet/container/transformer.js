@@ -3,7 +3,7 @@ import { addDays, differenceInCalendarDays } from 'date-fns';
 import { calculateDueDate, startOfToday } from 'utils/date';
 import { convertVolume, convertWeight } from 'utils/metric';
 import { getLatestDate } from 'utils/shipment';
-import { getBatchLatestQuantity } from 'utils/batch';
+import { calculateVolume, getBatchLatestQuantity } from 'utils/batch';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
   transformComputedField,
@@ -414,18 +414,18 @@ export default function transformSheetContainer({
         const currentContainer = getContainerFromRoot(root);
         return {
           value: (currentContainer?.batches ?? []).reduce((total, batch) => {
-            if (!batch.packageQuantity.value || !batch.packageVolume.value) {
+            const packageVolume = batch.packageVolume.auto
+              ? calculateVolume({ value: 0, metric: 'm³' }, batch.packageSize)
+              : batch.packageVolume.value;
+
+            if (!batch.packageQuantity.value || !packageVolume) {
               return total;
             }
 
             return (
               total +
               batch.packageQuantity.value *
-                convertVolume(
-                  batch.packageVolume.value.value,
-                  batch.packageVolume.value.metric,
-                  'm³'
-                )
+                convertVolume(packageVolume.value, packageVolume.metric, 'm³')
             );
           }, 0),
           metric: 'm³',
