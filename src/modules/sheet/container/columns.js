@@ -170,11 +170,42 @@ const columns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: ColumnWidths.Default,
   },
-  // total package quantity
-  // total quantity
-  // total volume
-  // total weight
   // total price
+  {
+    key: 'container.totalBatchQuantity',
+    title: <FormattedMessage {...containerMessages.totalBatchQuantity} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: ColumnWidths.Default,
+  },
+  {
+    key: 'container.totalItems',
+    title: <FormattedMessage {...containerMessages.totalUniqueItems} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: ColumnWidths.Default,
+  },
+  {
+    key: 'container.totalPackages',
+    title: <FormattedMessage {...containerMessages.totalPackages} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: ColumnWidths.Default,
+  },
+  {
+    key: 'container.totalWeight',
+    title: <FormattedMessage {...containerMessages.totalWeight} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: ColumnWidths.Default,
+  },
+  {
+    key: 'container.totalVolume',
+    title: <FormattedMessage {...containerMessages.totalVolume} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: ColumnWidths.Default,
+  },
   {
     key: 'container.logs',
     title: <FormattedMessage {...containerMessages.logs} />,

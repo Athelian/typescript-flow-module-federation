@@ -578,6 +578,15 @@ export default function({
           group: 'batch',
         },
       }
+    ).filter(
+      c =>
+        ![
+          'container.totalPrice',
+          'container.totalBatchQuantity',
+          'container.totalPackages',
+          'container.totalWeight',
+          'container.totalVolume',
+        ].includes(c.key)
     ),
     ...shipmentColumns(
       {

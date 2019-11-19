@@ -1,7 +1,9 @@
 // @flow
 import { addDays, differenceInCalendarDays } from 'date-fns';
-import { getLatestDate } from 'utils/shipment';
 import { calculateDueDate, startOfToday } from 'utils/date';
+import { convertVolume, convertWeight } from 'utils/metric';
+import { getLatestDate } from 'utils/shipment';
+import { getBatchLatestQuantity } from 'utils/batch';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
   transformComputedField,
@@ -95,7 +97,7 @@ export default function transformSheetContainer({
       type: 'status',
       ...transformComputedField(basePath, container, 'archived', root => {
         const currentShipment = getShipmentFromRoot(root);
-        return currentShipment.archived ?? true;
+        return currentShipment?.archived ?? true;
       }),
     },
     {
@@ -350,6 +352,85 @@ export default function transformSheetContainer({
         'memo',
         hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_MEMO)
       ),
+    },
+    {
+      columnKey: 'container.totalBatchQuantity',
+      type: 'number',
+      ...transformComputedField(basePath, container, 'totalBatchQuantity', root => {
+        const currentContainer = getContainerFromRoot(root);
+        return (currentContainer?.batches ?? []).reduce(
+          (total, batch) => total + getBatchLatestQuantity(batch),
+          0
+        );
+      }),
+    },
+    {
+      columnKey: 'container.totalItems',
+      type: 'number',
+      ...transformComputedField(basePath, container, 'totalItems', root => {
+        const currentContainer = getContainerFromRoot(root);
+        return (currentContainer?.batches ?? []).reduce(
+          (products, batch) => products.add(batch.orderItem.id),
+          new Set()
+        ).size;
+      }),
+    },
+    {
+      columnKey: 'container.totalPackages',
+      type: 'number',
+      ...transformComputedField(basePath, container, 'totalPackages', root => {
+        const currentContainer = getContainerFromRoot(root);
+        return (currentContainer?.batches ?? []).reduce(
+          (total, batch) => total + (batch.packageQuantity.value || 0),
+          0
+        );
+      }),
+    },
+    {
+      columnKey: 'container.totalWeight',
+      type: 'metric_value',
+      ...transformComputedField(basePath, container, 'totalWeight', root => {
+        const currentContainer = getContainerFromRoot(root);
+        return {
+          value: (currentContainer?.batches ?? []).reduce((total, batch) => {
+            if (!batch.packageQuantity.value || !batch.packageGrossWeight) {
+              return total;
+            }
+
+            return (
+              total +
+              batch.packageQuantity.value *
+                convertWeight(batch.packageGrossWeight.value, batch.packageGrossWeight.metric, 'kg')
+            );
+          }, 0),
+          metric: 'kg',
+        };
+      }),
+    },
+    {
+      columnKey: 'container.totalVolume',
+      type: 'metric_value',
+      ...transformComputedField(basePath, container, 'totalVolume', root => {
+        const currentContainer = getContainerFromRoot(root);
+        return {
+          value: (currentContainer?.batches ?? []).reduce((total, batch) => {
+            if (!batch.packageQuantity.value || !batch.packageVolume.value) {
+              return total;
+            }
+
+            return (
+              total +
+              batch.packageQuantity.value *
+                convertVolume(
+                  batch.packageVolume.value.value,
+                  batch.packageVolume.value.metric,
+                  'm³'
+                )
+            );
+          }, 0),
+          metric: 'm³',
+        };
+      }),
     },
     {
       columnKey: 'container.logs',
