@@ -7,9 +7,9 @@ import type { FieldDefinition } from 'types';
 import type { ColumnConfig } from 'components/Sheet';
 import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
-import containerMessages from 'modules/container/messages';
 import orderColumns from 'modules/sheet/order/columns';
 import shipmentColumns from 'modules/sheet/shipment/columns';
+import containerColumns from 'modules/sheet/container/columns';
 
 const orderItemColumns: Array<ColumnConfig> = [
   {
@@ -464,214 +464,6 @@ const batchColumns: Array<ColumnConfig> = [
   // actions
 ];
 
-const containerColumns: Array<ColumnConfig> = [
-  {
-    key: 'order.orderItem.batch.container.created',
-    title: <FormattedMessage {...containerMessages.createdAt} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 110,
-    sort: {
-      local: true,
-      name: 'containerCreatedAt',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'order.orderItem.batch.container.updated',
-    title: <FormattedMessage {...containerMessages.updatedAt} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 110,
-    sort: {
-      local: true,
-      name: 'containerUpdatedAt',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'order.orderItem.batch.container.archived',
-    title: <FormattedMessage {...containerMessages.status} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 105,
-  },
-  {
-    key: 'order.orderItem.batch.container.no',
-    title: <FormattedMessage {...containerMessages.containerNo} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'containerNo',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'order.orderItem.batch.container.containerType',
-    title: <FormattedMessage {...containerMessages.containerType} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 100,
-  },
-  {
-    key: 'order.orderItem.batch.container.containerOption',
-    title: <FormattedMessage {...containerMessages.containerOption} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 100,
-  },
-  {
-    key: 'order.orderItem.batch.container.warehouseArrivalAgreedDate',
-    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDate} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 170,
-    sort: {
-      local: true,
-      name: 'containerWarehouseArrivalAgreedDate',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'order.orderItem.batch.container.warehouseArrivalAgreedDateAssignedTo',
-    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateAssignedTo} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 160,
-  },
-  {
-    key: 'order.orderItem.batch.container.warehouseArrivalAgreedDateApproved',
-    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateApproved} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 110,
-  },
-  {
-    key: 'order.orderItem.batch.container.warehouseArrivalActualDate',
-    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDate} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 170,
-    sort: {
-      local: true,
-      name: 'containerWarehouseArrivalActualDate',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'order.orderItem.batch.container.warehouseArrivalActualDateAssignedTo',
-    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDateAssignedTo} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 160,
-  },
-  {
-    key: 'order.orderItem.batch.container.warehouseArrivalActualDateApproved',
-    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDateApproved} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 110,
-  },
-  {
-    key: 'order.orderItem.batch.container.warehouse',
-    title: <FormattedMessage {...containerMessages.warehouse} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-  },
-  {
-    key: 'order.orderItem.batch.container.freeTime',
-    title: <FormattedMessage {...containerMessages.freeTime} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 195,
-  },
-  {
-    key: 'order.orderItem.batch.container.freeTimeStartDate',
-    title: <FormattedMessage {...containerMessages.startDate} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 195,
-  },
-  {
-    key: 'order.orderItem.batch.container.freeTimeDuration',
-    title: <FormattedMessage {...containerMessages.duration} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-  },
-  {
-    key: 'order.orderItem.batch.container.dueDate',
-    title: <FormattedMessage {...containerMessages.dueDate} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-  },
-  {
-    key: 'order.orderItem.batch.container.yardName',
-    title: <FormattedMessage {...containerMessages.yardName} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'containerYardName',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'order.orderItem.batch.container.departureDate',
-    title: <FormattedMessage {...containerMessages.departureDate} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 125,
-    sort: {
-      local: true,
-      name: 'containerDepartureDate',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'order.orderItem.batch.container.departureDateAssignedTo',
-    title: <FormattedMessage {...containerMessages.departureDateAssignedTo} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 160,
-  },
-  {
-    key: 'order.orderItem.batch.container.departureDateApproved',
-    title: <FormattedMessage {...containerMessages.departureDateApproved} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 110,
-  },
-  {
-    key: 'order.orderItem.batch.container.tags',
-    title: <FormattedMessage {...containerMessages.tags} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-  },
-  {
-    key: 'order.orderItem.batch.container.memo',
-    exportKey: 'orderItems.batches.container.memo',
-    title: <FormattedMessage {...containerMessages.memo} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-  },
-  {
-    key: 'order.orderItem.batch.container.logs',
-    title: <FormattedMessage {...containerMessages.logs} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 120,
-  },
-  // actions
-];
-
 export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment'];
 
 type Props = {
@@ -747,7 +539,46 @@ export default function({
       color: colors.BATCH,
       width: 200,
     })),
-    ...containerColumns,
+    ...containerColumns(
+      {},
+      {
+        'container.created': {
+          local: true,
+          name: 'containerCreateAt',
+          group: 'batch',
+        },
+        'container.updated': {
+          local: true,
+          name: 'containerUpdatedAt',
+          group: 'batch',
+        },
+        'container.no': {
+          local: true,
+          name: 'containerNo',
+          group: 'batch',
+        },
+        'container.warehouseArrivalAgreedDate': {
+          local: true,
+          name: 'containerWarehouseArrivalAgreedDate',
+          group: 'batch',
+        },
+        'container.warehouseArrivalActualDate': {
+          local: true,
+          name: 'containerWarehouseArrivalActualDate',
+          group: 'batch',
+        },
+        'container.yardName': {
+          local: true,
+          name: 'containerYardName',
+          group: 'batch',
+        },
+        'container.departureDate': {
+          local: true,
+          name: 'containerDepartureDate',
+          group: 'batch',
+        },
+      }
+    ),
     ...shipmentColumns(
       {
         'shipment.created': 'orderItems.batches.shipment.createdAt',

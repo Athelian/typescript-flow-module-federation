@@ -57,7 +57,7 @@ const columns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.relatedExporters} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: 810,
+    width: ColumnWidths.Partners,
   },
   {
     key: 'shipment.forwarders',
