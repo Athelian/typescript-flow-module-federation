@@ -1393,7 +1393,6 @@ function BatchCell({
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
       if (item && dropResult) {
-        // TODO: new dialog for move batches to shipment
         dispatch({
           type: 'DND',
           payload: {
@@ -1405,7 +1404,7 @@ function BatchCell({
                   })
                 : {
                     id: item?.id,
-                    icon: 'BATCH',
+                    icon: 'BATCHES',
                     value: batchIds.length,
                   },
             to: getIdentifier({
