@@ -56,6 +56,11 @@ export default function normalizeSheetShipmentInput(
         totalVolumeOverriding: newValue.auto,
         totalVolumeDisplayMetric: newValue.displayMetric,
       };
+    case 'totalPackages':
+      return {
+        totalPackageQuantityOverride: newValue.value,
+        totalPackageQuantityOverriding: newValue.auto,
+      };
     case 'forwarders':
       return {
         forwarderIds: newValue.map(({ id }) => id),

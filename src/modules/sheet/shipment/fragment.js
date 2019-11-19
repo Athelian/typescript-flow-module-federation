@@ -28,6 +28,8 @@ export const sheetShipmentFragment = gql`
     }
     totalVolumeOverriding
     totalVolumeDisplayMetric
+    totalPackageQuantityOverride
+    totalPackageQuantityOverriding
     inCharges {
       ...userAvatarFragment
     }

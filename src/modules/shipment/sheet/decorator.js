@@ -60,6 +60,10 @@ function decorateShipment(shipment: Object): Object {
       auto: shipment.totalVolumeOverriding,
       displayMetric: shipment.totalVolumeDisplayMetric,
     },
+    totalPackages: {
+      value: shipment.totalPackageQuantityOverride,
+      auto: shipment.totalPackageQuantityOverriding,
+    },
     cargoReady: {
       ...shipment.cargoReady,
       approved: {
