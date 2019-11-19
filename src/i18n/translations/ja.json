@@ -1178,6 +1178,8 @@
   "modules.RelationMap.move.moveToOrderSamePartnersTooltip": "異なる輸入者または輸出者のバッチが選択されています。選択したバッチが全て同じ輸入者と輸出者である場合にのみ他の発注に移動することができます。",
   "modules.RelationMap.move.moveToNewOrder": "新規発注に移動",
   "modules.RelationMap.move.moveToNewOrderDescription": "{batchesLabel}を新しい{orderLabel}に移動",
+  "modules.RelationMap.dnd.confirmMoveMultiMessage": "Are you sure you want to move these {total} {fromLabel} to an existing {toLabel} {to}?",
+  "modules.RelationMap.dnd.confirmMoveMessage": "Are you sure you want to move {fromLabel} {from} to an existing {toLabel} {to}?",
   "modules.RelationMap.moveItem.noPermission": "移動機能を利用できない{itemLabel}が選択されています",
   "modules.RelationMap.moveItem.message1": "選択した{numOfItems}つの{itemsLabel}をどこに移動しますか？",
   "modules.RelationMap.moveItem.moveToOrderDescription": "{itemsLabel}を既存の{orderLabel}に移動",

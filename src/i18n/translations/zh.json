@@ -1178,6 +1178,8 @@
   "modules.RelationMap.move.moveToOrderSamePartnersTooltip": "至少一个选定的批次具有与其他批次不同的进口商或出口商。如果批次都具有相同的进口商和出口商，则只能将批次移至不同的订货",
   "modules.RelationMap.move.moveToNewOrder": "Move to New Order",
   "modules.RelationMap.move.moveToNewOrderDescription": "Move {batchesLabel} to a new {orderLabel}",
+  "modules.RelationMap.dnd.confirmMoveMultiMessage": "Are you sure you want to move these {total} {fromLabel} to an existing {toLabel} {to}?",
+  "modules.RelationMap.dnd.confirmMoveMessage": "Are you sure you want to move {fromLabel} {from} to an existing {toLabel} {to}?",
   "modules.RelationMap.moveItem.noPermission": "At least one {itemLabel} selected does not allow you to move it anywhere",
   "modules.RelationMap.moveItem.message1": "Where would you like to move the {numOfItems} {itemsLabel} that you have selected?",
   "modules.RelationMap.moveItem.moveToOrderDescription": "Move {itemsLabel} to an existing {orderLabel}",

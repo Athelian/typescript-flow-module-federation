@@ -1178,6 +1178,8 @@
   "modules.RelationMap.move.moveToOrderSamePartnersTooltip": "At least one selected Batch has a different Importer or Exporter from the others. You can only move Batches to a different Order if they all have the same Importer and Exporter.",
   "modules.RelationMap.move.moveToNewOrder": "Move to New Order",
   "modules.RelationMap.move.moveToNewOrderDescription": "Move {batchesLabel} to a new {orderLabel}",
+  "modules.RelationMap.dnd.confirmMoveMultiMessage": "Are you sure you want to move these {total} {fromLabel} to an existing {toLabel} {to}?",
+  "modules.RelationMap.dnd.confirmMoveMessage": "Are you sure you want to move {fromLabel} {from} to an existing {toLabel} {to}?",
   "modules.RelationMap.moveItem.noPermission": "At least one {itemLabel} selected does not allow you to move it anywhere",
   "modules.RelationMap.moveItem.message1": "Where would you like to move the {numOfItems} {itemsLabel} that you have selected?",
   "modules.RelationMap.moveItem.moveToOrderDescription": "Move {itemsLabel} (along with their {batchesLabel}) to an existing {orderLabel}",
