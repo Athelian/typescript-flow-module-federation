@@ -102,16 +102,17 @@ const OverridableMetricValueInput = (
       <ToggleInput
         editable={!readonly}
         toggled={value?.auto ?? false}
-        onToggle={() =>
+        onToggle={() => {
+          const auto = !(value?.auto ?? false);
           onChange(
             {
-              value: value?.value,
+              value: auto ? context : value?.value,
               displayMetric: currentDisplayMetric,
-              auto: !(value?.auto ?? false),
+              auto,
             },
             true
-          )
-        }
+          );
+        }}
       />
     </div>
   );
