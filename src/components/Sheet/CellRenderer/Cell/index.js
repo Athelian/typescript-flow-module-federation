@@ -6,6 +6,7 @@ import type { Action, CellValue, Position } from 'components/Sheet/SheetState/ty
 import { Actions } from 'components/Sheet/SheetState/constants';
 import CellInput from './CellInput';
 import CellDisplay from './CellDisplay';
+import CellAction from './CellAction';
 import { CellStyle, CellBorderStyle, CellPlaceholderStyle, CellShadowStyle } from './style';
 
 type Props = {
@@ -182,6 +183,16 @@ const Cell = ({
 
         if (!cell.entity || hidden) {
           return <div className={CellPlaceholderStyle} />;
+        }
+
+        if (cell.type === 'action') {
+          return (
+            <CellAction
+              actions={cell.extra}
+              onAction={action => console.log(action)}
+              inputFocus={inputFocus}
+            />
+          );
         }
 
         if (isReadonly) {

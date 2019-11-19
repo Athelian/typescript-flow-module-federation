@@ -1,5 +1,5 @@
 // @flow
-
+import * as React from 'react';
 import type { SortDirection } from 'types';
 
 export type ColumnSortConfig = {|
@@ -44,6 +44,11 @@ export type Area = {
   from: Position,
   to: Position,
 };
+
+export type CellAction = {|
+  action: string,
+  label: React.Node,
+|};
 
 export type CellValue = {|
   columnKey: string,

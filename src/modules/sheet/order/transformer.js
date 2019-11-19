@@ -5,6 +5,7 @@ import { getBatchLatestQuantity } from 'utils/batch';
 import type { FieldDefinition } from 'types';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
+  transformActionField,
   transformComputedField,
   transformCustomField,
   transformField,
@@ -321,6 +322,14 @@ export default function transformSheetOrder({
       columnKey: 'order.logs',
       type: 'order_logs',
       ...transformValueField(basePath, order, 'id', () => true),
+    },
+    {
+      columnKey: 'order.action',
+      ...transformActionField(basePath, order, [
+        { action: 'action_1', label: 'Action 1' },
+        { action: 'action_2', label: 'Action 2' },
+        { action: 'action_3', label: 'Action 3' },
+      ]),
     },
     {
       columnKey: 'order.mask',

@@ -19,10 +19,7 @@ import BaseMetricValueInput from 'components/Inputs/MetricValueInput';
 import NumberInput from 'components/Inputs/NumberInput';
 import SelectInput from 'components/Inputs/SelectInput';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import {
-  MetricSelectInput,
-  MetricSelectOption,
-} from 'components/Sheet/CellRenderer/Cell/CellInput/Common/MetricValueInput';
+import { MetricSelectInput } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/MetricValueInput';
 import {
   CellInputWrapperStyle,
   InputStyle,
@@ -50,7 +47,7 @@ const MetricValueInput = (
             optionWidth={30}
             optionHeight={30}
             renderInput={MetricSelectInput}
-            renderOption={MetricSelectOption}
+            renderOption={SelectInput.DefaultRenderSelectOption}
           />
         </div>
       )}

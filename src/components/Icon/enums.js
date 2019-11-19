@@ -102,6 +102,7 @@ import {
   faForward as SKIPPED,
   faUndo as UNDO,
   faBringForward as BRING_FORWARD,
+  faWrench as ACTION,
   // Shipment Timeline
   faBoxCheck as CARGO_READY,
   faAnchor as PORT,
@@ -276,6 +277,7 @@ export default {
   RELOAD,
   CLOCK,
   MAP,
+  ACTION,
 
   TIMELINE,
   CARGO_READY,
