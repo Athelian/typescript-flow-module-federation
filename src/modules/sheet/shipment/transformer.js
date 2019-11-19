@@ -37,11 +37,13 @@ import {
   SHIPMENT_SET_TAGS,
   SHIPMENT_SET_TASKS,
   SHIPMENT_SET_TIMELINE_DATE,
+  SHIPMENT_SET_TOTAL_WEIGHT,
   SHIPMENT_SET_TRANSPORT_TYPE,
   SHIPMENT_SET_VESSEL_NAME,
   SHIPMENT_SET_WAREHOUSE,
   SHIPMENT_UPDATE,
 } from 'modules/permission/constants/shipment';
+import { convertWeight } from 'utils/metric';
 
 type Props = {|
   fieldDefinitions: Array<FieldDefinition>,
@@ -59,6 +61,14 @@ export default function transformSheetShipment({
   readonlyExporter,
 }: Props): Array<CellValue> {
   const nbOfVoyages = (shipment?.voyages ?? []).length;
+  const getBatchesFromRoot = root => {
+    const currentShipment = getShipmentFromRoot(root);
+    return [
+      ...(currentShipment?.batchesWithoutContainer ?? []),
+      // $FlowFixMe flow doesn't know flat
+      ...(currentShipment?.containers ?? []).map(c => c.batches).flat(),
+    ];
+  };
 
   return [
     {
@@ -337,53 +347,47 @@ export default function transformSheetShipment({
     {
       columnKey: 'shipment.totalBatchQuantity',
       type: 'number',
-      ...transformComputedField(basePath, shipment, 'totalBatchQuantity', root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [
-          ...(currentShipment?.batchesWithoutContainer ?? []),
-          // $FlowFixMe flow doesn't know flat
-          ...(currentShipment?.container ?? []).map(c => c.batches).flat(),
-        ].reduce((total, batch) => total + getBatchLatestQuantity(batch), 0);
-      }),
+      ...transformComputedField(basePath, shipment, 'totalBatchQuantity', root =>
+        getBatchesFromRoot(root).reduce((total, batch) => total + getBatchLatestQuantity(batch), 0)
+      ),
     },
     {
       columnKey: 'shipment.totalProducts',
       type: 'number',
-      ...transformComputedField(basePath, shipment, 'totalProducts', root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [
-          ...(currentShipment?.batchesWithoutContainer ?? []),
-          // $FlowFixMe flow doesn't know flat
-          ...(currentShipment?.container ?? []).map(c => c.batches).flat(),
-        ].reduce(
-          (products, batch) => products.add(batch.orderItem.productProvider.product.id),
-          new Set()
-        ).size;
-      }),
+      ...transformComputedField(
+        basePath,
+        shipment,
+        'totalProducts',
+        root =>
+          getBatchesFromRoot(root).reduce(
+            (products, batch) => products.add(batch.orderItem.productProvider.product.id),
+            new Set()
+          ).size
+      ),
     },
     {
       columnKey: 'shipment.totalOrders',
       type: 'number',
-      ...transformComputedField(basePath, shipment, 'totalOrders', root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [
-          ...(currentShipment?.batchesWithoutContainer ?? []),
-          // $FlowFixMe flow doesn't know flat
-          ...(currentShipment?.container ?? []).map(c => c.batches).flat(),
-        ].reduce((orders, batch) => orders.add(batch.orderItem.order.id), new Set()).size;
-      }),
+      ...transformComputedField(
+        basePath,
+        shipment,
+        'totalOrders',
+        root =>
+          getBatchesFromRoot(root).reduce(
+            (orders, batch) => orders.add(batch.orderItem.order.id),
+            new Set()
+          ).size
+      ),
     },
     {
       columnKey: 'shipment.totalBatches',
       type: 'number',
-      ...transformComputedField(basePath, shipment, 'totalBatches', root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [
-          ...(currentShipment?.batchesWithoutContainer ?? []),
-          // $FlowFixMe flow doesn't know flat
-          ...(currentShipment?.container ?? []).map(c => c.batches).flat(),
-        ].length;
-      }),
+      ...transformComputedField(
+        basePath,
+        shipment,
+        'totalBatches',
+        root => getBatchesFromRoot(root).length
+      ),
     },
     {
       columnKey: 'shipment.totalContainers',
@@ -392,6 +396,30 @@ export default function transformSheetShipment({
         const currentShipment = getShipmentFromRoot(root);
         return (currentShipment?.container ?? []).length;
       }),
+    },
+    {
+      columnKey: 'shipment.totalWeight',
+      type: 'mass_overridable_toggle',
+      computed: root => ({
+        value: getBatchesFromRoot(root).reduce((total, batch) => {
+          if (!batch.packageQuantity.value || !batch.packageGrossWeight) {
+            return total;
+          }
+
+          return (
+            total +
+            batch.packageQuantity.value *
+              convertWeight(batch.packageGrossWeight.value, batch.packageGrossWeight.metric, 'kg')
+          );
+        }, 0),
+        metric: 'kg',
+      }),
+      ...transformValueField(
+        basePath,
+        shipment,
+        'totalWeight',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TOTAL_WEIGHT)
+      ),
     },
     {
       columnKey: 'shipment.numOfVoyages',

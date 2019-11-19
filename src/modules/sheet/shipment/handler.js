@@ -17,9 +17,10 @@ import {
 
 export async function handleShipmentChanges(
   client: ApolloClient<any>,
-  changes: Array<EntityEventChange>
+  changes: Array<EntityEventChange>,
+  shipment: ?Object
 ): Promise<Array<EntityEventChange>> {
-  return mapAsync(changes, change => {
+  changes = await mapAsync(changes, change => {
     switch (change.field) {
       case 'importer':
       case 'exporter':
@@ -106,6 +107,30 @@ export async function handleShipmentChanges(
 
     return change;
   });
+
+  if (shipment) {
+    changes = mergeChanges(
+      changes,
+      {
+        totalWeightOverride: (i, v) => ({
+          ...i,
+          value: v,
+        }),
+        totalWeightOverriding: (i, v) => ({
+          ...i,
+          auto: v,
+        }),
+        totalWeightDisplayMetric: (i, v) => ({
+          ...i,
+          displayMetric: v,
+        }),
+      },
+      'totalWeight',
+      shipment.totalWeight
+    );
+  }
+
+  return changes;
 }
 
 export function handleVoyageChanges(changes: Array<EntityEventChange>): Array<EntityEventChange> {

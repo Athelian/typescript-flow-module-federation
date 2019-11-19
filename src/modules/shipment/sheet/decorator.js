@@ -50,6 +50,11 @@ function decorateContainer(container: Object): Object {
 function decorateShipment(shipment: Object): Object {
   return {
     ...shipment,
+    totalWeight: {
+      value: shipment.totalWeightOverride,
+      auto: shipment.totalWeightOverriding,
+      displayMetric: shipment.totalWeightDisplayMetric,
+    },
     cargoReady: {
       ...shipment.cargoReady,
       approved: {

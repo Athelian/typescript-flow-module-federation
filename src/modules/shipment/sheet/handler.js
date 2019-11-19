@@ -423,7 +423,11 @@ export default function entityEventHandler(
 
         switch (event.entity.__typename) {
           case 'Shipment': {
-            changes = await handleShipmentChanges(client, changes);
+            changes = await handleShipmentChanges(
+              client,
+              changes,
+              shipments.find(s => s.id === event.entity?.id)
+            );
             break;
           }
           case 'TimelineDate': {
