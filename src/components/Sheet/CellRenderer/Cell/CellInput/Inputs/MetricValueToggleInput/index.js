@@ -37,8 +37,8 @@ const MetricValueToggleInput = (
     input={({ value, auto, readonly, onChange }) => {
       const inputValue = {
         value: valueConverter(
-          value.value,
-          value.metric,
+          value?.value ?? 0,
+          value?.metric ?? defaultMetric,
           props.value?.value?.metric ?? defaultMetric
         ),
         metric: props.value?.value?.metric ?? defaultMetric,
