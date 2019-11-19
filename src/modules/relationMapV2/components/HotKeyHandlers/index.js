@@ -23,15 +23,11 @@ function HotKeyHandlers() {
 
   const isSameImporter = React.useCallback(() => {
     return importerIds.length <= 1;
-  }, [importerIds.length]);
+  }, [importerIds]);
 
   const hasPermissionMoveToExistShipment = React.useCallback(() => {
-    return (
-      batchIds.length > 0 &&
-      isSameImporter() &&
-      hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM])
-    );
-  }, [batchIds.length, hasPermissions, isSameImporter]);
+    return isSameImporter() && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
+  }, [hasPermissions, isSameImporter]);
 
   const openShipments = React.useCallback(() => {
     dispatch({
@@ -49,12 +45,18 @@ function HotKeyHandlers() {
   }, [containerIds, dispatch, exporterIds, importerIds, orderIds, shipmentIds]);
 
   React.useEffect(() => {
-    hotkeys('alt+1', () => {
-      const slideViewStack = document.querySelector('#portal-root')?.childElementCount ?? 0;
-      const isAllow = slideViewStack === 0 || !!document.querySelector('#moveBatches');
-      if (hasPermissionMoveToExistShipment() && isAllow) openShipments();
-    });
-  }, [hasPermissionMoveToExistShipment, openShipments]);
+    if (batchIds.length > 0) {
+      hotkeys.unbind('alt+1');
+      hotkeys('alt+1', () => {
+        const slideViewStack = document.querySelector('#portal-root')?.childElementCount ?? 0;
+        const isAllow =
+          batchIds.length > 0 && (slideViewStack === 0 || !!document.querySelector('#moveBatches'));
+        if (hasPermissionMoveToExistShipment() && isAllow) openShipments();
+      });
+    } else {
+      hotkeys.unbind('alt+1');
+    }
+  }, [batchIds, hasPermissionMoveToExistShipment, openShipments]);
 
   return null;
 }
