@@ -1,9 +1,12 @@
 // @flow
 import React from 'react';
 import { useIntl } from 'react-intl';
-import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
-import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import Dialog from 'components/Dialog';
+import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
+import {
+  CellDisplayWrapperStyle,
+  DisplayContentStyle,
+} from 'components/Sheet/CellRenderer/Cell/CellDisplay/Common/style';
 import {
   TextAreaInputButtonStyle,
   TextAreaInputDialogWrapperStyle,
@@ -55,9 +58,9 @@ const TextAreaInput = ({
             })}
           </span>
         ) : (
-          <DisplayWrapper>
-            <span>{value}</span>
-          </DisplayWrapper>
+          <div className={CellDisplayWrapperStyle}>
+            <span className={DisplayContentStyle}>{value}</span>
+          </div>
         )}
       </button>
 

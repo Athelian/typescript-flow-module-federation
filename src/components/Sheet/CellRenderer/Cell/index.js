@@ -185,7 +185,14 @@ const Cell = ({
         }
 
         if (isReadonly) {
-          return <CellDisplay value={computedValue} type={cell.type} entity={cell.entity?.type} />;
+          return (
+            <CellDisplay
+              value={computedValue}
+              type={cell.type}
+              entity={cell.entity}
+              extra={cell.extra}
+            />
+          );
         }
 
         return (

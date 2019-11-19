@@ -38,4 +38,8 @@ export default defineMessages({
     id: 'components.Sheet.logs',
     defaultMessage: 'Logs',
   },
+  invalidMetricValue: {
+    id: 'components.Sheet.invalidMetricValue',
+    defaultMessage: 'Invalid',
+  },
 });

@@ -1,4 +1,6 @@
 // @flow
+import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { addDays, differenceInCalendarDays } from 'date-fns';
 import { calculateDueDate, startOfToday } from 'utils/date';
 import { convertVolume, convertWeight } from 'utils/metric';
@@ -352,6 +354,40 @@ export default function transformSheetContainer({
         'memo',
         hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_MEMO)
       ),
+    },
+    {
+      columnKey: 'container.totalPrice',
+      type: 'maskable_metric_value',
+      extra: {
+        message: (
+          <FormattedMessage
+            id="modules.container.totalPriceUnavailable"
+            defaultMessage="Cannot calculate due to mixed currencies"
+          />
+        ),
+      },
+      ...transformComputedField(basePath, container, 'totalPrice', root => {
+        const currentContainer = getContainerFromRoot(root);
+
+        const totalPrice = (currentContainer?.batches ?? []).reduce(
+          (total, batch) => total + getBatchLatestQuantity(batch) * batch.orderItem.price.value,
+          0
+        );
+        const currencies = (currentContainer?.batches ?? []).reduce(
+          (list, batch) => list.add(batch.orderItem.price.metric),
+          new Set()
+        );
+
+        if (currencies.size === 0) {
+          return { value: 0, metric: '' };
+        }
+
+        if (currencies.size === 1) {
+          return { value: totalPrice, metric: Array.from(currencies)[0] };
+        }
+
+        return null;
+      }),
     },
     {
       columnKey: 'container.totalBatchQuantity',

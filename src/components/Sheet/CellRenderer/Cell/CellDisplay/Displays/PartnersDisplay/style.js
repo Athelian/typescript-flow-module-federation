@@ -2,6 +2,11 @@
 import { css } from 'react-emotion';
 import { layout, colors, borderRadiuses } from 'styles/common';
 
+export const PartnersWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 5px;
+`;
+
 export const CardStyle: string = css`
   ${layout.HORIZONTAL};
   ${borderRadiuses.MAIN};
@@ -9,7 +14,7 @@ export const CardStyle: string = css`
   overflow: hidden;
   border-bottom-right-radius: 0;
   width: 100%;
-  min-width: 40px;
+  width: 200px;
   height: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 `;
