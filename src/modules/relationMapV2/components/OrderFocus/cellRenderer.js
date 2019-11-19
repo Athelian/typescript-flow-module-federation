@@ -679,7 +679,10 @@ const shipmentDropMessage = ({
           exporterIds.push(exporterId);
         }
       });
-      const isSameParent = shipmentIds.length === 1 && shipmentIds.includes(shipmentId);
+      const isSameParent =
+        shipmentIds.length === 1 &&
+        shipmentIds.includes(shipmentId) &&
+        batchIds.every(batchId => !!entities?.batches?.[batchId]?.shipment);
       if (isSameParent)
         return (
           <div>
@@ -1884,7 +1887,10 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
               exporterIds.push(exporterId);
             }
           });
-          const isSameParent = shipmentIds.length === 1 && shipmentIds.includes(shipment.id);
+          const isSameParent =
+            shipmentIds.length === 1 &&
+            shipmentIds.includes(shipmentId) &&
+            batchIds.every(batchId => !!entities?.batches?.[batchId]?.shipment);
           const isDifferentImporter = !importerIds.includes(shipment.importer?.id);
           const isDifferentExporter =
             (exporterIds.length === 1 &&
