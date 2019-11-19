@@ -64,6 +64,7 @@ const OverridableMetricValueInput = (
       <div className={CellInputWrapperStyle}>
         <BaseMetricValueInput
           value={displayValue}
+          disabled={readonly}
           onChange={newValue =>
             onChange({
               value: newValue,

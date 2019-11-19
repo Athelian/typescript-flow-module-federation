@@ -37,13 +37,12 @@ const MetricValueInput = (
   <div className={CellInputWrapperStyle}>
     <BaseMetricValueInput
       value={value}
+      disabled={readonly}
       onChange={onChange}
       defaultMetric={defaultMetric}
       valueConverter={valueConverter}
       metrics={metrics}
-      renderInput={inputProps => (
-        <NumberInput {...inputProps} className={InputStyle} disabled={readonly} />
-      )}
+      renderInput={inputProps => <NumberInput {...inputProps} className={InputStyle} />}
       renderSelect={selectProps => (
         <div className={SelectStyle}>
           <SelectInput

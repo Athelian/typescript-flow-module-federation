@@ -14,7 +14,14 @@ type Props = {
   required: boolean,
 };
 
-const SearchSelectEnumInputImpl = ({ value, onChange, focus, enumType, required }: Props) => {
+const SearchSelectEnumInputImpl = ({
+  value,
+  onChange,
+  focus,
+  enumType,
+  required,
+  readonly,
+}: Props) => {
   const intl = useIntl();
   const { enums, loading } = useEnum(enumType);
 
@@ -31,6 +38,7 @@ const SearchSelectEnumInputImpl = ({ value, onChange, focus, enumType, required 
   return (
     <SearchSelectInput
       value={value}
+      readonly={readonly}
       required={required}
       onChange={onChange}
       items={loading ? [] : enums}

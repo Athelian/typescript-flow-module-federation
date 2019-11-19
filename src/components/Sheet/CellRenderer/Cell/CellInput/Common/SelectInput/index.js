@@ -15,6 +15,7 @@ import {
 
 type Props = {
   value: any | null,
+  readonly: boolean,
   required: boolean,
   onChange: any => void,
   items: Array<any>,
@@ -86,9 +87,18 @@ const Option = ({ selected, highlighted, item, itemToString }: RenderOptionProps
   </div>
 );
 
-const SelectInput = ({ value, required, onChange, items, itemToString, itemToValue }: Props) => (
+const SelectInput = ({
+  value,
+  readonly,
+  required,
+  onChange,
+  items,
+  itemToString,
+  itemToValue,
+}: Props) => (
   <BaseSelectInput
     value={value}
+    disabled={readonly}
     required={required}
     onChange={onChange}
     items={items}

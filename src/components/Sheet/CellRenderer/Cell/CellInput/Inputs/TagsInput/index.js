@@ -8,7 +8,7 @@ import { isForbidden } from 'utils/data';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import { TagsSelectStyle, RemoveButtonStyle, TagsInputWrapperStyle } from './style';
 
-const TagInputRenderer = ({ getInputProps, remove, selectedItems }: RenderInputProps) => (
+const TagInputRenderer = ({ disabled, getInputProps, remove, selectedItems }: RenderInputProps) => (
   <div className={TagsSelectStyle}>
     {(selectedItems || [])
       .filter(item => !isForbidden(item))
@@ -19,6 +19,7 @@ const TagInputRenderer = ({ getInputProps, remove, selectedItems }: RenderInputP
           suffix={
             <button
               type="button"
+              disabled={disabled}
               className={RemoveButtonStyle}
               onClick={event => {
                 event.stopPropagation();
@@ -43,11 +44,13 @@ const TagInputRenderer = ({ getInputProps, remove, selectedItems }: RenderInputP
 const TagsInput = (entityType: string) => ({
   value,
   onChange,
+  readonly,
 }: InputProps<Array<{ id: string, name: string, color: string }>>) => (
   <div className={TagsInputWrapperStyle}>
     <BaseTagsInput
       entityType={entityType}
       value={value || []}
+      disabled={readonly}
       onChange={onChange}
       optionWidth={200}
       renderInput={TagInputRenderer}

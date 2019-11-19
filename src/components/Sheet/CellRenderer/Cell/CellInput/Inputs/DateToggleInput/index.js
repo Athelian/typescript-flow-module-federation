@@ -10,7 +10,7 @@ const DateToggleInput = (
 ) => (
   <ComputableInput
     {...props}
-    input={({ onChange, readonly, value }: InputProps<Date | string>) => (
+    input={({ onChange, readonly, value }) => (
       <BaseDateInput
         value={value}
         className={InputStyle}

@@ -8,7 +8,7 @@ import { InputStyle } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/
 const NumberToggleInput = (props: InputProps<{ value: ?number, auto: boolean }, number>) => (
   <ComputableInput
     {...props}
-    input={({ onChange, value, readonly }: InputProps<number>) => (
+    input={({ onChange, value, readonly }) => (
       <BaseNumberInput
         value={value === null ? '' : value}
         className={InputStyle}
