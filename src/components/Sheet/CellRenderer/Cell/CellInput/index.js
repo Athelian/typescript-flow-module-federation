@@ -154,6 +154,10 @@ const CellInput = ({
     const container = containerRef.current;
 
     if (inputFocus) {
+      if (document.activeElement && container.contains(document.activeElement)) {
+        return;
+      }
+
       const focusableElement =
         container.querySelector('[data-focus-first]:not([disabled])') ||
         container.querySelector(
