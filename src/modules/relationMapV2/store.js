@@ -18,7 +18,7 @@ import {
 } from 'modules/relationMapV2/constants';
 import { normalizeEntity } from 'modules/relationMapV2/components/OrderFocus/normalize';
 import { sortOrderItemBy, sortBatchBy, sortContainerBy } from './sort';
-import { targetedIds } from './helpers';
+import { targetedIds, findParentIdsByBatch } from './helpers';
 import type { State } from './type.js.flow';
 
 const defaultState = [];
@@ -1595,6 +1595,56 @@ function useFocusView(viewer: 'Order' | 'Shipment') {
         state.targets.filter(target => target.includes(`${type}-`)).length > 1,
       isTargeted: (id: string, type: string) => state.targets.includes(`${type}-${id}`),
       targetedBatchIds: () => targetedIds(state.targets, BATCH),
+      relatedIds: (mapping: Object) => {
+        const batchIds = targetedIds(state.targets, BATCH);
+        const orderIds = [
+          ...new Set(
+            batchIds
+              .map(batchId => {
+                const [, parentOrderId] = findParentIdsByBatch({
+                  batchId,
+                  viewer: state.viewer,
+                  entities: mapping.entities,
+                });
+                return parentOrderId;
+              })
+              .filter(Boolean)
+          ),
+        ];
+        const containerIds = [
+          ...new Set(
+            batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.container).filter(Boolean)
+          ),
+        ];
+        const shipmentIds = [
+          ...new Set(
+            batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.shipment).filter(Boolean)
+          ),
+        ];
+
+        const importerIds = [];
+        const exporterIds = [];
+        orderIds.forEach(orderId => {
+          const order = mapping.entities?.orders?.[orderId];
+          const importId = order?.importer?.id;
+          const exporterId = order?.exporter?.id;
+          if (importId && !importerIds.includes(importId)) {
+            importerIds.push(importId);
+          }
+          if (exporterId && !exporterIds.includes(exporterId)) {
+            exporterIds.push(exporterId);
+          }
+        });
+
+        return {
+          batchIds,
+          orderIds,
+          containerIds,
+          shipmentIds,
+          importerIds,
+          exporterIds,
+        };
+      },
     },
     dispatch,
   };

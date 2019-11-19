@@ -1,53 +1,22 @@
 // @flow
 import * as React from 'react';
 import hotkeys from 'hotkeys-js';
-import { BATCH } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
-import { targetedIds, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
 import { useAllHasPermission } from 'contexts/Permissions';
 
 function HotKeyHandlers() {
   const { mapping } = Entities.useContainer();
-  const { dispatch, state } = FocusedView.useContainer();
-  const batchIds = targetedIds(state.targets, BATCH);
-  const orderIds = [
-    ...new Set(
-      batchIds
-        .map(batchId => {
-          const [, parentOrderId] = findParentIdsByBatch({
-            batchId,
-            viewer: state.viewer,
-            entities: mapping.entities,
-          });
-          return parentOrderId;
-        })
-        .filter(Boolean)
-    ),
-  ];
-  const containerIds = [
-    ...new Set(
-      batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.container).filter(Boolean)
-    ),
-  ];
-  const shipmentIds = [
-    ...new Set(
-      batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.shipment).filter(Boolean)
-    ),
-  ];
-  const importerIds = [];
-  const exporterIds = [];
-  orderIds.forEach(orderId => {
-    const order = mapping.entities?.orders?.[orderId];
-    const importId = order?.importer?.id;
-    const exporterId = order?.exporter?.id;
-    if (importId && !importerIds.includes(importId)) {
-      importerIds.push(importId);
-    }
-    if (exporterId && !exporterIds.includes(exporterId)) {
-      exporterIds.push(exporterId);
-    }
-  });
+  const { dispatch, selectors } = FocusedView.useContainer();
+  const {
+    batchIds,
+    orderIds,
+    containerIds,
+    shipmentIds,
+    importerIds,
+    exporterIds,
+  } = selectors.relatedIds(mapping);
+
   const hasPermissions = useAllHasPermission(
     batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.ownedBy).filter(Boolean)
   );
