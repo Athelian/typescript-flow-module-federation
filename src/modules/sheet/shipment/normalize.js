@@ -50,6 +50,12 @@ export default function normalizeSheetShipmentInput(
         totalWeightOverriding: newValue.auto,
         totalWeightDisplayMetric: newValue.displayMetric,
       };
+    case 'totalVolume':
+      return {
+        totalVolumeOverride: newValue.value ? removeTypename(newValue.value) : null,
+        totalVolumeOverriding: newValue.auto,
+        totalVolumeDisplayMetric: newValue.displayMetric,
+      };
     case 'forwarders':
       return {
         forwarderIds: newValue.map(({ id }) => id),

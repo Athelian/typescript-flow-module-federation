@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import type { FieldDefinition } from 'types';
-import { calculatePackageQuantity, getBatchLatestQuantity } from 'utils/batch';
+import { calculatePackageQuantity, calculateVolume, getBatchLatestQuantity } from 'utils/batch';
+import { convertVolume, convertWeight } from 'utils/metric';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
   transformComputedField,
@@ -39,13 +40,13 @@ import {
   SHIPMENT_SET_TAGS,
   SHIPMENT_SET_TASKS,
   SHIPMENT_SET_TIMELINE_DATE,
+  SHIPMENT_SET_TOTAL_VOLUME,
   SHIPMENT_SET_TOTAL_WEIGHT,
   SHIPMENT_SET_TRANSPORT_TYPE,
   SHIPMENT_SET_VESSEL_NAME,
   SHIPMENT_SET_WAREHOUSE,
   SHIPMENT_UPDATE,
 } from 'modules/permission/constants/shipment';
-import { convertWeight } from 'utils/metric';
 
 type Props = {|
   fieldDefinitions: Array<FieldDefinition>,
@@ -455,6 +456,36 @@ export default function transformSheetShipment({
         shipment,
         'totalWeight',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TOTAL_WEIGHT)
+      ),
+    },
+    {
+      columnKey: 'shipment.totalVolume',
+      type: 'volume_overridable_toggle',
+      computed: root => ({
+        value: getBatchesFromRoot(root).reduce((total, batch) => {
+          const packageVolume = batch.packageVolume.auto
+            ? calculateVolume({ value: 0, metric: 'm³' }, batch.packageSize)
+            : batch.packageVolume.value;
+
+          if (!packageVolume) {
+            return total;
+          }
+
+          return (
+            total +
+            (batch.packageQuantity.auto
+              ? calculatePackageQuantity(batch)
+              : batch.packageQuantity.value || 0) *
+              convertVolume(packageVolume.value, packageVolume.metric, 'm³')
+          );
+        }, 0),
+        metric: 'm³',
+      }),
+      ...transformValueField(
+        basePath,
+        shipment,
+        'totalVolume',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TOTAL_VOLUME)
       ),
     },
     {

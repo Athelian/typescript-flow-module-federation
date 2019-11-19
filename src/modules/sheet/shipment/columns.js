@@ -214,6 +214,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Default,
   },
   {
+    key: 'shipment.totalVolume',
+    title: <FormattedMessage {...shipmentMessages.totalVolume} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Default,
+  },
+  {
     key: 'shipment.numOfVoyages',
     title: <FormattedMessage {...shipmentMessages.numOfVoyages} />,
     icon: 'SHIPMENT',

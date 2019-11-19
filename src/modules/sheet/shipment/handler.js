@@ -128,6 +128,26 @@ export async function handleShipmentChanges(
       'totalWeight',
       shipment.totalWeight
     );
+
+    changes = mergeChanges(
+      changes,
+      {
+        totalVolumeOverride: (i, v) => ({
+          ...i,
+          value: v,
+        }),
+        totalVolumeOverriding: (i, v) => ({
+          ...i,
+          auto: v,
+        }),
+        totalVolumeDisplayMetric: (i, v) => ({
+          ...i,
+          displayMetric: v,
+        }),
+      },
+      'totalVolume',
+      shipment.totalVolume
+    );
   }
 
   return changes;

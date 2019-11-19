@@ -22,6 +22,12 @@ export const sheetShipmentFragment = gql`
     }
     totalWeightOverriding
     totalWeightDisplayMetric
+    totalVolumeOverride {
+      value
+      metric
+    }
+    totalVolumeOverriding
+    totalVolumeDisplayMetric
     inCharges {
       ...userAvatarFragment
     }
