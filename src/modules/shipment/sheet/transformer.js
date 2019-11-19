@@ -1,7 +1,4 @@
 // @flow
-import { addDays, differenceInCalendarDays } from 'date-fns';
-import { calculateDueDate, startOfToday } from 'utils/date';
-import { getLatestDate } from 'utils/shipment';
 import { calculateVolume, getBatchLatestQuantity } from 'utils/batch';
 import { defaultVolumeMetric } from 'utils/metric';
 import type { FieldDefinition } from 'types';
@@ -15,6 +12,7 @@ import {
 } from 'components/Sheet';
 import transformSheetOrder from 'modules/sheet/order/transformer';
 import transformSheetShipment from 'modules/sheet/shipment/transformer';
+import transformSheetContainer from 'modules/sheet/container/transformer';
 import {
   ORDER_ITEMS_SET_NO,
   ORDER_ITEMS_SET_QUANTITY,
@@ -48,27 +46,6 @@ import {
   BATCH_SET_TASKS,
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
-import {
-  CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
-  CONTAINER_SET_AGREE_ARRIVAL_DATE,
-  CONTAINER_SET_DEPARTURE_DATE,
-  CONTAINER_SET_NO,
-  CONTAINER_SET_YARD_NAME,
-  CONTAINER_UPDATE,
-  CONTAINER_SET_CONTAINER_TYPE,
-  CONTAINER_SET_CONTAINER_OPTION,
-  CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE,
-  CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
-  CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE,
-  CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
-  CONTAINER_SET_WAREHOUSE,
-  CONTAINER_SET_FREE_TIME_START_DATE,
-  CONTAINER_SET_FREE_TIME_DURATION,
-  CONTAINER_ASSIGN_DEPARTURE_DATE,
-  CONTAINER_APPROVE_DEPARTURE_DATE,
-  CONTAINER_SET_TAGS,
-  CONTAINER_SET_MEMO,
-} from 'modules/permission/constants/container';
 
 function getCurrentBatch(batchId: string, shipment: Object): ?Object {
   return [
@@ -109,297 +86,15 @@ function transformShipment(
 
 function transformContainer(
   basePath: string,
-  container: Object,
+  container: ?Object,
   hasContainers: boolean
 ): Array<CellValue> {
-  return [
-    {
-      columnKey: 'shipment.container.created',
-      type: 'date_user',
-      ...transformComputedField(basePath, container, 'created', item => {
-        const currentContainer = item.containers.find(c => c.id === container?.id);
-
-        return currentContainer
-          ? {
-              at: new Date(currentContainer?.createdAt),
-              by: currentContainer?.createdBy,
-            }
-          : null;
-      }),
-    },
-    {
-      columnKey: 'shipment.container.createdBy',
-      type: 'text',
-      ...transformReadonlyField(basePath, container, 'createdBy', container?.createdBy ?? null),
-    },
-    {
-      columnKey: 'shipment.container.createdAt',
-      type: 'text',
-      ...transformReadonlyField(basePath, container, 'createdAt', container?.createdAt ?? null),
-    },
-    {
-      columnKey: 'shipment.container.updated',
-      type: 'date_user',
-      ...transformComputedField(basePath, container, 'updated', item => {
-        const currentContainer = item.containers.find(c => c.id === container?.id);
-
-        return currentContainer
-          ? {
-              at: new Date(currentContainer?.updatedAt),
-              by: currentContainer?.updatedBy,
-            }
-          : null;
-      }),
-    },
-    {
-      columnKey: 'shipment.container.updatedBy',
-      type: 'text',
-      ...transformReadonlyField(basePath, container, 'updatedBy', container?.updatedBy ?? null),
-    },
-    {
-      columnKey: 'shipment.container.updatedAt',
-      type: 'text',
-      ...transformReadonlyField(basePath, container, 'updatedAt', container?.updatedAt ?? null),
-    },
-    {
-      columnKey: 'shipment.container.archived',
-      type: 'status',
-      ...transformComputedField(basePath, container, 'archived', item => item.archived ?? true),
-    },
-    {
-      columnKey: 'shipment.container.no',
-      type: 'text',
-      ...transformValueField(
-        basePath,
-        container,
-        'no',
-        hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_NO)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.containerType',
-      type: 'container_type',
-      ...transformValueField(
-        basePath,
-        container,
-        'containerType',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_CONTAINER_TYPE)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.containerOption',
-      type: 'container_option',
-      ...transformValueField(
-        basePath,
-        container,
-        'containerOption',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_CONTAINER_OPTION)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.warehouseArrivalAgreedDate',
-      type: 'datetime',
-      ...transformValueField(
-        basePath,
-        container,
-        'warehouseArrivalAgreedDate',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_AGREE_ARRIVAL_DATE)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.warehouseArrivalAgreedDateAssignedTo',
-      type: 'user_assignment',
-      computed: item =>
-        [item.importer?.id, item.exporter?.id, ...item.forwarders.map(f => f.id)].filter(Boolean),
-      ...transformValueField(
-        basePath,
-        container,
-        'warehouseArrivalAgreedDateAssignedTo',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.warehouseArrivalAgreedDateApproved',
-      type: 'approval',
-      ...transformValueField(
-        basePath,
-        container,
-        'warehouseArrivalAgreedDateApproved',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_APPROVE_AGREE_ARRIVAL_DATE)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.warehouseArrivalActualDate',
-      type: 'datetime',
-      ...transformValueField(
-        basePath,
-        container,
-        'warehouseArrivalActualDate',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_ACTUAL_ARRIVAL_DATE)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.warehouseArrivalActualDateAssignedTo',
-      type: 'user_assignment',
-      computed: item =>
-        [item.importer?.id, item.exporter?.id, ...item.forwarders.map(f => f.id)].filter(Boolean),
-      ...transformValueField(
-        basePath,
-        container,
-        'warehouseArrivalActualDateAssignedTo',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.warehouseArrivalActualDateApproved',
-      type: 'approval',
-      ...transformValueField(
-        basePath,
-        container,
-        'warehouseArrivalActualDateApproved',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.warehouse',
-      type: 'warehouse',
-      ...transformValueField(
-        basePath,
-        container,
-        'warehouse',
-        hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_WAREHOUSE)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.freeTime',
-      type: 'text',
-      ...transformComputedField(basePath, container, 'freeTime', shipment => {
-        const currentContainer = shipment.containers.find(c => c.id === container?.id);
-        const { value: freeTimeStartDate } = currentContainer?.freeTimeStartDate ?? {
-          value: null,
-        };
-        const dueDate = freeTimeStartDate
-          ? calculateDueDate(freeTimeStartDate, currentContainer?.freeTimeDuration)
-          : null;
-
-        return dueDate ? differenceInCalendarDays(dueDate, startOfToday()) : 0;
-      }),
-    },
-    {
-      columnKey: 'shipment.container.freeTimeStartDate',
-      type: 'date_toggle',
-      computed: shipment => {
-        const currentContainer = shipment.containers.find(c => c.id === container?.id);
-        const auto = currentContainer?.autoCalculatedFreeTimeStartDate ?? false;
-        return auto ? getLatestDate(shipment.voyages[shipment.voyages.length - 1]?.arrival) : null;
-      },
-      ...transformValueField(
-        basePath,
-        container,
-        'freeTimeStartDate',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_FREE_TIME_START_DATE)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.freeTimeDuration',
-      type: 'day',
-      ...transformValueField(
-        basePath,
-        container,
-        'freeTimeDuration',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_FREE_TIME_DURATION)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.dueDate',
-      type: 'date',
-      ...transformComputedField(basePath, container, 'dueDate', shipment => {
-        const currentContainer = shipment.containers.find(c => c.id === container?.id);
-        const date = currentContainer?.freeTimeStartDate?.value;
-        return date ? addDays(new Date(date), currentContainer?.freeTimeDuration ?? 0) : null;
-      }),
-    },
-    {
-      columnKey: 'shipment.container.yardName',
-      type: 'text',
-      ...transformValueField(
-        basePath,
-        container,
-        'yardName',
-        hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_YARD_NAME)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.departureDate',
-      type: 'date',
-      ...transformValueField(
-        basePath,
-        container,
-        'departureDate',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_DEPARTURE_DATE)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.departureDateAssignedTo',
-      type: 'user_assignment',
-      computed: item =>
-        [item.importer?.id, item.exporter?.id, ...item.forwarders.map(f => f.id)].filter(Boolean),
-      ...transformValueField(
-        basePath,
-        container,
-        'departureDateAssignedTo',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_ASSIGN_DEPARTURE_DATE)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.departureDateApproved',
-      type: 'approval',
-      ...transformValueField(
-        basePath,
-        container,
-        'departureDateApproved',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_APPROVE_DEPARTURE_DATE)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.tags',
-      type: 'container_tags',
-      ...transformValueField(
-        basePath,
-        container,
-        'tags',
-        hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_TAGS)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.memo',
-      type: 'textarea',
-      ...transformValueField(
-        basePath,
-        container,
-        'memo',
-        hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_MEMO)
-      ),
-    },
-    {
-      columnKey: 'shipment.container.logs',
-      type: 'container_logs',
-      ...transformValueField(basePath, container, 'id', () => true),
-    },
-  ].map(c => ({
+  return transformSheetContainer({
+    basePath,
+    container,
+    getContainerFromRoot: root => root.containers.find(c => c.id === container?.id),
+    getShipmentFromRoot: root => root,
+  }).map(c => ({
     ...c,
     disabled: !hasContainers && !container,
     empty: hasContainers && !container,

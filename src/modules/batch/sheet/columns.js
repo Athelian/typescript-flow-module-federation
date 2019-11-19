@@ -7,9 +7,9 @@ import type { FieldDefinition } from 'types';
 import type { ColumnConfig } from 'components/Sheet';
 import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
-import containerMessages from 'modules/container/messages';
 import orderColumns from 'modules/sheet/order/columns';
 import shipmentColumns from 'modules/sheet/shipment/columns';
+import containerColumns from 'modules/sheet/container/columns';
 
 const orderItemColumns: Array<ColumnConfig> = [
   {
@@ -357,180 +357,6 @@ const batchColumns: Array<ColumnConfig> = [
   // actions
 ];
 
-const containerColumns: Array<ColumnConfig> = [
-  {
-    key: 'container.created',
-    title: <FormattedMessage {...containerMessages.createdAt} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 110,
-  },
-  {
-    key: 'container.updated',
-    title: <FormattedMessage {...containerMessages.updatedAt} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 110,
-  },
-  {
-    key: 'container.archived',
-    exportKey: 'batches.container.archived',
-    title: <FormattedMessage {...containerMessages.status} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 105,
-  },
-  {
-    key: 'container.no',
-    title: <FormattedMessage {...containerMessages.containerNo} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-  },
-  {
-    key: 'container.containerType',
-    title: <FormattedMessage {...containerMessages.containerType} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 100,
-  },
-  {
-    key: 'container.containerOption',
-    title: <FormattedMessage {...containerMessages.containerOption} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 100,
-  },
-  {
-    key: 'container.warehouseArrivalAgreedDate',
-    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDate} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 170,
-  },
-  {
-    key: 'container.warehouseArrivalAgreedDateAssignedTo',
-    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateAssignedTo} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 160,
-  },
-  {
-    key: 'container.warehouseArrivalAgreedDateApproved',
-    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateApproved} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 110,
-  },
-  {
-    key: 'container.warehouseArrivalActualDate',
-    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDate} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 170,
-  },
-  {
-    key: 'container.warehouseArrivalActualDateAssignedTo',
-    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDateAssignedTo} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 160,
-  },
-  {
-    key: 'container.warehouseArrivalActualDateApproved',
-    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDateApproved} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 110,
-  },
-  {
-    key: 'container.warehouse',
-    title: <FormattedMessage {...containerMessages.warehouse} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-  },
-  {
-    key: 'container.freeTime',
-    title: <FormattedMessage {...containerMessages.freeTime} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 195,
-  },
-  {
-    key: 'container.freeTimeStartDate',
-    title: <FormattedMessage {...containerMessages.startDate} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 195,
-  },
-  {
-    key: 'container.freeTimeDuration',
-    title: <FormattedMessage {...containerMessages.duration} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-  },
-  {
-    key: 'container.dueDate',
-    title: <FormattedMessage {...containerMessages.dueDate} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-  },
-  {
-    key: 'container.yardName',
-    title: <FormattedMessage {...containerMessages.yardName} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-  },
-  {
-    key: 'container.departureDate',
-    title: <FormattedMessage {...containerMessages.departureDate} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 125,
-  },
-  {
-    key: 'container.departureDateAssignedTo',
-    title: <FormattedMessage {...containerMessages.departureDateAssignedTo} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 160,
-  },
-  {
-    key: 'container.departureDateApproved',
-    title: <FormattedMessage {...containerMessages.departureDateApproved} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 110,
-  },
-  {
-    key: 'container.tags',
-    title: <FormattedMessage {...containerMessages.tags} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-  },
-  {
-    key: 'container.memo',
-    exportKey: 'batches.container.memo',
-    title: <FormattedMessage {...containerMessages.memo} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 200,
-  },
-  {
-    key: 'container.logs',
-    title: <FormattedMessage {...containerMessages.logs} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: 120,
-  },
-  // actions
-];
-
 export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment'];
 
 type Props = {
@@ -572,7 +398,7 @@ export default function({
           'order.totalPrice',
         ].includes(c.key)
     ),
-    ...containerColumns,
+    ...containerColumns({}, {}),
     ...shipmentColumns(
       {
         'shipment.created': 'shipment.createdAt',
