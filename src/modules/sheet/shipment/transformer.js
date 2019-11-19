@@ -66,7 +66,7 @@ export default function transformSheetShipment({
     return [
       ...(currentShipment?.batchesWithoutContainer ?? []),
       // $FlowFixMe flow doesn't know flat
-      ...(currentShipment?.container ?? []).map(c => c.batches).flat(),
+      ...(currentShipment?.containers ?? []).map(c => c.batches).flat(),
     ];
   };
 
@@ -400,18 +400,20 @@ export default function transformSheetShipment({
     {
       columnKey: 'shipment.totalWeight',
       type: 'mass_overridable_toggle',
-      computed: root =>
-        getBatchesFromRoot(root).reduce((total, batch) => {
+      computed: root => ({
+        value: getBatchesFromRoot(root).reduce((total, batch) => {
           if (!batch.packageQuantity.value || !batch.packageGrossWeight) {
             return total;
           }
 
           return (
             total +
-            batch.packageQuantity.value.value *
+            batch.packageQuantity.value *
               convertWeight(batch.packageGrossWeight.value, batch.packageGrossWeight.metric, 'kg')
           );
         }, 0),
+        metric: 'kg',
+      }),
       ...transformValueField(
         basePath,
         shipment,
