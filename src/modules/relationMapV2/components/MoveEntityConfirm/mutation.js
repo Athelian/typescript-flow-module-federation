@@ -251,6 +251,30 @@ const moveBatchToShipment = ({
     });
 };
 
+const moveBatchesToShipment = ({
+  batchIds,
+  shipmentId,
+  entities,
+  isOrderFocus,
+}: {|
+  batchIds: Array<string>,
+  shipmentId: string,
+  entities: Object,
+  isOrderFocus: boolean,
+|}) => {
+  return Promise.all(
+    batchIds.map(batchId =>
+      moveBatchToShipment({
+        batchId,
+        shipmentId,
+        entities,
+        isOrderFocus,
+      })
+    )
+    // $FlowIgnore: flow doesn't support flat yet
+  ).then(ids => (ids ?? []).flat());
+};
+
 export const moveEntityMutation = (state: State, entities: Object) => {
   const isOrderFocus = state.viewer === 'Order';
   switch (state.moveEntity.detail.from.icon) {
@@ -308,6 +332,23 @@ export const moveEntityMutation = (state: State, entities: Object) => {
             isOrderFocus,
             shipmentId: state.moveEntity.detail.to.id,
             batchId: state.moveEntity.detail.from.id,
+          });
+        }
+
+        default:
+          return Promise.reject(new Error(`Not handle yet`));
+      }
+    }
+
+    case 'BATCHES': {
+      const batchIds = state.moveEntity.detail.from.id.split(',') ?? [];
+      switch (state.moveEntity.detail.to.icon) {
+        case 'SHIPMENT': {
+          return moveBatchesToShipment({
+            entities,
+            isOrderFocus,
+            batchIds,
+            shipmentId: state.moveEntity.detail.to.id,
           });
         }
 
