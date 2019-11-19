@@ -1,6 +1,6 @@
 // @flow
 import type { FieldDefinition } from 'types';
-import { getBatchLatestQuantity } from 'utils/batch';
+import { calculatePackageQuantity, getBatchLatestQuantity } from 'utils/batch';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
   transformComputedField,
@@ -402,13 +402,15 @@ export default function transformSheetShipment({
       type: 'mass_overridable_toggle',
       computed: root => ({
         value: getBatchesFromRoot(root).reduce((total, batch) => {
-          if (!batch.packageQuantity.value || !batch.packageGrossWeight) {
+          if (!batch.packageGrossWeight) {
             return total;
           }
 
           return (
             total +
-            batch.packageQuantity.value *
+            (batch.packageQuantity.auto
+              ? calculatePackageQuantity(batch)
+              : batch.packageQuantity.value || 0) *
               convertWeight(batch.packageGrossWeight.value, batch.packageGrossWeight.metric, 'kg')
           );
         }, 0),

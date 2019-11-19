@@ -398,7 +398,16 @@ export default function({
           'order.totalPrice',
         ].includes(c.key)
     ),
-    ...containerColumns({}, {}),
+    ...containerColumns({}, {}).filter(
+      c =>
+        ![
+          'container.totalPrice',
+          'container.totalBatchQuantity',
+          'container.totalPackages',
+          'container.totalWeight',
+          'container.totalVolume',
+        ].includes(c.key)
+    ),
     ...shipmentColumns(
       {
         'shipment.created': 'shipment.createdAt',
