@@ -5,135 +5,11 @@ import { FormattedMessage } from 'react-intl';
 import { colors } from 'styles/common';
 import type { FieldDefinition } from 'types';
 import type { ColumnConfig } from 'components/Sheet';
-import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
 import orderColumns from 'modules/sheet/order/columns';
+import orderItemColumns from 'modules/sheet/orderItem/columns';
 import shipmentColumns from 'modules/sheet/shipment/columns';
 import containerColumns from 'modules/sheet/container/columns';
-
-const orderItemColumns: Array<ColumnConfig> = [
-  {
-    key: 'orderItem.created',
-    exportKey: 'orderItems.createdAt',
-    title: <FormattedMessage {...orderItemMessages.createdAt} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 110,
-  },
-  {
-    key: 'orderItem.updated',
-    title: <FormattedMessage {...orderItemMessages.updatedAt} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 110,
-  },
-  {
-    key: 'orderItem.archived',
-    exportKey: 'orderItems.archived',
-    title: <FormattedMessage {...orderItemMessages.status} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 105,
-  },
-  {
-    key: 'orderItem.productProvider.product.name',
-    title: <FormattedMessage {...orderItemMessages.productName} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-    sort: {
-      name: 'productName',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'orderItem.productProvider.product.serial',
-    title: <FormattedMessage {...orderItemMessages.productSerial} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-    sort: {
-      name: 'productSerial',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'orderItem.no',
-    exportKey: 'orderItems.no',
-    title: <FormattedMessage {...orderItemMessages.no} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-  {
-    key: 'orderItem.quantity',
-    exportKey: 'orderItems.quantity',
-    title: <FormattedMessage {...orderItemMessages.quantity} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-  {
-    key: 'orderItem.price',
-    exportKey: 'orderItems.price',
-    title: <FormattedMessage {...orderItemMessages.unitPrice} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-  {
-    key: 'orderItem.deliveryDate',
-    exportKey: 'orderItems.deliveryDate',
-    title: <FormattedMessage {...orderItemMessages.deliveryDate} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 125,
-  },
-  {
-    key: 'orderItem.tags',
-    title: <FormattedMessage {...orderItemMessages.tags} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-  {
-    key: 'orderItem.memo',
-    exportKey: 'orderItems.memo',
-    title: <FormattedMessage {...orderItemMessages.memo} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-  {
-    key: 'orderItem.files',
-    title: <FormattedMessage {...orderItemMessages.sectionDocuments} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-  {
-    key: 'orderItem.todo',
-    title: <FormattedMessage {...orderItemMessages.tasks} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-  {
-    key: 'orderItem.logs',
-    title: <FormattedMessage {...orderItemMessages.logs} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 120,
-  },
-  {
-    key: 'orderItem.mask',
-    title: <FormattedMessage {...orderItemMessages.mask} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-  // actions
-];
 
 const batchColumns: Array<ColumnConfig> = [
   {
@@ -381,14 +257,15 @@ export default function({
       color: colors.BATCH,
       width: 200,
     })),
-    ...orderItemColumns,
-    ...orderItemFieldDefinitions.map(fieldDefinition => ({
-      key: `orderItem.customField.${fieldDefinition.id}`,
-      title: fieldDefinition.name,
-      icon: 'ORDER_ITEM',
-      color: colors.ORDER_ITEM,
-      width: 200,
-    })),
+    ...orderItemColumns({}, {}, orderItemFieldDefinitions).filter(
+      c =>
+        ![
+          'orderItem.remainQuantity',
+          'orderItem.totalBatched',
+          'orderItem.totalShipped',
+          'orderItem.totalPrice',
+        ].includes(c.key)
+    ),
     ...orderColumns({}, {}, orderFieldDefinitions).filter(
       c =>
         ![
