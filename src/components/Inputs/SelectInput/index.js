@@ -26,6 +26,7 @@ export type RenderOptionProps = {
 
 type Props = {
   value: any,
+  disabled?: boolean,
   required?: boolean,
   onChange: any => void,
   onFocus?: (SyntheticFocusEvent<any>) => void,
@@ -179,6 +180,7 @@ const SelectOptions = ({
 
 const SelectInput = ({
   value,
+  disabled,
   required,
   onChange,
   onFocus,
@@ -265,6 +267,7 @@ const SelectInput = ({
                   }
                 },
                 onBlur,
+                disabled,
               }),
             getToggleButtonProps: props =>
               getToggleButtonProps({
@@ -280,6 +283,7 @@ const SelectInput = ({
                     setTimeout(() => openMenu(), 100);
                   }
                 },
+                disabled,
               }),
           })}
           {isOpen && (

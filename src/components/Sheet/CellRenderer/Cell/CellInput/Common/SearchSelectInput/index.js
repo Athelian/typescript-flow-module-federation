@@ -11,6 +11,7 @@ import { SelectInputStyle, SelectOptionStyle, ArrowDownStyle, ClearButtonStyle }
 
 type Props = {
   value: any | null,
+  readonly: boolean,
   required?: boolean,
   onChange: any => void,
   items: Array<any>,
@@ -69,6 +70,7 @@ const Option = ({ selected, highlighted, item, itemToString }: RenderOptionProps
 
 const SearchSelectInput = ({
   value,
+  readonly,
   required,
   onChange,
   items,
@@ -79,6 +81,7 @@ const SearchSelectInput = ({
   <div className={CellInputWrapperStyle}>
     <BaseSelectInput
       value={value}
+      disabled={readonly}
       required={required}
       onChange={onChange}
       items={items}

@@ -79,6 +79,7 @@ const DateRevisionsInput = ({
         <div key={`${revision.id || ''}-${index + 0}`} className={RevisionWrapperStyle}>
           <SelectInput
             value={revision.type}
+            disabled={readonly}
             onChange={handleTypeChange(index)}
             items={enums.map(e => e.description || e.name)}
             filterItems={(query, items) => items}

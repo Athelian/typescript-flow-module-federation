@@ -10,6 +10,7 @@ import { filterItems, itemToString, itemToValue } from './helpers';
 
 const PortInput = ({
   value,
+  readonly,
   context,
   focus,
   onChange,
@@ -65,6 +66,7 @@ const PortInput = ({
   return (
     <SearchSelectInput
       value={inputValue}
+      readonly={readonly}
       required={false}
       onChange={handleChange}
       focus={focus}

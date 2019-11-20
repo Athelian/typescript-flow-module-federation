@@ -293,12 +293,11 @@ function transformBatch(
     {
       columnKey: 'batch.packageVolume',
       type: 'volume_toggle',
-      computed: currentBatch => {
-        return calculateVolume(
+      computed: currentBatch =>
+        calculateVolume(
           currentBatch?.packageVolume?.value ?? { value: 0, metric: defaultVolumeMetric },
           currentBatch?.packageSize
-        );
-      },
+        ),
       ...transformValueField(
         basePath,
         batch,
