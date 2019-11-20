@@ -7,9 +7,7 @@ import { useDrop, useDrag } from 'react-dnd';
 import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import { useEntityHasPermissions, useHasPermissions } from 'contexts/Permissions';
-import { Tooltip } from 'components/Tooltip';
 import LoadingIcon from 'components/LoadingIcon';
-import Icon from 'components/Icon';
 import BaseCard from 'components/Cards';
 import {
   ORDER,
@@ -20,9 +18,7 @@ import {
   PRODUCT,
   ORDER_WIDTH,
   BATCH_WIDTH,
-  ORDER_ITEM_WIDTH,
   CONTAINER_WIDTH,
-  SHIPMENT_WIDTH,
   SHIPMENT_LONG_WIDTH,
 } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
@@ -52,96 +48,15 @@ import OrderItemHeading from '../OrderItemHeading';
 import BatchHeading from '../BatchHeading';
 import ContainerHeading from '../ContainerHeading';
 import OrderHeading from '../OrderHeading';
+import DraggedPlaceholder from '../DraggedPlaceholder';
+import CellDraggable from '../CellDraggable';
+import DroppableOverlay from '../DroppableOverlay';
 import { ContentStyle } from './style';
 
 type CellProps = {
   data: Object,
   beforeConnector?: ?LINE_CONNECTOR,
   afterConnector?: ?LINE_CONNECTOR,
-};
-
-export const Overlay = ({
-  color,
-  message,
-  icon,
-}: {
-  color: string,
-  message?: React$Node,
-  icon?: React$Node,
-}) => {
-  return message ? (
-    <Tooltip visible message={message}>
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          height: '100%',
-          width: '100%',
-          zIndex: 4,
-          backgroundColor: color,
-          borderRadius: '5px',
-        }}
-      >
-        {icon && (
-          <div
-            style={{
-              position: 'absolute',
-              width: '55px',
-              height: '55px',
-              right: '0px',
-              top: '0px',
-              fontSize: '48px',
-              lineHeight: '48px',
-              display: 'flex',
-              alignItems: 'center',
-              textAlign: 'center',
-              letterSpacing: '2px',
-              textTransform: 'uppercase',
-              color: '#fff',
-            }}
-          >
-            {icon}
-          </div>
-        )}
-      </div>
-    </Tooltip>
-  ) : (
-    <div
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        height: '100%',
-        width: '100%',
-        zIndex: 4,
-        backgroundColor: color,
-        borderRadius: '5px',
-      }}
-    >
-      {icon && (
-        <div
-          style={{
-            position: 'absolute',
-            width: '55px',
-            height: '55px',
-            right: '0px',
-            top: '0px',
-            fontSize: '48px',
-            lineHeight: '48px',
-            display: 'flex',
-            alignItems: 'center',
-            textAlign: 'center',
-            letterSpacing: '2px',
-            textTransform: 'uppercase',
-            color,
-          }}
-        >
-          {icon}
-        </div>
-      )}
-    </div>
-  );
 };
 
 // NOTE: only support for drag and drop a batch
@@ -649,7 +564,7 @@ function OrderCell({ data, beforeConnector }: CellProps) {
   const hasPermissions = useEntityHasPermissions(data);
   const orderId = order?.id;
   const itemId = data.orderItem?.id;
-  const [{ isOver, canDrop, dropMessage, isSameItem }, drop] = useDrop({
+  const [{ isOver, canDrop, dropMessage }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
     canDrop: item => {
       const { type } = item;
@@ -693,7 +608,7 @@ function OrderCell({ data, beforeConnector }: CellProps) {
       }),
     }),
   });
-  const [{ isDragging }, drag] = useDrag({
+  const [, drag] = useDrag({
     item: { type: ORDER, id: orderId },
     canDrag: () => false,
     begin: () => {
@@ -752,16 +667,7 @@ function OrderCell({ data, beforeConnector }: CellProps) {
       </div>
 
       <CellWrapper ref={drop}>
-        {isDragging ? (
-          <div
-            style={{
-              background: '#AAAAAA',
-              width: ORDER_WIDTH - 20,
-              height: '100%',
-              borderRadius: '5px',
-            }}
-          />
-        ) : (
+        <CellDraggable ref={drag}>
           <BaseCard
             icon="ORDER"
             color="ORDER"
@@ -770,51 +676,44 @@ function OrderCell({ data, beforeConnector }: CellProps) {
             selectable={state.targets.includes(`${ORDER}-${orderId}`)}
             onClick={handleClick}
             flattenCornerIcon
+            id={`${ORDER}-${orderId}`}
           >
-            <div ref={drag} id={`${ORDER}-${orderId}`}>
-              <Badge label={badge.order?.[orderId] || ''} />
-              <OrderCard
-                organizationId={order?.ownedBy?.id}
-                order={order}
-                onViewForm={evt => {
-                  evt.stopPropagation();
-                  dispatch({
-                    type: 'EDIT',
-                    payload: {
-                      type: ORDER,
-                      selectedId: orderId,
+            <OrderCard
+              organizationId={order?.ownedBy?.id}
+              order={order}
+              onViewForm={evt => {
+                evt.stopPropagation();
+                dispatch({
+                  type: 'EDIT',
+                  payload: {
+                    type: ORDER,
+                    selectedId: orderId,
+                  },
+                });
+              }}
+              onCreateItem={evt => {
+                evt.stopPropagation();
+                dispatch({
+                  type: 'CREATE_ITEM',
+                  payload: {
+                    entity: {
+                      id: orderId,
                     },
-                  });
-                }}
-                onCreateItem={evt => {
-                  evt.stopPropagation();
-                  dispatch({
-                    type: 'CREATE_ITEM',
-                    payload: {
-                      entity: {
-                        id: orderId,
-                      },
-                    },
-                  });
-                }}
-              />
-              <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
-              {(isOver || state.isDragging) && !isSameItem && !canDrop && (
-                <Overlay
-                  color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
-                  message={isOver && dropMessage}
-                  icon={<Icon icon="CANCEL" />}
-                />
-              )}
-              {!isOver && canDrop && (
-                <Overlay color="rgba(17, 209, 166, 0.25)" icon={<Icon icon="EXCHANGE" />} />
-              )}
-              {isOver && canDrop && (
-                <Overlay message={dropMessage} icon={<Icon icon="EXCHANGE" />} color="#11D1A6" />
-              )}
-            </div>
+                  },
+                });
+              }}
+            />
           </BaseCard>
-        )}
+
+          <DroppableOverlay
+            isDragging={state.isDragging}
+            canDrop={canDrop}
+            isOver={isOver}
+            message={dropMessage}
+          />
+          <FilterHitBorder hasFilterHits={isMatchedEntity(matches, order)} />
+          <Badge label={badge.order?.[orderId] || ''} />
+        </CellDraggable>
       </CellWrapper>
 
       <div className={ContentStyle} />
@@ -831,7 +730,7 @@ function OrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
   const order = data.orderItem?.order;
   const orderId = order?.id;
   const itemId = data.orderItem?.id;
-  const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
+  const [{ isOver, canDrop, dropMessage }, drop] = useDrop({
     accept: BATCH,
     canDrop: item => {
       const { type } = item;
@@ -877,7 +776,7 @@ function OrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
       }),
     }),
   });
-  const [{ isDragging }, drag] = useDrag({
+  const [, drag] = useDrag({
     item: { type: ORDER_ITEM, id: itemId },
     canDrag: () => false,
     end: (item, monitor) => {
@@ -941,16 +840,7 @@ function OrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
       </div>
 
       <CellWrapper ref={drop}>
-        {isDragging ? (
-          <div
-            style={{
-              background: '#AAAAAA',
-              width: ORDER_ITEM_WIDTH - 20,
-              height: '100%',
-              borderRadius: '5px',
-            }}
-          />
-        ) : (
+        <CellDraggable ref={drag}>
           <BaseCard
             icon="ORDER_ITEM"
             color="ORDER_ITEM"
@@ -959,65 +849,58 @@ function OrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
             selectable={state.targets.includes(`${ORDER_ITEM}-${itemId}`)}
             onClick={handleClick}
             flattenCornerIcon
+            id={`${ORDER_ITEM}-${itemId}`}
           >
-            <div ref={drag} id={`${ORDER_ITEM}-${itemId}`}>
-              <Badge label={badge.orderItem?.[itemId] || ''} />
-              <OrderItemCard
-                organizationId={data.orderItem?.ownedBy?.id}
-                orderItem={data.orderItem}
-                onViewForm={evt => {
-                  evt.stopPropagation();
-                  dispatch({
-                    type: 'EDIT',
-                    payload: {
-                      type: ORDER_ITEM,
-                      selectedId: itemId,
-                      orderId,
+            <OrderItemCard
+              organizationId={data.orderItem?.ownedBy?.id}
+              orderItem={data.orderItem}
+              onViewForm={evt => {
+                evt.stopPropagation();
+                dispatch({
+                  type: 'EDIT',
+                  payload: {
+                    type: ORDER_ITEM,
+                    selectedId: itemId,
+                    orderId,
+                  },
+                });
+              }}
+              onDeleteItem={evt => {
+                evt.stopPropagation();
+                dispatch({
+                  type: 'DELETE_ITEM',
+                  payload: {
+                    entity: {
+                      id: itemId,
+                      no: data.orderItem?.no,
                     },
-                  });
-                }}
-                onDeleteItem={evt => {
-                  evt.stopPropagation();
-                  dispatch({
-                    type: 'DELETE_ITEM',
-                    payload: {
-                      entity: {
-                        id: itemId,
-                        no: data.orderItem?.no,
-                      },
+                  },
+                });
+              }}
+              onCreateBatch={evt => {
+                evt.stopPropagation();
+                dispatch({
+                  type: 'CREATE_BATCH',
+                  payload: {
+                    entity: {
+                      id: itemId,
+                      no: data.orderItem?.no,
                     },
-                  });
-                }}
-                onCreateBatch={evt => {
-                  evt.stopPropagation();
-                  dispatch({
-                    type: 'CREATE_BATCH',
-                    payload: {
-                      entity: {
-                        id: itemId,
-                        no: data.orderItem?.no,
-                      },
-                    },
-                  });
-                }}
-              />
-              <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
-              {(isOver || state.isDragging) && !isSameItem && !canDrop && (
-                <Overlay
-                  color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
-                  message={isOver && dropMessage}
-                  icon={<Icon icon="CANCEL" />}
-                />
-              )}
-              {!isOver && canDrop && (
-                <Overlay color="rgba(17, 209, 166, 0.25)" icon={<Icon icon="EXCHANGE" />} />
-              )}
-              {isOver && canDrop && (
-                <Overlay message={dropMessage} icon={<Icon icon="EXCHANGE" />} color="#11D1A6" />
-              )}
-            </div>
+                  },
+                });
+              }}
+            />
           </BaseCard>
-        )}
+
+          <DroppableOverlay
+            isDragging={state.isDragging}
+            canDrop={canDrop}
+            isOver={isOver}
+            message={dropMessage}
+          />
+          <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data.orderItem)} />
+          <Badge label={badge.orderItem?.[itemId] || ''} />
+        </CellDraggable>
       </CellWrapper>
 
       <div className={ContentStyle}>
@@ -1139,6 +1022,12 @@ function BatchCell({
         },
       }),
   });
+
+  // TODO: Replace with multi dnd logic
+  const showDraggingPlaceholder = isDragging;
+  // TODO: Replace with multi dnd logic
+  const draggingCount = 1;
+
   return (
     <>
       <div className={ContentStyle}>
@@ -1175,16 +1064,7 @@ function BatchCell({
       </div>
 
       <CellWrapper ref={drop}>
-        {isDragging ? (
-          <div
-            style={{
-              background: '#DDD',
-              width: BATCH_WIDTH,
-              height: '100%',
-              borderRadius: '5px',
-            }}
-          />
-        ) : (
+        <CellDraggable ref={drag}>
           <BaseCard
             icon="BATCH"
             color="BATCH"
@@ -1193,49 +1073,73 @@ function BatchCell({
             selectable={state.targets.includes(`${BATCH}-${batchId}`)}
             onClick={handleClick}
             flattenCornerIcon
+            id={`${BATCH}-${batchId}`}
           >
-            <div ref={drag} id={`${BATCH}-${batchId}`}>
-              <Badge label={badge.batch?.[batchId] || ''} />
-              <BatchCard
-                organizationId={data?.ownedBy?.id}
-                batch={data}
-                onViewForm={evt => {
-                  evt.stopPropagation();
-                  dispatch({
-                    type: 'EDIT',
-                    payload: {
-                      type: BATCH,
-                      selectedId: batchId,
-                      shipmentId: shipment?.id,
+            <BatchCard
+              organizationId={data?.ownedBy?.id}
+              batch={data}
+              onViewForm={evt => {
+                evt.stopPropagation();
+                dispatch({
+                  type: 'EDIT',
+                  payload: {
+                    type: BATCH,
+                    selectedId: batchId,
+                    shipmentId: shipment?.id,
+                  },
+                });
+              }}
+              onDeleteBatch={evt => {
+                evt.stopPropagation();
+                dispatch({
+                  type: 'DELETE_BATCH',
+                  payload: {
+                    entity: {
+                      id: batchId,
+                      no: data?.no,
                     },
-                  });
-                }}
-                onDeleteBatch={evt => {
-                  evt.stopPropagation();
-                  dispatch({
-                    type: 'DELETE_BATCH',
-                    payload: {
-                      entity: {
-                        id: batchId,
-                        no: data?.no,
-                      },
-                    },
-                  });
-                }}
+                  },
+                });
+              }}
+            />
+          </BaseCard>
+
+          {showDraggingPlaceholder || isSameItem ? (
+            <DraggedPlaceholder
+              message={
+                <FormattedMessage
+                  id="modules.RelationMap.dnd.movingXBatches"
+                  defaultMessage="Moving {draggingCount} {batchesLabel}"
+                  values={{
+                    draggingCount,
+                    batchesLabel:
+                      draggingCount > 1 ? (
+                        <FormattedMessage id="modules.RelationMap.label.batches" />
+                      ) : (
+                        <FormattedMessage id="modules.RelationMap.label.batch" />
+                      ),
+                  }}
+                />
+              }
+            />
+          ) : (
+            <>
+              <DroppableOverlay
+                isDragging={state.isDragging}
+                canDrop={canDrop}
+                isOver={isOver}
+                message={
+                  <FormattedMessage
+                    id="modules.RelationMap.dnd.cannotMoveToBatch"
+                    defaultMessage="Cannot Move to Batch"
+                  />
+                }
               />
               <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
-              {(isOver || state.isDragging) && !isSameItem && !canDrop && (
-                <Overlay
-                  color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
-                  message={isOver && 'CANNOT MOVE TO BATCH'}
-                  icon={<Icon icon="CANCEL" />}
-                />
-              )}
-              {!isOver && canDrop && <Overlay color="rgba(17, 209, 166, 0.25)" />}
-              {isOver && canDrop && <Overlay color="#11D1A6" />}
-            </div>
-          </BaseCard>
-        )}
+              <Badge label={badge.batch?.[batchId] || ''} />
+            </>
+          )}
+        </CellDraggable>
       </CellWrapper>
 
       <div className={ContentStyle}>
@@ -1265,7 +1169,7 @@ function ContainerCell({
   const hasPermissions = useEntityHasPermissions(data);
   const batches = shipment?.batches ?? [];
   const shipmentId = shipment?.id ?? '';
-  const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
+  const [{ isOver, canDrop, dropMessage }, drop] = useDrop({
     accept: BATCH,
     canDrop: item => {
       const { type } = item;
@@ -1310,7 +1214,7 @@ function ContainerCell({
       }),
     }),
   });
-  const [{ isDragging }, drag] = useDrag({
+  const [, drag] = useDrag({
     item: { type: CONTAINER, id: containerId },
     canDrag: () => false,
     begin: () => {
@@ -1399,16 +1303,7 @@ function ContainerCell({
       </div>
 
       <CellWrapper ref={drop}>
-        {isDragging ? (
-          <div
-            style={{
-              background: '#AAAAAA',
-              width: CONTAINER_WIDTH - 20,
-              height: '100%',
-              borderRadius: '5px',
-            }}
-          />
-        ) : (
+        <CellDraggable ref={drag}>
           <BaseCard
             icon="CONTAINER"
             color="CONTAINER"
@@ -1417,53 +1312,46 @@ function ContainerCell({
             selectable={state.targets.includes(`${CONTAINER}-${containerId}`)}
             onClick={handleClick}
             flattenCornerIcon
+            id={`${CONTAINER}-${containerId}`}
           >
-            <div ref={drag}>
-              <Badge label={badge.container?.[containerId] || ''} />
-              <ContainerCard
-                organizationId={data?.ownedBy?.id}
-                container={data}
-                onViewForm={evt => {
-                  evt.stopPropagation();
-                  dispatch({
-                    type: 'EDIT',
-                    payload: {
-                      type: CONTAINER,
-                      selectedId: containerId,
-                      orderIds,
+            <ContainerCard
+              organizationId={data?.ownedBy?.id}
+              container={data}
+              onViewForm={evt => {
+                evt.stopPropagation();
+                dispatch({
+                  type: 'EDIT',
+                  payload: {
+                    type: CONTAINER,
+                    selectedId: containerId,
+                    orderIds,
+                  },
+                });
+              }}
+              onDeleteContainer={evt => {
+                evt.stopPropagation();
+                dispatch({
+                  type: 'DELETE_CONTAINER',
+                  payload: {
+                    entity: {
+                      id: containerId,
+                      no: data?.no,
                     },
-                  });
-                }}
-                onDeleteContainer={evt => {
-                  evt.stopPropagation();
-                  dispatch({
-                    type: 'DELETE_CONTAINER',
-                    payload: {
-                      entity: {
-                        id: containerId,
-                        no: data?.no,
-                      },
-                    },
-                  });
-                }}
-              />
-              <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
-              {(isOver || state.isDragging) && !isSameItem && !canDrop && (
-                <Overlay
-                  color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
-                  message={isOver && dropMessage}
-                  icon={<Icon icon="CANCEL" />}
-                />
-              )}
-              {!isOver && canDrop && (
-                <Overlay color="rgba(17, 209, 166, 0.25)" icon={<Icon icon="EXCHANGE" />} />
-              )}
-              {isOver && canDrop && (
-                <Overlay message={dropMessage} icon={<Icon icon="EXCHANGE" />} color="#11D1A6" />
-              )}
-            </div>
+                  },
+                });
+              }}
+            />
           </BaseCard>
-        )}
+
+          <DroppableOverlay
+            isDragging={state.isDragging}
+            canDrop={canDrop}
+            isOver={isOver}
+            message={dropMessage}
+          />
+          <FilterHitBorder hasFilterHits={isMatchedEntity(matches, data)} />
+          <Badge label={badge.container?.[containerId] || ''} />
+        </CellDraggable>
       </CellWrapper>
 
       <div className={ContentStyle}>
@@ -1490,7 +1378,7 @@ function ShipmentCell({
   const { matches } = Hits.useContainer();
   const shipmentId = shipment?.id;
   const hasPermissions = useHasPermissions(shipment?.ownedBy?.id);
-  const [{ isOver, canDrop, isSameItem, dropMessage }, drop] = useDrop({
+  const [{ isOver, canDrop, dropMessage }, drop] = useDrop({
     accept: BATCH,
     canDrop: item => {
       const { type } = item;
@@ -1535,7 +1423,7 @@ function ShipmentCell({
       }),
     }),
   });
-  const [{ isDragging }, drag] = useDrag({
+  const [, drag] = useDrag({
     item: { type: SHIPMENT, id: shipmentId },
     canDrag: () => false,
     begin: () => {
@@ -1621,16 +1509,7 @@ function ShipmentCell({
       <div className={ContentStyle} />
 
       <CellWrapper ref={drop}>
-        {isDragging ? (
-          <div
-            style={{
-              background: '#AAAAAA',
-              width: SHIPMENT_WIDTH - 20,
-              height: '100%',
-              borderRadius: '5px',
-            }}
-          />
-        ) : (
+        <CellDraggable ref={drag}>
           <BaseCard
             icon="SHIPMENT"
             color="SHIPMENT"
@@ -1639,52 +1518,45 @@ function ShipmentCell({
             selectable={state.targets.includes(`${SHIPMENT}-${shipmentId}`)}
             onClick={handleClick}
             flattenCornerIcon
+            id={`${SHIPMENT}-${shipmentId}`}
           >
-            <div ref={drag} id={`${SHIPMENT}-${shipmentId}`}>
-              <Badge label={badge.shipment?.[shipmentId] || ''} />
-              <ShipmentCard
-                organizationId={shipment?.ownedBy?.id}
-                shipment={shipment}
-                onViewForm={evt => {
-                  evt.stopPropagation();
-                  dispatch({
-                    type: 'EDIT',
-                    payload: {
-                      type: SHIPMENT,
-                      selectedId: shipmentId,
-                      orderIds,
+            <ShipmentCard
+              organizationId={shipment?.ownedBy?.id}
+              shipment={shipment}
+              onViewForm={evt => {
+                evt.stopPropagation();
+                dispatch({
+                  type: 'EDIT',
+                  payload: {
+                    type: SHIPMENT,
+                    selectedId: shipmentId,
+                    orderIds,
+                  },
+                });
+              }}
+              onCreateContainer={evt => {
+                evt.stopPropagation();
+                dispatch({
+                  type: 'CREATE_CONTAINER',
+                  payload: {
+                    entity: {
+                      id: shipmentId,
                     },
-                  });
-                }}
-                onCreateContainer={evt => {
-                  evt.stopPropagation();
-                  dispatch({
-                    type: 'CREATE_CONTAINER',
-                    payload: {
-                      entity: {
-                        id: shipmentId,
-                      },
-                    },
-                  });
-                }}
-              />
-              <FilterHitBorder hasFilterHits={isMatchedEntity(matches, shipment)} />
-              {(isOver || state.isDragging) && !isSameItem && !canDrop && (
-                <Overlay
-                  color={isOver ? '#EF4848' : 'rgba(239, 72, 72, 0.25)'}
-                  message={isOver && dropMessage}
-                  icon={<Icon icon="CANCEL" />}
-                />
-              )}
-              {!isOver && canDrop && (
-                <Overlay color="rgba(17, 209, 166, 0.25)" icon={<Icon icon="EXCHANGE" />} />
-              )}
-              {isOver && canDrop && (
-                <Overlay message={dropMessage} icon={<Icon icon="EXCHANGE" />} color="#11D1A6" />
-              )}
-            </div>
+                  },
+                });
+              }}
+            />
           </BaseCard>
-        )}
+
+          <DroppableOverlay
+            isDragging={state.isDragging}
+            canDrop={canDrop}
+            isOver={isOver}
+            message={dropMessage}
+          />
+          <FilterHitBorder hasFilterHits={isMatchedEntity(matches, shipment)} />
+          <Badge label={badge.shipment?.[shipmentId] || ''} />
+        </CellDraggable>
       </CellWrapper>
 
       <div className={ContentStyle}>

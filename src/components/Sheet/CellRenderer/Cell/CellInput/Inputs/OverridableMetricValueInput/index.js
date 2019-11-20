@@ -35,12 +35,14 @@ const OverridableMetricValueInput = (
   metrics: Array<string>,
   defaultMetric: string,
   valueConverter: (value: number, from: any, to: any) => number
+  // eslint-disable-next-line flowtype/space-after-type-colon
 ) => ({
   value,
   context,
   readonly,
   onChange,
-}: InputProps<
+}: // eslint-disable-next-line flowtype/generic-spacing
+InputProps<
   {
     value: ?MetricValue,
     auto: boolean,

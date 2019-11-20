@@ -7,5 +7,7 @@ type Props = {|
 |};
 
 export default function FilterHitBorder({ hasFilterHits }: Props) {
-  return <div className={FilteredHitStyle(hasFilterHits)} />;
+  if (!hasFilterHits) return null;
+
+  return <div className={FilteredHitStyle} />;
 }
