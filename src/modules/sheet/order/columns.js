@@ -178,7 +178,6 @@ const columns: Array<ColumnConfig> = [
     color: colors.ORDER,
     width: ColumnWidths.Default,
   },
-  // actions
 ];
 
 export default function orderColumns(

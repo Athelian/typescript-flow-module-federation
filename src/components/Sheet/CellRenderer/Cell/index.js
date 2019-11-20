@@ -2,10 +2,12 @@
 import * as React from 'react';
 import { useHasPermissions } from 'contexts/Permissions';
 import { Blackout } from 'components/Form';
-import type { Action, CellValue, Position } from 'components/Sheet/SheetState/types';
+import type { DoAction } from 'components/Sheet/SheetAction/types';
+import type { Action, CellValue, Mutate } from 'components/Sheet/SheetState/types';
 import { Actions } from 'components/Sheet/SheetState/constants';
 import CellInput from './CellInput';
 import CellDisplay from './CellDisplay';
+import CellAction from './CellAction';
 import { CellStyle, CellBorderStyle, CellPlaceholderStyle, CellShadowStyle } from './style';
 
 type Props = {
@@ -21,7 +23,8 @@ type Props = {
   error: boolean,
   weakError: boolean,
   dispatch: Action => void,
-  mutate: ({ cell: Position, value: any, item: Object }) => void,
+  mutate: Mutate,
+  doAction: DoAction,
 };
 
 const Cell = ({
@@ -38,6 +41,7 @@ const Cell = ({
   weakError,
   dispatch,
   mutate,
+  doAction,
 }: Props) => {
   const hasPermission = useHasPermissions(parentCell.data?.ownedBy);
   const wrapperRef = React.useRef(null);
@@ -100,6 +104,14 @@ const Cell = ({
       });
     },
     [mutate, columnIndex, rowIndex, item]
+  );
+  const handleAction = React.useCallback(
+    action => {
+      if (cell.entity) {
+        doAction({ action, entity: cell.entity, item });
+      }
+    },
+    [cell.entity, item, doAction]
   );
 
   const handleClick = React.useCallback(() => {
@@ -182,6 +194,16 @@ const Cell = ({
 
         if (!cell.entity || hidden) {
           return <div className={CellPlaceholderStyle} />;
+        }
+
+        if (cell.type === 'action') {
+          return (
+            <CellAction
+              actions={cell.extra || []}
+              onAction={handleAction}
+              inputFocus={inputFocus}
+            />
+          );
         }
 
         if (isReadonly) {

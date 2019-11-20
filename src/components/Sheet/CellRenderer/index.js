@@ -59,6 +59,7 @@ const CellRenderer = ({ data, style, columnIndex, rowIndex }: Props) => {
             weakError={cellData.weakErrored}
             dispatch={cellData.dispatch}
             mutate={cellData.mutate}
+            doAction={cellData.doAction}
           />
         </>
       )}

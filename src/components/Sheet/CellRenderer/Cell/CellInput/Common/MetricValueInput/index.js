@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
-import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
-import { SelectOptionStyle, SelectInputStyle } from './style';
+import type { RenderInputProps } from 'components/Inputs/SelectInput';
+import { SelectInputStyle } from './style';
 
 export const MetricSelectInput = ({
   isOpen,
@@ -22,15 +22,4 @@ export const MetricSelectInput = ({
   >
     {itemToString(selectedItem)}
   </button>
-);
-
-export const MetricSelectOption = ({
-  item,
-  selected,
-  highlighted,
-  itemToString,
-}: RenderOptionProps) => (
-  <div className={SelectOptionStyle(highlighted, selected)}>
-    <span>{itemToString(item)}</span>
-  </div>
 );

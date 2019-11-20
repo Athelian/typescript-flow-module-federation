@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import SelectInput from 'components/Inputs/SelectInput';
-import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
+import type { RenderInputProps } from 'components/Inputs/SelectInput';
 import DateInput from 'components/Form/Inputs/DateInput';
 import useEnum from 'hooks/useEnum';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
@@ -11,7 +11,6 @@ import {
   DateRevisionsWrapperStyle,
   SeparatorStyle,
   SelectInputStyle,
-  OptionStyle,
   AddButtonStyle,
   RemoveButtonStyle,
   InputStyle,
@@ -30,17 +29,6 @@ const DateRevisionTypeSelectInput = ({
       <Icon icon="CHEVRON_DOWN" />
     </i>
   </button>
-);
-
-const DateRevisionTypeSelectOption = ({
-  item,
-  selected,
-  highlighted,
-  itemToString,
-}: RenderOptionProps) => (
-  <div className={OptionStyle(highlighted, selected)}>
-    <span>{itemToString(item)}</span>
-  </div>
 );
 
 const DateRevisionsInput = ({
@@ -88,7 +76,7 @@ const DateRevisionsInput = ({
             optionWidth={200}
             optionHeight={30}
             renderInput={DateRevisionTypeSelectInput}
-            renderOption={DateRevisionTypeSelectOption}
+            renderOption={SelectInput.DefaultRenderSelectOption}
           />
           <hr className={SeparatorStyle} />
           <DateInput

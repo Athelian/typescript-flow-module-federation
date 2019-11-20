@@ -3,17 +3,9 @@ import * as React from 'react';
 import { equals } from 'ramda';
 import cellReducer from './reducer';
 import { Actions } from './constants';
-import type {
-  Action,
-  CellValue,
-  State,
-  Position,
-  Mutator,
-  ColumnConfig,
-  ColumnSort,
-} from './types';
+import type { Action, CellValue, State, Mutator, ColumnConfig, ColumnSort, Mutate } from './types';
 
-type Props = {
+type Props = {|
   items: Array<Object>,
   columns: Array<ColumnConfig>,
   transformItem: (index: number, item: Object) => Array<Array<CellValue>>,
@@ -21,7 +13,7 @@ type Props = {
   onRemoteSort: (sorts: Array<ColumnSort>) => void,
   onMutate: Mutator,
   children: React.Node,
-};
+|};
 
 const initialState: State = {
   initialized: false,
@@ -43,11 +35,11 @@ const initialState: State = {
   removedRows: [],
 };
 
-type Context = {
+type Context = {|
   state: State,
   dispatch: Action => void,
-  mutate: ({ cell: Position, value: any, item: Object }) => void,
-};
+  mutate: Mutate,
+|};
 
 export const SheetStateContext = React.createContext<Context>({
   state: initialState,

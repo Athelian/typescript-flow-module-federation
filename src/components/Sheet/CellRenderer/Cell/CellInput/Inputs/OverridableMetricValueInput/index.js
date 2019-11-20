@@ -25,10 +25,7 @@ import {
   CellInputWrapperStyle,
   InputStyle,
 } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
-import {
-  MetricSelectInput,
-  MetricSelectOption,
-} from 'components/Sheet/CellRenderer/Cell/CellInput/Common/MetricValueInput';
+import { MetricSelectInput } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/MetricValueInput';
 import { WrapperStyle, CalculatorIconStyle, SelectStyle } from './style';
 
 const OverridableMetricValueInput = (
@@ -91,7 +88,7 @@ InputProps<
                 optionWidth={30}
                 optionHeight={30}
                 renderInput={MetricSelectInput}
-                renderOption={MetricSelectOption}
+                renderOption={SelectInput.DefaultRenderSelectOption}
               />
             </div>
           )}

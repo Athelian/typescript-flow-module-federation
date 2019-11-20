@@ -87,6 +87,7 @@ const ProjectSheetModule = () => {
         onLocalSort={onLocalSort}
         onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
+        actions={{}}
       />
     </Content>
   );
