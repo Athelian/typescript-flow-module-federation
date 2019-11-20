@@ -172,13 +172,6 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Logs,
   },
   {
-    key: 'order.action',
-    title: 'Actions',
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: ColumnWidths.Default,
-  },
-  {
     key: 'order.mask',
     title: <FormattedMessage {...orderMessages.mask} />,
     icon: 'ORDER',

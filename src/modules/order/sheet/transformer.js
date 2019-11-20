@@ -9,6 +9,7 @@ import {
   transformCustomField,
   transformValueField,
   transformField,
+  transformActionField,
 } from 'components/Sheet';
 import transformSheetOrder from 'modules/sheet/order/transformer';
 import transformSheetShipment from 'modules/sheet/shipment/transformer';
@@ -326,6 +327,12 @@ function transformOrderItem(
           hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_CUSTOM_FIELDS)
       ),
     })),
+    {
+      columnKey: 'order.orderItem.action',
+      ...transformActionField(basePath, orderItem, [
+        { action: 'batch_create', label: 'Create Batch' },
+      ]),
+    },
   ].map(c => ({
     ...c,
     disabled: !hasItems && !orderItem,

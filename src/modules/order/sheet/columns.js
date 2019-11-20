@@ -204,7 +204,6 @@ const orderItemColumns: Array<ColumnConfig> = [
     color: colors.ORDER_ITEM,
     width: 200,
   },
-  // actions
 ];
 
 const batchColumns: Array<ColumnConfig> = [
@@ -530,6 +529,13 @@ export default function({
       color: colors.ORDER_ITEM,
       width: 200,
     })),
+    {
+      key: 'order.orderItem.action',
+      title: 'Actions',
+      icon: 'ORDER_ITEM',
+      color: colors.ORDER_ITEM,
+      width: 200,
+    },
     ...batchColumns,
     ...batchFieldDefinitions.map(fieldDefinition => ({
       key: `order.orderItem.batch.customField.${fieldDefinition.id}`,

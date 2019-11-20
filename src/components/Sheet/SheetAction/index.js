@@ -9,6 +9,25 @@ type Props = {
   }) => React.Node,
 };
 
+export const useSheetActionDialog = (onDone: () => void): [boolean, () => void] => {
+  const [open, setOpen] = React.useState(true);
+  const handleClose = React.useCallback(() => {
+    setOpen(false);
+  }, []);
+
+  React.useEffect(() => {
+    if (open) {
+      return () => {};
+    }
+
+    const handler = setTimeout(() => onDone(), 300);
+
+    return () => clearTimeout(handler);
+  }, [open, onDone]);
+
+  return [open, handleClose];
+};
+
 const SheetAction = ({ actions, children }: Props) => {
   const [activeAction, setActiveAction] = React.useState<{
     action: string,

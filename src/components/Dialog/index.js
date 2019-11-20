@@ -12,11 +12,11 @@ import {
 } from './style';
 
 type Props = {|
-  width: string,
-  showCancelButton: boolean,
-  isOpen: boolean,
+  width?: string,
+  showCancelButton?: boolean,
+  isOpen?: boolean,
   onCancel?: Function,
-  onRequestClose: Function,
+  onRequestClose?: Function,
   children: React.Node,
 |};
 
@@ -28,14 +28,11 @@ const defaultProps = {
 
 const ANIMATION_FINISHED = 300; // 0.3s
 
-const DialogRender = ({
-  isOpen,
-  onRequestClose,
-  onCancel,
-  width,
-  showCancelButton,
-  children,
-}: Props) => {
+const DialogRender = (props: Props) => {
+  const { isOpen, onRequestClose, onCancel, width, showCancelButton, children } = {
+    ...defaultProps,
+    ...props,
+  };
   const slot = usePortalSlot();
 
   return ReactDOM.createPortal(
@@ -99,7 +96,5 @@ const Dialog = ({ isOpen, onRequestClose, onCancel, width, showCancelButton, chi
     </DialogRender>
   ) : null;
 };
-
-Dialog.defaultProps = defaultProps;
 
 export default Dialog;
