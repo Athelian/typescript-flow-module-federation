@@ -19,10 +19,9 @@ function resolveForeignFocuses(focus: Object, rows: Array<Array<CellValue>>): Ar
 export function setForeignFocuses(state: State, payload: { foreignFocuses: Array<Object> }): State {
   const { foreignFocuses } = payload;
 
-  const foreignFocusesAt = foreignFocuses
-    .map(focus => resolveForeignFocuses(focus, state.rows))
-    // $FlowFixMe flow doesn't support flat()
-    .flat();
+  const foreignFocusesAt = foreignFocuses.flatMap(focus =>
+    resolveForeignFocuses(focus, state.rows)
+  );
 
   return {
     ...state,

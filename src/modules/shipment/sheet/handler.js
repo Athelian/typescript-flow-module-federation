@@ -457,9 +457,7 @@ export default function entityEventHandler(
             break;
           case 'Container': {
             const container = shipments
-              .map(shipment => shipment.containers)
-              // $FlowFixMe flat not supported by flow
-              .flat()
+              .flatMap(shipment => shipment.containers)
               .find(c => c.id === event.entity?.id);
             changes = await handleContainerChanges(client, changes, container);
             break;
@@ -485,12 +483,10 @@ export default function entityEventHandler(
             });
 
             const batch = shipments
-              .map(shipment => [
+              .flatMap(shipment => [
                 ...shipment.batchesWithoutContainer,
-                ...shipment.containers.map(c => c.batches).flat(),
+                ...shipment.containers.flatMap(c => c.batches),
               ])
-              // $FlowFixMe flat not supported by flow
-              .flat()
               .find(b => b.id === event.entity.id);
             changes = await handleBatchChanges(client, changes, batch);
             break;

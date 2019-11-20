@@ -290,9 +290,7 @@ export default function entityEventHandler(
             });
 
             const task = projects
-              .map(project => project.milestones.map(milestone => milestone.tasks).flat())
-              // $FlowFixMe flat not supported by flow
-              .flat()
+              .flatMap(project => project.milestones.flatMap(milestone => milestone.tasks))
               .find(t => t.id === event.entity?.id);
             if (task) {
               changes = mergeChanges(

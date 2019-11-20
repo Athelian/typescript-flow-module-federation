@@ -225,7 +225,7 @@ function normalizedInput(
     case 'Batch': {
       const batch = [
         ...shipment.batchesWithoutContainer,
-        ...shipment.containers.map(c => c.batches).flat(),
+        ...shipment.containers.flatMap(c => c.batches),
       ].find(b => b.id === entity.id);
       if (!batch) {
         return {};
@@ -236,7 +236,7 @@ function normalizedInput(
     case 'OrderItem': {
       const orderItem = [
         ...shipment.batchesWithoutContainer,
-        ...shipment.containers.map(c => c.batches).flat(),
+        ...shipment.containers.flatMap(c => c.batches),
       ]
         .map(b => b.orderItem)
         .find(oi => oi.id === entity.id);
@@ -249,7 +249,7 @@ function normalizedInput(
     case 'Order': {
       const order = [
         ...shipment.batchesWithoutContainer,
-        ...shipment.containers.map(c => c.batches).flat(),
+        ...shipment.containers.flatMap(c => c.batches),
       ]
         .map(b => b.orderItem.order)
         .find(o => o.id === entity.id);
