@@ -10,6 +10,7 @@ import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
+import Action1 from 'modules/sheet/order/actions/Action1';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
 import orderColumns, { FieldDefinitionEntityTypes } from './columns';
@@ -108,6 +109,9 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
         onLocalSort={onLocalSort}
         onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
+        actions={{
+          action_1: Action1,
+        }}
       />
     </Content>
   );

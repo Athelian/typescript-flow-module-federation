@@ -108,6 +108,7 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
         onLocalSort={onLocalSort}
         onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
+        actions={{}}
       />
     </Content>
   );

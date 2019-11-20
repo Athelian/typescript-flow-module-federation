@@ -112,6 +112,7 @@ const ShipmentSheetModuleImpl = ({
         onLocalSort={onLocalSort}
         onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
+        actions={{}}
       />
     </Content>
   );
