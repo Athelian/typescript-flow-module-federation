@@ -5,206 +5,11 @@ import { FormattedMessage } from 'react-intl';
 import { colors } from 'styles/common';
 import type { FieldDefinition } from 'types';
 import type { ColumnConfig } from 'components/Sheet';
-import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
 import orderColumns from 'modules/sheet/order/columns';
+import orderItemColumns from 'modules/sheet/orderItem/columns';
 import shipmentColumns from 'modules/sheet/shipment/columns';
 import containerColumns from 'modules/sheet/container/columns';
-
-const orderItemColumns: Array<ColumnConfig> = [
-  {
-    key: 'order.orderItem.created',
-    exportKey: 'orderItems.createdAt',
-    title: <FormattedMessage {...orderItemMessages.createdAt} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 110,
-    sort: {
-      local: true,
-      default: true,
-      name: 'createdAt',
-      group: 'orderItem',
-    },
-  },
-  {
-    key: 'order.orderItem.updated',
-    exportKey: 'orderItems.updatedAt',
-    title: <FormattedMessage {...orderItemMessages.updatedAt} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 110,
-    sort: {
-      local: true,
-      name: 'updatedAt',
-      group: 'orderItem',
-    },
-  },
-  {
-    key: 'order.orderItem.archived',
-    title: <FormattedMessage {...orderItemMessages.status} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 105,
-  },
-  {
-    key: 'order.orderItem.productProvider.product.name',
-    exportKey: 'orderItems.productProvider.name',
-    title: <FormattedMessage {...orderItemMessages.productName} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'productProvider.product.name',
-      group: 'orderItem',
-    },
-  },
-  {
-    key: 'order.orderItem.productProvider.product.serial',
-    exportKey: 'orderItems.productProvider.product.serial',
-    title: <FormattedMessage {...orderItemMessages.productSerial} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'productProvider.product.serial',
-      group: 'orderItem',
-    },
-  },
-  {
-    key: 'order.orderItem.no',
-    exportKey: 'orderItems.no',
-    title: <FormattedMessage {...orderItemMessages.no} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'no',
-      group: 'orderItem',
-    },
-  },
-  {
-    key: 'order.orderItem.quantity',
-    exportKey: 'orderItems.quantity',
-    title: <FormattedMessage {...orderItemMessages.quantity} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'quantity',
-      group: 'orderItem',
-    },
-  },
-  {
-    key: 'order.orderItem.price',
-    exportKey: 'orderItems.price.amount',
-    title: <FormattedMessage {...orderItemMessages.unitPrice} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'price',
-      group: 'orderItem',
-    },
-  },
-  {
-    key: 'order.orderItem.deliveryDate',
-    title: <FormattedMessage {...orderItemMessages.deliveryDate} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 125,
-    sort: {
-      local: true,
-      name: 'deliveryDate',
-      group: 'orderItem',
-    },
-  },
-  {
-    key: 'order.orderItem.tags',
-    title: <FormattedMessage {...orderItemMessages.tags} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-  {
-    key: 'order.orderItem.memo',
-    exportKey: 'orderItems.memo',
-    title: <FormattedMessage {...orderItemMessages.memo} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-  {
-    key: 'order.orderItem.remainQuantity',
-    title: <FormattedMessage {...orderItemMessages.remainQuantity} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-  {
-    key: 'order.orderItem.totalBatched',
-    title: <FormattedMessage {...orderItemMessages.totalBatched} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'totalBatched',
-      group: 'orderItem',
-    },
-  },
-  {
-    key: 'order.orderItem.totalShipped',
-    title: <FormattedMessage {...orderItemMessages.totalShipped} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'totalShipped',
-      group: 'orderItem',
-    },
-  },
-  {
-    key: 'order.orderItem.totalPrice',
-    title: <FormattedMessage {...orderItemMessages.totalPrice} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-  {
-    key: 'order.orderItem.files',
-    title: <FormattedMessage {...orderItemMessages.sectionDocuments} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-  {
-    key: 'order.orderItem.todo',
-    title: <FormattedMessage {...orderItemMessages.tasks} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-  {
-    key: 'order.orderItem.logs',
-    title: <FormattedMessage {...orderItemMessages.logs} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 120,
-  },
-  {
-    key: 'order.orderItem.mask',
-    title: <FormattedMessage {...orderItemMessages.mask} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: 200,
-  },
-];
 
 const batchColumns: Array<ColumnConfig> = [
   {
@@ -520,17 +325,74 @@ export default function({
       },
       orderFieldDefinitions
     ),
-    ...orderItemColumns,
-    ...orderItemFieldDefinitions.map(fieldDefinition => ({
-      key: `order.orderItem.customField.${fieldDefinition.id}`,
-      exportKey: `orderItems.customFields.${fieldDefinition.id}`,
-      title: fieldDefinition.name,
-      icon: 'ORDER_ITEM',
-      color: colors.ORDER_ITEM,
-      width: 200,
-    })),
+    ...orderItemColumns(
+      {
+        'orderItem.created': 'orderItems.createdAt',
+        'orderItem.updated': 'orderItems.updatedAt',
+        'orderItem.productProvider.product.name': 'orderItems.productProvider.name',
+        'orderItem.productProvider.product.serial': 'orderItems.productProvider.product.serial',
+        'orderItem.no': 'orderItems.no',
+        'orderItem.quantity': 'orderItems.quantity',
+        'orderItem.price': 'orderItems.price.amount',
+        'orderItem.memo': 'orderItems.memo',
+      },
+      {
+        'orderItem.created': {
+          local: true,
+          default: true,
+          name: 'createdAt',
+          group: 'orderItem',
+        },
+        'orderItem.updated': {
+          local: true,
+          name: 'updatedAt',
+          group: 'orderItem',
+        },
+        'orderItem.productProvider.product.name': {
+          local: true,
+          name: 'productProvider.product.name',
+          group: 'orderItem',
+        },
+        'orderItem.productProvider.product.serial': {
+          local: true,
+          name: 'productProvider.product.serial',
+          group: 'orderItem',
+        },
+        'orderItem.no': {
+          local: true,
+          name: 'no',
+          group: 'orderItem',
+        },
+        'orderItem.quantity': {
+          local: true,
+          name: 'quantity',
+          group: 'orderItem',
+        },
+        'orderItem.price': {
+          local: true,
+          name: 'price',
+          group: 'orderItem',
+        },
+        'orderItem.deliveryDate': {
+          local: true,
+          name: 'deliveryDate',
+          group: 'orderItem',
+        },
+        'orderItem.totalBatched': {
+          local: true,
+          name: 'totalBatched',
+          group: 'orderItem',
+        },
+        'orderItem.totalShipped': {
+          local: true,
+          name: 'totalShipped',
+          group: 'orderItem',
+        },
+      },
+      orderItemFieldDefinitions
+    ),
     {
-      key: 'order.orderItem.action',
+      key: 'orderItem.action',
       title: 'Actions',
       icon: 'ORDER_ITEM',
       color: colors.ORDER_ITEM,
