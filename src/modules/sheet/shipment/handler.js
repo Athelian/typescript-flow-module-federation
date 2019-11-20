@@ -148,6 +148,22 @@ export async function handleShipmentChanges(
       'totalVolume',
       shipment.totalVolume
     );
+
+    changes = mergeChanges(
+      changes,
+      {
+        totalPackageQuantityOverride: (i, v) => ({
+          ...i,
+          value: v,
+        }),
+        totalPackageQuantityOverriding: (i, v) => ({
+          ...i,
+          auto: v,
+        }),
+      },
+      'totalPackages',
+      shipment.totalPackages
+    );
   }
 
   return changes;

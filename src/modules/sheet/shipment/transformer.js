@@ -40,6 +40,7 @@ import {
   SHIPMENT_SET_TAGS,
   SHIPMENT_SET_TASKS,
   SHIPMENT_SET_TIMELINE_DATE,
+  SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY,
   SHIPMENT_SET_TOTAL_VOLUME,
   SHIPMENT_SET_TOTAL_WEIGHT,
   SHIPMENT_SET_TRANSPORT_TYPE,
@@ -431,6 +432,26 @@ export default function transformSheetShipment({
         const currentShipment = getShipmentFromRoot(root);
         return (currentShipment?.container ?? []).length;
       }),
+    },
+    {
+      columnKey: 'shipment.totalPackages',
+      type: 'number_toggle',
+      computed: root =>
+        getBatchesFromRoot(root).reduce(
+          (total, batch) =>
+            total +
+            (batch.packageQuantity.auto
+              ? calculatePackageQuantity(batch)
+              : batch.packageQuantity.value || 0),
+          0
+        ),
+      ...transformValueField(
+        basePath,
+        shipment,
+        'totalPackages',
+        hasPermission =>
+          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY)
+      ),
     },
     {
       columnKey: 'shipment.totalWeight',
