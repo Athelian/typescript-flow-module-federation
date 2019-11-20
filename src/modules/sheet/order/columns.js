@@ -2,12 +2,13 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import type { FieldDefinition } from 'types';
 import { colors } from 'styles/common';
 import type { ColumnSortConfig, ColumnConfig } from 'components/Sheet/SheetState/types';
 import orderMessages from 'modules/order/messages';
 import { ColumnWidths, populateColumns } from 'modules/sheet/common/columns';
 
-const columns = [
+const columns: Array<ColumnConfig> = [
   {
     key: 'order.created',
     title: <FormattedMessage {...orderMessages.createdAt} />,
@@ -177,12 +178,24 @@ const columns = [
     color: colors.ORDER,
     width: ColumnWidths.Default,
   },
-  // actions
 ];
 
 export default function orderColumns(
   exportKeys: { [string]: string },
-  sorts: { [string]: ColumnSortConfig }
+  sorts: { [string]: ColumnSortConfig },
+  fieldDefinitions: Array<FieldDefinition>
 ): Array<ColumnConfig> {
-  return populateColumns(columns, exportKeys, sorts);
+  return [
+    ...populateColumns(columns, exportKeys, sorts),
+    ...fieldDefinitions.map(fieldDefinition => ({
+      key: `order.customField.${fieldDefinition.id}`,
+      exportKey: exportKeys['order.customField']
+        ? `${exportKeys['order.customField']}.${fieldDefinition.id}`
+        : undefined,
+      title: fieldDefinition.name,
+      icon: 'ORDER',
+      color: colors.ORDER,
+      width: ColumnWidths.Default,
+    })),
+  ];
 }

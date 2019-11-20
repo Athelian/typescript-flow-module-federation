@@ -1,8 +1,11 @@
 // @flow
 import * as React from 'react';
 import BaseNumberInput from 'components/Inputs/NumberInput';
-import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
+import {
+  CellDisplayWrapperStyle,
+  DisplayContentStyle,
+} from 'components/Sheet/CellRenderer/Cell/CellDisplay/Common/style';
 import {
   CellInputWrapperStyle,
   InputStyle,
@@ -29,9 +32,9 @@ const StaticMetricValueInput = ({
         }
         disabled={readonly}
       />
-      <DisplayWrapper width="min-content">
-        <span>{metric}</span>
-      </DisplayWrapper>
+      <div className={CellDisplayWrapperStyle}>
+        <span className={DisplayContentStyle}>{metric}</span>
+      </div>
     </div>
   );
 };

@@ -211,10 +211,7 @@ function transformMilestone(
 }
 
 function getCurrentTask(taskId, project) {
-  return project.milestones
-    .map(milestone => milestone.tasks)
-    .flat()
-    .find(task => task.id === taskId);
+  return project.milestones.flatMap(milestone => milestone.tasks).find(task => task.id === taskId);
 }
 
 function transformTask(basePath: string, task: Object): Array<CellValue> {

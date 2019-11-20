@@ -3,18 +3,18 @@ import * as React from 'react';
 import { useIntl } from 'react-intl';
 import Icon from 'components/Icon';
 import BaseSelectInput from 'components/Inputs/SelectInput';
-import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
+import type { RenderInputProps } from 'components/Inputs/SelectInput';
 import messages from 'components/Form/Inputs/messages';
 import {
   SelectInputWrapperStyle,
   SelectInputStyle,
   ClearButtonStyle,
   ArrowDownStyle,
-  SelectOptionStyle,
 } from './style';
 
 type Props = {
   value: any | null,
+  readonly: boolean,
   required: boolean,
   onChange: any => void,
   items: Array<any>,
@@ -80,15 +80,18 @@ const Select = ({
   );
 };
 
-const Option = ({ selected, highlighted, item, itemToString }: RenderOptionProps) => (
-  <div className={SelectOptionStyle(highlighted, selected)}>
-    <span>{itemToString(item)}</span>
-  </div>
-);
-
-const SelectInput = ({ value, required, onChange, items, itemToString, itemToValue }: Props) => (
+const SelectInput = ({
+  value,
+  readonly,
+  required,
+  onChange,
+  items,
+  itemToString,
+  itemToValue,
+}: Props) => (
   <BaseSelectInput
     value={value}
+    disabled={readonly}
     required={required}
     onChange={onChange}
     items={items}
@@ -98,7 +101,7 @@ const SelectInput = ({ value, required, onChange, items, itemToString, itemToVal
     optionHeight={30}
     optionWidth={200}
     renderInput={Select}
-    renderOption={Option}
+    renderOption={BaseSelectInput.DefaultRenderSelectOption}
   />
 );
 

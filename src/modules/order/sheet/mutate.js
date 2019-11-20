@@ -28,8 +28,7 @@ const mutations = {
 
 function getShipmentByTimelineDateId(timelineDateId: string, item: Object): Object {
   return item.orderItems
-    .map(i => i.batches)
-    .flat()
+    .flatMap(i => i.batches)
     .filter(b => !!b.shipment)
     .map(b => b.shipment)
     .find(shipment => {
@@ -50,8 +49,7 @@ function getShipmentByTimelineDateId(timelineDateId: string, item: Object): Obje
 
 function getShipmentByVoyageId(voyageId: string, item: Object): Object {
   return item.orderItems
-    .map(i => i.batches)
-    .flat()
+    .flatMap(i => i.batches)
     .filter(b => !!b.shipment)
     .map(b => b.shipment)
     .find(shipment => !!shipment.voyages.find(voyage => voyage.id === voyageId));
@@ -59,8 +57,7 @@ function getShipmentByVoyageId(voyageId: string, item: Object): Object {
 
 function getShipmentByContainerGroupId(containerGroupId: string, item: Object): Object {
   return item.orderItems
-    .map(i => i.batches)
-    .flat()
+    .flatMap(i => i.batches)
     .filter(b => !!b.shipment)
     .map(b => b.shipment)
     .find(shipment => !!shipment.containerGroups.find(cg => cg.id === containerGroupId));
@@ -159,10 +156,7 @@ function normalizeInput(
       return normalizeSheetOrderItemInput(orderItem, field, oldValue, newValue);
     }
     case 'Batch': {
-      const batch = item.orderItems
-        .map(oi => oi.batches)
-        .flat()
-        .find(b => b.id === entity.id);
+      const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === entity.id);
       if (!batch) {
         return {};
       }
@@ -171,8 +165,7 @@ function normalizeInput(
     }
     case 'Shipment': {
       const shipment = item.orderItems
-        .map(oi => oi.batches)
-        .flat()
+        .flatMap(oi => oi.batches)
         .map(b => b.shipment)
         .filter(Boolean)
         .find(s => s?.id === entity.id);
@@ -184,8 +177,7 @@ function normalizeInput(
     }
     case 'Container': {
       const container = item.orderItems
-        .map(oi => oi.batches)
-        .flat()
+        .flatMap(oi => oi.batches)
         .map(b => b.container)
         .filter(Boolean)
         .find(s => s?.id === entity.id);

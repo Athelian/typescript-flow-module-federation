@@ -4,13 +4,14 @@ import { useIntl } from 'react-intl';
 import DebounceInput from 'react-debounce-input';
 import Icon from 'components/Icon';
 import BaseSelectInput from 'components/Inputs/SelectInput';
-import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
+import type { RenderInputProps } from 'components/Inputs/SelectInput';
 import messages from 'components/Form/Inputs/messages';
 import { CellInputWrapperStyle } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
-import { SelectInputStyle, SelectOptionStyle, ArrowDownStyle, ClearButtonStyle } from './style';
+import { SelectInputStyle, ArrowDownStyle, ClearButtonStyle } from './style';
 
 type Props = {
   value: any | null,
+  readonly: boolean,
   required?: boolean,
   onChange: any => void,
   items: Array<any>,
@@ -61,14 +62,9 @@ const Select = ({
   );
 };
 
-const Option = ({ selected, highlighted, item, itemToString }: RenderOptionProps) => (
-  <div className={SelectOptionStyle(highlighted, selected)}>
-    <span>{itemToString(item)}</span>
-  </div>
-);
-
 const SearchSelectInput = ({
   value,
+  readonly,
   required,
   onChange,
   items,
@@ -79,6 +75,7 @@ const SearchSelectInput = ({
   <div className={CellInputWrapperStyle}>
     <BaseSelectInput
       value={value}
+      disabled={readonly}
       required={required}
       onChange={onChange}
       items={items}
@@ -88,7 +85,7 @@ const SearchSelectInput = ({
       optionHeight={30}
       optionWidth={200}
       renderInput={Select}
-      renderOption={Option}
+      renderOption={BaseSelectInput.DefaultRenderSelectOption}
     />
   </div>
 );

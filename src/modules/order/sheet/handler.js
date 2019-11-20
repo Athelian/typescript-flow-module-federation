@@ -415,22 +415,23 @@ export default function entityEventHandler(
             });
 
             const batch = orders
-              .map(order => order.orderItems.map(oi => oi.batches).flat())
-              // $FlowFixMe flat not supported by flow
-              .flat()
+              .flatMap(order => order.orderItems.flatMap(oi => oi.batches))
               .find(b => b.id === event.entity.id);
             changes = await handleBatchChanges(client, changes, batch);
             break;
           }
           case 'Shipment': {
-            changes = await handleShipmentChanges(client, changes);
+            const shipment = orders
+              .flatMap(order => order.orderItems.flatMap(oi => oi.batches))
+              .map(b => b.shipment)
+              .filter(Boolean)
+              .find(s => isBelongToShipment(s, event.entity?.id));
+            changes = await handleShipmentChanges(client, changes, shipment);
             break;
           }
           case 'TimelineDate': {
             const shipment = orders
-              .map(order => order.orderItems.map(oi => oi.batches).flat())
-              // $FlowFixMe flat not supported by flow
-              .flat()
+              .flatMap(order => order.orderItems.flatMap(oi => oi.batches))
               .map(b => b.shipment)
               .filter(Boolean)
               .find(s => isBelongToShipment(s, event.entity?.id));
@@ -439,9 +440,7 @@ export default function entityEventHandler(
           }
           case 'Container': {
             const container = orders
-              .map(order => order.orderItems.map(oi => oi.batches).flat())
-              // $FlowFixMe flat not supported by flow
-              .flat()
+              .flatMap(order => order.orderItems.flatMap(oi => oi.batches))
               .map(b => b.container)
               .filter(Boolean)
               .find(c => c?.id === event.entity?.id);

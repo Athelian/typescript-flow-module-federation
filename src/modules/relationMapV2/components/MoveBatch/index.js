@@ -4,8 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import useUser from 'hooks/useUser';
 import { Tooltip } from 'components/Tooltip';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
-import { targetedIds, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
-import { BATCH } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { BaseButton } from 'components/Buttons';
 import { useAllHasPermission } from 'contexts/Permissions';
@@ -43,31 +41,14 @@ export default function MoveBatch({ onSuccess }: Props) {
   const { isExporter } = useUser();
   const { mapping } = Entities.useContainer();
   const { dispatch, state, selectors } = FocusedView.useContainer();
-  const batchIds = targetedIds(state.targets, BATCH);
-  const orderIds = [
-    ...new Set(
-      batchIds
-        .map(batchId => {
-          const [, parentOrderId] = findParentIdsByBatch({
-            batchId,
-            viewer: state.viewer,
-            entities: mapping.entities,
-          });
-          return parentOrderId;
-        })
-        .filter(Boolean)
-    ),
-  ];
-  const containerIds = [
-    ...new Set(
-      batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.container).filter(Boolean)
-    ),
-  ];
-  const shipmentIds = [
-    ...new Set(
-      batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.shipment).filter(Boolean)
-    ),
-  ];
+  const {
+    batchIds,
+    orderIds,
+    containerIds,
+    shipmentIds,
+    importerIds,
+    exporterIds,
+  } = selectors.relatedIds(mapping);
   const totalBatches = batchIds.length;
   const { isProcessing, isOpen, type } = state.batchActions;
   const isMoveBatches = type === 'moveBatches';
@@ -82,20 +63,6 @@ export default function MoveBatch({ onSuccess }: Props) {
   const hasPermissions = useAllHasPermission(
     batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.ownedBy).filter(Boolean)
   );
-
-  const importerIds = [];
-  const exporterIds = [];
-  orderIds.forEach(orderId => {
-    const order = mapping.entities?.orders?.[orderId];
-    const importId = order?.importer?.id;
-    const exporterId = order?.exporter?.id;
-    if (importId && !importerIds.includes(importId)) {
-      importerIds.push(importId);
-    }
-    if (exporterId && !exporterIds.includes(exporterId)) {
-      exporterIds.push(exporterId);
-    }
-  });
 
   const onNewContainer = (shipment: Object) => {
     dispatch({

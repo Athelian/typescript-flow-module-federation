@@ -44,6 +44,23 @@ export default function normalizeSheetShipmentInput(
       return {
         inChargeIds: newValue.map(user => user.id),
       };
+    case 'totalWeight':
+      return {
+        totalWeightOverride: newValue.value ? removeTypename(newValue.value) : null,
+        totalWeightOverriding: newValue.auto,
+        totalWeightDisplayMetric: newValue.displayMetric,
+      };
+    case 'totalVolume':
+      return {
+        totalVolumeOverride: newValue.value ? removeTypename(newValue.value) : null,
+        totalVolumeOverriding: newValue.auto,
+        totalVolumeDisplayMetric: newValue.displayMetric,
+      };
+    case 'totalPackages':
+      return {
+        totalPackageQuantityOverride: newValue.value,
+        totalPackageQuantityOverriding: newValue.auto,
+      };
     case 'forwarders':
       return {
         forwarderIds: newValue.map(({ id }) => id),

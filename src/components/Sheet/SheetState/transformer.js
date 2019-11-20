@@ -1,4 +1,5 @@
 // @flow
+import type { CellAction } from 'components/Sheet/SheetState/types';
 
 export const transformField = (
   entity: Object | null,
@@ -83,4 +84,14 @@ export const transformComputedField = (
   ...transformField(entity, basePath, field, null),
   readonly: true,
   computed,
+});
+
+export const transformActionField = (
+  basePath: string,
+  entity: Object | null,
+  actions: Array<CellAction>
+) => ({
+  ...transformField(entity, basePath, 'action', null),
+  type: 'action',
+  extra: actions,
 });

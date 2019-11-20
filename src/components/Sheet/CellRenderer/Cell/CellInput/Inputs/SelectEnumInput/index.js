@@ -13,7 +13,7 @@ type Props = {
   required: boolean,
 };
 
-const SelectEnumInputImpl = ({ value, onChange, focus, enumType, required }: Props) => {
+const SelectEnumInputImpl = ({ value, readonly, onChange, focus, enumType, required }: Props) => {
   const intl = useIntl();
 
   const { enums, loading } = useEnum(enumType);
@@ -29,6 +29,7 @@ const SelectEnumInputImpl = ({ value, onChange, focus, enumType, required }: Pro
   return (
     <SelectInput
       value={value}
+      readonly={readonly}
       required={required}
       onChange={onChange}
       items={loading ? [] : enums}

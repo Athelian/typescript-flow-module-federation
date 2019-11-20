@@ -5,7 +5,7 @@ import { FixedSizeList } from 'react-window';
 import Downshift from 'downshift';
 import { equals } from 'ramda';
 import usePortalSlot from 'hooks/usePortalSlot';
-import { DownshiftStyle, OptionsWrapperStyle } from './style';
+import { DownshiftStyle, OptionsWrapperStyle, DefaultOptionStyle } from './style';
 
 export type RenderInputProps = {
   isOpen: boolean,
@@ -26,6 +26,7 @@ export type RenderOptionProps = {
 
 type Props = {
   value: any,
+  disabled?: boolean,
   required?: boolean,
   onChange: any => void,
   onFocus?: (SyntheticFocusEvent<any>) => void,
@@ -177,8 +178,20 @@ const SelectOptions = ({
   );
 };
 
+const DefaultRenderSelectOption = ({
+  selected,
+  highlighted,
+  item,
+  itemToString,
+}: RenderOptionProps) => (
+  <div className={DefaultOptionStyle(highlighted, selected)}>
+    <span>{itemToString(item)}</span>
+  </div>
+);
+
 const SelectInput = ({
   value,
+  disabled,
   required,
   onChange,
   onFocus,
@@ -265,6 +278,7 @@ const SelectInput = ({
                   }
                 },
                 onBlur,
+                disabled,
               }),
             getToggleButtonProps: props =>
               getToggleButtonProps({
@@ -280,6 +294,7 @@ const SelectInput = ({
                     setTimeout(() => openMenu(), 100);
                   }
                 },
+                disabled,
               }),
           })}
           {isOpen && (
@@ -304,5 +319,7 @@ const SelectInput = ({
     </Downshift>
   );
 };
+
+SelectInput.DefaultRenderSelectOption = DefaultRenderSelectOption;
 
 export default SelectInput;

@@ -61571,14 +61571,7 @@ export type BatchFormFragmentFragment = ({
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
       ...{ __typename?: 'Organization' },
     ...OwnedByFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, batchQuantityRevisions: Array<({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: *, sort: *, updatedAt: *, quantity: *, type: *, memo: * |}>,
-    ...{| updatedBy: ?({
-        ...{ __typename?: 'User' },
-      ...UserAvatarFragmentFragment
-    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, totalVolume: ({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, totalVolume: ({
       ...{ __typename?: 'MetricValue' },
     ...MetricFragmentFragment
   }), todo: ({

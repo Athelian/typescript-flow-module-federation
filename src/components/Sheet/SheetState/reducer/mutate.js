@@ -24,19 +24,16 @@ export function changeValues(
   const cellsToUpdate = changes
     .map(({ entity, field, value }) => {
       return {
-        cells: state.allRows
-          .map(row =>
-            row.filter(
-              cell =>
-                cell.entity &&
-                cell.data &&
-                cell.entity?.id === entity.id &&
-                cell.entity?.type === entity.type &&
-                cell.data?.field === field
-            )
+        cells: state.allRows.flatMap(row =>
+          row.filter(
+            cell =>
+              cell.entity &&
+              cell.data &&
+              cell.entity?.id === entity.id &&
+              cell.entity?.type === entity.type &&
+              cell.data?.field === field
           )
-          // $FlowFixMe flow doesn't support flat()
-          .flat(),
+        ),
         value,
       };
     })
@@ -45,11 +42,12 @@ export function changeValues(
   let items = clone(state.items);
   cellsToUpdate.forEach(({ cells, value }) => {
     cells.forEach(cell => {
-      if (cell.data.field.charAt(0) === '@') {
-        const fieldDefinitionId = cell.data.field.substr(1);
-        let fieldValues = [
-          ...getByPathWithDefault([], `${cell.data.path}.customFields.fieldValues`, items),
-        ];
+      // $FlowFixMe cell.data cannot be null since we filter cells before
+      const { field, path } = cell.data;
+
+      if (field.charAt(0) === '@') {
+        const fieldDefinitionId = field.substr(1);
+        let fieldValues = [...getByPathWithDefault([], `${path}.customFields.fieldValues`, items)];
 
         if (!fieldValues.find(fv => fv.fieldDefinition.id === fieldDefinitionId)) {
           fieldValues = [
@@ -70,20 +68,16 @@ export function changeValues(
           );
         }
 
-        items = setIn(`${cell.data.path}.customFields.fieldValues`, fieldValues, items);
+        items = setIn(`${path}.customFields.fieldValues`, fieldValues, items);
       } else {
-        items = setIn(cell.data.path, value, items);
+        items = setIn(path, value, items);
       }
     });
   });
 
   const clearError =
     state.errorAt &&
-    cellsToUpdate
-      .map(({ cells }) => cells)
-      // $FlowFixMe flow doesn't support flat()
-      .flat()
-      .find(cell => state.errorAt?.cell === cell);
+    cellsToUpdate.flatMap(({ cells }) => cells).find(cell => state.errorAt?.cell === cell);
 
   return {
     ...state,

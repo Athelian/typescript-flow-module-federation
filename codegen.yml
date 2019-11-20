@@ -10,3 +10,6 @@ generates:
   src/generated/graphql.schema.json:
     plugins:
       - 'introspection'
+  src/generated/fragmentTypes.json:
+    plugins:
+      - fragment-matcher

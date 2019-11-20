@@ -18,40 +18,13 @@ import {
 import BaseMetricValueInput from 'components/Inputs/MetricValueInput';
 import NumberInput from 'components/Inputs/NumberInput';
 import SelectInput from 'components/Inputs/SelectInput';
-import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
+import { MetricSelectInput } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/MetricValueInput';
 import {
   CellInputWrapperStyle,
   InputStyle,
 } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
-import { SelectOptionStyle, SelectInputStyle, SelectStyle } from './style';
-
-const MetricSelectInput = ({
-  isOpen,
-  selectedItem,
-  getToggleButtonProps,
-  itemToString,
-}: RenderInputProps) => (
-  <button
-    type="button"
-    className={SelectInputStyle}
-    {...getToggleButtonProps({
-      onKeyDown: e => {
-        if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
-          e.stopPropagation();
-        }
-      },
-    })}
-  >
-    {itemToString(selectedItem)}
-  </button>
-);
-
-const MetricSelectOption = ({ item, selected, highlighted, itemToString }: RenderOptionProps) => (
-  <div className={SelectOptionStyle(highlighted, selected)}>
-    <span>{itemToString(item)}</span>
-  </div>
-);
+import { SelectStyle } from './style';
 
 const MetricValueInput = (
   metrics: Array<string>,
@@ -61,13 +34,12 @@ const MetricValueInput = (
   <div className={CellInputWrapperStyle}>
     <BaseMetricValueInput
       value={value}
+      disabled={readonly}
       onChange={onChange}
       defaultMetric={defaultMetric}
       valueConverter={valueConverter}
       metrics={metrics}
-      renderInput={inputProps => (
-        <NumberInput {...inputProps} className={InputStyle} disabled={readonly} />
-      )}
+      renderInput={inputProps => <NumberInput {...inputProps} className={InputStyle} />}
       renderSelect={selectProps => (
         <div className={SelectStyle}>
           <SelectInput
@@ -75,7 +47,7 @@ const MetricValueInput = (
             optionWidth={30}
             optionHeight={30}
             renderInput={MetricSelectInput}
-            renderOption={MetricSelectOption}
+            renderOption={SelectInput.DefaultRenderSelectOption}
           />
         </div>
       )}

@@ -44,19 +44,6 @@ export const SelectInputStyle = (isOpen: boolean): string => css`
   }
 `;
 
-export const OptionStyle = (highlighted: boolean, selected: boolean): string => css`
-  ${layout.HORIZONTAL};
-  ${layout.CENTER};
-  ${fontSizes.MAIN};
-  ${presets.ELLIPSIS};
-  color: ${selected ? colors.TEAL : colors.BLACK};
-  background: ${highlighted ? colors.GRAY_SUPER_LIGHT : colors.WHITE};
-  width: 100%;
-  height: 100%;
-  font-weight: bold;
-  padding: 0 5px;
-`;
-
 export const SeparatorStyle = css`
   height: 20px;
   min-width: 1px;

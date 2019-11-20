@@ -18,6 +18,7 @@ type Item = {
 
 export type RenderInputProps = {
   isOpen: boolean,
+  disabled?: boolean,
   selectedItems: Array<Item>,
   getInputProps: Function,
   remove: Item => void,
@@ -26,6 +27,7 @@ export type RenderInputProps = {
 type Props = {
   entityType: string,
   value: Array<Item>,
+  disabled?: boolean,
   onChange: (Array<Item>) => void,
   onFocus?: (SyntheticFocusEvent<any>) => void,
   onBlur?: (SyntheticFocusEvent<any>) => void,
@@ -181,6 +183,7 @@ const stateReducer = (state: Object, changes: Object) => {
 const TagsInput = ({
   entityType,
   value,
+  disabled,
   onChange,
   onFocus,
   onBlur,
@@ -225,6 +228,7 @@ const TagsInput = ({
         <div>
           {React.createElement(renderInput, {
             isOpen,
+            disabled,
             selectedItems: value,
             remove: handleRemove,
             getInputProps: props =>
@@ -249,6 +253,7 @@ const TagsInput = ({
                 },
                 onFocus,
                 onBlur,
+                disabled,
               }),
           })}
           {isOpen && (

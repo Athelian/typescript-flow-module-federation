@@ -16,6 +16,20 @@ export const sheetShipmentFragment = gql`
     incoterm
     carrier
     memo
+    totalWeightOverride {
+      value
+      metric
+    }
+    totalWeightOverriding
+    totalWeightDisplayMetric
+    totalVolumeOverride {
+      value
+      metric
+    }
+    totalVolumeOverriding
+    totalVolumeDisplayMetric
+    totalPackageQuantityOverride
+    totalPackageQuantityOverriding
     inCharges {
       ...userAvatarFragment
     }

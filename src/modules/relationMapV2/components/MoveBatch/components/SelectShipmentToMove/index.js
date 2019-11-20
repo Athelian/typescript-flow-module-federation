@@ -6,7 +6,6 @@ import useFilterSort from 'hooks/useFilterSort';
 import loadMore from 'utils/loadMore';
 import { useEntityHasPermissions } from 'contexts/Permissions';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
-import { targetedIds } from 'modules/relationMapV2/helpers';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import {
@@ -22,7 +21,6 @@ import ShipmentGridView from 'modules/shipment/list/ShipmentGridView';
 import { ShipmentCard } from 'components/Cards';
 import { BATCH_UPDATE } from 'modules/permission/constants/batch';
 import { SHIPMENT_ADD_BATCH } from 'modules/permission/constants/shipment';
-import { BATCH } from 'modules/relationMapV2/constants';
 import { OverlayStyle } from './style';
 import { shipmentListQuery } from './query';
 import { moveBatchesToShipment } from './mutation';
@@ -36,14 +34,19 @@ function ShipmentRenderer({
   shipment,
   selected,
   setSelected,
-}: {
+}: {|
   shipment: Object,
   selected: ?Object,
   setSelected: (?Object) => void,
-}) {
-  const { state } = FocusedView.useContainer();
+|}) {
+  const { state, selectors } = FocusedView.useContainer();
+  const batchIds = selectors.targetedBatchIds();
+  const { mapping } = Entities.useContainer();
   const { shipmentIds, importerIds, exporterIds } = state.moveActions;
-  const isSameParent = shipmentIds.length === 1 && shipmentIds.includes(shipment.id);
+  const isSameParent =
+    shipmentIds.length === 1 &&
+    shipmentIds.includes(shipment.id) &&
+    batchIds.every(batchId => !!mapping.entities?.batches?.[batchId]?.shipment);
   const hasPermissions = useEntityHasPermissions(shipment);
   const isDifferentImporter = !importerIds.includes(shipment.importer?.id);
   const isDifferentExporter =
@@ -128,11 +131,11 @@ function ShipmentRenderer({
 }
 
 function SelectShipmentToMove({ onSuccess, onNewContainer }: Props) {
-  const { dispatch, state } = FocusedView.useContainer();
+  const { dispatch, state, selectors } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
-  const batchIds = targetedIds(state.targets, BATCH);
   const [selected, setSelected] = React.useState(null);
   const { isProcessing, isOpen, type, from, orderIds } = state.moveActions;
+  const batchIds = selectors.targetedBatchIds();
   const isMoveFromBatch = from === 'batch';
   const isMoveToContainer = type === 'newContainer';
   const isMoveToShipment = type === 'existShipment';

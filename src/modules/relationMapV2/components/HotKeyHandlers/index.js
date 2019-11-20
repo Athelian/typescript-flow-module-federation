@@ -1,68 +1,33 @@
 // @flow
 import * as React from 'react';
 import hotkeys from 'hotkeys-js';
-import { BATCH } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
-import { targetedIds, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
 import { useAllHasPermission } from 'contexts/Permissions';
 
 function HotKeyHandlers() {
   const { mapping } = Entities.useContainer();
-  const { dispatch, state } = FocusedView.useContainer();
-  const batchIds = targetedIds(state.targets, BATCH);
-  const orderIds = [
-    ...new Set(
-      batchIds
-        .map(batchId => {
-          const [, parentOrderId] = findParentIdsByBatch({
-            batchId,
-            viewer: state.viewer,
-            entities: mapping.entities,
-          });
-          return parentOrderId;
-        })
-        .filter(Boolean)
-    ),
-  ];
-  const containerIds = [
-    ...new Set(
-      batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.container).filter(Boolean)
-    ),
-  ];
-  const shipmentIds = [
-    ...new Set(
-      batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.shipment).filter(Boolean)
-    ),
-  ];
-  const importerIds = [];
-  const exporterIds = [];
-  orderIds.forEach(orderId => {
-    const order = mapping.entities?.orders?.[orderId];
-    const importId = order?.importer?.id;
-    const exporterId = order?.exporter?.id;
-    if (importId && !importerIds.includes(importId)) {
-      importerIds.push(importId);
-    }
-    if (exporterId && !exporterIds.includes(exporterId)) {
-      exporterIds.push(exporterId);
-    }
-  });
+  const { dispatch, selectors } = FocusedView.useContainer();
+  const {
+    batchIds,
+    orderIds,
+    containerIds,
+    shipmentIds,
+    importerIds,
+    exporterIds,
+  } = selectors.relatedIds(mapping);
+
   const hasPermissions = useAllHasPermission(
     batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.ownedBy).filter(Boolean)
   );
 
   const isSameImporter = React.useCallback(() => {
     return importerIds.length <= 1;
-  }, [importerIds.length]);
+  }, [importerIds]);
 
   const hasPermissionMoveToExistShipment = React.useCallback(() => {
-    return (
-      batchIds.length > 0 &&
-      isSameImporter() &&
-      hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM])
-    );
-  }, [batchIds.length, hasPermissions, isSameImporter]);
+    return isSameImporter() && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
+  }, [hasPermissions, isSameImporter]);
 
   const openShipments = React.useCallback(() => {
     dispatch({
@@ -80,12 +45,18 @@ function HotKeyHandlers() {
   }, [containerIds, dispatch, exporterIds, importerIds, orderIds, shipmentIds]);
 
   React.useEffect(() => {
-    hotkeys('alt+1', () => {
-      const slideViewStack = document.querySelector('#portal-root')?.childElementCount ?? 0;
-      const isAllow = slideViewStack === 0 || !!document.querySelector('#moveBatches');
-      if (hasPermissionMoveToExistShipment() && isAllow) openShipments();
-    });
-  }, [hasPermissionMoveToExistShipment, openShipments]);
+    if (batchIds.length > 0) {
+      hotkeys.unbind('alt+1');
+      hotkeys('alt+1', () => {
+        const slideViewStack = document.querySelector('#portal-root')?.childElementCount ?? 0;
+        const isAllow =
+          batchIds.length > 0 && (slideViewStack === 0 || !!document.querySelector('#moveBatches'));
+        if (hasPermissionMoveToExistShipment() && isAllow) openShipments();
+      });
+    } else {
+      hotkeys.unbind('alt+1');
+    }
+  }, [batchIds, hasPermissionMoveToExistShipment, openShipments]);
 
   return null;
 }

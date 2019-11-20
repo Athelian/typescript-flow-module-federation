@@ -61,10 +61,9 @@ const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
   ]);
   const currentColumnKeys = React.useMemo<Array<string>>(
     () =>
-      Object.values(columnStates)
-        .map((state: any) => state.filter(c => !c.hidden).map(c => c.column.key))
-        // $FlowFixMe flat not supported by flow
-        .flat(),
+      Object.values(columnStates).flatMap((state: any) =>
+        state.filter(c => !c.hidden).map(c => c.column.key)
+      ),
     [columnStates]
   );
   const isDirty = React.useMemo(

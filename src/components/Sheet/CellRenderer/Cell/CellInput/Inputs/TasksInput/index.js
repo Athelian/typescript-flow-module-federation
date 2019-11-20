@@ -3,9 +3,12 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
-import DisplayWrapper from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/DisplayWrapper';
 import type { TaskPayload, TaskTemplatePayload } from 'generated/graphql';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
+import {
+  CellDisplayWrapperStyle,
+  DisplayContentStyle,
+} from 'components/Sheet/CellRenderer/Cell/CellDisplay/Common/style';
 import TasksInputDialog from './TasksInputDialog';
 import {
   TasksInputWrapperStyle,
@@ -75,8 +78,8 @@ const TasksInput = (entityType: string) => {
           </div>
 
           <div className={TasksCountWrapperStyle}>
-            <DisplayWrapper>
-              <span>
+            <div className={CellDisplayWrapperStyle}>
+              <span className={DisplayContentStyle}>
                 {tasks.length === 1 ? (
                   <FormattedMessage
                     id="modules.sheet.task"
@@ -91,7 +94,7 @@ const TasksInput = (entityType: string) => {
                   />
                 )}
               </span>
-            </DisplayWrapper>
+            </div>
           </div>
 
           <div className={TasksChartWrapperStyle}>

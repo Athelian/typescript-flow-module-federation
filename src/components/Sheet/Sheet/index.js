@@ -1,12 +1,6 @@
 // @flow
 import * as React from 'react';
 import type { SortDirection } from 'types';
-import {
-  useSheetStateLoadMore,
-  SheetState,
-  useSheetState,
-  useSheetKeyNavigation,
-} from '../SheetState';
 import type {
   CellData,
   CellValue,
@@ -16,8 +10,16 @@ import type {
   Mutator,
 } from '../SheetState/types';
 import type { EntityEventHandlerFactory } from '../SheetLive/types';
+import type { ActionComponentProps, DoAction } from '../SheetAction/types';
 import { Actions } from '../SheetState/constants';
+import {
+  useSheetStateLoadMore,
+  SheetState,
+  useSheetState,
+  useSheetKeyNavigation,
+} from '../SheetState';
 import SheetRenderer from '../SheetRenderer';
+import SheetAction from '../SheetAction';
 import CellRenderer from '../CellRenderer';
 import { SheetLiveID } from '../SheetLive';
 import { useSheetLiveFocus } from '../SheetLive/focus';
@@ -25,23 +27,30 @@ import { useSheetLiveEntity } from '../SheetLive/entity';
 import { SheetContentWrapperStyle } from './style';
 import { isInArea } from './helpers';
 
-type ImplProps = {
+type BaseProps = {|
   loading: boolean,
   hasMore: boolean,
   onLoadMore: () => Promise<Array<Object>>,
   handleEntityEvent: ?EntityEventHandlerFactory,
-};
+|};
 
-type Props = {
+type ImplProps = {|
+  ...BaseProps,
+  doAction: DoAction,
+|};
+
+type Props = {|
+  ...BaseProps,
   items: Array<Object>,
   columns: Array<ColumnConfig>,
   onLocalSort: (items: Array<Object>, sorts: Array<ColumnSort>) => Array<Object>,
   onRemoteSort: (sorts: Array<ColumnSort>) => void,
   transformItem: Object => Array<Array<CellValue>>,
   onMutate: Mutator,
-} & ImplProps;
+  actions: { [string]: (ActionComponentProps) => React.Node },
+|};
 
-const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent }: ImplProps) => {
+const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent, doAction }: ImplProps) => {
   const [loadingMore, handleThreshold] = useSheetStateLoadMore(onLoadMore);
   const { state, dispatch, mutate } = useSheetState();
   useSheetKeyNavigation();
@@ -135,6 +144,7 @@ const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent }: ImplProp
             weakErrored: !!state.weakErrorAt.find(e => isInArea(e, columnIndex, rowIndex)),
             dispatch,
             mutate,
+            doAction,
           };
         })
       ),
@@ -151,6 +161,7 @@ const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent }: ImplProp
       state.weakErrorAt,
       dispatch,
       mutate,
+      doAction,
     ]
   );
 
@@ -210,6 +221,7 @@ const Sheet = ({
   hasMore,
   onLoadMore,
   handleEntityEvent,
+  actions,
 }: Props) => (
   <SheetState
     items={items}
@@ -220,12 +232,17 @@ const Sheet = ({
     onRemoteSort={onRemoteSort}
   >
     <SheetLiveID>
-      <SheetImpl
-        loading={loading}
-        hasMore={hasMore}
-        onLoadMore={onLoadMore}
-        handleEntityEvent={handleEntityEvent}
-      />
+      <SheetAction actions={actions}>
+        {({ doAction }) => (
+          <SheetImpl
+            loading={loading}
+            hasMore={hasMore}
+            onLoadMore={onLoadMore}
+            handleEntityEvent={handleEntityEvent}
+            doAction={doAction}
+          />
+        )}
+      </SheetAction>
     </SheetLiveID>
   </SheetState>
 );

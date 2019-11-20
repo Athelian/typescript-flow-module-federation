@@ -1,6 +1,7 @@
 // @flow
-
+import * as React from 'react';
 import type { SortDirection } from 'types';
+import type { DoAction } from 'components/Sheet/SheetAction/types';
 
 export type ColumnSortConfig = {|
   local?: boolean,
@@ -44,6 +45,11 @@ export type Area = {
   from: Position,
   to: Position,
 };
+
+export type CellAction = {|
+  action: string,
+  label: React.Node,
+|};
 
 export type CellValue = {|
   columnKey: string,
@@ -171,6 +177,8 @@ export type Mutator = ({
   item: Object,
 }) => Promise<Array<Object> | null>;
 
+export type Mutate = ({ cell: Position, value: any, item: Object }) => void;
+
 export type CellData = {|
   item: Object | null,
   cell: CellValue,
@@ -184,5 +192,6 @@ export type CellData = {|
   weakFocused: boolean,
   weakErrored: boolean,
   dispatch: Action => void,
-  mutate: ({ cell: Position, value: any, item: Object }) => void,
+  mutate: Mutate,
+  doAction: DoAction,
 |};

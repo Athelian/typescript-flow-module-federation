@@ -5,6 +5,7 @@ import { MetricValueInputStyle } from './style';
 
 type RenderInputProps = {
   value: number,
+  disabled?: boolean,
   onChange: (SyntheticInputEvent<any>) => any,
   onFocus?: (SyntheticFocusEvent<any>) => void,
   onBlur?: (SyntheticFocusEvent<any>) => void,
@@ -12,6 +13,7 @@ type RenderInputProps = {
 
 type RenderSelectProps = {
   value: string,
+  disabled?: boolean,
   required: true,
   onChange: string => void,
   onFocus?: (SyntheticFocusEvent<any>) => void,
@@ -24,6 +26,7 @@ type RenderSelectProps = {
 
 type Props = {
   value: ?MetricValue,
+  disabled?: boolean,
   onChange: MetricValue => void,
   onFocus?: (SyntheticFocusEvent<any>) => void,
   onBlur?: (SyntheticFocusEvent<any>) => void,
@@ -36,6 +39,7 @@ type Props = {
 
 const MetricValueInput = ({
   value,
+  disabled,
   onChange,
   onFocus,
   onBlur,
@@ -48,6 +52,7 @@ const MetricValueInput = ({
   <div className={MetricValueInputStyle}>
     {renderInput({
       value: value?.value ?? 0,
+      disabled,
       onChange: e =>
         onChange({
           ...(value || { metric: defaultMetric }),
@@ -58,6 +63,7 @@ const MetricValueInput = ({
     })}
     {renderSelect({
       value: value?.metric ?? defaultMetric,
+      disabled,
       required: true,
       onChange: newMetric =>
         onChange({

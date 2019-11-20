@@ -16,9 +16,9 @@ import SearchSelectEnumInput from './Inputs/SearchSelectEnumInput';
 import MetricValueInput from './Inputs/MetricValueInput';
 import MetricValueToggleInput from './Inputs/MetricValueToggleInput';
 import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
+import OverridableMetricValueInput from './Inputs/OverridableMetricValueInput';
 import SizeInput from './Inputs/SizeInput';
 import DocumentsInput from './Inputs/DocumentsInput';
-import QuantityRevisionsInput from './Inputs/QuantityRevisionsInput';
 import DateRevisionsInput from './Inputs/DateRevisionsInput';
 import StatusInput from './Inputs/StatusInput';
 import TagsInput from './Inputs/TagsInput';
@@ -72,6 +72,11 @@ const inputs = {
   area_toggle: MetricValueToggleInput.Area,
   length_toggle: MetricValueToggleInput.Length,
   mass_toggle: MetricValueToggleInput.Mass,
+  // Overridable computed with toggle
+  volume_overridable_toggle: OverridableMetricValueInput.Volume,
+  area_overridable_toggle: OverridableMetricValueInput.Area,
+  length_overridable_toggle: OverridableMetricValueInput.Length,
+  mass_overridable_toggle: OverridableMetricValueInput.Mass,
   // Select
   load_type: SelectEnumInput.LoadType,
   transport_type: SelectEnumInput.TransportType,
@@ -117,7 +122,6 @@ const inputs = {
   shipment_tasks: TasksInput.Shipment,
   // Other
   approval: ApprovalInput,
-  quantity_revisions: QuantityRevisionsInput,
   date_revisions: DateRevisionsInput,
 };
 
@@ -150,6 +154,10 @@ const CellInput = ({
     const container = containerRef.current;
 
     if (inputFocus) {
+      if (document.activeElement && container.contains(document.activeElement)) {
+        return;
+      }
+
       const focusableElement =
         container.querySelector('[data-focus-first]:not([disabled])') ||
         container.querySelector(

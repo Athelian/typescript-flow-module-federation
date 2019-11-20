@@ -58,7 +58,7 @@ export default function transformSheetOrder({
               at: new Date(currentOrder.createdAt),
               by: currentOrder.createdBy,
             }
-          : { at: null, by: null };
+          : null;
       }),
     },
     {
@@ -81,7 +81,7 @@ export default function transformSheetOrder({
               at: new Date(currentOrder.updatedAt),
               by: currentOrder.updatedBy,
             }
-          : { at: null, by: null };
+          : null;
       }),
     },
     {
