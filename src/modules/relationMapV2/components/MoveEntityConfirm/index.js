@@ -12,6 +12,7 @@ import { moveEntityMutation } from './mutation';
 import {
   OrderLabelIcon,
   ItemLabelIcon,
+  ItemsLabelIcon,
   BatchLabelIcon,
   BatchesLabelIcon,
   ContainerLabelIcon,
@@ -25,6 +26,7 @@ type Props = {
 const labelMapping = {
   ORDER: <OrderLabelIcon />,
   ORDER_ITEM: <ItemLabelIcon />,
+  ORDER_ITEMS: <ItemsLabelIcon />,
   BATCH: <BatchLabelIcon />,
   BATCHES: <BatchesLabelIcon />,
   CONTAINER: <ContainerLabelIcon />,
@@ -62,7 +64,7 @@ export default function MoveEntityConfirm({ onSuccess }: Props) {
         });
       });
   };
-  const isMulti = ['BATCHES'].includes(from.icon);
+  const isMulti = ['BATCHES', 'ORDER_ITEMS'].includes(from.icon);
   return (
     <Dialog isOpen={isOpen} width="400px" onRequestClose={() => {}}>
       {isOpen && (

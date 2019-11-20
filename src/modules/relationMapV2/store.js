@@ -1595,6 +1595,7 @@ function useFocusView(viewer: 'Order' | 'Shipment') {
         state.targets.filter(target => target.includes(`${type}-`)).length > 1,
       isTargeted: (id: string, type: string) => state.targets.includes(`${type}-${id}`),
       targetedBatchIds: () => targetedIds(state.targets, BATCH),
+      targetedOrderItemIds: () => targetedIds(state.targets, ORDER_ITEM),
       relatedIds: (mapping: Object) => {
         const batchIds = targetedIds(state.targets, BATCH);
         const orderIds = [

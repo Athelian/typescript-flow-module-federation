@@ -20,7 +20,7 @@ type Props = {|
 
 export default function CardActions({ actions = [] }: Props) {
   const slot = usePortalSlot();
-  const companionRef = React.useRef<HTMLDivElement | null>(null);
+  const companionRef = React.useRef<HTMLButtonElement | null>(null);
   const optionsRef = React.useRef<HTMLDivElement | null>(null);
 
   const [dropdownIsOpen, setDropdownIsOpen] = React.useState(false);
@@ -31,11 +31,10 @@ export default function CardActions({ actions = [] }: Props) {
     }
 
     const viewportOffset: ClientRect = companionRef.current.getBoundingClientRect();
-
-    // $FlowFixMe
-    optionsRef.current.style.top = `${viewportOffset.top + viewportOffset.height + 5}px`;
-    // $FlowFixMe
-    optionsRef.current.style.right = `${window.innerWidth - viewportOffset.right}px`;
+    if (optionsRef.current) {
+      optionsRef.current.style.top = `${viewportOffset.top + viewportOffset.height + 5}px`;
+      optionsRef.current.style.right = `${window.innerWidth - viewportOffset.right}px`;
+    }
   }, [companionRef, optionsRef, dropdownIsOpen]);
 
   React.useEffect(() => {

@@ -3,6 +3,7 @@ export const PADDING = 10;
 export const MARGIN = 20;
 export const ORDER = 'Order';
 export const ORDER_ITEM = 'OrderItem';
+export const ORDER_ITEMS = 'OrderItems';
 export const BATCH = 'Batch';
 export const BATCHES = 'Batches';
 export const SHIPMENT = 'Shipment';
