@@ -25,4 +25,5 @@ export const MessageStyle: string = css`
   letter-spacing: 2px;
   ${presets.ELLIPSIS};
   ${shadows.INPUT};
+  text-align: center;
 `;

@@ -40,4 +40,5 @@ export const MessageStyle = (canDrop: boolean): string => css`
   letter-spacing: 2px;
   ${presets.ELLIPSIS};
   ${shadows.INPUT};
+  text-align: center;
 `;
