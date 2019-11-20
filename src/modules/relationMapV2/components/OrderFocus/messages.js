@@ -608,6 +608,135 @@ export const containerDropMessage = ({
       );
     }
 
+    case BATCHES: {
+      const batchIds = item?.id.split(',') ?? [];
+      const containerIds = [
+        ...new Set(
+          batchIds.map(batchId => entities?.batches?.[batchId]?.container).filter(Boolean)
+        ),
+      ];
+      const orderIds = [
+        ...new Set(
+          batchIds
+            .map(batchId => {
+              const [, parentOrderId] = findParentIdsByBatch({
+                batchId,
+                entities,
+                viewer: ORDER,
+              });
+              return parentOrderId;
+            })
+            .filter(Boolean)
+        ),
+      ];
+      const container = getByPathWithDefault({}, `containers.${containerId}`, entities);
+      const shipment = getByPathWithDefault({}, `shipments.${container.shipment}`, entities);
+      const importerIds = [];
+      const exporterIds = [];
+      orderIds.forEach(orderId => {
+        const order = entities?.orders?.[orderId];
+        const importId = order?.importer?.id;
+        const exporterId = order?.exporter?.id;
+        if (importId && !importerIds.includes(importId)) {
+          importerIds.push(importId);
+        }
+        if (exporterId && !exporterIds.includes(exporterId)) {
+          exporterIds.push(exporterId);
+        }
+      });
+      const isSameParent =
+        containerIds.length === 1 &&
+        containerIds.includes(containerId) &&
+        batchIds.every(batchId => !!entities?.batches?.[batchId]?.container);
+      if (isSameParent)
+        return (
+          <div>
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noContainerPermission"
+              defaultMessage="CANNOT MOVE TO CONTAINER"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.sameContainer"
+              defaultMessage="SAME CONTAINER"
+            />
+            )
+          </div>
+        );
+
+      const isDifferentImporter = !importerIds.includes(shipment?.importer?.id);
+      if (isDifferentImporter)
+        return (
+          <div>
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noContainerPermission"
+              defaultMessage="CANNOT MOVE TO CONTAINER"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.importerMismatch"
+              defaultMessage="IMPORTER MISMATCHED"
+            />
+            )
+          </div>
+        );
+
+      const isDifferentExporter =
+        (exporterIds.length === 1 &&
+          !exporterIds.includes(shipment?.exporter?.id) &&
+          shipment?.exporter?.id) ||
+        (exporterIds.length > 1 && shipment?.exporter?.id);
+
+      if (isDifferentExporter)
+        return (
+          <div>
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noContainerPermission"
+              defaultMessage="CANNOT MOVE TO CONTAINER"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.exporterMismatch"
+              defaultMessage="EXPORTER MISMATCHED"
+            />
+            )
+          </div>
+        );
+
+      const noPermission = !hasPermissionToMove({
+        hasPermissions,
+        type: SHIPMENT,
+      });
+      if (noPermission)
+        return (
+          <div>
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noContainerPermission"
+              defaultMessage="CANNOT MOVE TO CONTAINER"
+            />{' '}
+            <br />
+            (
+            <FormattedMessage
+              id="modules.RelationMap.dnd.noPermission"
+              defaultMessage="NO PERMISSION"
+            />
+            )
+          </div>
+        );
+
+      return (
+        <div>
+          <FormattedMessage
+            id="modules.RelationMap.dnd.moveContainer"
+            defaultMessage="MOVE TO CONTAINER"
+          />
+        </div>
+      );
+    }
+
     default:
       return (
         <div>

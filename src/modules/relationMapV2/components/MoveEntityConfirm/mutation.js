@@ -299,6 +299,30 @@ const moveBatchesToShipment = ({
   ).then(ids => (ids ?? []).flat());
 };
 
+const moveBatchesToContainer = ({
+  batchIds,
+  containerId,
+  entities,
+  isOrderFocus,
+}: {|
+  batchIds: Array<string>,
+  containerId: string,
+  entities: Object,
+  isOrderFocus: boolean,
+|}) => {
+  return Promise.all(
+    batchIds.map(batchId =>
+      moveBatchToContainer({
+        batchId,
+        containerId,
+        entities,
+        isOrderFocus,
+      })
+    )
+    // $FlowIgnore: flow doesn't support flat yet
+  ).then(ids => (ids ?? []).flat());
+};
+
 export const moveEntityMutation = (state: State, entities: Object) => {
   const isOrderFocus = state.viewer === 'Order';
   switch (state.moveEntity.detail.from.icon) {
@@ -383,6 +407,14 @@ export const moveEntityMutation = (state: State, entities: Object) => {
     case 'BATCHES': {
       const batchIds = state.moveEntity.detail.from.id.split(',') ?? [];
       switch (state.moveEntity.detail.to.icon) {
+        case 'CONTAINER': {
+          return moveBatchesToContainer({
+            entities,
+            isOrderFocus,
+            batchIds,
+            containerId: state.moveEntity.detail.to.id,
+          });
+        }
         case 'SHIPMENT': {
           return moveBatchesToShipment({
             entities,
