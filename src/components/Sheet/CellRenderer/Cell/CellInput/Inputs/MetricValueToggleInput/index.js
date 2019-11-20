@@ -19,7 +19,10 @@ import SelectInput from 'components/Inputs/SelectInput';
 import NumberInput from 'components/Inputs/NumberInput';
 import BaseMetricValueInput from 'components/Inputs/MetricValueInput';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import { InputStyle } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
+import {
+  InputStyle,
+  AutocalculateInputWrapperStyle,
+} from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
 import { SelectStyle } from 'components/Sheet/CellRenderer/Cell/CellInput/Inputs/MetricValueInput/style';
 import { MetricSelectInput } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/MetricValueInput';
 import ComputableInput from 'components/Sheet/CellRenderer/Cell/CellInput/Common/ComputableInput';
@@ -50,7 +53,9 @@ const MetricValueToggleInput = (
           valueConverter={valueConverter}
           metrics={metrics}
           renderInput={inputProps => (
-            <NumberInput {...inputProps} className={InputStyle} disabled={readonly || auto} />
+            <div className={AutocalculateInputWrapperStyle(readonly || auto)}>
+              <NumberInput {...inputProps} className={InputStyle} disabled={readonly || auto} />
+            </div>
           )}
           renderSelect={selectProps => (
             <div className={SelectStyle}>

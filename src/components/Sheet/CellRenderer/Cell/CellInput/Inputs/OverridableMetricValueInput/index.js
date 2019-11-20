@@ -22,11 +22,11 @@ import SelectInput from 'components/Inputs/SelectInput';
 import BaseMetricValueInput from 'components/Inputs/MetricValueInput';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import {
-  CellInputWrapperStyle,
   InputStyle,
+  AutocalculateInputWrapperStyle,
 } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
 import { MetricSelectInput } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/MetricValueInput';
-import { WrapperStyle, CalculatorIconStyle, SelectStyle } from './style';
+import { OverridableMetricValueInputWrapperStyle, CalculatorIconStyle, SelectStyle } from './style';
 
 const OverridableMetricValueInput = (
   metrics: Array<string>,
@@ -59,41 +59,41 @@ InputProps<
   };
 
   return (
-    <div className={WrapperStyle(value?.auto ?? false)}>
-      <div className={CellInputWrapperStyle}>
-        <BaseMetricValueInput
-          value={displayValue}
-          disabled={readonly}
-          onChange={newValue =>
-            onChange({
-              value: newValue,
-              displayMetric: newValue.metric,
-              auto: value?.auto ?? false,
-            })
-          }
-          defaultMetric={currentDisplayMetric}
-          valueConverter={valueConverter}
-          metrics={metrics}
-          renderInput={inputProps => (
+    <div className={OverridableMetricValueInputWrapperStyle}>
+      <BaseMetricValueInput
+        value={displayValue}
+        disabled={readonly}
+        onChange={newValue =>
+          onChange({
+            value: newValue,
+            displayMetric: newValue.metric,
+            auto: value?.auto ?? false,
+          })
+        }
+        defaultMetric={currentDisplayMetric}
+        valueConverter={valueConverter}
+        metrics={metrics}
+        renderInput={inputProps => (
+          <div className={AutocalculateInputWrapperStyle(readonly || (value?.auto ?? false))}>
             <NumberInput
               {...inputProps}
               className={InputStyle}
               disabled={readonly || (value?.auto ?? false)}
             />
-          )}
-          renderSelect={selectProps => (
-            <div className={SelectStyle}>
-              <SelectInput
-                {...selectProps}
-                optionWidth={30}
-                optionHeight={30}
-                renderInput={MetricSelectInput}
-                renderOption={SelectInput.DefaultRenderSelectOption}
-              />
-            </div>
-          )}
-        />
-      </div>
+          </div>
+        )}
+        renderSelect={selectProps => (
+          <div className={SelectStyle}>
+            <SelectInput
+              {...selectProps}
+              optionWidth={30}
+              optionHeight={30}
+              renderInput={MetricSelectInput}
+              renderOption={SelectInput.DefaultRenderSelectOption}
+            />
+          </div>
+        )}
+      />
 
       <div className={CalculatorIconStyle}>
         <Icon icon="CALCULATOR" />
