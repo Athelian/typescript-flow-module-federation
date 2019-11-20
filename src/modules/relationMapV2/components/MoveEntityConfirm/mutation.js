@@ -117,6 +117,30 @@ const moveOrderItemToOrder = ({
     });
 };
 
+const moveOrderItemsToOrder = ({
+  itemIds,
+  orderId,
+  entities,
+  isOrderFocus,
+}: {
+  itemIds: Array<string>,
+  orderId: string,
+  entities: Object,
+  isOrderFocus: boolean,
+}) => {
+  return Promise.all(
+    itemIds.map(orderItemId =>
+      moveOrderItemToOrder({
+        orderItemId,
+        orderId,
+        entities,
+        isOrderFocus,
+      })
+    )
+    // $FlowIgnore: flow doesn't support flat yet
+  ).then(ids => (ids ?? []).flat());
+};
+
 const moveBatchToOrderItem = ({
   batchId,
   orderItemId,
@@ -285,6 +309,22 @@ export const moveEntityMutation = (state: State, entities: Object) => {
         orderItemId: state.moveEntity.detail.from.id,
         orderId: state.moveEntity.detail.to.id,
       });
+    }
+    case 'ORDER_ITEMS': {
+      const itemIds = state.moveEntity.detail.from.id.split(',') ?? [];
+      switch (state.moveEntity.detail.to.icon) {
+        case 'ORDER': {
+          return moveOrderItemsToOrder({
+            entities,
+            isOrderFocus,
+            itemIds,
+            orderId: state.moveEntity.detail.to.id,
+          });
+        }
+
+        default:
+          return Promise.reject(new Error(`Not handle yet`));
+      }
     }
     case 'BATCH': {
       const batch = getByPathWithDefault(
