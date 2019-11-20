@@ -1,12 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, fontSizes, colors, presets, shadows, transitions } from 'styles/common';
+import { borderRadiuses, fontSizes, colors, presets, shadows } from 'styles/common';
 
 export const CardActionsWrapperStyle: string = css`
   position: absolute;
   top: -10px;
   right: -10px;
-  z-index: 3;
+  z-index: 4;
 `;
 
 export const CardActionsButtonStyle = (dropdownIsOpen: boolean): string => css`
@@ -24,23 +24,19 @@ export const CardActionsButtonStyle = (dropdownIsOpen: boolean): string => css`
   }
 `;
 
-export const DropdownWrapperStyle = (dropdownIsOpen: boolean, numOfOptions: number): string => css`
+export const DropdownWrapperStyle = (numOfOptions: number): string => css`
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: calc(100% + 5px);
-  right: 0;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  z-index: 2;
   ${shadows.INPUT};
   width: min-content;
   background: ${colors.WHITE};
   ${borderRadiuses.MAIN};
   cursor: pointer;
-  height: ${dropdownIsOpen ? `${numOfOptions * 30}px` : '0px'};
-  ${transitions.EXPAND};
+  height: ${numOfOptions * 30}px;
 `;
 
 export const OptionStyle: string = css`
