@@ -61,10 +61,7 @@ function computeMergedCells(
 
 function transformItems(transformer: (number, Object) => Array<Array<CellValue>>) {
   return (from: number, items: Array<Object>): Array<Array<CellValue>> =>
-    items
-      .map((item: Object, idx: number) => transformer(from + idx, item))
-      // $FlowFixMe flow doesn't support flat()
-      .flat();
+    items.flatMap((item: Object, idx: number) => transformer(from + idx, item));
 }
 
 function mapRowsToColumns(
@@ -87,14 +84,12 @@ function mapRowsToColumns(
 function resolveEntities(rows: Array<Array<CellValue>>): Array<{ id: string, type: string }> {
   return Array.from(
     rows
-      .map(row =>
+      .flatMap(row =>
         row
           .filter(cell => !!cell.entity)
           .map(cell => ({ id: cell?.entity?.id, type: cell?.entity?.type }))
       )
-      // $FlowFixMe flow doesn't support flat()
-      .flat()
-      .reduce((m, e) => {
+      .reduce((m: Map<string, Object>, e: Object) => {
         m.set(`${e.type}:${e.id}`, e);
         return m;
       }, new Map())

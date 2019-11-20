@@ -70,7 +70,7 @@ export default function transformSheetShipment({
     return [
       ...(currentShipment?.batchesWithoutContainer ?? []),
       // $FlowFixMe flow doesn't know flat
-      ...(currentShipment?.containers ?? []).map(c => c.batches).flat(),
+      ...(currentShipment?.containers ?? []).flatMap(c => c.batches),
     ];
   };
 

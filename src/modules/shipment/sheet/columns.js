@@ -1,259 +1,11 @@
-/* eslint-disable react/jsx-props-no-spreading */
 // @flow
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { colors } from 'styles/common';
 import type { FieldDefinition } from 'types';
 import type { ColumnConfig } from 'components/Sheet';
-import batchMessages from 'modules/batch/messages';
 import orderColumns from 'modules/sheet/order/columns';
 import orderItemColumns from 'modules/sheet/orderItem/columns';
 import shipmentColumns from 'modules/sheet/shipment/columns';
 import containerColumns from 'modules/sheet/container/columns';
-
-const batchColumns: Array<ColumnConfig> = [
-  {
-    key: 'shipment.container.batch.created',
-    title: <FormattedMessage {...batchMessages.createdAt} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 110,
-    sort: {
-      local: true,
-      default: true,
-      name: 'createdAt',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'shipment.container.batch.updated',
-    title: <FormattedMessage {...batchMessages.updatedAt} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 110,
-    sort: {
-      local: true,
-      name: 'updatedAt',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'shipment.container.batch.archived',
-    title: <FormattedMessage {...batchMessages.status} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 105,
-  },
-  {
-    key: 'shipment.container.batch.no',
-    exportKey: 'containers.batches.no',
-    title: <FormattedMessage {...batchMessages.batchNo} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'no',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'shipment.container.batch.deliveredAt',
-    title: <FormattedMessage {...batchMessages.deliveredAt} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 125,
-    sort: {
-      local: true,
-      name: 'deliveredAt',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'shipment.container.batch.desiredAt',
-    title: <FormattedMessage {...batchMessages.desiredAt} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 125,
-    sort: {
-      local: true,
-      name: 'desiredAt',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'shipment.container.batch.expiredAt',
-    title: <FormattedMessage {...batchMessages.expiredAt} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 125,
-    sort: {
-      local: true,
-      name: 'expiredAt',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'shipment.container.batch.producedAt',
-    title: <FormattedMessage {...batchMessages.producedAt} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 125,
-    sort: {
-      local: true,
-      name: 'producedAt',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'shipment.container.batch.tags',
-    title: <FormattedMessage {...batchMessages.tags} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.memo',
-    title: <FormattedMessage {...batchMessages.memo} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.latestQuantity',
-    title: <FormattedMessage {...batchMessages.currentQuantity} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.quantity',
-    exportKey: 'containers.batches.quantity',
-    title: <FormattedMessage {...batchMessages.initialQuantity} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'quantity',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'shipment.container.batch.producedQuantity',
-    title: <FormattedMessage {...batchMessages.producedQuantity} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.preShippedQuantity',
-    title: <FormattedMessage {...batchMessages.preShippedQuantity} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.shippedQuantity',
-    title: <FormattedMessage {...batchMessages.shippedQuantity} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.postShippedQuantity',
-    title: <FormattedMessage {...batchMessages.postShippedQuantity} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.deliveredQuantity',
-    title: <FormattedMessage {...batchMessages.deliveredQuantity} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.packageName',
-    title: <FormattedMessage {...batchMessages.packageName} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'packageName',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'shipment.container.batch.packageCapacity',
-    title: <FormattedMessage {...batchMessages.packageCapacity} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-    sort: {
-      local: true,
-      name: 'packageCapacity',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'shipment.container.batch.packageQuantity',
-    title: <FormattedMessage {...batchMessages.packageQuantity} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 250,
-    sort: {
-      local: true,
-      name: 'packageQuantity',
-      group: 'batch',
-    },
-  },
-  {
-    key: 'shipment.container.batch.packageGrossWeight',
-    title: <FormattedMessage {...batchMessages.packageGrossWeight} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.packageVolume',
-    title: <FormattedMessage {...batchMessages.packageVolume} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.packageSize',
-    title: <FormattedMessage {...batchMessages.packageSizeGrouped} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 280,
-  },
-  {
-    key: 'shipment.container.batch.todo',
-    title: <FormattedMessage {...batchMessages.tasks} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-  },
-  {
-    key: 'shipment.container.batch.logs',
-    title: <FormattedMessage {...batchMessages.logs} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 120,
-  },
-  {
-    key: 'shipment.container.batch.mask',
-    title: <FormattedMessage {...batchMessages.mask} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: 200,
-  },
-  // actions
-];
+import batchColumns from 'modules/sheet/batch/columns';
 
 export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment'];
 
@@ -429,15 +181,71 @@ export default function({
         },
       }
     ),
-    ...batchColumns,
-    ...batchFieldDefinitions.map(fieldDefinition => ({
-      key: `shipment.container.batch.customField.${fieldDefinition.id}`,
-      exportKey: `containers.batches.customFields.${fieldDefinition.id}`,
-      title: fieldDefinition.name,
-      icon: 'BATCH',
-      color: colors.BATCH,
-      width: 200,
-    })),
+    ...batchColumns(
+      {
+        'batch.no': 'containers.batches.no',
+        'batch.quantity': 'containers.batches.quantity',
+      },
+      {
+        'batch.created': {
+          local: true,
+          default: true,
+          name: 'createdAt',
+          group: 'batch',
+        },
+        'batch.updated': {
+          local: true,
+          name: 'updatedAt',
+          group: 'batch',
+        },
+        'batch.no': {
+          local: true,
+          name: 'no',
+          group: 'batch',
+        },
+        'batch.deliveredAt': {
+          local: true,
+          name: 'deliveredAt',
+          group: 'batch',
+        },
+        'batch.desiredAt': {
+          local: true,
+          name: 'desiredAt',
+          group: 'batch',
+        },
+        'batch.expiredAt': {
+          local: true,
+          name: 'expiredAt',
+          group: 'batch',
+        },
+        'batch.producedAt': {
+          local: true,
+          name: 'producedAt',
+          group: 'batch',
+        },
+        'batch.quantity': {
+          local: true,
+          name: 'quantity',
+          group: 'batch',
+        },
+        'batch.packageName': {
+          local: true,
+          name: 'packageName',
+          group: 'batch',
+        },
+        'batch.packageCapacity': {
+          local: true,
+          name: 'packageCapacity',
+          group: 'batch',
+        },
+        'batch.packageQuantity': {
+          local: true,
+          name: 'packageQuantity',
+          group: 'batch',
+        },
+      },
+      batchFieldDefinitions
+    ),
     ...orderItemColumns(
       {
         'orderItem.productProvider.product.name':
