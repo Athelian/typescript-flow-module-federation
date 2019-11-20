@@ -3,7 +3,7 @@ import * as React from 'react';
 import Icon from 'components/Icon';
 import { ToggleInput } from 'components/Form';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import { WrapperStyle, CalculatorIconStyle } from './style';
+import { ComputableInputWrapperStyle, CalculatorIconStyle } from './style';
 
 type Props<T> = {
   ...InputProps<{ value: ?T, auto: boolean }, T>,
@@ -11,7 +11,7 @@ type Props<T> = {
 };
 
 const ComputableInput = <T>({ value, context, onChange, readonly, input }: Props<T>) => (
-  <div className={WrapperStyle(value?.auto ?? false)}>
+  <div className={ComputableInputWrapperStyle}>
     {input({
       value: value?.auto ?? false ? context : value?.value ?? null,
       onChange: newValue => onChange({ ...(value || { auto: false }), value: newValue }),

@@ -2,13 +2,12 @@
 import { css } from 'react-emotion';
 import { colors, fontSizes, layout } from 'styles/common';
 
-export const WrapperStyle = (auto: boolean) => css`
+export const ComputableInputWrapperStyle: string = css`
   display: grid;
   width: 100%;
   grid-template-columns: 1fr 30px 35px;
   justify-items: center;
-  ${auto && 'background-color: rgba(0, 0, 0, 0.025)'};
-  padding: 0 5px;
+  overflow: hidden;
 `;
 
 export const CalculatorIconStyle: string = css`

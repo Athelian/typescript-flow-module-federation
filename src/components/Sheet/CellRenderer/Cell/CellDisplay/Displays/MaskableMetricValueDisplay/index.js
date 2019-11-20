@@ -11,10 +11,12 @@ import {
 import MetricValueDisplay from 'components/Sheet/CellRenderer/Cell/CellDisplay/Displays/MetricValueDisplay';
 import messages from 'components/Sheet/messages';
 
+// eslint-disable-next-line flowtype/space-after-type-colon
 const MaskableMetricValueDisplay = ({
   value,
   extra,
-}: DisplayProps<
+}: // eslint-disable-next-line flowtype/generic-spacing
+DisplayProps<
   MetricValue | null,
   {
     message: React.Node,
