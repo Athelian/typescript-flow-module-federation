@@ -1,12 +1,17 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
+import { colors } from 'styles/common';
 import LoadingIcon from 'components/LoadingIcon';
+import Icon from 'components/Icon';
 import Dialog from 'components/Dialog';
+import { Label } from 'components/Form';
 import type { ActionComponentProps } from 'components/Sheet/SheetAction/types';
 import { useSheetActionDialog } from 'components/Sheet/SheetAction';
+import messages from '../messages';
 import batchCreateActionMutation from './mutation';
-import { DialogWrapperStyle } from './style';
+import { DialogWrapperStyle, DialogMessageStyle } from './style';
 
 type Props = {
   ...ActionComponentProps,
@@ -18,6 +23,10 @@ const BatchCreateActionImpl = ({ entity, item, onDone, getOrderItemBatchesCount 
   const [mutate, { loading, called }] = useMutation(batchCreateActionMutation);
 
   React.useEffect(() => {
+    if (loading || called) {
+      return;
+    }
+
     mutate({
       variables: {
         input: {
@@ -27,7 +36,7 @@ const BatchCreateActionImpl = ({ entity, item, onDone, getOrderItemBatchesCount 
         },
       },
     });
-  }, [mutate, entity, getOrderItemBatchesCount, item]);
+  }, [mutate, entity, getOrderItemBatchesCount, item, loading, called]);
 
   React.useEffect(() => {
     // TODO: Check and handle not successful mutation
@@ -46,7 +55,21 @@ const BatchCreateActionImpl = ({ entity, item, onDone, getOrderItemBatchesCount 
       }}
     >
       <div className={DialogWrapperStyle}>
-        Creating batch...
+        <Label height="30px" align="center">
+          <FormattedMessage {...messages.batchCreateTitle} />
+        </Label>
+        <div className={DialogMessageStyle}>
+          <FormattedMessage
+            {...messages.batchCreateMessage}
+            values={{
+              icon: (
+                <span style={{ color: colors.BATCH }}>
+                  <Icon icon="BATCH" />
+                </span>
+              ),
+            }}
+          />
+        </div>
         <LoadingIcon />
       </div>
     </Dialog>

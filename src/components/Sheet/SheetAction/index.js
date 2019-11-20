@@ -4,9 +4,7 @@ import type { ActionComponentProps, DoAction } from './types';
 
 type Props = {
   actions: { [string]: (ActionComponentProps) => React.Node },
-  children: ({
-    doAction: DoAction,
-  }) => React.Node,
+  children: ({ doAction: DoAction }) => React.Node,
 };
 
 export const useSheetActionDialog = (onDone: () => void): [boolean, () => void] => {
