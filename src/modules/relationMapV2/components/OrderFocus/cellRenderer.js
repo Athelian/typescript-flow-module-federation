@@ -8,7 +8,6 @@ import { flatten } from 'lodash';
 import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import { useEntityHasPermissions, useHasPermissions } from 'contexts/Permissions';
-import { Tooltip } from 'components/Tooltip';
 import LoadingIcon from 'components/LoadingIcon';
 import BaseCard from 'components/Cards';
 import {
@@ -65,90 +64,6 @@ type CellProps = {
   data: Object,
   beforeConnector?: ?LINE_CONNECTOR,
   afterConnector?: ?LINE_CONNECTOR,
-};
-
-export const Overlay = ({
-  color,
-  message,
-  icon,
-}: {
-  color: string,
-  message?: React$Node,
-  icon?: React$Node,
-}) => {
-  return message ? (
-    <Tooltip visible message={message}>
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          height: '100%',
-          width: '100%',
-          zIndex: 4,
-          backgroundColor: color,
-          borderRadius: '5px',
-        }}
-      >
-        {icon && (
-          <div
-            style={{
-              position: 'absolute',
-              width: '55px',
-              height: '55px',
-              right: '0px',
-              top: '0px',
-              fontSize: '48px',
-              lineHeight: '48px',
-              display: 'flex',
-              alignItems: 'center',
-              textAlign: 'center',
-              letterSpacing: '2px',
-              textTransform: 'uppercase',
-              color: '#fff',
-            }}
-          >
-            {icon}
-          </div>
-        )}
-      </div>
-    </Tooltip>
-  ) : (
-    <div
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        height: '100%',
-        width: '100%',
-        zIndex: 4,
-        backgroundColor: color,
-        borderRadius: '5px',
-      }}
-    >
-      {icon && (
-        <div
-          style={{
-            position: 'absolute',
-            width: '55px',
-            height: '55px',
-            right: '0px',
-            top: '0px',
-            fontSize: '48px',
-            lineHeight: '48px',
-            display: 'flex',
-            alignItems: 'center',
-            textAlign: 'center',
-            letterSpacing: '2px',
-            textTransform: 'uppercase',
-            color,
-          }}
-        >
-          {icon}
-        </div>
-      )}
-    </div>
-  );
 };
 
 // NOTE: only support for drag and drop a batch and order item
