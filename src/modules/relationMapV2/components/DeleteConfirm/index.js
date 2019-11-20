@@ -17,7 +17,7 @@ import ActionDialog, {
   ContainerLabelIcon,
   BatchesLabelIcon,
   ShipmentLabelIcon,
-} from '../ActionDialog';
+} from 'components/Dialog/ActionDialog';
 import { deleteContainerMutation, deleteOrderItemMutation } from './mutation';
 
 type Props = {|

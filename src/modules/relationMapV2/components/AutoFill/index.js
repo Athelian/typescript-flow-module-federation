@@ -14,7 +14,7 @@ import ActionDialog, {
   ItemLabelIcon,
   BatchesLabelIcon,
   BatchLabelIcon,
-} from '../ActionDialog';
+} from 'components/Dialog/ActionDialog';
 import { batchBalanceSplitManyMutation } from './mutation';
 
 type Props = {|

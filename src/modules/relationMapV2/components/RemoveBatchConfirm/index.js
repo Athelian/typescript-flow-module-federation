@@ -8,7 +8,7 @@ import ActionDialog, {
   BatchLabelIcon,
   ContainerLabelIcon,
   ShipmentLabelIcon,
-} from '../ActionDialog';
+} from 'components/Dialog/ActionDialog';
 import { removeBatchMutation } from './mutation';
 
 type Props = {|

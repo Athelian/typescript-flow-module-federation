@@ -7,8 +7,6 @@ import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import { CancelButton, MoveButton } from 'components/Buttons';
-import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
-import { moveEntityMutation } from './mutation';
 import {
   OrderLabelIcon,
   ItemLabelIcon,
@@ -17,7 +15,9 @@ import {
   BatchesLabelIcon,
   ContainerLabelIcon,
   ShipmentLabelIcon,
-} from '../ActionDialog';
+} from 'components/Dialog/ActionDialog';
+import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
+import { moveEntityMutation } from './mutation';
 
 type Props = {
   onSuccess: (ids: Array<string>) => void,
