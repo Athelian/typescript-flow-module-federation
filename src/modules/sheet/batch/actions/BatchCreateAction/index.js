@@ -14,8 +14,21 @@ type Props = {
 };
 
 const BatchCreateActionImpl = ({ entity, item, onDone, getOrderItemBatchesCount }: Props) => {
+  const [minTimer, setMinTimer] = React.useState(2);
   const [isOpen, close] = useSheetActionDialog(onDone);
   const [mutate, { loading, called }] = useMutation(batchCreateActionMutation);
+
+  React.useEffect(() => {
+    if (!minTimer) return () => {};
+
+    const intervalId = setInterval(() => {
+      setMinTimer(minTimer - 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [minTimer]);
 
   React.useEffect(() => {
     if (loading || called) {
@@ -42,7 +55,7 @@ const BatchCreateActionImpl = ({ entity, item, onDone, getOrderItemBatchesCount 
 
   return (
     <ActionDialog
-      isOpen={isOpen}
+      isOpen={isOpen || minTimer > 0}
       isProcessing
       onCancel={() => {}}
       title={<FormattedMessage {...messages.batchCreateTitle} />}
