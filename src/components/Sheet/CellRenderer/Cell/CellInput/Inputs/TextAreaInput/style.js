@@ -11,7 +11,6 @@ import {
 } from 'styles/common';
 
 export const TextAreaInputButtonStyle: string = css`
-  display: flex;
   width: 100%;
   cursor: pointer;
 `;
