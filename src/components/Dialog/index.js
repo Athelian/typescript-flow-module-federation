@@ -26,7 +26,7 @@ const defaultProps = {
   onRequestClose: () => {},
 };
 
-const ANIMATION_FINISHED = 300; // 0.3s
+export const ANIMATION_FINISHED = 300; // 0.3s
 
 const DialogRender = (props: Props) => {
   const { isOpen, onRequestClose, onCancel, width, showCancelButton, children } = {

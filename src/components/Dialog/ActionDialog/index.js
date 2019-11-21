@@ -24,16 +24,13 @@ import {
   ButtonsWrapperStyle,
 } from './style';
 
-type OptionalProps = {
-  dialogSubMessage?: React.Node,
-};
-
-type Props = OptionalProps & {
+type Props = {
   isOpen: boolean,
-  isProcessing: boolean,
-  onCancel: Function,
+  isProcessing?: boolean,
+  onCancel?: Function,
   title: React.Node,
   dialogMessage: React.Node,
+  dialogSubMessage?: React.Node,
   buttons?: React.Node,
   children?: React.Node,
 };

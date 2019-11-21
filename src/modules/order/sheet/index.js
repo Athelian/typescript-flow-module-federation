@@ -11,7 +11,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import OrderItemCloneAction from 'modules/sheet/orderItem/actions/OrderItemCloneAction';
-import BatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAction';
+import BaseBatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAction';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
 import orderColumns, { FieldDefinitionEntityTypes } from './columns';
@@ -31,6 +31,11 @@ type ImplProps = {
   columns: Array<ColumnConfig>,
   transformer: Object => Array<Array<CellValue>>,
 };
+
+export const BatchCreateAction = BaseBatchCreateAction((orderItemId, item) => {
+  const orderItem = item.orderItems.find(oi => oi.id === orderItemId);
+  return (orderItem?.batches ?? []).length;
+});
 
 const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }: ImplProps) => {
   const client = useApolloClient();
@@ -111,10 +116,7 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
         onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
         actions={{
-          order_item_batch_create: BatchCreateAction((orderItemId, item) => {
-            const orderItem = item.orderItems.find(oi => oi.id === orderItemId);
-            return (orderItem?.batches ?? []).length;
-          }),
+          order_item_batch_create: BatchCreateAction,
           order_item_clone: OrderItemCloneAction,
         }}
       />
