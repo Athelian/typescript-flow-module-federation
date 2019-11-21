@@ -12,31 +12,30 @@ import {
 } from './style';
 
 type DropdownProps = {|
-  actions?: Array<{
+  actions: Array<{
     label: React.Node,
     onClick: Function,
   }>,
   dropdownIsOpen: boolean,
   setDropdownIsOpen: boolean => void,
-  buttonRef: HTMLButtonElement | null,
+  buttonRef: { current: HTMLButtonElement | null },
 |};
 
 const Dropdown = ({ actions, dropdownIsOpen, setDropdownIsOpen, buttonRef }: DropdownProps) => {
   const slot = usePortalSlot();
-  const companionRef = React.useRef<HTMLButtonElement | null>(null);
   const optionsRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
-    if (!dropdownIsOpen || !companionRef.current || !optionsRef.current) {
+    if (!dropdownIsOpen || !buttonRef.current || !optionsRef.current) {
       return;
     }
 
-    const viewportOffset: ClientRect = companionRef.current.getBoundingClientRect();
+    const viewportOffset: ClientRect = buttonRef.current.getBoundingClientRect();
     if (optionsRef.current) {
       optionsRef.current.style.top = `${viewportOffset.top + viewportOffset.height + 5}px`;
       optionsRef.current.style.right = `${window.innerWidth - viewportOffset.right}px`;
     }
-  }, [companionRef, optionsRef, dropdownIsOpen]);
+  }, [buttonRef, optionsRef, dropdownIsOpen]);
 
   React.useEffect(() => {
     const opts = { capture: false, passive: true };
@@ -53,12 +52,11 @@ const Dropdown = ({ actions, dropdownIsOpen, setDropdownIsOpen, buttonRef }: Dro
 
   return (
     <>
-      <div ref={companionRef} />
       {ReactDOM.createPortal(
         <OutsideClickHandler
           onOutsideClick={() => setDropdownIsOpen(false)}
           ignoreClick={!dropdownIsOpen}
-          ignoreElements={[buttonRef?.current]}
+          ignoreElements={buttonRef.current ? [buttonRef.current] : []}
         >
           <div
             className={DropdownWrapperStyle(actions.length)}
