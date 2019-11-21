@@ -22,7 +22,7 @@ type DropdownProps = {|
 |};
 
 const Dropdown = ({ actions, dropdownIsOpen, setDropdownIsOpen, buttonRef }: DropdownProps) => {
-  const slot = usePortalSlot({ key: 'isCardActionsDropdown', value: true });
+  const slot = usePortalSlot();
   const companionRef = React.useRef<HTMLButtonElement | null>(null);
   const optionsRef = React.useRef<HTMLDivElement | null>(null);
 

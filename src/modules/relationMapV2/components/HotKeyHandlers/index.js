@@ -4,6 +4,9 @@ import hotkeys from 'hotkeys-js';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { useAllHasPermission } from 'contexts/Permissions';
+import { hasInPortal } from 'hooks/usePortalSlot';
+import { SLIDEVIEW_PORTAL_NAME } from 'components/SlideView';
+import { DIALOG_PORTAL_NAME } from 'components/Dialog';
 
 function HotKeyHandlers() {
   const { mapping } = Entities.useContainer();
@@ -48,9 +51,8 @@ function HotKeyHandlers() {
     if (batchIds.length > 0) {
       hotkeys.unbind('alt+1');
       hotkeys('alt+1', () => {
-        const portalStack = [...(document.querySelector('#portal-root')?.children ?? [])];
-        const noSlideViewsOrDialogsOpen = portalStack.every(
-          element => element.isCardActionsDropdown
+        const noSlideViewsOrDialogsOpen = !(
+          hasInPortal(SLIDEVIEW_PORTAL_NAME) || hasInPortal(DIALOG_PORTAL_NAME)
         );
 
         const isAllow =
