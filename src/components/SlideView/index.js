@@ -40,8 +40,10 @@ const SlideViewContext = React.createContext<Context>({
 
 const ANIMATION_FINISHED = 300; // 0.3s
 
+export const SLIDEVIEW_PORTAL_NAME = 'slideview';
+
 const SlideViewRender = ({ isOpen, onRequestClose, shouldConfirm, children }: Props) => {
-  const slot = usePortalSlot();
+  const slot = usePortalSlot(SLIDEVIEW_PORTAL_NAME);
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
   const parentContext = React.useContext(SlideViewContext);
 

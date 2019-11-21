@@ -13,7 +13,7 @@ import { BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import { useNumberInput } from 'modules/form/hooks';
 import { Label, Display, NumberInputFactory } from 'components/Form';
-import ActionDialog, { BatchesLabelIcon, BatchLabelIcon } from '../ActionDialog';
+import ActionDialog, { BatchesLabelIcon, BatchLabelIcon } from 'components/Dialog/ActionDialog';
 import { batchSimpleSplitMutation } from './mutation';
 import { SplitInputsWrapperStyle, SplitRowStyle } from './style';
 import validator from './validator';

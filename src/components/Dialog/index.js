@@ -28,12 +28,14 @@ const defaultProps = {
 
 const ANIMATION_FINISHED = 300; // 0.3s
 
+export const DIALOG_PORTAL_NAME = 'dialog';
+
 const DialogRender = (props: Props) => {
   const { isOpen, onRequestClose, onCancel, width, showCancelButton, children } = {
     ...defaultProps,
     ...props,
   };
-  const slot = usePortalSlot();
+  const slot = usePortalSlot(DIALOG_PORTAL_NAME);
 
   return ReactDOM.createPortal(
     <div

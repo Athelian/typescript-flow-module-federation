@@ -16,7 +16,7 @@ import ActionDialog, {
   ItemLabelIcon,
   ItemsLabelIcon,
   BatchesLabelIcon,
-} from '../ActionDialog';
+} from 'components/Dialog/ActionDialog';
 import SelectOrderToMoveItem from './components/SelectOrderToMoveItem';
 import {
   ItemMoveButtonsWrapperStyle,

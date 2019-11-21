@@ -16,7 +16,7 @@ import ActionDialog, {
   OrderLabelIcon,
   ShipmentLabelIcon,
   ShipmentsLabelIcon,
-} from '../ActionDialog';
+} from 'components/Dialog/ActionDialog';
 import { updateOrdersMutation, updateShipmentMutation } from './mutation';
 
 type Props = {|

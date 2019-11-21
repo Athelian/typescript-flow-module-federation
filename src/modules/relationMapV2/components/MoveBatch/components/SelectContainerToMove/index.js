@@ -40,9 +40,14 @@ function ContainerRenderer({
   selected: ?Object,
   setSelected: (?Object) => void,
 }) {
-  const { state } = FocusedView.useContainer();
+  const { state, selectors } = FocusedView.useContainer();
+  const { mapping } = Entities.useContainer();
+  const batchIds = selectors.targetedBatchIds();
   const { containerIds, importerIds, exporterIds } = state.moveActions;
-  const isSameParent = containerIds.length === 1 && containerIds.includes(container.id);
+  const isSameParent =
+    containerIds.length === 1 &&
+    containerIds.includes(container.id) &&
+    batchIds.every(batchId => !!mapping.entities?.batches?.[batchId]?.container);
   const hasPermissions = useEntityHasPermissions(container);
   const isDifferentImporter = !importerIds.includes(container?.shipment?.importer?.id);
   const isDifferentExporter =

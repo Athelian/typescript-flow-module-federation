@@ -11,19 +11,20 @@ import {
   OptionStyle,
 } from './style';
 
-type Props = {|
+type DropdownProps = {|
   actions?: Array<{
     label: React.Node,
     onClick: Function,
   }>,
+  dropdownIsOpen: boolean,
+  setDropdownIsOpen: boolean => void,
+  buttonRef: HTMLButtonElement | null,
 |};
 
-export default function CardActions({ actions = [] }: Props) {
+const Dropdown = ({ actions, dropdownIsOpen, setDropdownIsOpen, buttonRef }: DropdownProps) => {
   const slot = usePortalSlot();
   const companionRef = React.useRef<HTMLButtonElement | null>(null);
   const optionsRef = React.useRef<HTMLDivElement | null>(null);
-
-  const [dropdownIsOpen, setDropdownIsOpen] = React.useState(false);
 
   React.useEffect(() => {
     if (!dropdownIsOpen || !companionRef.current || !optionsRef.current) {
@@ -51,10 +52,61 @@ export default function CardActions({ actions = [] }: Props) {
   }, [setDropdownIsOpen]);
 
   return (
+    <>
+      <div ref={companionRef} />
+      {ReactDOM.createPortal(
+        <OutsideClickHandler
+          onOutsideClick={() => setDropdownIsOpen(false)}
+          ignoreClick={!dropdownIsOpen}
+          ignoreElements={[buttonRef?.current]}
+        >
+          <div
+            className={DropdownWrapperStyle(actions.length)}
+            ref={ref => {
+              optionsRef.current = ref;
+            }}
+          >
+            {actions.map((action, index) => {
+              const { label, onClick } = action;
+
+              return (
+                <button
+                  key={String(index)}
+                  className={OptionStyle}
+                  onClick={event => {
+                    onClick(event);
+                    setDropdownIsOpen(false);
+                  }}
+                  type="button"
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        </OutsideClickHandler>,
+        slot
+      )}
+    </>
+  );
+};
+
+type Props = {|
+  actions?: Array<{
+    label: React.Node,
+    onClick: Function,
+  }>,
+|};
+
+export default function CardActions({ actions = [] }: Props) {
+  const [dropdownIsOpen, setDropdownIsOpen] = React.useState(false);
+  const buttonRef = React.useRef<HTMLButtonElement | null>(null);
+
+  return (
     actions.length > 0 && (
       <div className={CardActionsWrapperStyle}>
         <button
-          ref={companionRef}
+          ref={buttonRef}
           onClick={event => {
             event.stopPropagation();
             setDropdownIsOpen(!dropdownIsOpen);
@@ -65,39 +117,14 @@ export default function CardActions({ actions = [] }: Props) {
           <Icon icon="HORIZONTAL_ELLIPSIS" />
         </button>
 
-        {dropdownIsOpen &&
-          ReactDOM.createPortal(
-            <OutsideClickHandler
-              onOutsideClick={() => setDropdownIsOpen(false)}
-              ignoreClick={!dropdownIsOpen}
-            >
-              <div
-                className={DropdownWrapperStyle(actions.length)}
-                ref={ref => {
-                  optionsRef.current = ref;
-                }}
-              >
-                {actions.map((action, index) => {
-                  const { label, onClick } = action;
-
-                  return (
-                    <button
-                      key={String(index)}
-                      className={OptionStyle}
-                      onClick={event => {
-                        onClick(event);
-                        setDropdownIsOpen(false);
-                      }}
-                      type="button"
-                    >
-                      {label}
-                    </button>
-                  );
-                })}
-              </div>
-            </OutsideClickHandler>,
-            slot
-          )}
+        {dropdownIsOpen && (
+          <Dropdown
+            actions={actions}
+            dropdownIsOpen={dropdownIsOpen}
+            setDropdownIsOpen={setDropdownIsOpen}
+            buttonRef={buttonRef}
+          />
+        )}
       </div>
     )
   );

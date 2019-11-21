@@ -4,6 +4,9 @@ import hotkeys from 'hotkeys-js';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { useAllHasPermission } from 'contexts/Permissions';
+import { hasInPortal } from 'hooks/usePortalSlot';
+import { SLIDEVIEW_PORTAL_NAME } from 'components/SlideView';
+import { DIALOG_PORTAL_NAME } from 'components/Dialog';
 
 function HotKeyHandlers() {
   const { mapping } = Entities.useContainer();
@@ -48,9 +51,13 @@ function HotKeyHandlers() {
     if (batchIds.length > 0) {
       hotkeys.unbind('alt+1');
       hotkeys('alt+1', () => {
-        const slideViewStack = document.querySelector('#portal-root')?.childElementCount ?? 0;
+        const noSlideViewsOrDialogsOpen = !(
+          hasInPortal(SLIDEVIEW_PORTAL_NAME) || hasInPortal(DIALOG_PORTAL_NAME)
+        );
+
         const isAllow =
-          batchIds.length > 0 && (slideViewStack === 0 || !!document.querySelector('#moveBatches'));
+          batchIds.length > 0 &&
+          (noSlideViewsOrDialogsOpen || !!document.querySelector('#moveBatches'));
         if (hasPermissionMoveToExistShipment() && isAllow) openShipments();
       });
     } else {

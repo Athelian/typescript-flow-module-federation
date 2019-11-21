@@ -7,7 +7,7 @@ import { prepareParsedContainerInput } from 'modules/container/form/mutation';
 import { generateContainer } from 'utils/container';
 import { getLatestDate } from 'utils/shipment';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
-import ActionDialog, { ContainerLabelIcon } from '../ActionDialog';
+import ActionDialog, { ContainerLabelIcon } from 'components/Dialog/ActionDialog';
 import { createContainerMutation } from './mutation';
 
 type Props = {|
