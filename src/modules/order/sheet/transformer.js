@@ -1,4 +1,6 @@
 // @flow
+import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import type { FieldDefinition } from 'types';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import { transformActionField } from 'components/Sheet';
@@ -7,6 +9,7 @@ import transformSheetOrderItem from 'modules/sheet/orderItem/transformer';
 import transformSheetBatch from 'modules/sheet/batch/transformer';
 import transformSheetShipment from 'modules/sheet/shipment/transformer';
 import transformSheetContainer from 'modules/sheet/container/transformer';
+import itemMessages from 'modules/sheet/orderItem/actions/messages';
 
 function getCurrentBatch(batchId: string, order: Object): ?Object {
   return order.orderItems.flatMap(oi => oi.batches).find(oi => oi.id === batchId);
@@ -47,7 +50,14 @@ function transformOrderItem(
     {
       columnKey: 'orderItem.action',
       ...transformActionField(basePath, orderItem, [
-        { action: 'batch_create', label: 'Create Batch' },
+        {
+          action: 'order_item_batch_create',
+          label: <FormattedMessage {...itemMessages.batchCreateTitle} />,
+        },
+        {
+          action: 'order_item_clone',
+          label: <FormattedMessage {...itemMessages.orderItemCloneTitle} />,
+        },
       ]),
     },
   ].map(c => ({

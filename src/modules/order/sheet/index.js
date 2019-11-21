@@ -10,6 +10,7 @@ import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
+import OrderItemCloneAction from 'modules/sheet/orderItem/actions/OrderItemCloneAction';
 import BatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAction';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
@@ -110,10 +111,11 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
         onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
         actions={{
-          batch_create: BatchCreateAction((orderItemId, item) => {
+          order_item_batch_create: BatchCreateAction((orderItemId, item) => {
             const orderItem = item.orderItems.find(oi => oi.id === orderItemId);
             return (orderItem?.batches ?? []).length;
           }),
+          order_item_clone: OrderItemCloneAction,
         }}
       />
     </Content>

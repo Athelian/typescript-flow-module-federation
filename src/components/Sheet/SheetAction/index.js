@@ -52,7 +52,7 @@ const SheetAction = ({ actions, children }: Props) => {
     <>
       {children({ doAction })}
       {activeAction &&
-        actions[activeAction.action]({
+        React.createElement(actions[activeAction.action], {
           entity: activeAction.entity,
           item: activeAction.item,
           onDone: handleDone,
