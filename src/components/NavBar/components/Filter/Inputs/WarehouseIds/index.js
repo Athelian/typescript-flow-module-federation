@@ -119,23 +119,21 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
   );
 };
 
-const WarehouseIds = ({ value, readonly, onChange }: Props) => {
-  return (
-    <Ids
-      value={value}
-      readonly={readonly}
-      onChange={onChange}
-      title={<FormattedMessage {...messages.warehouses} />}
-      selector={WarehouseSelector}
-      query={warehousesByIDsQuery}
-      getItems={data => data?.warehousesByIDs ?? []}
-      renderItem={warehouse => (
-        <BaseCard icon="WAREHOUSE" color="WAREHOUSE" wrapperClassName={CardStyle}>
-          <Display height="30px">{warehouse?.name}</Display>
-        </BaseCard>
-      )}
-    />
-  );
-};
+const WarehouseIds = ({ value, readonly, onChange }: Props) => (
+  <Ids
+    value={value}
+    readonly={readonly}
+    onChange={onChange}
+    title={<FormattedMessage {...messages.warehouses} />}
+    selector={WarehouseSelector}
+    query={warehousesByIDsQuery}
+    getItems={data => data?.warehousesByIDs ?? []}
+    renderItem={warehouse => (
+      <BaseCard icon="WAREHOUSE" color="WAREHOUSE" wrapperClassName={CardStyle}>
+        <Display height="30px">{warehouse?.name}</Display>
+      </BaseCard>
+    )}
+  />
+);
 
 export default WarehouseIds;

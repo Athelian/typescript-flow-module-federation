@@ -8,13 +8,13 @@ import {
   Filter,
   Search,
   Sort,
-  ShipmentSortConfig,
-  ShipmentFilterConfig,
+  ProductProviderSortConfig,
+  ProductProviderFilterConfig,
 } from 'components/NavBar';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import { Content, SlideViewNavBar } from 'components/Layout';
 import BaseCard from 'components/Cards/BaseCard';
-import { ShipmentCard } from 'components/Cards';
+import { ProductProviderCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Display } from 'components/Form';
@@ -23,7 +23,7 @@ import { isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from '../../messages';
 import Ids from '../Common/Ids';
-import { shipmentsQuery, shipmentsByIDsQuery } from './query';
+import { productProvidersQuery, productProvidersByIDsQuery } from './query';
 import { CardStyle } from './style';
 
 type Props = {
@@ -39,9 +39,9 @@ type SelectorProps = {
   setSelected: (Array<string>) => void,
 };
 
-const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
+const ProductProviderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
-    { query: '' },
+    { query: '', archived: false },
     { updatedAt: 'DESCENDING' }
   );
 
@@ -51,14 +51,14 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
         {({ value: values, push, filter }) => (
           <>
             <SlideViewNavBar>
-              <EntityIcon icon="SHIPMENT" color="SHIPMENT" />
+              <EntityIcon icon="PRODUCT_PROVIDER" color="PRODUCT_PROVIDER" />
               <Filter
-                config={ShipmentFilterConfig.filter(c => c.field !== 'ids')}
+                config={ProductProviderFilterConfig}
                 filterBy={filterBy}
                 onChange={setFilterBy}
               />
               <Search query={query} onChange={setQuery} />
-              <Sort sortBy={sortBy} onChange={setSortBy} config={ShipmentSortConfig} />
+              <Sort config={ProductProviderSortConfig} sortBy={sortBy} onChange={setSortBy} />
               <CancelButton onClick={onClose} />
               <SaveButton
                 disabled={isEquals(values, selected)}
@@ -68,7 +68,7 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
 
             <Content>
               <Query
-                query={shipmentsQuery}
+                query={productProvidersQuery}
                 variables={{ filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 }}
                 fetchPolicy="network-only"
               >
@@ -77,35 +77,35 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
                     return error.message;
                   }
 
-                  const nextPage = (data?.shipments?.page ?? 1) + 1;
-                  const totalPage = data?.shipments?.totalPage ?? 1;
+                  const nextPage = (data?.productProviders?.page ?? 1) + 1;
+                  const totalPage = data?.productProviders?.totalPage ?? 1;
                   const hasMore = nextPage <= totalPage;
-                  const nodes = data?.shipments?.nodes ?? [];
+                  const nodes = data?.productProviders?.nodes ?? [];
 
                   return (
                     <GridView
                       onLoadMore={() =>
-                        loadMore({ fetchMore, data }, { filterBy, sortBy }, 'shipments')
+                        loadMore({ fetchMore, data }, { filterBy, sortBy }, 'productProviders')
                       }
                       hasMore={hasMore}
                       isLoading={loading}
                       isEmpty={nodes.length === 0}
                       emptyMessage={null}
-                      itemWidth="860px"
+                      itemWidth="195px"
                     >
-                      {nodes.map(shipment => {
-                        const isSelected = values.some(id => id === shipment?.id);
+                      {nodes.map(productProvider => {
+                        const isSelected = values.some(id => id === productProvider?.id);
                         return (
-                          <ShipmentCard
-                            key={shipment?.id}
-                            shipment={shipment}
+                          <ProductProviderCard
+                            key={productProvider?.id}
+                            productProvider={productProvider}
                             selectable
                             selected={isSelected}
                             onSelect={() => {
                               if (isSelected) {
-                                filter(id => id !== shipment?.id);
+                                filter(id => id !== productProvider?.id);
                               } else {
-                                push(shipment?.id);
+                                push(productProvider?.id);
                               }
                             }}
                           />
@@ -123,21 +123,21 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
   );
 };
 
-const ShipmentIds = ({ value, readonly, onChange }: Props) => (
+const ProductProviderIds = ({ value, readonly, onChange }: Props) => (
   <Ids
     value={value}
     readonly={readonly}
     onChange={onChange}
-    title={<FormattedMessage {...messages.shipments} />}
-    selector={ShipmentSelector}
-    query={shipmentsByIDsQuery}
-    getItems={data => data?.shipmentsByIDs ?? []}
-    renderItem={shipment => (
-      <BaseCard icon="SHIPMENT" color="SHIPMENT" wrapperClassName={CardStyle}>
-        <Display height="30px">{shipment?.no}</Display>
+    title={<FormattedMessage {...messages.productProviders} />}
+    selector={ProductProviderSelector}
+    query={productProvidersByIDsQuery}
+    getItems={data => data?.productProvidersByIDs ?? []}
+    renderItem={productProvider => (
+      <BaseCard icon="ProductProvider" color="ProductProvider" wrapperClassName={CardStyle}>
+        <Display height="30px">{productProvider?.name}</Display>
       </BaseCard>
     )}
   />
 );
 
-export default ShipmentIds;
+export default ProductProviderIds;

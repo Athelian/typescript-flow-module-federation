@@ -18,7 +18,9 @@ import MaskEditType from './Inputs/MaskEditType';
 import OrderIds from './Inputs/OrderIds';
 import ShipmentIds from './Inputs/ShipmentIds';
 import WarehouseIds from './Inputs/WarehouseIds';
-import { CompletelyBatched, CompletelyShipped, HasShipment } from './Inputs/Bool';
+import ProductIds from './Inputs/ProductIds';
+import ProductProviderIds from './Inputs/ProductProviderIds';
+import { CompletelyBatched, CompletelyShipped, HasShipment, FreeTimeOverdue } from './Inputs/Bool';
 import OrganizationIds, {
   ImporterIds,
   ExporterIds,
@@ -91,6 +93,8 @@ const inputs = {
   order_ids: OrderIds,
   shipment_ids: ShipmentIds,
   warehouse_ids: WarehouseIds,
+  product_ids: ProductIds,
+  product_provider_ids: ProductProviderIds,
   organization_ids: OrganizationIds,
   importer_ids: ImporterIds,
   exporter_ids: ExporterIds,
@@ -119,6 +123,7 @@ const inputs = {
   completely_batched: CompletelyBatched,
   completely_shipped: CompletelyShipped,
   has_shipment: HasShipment,
+  free_time_overdue: FreeTimeOverdue,
   ports: Ports,
 };
 

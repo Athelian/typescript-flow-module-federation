@@ -69,5 +69,10 @@ export const HasShipment = Bool(
   messages.hasShipment,
   messages.hasNotShipment
 );
+export const FreeTimeOverdue = Bool(
+  messages.freeTimeOverdue,
+  messages.freeTimeOverdue,
+  messages.freeTimeNotOverdue
+);
 
 export default Bool;

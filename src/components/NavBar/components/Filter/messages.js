@@ -114,6 +114,14 @@ export default defineMessages({
     id: 'components.NavBar.Filter.warehouses',
     defaultMessage: 'Warehouses',
   },
+  products: {
+    id: 'components.NavBar.Filter.products',
+    defaultMessage: 'Products',
+  },
+  productProviders: {
+    id: 'components.NavBar.Filter.productProviders',
+    defaultMessage: 'End Products',
+  },
   users: {
     id: 'components.NavBar.Filter.users',
     defaultMessage: 'Users',
@@ -165,5 +173,13 @@ export default defineMessages({
   hasNotShipment: {
     id: 'components.NavBar.Filter.hasNotShipment',
     defaultMessage: 'Has Not Shipment',
+  },
+  freeTimeOverdue: {
+    id: 'components.NavBar.Filter.freeTimeOverdue',
+    defaultMessage: 'Free Time Overdue',
+  },
+  freeTimeNotOverdue: {
+    id: 'components.NavBar.Filter.freeTimeNotOverdue',
+    defaultMessage: 'Free Time Not Overdue',
   },
 });

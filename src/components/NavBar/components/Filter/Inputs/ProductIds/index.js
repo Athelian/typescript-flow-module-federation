@@ -8,13 +8,13 @@ import {
   Filter,
   Search,
   Sort,
-  ShipmentSortConfig,
-  ShipmentFilterConfig,
+  ProductSortConfig,
+  ProductFilterConfig,
 } from 'components/NavBar';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import { Content, SlideViewNavBar } from 'components/Layout';
 import BaseCard from 'components/Cards/BaseCard';
-import { ShipmentCard } from 'components/Cards';
+import { ProductCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Display } from 'components/Form';
@@ -23,7 +23,7 @@ import { isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from '../../messages';
 import Ids from '../Common/Ids';
-import { shipmentsQuery, shipmentsByIDsQuery } from './query';
+import { productsQuery, productsByIDsQuery } from './query';
 import { CardStyle } from './style';
 
 type Props = {
@@ -39,9 +39,9 @@ type SelectorProps = {
   setSelected: (Array<string>) => void,
 };
 
-const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
+const ProductSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
-    { query: '' },
+    { query: '', archived: false },
     { updatedAt: 'DESCENDING' }
   );
 
@@ -51,14 +51,10 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
         {({ value: values, push, filter }) => (
           <>
             <SlideViewNavBar>
-              <EntityIcon icon="SHIPMENT" color="SHIPMENT" />
-              <Filter
-                config={ShipmentFilterConfig.filter(c => c.field !== 'ids')}
-                filterBy={filterBy}
-                onChange={setFilterBy}
-              />
+              <EntityIcon icon="PRODUCT" color="PRODUCT" />
+              <Filter config={ProductFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
               <Search query={query} onChange={setQuery} />
-              <Sort sortBy={sortBy} onChange={setSortBy} config={ShipmentSortConfig} />
+              <Sort config={ProductSortConfig} sortBy={sortBy} onChange={setSortBy} />
               <CancelButton onClick={onClose} />
               <SaveButton
                 disabled={isEquals(values, selected)}
@@ -68,7 +64,7 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
 
             <Content>
               <Query
-                query={shipmentsQuery}
+                query={productsQuery}
                 variables={{ filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 }}
                 fetchPolicy="network-only"
               >
@@ -77,35 +73,35 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
                     return error.message;
                   }
 
-                  const nextPage = (data?.shipments?.page ?? 1) + 1;
-                  const totalPage = data?.shipments?.totalPage ?? 1;
+                  const nextPage = (data?.products?.page ?? 1) + 1;
+                  const totalPage = data?.products?.totalPage ?? 1;
                   const hasMore = nextPage <= totalPage;
-                  const nodes = data?.shipments?.nodes ?? [];
+                  const nodes = data?.products?.nodes ?? [];
 
                   return (
                     <GridView
                       onLoadMore={() =>
-                        loadMore({ fetchMore, data }, { filterBy, sortBy }, 'shipments')
+                        loadMore({ fetchMore, data }, { filterBy, sortBy }, 'products')
                       }
                       hasMore={hasMore}
                       isLoading={loading}
                       isEmpty={nodes.length === 0}
                       emptyMessage={null}
-                      itemWidth="860px"
+                      itemWidth="195px"
                     >
-                      {nodes.map(shipment => {
-                        const isSelected = values.some(id => id === shipment?.id);
+                      {nodes.map(product => {
+                        const isSelected = values.some(id => id === product?.id);
                         return (
-                          <ShipmentCard
-                            key={shipment?.id}
-                            shipment={shipment}
+                          <ProductCard
+                            key={product?.id}
+                            product={product}
                             selectable
                             selected={isSelected}
                             onSelect={() => {
                               if (isSelected) {
-                                filter(id => id !== shipment?.id);
+                                filter(id => id !== product?.id);
                               } else {
-                                push(shipment?.id);
+                                push(product?.id);
                               }
                             }}
                           />
@@ -123,21 +119,21 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
   );
 };
 
-const ShipmentIds = ({ value, readonly, onChange }: Props) => (
+const ProductIds = ({ value, readonly, onChange }: Props) => (
   <Ids
     value={value}
     readonly={readonly}
     onChange={onChange}
-    title={<FormattedMessage {...messages.shipments} />}
-    selector={ShipmentSelector}
-    query={shipmentsByIDsQuery}
-    getItems={data => data?.shipmentsByIDs ?? []}
-    renderItem={shipment => (
-      <BaseCard icon="SHIPMENT" color="SHIPMENT" wrapperClassName={CardStyle}>
-        <Display height="30px">{shipment?.no}</Display>
+    title={<FormattedMessage {...messages.products} />}
+    selector={ProductSelector}
+    query={productsByIDsQuery}
+    getItems={data => data?.productsByIDs ?? []}
+    renderItem={product => (
+      <BaseCard icon="PRODUCT" color="PRODUCT" wrapperClassName={CardStyle}>
+        <Display height="30px">{product?.name}</Display>
       </BaseCard>
     )}
   />
 );
 
-export default ShipmentIds;
+export default ProductIds;
