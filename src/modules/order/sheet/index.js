@@ -10,7 +10,7 @@ import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
-import BatchCreateAction from 'modules/sheet/batch/actions/BatchCreateAction';
+import BatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAction';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
 import orderColumns, { FieldDefinitionEntityTypes } from './columns';
