@@ -48,9 +48,14 @@ function HotKeyHandlers() {
     if (batchIds.length > 0) {
       hotkeys.unbind('alt+1');
       hotkeys('alt+1', () => {
-        const slideViewStack = document.querySelector('#portal-root')?.childElementCount ?? 0;
+        const portalStack = [...(document.querySelector('#portal-root')?.children ?? [])];
+        const noSlideViewsOrDialogsOpen = portalStack.every(
+          element => element.isCardActionsDropdown
+        );
+
         const isAllow =
-          batchIds.length > 0 && (slideViewStack === 0 || !!document.querySelector('#moveBatches'));
+          batchIds.length > 0 &&
+          (noSlideViewsOrDialogsOpen || !!document.querySelector('#moveBatches'));
         if (hasPermissionMoveToExistShipment() && isAllow) openShipments();
       });
     } else {
