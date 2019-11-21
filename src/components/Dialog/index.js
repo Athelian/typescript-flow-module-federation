@@ -26,7 +26,7 @@ const defaultProps = {
   onRequestClose: () => {},
 };
 
-const ANIMATION_FINISHED = 300; // 0.3s
+export const ANIMATION_FINISHED = 300; // 0.3s
 
 export const DIALOG_PORTAL_NAME = 'dialog';
 
