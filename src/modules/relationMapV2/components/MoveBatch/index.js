@@ -22,7 +22,7 @@ import ActionDialog, {
   OrderLabelIcon,
   ContainerLabelIcon,
   ShipmentLabelIcon,
-} from '../ActionDialog';
+} from 'components/Dialog/ActionDialog';
 import SelectOrderToMove from './components/SelectOrderToMove';
 import SelectShipmentToMove from './components/SelectShipmentToMove';
 import SelectContainerToMove from './components/SelectContainerToMove';

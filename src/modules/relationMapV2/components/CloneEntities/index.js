@@ -25,7 +25,7 @@ import ActionDialog, {
   ShipmentsLabelIcon,
   ContainerLabelIcon,
   ContainersLabelIcon,
-} from '../ActionDialog';
+} from 'components/Dialog/ActionDialog';
 import {
   cloneBatchesMutation,
   cloneOrderItemsMutation,

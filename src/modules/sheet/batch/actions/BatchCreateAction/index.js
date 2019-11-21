@@ -2,16 +2,11 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
-import { colors } from 'styles/common';
-import LoadingIcon from 'components/LoadingIcon';
-import Icon from 'components/Icon';
-import Dialog from 'components/Dialog';
-import { Label } from 'components/Form';
 import type { ActionComponentProps } from 'components/Sheet/SheetAction/types';
 import { useSheetActionDialog } from 'components/Sheet/SheetAction';
+import ActionDialog, { BatchLabelIcon } from 'components/Dialog/ActionDialog';
 import messages from '../messages';
 import batchCreateActionMutation from './mutation';
-import { DialogWrapperStyle, DialogMessageStyle } from './style';
 
 type Props = {
   ...ActionComponentProps,
@@ -19,8 +14,21 @@ type Props = {
 };
 
 const BatchCreateActionImpl = ({ entity, item, onDone, getOrderItemBatchesCount }: Props) => {
-  const [open, close] = useSheetActionDialog(onDone);
+  const [minTimer, setMinTimer] = React.useState(2);
+  const [isOpen, close] = useSheetActionDialog(onDone);
   const [mutate, { loading, called }] = useMutation(batchCreateActionMutation);
+
+  React.useEffect(() => {
+    if (!minTimer) return () => {};
+
+    const intervalId = setInterval(() => {
+      setMinTimer(minTimer - 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [minTimer]);
 
   React.useEffect(() => {
     if (loading || called) {
@@ -46,33 +54,19 @@ const BatchCreateActionImpl = ({ entity, item, onDone, getOrderItemBatchesCount 
   }, [loading, called, close]);
 
   return (
-    <Dialog
-      isOpen={open}
-      onRequestClose={() => {
-        if (!loading) {
-          close();
-        }
-      }}
-    >
-      <div className={DialogWrapperStyle}>
-        <Label height="30px" align="center">
-          <FormattedMessage {...messages.batchCreateTitle} />
-        </Label>
-        <div className={DialogMessageStyle}>
-          <FormattedMessage
-            {...messages.batchCreateMessage}
-            values={{
-              icon: (
-                <span style={{ color: colors.BATCH }}>
-                  <Icon icon="BATCH" />
-                </span>
-              ),
-            }}
-          />
-        </div>
-        <LoadingIcon />
-      </div>
-    </Dialog>
+    <ActionDialog
+      isOpen={isOpen || minTimer > 0}
+      isProcessing
+      onCancel={() => {}}
+      title={<FormattedMessage {...messages.batchCreateTitle} />}
+      dialogMessage={
+        <FormattedMessage
+          {...messages.batchCreateCreating}
+          values={{ batchLabel: <BatchLabelIcon /> }}
+        />
+      }
+      buttons={null}
+    />
   );
 };
 

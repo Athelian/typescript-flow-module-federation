@@ -3,11 +3,11 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   batchCreateTitle: {
-    id: 'modules.sheet.batch.actions.batchCreate.title',
+    id: 'modules.Sheet.label.createBatch',
     defaultMessage: 'CREATE BATCH',
   },
-  batchCreateMessage: {
-    id: 'modules.sheet.batch.actions.batchCreate.message',
-    defaultMessage: 'Create Batch {icon}...',
+  batchCreateCreating: {
+    id: 'modules.Sheet.createBatch.creating',
+    defaultMessage: 'Creating {batchLabel} ...',
   },
 });

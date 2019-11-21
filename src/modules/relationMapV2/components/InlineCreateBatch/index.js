@@ -8,7 +8,7 @@ import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
 import { generateBatchByOrderItem } from 'utils/batch';
 import { removeTypename } from 'utils/data';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
-import ActionDialog, { BatchLabelIcon } from '../ActionDialog';
+import ActionDialog, { BatchLabelIcon } from 'components/Dialog/ActionDialog';
 import { createBatchMutation } from './mutation';
 
 type Props = {|

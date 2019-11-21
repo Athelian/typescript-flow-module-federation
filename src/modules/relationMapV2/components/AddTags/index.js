@@ -26,13 +26,6 @@ import {
   findShipmentIdsByOrderItem,
   findShipmentIdsByOrder,
 } from 'modules/relationMapV2/helpers';
-import {
-  ordersByIDsQuery,
-  orderItemsByIDsQuery,
-  batchesByIDsQuery,
-  containersByIDsQuery,
-  shipmentsByIDsQuery,
-} from './query';
 import ActionDialog, {
   OrdersLabelIcon,
   OrderLabelIcon,
@@ -46,7 +39,14 @@ import ActionDialog, {
   ShipmentsLabelIcon,
   TagsLabelIcon,
   TagLabelIcon,
-} from '../ActionDialog';
+} from 'components/Dialog/ActionDialog';
+import {
+  ordersByIDsQuery,
+  orderItemsByIDsQuery,
+  batchesByIDsQuery,
+  containersByIDsQuery,
+  shipmentsByIDsQuery,
+} from './query';
 import { entitiesUpdateManyMutation } from './mutation';
 
 type Props = {|

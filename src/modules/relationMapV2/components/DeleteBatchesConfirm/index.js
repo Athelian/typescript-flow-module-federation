@@ -10,7 +10,7 @@ import { BATCH } from 'modules/relationMapV2/constants';
 import { BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import Icon from 'components/Icon';
-import ActionDialog, { BatchesLabelIcon, BatchLabelIcon } from '../ActionDialog';
+import ActionDialog, { BatchesLabelIcon, BatchLabelIcon } from 'components/Dialog/ActionDialog';
 import { deleteBatchMutation } from '../DeleteBatchConfirm/mutation';
 import { entitiesUpdateManyMutation } from '../AddTags/mutation';
 

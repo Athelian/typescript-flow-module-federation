@@ -2,7 +2,6 @@
 import * as React from 'react';
 import type { OrderItem } from 'generated/graphql';
 import { useMutation } from '@apollo/react-hooks';
-
 import SlideView from 'components/SlideView';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import SelectProductProviders from './SelectProductProviders';
@@ -70,7 +69,12 @@ export default function InlineCreateBatch({ onSuccess }: Props) {
                 })
               )
             )
-              .then(result => onSuccess(orderId, result.map(item => item?.data?.orderItemCreate)))
+              .then(result =>
+                onSuccess(
+                  orderId,
+                  result.map(item => item?.data?.orderItemCreate)
+                )
+              )
               .catch(() => {
                 dispatch({
                   type: 'CREATE_ITEM_END',

@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
 import { FocusedView } from 'modules/relationMapV2/store';
 import { BaseButton } from 'components/Buttons';
-import ActionDialog, { ContainerLabelIcon, BatchesLabelIcon } from '../ActionDialog';
+import ActionDialog, { ContainerLabelIcon, BatchesLabelIcon } from 'components/Dialog/ActionDialog';
 import { deleteContainerMutation } from './mutation';
 
 type Props = {|
