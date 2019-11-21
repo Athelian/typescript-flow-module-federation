@@ -84,7 +84,11 @@ function OrderCell({ data, afterConnector }: CellProps) {
       switch (type) {
         case ORDER_ITEM: {
           const itemId = item.id;
-          const parentOrderId = findOrderIdByItem({ orderItemId: itemId, entities, viewer: ORDER });
+          const parentOrderId = findOrderIdByItem({
+            orderItemId: itemId,
+            entities,
+            viewer: state.viewer,
+          });
           if (!parentOrderId) return false;
           const isOwnOrder = orderId === parentOrderId;
           const isDifferentImporter =
@@ -104,7 +108,9 @@ function OrderCell({ data, afterConnector }: CellProps) {
           const parentOrderIds = [
             ...new Set(
               itemIds
-                .map(itemId => findOrderIdByItem({ orderItemId: itemId, entities, viewer: ORDER }))
+                .map(itemId =>
+                  findOrderIdByItem({ orderItemId: itemId, entities, viewer: state.viewer })
+                )
                 .filter(Boolean)
             ),
           ];
@@ -138,7 +144,11 @@ function OrderCell({ data, afterConnector }: CellProps) {
         }
         case BATCH: {
           const batchId = item.id;
-          const [, parentOrderId] = findParentIdsByBatch({ batchId, entities, viewer: ORDER });
+          const [, parentOrderId] = findParentIdsByBatch({
+            batchId,
+            entities,
+            viewer: state.viewer,
+          });
           if (!parentOrderId) return false;
           const isOwnOrder = orderId === parentOrderId;
           const isDifferentImporter =
@@ -344,7 +354,7 @@ function OrderItemCell({
           const [parentItemId, parentOrderId] = findParentIdsByBatch({
             batchId,
             entities,
-            viewer: ORDER,
+            viewer: state.viewer,
           });
           if (!parentOrderId || !parentItemId) return false;
           const parentOrder = entities.orders?.[parentOrderId];
@@ -864,7 +874,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
           const [, parentOrderId] = findParentIdsByBatch({
             batchId,
             entities,
-            viewer: ORDER,
+            viewer: state.viewer,
           });
           if (!parentOrderId) return false;
 
@@ -1135,7 +1145,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
           const [parentItemId, parentOrderId] = findParentIdsByBatch({
             batchId,
             entities,
-            viewer: ORDER,
+            viewer: state.viewer,
           });
           if (!parentItemId || !parentOrderId) return false;
 
