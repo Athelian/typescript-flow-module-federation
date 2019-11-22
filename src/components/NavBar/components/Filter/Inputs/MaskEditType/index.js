@@ -4,13 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { Label, RadioInput } from 'components/Form';
 import tableTemplateMessage from 'modules/tableTemplate/messages';
 import messages from '../../messages';
+import type { FilterInputProps } from '../../types';
 import { RadiosWrapperStyle } from './style';
-
-type Props = {
-  value: string,
-  readonly: boolean,
-  onChange: string => void,
-};
 
 const Types = {
   Order: tableTemplateMessage.order,
@@ -18,7 +13,7 @@ const Types = {
   ShipmentSheet: tableTemplateMessage.shipmentSheet,
 };
 
-const MaskEditType = ({ value, onChange, readonly }: Props) => (
+const MaskEditType = ({ value, onChange, readonly }: FilterInputProps<string>) => (
   <>
     <Label height="30px">
       <FormattedMessage {...messages.maskEditTypes} />

@@ -22,15 +22,10 @@ import useFilterSort from 'hooks/useFilterSort';
 import { isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from '../../messages';
+import type { FilterInputProps } from '../../types';
 import Ids from '../Common/Ids';
 import { organizationsByIDsQuery, partnersQuery } from './query';
 import { CardStyle } from './style';
-
-type Props = {
-  value: Array<string>,
-  readonly: boolean,
-  onChange: (Array<string>) => void,
-};
 
 type SelectorProps = {
   organizationType: ?string,
@@ -144,7 +139,7 @@ const OrganizationIdsImpl = (organizationType: ?string, title: React.Node) => ({
   value,
   readonly,
   onChange,
-}: Props) => {
+}: FilterInputProps<Array<string>>) => {
   return (
     <Ids
       value={value}

@@ -2,15 +2,14 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Label, DateInput, DefaultStyle } from 'components/Form';
+import type { FilterInputProps } from '../../types';
 import messages from '../../messages';
 
-type Props = {
-  value: { after: Date | null, before: Date | null },
-  readonly: boolean,
-  onChange: ({ after: Date | null, before: Date | null }) => void,
-};
-
-const DateRange = ({ value, readonly, onChange }: Props) => {
+const DateRange = ({
+  value,
+  readonly,
+  onChange,
+}: FilterInputProps<{ after: Date | null, before: Date | null }>) => {
   return (
     <>
       <Label height="30px">

@@ -14,7 +14,7 @@ import projectMessages from 'modules/project/messages';
 import taskMessages from 'modules/task/messages';
 import tagMessages from 'modules/tags/messages';
 import tableTemplateMessages from 'modules/tableTemplate/messages';
-import type { FilterConfig } from './index';
+import type { FilterConfig } from './types';
 
 export const ProductFilterConfig: Array<FilterConfig> = [
   {
@@ -381,7 +381,13 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     message: shipmentMessages.tags,
     defaultValue: [],
   },
-  // container type
+  {
+    entity: 'CONTAINER',
+    field: 'containerContainerType',
+    type: 'container_type',
+    message: containerMessages.containerType,
+    defaultValue: null,
+  },
   // container option
   {
     entity: 'CONTAINER',

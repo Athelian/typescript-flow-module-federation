@@ -22,15 +22,10 @@ import useFilterSort from 'hooks/useFilterSort';
 import { isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from '../../messages';
+import type { FilterInputProps } from '../../types';
 import Ids from '../Common/Ids';
 import { productProvidersQuery, productProvidersByIDsQuery } from './query';
 import { CardStyle } from './style';
-
-type Props = {
-  value: Array<string>,
-  readonly: boolean,
-  onChange: (Array<string>) => void,
-};
 
 type SelectorProps = {
   open: boolean,
@@ -123,7 +118,7 @@ const ProductProviderSelector = ({ open, onClose, selected, setSelected }: Selec
   );
 };
 
-const ProductProviderIds = ({ value, readonly, onChange }: Props) => (
+const ProductProviderIds = ({ value, readonly, onChange }: FilterInputProps<Array<string>>) => (
   <Ids
     value={value}
     readonly={readonly}

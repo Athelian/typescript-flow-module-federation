@@ -6,17 +6,13 @@ import { Label, TagsInput } from 'components/Form';
 import { useViewerHasPermissions } from 'contexts/Permissions';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import messages from '../../messages';
+import type { FilterInputProps } from '../../types';
 import { tagsByIDsQuery } from './query';
 
-type Props = {
-  value: Array<string>,
-  readonly: boolean,
-  onChange: (Array<string>) => void,
-};
-
 type ImplProps = {
+  ...FilterInputProps<Array<string>>,
   tagType: string,
-} & Props;
+};
 
 const TagsImpl = ({ value, readonly, onChange, tagType }: ImplProps) => {
   const hasPermissions = useViewerHasPermissions();
@@ -52,7 +48,11 @@ const TagsImpl = ({ value, readonly, onChange, tagType }: ImplProps) => {
   );
 };
 
-const Tags = (tagType: string) => ({ value, onChange, readonly }: Props) => (
+const Tags = (tagType: string) => ({
+  value,
+  onChange,
+  readonly,
+}: FilterInputProps<Array<string>>) => (
   <TagsImpl value={value} readonly={readonly} onChange={onChange} tagType={tagType} />
 );
 

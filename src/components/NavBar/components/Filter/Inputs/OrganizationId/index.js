@@ -20,15 +20,10 @@ import SlideView from 'components/SlideView';
 import useFilterSort from 'hooks/useFilterSort';
 import loadMore from 'utils/loadMore';
 import messages from '../../messages';
+import type { FilterInputProps } from '../../types';
 import Id from '../Common/Id';
 import { organizationQuery, partnersQuery } from './query';
 import { CardStyle } from './style';
-
-type Props = {
-  value: ?string,
-  readonly: boolean,
-  onChange: (?string) => void,
-};
 
 type SelectorProps = {
   organizationType: ?string,
@@ -127,7 +122,7 @@ const OrganizationId = (organizationType: ?string, title: React.Node) => ({
   value,
   readonly,
   onChange,
-}: Props) => {
+}: FilterInputProps<?string>) => {
   return (
     <Id
       value={value}

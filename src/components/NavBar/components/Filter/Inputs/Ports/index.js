@@ -5,16 +5,15 @@ import { Label } from 'components/Form';
 import { BaseButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import messages from '../../messages';
+import type { FilterInputProps } from '../../types';
 import PortInput from './PortInput';
 import { PortsWrapperStyle, PortWrapperStyle, RemoveButtonStyle } from './style';
 
-type Props = {
-  value: Array<{ seaport?: string, airport?: string }>,
-  readonly: boolean,
-  onChange: (Array<{ seaport?: string, airport?: string }>) => void,
-};
-
-const Ports = ({ value, readonly, onChange }: Props) => {
+const Ports = ({
+  value,
+  readonly,
+  onChange,
+}: FilterInputProps<Array<{ seaport?: string, airport?: string }>>) => {
   const hasWeakPort = !value.every(v => !!v.seaport || !!v.airport);
 
   return (

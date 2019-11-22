@@ -4,13 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { CheckboxInput, Label } from 'components/Form';
 import partnerMessages from 'modules/partner/messages';
 import messages from '../../messages';
+import type { FilterInputProps } from '../../types';
 import { CheckboxWrapperStyle } from './style';
-
-type Props = {
-  value: Array<string>,
-  readonly: boolean,
-  onChange: (Array<string>) => void,
-};
 
 const Types = {
   Importer: partnerMessages.importer,
@@ -20,7 +15,7 @@ const Types = {
   Warehouser: partnerMessages.warehouser,
 };
 
-const OrganizationTypes = ({ value, onChange, readonly }: Props) => {
+const OrganizationTypes = ({ value, onChange, readonly }: FilterInputProps<Array<string>>) => {
   const handleToggle = (type: string) => () => {
     if (value.includes(type)) {
       onChange(value.filter(t => t !== type));
