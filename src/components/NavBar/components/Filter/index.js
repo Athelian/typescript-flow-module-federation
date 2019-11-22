@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage, type MessageDescriptor, useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import Dialog from 'components/Dialog';
 import Icon from 'components/Icon';
 import { Tooltip } from 'components/Tooltip';
@@ -15,10 +15,14 @@ import Users from './Inputs/Users';
 import OrganizationTypes from './Inputs/OrganizationTypes';
 import TaskTemplateEntityTypes from './Inputs/TaskTemplateEntityTypes';
 import MaskEditType from './Inputs/MaskEditType';
+import ContainerType from './Inputs/ContainerType';
+import ContainerOption from './Inputs/ContainterOption';
 import OrderIds from './Inputs/OrderIds';
 import ShipmentIds from './Inputs/ShipmentIds';
 import WarehouseIds from './Inputs/WarehouseIds';
-import { CompletelyBatched, CompletelyShipped, HasShipment } from './Inputs/Bool';
+import ProductIds from './Inputs/ProductIds';
+import ProductProviderIds from './Inputs/ProductProviderIds';
+import { CompletelyBatched, CompletelyShipped, HasShipment, FreeTimeOverdue } from './Inputs/Bool';
 import OrganizationIds, {
   ImporterIds,
   ExporterIds,
@@ -56,23 +60,8 @@ import {
   WrapperStyle,
   AddFilterButtonWrapperStyle,
 } from './style';
+import type { FilterConfig, FilterState } from './types';
 import messages from './messages';
-
-export type FilterConfig = {
-  entity: string,
-  field: string,
-  type: string,
-  message: MessageDescriptor,
-  defaultValue?: any,
-  hidden?: boolean,
-};
-
-type FilterState = {
-  entity: string | null,
-  field: string | null,
-  type: string | null,
-  value: any,
-};
 
 type Props = {
   config: Array<FilterConfig>,
@@ -91,6 +80,8 @@ const inputs = {
   order_ids: OrderIds,
   shipment_ids: ShipmentIds,
   warehouse_ids: WarehouseIds,
+  product_ids: ProductIds,
+  product_provider_ids: ProductProviderIds,
   organization_ids: OrganizationIds,
   importer_ids: ImporterIds,
   exporter_ids: ExporterIds,
@@ -116,9 +107,12 @@ const inputs = {
   organization_types: OrganizationTypes,
   task_template_entity_types: TaskTemplateEntityTypes,
   mask_edit_type: MaskEditType,
+  container_type: ContainerType,
+  container_option: ContainerOption,
   completely_batched: CompletelyBatched,
   completely_shipped: CompletelyShipped,
   has_shipment: HasShipment,
+  free_time_overdue: FreeTimeOverdue,
   ports: Ports,
 };
 

@@ -4,13 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { CheckboxInput, Label } from 'components/Form';
 import taskTemplateMessage from 'modules/taskTemplate/messages';
 import messages from '../../messages';
+import type { FilterInputProps } from '../../types';
 import { CheckboxWrapperStyle } from './style';
-
-type Props = {
-  value: Array<string>,
-  readonly: boolean,
-  onChange: (Array<string>) => void,
-};
 
 const Types = {
   Product: taskTemplateMessage.product,
@@ -22,7 +17,11 @@ const Types = {
   Container: taskTemplateMessage.container,
 };
 
-const TaskTemplateEntityTypes = ({ value, onChange, readonly }: Props) => {
+const TaskTemplateEntityTypes = ({
+  value,
+  onChange,
+  readonly,
+}: FilterInputProps<Array<string>>) => {
   const handleToggle = (type: string) => () => {
     if (value.includes(type)) {
       onChange(value.filter(t => t !== type));

@@ -4,15 +4,10 @@ import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { Label, ToggleInput } from 'components/Form';
 import messages from '../../messages';
+import type { FilterInputProps } from '../../types';
 import { StatusStyle } from './style';
 
-type Props = {
-  value: boolean,
-  readonly: boolean,
-  onChange: boolean => void,
-};
-
-const Archived = ({ value, readonly, onChange }: Props) => {
+const Archived = ({ value, readonly, onChange }: FilterInputProps<boolean>) => {
   return (
     <>
       <Label height="30px">

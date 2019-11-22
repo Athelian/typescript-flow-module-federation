@@ -290,4 +290,12 @@ export default defineMessages({
     id: 'modules.Products.downloadCSV',
     defaultMessage: 'DOWNLOAD CSV',
   },
+  product: {
+    id: 'modules.Products.product',
+    defaultMessage: 'Product',
+  },
+  productProvider: {
+    id: 'modules.Products.productProvider',
+    defaultMessage: 'End Product',
+  },
 });

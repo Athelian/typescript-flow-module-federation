@@ -8,13 +8,13 @@ import {
   Filter,
   Search,
   Sort,
-  WarehouseSortConfig,
-  WarehouseFilterConfig,
+  ProductProviderSortConfig,
+  ProductProviderFilterConfig,
 } from 'components/NavBar';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import { Content, SlideViewNavBar } from 'components/Layout';
 import BaseCard from 'components/Cards/BaseCard';
-import { WarehouseCard } from 'components/Cards';
+import { ProductProviderCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Display } from 'components/Form';
@@ -24,7 +24,7 @@ import loadMore from 'utils/loadMore';
 import messages from '../../messages';
 import type { FilterInputProps } from '../../types';
 import Ids from '../Common/Ids';
-import { warehousesQuery, warehousesByIDsQuery } from './query';
+import { productProvidersQuery, productProvidersByIDsQuery } from './query';
 import { CardStyle } from './style';
 
 type SelectorProps = {
@@ -34,7 +34,7 @@ type SelectorProps = {
   setSelected: (Array<string>) => void,
 };
 
-const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
+const ProductProviderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', archived: false },
     { updatedAt: 'DESCENDING' }
@@ -46,10 +46,14 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
         {({ value: values, push, filter }) => (
           <>
             <SlideViewNavBar>
-              <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
-              <Filter config={WarehouseFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
+              <EntityIcon icon="PRODUCT_PROVIDER" color="PRODUCT_PROVIDER" />
+              <Filter
+                config={ProductProviderFilterConfig}
+                filterBy={filterBy}
+                onChange={setFilterBy}
+              />
               <Search query={query} onChange={setQuery} />
-              <Sort config={WarehouseSortConfig} sortBy={sortBy} onChange={setSortBy} />
+              <Sort config={ProductProviderSortConfig} sortBy={sortBy} onChange={setSortBy} />
               <CancelButton onClick={onClose} />
               <SaveButton
                 disabled={isEquals(values, selected)}
@@ -59,7 +63,7 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
 
             <Content>
               <Query
-                query={warehousesQuery}
+                query={productProvidersQuery}
                 variables={{ filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 }}
                 fetchPolicy="network-only"
               >
@@ -68,15 +72,15 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
                     return error.message;
                   }
 
-                  const nextPage = (data?.warehouses?.page ?? 1) + 1;
-                  const totalPage = data?.warehouses?.totalPage ?? 1;
+                  const nextPage = (data?.productProviders?.page ?? 1) + 1;
+                  const totalPage = data?.productProviders?.totalPage ?? 1;
                   const hasMore = nextPage <= totalPage;
-                  const nodes = data?.warehouses?.nodes ?? [];
+                  const nodes = data?.productProviders?.nodes ?? [];
 
                   return (
                     <GridView
                       onLoadMore={() =>
-                        loadMore({ fetchMore, data }, { filterBy, sortBy }, 'warehouses')
+                        loadMore({ fetchMore, data }, { filterBy, sortBy }, 'productProviders')
                       }
                       hasMore={hasMore}
                       isLoading={loading}
@@ -84,19 +88,19 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
                       emptyMessage={null}
                       itemWidth="195px"
                     >
-                      {nodes.map(warehouse => {
-                        const isSelected = values.some(id => id === warehouse?.id);
+                      {nodes.map(productProvider => {
+                        const isSelected = values.some(id => id === productProvider?.id);
                         return (
-                          <WarehouseCard
-                            key={warehouse?.id}
-                            warehouse={warehouse}
+                          <ProductProviderCard
+                            key={productProvider?.id}
+                            productProvider={productProvider}
                             selectable
                             selected={isSelected}
                             onSelect={() => {
                               if (isSelected) {
-                                filter(id => id !== warehouse?.id);
+                                filter(id => id !== productProvider?.id);
                               } else {
-                                push(warehouse?.id);
+                                push(productProvider?.id);
                               }
                             }}
                           />
@@ -114,21 +118,21 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
   );
 };
 
-const WarehouseIds = ({ value, readonly, onChange }: FilterInputProps<Array<string>>) => (
+const ProductProviderIds = ({ value, readonly, onChange }: FilterInputProps<Array<string>>) => (
   <Ids
     value={value}
     readonly={readonly}
     onChange={onChange}
-    title={<FormattedMessage {...messages.warehouses} />}
-    selector={WarehouseSelector}
-    query={warehousesByIDsQuery}
-    getItems={data => data?.warehousesByIDs ?? []}
-    renderItem={warehouse => (
-      <BaseCard icon="WAREHOUSE" color="WAREHOUSE" wrapperClassName={CardStyle}>
-        <Display height="30px">{warehouse?.name}</Display>
+    title={<FormattedMessage {...messages.productProviders} />}
+    selector={ProductProviderSelector}
+    query={productProvidersByIDsQuery}
+    getItems={data => data?.productProvidersByIDs ?? []}
+    renderItem={productProvider => (
+      <BaseCard icon="ProductProvider" color="ProductProvider" wrapperClassName={CardStyle}>
+        <Display height="30px">{productProvider?.name}</Display>
       </BaseCard>
     )}
   />
 );
 
-export default WarehouseIds;
+export default ProductProviderIds;

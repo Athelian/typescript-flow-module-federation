@@ -8,13 +8,13 @@ import {
   Filter,
   Search,
   Sort,
-  WarehouseSortConfig,
-  WarehouseFilterConfig,
+  ProductSortConfig,
+  ProductFilterConfig,
 } from 'components/NavBar';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import { Content, SlideViewNavBar } from 'components/Layout';
 import BaseCard from 'components/Cards/BaseCard';
-import { WarehouseCard } from 'components/Cards';
+import { ProductCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Display } from 'components/Form';
@@ -24,7 +24,7 @@ import loadMore from 'utils/loadMore';
 import messages from '../../messages';
 import type { FilterInputProps } from '../../types';
 import Ids from '../Common/Ids';
-import { warehousesQuery, warehousesByIDsQuery } from './query';
+import { productsQuery, productsByIDsQuery } from './query';
 import { CardStyle } from './style';
 
 type SelectorProps = {
@@ -34,7 +34,7 @@ type SelectorProps = {
   setSelected: (Array<string>) => void,
 };
 
-const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
+const ProductSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', archived: false },
     { updatedAt: 'DESCENDING' }
@@ -46,10 +46,10 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
         {({ value: values, push, filter }) => (
           <>
             <SlideViewNavBar>
-              <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
-              <Filter config={WarehouseFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
+              <EntityIcon icon="PRODUCT" color="PRODUCT" />
+              <Filter config={ProductFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
               <Search query={query} onChange={setQuery} />
-              <Sort config={WarehouseSortConfig} sortBy={sortBy} onChange={setSortBy} />
+              <Sort config={ProductSortConfig} sortBy={sortBy} onChange={setSortBy} />
               <CancelButton onClick={onClose} />
               <SaveButton
                 disabled={isEquals(values, selected)}
@@ -59,7 +59,7 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
 
             <Content>
               <Query
-                query={warehousesQuery}
+                query={productsQuery}
                 variables={{ filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 }}
                 fetchPolicy="network-only"
               >
@@ -68,15 +68,15 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
                     return error.message;
                   }
 
-                  const nextPage = (data?.warehouses?.page ?? 1) + 1;
-                  const totalPage = data?.warehouses?.totalPage ?? 1;
+                  const nextPage = (data?.products?.page ?? 1) + 1;
+                  const totalPage = data?.products?.totalPage ?? 1;
                   const hasMore = nextPage <= totalPage;
-                  const nodes = data?.warehouses?.nodes ?? [];
+                  const nodes = data?.products?.nodes ?? [];
 
                   return (
                     <GridView
                       onLoadMore={() =>
-                        loadMore({ fetchMore, data }, { filterBy, sortBy }, 'warehouses')
+                        loadMore({ fetchMore, data }, { filterBy, sortBy }, 'products')
                       }
                       hasMore={hasMore}
                       isLoading={loading}
@@ -84,19 +84,19 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
                       emptyMessage={null}
                       itemWidth="195px"
                     >
-                      {nodes.map(warehouse => {
-                        const isSelected = values.some(id => id === warehouse?.id);
+                      {nodes.map(product => {
+                        const isSelected = values.some(id => id === product?.id);
                         return (
-                          <WarehouseCard
-                            key={warehouse?.id}
-                            warehouse={warehouse}
+                          <ProductCard
+                            key={product?.id}
+                            product={product}
                             selectable
                             selected={isSelected}
                             onSelect={() => {
                               if (isSelected) {
-                                filter(id => id !== warehouse?.id);
+                                filter(id => id !== product?.id);
                               } else {
-                                push(warehouse?.id);
+                                push(product?.id);
                               }
                             }}
                           />
@@ -114,21 +114,21 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
   );
 };
 
-const WarehouseIds = ({ value, readonly, onChange }: FilterInputProps<Array<string>>) => (
+const ProductIds = ({ value, readonly, onChange }: FilterInputProps<Array<string>>) => (
   <Ids
     value={value}
     readonly={readonly}
     onChange={onChange}
-    title={<FormattedMessage {...messages.warehouses} />}
-    selector={WarehouseSelector}
-    query={warehousesByIDsQuery}
-    getItems={data => data?.warehousesByIDs ?? []}
-    renderItem={warehouse => (
-      <BaseCard icon="WAREHOUSE" color="WAREHOUSE" wrapperClassName={CardStyle}>
-        <Display height="30px">{warehouse?.name}</Display>
+    title={<FormattedMessage {...messages.products} />}
+    selector={ProductSelector}
+    query={productsByIDsQuery}
+    getItems={data => data?.productsByIDs ?? []}
+    renderItem={product => (
+      <BaseCard icon="PRODUCT" color="PRODUCT" wrapperClassName={CardStyle}>
+        <Display height="30px">{product?.name}</Display>
       </BaseCard>
     )}
   />
 );
 
-export default WarehouseIds;
+export default ProductIds;

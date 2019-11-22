@@ -14,7 +14,7 @@ import projectMessages from 'modules/project/messages';
 import taskMessages from 'modules/task/messages';
 import tagMessages from 'modules/tags/messages';
 import tableTemplateMessages from 'modules/tableTemplate/messages';
-import type { FilterConfig } from './index';
+import type { FilterConfig } from './types';
 
 export const ProductFilterConfig: Array<FilterConfig> = [
   {
@@ -49,35 +49,35 @@ export const ProductFilterConfig: Array<FilterConfig> = [
 
 export const ProductProviderFilterConfig: Array<FilterConfig> = [
   {
-    entity: 'PRODUCT PROVIDER',
+    entity: 'END PRODUCT',
     field: 'archived',
     type: 'archived',
     message: productMessages.status,
     defaultValue: false,
   },
   {
-    entity: 'PRODUCT PROVIDER',
+    entity: 'END PRODUCT',
     field: 'createdAt',
     type: 'date_range',
     message: productMessages.createdAt,
     defaultValue: { after: null, before: null },
   },
   {
-    entity: 'PRODUCT PROVIDER',
+    entity: 'END PRODUCT',
     field: 'updatedAt',
     type: 'date_range',
     message: productMessages.updatedAt,
     defaultValue: { after: null, before: null },
   },
   {
-    entity: 'PRODUCT PROVIDER',
+    entity: 'END PRODUCT',
     field: 'tagIds',
     type: 'product_tags',
     message: productMessages.tags,
     defaultValue: [],
   },
   {
-    entity: 'PRODUCT PROVIDER',
+    entity: 'END PRODUCT',
     field: 'importerId',
     type: 'importer_id',
     message: productMessages.importer,
@@ -85,7 +85,7 @@ export const ProductProviderFilterConfig: Array<FilterConfig> = [
     hidden: true,
   },
   {
-    entity: 'PRODUCT PROVIDER',
+    entity: 'END PRODUCT',
     field: 'exporterId',
     type: 'exporter_id',
     message: productMessages.exporter,
@@ -93,7 +93,7 @@ export const ProductProviderFilterConfig: Array<FilterConfig> = [
     hidden: true,
   },
   {
-    entity: 'PRODUCT PROVIDER',
+    entity: 'END PRODUCT',
     field: 'supplierId',
     type: 'supplier_id',
     message: productMessages.supplier,
@@ -204,6 +204,34 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     field: 'batchTagIds',
     type: 'batch_tags',
     message: batchMessages.tags,
+    defaultValue: [],
+  },
+  {
+    entity: 'PRODUCT',
+    field: 'productIds',
+    type: 'product_ids',
+    message: productMessages.product,
+    defaultValue: [],
+  },
+  {
+    entity: 'PRODUCT',
+    field: 'productTagIds',
+    type: 'product_tags',
+    message: productMessages.tags,
+    defaultValue: [],
+  },
+  {
+    entity: 'END PRODUCT',
+    field: 'productProviderIds',
+    type: 'product_provider_ids',
+    message: productMessages.productProvider,
+    defaultValue: [],
+  },
+  {
+    entity: 'END PRODUCT',
+    field: 'supplierIds',
+    type: 'supplier_ids',
+    message: productMessages.supplier,
     defaultValue: [],
   },
   {
@@ -352,6 +380,76 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     type: 'shipment_tags',
     message: shipmentMessages.tags,
     defaultValue: [],
+  },
+  {
+    entity: 'CONTAINER',
+    field: 'containerContainerType',
+    type: 'container_type',
+    message: containerMessages.containerType,
+    defaultValue: null,
+  },
+  {
+    entity: 'CONTAINER',
+    field: 'containerContainerOption',
+    type: 'container_option',
+    message: containerMessages.containerOption,
+    defaultValue: null,
+  },
+  {
+    entity: 'CONTAINER',
+    field: 'containerWarehouseIds',
+    type: 'warehouse_ids',
+    message: containerMessages.warehouse,
+    defaultValue: [],
+  },
+  {
+    entity: 'CONTAINER',
+    field: 'containerTagIds',
+    type: 'container_tags',
+    message: containerMessages.tags,
+    defaultValue: [],
+  },
+  {
+    entity: 'CONTAINER',
+    field: 'containerCreatedAt',
+    type: 'date_range',
+    message: containerMessages.createdAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'CONTAINER',
+    field: 'containerUpdatedAt',
+    type: 'date_range',
+    message: containerMessages.updatedAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'CONTAINER',
+    field: 'containerWarehouseArrivalAgreedDate',
+    type: 'date_range',
+    message: containerMessages.warehouseArrivalAgreedDate,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'CONTAINER',
+    field: 'containerWarehouseArrivalActualDate',
+    type: 'date_range',
+    message: containerMessages.warehouseArrivalActualDate,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'CONTAINER',
+    field: 'containerFreeTimeDueDate',
+    type: 'date_range',
+    message: containerMessages.dueDate,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'CONTAINER',
+    field: 'containerFreeTimeOverdue',
+    type: 'free_time_overdue',
+    message: containerMessages.freeTimeOverdue,
+    defaultValue: false,
   },
 ];
 

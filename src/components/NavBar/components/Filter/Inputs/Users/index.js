@@ -5,15 +5,10 @@ import { FormattedMessage } from 'react-intl';
 import { Label, UserAssignmentInput } from 'components/Form';
 import { useAuthorizedViewer } from 'contexts/Viewer';
 import messages from '../../messages';
+import type { FilterInputProps } from '../../types';
 import { usersByIDsQuery } from './query';
 
-type Props = {
-  value: Array<string>,
-  readonly: boolean,
-  onChange: (Array<string>) => void,
-};
-
-const Users = ({ value, readonly, onChange }: Props) => {
+const Users = ({ value, readonly, onChange }: FilterInputProps<Array<string>>) => {
   const { organization } = useAuthorizedViewer();
   const { data } = useQuery(usersByIDsQuery, {
     variables: { ids: value },
