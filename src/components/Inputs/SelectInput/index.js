@@ -291,7 +291,7 @@ const SelectInput = ({
                 },
                 onFocus: () => {
                   if (!isOpen) {
-                    setTimeout(() => openMenu(), 100);
+                    openMenu();
                   }
                 },
                 disabled,

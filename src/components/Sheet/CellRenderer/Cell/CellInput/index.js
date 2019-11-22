@@ -153,36 +153,36 @@ const CellInput = ({
     }
     const container = containerRef.current;
 
-    if (inputFocus) {
-      if (document.activeElement && container.contains(document.activeElement)) {
-        return;
-      }
+    if (!inputFocus) {
+      return;
+    }
 
-      const focusableElement =
-        container.querySelector('[data-focus-first]:not([disabled])') ||
-        container.querySelector(
-          [
-            'input:not([disabled]):not([tabindex="-1"])',
-            'button:not([disabled]):not([tabindex="-1"])',
-            '[tabindex]:not([disabled]):not([tabindex="-1"])',
-          ].join(',')
-        );
-      if (focusableElement) {
-        focusableElement.focus({
-          preventScroll: true,
-        });
+    if (document.activeElement && container.contains(document.activeElement)) {
+      return;
+    }
 
-        if (
-          focusableElement instanceof HTMLInputElement &&
-          (focusableElement.type === 'text' || focusableElement.type === 'number')
-        ) {
-          focusableElement.select();
-        }
-      }
-    } else {
-      container.focus({
-        preventScroll: true,
-      });
+    const focusableElement =
+      container.querySelector('[data-focus-first]:not([disabled])') ||
+      container.querySelector(
+        [
+          'input:not([disabled]):not([tabindex="-1"])',
+          'button:not([disabled]):not([tabindex="-1"])',
+          '[tabindex]:not([disabled]):not([tabindex="-1"])',
+        ].join(',')
+      );
+    if (!focusableElement) {
+      return;
+    }
+
+    focusableElement.focus({
+      preventScroll: true,
+    });
+
+    if (
+      focusableElement instanceof HTMLInputElement &&
+      (focusableElement.type === 'text' || focusableElement.type === 'number')
+    ) {
+      focusableElement.select();
     }
   }, [inputFocus]);
 
