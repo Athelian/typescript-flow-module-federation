@@ -3,15 +3,11 @@ import * as React from 'react';
 import { FormattedMessage, MessageDescriptor } from 'react-intl';
 import { Label, ToggleInput } from 'components/Form';
 import messages from '../../messages';
+import type { FilterInputProps } from '../../types';
 import { StatusStyle } from './style';
 
-type Props = {
-  value: boolean,
-  readonly: boolean,
-  onChange: boolean => void,
-};
-
-type ImplProps = Props & {
+type ImplProps = {
+  ...FilterInputProps<boolean>,
   title: MessageDescriptor,
   onMsg?: MessageDescriptor,
   offMsg?: MessageDescriptor,
@@ -43,7 +39,7 @@ const Bool = (title: MessageDescriptor, onMsg?: MessageDescriptor, offMsg?: Mess
   value,
   onChange,
   readonly,
-}: Props) => (
+}: FilterInputProps<boolean>) => (
   <BoolImpl
     value={value}
     onChange={onChange}
@@ -68,6 +64,11 @@ export const HasShipment = Bool(
   messages.hasShipment,
   messages.hasShipment,
   messages.hasNotShipment
+);
+export const FreeTimeOverdue = Bool(
+  messages.freeTimeOverdue,
+  messages.freeTimeOverdue,
+  messages.freeTimeNotOverdue
 );
 
 export default Bool;

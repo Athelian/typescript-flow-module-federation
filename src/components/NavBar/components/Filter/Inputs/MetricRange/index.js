@@ -3,15 +3,14 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { DefaultStyle, Label, MetricInput } from 'components/Form';
 import { volumeMetrics, areaMetrics, distanceMetrics, weightMetrics } from 'utils/metric';
+import type { FilterInputProps } from '../../types';
 import messages from '../../messages';
 
-type Props = {
-  value: { min: number | null, max: number | null, metric: string },
-  readonly: boolean,
-  onChange: ({ min: number | null, max: number | null, metric: string }) => void,
-};
-
-const MetricRange = (metrics: Array<string>) => ({ value, readonly, onChange }: Props) => {
+const MetricRange = (metrics: Array<string>) => ({
+  value,
+  readonly,
+  onChange,
+}: FilterInputProps<{ min: number | null, max: number | null, metric: string }>) => {
   return (
     <>
       <Label height="30px">

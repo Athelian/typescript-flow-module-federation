@@ -32,15 +32,21 @@ type Props = {
   onFocus?: (SyntheticFocusEvent<any>) => void,
   onBlur?: (SyntheticFocusEvent<any>) => void,
   items: Array<any>,
-  filterItems: (query: string, items: Array<any>) => Array<any>,
+  filterItems?: (query: string, items: Array<any>) => Array<any>,
   itemToString: any => string,
   itemToValue: any => any,
-  optionWidth: number,
-  optionHeight: number,
+  optionWidth?: number,
+  optionHeight?: number,
   inputRef?: { current: any },
   toggleRef?: { current: any },
   renderInput: RenderInputProps => React.Node,
   renderOption: RenderOptionProps => React.Node,
+};
+
+const defaultProps = {
+  filterItems: (query, items) => items,
+  optionWidth: 200,
+  optionHeight: 30,
 };
 
 type OptionsProps = {
@@ -189,24 +195,29 @@ const DefaultRenderSelectOption = ({
   </div>
 );
 
-const SelectInput = ({
-  value,
-  disabled,
-  required,
-  onChange,
-  onFocus,
-  onBlur,
-  items,
-  filterItems,
-  itemToString,
-  itemToValue,
-  optionWidth,
-  optionHeight,
-  inputRef,
-  toggleRef,
-  renderInput,
-  renderOption,
-}: Props) => {
+const SelectInput = (props: Props) => {
+  const {
+    value,
+    disabled,
+    required,
+    onChange,
+    onFocus,
+    onBlur,
+    items,
+    filterItems,
+    itemToString,
+    itemToValue,
+    optionWidth,
+    optionHeight,
+    inputRef,
+    toggleRef,
+    renderInput,
+    renderOption,
+  } = {
+    ...defaultProps,
+    ...props,
+  };
+
   const handleChange = React.useCallback(item => onChange(itemToValue(item)), [
     onChange,
     itemToValue,
@@ -252,9 +263,9 @@ const SelectInput = ({
             selectedItem,
             itemToString,
             clearSelection,
-            getInputProps: props =>
+            getInputProps: inputProps =>
               getInputProps({
-                ...props,
+                ...inputProps,
                 ref: ref => {
                   if (inputRef) {
                     // eslint-disable-next-line no-param-reassign
@@ -280,9 +291,9 @@ const SelectInput = ({
                 onBlur,
                 disabled,
               }),
-            getToggleButtonProps: props =>
+            getToggleButtonProps: buttonProps =>
               getToggleButtonProps({
-                ...props,
+                ...buttonProps,
                 ref: ref => {
                   if (toggleRef) {
                     // eslint-disable-next-line no-param-reassign
@@ -291,7 +302,7 @@ const SelectInput = ({
                 },
                 onFocus: () => {
                   if (!isOpen) {
-                    setTimeout(() => openMenu(), 100);
+                    openMenu();
                   }
                 },
                 disabled,

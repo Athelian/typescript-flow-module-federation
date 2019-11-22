@@ -10,18 +10,17 @@ export const DateRevisionsWrapperStyle = css`
 `;
 
 export const RevisionWrapperStyle = css`
-  ${layout.HORIZONTAL};
-  ${layout.CENTER};
+  display: grid;
+  grid-template-columns: 80px 1px 115px 30px;
   height: 30px;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
+  width: 225px;
 `;
 
 export const SelectInputStyle = (isOpen: boolean): string => css`
-  ${layout.HORIZONTAL};
-  ${layout.CENTER};
   ${presets.BUTTON};
-  width: 100%;
-
+  width: 80px;
+  height: 100%;
   & > span {
     ${fontSizes.MAIN};
     ${presets.ELLIPSIS};
@@ -31,14 +30,13 @@ export const SelectInputStyle = (isOpen: boolean): string => css`
     padding: 0 5px;
     flex: 1;
   }
-
   & > i {
     ${transitions.EXPAND};
     ${fontSizes.SMALL};
     color: ${isOpen ? colors.TEAL : colors.GRAY_LIGHT};
     height: 100%;
+    padding: 0 5px 0 0;
   }
-
   &:focus > i {
     color: ${colors.TEAL};
   }
@@ -46,33 +44,19 @@ export const SelectInputStyle = (isOpen: boolean): string => css`
 
 export const SeparatorStyle = css`
   height: 20px;
-  min-width: 1px;
+  width: 1px;
   background-color: rgba(0, 0, 0, 0.1);
-  margin: 0 5px;
   border: none;
-`;
-
-export const InputStyle = css`
-  ${fontSizes.MAIN};
-  ${presets.ELLIPSIS};
-  color: ${colors.BLACK};
-  background: transparent;
-  min-width: 105px;
-  line-height: 18px;
-  font-weight: 600;
-
-  &::placeholder {
-    color: ${colors.GRAY_LIGHT};
-  }
+  flex-shrink: 0;
+  margin: 5px 0;
 `;
 
 export const RemoveButtonStyle = css`
   ${presets.BUTTON};
   color: rgba(0, 0, 0, 0.1);
   height: 30px;
-  width: 20px;
-  margin-right: 5px;
-
+  width: 30px;
+  flex-shrink: 0;
   &:hover,
   &:focus {
     color: ${colors.RED};
@@ -92,6 +76,7 @@ export const AddButtonStyle = css`
   width: min-content;
   padding: 0 10px;
   margin: 0 5px;
+  flex-shrink: 0;
   &:hover,
   :focus {
     background-color: ${colors.TEAL_DARK};

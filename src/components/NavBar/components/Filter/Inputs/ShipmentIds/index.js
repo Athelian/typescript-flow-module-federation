@@ -22,15 +22,10 @@ import useFilterSort from 'hooks/useFilterSort';
 import { isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from '../../messages';
+import type { FilterInputProps } from '../../types';
 import Ids from '../Common/Ids';
 import { shipmentsQuery, shipmentsByIDsQuery } from './query';
 import { CardStyle } from './style';
-
-type Props = {
-  value: Array<string>,
-  readonly: boolean,
-  onChange: (Array<string>) => void,
-};
 
 type SelectorProps = {
   open: boolean,
@@ -123,23 +118,21 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
   );
 };
 
-const ShipmentIds = ({ value, readonly, onChange }: Props) => {
-  return (
-    <Ids
-      value={value}
-      readonly={readonly}
-      onChange={onChange}
-      title={<FormattedMessage {...messages.shipments} />}
-      selector={ShipmentSelector}
-      query={shipmentsByIDsQuery}
-      getItems={data => data?.shipmentsByIDs ?? []}
-      renderItem={shipment => (
-        <BaseCard icon="SHIPMENT" color="SHIPMENT" wrapperClassName={CardStyle}>
-          <Display height="30px">{shipment?.no}</Display>
-        </BaseCard>
-      )}
-    />
-  );
-};
+const ShipmentIds = ({ value, readonly, onChange }: FilterInputProps<Array<string>>) => (
+  <Ids
+    value={value}
+    readonly={readonly}
+    onChange={onChange}
+    title={<FormattedMessage {...messages.shipments} />}
+    selector={ShipmentSelector}
+    query={shipmentsByIDsQuery}
+    getItems={data => data?.shipmentsByIDs ?? []}
+    renderItem={shipment => (
+      <BaseCard icon="SHIPMENT" color="SHIPMENT" wrapperClassName={CardStyle}>
+        <Display height="30px">{shipment?.no}</Display>
+      </BaseCard>
+    )}
+  />
+);
 
 export default ShipmentIds;

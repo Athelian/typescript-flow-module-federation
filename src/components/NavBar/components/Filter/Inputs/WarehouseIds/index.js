@@ -22,15 +22,10 @@ import useFilterSort from 'hooks/useFilterSort';
 import { isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from '../../messages';
+import type { FilterInputProps } from '../../types';
 import Ids from '../Common/Ids';
 import { warehousesQuery, warehousesByIDsQuery } from './query';
 import { CardStyle } from './style';
-
-type Props = {
-  value: Array<string>,
-  readonly: boolean,
-  onChange: (Array<string>) => void,
-};
 
 type SelectorProps = {
   open: boolean,
@@ -119,23 +114,21 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
   );
 };
 
-const WarehouseIds = ({ value, readonly, onChange }: Props) => {
-  return (
-    <Ids
-      value={value}
-      readonly={readonly}
-      onChange={onChange}
-      title={<FormattedMessage {...messages.warehouses} />}
-      selector={WarehouseSelector}
-      query={warehousesByIDsQuery}
-      getItems={data => data?.warehousesByIDs ?? []}
-      renderItem={warehouse => (
-        <BaseCard icon="WAREHOUSE" color="WAREHOUSE" wrapperClassName={CardStyle}>
-          <Display height="30px">{warehouse?.name}</Display>
-        </BaseCard>
-      )}
-    />
-  );
-};
+const WarehouseIds = ({ value, readonly, onChange }: FilterInputProps<Array<string>>) => (
+  <Ids
+    value={value}
+    readonly={readonly}
+    onChange={onChange}
+    title={<FormattedMessage {...messages.warehouses} />}
+    selector={WarehouseSelector}
+    query={warehousesByIDsQuery}
+    getItems={data => data?.warehousesByIDs ?? []}
+    renderItem={warehouse => (
+      <BaseCard icon="WAREHOUSE" color="WAREHOUSE" wrapperClassName={CardStyle}>
+        <Display height="30px">{warehouse?.name}</Display>
+      </BaseCard>
+    )}
+  />
+);
 
 export default WarehouseIds;

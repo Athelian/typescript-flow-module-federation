@@ -130,4 +130,8 @@ export default defineMessages({
     id: 'modules.container.freeTime',
     defaultMessage: 'FREE TIME',
   },
+  freeTimeOverdue: {
+    id: 'modules.container.freeTimeOverdue',
+    defaultMessage: 'Free time overdue',
+  },
 });

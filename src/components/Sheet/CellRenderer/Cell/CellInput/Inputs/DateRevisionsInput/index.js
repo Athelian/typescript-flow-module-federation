@@ -6,14 +6,18 @@ import SelectInput from 'components/Inputs/SelectInput';
 import type { RenderInputProps } from 'components/Inputs/SelectInput';
 import DateInput from 'components/Form/Inputs/DateInput';
 import useEnum from 'hooks/useEnum';
+import usePrevious from 'hooks/usePrevious';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
+import {
+  CellInputWrapperStyle,
+  InputStyle,
+} from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
 import {
   DateRevisionsWrapperStyle,
   SeparatorStyle,
   SelectInputStyle,
   AddButtonStyle,
   RemoveButtonStyle,
-  InputStyle,
   RevisionWrapperStyle,
 } from './style';
 
@@ -37,6 +41,7 @@ const DateRevisionsInput = ({
   readonly,
 }: InputProps<Array<{ id?: string, type: string, date: string | Date }>>) => {
   const { enums } = useEnum('TimelineDateRevisionType');
+  const previousValue = usePrevious(value);
 
   const handleTypeChange = (index: number) => (newType: string) => {
     onChange(
@@ -79,15 +84,25 @@ const DateRevisionsInput = ({
             renderOption={SelectInput.DefaultRenderSelectOption}
           />
           <hr className={SeparatorStyle} />
-          <DateInput
-            className={InputStyle}
-            value={revision.date}
-            readOnly={readonly}
-            readOnlyWidth="100%"
-            readOnlyHeight="30px"
-            onChange={handleDateChange(index)}
-            required
-          />
+          <div className={CellInputWrapperStyle}>
+            <DateInput
+              className={InputStyle}
+              value={revision.date}
+              readOnly={readonly}
+              readOnlyWidth="105px"
+              readOnlyHeight="30px"
+              onChange={handleDateChange(index)}
+              onBlur={evt => {
+                const lastValidDate = previousValue?.[index]?.date || evt.target.value;
+                onChange(
+                  (value || []).map((v, i) =>
+                    i === index ? { ...v, date: v.date || lastValidDate } : v
+                  )
+                );
+              }}
+              required
+            />
+          </div>
           {!readonly && (
             <button type="button" className={RemoveButtonStyle} onClick={handleRemove(index)}>
               <Icon icon="REMOVE" />

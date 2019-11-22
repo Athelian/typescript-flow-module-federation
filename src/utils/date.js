@@ -31,6 +31,8 @@ export {
   isValid,
 };
 
+export const isValidDate = (date: Date | string): boolean => !!date && isValid(new Date(date));
+
 export const formatToDateInput = (date: string): string =>
   isValid(new Date(date)) ? format(new Date(date), 'yyyy-MM-dd') : '';
 
