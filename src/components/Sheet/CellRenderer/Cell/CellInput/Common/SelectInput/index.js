@@ -42,6 +42,10 @@ const Select = ({
             if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
               e.stopPropagation();
             }
+
+            if (e.key === 'Enter' && isOpen) {
+              e.preventDefault();
+            }
           },
         })}
       >
