@@ -1,6 +1,5 @@
 // @flow
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { IntlShape } from 'react-intl';
 import type { FieldDefinition } from 'types';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import { transformActionField } from 'components/Sheet';
@@ -37,7 +36,8 @@ function transformOrderItem(
   fieldDefinitions: Array<FieldDefinition>,
   basePath: string,
   orderItem: Object,
-  hasItems: boolean
+  hasItems: boolean,
+  intl: IntlShape
 ): Array<CellValue> {
   return [
     ...transformSheetOrderItem({
@@ -52,11 +52,11 @@ function transformOrderItem(
       ...transformActionField(basePath, orderItem, [
         {
           action: 'order_item_batch_create',
-          label: <FormattedMessage {...itemMessages.batchCreateTitle} />,
+          label: intl.formatMessage(itemMessages.batchCreateTitle),
         },
         {
           action: 'order_item_clone',
-          label: <FormattedMessage {...itemMessages.orderItemCloneTitle} />,
+          label: intl.formatMessage(itemMessages.orderItemCloneTitle),
         },
       ]),
     },
@@ -144,6 +144,7 @@ type Props = {
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
+  intl: IntlShape,
 };
 
 export default function transformer({
@@ -151,6 +152,7 @@ export default function transformer({
   orderItemFieldDefinitions,
   batchFieldDefinitions,
   shipmentFieldDefinitions,
+  intl,
 }: Props) {
   return (index: number, order: Object): Array<Array<CellValue>> => {
     const rows = [];
@@ -163,7 +165,8 @@ export default function transformer({
           orderItemFieldDefinitions,
           `${index}.orderItems.${orderItemIdx}`,
           orderItem,
-          true
+          true,
+          intl
         );
 
         if ((orderItem?.batches?.length ?? 0) > 0) {
@@ -183,7 +186,8 @@ export default function transformer({
               orderItemFieldDefinitions,
               `${index}.orderItems.${orderItemIdx}`,
               null,
-              true
+              true,
+              intl
             );
           });
         } else {
@@ -193,7 +197,8 @@ export default function transformer({
               orderItemFieldDefinitions,
               `${index}.orderItems.${orderItemIdx}`,
               orderItem,
-              true
+              true,
+              intl
             ),
             ...transformFullBatch(
               batchFieldDefinitions,
@@ -208,7 +213,13 @@ export default function transformer({
     } else {
       rows.push([
         ...orderCells,
-        ...transformOrderItem(orderItemFieldDefinitions, `${index}.orderItems.0`, null, false),
+        ...transformOrderItem(
+          orderItemFieldDefinitions,
+          `${index}.orderItems.0`,
+          null,
+          false,
+          intl
+        ),
         ...transformFullBatch(
           batchFieldDefinitions,
           shipmentFieldDefinitions,

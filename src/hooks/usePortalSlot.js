@@ -6,7 +6,7 @@ const root = document.getElementById('portal-root');
 const PORTAL_NAME_ATTRIBUTE = 'data-portal-name';
 
 export function hasInPortal(name: string): boolean {
-  return !!root.querySelector(`[${PORTAL_NAME_ATTRIBUTE}="${name}"]`);
+  return !!(root && root.querySelector(`[${PORTAL_NAME_ATTRIBUTE}="${name}"]`));
 }
 
 export default function usePortalSlot(name: string = 'generic'): HTMLDivElement {
@@ -22,8 +22,9 @@ export default function usePortalSlot(name: string = 'generic'): HTMLDivElement 
 
   function getSlotElem(): HTMLDivElement {
     if (!slotRef.current) {
-      slotRef.current = document.createElement('div');
-      slotRef.current.setAttribute(PORTAL_NAME_ATTRIBUTE, name);
+      const slot = document.createElement('div');
+      slot.setAttribute(PORTAL_NAME_ATTRIBUTE, name);
+      slotRef.current = slot;
     }
 
     return slotRef.current;

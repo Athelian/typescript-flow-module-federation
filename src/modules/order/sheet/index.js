@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { useIntl } from 'react-intl';
 import { useApolloClient } from '@apollo/react-hooks';
 import { equals } from 'ramda';
 import { Content } from 'components/Layout';
@@ -125,6 +126,7 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
 };
 
 const OrderSheetModule = ({ orderIds }: Props) => {
+  const intl = useIntl();
   const { fieldDefinitions, loading } = useFieldDefinitions(FieldDefinitionEntityTypes);
 
   if (loading) {
@@ -141,7 +143,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
   return (
     <OrderSheetModuleImpl
       columns={orderColumns(allFieldDefinitions)}
-      transformer={orderTransformer(allFieldDefinitions)}
+      transformer={orderTransformer({ ...allFieldDefinitions, intl })}
       orderIds={orderIds}
     />
   );
