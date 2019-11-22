@@ -159,7 +159,7 @@ const OrderBatchCard = ({
   const hasContainers = shipment && shipment.containers && shipment.containers.length > 0;
 
   const latestQuantity = getBatchLatestQuantity(batch);
-  const currentQuantity: string = findActiveQuantityField({
+  const latestQuantityField: string = findActiveQuantityField({
     producedQuantity: batch?.producedQuantity,
     preShippedQuantity: batch?.preShippedQuantity,
     shippedQuantity: batch?.shippedQuantity,
@@ -167,7 +167,7 @@ const OrderBatchCard = ({
     deliveredQuantity: batch?.deliveredQuantity,
   });
 
-  const quantityName = `batches.${id}.latestQuantity`;
+  const quantityName = `batches.${id}.${latestQuantityField}`;
 
   const validation = validator({
     no: `batch.${batch.id}.no`,
@@ -223,8 +223,8 @@ const OrderBatchCard = ({
           onClick={evt => evt.stopPropagation()}
           role="presentation"
         >
-          <Label required={currentQuantity === 'initialQuantity'}>
-            <FormattedMessage {...messages[currentQuantity]} />
+          <Label required={latestQuantityField === 'quantity'}>
+            <FormattedMessage {...messages[latestQuantityField]} />
           </Label>
           <FormField
             name={quantityName}

@@ -43,7 +43,7 @@ export const findActiveQuantityField = ({
 
   if (producedQuantity) return 'producedQuantity';
 
-  return 'initialQuantity';
+  return 'quantity';
 };
 
 export const getBatchLatestQuantity = (batch: BatchPayload) => {

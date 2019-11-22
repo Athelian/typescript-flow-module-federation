@@ -40,7 +40,7 @@ const QuantitySection = () => {
                   deliveredQuantity,
                 } = values;
 
-                const activeQuantity = findActiveQuantityField({
+                const latestQuantityField = findActiveQuantityField({
                   producedQuantity,
                   preShippedQuantity,
                   shippedQuantity,
@@ -75,7 +75,7 @@ const QuantitySection = () => {
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
                           InputWrapperComponent={
-                            activeQuantity === 'initialQuantity' ? CurrentQuantity : React.Fragment
+                            latestQuantityField === 'quantity' ? CurrentQuantity : React.Fragment
                           }
                         />
                       )}
@@ -106,7 +106,9 @@ const QuantitySection = () => {
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
                           InputWrapperComponent={
-                            activeQuantity === 'producedQuantity' ? CurrentQuantity : React.Fragment
+                            latestQuantityField === 'producedQuantity'
+                              ? CurrentQuantity
+                              : React.Fragment
                           }
                         />
                       )}
@@ -137,7 +139,7 @@ const QuantitySection = () => {
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
                           InputWrapperComponent={
-                            activeQuantity === 'preShippedQuantity'
+                            latestQuantityField === 'preShippedQuantity'
                               ? CurrentQuantity
                               : React.Fragment
                           }
@@ -170,7 +172,9 @@ const QuantitySection = () => {
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
                           InputWrapperComponent={
-                            activeQuantity === 'shippedQuantity' ? CurrentQuantity : React.Fragment
+                            latestQuantityField === 'shippedQuantity'
+                              ? CurrentQuantity
+                              : React.Fragment
                           }
                         />
                       )}
@@ -201,7 +205,7 @@ const QuantitySection = () => {
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
                           InputWrapperComponent={
-                            activeQuantity === 'postShippedQuantity'
+                            latestQuantityField === 'postShippedQuantity'
                               ? CurrentQuantity
                               : React.Fragment
                           }
@@ -234,7 +238,7 @@ const QuantitySection = () => {
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
                           InputWrapperComponent={
-                            activeQuantity === 'deliveredQuantity'
+                            latestQuantityField === 'deliveredQuantity'
                               ? CurrentQuantity
                               : React.Fragment
                           }

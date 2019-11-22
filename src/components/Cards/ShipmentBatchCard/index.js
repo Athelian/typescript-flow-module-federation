@@ -175,7 +175,7 @@ const ShipmentBatchCard = ({
   const productProviderName = getByPathWithDefault('', 'orderItem.productProvider.name', batch);
   const todo = getByPathWithDefault({}, 'todo', batch);
   const latestQuantity = getBatchLatestQuantity(batch);
-  const currentQuantity: string = findActiveQuantityField({
+  const latestQuantityField: string = findActiveQuantityField({
     producedQuantity: batch?.producedQuantity,
     preShippedQuantity: batch?.preShippedQuantity,
     shippedQuantity: batch?.shippedQuantity,
@@ -183,7 +183,7 @@ const ShipmentBatchCard = ({
     deliveredQuantity: batch?.deliveredQuantity,
   });
 
-  const quantityName = `batches.${id}.quantity`;
+  const quantityName = `batches.${id}.${latestQuantityField}`;
 
   const validation = validator({
     no: `batch.${id}.no`,
@@ -318,8 +318,8 @@ const ShipmentBatchCard = ({
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
-            <Label required={currentQuantity === 'initialQuantity'}>
-              <FormattedMessage {...messages[currentQuantity]} />
+            <Label required={latestQuantityField === 'quantity'}>
+              <FormattedMessage {...messages[latestQuantityField]} />
             </Label>
             <FormField
               name={quantityName}

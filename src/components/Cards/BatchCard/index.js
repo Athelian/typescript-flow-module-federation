@@ -64,7 +64,7 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
     todo,
   } = batch;
 
-  const currentQuantity: string = findActiveQuantityField({
+  const latestQuantityField: string = findActiveQuantityField({
     producedQuantity: batch?.producedQuantity,
     preShippedQuantity: batch?.preShippedQuantity,
     shippedQuantity: batch?.shippedQuantity,
@@ -135,7 +135,7 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
 
           <div className={QuantityWrapperStyle}>
             <Label>
-              <FormattedMessage {...messages[currentQuantity]} />
+              <FormattedMessage {...messages[latestQuantityField]} />
             </Label>
             <Display>
               <FormattedNumber value={latestQuantity} />
