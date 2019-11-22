@@ -22,6 +22,7 @@ export const SelectInputStyle = (isOpen: boolean): string => css`
 `;
 
 export const SelectTextStyle = (hasValue: boolean): string => css`
+  ${presets.ELLIPSIS};
   color: ${hasValue ? colors.BLACK : colors.GRAY_LIGHT};
   padding: 0 5px;
   text-align: left;

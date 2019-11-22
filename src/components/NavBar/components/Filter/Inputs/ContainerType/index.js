@@ -30,7 +30,13 @@ const ContainerType = ({ value, onChange, readonly }: FilterInputProps<?string>)
         itemToString,
       }: RenderInputProps) => (
         <button type="button" {...getToggleButtonProps()} className={SelectInputStyle(isOpen)}>
-          <span className={SelectTextStyle(!!selectedItem)}>{itemToString(selectedItem)}</span>
+          <span className={SelectTextStyle(!!selectedItem)}>
+            {selectedItem ? (
+              itemToString(selectedItem)
+            ) : (
+              <FormattedMessage {...messages.containerTypePlaceholder} />
+            )}
+          </span>
           {!selectedItem && (
             <i className={ArrowDownStyle(isOpen)}>
               <Icon icon="CHEVRON_DOWN" />

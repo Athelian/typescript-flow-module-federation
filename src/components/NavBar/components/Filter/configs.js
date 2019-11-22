@@ -49,35 +49,35 @@ export const ProductFilterConfig: Array<FilterConfig> = [
 
 export const ProductProviderFilterConfig: Array<FilterConfig> = [
   {
-    entity: 'PRODUCT PROVIDER',
+    entity: 'END PRODUCT',
     field: 'archived',
     type: 'archived',
     message: productMessages.status,
     defaultValue: false,
   },
   {
-    entity: 'PRODUCT PROVIDER',
+    entity: 'END PRODUCT',
     field: 'createdAt',
     type: 'date_range',
     message: productMessages.createdAt,
     defaultValue: { after: null, before: null },
   },
   {
-    entity: 'PRODUCT PROVIDER',
+    entity: 'END PRODUCT',
     field: 'updatedAt',
     type: 'date_range',
     message: productMessages.updatedAt,
     defaultValue: { after: null, before: null },
   },
   {
-    entity: 'PRODUCT PROVIDER',
+    entity: 'END PRODUCT',
     field: 'tagIds',
     type: 'product_tags',
     message: productMessages.tags,
     defaultValue: [],
   },
   {
-    entity: 'PRODUCT PROVIDER',
+    entity: 'END PRODUCT',
     field: 'importerId',
     type: 'importer_id',
     message: productMessages.importer,
@@ -85,7 +85,7 @@ export const ProductProviderFilterConfig: Array<FilterConfig> = [
     hidden: true,
   },
   {
-    entity: 'PRODUCT PROVIDER',
+    entity: 'END PRODUCT',
     field: 'exporterId',
     type: 'exporter_id',
     message: productMessages.exporter,
@@ -93,7 +93,7 @@ export const ProductProviderFilterConfig: Array<FilterConfig> = [
     hidden: true,
   },
   {
-    entity: 'PRODUCT PROVIDER',
+    entity: 'END PRODUCT',
     field: 'supplierId',
     type: 'supplier_id',
     message: productMessages.supplier,
@@ -221,14 +221,14 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     defaultValue: [],
   },
   {
-    entity: 'PRODUCT_PROVIDER',
+    entity: 'END PRODUCT',
     field: 'productProviderIds',
     type: 'product_provider_ids',
     message: productMessages.productProvider,
     defaultValue: [],
   },
   {
-    entity: 'PRODUCT_PROVIDER',
+    entity: 'END PRODUCT',
     field: 'supplierIds',
     type: 'supplier_ids',
     message: productMessages.supplier,

@@ -154,9 +154,17 @@ export default defineMessages({
     id: 'components.NavBar.Filter.containerType',
     defaultMessage: 'Container Type',
   },
+  containerTypePlaceholder: {
+    id: 'components.NavBar.Filter.containerTypePlaceholder',
+    defaultMessage: 'Please choose a type',
+  },
   containerOption: {
     id: 'components.NavBar.Filter.containerOption',
     defaultMessage: 'Container Option',
+  },
+  containerOptionPlaceholder: {
+    id: 'components.NavBar.Filter.containerOptionPlaceholder',
+    defaultMessage: 'Please choose an option',
   },
   completelyBatched: {
     id: 'components.NavBar.Filter.completelyBatched',
