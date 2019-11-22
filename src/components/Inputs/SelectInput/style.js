@@ -13,7 +13,6 @@ import {
 
 export const DownshiftStyle: string = css`
   width: 100%;
-  max-width: min-content;
 `;
 
 export const OptionsWrapperStyle = (width: number, height: number): string => css`
