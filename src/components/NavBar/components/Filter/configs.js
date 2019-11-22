@@ -388,7 +388,13 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     message: containerMessages.containerType,
     defaultValue: null,
   },
-  // container option
+  {
+    entity: 'CONTAINER',
+    field: 'containerContainerOption',
+    type: 'container_option',
+    message: containerMessages.containerOption,
+    defaultValue: null,
+  },
   {
     entity: 'CONTAINER',
     field: 'containerWarehouseIds',
