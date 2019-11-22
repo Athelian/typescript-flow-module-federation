@@ -11,6 +11,14 @@ import { FormField, FormContainer } from 'modules/form';
 import { SectionHeader, SectionWrapper, NumberInputFactory } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import validator from 'modules/batch/form/validator';
+import {
+  INITIAL_QUANTITY,
+  PRODUCED_QUANTITY,
+  PRE_SHIPPED_QUANTITY,
+  SHIPPED_QUANTITY,
+  POST_SHIPPED_QUANTITY,
+  DELIVERED_QUANTITY,
+} from 'modules/batch/constants';
 import CurrentQuantity from './CurrentQuantity';
 import { QuantitySectionWrapperStyle } from './style';
 
@@ -40,7 +48,7 @@ const QuantitySection = () => {
                   deliveredQuantity,
                 } = values;
 
-                const activeQuantity = findActiveQuantityField({
+                const latestQuantityField = findActiveQuantityField({
                   producedQuantity,
                   preShippedQuantity,
                   shippedQuantity,
@@ -50,7 +58,7 @@ const QuantitySection = () => {
                 return (
                   <GridColumn gap="10px">
                     <FormField
-                      name="quantity"
+                      name={INITIAL_QUANTITY}
                       initValue={quantity}
                       setFieldValue={setFieldArrayValue}
                       values={values}
@@ -62,7 +70,7 @@ const QuantitySection = () => {
                           {...inputHandlers}
                           onBlur={evt => {
                             inputHandlers.onBlur(evt);
-                            setFieldArrayValue('quantity', evt.target.value);
+                            setFieldArrayValue(name, evt.target.value);
                             calculatePackageQuantity(setFieldTouched);
                           }}
                           required
@@ -75,13 +83,15 @@ const QuantitySection = () => {
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
                           InputWrapperComponent={
-                            activeQuantity === 'initialQuantity' ? CurrentQuantity : React.Fragment
+                            latestQuantityField === INITIAL_QUANTITY
+                              ? CurrentQuantity
+                              : React.Fragment
                           }
                         />
                       )}
                     </FormField>
                     <FormField
-                      name="producedQuantity"
+                      name={PRODUCED_QUANTITY}
                       initValue={producedQuantity}
                       setFieldValue={setFieldArrayValue}
                       values={values}
@@ -94,7 +104,7 @@ const QuantitySection = () => {
                           {...inputHandlers}
                           onBlur={evt => {
                             inputHandlers.onBlur(evt);
-                            setFieldArrayValue('producedQuantity', evt.target.value);
+                            setFieldArrayValue(name, evt.target.value);
                             calculatePackageQuantity(setFieldTouched);
                           }}
                           originalValue={originalValues[name]}
@@ -106,13 +116,15 @@ const QuantitySection = () => {
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
                           InputWrapperComponent={
-                            activeQuantity === 'producedQuantity' ? CurrentQuantity : React.Fragment
+                            latestQuantityField === PRODUCED_QUANTITY
+                              ? CurrentQuantity
+                              : React.Fragment
                           }
                         />
                       )}
                     </FormField>
                     <FormField
-                      name="preShippedQuantity"
+                      name={PRE_SHIPPED_QUANTITY}
                       initValue={preShippedQuantity}
                       setFieldValue={setFieldArrayValue}
                       values={values}
@@ -125,7 +137,7 @@ const QuantitySection = () => {
                           {...inputHandlers}
                           onBlur={evt => {
                             inputHandlers.onBlur(evt);
-                            setFieldArrayValue('preShippedQuantity', evt.target.value);
+                            setFieldArrayValue(name, evt.target.value);
                             calculatePackageQuantity(setFieldTouched);
                           }}
                           originalValue={originalValues[name]}
@@ -137,7 +149,7 @@ const QuantitySection = () => {
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
                           InputWrapperComponent={
-                            activeQuantity === 'preShippedQuantity'
+                            latestQuantityField === PRE_SHIPPED_QUANTITY
                               ? CurrentQuantity
                               : React.Fragment
                           }
@@ -145,7 +157,7 @@ const QuantitySection = () => {
                       )}
                     </FormField>
                     <FormField
-                      name="shippedQuantity"
+                      name={SHIPPED_QUANTITY}
                       initValue={shippedQuantity}
                       setFieldValue={setFieldArrayValue}
                       values={values}
@@ -158,7 +170,7 @@ const QuantitySection = () => {
                           {...inputHandlers}
                           onBlur={evt => {
                             inputHandlers.onBlur(evt);
-                            setFieldArrayValue('shippedQuantity', evt.target.value);
+                            setFieldArrayValue(name, evt.target.value);
                             calculatePackageQuantity(setFieldTouched);
                           }}
                           originalValue={originalValues[name]}
@@ -170,13 +182,15 @@ const QuantitySection = () => {
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
                           InputWrapperComponent={
-                            activeQuantity === 'shippedQuantity' ? CurrentQuantity : React.Fragment
+                            latestQuantityField === SHIPPED_QUANTITY
+                              ? CurrentQuantity
+                              : React.Fragment
                           }
                         />
                       )}
                     </FormField>
                     <FormField
-                      name="postShippedQuantity"
+                      name={POST_SHIPPED_QUANTITY}
                       initValue={postShippedQuantity}
                       setFieldValue={setFieldArrayValue}
                       values={values}
@@ -189,7 +203,7 @@ const QuantitySection = () => {
                           {...inputHandlers}
                           onBlur={evt => {
                             inputHandlers.onBlur(evt);
-                            setFieldArrayValue('postShippedQuantity', evt.target.value);
+                            setFieldArrayValue(name, evt.target.value);
                             calculatePackageQuantity(setFieldTouched);
                           }}
                           originalValue={originalValues[name]}
@@ -201,7 +215,7 @@ const QuantitySection = () => {
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
                           InputWrapperComponent={
-                            activeQuantity === 'postShippedQuantity'
+                            latestQuantityField === POST_SHIPPED_QUANTITY
                               ? CurrentQuantity
                               : React.Fragment
                           }
@@ -209,7 +223,7 @@ const QuantitySection = () => {
                       )}
                     </FormField>
                     <FormField
-                      name="deliveredQuantity"
+                      name={DELIVERED_QUANTITY}
                       initValue={deliveredQuantity}
                       setFieldValue={setFieldArrayValue}
                       values={values}
@@ -222,7 +236,7 @@ const QuantitySection = () => {
                           {...inputHandlers}
                           onBlur={evt => {
                             inputHandlers.onBlur(evt);
-                            setFieldArrayValue('deliveredQuantity', evt.target.value);
+                            setFieldArrayValue(name, evt.target.value);
                             calculatePackageQuantity(setFieldTouched);
                           }}
                           originalValue={originalValues[name]}
@@ -234,7 +248,7 @@ const QuantitySection = () => {
                           }
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
                           InputWrapperComponent={
-                            activeQuantity === 'deliveredQuantity'
+                            latestQuantityField === DELIVERED_QUANTITY
                               ? CurrentQuantity
                               : React.Fragment
                           }

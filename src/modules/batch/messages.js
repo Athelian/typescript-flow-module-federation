@@ -13,7 +13,7 @@ export default defineMessages({
   },
   quantity: {
     id: 'components.BatchItem.quantity',
-    defaultMessage: 'QUANTITY',
+    defaultMessage: 'INITIAL QUANTITY',
   },
   initialQuantity: {
     id: 'components.BatchItem.initialQuantity',

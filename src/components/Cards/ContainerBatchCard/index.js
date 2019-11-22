@@ -22,6 +22,14 @@ import withForbiddenCard from 'hoc/withForbiddenCard';
 import RelateEntity from 'components/RelateEntity';
 import { getByPathWithDefault } from 'utils/fp';
 import {
+  INITIAL_QUANTITY,
+  PRODUCED_QUANTITY,
+  PRE_SHIPPED_QUANTITY,
+  SHIPPED_QUANTITY,
+  POST_SHIPPED_QUANTITY,
+  DELIVERED_QUANTITY,
+} from 'modules/batch/constants';
+import {
   FieldItem,
   Label,
   Display,
@@ -174,14 +182,14 @@ const ContainerBatchCard = ({
   const shipment = getByPathWithDefault(null, 'shipment', batch);
   const todo = getByPathWithDefault(null, 'todo', batch);
   const latestQuantity = getBatchLatestQuantity(batch);
-  const currentQuantity: string = findActiveQuantityField({
-    producedQuantity: batch?.producedQuantity,
-    preShippedQuantity: batch?.preShippedQuantity,
-    shippedQuantity: batch?.shippedQuantity,
-    postShippedQuantity: batch?.postShippedQuantity,
-    deliveredQuantity: batch?.deliveredQuantity,
+  const latestQuantityField: string = findActiveQuantityField({
+    [PRODUCED_QUANTITY]: batch?.[PRODUCED_QUANTITY],
+    [PRE_SHIPPED_QUANTITY]: batch?.[PRE_SHIPPED_QUANTITY],
+    [SHIPPED_QUANTITY]: batch?.[SHIPPED_QUANTITY],
+    [POST_SHIPPED_QUANTITY]: batch?.[POST_SHIPPED_QUANTITY],
+    [DELIVERED_QUANTITY]: batch?.[DELIVERED_QUANTITY],
   });
-  const quantityName = `batches.${id}.quantity`;
+  const quantityName = `batches.${id}.${latestQuantityField}`;
   const validation = validator({
     no: `batches.${id}.no`,
   });
@@ -297,8 +305,8 @@ const ContainerBatchCard = ({
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
-            <Label required={currentQuantity === 'initialQuantity'}>
-              <FormattedMessage {...messages[currentQuantity]} />
+            <Label required={latestQuantityField === INITIAL_QUANTITY}>
+              <FormattedMessage {...messages[latestQuantityField]} />
             </Label>
             <FormField
               name={quantityName}

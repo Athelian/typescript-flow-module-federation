@@ -27,6 +27,14 @@ import {
   TextInputFactory,
   DateInputFactory,
 } from 'components/Form';
+import {
+  INITIAL_QUANTITY,
+  PRODUCED_QUANTITY,
+  PRE_SHIPPED_QUANTITY,
+  SHIPPED_QUANTITY,
+  POST_SHIPPED_QUANTITY,
+  DELIVERED_QUANTITY,
+} from 'modules/batch/constants';
 import TaskRing from 'components/TaskRing';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import validator from './validator';
@@ -175,15 +183,15 @@ const ShipmentBatchCard = ({
   const productProviderName = getByPathWithDefault('', 'orderItem.productProvider.name', batch);
   const todo = getByPathWithDefault({}, 'todo', batch);
   const latestQuantity = getBatchLatestQuantity(batch);
-  const currentQuantity: string = findActiveQuantityField({
-    producedQuantity: batch?.producedQuantity,
-    preShippedQuantity: batch?.preShippedQuantity,
-    shippedQuantity: batch?.shippedQuantity,
-    postShippedQuantity: batch?.postShippedQuantity,
-    deliveredQuantity: batch?.deliveredQuantity,
+  const latestQuantityField: string = findActiveQuantityField({
+    [PRODUCED_QUANTITY]: batch?.[PRODUCED_QUANTITY],
+    [PRE_SHIPPED_QUANTITY]: batch?.[PRE_SHIPPED_QUANTITY],
+    [SHIPPED_QUANTITY]: batch?.[SHIPPED_QUANTITY],
+    [POST_SHIPPED_QUANTITY]: batch?.[POST_SHIPPED_QUANTITY],
+    [DELIVERED_QUANTITY]: batch?.[DELIVERED_QUANTITY],
   });
 
-  const quantityName = `batches.${id}.quantity`;
+  const quantityName = `batches.${id}.${latestQuantityField}`;
 
   const validation = validator({
     no: `batch.${id}.no`,
@@ -318,8 +326,8 @@ const ShipmentBatchCard = ({
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
-            <Label required={currentQuantity === 'initialQuantity'}>
-              <FormattedMessage {...messages[currentQuantity]} />
+            <Label required={latestQuantityField === INITIAL_QUANTITY}>
+              <FormattedMessage {...messages[latestQuantityField]} />
             </Label>
             <FormField
               name={quantityName}

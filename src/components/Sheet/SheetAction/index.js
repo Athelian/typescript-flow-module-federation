@@ -1,5 +1,8 @@
 // @flow
 import * as React from 'react';
+import { useMutation } from '@apollo/react-hooks';
+import { DocumentNode } from 'graphql';
+import { ANIMATION_FINISHED } from 'components/Dialog';
 import type { ActionComponentProps, DoAction } from './types';
 
 type Props = {
@@ -11,19 +14,36 @@ export const useSheetActionDialog = (onDone: () => void): [boolean, () => void] 
   const [open, setOpen] = React.useState(true);
   const handleClose = React.useCallback(() => {
     setOpen(false);
-  }, []);
-
-  React.useEffect(() => {
-    if (open) {
-      return () => {};
-    }
-
-    const handler = setTimeout(() => onDone(), 300);
-
-    return () => clearTimeout(handler);
-  }, [open, onDone]);
+    setTimeout(() => onDone(), ANIMATION_FINISHED);
+  }, [onDone]);
 
   return [open, handleClose];
+};
+
+export const useSheetActionAutoProcess = (
+  mutation: DocumentNode,
+  variables: Object,
+  onComplete: () => void
+) => {
+  const [mutate] = useMutation(mutation);
+
+  React.useEffect(() => {
+    const timeBeforeMutation = Date.now();
+
+    mutate({
+      variables,
+    })
+      .then(() => {
+        // TODO: Check and show error on not successful mutation
+        const delayToClose = 2000 - (Date.now() - timeBeforeMutation);
+        setTimeout(onComplete, Math.max(delayToClose, 0));
+      })
+      .catch(() => {
+        // TODO: Show error
+        onComplete();
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 };
 
 const SheetAction = ({ actions, children }: Props) => {
@@ -52,7 +72,7 @@ const SheetAction = ({ actions, children }: Props) => {
     <>
       {children({ doAction })}
       {activeAction &&
-        actions[activeAction.action]({
+        React.createElement(actions[activeAction.action], {
           entity: activeAction.entity,
           item: activeAction.item,
           onDone: handleDone,

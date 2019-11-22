@@ -15,22 +15,20 @@ type Props = {
 };
 
 const RenderSelectInput = ({ isOpen, getToggleButtonProps }: RenderInputProps) => (
-  <div className={CellActionWrapperStyle}>
-    <LabelledButton
-      className={ButtonStyle}
-      icon="ACTION"
-      label={<FormattedMessage {...messages.actions} />}
-      backgroundColor="TEAL"
-      hoverBackgroundColor="TEAL_DARK"
-      {...getToggleButtonProps({
-        onKeyDown: e => {
-          if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
-            e.stopPropagation();
-          }
-        },
-      })}
-    />
-  </div>
+  <LabelledButton
+    className={ButtonStyle}
+    icon="ACTION"
+    label={<FormattedMessage {...messages.actions} />}
+    backgroundColor="TEAL"
+    hoverBackgroundColor="TEAL_DARK"
+    {...getToggleButtonProps({
+      onKeyDown: e => {
+        if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
+          e.stopPropagation();
+        }
+      },
+    })}
+  />
 );
 
 const CellAction = ({ actions, onAction, inputFocus }: Props) => {
@@ -45,19 +43,21 @@ const CellAction = ({ actions, onAction, inputFocus }: Props) => {
   }, [inputFocus]);
 
   return (
-    <SelectInput
-      value={null}
-      toggleRef={buttonRef}
-      onChange={onAction}
-      items={actions}
-      filterItems={(q, i) => i}
-      itemToString={item => item?.label ?? ''}
-      itemToValue={item => item?.action ?? null}
-      optionWidth={200}
-      optionHeight={30}
-      renderInput={RenderSelectInput}
-      renderOption={SelectInput.DefaultRenderSelectOption}
-    />
+    <div className={CellActionWrapperStyle}>
+      <SelectInput
+        value={null}
+        toggleRef={buttonRef}
+        onChange={onAction}
+        items={actions}
+        filterItems={(q, i) => i}
+        itemToString={item => item?.label ?? ''}
+        itemToValue={item => item?.action ?? null}
+        optionWidth={200}
+        optionHeight={30}
+        renderInput={RenderSelectInput}
+        renderOption={SelectInput.DefaultRenderSelectOption}
+      />
+    </div>
   );
 };
 
