@@ -18,6 +18,13 @@ import RelateEntity from 'components/RelateEntity';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { FieldItem, Label, Display } from 'components/Form';
 import TaskRing from 'components/TaskRing';
+import {
+  PRODUCED_QUANTITY,
+  PRE_SHIPPED_QUANTITY,
+  SHIPPED_QUANTITY,
+  POST_SHIPPED_QUANTITY,
+  DELIVERED_QUANTITY,
+} from 'modules/batch/constants';
 import BaseCard from '../BaseCard';
 import {
   BatchCardWrapperStyle,
@@ -64,12 +71,12 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
     todo,
   } = batch;
 
-  const currentQuantity: string = findActiveQuantityField({
-    producedQuantity: batch?.producedQuantity,
-    preShippedQuantity: batch?.preShippedQuantity,
-    shippedQuantity: batch?.shippedQuantity,
-    postShippedQuantity: batch?.postShippedQuantity,
-    deliveredQuantity: batch?.deliveredQuantity,
+  const latestQuantityField: string = findActiveQuantityField({
+    [PRODUCED_QUANTITY]: batch?.[PRODUCED_QUANTITY],
+    [PRE_SHIPPED_QUANTITY]: batch?.[PRE_SHIPPED_QUANTITY],
+    [SHIPPED_QUANTITY]: batch?.[SHIPPED_QUANTITY],
+    [POST_SHIPPED_QUANTITY]: batch?.[POST_SHIPPED_QUANTITY],
+    [DELIVERED_QUANTITY]: batch?.[DELIVERED_QUANTITY],
   });
   const packageVolume = batch.packageVolume || {
     metric: defaultVolumeMetric,
@@ -135,7 +142,7 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
 
           <div className={QuantityWrapperStyle}>
             <Label>
-              <FormattedMessage {...messages[currentQuantity]} />
+              <FormattedMessage {...messages[latestQuantityField]} />
             </Label>
             <Display>
               <FormattedNumber value={latestQuantity} />

@@ -8,6 +8,14 @@ import {
   BATCH_SET_CUSTOM_FIELDS_MASK,
   BATCH_SET_TAGS,
 } from 'modules/permission/constants/batch';
+import {
+  INITIAL_QUANTITY,
+  PRODUCED_QUANTITY,
+  PRE_SHIPPED_QUANTITY,
+  SHIPPED_QUANTITY,
+  POST_SHIPPED_QUANTITY,
+  DELIVERED_QUANTITY,
+} from 'modules/batch/constants';
 import { times, divide } from './number';
 import { uuid } from './id';
 import {
@@ -33,26 +41,26 @@ export const findActiveQuantityField = ({
   postShippedQuantity: ?number,
   deliveredQuantity: ?number,
 }) => {
-  if (deliveredQuantity) return 'deliveredQuantity';
+  if (deliveredQuantity) return DELIVERED_QUANTITY;
 
-  if (postShippedQuantity) return 'postShippedQuantity';
+  if (postShippedQuantity) return POST_SHIPPED_QUANTITY;
 
-  if (shippedQuantity) return 'shippedQuantity';
+  if (shippedQuantity) return SHIPPED_QUANTITY;
 
-  if (preShippedQuantity) return 'preShippedQuantity';
+  if (preShippedQuantity) return PRE_SHIPPED_QUANTITY;
 
-  if (producedQuantity) return 'producedQuantity';
+  if (producedQuantity) return PRODUCED_QUANTITY;
 
-  return 'initialQuantity';
+  return INITIAL_QUANTITY;
 };
 
 export const getBatchLatestQuantity = (batch: BatchPayload) => {
-  const quantity = batch?.quantity ?? 0;
-  const deliveredQuantity = batch?.deliveredQuantity ?? null;
-  const postShippedQuantity = batch?.postShippedQuantity ?? null;
-  const shippedQuantity = batch?.shippedQuantity ?? null;
-  const preShippedQuantity = batch?.preShippedQuantity ?? null;
-  const producedQuantity = batch?.producedQuantity ?? null;
+  const quantity = batch?.[INITIAL_QUANTITY] ?? 0;
+  const deliveredQuantity = batch?.[DELIVERED_QUANTITY] ?? null;
+  const postShippedQuantity = batch?.[POST_SHIPPED_QUANTITY] ?? null;
+  const shippedQuantity = batch?.[SHIPPED_QUANTITY] ?? null;
+  const preShippedQuantity = batch?.[PRE_SHIPPED_QUANTITY] ?? null;
+  const producedQuantity = batch?.[PRODUCED_QUANTITY] ?? null;
 
   if (deliveredQuantity !== null) return deliveredQuantity;
 
