@@ -106,11 +106,13 @@ export default class OrderItemsContainer extends Container<FormState> {
 
   getShipments = (): Array<ShipmentPayload> => {
     const shipments = [];
+    const shipmentIds = [];
     const { orderItems } = this.state;
     orderItems.forEach(orderItem => {
       const batches = getByPathWithDefault([], 'batches', orderItem);
       batches.forEach(batch => {
-        if (batch.shipment && !shipments.includes(batch.shipment)) {
+        if (batch.shipment && !shipmentIds.includes(batch.shipment.id)) {
+          shipmentIds.push(batch.shipment.id);
           shipments.push(batch.shipment);
         }
       });
