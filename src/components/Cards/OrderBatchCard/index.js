@@ -29,6 +29,14 @@ import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import { getLatestDate } from 'utils/shipment';
+import {
+  INITIAL_QUANTITY,
+  PRODUCED_QUANTITY,
+  PRE_SHIPPED_QUANTITY,
+  SHIPPED_QUANTITY,
+  POST_SHIPPED_QUANTITY,
+  DELIVERED_QUANTITY,
+} from 'modules/batch/constants';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -160,11 +168,11 @@ const OrderBatchCard = ({
 
   const latestQuantity = getBatchLatestQuantity(batch);
   const latestQuantityField: string = findActiveQuantityField({
-    producedQuantity: batch?.producedQuantity,
-    preShippedQuantity: batch?.preShippedQuantity,
-    shippedQuantity: batch?.shippedQuantity,
-    postShippedQuantity: batch?.postShippedQuantity,
-    deliveredQuantity: batch?.deliveredQuantity,
+    [PRODUCED_QUANTITY]: batch?.[PRODUCED_QUANTITY],
+    [PRE_SHIPPED_QUANTITY]: batch?.[PRE_SHIPPED_QUANTITY],
+    [SHIPPED_QUANTITY]: batch?.[SHIPPED_QUANTITY],
+    [POST_SHIPPED_QUANTITY]: batch?.[POST_SHIPPED_QUANTITY],
+    [DELIVERED_QUANTITY]: batch?.[DELIVERED_QUANTITY],
   });
 
   const quantityName = `batches.${id}.${latestQuantityField}`;
@@ -223,7 +231,7 @@ const OrderBatchCard = ({
           onClick={evt => evt.stopPropagation()}
           role="presentation"
         >
-          <Label required={latestQuantityField === 'quantity'}>
+          <Label required={latestQuantityField === INITIAL_QUANTITY}>
             <FormattedMessage {...messages[latestQuantityField]} />
           </Label>
           <FormField
