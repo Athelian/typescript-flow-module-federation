@@ -8,12 +8,15 @@ import DateInput from 'components/Form/Inputs/DateInput';
 import useEnum from 'hooks/useEnum';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import {
+  CellInputWrapperStyle,
+  InputStyle,
+} from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
+import {
   DateRevisionsWrapperStyle,
   SeparatorStyle,
   SelectInputStyle,
   AddButtonStyle,
   RemoveButtonStyle,
-  InputStyle,
   RevisionWrapperStyle,
 } from './style';
 
@@ -79,15 +82,17 @@ const DateRevisionsInput = ({
             renderOption={SelectInput.DefaultRenderSelectOption}
           />
           <hr className={SeparatorStyle} />
-          <DateInput
-            className={InputStyle}
-            value={revision.date}
-            readOnly={readonly}
-            readOnlyWidth="100%"
-            readOnlyHeight="30px"
-            onChange={handleDateChange(index)}
-            required
-          />
+          <div className={CellInputWrapperStyle}>
+            <DateInput
+              className={InputStyle}
+              value={revision.date}
+              readOnly={readonly}
+              readOnlyWidth="105px"
+              readOnlyHeight="30px"
+              onChange={handleDateChange(index)}
+              required
+            />
+          </div>
           {!readonly && (
             <button type="button" className={RemoveButtonStyle} onClick={handleRemove(index)}>
               <Icon icon="REMOVE" />
