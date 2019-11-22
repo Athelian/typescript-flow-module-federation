@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { injectIntl, type IntlShape } from 'react-intl';
 import { Display } from 'components/Form';
-import { formatToDateInput } from 'utils/date';
+import { formatToDateInput, isValidDate } from 'utils/date';
 import FormattedDate from 'components/FormattedDate';
 import { type InputProps, defaultInputProps } from 'components/Form/Inputs/type';
 import { isNullOrUndefined } from 'utils/fp';
@@ -10,6 +10,7 @@ import messages from 'components/Form/Inputs/messages';
 
 type Props = {|
   ...InputProps,
+  required?: boolean,
   intl: IntlShape,
   color?: string,
 |};
@@ -24,13 +25,39 @@ const DateInput = ({
   placeholder,
   color,
   inputRef,
+  required,
+  name,
+  onChange,
   onBlur,
+  onFocus,
   ...rest
 }: Props) => {
-  const handleBlur = e => {
-    e.target.value = e.target.value ? formatToDateInput(e.target.value) : '';
-    if (onBlur) {
-      onBlur(e);
+  const ref = React.useRef();
+  React.useEffect(() => {
+    if (isValidDate(value)) ref.current = value;
+  }, [value]);
+  const originalValue = ref.current || value;
+
+  const handleBlur = evt => {
+    if (required && onChange && !isValidDate(evt.target.value)) {
+      // eslint-disable-next-line no-param-reassign
+      evt.target.value = formatToDateInput(originalValue);
+      onChange(evt);
+      evt.persist();
+      setTimeout(() => {
+        if (onBlur)
+          onBlur({
+            ...evt,
+            target: {
+              ...evt.target,
+              value: originalValue,
+            },
+          });
+      }, 0);
+    } else {
+      // eslint-disable-next-line no-param-reassign
+      evt.target.value = evt.target.value ? formatToDateInput(evt.target.value) : '';
+      if (onBlur) onBlur(evt);
     }
   };
 
@@ -49,8 +76,12 @@ const DateInput = ({
           : placeholder
       }
       onBlur={handleBlur}
-      {...rest}
+      onChange={onChange}
+      onFocus={onFocus}
+      name={name}
+      required={required}
       type="date"
+      {...rest}
     />
   );
 };
