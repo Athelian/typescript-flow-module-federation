@@ -1012,6 +1012,14 @@ export default function transformSheetShipment({
     {
       columnKey: 'shipment.containerGroup.warehouse',
       type: 'warehouse',
+      hide: root => {
+        const currentShipment = getShipmentFromRoot(root);
+        if (currentShipment?.containers) {
+          return (currentShipment?.containers ?? []).length > 0;
+        }
+
+        return (currentShipment?.containerCount ?? 0) > 0;
+      },
       ...transformValueField(
         `${basePath}.containerGroups.0`,
         shipment?.containerGroups?.[0] ?? null,

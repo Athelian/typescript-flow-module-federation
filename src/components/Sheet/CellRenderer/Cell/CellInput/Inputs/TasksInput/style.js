@@ -9,6 +9,7 @@ export const TasksInputWrapperStyle: string = css`
   overflow: hidden;
   width: 100%;
   cursor: pointer;
+  height: 30px;
 `;
 
 export const TasksCountWrapperStyle: string = css`

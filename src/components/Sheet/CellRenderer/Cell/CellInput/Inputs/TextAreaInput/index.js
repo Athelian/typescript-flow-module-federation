@@ -50,18 +50,18 @@ const TextAreaInput = ({
         type="button"
         className={TextAreaInputButtonStyle}
       >
-        {value === null || value === undefined || value === '' ? (
-          <span className={TextAreaPlaceholderStyle}>
-            {intl.formatMessage({
-              id: 'components.sheet.textarea.placeholder',
-              defaultMessage: 'Please enter a value',
-            })}
-          </span>
-        ) : (
-          <div className={CellDisplayWrapperStyle}>
+        <div className={CellDisplayWrapperStyle}>
+          {value === null || value === undefined || value === '' ? (
+            <span className={TextAreaPlaceholderStyle}>
+              {intl.formatMessage({
+                id: 'components.sheet.textarea.placeholder',
+                defaultMessage: 'Please enter a value',
+              })}
+            </span>
+          ) : (
             <span className={DisplayContentStyle}>{value}</span>
-          </div>
-        )}
+          )}
+        </div>
       </button>
 
       <Dialog
