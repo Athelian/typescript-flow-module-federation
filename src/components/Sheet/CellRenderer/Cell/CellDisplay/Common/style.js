@@ -1,12 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, fontSizes, layout, presets } from 'styles/common';
+import { colors, fontSizes, presets } from 'styles/common';
 
 export const CellDisplayWrapperStyle: string = css`
-  ${layout.LAYOUT};
-  ${layout.HORIZONTAL};
-  ${layout.CENTER};
-  padding: 5px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
 `;
 
 export const DisplayContentStyle: string = css`

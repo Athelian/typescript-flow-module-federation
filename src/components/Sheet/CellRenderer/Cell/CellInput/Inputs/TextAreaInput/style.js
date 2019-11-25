@@ -12,6 +12,7 @@ import {
 
 export const TextAreaInputButtonStyle: string = css`
   width: 100%;
+  height: 30px;
   cursor: pointer;
 `;
 
@@ -20,7 +21,6 @@ export const TextAreaPlaceholderStyle: string = css`
   font-weight: bold;
   color: ${colors.GRAY_LIGHT};
   ${presets.ELLIPSIS};
-  padding: 5px;
 `;
 
 export const TextAreaInputDialogWrapperStyle: string = css`

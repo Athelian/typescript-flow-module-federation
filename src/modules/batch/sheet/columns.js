@@ -77,6 +77,7 @@ export default function({
         ![
           'container.totalPrice',
           'container.totalBatchQuantity',
+          'container.totalItems',
           'container.totalPackages',
           'container.totalWeight',
           'container.totalVolume',
