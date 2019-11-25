@@ -8,6 +8,7 @@ export const DocumentsInputWrapperStyle: string = css`
   ${fontSizes.MAIN};
   overflow: hidden;
   width: 100%;
+  height: 30px;
   cursor: pointer;
 `;
 
