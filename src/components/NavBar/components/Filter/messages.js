@@ -166,6 +166,14 @@ export default defineMessages({
     id: 'components.NavBar.Filter.containerOptionPlaceholder',
     defaultMessage: 'Please choose an option',
   },
+  country: {
+    id: 'components.NavBar.Filter.country',
+    defaultMessage: 'Country',
+  },
+  countryPlaceholder: {
+    id: 'components.NavBar.Filter.countryPlaceholder',
+    defaultMessage: 'Please choose a country',
+  },
   completelyBatched: {
     id: 'components.NavBar.Filter.completelyBatched',
     defaultMessage: 'Fully Batched',
