@@ -20,6 +20,7 @@ function transformBatch(
     getOrderFromRoot: root => root.order,
     getShipmentFromRoot: root => root.shipment,
     getBatchFromRoot: root => root,
+    actions: [],
   });
 }
 
@@ -34,6 +35,7 @@ function transformOrderItem(
     orderItem,
     getOrderFromRoot: root => root.orderItem.order,
     getOrderItemFromRoot: root => root.orderItem,
+    actions: [],
   }).map(c => ({
     ...c,
     duplicable: true,

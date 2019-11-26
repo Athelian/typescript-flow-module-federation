@@ -210,5 +210,12 @@ export default function batchColumns(
       color: colors.BATCH,
       width: ColumnWidths.Default,
     })),
+    {
+      key: 'batch.action',
+      title: 'Actions',
+      icon: 'BATCH',
+      color: colors.BATCH,
+      width: 200,
+    },
   ];
 }

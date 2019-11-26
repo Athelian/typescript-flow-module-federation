@@ -53,7 +53,7 @@ export default function({
         },
       },
       batchFieldDefinitions
-    ),
+    ).filter(c => !['batch.action'].includes(c.key)),
     ...orderItemColumns({}, {}, orderItemFieldDefinitions).filter(
       c =>
         ![
@@ -61,6 +61,7 @@ export default function({
           'orderItem.totalBatched',
           'orderItem.totalShipped',
           'orderItem.totalPrice',
+          'orderItem.action',
         ].includes(c.key)
     ),
     ...orderColumns({}, {}, orderFieldDefinitions).filter(

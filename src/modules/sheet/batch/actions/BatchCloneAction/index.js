@@ -3,14 +3,14 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import type { ActionComponentProps } from 'components/Sheet/SheetAction/types';
 import { useSheetActionAutoProcess, useSheetActionDialog } from 'components/Sheet/SheetAction';
-import ActionDialog, { ItemLabelIcon } from 'components/Dialog/ActionDialog';
+import ActionDialog, { BatchLabelIcon } from 'components/Dialog/ActionDialog';
 import messages from '../messages';
-import cloneOrderItemActionMutation from './mutation';
+import cloneBatchActionMutation from './mutation';
 
-const OrderItemCloneAction = ({ entity, onDone }: ActionComponentProps) => {
+const BatchCloneAction = ({ entity, onDone }: ActionComponentProps) => {
   const [isOpen, close] = useSheetActionDialog(onDone);
   useSheetActionAutoProcess(
-    cloneOrderItemActionMutation,
+    cloneBatchActionMutation,
     {
       id: entity.id,
       input: {},
@@ -22,15 +22,12 @@ const OrderItemCloneAction = ({ entity, onDone }: ActionComponentProps) => {
     <ActionDialog
       isOpen={isOpen}
       isProcessing
-      title={<FormattedMessage {...messages.orderItemCloneTitle} />}
+      title={<FormattedMessage {...messages.batchCloneTitle} />}
       dialogMessage={
-        <FormattedMessage
-          {...messages.orderItemCloneCloning}
-          values={{ icon: <ItemLabelIcon /> }}
-        />
+        <FormattedMessage {...messages.batchCloneCloning} values={{ icon: <BatchLabelIcon /> }} />
       }
     />
   );
 };
 
-export default OrderItemCloneAction;
+export default BatchCloneAction;

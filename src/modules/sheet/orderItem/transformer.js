@@ -1,8 +1,9 @@
 // @flow
 import { getBatchLatestQuantity } from 'utils/batch';
 import type { FieldDefinition } from 'types';
-import type { CellValue } from 'components/Sheet/SheetState/types';
+import type { CellAction, CellValue } from 'components/Sheet/SheetState/types';
 import {
+  transformActionField,
   transformComputedField,
   transformCustomField,
   transformField,
@@ -29,6 +30,7 @@ type Props = {|
   orderItem: ?Object,
   getOrderFromRoot: Object => ?Object,
   getOrderItemFromRoot: Object => ?Object,
+  actions: Array<CellAction>,
 |};
 
 export default function transformSheetOrderItem({
@@ -37,6 +39,7 @@ export default function transformSheetOrderItem({
   orderItem,
   getOrderFromRoot,
   getOrderItemFromRoot,
+  actions,
 }: Props): Array<CellValue> {
   return [
     {
@@ -297,5 +300,9 @@ export default function transformSheetOrderItem({
           hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_CUSTOM_FIELDS)
       ),
     })),
+    {
+      columnKey: 'orderItem.action',
+      ...transformActionField(basePath, orderItem, actions),
+    },
   ];
 }

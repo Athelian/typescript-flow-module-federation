@@ -67,6 +67,7 @@ function transformBatch(
     getOrderFromRoot: root => getCurrentBatch(batch?.id, root)?.order,
     getShipmentFromRoot: root => root,
     getBatchFromRoot: root => getCurrentBatch(batch?.id, root),
+    actions: [],
   }).map(c => ({
     ...c,
     disabled: !batch,
@@ -84,6 +85,7 @@ function transformBatchOrderItem(
     orderItem: batch?.orderItem ?? null,
     getOrderFromRoot: root => getCurrentBatch(batch?.id, root)?.orderItem?.order,
     getOrderItemFromRoot: root => getCurrentBatch(batch?.id, root)?.orderItem,
+    actions: [],
   }).map(c => ({
     ...c,
     duplicable: true,
