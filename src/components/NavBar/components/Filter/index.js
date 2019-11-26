@@ -16,7 +16,7 @@ import OrganizationTypes from './Inputs/OrganizationTypes';
 import TaskTemplateEntityTypes from './Inputs/TaskTemplateEntityTypes';
 import MaskEditType from './Inputs/MaskEditType';
 import ContainerType from './Inputs/ContainerType';
-import ContainerOption from './Inputs/ContainterOption';
+import ContainerOption from './Inputs/ContainerOption';
 import Country from './Inputs/Country';
 import OrderIds from './Inputs/OrderIds';
 import ShipmentIds from './Inputs/ShipmentIds';
