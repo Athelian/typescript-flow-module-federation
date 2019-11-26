@@ -14,7 +14,7 @@ import {
 import { CancelButton, SaveButton } from 'components/Buttons';
 import { Content, SlideViewNavBar } from 'components/Layout';
 import BaseCard from 'components/Cards/BaseCard';
-import { ProductProviderCard } from 'components/Cards';
+import { OrderProductProviderCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Display } from 'components/Form';
@@ -91,7 +91,7 @@ const ProductProviderSelector = ({ open, onClose, selected, setSelected }: Selec
                       {nodes.map(productProvider => {
                         const isSelected = values.some(id => id === productProvider?.id);
                         return (
-                          <ProductProviderCard
+                          <OrderProductProviderCard
                             key={productProvider?.id}
                             productProvider={productProvider}
                             selectable
@@ -128,7 +128,7 @@ const ProductProviderIds = ({ value, readonly, onChange }: FilterInputProps<Arra
     query={productProvidersByIDsQuery}
     getItems={data => data?.productProvidersByIDs ?? []}
     renderItem={productProvider => (
-      <BaseCard icon="ProductProvider" color="ProductProvider" wrapperClassName={CardStyle}>
+      <BaseCard icon="PRODUCT_PROVIDER" color="PRODUCT_PROVIDER" wrapperClassName={CardStyle}>
         <Display height="30px">{productProvider?.name}</Display>
       </BaseCard>
     )}
