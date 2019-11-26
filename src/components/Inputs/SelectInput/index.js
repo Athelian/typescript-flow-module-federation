@@ -302,7 +302,7 @@ const SelectInput = (props: Props) => {
                 },
                 onFocus: () => {
                   if (!isOpen) {
-                    openMenu();
+                    setTimeout(() => openMenu(), 100);
                   }
                 },
                 disabled,
