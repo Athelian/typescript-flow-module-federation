@@ -10,6 +10,8 @@ type Props = {
   children: ({ doAction: DoAction }) => React.Node,
 };
 
+const ACTION_MUTATION_EXECUTION_TIME = 2000; // 2sec
+
 export const useSheetActionDialog = (onDone: () => void): [boolean, () => void] => {
   const [open, setOpen] = React.useState(true);
   const handleClose = React.useCallback(() => {
@@ -20,6 +22,23 @@ export const useSheetActionDialog = (onDone: () => void): [boolean, () => void] 
   return [open, handleClose];
 };
 
+export const executeActionMutation = (mutate, variables: Object, onComplete: () => void) => {
+  const timeBeforeMutation = Date.now();
+
+  mutate({
+    variables,
+  })
+    .then(() => {
+      // TODO: Check and show error on not successful mutation
+      const delayToClose = ACTION_MUTATION_EXECUTION_TIME - (Date.now() - timeBeforeMutation);
+      setTimeout(onComplete, Math.max(delayToClose, 0));
+    })
+    .catch(() => {
+      // TODO: Show error
+      onComplete();
+    });
+};
+
 export const useSheetActionAutoProcess = (
   mutation: DocumentNode,
   variables: Object,
@@ -28,20 +47,7 @@ export const useSheetActionAutoProcess = (
   const [mutate] = useMutation(mutation);
 
   React.useEffect(() => {
-    const timeBeforeMutation = Date.now();
-
-    mutate({
-      variables,
-    })
-      .then(() => {
-        // TODO: Check and show error on not successful mutation
-        const delayToClose = 2000 - (Date.now() - timeBeforeMutation);
-        setTimeout(onComplete, Math.max(delayToClose, 0));
-      })
-      .catch(() => {
-        // TODO: Show error
-        onComplete();
-      });
+    executeActionMutation(mutate, variables, onComplete);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
