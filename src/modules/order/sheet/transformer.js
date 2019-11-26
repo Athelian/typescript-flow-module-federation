@@ -7,7 +7,8 @@ import transformSheetOrderItem from 'modules/sheet/orderItem/transformer';
 import transformSheetBatch from 'modules/sheet/batch/transformer';
 import transformSheetShipment from 'modules/sheet/shipment/transformer';
 import transformSheetContainer from 'modules/sheet/container/transformer';
-import itemMessages from 'modules/sheet/orderItem/actions/messages';
+import orderItemActionMessages from 'modules/sheet/orderItem/actions/messages';
+import batchMessages from 'modules/sheet/batch/actions/messages';
 
 function getCurrentBatch(batchId: string, order: Object): ?Object {
   return order.orderItems.flatMap(oi => oi.batches).find(oi => oi.id === batchId);
@@ -48,15 +49,15 @@ function transformOrderItem(
       actions: [
         {
           action: 'order_item_batch_create',
-          label: intl.formatMessage(itemMessages.batchCreateTitle),
+          label: intl.formatMessage(orderItemActionMessages.batchCreateTitle),
         },
         {
           action: 'order_item_clone',
-          label: intl.formatMessage(itemMessages.orderItemCloneTitle),
+          label: intl.formatMessage(orderItemActionMessages.orderItemCloneTitle),
         },
         {
           action: 'order_item_delete',
-          label: intl.formatMessage(itemMessages.orderItemDeleteTitle),
+          label: intl.formatMessage(orderItemActionMessages.orderItemDeleteTitle),
         },
       ],
     }),
@@ -71,7 +72,8 @@ function transformOrderItem(
 function transformBatch(
   fieldDefinitions: Array<FieldDefinition>,
   basePath: string,
-  batch: Object
+  batch: Object,
+  intl: IntlShape
 ): Array<CellValue> {
   return transformSheetBatch({
     fieldDefinitions,
@@ -80,6 +82,12 @@ function transformBatch(
     getOrderFromRoot: root => root,
     getShipmentFromRoot: root => getCurrentBatch(batch?.id, root)?.shipment,
     getBatchFromRoot: root => getCurrentBatch(batch?.id, root),
+    actions: [
+      {
+        action: 'batch_delete_remove',
+        label: intl.formatMessage(batchMessages.batchRemoveDeleteTitle),
+      },
+    ],
   }).map(c => ({
     ...c,
     disabled: !batch,
@@ -130,10 +138,11 @@ function transformFullBatch(
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
   basePath: string,
-  batch: Object
+  batch: Object,
+  intl: IntlShape
 ): Array<CellValue> {
   return [
-    ...transformBatch(batchFieldDefinitions, basePath, batch),
+    ...transformBatch(batchFieldDefinitions, basePath, batch, intl),
     ...transformBatchContainer(`${basePath}.container`, batch),
     ...transformBatchShipment(shipmentFieldDefinitions, `${basePath}.shipment`, batch),
   ];
@@ -178,7 +187,8 @@ export default function transformer({
                 batchFieldDefinitions,
                 shipmentFieldDefinitions,
                 `${index}.orderItems.${orderItemIdx}.batches.${batchIdx}`,
-                batch
+                batch,
+                intl
               ),
             ]);
             orderCells = transformOrder(orderFieldDefinitions, `${index}`, null);
@@ -204,7 +214,8 @@ export default function transformer({
               batchFieldDefinitions,
               shipmentFieldDefinitions,
               `${index}.orderItems.${orderItemIdx}.batches.0`,
-              null
+              null,
+              intl
             ),
           ]);
           orderCells = transformOrder(orderFieldDefinitions, `${index}`, null);
@@ -224,7 +235,8 @@ export default function transformer({
           batchFieldDefinitions,
           shipmentFieldDefinitions,
           `${index}.orderItems.0.batches.0`,
-          null
+          null,
+          intl
         ),
       ]);
     }

@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
 import { BaseButton } from 'components/Buttons';
 import type { ActionComponentProps } from 'components/Sheet/SheetAction/types';
-import { useSheetActionDialog } from 'components/Sheet/SheetAction';
+import { executeActionMutation, useSheetActionDialog } from 'components/Sheet/SheetAction';
 import ActionDialog, { BatchesLabelIcon, ItemLabelIcon } from 'components/Dialog/ActionDialog';
 import messages from '../messages';
 import deleteOrderItemActionMutation from './mutation';
@@ -14,31 +14,23 @@ const OrderItemDeleteAction = ({ entity, onDone }: ActionComponentProps) => {
   const [deleteOrderItem, { loading, called }] = useMutation(deleteOrderItemActionMutation);
 
   const onConfirm = () => {
-    const timeBeforeMutation = Date.now();
-
-    deleteOrderItem({
-      variables: {
+    executeActionMutation(
+      deleteOrderItem,
+      {
         id: entity.id,
       },
-    })
-      .then(() => {
-        const delayToClose = 2000 - (Date.now() - timeBeforeMutation);
-        setTimeout(close, Math.max(delayToClose, 0));
-      })
-      .catch(() => {
-        close();
-      });
+      close
+    );
   };
 
   let dialogMessage = null;
   let dialogSubMessage = null;
 
-  if (loading) {
+  if (loading || called) {
     dialogMessage = (
       <FormattedMessage {...messages.orderItemDeleting} values={{ icon: <ItemLabelIcon /> }} />
     );
   } else {
-    // Has permission to delete
     dialogMessage = (
       <FormattedMessage {...messages.confirmOrderItemDelete} values={{ icon: <ItemLabelIcon /> }} />
     );

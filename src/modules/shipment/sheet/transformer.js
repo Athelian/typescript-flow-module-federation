@@ -67,6 +67,7 @@ function transformBatch(
     getOrderFromRoot: root => getCurrentBatch(batch?.id, root)?.order,
     getShipmentFromRoot: root => root,
     getBatchFromRoot: root => getCurrentBatch(batch?.id, root),
+    actions: [],
   }).map(c => ({
     ...c,
     disabled: !batch,

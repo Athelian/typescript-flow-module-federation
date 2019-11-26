@@ -2,8 +2,9 @@
 import { calculatePackageQuantity, calculateVolume, getBatchLatestQuantity } from 'utils/batch';
 import { defaultVolumeMetric } from 'utils/metric';
 import type { FieldDefinition } from 'types';
-import type { CellValue } from 'components/Sheet/SheetState/types';
+import type { CellAction, CellValue } from 'components/Sheet/SheetState/types';
 import {
+  transformActionField,
   transformComputedField,
   transformCustomField,
   transformField,
@@ -38,6 +39,7 @@ type Props = {|
   getOrderFromRoot: Object => ?Object,
   getShipmentFromRoot: Object => ?Object,
   getBatchFromRoot: Object => ?Object,
+  actions: Array<CellAction>,
 |};
 
 export default function transformSheetBatch({
@@ -47,6 +49,7 @@ export default function transformSheetBatch({
   getOrderFromRoot,
   getShipmentFromRoot,
   getBatchFromRoot,
+  actions,
 }: Props): Array<CellValue> {
   return [
     {
@@ -362,5 +365,9 @@ export default function transformSheetBatch({
         hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_CUSTOM_FIELDS)
       ),
     })),
+    {
+      columnKey: 'batch.action',
+      ...transformActionField(basePath, batch, actions),
+    },
   ];
 }

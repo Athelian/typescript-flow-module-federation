@@ -53,7 +53,7 @@ export default function({
         },
       },
       batchFieldDefinitions
-    ),
+    ).filter(c => !['batch.action'].includes(c.key)),
     ...orderItemColumns({}, {}, orderItemFieldDefinitions).filter(
       c =>
         ![
