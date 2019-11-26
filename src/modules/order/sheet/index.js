@@ -14,6 +14,7 @@ import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import OrderItemCloneAction from 'modules/sheet/orderItem/actions/OrderItemCloneAction';
 import OrderItemDeleteAction from 'modules/sheet/orderItem/actions/OrderItemDeleteAction';
 import BaseBatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAction';
+import BatchCloneAction from 'modules/sheet/batch/actions/BatchCloneAction';
 import BaseBatchDeleteRemoveAction from 'modules/sheet/batch/actions/BatchDeleteRemoveAction';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
@@ -133,6 +134,7 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
           order_item_batch_create: BatchCreateAction,
           order_item_clone: OrderItemCloneAction,
           order_item_delete: OrderItemDeleteAction,
+          batch_clone: BatchCloneAction,
           batch_delete_remove: BatchDeleteRemoveAction,
         }}
       />

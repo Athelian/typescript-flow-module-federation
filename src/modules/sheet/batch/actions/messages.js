@@ -2,6 +2,14 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  batchCloneTitle: {
+    id: 'modules.Sheet.batch.clone.title',
+    defaultMessage: 'Clone',
+  },
+  batchCloneCloning: {
+    id: 'modules.Sheet.batch.clone.cloning',
+    defaultMessage: 'Cloning {icon} ...',
+  },
   batchRemoveDeleteTitle: {
     id: 'modules.Sheet.batch.deleteRemove.title',
     defaultMessage: 'Delete / Remove',
