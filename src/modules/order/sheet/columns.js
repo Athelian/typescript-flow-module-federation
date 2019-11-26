@@ -1,5 +1,4 @@
 // @flow
-import { colors } from 'styles/common';
 import type { FieldDefinition } from 'types';
 import type { ColumnConfig } from 'components/Sheet';
 import orderColumns from 'modules/sheet/order/columns';
@@ -131,13 +130,6 @@ export default function({
       },
       orderItemFieldDefinitions
     ),
-    {
-      key: 'orderItem.action',
-      title: 'Actions',
-      icon: 'ORDER_ITEM',
-      color: colors.ORDER_ITEM,
-      width: 200,
-    },
     ...batchColumns(
       {
         'batch.created': 'orderItems.batches.createdAt',

@@ -2,7 +2,6 @@
 import { IntlShape } from 'react-intl';
 import type { FieldDefinition } from 'types';
 import type { CellValue } from 'components/Sheet/SheetState/types';
-import { transformActionField } from 'components/Sheet';
 import transformSheetOrder from 'modules/sheet/order/transformer';
 import transformSheetOrderItem from 'modules/sheet/orderItem/transformer';
 import transformSheetBatch from 'modules/sheet/batch/transformer';
@@ -46,10 +45,7 @@ function transformOrderItem(
       orderItem,
       getOrderFromRoot: root => root,
       getOrderItemFromRoot: root => root.orderItems.find(oi => oi.id === orderItem?.id),
-    }),
-    {
-      columnKey: 'orderItem.action',
-      ...transformActionField(basePath, orderItem, [
+      actions: [
         {
           action: 'order_item_batch_create',
           label: intl.formatMessage(itemMessages.batchCreateTitle),
@@ -58,8 +54,12 @@ function transformOrderItem(
           action: 'order_item_clone',
           label: intl.formatMessage(itemMessages.orderItemCloneTitle),
         },
-      ]),
-    },
+        {
+          action: 'order_item_delete',
+          label: intl.formatMessage(itemMessages.orderItemDeleteTitle),
+        },
+      ],
+    }),
   ].map(c => ({
     ...c,
     disabled: !hasItems && !orderItem,

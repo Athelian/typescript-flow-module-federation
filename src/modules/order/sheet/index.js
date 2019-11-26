@@ -12,6 +12,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import OrderItemCloneAction from 'modules/sheet/orderItem/actions/OrderItemCloneAction';
+import OrderItemDeleteAction from 'modules/sheet/orderItem/actions/OrderItemDeleteAction';
 import BaseBatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAction';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
@@ -119,6 +120,7 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
         actions={{
           order_item_batch_create: BatchCreateAction,
           order_item_clone: OrderItemCloneAction,
+          order_item_delete: OrderItemDeleteAction,
         }}
       />
     </Content>

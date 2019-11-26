@@ -32,10 +32,7 @@ const BatchCreateActionImpl = ({ entity, item, onDone, getOrderItemBatchesCount 
       isProcessing
       title={<FormattedMessage {...messages.batchCreateTitle} />}
       dialogMessage={
-        <FormattedMessage
-          {...messages.batchCreateCreating}
-          values={{ batchLabel: <BatchLabelIcon /> }}
-        />
+        <FormattedMessage {...messages.batchCreateCreating} values={{ icon: <BatchLabelIcon /> }} />
       }
     />
   );
