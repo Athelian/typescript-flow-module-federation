@@ -17,6 +17,7 @@ import TaskTemplateEntityTypes from './Inputs/TaskTemplateEntityTypes';
 import MaskEditType from './Inputs/MaskEditType';
 import ContainerType from './Inputs/ContainerType';
 import ContainerOption from './Inputs/ContainterOption';
+import Country from './Inputs/Country';
 import OrderIds from './Inputs/OrderIds';
 import ShipmentIds from './Inputs/ShipmentIds';
 import WarehouseIds from './Inputs/WarehouseIds';
@@ -109,6 +110,7 @@ const inputs = {
   mask_edit_type: MaskEditType,
   container_type: ContainerType,
   container_option: ContainerOption,
+  country: Country,
   completely_batched: CompletelyBatched,
   completely_shipped: CompletelyShipped,
   has_shipment: HasShipment,
