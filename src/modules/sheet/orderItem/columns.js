@@ -161,5 +161,12 @@ export default function orderItemColumns(
       color: colors.ORDER_ITEM,
       width: ColumnWidths.Default,
     })),
+    {
+      key: 'orderItem.action',
+      title: 'Actions',
+      icon: 'ORDER_ITEM',
+      color: colors.ORDER_ITEM,
+      width: 200,
+    },
   ];
 }

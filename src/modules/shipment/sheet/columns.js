@@ -262,6 +262,7 @@ export default function({
           'orderItem.totalBatched',
           'orderItem.totalShipped',
           'orderItem.totalPrice',
+          'orderItem.action',
         ].includes(c.key)
     ),
     ...orderColumns(

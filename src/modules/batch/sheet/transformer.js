@@ -34,6 +34,7 @@ function transformOrderItem(
     orderItem,
     getOrderFromRoot: root => root.orderItem.order,
     getOrderItemFromRoot: root => root.orderItem,
+    actions: [],
   }).map(c => ({
     ...c,
     duplicable: true,

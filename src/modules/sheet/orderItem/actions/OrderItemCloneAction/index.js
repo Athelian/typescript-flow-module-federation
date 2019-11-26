@@ -26,7 +26,7 @@ const OrderItemCloneAction = ({ entity, onDone }: ActionComponentProps) => {
       dialogMessage={
         <FormattedMessage
           {...messages.orderItemCloneCloning}
-          values={{ itemLabel: <ItemLabelIcon /> }}
+          values={{ icon: <ItemLabelIcon /> }}
         />
       }
     />
