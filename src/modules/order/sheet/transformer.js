@@ -84,6 +84,10 @@ function transformBatch(
     getBatchFromRoot: root => getCurrentBatch(batch?.id, root),
     actions: [
       {
+        action: 'batch_clone',
+        label: intl.formatMessage(batchMessages.batchCloneTitle),
+      },
+      {
         action: 'batch_delete_remove',
         label: intl.formatMessage(batchMessages.batchRemoveDeleteTitle),
       },
