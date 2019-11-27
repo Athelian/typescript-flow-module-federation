@@ -104,6 +104,7 @@ function transformBatchOrderItemOrder(
     order: batch?.orderItem?.order ?? null,
     getOrderFromRoot: root => getCurrentOrder(batch?.orderItem?.order?.id, root),
     readonlyExporter: true,
+    actions: [],
   }).map(c => ({
     ...c,
     duplicable: true,

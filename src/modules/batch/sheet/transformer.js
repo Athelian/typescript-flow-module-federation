@@ -53,6 +53,7 @@ function transformOrder(
     order,
     getOrderFromRoot: root => root?.orderItem?.order,
     readonlyExporter: true,
+    actions: [],
   }).map(c => ({
     ...c,
     duplicable: true,
