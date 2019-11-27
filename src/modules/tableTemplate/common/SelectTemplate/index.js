@@ -1,15 +1,13 @@
 // @flow
 import * as React from 'react';
-import { Query } from 'react-apollo';
-import { ObjectValue } from 'react-values';
-import { getByPathWithDefault, isEquals } from 'utils/fp';
-import loadMore from 'utils/loadMore';
+import useQueryList from 'hooks/useQueryList';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { tableTemplateQuery } from 'modules/tableTemplate/list/query';
 import TableTemplateGridView from 'modules/tableTemplate/list/TableTemplateGridView';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { EntityIcon } from 'components/NavBar';
 import { TemplateCard } from 'components/Cards';
+import Selector from 'components/Selector';
 
 type Props = {
   selected?: ?{
@@ -27,75 +25,67 @@ const defaultProps = {
   },
 };
 
-const SelectTemplate = ({ selected, onCancel, onSelect }: Props) => (
-  <Query
-    query={tableTemplateQuery}
-    variables={{
-      page: 1,
-      perPage: 10,
-      filterBy: {
-        type: 'Order',
+const SelectTemplate = ({ selected, onCancel, onSelect }: Props) => {
+  const { nodes, loading, hasMore, loadMore } = useQueryList(
+    tableTemplateQuery,
+    {
+      variables: {
+        page: 1,
+        perPage: 10,
+        filterBy: {
+          type: 'Order',
+        },
+        sortBy: {
+          updatedAt: 'DESCENDING',
+        },
       },
-      sortBy: {
-        updatedAt: 'DESCENDING',
-      },
-    }}
-    fetchPolicy="network-only"
-  >
-    {({ error, loading, data, fetchMore }) => {
-      if (error) {
-        return error.message;
-      }
+      fetchPolicy: 'network-only',
+    },
+    'maskEdits'
+  );
 
-      const nextPage = getByPathWithDefault(1, `maskEdits.page`, data) + 1;
-      const totalPage = getByPathWithDefault(1, `maskEdits.totalPage`, data);
-      const hasMore = nextPage <= totalPage;
-      return (
-        <ObjectValue defaultValue={selected}>
-          {({ value, set }) => (
-            <SlideViewLayout>
-              <SlideViewNavBar>
-                <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
-                <CancelButton onClick={onCancel} />
-                <SaveButton
-                  disabled={isEquals(value, selected)}
-                  onClick={() => onSelect(value)}
-                  data-testid="saveButtonOnSelectTemplate"
-                />
-              </SlideViewNavBar>
+  return (
+    <Selector.Single selected={selected}>
+      {({ value, dirty, getItemProps }) => (
+        <SlideViewLayout>
+          <SlideViewNavBar>
+            <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+            <CancelButton onClick={onCancel} />
+            <SaveButton
+              disabled={!dirty}
+              onClick={() => onSelect(value)}
+              data-testid="saveButtonOnSelectTemplate"
+            />
+          </SlideViewNavBar>
 
-              <Content>
-                <TableTemplateGridView
-                  items={getByPathWithDefault([], 'maskEdits.nodes', data)}
-                  onLoadMore={() => loadMore({ fetchMore, data }, {}, 'maskEdits')}
-                  hasMore={hasMore}
-                  isLoading={loading}
-                  renderItem={item => (
-                    <TemplateCard
-                      onSelect={() => set(item)}
-                      key={item.id}
-                      template={{
-                        id: item.id,
-                        title: item.name,
-                        description: item.memo,
-                        count: (item.fields || []).length,
-                      }}
-                      type="EDIT_TABLE"
-                      actions={[]}
-                      showActionsOnHover
-                      selectable
-                      selected={value && value.id === item.id}
-                    />
-                  )}
+          <Content>
+            <TableTemplateGridView
+              items={nodes}
+              onLoadMore={loadMore}
+              hasMore={hasMore}
+              isLoading={loading}
+              renderItem={item => (
+                <TemplateCard
+                  key={item.id}
+                  template={{
+                    id: item.id,
+                    title: item.name,
+                    description: item.memo,
+                    count: (item.fields || []).length,
+                  }}
+                  type="EDIT_TABLE"
+                  actions={[]}
+                  showActionsOnHover
+                  {...getItemProps(item)}
                 />
-              </Content>
-            </SlideViewLayout>
-          )}
-        </ObjectValue>
-      );
-    }}
-  </Query>
-);
+              )}
+            />
+          </Content>
+        </SlideViewLayout>
+      )}
+    </Selector.Single>
+  );
+};
 
 SelectTemplate.defaultProps = defaultProps;
 

@@ -1,15 +1,14 @@
 // @flow
 import * as React from 'react';
-import { Query } from 'react-apollo';
 import { partnersQuery } from 'graphql/partner/query';
-import { ObjectValue } from 'react-values';
-import { isNullOrUndefined, getByPathWithDefault } from 'utils/fp';
-import loadMore from 'utils/loadMore';
+import { isNullOrUndefined } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
 import useFilterSort from 'hooks/useFilterSort';
+import useQueryList from 'hooks/useQueryList';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { SaveButton, CancelButton } from 'components/Buttons';
+import Selector from 'components/Selector';
 import {
   EntityIcon,
   Filter,
@@ -68,8 +67,6 @@ const chooseMessage = ({
   return selectMessage || warningMessage;
 };
 
-const partnerPath = 'viewer.user.organization.partners';
-
 const SelectExporter = ({
   cacheKey,
   isRequired,
@@ -88,101 +85,93 @@ const SelectExporter = ({
     cacheKey
   );
 
-  const queryVariables = { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 10 };
+  const { nodes, loading, hasMore, loadMore } = useQueryList(
+    partnersQuery,
+    {
+      variables: { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 10 },
+      fetchPolicy: 'network-only',
+    },
+    'viewer.user.organization.partners'
+  );
+
+  const partners = React.useMemo(
+    () =>
+      nodes.map(item => ({
+        ...item.organization,
+        code: item.code,
+      })),
+    [nodes]
+  );
 
   return (
-    <Query fetchPolicy="network-only" query={partnersQuery} variables={queryVariables}>
-      {({ loading, data, fetchMore, error }) => {
-        if (error) {
-          return error.message;
-        }
-        const items = getByPathWithDefault([], `${partnerPath}.nodes`, data).map(item => ({
-          ...item.organization,
-          code: item.code,
-        }));
-        const nextPage = getByPathWithDefault(1, `${partnerPath}.page`, data) + 1;
-        const totalPage = getByPathWithDefault(1, `${partnerPath}.totalPage`, data);
-        const hasMore = nextPage <= totalPage;
-        return (
-          <ObjectValue defaultValue={selected}>
-            {({ value, set }) => (
-              <SlideViewLayout>
-                <SlideViewNavBar>
-                  <EntityIcon icon="PARTNER" color="PARTNER" />
+    <Selector.Single selected={selected} required={isRequired}>
+      {({ value, dirty, getItemProps }) => (
+        <SlideViewLayout>
+          <SlideViewNavBar>
+            <EntityIcon icon="PARTNER" color="PARTNER" />
 
-                  <Filter
-                    config={PartnerFilterConfig}
-                    filterBy={filterBy}
-                    onChange={setFilterBy}
-                    staticFilters={['types']}
-                  />
-                  <Search query={query} onChange={setQuery} />
-                  <Sort config={PartnerSortConfig} sortBy={sortBy} onChange={setSortBy} />
-                  <CancelButton onClick={onCancel} />
-                  <SaveButton
-                    data-testid="btnSaveExporter"
-                    disabled={value?.id === selected?.id}
-                    onClick={() => {
-                      if (isRequired) {
-                        if (!isNullOrUndefined(selected)) {
-                          setOpenConfirmDialog(true);
-                        } else {
-                          onSelect(value);
-                        }
-                      } else {
-                        setOpenConfirmDialog(true);
-                      }
-                    }}
-                  />
-                  <ConfirmDialog
-                    isOpen={openConfirmDialog}
-                    onRequestClose={() => setOpenConfirmDialog(false)}
-                    onCancel={() => setOpenConfirmDialog(false)}
-                    onConfirm={() => {
-                      onSelect(value);
-                      setOpenConfirmDialog(false);
-                    }}
-                    message={chooseMessage({
-                      selected,
-                      value,
-                      selectMessage,
-                      changeMessage,
-                      deselectMessage,
-                      warningMessage,
-                    })}
-                  />
-                </SlideViewNavBar>
+            <Filter
+              config={PartnerFilterConfig}
+              filterBy={filterBy}
+              onChange={setFilterBy}
+              staticFilters={['types']}
+            />
+            <Search query={query} onChange={setQuery} />
+            <Sort config={PartnerSortConfig} sortBy={sortBy} onChange={setSortBy} />
+            <CancelButton onClick={onCancel} />
+            <SaveButton
+              data-testid="btnSaveExporter"
+              disabled={!dirty}
+              onClick={() => {
+                if (isRequired) {
+                  if (!isNullOrUndefined(selected)) {
+                    setOpenConfirmDialog(true);
+                  } else {
+                    onSelect(value);
+                  }
+                } else {
+                  setOpenConfirmDialog(true);
+                }
+              }}
+            />
+            <ConfirmDialog
+              isOpen={openConfirmDialog}
+              onRequestClose={() => setOpenConfirmDialog(false)}
+              onCancel={() => setOpenConfirmDialog(false)}
+              onConfirm={() => {
+                onSelect(value);
+                setOpenConfirmDialog(false);
+              }}
+              message={chooseMessage({
+                selected,
+                value,
+                selectMessage,
+                changeMessage,
+                deselectMessage,
+                warningMessage,
+              })}
+            />
+          </SlideViewNavBar>
 
-                <Content>
-                  <PartnerGridView
-                    hasMore={hasMore}
-                    isLoading={loading}
-                    onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, partnerPath)}
-                    items={items}
-                    renderItem={item => (
-                      <PartnerCard
-                        key={item.id}
-                        data-testid="partnerCard"
-                        partner={item}
-                        onSelect={() => {
-                          if (!isRequired && (value && value.id === item.id)) {
-                            set(null);
-                          } else {
-                            set(cleanUpData(item));
-                          }
-                        }}
-                        selectable
-                        selected={value && value.id === item.id}
-                      />
-                    )}
-                  />
-                </Content>
-              </SlideViewLayout>
-            )}
-          </ObjectValue>
-        );
-      }}
-    </Query>
+          <Content>
+            <PartnerGridView
+              hasMore={hasMore}
+              isLoading={loading}
+              onLoadMore={loadMore}
+              items={partners}
+              renderItem={item => (
+                <PartnerCard
+                  key={item.id}
+                  data-testid="partnerCard"
+                  partner={item}
+                  {...getItemProps(cleanUpData(item))}
+                />
+              )}
+            />
+          </Content>
+        </SlideViewLayout>
+      )}
+    </Selector.Single>
   );
 };
 
