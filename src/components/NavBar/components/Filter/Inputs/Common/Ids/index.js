@@ -5,17 +5,19 @@ import LoadingIcon from 'components/LoadingIcon';
 import { DashedPlusButton, Label } from 'components/Form';
 import { SelectionWrapperStyle } from './style';
 
+export type SelectorProps = {
+  open: boolean,
+  onClose: () => void,
+  selected: Array<string>,
+  setSelected: (Array<string>) => void,
+};
+
 type Props = {
   value: Array<string>,
   readonly: boolean,
   onChange: (Array<string>) => void,
   title: any,
-  selector: ({
-    open: boolean,
-    onClose: () => void,
-    selected: Array<string>,
-    setSelected: (Array<string>) => void,
-  }) => React.Node,
+  selector: SelectorProps => React.Node,
   query: any,
   getItems: Object => Array<Object>,
   renderItem: Object => React.Node,
