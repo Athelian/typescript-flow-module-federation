@@ -3,8 +3,9 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { getBatchLatestQuantity } from 'utils/batch';
 import type { FieldDefinition } from 'types';
-import type { CellValue } from 'components/Sheet/SheetState/types';
+import type { CellAction, CellValue } from 'components/Sheet/SheetState/types';
 import {
+  transformActionField,
   transformComputedField,
   transformCustomField,
   transformField,
@@ -38,6 +39,7 @@ type Props = {|
   order: ?Object,
   getOrderFromRoot: Object => ?Object,
   readonlyExporter: boolean,
+  actions: Array<CellAction>,
 |};
 
 export default function transformSheetOrder({
@@ -46,6 +48,7 @@ export default function transformSheetOrder({
   order,
   getOrderFromRoot,
   readonlyExporter,
+  actions,
 }: Props): Array<CellValue> {
   return [
     {
@@ -349,5 +352,9 @@ export default function transformSheetOrder({
         hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_CUSTOM_FIELDS)
       ),
     })),
+    {
+      columnKey: 'order.action',
+      ...transformActionField(basePath, order, actions),
+    },
   ];
 }
