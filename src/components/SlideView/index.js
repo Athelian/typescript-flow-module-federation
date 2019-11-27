@@ -38,7 +38,7 @@ const SlideViewContext = React.createContext<Context>({
   minWidth: StartMinWidth + MinWidthStep,
 });
 
-const ANIMATION_FINISHED = 300; // 0.3s
+export const ANIMATION_FINISHED = 300; // 0.3s
 
 export const SLIDEVIEW_PORTAL_NAME = 'slideview';
 

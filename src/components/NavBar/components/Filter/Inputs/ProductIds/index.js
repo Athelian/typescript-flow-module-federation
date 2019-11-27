@@ -1,8 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ArrayValue } from 'react-values';
-import { Query } from 'react-apollo';
 import {
   EntityIcon,
   Filter,
@@ -12,27 +10,20 @@ import {
   ProductFilterConfig,
 } from 'components/NavBar';
 import { CancelButton, SaveButton } from 'components/Buttons';
-import { Content, SlideViewNavBar } from 'components/Layout';
+import { Content, SlideViewNavBar, SlideViewLayout } from 'components/Layout';
 import BaseCard from 'components/Cards/BaseCard';
 import { ProductCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Display } from 'components/Form';
+import Selector from 'components/Selector';
 import useFilterSort from 'hooks/useFilterSort';
-import { isEquals } from 'utils/fp';
-import loadMore from 'utils/loadMore';
+import useQueryList from 'hooks/useQueryList';
 import messages from '../../messages';
 import type { FilterInputProps } from '../../types';
-import Ids from '../Common/Ids';
+import Ids, { type SelectorProps } from '../Common/Ids';
 import { productsQuery, productsByIDsQuery } from './query';
 import { CardStyle } from './style';
-
-type SelectorProps = {
-  open: boolean,
-  onClose: () => void,
-  selected: Array<string>,
-  setSelected: (Array<string>) => void,
-};
 
 const ProductSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
@@ -40,76 +31,46 @@ const ProductSelector = ({ open, onClose, selected, setSelected }: SelectorProps
     { updatedAt: 'DESCENDING' }
   );
 
+  const { nodes, loading, hasMore, loadMore } = useQueryList(
+    productsQuery,
+    {
+      variables: { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 },
+      fetchPolicy: 'network-only',
+    },
+    'products'
+  );
+
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
-      <ArrayValue defaultValue={selected}>
-        {({ value: values, push, filter }) => (
-          <>
+      <Selector.Many selected={selected}>
+        {({ value, dirty, getItemProps }) => (
+          <SlideViewLayout>
             <SlideViewNavBar>
               <EntityIcon icon="PRODUCT" color="PRODUCT" />
               <Filter config={ProductFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
               <Search query={query} onChange={setQuery} />
               <Sort config={ProductSortConfig} sortBy={sortBy} onChange={setSortBy} />
               <CancelButton onClick={onClose} />
-              <SaveButton
-                disabled={isEquals(values, selected)}
-                onClick={() => setSelected(values)}
-              />
+              <SaveButton disabled={!dirty} onClick={() => setSelected(value)} />
             </SlideViewNavBar>
 
             <Content>
-              <Query
-                query={productsQuery}
-                variables={{ filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 }}
-                fetchPolicy="network-only"
+              <GridView
+                onLoadMore={loadMore}
+                hasMore={hasMore}
+                isLoading={loading}
+                isEmpty={nodes.length === 0}
+                emptyMessage={null}
+                itemWidth="195px"
               >
-                {({ loading, data, fetchMore, error }) => {
-                  if (error) {
-                    return error.message;
-                  }
-
-                  const nextPage = (data?.products?.page ?? 1) + 1;
-                  const totalPage = data?.products?.totalPage ?? 1;
-                  const hasMore = nextPage <= totalPage;
-                  const nodes = data?.products?.nodes ?? [];
-
-                  return (
-                    <GridView
-                      onLoadMore={() =>
-                        loadMore({ fetchMore, data }, { filterBy, sortBy }, 'products')
-                      }
-                      hasMore={hasMore}
-                      isLoading={loading}
-                      isEmpty={nodes.length === 0}
-                      emptyMessage={null}
-                      itemWidth="195px"
-                    >
-                      {nodes.map(product => {
-                        const isSelected = values.some(id => id === product?.id);
-                        return (
-                          <ProductCard
-                            key={product?.id}
-                            product={product}
-                            selectable
-                            selected={isSelected}
-                            onSelect={() => {
-                              if (isSelected) {
-                                filter(id => id !== product?.id);
-                              } else {
-                                push(product?.id);
-                              }
-                            }}
-                          />
-                        );
-                      })}
-                    </GridView>
-                  );
-                }}
-              </Query>
+                {nodes.map(product => (
+                  <ProductCard key={product?.id} product={product} {...getItemProps(product)} />
+                ))}
+              </GridView>
             </Content>
-          </>
+          </SlideViewLayout>
         )}
-      </ArrayValue>
+      </Selector.Many>
     </SlideView>
   );
 };
