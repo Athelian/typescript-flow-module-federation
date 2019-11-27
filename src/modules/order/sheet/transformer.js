@@ -7,6 +7,7 @@ import transformSheetOrderItem from 'modules/sheet/orderItem/transformer';
 import transformSheetBatch from 'modules/sheet/batch/transformer';
 import transformSheetShipment from 'modules/sheet/shipment/transformer';
 import transformSheetContainer from 'modules/sheet/container/transformer';
+import orderActionMessages from 'modules/sheet/order/actions/messages';
 import orderItemActionMessages from 'modules/sheet/orderItem/actions/messages';
 import batchMessages from 'modules/sheet/batch/actions/messages';
 
@@ -17,7 +18,8 @@ function getCurrentBatch(batchId: string, order: Object): ?Object {
 function transformOrder(
   fieldDefinitions: Array<FieldDefinition>,
   basePath: string,
-  order: Object
+  order: Object,
+  intl: IntlShape
 ): Array<CellValue> {
   return transformSheetOrder({
     fieldDefinitions,
@@ -25,6 +27,12 @@ function transformOrder(
     order,
     getOrderFromRoot: root => root,
     readonlyExporter: false,
+    actions: [
+      {
+        action: 'order_autofill',
+        label: intl.formatMessage(orderActionMessages.batchesAutofillTitle),
+      },
+    ],
   }).map(c => ({
     ...c,
     empty: !order,
@@ -170,7 +178,7 @@ export default function transformer({
   return (index: number, order: Object): Array<Array<CellValue>> => {
     const rows = [];
 
-    let orderCells = transformOrder(orderFieldDefinitions, `${index}`, order);
+    let orderCells = transformOrder(orderFieldDefinitions, `${index}`, order, intl);
 
     if ((order?.orderItems?.length ?? 0) > 0) {
       (order?.orderItems ?? []).forEach((orderItem, orderItemIdx) => {
@@ -195,7 +203,7 @@ export default function transformer({
                 intl
               ),
             ]);
-            orderCells = transformOrder(orderFieldDefinitions, `${index}`, null);
+            orderCells = transformOrder(orderFieldDefinitions, `${index}`, null, intl);
             orderItemCells = transformOrderItem(
               orderItemFieldDefinitions,
               `${index}.orderItems.${orderItemIdx}`,
@@ -222,7 +230,7 @@ export default function transformer({
               intl
             ),
           ]);
-          orderCells = transformOrder(orderFieldDefinitions, `${index}`, null);
+          orderCells = transformOrder(orderFieldDefinitions, `${index}`, null, intl);
         }
       });
     } else {

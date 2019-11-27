@@ -278,6 +278,7 @@ export default function({
           'order.totalBatched',
           'order.totalShipped',
           'order.totalPrice',
+          'order.action',
         ].includes(c.key)
     ),
   ];
