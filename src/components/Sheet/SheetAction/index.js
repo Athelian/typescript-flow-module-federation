@@ -1,6 +1,10 @@
 // @flow
 import * as React from 'react';
-import { useMutation } from '@apollo/react-hooks';
+import {
+  type MutationFunctionOptions,
+  type ExecutionResult,
+  useMutation,
+} from '@apollo/react-hooks';
 import { DocumentNode } from 'graphql';
 import { ANIMATION_FINISHED } from 'components/Dialog';
 import type { ActionComponentProps, DoAction } from './types';
@@ -22,7 +26,11 @@ export const useSheetActionDialog = (onDone: () => void): [boolean, () => void] 
   return [open, handleClose];
 };
 
-export const executeActionMutation = (mutate, variables: Object, onComplete: () => void) => {
+export const executeActionMutation = (
+  mutate: (MutationFunctionOptions<any, any>) => Promise<ExecutionResult<any>>,
+  variables: Object,
+  onComplete: () => void
+) => {
   const timeBeforeMutation = Date.now();
 
   mutate({
