@@ -29,12 +29,12 @@ function transformOrder(
     readonlyExporter: false,
     actions: [
       {
-        action: 'order_item_create',
-        label: intl.formatMessage(orderActionMessages.orderItemCreateTitle),
-      },
-      {
         action: 'order_autofill',
         label: intl.formatMessage(orderActionMessages.batchesAutofillTitle),
+      },
+      {
+        action: 'order_item_create',
+        label: intl.formatMessage(orderActionMessages.orderItemCreateTitle),
       },
     ],
   }).map(c => ({
@@ -60,16 +60,20 @@ function transformOrderItem(
       getOrderItemFromRoot: root => root.orderItems.find(oi => oi.id === orderItem?.id),
       actions: [
         {
-          action: 'order_item_batch_create',
-          label: intl.formatMessage(orderItemActionMessages.batchCreateTitle),
-        },
-        {
           action: 'order_item_clone',
           label: intl.formatMessage(orderItemActionMessages.orderItemCloneTitle),
         },
         {
+          action: 'order_item_sync_price',
+          label: intl.formatMessage(orderItemActionMessages.orderItemSyncPriceTitle),
+        },
+        {
           action: 'order_item_delete',
           label: intl.formatMessage(orderItemActionMessages.orderItemDeleteTitle),
+        },
+        {
+          action: 'order_item_batch_create',
+          label: intl.formatMessage(orderItemActionMessages.batchCreateTitle),
         },
       ],
     }),

@@ -57,7 +57,7 @@ const DialogRender = (props: Props) => {
         onClick={event => event.stopPropagation()}
         role="presentation"
       >
-        {showCancelButton && (
+        {showCancelButton && isOpen && (
           <button type="button" onClick={onCancel} className={CancelButtonStyle}>
             <Icon icon="CLEAR" />
           </button>

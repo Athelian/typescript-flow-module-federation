@@ -4,7 +4,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   batchesAutofillTitle: {
     id: 'modules.Sheet.order.batchesAutofill.title',
-    defaultMessage: 'Autofill',
+    defaultMessage: 'Autofill Batches',
   },
   batchesAutofillButton: {
     id: 'modules.Sheet.order.batchesAutofill.button',
