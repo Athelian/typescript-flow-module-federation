@@ -1,8 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ArrayValue } from 'react-values';
-import { Query } from 'react-apollo';
 import {
   EntityIcon,
   Filter,
@@ -12,27 +10,20 @@ import {
   ProductProviderFilterConfig,
 } from 'components/NavBar';
 import { CancelButton, SaveButton } from 'components/Buttons';
-import { Content, SlideViewNavBar } from 'components/Layout';
+import { Content, SlideViewNavBar, SlideViewLayout } from 'components/Layout';
 import BaseCard from 'components/Cards/BaseCard';
 import { OrderProductProviderCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Display } from 'components/Form';
+import Selector from 'components/Selector';
 import useFilterSort from 'hooks/useFilterSort';
-import { isEquals } from 'utils/fp';
-import loadMore from 'utils/loadMore';
+import useQueryList from 'hooks/useQueryList';
 import messages from '../../messages';
 import type { FilterInputProps } from '../../types';
-import Ids from '../Common/Ids';
+import Ids, { type SelectorProps } from '../Common/Ids';
 import { productProvidersQuery, productProvidersByIDsQuery } from './query';
 import { CardStyle } from './style';
-
-type SelectorProps = {
-  open: boolean,
-  onClose: () => void,
-  selected: Array<string>,
-  setSelected: (Array<string>) => void,
-};
 
 const ProductProviderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
@@ -40,11 +31,20 @@ const ProductProviderSelector = ({ open, onClose, selected, setSelected }: Selec
     { updatedAt: 'DESCENDING' }
   );
 
+  const { nodes, loading, hasMore, loadMore } = useQueryList(
+    productProvidersQuery,
+    {
+      variables: { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 },
+      fetchPolicy: 'network-only',
+    },
+    'productProviders'
+  );
+
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
-      <ArrayValue defaultValue={selected}>
-        {({ value: values, push, filter }) => (
-          <>
+      <Selector.Many selected={selected.map(id => ({ id }))}>
+        {({ value, dirty, getItemProps }) => (
+          <SlideViewLayout>
             <SlideViewNavBar>
               <EntityIcon icon="PRODUCT_PROVIDER" color="PRODUCT_PROVIDER" />
               <Filter
@@ -56,64 +56,32 @@ const ProductProviderSelector = ({ open, onClose, selected, setSelected }: Selec
               <Sort config={ProductProviderSortConfig} sortBy={sortBy} onChange={setSortBy} />
               <CancelButton onClick={onClose} />
               <SaveButton
-                disabled={isEquals(values, selected)}
-                onClick={() => setSelected(values)}
+                disabled={!dirty}
+                onClick={() => setSelected(value.map(productProvider => productProvider.id))}
               />
             </SlideViewNavBar>
 
             <Content>
-              <Query
-                query={productProvidersQuery}
-                variables={{ filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 }}
-                fetchPolicy="network-only"
+              <GridView
+                onLoadMore={loadMore}
+                hasMore={hasMore}
+                isLoading={loading}
+                isEmpty={nodes.length === 0}
+                emptyMessage={null}
+                itemWidth="195px"
               >
-                {({ loading, data, fetchMore, error }) => {
-                  if (error) {
-                    return error.message;
-                  }
-
-                  const nextPage = (data?.productProviders?.page ?? 1) + 1;
-                  const totalPage = data?.productProviders?.totalPage ?? 1;
-                  const hasMore = nextPage <= totalPage;
-                  const nodes = data?.productProviders?.nodes ?? [];
-
-                  return (
-                    <GridView
-                      onLoadMore={() =>
-                        loadMore({ fetchMore, data }, { filterBy, sortBy }, 'productProviders')
-                      }
-                      hasMore={hasMore}
-                      isLoading={loading}
-                      isEmpty={nodes.length === 0}
-                      emptyMessage={null}
-                      itemWidth="195px"
-                    >
-                      {nodes.map(productProvider => {
-                        const isSelected = values.some(id => id === productProvider?.id);
-                        return (
-                          <OrderProductProviderCard
-                            key={productProvider?.id}
-                            productProvider={productProvider}
-                            selectable
-                            selected={isSelected}
-                            onSelect={() => {
-                              if (isSelected) {
-                                filter(id => id !== productProvider?.id);
-                              } else {
-                                push(productProvider?.id);
-                              }
-                            }}
-                          />
-                        );
-                      })}
-                    </GridView>
-                  );
-                }}
-              </Query>
+                {nodes.map(productProvider => (
+                  <OrderProductProviderCard
+                    key={productProvider?.id}
+                    productProvider={productProvider}
+                    {...getItemProps(productProvider)}
+                  />
+                ))}
+              </GridView>
             </Content>
-          </>
+          </SlideViewLayout>
         )}
-      </ArrayValue>
+      </Selector.Many>
     </SlideView>
   );
 };

@@ -1,8 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ArrayValue } from 'react-values';
-import { Query } from 'react-apollo';
 import {
   EntityIcon,
   Filter,
@@ -12,27 +10,20 @@ import {
   WarehouseFilterConfig,
 } from 'components/NavBar';
 import { CancelButton, SaveButton } from 'components/Buttons';
-import { Content, SlideViewNavBar } from 'components/Layout';
+import { Content, SlideViewNavBar, SlideViewLayout } from 'components/Layout';
 import BaseCard from 'components/Cards/BaseCard';
 import { WarehouseCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Display } from 'components/Form';
+import Selector from 'components/Selector';
 import useFilterSort from 'hooks/useFilterSort';
-import { isEquals } from 'utils/fp';
-import loadMore from 'utils/loadMore';
+import useQueryList from 'hooks/useQueryList';
 import messages from '../../messages';
 import type { FilterInputProps } from '../../types';
-import Ids from '../Common/Ids';
+import Ids, { type SelectorProps } from '../Common/Ids';
 import { warehousesQuery, warehousesByIDsQuery } from './query';
 import { CardStyle } from './style';
-
-type SelectorProps = {
-  open: boolean,
-  onClose: () => void,
-  selected: Array<string>,
-  setSelected: (Array<string>) => void,
-};
 
 const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
@@ -40,11 +31,20 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
     { updatedAt: 'DESCENDING' }
   );
 
+  const { nodes, loading, hasMore, loadMore } = useQueryList(
+    warehousesQuery,
+    {
+      variables: { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 },
+      fetchPolicy: 'network-only',
+    },
+    'warehouses'
+  );
+
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
-      <ArrayValue defaultValue={selected}>
-        {({ value: values, push, filter }) => (
-          <>
+      <Selector.Many selected={selected.map(id => ({ id }))}>
+        {({ value, dirty, getItemProps }) => (
+          <SlideViewLayout>
             <SlideViewNavBar>
               <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
               <Filter config={WarehouseFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
@@ -52,64 +52,32 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
               <Sort config={WarehouseSortConfig} sortBy={sortBy} onChange={setSortBy} />
               <CancelButton onClick={onClose} />
               <SaveButton
-                disabled={isEquals(values, selected)}
-                onClick={() => setSelected(values)}
+                disabled={!dirty}
+                onClick={() => setSelected(value.map(warehouse => warehouse.id))}
               />
             </SlideViewNavBar>
 
             <Content>
-              <Query
-                query={warehousesQuery}
-                variables={{ filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 }}
-                fetchPolicy="network-only"
+              <GridView
+                onLoadMore={loadMore}
+                hasMore={hasMore}
+                isLoading={loading}
+                isEmpty={nodes.length === 0}
+                emptyMessage={null}
+                itemWidth="195px"
               >
-                {({ loading, data, fetchMore, error }) => {
-                  if (error) {
-                    return error.message;
-                  }
-
-                  const nextPage = (data?.warehouses?.page ?? 1) + 1;
-                  const totalPage = data?.warehouses?.totalPage ?? 1;
-                  const hasMore = nextPage <= totalPage;
-                  const nodes = data?.warehouses?.nodes ?? [];
-
-                  return (
-                    <GridView
-                      onLoadMore={() =>
-                        loadMore({ fetchMore, data }, { filterBy, sortBy }, 'warehouses')
-                      }
-                      hasMore={hasMore}
-                      isLoading={loading}
-                      isEmpty={nodes.length === 0}
-                      emptyMessage={null}
-                      itemWidth="195px"
-                    >
-                      {nodes.map(warehouse => {
-                        const isSelected = values.some(id => id === warehouse?.id);
-                        return (
-                          <WarehouseCard
-                            key={warehouse?.id}
-                            warehouse={warehouse}
-                            selectable
-                            selected={isSelected}
-                            onSelect={() => {
-                              if (isSelected) {
-                                filter(id => id !== warehouse?.id);
-                              } else {
-                                push(warehouse?.id);
-                              }
-                            }}
-                          />
-                        );
-                      })}
-                    </GridView>
-                  );
-                }}
-              </Query>
+                {nodes.map(warehouse => (
+                  <WarehouseCard
+                    key={warehouse?.id}
+                    warehouse={warehouse}
+                    {...getItemProps(warehouse)}
+                  />
+                ))}
+              </GridView>
             </Content>
-          </>
+          </SlideViewLayout>
         )}
-      </ArrayValue>
+      </Selector.Many>
     </SlideView>
   );
 };

@@ -11,11 +11,6 @@ import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
-import OrderItemCloneAction from 'modules/sheet/orderItem/actions/OrderItemCloneAction';
-import OrderItemDeleteAction from 'modules/sheet/orderItem/actions/OrderItemDeleteAction';
-import BaseBatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAction';
-import BatchCloneAction from 'modules/sheet/batch/actions/BatchCloneAction';
-import BaseBatchDeleteRemoveAction from 'modules/sheet/batch/actions/BatchDeleteRemoveAction';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
 import orderColumns, { FieldDefinitionEntityTypes } from './columns';
@@ -24,6 +19,7 @@ import entityEventHandler from './handler';
 import sorter from './sorter';
 import mutate from './mutate';
 import decorate from './decorator';
+import actions from './actions';
 import { ordersQuery } from './query';
 
 type Props = {
@@ -35,22 +31,6 @@ type ImplProps = {
   columns: Array<ColumnConfig>,
   transformer: Object => Array<Array<CellValue>>,
 };
-
-export const BatchCreateAction = BaseBatchCreateAction((orderItemId, item) => {
-  const orderItem = item.orderItems.find(oi => oi.id === orderItemId);
-  return (orderItem?.batches ?? []).length;
-});
-
-export const BatchDeleteRemoveAction = BaseBatchDeleteRemoveAction(
-  (batchId, item) => {
-    const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId);
-    return !!batch?.shipment;
-  },
-  (batchId, item) => {
-    const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId);
-    return !!batch?.container;
-  }
-);
 
 const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }: ImplProps) => {
   const client = useApolloClient();
@@ -130,13 +110,7 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
         onLocalSort={onLocalSort}
         onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
-        actions={{
-          order_item_batch_create: BatchCreateAction,
-          order_item_clone: OrderItemCloneAction,
-          order_item_delete: OrderItemDeleteAction,
-          batch_clone: BatchCloneAction,
-          batch_delete_remove: BatchDeleteRemoveAction,
-        }}
+        actions={actions}
       />
     </Content>
   );

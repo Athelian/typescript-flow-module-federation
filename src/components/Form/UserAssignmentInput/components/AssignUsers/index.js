@@ -1,11 +1,9 @@
 // @flow
 import * as React from 'react';
-import { Query } from 'react-apollo';
-import { ArrayValue } from 'react-values';
-import { isEquals, getByPathWithDefault } from 'utils/fp';
-import loadMore from 'utils/loadMore';
 import { usersQuery } from 'graphql/staff/query';
 import useFilterSort from 'hooks/useFilterSort';
+import useQueryList from 'hooks/useQueryList';
+import Selector from 'components/Selector';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import {
@@ -43,82 +41,55 @@ const AssignUsers = ({ selected, onCancel, onSelect, organizationIds }: Props) =
     { updatedAt: 'DESCENDING' }
   );
 
-  const queryVariables = { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 10 };
+  const { nodes, loading, hasMore, loadMore } = useQueryList(
+    usersQuery,
+    {
+      variables: { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 10 },
+      fetchPolicy: 'network-only',
+    },
+    'users'
+  );
 
   return (
-    <Query fetchPolicy="network-only" query={usersQuery} variables={queryVariables}>
-      {({ loading, error, fetchMore, data }) => {
-        if (error) {
-          return error.message;
-        }
+    <Selector.Many selected={selected} max={MAX_SELECTIONS}>
+      {({ value, dirty, getItemProps }) => (
+        <SlideViewLayout>
+          <SlideViewNavBar>
+            <EntityIcon icon="STAFF" color="STAFF" />
 
-        const items = getByPathWithDefault([], 'users.nodes', data);
-        const nextPage = getByPathWithDefault(1, 'users.page', data) + 1;
-        const totalPage = getByPathWithDefault(1, 'users.totalPage', data);
-        const hasMore = nextPage <= totalPage;
+            <Filter
+              config={UserFilterConfig}
+              filterBy={filterBy}
+              onChange={setFilterBy}
+              staticFilters={['organizationIds']}
+            />
+            <Search query={query} onChange={setQuery} />
+            <Sort config={UserSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
-        return (
-          <ArrayValue defaultValue={selected}>
-            {({ value: values, push, filter }) => {
-              return (
-                <SlideViewLayout>
-                  <SlideViewNavBar>
-                    <EntityIcon icon="STAFF" color="STAFF" />
+            <h3>
+              {value.length}/{MAX_SELECTIONS}
+            </h3>
 
-                    <Filter
-                      config={UserFilterConfig}
-                      filterBy={filterBy}
-                      onChange={setFilterBy}
-                      staticFilters={['organizationIds']}
-                    />
-                    <Search query={query} onChange={setQuery} />
-                    <Sort config={UserSortConfig} sortBy={sortBy} onChange={setSortBy} />
+            <CancelButton onClick={onCancel} />
+            <SaveButton
+              data-testid="saveButtonOnAssignUsers"
+              disabled={!dirty}
+              onClick={() => onSelect(value)}
+            />
+          </SlideViewNavBar>
 
-                    <h3>
-                      {values.length}/{MAX_SELECTIONS}
-                    </h3>
-
-                    <CancelButton onClick={onCancel} />
-                    <SaveButton
-                      data-testid="saveButtonOnAssignUsers"
-                      disabled={isEquals(values, selected)}
-                      onClick={() => onSelect(values)}
-                    />
-                  </SlideViewNavBar>
-
-                  <Content>
-                    <StaffGridView
-                      hasMore={hasMore}
-                      isLoading={loading}
-                      onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'users')}
-                      items={items}
-                      renderItem={item => {
-                        const isSelected = values.some(({ id }) => id === item.id);
-                        return (
-                          <StaffCard
-                            key={item.id}
-                            staff={item}
-                            onSelect={() => {
-                              if (isSelected) {
-                                filter(({ id }) => id !== item.id);
-                              } else if (values.length < MAX_SELECTIONS) {
-                                push(item);
-                              }
-                            }}
-                            selectable
-                            selected={isSelected}
-                          />
-                        );
-                      }}
-                    />
-                  </Content>
-                </SlideViewLayout>
-              );
-            }}
-          </ArrayValue>
-        );
-      }}
-    </Query>
+          <Content>
+            <StaffGridView
+              hasMore={hasMore}
+              isLoading={loading}
+              onLoadMore={loadMore}
+              items={nodes}
+              renderItem={item => <StaffCard key={item.id} staff={item} {...getItemProps(item)} />}
+            />
+          </Content>
+        </SlideViewLayout>
+      )}
+    </Selector.Many>
   );
 };
 

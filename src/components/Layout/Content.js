@@ -2,21 +2,18 @@
 import * as React from 'react';
 import { ContentWrapperStyle } from './style';
 
-type OptionalProps = {
-  notCenter: boolean,
-};
-
-type Props = OptionalProps & {
+type Props = {
   children: React.Node,
+  notCenter?: boolean,
 };
 
 const defaultProps = {
   notCenter: false,
 };
 
-const Content = ({ notCenter, children }: Props) => {
-  return <div className={ContentWrapperStyle({ notCenter })}>{children}</div>;
-};
+const Content = ({ notCenter, children }: Props) => (
+  <div className={ContentWrapperStyle(notCenter)}>{children}</div>
+);
 
 Content.defaultProps = defaultProps;
 

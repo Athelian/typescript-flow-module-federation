@@ -1,8 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ArrayValue } from 'react-values';
-import { Query } from 'react-apollo';
 import {
   EntityIcon,
   Filter,
@@ -12,27 +10,20 @@ import {
   OrderFilterConfig,
 } from 'components/NavBar';
 import { CancelButton, SaveButton } from 'components/Buttons';
-import { Content, SlideViewNavBar } from 'components/Layout';
+import { Content, SlideViewNavBar, SlideViewLayout } from 'components/Layout';
 import BaseCard from 'components/Cards/BaseCard';
 import { OrderCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Display } from 'components/Form';
+import Selector from 'components/Selector';
 import useFilterSort from 'hooks/useFilterSort';
-import { isEquals } from 'utils/fp';
-import loadMore from 'utils/loadMore';
+import useQueryList from 'hooks/useQueryList';
 import messages from '../../messages';
 import type { FilterInputProps } from '../../types';
-import Ids from '../Common/Ids';
+import Ids, { type SelectorProps } from '../Common/Ids';
 import { ordersQuery, ordersByIDsQuery } from './query';
 import { CardStyle } from './style';
-
-type SelectorProps = {
-  open: boolean,
-  onClose: () => void,
-  selected: Array<string>,
-  setSelected: (Array<string>) => void,
-};
 
 const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
@@ -40,11 +31,20 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
     { updatedAt: 'DESCENDING' }
   );
 
+  const { nodes, loading, hasMore, loadMore } = useQueryList(
+    ordersQuery,
+    {
+      variables: { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 },
+      fetchPolicy: 'network-only',
+    },
+    'orders'
+  );
+
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
-      <ArrayValue defaultValue={selected}>
-        {({ value: values, push, filter }) => (
-          <>
+      <Selector.Many selected={selected.map(id => ({ id }))}>
+        {({ value, dirty, getItemProps }) => (
+          <SlideViewLayout>
             <SlideViewNavBar>
               <EntityIcon icon="ORDER" color="ORDER" />
               <Filter
@@ -56,64 +56,28 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
               <Sort sortBy={sortBy} onChange={setSortBy} config={OrderSortConfig} />
               <CancelButton onClick={onClose} />
               <SaveButton
-                disabled={isEquals(values, selected)}
-                onClick={() => setSelected(values)}
+                disabled={!dirty}
+                onClick={() => setSelected(value.map(order => order.id))}
               />
             </SlideViewNavBar>
 
             <Content>
-              <Query
-                query={ordersQuery}
-                variables={{ filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 }}
-                fetchPolicy="network-only"
+              <GridView
+                isLoading={loading}
+                hasMore={hasMore}
+                onLoadMore={loadMore}
+                isEmpty={nodes.length === 0}
+                emptyMessage={null}
+                itemWidth="195px"
               >
-                {({ loading, data, fetchMore, error }) => {
-                  if (error) {
-                    return error.message;
-                  }
-
-                  const nextPage = (data?.orders?.page ?? 1) + 1;
-                  const totalPage = data?.orders?.totalPage ?? 1;
-                  const hasMore = nextPage <= totalPage;
-                  const nodes = data?.orders?.nodes ?? [];
-
-                  return (
-                    <GridView
-                      onLoadMore={() =>
-                        loadMore({ fetchMore, data }, { filterBy, sortBy }, 'orders')
-                      }
-                      hasMore={hasMore}
-                      isLoading={loading}
-                      isEmpty={nodes.length === 0}
-                      emptyMessage={null}
-                      itemWidth="195px"
-                    >
-                      {nodes.map(order => {
-                        const isSelected = values.some(id => id === order?.id);
-                        return (
-                          <OrderCard
-                            key={order?.id}
-                            order={order}
-                            selectable
-                            selected={isSelected}
-                            onSelect={() => {
-                              if (isSelected) {
-                                filter(id => id !== order?.id);
-                              } else {
-                                push(order?.id);
-                              }
-                            }}
-                          />
-                        );
-                      })}
-                    </GridView>
-                  );
-                }}
-              </Query>
+                {nodes.map(order => (
+                  <OrderCard key={order?.id} order={order} {...getItemProps(order)} />
+                ))}
+              </GridView>
             </Content>
-          </>
+          </SlideViewLayout>
         )}
-      </ArrayValue>
+      </Selector.Many>
     </SlideView>
   );
 };

@@ -1,18 +1,11 @@
 // @flow
 import * as React from 'react';
-import { toast } from 'react-toastify';
-import { useIntl } from 'react-intl';
-import { useQuery } from '@apollo/react-hooks';
-import { ArrayValue } from 'react-values';
-import { trackingError } from 'utils/trackingError';
-import { getByPathWithDefault } from 'utils/fp';
 import { removeTypename } from 'utils/data';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import useFilterSort from 'hooks/useFilterSort';
-import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
-import { BATCH_TASK_LIST } from 'modules/permission/constants/batch';
-import BatchGridView from 'modules/batch/list/BatchGridView';
+import useQueryList from 'hooks/useQueryList';
+import Selector from 'components/Selector';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { ShipmentBatchCard } from 'components/Cards';
 import {
@@ -24,6 +17,9 @@ import {
   Sort,
 } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
+import { BATCH_TASK_LIST } from 'modules/permission/constants/batch';
+import BatchGridView from 'modules/batch/list/BatchGridView';
 import { selectBatchListQuery } from './query';
 
 type Props = {
@@ -33,54 +29,34 @@ type Props = {
   filter: Object,
 };
 
-function SelectShipmentBatches({ onCancel, onSelect, selectedBatches, filter }: Props) {
-  const intl = useIntl();
+const SelectShipmentBatches = ({ onCancel, onSelect, selectedBatches, filter }: Props) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', archived: false, hasShipment: false, ...filter },
     { updatedAt: 'DESCENDING' }
   );
 
-  const queryVariables = { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 20 };
-
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const viewPrice = hasPermission(ORDER_ITEMS_GET_PRICE);
   const viewTasks = hasPermission(BATCH_TASK_LIST);
-  const ignoreBatches = selectedBatches.map(batch => batch.id);
 
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [hasMore, setHasMore] = React.useState(true);
-  const [page, setPage] = React.useState(1);
-  const [batches, setBatches] = React.useState([]);
-  const { loading, error, client, networkStatus } = useQuery(selectBatchListQuery, {
-    variables: queryVariables,
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'no-cache',
-    onCompleted: result => {
-      setBatches(getByPathWithDefault([], 'batches.nodes', result));
-      const nextPage = getByPathWithDefault(1, 'batches.page', result) + 1;
-      const totalPage = getByPathWithDefault(1, 'batches.totalPage', result);
-      setHasMore(nextPage <= totalPage);
-      setPage(nextPage);
-      setIsLoading(false);
+  const { nodes, loading, hasMore, loadMore } = useQueryList(
+    selectBatchListQuery,
+    {
+      variables: {
+        filterBy: { query, excludeIds: selectedBatches.map(batch => batch.id), ...filterBy },
+        sortBy,
+        page: 1,
+        perPage: 20,
+      },
+      fetchPolicy: 'network-only',
     },
-  });
-
-  const refetching = networkStatus === 4;
-
-  React.useEffect(() => {
-    if (loading && !refetching) {
-      setIsLoading(true);
-    }
-  }, [loading, refetching]);
-
-  if (error) {
-    return error.message;
-  }
+    'batches'
+  );
 
   return (
-    <ArrayValue>
-      {({ value: selected, push, filter: arrayValueFilter }) => (
+    <Selector.Many selected={[]}>
+      {({ value, dirty, getItemProps }) => (
         <SlideViewLayout>
           <SlideViewNavBar>
             <EntityIcon icon="BATCH" color="BATCH" />
@@ -97,76 +73,36 @@ function SelectShipmentBatches({ onCancel, onSelect, selectedBatches, filter }: 
             <CancelButton onClick={onCancel} />
             <SaveButton
               data-testid="saveButtonOnSelectContainerBatches"
-              disabled={selected.length === 0}
+              disabled={!dirty}
               onClick={() => {
-                onSelect(removeTypename(selected));
+                onSelect(removeTypename(value));
               }}
             />
           </SlideViewNavBar>
 
           <Content>
             <BatchGridView
-              items={batches.filter(item => !ignoreBatches.includes(item.id))}
-              onLoadMore={() => {
-                client
-                  .query({
-                    query: selectBatchListQuery,
-                    fetchPolicy: 'no-cache',
-                    variables: {
-                      ...queryVariables,
-                      page,
-                    },
-                  })
-                  .then(result => {
-                    setBatches([
-                      ...batches,
-                      ...getByPathWithDefault([], 'data.batches.nodes', result),
-                    ]);
-                    const nextPage = getByPathWithDefault(1, 'data.batches.page', result) + 1;
-                    const totalPage = getByPathWithDefault(1, 'data.batches.totalPage', result);
-                    setHasMore(nextPage <= totalPage);
-                    setPage(nextPage);
-                  })
-                  .catch(err => {
-                    trackingError(err);
-                    toast.error(
-                      intl.formatMessage({
-                        id: 'global.apiErrorMessage',
-                        defaultMessage: 'There was an error. Please try again later.',
-                      })
-                    );
-                  });
-              }}
+              items={nodes}
+              onLoadMore={loadMore}
               hasMore={hasMore}
-              isLoading={isLoading}
-              renderItem={item => {
-                const isSelected = selected.some(({ id }) => id === item.id);
-                return (
-                  <ShipmentBatchCard
-                    key={item.id}
-                    batch={item}
-                    selectable
-                    selected={isSelected}
-                    onSelect={() => {
-                      if (isSelected) {
-                        arrayValueFilter(({ id }) => id !== item.id);
-                      } else {
-                        push(item);
-                      }
-                    }}
-                    viewable={{
-                      price: viewPrice,
-                      tasks: viewTasks,
-                    }}
-                  />
-                );
-              }}
+              isLoading={loading}
+              renderItem={item => (
+                <ShipmentBatchCard
+                  key={item.id}
+                  batch={item}
+                  viewable={{
+                    price: viewPrice,
+                    tasks: viewTasks,
+                  }}
+                  {...getItemProps(item)}
+                />
+              )}
             />
           </Content>
         </SlideViewLayout>
       )}
-    </ArrayValue>
+    </Selector.Many>
   );
-}
+};
 
 export default SelectShipmentBatches;

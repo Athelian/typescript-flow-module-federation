@@ -7,6 +7,7 @@ import transformSheetOrderItem from 'modules/sheet/orderItem/transformer';
 import transformSheetBatch from 'modules/sheet/batch/transformer';
 import transformSheetShipment from 'modules/sheet/shipment/transformer';
 import transformSheetContainer from 'modules/sheet/container/transformer';
+import orderActionMessages from 'modules/sheet/order/actions/messages';
 import orderItemActionMessages from 'modules/sheet/orderItem/actions/messages';
 import batchMessages from 'modules/sheet/batch/actions/messages';
 
@@ -17,7 +18,8 @@ function getCurrentBatch(batchId: string, order: Object): ?Object {
 function transformOrder(
   fieldDefinitions: Array<FieldDefinition>,
   basePath: string,
-  order: Object
+  order: Object,
+  intl: IntlShape
 ): Array<CellValue> {
   return transformSheetOrder({
     fieldDefinitions,
@@ -25,6 +27,16 @@ function transformOrder(
     order,
     getOrderFromRoot: root => root,
     readonlyExporter: false,
+    actions: [
+      {
+        action: 'order_autofill',
+        label: intl.formatMessage(orderActionMessages.batchesAutofillTitle),
+      },
+      {
+        action: 'order_item_create',
+        label: intl.formatMessage(orderActionMessages.orderItemCreateTitle),
+      },
+    ],
   }).map(c => ({
     ...c,
     empty: !order,
@@ -48,16 +60,20 @@ function transformOrderItem(
       getOrderItemFromRoot: root => root.orderItems.find(oi => oi.id === orderItem?.id),
       actions: [
         {
-          action: 'order_item_batch_create',
-          label: intl.formatMessage(orderItemActionMessages.batchCreateTitle),
-        },
-        {
           action: 'order_item_clone',
           label: intl.formatMessage(orderItemActionMessages.orderItemCloneTitle),
         },
         {
+          action: 'order_item_sync_price',
+          label: intl.formatMessage(orderItemActionMessages.orderItemSyncPriceTitle),
+        },
+        {
           action: 'order_item_delete',
           label: intl.formatMessage(orderItemActionMessages.orderItemDeleteTitle),
+        },
+        {
+          action: 'order_item_batch_create',
+          label: intl.formatMessage(orderItemActionMessages.batchCreateTitle),
         },
       ],
     }),
@@ -86,6 +102,14 @@ function transformBatch(
       {
         action: 'batch_clone',
         label: intl.formatMessage(batchMessages.batchCloneTitle),
+      },
+      {
+        action: 'batch_sync_packaging',
+        label: intl.formatMessage(batchMessages.batchSyncPackagingTitle),
+      },
+      {
+        action: 'batch_split',
+        label: intl.formatMessage(batchMessages.batchSplitTitle),
       },
       {
         action: 'batch_delete_remove',
@@ -170,7 +194,7 @@ export default function transformer({
   return (index: number, order: Object): Array<Array<CellValue>> => {
     const rows = [];
 
-    let orderCells = transformOrder(orderFieldDefinitions, `${index}`, order);
+    let orderCells = transformOrder(orderFieldDefinitions, `${index}`, order, intl);
 
     if ((order?.orderItems?.length ?? 0) > 0) {
       (order?.orderItems ?? []).forEach((orderItem, orderItemIdx) => {
@@ -195,7 +219,7 @@ export default function transformer({
                 intl
               ),
             ]);
-            orderCells = transformOrder(orderFieldDefinitions, `${index}`, null);
+            orderCells = transformOrder(orderFieldDefinitions, `${index}`, null, intl);
             orderItemCells = transformOrderItem(
               orderItemFieldDefinitions,
               `${index}.orderItems.${orderItemIdx}`,
@@ -222,7 +246,7 @@ export default function transformer({
               intl
             ),
           ]);
-          orderCells = transformOrder(orderFieldDefinitions, `${index}`, null);
+          orderCells = transformOrder(orderFieldDefinitions, `${index}`, null, intl);
         }
       });
     } else {

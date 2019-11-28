@@ -14,11 +14,15 @@ import {
   removeBatchFromContainerActionMutation,
 } from './mutation';
 
-type Props = {
-  ...ActionComponentProps,
+type Props = {|
   hasShipment: (batchId: string, item: Object) => boolean,
   hasContainer: (batchId: string, item: Object) => boolean,
-};
+|};
+
+type ImplProps = {|
+  ...ActionComponentProps,
+  ...Props,
+|};
 
 const BatchDeleteRemoveActionImpl = ({
   entity,
@@ -26,7 +30,7 @@ const BatchDeleteRemoveActionImpl = ({
   onDone,
   hasContainer,
   hasShipment,
-}: Props) => {
+}: ImplProps) => {
   const [isOpen, close] = useSheetActionDialog(onDone);
   const [deleteBatch, { loading, called }] = useMutation(deleteBatchActionMutation);
   const [
@@ -148,10 +152,9 @@ const BatchDeleteRemoveActionImpl = ({
   );
 };
 
-const BatchDeleteRemoveAction = (
-  hasShipment: (batchId: string, item: Object) => boolean,
-  hasContainer: (batchId: string, item: Object) => boolean
-) => (props: ActionComponentProps) => (
+const BatchDeleteRemoveAction = ({ hasShipment, hasContainer }: Props) => (
+  props: ActionComponentProps
+) => (
   <BatchDeleteRemoveActionImpl {...props} hasShipment={hasShipment} hasContainer={hasContainer} />
 );
 
