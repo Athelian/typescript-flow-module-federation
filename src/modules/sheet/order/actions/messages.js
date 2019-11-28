@@ -31,6 +31,6 @@ export default defineMessages({
   },
   orderItemCreateTitle: {
     id: 'modules.Sheet.order.orderItemCreate.title',
-    defaultMessage: 'Create order item',
+    defaultMessage: 'Create Item',
   },
 });
