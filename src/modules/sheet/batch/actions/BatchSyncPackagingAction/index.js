@@ -45,7 +45,7 @@ const BatchSyncPackagingActionImpl = ({ entity, item, onDone, getProductProvider
     variables: { id: productProviderId },
     fetchPolicy: 'network-only',
   });
-  const productProvider = removeTypename(data?.productProvider) ?? null;
+  const productProvider = removeTypename(data?.productProvider ?? null);
 
   const [selectedPackage, setSelectedPackage] = React.useState(null);
 
