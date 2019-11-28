@@ -62,7 +62,7 @@ const OrganizationSelector = ({
 
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
-      <Selector.Many selected={selected}>
+      <Selector.Many selected={selected.map(id => ({ id }))}>
         {({ value, dirty, getItemProps }) => (
           <SlideViewLayout>
             <SlideViewNavBar>
@@ -76,7 +76,10 @@ const OrganizationSelector = ({
               <Search query={query} onChange={setQuery} />
               <Sort sortBy={sortBy} onChange={setSortBy} config={PartnerSortConfig} />
               <CancelButton onClick={onClose} />
-              <SaveButton disabled={!dirty} onClick={() => setSelected(value)} />
+              <SaveButton
+                disabled={!dirty}
+                onClick={() => setSelected(value.map(partner => partner.id))}
+              />
             </SlideViewNavBar>
 
             <Content>
@@ -104,32 +107,30 @@ const OrganizationIdsImpl = (organizationType: ?string, title: React.Node) => ({
   value,
   readonly,
   onChange,
-}: FilterInputProps<Array<string>>) => {
-  return (
-    <Ids
-      value={value}
-      readonly={readonly}
-      onChange={onChange}
-      title={title}
-      selector={({ open, onClose, selected, setSelected }) => (
-        <OrganizationSelector
-          organizationType={organizationType}
-          open={open}
-          onClose={onClose}
-          selected={selected}
-          setSelected={setSelected}
-        />
-      )}
-      query={organizationsByIDsQuery}
-      getItems={data => data?.organizationsByIDs ?? []}
-      renderItem={partner => (
-        <BaseCard icon="PARTNER" color="PARTNER" wrapperClassName={CardStyle}>
-          <Display height="30px">{partner?.partner?.name || partner?.name}</Display>
-        </BaseCard>
-      )}
-    />
-  );
-};
+}: FilterInputProps<Array<string>>) => (
+  <Ids
+    value={value}
+    readonly={readonly}
+    onChange={onChange}
+    title={title}
+    selector={({ open, onClose, selected, setSelected }) => (
+      <OrganizationSelector
+        organizationType={organizationType}
+        open={open}
+        onClose={onClose}
+        selected={selected}
+        setSelected={setSelected}
+      />
+    )}
+    query={organizationsByIDsQuery}
+    getItems={data => data?.organizationsByIDs ?? []}
+    renderItem={partner => (
+      <BaseCard icon="PARTNER" color="PARTNER" wrapperClassName={CardStyle}>
+        <Display height="30px">{partner?.partner?.name || partner?.name}</Display>
+      </BaseCard>
+    )}
+  />
+);
 
 export const ImporterIds = OrganizationIdsImpl(
   'Importer',

@@ -42,7 +42,7 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
 
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
-      <Selector.Many selected={selected}>
+      <Selector.Many selected={selected.map(id => ({ id }))}>
         {({ value, dirty, getItemProps }) => (
           <SlideViewLayout>
             <SlideViewNavBar>
@@ -55,7 +55,10 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
               <Search query={query} onChange={setQuery} />
               <Sort sortBy={sortBy} onChange={setSortBy} config={OrderSortConfig} />
               <CancelButton onClick={onClose} />
-              <SaveButton disabled={!dirty} onClick={() => setSelected(value)} />
+              <SaveButton
+                disabled={!dirty}
+                onClick={() => setSelected(value.map(order => order.id))}
+              />
             </SlideViewNavBar>
 
             <Content>

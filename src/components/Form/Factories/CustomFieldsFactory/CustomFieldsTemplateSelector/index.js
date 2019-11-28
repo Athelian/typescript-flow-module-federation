@@ -1,17 +1,15 @@
 // @flow
 import * as React from 'react';
-import { Query } from 'react-apollo';
-import { ObjectValue } from 'react-values';
-import { isEquals, getByPathWithDefault } from 'utils/fp';
+import { countMaskFieldDefinitions } from 'utils/customFields';
 import { removeTypename } from 'utils/data';
-import loadMore from 'utils/loadMore';
-import MaskGridView from 'modules/metadata/components/MaskGridView';
+import useQueryList from 'hooks/useQueryList';
 import { TemplateCard } from 'components/Cards';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
+import Selector from 'components/Selector';
+import MaskGridView from 'modules/metadata/components/MaskGridView';
 import { masksQuery } from 'modules/metadata/query';
-import { countMaskFieldDefinitions } from 'utils/customFields';
 
 type Props = {
   entityType: string,
@@ -37,79 +35,62 @@ const CustomFieldsTemplateSelector = ({
   onCancel,
   onSave,
   saveButtonId,
-}: Props) => (
-  <Query
-    query={masksQuery}
-    variables={{
-      page: 1,
-      perPage: 10,
-      filterBy: { entityTypes: [entityType] },
-    }}
-    fetchPolicy="network-only"
-  >
-    {({ loading, data, fetchMore, error }) => {
-      if (error) {
-        return error.message;
-      }
+}: Props) => {
+  const { nodes, loading, hasMore, loadMore } = useQueryList(
+    masksQuery,
+    {
+      variables: {
+        page: 1,
+        perPage: 10,
+        filterBy: { entityTypes: [entityType] },
+      },
+      fetchPolicy: 'network-only',
+    },
+    'masks'
+  );
 
-      const nextPage = getByPathWithDefault(1, 'masks.page', data) + 1;
-      const totalPage = getByPathWithDefault(1, 'masks.totalPage', data);
-      const hasMore = nextPage <= totalPage;
+  return (
+    <Selector.Single selected={selected}>
+      {({ value, dirty, getItemProps }) => (
+        <SlideViewLayout>
+          <SlideViewNavBar>
+            <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+            <CancelButton onClick={onCancel} />
+            <SaveButton
+              id={saveButtonId}
+              data-testid="saveButtonOnSelectMask"
+              disabled={!dirty}
+              onClick={() => onSave(value)}
+            />
+          </SlideViewNavBar>
 
-      return (
-        <ObjectValue defaultValue={selected}>
-          {({ value, set }) => (
-            <SlideViewLayout>
-              <SlideViewNavBar>
-                <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
-                <CancelButton onClick={onCancel} />
-                <SaveButton
-                  id={saveButtonId}
-                  data-testid="saveButtonOnSelectMask"
-                  disabled={isEquals(value, selected)}
-                  onClick={() => onSave(value)}
+          <Content>
+            <MaskGridView
+              entityType={entityType}
+              items={nodes}
+              onLoadMore={loadMore}
+              hasMore={hasMore}
+              isLoading={loading}
+              renderItem={mask => (
+                <TemplateCard
+                  key={mask.id}
+                  template={{
+                    id: mask.id,
+                    title: mask.name,
+                    description: mask.memo,
+                    count: countMaskFieldDefinitions(mask),
+                  }}
+                  type="METADATA"
+                  {...getItemProps(removeTypename(mask))}
                 />
-              </SlideViewNavBar>
-
-              <Content>
-                <MaskGridView
-                  entityType={entityType}
-                  items={getByPathWithDefault([], 'masks.nodes', data)}
-                  onLoadMore={() =>
-                    loadMore({ fetchMore, data }, { filter: { entityTypes: entityType } }, 'masks')
-                  }
-                  hasMore={hasMore}
-                  isLoading={loading}
-                  renderItem={mask => (
-                    <TemplateCard
-                      key={mask.id}
-                      template={{
-                        id: mask.id,
-                        title: mask.name,
-                        description: mask.memo,
-                        count: countMaskFieldDefinitions(mask),
-                      }}
-                      type="METADATA"
-                      onSelect={() => {
-                        if (value && mask.id === value.id) {
-                          set(null);
-                        } else {
-                          set(removeTypename(mask));
-                        }
-                      }}
-                      selectable
-                      selected={value && mask.id === value.id}
-                    />
-                  )}
-                />
-              </Content>
-            </SlideViewLayout>
-          )}
-        </ObjectValue>
-      );
-    }}
-  </Query>
-);
+              )}
+            />
+          </Content>
+        </SlideViewLayout>
+      )}
+    </Selector.Single>
+  );
+};
 
 CustomFieldsTemplateSelector.defaultProps = defaultProps;
 
