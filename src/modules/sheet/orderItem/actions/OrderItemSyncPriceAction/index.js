@@ -93,7 +93,11 @@ const OrderItemSyncPriceActionImpl = ({ entity, item, onDone, getProductProvider
         ) : (
           <FieldItem
             vertical
-            label={<Label align="center">End Product's Unit Price</Label>}
+            label={
+              <Label align="center">
+                <FormattedMessage {...messages.orderItemSyncPriceEndProductLabel} />
+              </Label>
+            }
             input={
               <Display align="center">
                 <FormattedNumber value={productProvider?.unitPrice?.amount} />

@@ -20,9 +20,13 @@ export default defineMessages({
       'Are you sure you want to load the following price from the {endProductLabel} into this {orderItemLabel} ?',
   },
   orderItemSyncPriceRestrictedMessage: {
-    id: 'modules.Sheet.orderItem.syncPrice.message',
+    id: 'modules.Sheet.orderItem.syncPrice.restrictedMessage',
     defaultMessage:
       'Sorry, you cannot load the following price from the {endProductLabel} into this {orderItemLabel} because their currencies are mismatched',
+  },
+  orderItemSyncPriceEndProductLabel: {
+    id: 'modules.Sheet.orderItem.syncPrice.endProductLabel',
+    defaultMessage: `End Product's Unit Price`,
   },
   orderItemSyncPriceSyncing: {
     id: 'modules.Sheet.orderItem.syncPrice.syncing',
