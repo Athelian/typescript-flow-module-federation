@@ -27,33 +27,201 @@ import {
   ArrowDownStyle,
 } from './style';
 
+type ContentProps = {
+  productProvider: Object,
+  selectedPackage: Object,
+  setSelectedPackage: Object => void,
+};
+
+const BatchSyncPackagingContent = ({
+  productProvider,
+  selectedPackage,
+  setSelectedPackage,
+}: ContentProps) => {
+  const intl = useIntl();
+
+  return (
+    <div className={ContentWrapperStyle}>
+      <OrderProductProviderCard productProvider={productProvider} readOnly />
+
+      <GridColumn gap="15px">
+        <SelectInput
+          value={selectedPackage}
+          items={productProvider?.packages ?? []}
+          itemToString={option =>
+            option
+              ? option.name ||
+                intl.formatMessage({
+                  id: 'modules.ProductProviders.noPackageName',
+                  defaultMessage: 'No package name',
+                })
+              : ''
+          }
+          itemToValue={option => option}
+          renderInput={({
+            getToggleButtonProps,
+            selectedItem,
+            isOpen: selectDropdownIsOpen,
+            itemToString,
+          }: RenderInputProps) => (
+            <button
+              type="button"
+              {...getToggleButtonProps()}
+              className={SelectInputStyle(selectDropdownIsOpen)}
+            >
+              <span className={SelectTextStyle(!!selectedItem)}>{itemToString(selectedItem)}</span>
+
+              <i className={ArrowDownStyle(selectDropdownIsOpen)}>
+                <Icon icon="CHEVRON_DOWN" />
+              </i>
+            </button>
+          )}
+          renderOption={({ item: option, highlighted, selected }) => {
+            const isDefault = option?.id === productProvider?.defaultPackage?.id;
+
+            return (
+              <div className={DefaultOptionStyle(highlighted, selected)}>
+                <span className={StarStyle(isDefault)}>
+                  <Icon icon="STAR" />
+                </span>
+                <span>
+                  {option
+                    ? option.name ||
+                      intl.formatMessage({
+                        id: 'modules.ProductProviders.noPackageName',
+                        defaultMessage: 'No package name',
+                      })
+                    : ''}
+                </span>
+              </div>
+            );
+          }}
+          onChange={option => {
+            setSelectedPackage(option);
+          }}
+        />
+
+        <FieldItem
+          label={
+            <Label>
+              <FormattedMessage id="modules.ProductProviders.packageName" />
+            </Label>
+          }
+          input={<Display>{selectedPackage?.name}</Display>}
+        />
+
+        <FieldItem
+          label={
+            <Label>
+              <FormattedMessage id="modules.ProductProviders.packageCapacity" />
+            </Label>
+          }
+          input={
+            <Display>
+              <FormattedNumber value={selectedPackage?.capacity} />
+            </Display>
+          }
+        />
+
+        <FieldItem
+          label={
+            <Label>
+              <FormattedMessage id="modules.ProductProviders.grossWeight" />
+            </Label>
+          }
+          input={
+            <Display>
+              <FormattedNumber value={selectedPackage?.grossWeight?.value} />
+              {` ${selectedPackage?.grossWeight?.metric}`}
+            </Display>
+          }
+        />
+
+        <FieldItem
+          label={
+            <Label>
+              <FormattedMessage id="modules.ProductProviders.pkgVolume" />
+            </Label>
+          }
+          input={
+            <Display>
+              <FormattedNumber value={selectedPackage?.volume?.value} />
+              {` ${selectedPackage?.volume?.metric}`}
+
+              {selectedPackage?.autoCalculateVolume}
+            </Display>
+          }
+        />
+
+        <FieldItem
+          label={
+            <Label>
+              <FormattedMessage id="modules.ProductProviders.pkgWidth" />
+            </Label>
+          }
+          input={
+            <Display>
+              <FormattedNumber value={selectedPackage?.size?.width?.value} />
+              {` ${selectedPackage?.size?.width?.metric}`}
+            </Display>
+          }
+        />
+
+        <FieldItem
+          label={
+            <Label>
+              <FormattedMessage id="modules.ProductProviders.pkgHeight" />
+            </Label>
+          }
+          input={
+            <Display>
+              <FormattedNumber value={selectedPackage?.size?.height?.value} />
+              {` ${selectedPackage?.size?.height?.metric}`}
+            </Display>
+          }
+        />
+
+        <FieldItem
+          label={
+            <Label>
+              <FormattedMessage id="modules.ProductProviders.pkgLength" />
+            </Label>
+          }
+          input={
+            <Display>
+              <FormattedNumber value={selectedPackage?.size?.length?.value} />
+              {` ${selectedPackage?.size?.length?.metric}`}
+            </Display>
+          }
+        />
+      </GridColumn>
+    </div>
+  );
+};
+
 type Props = {
   ...ActionComponentProps,
   getProductProviderId: (batchId: string, item: Object) => ?string,
 };
 
 const BatchSyncPackagingActionImpl = ({ entity, item, onDone, getProductProviderId }: Props) => {
-  const intl = useIntl();
-
   const [isOpen, close] = useSheetActionDialog(onDone);
   const [updateBatch, { loading: processing, called }] = useMutation(
     syncPackagingBatchActionMutation
   );
 
+  const [selectedPackage, setSelectedPackage] = React.useState(null);
+
   const productProviderId = getProductProviderId(entity.id, item);
   const { data, loading } = useQuery(syncPackagingProductProviderQuery, {
     variables: { id: productProviderId },
     fetchPolicy: 'network-only',
+    onCompleted: result => {
+      console.warn(result);
+      setSelectedPackage(removeTypename(result?.productProvider?.defaultPackage));
+    },
   });
   const productProvider = removeTypename(data?.productProvider ?? null);
-
-  const [selectedPackage, setSelectedPackage] = React.useState(null);
-
-  React.useEffect(() => {
-    if (!selectedPackage && productProvider?.packages?.length > 0) {
-      setSelectedPackage(productProvider.packages[0]);
-    }
-  }, [productProvider, selectedPackage, setSelectedPackage]);
 
   const onSync = () => {
     executeActionMutation(
@@ -111,170 +279,11 @@ const BatchSyncPackagingActionImpl = ({ entity, item, onDone, getProductProvider
         {loading ? (
           <LoadingIcon />
         ) : (
-          <div className={ContentWrapperStyle}>
-            <OrderProductProviderCard productProvider={productProvider} readOnly />
-
-            <GridColumn gap="15px">
-              <SelectInput
-                value={selectedPackage}
-                items={
-                  productProvider?.packages?.map(packaging => {
-                    return { label: packaging.name, value: packaging };
-                  }) ?? []
-                }
-                itemToString={option =>
-                  option
-                    ? option.label ||
-                      intl.formatMessage({
-                        id: 'modules.ProductProviders.noPackageName',
-                        defaultMessage: 'No package name',
-                      })
-                    : ''
-                }
-                itemToValue={option => (option ? option.value : '')}
-                renderInput={({
-                  getToggleButtonProps,
-                  selectedItem,
-                  isOpen: selectDropdownIsOpen,
-                  itemToString,
-                }: RenderInputProps) => (
-                  <button
-                    type="button"
-                    {...getToggleButtonProps()}
-                    className={SelectInputStyle(selectDropdownIsOpen)}
-                  >
-                    <span className={SelectTextStyle(!!selectedItem)}>
-                      {itemToString(selectedItem)}
-                    </span>
-
-                    <i className={ArrowDownStyle(selectDropdownIsOpen)}>
-                      <Icon icon="CHEVRON_DOWN" />
-                    </i>
-                  </button>
-                )}
-                renderOption={({ item: option, highlighted, selected }) => {
-                  const isDefault =
-                    (productProvider?.packages ?? []).find(
-                      packaging => packaging?.id === option?.value?.id
-                    )?.id === productProvider?.defaultPackage?.id;
-
-                  return (
-                    <div className={DefaultOptionStyle(highlighted, selected)}>
-                      <span className={StarStyle(isDefault)}>
-                        <Icon icon="STAR" />
-                      </span>
-                      <span>
-                        {option
-                          ? option.label ||
-                            intl.formatMessage({
-                              id: 'modules.ProductProviders.noPackageName',
-                              defaultMessage: 'No package name',
-                            })
-                          : ''}
-                      </span>
-                    </div>
-                  );
-                }}
-                onChange={option => {
-                  setSelectedPackage(option);
-                }}
-              />
-
-              <FieldItem
-                label={
-                  <Label>
-                    <FormattedMessage id="modules.ProductProviders.packageName" />
-                  </Label>
-                }
-                input={<Display>{selectedPackage?.name}</Display>}
-              />
-
-              <FieldItem
-                label={
-                  <Label>
-                    <FormattedMessage id="modules.ProductProviders.packageCapacity" />
-                  </Label>
-                }
-                input={
-                  <Display>
-                    <FormattedNumber value={selectedPackage?.capacity} />
-                  </Display>
-                }
-              />
-
-              <FieldItem
-                label={
-                  <Label>
-                    <FormattedMessage id="modules.ProductProviders.grossWeight" />
-                  </Label>
-                }
-                input={
-                  <Display>
-                    <FormattedNumber value={selectedPackage?.grossWeight?.value} />
-                    {` ${selectedPackage?.grossWeight?.metric}`}
-                  </Display>
-                }
-              />
-
-              <FieldItem
-                label={
-                  <Label>
-                    <FormattedMessage id="modules.ProductProviders.pkgVolume" />
-                  </Label>
-                }
-                input={
-                  <Display>
-                    <FormattedNumber value={selectedPackage?.volume?.value} />
-                    {` ${selectedPackage?.volume?.metric}`}
-
-                    {selectedPackage?.autoCalculateVolume}
-                  </Display>
-                }
-              />
-
-              <FieldItem
-                label={
-                  <Label>
-                    <FormattedMessage id="modules.ProductProviders.pkgWidth" />
-                  </Label>
-                }
-                input={
-                  <Display>
-                    <FormattedNumber value={selectedPackage?.size?.width?.value} />
-                    {` ${selectedPackage?.size?.width?.metric}`}
-                  </Display>
-                }
-              />
-
-              <FieldItem
-                label={
-                  <Label>
-                    <FormattedMessage id="modules.ProductProviders.pkgHeight" />
-                  </Label>
-                }
-                input={
-                  <Display>
-                    <FormattedNumber value={selectedPackage?.size?.height?.value} />
-                    {` ${selectedPackage?.size?.height?.metric}`}
-                  </Display>
-                }
-              />
-
-              <FieldItem
-                label={
-                  <Label>
-                    <FormattedMessage id="modules.ProductProviders.pkgLength" />
-                  </Label>
-                }
-                input={
-                  <Display>
-                    <FormattedNumber value={selectedPackage?.size?.length?.value} />
-                    {` ${selectedPackage?.size?.length?.metric}`}
-                  </Display>
-                }
-              />
-            </GridColumn>
-          </div>
+          <BatchSyncPackagingContent
+            productProvider={productProvider}
+            selectedPackage={selectedPackage}
+            setSelectedPackage={setSelectedPackage}
+          />
         )}
       </div>
     </ActionDialog>
