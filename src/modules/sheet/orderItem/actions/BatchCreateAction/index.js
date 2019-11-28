@@ -7,12 +7,16 @@ import ActionDialog, { BatchLabelIcon } from 'components/Dialog/ActionDialog';
 import messages from '../messages';
 import batchCreateActionMutation from './mutation';
 
-type Props = {
-  ...ActionComponentProps,
+type Props = {|
   getOrderItemBatchesCount: (orderItemId: string, item: Object) => number,
-};
+|};
 
-const BatchCreateActionImpl = ({ entity, item, onDone, getOrderItemBatchesCount }: Props) => {
+type ImplProps = {|
+  ...ActionComponentProps,
+  ...Props,
+|};
+
+const BatchCreateActionImpl = ({ entity, item, onDone, getOrderItemBatchesCount }: ImplProps) => {
   const [isOpen, close] = useSheetActionDialog(onDone);
   useSheetActionAutoProcess(
     batchCreateActionMutation,
@@ -38,10 +42,8 @@ const BatchCreateActionImpl = ({ entity, item, onDone, getOrderItemBatchesCount 
   );
 };
 
-const BatchCreateAction = (
-  getOrderItemBatchesCount: (orderItemId: string, item: Object) => number
-) => (props: ActionComponentProps) => (
-  <BatchCreateActionImpl {...props} getOrderItemBatchesCount={getOrderItemBatchesCount} />
-);
+const BatchCreateAction = ({ getOrderItemBatchesCount }: Props) => (
+  props: ActionComponentProps
+) => <BatchCreateActionImpl {...props} getOrderItemBatchesCount={getOrderItemBatchesCount} />;
 
 export default BatchCreateAction;

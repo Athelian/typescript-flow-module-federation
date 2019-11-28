@@ -15,11 +15,15 @@ import ActionDialog, {
 import messages from '../messages';
 import balanceSplitActionMutation from './mutation';
 
-type Props = {
-  ...ActionComponentProps,
+type Props = {|
   getOrderItemsCount: (orderId: string, item: Object) => number,
   getNotFullyBatchedOrderItemIds: (orderId: string, item: Object) => Array<string>,
-};
+|};
+
+type ImplProps = {|
+  ...ActionComponentProps,
+  ...Props,
+|};
 
 const BatchesAutofillActionImpl = ({
   entity,
@@ -27,7 +31,7 @@ const BatchesAutofillActionImpl = ({
   onDone,
   getOrderItemsCount,
   getNotFullyBatchedOrderItemIds,
-}: Props) => {
+}: ImplProps) => {
   const [isOpen, close] = useSheetActionDialog(onDone);
   const [balanceSplit, { loading, called }] = useMutation(balanceSplitActionMutation);
   const orderItemsCount = getOrderItemsCount(entity.id, item);
@@ -107,10 +111,9 @@ const BatchesAutofillActionImpl = ({
   );
 };
 
-const BatchesAutofillAction = (
-  getOrderItemsCount: (orderId: string, item: Object) => number,
-  getNotFullyBatchedOrderItemIds: (orderId: string, item: Object) => Array<string>
-) => (props: ActionComponentProps) => (
+const BatchesAutofillAction = ({ getOrderItemsCount, getNotFullyBatchedOrderItemIds }: Props) => (
+  props: ActionComponentProps
+) => (
   <BatchesAutofillActionImpl
     {...props}
     getOrderItemsCount={getOrderItemsCount}
