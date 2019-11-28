@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { useHasPermissions } from 'contexts/Permissions';
+import FocusFallbackProvider from 'contexts/FocusFallback';
 import { Blackout } from 'components/Form';
 import type { DoAction } from 'components/Sheet/SheetAction/types';
 import type { Action, CellValue, Mutate } from 'components/Sheet/SheetState/types';
@@ -141,6 +142,8 @@ const Cell = ({
       switch (e.key) {
         case 'Enter':
           if (isInputFocusable) {
+            e.stopPropagation();
+            e.preventDefault();
             setInputFocus(true);
           }
           break;
@@ -218,20 +221,22 @@ const Cell = ({
         }
 
         return (
-          <CellInput
-            value={cell.data?.value ?? null}
-            context={computedValue}
-            extra={cell.extra}
-            type={cell.type}
-            focus={focus}
-            inputFocus={inputFocus}
-            disabled={isDisabled}
-            onFocus={handleInputFocus}
-            onBlur={handleInputBlur}
-            onUp={handleFocusUp}
-            onDown={handleFocusDown}
-            onUpdate={handleUpdate}
-          />
+          <FocusFallbackProvider element={wrapperRef}>
+            <CellInput
+              value={cell.data?.value ?? null}
+              context={computedValue}
+              extra={cell.extra}
+              type={cell.type}
+              focus={focus}
+              inputFocus={inputFocus}
+              disabled={isDisabled}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
+              onUp={handleFocusUp}
+              onDown={handleFocusDown}
+              onUpdate={handleUpdate}
+            />
+          </FocusFallbackProvider>
         );
       })()}
 
