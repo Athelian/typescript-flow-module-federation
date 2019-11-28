@@ -62,7 +62,7 @@ const OrganizationSelector = ({
 
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
-      <Selector.Many selected={selected}>
+      <Selector.Many selected={selected.map(id => ({ id }))}>
         {({ value, dirty, getItemProps }) => (
           <SlideViewLayout>
             <SlideViewNavBar>
@@ -76,7 +76,10 @@ const OrganizationSelector = ({
               <Search query={query} onChange={setQuery} />
               <Sort sortBy={sortBy} onChange={setSortBy} config={PartnerSortConfig} />
               <CancelButton onClick={onClose} />
-              <SaveButton disabled={!dirty} onClick={() => setSelected(value)} />
+              <SaveButton
+                disabled={!dirty}
+                onClick={() => setSelected(value.map(partner => partner.id))}
+              />
             </SlideViewNavBar>
 
             <Content>

@@ -42,7 +42,7 @@ const ProductProviderSelector = ({ open, onClose, selected, setSelected }: Selec
 
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
-      <Selector.Many selected={selected}>
+      <Selector.Many selected={selected.map(id => ({ id }))}>
         {({ value, dirty, getItemProps }) => (
           <SlideViewLayout>
             <SlideViewNavBar>
@@ -55,7 +55,10 @@ const ProductProviderSelector = ({ open, onClose, selected, setSelected }: Selec
               <Search query={query} onChange={setQuery} />
               <Sort config={ProductProviderSortConfig} sortBy={sortBy} onChange={setSortBy} />
               <CancelButton onClick={onClose} />
-              <SaveButton disabled={!dirty} onClick={() => setSelected(value)} />
+              <SaveButton
+                disabled={!dirty}
+                onClick={() => setSelected(value.map(productProvider => productProvider.id))}
+              />
             </SlideViewNavBar>
 
             <Content>

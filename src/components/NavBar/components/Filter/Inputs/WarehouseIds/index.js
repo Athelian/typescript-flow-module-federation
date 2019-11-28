@@ -42,7 +42,7 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
 
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
-      <Selector.Many selected={selected}>
+      <Selector.Many selected={selected.map(id => ({ id }))}>
         {({ value, dirty, getItemProps }) => (
           <SlideViewLayout>
             <SlideViewNavBar>
@@ -51,7 +51,10 @@ const WarehouseSelector = ({ open, onClose, selected, setSelected }: SelectorPro
               <Search query={query} onChange={setQuery} />
               <Sort config={WarehouseSortConfig} sortBy={sortBy} onChange={setSortBy} />
               <CancelButton onClick={onClose} />
-              <SaveButton disabled={!dirty} onClick={() => setSelected(value)} />
+              <SaveButton
+                disabled={!dirty}
+                onClick={() => setSelected(value.map(warehouse => warehouse.id))}
+              />
             </SlideViewNavBar>
 
             <Content>

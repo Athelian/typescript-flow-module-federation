@@ -42,7 +42,7 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
 
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
-      <Selector.Many selected={selected}>
+      <Selector.Many selected={selected.map(id => ({ id }))}>
         {({ value, dirty, getItemProps }) => (
           <SlideViewLayout>
             <SlideViewNavBar>
@@ -55,7 +55,10 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
               <Search query={query} onChange={setQuery} />
               <Sort sortBy={sortBy} onChange={setSortBy} config={ShipmentSortConfig} />
               <CancelButton onClick={onClose} />
-              <SaveButton disabled={!dirty} onClick={() => setSelected(value)} />
+              <SaveButton
+                disabled={!dirty}
+                onClick={() => setSelected(value.map(shipment => shipment.id))}
+              />
             </SlideViewNavBar>
 
             <Content>
