@@ -16,11 +16,14 @@ const OrderItemCreateAction = BaseOrderItemCreateAction(
   (orderId, item) => item.exporter.id
 );
 
-const OrderItemSyncPriceAction = BaseOrderItemSyncPriceAction((orderItemId, item) => {
-  const productProviderId = (item?.orderItems ?? []).find(orderItem => orderItem.id === orderItemId)
-    ?.productProvider?.id;
+const OrderItemSyncPriceAction = BaseOrderItemSyncPriceAction({
+  getProductProviderId: (orderItemId, item) => {
+    const productProviderId = (item?.orderItems ?? []).find(
+      orderItem => orderItem.id === orderItemId
+    )?.productProvider?.id;
 
-  return productProviderId;
+    return productProviderId;
+  },
 });
 
 const BatchesAutofillAction = BaseBatchesAutofillAction(

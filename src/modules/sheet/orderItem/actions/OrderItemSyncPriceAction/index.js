@@ -15,12 +15,21 @@ import { syncPriceOrderItemActionMutation } from './mutation';
 import { syncPriceProductProviderQuery } from './query';
 import { BodyWrapperStyle } from './style';
 
-type Props = {
-  ...ActionComponentProps,
+type Props = {|
   getProductProviderId: (orderItemId: string, item: Object) => ?string,
-};
+|};
 
-const OrderItemSyncPriceActionImpl = ({ entity, item, onDone, getProductProviderId }: Props) => {
+type ImplProps = {|
+  ...ActionComponentProps,
+  ...Props,
+|};
+
+const OrderItemSyncPriceActionImpl = ({
+  entity,
+  item,
+  onDone,
+  getProductProviderId,
+}: ImplProps) => {
   const [isOpen, close] = useSheetActionDialog(onDone);
   const [updateOrderItem, { loading: processing, called }] = useMutation(
     syncPriceOrderItemActionMutation
@@ -111,10 +120,8 @@ const OrderItemSyncPriceActionImpl = ({ entity, item, onDone, getProductProvider
   );
 };
 
-const OrderItemSyncPriceAction = (
-  getProductProviderId: (orderItemId: string, order: Object) => ?string
-) => (props: ActionComponentProps) => (
-  <OrderItemSyncPriceActionImpl {...props} getProductProviderId={getProductProviderId} />
-);
+const OrderItemSyncPriceAction = ({ getProductProviderId }: Props) => (
+  props: ActionComponentProps
+) => <OrderItemSyncPriceActionImpl {...props} getProductProviderId={getProductProviderId} />;
 
 export default OrderItemSyncPriceAction;
