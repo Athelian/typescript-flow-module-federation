@@ -61,7 +61,7 @@ export default defineMessages({
   },
   batchSplitNotEnoughQuantity: {
     id: 'modules.Sheet.batch.split.notEnoughQuantity',
-    defaultMessage: 'The {batchLabel} have not the quantity greater than 0',
+    defaultMessage: 'Sorry, you cannot split this {batchLabel} because its quantity is not greater than 0',
   },
   batchSplitMessage: {
     id: 'modules.Sheet.batch.split.message',
