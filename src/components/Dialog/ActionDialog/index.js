@@ -9,6 +9,7 @@ import BatchesLabelIcon from './LabelIcon/BatchesLabelIcon';
 import BatchLabelIcon from './LabelIcon/BatchLabelIcon';
 import ContainerLabelIcon from './LabelIcon/ContainerLabelIcon';
 import ContainersLabelIcon from './LabelIcon/ContainersLabelIcon';
+import EndProductLabelIcon from './LabelIcon/EndProductLabelIcon';
 import ItemLabelIcon from './LabelIcon/ItemLabelIcon';
 import ItemsLabelIcon from './LabelIcon/ItemsLabelIcon';
 import OrderLabelIcon from './LabelIcon/OrderLabelIcon';
@@ -86,6 +87,7 @@ export {
   BatchLabelIcon,
   ContainerLabelIcon,
   ContainersLabelIcon,
+  EndProductLabelIcon,
   ItemLabelIcon,
   ItemsLabelIcon,
   OrderLabelIcon,

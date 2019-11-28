@@ -10,6 +10,23 @@ export default defineMessages({
     id: 'modules.Sheet.batch.clone.cloning',
     defaultMessage: 'Cloning {icon} ...',
   },
+  batchSyncPackagingTitle: {
+    id: 'modules.Sheet.batch.syncPackaging.title',
+    defaultMessage: 'Sync Packaging',
+  },
+  batchSyncPackagingMessage: {
+    id: 'modules.Sheet.batch.syncPackaging.message',
+    defaultMessage:
+      'Please choose a package from the {endProductLabel} to load into your {batchLabel}',
+  },
+  batchSyncPackagingSyncing: {
+    id: 'modules.Sheet.batch.syncPackaging.syncing',
+    defaultMessage: 'Syncing {batchLabel} ...',
+  },
+  batchSyncPackagingSyncButton: {
+    id: 'modules.Sheet.batch.syncPackaging.syncButton',
+    defaultMessage: 'Sync',
+  },
   batchRemoveDeleteTitle: {
     id: 'modules.Sheet.batch.deleteRemove.title',
     defaultMessage: 'Delete / Remove',
