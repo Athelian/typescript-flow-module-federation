@@ -1,11 +1,18 @@
 // @flow
 import { getBatchLatestQuantity } from 'utils/batch';
+import BaseOrderItemCreateAction from 'modules/sheet/order/actions/OrderItemCreateAction';
 import BaseBatchesAutofillAction from 'modules/sheet/order/actions/BatchesAutofillAction';
 import OrderItemCloneAction from 'modules/sheet/orderItem/actions/OrderItemCloneAction';
 import OrderItemDeleteAction from 'modules/sheet/orderItem/actions/OrderItemDeleteAction';
 import BaseBatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAction';
 import BatchCloneAction from 'modules/sheet/batch/actions/BatchCloneAction';
 import BaseBatchDeleteRemoveAction from 'modules/sheet/batch/actions/BatchDeleteRemoveAction';
+
+const OrderItemCreateAction = BaseOrderItemCreateAction(
+  (orderId, item) => item.currency,
+  (orderId, item) => item.importer.id,
+  (orderId, item) => item.exporter.id
+);
 
 const BatchesAutofillAction = BaseBatchesAutofillAction(
   (orderId, item) => item.orderItems.length,
@@ -36,6 +43,7 @@ const BatchDeleteRemoveAction = BaseBatchDeleteRemoveAction(
 );
 
 export default {
+  order_item_create: OrderItemCreateAction,
   order_autofill: BatchesAutofillAction,
   order_item_batch_create: BatchCreateAction,
   order_item_clone: OrderItemCloneAction,

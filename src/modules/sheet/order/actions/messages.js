@@ -29,4 +29,8 @@ export default defineMessages({
     defaultMessage:
       'This will create a {batchLabel} for each {itemLabel} with its quantity set as the remaining quantity of the {itemLabel}. Only {itemsLabel} with quantities higher than the sum of quantities of their {batchesLabel} can be autofilled.',
   },
+  orderItemCreateTitle: {
+    id: 'modules.Sheet.order.orderItemCreate.title',
+    defaultMessage: 'Create Item',
+  },
 });
