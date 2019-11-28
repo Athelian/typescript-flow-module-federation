@@ -29,6 +29,10 @@ function transformOrder(
     readonlyExporter: false,
     actions: [
       {
+        action: 'order_item_create',
+        label: intl.formatMessage(orderActionMessages.orderItemCreateTitle),
+      },
+      {
         action: 'order_autofill',
         label: intl.formatMessage(orderActionMessages.batchesAutofillTitle),
       },

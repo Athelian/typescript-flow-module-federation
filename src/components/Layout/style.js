@@ -9,7 +9,7 @@ export const LayoutWrapperStyle: string = css`
   position: relative;
 `;
 
-export const ContentWrapperStyle = ({ notCenter = false }: { notCenter: boolean }) => css`
+export const ContentWrapperStyle = (notCenter?: boolean) => css`
   height: calc(100vh - 50px);
   width: 100%;
   overflow-x: hidden;

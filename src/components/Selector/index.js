@@ -9,21 +9,37 @@ type ItemProps = {|
   onSelect: Object => void,
 |};
 
+type IncrementProps = {|
+  value: number,
+  onMinus: () => void,
+  onPlus: () => void,
+|};
+
 type RenderProps<T> = {|
   value: T,
   dirty: boolean,
   getItemProps: (item: Object, selectable?: boolean) => ItemProps,
 |};
 
-type BaseProps<T> = {|
-  selected: T,
-  children: (RenderProps<T>) => React.Node,
+type RenderWithIncrementProps<T> = {|
+  ...RenderProps<T>,
+  getIncrementProps: (item: Object) => IncrementProps,
 |};
 
 type SingleProps = {|
-  ...BaseProps<?Object>,
+  selected: ?Object,
   required?: boolean,
+  children: (RenderProps<?Object>) => React.Node,
 |};
+
+type ManyProps = {|
+  selected: Array<Object>,
+  max?: number,
+  children: (RenderWithIncrementProps<Array<Object>>) => React.Node,
+|};
+
+const countSelected = (selected: Array<Object> = [], value: Object) =>
+  selected.filter(item => item.id === value.id).length;
 
 const SelectorSingle = ({ selected, required, children }: SingleProps) => (
   <ObjectValue defaultValue={selected}>
@@ -49,14 +65,9 @@ const SelectorSingle = ({ selected, required, children }: SingleProps) => (
   </ObjectValue>
 );
 
-type ManyProps = {|
-  ...BaseProps<Array<Object>>,
-  max?: number,
-|};
-
 const SelectorMany = ({ selected, max, children }: ManyProps) => (
   <ArrayValue defaultValue={selected}>
-    {({ value, push, filter }) =>
+    {({ value, push, filter, splice }) =>
       children({
         value,
         dirty: !equals(
@@ -75,6 +86,19 @@ const SelectorMany = ({ selected, max, children }: ManyProps) => (
                 push(item);
               }
             },
+          };
+        },
+        getIncrementProps: item => {
+          const index = value.map(i => i.id).indexOf(item.id);
+
+          return {
+            value: countSelected(value, item),
+            onMinus: () => {
+              if (index > -1) {
+                splice(index, 1);
+              }
+            },
+            onPlus: () => push(item),
           };
         },
       })

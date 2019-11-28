@@ -15,12 +15,11 @@ const MinWidthStep = 50; // px
 type Props = {|
   isOpen: boolean,
   onRequestClose: () => void,
-  shouldConfirm: Function,
+  shouldConfirm?: Function,
   children: React.Node,
 |};
 
 const defaultProps = {
-  isOpen: false,
   shouldConfirm: () => {
     const button = document.getElementById('save_button');
     // $FlowFixMe: Cannot get button.disabled because property disabled is missing in HTMLElement [1].
@@ -58,7 +57,7 @@ const SlideViewRender = ({ isOpen, onRequestClose, shouldConfirm, children }: Pr
         className={BackdropStyle(isOpen)}
         onClick={event => {
           event.stopPropagation();
-          if (shouldConfirm()) {
+          if (shouldConfirm && shouldConfirm()) {
             setConfirmDialogOpen(true);
           } else {
             onRequestClose();
