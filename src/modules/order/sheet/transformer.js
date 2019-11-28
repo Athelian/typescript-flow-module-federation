@@ -96,6 +96,10 @@ function transformBatch(
         label: intl.formatMessage(batchMessages.batchCloneTitle),
       },
       {
+        action: 'batch_sync_packaging',
+        label: intl.formatMessage(batchMessages.batchSyncPackagingTitle),
+      },
+      {
         action: 'batch_delete_remove',
         label: intl.formatMessage(batchMessages.batchRemoveDeleteTitle),
       },

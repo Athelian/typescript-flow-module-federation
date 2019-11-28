@@ -5,6 +5,7 @@ import OrderItemCloneAction from 'modules/sheet/orderItem/actions/OrderItemClone
 import OrderItemDeleteAction from 'modules/sheet/orderItem/actions/OrderItemDeleteAction';
 import BaseBatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAction';
 import BatchCloneAction from 'modules/sheet/batch/actions/BatchCloneAction';
+import BaseBatchSyncPackagingAction from 'modules/sheet/batch/actions/BatchSyncPackagingAction';
 import BaseBatchDeleteRemoveAction from 'modules/sheet/batch/actions/BatchDeleteRemoveAction';
 
 const BatchesAutofillAction = BaseBatchesAutofillAction(
@@ -24,6 +25,14 @@ const BatchCreateAction = BaseBatchCreateAction((orderItemId, item) => {
   return (orderItem?.batches ?? []).length;
 });
 
+const BatchSyncPackagingAction = BaseBatchSyncPackagingAction((batchId, item) => {
+  const productProviderId = (item?.orderItems ?? []).find(orderItem =>
+    (orderItem?.batches ?? []).some(batch => batch.id === batchId)
+  )?.productProvider?.id;
+
+  return productProviderId;
+});
+
 const BatchDeleteRemoveAction = BaseBatchDeleteRemoveAction(
   (batchId, item) => {
     const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId);
@@ -41,5 +50,6 @@ export default {
   order_item_clone: OrderItemCloneAction,
   order_item_delete: OrderItemDeleteAction,
   batch_clone: BatchCloneAction,
+  batch_sync_packaging: BatchSyncPackagingAction,
   batch_delete_remove: BatchDeleteRemoveAction,
 };
