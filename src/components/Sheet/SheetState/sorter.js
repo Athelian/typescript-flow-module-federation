@@ -2,7 +2,7 @@
 import type { SortDirection } from 'types';
 
 export function stringSort(a: string, b: string): number {
-  return (a === undefined || a === null ? '' : a).localeCompare(b);
+  return (a || '').localeCompare(b);
 }
 
 export function numberSort(a: number, b: number): number {
