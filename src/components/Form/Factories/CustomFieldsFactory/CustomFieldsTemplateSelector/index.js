@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { countMaskFieldDefinitions } from 'utils/customFields';
+import { removeTypename } from 'utils/data';
 import useQueryList from 'hooks/useQueryList';
 import { TemplateCard } from 'components/Cards';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
@@ -80,7 +81,7 @@ const CustomFieldsTemplateSelector = ({
                     count: countMaskFieldDefinitions(mask),
                   }}
                   type="METADATA"
-                  {...getItemProps(mask)}
+                  {...getItemProps(removeTypename(mask))}
                 />
               )}
             />
