@@ -8,13 +8,14 @@ import BaseOrderItemSyncPriceAction from 'modules/sheet/orderItem/actions/OrderI
 import BaseBatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAction';
 import BatchCloneAction from 'modules/sheet/batch/actions/BatchCloneAction';
 import BaseBatchSyncPackagingAction from 'modules/sheet/batch/actions/BatchSyncPackagingAction';
+import BaseBatchSplitAction from 'modules/sheet/batch/actions/BatchSplitAction';
 import BaseBatchDeleteRemoveAction from 'modules/sheet/batch/actions/BatchDeleteRemoveAction';
 
-const OrderItemCreateAction = BaseOrderItemCreateAction(
-  (orderId, item) => item.currency,
-  (orderId, item) => item.importer.id,
-  (orderId, item) => item.exporter.id
-);
+const OrderItemCreateAction = BaseOrderItemCreateAction({
+  getCurrency: (orderId, item) => item.currency,
+  getImporterId: (orderId, item) => item.importer.id,
+  getExporterId: (orderId, item) => item.exporter.id,
+});
 
 const OrderItemSyncPriceAction = BaseOrderItemSyncPriceAction({
   getProductProviderId: (orderItemId, item) => {
@@ -26,41 +27,49 @@ const OrderItemSyncPriceAction = BaseOrderItemSyncPriceAction({
   },
 });
 
-const BatchesAutofillAction = BaseBatchesAutofillAction(
-  (orderId, item) => item.orderItems.length,
-  (orderId, item) =>
+const BatchesAutofillAction = BaseBatchesAutofillAction({
+  getOrderItemsCount: (orderId, item) => item.orderItems.length,
+  getNotFullyBatchedOrderItemIds: (orderId, item) =>
     item.orderItems
       .filter(
         oi =>
           oi.quantity >
           oi.batches.reduce((total, batch) => total + getBatchLatestQuantity(batch), 0)
       )
-      .map(oi => oi.id)
-);
-
-const BatchCreateAction = BaseBatchCreateAction((orderItemId, item) => {
-  const orderItem = item.orderItems.find(oi => oi.id === orderItemId);
-  return (orderItem?.batches ?? []).length;
+      .map(oi => oi.id),
 });
 
-const BatchSyncPackagingAction = BaseBatchSyncPackagingAction((batchId, item) => {
-  const productProviderId = (item?.orderItems ?? []).find(orderItem =>
-    (orderItem?.batches ?? []).some(batch => batch.id === batchId)
-  )?.productProvider?.id;
-
-  return productProviderId;
+const BatchCreateAction = BaseBatchCreateAction({
+  getOrderItemBatchesCount: (orderItemId, item) => {
+    const orderItem = item.orderItems.find(oi => oi.id === orderItemId);
+    return (orderItem?.batches ?? []).length;
+  },
 });
 
-const BatchDeleteRemoveAction = BaseBatchDeleteRemoveAction(
-  (batchId, item) => {
+const BatchSyncPackagingAction = BaseBatchSyncPackagingAction({
+  getProductProviderId: (batchId, item) => {
+    const orderItem = (item?.orderItems ?? []).find(oi =>
+      (oi?.batches ?? []).some(batch => batch.id === batchId)
+    );
+    return orderItem?.productProvider?.id;
+  },
+});
+
+const BatchSplitAction = BaseBatchSplitAction({
+  getBatch: (batchId, item) =>
+    item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId),
+});
+
+const BatchDeleteRemoveAction = BaseBatchDeleteRemoveAction({
+  hasShipment: (batchId, item) => {
     const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId);
     return !!batch?.shipment;
   },
-  (batchId, item) => {
+  hasContainer: (batchId, item) => {
     const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId);
     return !!batch?.container;
-  }
-);
+  },
+});
 
 export default {
   order_item_sync_price: OrderItemSyncPriceAction,
@@ -71,5 +80,6 @@ export default {
   order_item_delete: OrderItemDeleteAction,
   batch_clone: BatchCloneAction,
   batch_sync_packaging: BatchSyncPackagingAction,
+  batch_split: BatchSplitAction,
   batch_delete_remove: BatchDeleteRemoveAction,
 };

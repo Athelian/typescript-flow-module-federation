@@ -10,7 +10,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Display, Label } from 'components/Form';
 import type { ActionComponentProps } from 'components/Sheet/SheetAction/types';
-import SelectInput from 'components/Inputs/SelectInput';
+import SelectInput, { type RenderInputProps } from 'components/Inputs/SelectInput';
 import { executeActionMutation, useSheetActionDialog } from 'components/Sheet/SheetAction';
 import ActionDialog, { BatchLabelIcon, EndProductLabelIcon } from 'components/Dialog/ActionDialog';
 import { DefaultOptionStyle } from 'components/Inputs/SelectInput/style';
@@ -197,12 +197,21 @@ const BatchSyncPackagingContent = ({
   );
 };
 
-type Props = {
-  ...ActionComponentProps,
+type Props = {|
   getProductProviderId: (batchId: string, item: Object) => ?string,
-};
+|};
 
-const BatchSyncPackagingActionImpl = ({ entity, item, onDone, getProductProviderId }: Props) => {
+type ImplProps = {|
+  ...ActionComponentProps,
+  ...Props,
+|};
+
+const BatchSyncPackagingActionImpl = ({
+  entity,
+  item,
+  onDone,
+  getProductProviderId,
+}: ImplProps) => {
   const [isOpen, close] = useSheetActionDialog(onDone);
   const [updateBatch, { loading: processing, called }] = useMutation(
     syncPackagingBatchActionMutation
@@ -287,10 +296,8 @@ const BatchSyncPackagingActionImpl = ({ entity, item, onDone, getProductProvider
   );
 };
 
-const BatchSyncPackagingAction = (
-  getProductProviderId: (batchId: string, order: Object) => ?string
-) => (props: ActionComponentProps) => (
-  <BatchSyncPackagingActionImpl {...props} getProductProviderId={getProductProviderId} />
-);
+const BatchSyncPackagingAction = ({ getProductProviderId }: Props) => (
+  props: ActionComponentProps
+) => <BatchSyncPackagingActionImpl {...props} getProductProviderId={getProductProviderId} />;
 
 export default BatchSyncPackagingAction;

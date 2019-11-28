@@ -51,4 +51,36 @@ export default defineMessages({
     id: 'modules.Sheet.batch.deleteRemove.removeButton',
     defaultMessage: 'Remove from {icon}',
   },
+  batchSplitTitle: {
+    id: 'modules.Sheet.batch.split.title',
+    defaultMessage: 'Split',
+  },
+  batchSplitSplitting: {
+    id: 'modules.Sheet.batch.split.splitting',
+    defaultMessage: 'Splitting {batchLabel} ...',
+  },
+  batchSplitNotEnoughQuantity: {
+    id: 'modules.Sheet.batch.split.notEnoughQuantity',
+    defaultMessage: 'Sorry, you cannot split this {batchLabel} because its quantity is not greater than 0',
+  },
+  batchSplitMessage: {
+    id: 'modules.Sheet.batch.split.message',
+    defaultMessage: 'Please enter the quantity that you would like to split by',
+  },
+  batchSplitSubMessage: {
+    id: 'modules.Sheet.batch.split.subMessage',
+    defaultMessage: 'You cannot split by more than the quantity of the {batchLabel}',
+  },
+  batchSplitButton: {
+    id: 'modules.Sheet.batch.split.button',
+    defaultMessage: 'Split',
+  },
+  batchSplitInto: {
+    id: 'modules.Sheet.batch.split.into',
+    defaultMessage: 'Quantity to Split Into',
+  },
+  batchSplitValidatorError: {
+    id: 'modules.Sheet.batch.split.validatorError',
+    defaultMessage: 'Please enter the number between {min} and {max}',
+  },
 });

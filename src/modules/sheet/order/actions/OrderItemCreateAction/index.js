@@ -27,12 +27,16 @@ import { ItemWrapperStyle } from 'modules/order/common/SelectProductProviders/st
 import { OverlayStyle } from './style';
 import orderItemCreateActionMutation from './mutation';
 
-type Props = {
-  ...ActionComponentProps,
+type Props = {|
   getCurrency: (orderId: string, item: Object) => string,
   getImporterId: (orderId: string, item: Object) => string,
   getExporterId: (orderId: string, item: Object) => string,
-};
+|};
+
+type ImplProps = {|
+  ...ActionComponentProps,
+  ...Props,
+|};
 
 const OrderItemCreateActionImpl = ({
   entity,
@@ -41,7 +45,7 @@ const OrderItemCreateActionImpl = ({
   getCurrency,
   getImporterId,
   getExporterId,
-}: Props) => {
+}: ImplProps) => {
   const [isOpen, close] = useSheetActionDialog(onDone);
   const [orderItemCreate, { loading: mutateLoading, called }] = useMutation(
     orderItemCreateActionMutation
@@ -165,11 +169,9 @@ const OrderItemCreateActionImpl = ({
   );
 };
 
-const OrderItemCreateAction = (
-  getCurrency: (orderId: string, item: Object) => string,
-  getImporterId: (orderId: string, item: Object) => string,
-  getExporterId: (orderId: string, item: Object) => string
-) => (props: ActionComponentProps) => (
+const OrderItemCreateAction = ({ getCurrency, getExporterId, getImporterId }: Props) => (
+  props: ActionComponentProps
+) => (
   <OrderItemCreateActionImpl
     {...props}
     getCurrency={getCurrency}
