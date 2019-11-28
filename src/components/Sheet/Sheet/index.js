@@ -134,7 +134,7 @@ const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent, doAction }
               ) || null,
             error:
               !!state.errorAt &&
-              state.errorAt.messages.length > 0 &&
+              state.errorAt.violations.length > 0 &&
               isInArea(state.errorAt, columnIndex, rowIndex)
                 ? state.errorAt
                 : null,
