@@ -64,6 +64,10 @@ function transformOrderItem(
           label: intl.formatMessage(orderItemActionMessages.orderItemCloneTitle),
         },
         {
+          action: 'order_item_sync_price',
+          label: intl.formatMessage(orderItemActionMessages.orderItemSyncPriceTitle),
+        },
+        {
           action: 'order_item_delete',
           label: intl.formatMessage(orderItemActionMessages.orderItemDeleteTitle),
         },

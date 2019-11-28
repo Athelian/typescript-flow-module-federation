@@ -10,6 +10,28 @@ export default defineMessages({
     id: 'modules.Sheet.orderItem.clone.cloning',
     defaultMessage: 'Cloning {icon} ...',
   },
+  orderItemSyncPriceTitle: {
+    id: 'modules.Sheet.orderItem.syncPrice.title',
+    defaultMessage: 'Sync Price',
+  },
+  orderItemSyncPriceMessage: {
+    id: 'modules.Sheet.orderItem.syncPrice.message',
+    defaultMessage:
+      'Are you sure you want to load the following price from the {endProductLabel} into this {orderItemLabel} ?',
+  },
+  orderItemSyncPriceRestrictedMessage: {
+    id: 'modules.Sheet.orderItem.syncPrice.message',
+    defaultMessage:
+      'Sorry, you cannot load the following price from the {endProductLabel} into this {orderItemLabel} because their currencies are mismatched',
+  },
+  orderItemSyncPriceSyncing: {
+    id: 'modules.Sheet.orderItem.syncPrice.syncing',
+    defaultMessage: 'Syncing {orderItemLabel} ...',
+  },
+  orderItemSyncPriceSyncButton: {
+    id: 'modules.Sheet.orderItem.syncPrice.syncButton',
+    defaultMessage: 'Sync',
+  },
   batchCreateTitle: {
     id: 'modules.Sheet.orderItem.createBatch.title',
     defaultMessage: 'Create Batch',

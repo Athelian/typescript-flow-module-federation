@@ -4,6 +4,7 @@ import BaseOrderItemCreateAction from 'modules/sheet/order/actions/OrderItemCrea
 import BaseBatchesAutofillAction from 'modules/sheet/order/actions/BatchesAutofillAction';
 import OrderItemCloneAction from 'modules/sheet/orderItem/actions/OrderItemCloneAction';
 import OrderItemDeleteAction from 'modules/sheet/orderItem/actions/OrderItemDeleteAction';
+import BaseOrderItemSyncPriceAction from 'modules/sheet/orderItem/actions/OrderItemSyncPriceAction';
 import BaseBatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAction';
 import BatchCloneAction from 'modules/sheet/batch/actions/BatchCloneAction';
 import BaseBatchSyncPackagingAction from 'modules/sheet/batch/actions/BatchSyncPackagingAction';
@@ -14,6 +15,13 @@ const OrderItemCreateAction = BaseOrderItemCreateAction(
   (orderId, item) => item.importer.id,
   (orderId, item) => item.exporter.id
 );
+
+const OrderItemSyncPriceAction = BaseOrderItemSyncPriceAction((orderItemId, item) => {
+  const productProviderId = (item?.orderItems ?? []).find(orderItem => orderItem.id === orderItemId)
+    ?.productProvider?.id;
+
+  return productProviderId;
+});
 
 const BatchesAutofillAction = BaseBatchesAutofillAction(
   (orderId, item) => item.orderItems.length,
@@ -52,6 +60,7 @@ const BatchDeleteRemoveAction = BaseBatchDeleteRemoveAction(
 );
 
 export default {
+  order_item_sync_price: OrderItemSyncPriceAction,
   order_item_create: OrderItemCreateAction,
   order_autofill: BatchesAutofillAction,
   order_item_batch_create: BatchCreateAction,
