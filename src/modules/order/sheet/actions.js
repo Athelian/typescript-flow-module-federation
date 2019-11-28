@@ -1,10 +1,11 @@
 // @flow
 import { getBatchLatestQuantity } from 'utils/batch';
-import BaseOrderItemCreateAction from 'modules/sheet/order/actions/OrderItemCreateAction';
+import OrderSyncAllPricesAction from 'modules/sheet/order/actions/OrderSyncAllPricesAction';
 import BaseBatchesAutofillAction from 'modules/sheet/order/actions/BatchesAutofillAction';
+import BaseOrderItemCreateAction from 'modules/sheet/order/actions/OrderItemCreateAction';
 import OrderItemCloneAction from 'modules/sheet/orderItem/actions/OrderItemCloneAction';
-import OrderItemDeleteAction from 'modules/sheet/orderItem/actions/OrderItemDeleteAction';
 import BaseOrderItemSyncPriceAction from 'modules/sheet/orderItem/actions/OrderItemSyncPriceAction';
+import OrderItemDeleteAction from 'modules/sheet/orderItem/actions/OrderItemDeleteAction';
 import BaseBatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAction';
 import BatchCloneAction from 'modules/sheet/batch/actions/BatchCloneAction';
 import BaseBatchSyncPackagingAction from 'modules/sheet/batch/actions/BatchSyncPackagingAction';
@@ -72,12 +73,13 @@ const BatchDeleteRemoveAction = BaseBatchDeleteRemoveAction({
 });
 
 export default {
-  order_item_sync_price: OrderItemSyncPriceAction,
-  order_item_create: OrderItemCreateAction,
+  order_sync_all_prices: OrderSyncAllPricesAction,
   order_autofill: BatchesAutofillAction,
-  order_item_batch_create: BatchCreateAction,
+  order_item_create: OrderItemCreateAction,
   order_item_clone: OrderItemCloneAction,
+  order_item_sync_price: OrderItemSyncPriceAction,
   order_item_delete: OrderItemDeleteAction,
+  order_item_batch_create: BatchCreateAction,
   batch_clone: BatchCloneAction,
   batch_sync_packaging: BatchSyncPackagingAction,
   batch_split: BatchSplitAction,
