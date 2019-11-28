@@ -48,15 +48,7 @@ const BatchSyncPackagingContent = ({
         <SelectInput
           value={selectedPackage}
           items={productProvider?.packages ?? []}
-          itemToString={option =>
-            option
-              ? option.name ||
-                intl.formatMessage({
-                  id: 'modules.ProductProviders.noPackageName',
-                  defaultMessage: 'No package name',
-                })
-              : ''
-          }
+          itemToString={option => option?.name ?? ''}
           itemToValue={option => option}
           renderInput={({
             getToggleButtonProps,
@@ -69,14 +61,21 @@ const BatchSyncPackagingContent = ({
               {...getToggleButtonProps()}
               className={SelectInputStyle(selectDropdownIsOpen)}
             >
-              <span className={SelectTextStyle(!!selectedItem)}>{itemToString(selectedItem)}</span>
+              <span className={SelectTextStyle(!!selectedItem)}>
+                {selectedItem?.name
+                  ? itemToString(selectedItem)
+                  : intl.formatMessage({
+                      id: 'modules.ProductProviders.noPackageName',
+                      defaultMessage: 'No package name',
+                    })}
+              </span>
 
               <i className={ArrowDownStyle(selectDropdownIsOpen)}>
                 <Icon icon="CHEVRON_DOWN" />
               </i>
             </button>
           )}
-          renderOption={({ item: option, highlighted, selected }) => {
+          renderOption={({ item: option, highlighted, selected, itemToString }) => {
             const isDefault = option?.id === productProvider?.defaultPackage?.id;
 
             return (
@@ -85,13 +84,12 @@ const BatchSyncPackagingContent = ({
                   <Icon icon="STAR" />
                 </span>
                 <span>
-                  {option
-                    ? option.name ||
-                      intl.formatMessage({
+                  {option?.name
+                    ? itemToString(option)
+                    : intl.formatMessage({
                         id: 'modules.ProductProviders.noPackageName',
                         defaultMessage: 'No package name',
-                      })
-                    : ''}
+                      })}
                 </span>
               </div>
             );
@@ -217,7 +215,6 @@ const BatchSyncPackagingActionImpl = ({ entity, item, onDone, getProductProvider
     variables: { id: productProviderId },
     fetchPolicy: 'network-only',
     onCompleted: result => {
-      console.warn(result);
       setSelectedPackage(removeTypename(result?.productProvider?.defaultPackage));
     },
   });
