@@ -12,15 +12,32 @@ import messages from '../messages';
 import { syncAllPricesOrderActionMutation } from './mutation';
 import { syncAllPricesProductProvidersQuery } from './query';
 
-const OrderSyncAllPricesAction = ({ entity, item, onDone }: ActionComponentProps) => {
+type Props = {|
+  getUniqueProductProvidersIds: (item: Object) => Array<string>,
+  getOrderItemsProductProvidersMapping: (
+    item: Object,
+    productProviders: Array<Object>
+  ) => { orderItemsMapping: Array<Object>, numOfOrderItemsAbleToSync: number },
+|};
+
+type ImplProps = {|
+  ...ActionComponentProps,
+  ...Props,
+|};
+
+const OrderSyncAllPricesActionImpl = ({
+  entity,
+  item,
+  onDone,
+  getUniqueProductProvidersIds,
+  getOrderItemsProductProvidersMapping,
+}: ImplProps) => {
   const [isOpen, close] = useSheetActionDialog(onDone);
   const [updateOrder, { loading: processing, called }] = useMutation(
     syncAllPricesOrderActionMutation
   );
 
-  const uniqueProductProviderIds = [
-    ...new Set((item?.orderItems ?? []).map(orderItem => orderItem?.productProvider?.id)),
-  ];
+  const uniqueProductProviderIds = getUniqueProductProvidersIds(item);
 
   const { data, loading } = useQuery(syncAllPricesProductProvidersQuery, {
     variables: { ids: uniqueProductProviderIds },
@@ -28,27 +45,12 @@ const OrderSyncAllPricesAction = ({ entity, item, onDone }: ActionComponentProps
   });
   const productProviders = removeTypename(data?.productProvidersByIDs ?? []);
 
+  const { orderItemsMapping, numOfOrderItemsAbleToSync } = getOrderItemsProductProvidersMapping(
+    item,
+    productProviders
+  );
+
   const numOfOrderItems = item?.orderItems?.length ?? 0;
-  let numOfOrderItemsAbleToSync = 0;
-
-  const orderItemsMapping = (item?.orderItems ?? []).map(orderItem => {
-    const matchedProductProvider = productProviders.find(
-      productProvider => productProvider.id === orderItem?.productProvider?.id
-    );
-
-    const currencyMatches = matchedProductProvider?.unitPrice?.currency === item?.currency;
-    if (currencyMatches) {
-      numOfOrderItemsAbleToSync += 1;
-    }
-
-    return {
-      ...orderItem,
-      productProvider: {
-        ...matchedProductProvider,
-      },
-      currencyMatches,
-    };
-  });
 
   const cannotSync = numOfOrderItemsAbleToSync === 0;
 
@@ -126,5 +128,16 @@ const OrderSyncAllPricesAction = ({ entity, item, onDone }: ActionComponentProps
     />
   );
 };
+
+const OrderSyncAllPricesAction = ({
+  getUniqueProductProvidersIds,
+  getOrderItemsProductProvidersMapping,
+}: Props) => (props: ActionComponentProps) => (
+  <OrderSyncAllPricesActionImpl
+    {...props}
+    getUniqueProductProvidersIds={getUniqueProductProvidersIds}
+    getOrderItemsProductProvidersMapping={getOrderItemsProductProvidersMapping}
+  />
+);
 
 export default OrderSyncAllPricesAction;
