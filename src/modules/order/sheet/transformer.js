@@ -72,6 +72,10 @@ function transformOrderItem(
           label: intl.formatMessage(orderItemActionMessages.orderItemSyncPriceTitle),
         },
         {
+          action: 'order_item_autofill',
+          label: intl.formatMessage(orderItemActionMessages.orderItemAutofillTitle),
+        },
+        {
           action: 'order_item_delete',
           label: intl.formatMessage(orderItemActionMessages.orderItemDeleteTitle),
         },

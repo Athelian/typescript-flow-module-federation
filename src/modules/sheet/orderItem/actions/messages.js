@@ -64,4 +64,30 @@ export default defineMessages({
     id: 'modules.Sheet.orderItem.delete.button',
     defaultMessage: 'Delete',
   },
+  orderItemAutofillTitle: {
+    id: 'modules.Sheet.orderItem.autofill.title',
+    defaultMessage: 'Autofill Batch',
+  },
+  orderItemAutofillButton: {
+    id: 'modules.Sheet.orderItem.autofill.button',
+    defaultMessage: 'Autofill',
+  },
+  orderItemAutofillAutofilling: {
+    id: 'modules.Sheet.orderItem.autofill.autofilling',
+    defaultMessage: 'Autofilling {batchLabel} ...',
+  },
+  orderItemAutofillRestrictedMessage: {
+    id: 'modules.Sheet.orderItem.autofill.restrictedMessage',
+    defaultMessage:
+      'Sorry, you cannot autofill this {itemLabel} because it has less quantity than the total quantity of its {batchesLabel}',
+  },
+  orderItemAutofillMessage: {
+    id: 'modules.Sheet.orderItem.autofill.message',
+    defaultMessage: 'Are you sure you want to autofill this {itemLabel} ?',
+  },
+  orderItemAutofillSubMessage: {
+    id: 'modules.Sheet.orderItem.autofill.subMessage',
+    defaultMessage:
+      'This will create a {batchLabel} with its quantity set as the remaining quantity of the {itemLabel}',
+  },
 });

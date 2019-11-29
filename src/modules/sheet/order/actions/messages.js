@@ -44,7 +44,7 @@ export default defineMessages({
   batchesAutofillConfirm: {
     id: 'modules.Sheet.order.batchesAutofill.confirm',
     defaultMessage:
-      'Are you sure you want to autofill {numOfValidItems} / {numOfItems} {itemsLabel} that you have selected?',
+      '{numOfValidItems} / {numOfItems} {itemsLabel} are able to be autofilled. Would you like to autofill these {itemsLabel} ?',
   },
   batchesAutofillSubConfirm: {
     id: 'modules.Sheet.order.batchesAutofill.subConfirm',
