@@ -1,5 +1,6 @@
 // @flow
 import { getBatchLatestQuantity } from 'utils/batch';
+import OrderExportAction from 'modules/sheet/order/actions/OrderExportAction';
 import BaseOrderSyncAllPricesAction from 'modules/sheet/order/actions/OrderSyncAllPricesAction';
 import BaseBatchesAutofillAction from 'modules/sheet/order/actions/BatchesAutofillAction';
 import BaseOrderItemCreateAction from 'modules/sheet/order/actions/OrderItemCreateAction';
@@ -121,6 +122,7 @@ const OrderItemAutofillAction = BaseOrderItemAutofillAction({
 });
 
 export default {
+  order_export: OrderExportAction,
   order_sync_all_prices: OrderSyncAllPricesAction,
   order_autofill: BatchesAutofillAction,
   order_item_create: OrderItemCreateAction,
