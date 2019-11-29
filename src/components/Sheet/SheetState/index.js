@@ -185,7 +185,7 @@ export const SheetState = ({
           type: Actions.SET_ERROR,
           cell,
           payload: {
-            messages: violations.map(v => v.message),
+            violations,
           },
         });
       });
