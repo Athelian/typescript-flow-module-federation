@@ -9,7 +9,7 @@ import { orderExportQuery } from 'modules/order/query';
 import messages from '../messages';
 import { BodyWrapperStyle } from './style';
 
-const OrderSyncAllPricesAction = ({ entity, onDone }: ActionComponentProps) => {
+const OrderExportAction = ({ entity, onDone }: ActionComponentProps) => {
   const [isOpen, close] = useSheetActionDialog(onDone);
 
   return (
@@ -31,4 +31,4 @@ const OrderSyncAllPricesAction = ({ entity, onDone }: ActionComponentProps) => {
   );
 };
 
-export default OrderSyncAllPricesAction;
+export default OrderExportAction;
