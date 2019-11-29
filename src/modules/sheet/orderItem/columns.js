@@ -87,13 +87,6 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Default,
   },
   {
-    key: 'orderItem.remainQuantity',
-    title: <FormattedMessage {...orderItemMessages.remainQuantity} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: ColumnWidths.Default,
-  },
-  {
     key: 'orderItem.totalBatched',
     title: <FormattedMessage {...orderItemMessages.totalBatched} />,
     icon: 'ORDER_ITEM',
