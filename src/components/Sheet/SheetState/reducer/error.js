@@ -45,7 +45,7 @@ export function clearError(state: State): State {
 
 export function reError(
   state: State,
-  payload: { violations: Array<string>, cell: CellValue }
+  payload: { violations: Array<Violation>, cell: CellValue }
 ): State {
   const { cell, violations } = payload;
   const pos = findEquivalentCellPosition(state.rows, cell);
