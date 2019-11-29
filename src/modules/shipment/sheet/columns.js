@@ -6,14 +6,16 @@ import orderItemColumns from 'modules/sheet/orderItem/columns';
 import shipmentColumns from 'modules/sheet/shipment/columns';
 import containerColumns from 'modules/sheet/container/columns';
 import batchColumns from 'modules/sheet/batch/columns';
+import productColumns from 'modules/sheet/product/columns';
 
-export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment'];
+export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment', 'Product'];
 
 type Props = {
   orderFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
+  productFieldDefinitions: Array<FieldDefinition>,
 };
 
 export default function({
@@ -21,6 +23,7 @@ export default function({
   orderItemFieldDefinitions,
   batchFieldDefinitions,
   shipmentFieldDefinitions,
+  productFieldDefinitions,
 }: Props): Array<ColumnConfig> {
   return [
     ...shipmentColumns(
@@ -265,6 +268,7 @@ export default function({
           'orderItem.action',
         ].includes(c.key)
     ),
+    ...productColumns({}, {}, productFieldDefinitions),
     ...orderColumns(
       {
         'order.poNo': 'containers.batches.orderItem.order.poNo',

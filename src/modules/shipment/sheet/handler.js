@@ -13,6 +13,7 @@ import { handleFieldValueEvent } from 'modules/sheet/common/handler';
 import { handleOrderChanges } from 'modules/sheet/order/handler';
 import { handleOrderItemChanges } from 'modules/sheet/orderItem/handler';
 import { handleBatchChanges } from 'modules/sheet/batch/handler';
+import { handleProductChanges } from 'modules/sheet/product/handler';
 import {
   handleContainerGroupChanges,
   handleShipmentChanges,
@@ -510,6 +511,9 @@ export default function entityEventHandler(
           }
           case 'Order':
             changes = await handleOrderChanges(client, changes);
+            break;
+          case 'Product':
+            changes = await handleProductChanges(client, changes);
             break;
           case 'FieldValue':
             handleFieldValueEvent(dispatch, event);
