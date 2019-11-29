@@ -73,11 +73,15 @@ export const useSheetStateLoadMore = (
   return [loadingMore, handleThreshold];
 };
 
-export const useSheetKeyNavigation = () => {
+export const useSheetKeyNavigation = (disableNavigation: boolean = false) => {
   const { dispatch } = useSheetState();
 
   const handleKey = React.useCallback(
     (e: SyntheticKeyboardEvent<HTMLDivElement>) => {
+      if (disableNavigation) {
+        return;
+      }
+
       switch (e.key) {
         case 'ArrowUp':
           e.preventDefault();
@@ -113,7 +117,7 @@ export const useSheetKeyNavigation = () => {
           break;
       }
     },
-    [dispatch]
+    [disableNavigation, dispatch]
   );
 
   React.useEffect(() => {

@@ -36,6 +36,7 @@ type BaseProps = {|
 
 type ImplProps = {|
   ...BaseProps,
+  disableNavigation: boolean,
   doAction: DoAction,
 |};
 
@@ -50,10 +51,17 @@ type Props = {|
   actions: { [string]: (ActionComponentProps) => React.Node },
 |};
 
-const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent, doAction }: ImplProps) => {
+const SheetImpl = ({
+  loading,
+  hasMore,
+  onLoadMore,
+  handleEntityEvent,
+  disableNavigation,
+  doAction,
+}: ImplProps) => {
   const [loadingMore, handleThreshold] = useSheetStateLoadMore(onLoadMore);
   const { state, dispatch, mutate } = useSheetState();
-  useSheetKeyNavigation();
+  useSheetKeyNavigation(disableNavigation);
   useSheetLiveFocus();
   useSheetLiveEntity(handleEntityEvent);
 
@@ -233,12 +241,13 @@ const Sheet = ({
   >
     <SheetLiveID>
       <SheetAction actions={actions}>
-        {({ doAction }) => (
+        {({ doAction, actionProcessing }) => (
           <SheetImpl
             loading={loading}
             hasMore={hasMore}
             onLoadMore={onLoadMore}
             handleEntityEvent={handleEntityEvent}
+            disableNavigation={actionProcessing}
             doAction={doAction}
           />
         )}
