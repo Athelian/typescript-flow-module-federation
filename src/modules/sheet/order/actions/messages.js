@@ -59,4 +59,8 @@ export default defineMessages({
     id: 'modules.Sheet.order.orderExport.title',
     defaultMessage: 'Export',
   },
+  orderExportMessage: {
+    id: 'modules.Sheet.order.orderExport.message',
+    defaultMessage: 'Export this {orderLabel}',
+  },
 });

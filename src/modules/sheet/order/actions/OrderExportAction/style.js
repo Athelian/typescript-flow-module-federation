@@ -3,10 +3,10 @@ import { css } from 'react-emotion';
 
 export const BodyWrapperStyle: string = css`
   display: flex;
-  flex-align: center;
+  align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100px;
+  height: 60px;
 `;
 
 export default BodyWrapperStyle;

@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { ExportButton } from 'components/Buttons';
 import type { ActionComponentProps } from 'components/Sheet/SheetAction/types';
 import { useSheetActionDialog } from 'components/Sheet/SheetAction';
-import ActionDialog from 'components/Dialog/ActionDialog';
+import ActionDialog, { OrderLabelIcon } from 'components/Dialog/ActionDialog';
 import { orderExportQuery } from 'modules/order/query';
 import messages from '../messages';
 import { BodyWrapperStyle } from './style';
@@ -17,7 +17,12 @@ const OrderSyncAllPricesAction = ({ entity, onDone }: ActionComponentProps) => {
       isOpen={isOpen}
       onCancel={close}
       title={<FormattedMessage {...messages.orderExportTitle} />}
-      dialogMessage="Hi"
+      dialogMessage={
+        <FormattedMessage
+          {...messages.orderExportMessage}
+          values={{ orderLabel: <OrderLabelIcon /> }}
+        />
+      }
     >
       <div className={BodyWrapperStyle}>
         <ExportButton type="Order" exportQuery={orderExportQuery} variables={{ id: entity.id }} />
