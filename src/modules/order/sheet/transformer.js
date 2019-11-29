@@ -29,6 +29,10 @@ function transformOrder(
     readonlyExporter: false,
     actions: [
       {
+        action: 'order_sync_all_prices',
+        label: intl.formatMessage(orderActionMessages.syncAllPricesTitle),
+      },
+      {
         action: 'order_autofill',
         label: intl.formatMessage(orderActionMessages.batchesAutofillTitle),
       },

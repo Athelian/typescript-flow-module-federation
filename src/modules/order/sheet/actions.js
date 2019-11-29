@@ -1,15 +1,50 @@
 // @flow
 import { getBatchLatestQuantity } from 'utils/batch';
-import BaseOrderItemCreateAction from 'modules/sheet/order/actions/OrderItemCreateAction';
+import BaseOrderSyncAllPricesAction from 'modules/sheet/order/actions/OrderSyncAllPricesAction';
 import BaseBatchesAutofillAction from 'modules/sheet/order/actions/BatchesAutofillAction';
+import BaseOrderItemCreateAction from 'modules/sheet/order/actions/OrderItemCreateAction';
 import OrderItemCloneAction from 'modules/sheet/orderItem/actions/OrderItemCloneAction';
-import OrderItemDeleteAction from 'modules/sheet/orderItem/actions/OrderItemDeleteAction';
 import BaseOrderItemSyncPriceAction from 'modules/sheet/orderItem/actions/OrderItemSyncPriceAction';
+import OrderItemDeleteAction from 'modules/sheet/orderItem/actions/OrderItemDeleteAction';
 import BaseBatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAction';
 import BatchCloneAction from 'modules/sheet/batch/actions/BatchCloneAction';
 import BaseBatchSyncPackagingAction from 'modules/sheet/batch/actions/BatchSyncPackagingAction';
 import BaseBatchSplitAction from 'modules/sheet/batch/actions/BatchSplitAction';
 import BaseBatchDeleteRemoveAction from 'modules/sheet/batch/actions/BatchDeleteRemoveAction';
+
+const OrderSyncAllPricesAction = BaseOrderSyncAllPricesAction({
+  getUniqueProductProvidersIds: item => {
+    const uniqueProductProviderIds = [
+      ...new Set((item?.orderItems ?? []).map(orderItem => orderItem?.productProvider?.id)),
+    ];
+
+    return uniqueProductProviderIds;
+  },
+  getOrderItemsProductProvidersMapping: (item, productProviders) => {
+    let numOfOrderItemsAbleToSync = 0;
+
+    const orderItemsMapping = (item?.orderItems ?? []).map(orderItem => {
+      const matchedProductProvider = productProviders.find(
+        productProvider => productProvider.id === orderItem?.productProvider?.id
+      );
+
+      const currencyMatches = matchedProductProvider?.unitPrice?.currency === item?.currency;
+      if (currencyMatches) {
+        numOfOrderItemsAbleToSync += 1;
+      }
+
+      return {
+        ...orderItem,
+        productProvider: {
+          ...matchedProductProvider,
+        },
+        currencyMatches,
+      };
+    });
+
+    return { orderItemsMapping, numOfOrderItemsAbleToSync };
+  },
+});
 
 const OrderItemCreateAction = BaseOrderItemCreateAction({
   getCurrency: (orderId, item) => item.currency,
@@ -72,12 +107,13 @@ const BatchDeleteRemoveAction = BaseBatchDeleteRemoveAction({
 });
 
 export default {
-  order_item_sync_price: OrderItemSyncPriceAction,
-  order_item_create: OrderItemCreateAction,
+  order_sync_all_prices: OrderSyncAllPricesAction,
   order_autofill: BatchesAutofillAction,
-  order_item_batch_create: BatchCreateAction,
+  order_item_create: OrderItemCreateAction,
   order_item_clone: OrderItemCloneAction,
+  order_item_sync_price: OrderItemSyncPriceAction,
   order_item_delete: OrderItemDeleteAction,
+  order_item_batch_create: BatchCreateAction,
   batch_clone: BatchCloneAction,
   batch_sync_packaging: BatchSyncPackagingAction,
   batch_split: BatchSplitAction,
