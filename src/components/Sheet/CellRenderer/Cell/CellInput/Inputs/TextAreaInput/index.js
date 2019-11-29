@@ -23,17 +23,9 @@ const TextAreaInput = ({
   readonly,
 }: InputProps<string>) => {
   const intl = useIntl();
-  const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
   const [textValue, setTextValue] = React.useState(value);
 
   React.useEffect(() => setTextValue(value), [value]);
-  React.useEffect(() => {
-    if (!focus) {
-      return () => {};
-    }
-    const handler = setTimeout(() => inputRef.current && inputRef.current.select(), 200);
-    return () => clearTimeout(handler);
-  }, [focus]);
 
   const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
     if (focus) {
@@ -73,7 +65,7 @@ const TextAreaInput = ({
       >
         <div className={TextAreaInputDialogWrapperStyle}>
           <textarea
-            ref={inputRef}
+            data-focus-first
             className={TextAreaInputStyle}
             value={textValue}
             placeholder={intl.formatMessage({
@@ -83,16 +75,11 @@ const TextAreaInput = ({
             spellCheck={false}
             onChange={event => setTextValue(event.target.value)}
             onKeyDown={event => {
-              switch (event.key) {
-                case 'Tab':
-                  event.preventDefault();
-                  event.stopPropagation();
-                  break;
-                case 'Enter':
-                  event.stopPropagation();
-                  break;
-                default:
-                  break;
+              if (event.key !== 'Escape') {
+                event.stopPropagation();
+              }
+              if (event.key === 'Tab') {
+                event.preventDefault();
               }
             }}
           />

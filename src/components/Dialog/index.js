@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Icon from 'components/Icon';
 import usePortalSlot from 'hooks/usePortalSlot';
+import { useFocusFallback } from 'contexts/FocusFallback';
 import {
   BackdropFadeInStyle,
   BackdropFadeOutStyle,
@@ -37,6 +38,24 @@ const DialogRender = (props: Props) => {
   };
   const slot = usePortalSlot(DIALOG_PORTAL_NAME);
 
+  const focusFallback = useFocusFallback();
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      if (containerRef.current) {
+        const elemToFocus =
+          containerRef.current.querySelector('[data-focus-first]:not([disabled])') ||
+          containerRef.current;
+        if (elemToFocus) {
+          elemToFocus.focus();
+        }
+      }
+    } else if (focusFallback.element.current) {
+      focusFallback.element.current.focus();
+    }
+  }, [isOpen, focusFallback]);
+
   return ReactDOM.createPortal(
     <div
       className={isOpen ? BackdropFadeInStyle : BackdropFadeOutStyle}
@@ -53,6 +72,7 @@ const DialogRender = (props: Props) => {
       role="presentation"
     >
       <div
+        ref={containerRef}
         className={isOpen ? DialogFadeInStyle(width) : DialogFadeOutStyle(width)}
         onClick={event => event.stopPropagation()}
         role="presentation"
