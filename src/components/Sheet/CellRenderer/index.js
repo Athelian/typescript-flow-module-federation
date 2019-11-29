@@ -39,7 +39,11 @@ const CellRenderer = ({ data, style, columnIndex, rowIndex }: Props) => {
           )}
 
           {isTop && isErrored && (
-            <Errors errors={cellData.error?.messages ?? []} isFirstRow={onFirstRow} size={size} />
+            <Errors
+              violations={cellData.error?.violations ?? []}
+              isFirstRow={onFirstRow}
+              size={size}
+            />
           )}
 
           {cellData.removedRow && <Deleted area={cellData.removedRow} />}

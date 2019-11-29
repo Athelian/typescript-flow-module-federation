@@ -29,6 +29,14 @@ function transformOrder(
     readonlyExporter: false,
     actions: [
       {
+        action: 'order_export',
+        label: intl.formatMessage(orderActionMessages.orderExportTitle),
+      },
+      {
+        action: 'order_sync_all_prices',
+        label: intl.formatMessage(orderActionMessages.syncAllPricesTitle),
+      },
+      {
         action: 'order_autofill',
         label: intl.formatMessage(orderActionMessages.batchesAutofillTitle),
       },
@@ -66,6 +74,10 @@ function transformOrderItem(
         {
           action: 'order_item_sync_price',
           label: intl.formatMessage(orderItemActionMessages.orderItemSyncPriceTitle),
+        },
+        {
+          action: 'order_item_autofill',
+          label: intl.formatMessage(orderItemActionMessages.orderItemAutofillTitle),
         },
         {
           action: 'order_item_delete',

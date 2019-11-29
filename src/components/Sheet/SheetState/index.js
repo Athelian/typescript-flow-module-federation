@@ -1,6 +1,9 @@
 // @flow
 import * as React from 'react';
 import { equals } from 'ramda';
+import { hasInPortal } from 'hooks/usePortalSlot';
+import { DIALOG_PORTAL_NAME } from 'components/Dialog';
+import { SLIDEVIEW_PORTAL_NAME } from 'components/SlideView';
 import cellReducer from './reducer';
 import { Actions } from './constants';
 import type { Action, CellValue, State, Mutator, ColumnConfig, ColumnSort, Mutate } from './types';
@@ -78,6 +81,10 @@ export const useSheetKeyNavigation = () => {
 
   const handleKey = React.useCallback(
     (e: SyntheticKeyboardEvent<HTMLDivElement>) => {
+      if (hasInPortal(DIALOG_PORTAL_NAME) || hasInPortal(SLIDEVIEW_PORTAL_NAME)) {
+        return;
+      }
+
       switch (e.key) {
         case 'ArrowUp':
           e.preventDefault();
@@ -181,7 +188,7 @@ export const SheetState = ({
           type: Actions.SET_ERROR,
           cell,
           payload: {
-            messages: violations.map(v => v.message),
+            violations,
           },
         });
       });

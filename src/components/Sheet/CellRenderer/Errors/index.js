@@ -1,18 +1,20 @@
 // @flow
 import * as React from 'react';
+import type { Violation } from 'types';
+import FormattedViolation from 'components/FormattedViolation';
 import { ErrorStyle, WrapperStyle } from './style';
 
 type Props = {
   isFirstRow: boolean,
   size: number,
-  errors: Array<string>,
+  violations: Array<Violation>,
 };
 
-const Errors = ({ isFirstRow, size, errors }: Props) => (
+const Errors = ({ isFirstRow, size, violations }: Props) => (
   <div className={WrapperStyle(isFirstRow, size)}>
-    {errors.map(error => (
-      <span key={error} className={ErrorStyle}>
-        {error}
+    {violations.map(violation => (
+      <span key={violation.error} className={ErrorStyle}>
+        <FormattedViolation violation={violation} />
       </span>
     ))}
   </div>

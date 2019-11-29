@@ -102,7 +102,7 @@ export default function AutoFill({ onSuccess }: Props) {
         id="modules.RelationMap.autofill.autofilling"
         defaultMessage="Autofilling {numOfItems} {itemsLabel} ..."
         values={{
-          numOfItems: <FormattedNumber value={totalOrderItems} />,
+          numOfItems: <FormattedNumber value={totalItemsWithHigherQuantity} />,
           itemsLabel: <ItemsLabelIcon />,
         }}
       />

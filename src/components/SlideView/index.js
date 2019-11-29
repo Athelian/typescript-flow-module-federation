@@ -4,6 +4,7 @@ import * as ReactDOM from 'react-dom';
 import { FormattedMessage } from 'react-intl';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import usePortalSlot from 'hooks/usePortalSlot';
+import { useFocusFallback } from 'contexts/FocusFallback';
 import { BackdropStyle, SlideViewStyle, SlideViewContentStyle } from './style';
 
 const StartWidth = 80; // vw
@@ -46,6 +47,24 @@ const SlideViewRender = ({ isOpen, onRequestClose, shouldConfirm, children }: Pr
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
   const parentContext = React.useContext(SlideViewContext);
 
+  const focusFallback = useFocusFallback();
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      if (containerRef.current) {
+        const elemToFocus =
+          containerRef.current.querySelector('[data-focus-first]:not([disabled])') ||
+          containerRef.current;
+        if (elemToFocus) {
+          elemToFocus.focus();
+        }
+      }
+    } else if (focusFallback.element.current) {
+      focusFallback.element.current.focus();
+    }
+  }, [isOpen, focusFallback]);
+
   const handleCloseConfirmDialog = () => setConfirmDialogOpen(false);
 
   const width = parentContext.width - WidthStep;
@@ -66,8 +85,10 @@ const SlideViewRender = ({ isOpen, onRequestClose, shouldConfirm, children }: Pr
         role="presentation"
       >
         <div
+          ref={containerRef}
           className={SlideViewStyle(isOpen, width, minWidth)}
           onClick={evt => evt.stopPropagation()}
+          tabIndex="-1"
           role="presentation"
         >
           <div className={SlideViewContentStyle}>{children}</div>

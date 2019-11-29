@@ -1,5 +1,4 @@
 import * as emotion from 'emotion';
-/* eslint-disable import/no-extraneous-dependencies */
 import { createSerializer } from 'jest-emotion';
 import IntlPolyfill from 'intl';
 
@@ -14,5 +13,16 @@ const setupTest = () => {
     global.Intl = IntlPolyfill;
   }
 };
+
+const portalRoot = document.createElement('div');
+portalRoot.id = 'portal-root';
+
+beforeAll(() => {
+  document.body.appendChild(portalRoot);
+});
+
+afterAll(() => {
+  document.body.removeChild(portalRoot);
+});
 
 setupTest();

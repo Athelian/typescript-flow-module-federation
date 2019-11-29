@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import type { SortDirection } from 'types';
+import type { SortDirection, Violation } from 'types';
 import type { DoAction } from 'components/Sheet/SheetAction/types';
 
 export type ColumnSortConfig = {|
@@ -94,7 +94,7 @@ export type ForeignFocus = {
 type Error = {
   ...Area,
   cell: CellValue,
-  messages: Array<string>,
+  violations: Array<Violation>,
 };
 
 export type Action = {|
@@ -121,7 +121,7 @@ export type Action = {|
     column?: string,
     width?: number,
     direction?: SortDirection,
-    messages?: Array<string>,
+    violations?: Array<Violation>,
     callback?: (
       Array<Object>
     ) => ?{

@@ -134,7 +134,7 @@ const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent, doAction }
               ) || null,
             error:
               !!state.errorAt &&
-              state.errorAt.messages.length > 0 &&
+              state.errorAt.violations.length > 0 &&
               isInArea(state.errorAt, columnIndex, rowIndex)
                 ? state.errorAt
                 : null,
@@ -171,24 +171,30 @@ const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent, doAction }
     });
   };
 
-  const onColumnSort = (column: string, direction: SortDirection) => {
-    dispatch({
-      type: Actions.SORT_COLUMN,
-      payload: {
-        column,
-        direction,
-      },
-    });
-  };
-  const onColumnResize = (column: string, width: number) => {
-    dispatch({
-      type: Actions.RESIZE_COLUMN,
-      payload: {
-        column,
-        width,
-      },
-    });
-  };
+  const onColumnSort = React.useCallback(
+    (column: string, direction: SortDirection) => {
+      dispatch({
+        type: Actions.SORT_COLUMN,
+        payload: {
+          column,
+          direction,
+        },
+      });
+    },
+    [dispatch]
+  );
+  const onColumnResize = React.useCallback(
+    (column: string, width: number) => {
+      dispatch({
+        type: Actions.RESIZE_COLUMN,
+        payload: {
+          column,
+          width,
+        },
+      });
+    },
+    [dispatch]
+  );
 
   return (
     <div className={SheetContentWrapperStyle} onMouseLeave={handleMouseLeave}>

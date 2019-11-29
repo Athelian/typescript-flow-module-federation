@@ -6,7 +6,7 @@ export const BodyWrapperStyle: string = css`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 45px;
+  height: 60px;
 `;
 
 export default BodyWrapperStyle;

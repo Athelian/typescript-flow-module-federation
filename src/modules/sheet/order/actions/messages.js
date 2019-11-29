@@ -2,6 +2,28 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  syncAllPricesTitle: {
+    id: 'modules.Sheet.order.syncAllPrices.title',
+    defaultMessage: 'Sync All Prices',
+  },
+  syncAllPricesSyncButton: {
+    id: 'modules.Sheet.order.syncAllPrices.syncButton',
+    defaultMessage: 'Sync',
+  },
+  syncAllPricesSyncing: {
+    id: 'modules.Sheet.order.syncAllPrices.syncing',
+    defaultMessage: 'Syncing {numOfValidItems} {itemsLabel} ...',
+  },
+  syncAllPricesMessage: {
+    id: 'modules.Sheet.order.syncAllPrices.message',
+    defaultMessage:
+      '{numOfValidItems} / {numOfItems} {itemsLabel} are able to load the prices from their {endProductsLabel}. Would you like to sync the prices?',
+  },
+  syncAllPricesRestrictedMessage: {
+    id: 'modules.Sheet.order.syncAllPrices.restrictedMessage',
+    defaultMessage:
+      'Sorry, you cannot load any prices from the {endProductsLabel} into the {itemsLabel} because every currency is mismatched',
+  },
   batchesAutofillTitle: {
     id: 'modules.Sheet.order.batchesAutofill.title',
     defaultMessage: 'Autofill Batches',
@@ -17,12 +39,12 @@ export default defineMessages({
   batchesAutofillNone: {
     id: 'modules.Sheet.order.batchesAutofill.none',
     defaultMessage:
-      'No {itemsLabel} of the order have more quantity than the sum of their {batchesLabel} quantities.',
+      'Sorry, you cannot autofill any {itemsLabel} because none of them have quantity more than the sum of quantities of their {batchesLabel}',
   },
   batchesAutofillConfirm: {
     id: 'modules.Sheet.order.batchesAutofill.confirm',
     defaultMessage:
-      'Are you sure you want to autofill {numOfValidItems} / {numOfItems} {itemsLabel} that you have selected?',
+      '{numOfValidItems} / {numOfItems} {itemsLabel} are able to be autofilled. Would you like to autofill these {itemsLabel} ?',
   },
   batchesAutofillSubConfirm: {
     id: 'modules.Sheet.order.batchesAutofill.subConfirm',
@@ -32,5 +54,13 @@ export default defineMessages({
   orderItemCreateTitle: {
     id: 'modules.Sheet.order.orderItemCreate.title',
     defaultMessage: 'Create Item',
+  },
+  orderExportTitle: {
+    id: 'modules.Sheet.order.orderExport.title',
+    defaultMessage: 'Export',
+  },
+  orderExportMessage: {
+    id: 'modules.Sheet.order.orderExport.message',
+    defaultMessage: 'Export this {orderLabel}',
   },
 });

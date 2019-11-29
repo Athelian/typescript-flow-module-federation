@@ -21,3 +21,14 @@ export type FieldDefinition = {
 export type SortDirection = 'ASCENDING' | 'DESCENDING';
 export type SortBy = { [string]: SortDirection };
 export type FilterBy = Object;
+
+export type Violation = {
+  message: string,
+  error: string,
+  code: string,
+  path: string,
+  parameters: Array<{
+    key: string,
+    value: string,
+  }>,
+};
