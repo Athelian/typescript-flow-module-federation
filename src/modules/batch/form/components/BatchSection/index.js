@@ -259,7 +259,10 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
                             setFieldValue('tags', value);
                           }}
                           onClickRemove={value => {
-                            setFieldValue('tags', values.tags.filter(({ id }) => id !== value.id));
+                            setFieldValue(
+                              'tags',
+                              values.tags.filter(({ id }) => id !== value.id)
+                            );
                           }}
                           editable={{
                             set:

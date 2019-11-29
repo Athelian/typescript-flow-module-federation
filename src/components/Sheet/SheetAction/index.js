@@ -6,13 +6,10 @@ import {
   useMutation,
 } from '@apollo/react-hooks';
 import { DocumentNode } from 'graphql';
+import { useHasPermissions } from 'contexts/Permissions';
 import { ANIMATION_FINISHED } from 'components/Dialog';
-import type { ActionComponentProps, DoAction } from './types';
-
-type Props = {
-  actions: { [string]: (ActionComponentProps) => React.Node },
-  children: ({ doAction: DoAction }) => React.Node,
-};
+import type { ActionConfig, DoAction, ActionRequest, ActionComponentProps } from './types';
+import NoPermission from './NoPermission';
 
 const ACTION_MUTATION_EXECUTION_TIME = 2000; // 2sec
 
@@ -60,16 +57,45 @@ export const useSheetActionAutoProcess = (
   }, []);
 };
 
+export const AC = (
+  component: ActionComponentProps => React.Node,
+  permissions: ((string) => boolean) => boolean = () => true
+): ActionConfig => ({
+  component,
+  permissions,
+});
+
+type RendererProps = {
+  config: ActionConfig,
+  request: ActionRequest,
+  onDone: () => void,
+};
+
+const SheetActionRenderer = ({ config, request, onDone }: RendererProps) => {
+  const hasPermissions = useHasPermissions(request.ownedBy);
+
+  if (!config.permissions(hasPermissions)) {
+    return <NoPermission onDone={onDone} />;
+  }
+
+  return React.createElement(config.component, {
+    entity: request.entity,
+    item: request.item,
+    onDone,
+  });
+};
+
+type Props = {
+  actions: { [string]: ActionConfig },
+  children: ({ doAction: DoAction }) => React.Node,
+};
+
 const SheetAction = ({ actions, children }: Props) => {
-  const [activeAction, setActiveAction] = React.useState<{
-    action: string,
-    entity: { id: string, type: string },
-    item: Object,
-  } | null>(null);
+  const [activeAction, setActiveAction] = React.useState<ActionRequest | null>(null);
   const doAction = React.useCallback(
-    ({ action, entity, item }) => {
+    requestedAction => {
       if (activeAction === null) {
-        setActiveAction({ action, entity, item });
+        setActiveAction(requestedAction);
       }
     },
     [activeAction]
@@ -85,12 +111,13 @@ const SheetAction = ({ actions, children }: Props) => {
   return (
     <>
       {children({ doAction })}
-      {activeAction &&
-        React.createElement(actions[activeAction.action], {
-          entity: activeAction.entity,
-          item: activeAction.item,
-          onDone: handleDone,
-        })}
+      {activeAction && (
+        <SheetActionRenderer
+          request={activeAction}
+          config={actions[activeAction.action]}
+          onDone={handleDone}
+        />
+      )}
     </>
   );
 };
