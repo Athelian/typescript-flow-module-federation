@@ -75,6 +75,7 @@ const DialogRender = (props: Props) => {
         ref={containerRef}
         className={isOpen ? DialogFadeInStyle(width) : DialogFadeOutStyle(width)}
         onClick={event => event.stopPropagation()}
+        tabIndex="-1"
         role="presentation"
       >
         {showCancelButton && isOpen && (
