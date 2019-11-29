@@ -39,22 +39,20 @@ const DialogRender = (props: Props) => {
   const slot = usePortalSlot(DIALOG_PORTAL_NAME);
 
   const focusFallback = useFocusFallback();
-  const activeElemRef = React.useRef<HTMLElement | null>(null);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     if (isOpen) {
-      activeElemRef.current = document.activeElement;
       if (containerRef.current) {
         const elemToFocus =
           containerRef.current.querySelector('[data-focus-first]:not([disabled])') ||
           containerRef.current;
-        elemToFocus.focus();
+        if (elemToFocus) {
+          elemToFocus.focus();
+        }
       }
     } else if (focusFallback.element.current) {
       focusFallback.element.current.focus();
-    } else if (activeElemRef.current) {
-      activeElemRef.current.focus();
     }
   }, [isOpen, focusFallback]);
 

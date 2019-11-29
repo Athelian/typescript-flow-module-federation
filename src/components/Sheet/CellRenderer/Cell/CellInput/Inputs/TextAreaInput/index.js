@@ -58,7 +58,6 @@ const TextAreaInput = ({
 
       <Dialog
         isOpen={focus}
-        noRefocus
         onRequestClose={() => {
           onChange(textValue, true);
           forceBlur();
