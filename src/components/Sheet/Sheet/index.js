@@ -36,7 +36,6 @@ type BaseProps = {|
 
 type ImplProps = {|
   ...BaseProps,
-  disableNavigation: boolean,
   doAction: DoAction,
 |};
 
@@ -51,17 +50,10 @@ type Props = {|
   actions: { [string]: (ActionComponentProps) => React.Node },
 |};
 
-const SheetImpl = ({
-  loading,
-  hasMore,
-  onLoadMore,
-  handleEntityEvent,
-  disableNavigation,
-  doAction,
-}: ImplProps) => {
+const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent, doAction }: ImplProps) => {
   const [loadingMore, handleThreshold] = useSheetStateLoadMore(onLoadMore);
   const { state, dispatch, mutate } = useSheetState();
-  useSheetKeyNavigation(disableNavigation);
+  useSheetKeyNavigation();
   useSheetLiveFocus();
   useSheetLiveEntity(handleEntityEvent);
 
@@ -179,24 +171,30 @@ const SheetImpl = ({
     });
   };
 
-  const onColumnSort = (column: string, direction: SortDirection) => {
-    dispatch({
-      type: Actions.SORT_COLUMN,
-      payload: {
-        column,
-        direction,
-      },
-    });
-  };
-  const onColumnResize = (column: string, width: number) => {
-    dispatch({
-      type: Actions.RESIZE_COLUMN,
-      payload: {
-        column,
-        width,
-      },
-    });
-  };
+  const onColumnSort = React.useCallback(
+    (column: string, direction: SortDirection) => {
+      dispatch({
+        type: Actions.SORT_COLUMN,
+        payload: {
+          column,
+          direction,
+        },
+      });
+    },
+    [dispatch]
+  );
+  const onColumnResize = React.useCallback(
+    (column: string, width: number) => {
+      dispatch({
+        type: Actions.RESIZE_COLUMN,
+        payload: {
+          column,
+          width,
+        },
+      });
+    },
+    [dispatch]
+  );
 
   return (
     <div className={SheetContentWrapperStyle} onMouseLeave={handleMouseLeave}>
@@ -241,13 +239,12 @@ const Sheet = ({
   >
     <SheetLiveID>
       <SheetAction actions={actions}>
-        {({ doAction, actionProcessing }) => (
+        {({ doAction }) => (
           <SheetImpl
             loading={loading}
             hasMore={hasMore}
             onLoadMore={onLoadMore}
             handleEntityEvent={handleEntityEvent}
-            disableNavigation={actionProcessing}
             doAction={doAction}
           />
         )}

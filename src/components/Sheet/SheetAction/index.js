@@ -11,7 +11,7 @@ import type { ActionComponentProps, DoAction } from './types';
 
 type Props = {
   actions: { [string]: (ActionComponentProps) => React.Node },
-  children: ({ actionProcessing: boolean, doAction: DoAction }) => React.Node,
+  children: ({ doAction: DoAction }) => React.Node,
 };
 
 const ACTION_MUTATION_EXECUTION_TIME = 2000; // 2sec
@@ -84,7 +84,7 @@ const SheetAction = ({ actions, children }: Props) => {
 
   return (
     <>
-      {children({ actionProcessing: !!activeAction, doAction })}
+      {children({ doAction })}
       {activeAction &&
         React.createElement(actions[activeAction.action], {
           entity: activeAction.entity,

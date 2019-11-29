@@ -88,6 +88,7 @@ const SlideViewRender = ({ isOpen, onRequestClose, shouldConfirm, children }: Pr
           ref={containerRef}
           className={SlideViewStyle(isOpen, width, minWidth)}
           onClick={evt => evt.stopPropagation()}
+          tabIndex="-1"
           role="presentation"
         >
           <div className={SlideViewContentStyle}>{children}</div>
