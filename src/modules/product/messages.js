@@ -298,4 +298,8 @@ export default defineMessages({
     id: 'modules.Products.productProvider',
     defaultMessage: 'End Product',
   },
+  mask: {
+    id: 'modules.Products.mask',
+    defaultMessage: 'Custom Fields Template',
+  },
 });

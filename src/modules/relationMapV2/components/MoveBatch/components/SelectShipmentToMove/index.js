@@ -193,6 +193,11 @@ function SelectShipmentToMove({ onSuccess, onNewContainer }: Props) {
             <Sort config={ShipmentSortConfig} sortBy={sortBy} onChange={setSortBy} />
             <CancelButton onClick={onCancel} />
             <SaveButton
+              {...(isMoveToContainer && {
+                label: (
+                  <FormattedMessage id="components.button.continue" defaultMessage="Continue" />
+                ),
+              })}
               disabled={!selected || isProcessing}
               isLoading={isProcessing}
               onClick={onConfirm}
