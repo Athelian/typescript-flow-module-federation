@@ -176,6 +176,17 @@ export const containerByIDQuery = gql`
                   ...sheetOwnedFragment
                   ...sheetCustomizableFragment
                 }
+                productProvider {
+                  ... on ProductProvider {
+                    id
+                    product {
+                      ...sheetProductFragment
+                      ...sheetModelFragment
+                      ...sheetOwnedFragment
+                      ...sheetCustomizableFragment
+                    }
+                  }
+                }
               }
             }
           }
@@ -236,6 +247,17 @@ export const batchByIDQuery = gql`
               ...sheetOwnedFragment
               ...sheetCustomizableFragment
             }
+            productProvider {
+              ... on ProductProvider {
+                id
+                product {
+                  ...sheetProductFragment
+                  ...sheetModelFragment
+                  ...sheetOwnedFragment
+                  ...sheetCustomizableFragment
+                }
+              }
+            }
           }
         }
       }
@@ -275,6 +297,17 @@ export const orderItemByIDQuery = gql`
           ...sheetModelFragment
           ...sheetOwnedFragment
           ...sheetCustomizableFragment
+        }
+        productProvider {
+          ... on ProductProvider {
+            id
+            product {
+              ...sheetProductFragment
+              ...sheetModelFragment
+              ...sheetOwnedFragment
+              ...sheetCustomizableFragment
+            }
+          }
         }
       }
     }
