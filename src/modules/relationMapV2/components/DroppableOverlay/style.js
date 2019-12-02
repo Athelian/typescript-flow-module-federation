@@ -9,9 +9,6 @@ const getBackgroundColor = (canDrop: boolean, isOver: boolean): string => {
     }
     return 'rgba(17, 209, 166, 0.1)';
   }
-  if (isOver) {
-    return 'rgba(239, 72, 72, 0.5)';
-  }
   return 'rgba(239, 72, 72, 0.1)';
 };
 
@@ -27,7 +24,6 @@ export const DroppableOverlayStyle = (canDrop: boolean, isOver: boolean): string
   align-items: center;
   justify-content: center;
   ${transitions.MAIN};
-  ${isOver && `box-shadow: 0 0 5px 0 ${canDrop ? colors.TEAL : colors.RED}`};
 `;
 
 export const MessageStyle = (canDrop: boolean): string => css`
