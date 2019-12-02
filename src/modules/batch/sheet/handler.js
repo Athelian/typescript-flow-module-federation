@@ -21,6 +21,7 @@ import {
   handleVoyageChanges,
 } from 'modules/sheet/shipment/handler';
 import { handleContainerChanges } from 'modules/sheet/container/handler';
+import { decorateContainer, decorateShipment } from './decorator';
 import { orderByIDQuery, containerByIDQuery, orderItemByIDQuery, shipmentByIDQuery } from './query';
 
 function replaceBatch({
@@ -72,7 +73,7 @@ function onUpdateBatchContainerFactory(client: ApolloClient<any>, dispatch: Acti
             batches,
             dispatch,
             field: 'container',
-            data: data?.container,
+            data: decorateContainer(data?.container),
           });
         });
     } else {
@@ -108,7 +109,7 @@ function onUpdateBatchShipmentFactory(client: ApolloClient<any>, dispatch: Actio
             batches,
             dispatch,
             field: 'shipment',
-            data: data?.shipment,
+            data: decorateShipment(data?.shipment),
           });
         });
     } else {
