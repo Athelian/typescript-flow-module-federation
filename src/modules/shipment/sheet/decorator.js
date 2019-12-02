@@ -1,7 +1,7 @@
 // @flow
 import { defaultVolumeMetric } from 'utils/metric';
 
-function decorateBatch(batch: Object): Object {
+export function decorateBatch(batch: Object): Object {
   return {
     ...batch,
     packageQuantity: {
@@ -18,7 +18,7 @@ function decorateBatch(batch: Object): Object {
   };
 }
 
-function decorateContainer(container: Object): Object {
+export function decorateContainer(container: Object): Object {
   return {
     ...container,
     freeTimeStartDate: {
