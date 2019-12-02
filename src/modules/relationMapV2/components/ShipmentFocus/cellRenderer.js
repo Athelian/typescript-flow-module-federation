@@ -247,7 +247,7 @@ function OrderItemCell({
   const order = data.orderItem?.order;
   const orderId = order?.id;
   const itemId = data.orderItem?.id;
-  const batches = shipment.batches.filter(batch => batch.orderItem.id === itemId);
+  const batches = (shipment?.batches ?? []).filter(batch => batch.orderItem?.id === itemId);
   const [{ isOver, canDrop, dropMessage }, drop] = useDrop({
     accept: BATCH,
     canDrop: item => {
