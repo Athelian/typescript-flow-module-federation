@@ -114,8 +114,7 @@ const RelatedSection = ({ intl, id }: Props) => {
                         {!loading && (
                           <Label align="left">
                             {' ('}
-                            <FormattedNumber value={totalCount} />
-                            {')'}
+                            <FormattedNumber value={totalCount} />)
                           </Label>
                         )}
                       </div>

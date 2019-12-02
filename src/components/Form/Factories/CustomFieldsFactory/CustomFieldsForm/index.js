@@ -111,8 +111,7 @@ class CustomFieldsForm extends React.Component<Props> {
                             defaultMessage="CUSTOM FIELDS"
                           />
                           {' ('}
-                          <FormattedNumber value={countCustomFields(mask, fieldValues)} />
-                          {')'}
+                          <FormattedNumber value={countCustomFields(mask, fieldValues)} />)
                         </>
                       }
                     />

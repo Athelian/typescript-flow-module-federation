@@ -70,8 +70,7 @@ const CargoSection = ({ shipmentIsArchived, importerId, exporterId }: Props) => 
               <>
                 <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />
                 {' ('}
-                <FormattedNumber value={batchesContainer.state.batches.length} />
-                {')'}
+                <FormattedNumber value={batchesContainer.state.batches.length} />)
               </>
             }
           />

@@ -31,8 +31,7 @@ function TaskSectionInTemplate() {
               <>
                 <FormattedMessage id="modules.Tasks.tasks" defaultMessage="TASKS" />
                 {' ('}
-                <FormattedNumber value={tasks.length} />
-                {')'}
+                <FormattedNumber value={tasks.length} />)
               </>
             }
           />
@@ -83,7 +82,10 @@ function TaskSectionInTemplate() {
                   }
                 }}
                 onRemove={({ id }) => {
-                  setFieldValue('tasks', tasks.filter(({ id: itemId }) => id !== itemId));
+                  setFieldValue(
+                    'tasks',
+                    tasks.filter(({ id: itemId }) => id !== itemId)
+                  );
                   setFieldTouched(`tasks.${id}`);
                 }}
                 onSave={(index, newValue) => {

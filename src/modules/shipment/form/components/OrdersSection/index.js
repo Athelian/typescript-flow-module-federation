@@ -40,8 +40,7 @@ function OrdersSection({ isReady, batches }: Props) {
               <>
                 <FormattedMessage id="modules.Shipments.order" defaultMessage="ORDERS" />
                 {' ('}
-                <FormattedNumber value={orders.length} />
-                {')'}
+                <FormattedNumber value={orders.length} />)
               </>
             }
           />

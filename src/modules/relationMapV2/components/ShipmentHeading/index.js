@@ -199,7 +199,7 @@ export default function ShipmentHeading({
 
             {canViewPlace && places.length > 1 && (
               <Display width="min-content">
-                {'+'}
+                +
                 <FormattedNumber value={places.length - 1} />
               </Display>
             )}

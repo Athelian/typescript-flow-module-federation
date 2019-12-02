@@ -391,9 +391,8 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                             id="components.inputs.inCharge"
                             defaultMessage="IN CHARGE"
                           />
-                           (
-                          <FormattedNumber value={values.inCharges.length} />
-                          )
+                          {' ('}
+                          <FormattedNumber value={values.inCharges.length} />)
                         </>
                       }
                       infoMessage={
