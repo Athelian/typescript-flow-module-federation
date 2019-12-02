@@ -12,12 +12,12 @@ export type Scalars = {|
   /** 
  * The `Long` scalar type represents non-fractional signed whole numeric values.
    * Long can represent values between -(2^63) and 2^63 - 1.
- **/
+ */
   Long: any,
   /** 
  * The `Upload` scalar type represents a part name of multipart request to a File.
    * The Upload type is only meant to be use as an input, not as an output.
- **/
+ */
   Upload: any,
   /** Void scalar */
   Void: any,
@@ -17790,7 +17790,7 @@ export type Batch = {|
   ...Customizable,
   ...Memorizable,
   ...Sortable,
-  ...{
+  ...{|
      __typename?: 'Batch',
     archived: $ElementType<Scalars, 'Boolean'>,
     no: $ElementType<Scalars, 'String'>,
@@ -17834,7 +17834,7 @@ export type Batch = {|
     customFields: CustomFields,
     memo?: ?$ElementType<Scalars, 'String'>,
     sort: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type BatchCreateInput = {|
@@ -17896,15 +17896,13 @@ export type BatchFilterInput = {|
   hasShipment?: ?$ElementType<Scalars, 'Boolean'>,
   hasShipmentExcludeId?: ?$ElementType<Scalars, 'ID'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  milestoneId?: ?$ElementType<Scalars, 'ID'>,
-  milestoneRelatedId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
 export type BatchPayload = Batch | BadRequest | Forbidden | NotFound;
 
 export type BatchPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'BatchPayloadPaginatedSearch',
     nodes: Array<BatchPayload>,
     hits: Array<Hit>,
@@ -17913,7 +17911,7 @@ export type BatchPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type BatchQuantityRevision = {|
@@ -17921,7 +17919,7 @@ export type BatchQuantityRevision = {|
   ...Owned,
   ...Sortable,
   ...Memorizable,
-  ...{
+  ...{|
      __typename?: 'BatchQuantityRevision',
     batch: BatchPayload,
     type: BatchQuantityRevisionType,
@@ -17936,7 +17934,7 @@ export type BatchQuantityRevision = {|
     ownedBy: OrganizationPayload,
     sort: $ElementType<Scalars, 'Int'>,
     memo?: ?$ElementType<Scalars, 'String'>,
-  }
+  |}
 |};
 
 export type BatchQuantityRevisionCreateInput = {|
@@ -18049,7 +18047,7 @@ export type ChangeType = {|
 export type Comment = {|
   ...Model,
   ...Owned,
-  ...{
+  ...{|
      __typename?: 'Comment',
     entity: EntityPayload,
     content: $ElementType<Scalars, 'String'>,
@@ -18061,7 +18059,7 @@ export type Comment = {|
     updatedBy?: ?UserPayload,
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
-  }
+  |}
 |};
 
 export type CommentCreateInput = {|
@@ -18081,7 +18079,7 @@ export type Container = {|
   ...Tagged,
   ...Sortable,
   ...Memorizable,
-  ...{
+  ...{|
      __typename?: 'Container',
     archived: $ElementType<Scalars, 'Boolean'>,
     no: $ElementType<Scalars, 'String'>,
@@ -18127,7 +18125,7 @@ export type Container = {|
     tags: Array<TagPayload>,
     sort: $ElementType<Scalars, 'Int'>,
     memo?: ?$ElementType<Scalars, 'String'>,
-  }
+  |}
 |};
 
 export type ContainerBatchInput = {|
@@ -18196,15 +18194,13 @@ export type ContainerFilterInput = {|
   productId?: ?$ElementType<Scalars, 'ID'>,
   warehouseArrivalActualDate?: ?DateRangeInput,
   warehouseIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  milestoneId?: ?$ElementType<Scalars, 'ID'>,
-  milestoneRelatedId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
 export type ContainerGroup = {|
   ...Model,
   ...Owned,
   ...Sortable,
-  ...{
+  ...{|
      __typename?: 'ContainerGroup',
     customClearance: TimelineDatePayload,
     warehouseArrival: TimelineDatePayload,
@@ -18220,7 +18216,7 @@ export type ContainerGroup = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     sort: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type ContainerGroupNestedInput = {|
@@ -18245,7 +18241,7 @@ export type ContainerPayload = Container | BadRequest | Forbidden | NotFound;
 
 export type ContainerPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'ContainerPayloadPaginatedSearch',
     nodes: Array<ContainerPayload>,
     hits: Array<Hit>,
@@ -18254,7 +18250,7 @@ export type ContainerPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type ContainerSortInput = {|
@@ -19274,7 +19270,7 @@ export type Entry = Event | Comment | BadRequest | Forbidden | NotFound;
 
 export type EntryPaginatedList = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'EntryPaginatedList',
     nodes: Array<Entry>,
     page: $ElementType<Scalars, 'Int'>,
@@ -19282,13 +19278,13 @@ export type EntryPaginatedList = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type Event = {|
   ...Model,
   ...Owned,
-  ...{
+  ...{|
      __typename?: 'Event',
     entity: EntityPayload,
     logs: Array<Log>,
@@ -19300,7 +19296,7 @@ export type Event = {|
     updatedBy?: ?UserPayload,
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
-  }
+  |}
 |};
 
 export type Export = {|
@@ -19319,7 +19315,7 @@ export type ExportPayload = Export | BadRequest | Forbidden | NotFound;
 
 export type ExportTemplate = {|
   ...Model,
-  ...{
+  ...{|
      __typename?: 'ExportTemplate',
     name: $ElementType<Scalars, 'String'>,
     types: Array<ExportType>,
@@ -19335,7 +19331,7 @@ export type ExportTemplate = {|
     createdBy?: ?UserPayload,
     updatedBy?: ?UserPayload,
     deletedBy?: ?UserPayload,
-  }
+  |}
 |};
 
 export type ExportTemplateFilterInput = {|
@@ -19387,7 +19383,7 @@ export type FieldDefinition = {|
   ...Model,
   ...Owned,
   ...Sortable,
-  ...{
+  ...{|
      __typename?: 'FieldDefinition',
     name: $ElementType<Scalars, 'String'>,
     entityType: CustomizableEntityType,
@@ -19400,7 +19396,7 @@ export type FieldDefinition = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     sort: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type FieldDefinitionInput = {|
@@ -19440,7 +19436,7 @@ export type File = {|
   ...Model,
   ...Owned,
   ...Memorizable,
-  ...{
+  ...{|
      __typename?: 'File',
     name: $ElementType<Scalars, 'String'>,
     type: FileType,
@@ -19459,7 +19455,7 @@ export type File = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     memo?: ?$ElementType<Scalars, 'String'>,
-  }
+  |}
 |};
 
 
@@ -19491,7 +19487,7 @@ export type FilePayload = File | BadRequest | Forbidden | NotFound;
 
 export type FilePayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'FilePayloadPaginatedSearch',
     nodes: Array<FilePayload>,
     hits: Array<Hit>,
@@ -19500,7 +19496,7 @@ export type FilePayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type FileSortInput = {|
@@ -19660,7 +19656,7 @@ export type Incoterm = $Values<typeof IncotermValues>;
 export type Integration = {|
   ...Model,
   ...Owned,
-  ...{
+  ...{|
      __typename?: 'Integration',
     name: $ElementType<Scalars, 'String'>,
     service: $ElementType<Scalars, 'String'>,
@@ -19674,13 +19670,13 @@ export type Integration = {|
     updatedBy?: ?UserPayload,
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
-  }
+  |}
 |};
 
 export type IntegrationConfiguration = {|
   ...Model,
   ...Owned,
-  ...{
+  ...{|
      __typename?: 'IntegrationConfiguration',
     integration: IntegrationPayload,
     automated: $ElementType<Scalars, 'Boolean'>,
@@ -19695,7 +19691,7 @@ export type IntegrationConfiguration = {|
     updatedBy?: ?UserPayload,
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
-  }
+  |}
 |};
 
 
@@ -19724,7 +19720,7 @@ export type IntegrationConfigurationPayload = IntegrationConfiguration | BadRequ
 
 export type IntegrationConfigurationPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'IntegrationConfigurationPayloadPaginatedSearch',
     nodes: Array<IntegrationConfigurationPayload>,
     hits: Array<Hit>,
@@ -19733,7 +19729,7 @@ export type IntegrationConfigurationPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type IntegrationConfigurationSortInput = {|
@@ -19759,7 +19755,7 @@ export type IntegrationFilterInput = {|
 export type IntegrationLink = {|
   ...Model,
   ...Owned,
-  ...{
+  ...{|
      __typename?: 'IntegrationLink',
     configuration: IntegrationConfigurationPayload,
     status: IntegrationLinkStatus,
@@ -19778,7 +19774,7 @@ export type IntegrationLink = {|
     updatedBy?: ?UserPayload,
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
-  }
+  |}
 |};
 
 export type IntegrationLinkCreateInput = {|
@@ -19793,7 +19789,7 @@ export type IntegrationLinkPayload = IntegrationLink | BadRequest | Forbidden | 
 
 export type IntegrationLinkPayloadPaginatedList = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'IntegrationLinkPayloadPaginatedList',
     nodes: Array<IntegrationLinkPayload>,
     page: $ElementType<Scalars, 'Int'>,
@@ -19801,7 +19797,7 @@ export type IntegrationLinkPayloadPaginatedList = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export const IntegrationLinkStatusValues = Object.freeze({
@@ -19830,7 +19826,7 @@ export type IntegrationPayload = Integration | BadRequest | Forbidden | NotFound
 
 export type IntegrationPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'IntegrationPayloadPaginatedSearch',
     nodes: Array<IntegrationPayload>,
     hits: Array<Hit>,
@@ -19839,7 +19835,7 @@ export type IntegrationPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type IntegrationSortInput = {|
@@ -20292,7 +20288,7 @@ export type Mask = {|
   ...Model,
   ...Owned,
   ...Memorizable,
-  ...{
+  ...{|
      __typename?: 'Mask',
     name: $ElementType<Scalars, 'String'>,
     entityType: CustomizableEntityType,
@@ -20306,7 +20302,7 @@ export type Mask = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     memo?: ?$ElementType<Scalars, 'String'>,
-  }
+  |}
 |};
 
 export type MaskCreateInput = {|
@@ -20320,7 +20316,7 @@ export type MaskEdit = {|
   ...Model,
   ...Owned,
   ...Memorizable,
-  ...{
+  ...{|
      __typename?: 'MaskEdit',
     name: $ElementType<Scalars, 'String'>,
     type: MaskEditType,
@@ -20334,7 +20330,7 @@ export type MaskEdit = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     memo?: ?$ElementType<Scalars, 'String'>,
-  }
+  |}
 |};
 
 export type MaskEditCreateInput = {|
@@ -20356,7 +20352,7 @@ export type MaskEditPayload = MaskEdit | BadRequest | Forbidden | NotFound;
 
 export type MaskEditPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'MaskEditPayloadPaginatedSearch',
     nodes: Array<MaskEditPayload>,
     hits: Array<Hit>,
@@ -20365,7 +20361,7 @@ export type MaskEditPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type MaskEditSortInput = {|
@@ -20409,7 +20405,7 @@ export type MaskPayload = Mask | BadRequest | Forbidden | NotFound;
 
 export type MaskPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'MaskPayloadPaginatedSearch',
     nodes: Array<MaskPayload>,
     hits: Array<Hit>,
@@ -20418,7 +20414,7 @@ export type MaskPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type MaskSortInput = {|
@@ -20465,7 +20461,7 @@ export type Milestone = {|
   ...Owned,
   ...Documented,
   ...Sortable,
-  ...{
+  ...{|
      __typename?: 'Milestone',
     name: $ElementType<Scalars, 'String'>,
     description?: ?$ElementType<Scalars, 'String'>,
@@ -20490,7 +20486,7 @@ export type Milestone = {|
     ownedBy: OrganizationPayload,
     files: Array<FilePayload>,
     sort: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type MilestoneCreateInput = {|
@@ -20551,7 +20547,7 @@ export type MilestoneTemplate = {|
   ...Model,
   ...Owned,
   ...Sortable,
-  ...{
+  ...{|
      __typename?: 'MilestoneTemplate',
     project: ProjectTemplatePayload,
     name: $ElementType<Scalars, 'String'>,
@@ -20569,7 +20565,7 @@ export type MilestoneTemplate = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     sort: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type MilestoneTemplatePayload = MilestoneTemplate | BadRequest | Forbidden | NotFound;
@@ -20622,6 +20618,7 @@ export type Mutation = {|
   orderClone: OrderPayload,
   orderCloneMany: Array<?OrderPayload>,
   orderItemCreate: OrderItemPayload,
+  orderItemCreateMany: Array<?OrderItemPayload>,
   orderItemUpdate: OrderItemPayload,
   orderItemUpdateMany: Array<?OrderItemPayload>,
   orderItemDelete?: ?EmptyPayload,
@@ -20805,6 +20802,11 @@ export type MutationOrderCloneManyArgs = {|
 
 export type MutationOrderItemCreateArgs = {|
   input: OrderItemCreateInput
+|};
+
+
+export type MutationOrderItemCreateManyArgs = {|
+  inputs: Array<OrderItemCreateInput>
 |};
 
 
@@ -21288,7 +21290,7 @@ export type NotificationPayload = Notification | BadRequest | Forbidden | NotFou
 
 export type NotificationPayloadPaginatedList = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'NotificationPayloadPaginatedList',
     nodes: Array<NotificationPayload>,
     page: $ElementType<Scalars, 'Int'>,
@@ -21296,7 +21298,7 @@ export type NotificationPayloadPaginatedList = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export const NotificationTypeValues = Object.freeze({
@@ -21421,7 +21423,7 @@ export type Order = {|
   ...Documented,
   ...Customizable,
   ...Memorizable,
-  ...{
+  ...{|
      __typename?: 'Order',
     archived: $ElementType<Scalars, 'Boolean'>,
     importer: OrganizationPayload,
@@ -21461,7 +21463,7 @@ export type Order = {|
     files: Array<FilePayload>,
     customFields: CustomFields,
     memo?: ?$ElementType<Scalars, 'String'>,
-  }
+  |}
 |};
 
 export type OrderCreateInput = {|
@@ -21507,11 +21509,10 @@ export type OrderFilterInput = {|
   productIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   productTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   productProviderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  milestoneId?: ?$ElementType<Scalars, 'ID'>,
-  milestoneRelatedId?: ?$ElementType<Scalars, 'ID'>,
-  shipmentTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  productProviderSupplierIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   shipmentForwarderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   shipmentInChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  shipmentTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   shipmentLoadPorts?: ?Array<PortInput>,
   shipmentFirstTransitPorts?: ?Array<PortInput>,
   shipmentSecondTransitPorts?: ?Array<PortInput>,
@@ -21550,7 +21551,7 @@ export type OrderItem = {|
   ...Documented,
   ...Customizable,
   ...Memorizable,
-  ...{
+  ...{|
      __typename?: 'OrderItem',
     order: OrderPayload,
     productProvider: ProductProviderPayload,
@@ -21582,7 +21583,7 @@ export type OrderItem = {|
     files: Array<FilePayload>,
     customFields: CustomFields,
     memo?: ?$ElementType<Scalars, 'String'>,
-  }
+  |}
 |};
 
 export type OrderItemBatchInput = {|
@@ -21642,15 +21643,13 @@ export type OrderItemFilterInput = {|
   exporterId?: ?$ElementType<Scalars, 'ID'>,
   supplierId?: ?$ElementType<Scalars, 'ID'>,
   importerId?: ?$ElementType<Scalars, 'ID'>,
-  milestoneId?: ?$ElementType<Scalars, 'ID'>,
-  milestoneRelatedId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
 export type OrderItemPayload = OrderItem | BadRequest | Forbidden | NotFound;
 
 export type OrderItemPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'OrderItemPayloadPaginatedSearch',
     nodes: Array<OrderItemPayload>,
     hits: Array<Hit>,
@@ -21659,7 +21658,7 @@ export type OrderItemPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type OrderItemSortInput = {|
@@ -21712,7 +21711,7 @@ export type OrderPayload = Order | BadRequest | Forbidden | NotFound;
 
 export type OrderPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'OrderPayloadPaginatedSearch',
     nodes: Array<OrderPayload>,
     hits: Array<Hit>,
@@ -21721,7 +21720,7 @@ export type OrderPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type OrderSortInput = {|
@@ -21763,7 +21762,7 @@ export type OrderUpdateWrapperInput = {|
 
 export type Organization = {|
   ...Model,
-  ...{
+  ...{|
      __typename?: 'Organization',
     types: Array<OrganizationType>,
     name: $ElementType<Scalars, 'String'>,
@@ -21788,7 +21787,7 @@ export type Organization = {|
     createdBy?: ?UserPayload,
     updatedBy?: ?UserPayload,
     deletedBy?: ?UserPayload,
-  }
+  |}
 |};
 
 
@@ -21854,7 +21853,7 @@ export type Parameter = {|
 
 export type Partner = {|
   ...Model,
-  ...{
+  ...{|
      __typename?: 'Partner',
     organization: OrganizationPayload,
     types: Array<OrganizationType>,
@@ -21870,7 +21869,7 @@ export type Partner = {|
     createdBy?: ?UserPayload,
     updatedBy?: ?UserPayload,
     deletedBy?: ?UserPayload,
-  }
+  |}
 |};
 
 export type PartnerFilterInput = {|
@@ -21886,7 +21885,7 @@ export type PartnerPayload = Partner | BadRequest | Forbidden | NotFound;
 
 export type PartnerPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'PartnerPayloadPaginatedSearch',
     nodes: Array<PartnerPayload>,
     hits: Array<Hit>,
@@ -21895,12 +21894,12 @@ export type PartnerPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type Partnership = {|
   ...Model,
-  ...{
+  ...{|
      __typename?: 'Partnership',
     confirmed: $ElementType<Scalars, 'Boolean'>,
     leftOrganization: OrganizationPayload,
@@ -21922,14 +21921,14 @@ export type Partnership = {|
     createdBy?: ?UserPayload,
     updatedBy?: ?UserPayload,
     deletedBy?: ?UserPayload,
-  }
+  |}
 |};
 
 export type PartnershipPayload = Partnership | BadRequest | Forbidden | NotFound;
 
 export type PartnershipPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'PartnershipPayloadPaginatedSearch',
     nodes: Array<PartnershipPayload>,
     hits: Array<Hit>,
@@ -21938,7 +21937,7 @@ export type PartnershipPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type PartnerSortInput = {|
@@ -21985,7 +21984,7 @@ export type Product = {|
   ...Documented,
   ...Memorizable,
   ...Customizable,
-  ...{
+  ...{|
      __typename?: 'Product',
     archived: $ElementType<Scalars, 'Boolean'>,
     importer: OrganizationPayload,
@@ -22014,7 +22013,7 @@ export type Product = {|
     files: Array<FilePayload>,
     memo?: ?$ElementType<Scalars, 'String'>,
     customFields: CustomFields,
-  }
+  |}
 |};
 
 
@@ -22081,15 +22080,13 @@ export type ProductFilterInput = {|
   exporterId?: ?$ElementType<Scalars, 'ID'>,
   supplierId?: ?$ElementType<Scalars, 'ID'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  milestoneId?: ?$ElementType<Scalars, 'ID'>,
-  milestoneRelatedId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
 export type ProductPayload = Product | BadRequest | Forbidden | NotFound;
 
 export type ProductPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'ProductPayloadPaginatedSearch',
     nodes: Array<ProductPayload>,
     hits: Array<Hit>,
@@ -22098,7 +22095,7 @@ export type ProductPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type ProductProvider = {|
@@ -22108,7 +22105,7 @@ export type ProductProvider = {|
   ...Documented,
   ...Customizable,
   ...Memorizable,
-  ...{
+  ...{|
      __typename?: 'ProductProvider',
     archived: $ElementType<Scalars, 'Boolean'>,
     /** Determined if the ProductProvider is referenced by at least one OrderItem or not */
@@ -22149,7 +22146,7 @@ export type ProductProvider = {|
     files: Array<FilePayload>,
     customFields: CustomFields,
     memo?: ?$ElementType<Scalars, 'String'>,
-  }
+  |}
 |};
 
 
@@ -22193,15 +22190,13 @@ export type ProductProviderFilterInput = {|
   supplierId?: ?$ElementType<Scalars, 'ID'>,
   importerId?: ?$ElementType<Scalars, 'ID'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  milestoneId?: ?$ElementType<Scalars, 'ID'>,
-  milestoneRelatedId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
 export type ProductProviderPackage = {|
   ...Model,
   ...Owned,
   ...Sortable,
-  ...{
+  ...{|
      __typename?: 'ProductProviderPackage',
     productProvider: ProductProviderPayload,
     name?: ?$ElementType<Scalars, 'String'>,
@@ -22219,7 +22214,7 @@ export type ProductProviderPackage = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     sort: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type ProductProviderPackageCreateInput = {|
@@ -22247,7 +22242,7 @@ export type ProductProviderPayload = ProductProvider | BadRequest | Forbidden | 
 
 export type ProductProviderPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'ProductProviderPayloadPaginatedSearch',
     nodes: Array<ProductProviderPayload>,
     hits: Array<Hit>,
@@ -22256,7 +22251,7 @@ export type ProductProviderPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type ProductProviderSortInput = {|
@@ -22326,7 +22321,7 @@ export type Project = {|
   ...Model,
   ...Owned,
   ...Tagged,
-  ...{
+  ...{|
      __typename?: 'Project',
     name: $ElementType<Scalars, 'String'>,
     description?: ?$ElementType<Scalars, 'String'>,
@@ -22343,7 +22338,7 @@ export type Project = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     tags: Array<TagPayload>,
-  }
+  |}
 |};
 
 export type ProjectCreateInput = {|
@@ -22397,7 +22392,7 @@ export type ProjectPayload = Project | BadRequest | Forbidden | NotFound;
 
 export type ProjectPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'ProjectPayloadPaginatedSearch',
     nodes: Array<ProjectPayload>,
     hits: Array<Hit>,
@@ -22406,7 +22401,7 @@ export type ProjectPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type ProjectSortInput = {|
@@ -22420,7 +22415,7 @@ export type ProjectTemplate = {|
   ...Model,
   ...Owned,
   ...Tagged,
-  ...{
+  ...{|
      __typename?: 'ProjectTemplate',
     name: $ElementType<Scalars, 'String'>,
     description?: ?$ElementType<Scalars, 'String'>,
@@ -22434,7 +22429,7 @@ export type ProjectTemplate = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     tags: Array<TagPayload>,
-  }
+  |}
 |};
 
 export type ProjectTemplateCreateInput = {|
@@ -22474,7 +22469,7 @@ export type ProjectTemplatePayload = ProjectTemplate | BadRequest | Forbidden | 
 
 export type ProjectTemplatePayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'ProjectTemplatePayloadPaginatedSearch',
     nodes: Array<ProjectTemplatePayload>,
     hits: Array<Hit>,
@@ -22483,7 +22478,7 @@ export type ProjectTemplatePayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type ProjectTemplateSortInput = {|
@@ -23286,7 +23281,7 @@ export type ResizePreset = $Values<typeof ResizePresetValues>;
 export type Role = {|
   ...Model,
   ...Memorizable,
-  ...{
+  ...{|
      __typename?: 'Role',
     name: $ElementType<Scalars, 'String'>,
     parents: Array<RolePayload>,
@@ -23302,7 +23297,7 @@ export type Role = {|
     updatedBy?: ?UserPayload,
     deletedBy?: ?UserPayload,
     memo?: ?$ElementType<Scalars, 'String'>,
-  }
+  |}
 |};
 
 export type RoleCreateInput = {|
@@ -23317,7 +23312,7 @@ export type RolePayload = Role | BadRequest | Forbidden | NotFound;
 
 export type RolePayloadPaginatedList = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'RolePayloadPaginatedList',
     nodes: Array<RolePayload>,
     page: $ElementType<Scalars, 'Int'>,
@@ -23325,7 +23320,7 @@ export type RolePayloadPaginatedList = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type RoleUpdateInput = {|
@@ -60368,7 +60363,7 @@ export type Shipment = {|
   ...Documented,
   ...Customizable,
   ...Memorizable,
-  ...{
+  ...{|
      __typename?: 'Shipment',
     archived: $ElementType<Scalars, 'Boolean'>,
     importer: OrganizationPayload,
@@ -60424,7 +60419,7 @@ export type Shipment = {|
     files: Array<FilePayload>,
     customFields: CustomFields,
     memo?: ?$ElementType<Scalars, 'String'>,
-  }
+  |}
 |};
 
 export type ShipmentBatchInput = {|
@@ -60572,16 +60567,42 @@ export type ShipmentFilterInput = {|
   customClearance?: ?DateRangeInput,
   warehouseArrival?: ?DateRangeInput,
   deliveryReady?: ?DateRangeInput,
+  containerContainerType?: ?$ElementType<Scalars, 'String'>,
+  containerContainerOption?: ?ContainerOption,
+  containerWarehouseIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  containerTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  containerCreatedAt?: ?DateRangeInput,
+  containerUpdatedAt?: ?DateRangeInput,
+  containerWarehouseArrivalAgreedDate?: ?DateRangeInput,
+  containerWarehouseArrivalActualDate?: ?DateRangeInput,
+  containerFreeTimeDueDate?: ?DateRangeInput,
+  containerFreeTimeOverdue?: ?$ElementType<Scalars, 'Boolean'>,
+  orderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  orderArchived?: ?$ElementType<Scalars, 'Boolean'>,
+  orderExporterIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  orderInChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  orderTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  orderCompletelyBatched?: ?$ElementType<Scalars, 'Boolean'>,
+  orderCompletelyShipped?: ?$ElementType<Scalars, 'Boolean'>,
+  batchTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  batchDeliveredAt?: ?DateRangeInput,
+  batchExpiredAt?: ?DateRangeInput,
+  batchProducedAt?: ?DateRangeInput,
+  batchTotalVolume?: ?MetricRangeInput,
   productId?: ?$ElementType<Scalars, 'ID'>,
-  milestoneId?: ?$ElementType<Scalars, 'ID'>,
-  milestoneRelatedId?: ?$ElementType<Scalars, 'ID'>,
+  productIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  productTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  productProviderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  productProviderExporterIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  productProviderSupplierIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  productProviderOrigin?: ?Country,
 |};
 
 export type ShipmentPayload = Shipment | BadRequest | Forbidden | NotFound;
 
 export type ShipmentPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'ShipmentPayloadPaginatedSearch',
     nodes: Array<ShipmentPayload>,
     hits: Array<Hit>,
@@ -60590,7 +60611,7 @@ export type ShipmentPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type ShipmentSortInput = {|
@@ -60729,7 +60750,7 @@ export type Supervised = {|
 export type Tag = {|
   ...Model,
   ...Owned,
-  ...{
+  ...{|
      __typename?: 'Tag',
     name: $ElementType<Scalars, 'String'>,
     description?: ?$ElementType<Scalars, 'String'>,
@@ -60743,7 +60764,7 @@ export type Tag = {|
     updatedBy?: ?UserPayload,
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
-  }
+  |}
 |};
 
 export type TagCreateInput = {|
@@ -60793,7 +60814,7 @@ export type TagPayload = Tag | BadRequest | Forbidden | NotFound;
 
 export type TagPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'TagPayloadPaginatedSearch',
     nodes: Array<TagPayload>,
     hits: Array<Hit>,
@@ -60802,7 +60823,7 @@ export type TagPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type TagSortInput = {|
@@ -60824,7 +60845,7 @@ export type Task = {|
   ...Sortable,
   ...Memorizable,
   ...Tagged,
-  ...{
+  ...{|
      __typename?: 'Task',
     name: $ElementType<Scalars, 'String'>,
     approvable: $ElementType<Scalars, 'Boolean'>,
@@ -60863,7 +60884,7 @@ export type Task = {|
     sort: $ElementType<Scalars, 'Int'>,
     memo?: ?$ElementType<Scalars, 'String'>,
     tags: Array<TagPayload>,
-  }
+  |}
 |};
 
 export type TaskCount = {|
@@ -60954,7 +60975,7 @@ export type TaskPayload = Task | BadRequest | Forbidden | NotFound;
 
 export type TaskPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'TaskPayloadPaginatedSearch',
     nodes: Array<TaskPayload>,
     hits: Array<Hit>,
@@ -60963,7 +60984,7 @@ export type TaskPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type TaskSortInput = {|
@@ -60978,7 +60999,7 @@ export type TaskSortInput = {|
 export type TaskTemplate = {|
   ...Model,
   ...Owned,
-  ...{
+  ...{|
      __typename?: 'TaskTemplate',
     name: $ElementType<Scalars, 'String'>,
     entityType: TaskTemplateEntityType,
@@ -60992,7 +61013,7 @@ export type TaskTemplate = {|
     updatedBy?: ?UserPayload,
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
-  }
+  |}
 |};
 
 export type TaskTemplateCreateInput = {|
@@ -61034,7 +61055,7 @@ export type TaskTemplatePayload = TaskTemplate | BadRequest | Forbidden | NotFou
 
 export type TaskTemplatePayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'TaskTemplatePayloadPaginatedSearch',
     nodes: Array<TaskTemplatePayload>,
     hits: Array<Hit>,
@@ -61043,7 +61064,7 @@ export type TaskTemplatePayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type TaskTemplateSortInput = {|
@@ -61162,7 +61183,7 @@ export type TimelineDate = {|
   ...Model,
   ...Owned,
   ...Memorizable,
-  ...{
+  ...{|
      __typename?: 'TimelineDate',
     date?: ?$ElementType<Scalars, 'DateTime'>,
     latestDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -61180,7 +61201,7 @@ export type TimelineDate = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     memo?: ?$ElementType<Scalars, 'String'>,
-  }
+  |}
 |};
 
 export type TimelineDateNestedInput = {|
@@ -61198,7 +61219,7 @@ export type TimelineDateRevision = {|
   ...Owned,
   ...Sortable,
   ...Memorizable,
-  ...{
+  ...{|
      __typename?: 'TimelineDateRevision',
     date: $ElementType<Scalars, 'DateTime'>,
     type: TimelineDateRevisionType,
@@ -61213,7 +61234,7 @@ export type TimelineDateRevision = {|
     ownedBy: OrganizationPayload,
     sort: $ElementType<Scalars, 'Int'>,
     memo?: ?$ElementType<Scalars, 'String'>,
-  }
+  |}
 |};
 
 export type TimelineDateRevisionInput = {|
@@ -61303,7 +61324,7 @@ export type User = {|
   ...Model,
   ...Tagged,
   ...Memorizable,
-  ...{
+  ...{|
      __typename?: 'User',
     email: $ElementType<Scalars, 'String'>,
     organization?: ?OrganizationPayload,
@@ -61327,7 +61348,7 @@ export type User = {|
     deletedBy?: ?UserPayload,
     tags: Array<TagPayload>,
     memo?: ?$ElementType<Scalars, 'String'>,
-  }
+  |}
 |};
 
 export type UserFilterInput = {|
@@ -61343,7 +61364,7 @@ export type UserPayload = User | BadRequest | Forbidden | NotFound;
 
 export type UserPayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'UserPayloadPaginatedSearch',
     nodes: Array<UserPayload>,
     hits: Array<Hit>,
@@ -61352,7 +61373,7 @@ export type UserPayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type UserRoleInput = {|
@@ -61448,7 +61469,7 @@ export type Voyage = {|
   ...Model,
   ...Owned,
   ...Sortable,
-  ...{
+  ...{|
      __typename?: 'Voyage',
     vesselName?: ?$ElementType<Scalars, 'String'>,
     vesselCode?: ?$ElementType<Scalars, 'String'>,
@@ -61466,7 +61487,7 @@ export type Voyage = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     sort: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type VoyageNestedInput = {|
@@ -61486,7 +61507,7 @@ export type Warehouse = {|
   ...Owned,
   ...Supervised,
   ...Customizable,
-  ...{
+  ...{|
      __typename?: 'Warehouse',
     archived: $ElementType<Scalars, 'Boolean'>,
     name: $ElementType<Scalars, 'String'>,
@@ -61508,7 +61529,7 @@ export type Warehouse = {|
     ownedBy: OrganizationPayload,
     inCharges: Array<UserPayload>,
     customFields: CustomFields,
-  }
+  |}
 |};
 
 export type WarehouseCreateInput = {|
@@ -61537,7 +61558,7 @@ export type WarehousePayload = Warehouse | BadRequest | Forbidden | NotFound;
 
 export type WarehousePayloadPaginatedSearch = {|
   ...Paginated,
-  ...{
+  ...{|
      __typename?: 'WarehousePayloadPaginatedSearch',
     nodes: Array<WarehousePayload>,
     hits: Array<Hit>,
@@ -61546,7 +61567,7 @@ export type WarehousePayloadPaginatedSearch = {|
     totalPage: $ElementType<Scalars, 'Int'>,
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
-  }
+  |}
 |};
 
 export type WarehouseSortInput = {|
