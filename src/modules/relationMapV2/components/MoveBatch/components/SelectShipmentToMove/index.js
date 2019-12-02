@@ -24,6 +24,7 @@ import { SHIPMENT_ADD_BATCH } from 'modules/permission/constants/shipment';
 import { OverlayStyle } from './style';
 import { shipmentListQuery } from './query';
 import { moveBatchesToShipment } from './mutation';
+import ValidationCardOverlay from '../ValidationCardOverlay';
 
 type Props = {|
   onSuccess: (orderIds: Array<string>, shipmentIds: Array<string>) => void,
@@ -55,7 +56,7 @@ function ShipmentRenderer({
       shipment.exporter?.id) ||
     (exporterIds.length > 1 && shipment.exporter?.id);
   const noPermission = !hasPermissions([BATCH_UPDATE, SHIPMENT_ADD_BATCH]);
-  const isInvalid = isSameParent || isDifferentImporter || isDifferentExporter || noPermission;
+
   const msg = () => {
     if (noPermission)
       return (
@@ -93,30 +94,7 @@ function ShipmentRenderer({
   };
 
   return (
-    <div
-      style={{
-        width: 860,
-        height: 164,
-        position: 'relative',
-      }}
-    >
-      {isInvalid && (
-        <div
-          style={{
-            position: 'absolute',
-            zIndex: 2,
-            width: 860,
-            height: 164,
-            backgroundColor: 'rgba(239, 72, 72, 0.25)',
-            display: 'flex',
-            justifyContent: 'center',
-            textAlign: 'center',
-            alignItems: 'center',
-          }}
-        >
-          {msg()}
-        </div>
-      )}
+    <ValidationCardOverlay invalidMessage={msg()}>
       <ShipmentCard
         navigable={false}
         shipment={shipment}
@@ -126,7 +104,7 @@ function ShipmentRenderer({
           setSelected(shipment.id === selected?.id ? null : shipment);
         }}
       />
-    </div>
+    </ValidationCardOverlay>
   );
 }
 

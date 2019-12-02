@@ -26,6 +26,7 @@ import { BATCH } from 'modules/relationMapV2/constants';
 import { OverlayStyle } from './style';
 import { containerListQuery } from './query';
 import { moveBatchesToContainer } from './mutation';
+import ValidationCardOverlay from '../ValidationCardOverlay';
 
 type Props = {|
   onSuccess: (orderIds: Array<string>, shipmentIds: Array<string>) => void,
@@ -56,7 +57,7 @@ function ContainerRenderer({
       container?.shipment?.exporter?.id) ||
     (exporterIds.length > 1 && container?.shipment?.exporter?.id);
   const noPermission = !hasPermissions([BATCH_UPDATE, CONTAINER_BATCHES_ADD]);
-  const isInvalid = isSameParent || isDifferentImporter || isDifferentExporter || noPermission;
+
   const msg = () => {
     if (noPermission)
       return (
@@ -94,30 +95,7 @@ function ContainerRenderer({
   };
 
   return (
-    <div
-      style={{
-        width: 195,
-        height: 448,
-        position: 'relative',
-      }}
-    >
-      {isInvalid && (
-        <div
-          style={{
-            position: 'absolute',
-            zIndex: 2,
-            width: 195,
-            height: 448,
-            backgroundColor: 'rgba(239, 72, 72, 0.25)',
-            display: 'flex',
-            justifyContent: 'center',
-            textAlign: 'center',
-            alignItems: 'center',
-          }}
-        >
-          {msg()}
-        </div>
-      )}
+    <ValidationCardOverlay invalidMessage={msg()}>
       <ContainerCard
         container={container}
         selectable={container.id === selected?.id}
@@ -126,7 +104,7 @@ function ContainerRenderer({
           setSelected(container.id === selected?.id ? null : container);
         }}
       />
-    </div>
+    </ValidationCardOverlay>
   );
 }
 
