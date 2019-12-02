@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
-import { cx } from 'react-emotion';
 import FormattedDate from 'components/FormattedDate';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
@@ -57,11 +56,7 @@ const NotificationItem = ({ notification }: Props) => {
           {error && error.message}
           {/* $FlowFixMe Flow typed is not updated yet */}
           <Link
-            getProps={({ isCurrent }) =>
-              isCurrent
-                ? { className: cx(WrapperStyle(notification.read), 'active') }
-                : { className: WrapperStyle(notification.read) }
-            }
+            className={WrapperStyle(notification.read)}
             to={parseUrl(notification)}
             href={parseUrl(notification)}
             onClick={() => {
