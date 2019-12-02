@@ -6,7 +6,6 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { TEMPLATE_CREATE } from 'modules/permission/constants/template';
 import usePermission from 'hooks/usePermission';
-import useUser from 'hooks/useUser';
 import SlideView from 'components/SlideView';
 import TemplateFormWrapper from 'modules/tableTemplate/common/TemplateFormWrapper';
 import { Content } from 'components/Layout';
@@ -15,7 +14,6 @@ import FilterToolBar from 'components/common/FilterToolBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { NewButton } from 'components/Buttons';
 import useFilter from 'hooks/useFilter';
-import { isEnableBetaFeature } from 'utils/env';
 import TableTemplateList from './list';
 import messages from './messages';
 
@@ -37,10 +35,8 @@ const getInitFilter = (type: string) => ({
 });
 
 const TableTemplateModule = (props: Props) => {
-  const { isUsingLegacyFeatures } = useUser();
-  const showLegacyMenu = isUsingLegacyFeatures() || isEnableBetaFeature;
   const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter } = useFilter(
-    getInitFilter(showLegacyMenu ? 'Order' : 'OrderSheet'),
+    getInitFilter('OrderSheet'),
     'filterTableTemplate'
   );
   const { intl } = props;
@@ -52,25 +48,12 @@ const TableTemplateModule = (props: Props) => {
   const canCreate = hasPermission(TEMPLATE_CREATE);
   const activeType = filtersAndSort.filter?.type;
   const setActiveType = (type: string) => onChangeFilter({ ...filtersAndSort, filter: { type } });
+
   return (
     <Provider>
       <Content>
         <NavBar>
           <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
-          {showLegacyMenu && (
-            <TabItem
-              active={activeType === 'Order'}
-              label={
-                <FormattedMessage id="modules.TableTemplates.order" defaultMessage="Order Edit" />
-              }
-              icon="RELATION_MAP"
-              onClick={() => {
-                if (activeType !== 'Order') {
-                  setActiveType('Order');
-                }
-              }}
-            />
-          )}
           <TabItem
             active={activeType === 'OrderSheet'}
             label={

@@ -70,9 +70,9 @@ export default defineMessages({
     id: 'modules.SideBar.metadata',
     defaultMessage: 'CUSTOM FIELDS',
   },
-  template: {
-    id: 'modules.SideBar.template',
-    defaultMessage: 'RELATIONAL TABLE',
+  table: {
+    id: 'modules.SideBar.table',
+    defaultMessage: 'TABLE',
   },
   documents: {
     id: 'modules.SideBar.documents',
@@ -81,10 +81,6 @@ export default defineMessages({
   cards: {
     id: 'modules.SideBar.cards',
     defaultMessage: 'CARDS',
-  },
-  table: {
-    id: 'modules.SideBar.table',
-    defaultMessage: 'TABLE',
   },
   map: {
     id: 'modules.SideBar.map',
