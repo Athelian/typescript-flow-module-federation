@@ -32,18 +32,18 @@ function handleReadNotification(readNotification: Function, notificationId: numb
 
 const NotificationItem = ({ notification }: Props) => {
   React.useEffect(() => {
-    const anchors = document.querySelector('a[aria-current="page"]');
+    const anchors = document.querySelectorAll('a[aria-current="page"]');
     const clickHandler = (evt: MouseEvent) => {
       evt.preventDefault();
     };
     if (anchors) {
-      anchors.childNodes.forEach(anchor => {
+      anchors.forEach(anchor => {
         anchor.addEventListener('click', clickHandler);
       });
     }
     return () => {
       if (anchors) {
-        anchors.childNodes.forEach(anchor => {
+        anchors.forEach(anchor => {
           anchor.removeEventListener('click', clickHandler);
         });
       }
