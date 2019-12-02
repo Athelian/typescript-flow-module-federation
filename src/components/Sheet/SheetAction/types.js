@@ -1,4 +1,5 @@
 // @flow
+import * as React from 'react';
 
 export type ActionComponentProps = {|
   entity: { id: string, type: string },
@@ -6,8 +7,16 @@ export type ActionComponentProps = {|
   onDone: () => void,
 |};
 
-export type DoAction = ({|
+export type ActionConfig = {|
+  component: ActionComponentProps => React.Node,
+  permissions: ((string) => boolean) => boolean,
+|};
+
+export type ActionRequest = {|
   action: string,
   entity: { id: string, type: string },
+  ownedBy: string,
   item: Object,
-|}) => void;
+|};
+
+export type DoAction = ActionRequest => void;

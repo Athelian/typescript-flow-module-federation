@@ -335,7 +335,10 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                 changeTags('tags', value);
                               }}
                               onClickRemove={value => {
-                                changeTags('tags', tags.filter(({ id }) => id !== value.id));
+                                changeTags(
+                                  'tags',
+                                  tags.filter(({ id }) => id !== value.id)
+                                );
                               }}
                               editable={{
                                 set: hasPermission(TAG_LIST) && hasPermission(ORDER_UPDATE),
@@ -388,9 +391,9 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                             id="components.inputs.inCharge"
                             defaultMessage="IN CHARGE"
                           />
-                          {' ('}
+                           (
                           <FormattedNumber value={values.inCharges.length} />
-                          {')'}
+                          )
                         </>
                       }
                       infoMessage={

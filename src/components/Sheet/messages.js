@@ -46,4 +46,12 @@ export default defineMessages({
     id: 'components.Sheet.invalidMetricValue',
     defaultMessage: 'Invalid',
   },
+  actionNoPermission: {
+    id: 'components.Sheet.actionNoPermission',
+    defaultMessage: `Sorry you do not have permission to do this action`,
+  },
+  actionNoPermissionClose: {
+    id: 'components.Sheet.actionNoPermissionClose',
+    defaultMessage: 'Close',
+  },
 });
