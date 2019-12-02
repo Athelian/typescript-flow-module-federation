@@ -12,6 +12,7 @@ import OrderItemDeleteAction from 'modules/sheet/orderItem/actions/OrderItemDele
 import BaseBatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAction';
 import BatchCloneAction from 'modules/sheet/batch/actions/BatchCloneAction';
 import BaseBatchSyncPackagingAction from 'modules/sheet/batch/actions/BatchSyncPackagingAction';
+import BaseBatchMoveToExistingOrderAction from 'modules/sheet/batch/actions/BatchMoveToExistingOrderAction';
 import BaseBatchSplitAction from 'modules/sheet/batch/actions/BatchSplitAction';
 import BaseBatchDeleteRemoveAction from 'modules/sheet/batch/actions/BatchDeleteRemoveAction';
 import {
@@ -103,6 +104,13 @@ const BatchSyncPackagingAction = BaseBatchSyncPackagingAction({
   },
 });
 
+const BatchMoveToExistingOrderAction = BaseBatchMoveToExistingOrderAction({
+  getCurrency: (batchId, item) => item.currency,
+  getOrderId: (batchId, item) => item.id,
+  getImporterId: (batchId, item) => item.importer.id,
+  getExporterId: (batchId, item) => item.exporter.id,
+});
+
 const BatchSplitAction = BaseBatchSplitAction({
   getBatch: (batchId, item) =>
     item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId),
@@ -161,6 +169,12 @@ export default {
         perm(BATCH_SET_PACKAGE_WEIGHT) &&
         perm(BATCH_SET_PACKAGE_CAPACITY))
   ),
+  batch_move_order: AC(BatchMoveToExistingOrderAction, () => true),
+  // batch_move_new_order: AC(BatchMoveToNewOrderAction, () => true),
+  // batch_move_container: AC(BatchMoveToExistingContainerAction, () => true),
+  // batch_move_new_container: AC(BatchMoveToNewContainerAction, () => true),
+  // batch_move_shipment: AC(BatchMoveToExistingShipmentAction, () => true),
+  // batch_move_new_shipment: AC(BatchMoveToNewShipmentAction, () => true),
   batch_split: AC(BatchSplitAction, perm => perm(BATCH_CREATE)),
   batch_delete_remove: AC(
     BatchDeleteRemoveAction,

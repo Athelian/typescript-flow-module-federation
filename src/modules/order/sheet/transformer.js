@@ -120,6 +120,15 @@ function transformBatch(
         label: intl.formatMessage(batchMessages.batchSyncPackagingTitle),
       },
       {
+        action: 'batch_move_order',
+        label: intl.formatMessage(batchMessages.batchMoveToExistingOrderTitle),
+      },
+      // batch_move_new_order
+      // batch_move_container
+      // batch_move_new_container
+      // batch_move_shipment
+      // batch_move_new_shipment
+      {
         action: 'batch_split',
         label: intl.formatMessage(batchMessages.batchSplitTitle),
       },
