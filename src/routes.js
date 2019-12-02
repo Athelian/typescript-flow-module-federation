@@ -47,7 +47,7 @@ const Routes: StatelessFunctionalComponent<{}> = () => {
         <Router>
           <Authorized path="/">
             <Layout {...uiState} path="/">
-              <DashBoard path="/" />
+              <DashBoard path="/" default />
               <AsyncOrder path="order/*" />
               <AsyncOrderItem path="order-item/*" />
               <AsyncBatch path="batch/*" />
@@ -68,14 +68,12 @@ const Routes: StatelessFunctionalComponent<{}> = () => {
               <AsyncProjectTemplate path="templates/project/*" />
               <AsyncProfile path="profile/*" />
               <AsyncDocument path="document/*" />
-              <PageNotFound default />
             </Layout>
           </Authorized>
           <AsyncLogin path="/login" />
           <AsyncForgotPassword path="/forgot-password" />
           <AsyncResetPassword path="/reset-password/:token" />
           <PageNotFound path="/403" />
-          <PageNotFound default />
         </Router>
       </Suspense>
     </>
