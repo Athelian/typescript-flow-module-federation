@@ -17,12 +17,12 @@ import ShipmentForm from 'modules/shipment/index.form';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
+import NewOrderForm from 'modules/order/common/NewOrderForm';
+import NewShipmentForm from 'modules/shipment/common/NewShipmentForm';
 import { encodeId, uuid } from 'utils/id';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import { isEquals } from 'utils/fp';
-import NewOrderForm from './components/NewOrderForm';
-import NewShipmentForm from './components/NewShipmentForm';
 import { ordersAndShipmentsQuery } from './query';
 import { createContainerMutation } from './mutation';
 
