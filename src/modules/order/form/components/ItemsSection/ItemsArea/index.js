@@ -95,8 +95,7 @@ function ItemsArea({
             <div className={TitleStyle}>
               <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" />
               {' ('}
-              <FormattedNumber value={orderItems.length} />
-              {')'}
+              <FormattedNumber value={orderItems.length} />)
             </div>
           </div>
 

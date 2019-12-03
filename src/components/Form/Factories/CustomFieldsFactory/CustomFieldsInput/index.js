@@ -41,8 +41,7 @@ const CustomFieldsInput = ({
         {!loading && (
           <>
             {' ('}
-            <FormattedNumber value={mask ? originalFieldValues.length : fieldDefinitions.length} />
-            {')'}
+            <FormattedNumber value={mask ? originalFieldValues.length : fieldDefinitions.length} />)
           </>
         )}
       </Label>

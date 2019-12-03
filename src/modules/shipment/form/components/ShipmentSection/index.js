@@ -490,7 +490,10 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                               changeTags('tags', value);
                             }}
                             onClickRemove={value => {
-                              changeTags('tags', tags.filter(({ id }) => id !== value.id));
+                              changeTags(
+                                'tags',
+                                tags.filter(({ id }) => id !== value.id)
+                              );
                             }}
                             editable={{
                               set:
@@ -545,8 +548,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                           defaultMessage="IN CHARGE"
                         />
                         {' ('}
-                        <FormattedNumber value={values.inCharges.length} />
-                        {')'}
+                        <FormattedNumber value={values.inCharges.length} />)
                       </>
                     }
                     infoMessage={
@@ -586,10 +588,10 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         {(isForwarder() || isExporter()) &&
                         // Disable to changed importer if there is data send from RM
                         // base on initDataForSlideView
-                        (isNew &&
+                        isNew &&
                           Object.keys(initDataForSlideView).length === 0 &&
                           hasPermission(PARTNER_LIST) &&
-                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER])) ? (
+                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER]) ? (
                           <BooleanValue>
                             {({ value: importerSelectorIsOpen, set: importerSelectorToggle }) => (
                               <>
@@ -761,8 +763,8 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     input={
                       <>
                         {(isForwarder() || isImporter()) &&
-                        (hasPermission(PARTNER_LIST) &&
-                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_EXPORTER])) ? (
+                        hasPermission(PARTNER_LIST) &&
+                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_EXPORTER]) ? (
                           <BooleanValue>
                             {({ value: exporterSelectorIsOpen, set: exporterSelectorToggle }) => (
                               <>
@@ -947,8 +949,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                           defaultMessage="FORWARDER"
                         />
                         {' ('}
-                        <FormattedNumber value={forwarders.length} />
-                        {')'}
+                        <FormattedNumber value={forwarders.length} />)
                       </Label>
                     }
                     tooltip={
@@ -1013,8 +1014,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                   defaultMessage="RELATED EXPORTERS"
                                 />
                                 {' ('}
-                                <FormattedNumber value={uniqueExporters.length} />
-                                {')'}
+                                <FormattedNumber value={uniqueExporters.length} />)
                               </Label>
                               {uniqueExporters.length > 4 && (
                                 <button

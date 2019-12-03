@@ -254,8 +254,7 @@ const WarehouseSection = ({ isNew, isClone, isLoading }: Props) => {
                           defaultMessage="IN CHARGE"
                         />
                         {' ('}
-                        <FormattedNumber value={values.inCharges.length} />
-                        {')'}
+                        <FormattedNumber value={values.inCharges.length} />)
                       </>
                     }
                     infoMessage={
@@ -286,8 +285,7 @@ const WarehouseSection = ({ isNew, isClone, isLoading }: Props) => {
                           defaultMessage="AllOWED TO USE"
                         />
                         {' ('}
-                        <FormattedNumber value={values.organizations.length} />
-                        {')'}
+                        <FormattedNumber value={values.organizations.length} />)
                       </Label>
                     }
                     tooltip={

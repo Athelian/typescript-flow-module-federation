@@ -1,7 +1,7 @@
 // @flow
 import { defaultVolumeMetric } from 'utils/metric';
 
-function decorateContainer(container: Object): Object {
+export function decorateContainer(container: Object): Object {
   return {
     ...container,
     freeTimeStartDate: {
@@ -23,7 +23,7 @@ function decorateContainer(container: Object): Object {
   };
 }
 
-function decorateShipment(shipment: Object): Object {
+export function decorateShipment(shipment: Object): Object {
   return {
     ...shipment,
     cargoReady: {
@@ -77,7 +77,7 @@ function decorateShipment(shipment: Object): Object {
   };
 }
 
-function decorateBatch(batch: Object): Object {
+export function decorateBatch(batch: Object): Object {
   return {
     ...batch,
     packageQuantity: {
@@ -116,7 +116,7 @@ function decorateBatch(batch: Object): Object {
   };
 }
 
-function decorateOrderItem(orderItem: Object): Object {
+export function decorateOrderItem(orderItem: Object): Object {
   return {
     ...orderItem,
     batches: orderItem.batches.map(decorateBatch),

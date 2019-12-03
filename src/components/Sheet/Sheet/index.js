@@ -10,7 +10,7 @@ import type {
   Mutator,
 } from '../SheetState/types';
 import type { EntityEventHandlerFactory } from '../SheetLive/types';
-import type { ActionComponentProps, DoAction } from '../SheetAction/types';
+import type { ActionConfig, DoAction } from '../SheetAction/types';
 import { Actions } from '../SheetState/constants';
 import {
   useSheetStateLoadMore,
@@ -47,7 +47,7 @@ type Props = {|
   onRemoteSort: (sorts: Array<ColumnSort>) => void,
   transformItem: Object => Array<Array<CellValue>>,
   onMutate: Mutator,
-  actions: { [string]: (ActionComponentProps) => React.Node },
+  actions: { [string]: ActionConfig },
 |};
 
 const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent, doAction }: ImplProps) => {

@@ -13,6 +13,7 @@ import { handleFieldValueEvent } from 'modules/sheet/common/handler';
 import { handleOrderChanges } from 'modules/sheet/order/handler';
 import { handleOrderItemChanges } from 'modules/sheet/orderItem/handler';
 import { handleBatchChanges } from 'modules/sheet/batch/handler';
+import { handleProductChanges } from 'modules/sheet/product/handler';
 import {
   handleContainerGroupChanges,
   handleShipmentChanges,
@@ -20,6 +21,7 @@ import {
   handleVoyageChanges,
 } from 'modules/sheet/shipment/handler';
 import { handleContainerChanges } from 'modules/sheet/container/handler';
+import { decorateContainer, decorateBatch } from './decorator';
 import { batchByIDQuery, containerByIDQuery, orderByIDQuery, orderItemByIDQuery } from './query';
 
 function onCreateContainerFactory(client: ApolloClient<any>, dispatch: Action => void) {
@@ -57,7 +59,7 @@ function onCreateContainerFactory(client: ApolloClient<any>, dispatch: Action =>
               }
 
               const containers = [...shipments[shipmentIdx].containers];
-              containers.splice(newContainer.sort, 0, newContainer);
+              containers.splice(newContainer.sort, 0, decorateContainer(newContainer));
 
               return {
                 item: {
@@ -119,7 +121,7 @@ function onCreateBatchFactory(client: ApolloClient<any>, dispatch: Action => voi
                 const containers = [...shipments[shipmentIdx].containers];
                 const batches = [...containers[containerIdx].batches];
 
-                batches.splice(newBatch.containerSort, 0, newBatch);
+                batches.splice(newBatch.containerSort, 0, decorateBatch(newBatch));
 
                 containers[containerIdx] = {
                   ...containers[containerIdx],
@@ -137,7 +139,7 @@ function onCreateBatchFactory(client: ApolloClient<any>, dispatch: Action => voi
 
               const batches = [...shipments[shipmentIdx].batchesWithoutContainer];
 
-              batches.splice(newBatch.shipmentSort, 0, newBatch);
+              batches.splice(newBatch.shipmentSort, 0, decorateBatch(newBatch));
 
               return {
                 item: {
@@ -510,6 +512,9 @@ export default function entityEventHandler(
           }
           case 'Order':
             changes = await handleOrderChanges(client, changes);
+            break;
+          case 'Product':
+            changes = await handleProductChanges(client, changes);
             break;
           case 'FieldValue':
             handleFieldValueEvent(dispatch, event);

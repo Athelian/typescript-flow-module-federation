@@ -10,13 +10,16 @@ import normalizeSheetShipmentInput, {
   normalizeSheetVoyageInput,
 } from 'modules/sheet/shipment/normalize';
 import normalizeSheetContainerInput from 'modules/sheet/container/normalize';
+import normalizeSheetProductInput from 'modules/sheet/product/normalize';
 import sheetOrderMutation from 'modules/sheet/order/mutation';
 import sheetOrderItemMutation from 'modules/sheet/orderItem/mutation';
 import sheetBatchMutation from 'modules/sheet/batch/mutation';
 import sheetContainerMutation from 'modules/sheet/container/mutation';
 import sheetShipmentMutation from 'modules/sheet/shipment/mutation';
+import sheetProductMutation from 'modules/sheet/product/mutation';
 
 const mutations = {
+  Product: sheetProductMutation,
   Order: sheetOrderMutation,
   OrderItem: sheetOrderItemMutation,
   Batch: sheetBatchMutation,
@@ -258,6 +261,19 @@ function normalizedInput(
       }
 
       return normalizeSheetOrderInput(order, field, oldValue, newValue);
+    }
+    case 'Product': {
+      const product = [
+        ...shipment.batchesWithoutContainer,
+        ...shipment.containers.flatMap(c => c.batches),
+      ]
+        .map(b => b.orderItem.productProvider.product)
+        .find(o => o.id === entity.id);
+      if (!product) {
+        return {};
+      }
+
+      return normalizeSheetProductInput(product, field, oldValue, newValue);
     }
     default:
       return {

@@ -6,6 +6,7 @@ import transformSheetOrderItem from 'modules/sheet/orderItem/transformer';
 import transformSheetBatch from 'modules/sheet/batch/transformer';
 import transformSheetShipment from 'modules/sheet/shipment/transformer';
 import transformSheetContainer from 'modules/sheet/container/transformer';
+import transformSheetProduct from 'modules/sheet/product/transformer';
 
 function getCurrentBatch(batchId: string, shipment: Object): ?Object {
   return [...shipment.batchesWithoutContainer, ...shipment.containers.flatMap(c => c.batches)].find(
@@ -17,6 +18,12 @@ function getCurrentOrder(orderId: string, shipment: Object): ?Object {
   return [...shipment.batchesWithoutContainer, ...shipment.containers.flatMap(c => c.batches)]
     .map(b => b.orderItem.order)
     .find(o => o.id === orderId);
+}
+
+function getCurrentProduct(productId: string, shipment: Object): ?Object {
+  return [...shipment.batchesWithoutContainer, ...shipment.containers.flatMap(c => c.batches)]
+    .map(b => b.orderItem.productProvider.product)
+    .find(o => o.id === productId);
 }
 
 function transformShipment(
@@ -112,11 +119,30 @@ function transformBatchOrderItemOrder(
   }));
 }
 
+function transformBatchOrderItemProductProviderProduct(
+  fieldDefinitions: Array<FieldDefinition>,
+  basePath: string,
+  batch: Object
+): Array<CellValue> {
+  return transformSheetProduct({
+    fieldDefinitions,
+    basePath: `${basePath}.orderItem.productProvider.product`,
+    product: batch?.orderItem?.productProvider?.product ?? null,
+    getProductFromRoot: root =>
+      getCurrentProduct(batch?.orderItem?.productProvider?.product?.id, root),
+  }).map(c => ({
+    ...c,
+    duplicable: true,
+    disabled: !(batch?.orderItem?.productProvider?.product ?? null),
+  }));
+}
+
 type Props = {
   orderFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
+  productFieldDefinitions: Array<FieldDefinition>,
 };
 
 export default function transformer({
@@ -124,6 +150,7 @@ export default function transformer({
   orderItemFieldDefinitions,
   batchFieldDefinitions,
   shipmentFieldDefinitions,
+  productFieldDefinitions,
 }: Props) {
   return (index: number, shipment: Object): Array<Array<CellValue>> => {
     const rows = [];
@@ -146,6 +173,11 @@ export default function transformer({
         ),
         ...transformBatchOrderItemOrder(
           orderFieldDefinitions,
+          `${index}.batchesWithoutContainer.${batchIdx}`,
+          batch
+        ),
+        ...transformBatchOrderItemProductProviderProduct(
+          productFieldDefinitions,
           `${index}.batchesWithoutContainer.${batchIdx}`,
           batch
         ),
@@ -182,6 +214,11 @@ export default function transformer({
                 `${index}.containers.${containerIdx}.batches.${batchIdx}`,
                 batch
               ),
+              ...transformBatchOrderItemProductProviderProduct(
+                productFieldDefinitions,
+                `${index}.containers.${containerIdx}.batches.${batchIdx}`,
+                batch
+              ),
             ]);
 
             containerCells = transformContainer(`${index}.containers.${containerIdx}`, null, true);
@@ -206,6 +243,11 @@ export default function transformer({
               `${index}.containers.${containerIdx}.batches.-1`,
               null
             ),
+            ...transformBatchOrderItemProductProviderProduct(
+              productFieldDefinitions,
+              `${index}.containers.${containerIdx}.batches.-1`,
+              null
+            ),
           ]);
 
           shipmentCells = transformShipment(shipmentFieldDefinitions, `${index}`, null);
@@ -223,6 +265,11 @@ export default function transformer({
         ),
         ...transformBatchOrderItemOrder(
           orderFieldDefinitions,
+          `${index}.containers.-1.batches.-1`,
+          null
+        ),
+        ...transformBatchOrderItemProductProviderProduct(
+          productFieldDefinitions,
           `${index}.containers.-1.batches.-1`,
           null
         ),

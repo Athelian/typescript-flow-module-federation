@@ -108,11 +108,11 @@ const Cell = ({
   );
   const handleAction = React.useCallback(
     action => {
-      if (cell.entity) {
-        doAction({ action, entity: cell.entity, item });
+      if (parentCell.entity && parentCell.data) {
+        doAction({ action, entity: parentCell.entity, ownedBy: parentCell.data.ownedBy, item });
       }
     },
-    [cell.entity, item, doAction]
+    [parentCell.entity, parentCell.data, item, doAction]
   );
 
   const handleClick = React.useCallback(() => {

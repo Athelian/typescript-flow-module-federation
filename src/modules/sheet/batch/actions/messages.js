@@ -61,7 +61,8 @@ export default defineMessages({
   },
   batchSplitNotEnoughQuantity: {
     id: 'modules.Sheet.batch.split.notEnoughQuantity',
-    defaultMessage: 'Sorry, you cannot split this {batchLabel} because its quantity is not greater than 0',
+    defaultMessage:
+      'Sorry, you cannot split this {batchLabel} because its quantity is not greater than 0',
   },
   batchSplitMessage: {
     id: 'modules.Sheet.batch.split.message',
@@ -82,5 +83,9 @@ export default defineMessages({
   batchSplitValidatorError: {
     id: 'modules.Sheet.batch.split.validatorError',
     defaultMessage: 'Please enter the number between {min} and {max}',
+  },
+  batchMoveToExistingOrderTitle: {
+    id: 'modules.Sheet.batch.batchMoveToExistingOrder.title',
+    defaultMessage: 'Move to Order',
   },
 });

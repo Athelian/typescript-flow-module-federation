@@ -802,7 +802,10 @@ const TaskInfoSection = ({
                         setFieldValue('tags', value);
                       }}
                       onClickRemove={value => {
-                        setFieldValue('tags', values.tags.filter(({ id }) => id !== value.id));
+                        setFieldValue(
+                          'tags',
+                          values.tags.filter(({ id }) => id !== value.id)
+                        );
                       }}
                       editable={{
                         set: hasPermission(TAG_LIST) && editable.tags,

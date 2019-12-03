@@ -21,6 +21,7 @@ import ShipmentGridView from 'modules/shipment/list/ShipmentGridView';
 import { ShipmentCard } from 'components/Cards';
 import { BATCH_UPDATE } from 'modules/permission/constants/batch';
 import { SHIPMENT_ADD_BATCH } from 'modules/permission/constants/shipment';
+import ValidationCardOverlay from 'components/ValidationCardOverlay';
 import { OverlayStyle } from './style';
 import { shipmentListQuery } from './query';
 import { moveBatchesToShipment } from './mutation';
@@ -34,16 +35,19 @@ function ShipmentRenderer({
   shipment,
   selected,
   setSelected,
+  isMoveToContainer,
 }: {|
   shipment: Object,
   selected: ?Object,
   setSelected: (?Object) => void,
+  isMoveToContainer: boolean,
 |}) {
   const { state, selectors } = FocusedView.useContainer();
   const batchIds = selectors.targetedBatchIds();
   const { mapping } = Entities.useContainer();
   const { shipmentIds, importerIds, exporterIds } = state.moveActions;
   const isSameParent =
+    !isMoveToContainer &&
     shipmentIds.length === 1 &&
     shipmentIds.includes(shipment.id) &&
     batchIds.every(batchId => !!mapping.entities?.batches?.[batchId]?.shipment);
@@ -55,7 +59,7 @@ function ShipmentRenderer({
       shipment.exporter?.id) ||
     (exporterIds.length > 1 && shipment.exporter?.id);
   const noPermission = !hasPermissions([BATCH_UPDATE, SHIPMENT_ADD_BATCH]);
-  const isInvalid = isSameParent || isDifferentImporter || isDifferentExporter || noPermission;
+
   const msg = () => {
     if (noPermission)
       return (
@@ -93,30 +97,7 @@ function ShipmentRenderer({
   };
 
   return (
-    <div
-      style={{
-        width: 860,
-        height: 164,
-        position: 'relative',
-      }}
-    >
-      {isInvalid && (
-        <div
-          style={{
-            position: 'absolute',
-            zIndex: 2,
-            width: 860,
-            height: 164,
-            backgroundColor: 'rgba(239, 72, 72, 0.25)',
-            display: 'flex',
-            justifyContent: 'center',
-            textAlign: 'center',
-            alignItems: 'center',
-          }}
-        >
-          {msg()}
-        </div>
-      )}
+    <ValidationCardOverlay invalidMessage={msg()}>
       <ShipmentCard
         navigable={false}
         shipment={shipment}
@@ -126,7 +107,7 @@ function ShipmentRenderer({
           setSelected(shipment.id === selected?.id ? null : shipment);
         }}
       />
-    </div>
+    </ValidationCardOverlay>
   );
 }
 
@@ -193,6 +174,11 @@ function SelectShipmentToMove({ onSuccess, onNewContainer }: Props) {
             <Sort config={ShipmentSortConfig} sortBy={sortBy} onChange={setSortBy} />
             <CancelButton onClick={onCancel} />
             <SaveButton
+              {...(isMoveToContainer && {
+                label: (
+                  <FormattedMessage id="components.button.continue" defaultMessage="Continue" />
+                ),
+              })}
               disabled={!selected || isProcessing}
               isLoading={isProcessing}
               onClick={onConfirm}
@@ -223,6 +209,7 @@ function SelectShipmentToMove({ onSuccess, onNewContainer }: Props) {
                           selected={selected}
                           setSelected={setSelected}
                           shipment={shipment}
+                          isMoveToContainer={isMoveToContainer}
                         />
                       )}
                     />

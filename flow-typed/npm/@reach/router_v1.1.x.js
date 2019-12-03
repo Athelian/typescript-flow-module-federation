@@ -1,10 +1,10 @@
-// flow-typed signature: 3a324fcc57b547e405295581c59b46b1
-// flow-typed version: c6154227d1/@reach/router_v1.1.x/flow_>=v0.104.x
+// flow-typed signature: 2b04c5916376b7c9e9bdadfc314f0f45
+// flow-typed version: 29009cc98d/@reach/router_v1.1.x/flow_>=v0.104.x
 
 // @flow
 
 declare module '@reach/router' {
-  declare type DomLocation = typeof location;
+  declare type DomLocation = typeof location & {| state?: any |};
 
   declare export type NavigateFn = (
     to: string,
@@ -98,6 +98,7 @@ declare module '@reach/router' {
     from?: string,
     to: string,
     noThrow?: boolean,
+    state?: any
   |}>;
 
   declare export type MatchProps<Params> = {|

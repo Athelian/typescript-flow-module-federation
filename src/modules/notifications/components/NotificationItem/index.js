@@ -29,33 +29,56 @@ function handleReadNotification(readNotification: Function, notificationId: numb
   readNotification({ variables: { id: notificationId } });
 }
 
-const NotificationItem = ({ notification }: Props) => (
-  <Mutation mutation={mutation}>
-    {(readNotification, { loading, error }) => (
-      <>
-        {loading && <LoadingIcon />}
-        {error && error.message}
-        {/* $FlowFixMe Flow typed is not updated yet */}
-        <Link
-          to={parseUrl(notification)}
-          className={WrapperStyle(notification.read)}
-          onClick={() => handleReadNotification(readNotification, notification.id)}
-        >
-          <div className={AvatarStyle(avatar)}>
-            <div className={IconWrapperStyle}>
-              <Icon icon={parseIcon(notification?.entity?.__typename)} />
+const NotificationItem = ({ notification }: Props) => {
+  React.useEffect(() => {
+    const anchors = document.querySelectorAll('a[aria-current="page"]');
+    const clickHandler = (evt: MouseEvent) => {
+      evt.preventDefault();
+    };
+    if (anchors) {
+      anchors.forEach(anchor => {
+        anchor.addEventListener('click', clickHandler);
+      });
+    }
+    return () => {
+      if (anchors) {
+        anchors.forEach(anchor => {
+          anchor.removeEventListener('click', clickHandler);
+        });
+      }
+    };
+  }, []);
+  return (
+    <Mutation mutation={mutation}>
+      {(readNotification, { loading, error }) => (
+        <>
+          {loading && <LoadingIcon />}
+          {error && error.message}
+          {/* $FlowFixMe Flow typed is not updated yet */}
+          <Link
+            className={WrapperStyle(notification.read)}
+            to={parseUrl(notification)}
+            href={parseUrl(notification)}
+            onClick={() => {
+              handleReadNotification(readNotification, notification.id);
+            }}
+          >
+            <div className={AvatarStyle(avatar)}>
+              <div className={IconWrapperStyle}>
+                <Icon icon={parseIcon(notification?.entity?.__typename)} />
+              </div>
             </div>
-          </div>
-          <div className={InfoWrapper}>
-            {notification.body}
-            <div className="data">
-              <FormattedDate mode="relative" value={notification.createdAt} />
+            <div className={InfoWrapper}>
+              {notification.body}
+              <div>
+                <FormattedDate mode="relative" value={notification.createdAt} />
+              </div>
             </div>
-          </div>
-        </Link>
-      </>
-    )}
-  </Mutation>
-);
+          </Link>
+        </>
+      )}
+    </Mutation>
+  );
+};
 
 export default NotificationItem;

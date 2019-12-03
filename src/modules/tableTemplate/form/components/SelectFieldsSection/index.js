@@ -168,6 +168,7 @@ const SelectFieldsSection = () => {
               orderItemFieldDefinitions: orderItemCustomFields,
               batchFieldDefinitions: batchCustomFields,
               shipmentFieldDefinitions: shipmentCustomFields,
+              productFieldDefinitions: productCustomFields,
             })
           ),
           ProjectSheet: convertSheetColumns(projectSheetColumns),

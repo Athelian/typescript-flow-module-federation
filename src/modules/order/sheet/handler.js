@@ -20,6 +20,7 @@ import {
   handleVoyageChanges,
   handleShipmentChanges,
 } from 'modules/sheet/shipment/handler';
+import { decorateBatch, decorateContainer, decorateOrderItem, decorateShipment } from './decorator';
 import { batchByIDQuery, containerByIDQuery, orderItemByIDQuery, shipmentByIDQuery } from './query';
 
 function onCreateOrderItemFactory(client: ApolloClient<any>, dispatch: Action => void) {
@@ -57,7 +58,11 @@ function onCreateOrderItemFactory(client: ApolloClient<any>, dispatch: Action =>
               }
 
               const orderItems = [...orders[orderIdx].orderItems];
-              orderItems.splice(newOrderItem.sort, 0, newOrderItem);
+              if (orderItems.some(orderItem => orderItem.id === orderItemId)) {
+                return null;
+              }
+
+              orderItems.splice(newOrderItem.sort, 0, decorateOrderItem(newOrderItem));
 
               return {
                 item: {
@@ -116,7 +121,11 @@ function onCreateBatchFactory(client: ApolloClient<any>, dispatch: Action => voi
 
               const orderItems = [...orders[orderIdx].orderItems];
               const batches = [...orderItems[orderItemIdx].batches];
-              batches.splice(newBatch.sort, 0, newBatch);
+              if (batches.some(batch => batch.id === batchId)) {
+                return null;
+              }
+
+              batches.splice(newBatch.sort, 0, decorateBatch(newBatch));
               orderItems[orderItemIdx] = {
                 ...orderItems[orderItemIdx],
                 batches,
@@ -188,7 +197,7 @@ function onUpdateBatchContainerFactory(client: ApolloClient<any>, dispatch: Acti
             return;
           }
 
-          changeContainer(batchId, container, orders);
+          changeContainer(batchId, decorateContainer(container), orders);
         });
     } else {
       changeContainer(batchId, null, orders);
@@ -249,7 +258,7 @@ function onUpdateBatchShipmentFactory(client: ApolloClient<any>, dispatch: Actio
             return;
           }
 
-          changeShipment(batchId, shipment, orders);
+          changeShipment(batchId, decorateShipment(shipment), orders);
         });
     } else {
       changeShipment(batchId, null, orders);

@@ -62,8 +62,7 @@ const AssignmentApprovalFactory = ({
       <>
         <FormattedMessage id="components.inputs.assignedTo" defaultMessage="ASSIGNED TO" />
         {' ('}
-        <FormattedNumber value={assignments.length} />
-        {')'}
+        <FormattedNumber value={assignments.length} />)
       </>
     ),
     cacheKey,

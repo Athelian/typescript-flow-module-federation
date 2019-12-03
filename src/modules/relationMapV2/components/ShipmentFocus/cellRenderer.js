@@ -233,7 +233,12 @@ function OrderCell({ data, beforeConnector }: CellProps) {
   );
 }
 
-function OrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
+function OrderItemCell({
+  data,
+  beforeConnector,
+  afterConnector,
+  shipment,
+}: CellProps & { shipment: ?ShipmentPayload }) {
   const { state, dispatch } = FocusedView.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
@@ -242,6 +247,7 @@ function OrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
   const order = data.orderItem?.order;
   const orderId = order?.id;
   const itemId = data.orderItem?.id;
+  const batches = (shipment?.batches ?? []).filter(batch => batch.orderItem?.id === itemId);
   const [{ isOver, canDrop, dropMessage }, drop] = useDrop({
     accept: BATCH,
     canDrop: item => {
@@ -366,7 +372,7 @@ function OrderItemCell({ data, beforeConnector, afterConnector }: CellProps) {
           >
             <OrderItemCard
               organizationId={data.orderItem?.ownedBy?.id}
-              orderItem={data.orderItem}
+              orderItem={{ ...data.orderItem, batches }}
               onViewForm={evt => {
                 evt.stopPropagation();
                 dispatch({

@@ -1,3 +1,4 @@
+/* eslint-disable react/default-props-match-prop-types */
 // @flow
 import * as React from 'react';
 import { StringValue } from 'react-values';

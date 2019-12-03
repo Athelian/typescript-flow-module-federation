@@ -22,6 +22,7 @@ import OrderGridView from 'modules/order/list/OrderGridView';
 import { OrderCard } from 'components/Cards';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { BATCH } from 'modules/relationMapV2/constants';
+import ValidationCardOverlay from 'components/ValidationCardOverlay';
 import { OverlayStyle } from './style';
 import { orderListQuery } from './query';
 import { moveBatchesToOrder } from './mutation';
@@ -46,7 +47,7 @@ function OrderRenderer({
   const isDifferentImporter = !importerIds.includes(order?.importer?.id);
   const isDifferentExporter = !exporterIds.includes(order?.exporter?.id);
   const noPermission = !hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
-  const isInvalid = isSameParent || isDifferentImporter || isDifferentExporter || noPermission;
+
   const msg = () => {
     if (noPermission)
       return (
@@ -84,31 +85,9 @@ function OrderRenderer({
   };
 
   const isSelected = order.id === selected?.id;
+
   return (
-    <div
-      style={{
-        width: 195,
-        height: 303,
-        position: 'relative',
-      }}
-    >
-      {isInvalid && (
-        <div
-          style={{
-            position: 'absolute',
-            zIndex: 2,
-            width: 195,
-            height: 303,
-            backgroundColor: 'rgba(239, 72, 72, 0.25)',
-            display: 'flex',
-            justifyContent: 'center',
-            textAlign: 'center',
-            alignItems: 'center',
-          }}
-        >
-          {msg()}
-        </div>
-      )}
+    <ValidationCardOverlay invalidMessage={msg()}>
       <OrderCard
         order={order}
         selectable={isSelected}
@@ -117,7 +96,7 @@ function OrderRenderer({
           setSelected(isSelected ? null : order);
         }}
       />
-    </div>
+    </ValidationCardOverlay>
   );
 }
 
