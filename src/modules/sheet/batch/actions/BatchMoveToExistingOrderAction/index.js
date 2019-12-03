@@ -145,6 +145,33 @@ const BatchMoveToExistingOrderActionImpl = ({
   const orderItemNo = getOrderItemNo(entity.id, item);
   const orderItemPrice = getOrderItemPrice(entity.id, item);
 
+  const onMove = (selectedOrder: Object) => {
+    executeActionMutation(
+      orderUpdate,
+      {
+        id: selectedOrder?.id,
+        input: {
+          orderItems: [
+            ...(selectedOrder?.orderItems ?? []).map(orderItem => ({
+              id: orderItem?.id,
+            })),
+            {
+              productProviderId,
+              no: `[auto] ${orderItemNo}`,
+              quantity: latestQuantity,
+              price: {
+                amount: orderItemPrice?.currency === currency ? orderItemPrice?.amount ?? 0 : 0,
+                currency,
+              },
+              batches: [{ id: entity.id }],
+            },
+          ],
+        },
+      },
+      close
+    );
+  };
+
   return (
     <SlideView isOpen={isOpen} onRequestClose={close}>
       <Selector.Single selected={null}>
@@ -161,35 +188,7 @@ const BatchMoveToExistingOrderActionImpl = ({
               <SaveButton
                 disabled={!dirty || isProcessing || called}
                 isLoading={isProcessing || called}
-                onClick={() => {
-                  executeActionMutation(
-                    orderUpdate,
-                    {
-                      id: selectedOrder?.id,
-                      input: {
-                        orderItems: [
-                          ...(selectedOrder?.orderItems ?? []).map(orderItem => ({
-                            id: orderItem?.id,
-                          })),
-                          {
-                            productProviderId,
-                            no: `[auto] ${orderItemNo}`,
-                            quantity: latestQuantity,
-                            price: {
-                              amount:
-                                orderItemPrice?.currency === currency
-                                  ? orderItemPrice?.amount ?? 0
-                                  : 0,
-                              currency,
-                            },
-                            batches: [{ id: entity.id }],
-                          },
-                        ],
-                      },
-                    },
-                    close
-                  );
-                }}
+                onClick={() => onMove(selectedOrder)}
               />
             </SlideViewNavBar>
 
