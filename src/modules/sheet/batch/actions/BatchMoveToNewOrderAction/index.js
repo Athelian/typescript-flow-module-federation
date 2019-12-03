@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react';
 import type {
-  OrderPayload,
   OrderItemPayload,
   BatchPayload,
   ContainerPayload,
   ShipmentPayload,
+  OrganizationPayload,
 } from 'generated/graphql';
 import useUser from 'hooks/useUser';
 import type { ActionComponentProps } from 'components/Sheet/SheetAction/types';
@@ -15,35 +15,37 @@ import SlideView from 'components/SlideView';
 import { generateItemForMovedBatch } from 'utils/item';
 
 type Props = {|
-  getBatch: (batchId: string, order: OrderPayload) => BatchPayload,
-  getOrderItem: (batchId: string, order: OrderPayload) => OrderItemPayload,
-  getContainer: (batchId: string, order: OrderPayload) => ?ContainerPayload,
-  getShipment: (batchId: string, order: OrderPayload) => ?ShipmentPayload,
+  getBatch: (batchId: string, item: Object) => BatchPayload,
+  getOrderItem: (batchId: string, item: Object) => OrderItemPayload,
+  getContainer: (batchId: string, item: Object) => ?ContainerPayload,
+  getShipment: (batchId: string, item: Object) => ?ShipmentPayload,
+  getExporter: (batchId: string, item: Object) => OrganizationPayload,
 |};
 
 function BatchMoveToNewOrderActionImpl({
   entity,
-  item: order,
+  item,
   onDone,
   getBatch,
   getContainer,
   getShipment,
   getOrderItem,
+  getExporter,
 }: {|
   ...ActionComponentProps,
   ...Props,
 |}) {
   const { isImporter, organization } = useUser();
   const [isOpen, close] = useSheetActionDialog(onDone);
-  const { exporter } = order;
-  const batch = getBatch(entity.id, order);
-  const orderItem = getOrderItem(entity.id, order);
+  const batch = getBatch(entity.id, item);
+  const exporter = getExporter(entity.id, item);
+  const orderItem = getOrderItem(entity.id, item);
   const newOrderItems = [];
   const { id: itemId, ...newOrderItem } = orderItem;
   const newContainers = [];
   const newShipments = [];
-  const container = getContainer(entity.id, order);
-  const shipment = getShipment(entity.id, order);
+  const container = getContainer(entity.id, item);
+  const shipment = getShipment(entity.id, item);
   if (container) {
     newContainers.push(container);
   }

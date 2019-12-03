@@ -137,14 +137,14 @@ const BatchMoveToExistingOrderAction = BaseBatchMoveToExistingOrderAction({
 });
 
 const BatchMoveToNewOrderAction = BaseBatchMoveToNewOrderAction({
-  getContainer: (batchId, order) =>
-    (order?.orderItems ?? []).flatMap(({ batches }) => batches).find(({ id }) => id === batchId)
+  getContainer: (batchId, item) =>
+    (item?.orderItems ?? []).flatMap(({ batches }) => batches).find(({ id }) => id === batchId)
       ?.container,
-  getShipment: (batchId, order) =>
-    (order?.orderItems ?? []).flatMap(({ batches }) => batches).find(({ id }) => id === batchId)
+  getShipment: (batchId, item) =>
+    (item?.orderItems ?? []).flatMap(({ batches }) => batches).find(({ id }) => id === batchId)
       ?.shipment,
-  getBatch: (batchId, order) => {
-    const batch = (order?.orderItems ?? [])
+  getBatch: (batchId, item) => {
+    const batch = (item?.orderItems ?? [])
       .flatMap(({ batches }) => batches)
       .find(({ id }) => id === batchId);
     return {
@@ -153,8 +153,8 @@ const BatchMoveToNewOrderAction = BaseBatchMoveToNewOrderAction({
       packageVolume: batch.packageVolume?.value,
     };
   },
-  getOrderItem: (batchId, order) => {
-    const orderItem = (order?.orderItems ?? []).find(({ batches }) =>
+  getOrderItem: (batchId, item) => {
+    const orderItem = (item?.orderItems ?? []).find(({ batches }) =>
       batches.some(batch => batch.id === batchId)
     );
     return {
@@ -164,6 +164,9 @@ const BatchMoveToNewOrderAction = BaseBatchMoveToNewOrderAction({
         currency: orderItem.price?.metric ?? 'USD',
       },
     };
+  },
+  getExporter: (batchId, item) => {
+    return item.exporter;
   },
 });
 
