@@ -21,10 +21,10 @@ import ShipmentGridView from 'modules/shipment/list/ShipmentGridView';
 import { ShipmentCard } from 'components/Cards';
 import { BATCH_UPDATE } from 'modules/permission/constants/batch';
 import { SHIPMENT_ADD_BATCH } from 'modules/permission/constants/shipment';
+import ValidationCardOverlay from 'components/ValidationCardOverlay';
 import { OverlayStyle } from './style';
 import { shipmentListQuery } from './query';
 import { moveBatchesToShipment } from './mutation';
-import ValidationCardOverlay from '../ValidationCardOverlay';
 
 type Props = {|
   onSuccess: (orderIds: Array<string>, shipmentIds: Array<string>) => void,

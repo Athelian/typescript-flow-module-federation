@@ -125,7 +125,7 @@ const BatchMoveToExistingOrderAction = BaseBatchMoveToExistingOrderAction({
     );
     return orderItem?.no;
   },
-  orderItemPrice: (batchId, item) => {
+  getOrderItemPrice: (batchId, item) => {
     const orderItem = (item?.orderItems ?? []).find(oi =>
       (oi?.batches ?? []).some(batch => batch.id === batchId)
     );

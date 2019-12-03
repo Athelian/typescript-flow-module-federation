@@ -21,7 +21,7 @@ import { OrderCard } from 'components/Cards';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import Selector from 'components/Selector';
 import { executeActionMutation, useSheetActionDialog } from 'components/Sheet/SheetAction';
-import ValidationCardOverlay from 'modules/relationMapV2/components/MoveBatch/components/ValidationCardOverlay';
+import ValidationCardOverlay from 'components/ValidationCardOverlay';
 import { OverlayStyle } from './style';
 import { orderListQuery } from './query';
 import { batchMoveToExistingOrderActionMutation } from './mutation';
