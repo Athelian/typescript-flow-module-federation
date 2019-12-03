@@ -1,5 +1,6 @@
 // @flow
 import type { OrderItemPayload, BatchPayload } from 'generated/graphql';
+import { uuid } from './id';
 import { getByPathWithDefault } from './fp';
 import { getBatchLatestQuantity } from './batch';
 
@@ -113,5 +114,33 @@ export const spreadOrderItem = (item: Object): Object => {
     productProvider: compiledProductProvider,
     product: compiledProduct,
     order: compiledOrder,
+  };
+};
+
+export const generateItemForMovedBatch = (
+  orderItem: OrderItemPayload,
+  batch: BatchPayload
+): OrderItemPayload => {
+  return {
+    ...orderItem,
+    customFields: {
+      mask: null,
+      fieldValues: [],
+    },
+    todo: {
+      tasks: [],
+    },
+    tags: [],
+    files: [],
+    memo: '',
+    no: `[auto] ${orderItem.no}`,
+    quantity: getBatchLatestQuantity(batch),
+    isNew: true,
+    id: uuid(),
+    price: {
+      amount: orderItem?.price?.currency === 'USD' ? orderItem?.price?.amount ?? 0 : 0,
+      currency: orderItem?.price?.currency ?? 'USD',
+    },
+    batches: [batch],
   };
 };

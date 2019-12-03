@@ -1,16 +1,24 @@
 // @flow
 import * as React from 'react';
-import type { OrderPayload, OrderItemPayload, BatchPayload } from 'generated/graphql';
+import type {
+  OrderPayload,
+  OrderItemPayload,
+  BatchPayload,
+  ContainerPayload,
+  ShipmentPayload,
+} from 'generated/graphql';
 import useUser from 'hooks/useUser';
 import type { ActionComponentProps } from 'components/Sheet/SheetAction/types';
 import { useSheetActionDialog } from 'components/Sheet/SheetAction';
 import NewOrderForm from 'modules/order/common/NewOrderForm';
 import SlideView from 'components/SlideView';
-import { uuid } from 'utils/id';
+import { generateItemForMovedBatch } from 'utils/item';
 
 type Props = {|
   getBatch: (batchId: string, order: OrderPayload) => BatchPayload,
   getOrderItem: (batchId: string, order: OrderPayload) => OrderItemPayload,
+  getContainer: (batchId: string, order: OrderPayload) => ?ContainerPayload,
+  getShipment: (batchId: string, order: OrderPayload) => ?ShipmentPayload,
 |};
 
 function BatchMoveToNewOrderActionImpl({
@@ -18,6 +26,8 @@ function BatchMoveToNewOrderActionImpl({
   item: order,
   onDone,
   getBatch,
+  getContainer,
+  getShipment,
   getOrderItem,
 }: {|
   ...ActionComponentProps,
@@ -32,63 +42,35 @@ function BatchMoveToNewOrderActionImpl({
   const { id: itemId, ...newOrderItem } = orderItem;
   const newContainers = [];
   const newShipments = [];
-  if (batch.container) {
-    newContainers.push(batch.container);
+  const container = getContainer(entity.id, order);
+  const shipment = getShipment(entity.id, order);
+  if (container) {
+    newContainers.push(container);
   }
-  if (batch.shipment) {
-    newShipments.push(batch.shipment);
+  if (shipment) {
+    newShipments.push(shipment);
   }
 
-  const defaultItemValues = {
-    customFields: {
-      mask: null,
-      fieldValues: [],
-    },
-    todo: {
-      tasks: [],
-    },
-    tags: [],
-    files: [],
-    memo: '',
-  };
-  newOrderItems.push({
-    ...newOrderItem,
-    ...defaultItemValues,
-    no: `[auto] ${newOrderItem.no}`,
-    quantity: 0,
-    isNew: true,
-    id: uuid(),
-    batches: [batch],
-    // NOTE: send the original data before normalize from gtv
-    price: {
-      amount: orderItem?.price?.value ?? 0,
-      currency: orderItem?.price?.metric ?? 'JPY',
-    },
-  });
+  newOrderItems.push(generateItemForMovedBatch(newOrderItem, batch));
 
   return (
     <SlideView isOpen={isOpen} onRequestClose={close}>
       <NewOrderForm
         originalDataForSlideView={{
           orderItems: newOrderItems.map(currentOrderItem => ({
-            ...defaultItemValues,
             id: currentOrderItem.id,
             isNew: true,
             batches: currentOrderItem.batches.map(currentBatch => ({
               ...currentBatch,
               isNew: true,
+              quantity: 0,
             })),
           })),
         }}
         initDataForSlideView={{
           importer: isImporter() ? organization : {},
           exporter,
-          orderItems: newOrderItems.map(item => ({
-            ...item,
-            ...defaultItemValues,
-            no: `[auto] ${item.no}`,
-            quantity: 0,
-          })),
+          orderItems: newOrderItems,
           containers: newContainers,
           shipments: newShipments,
         }}

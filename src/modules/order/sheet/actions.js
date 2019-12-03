@@ -135,10 +135,34 @@ const BatchMoveToExistingOrderAction = BaseBatchMoveToExistingOrderAction({
 });
 
 const BatchMoveToNewOrderAction = BaseBatchMoveToNewOrderAction({
-  getBatch: (batchId, order) =>
-    (order?.orderItems ?? []).flatMap(({ batches }) => batches).find(({ id }) => id === batchId),
-  getOrderItem: (batchId, order) =>
-    (order?.orderItems ?? []).find(({ batches }) => batches.some(batch => batch.id === batchId)),
+  getContainer: (batchId, order) =>
+    (order?.orderItems ?? []).flatMap(({ batches }) => batches).find(({ id }) => id === batchId)
+      ?.container,
+  getShipment: (batchId, order) =>
+    (order?.orderItems ?? []).flatMap(({ batches }) => batches).find(({ id }) => id === batchId)
+      ?.shipment,
+  getBatch: (batchId, order) => {
+    const batch = (order?.orderItems ?? [])
+      .flatMap(({ batches }) => batches)
+      .find(({ id }) => id === batchId);
+    return {
+      ...batch,
+      packageQuantity: batch.packageQuantity?.value,
+      packageVolume: batch.packageVolume?.value,
+    };
+  },
+  getOrderItem: (batchId, order) => {
+    const orderItem = (order?.orderItems ?? []).find(({ batches }) =>
+      batches.some(batch => batch.id === batchId)
+    );
+    return {
+      ...orderItem,
+      price: {
+        amount: orderItem?.price?.value ?? 0,
+        currency: orderItem.price?.metric ?? 'USD',
+      },
+    };
+  },
 });
 
 const BatchSplitAction = BaseBatchSplitAction({

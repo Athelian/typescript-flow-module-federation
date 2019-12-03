@@ -19,25 +19,13 @@ import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
 import NewOrderForm from 'modules/order/common/NewOrderForm';
 import NewShipmentForm from 'modules/shipment/common/NewShipmentForm';
-import { encodeId, uuid } from 'utils/id';
+import { generateItemForMovedBatch } from 'utils/item';
+import { encodeId } from 'utils/id';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import { isEquals } from 'utils/fp';
 import { ordersAndShipmentsQuery } from './query';
 import { createContainerMutation } from './mutation';
-
-const defaultItemValues = {
-  customFields: {
-    mask: null,
-    fieldValues: [],
-  },
-  todo: {
-    tasks: [],
-  },
-  tags: [],
-  files: [],
-  memo: '',
-};
 
 type Props = {|
   onClose: (
@@ -264,15 +252,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
             if (batch.shipment && !newShipments.includes(batch.shipment)) {
               newShipments.push(batch.shipment);
             }
-            newOrderItems.push({
-              ...item,
-              ...defaultItemValues,
-              no: `[auto] ${item.no}`,
-              quantity: 0,
-              isNew: true,
-              id: uuid(),
-              batches: [batch],
-            });
+            newOrderItems.push(generateItemForMovedBatch(item, batch));
           }
         });
       }
@@ -287,11 +267,11 @@ const EditFormSlideView = ({ onClose }: Props) => {
               <NewOrderForm
                 originalDataForSlideView={{
                   orderItems: newOrderItems.map(item => ({
-                    ...defaultItemValues,
                     id: item.id,
                     isNew: true,
                     batches: item.batches.map(batch => ({
                       ...batch,
+                      quantity: 0,
                       isNew: true,
                     })),
                   })),
@@ -299,12 +279,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
                 initDataForSlideView={{
                   importer: isImporter() ? organization : {},
                   exporter,
-                  orderItems: newOrderItems.map(item => ({
-                    ...item,
-                    ...defaultItemValues,
-                    no: `[auto] ${item.no}`,
-                    quantity: 0,
-                  })),
+                  orderItems: newOrderItems,
                   containers: newContainers,
                   shipments: newShipments,
                 }}
