@@ -14,6 +14,7 @@ import BatchCloneAction from 'modules/sheet/batch/actions/BatchCloneAction';
 import BaseBatchSyncPackagingAction from 'modules/sheet/batch/actions/BatchSyncPackagingAction';
 import BaseBatchMoveToExistingOrderAction from 'modules/sheet/batch/actions/BatchMoveToExistingOrderAction';
 import BaseBatchMoveToNewOrderAction from 'modules/sheet/batch/actions/BatchMoveToNewOrderAction';
+import BaseBatchMoveToExistingContainerAction from 'modules/sheet/batch/actions/BatchMoveToExistingContainerAction';
 import BaseBatchSplitAction from 'modules/sheet/batch/actions/BatchSplitAction';
 import BaseBatchDeleteRemoveAction from 'modules/sheet/batch/actions/BatchDeleteRemoveAction';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
@@ -170,6 +171,21 @@ const BatchMoveToNewOrderAction = BaseBatchMoveToNewOrderAction({
   },
 });
 
+const BatchMoveToExistingContainerAction = BaseBatchMoveToExistingContainerAction({
+  getContainerId: (batchId, item) => {
+    const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId);
+    return batch?.container?.id;
+  },
+  getImporterId: (batchId, item) => {
+    const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId);
+    return batch?.shipment?.importer?.id;
+  },
+  getExporterId: (batchId, item) => {
+    const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId);
+    return batch?.shipment?.exporter?.id;
+  },
+});
+
 const BatchSplitAction = BaseBatchSplitAction({
   getBatch: (batchId, item) =>
     item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId),
@@ -235,7 +251,7 @@ export default {
       hasPermissions(ORDER_CREATE) &&
       (hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_ORDER_ITEM))
   ),
-  // batch_move_container: AC(BatchMoveToExistingContainerAction, () => true),
+  batch_move_container: AC(BatchMoveToExistingContainerAction, () => true),
   // batch_move_new_container: AC(BatchMoveToNewContainerAction, () => true),
   // batch_move_shipment: AC(BatchMoveToExistingShipmentAction, () => true),
   // batch_move_new_shipment: AC(BatchMoveToNewShipmentAction, () => true),
