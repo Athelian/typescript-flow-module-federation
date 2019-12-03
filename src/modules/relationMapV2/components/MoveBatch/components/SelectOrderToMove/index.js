@@ -22,10 +22,10 @@ import OrderGridView from 'modules/order/list/OrderGridView';
 import { OrderCard } from 'components/Cards';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { BATCH } from 'modules/relationMapV2/constants';
+import ValidationCardOverlay from 'components/ValidationCardOverlay';
 import { OverlayStyle } from './style';
 import { orderListQuery } from './query';
 import { moveBatchesToOrder } from './mutation';
-import ValidationCardOverlay from '../ValidationCardOverlay';
 
 type Props = {|
   onSuccess: (orderIds: Array<string>, shipmentIds: Array<string>) => void,

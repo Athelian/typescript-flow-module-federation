@@ -23,10 +23,10 @@ import { ContainerCard } from 'components/Cards';
 import { BATCH_UPDATE } from 'modules/permission/constants/batch';
 import { CONTAINER_BATCHES_ADD } from 'modules/permission/constants/container';
 import { BATCH } from 'modules/relationMapV2/constants';
+import ValidationCardOverlay from 'components/ValidationCardOverlay';
 import { OverlayStyle } from './style';
 import { containerListQuery } from './query';
 import { moveBatchesToContainer } from './mutation';
-import ValidationCardOverlay from '../ValidationCardOverlay';
 
 type Props = {|
   onSuccess: (orderIds: Array<string>, shipmentIds: Array<string>) => void,
