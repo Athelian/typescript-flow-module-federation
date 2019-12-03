@@ -7,6 +7,7 @@ import useQueryList from 'hooks/useQueryList';
 import { useEntityHasPermissions } from 'contexts/Permissions';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
+import type { ActionComponentProps } from 'components/Sheet/SheetAction/types';
 import {
   EntityIcon,
   Filter,
