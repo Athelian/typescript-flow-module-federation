@@ -109,6 +109,28 @@ const BatchMoveToExistingOrderAction = BaseBatchMoveToExistingOrderAction({
   getOrderId: (batchId, item) => item.id,
   getImporterId: (batchId, item) => item.importer.id,
   getExporterId: (batchId, item) => item.exporter.id,
+  getLatestQuantity: (batchId, item) => {
+    const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId);
+    return getBatchLatestQuantity(batch);
+  },
+  getProductProviderId: (batchId, item) => {
+    const orderItem = (item?.orderItems ?? []).find(oi =>
+      (oi?.batches ?? []).some(batch => batch.id === batchId)
+    );
+    return orderItem?.productProvider?.id;
+  },
+  getOrderItemNo: (batchId, item) => {
+    const orderItem = (item?.orderItems ?? []).find(oi =>
+      (oi?.batches ?? []).some(batch => batch.id === batchId)
+    );
+    return orderItem?.no;
+  },
+  orderItemPrice: (batchId, item) => {
+    const orderItem = (item?.orderItems ?? []).find(oi =>
+      (oi?.batches ?? []).some(batch => batch.id === batchId)
+    );
+    return orderItem?.price;
+  },
 });
 
 const BatchSplitAction = BaseBatchSplitAction({

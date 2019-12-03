@@ -31,6 +31,10 @@ type Props = {|
   getOrderId: (batchId: string, item: Object) => string,
   getImporterId: (batchId: string, item: Object) => string,
   getExporterId: (batchId: string, item: Object) => string,
+  getLatestQuantity: (batchId: string, item: Object) => number,
+  getProductProviderId: (batchId: string, item: Object) => string,
+  getOrderItemNo: (batchId: string, item: Object) => string,
+  getOrderItemPrice: (batchId: string, item: Object) => { amount: number, currency: string },
 |};
 
 type ImplProps = {|
@@ -105,6 +109,10 @@ const BatchMoveToExistingOrderActionImpl = ({
   getOrderId,
   getImporterId,
   getExporterId,
+  getLatestQuantity,
+  getProductProviderId,
+  getOrderItemNo,
+  getOrderItemPrice,
 }: ImplProps) => {
   const [isOpen, close] = useSheetActionDialog(onDone);
   const [orderUpdate, { loading: isProcessing, called }] = useMutation(
@@ -129,10 +137,13 @@ const BatchMoveToExistingOrderActionImpl = ({
   );
 
   const currency = getCurrency(entity.id, item);
-  console.warn(currency);
   const orderId = getOrderId(entity.id, item);
   const importerId = getImporterId(entity.id, item);
   const exporterId = getExporterId(entity.id, item);
+  const latestQuantity = getLatestQuantity(entity.id, item);
+  const productProviderId = getProductProviderId(entity.id, item);
+  const orderItemNo = getOrderItemNo(entity.id, item);
+  const orderItemPrice = getOrderItemPrice(entity.id, item);
 
   return (
     <SlideView isOpen={isOpen} onRequestClose={close}>
@@ -154,8 +165,27 @@ const BatchMoveToExistingOrderActionImpl = ({
                   executeActionMutation(
                     orderUpdate,
                     {
-                      // TODO: Handle mutation
-                      inputs: selectedOrder,
+                      id: selectedOrder?.id,
+                      input: {
+                        orderItems: [
+                          ...(selectedOrder?.orderItems ?? []).map(orderItem => ({
+                            id: orderItem?.id,
+                          })),
+                          {
+                            productProviderId,
+                            no: `[auto] ${orderItemNo}`,
+                            quantity: latestQuantity,
+                            price: {
+                              amount:
+                                orderItemPrice?.currency === currency
+                                  ? orderItemPrice?.amount ?? 0
+                                  : 0,
+                              currency,
+                            },
+                            batches: [{ id: entity.id }],
+                          },
+                        ],
+                      },
                     },
                     close
                   );
@@ -203,6 +233,10 @@ const BatchMoveToExistingOrderAction = ({
   getOrderId,
   getExporterId,
   getImporterId,
+  getLatestQuantity,
+  getProductProviderId,
+  getOrderItemNo,
+  getOrderItemPrice,
 }: Props) => (props: ActionComponentProps) => (
   <BatchMoveToExistingOrderActionImpl
     {...props}
@@ -210,6 +244,10 @@ const BatchMoveToExistingOrderAction = ({
     getOrderId={getOrderId}
     getExporterId={getExporterId}
     getImporterId={getImporterId}
+    getLatestQuantity={getLatestQuantity}
+    getProductProviderId={getProductProviderId}
+    getOrderItemNo={getOrderItemNo}
+    getOrderItemPrice={getOrderItemPrice}
   />
 );
 
