@@ -208,7 +208,7 @@ export const SheetState = ({
     dispatch({
       type: Actions.REARRANGE_COLUMNS,
       payload: {
-        columns,
+        columns: columns.filter(c => !c.hidden),
       },
     });
   }, [columns]);

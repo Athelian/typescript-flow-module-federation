@@ -1,20 +1,14 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { difference } from 'ramda';
 import Dialog from 'components/Dialog';
 import { ApplyButton, ResetButton, BaseButton, SaveButton, IconButton } from 'components/Buttons';
-import { Label } from 'components/Form';
-import Icon from 'components/Icon';
-import CornerIcon from 'components/CornerIcon';
 import { Tooltip } from 'components/Tooltip';
-import { colors } from 'styles/common';
 import type { ColumnConfig } from '../SheetState/types';
 import messages from '../messages';
-import Group from './Group';
+import ColumnsGroup from './ColumnsGroup';
 import TemplateSelector from './TemplateSelector';
 import TemplateNew from './TemplateNew';
-import type { ColumnState } from './types';
 import {
   ButtonStyle,
   ModalWrapperStyle,
@@ -23,120 +17,98 @@ import {
   TemplateWrapperStyle,
   TemplateSelectWrapperStyle,
   HeaderStyle,
-  TemplateStyle,
-  SelectTemplateStyle,
 } from './style';
 
 type Props = {
-  config: Array<ColumnConfig>,
   columns: Array<ColumnConfig>,
   templateType: string,
   onChange: (Array<ColumnConfig>) => void,
+  children: ({
+    getGroupProps: (
+      group: string
+    ) => {
+      icon: string,
+      columns: Array<ColumnConfig>,
+      onChange: (Array<ColumnConfig>) => void,
+    },
+  }) => React.Node,
 };
 
-const columnsToStates = (columns: Array<ColumnConfig>, config: Array<ColumnConfig>) =>
-  config.reduce(
-    (map, column) => ({
-      ...map,
-      [column.icon]: [
-        ...(map[column.icon] ?? []),
-        { column, hidden: !columns.find(c => c.key === column.key) },
-      ],
-    }),
-    {}
-  );
-
-const statesToColumns = (states: { [string]: Array<ColumnState> }) =>
-  Object.keys(states).reduce((list, key) => {
-    return [...list, ...states[key].filter(state => !state.hidden).map(state => state.column)];
-  }, []);
-
-const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
-  const [columnStates, setColumnStates] = React.useState<{ [string]: Array<ColumnState> }>({});
-  const [template, setTemplate] = React.useState<?Object>(null);
-  const columnStatesRef = React.useRef(columnStates);
+const ColumnsConfig = ({ columns, templateType, onChange, children }: Props) => {
+  // STATES
   const [isOpen, setOpen] = React.useState(false);
-  const groups = React.useMemo<Array<string>>(() => Array.from(new Set(config.map(c => c.icon))), [
-    config,
-  ]);
-  const currentColumnKeys = React.useMemo<Array<string>>(
-    () =>
-      Object.values(columnStates).flatMap((state: any) =>
-        state.filter(c => !c.hidden).map(c => c.column.key)
-      ),
-    [columnStates]
-  );
+  const [dirtyColumns, setDirtyColumns] = React.useState(columns);
+
+  // EFFECTS
+  React.useEffect(() => {
+    setDirtyColumns(columns);
+  }, [columns]);
+
+  // COMPUTED STATES
   const isDirty = React.useMemo(
     () =>
-      difference(
-        columns.map(c => c.key),
-        currentColumnKeys
-      ).length > 0 ||
-      difference(
-        currentColumnKeys,
-        columns.map(c => c.key)
-      ).length > 0,
-    [columns, currentColumnKeys]
+      !columns.every(
+        (col, idx) =>
+          col.key === dirtyColumns[idx]?.key && !!col.hidden === !!dirtyColumns[idx]?.hidden
+      ),
+    [columns, dirtyColumns]
   );
-
-  React.useEffect(() => {
-    const newColumnStates = columnsToStates(columns, config);
-    setColumnStates(newColumnStates);
-    columnStatesRef.current = newColumnStates;
-  }, [columns, config]);
-
-  const handleTemplateChange = (newTemplate: ?Object) => {
-    setTemplate(newTemplate);
-    if (!newTemplate) {
-      return;
-    }
-
-    const columnsFromTemplate = newTemplate.fields
-      .map(field => config.find(c => c.key === field))
-      .filter(c => !!c);
-
-    setColumnStates(columnsToStates(columnsFromTemplate, config));
-  };
-
-  const handleApply = () => {
-    columnStatesRef.current = columnStates;
-    setOpen(false);
-    onChange(statesToColumns(columnStates));
-  };
-
-  const handleSelectAll = () => {
-    setColumnStates(columnsToStates(config, config));
-  };
-
-  const handleUnselectAll = () => {
-    setColumnStates(columnsToStates([], config));
-  };
-
-  const handleGroup = () => {
-    setColumnStates(
-      Object.entries(columnStates).reduce(
-        (newColumnStates, [icon, states]: [string, any]) => ({
-          ...newColumnStates,
-          [icon]: (states: Array<ColumnState>).sort((a, b) => {
-            if (a.hidden && !b.hidden) {
-              return 1;
-            }
-
-            if (!a.hidden && b.hidden) {
-              return -1;
-            }
-
-            return 0;
-          }),
+  const groupedColumns = React.useMemo(
+    () =>
+      dirtyColumns.reduce(
+        (grouped, col) => ({
+          ...grouped,
+          [col.icon]: [...(grouped[col.icon] ?? []), col],
         }),
         {}
+      ),
+    [dirtyColumns]
+  );
+
+  // ACTIONS
+  const handleApply = () => {
+    onChange(dirtyColumns);
+    setOpen(false);
+  };
+  const handleReset = () => setDirtyColumns(columns);
+  const handleSelectAll = () =>
+    setDirtyColumns(dirtyColumns.map(col => ({ ...col, hidden: false })));
+  const handleUnselectAll = () =>
+    setDirtyColumns(dirtyColumns.map(col => ({ ...col, hidden: true })));
+  const handleGroup = () =>
+    setDirtyColumns(
+      Object.values(groupedColumns).flatMap(cols =>
+        ((cols: any): Array<ColumnConfig>).sort((a, b) => {
+          if (a.hidden && !b.hidden) {
+            return 1;
+          }
+
+          if (!a.hidden && b.hidden) {
+            return -1;
+          }
+
+          return 0;
+        })
       )
     );
+  const handleTemplateChange = () => {
+    // TODO: handle template selection after new template form is done
   };
 
-  const handleReset = () => {
-    setColumnStates(columnStatesRef.current);
-  };
+  // CALLBACKS
+  const getGroupProps = React.useCallback(
+    (group: string) => ({
+      icon: group,
+      columns: groupedColumns[group] ?? [],
+      onChange: newCols =>
+        setDirtyColumns(
+          Object.entries(groupedColumns).flatMap(([g, cols]) =>
+            g === group ? newCols : ((cols: any): Array<ColumnConfig>)
+          )
+        ),
+    }),
+    [groupedColumns]
+  );
 
   return (
     <>
@@ -197,29 +169,22 @@ const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
 
             <div className={TemplateWrapperStyle}>
               <div className={TemplateSelectWrapperStyle}>
-                <Label height="30px" width="min-content">
-                  <FormattedMessage {...messages.columnsConfigSelectTemplate} />
-                </Label>
                 <TemplateSelector onChange={handleTemplateChange} templateType={templateType}>
-                  {({ onClick }) =>
-                    template ? (
-                      <button type="button" onClick={onClick} className={TemplateStyle}>
-                        {template.name}
-                        <div>
-                          <CornerIcon icon="TEMPLATE" color={colors.TEMPLATE} />
-                        </div>
-                      </button>
-                    ) : (
-                      <button type="button" onClick={onClick} className={SelectTemplateStyle}>
-                        <Icon icon="ADD" />
-                      </button>
-                    )
-                  }
+                  {({ onClick }) => (
+                    <BaseButton
+                      onClick={onClick}
+                      label={<FormattedMessage {...messages.columnsConfigUseTemplate} />}
+                      icon="TEMPLATE"
+                      backgroundColor="BLUE"
+                      hoverBackgroundColor="BLUE_DARK"
+                    />
+                  )}
                 </TemplateSelector>
               </div>
 
               <TemplateNew
-                columns={currentColumnKeys}
+                // TODO: change when new form is done
+                columns={dirtyColumns.filter(col => !col.hidden).map(col => col.key)}
                 templateType={templateType}
                 onSave={handleTemplateChange}
               >
@@ -233,25 +198,13 @@ const ColumnsConfig = ({ config, columns, templateType, onChange }: Props) => {
             </div>
           </div>
 
-          {groups.map(group => {
-            return (
-              <Group
-                key={group}
-                icon={group}
-                columns={columnStates[group] || []}
-                onChange={c =>
-                  setColumnStates({
-                    ...columnStates,
-                    [group]: c,
-                  })
-                }
-              />
-            );
-          })}
+          {children({ getGroupProps })}
         </div>
       </Dialog>
     </>
   );
 };
+
+ColumnsConfig.Group = ColumnsGroup;
 
 export default ColumnsConfig;

@@ -3,22 +3,22 @@ import * as React from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Icon from 'components/Icon';
 import CheckboxInput from 'components/Form/CheckboxInput';
-import type { ColumnState } from '../types';
+import type { ColumnConfig } from 'components/Sheet/SheetState/types';
 import {
-  WrapperStyle,
-  LeftWrapperStyle,
-  IconStyle,
-  ColumnsWrapperStyle,
   ColumnStyle,
+  ColumnsWrapperStyle,
+  IconStyle,
+  LeftWrapperStyle,
+  WrapperStyle,
 } from './style';
 
 type Props = {
   icon: string,
-  columns: Array<ColumnState>,
-  onChange: (Array<ColumnState>) => void,
+  columns: Array<ColumnConfig>,
+  onChange: (Array<ColumnConfig>) => void,
 };
 
-const Group = ({ icon, columns, onChange }: Props) => {
+const ColumnsGroup = ({ icon, columns, onChange }: Props) => {
   const handleReorder = result => {
     if (!result.destination) {
       return;
@@ -28,7 +28,7 @@ const Group = ({ icon, columns, onChange }: Props) => {
       return;
     }
 
-    const reorder = Array.from(columns);
+    const reorder = [...columns];
     const [removed] = reorder.splice(result.source.index, 1);
     reorder.splice(result.destination.index, 0, removed);
 
@@ -37,14 +37,7 @@ const Group = ({ icon, columns, onChange }: Props) => {
 
   const handleToggle = (index: number) => {
     onChange(
-      columns.map((column, idx) =>
-        idx === index
-          ? {
-              ...column,
-              hidden: !column.hidden,
-            }
-          : column
-      )
+      columns.map((column, idx) => (idx === index ? { ...column, hidden: !column.hidden } : column))
     );
   };
 
@@ -65,7 +58,7 @@ const Group = ({ icon, columns, onChange }: Props) => {
               className={ColumnsWrapperStyle}
             >
               {columns.map((column, index) => (
-                <Draggable key={column.column.key} draggableId={column.column.key} index={index}>
+                <Draggable key={column.key} draggableId={column.key} index={index}>
                   {(dragProvided, snapshot) => (
                     <div
                       ref={dragProvided.innerRef}
@@ -84,7 +77,7 @@ const Group = ({ icon, columns, onChange }: Props) => {
                           handleToggle(index);
                         }}
                       />
-                      <span>{column.column.title}</span>
+                      <span>{column.title}</span>
                     </div>
                   )}
                 </Draggable>
@@ -98,4 +91,4 @@ const Group = ({ icon, columns, onChange }: Props) => {
   );
 };
 
-export default Group;
+export default ColumnsGroup;

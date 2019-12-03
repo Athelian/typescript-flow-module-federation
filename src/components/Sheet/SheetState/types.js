@@ -22,6 +22,7 @@ type Column = {|
 
 export type ColumnConfig = {|
   ...Column,
+  hidden?: boolean,
   sort?: ColumnSortConfig,
 |};
 

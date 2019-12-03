@@ -87,12 +87,18 @@ const ShipmentSheetModuleImpl = ({
 
         <Filter config={ShipmentFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <ColumnsConfig
-          config={columnConfigs}
-          columns={columns}
-          onChange={setColumns}
-          templateType="ShipmentSheet"
-        />
+        <ColumnsConfig columns={columns} templateType="ShipmentSheet" onChange={setColumns}>
+          {({ getGroupProps }) => (
+            <>
+              <ColumnsConfig.Group {...getGroupProps('SHIPMENT')} />
+              <ColumnsConfig.Group {...getGroupProps('CONTAINER')} />
+              <ColumnsConfig.Group {...getGroupProps('BATCH')} />
+              <ColumnsConfig.Group {...getGroupProps('ORDER_ITEM')} />
+              <ColumnsConfig.Group {...getGroupProps('PRODUCT')} />
+              <ColumnsConfig.Group {...getGroupProps('ORDER')} />
+            </>
+          )}
+        </ColumnsConfig>
         <ExportButton
           type="Shipments"
           exportQuery={shipmentsExportQuery}

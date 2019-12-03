@@ -83,12 +83,17 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
 
         <Filter config={OrderFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <ColumnsConfig
-          config={columnConfigs}
-          columns={columns}
-          onChange={setColumns}
-          templateType="OrderSheet"
-        />
+        <ColumnsConfig columns={columns} templateType="OrderSheet" onChange={setColumns}>
+          {({ getGroupProps }) => (
+            <>
+              <ColumnsConfig.Group {...getGroupProps('ORDER')} />
+              <ColumnsConfig.Group {...getGroupProps('ORDER_ITEM')} />
+              <ColumnsConfig.Group {...getGroupProps('BATCH')} />
+              <ColumnsConfig.Group {...getGroupProps('CONTAINER')} />
+              <ColumnsConfig.Group {...getGroupProps('SHIPMENT')} />
+            </>
+          )}
+        </ColumnsConfig>
         <ExportButton
           type="Orders"
           exportQuery={ordersExportQuery}

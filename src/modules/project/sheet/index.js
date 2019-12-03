@@ -60,12 +60,15 @@ const ProjectSheetModule = () => {
 
         <Filter config={ProjectFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <ColumnsConfig
-          config={projectColumns}
-          columns={columns}
-          onChange={setColumns}
-          templateType="ProjectSheet"
-        />
+        <ColumnsConfig columns={columns} templateType="ProjectSheet" onChange={setColumns}>
+          {({ getGroupProps }) => (
+            <>
+              <ColumnsConfig.Group {...getGroupProps('PROJECT')} />
+              <ColumnsConfig.Group {...getGroupProps('MILESTONE')} />
+              <ColumnsConfig.Group {...getGroupProps('TASK')} />
+            </>
+          )}
+        </ColumnsConfig>
         <ExportButton
           type="Projects"
           exportQuery={projectsExportQuery}

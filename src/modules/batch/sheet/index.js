@@ -81,12 +81,17 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
 
         <Filter config={BatchFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <ColumnsConfig
-          config={columnConfigs}
-          columns={columns}
-          onChange={setColumns}
-          templateType="BatchSheet"
-        />
+        <ColumnsConfig columns={columns} templateType="BatchSheet" onChange={setColumns}>
+          {({ getGroupProps }) => (
+            <>
+              <ColumnsConfig.Group {...getGroupProps('BATCH')} />
+              <ColumnsConfig.Group {...getGroupProps('ORDER_ITEM')} />
+              <ColumnsConfig.Group {...getGroupProps('ORDER')} />
+              <ColumnsConfig.Group {...getGroupProps('CONTAINER')} />
+              <ColumnsConfig.Group {...getGroupProps('SHIPMENT')} />
+            </>
+          )}
+        </ColumnsConfig>
         <ExportButton
           type="Batches"
           exportQuery={batchesExportQuery}
