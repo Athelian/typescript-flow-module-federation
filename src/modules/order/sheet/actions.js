@@ -16,6 +16,7 @@ import BaseBatchMoveToExistingOrderAction from 'modules/sheet/batch/actions/Batc
 import BaseBatchMoveToNewOrderAction from 'modules/sheet/batch/actions/BatchMoveToNewOrderAction';
 import BaseBatchSplitAction from 'modules/sheet/batch/actions/BatchSplitAction';
 import BaseBatchDeleteRemoveAction from 'modules/sheet/batch/actions/BatchDeleteRemoveAction';
+import { ORDER_CREATE } from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_CREATE,
   ORDER_ITEMS_DELETE,
@@ -33,6 +34,7 @@ import {
   BATCH_SET_PACKAGE_WEIGHT,
   BATCH_SET_SHIPMENT,
   BATCH_UPDATE,
+  BATCH_SET_ORDER_ITEM,
 } from 'modules/permission/constants/batch';
 import { PRODUCT_PROVIDER_LIST } from 'modules/permission/constants/product';
 
@@ -224,7 +226,12 @@ export default {
         perm(BATCH_SET_PACKAGE_CAPACITY))
   ),
   batch_move_order: AC(BatchMoveToExistingOrderAction, () => true),
-  batch_move_new_order: AC(BatchMoveToNewOrderAction, () => true),
+  batch_move_new_order: AC(
+    BatchMoveToNewOrderAction,
+    hasPermissions =>
+      hasPermissions(ORDER_CREATE) &&
+      (hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_ORDER_ITEM))
+  ),
   // batch_move_container: AC(BatchMoveToExistingContainerAction, () => true),
   // batch_move_new_container: AC(BatchMoveToNewContainerAction, () => true),
   // batch_move_shipment: AC(BatchMoveToExistingShipmentAction, () => true),
