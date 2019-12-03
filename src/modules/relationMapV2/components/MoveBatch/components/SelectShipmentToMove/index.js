@@ -35,13 +35,22 @@ function ShipmentRenderer({
   shipment,
   selected,
   setSelected,
+  isMoveToContainer,
 }: {|
   shipment: Object,
   selected: ?Object,
   setSelected: (?Object) => void,
+  isMoveToContainer: boolean,
 |}) {
-  const { state } = FocusedView.useContainer();
-  const { importerIds, exporterIds } = state.moveActions;
+  const { state, selectors } = FocusedView.useContainer();
+  const batchIds = selectors.targetedBatchIds();
+  const { mapping } = Entities.useContainer();
+  const { shipmentIds, importerIds, exporterIds } = state.moveActions;
+  const isSameParent =
+    !isMoveToContainer &&
+    shipmentIds.length === 1 &&
+    shipmentIds.includes(shipment.id) &&
+    batchIds.every(batchId => !!mapping.entities?.batches?.[batchId]?.shipment);
   const hasPermissions = useEntityHasPermissions(shipment);
   const isDifferentImporter = !importerIds.includes(shipment.importer?.id);
   const isDifferentExporter =
@@ -57,6 +66,14 @@ function ShipmentRenderer({
         <FormattedMessage
           id="modules.RelationMap.move.noPermission"
           defaultMessage="No permission"
+        />
+      );
+
+    if (isSameParent)
+      return (
+        <FormattedMessage
+          id="modules.RelationMap.move.sameParentShipment"
+          defaultMessage="Same parent shipment"
         />
       );
 
@@ -192,6 +209,7 @@ function SelectShipmentToMove({ onSuccess, onNewContainer }: Props) {
                           selected={selected}
                           setSelected={setSelected}
                           shipment={shipment}
+                          isMoveToContainer={isMoveToContainer}
                         />
                       )}
                     />
