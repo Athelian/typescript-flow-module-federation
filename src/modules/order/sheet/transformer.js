@@ -123,7 +123,10 @@ function transformBatch(
         action: 'batch_move_order',
         label: intl.formatMessage(batchMessages.batchMoveToExistingOrderTitle),
       },
-      // batch_move_new_order
+      {
+        action: 'batch_move_new_order',
+        label: intl.formatMessage(batchMessages.batchMoveToNewOrderTitle),
+      },
       // batch_move_container
       // batch_move_new_container
       // batch_move_shipment

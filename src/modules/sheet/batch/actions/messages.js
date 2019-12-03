@@ -88,4 +88,8 @@ export default defineMessages({
     id: 'modules.Sheet.batch.batchMoveToExistingOrder.title',
     defaultMessage: 'Move to Order',
   },
+  batchMoveToNewOrderTitle: {
+    id: 'modules.Sheet.batch.batchMoveToNewOrderTitle.title',
+    defaultMessage: 'Move to New Order',
+  },
 });

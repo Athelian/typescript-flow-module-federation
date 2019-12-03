@@ -13,6 +13,7 @@ import BaseBatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAc
 import BatchCloneAction from 'modules/sheet/batch/actions/BatchCloneAction';
 import BaseBatchSyncPackagingAction from 'modules/sheet/batch/actions/BatchSyncPackagingAction';
 import BaseBatchMoveToExistingOrderAction from 'modules/sheet/batch/actions/BatchMoveToExistingOrderAction';
+import BaseBatchMoveToNewOrderAction from 'modules/sheet/batch/actions/BatchMoveToNewOrderAction';
 import BaseBatchSplitAction from 'modules/sheet/batch/actions/BatchSplitAction';
 import BaseBatchDeleteRemoveAction from 'modules/sheet/batch/actions/BatchDeleteRemoveAction';
 import {
@@ -133,6 +134,13 @@ const BatchMoveToExistingOrderAction = BaseBatchMoveToExistingOrderAction({
   },
 });
 
+const BatchMoveToNewOrderAction = BaseBatchMoveToNewOrderAction({
+  getBatch: (batchId, order) =>
+    (order?.orderItems ?? []).flatMap(({ batches }) => batches).find(({ id }) => id === batchId),
+  getOrderItem: (batchId, order) =>
+    (order?.orderItems ?? []).find(({ batches }) => batches.some(batch => batch.id === batchId)),
+});
+
 const BatchSplitAction = BaseBatchSplitAction({
   getBatch: (batchId, item) =>
     item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId),
@@ -192,7 +200,7 @@ export default {
         perm(BATCH_SET_PACKAGE_CAPACITY))
   ),
   batch_move_order: AC(BatchMoveToExistingOrderAction, () => true),
-  // batch_move_new_order: AC(BatchMoveToNewOrderAction, () => true),
+  batch_move_new_order: AC(BatchMoveToNewOrderAction, () => true),
   // batch_move_container: AC(BatchMoveToExistingContainerAction, () => true),
   // batch_move_new_container: AC(BatchMoveToNewContainerAction, () => true),
   // batch_move_shipment: AC(BatchMoveToExistingShipmentAction, () => true),
