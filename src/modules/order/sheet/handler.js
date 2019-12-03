@@ -58,6 +58,10 @@ function onCreateOrderItemFactory(client: ApolloClient<any>, dispatch: Action =>
               }
 
               const orderItems = [...orders[orderIdx].orderItems];
+              if (orderItems.some(orderItem => orderItem.id === orderItemId)) {
+                return null;
+              }
+
               orderItems.splice(newOrderItem.sort, 0, decorateOrderItem(newOrderItem));
 
               return {
@@ -117,6 +121,10 @@ function onCreateBatchFactory(client: ApolloClient<any>, dispatch: Action => voi
 
               const orderItems = [...orders[orderIdx].orderItems];
               const batches = [...orderItems[orderItemIdx].batches];
+              if (batches.some(batch => batch.id === batchId)) {
+                return null;
+              }
+
               batches.splice(newBatch.sort, 0, decorateBatch(newBatch));
               orderItems[orderItemIdx] = {
                 ...orderItems[orderItemIdx],

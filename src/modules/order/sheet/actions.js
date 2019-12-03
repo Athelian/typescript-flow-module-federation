@@ -129,7 +129,7 @@ const BatchMoveToExistingOrderAction = BaseBatchMoveToExistingOrderAction({
     const orderItem = (item?.orderItems ?? []).find(oi =>
       (oi?.batches ?? []).some(batch => batch.id === batchId)
     );
-    return orderItem?.price;
+    return { amount: orderItem?.price?.value, currency: orderItem.price?.metric };
   },
 });
 
