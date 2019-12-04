@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Icon from 'components/Icon';
 import { Tooltip } from 'components/Tooltip';
-import { ActionCardWrapperStyle, DisabledWrapper, ActionWrapperStyle } from './style';
+import { ActionCardWrapperStyle, ActionWrapperStyle } from './style';
 
 type ActionCardProps = {|
   children: React$Node,
@@ -16,8 +16,6 @@ type ActionProps = {|
   tooltipMessage?: React.Node,
   icon: string,
 |};
-
-const DisabledAction = () => <div className={DisabledWrapper} />;
 
 const Action = ({ icon, targeted, className, onClick, tooltipMessage }: ActionProps) => {
   const action = (
@@ -51,6 +49,6 @@ const ActionCard = ({ children, show }: ActionCardProps) => {
   return show && <div className={ActionCardWrapperStyle}>{children}</div>;
 };
 
-export { Action, DisabledAction };
+export { Action };
 
 export default ActionCard;

@@ -1,13 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import {
-  fontSizes,
-  fontSizesWithHeights,
-  layout,
-  colors,
-  presets,
-  borderRadiuses,
-} from 'styles/common';
+import { fontSizesWithHeights, layout, colors, presets, borderRadiuses } from 'styles/common';
 
 export const OrderItemCardWrapperStyle: string = css`
   display: flex;
@@ -83,20 +76,6 @@ export const ProductTagsWrapperStyle: string = css`
   overflow: hidden;
 `;
 
-export const ProductIconLinkStyle: string = css`
-  ${presets.BUTTON};
-  position: absolute;
-  color: ${colors.WHITE};
-  ${fontSizes.SMALL};
-  right: 0;
-  top: 25px;
-  width: 20px;
-  height: 20px;
-  &:hover {
-    color: ${colors.TEAL};
-  }
-`;
-
 export const BodyWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 10px;
@@ -106,37 +85,6 @@ export const BodyWrapperStyle: string = css`
 export const QuantityWrapperStyle: string = css`
   width: 100%;
   padding: 0 5px;
-`;
-
-export const UnitPriceWrapperStyle: string = css`
-  position: relative;
-  width: 100%;
-  padding: 0 5px;
-  &:hover {
-    & > button {
-      opacity: 1;
-    }
-  }
-`;
-
-export const SyncButtonStyle: string = css`
-  ${presets.BUTTON};
-  ${borderRadiuses.BUTTON};
-  position: absolute;
-  top: 0;
-  left: 10px;
-  opacity: 0;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
-  color: ${colors.TEAL};
-  ${fontSizes.SMALL};
-  letter-spacing: 2px;
-  height: 20px;
-  width: 80px;
-  &:hover,
-  :focus {
-    background-color: ${colors.GRAY_VERY_LIGHT};
-    color: ${colors.TEAL_DARK};
-  }
 `;
 
 export const DividerStyle: string = css`
@@ -149,9 +97,4 @@ export const ChartWrapperStyle: string = css`
   width: 195px;
   padding: 0 10px;
   margin: 3px 0;
-`;
-
-export const TotalPriceWrapperStyle: string = css`
-  width: 100%;
-  padding: 0 5px;
 `;

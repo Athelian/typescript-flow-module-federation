@@ -5,9 +5,3 @@ export type Tag = {
   name: string,
   color: string,
 };
-
-export type TagForm = {
-  name: string,
-  description: ?string,
-  color: string,
-};
