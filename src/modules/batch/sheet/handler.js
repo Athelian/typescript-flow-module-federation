@@ -28,32 +28,36 @@ function replaceBatch({
   batchId,
   field,
   data,
-  batches,
   dispatch,
 }: {
   batchId: string,
   field: string,
   data: mixed,
-  batches: Array<Batch>,
   dispatch: Action => void,
 }) {
-  const batchIdx = batches.findIndex(({ id }) => batchId === id);
-  if (batchIdx >= 0) {
-    dispatch({
-      type: Actions.REPLACE_ITEM,
-      payload: {
-        item: {
-          ...batches[batchIdx],
-          [field]: data,
-        },
-        index: batchIdx,
+  dispatch({
+    type: Actions.REPLACE_ITEM,
+    payload: {
+      callback: (batches: Array<Object>) => {
+        const batchIdx = batches.findIndex(({ id }) => batchId === id);
+        if (batchIdx < 0) {
+          return null;
+        }
+
+        return {
+          item: {
+            ...batches[batchIdx],
+            [field]: data,
+          },
+          index: batchIdx,
+        };
       },
-    });
-  }
+    },
+  });
 }
 
 function onUpdateBatchContainerFactory(client: ApolloClient<any>, dispatch: Action => void) {
-  return async (batchId: string, containerId: string | null, batches: Array<Object>) => {
+  return async (batchId: string, containerId: string | null) => {
     if (containerId) {
       await client
         .query({
@@ -70,7 +74,6 @@ function onUpdateBatchContainerFactory(client: ApolloClient<any>, dispatch: Acti
 
           replaceBatch({
             batchId,
-            batches,
             dispatch,
             field: 'container',
             data: decorateContainer(data?.container),
@@ -79,7 +82,6 @@ function onUpdateBatchContainerFactory(client: ApolloClient<any>, dispatch: Acti
     } else {
       replaceBatch({
         batchId,
-        batches,
         dispatch,
         field: 'container',
         data: null,
@@ -89,7 +91,7 @@ function onUpdateBatchContainerFactory(client: ApolloClient<any>, dispatch: Acti
 }
 
 function onUpdateBatchShipmentFactory(client: ApolloClient<any>, dispatch: Action => void) {
-  return async (batchId: string, shipmentId: string | null, batches: Array<Batch>) => {
+  return async (batchId: string, shipmentId: string | null) => {
     if (shipmentId) {
       await client
         .query({
@@ -106,7 +108,6 @@ function onUpdateBatchShipmentFactory(client: ApolloClient<any>, dispatch: Actio
 
           replaceBatch({
             batchId,
-            batches,
             dispatch,
             field: 'shipment',
             data: decorateShipment(data?.shipment),
@@ -115,7 +116,6 @@ function onUpdateBatchShipmentFactory(client: ApolloClient<any>, dispatch: Actio
     } else {
       replaceBatch({
         batchId,
-        batches,
         dispatch,
         field: 'shipment',
         data: null,
@@ -125,7 +125,7 @@ function onUpdateBatchShipmentFactory(client: ApolloClient<any>, dispatch: Actio
 }
 
 function onUpdateBatchOrderItemFactory(client: ApolloClient<any>, dispatch: Action => void) {
-  return async (batchId: string, orderItemId: string | null, batches: Array<Batch>) => {
+  return async (batchId: string, orderItemId: string | null) => {
     await client
       .query({
         query: orderItemByIDQuery,
@@ -141,7 +141,6 @@ function onUpdateBatchOrderItemFactory(client: ApolloClient<any>, dispatch: Acti
 
         replaceBatch({
           batchId,
-          batches,
           dispatch,
           field: 'orderItem',
           data: data?.orderItem,
@@ -151,7 +150,7 @@ function onUpdateBatchOrderItemFactory(client: ApolloClient<any>, dispatch: Acti
 }
 
 function onUpdateBatchOrderItemOrderFactory(client: ApolloClient<any>, dispatch: Action => void) {
-  return async (batchId: string, orderId: string | null, batches: Array<Batch>) => {
+  return async (batchId: string, orderId: string | null) => {
     await client
       .query({
         query: orderByIDQuery,
@@ -166,27 +165,30 @@ function onUpdateBatchOrderItemOrderFactory(client: ApolloClient<any>, dispatch:
           return;
         }
 
-        const itemIds = (order?.orderItems ?? []).map(item => item?.id).filter(Boolean);
-        const replaceItems = [];
-
-        batches.forEach((batch, batchIdx) => {
-          if (itemIds.includes(batch?.orderItem?.id)) {
-            replaceItems.push({
-              item: {
-                ...batch,
-                orderItem: {
-                  ...batch.orderItem,
-                  order,
-                },
-              },
-              index: batchIdx,
-            });
-          }
-        });
         dispatch({
           type: Actions.REPLACE_ITEMS,
           payload: {
-            items: replaceItems,
+            callback: (batches: Array<Object>) => {
+              const itemIds = (order?.orderItems ?? []).map(item => item?.id).filter(Boolean);
+              const replaceItems = [];
+
+              batches.forEach((batch, batchIdx) => {
+                if (itemIds.includes(batch?.orderItem?.id)) {
+                  replaceItems.push({
+                    item: {
+                      ...batch,
+                      orderItem: {
+                        ...batch.orderItem,
+                        order,
+                      },
+                    },
+                    index: batchIdx,
+                  });
+                }
+              });
+
+              return replaceItems;
+            },
           },
         });
       });
@@ -271,8 +273,7 @@ export default function entityEventHandler(
                 case 'order':
                   await onUpdateBatchOrderItemOrder(
                     event.entity.id,
-                    change.new?.entity?.id ?? null,
-                    batches
+                    change.new?.entity?.id ?? null
                   );
                   return false;
                 default:
@@ -286,25 +287,13 @@ export default function entityEventHandler(
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               switch (change.field) {
                 case 'orderItem':
-                  await onUpdateBatchOrderItem(
-                    event.entity.id,
-                    change.new?.entity?.id ?? null,
-                    batches
-                  );
+                  await onUpdateBatchOrderItem(event.entity.id, change.new?.entity?.id ?? null);
                   return false;
                 case 'container':
-                  await onUpdateBatchContainer(
-                    event.entity.id,
-                    change.new?.entity?.id ?? null,
-                    batches
-                  );
+                  await onUpdateBatchContainer(event.entity.id, change.new?.entity?.id ?? null);
                   return false;
                 case 'shipment':
-                  await onUpdateBatchShipment(
-                    event.entity.id,
-                    change.new?.entity?.id ?? null,
-                    batches
-                  );
+                  await onUpdateBatchShipment(event.entity.id, change.new?.entity?.id ?? null);
                   return false;
                 default:
                   return true;

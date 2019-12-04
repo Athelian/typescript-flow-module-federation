@@ -124,10 +124,16 @@ export type Action = {|
     violations?: Array<Violation>,
     callback?: (
       Array<Object>
-    ) => ?{
-      item: Object,
-      index: number,
-    },
+    ) =>
+      | {
+          item: Object,
+          index: number,
+        }
+      | Array<{
+          item: Object,
+          index: number,
+        }>
+      | null,
   |},
 |};
 

@@ -27,12 +27,7 @@ export function preAddEntity(
   ): State => {
     const { entity, callback } = payload;
 
-    const item = callback(state.items);
-    if (!item) {
-      return state;
-    }
-
-    const newState = replaceItem(transformer, sorter)(state, item);
+    const newState = replaceItem(transformer, sorter)(state, { callback });
 
     let result = null;
 
@@ -190,7 +185,7 @@ export function postRemoveEntity(
       return state;
     }
     const newState = item.item
-      ? replaceItem(transformer, sorter)(state, item)
+      ? replaceItem(transformer, sorter)(state, { callback: () => item })
       : deleteItem(transformer, sorter)(state, item);
 
     return {
