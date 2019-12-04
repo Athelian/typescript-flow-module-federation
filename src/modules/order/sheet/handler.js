@@ -285,7 +285,7 @@ function onUpdateBatchShipmentFactory(client: ApolloClient<any>, dispatch: Actio
 }
 
 function onDeleteOrderItemFactory(dispatch: Action => void) {
-  return (orderItemId: string) => {
+  return (orderItemId: string, newOrderId: ?string = null) => {
     dispatch({
       type: Actions.PRE_REMOVE_ENTITY,
       payload: {
@@ -295,18 +295,16 @@ function onDeleteOrderItemFactory(dispatch: Action => void) {
         },
         callback: (orders: Array<Object>) => {
           const orderIdx = orders.findIndex(
-            order => !!order.orderItems.find(orderItem => orderItem.id === orderItemId)
+            o => o.id !== newOrderId && o.orderItems.some(oi => oi.id === orderItemId)
           );
-          if (orderIdx === -1) {
+          if (orderIdx < 0) {
             return null;
           }
 
           return {
             item: {
               ...orders[orderIdx],
-              orderItems: orders[orderIdx].orderItems.filter(
-                orderItem => orderItem.id !== orderItemId
-              ),
+              orderItems: orders[orderIdx].orderItems.filter(oi => oi.id !== orderItemId),
             },
             index: orderIdx,
           };
@@ -317,7 +315,7 @@ function onDeleteOrderItemFactory(dispatch: Action => void) {
 }
 
 function onDeleteBatchFactory(dispatch: Action => void) {
-  return (batchId: string) => {
+  return (batchId: string, newOrderItemId: ?string = null) => {
     dispatch({
       type: Actions.PRE_REMOVE_ENTITY,
       payload: {
@@ -326,23 +324,32 @@ function onDeleteBatchFactory(dispatch: Action => void) {
           type: 'Batch',
         },
         callback: (orders: Array<Object>) => {
-          const orderIdx = orders.findIndex(
-            order =>
-              !!order.orderItems.find(
-                orderItem => !!orderItem.batches.find(batch => batch.id === batchId)
-              )
+          const orderIdx = orders.findIndex(o =>
+            o.orderItems.some(
+              oi => oi.id !== newOrderItemId && oi.batches.some(b => b.id === batchId)
+            )
           );
-          if (orderIdx === -1) {
+          if (orderIdx < 0) {
             return null;
           }
+
+          const orderItems = [...orders[orderIdx].orderItems];
+          const orderItemIdx = orderItems.findIndex(
+            oi => oi.id !== newOrderItemId && oi.batches.some(b => b.id === batchId)
+          );
+          if (orderItemIdx < 0) {
+            return null;
+          }
+
+          orderItems[orderItemIdx] = {
+            ...orderItems[orderItemIdx],
+            batches: orderItems[orderItemIdx].batches.filter(batch => batch.id !== batchId),
+          };
 
           return {
             item: {
               ...orders[orderIdx],
-              orderItems: orders[orderIdx].orderItems.map(orderItem => ({
-                ...orderItem,
-                batches: orderItem.batches.filter(batch => batch.id !== batchId),
-              })),
+              orderItems,
             },
             index: orderIdx,
           };
@@ -404,7 +411,7 @@ export default function entityEventHandler(
           case 'OrderItem': {
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               if (change.field === 'order') {
-                onDeleteOrderItem(event.entity.id);
+                onDeleteOrderItem(event.entity.id, change.new?.entity?.id ?? null);
                 await onCreateOrderItem(event.entity.id);
 
                 return false;
@@ -419,7 +426,7 @@ export default function entityEventHandler(
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               switch (change.field) {
                 case 'orderItem':
-                  onDeleteBatch(event.entity.id);
+                  onDeleteBatch(event.entity.id, change.new?.entity?.id ?? null);
                   await onCreateBatch(event.entity.id);
                   return false;
                 case 'container':
