@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Nov 28 2019 13:06:40 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Dec 04 2019 13:50:49 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -29634,7 +29634,8 @@ input MaskCreateInput {
 type MaskEdit implements Model & Owned & Memorizable {
   name: String!
   type: MaskEditType!
-  fields: [String!]!
+  fields: [String!]! @deprecated(reason: "Use instead `columns` field.")
+  columns: [MaskEditColumn!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -29646,11 +29647,22 @@ type MaskEdit implements Model & Owned & Memorizable {
   memo: String
 }
 
+type MaskEditColumn {
+  key: String!
+  hidden: Boolean!
+}
+
+input MaskEditColumnInput {
+  key: String!
+  hidden: Boolean!
+}
+
 input MaskEditCreateInput {
   name: String!
   type: MaskEditType!
   memo: String
   fields: [String!]!
+  columns: [MaskEditColumnInput!]!
 }
 
 input MaskEditFilterInput {
@@ -29701,6 +29713,7 @@ input MaskEditUpdateInput {
   type: MaskEditType
   memo: String
   fields: [String!]
+  columns: [MaskEditColumnInput!]
 }
 
 input MaskFilterInput {

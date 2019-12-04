@@ -20321,6 +20321,7 @@ export type MaskEdit = {|
     name: $ElementType<Scalars, 'String'>,
     type: MaskEditType,
     fields: Array<$ElementType<Scalars, 'String'>>,
+    columns: Array<MaskEditColumn>,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
     updatedAt: $ElementType<Scalars, 'DateTime'>,
@@ -20333,11 +20334,23 @@ export type MaskEdit = {|
   |}
 |};
 
+export type MaskEditColumn = {|
+   __typename?: 'MaskEditColumn',
+  key: $ElementType<Scalars, 'String'>,
+  hidden: $ElementType<Scalars, 'Boolean'>,
+|};
+
+export type MaskEditColumnInput = {|
+  key: $ElementType<Scalars, 'String'>,
+  hidden: $ElementType<Scalars, 'Boolean'>,
+|};
+
 export type MaskEditCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   type: MaskEditType,
   memo?: ?$ElementType<Scalars, 'String'>,
   fields: Array<$ElementType<Scalars, 'String'>>,
+  columns: Array<MaskEditColumnInput>,
 |};
 
 export type MaskEditFilterInput = {|
@@ -20391,6 +20404,7 @@ export type MaskEditUpdateInput = {|
   type?: ?MaskEditType,
   memo?: ?$ElementType<Scalars, 'String'>,
   fields?: ?Array<$ElementType<Scalars, 'String'>>,
+  columns?: ?Array<MaskEditColumnInput>,
 |};
 
 export type MaskFilterInput = {|

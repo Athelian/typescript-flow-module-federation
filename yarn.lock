@@ -3781,10 +3781,10 @@ apollo-storybook-react@^0.2.3:
   dependencies:
     apollo-storybook-core "^0.5.4"
 
-apollo-upload-client@^12.0.0:
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/apollo-upload-client/-/apollo-upload-client-12.0.0.tgz#b7b73311d3c9ee1f2878c96dffac62baa38893a0"
-  integrity sha512-TbK50CY5RA2fg5jzD65kUwgntijLZE+jCvnMnjSNObNmKNeiYWXHXEyntkeUlANTuxuukxPVh2xw9KXsaGxxnw==
+apollo-upload-client@^12.1.0:
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/apollo-upload-client/-/apollo-upload-client-12.1.0.tgz#7af32196feb1a72e4c4953887bb7c50eee7e06e0"
+  integrity sha512-pAWYDMU9aFZnPvj0g7+FPRCHcslBPwUpnFxSUWiPDJAGYPXzE5C5DKcvRSQMMyQ09akqU6wZsyVk8zhL7GFC8Q==
   dependencies:
     "@babel/runtime" "^7.5.4"
     apollo-link "^1.2.12"
@@ -14637,10 +14637,10 @@ react-snap@^1.23.0:
     serve-static "1.13.2"
     sourcemapped-stacktrace-node "2.1.8"
 
-react-svg@^10.0.25:
-  version "10.0.25"
-  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-10.0.25.tgz#354196ca85e793ee54edf43c276a3541dfad3454"
-  integrity sha512-JflIy+HnrkKdecWFpu1+J5A48Yx8a0VroKMbjJYm8N75i8Vi7FD484ntxwPO5UixhynfDkp1QnbWNZvbinvaUw==
+react-svg@^10.0.26:
+  version "10.0.26"
+  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-10.0.26.tgz#c81a30f9ac6e333c65ae5976d5fc72c8533e4de1"
+  integrity sha512-gZMMk7NK9Dw5QnJ59ONnDV0rt26By0ZCWntPUSWMreEhIO3UB/FE/wv9K6Ooo08+ZOuembe5bxc9+uNYH4pSQQ==
   dependencies:
     "@babel/runtime" "^7.7.2"
     "@tanem/svg-injector" "^8.0.35"
