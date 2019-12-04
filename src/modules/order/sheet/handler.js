@@ -285,7 +285,7 @@ function onUpdateBatchShipmentFactory(client: ApolloClient<any>, dispatch: Actio
 }
 
 function onDeleteOrderItemFactory(dispatch: Action => void) {
-  return (orderItemId: string) => {
+  return (orderItemId: string, newOrderId: ?string = null) => {
     dispatch({
       type: Actions.PRE_REMOVE_ENTITY,
       payload: {
@@ -294,7 +294,9 @@ function onDeleteOrderItemFactory(dispatch: Action => void) {
           type: 'OrderItem',
         },
         callback: (orders: Array<Object>) => {
-          const orderIdx = orders.findIndex(o => o.orderItems.some(oi => oi.id === orderItemId));
+          const orderIdx = orders.findIndex(
+            o => o.id !== newOrderId && o.orderItems.some(oi => oi.id === orderItemId)
+          );
           if (orderIdx < 0) {
             return null;
           }
@@ -313,7 +315,7 @@ function onDeleteOrderItemFactory(dispatch: Action => void) {
 }
 
 function onDeleteBatchFactory(dispatch: Action => void) {
-  return (batchId: string) => {
+  return (batchId: string, newOrderItemId: ?string = null) => {
     dispatch({
       type: Actions.PRE_REMOVE_ENTITY,
       payload: {
@@ -323,14 +325,18 @@ function onDeleteBatchFactory(dispatch: Action => void) {
         },
         callback: (orders: Array<Object>) => {
           const orderIdx = orders.findIndex(o =>
-            o.orderItems.some(oi => oi.batches.some(b => b.id === batchId))
+            o.orderItems.some(
+              oi => oi.id !== newOrderItemId && oi.batches.some(b => b.id === batchId)
+            )
           );
           if (orderIdx < 0) {
             return null;
           }
 
           const orderItems = [...orders[orderIdx].orderItems];
-          const orderItemIdx = orderItems.findIndex(oi => oi.batches.some(b => b.id === batchId));
+          const orderItemIdx = orderItems.findIndex(
+            oi => oi.id !== newOrderItemId && oi.batches.some(b => b.id === batchId)
+          );
           if (orderItemIdx < 0) {
             return null;
           }
@@ -405,7 +411,7 @@ export default function entityEventHandler(
           case 'OrderItem': {
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               if (change.field === 'order') {
-                onDeleteOrderItem(event.entity.id);
+                onDeleteOrderItem(event.entity.id, change.new?.entity?.id ?? null);
                 await onCreateOrderItem(event.entity.id);
 
                 return false;
@@ -420,7 +426,7 @@ export default function entityEventHandler(
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               switch (change.field) {
                 case 'orderItem':
-                  onDeleteBatch(event.entity.id);
+                  onDeleteBatch(event.entity.id, change.new?.entity?.id ?? null);
                   await onCreateBatch(event.entity.id);
                   return false;
                 case 'container':

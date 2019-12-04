@@ -359,7 +359,7 @@ function onDeleteContainerFactory(dispatch: Action => void) {
 }
 
 function onDeleteBatchFactory(dispatch: Action => void) {
-  return (batchId: string) => {
+  return (batchId: string, newShipmentId: ?string = null) => {
     dispatch({
       type: Actions.PRE_REMOVE_ENTITY,
       payload: {
@@ -369,10 +369,10 @@ function onDeleteBatchFactory(dispatch: Action => void) {
         },
         callback: (shipments: Array<Object>) => {
           const shipmentIdx = shipments.findIndex(
-            shipment =>
-              !!shipment.containers.find(
-                container => !!container.batches.find(batch => batch.id === batchId)
-              ) || !!shipment.batchesWithoutContainer.find(batch => batch.id === batchId)
+            s =>
+              s.id !== newShipmentId &&
+              (s.batchesWithoutContainer.some(b => b.id === batchId) ||
+                s.containers.some(c => c.batches.some(b => b.id === batchId)))
           );
           if (shipmentIdx === -1) {
             return null;
@@ -476,7 +476,7 @@ export default function entityEventHandler(
                   return false;
                 case 'container':
                 case 'shipment':
-                  onDeleteBatch(event.entity.id);
+                  onDeleteBatch(event.entity.id, change.new?.entity?.id ?? null);
                   await onCreateBatch(event.entity.id);
                   return false;
                 default:
