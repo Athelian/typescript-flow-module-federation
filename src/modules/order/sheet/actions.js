@@ -274,7 +274,8 @@ export default {
     hasPermissions =>
       hasPermissions(CONTAINER_CREATE) &&
       (hasPermissions(SHIPMENT_UPDATE) || hasPermissions(SHIPMENT_ADD_BATCH)) &&
-      (hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_ORDER_ITEM))
+      (hasPermissions(BATCH_UPDATE) ||
+        (hasPermissions(BATCH_SET_SHIPMENT) && hasPermissions(BATCH_SET_SHIPMENT)))
   ),
   // batch_move_shipment: AC(BatchMoveToExistingShipmentAction, () => true),
   // batch_move_new_shipment: AC(BatchMoveToNewShipmentAction, () => true),
