@@ -268,14 +268,13 @@ export default {
       (hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_ORDER_ITEM))
   ),
   batch_move_container: AC(BatchMoveToExistingContainerAction, () => true),
-  // batch_move_new_container: AC(BatchMoveToNewContainerAction, () => true),
   batch_move_new_container: AC(
     BatchMoveToNewContainerOnExsitShipmentAction,
     hasPermissions =>
       hasPermissions(CONTAINER_CREATE) &&
       (hasPermissions(SHIPMENT_UPDATE) || hasPermissions(SHIPMENT_ADD_BATCH)) &&
       (hasPermissions(BATCH_UPDATE) ||
-        (hasPermissions(BATCH_SET_SHIPMENT) && hasPermissions(BATCH_SET_SHIPMENT)))
+        (hasPermissions(BATCH_SET_SHIPMENT) && hasPermissions(BATCH_SET_CONTAINER)))
   ),
   // batch_move_shipment: AC(BatchMoveToExistingShipmentAction, () => true),
   // batch_move_new_shipment: AC(BatchMoveToNewShipmentAction, () => true),
