@@ -15,6 +15,7 @@ import BaseBatchSyncPackagingAction from 'modules/sheet/batch/actions/BatchSyncP
 import BaseBatchMoveToExistingOrderAction from 'modules/sheet/batch/actions/BatchMoveToExistingOrderAction';
 import BaseBatchMoveToNewOrderAction from 'modules/sheet/batch/actions/BatchMoveToNewOrderAction';
 import BaseBatchMoveToExistingContainerAction from 'modules/sheet/batch/actions/BatchMoveToExistingContainerAction';
+import BaseBatchMoveToNewContainerOnExsitShipmentAction from 'modules/sheet/batch/actions/BatchMoveToNewContainerOnExsitShipmentAction';
 import BaseBatchSplitAction from 'modules/sheet/batch/actions/BatchSplitAction';
 import BaseBatchDeleteRemoveAction from 'modules/sheet/batch/actions/BatchDeleteRemoveAction';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
@@ -37,6 +38,8 @@ import {
   BATCH_UPDATE,
   BATCH_SET_ORDER_ITEM,
 } from 'modules/permission/constants/batch';
+import { CONTAINER_CREATE } from 'modules/permission/constants/container';
+import { SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH } from 'modules/permission/constants/shipment';
 import { PRODUCT_PROVIDER_LIST } from 'modules/permission/constants/product';
 
 const OrderSyncAllPricesAction = BaseOrderSyncAllPricesAction({
@@ -137,6 +140,30 @@ const BatchMoveToExistingOrderAction = BaseBatchMoveToExistingOrderAction({
   },
 });
 
+const getBatchData = (batchId: string, item: Object) => {
+  const batch = (item?.orderItems ?? [])
+    .flatMap(({ batches }) => batches)
+    .find(({ id }) => id === batchId);
+  return {
+    ...batch,
+    packageQuantity: batch.packageQuantity?.value,
+    packageVolume: batch.packageVolume?.value,
+  };
+};
+
+const getOrderItemData = (batchId: string, item: Object) => {
+  const orderItem = (item?.orderItems ?? []).find(({ batches }) =>
+    batches.some(batch => batch.id === batchId)
+  );
+  return {
+    ...orderItem,
+    price: {
+      amount: orderItem?.price?.value ?? 0,
+      currency: orderItem.price?.metric ?? 'USD',
+    },
+  };
+};
+
 const BatchMoveToNewOrderAction = BaseBatchMoveToNewOrderAction({
   getContainer: (batchId, item) =>
     (item?.orderItems ?? []).flatMap(({ batches }) => batches).find(({ id }) => id === batchId)
@@ -144,47 +171,21 @@ const BatchMoveToNewOrderAction = BaseBatchMoveToNewOrderAction({
   getShipment: (batchId, item) =>
     (item?.orderItems ?? []).flatMap(({ batches }) => batches).find(({ id }) => id === batchId)
       ?.shipment,
-  getBatch: (batchId, item) => {
-    const batch = (item?.orderItems ?? [])
-      .flatMap(({ batches }) => batches)
-      .find(({ id }) => id === batchId);
-    return {
-      ...batch,
-      packageQuantity: batch.packageQuantity?.value,
-      packageVolume: batch.packageVolume?.value,
-    };
-  },
-  getOrderItem: (batchId, item) => {
-    const orderItem = (item?.orderItems ?? []).find(({ batches }) =>
-      batches.some(batch => batch.id === batchId)
-    );
-    return {
-      ...orderItem,
-      price: {
-        amount: orderItem?.price?.value ?? 0,
-        currency: orderItem.price?.metric ?? 'USD',
-      },
-    };
-  },
+  getBatch: getBatchData,
+  getOrderItem: getOrderItemData,
   getExporter: (batchId, item) => {
     return item.exporter;
   },
 });
 
-const BatchMoveToExistingContainerAction = BaseBatchMoveToExistingContainerAction({
-  getContainerId: (batchId, item) => {
-    const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId);
-    return batch?.container?.id;
-  },
-  getImporterId: (batchId, item) => {
-    const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId);
-    return batch?.shipment?.importer?.id;
-  },
-  getExporterId: (batchId, item) => {
-    const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId);
-    return batch?.shipment?.exporter?.id;
-  },
-});
+const BatchMoveToNewContainerOnExsitShipmentAction = BaseBatchMoveToNewContainerOnExsitShipmentAction(
+  {
+    getImporter: (batchId, item) => item.importer,
+    getExporter: (batchId, item) => item.exporter,
+    getBatch: getBatchData,
+    getOrderItem: getOrderItemData,
+  }
+);
 
 const BatchSplitAction = BaseBatchSplitAction({
   getBatch: (batchId, item) =>
@@ -253,6 +254,13 @@ export default {
   ),
   batch_move_container: AC(BatchMoveToExistingContainerAction, () => true),
   // batch_move_new_container: AC(BatchMoveToNewContainerAction, () => true),
+  batch_move_new_container: AC(
+    BatchMoveToNewContainerOnExsitShipmentAction,
+    hasPermissions =>
+      hasPermissions(CONTAINER_CREATE) &&
+      (hasPermissions(SHIPMENT_UPDATE) || hasPermissions(SHIPMENT_ADD_BATCH)) &&
+      (hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_ORDER_ITEM))
+  ),
   // batch_move_shipment: AC(BatchMoveToExistingShipmentAction, () => true),
   // batch_move_new_shipment: AC(BatchMoveToNewShipmentAction, () => true),
   batch_split: AC(BatchSplitAction, perm => perm(BATCH_CREATE)),

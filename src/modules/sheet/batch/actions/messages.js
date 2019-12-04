@@ -96,4 +96,8 @@ export default defineMessages({
     id: 'modules.Sheet.batch.batchMoveToExistingContainer.title',
     defaultMessage: 'Move to Container',
   },
+  batchMoveToNewContainerTitle: {
+    id: 'modules.Sheet.batch.batchMoveToNewContainerTitle.title',
+    defaultMessage: 'Move to New Container',
+  },
 });
