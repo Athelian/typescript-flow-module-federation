@@ -1,18 +1,22 @@
 // @flow
 import gql from 'graphql-tag';
-import { forbiddenFragment, badRequestFragment } from 'graphql';
+import { badRequestFragment, forbiddenFragment } from 'graphql';
 
 export const createContainerMutation = gql`
   mutation containerCreate($input: ContainerCreateInput!) {
     containerCreate(input: $input) {
       ... on Container {
         id
+        shipment {
+          ... on Shipment {
+            id
+          }
+        }
       }
       ...badRequestFragment
       ...forbiddenFragment
     }
   }
-
   ${badRequestFragment}
   ${forbiddenFragment}
 `;
