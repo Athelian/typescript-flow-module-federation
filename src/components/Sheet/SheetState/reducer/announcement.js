@@ -27,7 +27,12 @@ export function preAddEntity(
   ): State => {
     const { entity, callback } = payload;
 
-    const newState = replaceItem(transformer, sorter)(state, { callback });
+    const item = callback(state.items);
+    if (!item) {
+      return state;
+    }
+
+    const newState = replaceItem(transformer, sorter)(state, { callback: () => item });
 
     let result = null;
 

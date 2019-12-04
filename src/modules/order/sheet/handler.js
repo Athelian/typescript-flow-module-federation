@@ -294,19 +294,15 @@ function onDeleteOrderItemFactory(dispatch: Action => void) {
           type: 'OrderItem',
         },
         callback: (orders: Array<Object>) => {
-          const orderIdx = orders.findIndex(
-            order => !!order.orderItems.find(orderItem => orderItem.id === orderItemId)
-          );
-          if (orderIdx === -1) {
+          const orderIdx = orders.findIndex(o => o.orderItems.some(oi => oi.id === orderItemId));
+          if (orderIdx < 0) {
             return null;
           }
 
           return {
             item: {
               ...orders[orderIdx],
-              orderItems: orders[orderIdx].orderItems.filter(
-                orderItem => orderItem.id !== orderItemId
-              ),
+              orderItems: orders[orderIdx].orderItems.filter(oi => oi.id !== orderItemId),
             },
             index: orderIdx,
           };
@@ -326,23 +322,28 @@ function onDeleteBatchFactory(dispatch: Action => void) {
           type: 'Batch',
         },
         callback: (orders: Array<Object>) => {
-          const orderIdx = orders.findIndex(
-            order =>
-              !!order.orderItems.find(
-                orderItem => !!orderItem.batches.find(batch => batch.id === batchId)
-              )
+          const orderIdx = orders.findIndex(o =>
+            o.orderItems.some(oi => oi.batches.some(b => b.id === batchId))
           );
-          if (orderIdx === -1) {
+          if (orderIdx < 0) {
             return null;
           }
+
+          const orderItems = [...orders[orderIdx].orderItems];
+          const orderItemIdx = orderItems.findIndex(oi => oi.batches.some(b => b.id === batchId));
+          if (orderItemIdx < 0) {
+            return null;
+          }
+
+          orderItems[orderItemIdx] = {
+            ...orderItems[orderItemIdx],
+            batches: orderItems[orderItemIdx].batches.filter(batch => batch.id !== batchId),
+          };
 
           return {
             item: {
               ...orders[orderIdx],
-              orderItems: orders[orderIdx].orderItems.map(orderItem => ({
-                ...orderItem,
-                batches: orderItem.batches.filter(batch => batch.id !== batchId),
-              })),
+              orderItems,
             },
             index: orderIdx,
           };
