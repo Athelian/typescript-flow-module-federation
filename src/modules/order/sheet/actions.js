@@ -15,7 +15,7 @@ import BaseBatchSyncPackagingAction from 'modules/sheet/batch/actions/BatchSyncP
 import BaseBatchMoveToExistingOrderAction from 'modules/sheet/batch/actions/BatchMoveToExistingOrderAction';
 import BaseBatchMoveToNewOrderAction from 'modules/sheet/batch/actions/BatchMoveToNewOrderAction';
 import BaseBatchMoveToExistingContainerAction from 'modules/sheet/batch/actions/BatchMoveToExistingContainerAction';
-import BaseBatchMoveToNewContainerOnExsitShipmentAction from 'modules/sheet/batch/actions/BatchMoveToNewContainerOnExsitShipmentAction';
+import BaseBatchMoveToNewContainerOnExistShipmentAction from 'modules/sheet/batch/actions/BatchMoveToNewContainerOnExistShipmentAction';
 import BaseBatchSplitAction from 'modules/sheet/batch/actions/BatchSplitAction';
 import BaseBatchDeleteRemoveAction from 'modules/sheet/batch/actions/BatchDeleteRemoveAction';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
@@ -140,6 +140,21 @@ const BatchMoveToExistingOrderAction = BaseBatchMoveToExistingOrderAction({
   },
 });
 
+const BatchMoveToExistingContainerAction = BaseBatchMoveToExistingContainerAction({
+  getContainerId: (batchId, item) => {
+    const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId);
+    return batch?.container?.id;
+  },
+  getImporterId: (batchId, item) => {
+    const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId);
+    return batch?.shipment?.importer?.id;
+  },
+  getExporterId: (batchId, item) => {
+    const batch = item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId);
+    return batch?.shipment?.exporter?.id;
+  },
+});
+
 const getBatchData = (batchId: string, item: Object) => {
   const batch = (item?.orderItems ?? [])
     .flatMap(({ batches }) => batches)
@@ -178,7 +193,7 @@ const BatchMoveToNewOrderAction = BaseBatchMoveToNewOrderAction({
   },
 });
 
-const BatchMoveToNewContainerOnExsitShipmentAction = BaseBatchMoveToNewContainerOnExsitShipmentAction(
+const BatchMoveToNewContainerOnExsitShipmentAction = BaseBatchMoveToNewContainerOnExistShipmentAction(
   {
     getImporter: (batchId, item) => item.importer,
     getExporter: (batchId, item) => item.exporter,
