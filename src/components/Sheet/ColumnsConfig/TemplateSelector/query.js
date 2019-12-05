@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  tableTemplateCardFragment,
+  tableTemplateFragment,
   userAvatarFragment,
   badRequestFragment,
   forbiddenFragment,
@@ -16,7 +16,7 @@ export const tableTemplateQuery = gql`
   ) {
     maskEdits(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...tableTemplateCardFragment
+        ...tableTemplateFragment
         ...forbiddenFragment
         ...badRequestFragment
       }
@@ -29,7 +29,7 @@ export const tableTemplateQuery = gql`
   }
 
   ${userAvatarFragment}
-  ${tableTemplateCardFragment}
+  ${tableTemplateFragment}
   ${forbiddenFragment}
   ${badRequestFragment}
 `;

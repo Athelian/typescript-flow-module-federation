@@ -18,6 +18,7 @@ export const TitleWrapperStyle: string = css`
   align-items: center;
   ${fontSizes.LARGE};
   color: ${colors.GRAY_DARK};
+  text-transform: uppercase;
 `;
 
 export const TitleStyle: string = css`

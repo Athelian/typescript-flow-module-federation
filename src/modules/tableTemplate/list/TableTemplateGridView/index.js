@@ -5,7 +5,8 @@ import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { TemplateCard } from 'components/Cards';
-import TemplateFormWrapper from 'modules/tableTemplate/common/TemplateFormWrapper';
+import TableTemplateFormWrapper from 'modules/tableTemplate/common/TableTemplateFormWrapper';
+import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 
 type Props = {
   items: Array<Object>,
@@ -24,9 +25,12 @@ const defaultRenderItem = (item: Object) => (
           key={item.id}
           template={{
             id: item.id,
-            title: item.name,
-            description: item.memo,
-            count: (item.fields || []).length,
+            title: item?.name,
+            description: item?.memo,
+            count: (item?.columns ?? []).reduce(
+              (currentCount, column) => (currentCount + column?.hidden ? 0 : 1),
+              0
+            ),
           }}
           type="EDIT_TABLE"
           actions={[]}
@@ -40,7 +44,9 @@ const defaultRenderItem = (item: Object) => (
             return button;
           }}
         >
-          {isOpen && <TemplateFormWrapper template={item} onCancel={() => toggle(false)} />}
+          <TableTemplateFormContainer.Provider initialState={item}>
+            <TableTemplateFormWrapper isNew={false} onCancel={() => toggle(false)} />
+          </TableTemplateFormContainer.Provider>
         </SlideView>
       </>
     )}

@@ -7,7 +7,8 @@ import type { IntlShape } from 'react-intl';
 import { TEMPLATE_CREATE } from 'modules/permission/constants/template';
 import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
-import TemplateFormWrapper from 'modules/tableTemplate/common/TemplateFormWrapper';
+import TableTemplateFormWrapper from 'modules/tableTemplate/common/TableTemplateFormWrapper';
+import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import { Content } from 'components/Layout';
 import { NavBar, EntityIcon } from 'components/NavBar';
 import FilterToolBar from 'components/common/FilterToolBar';
@@ -127,6 +128,7 @@ const TableTemplateModule = (props: Props) => {
               {({ value: isOpen, set: toggle }) => (
                 <>
                   <NewButton onClick={() => toggle(true)} />
+
                   <SlideView
                     isOpen={isOpen}
                     onRequestClose={() => toggle(false)}
@@ -135,13 +137,9 @@ const TableTemplateModule = (props: Props) => {
                       return button;
                     }}
                   >
-                    {isOpen && (
-                      <TemplateFormWrapper
-                        template={{ type: activeType }}
-                        isNew
-                        onCancel={() => toggle(false)}
-                      />
-                    )}
+                    <TableTemplateFormContainer.Provider initialState={null}>
+                      <TableTemplateFormWrapper isNew onCancel={() => toggle(false)} />
+                    </TableTemplateFormContainer.Provider>
                   </SlideView>
                 </>
               )}

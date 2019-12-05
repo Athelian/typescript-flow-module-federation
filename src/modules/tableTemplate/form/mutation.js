@@ -1,28 +1,39 @@
 // @flow
 import gql from 'graphql-tag';
-import { badRequestFragment, tableTemplateCardFragment, userAvatarFragment } from 'graphql';
+import { badRequestFragment, tableTemplateFragment, userAvatarFragment } from 'graphql';
+import { parseGenericField, parseEnumField, parseMemoField } from 'utils/data';
 
 export const maskEditCreateMutation: Object = gql`
   mutation maskEditCreate($input: MaskEditCreateInput!) {
     maskEditCreate(input: $input) {
-      ...tableTemplateCardFragment
+      ...tableTemplateFragment
       ...badRequestFragment
     }
   }
 
   ${badRequestFragment}
   ${userAvatarFragment}
-  ${tableTemplateCardFragment}
+  ${tableTemplateFragment}
 `;
 
 export const maskEditUpdateMutation: Object = gql`
   mutation maskEditUpdate($id: ID!, $input: MaskEditUpdateInput!) {
     maskEditUpdate(id: $id, input: $input) {
-      ...tableTemplateCardFragment
+      ...tableTemplateFragment
       ...badRequestFragment
     }
   }
   ${badRequestFragment}
   ${userAvatarFragment}
-  ${tableTemplateCardFragment}
+  ${tableTemplateFragment}
 `;
+
+export const prepareParsedMaskEditInput = (originalValues: ?Object, newValues: Object): Object => {
+  return {
+    ...(originalValues ? { id: originalValues.id } : {}),
+    ...parseGenericField('name', originalValues?.name, newValues.name),
+    ...parseEnumField('type', originalValues?.type, newValues.type),
+    ...parseMemoField('memo', originalValues?.memo, newValues.memo),
+    ...parseGenericField('columns', originalValues?.columns, newValues.columns),
+  };
+};

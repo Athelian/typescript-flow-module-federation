@@ -1,63 +1,87 @@
 // @flow
-import { Container } from 'unstated';
+import * as React from 'react';
+import { createContainer } from 'unstated-next';
 import { cleanFalsyAndTypeName, cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
-type FormState = {
-  name: string,
-  memo: string,
-  type: string,
-  fields: Array<string>,
-};
-
-const initValues = {
+const defaultState = {
   name: '',
   memo: '',
   type: 'Order',
-  fields: [],
+  columns: [],
+  updatedAt: '',
+  updatedBy: null,
 };
 
-export default class TemplateFormContainer extends Container<FormState> {
-  state = initValues;
+const useTableTemplateFormContainer = (intialState: Object = defaultState) => {
+  const [originalState, setOriginalState] = React.useState({
+    ...defaultState,
+    ...cleanUpData(intialState),
+  });
+  const [state, setState] = React.useState({ ...defaultState, ...cleanUpData(intialState) });
 
-  originalValues = initValues;
-
-  isDirty = () =>
-    !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
-
-  onSuccess = () => {
-    this.originalValues = { ...this.state };
-    this.setState(this.originalValues);
+  const initializeState = (value: Object) => {
+    const mergedInitialState = { ...defaultState, ...cleanUpData(value) };
+    if (!isEquals(mergedInitialState, originalState)) {
+      setOriginalState(mergedInitialState);
+    }
+    if (!isEquals(mergedInitialState, state)) {
+      setState(mergedInitialState);
+    }
   };
 
-  onCleanUp = () => {
-    this.setState(initValues);
+  const isDirty = !isEquals(cleanFalsyAndTypeName(state), cleanFalsyAndTypeName(originalState));
+
+  const resetState = () => {
+    setState(originalState);
   };
 
-  setFieldValue = (name: string, value: mixed) => {
-    this.setState({
+  const setFieldValue = (name: string, value: mixed) => {
+    setState({
+      ...state,
       [name]: value,
     });
   };
 
-  initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
-    this.setState(parsedValues);
-    this.originalValues = { ...parsedValues };
+  const selectAllColumns = () => {
+    setState({ ...state, columns: state.columns.map(col => ({ ...col, hidden: false })) });
   };
 
-  hasSelectField = (selectedField: string) => this.state.fields.includes(selectedField);
-
-  toggleSelectField = (selectedField: string) => {
-    const { fields } = this.state;
-    if (fields.includes(selectedField)) {
-      this.setState({
-        fields: fields.filter(item => item !== selectedField),
-      });
-    } else {
-      this.setState({
-        fields: [...fields, selectedField],
-      });
-    }
+  const unselectAllColumns = () => {
+    setState({ ...state, columns: state.columns.map(col => ({ ...col, hidden: true })) });
   };
-}
+
+  const groupAllColumns = (groupedColumns: Object) =>
+    setState({
+      ...state,
+      columns: Object.values(groupedColumns).flatMap(cols =>
+        ((cols: any): Array<ColumnConfig>).sort((a, b) => {
+          if (a.hidden && !b.hidden) {
+            return 1;
+          }
+
+          if (!a.hidden && b.hidden) {
+            return -1;
+          }
+
+          return 0;
+        })
+      ),
+    });
+
+  return {
+    state,
+    originalState,
+    initializeState,
+    isDirty,
+    resetState,
+    setFieldValue,
+    selectAllColumns,
+    unselectAllColumns,
+    groupAllColumns,
+  };
+};
+
+const TableTemplateFormContainer = createContainer(useTableTemplateFormContainer);
+
+export default TableTemplateFormContainer;

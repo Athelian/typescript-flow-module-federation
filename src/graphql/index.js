@@ -47,7 +47,7 @@ import {
   taskFormInTemplateFragment,
   taskCountFragment,
 } from './task/fragment';
-import { tableTemplateCardFragment } from './tableTemplate/fragment';
+import { tableTemplateFragment } from './tableTemplate/fragment';
 import { badRequestFragment, notFoundFragment, forbiddenFragment } from './errors/fragment';
 import {
   metricFragment,
@@ -118,7 +118,7 @@ export {
   timelineDateFullFragment,
   timelineDateMinimalFragment,
   portFragment,
-  tableTemplateCardFragment,
+  tableTemplateFragment,
   customFieldsFragment,
   maskFragment,
   fieldValuesFragment,

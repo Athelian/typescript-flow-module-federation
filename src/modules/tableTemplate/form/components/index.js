@@ -1,4 +1,4 @@
 import TemplateSection from './TemplateSection';
-import SelectFieldsSection from './SelectFieldsSection';
+import ColumnsConfigSection from './ColumnsConfigSection';
 
-export { TemplateSection, SelectFieldsSection };
+export { TemplateSection, ColumnsConfigSection };
