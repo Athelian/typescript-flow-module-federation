@@ -7,13 +7,10 @@ import { SectionHeader } from 'components/Form';
 import type { ColumnConfig } from 'components/Sheet/SheetState/types';
 import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
+import { getColumnGroupTypes } from './helpers';
 import { ColumnsConfigSectionWrapperStyle, ColumnsConfigSectionBodyStyle } from './style';
 
-type Props = {
-  customFields: Object,
-};
-
-const ColumnsConfigSection = ({ customFields }: Props) => {
+const ColumnsConfigSection = () => {
   const {
     state,
     setFieldValue,
@@ -21,7 +18,7 @@ const ColumnsConfigSection = ({ customFields }: Props) => {
     unselectAllColumns,
     groupAllColumns,
   } = TableTemplateFormContainer.useContainer();
-  const { columns } = state;
+  const { columns, type } = state;
 
   // COMPUTED STATES
   const groupedColumns = React.useMemo(
@@ -51,9 +48,6 @@ const ColumnsConfigSection = ({ customFields }: Props) => {
     }),
     [groupedColumns, setFieldValue]
   );
-
-  console.warn('customFields', customFields);
-  console.warn('state', state);
 
   return (
     <>
@@ -98,11 +92,9 @@ const ColumnsConfigSection = ({ customFields }: Props) => {
         </SectionNavBar>
 
         <div className={ColumnsConfigSectionBodyStyle}>
-          <ColumnsGroup {...getGroupProps('ORDER')} />
-          <ColumnsGroup {...getGroupProps('ORDER_ITEM')} />
-          <ColumnsGroup {...getGroupProps('BATCH')} />
-          <ColumnsGroup {...getGroupProps('CONTAINER')} />
-          <ColumnsGroup {...getGroupProps('SHIPMENT')} />
+          {getColumnGroupTypes(type).map(groupType => (
+            <ColumnsGroup {...getGroupProps(groupType)} />
+          ))}
         </div>
       </div>
     </>

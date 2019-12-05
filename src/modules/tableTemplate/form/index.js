@@ -6,10 +6,9 @@ import { TemplateFormWrapperStyle } from './style';
 
 type Props = {
   isNew: ?boolean,
-  customFields: Object,
 };
 
-function TableTemplateForm({ isNew, customFields }: Props) {
+function TableTemplateForm({ isNew }: Props) {
   return (
     <div className={TemplateFormWrapperStyle}>
       <SectionWrapper id="tableTemplate_templateSection">
@@ -17,7 +16,7 @@ function TableTemplateForm({ isNew, customFields }: Props) {
       </SectionWrapper>
 
       <SectionWrapper id="tableTemplate_editFieldsSection">
-        <ColumnsConfigSection customFields={customFields} />
+        <ColumnsConfigSection />
       </SectionWrapper>
     </div>
   );

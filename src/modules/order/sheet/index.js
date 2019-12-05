@@ -13,7 +13,7 @@ import type { ColumnConfig } from 'components/Sheet';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
-import orderColumns, { FieldDefinitionEntityTypes } from './columns';
+import orderColumns, { FieldDefinitionEntityTypes, OrderSheetColumnGroupTypes } from './columns';
 import orderTransformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
@@ -84,15 +84,9 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
         <Filter config={OrderFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig columns={columns} templateType="OrderSheet" onChange={setColumns}>
-          {({ getGroupProps }) => (
-            <>
-              <ColumnsConfig.Group {...getGroupProps('ORDER')} />
-              <ColumnsConfig.Group {...getGroupProps('ORDER_ITEM')} />
-              <ColumnsConfig.Group {...getGroupProps('BATCH')} />
-              <ColumnsConfig.Group {...getGroupProps('CONTAINER')} />
-              <ColumnsConfig.Group {...getGroupProps('SHIPMENT')} />
-            </>
-          )}
+          {({ getGroupProps }) =>
+            OrderSheetColumnGroupTypes.map(type => <ColumnsConfig.Group {...getGroupProps(type)} />)
+          }
         </ColumnsConfig>
         <ExportButton
           type="Orders"

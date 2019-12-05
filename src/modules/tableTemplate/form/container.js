@@ -8,21 +8,28 @@ import { isEquals } from 'utils/fp';
 const defaultState = {
   name: '',
   memo: '',
-  type: 'Order',
+  type: null,
   columns: [],
   updatedAt: '',
   updatedBy: null,
 };
 
-const useTableTemplateFormContainer = (intialState: Object = defaultState) => {
+const useTableTemplateFormContainer = (initialState: Object = defaultState) => {
   const [originalState, setOriginalState] = React.useState({
     ...defaultState,
-    ...cleanUpData(intialState),
+    ...cleanUpData(initialState),
   });
-  const [state, setState] = React.useState({ ...defaultState, ...cleanUpData(intialState) });
+
+  const [state, setState] = React.useState({
+    ...defaultState,
+    ...cleanUpData(initialState),
+  });
 
   const initializeState = (value: Object) => {
-    const mergedInitialState = { ...defaultState, ...cleanUpData(value) };
+    const mergedInitialState = {
+      ...defaultState,
+      ...cleanUpData(value),
+    };
     if (!isEquals(mergedInitialState, originalState)) {
       setOriginalState(mergedInitialState);
     }

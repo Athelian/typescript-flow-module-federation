@@ -13,7 +13,10 @@ import type { ColumnConfig } from 'components/Sheet';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { shipmentsExportQuery } from '../query';
-import shipmentColumns, { FieldDefinitionEntityTypes } from './columns';
+import shipmentColumns, {
+  FieldDefinitionEntityTypes,
+  ShipmentSheetColumnGroupTypes,
+} from './columns';
 import shipmentTransformer from './transformer';
 import entityEventHandler from './handler';
 import actions from './actions';
@@ -88,16 +91,11 @@ const ShipmentSheetModuleImpl = ({
         <Filter config={ShipmentFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig columns={columns} templateType="ShipmentSheet" onChange={setColumns}>
-          {({ getGroupProps }) => (
-            <>
-              <ColumnsConfig.Group {...getGroupProps('SHIPMENT')} />
-              <ColumnsConfig.Group {...getGroupProps('CONTAINER')} />
-              <ColumnsConfig.Group {...getGroupProps('BATCH')} />
-              <ColumnsConfig.Group {...getGroupProps('ORDER_ITEM')} />
-              <ColumnsConfig.Group {...getGroupProps('PRODUCT')} />
-              <ColumnsConfig.Group {...getGroupProps('ORDER')} />
-            </>
-          )}
+          {({ getGroupProps }) =>
+            ShipmentSheetColumnGroupTypes.map(type => (
+              <ColumnsConfig.Group {...getGroupProps(type)} />
+            ))
+          }
         </ColumnsConfig>
         <ExportButton
           type="Shipments"

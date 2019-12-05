@@ -12,7 +12,7 @@ import type { ColumnConfig } from 'components/Sheet';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { batchesExportQuery } from '../query';
-import batchColumns, { FieldDefinitionEntityTypes } from './columns';
+import batchColumns, { FieldDefinitionEntityTypes, BatchSheetColumnGroupTypes } from './columns';
 import batchTransformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
@@ -82,15 +82,9 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
         <Filter config={BatchFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig columns={columns} templateType="BatchSheet" onChange={setColumns}>
-          {({ getGroupProps }) => (
-            <>
-              <ColumnsConfig.Group {...getGroupProps('BATCH')} />
-              <ColumnsConfig.Group {...getGroupProps('ORDER_ITEM')} />
-              <ColumnsConfig.Group {...getGroupProps('ORDER')} />
-              <ColumnsConfig.Group {...getGroupProps('CONTAINER')} />
-              <ColumnsConfig.Group {...getGroupProps('SHIPMENT')} />
-            </>
-          )}
+          {({ getGroupProps }) =>
+            BatchSheetColumnGroupTypes.map(type => <ColumnsConfig.Group {...getGroupProps(type)} />)
+          }
         </ColumnsConfig>
         <ExportButton
           type="Batches"

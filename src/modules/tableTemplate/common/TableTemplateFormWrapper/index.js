@@ -20,14 +20,13 @@ import TableTemplateForm from 'modules/tableTemplate/form';
 
 type Props = {
   isNew: boolean,
-  customFields: Object,
   onCancel: () => void,
   onRefetch: () => void,
 };
 
 const formContainer = new FormContainer();
 
-const TableTemplateFormWrapper = ({ isNew, customFields, onCancel, onRefetch }: Props) => {
+const TableTemplateFormWrapper = ({ isNew, onCancel, onRefetch }: Props) => {
   const {
     state,
     originalState,
@@ -102,7 +101,7 @@ const TableTemplateFormWrapper = ({ isNew, customFields, onCancel, onRefetch }: 
         </SlideViewNavBar>
 
         <Content>
-          <TableTemplateForm isNew={isNew} customFields={customFields} />
+          <TableTemplateForm isNew={isNew} />
         </Content>
       </SlideViewLayout>
     </Provider>
