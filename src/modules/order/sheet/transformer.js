@@ -139,7 +139,10 @@ function transformBatch(
         action: 'batch_move_shipment',
         label: intl.formatMessage(batchMessages.batchMoveToShipmentTitle),
       },
-      // batch_move_new_shipment
+      {
+        action: 'batch_move_new_shipment',
+        label: intl.formatMessage(batchMessages.batchMoveToNewShipmentTitle),
+      },
       {
         action: 'batch_split',
         label: intl.formatMessage(batchMessages.batchSplitTitle),

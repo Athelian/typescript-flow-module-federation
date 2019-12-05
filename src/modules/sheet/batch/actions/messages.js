@@ -104,4 +104,8 @@ export default defineMessages({
     id: 'modules.Sheet.batch.batchMoveToShipmentTitle.title',
     defaultMessage: 'Move to Shipment',
   },
+  batchMoveToNewShipmentTitle: {
+    id: 'modules.Sheet.batch.batchMoveToNewShipmentTitle.title',
+    defaultMessage: 'Move to New Shipment',
+  },
 });

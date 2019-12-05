@@ -16,6 +16,7 @@ import BaseBatchMoveToExistingOrderAction from 'modules/sheet/batch/actions/Batc
 import BaseBatchMoveToNewOrderAction from 'modules/sheet/batch/actions/BatchMoveToNewOrderAction';
 import BaseBatchMoveToExistingContainerAction from 'modules/sheet/batch/actions/BatchMoveToExistingContainerAction';
 import BaseBatchMoveToExistingShipmentAction from 'modules/sheet/batch/actions/BatchMoveToExistingShipmentAction';
+import BaseBatchMoveToNewShipmentAction from 'modules/sheet/batch/actions/BatchMoveToNewShipmentAction';
 import BaseBatchMoveToNewContainerOnExistShipmentAction from 'modules/sheet/batch/actions/BatchMoveToNewContainerOnExistShipmentAction';
 import BaseBatchSplitAction from 'modules/sheet/batch/actions/BatchSplitAction';
 import BaseBatchDeleteRemoveAction from 'modules/sheet/batch/actions/BatchDeleteRemoveAction';
@@ -40,7 +41,11 @@ import {
   BATCH_SET_ORDER_ITEM,
 } from 'modules/permission/constants/batch';
 import { CONTAINER_CREATE } from 'modules/permission/constants/container';
-import { SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH } from 'modules/permission/constants/shipment';
+import {
+  SHIPMENT_CREATE,
+  SHIPMENT_UPDATE,
+  SHIPMENT_ADD_BATCH,
+} from 'modules/permission/constants/shipment';
 import { PRODUCT_PROVIDER_LIST } from 'modules/permission/constants/product';
 
 const OrderSyncAllPricesAction = BaseOrderSyncAllPricesAction({
@@ -209,6 +214,13 @@ const BatchMoveToNewContainerOnExsitShipmentAction = BaseBatchMoveToNewContainer
   }
 );
 
+const BatchMoveToNewShipmentAction = BaseBatchMoveToNewShipmentAction({
+  getImporter: (batchId, item) => item.importer,
+  getExporter: (batchId, item) => item.exporter,
+  getBatch: getBatchData,
+  getOrderItem: getOrderItemData,
+});
+
 const BatchSplitAction = BaseBatchSplitAction({
   getBatch: (batchId, item) =>
     item.orderItems.flatMap(oi => oi.batches).find(b => b.id === batchId),
@@ -293,7 +305,12 @@ export default {
     BatchMoveToExistingShipmentAction,
     hasPermissions => hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_SHIPMENT)
   ),
-  // batch_move_new_shipment: AC(BatchMoveToNewShipmentAction, () => true),
+  batch_move_new_shipment: AC(
+    BatchMoveToNewShipmentAction,
+    hasPermissions =>
+      hasPermissions(SHIPMENT_CREATE) &&
+      (hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_SHIPMENT))
+  ),
   batch_split: AC(BatchSplitAction, perm => perm(BATCH_CREATE)),
   batch_delete_remove: AC(
     BatchDeleteRemoveAction,
