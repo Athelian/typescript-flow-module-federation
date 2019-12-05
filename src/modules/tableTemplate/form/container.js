@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { createContainer } from 'unstated-next';
+import type { ColumnConfig } from 'components/Sheet/SheetState/types';
 import { cleanFalsyAndTypeName, cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
 

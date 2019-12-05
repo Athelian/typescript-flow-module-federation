@@ -20,12 +20,14 @@ import TableTemplateForm from 'modules/tableTemplate/form';
 
 type Props = {
   isNew: boolean,
+  customFields: Object,
   onCancel: () => void,
+  onRefetch: () => void,
 };
 
 const formContainer = new FormContainer();
 
-const TableTemplateFormWrapper = ({ isNew, onCancel }: Props) => {
+const TableTemplateFormWrapper = ({ isNew, customFields, onCancel, onRefetch }: Props) => {
   const {
     state,
     originalState,
@@ -58,6 +60,8 @@ const TableTemplateFormWrapper = ({ isNew, onCancel }: Props) => {
     } else {
       initializeState(isNew ? data?.maskEditCreate : data?.maskEditUpdate);
       formContainer.onReset();
+      onRefetch();
+      onCancel();
     }
   };
 
@@ -98,7 +102,7 @@ const TableTemplateFormWrapper = ({ isNew, onCancel }: Props) => {
         </SlideViewNavBar>
 
         <Content>
-          <TableTemplateForm isNew={isNew} />
+          <TableTemplateForm isNew={isNew} customFields={customFields} />
         </Content>
       </SlideViewLayout>
     </Provider>

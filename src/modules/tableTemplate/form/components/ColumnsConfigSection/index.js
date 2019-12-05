@@ -9,7 +9,11 @@ import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import { ColumnsConfigSectionWrapperStyle, ColumnsConfigSectionBodyStyle } from './style';
 
-const ColumnsConfigSection = () => {
+type Props = {
+  customFields: Object,
+};
+
+const ColumnsConfigSection = ({ customFields }: Props) => {
   const {
     state,
     setFieldValue,
@@ -47,6 +51,9 @@ const ColumnsConfigSection = () => {
     }),
     [groupedColumns, setFieldValue]
   );
+
+  console.warn('customFields', customFields);
+  console.warn('state', state);
 
   return (
     <>

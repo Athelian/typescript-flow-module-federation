@@ -1,11 +1,16 @@
 // @flow
 import * as React from 'react';
-import { Query } from 'react-apollo';
-import emitter from 'utils/emitter';
-import { getByPathWithDefault } from 'utils/fp';
+import { navigate } from '@reach/router';
+import { useQuery } from '@apollo/react-hooks';
+import { BooleanValue } from 'react-values';
+import { FormattedMessage } from 'react-intl';
+import SlideView from 'components/SlideView';
+import GridView from 'components/GridView';
+import { TemplateCard } from 'components/Cards';
+import TableTemplateFormWrapper from 'modules/tableTemplate/common/TableTemplateFormWrapper';
+import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import loadMore from 'utils/loadMore';
-import TableTemplateGridView from './TableTemplateGridView';
-import { tableTemplateQuery } from './query';
+import { tableTemplateQuery, allCustomFieldDefinitionsQuery } from './query';
 
 type Props = {
   filterBy: {
@@ -20,39 +25,102 @@ type Props = {
 
 const TableTemplateList = ({ ...filtersAndSort }: Props) => {
   const isTableTemplate = window.location.href.includes('templates');
+
+  const {
+    data: customFields,
+    loading: customFieldsQueryIsLoading,
+    error: customFieldsQueryError,
+  } = useQuery(allCustomFieldDefinitionsQuery, { fetchPolicy: 'network-only' });
+
+  const {
+    data: tableTemplatesData,
+    loading: tableTemplatesIsLoading,
+    error: tableTemplatesQueryError,
+    fetchMore,
+    refetch,
+  } = useQuery(tableTemplateQuery, {
+    fetchPolicy: 'network-only',
+    variables: { page: 1, ...filtersAndSort },
+  });
+
+  if (customFieldsQueryError || tableTemplatesQueryError) {
+    if (
+      (customFieldsQueryError?.message ?? '').includes('403') ||
+      (tableTemplatesQueryError?.message ?? '').includes('403')
+    ) {
+      navigate('/403');
+    }
+
+    if (customFieldsQueryError) {
+      return customFieldsQueryError.message;
+    }
+    return tableTemplatesQueryError.message;
+  }
+
+  const nextPage = (tableTemplatesData?.maskEdits?.page ?? 1) + 1;
+  const totalPages = tableTemplatesData?.maskEdits?.totalPage ?? 1;
+  const hasMore = nextPage <= totalPages;
+
+  const tableTemplates = tableTemplatesData?.maskEdits?.nodes ?? [];
+
   return (
-    <Query
-      query={tableTemplateQuery}
-      variables={{
-        page: 1,
-        ...filtersAndSort,
-      }}
-      fetchPolicy="network-only"
+    <GridView
+      onLoadMore={() =>
+        loadMore({ fetchMore, data: tableTemplatesData }, filtersAndSort, 'maskEdits')
+      }
+      hasMore={hasMore}
+      isLoading={customFieldsQueryIsLoading || tableTemplatesIsLoading}
+      itemWidth="195px"
+      isEmpty={tableTemplates.length === 0}
+      emptyMessage={
+        <FormattedMessage id="modules.TableTemplates.noItem" defaultMessage="No templates found" />
+      }
     >
-      {({ loading, data, fetchMore, refetch, error }) => {
-        if (error) {
-          return error.message;
-        }
-
-        const nextPage = getByPathWithDefault(1, `maskEdits.page`, data) + 1;
-        const totalPage = getByPathWithDefault(1, `maskEdits.totalPage`, data);
-        const hasMore = nextPage <= totalPage;
-
-        emitter.removeAllListeners('REFETCH_TABLE_TEMPLATES');
-        emitter.addListener('REFETCH_TABLE_TEMPLATES', () => {
-          if (isTableTemplate) refetch(tableTemplateQuery);
-        });
-
-        return (
-          <TableTemplateGridView
-            items={getByPathWithDefault([], 'maskEdits.nodes', data)}
-            onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'maskEdits')}
-            hasMore={hasMore}
-            isLoading={loading}
-          />
-        );
-      }}
-    </Query>
+      {tableTemplates.map(tableTemplate => (
+        <BooleanValue key={tableTemplate.id}>
+          {({ value: isOpen, set: toggle }) => (
+            <>
+              <TemplateCard
+                onClick={() => toggle(true)}
+                key={tableTemplate.id}
+                template={{
+                  id: tableTemplate.id,
+                  title: tableTemplate?.name,
+                  description: tableTemplate?.memo,
+                  count: (tableTemplate?.columns ?? []).reduce(
+                    (currentCount, column) => (currentCount + column?.hidden ? 0 : 1),
+                    0
+                  ),
+                }}
+                type="EDIT_TABLE"
+                showActionsOnHover
+              />
+              <SlideView
+                isOpen={isOpen}
+                onRequestClose={() => toggle(false)}
+                shouldConfirm={() => {
+                  const button = document.getElementById('table_template_form_save_button');
+                  return button;
+                }}
+              >
+                <TableTemplateFormContainer.Provider initialState={tableTemplate}>
+                  <TableTemplateFormWrapper
+                    isNew={false}
+                    customFields={customFields}
+                    onCancel={() => toggle(false)}
+                    onRefetch={() => {
+                      if (isTableTemplate) {
+                        refetch(tableTemplateQuery);
+                      }
+                    }}
+                  />
+                </TableTemplateFormContainer.Provider>
+              </SlideView>
+            </>
+          )}
+        </BooleanValue>
+      ))}
+    </GridView>
   );
 };
 
