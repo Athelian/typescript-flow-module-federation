@@ -15,6 +15,7 @@ import BaseBatchSyncPackagingAction from 'modules/sheet/batch/actions/BatchSyncP
 import BaseBatchMoveToExistingOrderAction from 'modules/sheet/batch/actions/BatchMoveToExistingOrderAction';
 import BaseBatchMoveToNewOrderAction from 'modules/sheet/batch/actions/BatchMoveToNewOrderAction';
 import BaseBatchMoveToExistingContainerAction from 'modules/sheet/batch/actions/BatchMoveToExistingContainerAction';
+import BaseBatchMoveToExistingShipmentAction from 'modules/sheet/batch/actions/BatchMoveToExistingShipmentAction';
 import BaseBatchMoveToNewContainerOnExistShipmentAction from 'modules/sheet/batch/actions/BatchMoveToNewContainerOnExistShipmentAction';
 import BaseBatchSplitAction from 'modules/sheet/batch/actions/BatchSplitAction';
 import BaseBatchDeleteRemoveAction from 'modules/sheet/batch/actions/BatchDeleteRemoveAction';
@@ -179,6 +180,12 @@ const getOrderItemData = (batchId: string, item: Object) => {
   };
 };
 
+const BatchMoveToExistingShipmentAction = BaseBatchMoveToExistingShipmentAction({
+  getBatch: getBatchData,
+  getImporter: (batchId, item) => item.importer,
+  getExporter: (batchId, item) => item.exporter,
+});
+
 const BatchMoveToNewOrderAction = BaseBatchMoveToNewOrderAction({
   getContainer: (batchId, item) =>
     (item?.orderItems ?? []).flatMap(({ batches }) => batches).find(({ id }) => id === batchId)
@@ -260,14 +267,20 @@ export default {
         perm(BATCH_SET_PACKAGE_WEIGHT) &&
         perm(BATCH_SET_PACKAGE_CAPACITY))
   ),
-  batch_move_order: AC(BatchMoveToExistingOrderAction, () => true),
+  batch_move_order: AC(
+    BatchMoveToExistingOrderAction,
+    hasPermissions => hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_ORDER_ITEM)
+  ),
   batch_move_new_order: AC(
     BatchMoveToNewOrderAction,
     hasPermissions =>
       hasPermissions(ORDER_CREATE) &&
       (hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_ORDER_ITEM))
   ),
-  batch_move_container: AC(BatchMoveToExistingContainerAction, () => true),
+  batch_move_container: AC(
+    BatchMoveToExistingContainerAction,
+    hasPermissions => hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_CONTAINER)
+  ),
   batch_move_new_container: AC(
     BatchMoveToNewContainerOnExsitShipmentAction,
     hasPermissions =>
@@ -276,7 +289,10 @@ export default {
       (hasPermissions(BATCH_UPDATE) ||
         (hasPermissions(BATCH_SET_SHIPMENT) && hasPermissions(BATCH_SET_CONTAINER)))
   ),
-  // batch_move_shipment: AC(BatchMoveToExistingShipmentAction, () => true),
+  batch_move_shipment: AC(
+    BatchMoveToExistingShipmentAction,
+    hasPermissions => hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_SHIPMENT)
+  ),
   // batch_move_new_shipment: AC(BatchMoveToNewShipmentAction, () => true),
   batch_split: AC(BatchSplitAction, perm => perm(BATCH_CREATE)),
   batch_delete_remove: AC(
