@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import ReactSVG from 'react-svg';
+import { ReactSVG } from 'react-svg';
 import Icon from 'components/Icon';
 import {
   PageNotFoundWrapperStyle,

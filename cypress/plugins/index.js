@@ -13,7 +13,6 @@
 const fetch = require('node-fetch');
 const logger = require('loglevel');
 const faker = require('faker');
-const chance = require('chance').Chance();
 const config = require('../../cypress.json');
 const user = require('../fixtures/user.json');
 
@@ -113,12 +112,12 @@ module.exports = on => {
             name: faker.name.findName(),
             updatedName: faker.name.findName(),
             clonedName: faker.name.findName(),
-            serial: chance.string({ length: 8 }),
-            clonedSerial: chance.string({ length: 8 }),
-            janCode: chance.string({ length: 13 }),
-            clonedJanCode: chance.string({ length: 13 }),
-            hsCode: chance.string({ length: 10 }),
-            clonedHsCode: chance.string({ length: 10 }),
+            serial: faker.lorem.slug(8).substr(0, 8),
+            clonedSerial: faker.lorem.slug(8).substr(0, 8),
+            janCode: faker.lorem.slug(13).substr(0, 13),
+            clonedJanCode: faker.lorem.slug(13).substr(0, 13),
+            hsCode: faker.lorem.slug(10).substr(0, 10),
+            clonedHsCode: faker.lorem.slug(10).substr(0, 10),
             material: faker.name.findName(),
             tags: [],
             endProductName: faker.name.findName(),
