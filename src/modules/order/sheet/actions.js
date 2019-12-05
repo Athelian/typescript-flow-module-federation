@@ -281,7 +281,9 @@ export default {
   ),
   batch_move_order: AC(
     BatchMoveToExistingOrderAction,
-    hasPermissions => hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_ORDER_ITEM)
+    hasPermissions =>
+      hasPermissions(ORDER_ITEMS_CREATE) &&
+      (hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_ORDER_ITEM))
   ),
   batch_move_new_order: AC(
     BatchMoveToNewOrderAction,
