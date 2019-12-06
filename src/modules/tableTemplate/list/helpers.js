@@ -8,21 +8,30 @@ export const getColumnsConfig = (
   type: string,
   customFields: Array<Object>
 ): Array<ColumnConfig> => {
-  const allFieldDefinitions = {
-    orderFieldDefinitions: customFields?.orderCustomFields ?? [],
-    orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
-    batchFieldDefinitions: customFields?.batchCustomFields ?? [],
-    shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
-    productFieldDefinitions: customFields?.productCustomFields ?? [],
-  };
   if (type === 'OrderSheet') {
-    return orderColumns(allFieldDefinitions);
+    return orderColumns({
+      orderFieldDefinitions: customFields?.orderCustomFields ?? [],
+      orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
+      batchFieldDefinitions: customFields?.batchCustomFields ?? [],
+      shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
+    });
   }
   if (type === 'ShipmentSheet') {
-    return shipmentColumns(allFieldDefinitions);
+    return shipmentColumns({
+      orderFieldDefinitions: customFields?.orderCustomFields ?? [],
+      orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
+      batchFieldDefinitions: customFields?.batchCustomFields ?? [],
+      shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
+      productFieldDefinitions: customFields?.productCustomFields ?? [],
+    });
   }
   if (type === 'BatchSheet') {
-    return batchColumns(allFieldDefinitions);
+    return batchColumns({
+      orderFieldDefinitions: customFields?.orderCustomFields ?? [],
+      orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
+      batchFieldDefinitions: customFields?.batchCustomFields ?? [],
+      shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
+    });
   }
   return [];
 };
@@ -31,13 +40,19 @@ export const parseColumns = (
   columnsConfig: Array<ColumnConfig>,
   queriedData: Array<{ key: string, hidden: boolean }>
 ): Array<ColumnConfig> | null => {
-  const cacheKeysOrder = Object.keys(queriedData);
+  const queriedDataAsObject = queriedData.reduce(
+    (object, item) => ({
+      ...object,
+      [item.key]: item.hidden,
+    }),
+    {}
+  );
 
   const orderedColumns = columnsConfig
-    .map(col => ({ ...col, hidden: !!queriedData[col.key] }))
+    .map(col => ({ ...col, hidden: !!queriedDataAsObject[col.key] }))
     .sort((a, b) => {
-      const aIdx = cacheKeysOrder.indexOf(a.key);
-      const bIdx = cacheKeysOrder.indexOf(b.key);
+      const aIdx = queriedData.findIndex(item => item.key === a.key);
+      const bIdx = queriedData.findIndex(item => item.key === b.key);
       if (aIdx > bIdx) {
         return 1;
       }

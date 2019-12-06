@@ -21,7 +21,7 @@ import TableTemplateForm from 'modules/tableTemplate/form';
 type Props = {
   isNew: boolean,
   onCancel: () => void,
-  onRefetch: () => void,
+  onRefetch?: () => void,
 };
 
 const formContainer = new FormContainer();
@@ -59,7 +59,9 @@ const TableTemplateFormWrapper = ({ isNew, onCancel, onRefetch }: Props) => {
     } else {
       initializeState(isNew ? data?.maskEditCreate : data?.maskEditUpdate);
       formContainer.onReset();
-      onRefetch();
+      if (onRefetch) {
+        onRefetch();
+      }
       onCancel();
     }
   };

@@ -93,7 +93,7 @@ const ShipmentSheetModuleImpl = ({
         <ColumnsConfig columns={columns} templateType="ShipmentSheet" onChange={setColumns}>
           {({ getGroupProps }) =>
             ShipmentSheetColumnGroupTypes.map(type => (
-              <ColumnsConfig.Group {...getGroupProps(type)} />
+              <ColumnsConfig.Group {...getGroupProps(type)} key={type} />
             ))
           }
         </ColumnsConfig>

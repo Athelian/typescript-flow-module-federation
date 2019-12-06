@@ -11,7 +11,6 @@ import TableTemplateFormWrapper from 'modules/tableTemplate/common/TableTemplate
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import loadMore from 'utils/loadMore';
 import { tableTemplateQuery, allCustomFieldDefinitionsQuery } from './query';
-import { getColumnsConfig, parseColumns } from './helpers';
 
 type Props = {
   filterBy: {
@@ -77,57 +76,51 @@ const TableTemplateList = ({ ...filtersAndSort }: Props) => {
         <FormattedMessage id="modules.TableTemplates.noItem" defaultMessage="No templates found" />
       }
     >
-      {tableTemplates.map(tableTemplate => {
-        const parsedColumns = parseColumns(
-          getColumnsConfig(tableTemplate?.type, customFields),
-          tableTemplate?.columns ?? []
-        );
-        const parsedTableTemplate = { ...tableTemplate, columns: parsedColumns };
-
-        return (
-          <BooleanValue key={parsedTableTemplate.id}>
-            {({ value: isOpen, set: toggle }) => (
-              <>
-                <TemplateCard
-                  onClick={() => toggle(true)}
-                  key={parsedTableTemplate.id}
-                  template={{
-                    id: parsedTableTemplate.id,
-                    title: parsedTableTemplate?.name,
-                    description: parsedTableTemplate?.memo,
-                    count: (parsedTableTemplate?.columns ?? []).reduce(
-                      (currentCount, column) => (currentCount + column?.hidden ? 0 : 1),
-                      0
-                    ),
-                  }}
-                  type="EDIT_TABLE"
-                  showActionsOnHover
-                />
-                <SlideView
-                  isOpen={isOpen}
-                  onRequestClose={() => toggle(false)}
-                  shouldConfirm={() => {
-                    const button = document.getElementById('table_template_form_save_button');
-                    return button;
-                  }}
+      {tableTemplates.map(tableTemplate => (
+        <BooleanValue key={tableTemplate.id}>
+          {({ value: isOpen, set: toggle }) => (
+            <>
+              <TemplateCard
+                onClick={() => toggle(true)}
+                key={tableTemplate.id}
+                template={{
+                  id: tableTemplate.id,
+                  title: tableTemplate?.name,
+                  description: tableTemplate?.memo,
+                  count: (tableTemplate?.columns ?? []).reduce(
+                    (currentCount, column) => (currentCount + column?.hidden ? 0 : 1),
+                    0
+                  ),
+                }}
+                type="EDIT_TABLE"
+                showActionsOnHover
+              />
+              <SlideView
+                isOpen={isOpen}
+                onRequestClose={() => toggle(false)}
+                shouldConfirm={() => {
+                  const button = document.getElementById('table_template_form_save_button');
+                  return button;
+                }}
+              >
+                <TableTemplateFormContainer.Provider
+                  initialState={{ ...tableTemplate, customFields }}
                 >
-                  <TableTemplateFormContainer.Provider initialState={parsedTableTemplate}>
-                    <TableTemplateFormWrapper
-                      isNew={false}
-                      onCancel={() => toggle(false)}
-                      onRefetch={() => {
-                        if (isTableTemplate) {
-                          refetch(tableTemplateQuery);
-                        }
-                      }}
-                    />
-                  </TableTemplateFormContainer.Provider>
-                </SlideView>
-              </>
-            )}
-          </BooleanValue>
-        );
-      })}
+                  <TableTemplateFormWrapper
+                    isNew={false}
+                    onCancel={() => toggle(false)}
+                    onRefetch={() => {
+                      if (isTableTemplate) {
+                        refetch(tableTemplateQuery);
+                      }
+                    }}
+                  />
+                </TableTemplateFormContainer.Provider>
+              </SlideView>
+            </>
+          )}
+        </BooleanValue>
+      ))}
     </GridView>
   );
 };

@@ -12,6 +12,7 @@ const defaultState = {
   columns: [],
   updatedAt: '',
   updatedBy: null,
+  customFields: [],
 };
 
 const useTableTemplateFormContainer = (initialState: Object = defaultState) => {

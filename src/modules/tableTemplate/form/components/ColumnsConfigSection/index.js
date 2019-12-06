@@ -7,7 +7,7 @@ import { SectionHeader } from 'components/Form';
 import type { ColumnConfig } from 'components/Sheet/SheetState/types';
 import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
-import { getColumnGroupTypes } from './helpers';
+import { getColumnGroupTypes, getColumnsConfig, parseColumns } from './helpers';
 import { ColumnsConfigSectionWrapperStyle, ColumnsConfigSectionBodyStyle } from './style';
 
 const ColumnsConfigSection = () => {
@@ -18,19 +18,23 @@ const ColumnsConfigSection = () => {
     unselectAllColumns,
     groupAllColumns,
   } = TableTemplateFormContainer.useContainer();
-  const { columns, type } = state;
 
   // COMPUTED STATES
+  const parsedColumns = React.useMemo(
+    () => parseColumns(getColumnsConfig(state.type, state.customFields), state.columns),
+    [state.type, state.customFields, state.columns]
+  );
+
   const groupedColumns = React.useMemo(
     () =>
-      columns.reduce(
+      parsedColumns.reduce(
         (grouped, col) => ({
           ...grouped,
           [col.icon]: [...(grouped[col.icon] ?? []), col],
         }),
         {}
       ),
-    [columns]
+    [parsedColumns]
   );
 
   // CALLBACKS
@@ -92,8 +96,8 @@ const ColumnsConfigSection = () => {
         </SectionNavBar>
 
         <div className={ColumnsConfigSectionBodyStyle}>
-          {getColumnGroupTypes(type).map(groupType => (
-            <ColumnsGroup {...getGroupProps(groupType)} />
+          {getColumnGroupTypes(state.type).map(groupType => (
+            <ColumnsGroup {...getGroupProps(groupType)} key={groupType} />
           ))}
         </div>
       </div>

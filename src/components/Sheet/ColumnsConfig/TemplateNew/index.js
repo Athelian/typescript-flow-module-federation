@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import SlideView from 'components/SlideView';
-import TemplateFormWrapper from 'modules/tableTemplate/common/TemplateFormWrapper';
+import TableTemplateFormWrapper from 'modules/tableTemplate/common/TableTemplateFormWrapper';
+import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 
 type RenderProps = {
   onClick: () => void,
@@ -26,17 +27,19 @@ const TemplateNew = ({ columns, templateType, onSave, children }: Props) => {
         onRequestClose={() => setOpen(false)}
         shouldConfirm={() => document.getElementById('table_template_form_save_button')}
       >
-        <TemplateFormWrapper
-          template={{
-            name: '',
-            memo: '',
+        <TableTemplateFormContainer.Provider
+          initialState={{
             type: templateType,
-            fields: columns,
+            columns,
           }}
-          isNew
-          onSave={template => onSave(template)}
-          onCancel={() => setOpen(false)}
-        />
+        >
+          <TableTemplateFormWrapper
+            isNew
+            // TODO: Apply properly
+            onSave={template => onSave(template)}
+            onCancel={() => setOpen(false)}
+          />
+        </TableTemplateFormContainer.Provider>
       </SlideView>
     </>
   );

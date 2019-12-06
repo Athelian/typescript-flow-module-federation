@@ -83,7 +83,9 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig columns={columns} templateType="BatchSheet" onChange={setColumns}>
           {({ getGroupProps }) =>
-            BatchSheetColumnGroupTypes.map(type => <ColumnsConfig.Group {...getGroupProps(type)} />)
+            BatchSheetColumnGroupTypes.map(type => (
+              <ColumnsConfig.Group {...getGroupProps(type)} key={type} />
+            ))
           }
         </ColumnsConfig>
         <ExportButton
