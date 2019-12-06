@@ -83,13 +83,9 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig columns={columns} templateType="OrderSheet" onChange={setColumns}>
           {({ getGroupProps }) =>
-<<<<<<< HEAD
             OrderSheetColumnGroups.map(type => (
               <ColumnsConfig.Group {...getGroupProps(type)} key={type} />
             ))
-=======
-            OrderSheetColumnGroupTypes.map(type => <ColumnsConfig.Group {...getGroupProps(type)} />)
->>>>>>> feat(table-template): parse initial columns
           }
         </ColumnsConfig>
         <ExportButton
