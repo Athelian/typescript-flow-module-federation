@@ -115,6 +115,7 @@ export const partnerNameFragment = gql`
   fragment partnerNameFragment on Organization {
     id
     name
+    types
   }
 `;
 
