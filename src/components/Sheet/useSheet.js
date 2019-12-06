@@ -4,12 +4,10 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { DocumentNode } from 'graphql';
 import type { FilterBy, SortBy, SortDirection } from 'types';
 import useFilterSort from 'hooks/useFilterSort';
-import type { ColumnConfig, ColumnSort } from './SheetState/types';
+import type { ColumnSort } from './SheetState/types';
 import useLocalSort from './useLocalSort';
-import useColumns from './useColumns';
 
 type Input = {
-  columns: Array<ColumnConfig>,
   itemsQuery: DocumentNode,
   initialFilterBy: FilterBy,
   initialSortBy: SortBy,
@@ -22,8 +20,6 @@ type Output = {
   initialItems: Array<Object>,
   loading: boolean,
   hasMore: boolean,
-  columns: Array<ColumnConfig>,
-  setColumns: (Array<ColumnConfig>) => void,
   query: string,
   setQuery: string => void,
   filterBy: FilterBy,
@@ -37,7 +33,6 @@ type Output = {
 };
 
 export default function useSheet({
-  columns,
   itemsQuery,
   initialFilterBy,
   initialSortBy,
@@ -47,7 +42,6 @@ export default function useSheet({
 }: Input): Output {
   const client = useApolloClient();
 
-  const [currentColumns, setCurrentColumns] = useColumns(columns, cacheKey);
   const [initialItems, setInitialItems] = React.useState<Array<Object>>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [page, setPage] = React.useState<{ page: number, totalPage: number }>({
@@ -137,8 +131,6 @@ export default function useSheet({
     initialItems,
     loading,
     hasMore: page.page < page.totalPage,
-    columns: currentColumns,
-    setColumns: setCurrentColumns,
     query,
     setQuery,
     filterBy,

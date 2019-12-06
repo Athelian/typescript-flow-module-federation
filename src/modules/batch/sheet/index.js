@@ -5,7 +5,7 @@ import { equals } from 'ramda';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, BatchFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig, useSheet, useResizedColumns } from 'components/Sheet';
+import { Sheet, ColumnsConfig, useSheet, useColumns, useResizedColumns } from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
@@ -47,8 +47,6 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
     loading,
     hasMore,
     onLoadMore,
-    columns,
-    setColumns,
     query,
     setQuery,
     filterBy,
@@ -58,7 +56,6 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
     onLocalSort,
     onRemoteSort,
   } = useSheet({
-    columns: columnConfigs,
     itemsQuery: batchesQuery,
     initialFilterBy: { query: '', archived: false },
     initialSortBy: { updatedAt: 'DESCENDING' },
@@ -66,6 +63,7 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
     getItems,
     cacheKey: 'batch_sheet',
   });
+  const [columns, setColumns] = useColumns(columnConfigs, 'batch_sheet');
 
   const [resizedColumns, onColumnResize] = useResizedColumns(columns, 'batch_sheet');
 

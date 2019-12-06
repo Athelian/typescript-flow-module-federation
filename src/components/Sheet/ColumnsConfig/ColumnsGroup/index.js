@@ -1,16 +1,10 @@
 // @flow
 import * as React from 'react';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import Icon from 'components/Icon';
-import CheckboxInput from 'components/Form/CheckboxInput';
 import type { ColumnConfig } from 'components/Sheet/SheetState/types';
-import {
-  ColumnStyle,
-  ColumnsWrapperStyle,
-  IconStyle,
-  LeftWrapperStyle,
-  WrapperStyle,
-} from './style';
+import DraggableColumn from '../DraggableColumn';
+import { ColumnsWrapperStyle, IconStyle, LeftWrapperStyle, WrapperStyle } from './style';
 
 type Props = {
   icon: string,
@@ -58,29 +52,12 @@ const ColumnsGroup = ({ icon, columns, onChange }: Props) => {
               className={ColumnsWrapperStyle}
             >
               {columns.map((column, index) => (
-                <Draggable key={column.key} draggableId={column.key} index={index}>
-                  {(dragProvided, snapshot) => (
-                    <div
-                      ref={dragProvided.innerRef}
-                      {...dragProvided.draggableProps}
-                      {...dragProvided.dragHandleProps}
-                      style={dragProvided.draggableProps.style}
-                      className={ColumnStyle(snapshot.isDragging)}
-                    >
-                      <i>
-                        <Icon icon="DRAG_HANDLE" />
-                      </i>
-                      <CheckboxInput
-                        checked={!column.hidden}
-                        onToggle={(e: SyntheticEvent<HTMLButtonElement>) => {
-                          e.stopPropagation();
-                          handleToggle(index);
-                        }}
-                      />
-                      <span>{column.title}</span>
-                    </div>
-                  )}
-                </Draggable>
+                <DraggableColumn
+                  key={column.key}
+                  index={index}
+                  column={column}
+                  onToggle={handleToggle}
+                />
               ))}
               {dropProvided.placeholder}
             </div>

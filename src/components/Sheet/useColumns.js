@@ -4,22 +4,20 @@ import { useAuthenticated } from 'contexts/Viewer';
 import { getCache, invalidateCache, setCache } from 'utils/cache';
 import type { ColumnConfig } from './SheetState/types';
 
-const KEY_PREFIX = 'zenport_sheet_columns';
+export const SHEET_COLUMN_KEY_PREFIX = 'zenport_sheet_columns';
 const WIDTH_KEY_PREFIX = 'zenport_sheet_column_widths';
 
-function getColumnsCache(key: string, columns: Array<ColumnConfig>): Array<ColumnConfig> | null {
-  const cache = getCache<{ [string]: boolean }>(KEY_PREFIX, key);
-  if (!cache) {
-    return null;
-  }
-
-  const cacheKeysOrder = Object.keys(cache);
+export function getColumnsConfigured(
+  columns: Array<ColumnConfig>,
+  configuration: { [string]: boolean }
+): Array<ColumnConfig> {
+  const keysOrder = Object.keys(configuration);
 
   const orderedColumns = columns
-    .map(col => ({ ...col, hidden: !!cache[col.key] }))
+    .map(col => ({ ...col, hidden: !!configuration[col.key] }))
     .sort((a, b) => {
-      const aIdx = cacheKeysOrder.indexOf(a.key);
-      const bIdx = cacheKeysOrder.indexOf(b.key);
+      const aIdx = keysOrder.indexOf(a.key);
+      const bIdx = keysOrder.indexOf(b.key);
       if (aIdx > bIdx) {
         return 1;
       }
@@ -41,9 +39,18 @@ function getColumnsCache(key: string, columns: Array<ColumnConfig>): Array<Colum
   return Object.values(groupedColumns).flat();
 }
 
+function getColumnsCache(key: string, columns: Array<ColumnConfig>): Array<ColumnConfig> | null {
+  const cache = getCache<{ [string]: boolean }>(SHEET_COLUMN_KEY_PREFIX, key);
+  if (!cache || !typeof cache === 'object') {
+    return null;
+  }
+
+  return getColumnsConfigured(columns, cache);
+}
+
 function setColumnsCache(key: string, columns: Array<ColumnConfig>) {
   setCache(
-    KEY_PREFIX,
+    SHEET_COLUMN_KEY_PREFIX,
     key,
     columns.reduce((cache, col) => ({ ...cache, [col.key]: col.hidden }), {})
   );
@@ -57,13 +64,13 @@ export function useColumnsInvalidator() {
       return;
     }
 
-    invalidateCache(KEY_PREFIX);
+    invalidateCache(SHEET_COLUMN_KEY_PREFIX);
   }, [authenticated]);
 }
 
 export default function useColumns(
   columns: Array<ColumnConfig>,
-  cacheKey: string
+  cacheKey: ?string
 ): [Array<ColumnConfig>, (Array<ColumnConfig>) => void] {
   const [currentColumns, setCurrentColumns] = React.useState<Array<ColumnConfig> | null>(null);
 

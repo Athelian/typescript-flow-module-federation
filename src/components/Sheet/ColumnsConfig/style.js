@@ -7,8 +7,7 @@ export const ButtonStyle = css`
 `;
 
 export const ModalWrapperStyle: string = css`
-  display: flex;
-  flex-direction: column;
+  ${layout.VERTICAL};
 `;
 
 export const HeaderStyle: string = css`

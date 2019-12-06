@@ -4,10 +4,17 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ProjectFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig, useSheet, useResizedColumns } from 'components/Sheet';
+import {
+  Sheet,
+  ColumnsConfig,
+  useSheet,
+  useResizedColumns,
+  type ColumnConfig,
+} from 'components/Sheet';
 import { clone } from 'utils/fp';
 import { projectsExportQuery } from '../query';
-import projectColumns from './columns';
+import MilestoneTaskColumnsConfigGroup from './MilestoneTaskColumnsConfigGroup';
+import { useProjectColumns } from './columns';
 import transformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
@@ -31,8 +38,6 @@ const ProjectSheetModule = () => {
     loading,
     hasMore,
     onLoadMore,
-    columns,
-    setColumns,
     query,
     setQuery,
     filterBy,
@@ -42,7 +47,6 @@ const ProjectSheetModule = () => {
     onLocalSort,
     onRemoteSort,
   } = useSheet({
-    columns: projectColumns,
     itemsQuery: projectsQuery,
     initialFilterBy: { query: '' },
     initialSortBy: { updatedAt: 'DESCENDING' },
@@ -50,8 +54,56 @@ const ProjectSheetModule = () => {
     getItems,
     cacheKey: 'project_sheet',
   });
+  const [columns, setColumns] = useProjectColumns('project_sheet');
 
   const [resizedColumns, onColumnResize] = useResizedColumns(columns, 'project_sheet');
+
+  /**
+   * Add a prefix to each milestone and task columns title.
+   * For milestone columns: #{milestone index + 1} {title}
+   * For tasks columns: #{milestone index + 1}-{task index + 1} {title}
+   *
+   * @type {Array<ColumnsConfig>}
+   */
+  const columnsWithPrefix = React.useMemo<Array<ColumnConfig>>(
+    () =>
+      resizedColumns.map(col => {
+        if (col.key.startsWith('milestones')) {
+          let matches = col.key.match(/milestones\.(\d+)/);
+          if (matches) {
+            const milestoneIdx = parseFloat(matches[1]);
+
+            if (col.key.startsWith(`milestones.${milestoneIdx}.tasks`)) {
+              matches = col.key.match(/milestones\.\d+\.tasks.(\d+)/);
+              if (matches) {
+                const taskIdx = parseFloat(matches[1]);
+
+                return {
+                  ...col,
+                  title: (
+                    <>
+                      #{milestoneIdx + 1}-{taskIdx + 1} {col.title}
+                    </>
+                  ),
+                };
+              }
+            }
+
+            return {
+              ...col,
+              title: (
+                <>
+                  #{milestoneIdx + 1} {col.title}
+                </>
+              ),
+            };
+          }
+        }
+
+        return col;
+      }),
+    [resizedColumns]
+  );
 
   return (
     <Content>
@@ -64,8 +116,7 @@ const ProjectSheetModule = () => {
           {({ getGroupProps }) => (
             <>
               <ColumnsConfig.Group {...getGroupProps('PROJECT')} />
-              <ColumnsConfig.Group {...getGroupProps('MILESTONE')} />
-              <ColumnsConfig.Group {...getGroupProps('TASK')} />
+              <MilestoneTaskColumnsConfigGroup {...getGroupProps('MILESTONE_TASK')} />
             </>
           )}
         </ColumnsConfig>
@@ -82,7 +133,7 @@ const ProjectSheetModule = () => {
       </NavBar>
 
       <Sheet
-        columns={resizedColumns}
+        columns={columnsWithPrefix}
         loading={loading}
         items={initialItems}
         hasMore={hasMore}

@@ -6,7 +6,7 @@ import { equals } from 'ramda';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ShipmentFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig, useSheet, useResizedColumns } from 'components/Sheet';
+import { Sheet, ColumnsConfig, useSheet, useColumns, useResizedColumns } from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
@@ -53,8 +53,6 @@ const ShipmentSheetModuleImpl = ({
     loading,
     hasMore,
     onLoadMore,
-    columns,
-    setColumns,
     query,
     setQuery,
     filterBy,
@@ -64,7 +62,6 @@ const ShipmentSheetModuleImpl = ({
     onLocalSort,
     onRemoteSort,
   } = useSheet({
-    columns: columnConfigs,
     itemsQuery: shipmentsQuery,
     initialFilterBy: { query: '', archived: false },
     initialSortBy: { updatedAt: 'DESCENDING' },
@@ -72,6 +69,7 @@ const ShipmentSheetModuleImpl = ({
     getItems,
     cacheKey: 'shipment_sheet',
   });
+  const [columns, setColumns] = useColumns(columnConfigs, 'shipment_sheet');
 
   const [resizedColumns, onColumnResize] = useResizedColumns(columns, 'shipment_sheet');
 
