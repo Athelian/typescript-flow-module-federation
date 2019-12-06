@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import { navigate } from '@reach/router';
+import { useQuery } from '@apollo/react-hooks';
 import { Provider } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { injectIntl, FormattedMessage } from 'react-intl';
@@ -15,6 +17,7 @@ import FilterToolBar from 'components/common/FilterToolBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { NewButton } from 'components/Buttons';
 import useFilter from 'hooks/useFilter';
+import { allCustomFieldDefinitionsQuery, tableTemplateQuery } from './list/query';
 import TableTemplateList from './list';
 import messages from './messages';
 
@@ -36,16 +39,53 @@ const getInitFilter = (type: string) => ({
 });
 
 const TableTemplateModule = (props: Props) => {
+  const isTableTemplate = window.location.href.includes('templates');
+
+  const { hasPermission } = usePermission();
+
+  const {
+    data: customFields,
+    loading: customFieldsQueryIsLoading,
+    error: customFieldsQueryError,
+  } = useQuery(allCustomFieldDefinitionsQuery, { fetchPolicy: 'network-only' });
+
   const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter } = useFilter(
     getInitFilter('OrderSheet'),
     'filterTableTemplate'
   );
+
+  const {
+    data: tableTemplatesData,
+    loading: tableTemplatesIsLoading,
+    error: tableTemplatesQueryError,
+    fetchMore,
+    refetch,
+  } = useQuery(tableTemplateQuery, {
+    fetchPolicy: 'network-only',
+    variables: { page: 1, ...queryVariables },
+  });
+
+  if (customFieldsQueryError) {
+    if ((customFieldsQueryError?.message ?? '').includes('403')) {
+      navigate('/403');
+    }
+
+    return customFieldsQueryError.message;
+  }
+
+  if (tableTemplatesQueryError) {
+    if ((tableTemplatesQueryError?.message ?? '').includes('403')) {
+      navigate('/403');
+    }
+
+    return tableTemplatesQueryError.message;
+  }
+
   const { intl } = props;
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
-  const { hasPermission } = usePermission();
   const canCreate = hasPermission(TEMPLATE_CREATE);
   const activeType = filtersAndSort.filter?.type;
   const setActiveType = (type: string) => onChangeFilter({ ...filtersAndSort, filter: { type } });
@@ -127,7 +167,7 @@ const TableTemplateModule = (props: Props) => {
             <BooleanValue>
               {({ value: isOpen, set: toggle }) => (
                 <>
-                  <NewButton onClick={() => toggle(true)} />
+                  <NewButton onClick={() => toggle(true)} isLoading={customFieldsQueryIsLoading} />
 
                   <SlideView
                     isOpen={isOpen}
@@ -137,8 +177,18 @@ const TableTemplateModule = (props: Props) => {
                       return button;
                     }}
                   >
-                    <TableTemplateFormContainer.Provider initialState={null}>
-                      <TableTemplateFormWrapper isNew onCancel={() => toggle(false)} />
+                    <TableTemplateFormContainer.Provider
+                      initialState={{ type: activeType, customFields }}
+                    >
+                      <TableTemplateFormWrapper
+                        isNew
+                        onCancel={() => toggle(false)}
+                        onRefetch={() => {
+                          if (isTableTemplate) {
+                            refetch(tableTemplateQuery);
+                          }
+                        }}
+                      />
                     </TableTemplateFormContainer.Provider>
                   </SlideView>
                 </>
@@ -146,7 +196,20 @@ const TableTemplateModule = (props: Props) => {
             </BooleanValue>
           )}
         </NavBar>
-        <TableTemplateList {...queryVariables} />
+        <TableTemplateList
+          isTableTemplate={isTableTemplate}
+          tableTemplatesData={tableTemplatesData}
+          tableTemplatesIsLoading={tableTemplatesIsLoading}
+          fetchMore={fetchMore}
+          refetch={() => {
+            if (isTableTemplate) {
+              refetch(tableTemplateQuery);
+            }
+          }}
+          customFieldsQueryIsLoading={customFieldsQueryIsLoading}
+          customFields={customFields}
+          {...queryVariables}
+        />
       </Content>
     </Provider>
   );

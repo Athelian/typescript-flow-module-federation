@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { IconButton } from 'components/Buttons';
+import { BaseButton } from 'components/Buttons';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader } from 'components/Form';
 import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
@@ -17,7 +17,7 @@ const ColumnsConfigSection = () => {
     unselectAllColumns,
     groupAllColumns,
   } = TableTemplateFormContainer.useContainer();
-  console.warn(state);
+
   // COMPUTED STATES
   const parsedColumns = React.useMemo(
     () => parseColumns(getColumnsConfig(state.type, state.customFields), state.columns),
@@ -69,27 +69,37 @@ const ColumnsConfigSection = () => {
 
       <div className={ColumnsConfigSectionWrapperStyle}>
         <SectionNavBar>
-          <IconButton
-            onClick={selectAllColumns}
-            icon="UNCHECKED"
-            textColor="GRAY_DARK"
-            hoverTextColor="WHITE"
-            backgroundColor="GRAY_SUPER_LIGHT"
-            hoverBackgroundColor="GRAY_LIGHT"
-          />
-
-          <IconButton
+          <BaseButton
             onClick={unselectAllColumns}
-            icon="CHECKED"
+            icon="UNCHECKED"
+            label={
+              <FormattedMessage
+                id="modules.TableTemplates.unselectAll"
+                defaultMessage="UNSELECT ALL"
+              />
+            }
             textColor="GRAY_DARK"
             hoverTextColor="WHITE"
             backgroundColor="GRAY_SUPER_LIGHT"
             hoverBackgroundColor="GRAY_LIGHT"
           />
 
-          <IconButton
+          <BaseButton
+            onClick={selectAllColumns}
+            icon="CHECKED"
+            label={
+              <FormattedMessage id="modules.TableTemplates.selectAll" defaultMessage="SELECT ALL" />
+            }
+            textColor="GRAY_DARK"
+            hoverTextColor="WHITE"
+            backgroundColor="GRAY_SUPER_LIGHT"
+            hoverBackgroundColor="GRAY_LIGHT"
+          />
+
+          <BaseButton
             onClick={() => groupAllColumns(groupedColumns)}
             icon="BRING_FORWARD"
+            label={<FormattedMessage id="modules.TableTemplates.group" defaultMessage="GROUP" />}
             textColor="GRAY_DARK"
             hoverTextColor="WHITE"
             backgroundColor="GRAY_SUPER_LIGHT"

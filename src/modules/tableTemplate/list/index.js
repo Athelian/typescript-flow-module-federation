@@ -1,7 +1,5 @@
 // @flow
 import * as React from 'react';
-import { navigate } from '@reach/router';
-import { useQuery } from '@apollo/react-hooks';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
@@ -10,9 +8,14 @@ import { TemplateCard } from 'components/Cards';
 import TableTemplateFormWrapper from 'modules/tableTemplate/common/TableTemplateFormWrapper';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import loadMore from 'utils/loadMore';
-import { tableTemplateQuery, allCustomFieldDefinitionsQuery } from './query';
 
 type Props = {
+  tableTemplatesData: Object,
+  tableTemplatesIsLoading: boolean,
+  fetchMore: Function,
+  refetch: Function,
+  customFieldsQueryIsLoading: boolean,
+  customFields: Array<Object>,
   filterBy: {
     type: string,
   },
@@ -23,40 +26,15 @@ type Props = {
   page: number,
 };
 
-const TableTemplateList = ({ ...filtersAndSort }: Props) => {
-  const isTableTemplate = window.location.href.includes('templates');
-
-  const {
-    data: customFields,
-    loading: customFieldsQueryIsLoading,
-    error: customFieldsQueryError,
-  } = useQuery(allCustomFieldDefinitionsQuery, { fetchPolicy: 'network-only' });
-
-  const {
-    data: tableTemplatesData,
-    loading: tableTemplatesIsLoading,
-    error: tableTemplatesQueryError,
-    fetchMore,
-    refetch,
-  } = useQuery(tableTemplateQuery, {
-    fetchPolicy: 'network-only',
-    variables: { page: 1, ...filtersAndSort },
-  });
-
-  if (customFieldsQueryError || tableTemplatesQueryError) {
-    if (
-      (customFieldsQueryError?.message ?? '').includes('403') ||
-      (tableTemplatesQueryError?.message ?? '').includes('403')
-    ) {
-      navigate('/403');
-    }
-
-    if (customFieldsQueryError) {
-      return customFieldsQueryError.message;
-    }
-    return tableTemplatesQueryError.message;
-  }
-
+const TableTemplateList = ({
+  tableTemplatesData,
+  tableTemplatesIsLoading,
+  fetchMore,
+  refetch,
+  customFieldsQueryIsLoading,
+  customFields,
+  ...filtersAndSort
+}: Props) => {
   const nextPage = (tableTemplatesData?.maskEdits?.page ?? 1) + 1;
   const totalPages = tableTemplatesData?.maskEdits?.totalPage ?? 1;
   const hasMore = nextPage <= totalPages;
@@ -109,11 +87,7 @@ const TableTemplateList = ({ ...filtersAndSort }: Props) => {
                   <TableTemplateFormWrapper
                     isNew={false}
                     onCancel={() => toggle(false)}
-                    onRefetch={() => {
-                      if (isTableTemplate) {
-                        refetch(tableTemplateQuery);
-                      }
-                    }}
+                    onRefetch={refetch}
                   />
                 </TableTemplateFormContainer.Provider>
               </SlideView>
