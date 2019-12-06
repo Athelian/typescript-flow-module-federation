@@ -13,7 +13,7 @@ import type { ColumnConfig } from 'components/Sheet';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
-import orderColumns, { FieldDefinitionEntityTypes, OrderSheetColumnGroupTypes } from './columns';
+import orderColumns, { FieldDefinitionEntityTypes, OrderSheetColumnGroups } from './columns';
 import orderTransformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
@@ -85,7 +85,7 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig columns={columns} templateType="OrderSheet" onChange={setColumns}>
           {({ getGroupProps }) =>
-            OrderSheetColumnGroupTypes.map(type => (
+            OrderSheetColumnGroups.map(type => (
               <ColumnsConfig.Group {...getGroupProps(type)} key={type} />
             ))
           }

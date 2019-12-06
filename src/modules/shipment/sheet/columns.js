@@ -10,7 +10,7 @@ import productColumns from 'modules/sheet/product/columns';
 
 export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment', 'Product'];
 
-export const ShipmentSheetColumnGroupTypes = [
+export const ShipmentSheetColumnGroups = [
   'SHIPMENT',
   'CONTAINER',
   'BATCH',

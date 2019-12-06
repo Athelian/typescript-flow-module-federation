@@ -1,52 +1,52 @@
 // @flow
 import type { ColumnConfig } from 'components/Sheet/SheetState/types';
-import orderColumns, { OrderSheetColumnGroupTypes } from 'modules/order/sheet/columns';
-import shipmentColumns, { ShipmentSheetColumnGroupTypes } from 'modules/shipment/sheet/columns';
-import batchColumns, { BatchSheetColumnGroupTypes } from 'modules/batch/sheet/columns';
+import orderColumns, { OrderSheetColumnGroups } from 'modules/order/sheet/columns';
+import shipmentColumns, { ShipmentSheetColumnGroups } from 'modules/shipment/sheet/columns';
+import batchColumns, { BatchSheetColumnGroups } from 'modules/batch/sheet/columns';
 
 export const getColumnGroupTypes = (type: string): Array<string> => {
-  if (type === 'OrderSheet') {
-    return OrderSheetColumnGroupTypes;
+  switch (type) {
+    case 'OrderSheet':
+      return OrderSheetColumnGroups;
+    case 'ShipmentSheet':
+      return ShipmentSheetColumnGroups;
+    case 'BatchSheet':
+      return BatchSheetColumnGroups;
+    default:
+      return [];
   }
-  if (type === 'ShipmentSheet') {
-    return ShipmentSheetColumnGroupTypes;
-  }
-  if (type === 'BatchSheet') {
-    return BatchSheetColumnGroupTypes;
-  }
-  return [];
 };
 
 export const getColumnsConfig = (
   type: string,
   customFields: Array<Object>
 ): Array<ColumnConfig> => {
-  if (type === 'OrderSheet') {
-    return orderColumns({
-      orderFieldDefinitions: customFields?.orderCustomFields ?? [],
-      orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
-      batchFieldDefinitions: customFields?.batchCustomFields ?? [],
-      shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
-    });
+  switch (type) {
+    case 'OrderSheet':
+      return orderColumns({
+        orderFieldDefinitions: customFields?.orderCustomFields ?? [],
+        orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
+        batchFieldDefinitions: customFields?.batchCustomFields ?? [],
+        shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
+      });
+    case 'ShipmentSheet':
+      return shipmentColumns({
+        orderFieldDefinitions: customFields?.orderCustomFields ?? [],
+        orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
+        batchFieldDefinitions: customFields?.batchCustomFields ?? [],
+        shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
+        productFieldDefinitions: customFields?.productCustomFields ?? [],
+      });
+    case 'BatchSheet':
+      return batchColumns({
+        orderFieldDefinitions: customFields?.orderCustomFields ?? [],
+        orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
+        batchFieldDefinitions: customFields?.batchCustomFields ?? [],
+        shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
+      });
+    default:
+      return [];
   }
-  if (type === 'ShipmentSheet') {
-    return shipmentColumns({
-      orderFieldDefinitions: customFields?.orderCustomFields ?? [],
-      orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
-      batchFieldDefinitions: customFields?.batchCustomFields ?? [],
-      shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
-      productFieldDefinitions: customFields?.productCustomFields ?? [],
-    });
-  }
-  if (type === 'BatchSheet') {
-    return batchColumns({
-      orderFieldDefinitions: customFields?.orderCustomFields ?? [],
-      orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
-      batchFieldDefinitions: customFields?.batchCustomFields ?? [],
-      shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
-    });
-  }
-  return [];
 };
 
 export const parseColumns = (

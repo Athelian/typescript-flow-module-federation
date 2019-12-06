@@ -10,7 +10,7 @@ import containerColumns from 'modules/sheet/container/columns';
 
 export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment', 'Product'];
 
-export const BatchSheetColumnGroupTypes = ['BATCH', 'ORDER_ITEM', 'ORDER', 'CONTAINER', 'SHIPMENT'];
+export const BatchSheetColumnGroups = ['BATCH', 'ORDER_ITEM', 'ORDER', 'CONTAINER', 'SHIPMENT'];
 
 type Props = {
   orderFieldDefinitions: Array<FieldDefinition>,

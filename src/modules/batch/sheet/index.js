@@ -12,7 +12,7 @@ import type { ColumnConfig } from 'components/Sheet';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { batchesExportQuery } from '../query';
-import batchColumns, { FieldDefinitionEntityTypes, BatchSheetColumnGroupTypes } from './columns';
+import batchColumns, { FieldDefinitionEntityTypes, BatchSheetColumnGroups } from './columns';
 import batchTransformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
@@ -83,7 +83,7 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig columns={columns} templateType="BatchSheet" onChange={setColumns}>
           {({ getGroupProps }) =>
-            BatchSheetColumnGroupTypes.map(type => (
+            BatchSheetColumnGroups.map(type => (
               <ColumnsConfig.Group {...getGroupProps(type)} key={type} />
             ))
           }

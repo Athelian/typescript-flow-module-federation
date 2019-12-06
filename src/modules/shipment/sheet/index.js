@@ -13,10 +13,7 @@ import type { ColumnConfig } from 'components/Sheet';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { shipmentsExportQuery } from '../query';
-import shipmentColumns, {
-  FieldDefinitionEntityTypes,
-  ShipmentSheetColumnGroupTypes,
-} from './columns';
+import shipmentColumns, { FieldDefinitionEntityTypes, ShipmentSheetColumnGroups } from './columns';
 import shipmentTransformer from './transformer';
 import entityEventHandler from './handler';
 import actions from './actions';
@@ -92,7 +89,7 @@ const ShipmentSheetModuleImpl = ({
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig columns={columns} templateType="ShipmentSheet" onChange={setColumns}>
           {({ getGroupProps }) =>
-            ShipmentSheetColumnGroupTypes.map(type => (
+            ShipmentSheetColumnGroups.map(type => (
               <ColumnsConfig.Group {...getGroupProps(type)} key={type} />
             ))
           }
