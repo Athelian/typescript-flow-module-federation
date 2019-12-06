@@ -71,7 +71,6 @@ const TableTemplateList = ({
                   ),
                 }}
                 type="EDIT_TABLE"
-                showActionsOnHover
               />
               <SlideView
                 isOpen={isOpen}

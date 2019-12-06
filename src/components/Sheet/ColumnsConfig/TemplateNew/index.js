@@ -17,6 +17,7 @@ type Props = {
 
 const TemplateNew = ({ columns, templateType, onSave, children }: Props) => {
   const [open, setOpen] = React.useState(false);
+  console.warn(columns);
 
   return (
     <>
@@ -30,7 +31,7 @@ const TemplateNew = ({ columns, templateType, onSave, children }: Props) => {
         <TableTemplateFormContainer.Provider
           initialState={{
             type: templateType,
-            columns,
+            // TODO: Handle properly
           }}
         >
           <TableTemplateFormWrapper
