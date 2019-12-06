@@ -394,6 +394,13 @@ class OrderFormModule extends React.PureComponent<Props> {
                       orderTagsState.isDirty() ||
                       orderFilesState.isDirty() ||
                       orderTasksState.isDirty();
+                    console.warn({
+                      orderItemState: orderItemState.isDirty(),
+                      orderInfoState: orderInfoState.isDirty(),
+                      orderTagsState: orderTagsState.isDirty(),
+                      orderFilesState: orderFilesState.isDirty(),
+                      orderTasksState: orderTasksState.isDirty(),
+                    });
 
                     return (
                       <>
