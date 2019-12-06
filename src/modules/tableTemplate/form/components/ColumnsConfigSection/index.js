@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { IconButton } from 'components/Buttons';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader } from 'components/Form';
-import type { ColumnConfig } from 'components/Sheet/SheetState/types';
 import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import { getColumnGroupTypes, getColumnsConfig, parseColumns } from './helpers';
@@ -18,7 +17,7 @@ const ColumnsConfigSection = () => {
     unselectAllColumns,
     groupAllColumns,
   } = TableTemplateFormContainer.useContainer();
-
+  console.warn(state);
   // COMPUTED STATES
   const parsedColumns = React.useMemo(
     () => parseColumns(getColumnsConfig(state.type, state.customFields), state.columns),
@@ -42,13 +41,16 @@ const ColumnsConfigSection = () => {
     (group: string) => ({
       icon: group,
       columns: groupedColumns[group] ?? [],
-      onChange: newCols =>
+      onChange: newCols => {
         setFieldValue(
           'columns',
           Object.entries(groupedColumns).flatMap(([g, cols]) =>
-            g === group ? newCols : ((cols: any): Array<ColumnConfig>)
+            g === group
+              ? newCols.map(newCol => ({ key: newCol.key, hidden: newCol.hidden }))
+              : cols.map(col => ({ key: col.key, hidden: col.hidden }))
           )
-        ),
+        );
+      },
     }),
     [groupedColumns, setFieldValue]
   );

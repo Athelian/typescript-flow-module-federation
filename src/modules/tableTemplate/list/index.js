@@ -88,7 +88,7 @@ const TableTemplateList = ({ ...filtersAndSort }: Props) => {
                   title: tableTemplate?.name,
                   description: tableTemplate?.memo,
                   count: (tableTemplate?.columns ?? []).reduce(
-                    (currentCount, column) => (currentCount + column?.hidden ? 0 : 1),
+                    (currentCount, column) => currentCount + (column?.hidden ? 0 : 1),
                     0
                   ),
                 }}

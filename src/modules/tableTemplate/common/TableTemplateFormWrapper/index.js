@@ -49,7 +49,7 @@ const TableTemplateFormWrapper = ({ isNew, onCancel, onRefetch }: Props) => {
     const input = prepareParsedMaskEditInput(isNew ? null : originalState, state);
 
     const { data } = await maskEditMutate({
-      variables: { input },
+      variables: { ...(isNew ? {} : { id: state.id }), input },
     });
 
     const violations = isNew ? data?.maskEditCreate?.violations : data?.maskEditUpdate?.violations;

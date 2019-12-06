@@ -30,7 +30,6 @@ export const maskEditUpdateMutation: Object = gql`
 
 export const prepareParsedMaskEditInput = (originalValues: ?Object, newValues: Object): Object => {
   return {
-    ...(originalValues ? { id: originalValues.id } : {}),
     ...parseGenericField('name', originalValues?.name, newValues.name),
     ...parseEnumField('type', originalValues?.type, newValues.type),
     ...parseMemoField('memo', originalValues?.memo, newValues.memo),
