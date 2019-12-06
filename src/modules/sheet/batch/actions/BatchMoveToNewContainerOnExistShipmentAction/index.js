@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Query } from 'react-apollo';
+import { useLazyQuery } from '@apollo/react-hooks';
 import type { BatchPayload, OrderItemPayload, OrganizationPayload } from 'generated/graphql';
 import loadMore from 'utils/loadMore';
 import useFilterSort from 'hooks/useFilterSort';
@@ -25,8 +26,10 @@ import { ShipmentCard } from 'components/Cards';
 import { SHIPMENT_ADD_BATCH } from 'modules/permission/constants/shipment';
 import { BATCH_UPDATE } from 'modules/permission/constants/batch';
 import { useSheetActionDialog } from 'components/Sheet/SheetAction';
+import LoadingIcon from 'components/LoadingIcon';
 import ValidationCardOverlay from 'components/ValidationCardOverlay';
 import { shipmentListQuery } from './query';
+import { orderItemFormQuery } from '../BatchMoveToNewShipmentAction/query';
 
 type Props = {|
   getBatch: (batchId: string, item: Object) => BatchPayload,
@@ -114,6 +117,7 @@ const BatchMoveToNewContainerOnExsitShipmentActionImpl = ({
   const [isOpen, close] = useSheetActionDialog(onDone);
   const [selected, setSelected] = React.useState(null);
   const [isShow, setIsShow] = React.useState(false);
+  const [queryOrderItem, itemResult] = useLazyQuery(orderItemFormQuery);
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', archived: false },
     { updatedAt: 'DESCENDING' },
@@ -121,27 +125,67 @@ const BatchMoveToNewContainerOnExsitShipmentActionImpl = ({
   );
   const queryVariables = { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 10 };
   const batch = getBatch(entity.id, item);
-  const orderItem = getOrderItem(entity.id, item);
+  const orderItem = { ...getOrderItem(entity.id, item), ...(itemResult?.data?.orderItem ?? {}) };
   const newBatches = [{ ...batch, orderItem }];
-  const importer = getImporter(entity.id, item);
-  const exporter = getExporter(entity.id, item);
+  const importer: Object = { ...getImporter(entity.id, item), types: ['Importer'] };
+  const exporter: Object = { ...getExporter(entity.id, item), types: ['Exporter'] };
+
+  React.useEffect(() => {
+    if (isOpen && isShow && !itemResult?.called && orderItem?.id) {
+      queryOrderItem({
+        variables: { id: orderItem?.id },
+      });
+    }
+  }, [isOpen, queryOrderItem, orderItem, isShow, itemResult.called, itemResult]);
+
   return (
     <SlideView isOpen={isOpen} onRequestClose={close}>
       {isShow ? (
-        <NewContainerForm
-          container={{
-            importer,
-            exporter: isExporter() ? exporter : null,
-            batches: newBatches.map(currentBatch => ({
-              ...currentBatch,
-              shipment: selected,
-            })),
-            shipment: selected,
-          }}
-          onSuccessCallback={close}
-          shipmentId={selected?.id ?? ''}
-          onCancel={close}
-        />
+        (() => {
+          if (itemResult.loading)
+            return (
+              <SlideViewLayout>
+                <SlideViewNavBar>
+                  <EntityIcon icon="SHIPMENT" color="SHIPMENT" subIcon="CARDS" />
+                  <Filter
+                    config={ShipmentFilterConfig}
+                    filterBy={filterBy}
+                    onChange={setFilterBy}
+                  />
+                  <Search query={query} onChange={setQuery} />
+                  <Sort config={ShipmentSortConfig} sortBy={sortBy} onChange={setSortBy} />
+                  <CancelButton onClick={close} />
+                  <SaveButton
+                    label={
+                      <FormattedMessage id="components.button.continue" defaultMessage="Continue" />
+                    }
+                    disabled={!selected}
+                    onClick={() => setIsShow(true)}
+                  />
+                </SlideViewNavBar>
+                <Content>
+                  <LoadingIcon />
+                </Content>
+              </SlideViewLayout>
+            );
+
+          return (
+            <NewContainerForm
+              container={{
+                importer,
+                exporter: isExporter() ? exporter : null,
+                batches: newBatches.map(currentBatch => ({
+                  ...currentBatch,
+                  shipment: selected,
+                })),
+                shipment: selected,
+              }}
+              onSuccessCallback={close}
+              shipmentId={selected?.id ?? ''}
+              onCancel={close}
+            />
+          );
+        })()
       ) : (
         <SlideViewLayout>
           <SlideViewNavBar>
