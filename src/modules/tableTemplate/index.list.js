@@ -201,11 +201,6 @@ const TableTemplateModule = (props: Props) => {
           tableTemplatesData={tableTemplatesData}
           tableTemplatesIsLoading={tableTemplatesIsLoading}
           fetchMore={fetchMore}
-          refetch={() => {
-            if (isTableTemplate) {
-              refetch(tableTemplateQuery);
-            }
-          }}
           customFieldsQueryIsLoading={customFieldsQueryIsLoading}
           customFields={customFields}
           {...queryVariables}

@@ -13,7 +13,6 @@ type Props = {
   tableTemplatesData: Object,
   tableTemplatesIsLoading: boolean,
   fetchMore: Function,
-  refetch: Function,
   customFieldsQueryIsLoading: boolean,
   customFields: Array<Object>,
   filterBy: {
@@ -30,7 +29,6 @@ const TableTemplateList = ({
   tableTemplatesData,
   tableTemplatesIsLoading,
   fetchMore,
-  refetch,
   customFieldsQueryIsLoading,
   customFields,
   ...filtersAndSort
@@ -83,11 +81,7 @@ const TableTemplateList = ({
                 <TableTemplateFormContainer.Provider
                   initialState={{ ...tableTemplate, customFields }}
                 >
-                  <TableTemplateFormWrapper
-                    isNew={false}
-                    onCancel={() => toggle(false)}
-                    onRefetch={refetch}
-                  />
+                  <TableTemplateFormWrapper isNew={false} onCancel={() => toggle(false)} />
                 </TableTemplateFormContainer.Provider>
               </SlideView>
             </>
