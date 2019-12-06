@@ -116,6 +116,16 @@ export function decorateBatch(batch: Object): Object {
   };
 }
 
+export function unDecorateBatch(batch: Object): Object {
+  return {
+    ...batch,
+    packageQuantity: batch.packageQuantity.value,
+    autoCalculatePackageQuantity: batch.packageQuantity.auto,
+    packageVolume: batch.packageVolume.value,
+    autoCalculatePackageVolume: batch.packageVolume.auto,
+  };
+}
+
 export function decorateOrderItem(orderItem: Object): Object {
   return {
     ...orderItem,

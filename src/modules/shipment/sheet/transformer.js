@@ -1,4 +1,5 @@
 // @flow
+import { IntlShape } from 'react-intl';
 import type { FieldDefinition } from 'types';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import transformSheetOrder from 'modules/sheet/order/transformer';
@@ -7,6 +8,7 @@ import transformSheetBatch from 'modules/sheet/batch/transformer';
 import transformSheetShipment from 'modules/sheet/shipment/transformer';
 import transformSheetContainer from 'modules/sheet/container/transformer';
 import transformSheetProduct from 'modules/sheet/product/transformer';
+import batchMessages from 'modules/sheet/batch/actions/messages';
 
 function getCurrentBatch(batchId: string, shipment: Object): ?Object {
   return [...shipment.batchesWithoutContainer, ...shipment.containers.flatMap(c => c.batches)].find(
@@ -65,7 +67,8 @@ function transformContainer(
 function transformBatch(
   fieldDefinitions: Array<FieldDefinition>,
   basePath: string,
-  batch: Object
+  batch: Object,
+  intl: IntlShape
 ): Array<CellValue> {
   return transformSheetBatch({
     fieldDefinitions,
@@ -74,7 +77,32 @@ function transformBatch(
     getOrderFromRoot: root => getCurrentBatch(batch?.id, root)?.order,
     getShipmentFromRoot: root => root,
     getBatchFromRoot: root => getCurrentBatch(batch?.id, root),
-    actions: [],
+    actions: [
+      {
+        action: 'batch_move_order',
+        label: intl.formatMessage(batchMessages.batchMoveToExistingOrderTitle),
+      },
+      {
+        action: 'batch_move_new_order',
+        label: intl.formatMessage(batchMessages.batchMoveToNewOrderTitle),
+      },
+      {
+        action: 'batch_move_container',
+        label: intl.formatMessage(batchMessages.batchMoveToExistingContainerTitle),
+      },
+      {
+        action: 'batch_move_new_container',
+        label: intl.formatMessage(batchMessages.batchMoveToNewContainerTitle),
+      },
+      {
+        action: 'batch_move_shipment',
+        label: intl.formatMessage(batchMessages.batchMoveToShipmentTitle),
+      },
+      {
+        action: 'batch_move_new_shipment',
+        label: intl.formatMessage(batchMessages.batchMoveToNewShipmentTitle),
+      },
+    ],
   }).map(c => ({
     ...c,
     disabled: !batch,
@@ -143,6 +171,7 @@ type Props = {
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
   productFieldDefinitions: Array<FieldDefinition>,
+  intl: IntlShape,
 };
 
 export default function transformer({
@@ -151,6 +180,7 @@ export default function transformer({
   batchFieldDefinitions,
   shipmentFieldDefinitions,
   productFieldDefinitions,
+  intl,
 }: Props) {
   return (index: number, shipment: Object): Array<Array<CellValue>> => {
     const rows = [];
@@ -164,7 +194,8 @@ export default function transformer({
         ...transformBatch(
           batchFieldDefinitions,
           `${index}.batchesWithoutContainer.${batchIdx}`,
-          batch
+          batch,
+          intl
         ),
         ...transformBatchOrderItem(
           orderItemFieldDefinitions,
@@ -202,7 +233,8 @@ export default function transformer({
               ...transformBatch(
                 batchFieldDefinitions,
                 `${index}.containers.${containerIdx}.batches.${batchIdx}`,
-                batch
+                batch,
+                intl
               ),
               ...transformBatchOrderItem(
                 orderItemFieldDefinitions,
@@ -231,7 +263,8 @@ export default function transformer({
             ...transformBatch(
               batchFieldDefinitions,
               `${index}.containers.${containerIdx}.batches.-1`,
-              null
+              null,
+              intl
             ),
             ...transformBatchOrderItem(
               orderItemFieldDefinitions,
@@ -257,7 +290,7 @@ export default function transformer({
       rows.push([
         ...shipmentCells,
         ...transformContainer(`${index}.containers.-1`, null, false),
-        ...transformBatch(batchFieldDefinitions, `${index}.containers.-1.batches.-1`, null),
+        ...transformBatch(batchFieldDefinitions, `${index}.containers.-1.batches.-1`, null, intl),
         ...transformBatchOrderItem(
           orderItemFieldDefinitions,
           `${index}.containers.-1.batches.-1`,
