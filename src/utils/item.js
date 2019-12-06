@@ -121,7 +121,7 @@ export const generateItemForMovedBatch = (
   orderItem: OrderItemPayload,
   batch: BatchPayload
 ): OrderItemPayload => {
-  return {
+  const item = {
     ...orderItem,
     customFields: {
       mask: null,
@@ -141,6 +141,9 @@ export const generateItemForMovedBatch = (
       amount: orderItem?.price?.currency === 'USD' ? orderItem?.price?.amount ?? 0 : 0,
       currency: orderItem?.price?.currency ?? 'USD',
     },
-    batches: [batch],
+  };
+  return {
+    ...item,
+    batches: [{ ...batch, orderItem: item }],
   };
 };
