@@ -1279,6 +1279,8 @@
   "modules.Sheet.batch.batchMoveToNewOrderTitle.title": "新規発注に移動",
   "modules.Sheet.batch.batchMoveToExistingContainer.title": "コンテナに移動",
   "modules.Sheet.batch.batchMoveToNewContainerTitle.title": "新規コンテナに移動",
+  "modules.Sheet.batch.batchMoveToShipmentTitle.title": "Move to Shipment",
+  "modules.Sheet.batch.batchMoveToNewShipmentTitle.title": "Move to New Shipment",
   "modules.Sheet.order.syncAllPrices.title": "全ての価格を同期",
   "modules.Sheet.order.syncAllPrices.syncButton": "同期",
   "modules.Sheet.order.syncAllPrices.syncing": "{numOfValidItems}つの{itemsLabel}を同期しています...",

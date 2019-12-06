@@ -1279,6 +1279,8 @@
   "modules.Sheet.batch.batchMoveToNewOrderTitle.title": "Move to New Order",
   "modules.Sheet.batch.batchMoveToExistingContainer.title": "Move to Container",
   "modules.Sheet.batch.batchMoveToNewContainerTitle.title": "Move to New Container",
+  "modules.Sheet.batch.batchMoveToShipmentTitle.title": "Move to Shipment",
+  "modules.Sheet.batch.batchMoveToNewShipmentTitle.title": "Move to New Shipment",
   "modules.Sheet.order.syncAllPrices.title": "同步所有价格",
   "modules.Sheet.order.syncAllPrices.syncButton": "同步",
   "modules.Sheet.order.syncAllPrices.syncing": "正在同步 {numOfValidItems} {itemsLabel} ...",
