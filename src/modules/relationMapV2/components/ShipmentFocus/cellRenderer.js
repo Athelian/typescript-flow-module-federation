@@ -110,7 +110,7 @@ function OrderCell({ data, beforeConnector }: CellProps) {
     collect: monitor => ({
       isOver: !!monitor.isOver(),
       canDrop: !!monitor.canDrop(),
-      isSameItem: monitor.getItem() && monitor.getItem().id === orderId,
+      isSameItem: monitor.getItem()?.id === orderId,
       dropMessage: orderDropMessage({
         hasPermissions,
         entities,
@@ -280,7 +280,7 @@ function OrderItemCell({
     collect: monitor => ({
       isOver: !!monitor.isOver(),
       canDrop: !!monitor.canDrop(),
-      isSameItem: monitor.getItem() && monitor.getItem().id === itemId,
+      isSameItem: monitor.getItem()?.id === itemId,
       dropMessage: orderItemDropMessage({
         hasPermissions,
         entities,
@@ -795,7 +795,7 @@ function ContainerCell({
     collect: monitor => ({
       isOver: !!monitor.isOver(),
       canDrop: !!monitor.canDrop(),
-      isSameItem: monitor.getItem() && monitor.getItem().id === containerId,
+      isSameItem: monitor.getItem()?.id === containerId,
       dropMessage: containerDropMessage({
         hasPermissions,
         entities,
@@ -995,7 +995,7 @@ function ShipmentCell({
         }
 
         case BATCHES: {
-          const batchIds = item.id.split(',');
+          const batchIds = (item?.id ?? '').split(',');
           const shipmentIds = [
             ...new Set(
               batchIds
@@ -1058,7 +1058,7 @@ function ShipmentCell({
     collect: monitor => ({
       isOver: !!monitor.isOver(),
       canDrop: !!monitor.canDrop(),
-      isSameItem: monitor.getItem() && monitor.getItem().id === shipmentId,
+      isSameItem: monitor.getItem()?.id === shipmentId,
       dropMessage: shipmentDropMessage({
         hasPermissions,
         entities,
