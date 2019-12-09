@@ -47,7 +47,7 @@ import {
   SHIPMENT_ADD_BATCH,
 } from 'modules/permission/constants/shipment';
 import { PRODUCT_PROVIDER_LIST } from 'modules/permission/constants/product';
-import { unDecorateBatch } from './decorator';
+import { unDecorateBatch, unDecorateContainer } from './decorator';
 
 const OrderSyncAllPricesAction = BaseOrderSyncAllPricesAction({
   getUniqueProductProvidersIds: item => [
@@ -190,8 +190,10 @@ const BatchMoveToExistingShipmentAction = BaseBatchMoveToExistingShipmentAction(
 
 const BatchMoveToNewOrderAction = BaseBatchMoveToNewOrderAction({
   getContainer: (batchId, item) =>
-    (item?.orderItems ?? []).flatMap(({ batches }) => batches).find(({ id }) => id === batchId)
-      ?.container,
+    unDecorateContainer(
+      (item?.orderItems ?? []).flatMap(({ batches }) => batches).find(({ id }) => id === batchId)
+        ?.container
+    ),
   getShipment: (batchId, item) =>
     (item?.orderItems ?? []).flatMap(({ batches }) => batches).find(({ id }) => id === batchId)
       ?.shipment,

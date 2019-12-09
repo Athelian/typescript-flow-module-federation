@@ -21,7 +21,7 @@ import {
   SHIPMENT_UPDATE,
   SHIPMENT_ADD_BATCH,
 } from 'modules/permission/constants/shipment';
-import { unDecorateBatch } from './decorator';
+import { unDecorateBatch, unDecorateContainer } from './decorator';
 
 function findBatch(batchId: string, shipment: Object): Object {
   return [...shipment.batchesWithoutContainer, ...shipment.containers.flatMap(c => c.batches)].find(
@@ -57,7 +57,8 @@ const BatchMoveToExistingShipmentAction = BaseBatchMoveToExistingShipmentAction(
 });
 
 const BatchMoveToNewOrderAction = BaseBatchMoveToNewOrderAction({
-  getContainer: (batchId, item) => item.containers.find(c => c.batches.some(b => b.id === batchId)),
+  getContainer: (batchId, item) =>
+    unDecorateContainer(item.containers.find(c => c.batches.some(b => b.id === batchId))),
   getShipment: (batchId, item) => item,
   getBatch: (batchId, item) => unDecorateBatch(findBatch(batchId, item)),
   getOrderItem: (batchId, item) => findBatch(batchId, item)?.orderItem,
