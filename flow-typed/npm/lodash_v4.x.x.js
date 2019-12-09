@@ -1,5 +1,5 @@
-// flow-typed signature: d9351f76193470ab6a4fd379227cc5b8
-// flow-typed version: 5af8c1fad8/lodash_v4.x.x/flow_>=v0.104.x
+// flow-typed signature: f4f777abe47b0c6f64c23a016a0500c3
+// flow-typed version: 331a9313d8/lodash_v4.x.x/flow_>=v0.104.x
 
 declare module "lodash" {
   declare type Path = $ReadOnlyArray<string | number> | string | number;
@@ -953,11 +953,11 @@ declare module "lodash" {
     ceil(number: number, precision?: number): number;
     divide(dividend: number, divisor: number): number;
     floor(number: number, precision?: number): number;
-    max<T>(array: ?Array<T>): T;
+    max<T>(array: ?$ReadOnlyArray<T>): T;
     maxBy<T>(array: ?$ReadOnlyArray<T>, iteratee?: Iteratee<T>): T;
     mean(array: Array<*>): number;
     meanBy<T>(array: Array<T>, iteratee?: Iteratee<T>): number;
-    min<T>(array: ?Array<T>): T;
+    min<T>(array: ?$ReadOnlyArray<T>): T;
     minBy<T>(array: ?$ReadOnlyArray<T>, iteratee?: Iteratee<T>): T;
     multiply(multiplier: number, multiplicand: number): number;
     round(number: number, precision?: number): number;

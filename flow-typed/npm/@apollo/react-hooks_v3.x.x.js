@@ -25,7 +25,8 @@ declare module '@apollo/react-hooks' {
           query: DocumentNode,
           variables: any,
           ...
-        }>,
+        }
+      >,
       ...
     };
     getChildContext(): {
@@ -36,7 +37,8 @@ declare module '@apollo/react-hooks' {
           query: DocumentNode,
           variables: any,
           ...
-        }>,
+        }
+      >,
       ...
     };
   }
@@ -119,7 +121,8 @@ declare module '@apollo/react-hooks' {
 
   declare export type QueryHookOptions<TData, TVariables> = QueryFunctionOptions<
     TData,
-    TVariables> & {
+    TVariables
+  > & {
     query?: DocumentNode,
     ...
   };
@@ -129,7 +132,8 @@ declare module '@apollo/react-hooks' {
     {
       skip: any,
       ...
-    }> & {
+    }
+  > & {
     query?: DocumentNode,
     ...
   };
@@ -164,14 +168,16 @@ declare module '@apollo/react-hooks' {
   /* Mutation types */
   declare export type MutationHookOptions<TData, TVariables> = BaseMutationOptions<
     TData,
-    TVariables> & {
+    TVariables
+  > & {
     mutation?: DocumentNode,
     ...
   };
 
   declare export type MutationOptions<TData, TVariables> = BaseMutationOptions<
     TData,
-    TVariables> & {
+    TVariables
+  > & {
     mutation: DocumentNode,
     ...
   };
@@ -184,14 +190,16 @@ declare module '@apollo/react-hooks' {
   /* Subscription types */
   declare export type SubscriptionHookOptions<TData, TVariables> = BaseSubscriptionOptions<
     TData,
-    TVariables> & {
+    TVariables
+  > & {
     subscription?: DocumentNode,
     ...
   };
 
   declare export type SubscriptionOptions<TData, TVariables> = BaseSubscriptionOptions<
     TData,
-    TVariables> & {
+    TVariables
+  > & {
     subscription: DocumentNode,
     children?: null | ((result: SubscriptionResult<TData>) => Element<any> | null),
     ...
@@ -332,7 +340,8 @@ declare module '@apollo/react-hooks' {
   declare export type BaseSubscriptionOptions<TData, TVariables> = {
     variables?: TVariables,
     fetchPolicy?: FetchPolicy,
-    shouldResubscribe?: | boolean
+    shouldResubscribe?:
+      | boolean
       | ((options: BaseSubscriptionOptions<TData, TVariables>) => boolean),
     client?: ApolloClient<any>,
     onSubscriptionData?: (options: OnSubscriptionDataOptions<TData>) => any,
@@ -628,7 +637,8 @@ declare module '@apollo/react-hooks' {
     optimisticResponse?: any;
     updateQueries?: MutationQueryReducersMap<T>;
     optimisticResponse?: any;
-    refetchQueries?: | ((result: ExecutionResult<>) => RefetchQueryDescription)
+    refetchQueries?:
+      | ((result: ExecutionResult<>) => RefetchQueryDescription)
       | RefetchQueryDescription;
     update?: MutationUpdaterFn<T>;
     errorPolicy?: ErrorPolicy;
@@ -785,7 +795,7 @@ declare module '@apollo/react-hooks' {
     constructor(options: ApolloClientOptions<TCacheShape>): this;
     watchQuery<T>(options: WatchQueryOptions): ObservableQuery<T>;
     query<T>(options: WatchQueryOptions): Promise<ApolloQueryResult<T>>;
-    mutate<T>(options: MutationOptions<T, V>): Promise<FetchResult<T>>;
+    mutate<T, V>(options: MutationOptions<T, V>): Promise<FetchResult<T>>;
     subscribe<T, D>(options: SubscriptionOptions<T, D>): Observable<any>;
     readQuery<T, D>(options: DataProxyReadQueryOptions<D>): T | null;
     readFragment<TData, TVariables>(
@@ -1012,10 +1022,12 @@ declare module '@apollo/react-hooks' {
   declare type CacheDiffResult<T> = DataProxyDiffResult<T>;
   declare type CacheWriteQueryOptions<TData, TVariables> = DataProxyWriteQueryOptions<
     TData,
-    TVariables>;
+    TVariables
+  >;
   declare type CacheWriteFragmentOptions<TData, TVariables> = DataProxyWriteFragmentOptions<
     TData,
-    TVariables>;
+    TVariables
+  >;
   declare type CacheWriteDataOptions<TData> = DataProxyWriteDataOptions<TData>;
 
   declare interface DataProxyReadQueryOptions {
