@@ -9,6 +9,7 @@ type Props = {|
   onClick: Function,
   id?: string,
   'data-testid'?: string,
+  isLoading?: boolean,
 |};
 
 const defaultProps = {

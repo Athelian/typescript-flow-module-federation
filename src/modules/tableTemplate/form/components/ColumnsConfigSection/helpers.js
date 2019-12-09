@@ -17,10 +17,7 @@ export const getColumnGroupTypes = (type: string): Array<string> => {
   }
 };
 
-export const getColumnsConfig = (
-  type: string,
-  customFields: Array<Object>
-): Array<ColumnConfig> => {
+export const getColumnsConfig = (type: string, customFields: ?Object): Array<ColumnConfig> => {
   switch (type) {
     case 'OrderSheet':
       return orderColumns({
@@ -52,7 +49,7 @@ export const getColumnsConfig = (
 export const parseColumns = (
   columnsConfig: Array<ColumnConfig>,
   queriedData: Array<{ key: string, hidden: boolean }>
-): Array<ColumnConfig> | null => {
+): Array<ColumnConfig> => {
   const queriedDataAsObject = queriedData.reduce(
     (object, item) => ({
       ...object,

@@ -47,7 +47,7 @@ const ColumnsConfigSection = () => {
           Object.entries(groupedColumns).flatMap(([g, cols]) =>
             g === group
               ? newCols.map(newCol => ({ key: newCol.key, hidden: newCol.hidden }))
-              : cols.map(col => ({ key: col.key, hidden: col.hidden }))
+              : (cols: any).map(col => ({ key: col.key, hidden: col.hidden }))
           )
         );
       },

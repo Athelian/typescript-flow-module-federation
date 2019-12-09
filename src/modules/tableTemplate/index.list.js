@@ -4,15 +4,14 @@ import { navigate } from '@reach/router';
 import { useQuery } from '@apollo/react-hooks';
 import { Provider } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import type { IntlShape } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { useViewerHasPermissions } from 'contexts/Permissions';
 import { TEMPLATE_CREATE } from 'modules/permission/constants/template';
-import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
 import TableTemplateFormWrapper from 'modules/tableTemplate/common/TableTemplateFormWrapper';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import { Content } from 'components/Layout';
-import { NavBar, EntityIcon } from 'components/NavBar';
+import { EntityIcon, NavBar } from 'components/NavBar';
 import FilterToolBar from 'components/common/FilterToolBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { NewButton } from 'components/Buttons';
@@ -20,10 +19,6 @@ import useFilter from 'hooks/useFilter';
 import { allCustomFieldDefinitionsQuery, tableTemplateQuery } from './list/query';
 import TableTemplateList from './list';
 import messages from './messages';
-
-type Props = {
-  intl: IntlShape,
-};
 
 const getInitFilter = (type: string) => ({
   viewType: 'grid',
@@ -38,10 +33,11 @@ const getInitFilter = (type: string) => ({
   page: 1,
 });
 
-const TableTemplateModule = (props: Props) => {
+const TableTemplateModule = () => {
+  const intl = useIntl();
   const isTableTemplate = window.location.href.includes('templates');
 
-  const { hasPermission } = usePermission();
+  const hasPermissions = useViewerHasPermissions();
 
   const {
     data: customFields,
@@ -81,12 +77,11 @@ const TableTemplateModule = (props: Props) => {
     return tableTemplatesQueryError.message;
   }
 
-  const { intl } = props;
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
-  const canCreate = hasPermission(TEMPLATE_CREATE);
+  const canCreate = hasPermissions(TEMPLATE_CREATE);
   const activeType = filtersAndSort.filter?.type;
   const setActiveType = (type: string) => onChangeFilter({ ...filtersAndSort, filter: { type } });
 
@@ -172,16 +167,14 @@ const TableTemplateModule = (props: Props) => {
                   <SlideView
                     isOpen={isOpen}
                     onRequestClose={() => toggle(false)}
-                    shouldConfirm={() => {
-                      const button = document.getElementById('table_template_form_save_button');
-                      return button;
-                    }}
+                    shouldConfirm={() => document.getElementById('table_template_form_save_button')}
                   >
                     <TableTemplateFormContainer.Provider
                       initialState={{ type: activeType, customFields }}
                     >
                       <TableTemplateFormWrapper
                         isNew
+                        onSave={() => toggle(false)}
                         onCancel={() => toggle(false)}
                         onRefetch={() => {
                           if (isTableTemplate) {
@@ -210,4 +203,4 @@ const TableTemplateModule = (props: Props) => {
   );
 };
 
-export default injectIntl(TableTemplateModule);
+export default TableTemplateModule;

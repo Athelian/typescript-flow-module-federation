@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { useViewerHasPermissions } from 'contexts/Permissions';
 import { TEMPLATE_CREATE, TEMPLATE_UPDATE } from 'modules/permission/constants/template';
-import usePermission from 'hooks/usePermission';
 import validator from 'modules/tableTemplate/form/validator';
 import { FormField } from 'modules/form';
 import {
@@ -22,8 +22,8 @@ type Props = {
 const TableTemplateSection = ({ isNew }: Props) => {
   const { state, originalState, setFieldValue } = TableTemplateFormContainer.useContainer();
 
-  const { hasPermission } = usePermission();
-  const canCreateOrUpdate = hasPermission(TEMPLATE_CREATE) || hasPermission(TEMPLATE_UPDATE);
+  const hasPermissions = useViewerHasPermissions();
+  const canCreateOrUpdate = hasPermissions(TEMPLATE_CREATE) || hasPermissions(TEMPLATE_UPDATE);
 
   return (
     <>

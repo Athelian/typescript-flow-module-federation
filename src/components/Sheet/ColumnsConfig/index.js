@@ -5,6 +5,7 @@ import Dialog from 'components/Dialog';
 import { ApplyButton, ResetButton, BaseButton, SaveButton, IconButton } from 'components/Buttons';
 import { Tooltip } from 'components/Tooltip';
 import type { ColumnConfig } from '../SheetState/types';
+import { getColumnsConfigured } from '../useColumns';
 import messages from '../messages';
 import ColumnsGroup from './ColumnsGroup';
 import TemplateSelector from './TemplateSelector';
@@ -91,8 +92,18 @@ const ColumnsConfig = ({ columns, templateType, onChange, children }: Props) => 
         })
       )
     );
-  const handleTemplateChange = () => {
-    // TODO: handle template selection after new template form is done
+  const handleTemplateChange = template => {
+    if (template) {
+      setDirtyColumns(
+        getColumnsConfigured(
+          columns,
+          (template?.columns ?? []).reduce(
+            (cache, col) => ({ ...cache, [col.key]: col.hidden }),
+            {}
+          )
+        )
+      );
+    }
   };
 
   // CALLBACKS
@@ -183,8 +194,7 @@ const ColumnsConfig = ({ columns, templateType, onChange, children }: Props) => 
               </div>
 
               <TemplateNew
-                // TODO: change when new form is done
-                columns={dirtyColumns.filter(col => !col.hidden).map(col => col.key)}
+                columns={dirtyColumns}
                 templateType={templateType}
                 onSave={handleTemplateChange}
               >

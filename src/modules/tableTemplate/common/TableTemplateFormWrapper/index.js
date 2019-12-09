@@ -20,13 +20,14 @@ import TableTemplateForm from 'modules/tableTemplate/form';
 
 type Props = {
   isNew: boolean,
+  onSave: Object => void,
   onCancel: () => void,
   onRefetch?: () => void,
 };
 
 const formContainer = new FormContainer();
 
-const TableTemplateFormWrapper = ({ isNew, onCancel, onRefetch }: Props) => {
+const TableTemplateFormWrapper = ({ isNew, onSave, onCancel, onRefetch }: Props) => {
   const {
     state,
     originalState,
@@ -45,7 +46,7 @@ const TableTemplateFormWrapper = ({ isNew, onCancel, onRefetch }: Props) => {
     };
   }, []);
 
-  const onSave = async () => {
+  const handleSave = async () => {
     const input = prepareParsedMaskEditInput(isNew ? null : originalState, state);
 
     const { data } = await maskEditMutate({
@@ -62,7 +63,7 @@ const TableTemplateFormWrapper = ({ isNew, onCancel, onRefetch }: Props) => {
       if (onRefetch) {
         onRefetch();
       }
-      onCancel();
+      onSave(isNew ? data?.maskEditCreate : data?.maskEditUpdate);
     }
   };
 
@@ -97,7 +98,7 @@ const TableTemplateFormWrapper = ({ isNew, onCancel, onRefetch }: Props) => {
               id="table_template_form_save_button"
               disabled={!formContainer.isReady(state, validator)}
               isLoading={isProcessing}
-              onClick={onSave}
+              onClick={handleSave}
             />
           )}
         </SlideViewNavBar>

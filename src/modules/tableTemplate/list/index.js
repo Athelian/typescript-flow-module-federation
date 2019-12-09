@@ -14,7 +14,7 @@ type Props = {
   tableTemplatesIsLoading: boolean,
   fetchMore: Function,
   customFieldsQueryIsLoading: boolean,
-  customFields: Array<Object>,
+  customFields: ?Object,
   filterBy: {
     type: string,
   },
@@ -73,15 +73,16 @@ const TableTemplateList = ({
               <SlideView
                 isOpen={isOpen}
                 onRequestClose={() => toggle(false)}
-                shouldConfirm={() => {
-                  const button = document.getElementById('table_template_form_save_button');
-                  return button;
-                }}
+                shouldConfirm={() => document.getElementById('table_template_form_save_button')}
               >
                 <TableTemplateFormContainer.Provider
                   initialState={{ ...tableTemplate, customFields }}
                 >
-                  <TableTemplateFormWrapper isNew={false} onCancel={() => toggle(false)} />
+                  <TableTemplateFormWrapper
+                    isNew={false}
+                    onSave={() => toggle(false)}
+                    onCancel={() => toggle(false)}
+                  />
                 </TableTemplateFormContainer.Provider>
               </SlideView>
             </>
