@@ -26,6 +26,10 @@ const orderItemFormWithOrderFragment = gql`
     archived
     no
     quantity
+    totalBatched
+    totalShipped
+    batchCount
+    batchShippedCount
     price {
       ...priceFragment
     }
