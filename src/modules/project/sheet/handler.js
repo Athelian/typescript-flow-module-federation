@@ -10,6 +10,7 @@ import type {
 } from 'components/Sheet/SheetLive/types';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
 import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
+import { filesByIDsQuery } from 'modules/sheet/common/query';
 import { milestoneByIDQuery, tagsByIDsQuery, taskByIDQuery, userByIDQuery } from './query';
 
 // $FlowFixMe not compatible with hook implementation
@@ -244,6 +245,24 @@ export default function entityEventHandler(
             });
             break;
           case 'Milestone':
+            changes = await mapAsync(changes, change => {
+              switch (change.field) {
+                case 'files':
+                  return client
+                    .query({
+                      query: filesByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.filesByIDs),
+                    }));
+                default:
+                  break;
+              }
+
+              return change;
+            });
             break;
           case 'Task': {
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
@@ -316,6 +335,7 @@ export default function entityEventHandler(
         }
 
         if (changes.length > 0) {
+          console.warn({ changes });
           dispatch({
             type: Actions.CHANGE_VALUES,
             payload: {
