@@ -75,15 +75,17 @@ const TableTemplateFormWrapper = ({ isNew, onSave, onCancel, onRefetch }: Props)
           <JumpToSection>
             <SectionTabs
               link="tableTemplate_templateSection"
-              label={<FormattedMessage id="modules.Templates.template" defaultMessage="TEMPLATE" />}
+              label={
+                <FormattedMessage id="modules.TableTemplates.template" defaultMessage="TEMPLATE" />
+              }
               icon="TEMPLATE"
             />
             <SectionTabs
               link="tableTemplate_editFieldsSection"
               label={
                 <FormattedMessage
-                  id="modules.Templates.relationTable"
-                  defaultMessage="RELATION TABLE"
+                  id="modules.TableTemplates.columnsConfigSection"
+                  defaultMessage="Columns Configuration"
                 />
               }
               icon="EDIT_TABLE"

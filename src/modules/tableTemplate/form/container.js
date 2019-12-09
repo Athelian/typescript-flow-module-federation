@@ -4,10 +4,7 @@ import { createContainer } from 'unstated-next';
 import type { ColumnConfig } from 'components/Sheet/SheetState/types';
 import { cleanFalsyAndTypeName, cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
-import {
-  getColumnsConfig,
-  parseColumns,
-} from 'modules/tableTemplate/form/components/ColumnsConfigSection/helpers';
+import { computeColumnConfigs } from 'modules/tableTemplate/form/components/ColumnsConfigSection/helpers';
 
 const defaultState = {
   name: null,
@@ -20,22 +17,25 @@ const defaultState = {
 };
 
 const useTableTemplateFormContainer = (initialState: Object = defaultState) => {
-  const mergedInitialState = {
-    ...defaultState,
-    ...cleanUpData(initialState),
-  };
+  const [state, setState] = React.useState(defaultState);
+  const [originalState, setOriginalState] = React.useState(defaultState);
 
-  const compiledInitialState = {
-    ...mergedInitialState,
-    columns: parseColumns(
-      getColumnsConfig(mergedInitialState.type, mergedInitialState.customFields),
-      mergedInitialState.columns
-    ).map(col => ({ key: col.key, hidden: col.hidden })),
-  };
+  React.useEffect(() => {
+    const mergedInitialState = {
+      ...defaultState,
+      ...cleanUpData(initialState),
+    };
 
-  const [originalState, setOriginalState] = React.useState(compiledInitialState);
+    setOriginalState({
+      ...mergedInitialState,
+      columns: computeColumnConfigs(mergedInitialState).map(col => ({
+        key: col.key,
+        hidden: col.hidden,
+      })),
+    });
+  }, [initialState]);
 
-  const [state, setState] = React.useState(compiledInitialState);
+  React.useEffect(() => setState(originalState), [originalState]);
 
   const initializeState = (value: Object) => {
     const mergedState = {
@@ -45,18 +45,11 @@ const useTableTemplateFormContainer = (initialState: Object = defaultState) => {
 
     const compiledState = {
       ...mergedState,
-      columns: parseColumns(
-        getColumnsConfig(mergedState.type, mergedState.customFields),
-        mergedState.columns
-      ).map(col => ({ key: col.key, hidden: col.hidden })),
+      columns: computeColumnConfigs(mergedState).map(col => ({ key: col.key, hidden: col.hidden })),
     };
 
     if (!isEquals(compiledState, originalState)) {
       setOriginalState(compiledState);
-    }
-
-    if (!isEquals(compiledState, state)) {
-      setState(compiledState);
     }
   };
 

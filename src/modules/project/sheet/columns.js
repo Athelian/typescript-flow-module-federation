@@ -10,6 +10,8 @@ import projectMessages from 'modules/project/messages';
 import milestoneMessages from 'modules/milestone/messages';
 import taskMessages from 'modules/task/messages';
 
+export const ProjectSheetColumnGroups = ['PROJECT', 'MILESTONE_TASK'];
+
 export const projectColumns: Array<ColumnConfig> = [
   {
     key: 'project.created',

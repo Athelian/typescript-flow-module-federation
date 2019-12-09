@@ -1,8 +1,17 @@
 // @flow
 import type { ColumnConfig } from 'components/Sheet/SheetState/types';
+import { getColumnsConfigured } from 'components/Sheet/useColumns';
 import orderColumns, { OrderSheetColumnGroups } from 'modules/order/sheet/columns';
 import shipmentColumns, { ShipmentSheetColumnGroups } from 'modules/shipment/sheet/columns';
 import batchColumns, { BatchSheetColumnGroups } from 'modules/batch/sheet/columns';
+import {
+  computeMilestoneTaskColumnsTemplate,
+  generateMilestoneTaskColumns,
+  milestoneColumns,
+  projectColumns,
+  ProjectSheetColumnGroups,
+  taskColumns,
+} from 'modules/project/sheet/columns';
 
 export const getColumnGroupTypes = (type: string): Array<string> => {
   switch (type) {
@@ -12,12 +21,14 @@ export const getColumnGroupTypes = (type: string): Array<string> => {
       return ShipmentSheetColumnGroups;
     case 'BatchSheet':
       return BatchSheetColumnGroups;
+    case 'ProjectSheet':
+      return ProjectSheetColumnGroups;
     default:
       return [];
   }
 };
 
-export const getColumnsConfig = (type: string, customFields: ?Object): Array<ColumnConfig> => {
+const getColumnsConfig = (type: string, customFields: ?Object): Array<ColumnConfig> => {
   switch (type) {
     case 'OrderSheet':
       return orderColumns({
@@ -46,40 +57,57 @@ export const getColumnsConfig = (type: string, customFields: ?Object): Array<Col
   }
 };
 
-export const parseColumns = (
-  columnsConfig: Array<ColumnConfig>,
-  queriedData: Array<{ key: string, hidden: boolean }>
-): Array<ColumnConfig> => {
-  const queriedDataAsObject = queriedData.reduce(
-    (object, item) => ({
-      ...object,
-      [item.key]: item.hidden,
-    }),
-    {}
-  );
+export const computeColumnConfigs = (state: Object): Array<ColumnConfig> => {
+  switch (state.type) {
+    case 'ProjectSheet': {
+      const {
+        milestoneColumnsTemplate,
+        milestoneCount,
+        taskColumnsTemplate,
+        taskCount,
+      } = computeMilestoneTaskColumnsTemplate(state.columns);
 
-  const orderedColumns = columnsConfig
-    .map(col => ({ ...col, hidden: !!queriedDataAsObject[col.key] }))
-    .sort((a, b) => {
-      const aIdx = queriedData.findIndex(item => item.key === a.key);
-      const bIdx = queriedData.findIndex(item => item.key === b.key);
-      if (aIdx > bIdx) {
-        return 1;
-      }
-      if (bIdx > aIdx) {
-        return -1;
-      }
-      return 0;
-    });
-
-  const groupedColumns = orderedColumns.reduce(
-    (grouped, col) => ({
-      ...grouped,
-      [col.icon]: [...(grouped[col.icon] ?? []), col],
-    }),
-    {}
-  );
-
-  // $FlowFixMe: flat
-  return Object.values(groupedColumns).flat();
+      return [
+        ...getColumnsConfigured(
+          projectColumns,
+          state.columns.reduce(
+            (object, item) => ({
+              ...object,
+              [item.key]: item.hidden,
+            }),
+            {}
+          )
+        ),
+        ...generateMilestoneTaskColumns(
+          getColumnsConfigured(
+            milestoneColumns('#'),
+            milestoneColumnsTemplate.reduce(
+              (object, item) => ({ ...object, [item.key]: item.hidden }),
+              {}
+            )
+          ),
+          Math.max(1, milestoneCount),
+          getColumnsConfigured(
+            taskColumns('#', '#'),
+            taskColumnsTemplate.reduce(
+              (object, item) => ({ ...object, [item.key]: item.hidden }),
+              {}
+            )
+          ),
+          Math.max(1, taskCount)
+        ),
+      ];
+    }
+    default:
+      return getColumnsConfigured(
+        getColumnsConfig(state.type, state.customFields),
+        state.columns.reduce(
+          (object, item) => ({
+            ...object,
+            [item.key]: item.hidden,
+          }),
+          {}
+        )
+      );
+  }
 };

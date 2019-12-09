@@ -6,7 +6,8 @@ import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader } from 'components/Form';
 import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
-import { getColumnGroupTypes, getColumnsConfig, parseColumns } from './helpers';
+import MilestoneTaskColumnsConfigGroup from 'modules/project/sheet/MilestoneTaskColumnsConfigGroup';
+import { getColumnGroupTypes, computeColumnConfigs } from './helpers';
 import { ColumnsConfigSectionWrapperStyle, ColumnsConfigSectionBodyStyle } from './style';
 
 const ColumnsConfigSection = () => {
@@ -19,10 +20,7 @@ const ColumnsConfigSection = () => {
   } = TableTemplateFormContainer.useContainer();
 
   // COMPUTED STATES
-  const parsedColumns = React.useMemo(
-    () => parseColumns(getColumnsConfig(state.type, state.customFields), state.columns),
-    [state.type, state.customFields, state.columns]
-  );
+  const parsedColumns = React.useMemo(() => computeColumnConfigs(state), [state]);
 
   const groupedColumns = React.useMemo(
     () =>
@@ -108,9 +106,16 @@ const ColumnsConfigSection = () => {
         </SectionNavBar>
 
         <div className={ColumnsConfigSectionBodyStyle}>
-          {getColumnGroupTypes(state.type).map(groupType => (
-            <ColumnsGroup {...getGroupProps(groupType)} key={groupType} />
-          ))}
+          {getColumnGroupTypes(state.type).map(groupType => {
+            switch (groupType) {
+              case 'MILESTONE_TASK':
+                return (
+                  <MilestoneTaskColumnsConfigGroup {...getGroupProps(groupType)} key={groupType} />
+                );
+              default:
+                return <ColumnsGroup {...getGroupProps(groupType)} key={groupType} />;
+            }
+          })}
         </div>
       </div>
     </>
