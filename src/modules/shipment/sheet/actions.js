@@ -23,7 +23,7 @@ import {
 } from 'modules/permission/constants/shipment';
 import { unDecorateBatch } from './decorator';
 
-function findBatch(batchId: string, shipment: Object): ?Object {
+function findBatch(batchId: string, shipment: Object): Object {
   return [...shipment.batchesWithoutContainer, ...shipment.containers.flatMap(c => c.batches)].find(
     b => b.id === batchId
   );

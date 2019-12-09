@@ -6,8 +6,7 @@ on:
       - hotfixes
 
 jobs:
-  lint:
-
+  flow:
     runs-on: ubuntu-latest
 
     steps:

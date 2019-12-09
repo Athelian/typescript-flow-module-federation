@@ -25,7 +25,7 @@ export type CellRender = {
     | 'containerSummary'
     | 'shipmentSummary'
     | 'placeholder',
-  data?: mixed,
+  data?: any,
   entity?: Entity,
   beforeConnector?: ?LINE_CONNECTOR,
   afterConnector?: ?LINE_CONNECTOR,
