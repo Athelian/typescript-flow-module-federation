@@ -335,7 +335,6 @@ export default function entityEventHandler(
         }
 
         if (changes.length > 0) {
-          console.warn({ changes });
           dispatch({
             type: Actions.CHANGE_VALUES,
             payload: {
