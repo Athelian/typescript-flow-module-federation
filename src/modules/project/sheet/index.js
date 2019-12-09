@@ -14,7 +14,7 @@ import {
 import { clone } from 'utils/fp';
 import { projectsExportQuery } from '../query';
 import MilestoneTaskColumnsConfigGroup from './MilestoneTaskColumnsConfigGroup';
-import { useProjectColumns } from './columns';
+import { computeProjectColumnConfigsFromTemplate, useProjectColumns } from './columns';
 import transformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
@@ -112,7 +112,12 @@ const ProjectSheetModule = () => {
 
         <Filter config={ProjectFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <ColumnsConfig columns={columns} templateType="ProjectSheet" onChange={setColumns}>
+        <ColumnsConfig
+          columns={columns}
+          templateType="ProjectSheet"
+          onChange={setColumns}
+          onLoadTemplate={computeProjectColumnConfigsFromTemplate}
+        >
           {({ getGroupProps }) => (
             <>
               <ColumnsConfig.Group {...getGroupProps('PROJECT')} />

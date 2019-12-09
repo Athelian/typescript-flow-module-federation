@@ -282,6 +282,43 @@ export function generateMilestoneTaskColumns(
   return columns;
 }
 
+export function computeProjectColumnConfigsFromTemplate(template: Object): Array<ColumnConfig> {
+  const {
+    milestoneColumnsTemplate,
+    milestoneCount,
+    taskColumnsTemplate,
+    taskCount,
+  } = computeMilestoneTaskColumnsTemplate(template.columns);
+
+  return [
+    ...getColumnsConfigured(
+      projectColumns,
+      template.columns.reduce(
+        (object, item) => ({
+          ...object,
+          [item.key]: item.hidden,
+        }),
+        {}
+      )
+    ),
+    ...generateMilestoneTaskColumns(
+      getColumnsConfigured(
+        milestoneColumns('#'),
+        milestoneColumnsTemplate.reduce(
+          (object, item) => ({ ...object, [item.key]: item.hidden }),
+          {}
+        )
+      ),
+      Math.max(1, milestoneCount),
+      getColumnsConfigured(
+        taskColumns('#', '#'),
+        taskColumnsTemplate.reduce((object, item) => ({ ...object, [item.key]: item.hidden }), {})
+      ),
+      Math.max(1, taskCount)
+    ),
+  ];
+}
+
 type ProjectColumnsCache = {
   projectColumns: { [string]: boolean },
   milestoneColumns: { [string]: boolean },

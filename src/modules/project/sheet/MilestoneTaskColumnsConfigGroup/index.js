@@ -146,6 +146,7 @@ const MilestoneTaskColumnsConfigGroup = ({ columns, onChange }: Props) => {
                     onToggle={handleToggleMilestone}
                   />
                 ))}
+                {dropProvided.placeholder}
               </div>
             )}
           </Droppable>
@@ -183,6 +184,7 @@ const MilestoneTaskColumnsConfigGroup = ({ columns, onChange }: Props) => {
                     onToggle={handleToggleTask}
                   />
                 ))}
+                {dropProvided.placeholder}
               </div>
             )}
           </Droppable>

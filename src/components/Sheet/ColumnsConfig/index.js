@@ -24,6 +24,7 @@ type Props = {
   columns: Array<ColumnConfig>,
   templateType: string,
   onChange: (Array<ColumnConfig>) => void,
+  onLoadTemplate?: (template: Object) => Array<ColumnConfig>,
   children: ({
     getGroupProps: (
       group: string
@@ -35,7 +36,7 @@ type Props = {
   }) => React.Node,
 };
 
-const ColumnsConfig = ({ columns, templateType, onChange, children }: Props) => {
+const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, children }: Props) => {
   // STATES
   const [isOpen, setOpen] = React.useState(false);
   const [dirtyColumns, setDirtyColumns] = React.useState(columns);
@@ -94,15 +95,19 @@ const ColumnsConfig = ({ columns, templateType, onChange, children }: Props) => 
     );
   const handleTemplateChange = template => {
     if (template) {
-      setDirtyColumns(
-        getColumnsConfigured(
-          columns,
-          (template?.columns ?? []).reduce(
-            (cache, col) => ({ ...cache, [col.key]: col.hidden }),
-            {}
+      if (onLoadTemplate) {
+        setDirtyColumns(onLoadTemplate(template));
+      } else {
+        setDirtyColumns(
+          getColumnsConfigured(
+            columns,
+            (template?.columns ?? []).reduce(
+              (cache, col) => ({ ...cache, [col.key]: col.hidden }),
+              {}
+            )
           )
-        )
-      );
+        );
+      }
     }
   };
 

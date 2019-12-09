@@ -7,7 +7,7 @@ import { SectionHeader } from 'components/Form';
 import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import MilestoneTaskColumnsConfigGroup from 'modules/project/sheet/MilestoneTaskColumnsConfigGroup';
-import { getColumnGroupTypes, computeColumnConfigs } from './helpers';
+import { getColumnGroupTypes, computeColumnConfigsFromState } from './helpers';
 import { ColumnsConfigSectionWrapperStyle, ColumnsConfigSectionBodyStyle } from './style';
 
 const ColumnsConfigSection = () => {
@@ -20,7 +20,7 @@ const ColumnsConfigSection = () => {
   } = TableTemplateFormContainer.useContainer();
 
   // COMPUTED STATES
-  const parsedColumns = React.useMemo(() => computeColumnConfigs(state), [state]);
+  const parsedColumns = React.useMemo(() => computeColumnConfigsFromState(state), [state]);
 
   const groupedColumns = React.useMemo(
     () =>

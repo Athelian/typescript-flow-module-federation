@@ -5,12 +5,8 @@ import orderColumns, { OrderSheetColumnGroups } from 'modules/order/sheet/column
 import shipmentColumns, { ShipmentSheetColumnGroups } from 'modules/shipment/sheet/columns';
 import batchColumns, { BatchSheetColumnGroups } from 'modules/batch/sheet/columns';
 import {
-  computeMilestoneTaskColumnsTemplate,
-  generateMilestoneTaskColumns,
-  milestoneColumns,
-  projectColumns,
+  computeProjectColumnConfigsFromTemplate,
   ProjectSheetColumnGroups,
-  taskColumns,
 } from 'modules/project/sheet/columns';
 
 export const getColumnGroupTypes = (type: string): Array<string> => {
@@ -57,57 +53,19 @@ const getColumnsConfig = (type: string, customFields: ?Object): Array<ColumnConf
   }
 };
 
-export const computeColumnConfigs = (state: Object): Array<ColumnConfig> => {
-  switch (state.type) {
-    case 'ProjectSheet': {
-      const {
-        milestoneColumnsTemplate,
-        milestoneCount,
-        taskColumnsTemplate,
-        taskCount,
-      } = computeMilestoneTaskColumnsTemplate(state.columns);
-
-      return [
-        ...getColumnsConfigured(
-          projectColumns,
-          state.columns.reduce(
-            (object, item) => ({
-              ...object,
-              [item.key]: item.hidden,
-            }),
-            {}
-          )
-        ),
-        ...generateMilestoneTaskColumns(
-          getColumnsConfigured(
-            milestoneColumns('#'),
-            milestoneColumnsTemplate.reduce(
-              (object, item) => ({ ...object, [item.key]: item.hidden }),
-              {}
-            )
-          ),
-          Math.max(1, milestoneCount),
-          getColumnsConfigured(
-            taskColumns('#', '#'),
-            taskColumnsTemplate.reduce(
-              (object, item) => ({ ...object, [item.key]: item.hidden }),
-              {}
-            )
-          ),
-          Math.max(1, taskCount)
-        ),
-      ];
-    }
-    default:
-      return getColumnsConfigured(
-        getColumnsConfig(state.type, state.customFields),
-        state.columns.reduce(
-          (object, item) => ({
-            ...object,
-            [item.key]: item.hidden,
-          }),
-          {}
-        )
-      );
+export const computeColumnConfigsFromState = (state: Object): Array<ColumnConfig> => {
+  if (state.type === 'ProjectSheet') {
+    return computeProjectColumnConfigsFromTemplate(state);
   }
+
+  return getColumnsConfigured(
+    getColumnsConfig(state.type, state.customFields),
+    state.columns.reduce(
+      (object, item) => ({
+        ...object,
+        [item.key]: item.hidden,
+      }),
+      {}
+    )
+  );
 };
