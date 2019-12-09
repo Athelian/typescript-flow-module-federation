@@ -238,6 +238,19 @@ export default function entityEventHandler(
                       field: change.field,
                       new: newCustomValue(data.tagsByIDs),
                     }));
+                case 'updatedBy':
+                  if (change.new) {
+                    return client
+                      .query({
+                        query: userByIDQuery,
+                        variables: { id: change.new?.entity?.id },
+                      })
+                      .then(({ data }) => ({
+                        field: change.field,
+                        new: newCustomValue(data.mask),
+                      }));
+                  }
+                  break;
                 default:
                   break;
               }
@@ -258,6 +271,20 @@ export default function entityEventHandler(
                       field: change.field,
                       new: newCustomValue(data.filesByIDs),
                     }));
+                case 'completedBy':
+                case 'updatedBy':
+                  if (change.new) {
+                    return client
+                      .query({
+                        query: userByIDQuery,
+                        variables: { id: change.new?.entity?.id },
+                      })
+                      .then(({ data }) => ({
+                        field: change.field,
+                        new: newCustomValue(data.mask),
+                      }));
+                  }
+                  break;
                 default:
                   break;
               }
@@ -289,7 +316,12 @@ export default function entityEventHandler(
                       field: change.field,
                       new: newCustomValue(data.tagsByIDs),
                     }));
+                case 'inProgressBy':
+                case 'completedBy':
                 case 'approvedBy':
+                case 'rejectedBy':
+                case 'skippedBy':
+                case 'updatedBy':
                   if (change.new) {
                     return client
                       .query({
