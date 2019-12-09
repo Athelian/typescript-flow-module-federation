@@ -1,6 +1,6 @@
 // @flow
 
-function decorateTask(task: Object): Object {
+export function decorateTask(task: Object): Object {
   return {
     ...task,
     approved: {
@@ -10,7 +10,7 @@ function decorateTask(task: Object): Object {
   };
 }
 
-function decorateMilestone(milestone: Object): Object {
+export function decorateMilestone(milestone: Object): Object {
   return {
     ...milestone,
     tasks: milestone.tasks.map(task => {

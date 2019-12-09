@@ -11,6 +11,7 @@ import type {
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
 import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
 import { filesByIDsQuery } from 'modules/sheet/common/query';
+import { decorateMilestone, decorateTask } from './decorator';
 import { milestoneByIDQuery, tagsByIDsQuery, taskByIDQuery, userByIDQuery } from './query';
 
 // $FlowFixMe not compatible with hook implementation
@@ -49,7 +50,7 @@ function onCreateMilestoneFactory(client: ApolloClient, dispatch: Action => void
               }
 
               const milestones = [...projects[projectIdx].milestones];
-              milestones.splice(newMilestone.sort, 0, newMilestone);
+              milestones.splice(newMilestone.sort, 0, decorateMilestone(newMilestone));
 
               return {
                 item: {
@@ -109,7 +110,7 @@ function onCreateTaskFactory(client: ApolloClient, dispatch: Action => void) {
 
               const milestones = [...projects[projectIdx].milestones];
               const tasks = [...milestones[milestoneIdx].tasks];
-              tasks.splice(newTask.sort, 0, newTask);
+              tasks.splice(newTask.sort, 0, decorateTask(newTask));
               milestones[milestoneIdx] = {
                 ...milestones[milestoneIdx],
                 tasks,
