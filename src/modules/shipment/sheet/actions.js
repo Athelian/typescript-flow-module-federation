@@ -60,7 +60,14 @@ const BatchMoveToNewOrderAction = BaseBatchMoveToNewOrderAction({
   getContainer: (batchId, item) =>
     unDecorateContainer(item.containers.find(c => c.batches.some(b => b.id === batchId))),
   getShipment: (batchId, item) => item,
-  getBatch: (batchId, item) => unDecorateBatch(findBatch(batchId, item)),
+  getBatch: (batchId, item) => {
+    const container = item.containers.find(c => c.batches.some(b => b.id === batchId));
+    return {
+      ...unDecorateBatch(findBatch(batchId, item)),
+      shipment: item,
+      container: container ? unDecorateContainer(container) : null,
+    };
+  },
   getOrderItem: (batchId, item) => findBatch(batchId, item)?.orderItem,
   getExporter: (batchId, item) => findBatch(batchId, item)?.orderItem?.order?.exporter,
 });
