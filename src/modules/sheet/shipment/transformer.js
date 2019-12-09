@@ -169,23 +169,19 @@ export default function transformSheetShipment({
       type: 'partners',
       ...transformComputedField(basePath, shipment, 'relatedExporters', root => {
         const currentShipment = getShipmentFromRoot(root);
-        const exporters = [];
+        const exporters = new Map();
 
         (currentShipment?.batchesWithoutContainer ?? []).forEach(({ orderItem }) => {
-          if (!exporters.includes(orderItem?.order?.exporter)) {
-            exporters.push(orderItem?.order?.exporter);
-          }
+          exporters.set(orderItem?.order?.exporter?.id, orderItem?.order?.exporter);
         });
 
         (currentShipment?.containers ?? []).forEach(({ batches = [] }) => {
           batches.forEach(({ orderItem }) => {
-            if (!exporters.includes(orderItem?.order?.exporter)) {
-              exporters.push(orderItem?.order?.exporter);
-            }
+            exporters.set(orderItem?.order?.exporter?.id, orderItem?.order?.exporter);
           });
         });
 
-        return exporters.filter(Boolean);
+        return Array.from(exporters.values()).filter(Boolean);
       }),
     },
     {
