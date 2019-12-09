@@ -74,6 +74,7 @@ const ProjectListModule = () => {
                                 milestones: template.milestones.map(item => ({
                                   ...item,
                                   tasks: [],
+                                  files: [],
                                 })),
                               },
                             },

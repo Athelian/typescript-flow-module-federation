@@ -65,7 +65,7 @@ export const ContainerWrapperStyle: string = css`
 
 export const WarehouseArrivalWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 20px 66px 71px 18px;
+  grid-template-columns: 20px 63px 76px 16px;
   height: 20px;
   width: 100%;
   align-items: center;
