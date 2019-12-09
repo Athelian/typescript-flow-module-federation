@@ -51,7 +51,7 @@ const ColumnsConfig = ({ columns, templateType, onChange, children }: Props) => 
       !columns.every(
         (col, idx) =>
           col.key === dirtyColumns[idx]?.key && !!col.hidden === !!dirtyColumns[idx]?.hidden
-      ),
+      ) || dirtyColumns.length !== columns.length,
     [columns, dirtyColumns]
   );
   const groupedColumns = React.useMemo(
