@@ -197,6 +197,7 @@ export const containerByIDQuery = gql`
 
   ${sheetOrderFragment}
   ${sheetOrderItemFragment}
+  ${sheetProductFragment}
   ${sheetBatchFragment}
   ${sheetContainerFragment}
   ${sheetModelFragment}
@@ -266,6 +267,7 @@ export const batchByIDQuery = gql`
 
   ${sheetOrderFragment}
   ${sheetOrderItemFragment}
+  ${sheetProductFragment}
   ${sheetBatchFragment}
   ${sheetModelFragment}
   ${sheetOwnedFragment}
@@ -315,6 +317,7 @@ export const orderItemByIDQuery = gql`
 
   ${sheetOrderFragment}
   ${sheetOrderItemFragment}
+  ${sheetProductFragment}
   ${sheetModelFragment}
   ${sheetOwnedFragment}
   ${sheetCustomizableFragment}

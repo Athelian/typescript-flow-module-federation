@@ -47,6 +47,7 @@ import {
   SHIPMENT_ADD_BATCH,
 } from 'modules/permission/constants/shipment';
 import { PRODUCT_PROVIDER_LIST } from 'modules/permission/constants/product';
+import { unDecorateBatch } from './decorator';
 
 const OrderSyncAllPricesAction = BaseOrderSyncAllPricesAction({
   getUniqueProductProvidersIds: item => [
@@ -165,11 +166,7 @@ const getBatchData = (batchId: string, item: Object) => {
   const batch = (item?.orderItems ?? [])
     .flatMap(({ batches }) => batches)
     .find(({ id }) => id === batchId);
-  return {
-    ...batch,
-    packageQuantity: batch.packageQuantity?.value,
-    packageVolume: batch.packageVolume?.value,
-  };
+  return unDecorateBatch(batch);
 };
 
 const getOrderItemData = (batchId: string, item: Object) => {
@@ -205,7 +202,7 @@ const BatchMoveToNewOrderAction = BaseBatchMoveToNewOrderAction({
   },
 });
 
-const BatchMoveToNewContainerOnExsitShipmentAction = BaseBatchMoveToNewContainerOnExistShipmentAction(
+const BatchMoveToNewContainerOnExistShipmentAction = BaseBatchMoveToNewContainerOnExistShipmentAction(
   {
     getImporter: (batchId, item) => item.importer,
     getExporter: (batchId, item) => item.exporter,
@@ -296,7 +293,7 @@ export default {
     hasPermissions => hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_CONTAINER)
   ),
   batch_move_new_container: AC(
-    BatchMoveToNewContainerOnExsitShipmentAction,
+    BatchMoveToNewContainerOnExistShipmentAction,
     hasPermissions =>
       hasPermissions(CONTAINER_CREATE) &&
       (hasPermissions(SHIPMENT_UPDATE) || hasPermissions(SHIPMENT_ADD_BATCH)) &&
