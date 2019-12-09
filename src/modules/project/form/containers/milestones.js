@@ -297,6 +297,7 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
           name: `Milestone - ${prevState.milestones.length + 1}`,
           dueDate: null,
           tasks: [],
+          files: [],
         },
       ],
     }));
