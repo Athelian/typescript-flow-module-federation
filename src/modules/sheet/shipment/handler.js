@@ -101,6 +101,19 @@ export async function handleShipmentChanges(
             }));
         }
         break;
+      case 'updatedBy':
+        if (change.new) {
+          return client
+            .query({
+              query: userByIDQuery,
+              variables: { id: change.new?.entity?.id },
+            })
+            .then(({ data }) => ({
+              field: change.field,
+              new: newCustomValue(data.mask),
+            }));
+        }
+        break;
       default:
         break;
     }
