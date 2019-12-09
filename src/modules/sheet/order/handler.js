@@ -9,6 +9,7 @@ import {
   organizationByIDQuery,
   filesByIDsQuery,
   maskByIDQuery,
+  userByIDQuery,
 } from 'modules/sheet/common/query';
 
 export function handleOrderChanges(
@@ -63,6 +64,19 @@ export function handleOrderChanges(
           return client
             .query({
               query: maskByIDQuery,
+              variables: { id: change.new?.entity?.id },
+            })
+            .then(({ data }) => ({
+              field: change.field,
+              new: newCustomValue(data.mask),
+            }));
+        }
+        break;
+      case 'updatedBy':
+        if (change.new) {
+          return client
+            .query({
+              query: userByIDQuery,
               variables: { id: change.new?.entity?.id },
             })
             .then(({ data }) => ({

@@ -164,7 +164,7 @@ const OrderBatchCard = ({
     todo,
   } = batch;
 
-  const hasContainers = shipment && shipment.containers && shipment.containers.length > 0;
+  const hasContainers = !!container;
 
   const latestQuantity = getBatchLatestQuantity(batch);
   const latestQuantityField: string = findActiveQuantityField({

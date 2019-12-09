@@ -18,6 +18,16 @@ export function decorateBatch(batch: Object): Object {
   };
 }
 
+export function unDecorateBatch(batch: Object): Object {
+  return {
+    ...batch,
+    packageQuantity: batch.packageQuantity.value,
+    autoCalculatePackageQuantity: batch.packageQuantity.auto,
+    packageVolume: batch.packageVolume.value,
+    autoCalculatePackageVolume: batch.packageVolume.auto,
+  };
+}
+
 export function decorateContainer(container: Object): Object {
   return {
     ...container,
@@ -40,6 +50,27 @@ export function decorateContainer(container: Object): Object {
     batches: container.batches.map(batch => {
       if (batch.__typename === 'Batch') {
         return decorateBatch(batch);
+      }
+
+      return batch;
+    }),
+  };
+}
+
+export function unDecorateContainer(container: Object): Object {
+  return {
+    ...container,
+    freeTimeStartDate: container?.freeTimeStartDate,
+    autoCalculatedFreeTimeStartDate: container?.freeTimeStartDate?.auto ?? false,
+    warehouseArrivalAgreedDateApprovedBy: container?.warehouseArrivalAgreedDateApproved?.user,
+    warehouseArrivalAgreedDateApprovedAt: container?.warehouseArrivalAgreedDateApproved?.date,
+    warehouseArrivalActualDateApprovedBy: container?.warehouseArrivalActualDateApproved?.user,
+    warehouseArrivalActualDateApprovedAt: container?.warehouseArrivalActualDateApproved?.date,
+    departureDateApprovedBy: container?.departureDateApproved?.user,
+    departureDateApprovedAt: container?.departureDateApproved?.date,
+    batches: (container?.batches ?? []).map(batch => {
+      if (batch.__typename === 'Batch') {
+        return unDecorateBatch(batch);
       }
 
       return batch;

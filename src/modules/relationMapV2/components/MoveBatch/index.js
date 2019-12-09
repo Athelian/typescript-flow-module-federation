@@ -4,7 +4,12 @@ import { FormattedMessage } from 'react-intl';
 import useUser from 'hooks/useUser';
 import { Tooltip } from 'components/Tooltip';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
-import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
+import {
+  BATCH_UPDATE,
+  BATCH_SET_ORDER_ITEM,
+  BATCH_SET_CONTAINER,
+  BATCH_SET_SHIPMENT,
+} from 'modules/permission/constants/batch';
 import { BaseButton } from 'components/Buttons';
 import { useAllHasPermission } from 'contexts/Permissions';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
@@ -135,11 +140,11 @@ export default function MoveBatch({ onSuccess }: Props) {
   };
 
   const hasPermissionMoveToExistContainer = () => {
-    return isSameImporter() && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
+    return isSameImporter() && hasPermissions([BATCH_UPDATE, BATCH_SET_CONTAINER]);
   };
 
   const hasPermissionMoveToExistShipment = () => {
-    return isSameImporter() && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
+    return isSameImporter() && hasPermissions([BATCH_UPDATE, BATCH_SET_SHIPMENT]);
   };
 
   const hasPermissionMoveToNewOrder = () => {
@@ -155,7 +160,8 @@ export default function MoveBatch({ onSuccess }: Props) {
       isSameImporter() &&
       hasPermissions(CONTAINER_CREATE) &&
       hasPermissions([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH]) &&
-      hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM])
+      (hasPermissions(BATCH_UPDATE) ||
+        (hasPermissions(BATCH_SET_SHIPMENT) && hasPermissions(BATCH_SET_CONTAINER)))
     );
   };
 
@@ -164,7 +170,7 @@ export default function MoveBatch({ onSuccess }: Props) {
       ? isSamePartners()
       : isSameImporter() &&
           hasPermissions(SHIPMENT_CREATE) &&
-          hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]);
+          hasPermissions([BATCH_UPDATE, BATCH_SET_SHIPMENT]);
   };
 
   const noPermission =

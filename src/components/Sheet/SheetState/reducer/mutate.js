@@ -135,11 +135,21 @@ export function replaceItem(
   transformer: (number, Object) => Array<Array<CellValue>>,
   sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
 ) {
-  return (state: State, payload: { item: Object, index: number }): State => {
-    const { item, index } = payload;
+  return (
+    state: State,
+    payload: {
+      callback: (items: Array<Object>) => { item: Object, index: number } | null,
+    }
+  ): State => {
+    const { callback } = payload;
+
+    const itemToReplace = callback(state.items);
+    if (!itemToReplace) {
+      return state;
+    }
 
     const items = [...state.items];
-    items[index] = item;
+    items[itemToReplace.index] = itemToReplace.item;
 
     return refresh(transformer, sorter)(state, {
       items,
@@ -151,9 +161,16 @@ export function replaceItems(
   transformer: (number, Object) => Array<Array<CellValue>>,
   sorter: (Array<Object>, Array<ColumnSort>) => Array<Object>
 ) {
-  return (state: State, payload: { items: Array<{ item: Object, index: number }> }): State => {
+  return (
+    state: State,
+    payload: { callback: (items: Array<Object>) => Array<{ item: Object, index: number }> }
+  ): State => {
+    const { callback } = payload;
+
+    const itemsToReplace = callback(state.items);
+
     const items = [...state.items];
-    (payload?.items ?? []).forEach(({ item, index }) => {
+    itemsToReplace.forEach(({ item, index }) => {
       items[index] = item;
     });
 

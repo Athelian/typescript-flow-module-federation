@@ -891,6 +891,8 @@ const TaskInfoSection = ({
                                     if (value === 'completed') {
                                       const newTask = {
                                         ...values,
+                                        inProgressAt: values.inProgressAt || todayForDateInput(),
+                                        inProgressBy: user,
                                         skippedAt: null,
                                         skippedBy: null,
                                         completedAt: todayForDateInput(),

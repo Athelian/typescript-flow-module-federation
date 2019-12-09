@@ -14,8 +14,8 @@ const ProjectApp = () => (
     <Redirect path="/" from="/" to="/project/cards" noThrow />
     <ProjectListModule path="/cards" />
     <ProjectSheetModuleWrapper path="/table" />
-    <ProjectFormModule path="/new" />
-    <ProjectFormModule path="/:projectId" />
+    <ProjectFormModule path="new" />
+    <ProjectFormModule path=":projectId" />
   </Router>
 );
 

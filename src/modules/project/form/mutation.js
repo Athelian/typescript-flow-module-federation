@@ -23,7 +23,6 @@ import {
   productProviderPackagingFragment,
 } from 'graphql';
 import { projectFormQueryFragment } from 'graphql/project/fragment';
-
 import type { Task, ProjectCreateInput } from 'generated/graphql';
 import {
   parseArrayOfChildrenField,
@@ -34,9 +33,8 @@ import {
   parseTaskField,
   parseEnumField,
   parseFilesField,
+  parseMemoField,
 } from 'utils/data';
-
-import { getByPathWithDefault } from 'utils/fp';
 
 export const createProjectMutation = gql`
   mutation projectCreate($input: ProjectCreateInput!) {
@@ -69,46 +67,55 @@ export const prepareParsedTaskInput = (originalValues: ?Task, values: Task) => (
 });
 
 const prepareParseMilestone = (originalValues: Object, newValues: Object): Object => ({
-  ...parseGenericField('name', originalValues?.name, newValues.name),
-  ...parseDateField('dueDate', originalValues?.dueDate, newValues?.dueDate),
+  ...parseGenericField('name', originalValues?.name ?? null, newValues.name),
+  ...parseDateField('dueDate', originalValues?.dueDate ?? null, newValues.dueDate),
   ...parseGenericField(
     'dueDateInterval',
-    originalValues?.dueDateInterval,
-    newValues?.dueDateInterval
+    originalValues?.dueDateInterval ?? null,
+    newValues.dueDateInterval
   ),
-  ...parseEnumField('dueDateBinding', originalValues?.dueDateBinding, newValues?.dueDateBinding),
+  ...parseEnumField(
+    'dueDateBinding',
+    originalValues?.dueDateBinding ?? null,
+    newValues.dueDateBinding
+  ),
   ...parseDateField(
     'estimatedCompletionDate',
-    originalValues?.estimatedCompletionDate,
-    newValues?.estimatedCompletionDate
+    originalValues?.estimatedCompletionDate ?? null,
+    newValues.estimatedCompletionDate
   ),
   ...parseGenericField(
     'estimatedCompletionDateInterval',
-    originalValues?.estimatedCompletionDateInterval,
-    newValues?.estimatedCompletionDateInterval
+    originalValues?.estimatedCompletionDateInterval ?? null,
+    newValues.estimatedCompletionDateInterval
   ),
   ...parseEnumField(
     'estimatedCompletionDateBinding',
-    originalValues?.estimatedCompletionDateBinding,
-    newValues?.estimatedCompletionDateBinding
+    originalValues?.estimatedCompletionDateBinding ?? null,
+    newValues.estimatedCompletionDateBinding
   ),
-  ...parseGenericField('description', originalValues?.description, newValues?.description),
-  ...parseParentIdField('completedById', originalValues?.completedBy, newValues.completedBy),
-  ...parseDateField('completedAt', originalValues?.completedAt, newValues.completedAt),
+  ...parseMemoField('description', originalValues?.description ?? null, newValues.description),
+  ...parseParentIdField(
+    'completedById',
+    originalValues?.completedBy ?? null,
+    newValues.completedBy
+  ),
+  ...parseDateField('completedAt', originalValues?.completedAt ?? null, newValues.completedAt),
   ...parseArrayOfChildrenField(
     'tasks',
-    originalValues?.tasks || [],
-    newValues?.tasks || [],
+    originalValues?.tasks ?? [],
+    newValues.tasks ?? [],
     (task: ?Object, newTask: Object) => ({
       ...(task ? { id: task.id } : {}),
       ...prepareParsedTaskInput(
-        !task ? originalValues.originalTasks.find(item => item.id === newTask.id) : task,
+        !task ? (originalValues?.originalTasks ?? []).find(item => item.id === newTask.id) : task,
         newTask
       ),
     })
   ),
-  ...parseFilesField('files', originalValues?.files, newValues?.files),
+  ...parseFilesField('files', originalValues?.files ?? [], newValues.files),
 });
+
 export const updateProjectMutation = gql`
   mutation projectUpdate($id: ID!, $input: ProjectUpdateInput!) {
     projectUpdate(id: $id, input: $input) {
@@ -147,30 +154,18 @@ export const prepareParsedProjectInput = (
   originalValues: ?Object,
   newValues: Object
 ): ProjectCreateInput => ({
-  ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
-  ...parseGenericField(
-    'description',
-    getByPathWithDefault(null, 'description', originalValues),
-    newValues.description
-  ),
-  ...parseDateField(
-    'dueDate',
-    getByPathWithDefault(null, 'dueDate', originalValues),
-    newValues.dueDate
-  ),
-  ...parseArrayOfIdsField(
-    'tagIds',
-    getByPathWithDefault([], 'tags', originalValues),
-    newValues.tags
-  ),
+  ...parseGenericField('name', originalValues?.name ?? null, newValues.name),
+  ...parseMemoField('description', originalValues?.description ?? null, newValues.description),
+  ...parseDateField('dueDate', originalValues?.dueDate ?? null, newValues.dueDate),
+  ...parseArrayOfIdsField('tagIds', originalValues?.tags ?? [], newValues.tags),
   ...parseArrayOfChildrenField(
     'milestones',
-    getByPathWithDefault([], 'milestones', originalValues),
+    originalValues?.milestones ?? [],
     newValues.milestones,
     (milestone: ?Object, newMilestone: Object) => ({
       ...(milestone ? { id: milestone.id } : {}),
       ...prepareParseMilestone(
-        { ...milestone, originalTasks: (originalValues && originalValues.originalTasks) || [] },
+        { ...milestone, originalTasks: originalValues?.originalTasks ?? [] },
         newMilestone
       ),
     })

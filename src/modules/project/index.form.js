@@ -150,6 +150,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
           isCompleted: false,
           name: 'Milestone - 1',
           tasks: [],
+          files: [],
         },
       ],
       ...info

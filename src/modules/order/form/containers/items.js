@@ -20,7 +20,26 @@ export default class OrderItemsContainer extends Container<FormState> {
 
   originalValues = initValues;
 
-  isDirty = () => !isEquals(this.state, this.originalValues);
+  isDirty = () => {
+    // Should ignore the currency from items when compare the state
+    // because on the order form, the currency is always force to order currency
+    return !isEquals(
+      {
+        ...this.state,
+        orderItems: this.state.orderItems.map(item => ({
+          ...item,
+          price: item.price?.amount ?? 0,
+        })),
+      },
+      {
+        ...this.originalValues,
+        orderItems: this.originalValues.orderItems.map(item => ({
+          ...item,
+          price: item.price?.amount ?? 0,
+        })),
+      }
+    );
+  };
 
   onSuccess = () => {
     this.originalValues = { ...this.state };

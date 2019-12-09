@@ -394,7 +394,6 @@ class OrderFormModule extends React.PureComponent<Props> {
                       orderTagsState.isDirty() ||
                       orderFilesState.isDirty() ||
                       orderTasksState.isDirty();
-
                     return (
                       <>
                         {isNewOrClone ? (

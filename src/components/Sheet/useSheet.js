@@ -98,6 +98,7 @@ export default function useSheet({
             filterBy: { query, ...filterBy },
             sortBy,
           },
+          fetchPolicy: 'no-cache',
         })
         .then(({ data }) => {
           setPage({
@@ -119,6 +120,7 @@ export default function useSheet({
       .watchQuery({
         query: itemsQuery,
         variables: { page: 1, perPage: 20, filterBy: { query, ...filterBy }, sortBy },
+        fetchPolicy: 'no-cache',
       })
       .subscribe(({ data }: { data: Object }) => {
         const { totalPage, nodes } = getItems(data);

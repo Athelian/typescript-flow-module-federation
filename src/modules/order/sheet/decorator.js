@@ -23,6 +23,20 @@ export function decorateContainer(container: Object): Object {
   };
 }
 
+export function unDecorateContainer(container: Object): Object {
+  return {
+    ...container,
+    freeTimeStartDate: container?.freeTimeStartDate,
+    autoCalculatedFreeTimeStartDate: container?.freeTimeStartDate?.auto ?? false,
+    warehouseArrivalAgreedDateApprovedBy: container?.warehouseArrivalAgreedDateApproved?.user,
+    warehouseArrivalAgreedDateApprovedAt: container?.warehouseArrivalAgreedDateApproved?.date,
+    warehouseArrivalActualDateApprovedBy: container?.warehouseArrivalActualDateApproved?.user,
+    warehouseArrivalActualDateApprovedAt: container?.warehouseArrivalActualDateApproved?.date,
+    departureDateApprovedBy: container?.departureDateApproved?.user,
+    departureDateApprovedAt: container?.departureDateApproved?.date,
+  };
+}
+
 export function decorateShipment(shipment: Object): Object {
   return {
     ...shipment,
@@ -113,6 +127,16 @@ export function decorateBatch(batch: Object): Object {
 
       return batch.container;
     })(),
+  };
+}
+
+export function unDecorateBatch(batch: Object): Object {
+  return {
+    ...batch,
+    packageQuantity: batch.packageQuantity.value,
+    autoCalculatePackageQuantity: batch.packageQuantity.auto,
+    packageVolume: batch.packageVolume.value,
+    autoCalculatePackageVolume: batch.packageVolume.auto,
   };
 }
 

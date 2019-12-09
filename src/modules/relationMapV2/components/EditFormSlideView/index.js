@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { useLazyQuery, useMutation } from 'react-apollo';
+import { useLazyQuery } from 'react-apollo';
 import usePrevious from 'hooks/usePrevious';
 import useUser from 'hooks/useUser';
 import SlideView from 'components/SlideView';
@@ -9,35 +9,21 @@ import OrderForm from 'modules/order/index.form';
 import ItemForm from 'modules/orderItem/index.form';
 import BatchForm from 'modules/batch/index.form';
 import ContainerForm from 'modules/container/index.form';
-import ContainerFormInSlide from 'modules/container/common/ContainerFormInSlide';
 // FIXME: binding date is not working yet
 import RMEditTasks from 'modules/relationMap/order/components/RMEditTasks';
-import { prepareParsedContainerInput } from 'modules/container/form/mutation';
 import ShipmentForm from 'modules/shipment/index.form';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
-import { encodeId, uuid } from 'utils/id';
+import NewOrderForm from 'modules/order/common/NewOrderForm';
+import NewShipmentForm from 'modules/shipment/common/NewShipmentForm';
+import NewContainerForm from 'modules/shipment/common/NewContainerForm';
+import { generateItemForMovedBatch } from 'utils/item';
+import { encodeId } from 'utils/id';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import { isEquals } from 'utils/fp';
-import NewOrderForm from './components/NewOrderForm';
-import NewShipmentForm from './components/NewShipmentForm';
 import { ordersAndShipmentsQuery } from './query';
-import { createContainerMutation } from './mutation';
-
-const defaultItemValues = {
-  customFields: {
-    mask: null,
-    fieldValues: [],
-  },
-  todo: {
-    tasks: [],
-  },
-  tags: [],
-  files: [],
-  memo: '',
-};
 
 type Props = {|
   onClose: (
@@ -53,7 +39,6 @@ const EditFormSlideView = ({ onClose }: Props) => {
   const { isExporter, isImporter, isForwarder, organization } = useUser();
   const isReady = React.useRef(true);
   const { dispatch, state } = FocusedView.useContainer();
-  const [createContainer] = useMutation(createContainerMutation);
   const [fetchOrdersAndShipments, { called, loading, data = {} }] = useLazyQuery(
     ordersAndShipmentsQuery,
     {
@@ -264,15 +249,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
             if (batch.shipment && !newShipments.includes(batch.shipment)) {
               newShipments.push(batch.shipment);
             }
-            newOrderItems.push({
-              ...item,
-              ...defaultItemValues,
-              no: `[auto] ${item.no}`,
-              quantity: 0,
-              isNew: true,
-              id: uuid(),
-              batches: [batch],
-            });
+            newOrderItems.push(generateItemForMovedBatch(item, batch));
           }
         });
       }
@@ -287,11 +264,11 @@ const EditFormSlideView = ({ onClose }: Props) => {
               <NewOrderForm
                 originalDataForSlideView={{
                   orderItems: newOrderItems.map(item => ({
-                    ...defaultItemValues,
                     id: item.id,
                     isNew: true,
                     batches: item.batches.map(batch => ({
                       ...batch,
+                      quantity: 0,
                       isNew: true,
                     })),
                   })),
@@ -299,12 +276,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
                 initDataForSlideView={{
                   importer: isImporter() ? organization : {},
                   exporter,
-                  orderItems: newOrderItems.map(item => ({
-                    ...item,
-                    ...defaultItemValues,
-                    no: `[auto] ${item.no}`,
-                    quantity: 0,
-                  })),
+                  orderItems: newOrderItems,
                   containers: newContainers,
                   shipments: newShipments,
                 }}
@@ -376,7 +348,8 @@ const EditFormSlideView = ({ onClose }: Props) => {
             break;
           default:
             form = (
-              <ContainerFormInSlide
+              <NewContainerForm
+                shipmentId={state.edit.shipment?.id ?? ''}
                 container={{
                   importer,
                   exporter: isExporter() ? exporter : null,
@@ -386,48 +359,29 @@ const EditFormSlideView = ({ onClose }: Props) => {
                   })),
                   shipment: state.edit.shipment,
                 }}
-                onSave={container => {
-                  createContainer({
-                    variables: {
-                      input: {
-                        ...prepareParsedContainerInput({
-                          originalValues: null,
-                          existingBatches: newBatches,
-                          newValues: container,
-                          location: {
-                            inContainerForm: true,
-                            inShipmentForm: false,
-                          },
-                        }),
-                        shipmentId: Number(state.edit.shipment?.id ?? ''),
-                      },
+                onSuccessCallback={container => {
+                  onSetBadges([
+                    {
+                      id: container.containerCreate.id,
+                      type: 'newItem',
+                      entity: 'container',
                     },
-                  })
-                    .then(result => {
-                      onSetBadges([
-                        {
-                          id: result.data.containerCreate.id,
-                          type: 'newItem',
-                          entity: 'container',
-                        },
-                      ]);
-                      dispatch({
-                        type: 'NEW_CONTAINER',
-                        payload: {
-                          containerId: result.data.containerCreate.id,
-                        },
-                      });
-                      onClose({
-                        moveToTop: true,
-                        id: result.data.containerCreate.id,
-                        type: CONTAINER,
-                      });
-                      dispatch({
-                        type: 'MOVE_BATCH_END',
-                        payload: {},
-                      });
-                    })
-                    .catch(onClose);
+                  ]);
+                  dispatch({
+                    type: 'NEW_CONTAINER',
+                    payload: {
+                      containerId: container.containerCreate.id,
+                    },
+                  });
+                  onClose({
+                    moveToTop: true,
+                    id: container.containerCreate.id,
+                    type: CONTAINER,
+                  });
+                  dispatch({
+                    type: 'MOVE_BATCH_END',
+                    payload: {},
+                  });
                 }}
               />
             );

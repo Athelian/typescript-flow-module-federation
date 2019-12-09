@@ -123,11 +123,26 @@ function transformBatch(
         action: 'batch_move_order',
         label: intl.formatMessage(batchMessages.batchMoveToExistingOrderTitle),
       },
-      // batch_move_new_order
-      // batch_move_container
-      // batch_move_new_container
-      // batch_move_shipment
-      // batch_move_new_shipment
+      {
+        action: 'batch_move_new_order',
+        label: intl.formatMessage(batchMessages.batchMoveToNewOrderTitle),
+      },
+      {
+        action: 'batch_move_container',
+        label: intl.formatMessage(batchMessages.batchMoveToExistingContainerTitle),
+      },
+      {
+        action: 'batch_move_new_container',
+        label: intl.formatMessage(batchMessages.batchMoveToNewContainerTitle),
+      },
+      {
+        action: 'batch_move_shipment',
+        label: intl.formatMessage(batchMessages.batchMoveToShipmentTitle),
+      },
+      {
+        action: 'batch_move_new_shipment',
+        label: intl.formatMessage(batchMessages.batchMoveToNewShipmentTitle),
+      },
       {
         action: 'batch_split',
         label: intl.formatMessage(batchMessages.batchSplitTitle),

@@ -106,10 +106,7 @@ class TaskFormModule extends React.Component<Props> {
                         <SectionTabs
                           link="task_project_section"
                           label={
-                            <FormattedMessage
-                              id="modules.task.project"
-                              defaultMessage="`PROJECT`"
-                            />
+                            <FormattedMessage id="modules.task.project" defaultMessage="PROJECT" />
                           }
                           icon="PROJECT"
                         />

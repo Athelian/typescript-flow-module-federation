@@ -32,7 +32,7 @@ export function preAddEntity(
       return state;
     }
 
-    const newState = replaceItem(transformer, sorter)(state, item);
+    const newState = replaceItem(transformer, sorter)(state, { callback: () => item });
 
     let result = null;
 
@@ -190,7 +190,7 @@ export function postRemoveEntity(
       return state;
     }
     const newState = item.item
-      ? replaceItem(transformer, sorter)(state, item)
+      ? replaceItem(transformer, sorter)(state, { callback: () => item })
       : deleteItem(transformer, sorter)(state, item);
 
     return {

@@ -88,4 +88,24 @@ export default defineMessages({
     id: 'modules.Sheet.batch.batchMoveToExistingOrder.title',
     defaultMessage: 'Move to Order',
   },
+  batchMoveToNewOrderTitle: {
+    id: 'modules.Sheet.batch.batchMoveToNewOrderTitle.title',
+    defaultMessage: 'Move to New Order',
+  },
+  batchMoveToExistingContainerTitle: {
+    id: 'modules.Sheet.batch.batchMoveToExistingContainer.title',
+    defaultMessage: 'Move to Container',
+  },
+  batchMoveToNewContainerTitle: {
+    id: 'modules.Sheet.batch.batchMoveToNewContainerTitle.title',
+    defaultMessage: 'Move to New Container',
+  },
+  batchMoveToShipmentTitle: {
+    id: 'modules.Sheet.batch.batchMoveToShipmentTitle.title',
+    defaultMessage: 'Move to Shipment',
+  },
+  batchMoveToNewShipmentTitle: {
+    id: 'modules.Sheet.batch.batchMoveToNewShipmentTitle.title',
+    defaultMessage: 'Move to New Shipment',
+  },
 });

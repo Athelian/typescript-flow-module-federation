@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { useIntl } from 'react-intl';
 import { useApolloClient } from '@apollo/react-hooks';
 import { equals } from 'ramda';
 import { Content } from 'components/Layout';
@@ -15,6 +16,7 @@ import { shipmentsExportQuery } from '../query';
 import shipmentColumns, { FieldDefinitionEntityTypes } from './columns';
 import shipmentTransformer from './transformer';
 import entityEventHandler from './handler';
+import actions from './actions';
 import sorter from './sorter';
 import mutate from './mutate';
 import decorate from './decorator';
@@ -112,13 +114,14 @@ const ShipmentSheetModuleImpl = ({
         onLocalSort={onLocalSort}
         onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
-        actions={{}}
+        actions={actions}
       />
     </Content>
   );
 };
 
 const ShipmentSheetModule = ({ shipmentIds }: Props) => {
+  const intl = useIntl();
   const { fieldDefinitions, loading } = useFieldDefinitions(FieldDefinitionEntityTypes);
 
   if (loading) {
@@ -136,7 +139,7 @@ const ShipmentSheetModule = ({ shipmentIds }: Props) => {
   return (
     <ShipmentSheetModuleImpl
       columns={shipmentColumns(allFieldDefinitions)}
-      transformer={shipmentTransformer(allFieldDefinitions)}
+      transformer={shipmentTransformer({ ...allFieldDefinitions, intl })}
       shipmentIds={shipmentIds}
     />
   );
