@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Dec 04 2019 13:50:49 GMT+0900 (Japan Standard Time)
+# timestamp: Mon Dec 09 2019 10:55:43 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -29661,7 +29661,7 @@ input MaskEditCreateInput {
   name: String!
   type: MaskEditType!
   memo: String
-  fields: [String!]!
+  fields: [String!]
   columns: [MaskEditColumnInput!]!
 }
 

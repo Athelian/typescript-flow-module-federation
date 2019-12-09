@@ -20349,7 +20349,7 @@ export type MaskEditCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   type: MaskEditType,
   memo?: ?$ElementType<Scalars, 'String'>,
-  fields: Array<$ElementType<Scalars, 'String'>>,
+  fields?: ?Array<$ElementType<Scalars, 'String'>>,
   columns: Array<MaskEditColumnInput>,
 |};
 
