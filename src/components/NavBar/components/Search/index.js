@@ -33,7 +33,12 @@ const Search = ({ query, onChange }: Props) => {
       <i className={IconStyle}>
         <Icon icon="SEARCH" />
       </i>
-      <CInput className={InputStyle} value={value} onInputChange={handleChange} />
+      <CInput
+        className={InputStyle}
+        value={value}
+        onInputChange={handleChange}
+        onKeyDown={e => e.stopPropagation()}
+      />
       {!!value && (
         <button className={ClearButtonStyle} type="button" onClick={handleClear}>
           <Icon icon="CLEAR" />
