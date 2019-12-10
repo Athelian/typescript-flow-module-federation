@@ -4,9 +4,10 @@ import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import SelectInput from 'components/Sheet/CellRenderer/Cell/CellInput/Common/SelectInput';
 
-const SelectCustomInput = (items: Array<{ value: any, label: string }>, required: boolean) => (
-  props: InputProps<string>
-) => {
+export const SelectCustomInput = (
+  items: Array<{ value: any, label: string }>,
+  required: boolean
+) => (props: InputProps<string>) => {
   const itemToStringFunc = item => (item ? item.label : '');
   const itemToValueFunc = item => (item ? item.value : '');
 
