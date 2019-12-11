@@ -55,6 +55,30 @@ function normalizedInput(
             approvedById: value?.user?.id ?? null,
             approvedAt: value?.date ?? null,
           };
+        case 'startDateBindingData': {
+          const date = value?.date ?? null;
+          if (date) {
+            return {
+              startDate: new Date(date),
+            };
+          }
+          return {
+            startDateInterval: value?.interval ?? null,
+            startDateBinding: value?.binding ?? null,
+          };
+        }
+        case 'dueDateBindingData': {
+          const date = value?.date ?? null;
+          if (date) {
+            return {
+              dueDate: new Date(date),
+            };
+          }
+          return {
+            dueDateInterval: value?.interval ?? null,
+            dueDateBinding: value?.binding ?? null,
+          };
+        }
         default:
           return {
             [field]: value,

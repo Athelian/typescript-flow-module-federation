@@ -290,6 +290,10 @@ function transformTask(
     {
       columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.startDate`,
       type: 'task_binding',
+      extra: {
+        parentEntity: task?.entity?.__typename,
+        type: 'startDate',
+      },
       ...transformValueField(
         basePath,
         task,
@@ -300,6 +304,10 @@ function transformTask(
     {
       columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.dueDate`,
       type: 'task_binding',
+      extra: {
+        parentEntity: task?.entity?.__typename,
+        type: 'dueDate',
+      },
       ...transformValueField(
         basePath,
         task,

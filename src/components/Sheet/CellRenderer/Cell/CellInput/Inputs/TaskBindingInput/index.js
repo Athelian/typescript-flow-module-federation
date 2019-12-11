@@ -28,12 +28,7 @@ const TaskBindingInput = ({
         date={value?.date ?? ''}
         entity={parentEntity}
         type={type}
-        handleChange={values => {
-          console.warn({
-            values,
-            onChange,
-          });
-        }}
+        handleChange={onChange}
       />
     </div>
   );

@@ -21,12 +21,9 @@ import {
 } from './style';
 
 type State = {|
-  bindingField: string,
-  type: string,
-  offset: string,
-  range: number,
-  duration: string,
-  date: string | Date,
+  interval?: ?IntervalInput,
+  binding?: ?TaskDateBinding,
+  date: ?string | ?Date,
 |};
 
 type Props = {|
@@ -99,56 +96,6 @@ const bindingOptionsByEntity = (entity: string, isStartDate: boolean) => {
   ];
 };
 
-function reducer(
-  state: State,
-  action: {
-    // prettier-ignore
-    type: | 'TOGGLE_BINDING'
-      | 'CHANGE_OFFSET'
-      | 'CHANGE_RANGE'
-      | 'CHANGE_DURATION'
-      | 'CHANGE_FIELD'
-      | 'CHANGE_DATE',
-    // prettier-ignore
-    payload?: | {| bindingField: string |}
-      | {| duration: string |}
-      | {| offset: string |}
-      | {| date: string |}
-      | {| range: number |}
-  }
-) {
-  const onChange = (): State => {
-    return {
-      ...state,
-      ...action.payload,
-    };
-  };
-  const onToggle = (): State => {
-    if (state.bindingField) {
-      return {
-        ...state,
-        bindingField: '',
-      };
-    }
-    return {
-      ...state,
-      bindingField:
-        state.type !== 'startDate' ? BINDING_FIELDS.TaskStartDate : BINDING_FIELDS.TaskDueDate,
-    };
-  };
-
-  const handlers = {
-    TOGGLE_BINDING: onToggle,
-    CHANGE_OFFSET: onChange,
-    CHANGE_DURATION: onChange,
-    CHANGE_FIELD: onChange,
-    CHANGE_RANGE: onChange,
-    CHANGE_DATE: onChange,
-  };
-
-  return handlers[action.type]?.() ?? state;
-}
-
 function BaseTaskBindingInput({
   interval,
   binding,
@@ -159,51 +106,26 @@ function BaseTaskBindingInput({
   handleChange,
 }: Props) {
   const intl = useIntl();
-  const [state, dispatch] = React.useReducer(
-    reducer,
-    {
-      bindingField: binding || '',
-      type: type || 'startDate',
-      offset: 'before',
-      duration: 'days',
-      range: 0,
-      date,
-    },
-    (initValues: State) => {
-      const { months = 0, weeks = 0, days = 0 } = interval || {};
-      if ((months || weeks || days) > 0) {
-        return {
-          ...initValues,
-          offset: 'after',
-          range: Math.abs(months || weeks || days),
-          duration: findDuration({ months, weeks }),
-        };
-      }
-      return {
-        ...initValues,
-        offset: 'before',
-        range: Math.abs(months || weeks || days),
-        duration: findDuration({ months, weeks }),
-      };
-    }
-  );
+  let offset = 'before';
+  const { months = 0, weeks = 0, days = 0 } = interval || {};
+  const range = Math.abs(months || weeks || days);
+  const duration = findDuration({ months, weeks });
+  if ((months || weeks || days) > 0) {
+    offset = 'after';
+  }
 
-  React.useEffect(() => {
-    handleChange(state);
-  }, [handleChange, state]);
-
-  if (!state.bindingField) {
+  if (!binding) {
     return (
       <div className={WrapperStyle(!!readOnly)}>
         <div className={DateWrapperStyle(false)}>
           <DateInput
             className={InputStyle}
-            value={state.date}
+            value={date}
             name="date"
             readOnly={readOnly}
             readOnlyWidth="100%"
             readOnlyHeight="30px"
-            onChange={evt => dispatch({ type: 'CHANGE_DATE', payload: { date: evt.target.value } })}
+            onChange={evt => handleChange({ date: evt.target.value })}
           />
           <div className={IconStyle}>
             <Icon icon="UNBINDED" />
@@ -214,8 +136,10 @@ function BaseTaskBindingInput({
             toggled={false}
             editable={!readOnly}
             onToggle={() => {
-              dispatch({
-                type: 'TOGGLE_BINDING',
+              handleChange({
+                date: '',
+                binding:
+                  type !== 'startDate' ? BINDING_FIELDS.TaskStartDate : BINDING_FIELDS.TaskDueDate,
               });
             }}
           />
@@ -238,7 +162,7 @@ function BaseTaskBindingInput({
       <div className={DateWrapperStyle(true)}>
         <DateInput
           className={DateInputStyle}
-          value={state.date}
+          value={date}
           name="date"
           readOnly
           readOnlyWidth="100%"
@@ -250,10 +174,12 @@ function BaseTaskBindingInput({
       </div>
       <div className={ToggleStyle}>
         <ToggleInput
-          toggled={!!state.bindingField}
+          toggled={!!binding}
           onToggle={() => {
-            dispatch({
-              type: 'TOGGLE_BINDING',
+            handleChange({
+              date,
+              interval,
+              binding: null,
             });
           }}
           editable={!readOnly}
@@ -264,11 +190,20 @@ function BaseTaskBindingInput({
       </div>
       <NumberInput
         name="range"
-        value={state.range}
+        value={range}
         required
         readonly={!!readOnly}
         disabled={readOnly}
-        onChange={evt => dispatch({ type: 'CHANGE_RANGE', payload: { range: evt.target.value } })}
+        onChange={evt => {
+          const newInterval = { days: 0, weeks: 0, months: 0 };
+          newInterval[duration] =
+            offset === 'after' ? Math.abs(evt.target.value) : -Math.abs(evt.target.value);
+          handleChange({
+            date,
+            binding,
+            interval: newInterval,
+          });
+        }}
         className={InputStyle}
       />
       <SelectInput
@@ -290,8 +225,19 @@ function BaseTaskBindingInput({
             value: 'months',
           },
         ]}
-        value={state.duration}
-        onChange={duration => dispatch({ type: 'CHANGE_DURATION', payload: { duration } })}
+        value={duration}
+        onChange={changeDuration =>
+          handleChange({
+            date,
+            binding,
+            interval: {
+              days: 0,
+              weeks: 0,
+              months: 0,
+              [changeDuration]: offset === 'after' ? Math.abs(range) : -Math.abs(range),
+            },
+          })
+        }
         readonly={!!readOnly}
         required
       />
@@ -306,8 +252,16 @@ function BaseTaskBindingInput({
           },
           { label: 'After', value: 'after' },
         ]}
-        value={state.offset}
-        onChange={offset => dispatch({ type: 'CHANGE_OFFSET', payload: { offset } })}
+        value={offset}
+        onChange={newOffset => {
+          const newInterval = { days: 0, weeks: 0, months: 0 };
+          newInterval[duration] = newOffset === 'after' ? Math.abs(range) : -Math.abs(range);
+          handleChange({
+            date,
+            binding,
+            interval: newInterval,
+          });
+        }}
         readonly={!!readOnly}
         required
       />
@@ -319,10 +273,8 @@ function BaseTaskBindingInput({
           value: field,
           label: intl.formatMessage(messages[field]),
         }))}
-        value={state.bindingField}
-        onChange={(bindingField: string) =>
-          dispatch({ type: 'CHANGE_FIELD', payload: { bindingField } })
-        }
+        value={binding}
+        onChange={(bindingField: string) => handleChange({ binding: bindingField, date, interval })}
         readonly={!!readOnly}
         required
       />
