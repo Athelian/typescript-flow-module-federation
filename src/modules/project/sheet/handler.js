@@ -1,5 +1,6 @@
 // @flow
 import ApolloClient from 'apollo-client';
+import { camelCase, upperFirst } from 'lodash';
 import { filterAsync, mapAsync } from 'utils/async';
 import type { Action } from 'components/Sheet/SheetState/types';
 import { Actions } from 'components/Sheet/SheetState/constants';
@@ -197,6 +198,14 @@ function onDeleteTaskFactory(dispatch: Action => void) {
   };
 }
 
+const cleanUpInterval = (interval: { days: number, weeks: number, months: number }) => {
+  const { days, months, weeks } = interval;
+  if (Math.abs(days)) return { days };
+  if (Math.abs(weeks)) return { weeks };
+  if (Math.abs(months)) return { months };
+  return { days: 0 };
+};
+
 export default function entityEventHandler(
   // $FlowFixMe not compatible with hook implementation
   client: ApolloClient,
@@ -359,6 +368,46 @@ export default function entityEventHandler(
                 },
                 'approved',
                 task.approved
+              );
+
+              changes = mergeChanges(
+                changes,
+                {
+                  startDate: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                  startDateInterval: (i, v) => ({
+                    ...i,
+                    interval: v ? cleanUpInterval(v) : v,
+                  }),
+                  startDateBinding: (i, v) => ({
+                    ...i,
+                    binding: v ? upperFirst(camelCase(v)) : v,
+                  }),
+                },
+                'startDateBindingData',
+                task.startDateBindingData
+              );
+
+              changes = mergeChanges(
+                changes,
+                {
+                  dueDate: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                  dueDateInterval: (i, v) => ({
+                    ...i,
+                    interval: v ? cleanUpInterval(v) : v,
+                  }),
+                  dueDateBinding: (i, v) => ({
+                    ...i,
+                    binding: v ? upperFirst(camelCase(v)) : v,
+                  }),
+                },
+                'dueDateBindingData',
+                task.dueDateBindingData
               );
             }
             break;

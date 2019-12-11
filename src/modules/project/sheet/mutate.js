@@ -60,6 +60,8 @@ function normalizedInput(
           if (date) {
             return {
               startDate: new Date(date),
+              startDateInterval: value?.interval ?? null,
+              startDateBinding: value?.binding ?? null,
             };
           }
           return {
@@ -72,6 +74,8 @@ function normalizedInput(
           if (date) {
             return {
               dueDate: new Date(date),
+              dueDateInterval: value?.interval ?? null,
+              dueDateBinding: value?.binding ?? null,
             };
           }
           return {

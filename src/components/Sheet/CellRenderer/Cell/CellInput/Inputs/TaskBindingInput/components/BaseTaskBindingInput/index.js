@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';
 import type { IntervalInput, TaskDateBinding } from 'generated/graphql';
-import { findDuration } from 'utils/date';
 import { ToggleInput } from 'components/Form';
 import NumberInput from 'components/Inputs/NumberInput';
 import DateInput from 'components/Form/Inputs/DateInput';
@@ -96,6 +95,22 @@ const bindingOptionsByEntity = (entity: string, isStartDate: boolean) => {
   ];
 };
 
+const findDuration = ({
+  months,
+  weeks,
+}: {
+  months: ?number,
+  weeks: ?number,
+}): 'days' | 'weeks' | 'months' => {
+  let duration = 'days';
+  if (!Number.isNaN(months) && months !== undefined) {
+    duration = 'months';
+  } else if (!Number.isNaN(weeks) && weeks !== undefined) {
+    duration = 'weeks';
+  }
+  return duration;
+};
+
 function BaseTaskBindingInput({
   interval,
   binding,
@@ -107,8 +122,8 @@ function BaseTaskBindingInput({
 }: Props) {
   const intl = useIntl();
   let offset = 'before';
-  const { months = 0, weeks = 0, days = 0 } = interval || {};
-  const range = Math.abs(months || weeks || days);
+  const { months, weeks, days } = interval || {};
+  const range = Math.abs(Number(months) || Number(weeks) || Number(days)) || 0;
   const duration = findDuration({ months, weeks });
   if ((months || weeks || days) > 0) {
     offset = 'after';
@@ -137,7 +152,7 @@ function BaseTaskBindingInput({
             editable={!readOnly}
             onToggle={() => {
               handleChange({
-                date: '',
+                date,
                 binding:
                   type !== 'startDate' ? BINDING_FIELDS.TaskStartDate : BINDING_FIELDS.TaskDueDate,
               });
@@ -192,10 +207,10 @@ function BaseTaskBindingInput({
         name="range"
         value={range}
         required
-        readonly={!!readOnly}
+        readOnly={!!readOnly}
         disabled={readOnly}
         onChange={evt => {
-          const newInterval = { days: 0, weeks: 0, months: 0 };
+          const newInterval = {};
           newInterval[duration] =
             offset === 'after' ? Math.abs(evt.target.value) : -Math.abs(evt.target.value);
           handleChange({
@@ -231,9 +246,6 @@ function BaseTaskBindingInput({
             date,
             binding,
             interval: {
-              days: 0,
-              weeks: 0,
-              months: 0,
               [changeDuration]: offset === 'after' ? Math.abs(range) : -Math.abs(range),
             },
           })
@@ -254,7 +266,7 @@ function BaseTaskBindingInput({
         ]}
         value={offset}
         onChange={newOffset => {
-          const newInterval = { days: 0, weeks: 0, months: 0 };
+          const newInterval = {};
           newInterval[duration] = newOffset === 'after' ? Math.abs(range) : -Math.abs(range);
           handleChange({
             date,
