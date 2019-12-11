@@ -11,6 +11,14 @@ import SelectInput from 'components/Sheet/CellRenderer/Cell/CellInput/Common/Sel
 import { InputStyle } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
 import Icon from 'components/Icon';
 import messages from './messages';
+import {
+  WrapperStyle,
+  DateWrapperStyle,
+  DateInputStyle,
+  IconStyle,
+  LabelStyle,
+  ToggleStyle,
+} from './style';
 
 type State = {|
   bindingField: string,
@@ -188,30 +196,38 @@ function BaseTaskBindingInput({
 
   if (!state.bindingField) {
     return (
-      <div>
-        <DateInput
-          className={InputStyle}
-          value={state.date}
-          name="date"
-          readOnly={readOnly}
-          readOnlyWidth="100%"
-          readOnlyHeight="30px"
-          onChange={evt => dispatch({ type: 'CHANGE_DATE', payload: { date: evt.target.value } })}
-        />
-        <Icon icon="UNBINDED" />
-        <ToggleInput
-          toggled={false}
-          editable={!readOnly}
-          onToggle={() => {
-            dispatch({
-              type: 'TOGGLE_BINDING',
-            });
-          }}
-        />
-        <FormattedMessage
-          id="components.taskBindingInput.bindingOff"
-          defaultMessage="BINDING OFF"
-        />
+      <div className={WrapperStyle(!!readOnly)}>
+        <div className={DateWrapperStyle(false)}>
+          <DateInput
+            className={InputStyle}
+            value={state.date}
+            name="date"
+            readOnly={readOnly}
+            readOnlyWidth="100%"
+            readOnlyHeight="30px"
+            onChange={evt => dispatch({ type: 'CHANGE_DATE', payload: { date: evt.target.value } })}
+          />
+          <div className={IconStyle}>
+            <Icon icon="UNBINDED" />
+          </div>
+        </div>
+        <div className={ToggleStyle}>
+          <ToggleInput
+            toggled={false}
+            editable={!readOnly}
+            onToggle={() => {
+              dispatch({
+                type: 'TOGGLE_BINDING',
+              });
+            }}
+          />
+        </div>
+        <div className={LabelStyle}>
+          <FormattedMessage
+            id="components.taskBindingInput.bindingOff"
+            defaultMessage="BINDING OFF"
+          />
+        </div>
       </div>
     );
   }
@@ -220,61 +236,67 @@ function BaseTaskBindingInput({
   const itemToValue = item => (item ? item.value : '');
 
   return (
-    <div>
-      <DateInput
-        className={InputStyle}
-        value={state.date}
-        name="date"
-        readOnly
-        readOnlyWidth="100%"
-        readOnlyHeight="30px"
-      />
-      <Icon icon="BINDED" />
-      <ToggleInput
-        toggled={!!state.bindingField}
-        onToggle={() => {
-          dispatch({
-            type: 'TOGGLE_BINDING',
-          });
-        }}
-        editable={!readOnly}
-      />
-      <FormattedMessage id="components.taskBindingInput.binding" defaultMessage="BINDING" />
-      <div>
-        <NumberInput
-          name="range"
-          value={state.range}
-          required
-          readonly={!!readOnly}
-          disabled={readOnly}
-          onChange={evt => dispatch({ type: 'CHANGE_RANGE', payload: { range: evt.target.value } })}
-          className={InputStyle}
+    <div className={WrapperStyle(!!readOnly)}>
+      <div className={DateWrapperStyle(true)}>
+        <DateInput
+          className={DateInputStyle}
+          value={state.date}
+          name="date"
+          readOnly
+          readOnlyWidth="100%"
+          readOnlyHeight="30px"
         />
-        <SelectInput
-          name="offset"
-          className={InputStyle}
-          itemToString={itemToString}
-          itemToValue={itemToValue}
-          items={[
-            {
-              label: 'Days',
-              value: 'days',
-            },
-            {
-              label: 'Weeks',
-              value: 'weeks',
-            },
-            {
-              label: 'Months',
-              value: 'months',
-            },
-          ]}
-          value={state.duration}
-          onChange={duration => dispatch({ type: 'CHANGE_DURATION', payload: { duration } })}
-          readonly={!!readOnly}
-          required
+        <div className={IconStyle}>
+          <Icon icon="BINDED" />
+        </div>
+      </div>
+      <div className={ToggleStyle}>
+        <ToggleInput
+          toggled={!!state.bindingField}
+          onToggle={() => {
+            dispatch({
+              type: 'TOGGLE_BINDING',
+            });
+          }}
+          editable={!readOnly}
         />
       </div>
+      <div className={LabelStyle}>
+        <FormattedMessage id="components.taskBindingInput.binding" defaultMessage="BINDING" />
+      </div>
+      <NumberInput
+        name="range"
+        value={state.range}
+        required
+        readonly={!!readOnly}
+        disabled={readOnly}
+        onChange={evt => dispatch({ type: 'CHANGE_RANGE', payload: { range: evt.target.value } })}
+        className={InputStyle}
+      />
+      <SelectInput
+        name="offset"
+        className={InputStyle}
+        itemToString={itemToString}
+        itemToValue={itemToValue}
+        items={[
+          {
+            label: 'Days',
+            value: 'days',
+          },
+          {
+            label: 'Weeks',
+            value: 'weeks',
+          },
+          {
+            label: 'Months',
+            value: 'months',
+          },
+        ]}
+        value={state.duration}
+        onChange={duration => dispatch({ type: 'CHANGE_DURATION', payload: { duration } })}
+        readonly={!!readOnly}
+        required
+      />
       <SelectInput
         className={InputStyle}
         itemToString={itemToString}
