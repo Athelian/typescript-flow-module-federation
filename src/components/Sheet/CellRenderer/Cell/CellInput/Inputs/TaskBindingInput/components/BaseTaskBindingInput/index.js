@@ -118,14 +118,12 @@ function reducer(
   }
 ) {
   const onChange = (): State => {
-    console.warn({ action, state });
     return {
       ...state,
       ...action.payload,
     };
   };
   const onToggle = (): State => {
-    console.warn({ action, state });
     if (state.bindingField) {
       return {
         ...state,
@@ -177,14 +175,14 @@ function BaseTaskBindingInput({
         return {
           ...initValues,
           offset: 'after',
-          range: months || weeks || days,
+          range: Math.abs(months || weeks || days),
           duration: findDuration({ months, weeks }),
         };
       }
       return {
         ...initValues,
         offset: 'before',
-        range: months || weeks || days,
+        range: Math.abs(months || weeks || days),
         duration: findDuration({ months, weeks }),
       };
     }

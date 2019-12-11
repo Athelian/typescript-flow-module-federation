@@ -24,6 +24,8 @@ import {
   TASK_SET_DESCRIPTION,
   TASK_SET_NAME,
   TASK_SET_TAGS,
+  TASK_SET_START_DATE,
+  TASK_SET_DUE_DATE,
   TASK_UPDATE,
 } from 'modules/permission/constants/task';
 
@@ -285,8 +287,26 @@ function transformTask(
         hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_DESCRIPTION)
       ),
     },
-    // start date + binding
-    // due date + binding
+    {
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.startDate`,
+      type: 'task_binding',
+      ...transformValueField(
+        basePath,
+        task,
+        'startDateBindingData',
+        hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_START_DATE)
+      ),
+    },
+    {
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.dueDate`,
+      type: 'task_binding',
+      ...transformValueField(
+        basePath,
+        task,
+        'dueDateBindingData',
+        hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_DUE_DATE)
+      ),
+    },
     // in progress
     // completed
     // rejected

@@ -7,6 +7,16 @@ export function decorateTask(task: Object): Object {
       user: task.approvedBy,
       date: task.approvedAt,
     },
+    startDateBindingData: {
+      date: task.startDate,
+      interval: task.startDateInterval,
+      binding: task.startDateBinding,
+    },
+    dueDateBindingData: {
+      date: task.dueDate,
+      interval: task.dueDateInterval,
+      binding: task.dueDateBinding,
+    },
   };
 }
 

@@ -9,22 +9,25 @@ const TaskBindingInput = ({
   value,
   readonly,
   onChange,
+  extra,
 }: InputProps<{
-  parentEntity: 'Order' | 'Batch' | 'Shipment' | 'Project' | 'Milestone',
-  type: 'startDate' | 'dueDate',
   binding: ?TaskDateBinding,
   interval: ?IntervalInput,
   date: ?(string | Date),
 }>) => {
+  const parentEntity: 'Order' | 'Batch' | 'Shipment' | 'Project' | 'Milestone' =
+    extra?.parentEntity ?? 'Order';
+  const type: 'startDate' | 'dueDate' = extra?.parentEntity ?? 'startDate';
+
   return (
     <div className={CellInputWrapperStyle}>
       <BaseTaskBindingInput
+        readOnly={readonly}
         binding={value?.binding}
         interval={value?.interval}
-        readOnly={readonly}
-        entity={value?.parentEntity}
         date={value?.date ?? ''}
-        type={value?.type}
+        entity={parentEntity}
+        type={type}
         handleChange={values => {
           console.warn({
             values,

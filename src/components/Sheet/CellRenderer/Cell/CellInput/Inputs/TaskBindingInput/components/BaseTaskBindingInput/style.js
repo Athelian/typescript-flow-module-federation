@@ -6,7 +6,6 @@ export const WrapperStyle = (readOnly: boolean) => css`
   ${layout.HORIZONTAL};
   width: 100%;
   height: 30px;
-  border: 0.5px solid rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   ${readOnly && `background: rgba(0, 0, 0, 0.1);`};
 `;

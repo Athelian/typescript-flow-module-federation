@@ -156,8 +156,20 @@ export const taskColumns = (
     color: colors.TASK,
     width: 200,
   },
-  // start date + binding
-  // due date + binding
+  {
+    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.startDate`,
+    title: <FormattedMessage {...taskMessages.startDate} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.TASK,
+    width: 630,
+  },
+  {
+    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.dueDate`,
+    title: <FormattedMessage {...taskMessages.dueDate} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.TASK,
+    width: 630,
+  },
   // in progress
   // completed
   // rejected
