@@ -103,7 +103,7 @@ export default defineMessages({
     defaultMessage: 'Total shipped quantity',
   },
   remainingShippedQuantity: {
-    id: 'modules.OrderItems.remainingBatchQuantity',
+    id: 'modules.OrderItems.remainingShippedQuantity',
     defaultMessage: 'REMAINING SHIPPED QUANTITY',
   },
   totalPrice: {
