@@ -60581,6 +60581,7 @@ export type ShipmentFilterInput = {|
   customClearance?: ?DateRangeInput,
   warehouseArrival?: ?DateRangeInput,
   deliveryReady?: ?DateRangeInput,
+  containerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   containerContainerType?: ?$ElementType<Scalars, 'String'>,
   containerContainerOption?: ?ContainerOption,
   containerWarehouseIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -61927,7 +61928,7 @@ export type UserAvatarFragmentFragment = ({
 
 export type PartnerNameFragmentFragment = ({
     ...{ __typename?: 'Organization' },
-  ...$Pick<Organization, {| id: *, name: * |}>
+  ...$Pick<Organization, {| id: *, name: *, types: * |}>
 });
 
 export type TimelineDateFullFragmentFragment = ({
