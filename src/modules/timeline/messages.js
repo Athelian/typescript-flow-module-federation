@@ -164,4 +164,8 @@ export default defineMessages({
     id: 'modules.timeline.project',
     defaultMessage: 'project',
   },
+  container: {
+    id: 'modules.timeline.container',
+    defaultMessage: 'container',
+  },
 });

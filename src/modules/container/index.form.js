@@ -3,15 +3,18 @@ import * as React from 'react';
 import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
+import { BooleanValue } from 'react-values';
 import { showToastError } from 'utils/errors';
 import { getByPath } from 'utils/fp';
 import { decodeId } from 'utils/id';
 import { SaveButton, ResetButton, ExportButton } from 'components/Buttons';
 import { FormContainer, resetFormState } from 'modules/form';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
-import { NavBar, EntityIcon } from 'components/NavBar';
+import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
+import SlideView from 'components/SlideView';
+import Timeline from 'modules/timeline/components/Timeline';
 import { QueryForm } from 'components/common';
 import { removeTypename } from 'utils/data';
 import { containerFormQuery } from './form/query';
@@ -19,7 +22,7 @@ import { updateContainerMutation, prepareParsedContainerInput } from './form/mut
 import { ContainerInfoContainer, ContainerBatchesContainer } from './form/containers';
 import validator from './form/validator';
 import ContainerForm from './form';
-import { containerExportQuery } from './query';
+import { containerExportQuery, containerTimelineQuery } from './query';
 
 type OptionalProps = {
   containerId: string,
@@ -193,6 +196,52 @@ class ContainerFormModule extends React.Component<Props> {
                 <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
                   {(containerInfoContainer, containerBatchesContainer) => (
                     <>
+                      <BooleanValue>
+                        {({ value: isOpen, set: toggleLogs }) => (
+                          <>
+                            <LogsButton
+                              entityType="container"
+                              entityId={containerId}
+                              onClick={() => toggleLogs(true)}
+                            />
+                            <SlideView isOpen={isOpen} onRequestClose={() => toggleLogs(false)}>
+                              <SlideViewLayout>
+                                {containerId && isOpen && (
+                                  <>
+                                    <SlideViewNavBar>
+                                      <EntityIcon icon="LOGS" color="LOGS" />
+                                    </SlideViewNavBar>
+
+                                    <Content>
+                                      <Timeline
+                                        query={containerTimelineQuery}
+                                        queryField="container"
+                                        variables={{
+                                          id: decodeId(containerId),
+                                        }}
+                                        entity={{
+                                          containerId: decodeId(containerId),
+                                        }}
+                                      />
+                                    </Content>
+                                  </>
+                                )}
+                              </SlideViewLayout>
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
+
+                      {containerId &&
+                        !containerInfoContainer.isDirty() &&
+                        !containerBatchesContainer.isDirty() && (
+                          <ExportButton
+                            type="Container"
+                            exportQuery={containerExportQuery}
+                            variables={{ id: decodeId(containerId) }}
+                          />
+                        )}
+
                       {(containerInfoContainer.isDirty() ||
                         containerBatchesContainer.isDirty()) && (
                         <>
@@ -241,16 +290,6 @@ class ContainerFormModule extends React.Component<Props> {
                           />
                         </>
                       )}
-
-                      {containerId &&
-                        !containerInfoContainer.isDirty() &&
-                        !containerBatchesContainer.isDirty() && (
-                          <ExportButton
-                            type="Container"
-                            exportQuery={containerExportQuery}
-                            variables={{ id: decodeId(containerId) }}
-                          />
-                        )}
                     </>
                   )}
                 </Subscribe>

@@ -1,6 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-import { commentFragment, eventFragment } from '../timeline/query';
+import { commentFragment, eventFragment } from 'modules/timeline/query';
 
 export const containerTimelineQuery = gql`
   query containerTimeline($id: ID!, $page: Int!, $perPage: Int!) {

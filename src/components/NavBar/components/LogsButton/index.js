@@ -20,6 +20,7 @@ type Props = {|
     | 'productProvider'
     | 'project'
     | 'shipment'
+    | 'container'
     | 'task',
   entityId: string,
 |};
