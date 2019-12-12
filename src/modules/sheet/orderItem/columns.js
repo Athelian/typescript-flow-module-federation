@@ -94,8 +94,22 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Default,
   },
   {
+    key: 'orderItem.remainingBatchQuantity',
+    title: <FormattedMessage {...orderItemMessages.remainingBatchQuantity} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: ColumnWidths.Default,
+  },
+  {
     key: 'orderItem.totalShipped',
     title: <FormattedMessage {...orderItemMessages.totalShipped} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: ColumnWidths.Default,
+  },
+  {
+    key: 'orderItem.remainingShippedQuantity',
+    title: <FormattedMessage {...orderItemMessages.remainingShippedQuantity} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: ColumnWidths.Default,

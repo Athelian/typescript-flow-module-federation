@@ -59,7 +59,9 @@ export default function({
         ![
           'orderItem.remainQuantity',
           'orderItem.totalBatched',
+          'orderItem.remainingBatchQuantity',
           'orderItem.totalShipped',
+          'orderItem.remainingShippedQuantity',
           'orderItem.totalPrice',
           'orderItem.action',
         ].includes(c.key)

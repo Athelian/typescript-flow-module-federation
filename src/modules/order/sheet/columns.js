@@ -122,9 +122,19 @@ export default function({
           name: 'totalBatched',
           group: 'orderItem',
         },
+        'orderItem.remainingBatchQuantity': {
+          local: true,
+          name: 'remainingBatchQuantity',
+          group: 'orderItem',
+        },
         'orderItem.totalShipped': {
           local: true,
           name: 'totalShipped',
+          group: 'orderItem',
+        },
+        'orderItem.remainingShippedQuantity': {
+          local: true,
+          name: 'remainingShippedQuantity',
           group: 'orderItem',
         },
       },

@@ -15,6 +15,10 @@ export default defineMessages({
     id: 'components.BatchItem.quantity',
     defaultMessage: 'INITIAL QUANTITY',
   },
+  differenceQuantity: {
+    id: 'components.BatchItem.differenceQuantity',
+    defaultMessage: 'Quantity Difference',
+  },
   initialQuantity: {
     id: 'components.BatchItem.initialQuantity',
     defaultMessage: 'INITIAL QUANTITY',

@@ -188,6 +188,14 @@ export default function transformSheetBatch({
       ),
     },
     {
+      columnKey: 'batch.differenceQuantity',
+      type: 'number',
+      ...transformComputedField(basePath, batch, 'differenceQuantity', root => {
+        const currentBatch = getBatchFromRoot(root);
+        return (currentBatch?.quantity ?? 0) - getBatchLatestQuantity(currentBatch);
+      }),
+    },
+    {
       columnKey: 'batch.quantity',
       type: 'number',
       ...transformValueField(

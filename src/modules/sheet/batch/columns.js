@@ -87,6 +87,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Default,
   },
   {
+    key: 'batch.differenceQuantity',
+    title: <FormattedMessage {...batchMessages.differenceQuantity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: ColumnWidths.Default,
+  },
+  {
     key: 'batch.quantity',
     title: <FormattedMessage {...batchMessages.initialQuantity} />,
     icon: 'BATCH',

@@ -235,7 +235,6 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
                         value={state.entity}
                         items={[state.entity]}
                         name="entity"
-                        // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
                         itemToString={i => i?.toUpperCase() ?? ''}
                         itemToValue={i => i}
                         readOnly
@@ -256,7 +255,7 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
                             c => c.entity === state.entity && c.field === i
                           )?.message;
                           const value = message ? intl.formatMessage(message) : i;
-                          // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
+
                           return value?.toUpperCase() ?? '';
                         }}
                         itemToValue={i => i}
@@ -369,7 +368,6 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
                         value={state.entity}
                         onChange={onEntityChange}
                         name="entity"
-                        // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
                         itemToString={i => i?.toUpperCase() ?? ''}
                         itemToValue={i => i}
                         items={[...entities]}
@@ -393,7 +391,7 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
                               c => c.entity === state.entity && c.field === i
                             )?.message;
                             const value = message ? intl.formatMessage(message) : i;
-                            // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
+
                             return value?.toUpperCase() ?? '';
                           }}
                           itemToValue={i => i}
