@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
+import useBeforeUnload from 'hooks/useBeforeUnload';
 
 type Props = {|
   disabled: boolean,
@@ -20,20 +21,26 @@ const defaultProps = {
   id: 'save_button',
 };
 
-const SaveButton = ({ disabled, isLoading, onClick, label, id, ...rest }: Props): React.Node => (
-  <BaseButton
-    icon="CHECKED"
-    label={label}
-    backgroundColor="TEAL"
-    hoverBackgroundColor="TEAL_DARK"
-    disabled={disabled}
-    onClick={onClick}
-    isLoading={isLoading}
-    id={id}
-    data-testid="saveButton"
-    {...rest}
-  />
-);
+const SaveButton = ({ disabled, isLoading, onClick, label, id, ...rest }: Props): React.Node => {
+  useBeforeUnload(
+    !disabled,
+    () => 'Are you sure you want to leave this page? Your changes will not be saved.'
+  );
+  return (
+    <BaseButton
+      icon="CHECKED"
+      label={label}
+      backgroundColor="TEAL"
+      hoverBackgroundColor="TEAL_DARK"
+      disabled={disabled}
+      onClick={onClick}
+      isLoading={isLoading}
+      id={id}
+      data-testid="saveButton"
+      {...rest}
+    />
+  );
+};
 
 SaveButton.defaultProps = defaultProps;
 
