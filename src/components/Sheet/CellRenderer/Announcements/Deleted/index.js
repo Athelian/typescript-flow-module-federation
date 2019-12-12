@@ -14,9 +14,7 @@ const Deleted = ({ area }: Props) => {
   const { state } = useSheetState();
 
   const height = Math.max(1, area.to.x + 1 - area.from.x) * 30;
-  const width = state.columns
-    .slice(area.from.y)
-    .reduce((total, col) => total + (state.columnWidths[col.key] || col.width), 0);
+  const width = state.columns.slice(area.from.y).reduce((total, col) => total + col.width, 0);
 
   return (
     <div className={DeletedStyle(height, width)}>

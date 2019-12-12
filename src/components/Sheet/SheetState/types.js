@@ -162,7 +162,6 @@ export type State = {|
   allRows: Array<Array<CellValue>>,
   columns: Array<ColumnConfig>,
   columnSorts: Array<ColumnSort>,
-  columnWidths: { [string]: number },
   entities: Array<{ id: string, type: string }>,
   hoverAt: Area | null,
   focusAt: Focus | null,

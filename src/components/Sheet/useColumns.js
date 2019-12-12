@@ -5,6 +5,7 @@ import { getCache, invalidateCache, setCache } from 'utils/cache';
 import type { ColumnConfig } from './SheetState/types';
 
 const KEY_PREFIX = 'zenport_sheet_columns';
+const WIDTH_KEY_PREFIX = 'zenport_sheet_column_widths';
 
 function getColumnsCache(key: string, columns: Array<ColumnConfig>): Array<ColumnConfig> | null {
   const cache = getCache<Array<ColumnConfig>>(KEY_PREFIX, key);
@@ -70,4 +71,45 @@ export default function useColumns(
   }
 
   return [getColumns(), setCurrentColumns];
+}
+
+export function useResizedColumns(
+  columns: Array<ColumnConfig>,
+  cacheKey: string
+): [Array<ColumnConfig>, (key: string, width: number) => void] {
+  const [columnWidths, setColumnWidths] = React.useState<{ [string]: number } | null>(null);
+  const resizedColumns = React.useMemo(() => {
+    if (!columnWidths) {
+      return columns;
+    }
+
+    return columns.map(col => ({ ...col, width: columnWidths[col.key] || col.width }));
+  }, [columns, columnWidths]);
+
+  React.useEffect(() => {
+    if (columnWidths) {
+      setCache(WIDTH_KEY_PREFIX, cacheKey, columnWidths);
+    }
+  }, [cacheKey, columnWidths]);
+
+  const onColumnResize = React.useCallback(
+    (key: string, width: number) =>
+      setColumnWidths({
+        ...(columnWidths || {}),
+        [key]: width,
+      }),
+    [columnWidths]
+  );
+
+  function getResizedColumns() {
+    if (!columnWidths) {
+      setColumnWidths(
+        (cacheKey && getCache<{ [string]: number }>(WIDTH_KEY_PREFIX, cacheKey)) || {}
+      );
+    }
+
+    return resizedColumns;
+  }
+
+  return [getResizedColumns(), onColumnResize];
 }

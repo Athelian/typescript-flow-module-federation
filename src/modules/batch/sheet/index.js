@@ -5,7 +5,7 @@ import { equals } from 'ramda';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, BatchFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig, useSheet } from 'components/Sheet';
+import { Sheet, ColumnsConfig, useSheet, useResizedColumns } from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
@@ -67,6 +67,8 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
     cacheKey: 'batch_sheet',
   });
 
+  const [resizedColumns, onColumnResize] = useResizedColumns(columns, 'batch_sheet');
+
   if (!!batchIds && !equals(batchIdsRef.current, batchIds)) {
     setFilterBy({ query: '', ids: batchIds });
     batchIdsRef.current = batchIds;
@@ -98,7 +100,7 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
       </NavBar>
 
       <Sheet
-        columns={columns}
+        columns={resizedColumns}
         loading={loading}
         items={initialItems}
         hasMore={hasMore}
@@ -108,6 +110,7 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
         onLocalSort={onLocalSort}
         onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
+        onColumnResize={onColumnResize}
         actions={{}}
       />
     </Content>

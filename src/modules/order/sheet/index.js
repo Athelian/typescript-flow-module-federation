@@ -6,7 +6,7 @@ import { equals } from 'ramda';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, OrderFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig, useSheet } from 'components/Sheet';
+import { Sheet, ColumnsConfig, useSheet, useResizedColumns } from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
@@ -69,6 +69,8 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
     cacheKey: 'order_sheet',
   });
 
+  const [resizedColumns, onColumnResize] = useResizedColumns(columns, 'order_sheet');
+
   if (!!orderIds && !equals(orderIdsRef.current, orderIds)) {
     setFilterBy({ query: '', ids: orderIds });
     orderIdsRef.current = orderIds;
@@ -100,7 +102,7 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
       </NavBar>
 
       <Sheet
-        columns={columns}
+        columns={resizedColumns}
         loading={loading}
         items={initialItems}
         hasMore={hasMore}
@@ -110,6 +112,7 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
         onLocalSort={onLocalSort}
         onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
+        onColumnResize={onColumnResize}
         actions={actions}
       />
     </Content>
