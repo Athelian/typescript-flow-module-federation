@@ -32,8 +32,8 @@ export const colors = {
 
   TRANSPARENT: 'rgba(0, 0, 0, 0)',
 
-  PROJECT: '#9D628D',
-  MILESTONE: '#F183B1',
+  PROJECT: '#9029B4',
+  MILESTONE: '#9F7C8B',
   TASK: '#CD9EE2',
   PRODUCT: '#F12C2C',
   PRODUCT_PROVIDER: '#CF0000',
