@@ -6,11 +6,13 @@ import orderItemColumns from 'modules/sheet/orderItem/columns';
 import batchColumns from 'modules/sheet/batch/columns';
 import shipmentColumns from 'modules/sheet/shipment/columns';
 import containerColumns from 'modules/sheet/container/columns';
+import productColumns from 'modules/sheet/product/columns';
 
-export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment'];
+export const FieldDefinitionEntityTypes = ['Order', 'Product', 'OrderItem', 'Batch', 'Shipment'];
 
 type Props = {
   orderFieldDefinitions: Array<FieldDefinition>,
+  productFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
@@ -18,6 +20,7 @@ type Props = {
 
 export default function({
   orderFieldDefinitions,
+  productFieldDefinitions,
   orderItemFieldDefinitions,
   batchFieldDefinitions,
   shipmentFieldDefinitions,
@@ -64,12 +67,11 @@ export default function({
       },
       orderFieldDefinitions
     ),
+    ...productColumns({}, {}, productFieldDefinitions),
     ...orderItemColumns(
       {
         'orderItem.created': 'orderItems.createdAt',
         'orderItem.updated': 'orderItems.updatedAt',
-        'orderItem.productProvider.product.name': 'orderItems.productProvider.name',
-        'orderItem.productProvider.product.serial': 'orderItems.productProvider.product.serial',
         'orderItem.no': 'orderItems.no',
         'orderItem.quantity': 'orderItems.quantity',
         'orderItem.price': 'orderItems.price.amount',
@@ -85,16 +87,6 @@ export default function({
         'orderItem.updated': {
           local: true,
           name: 'updatedAt',
-          group: 'orderItem',
-        },
-        'orderItem.productProvider.product.name': {
-          local: true,
-          name: 'productProvider.product.name',
-          group: 'orderItem',
-        },
-        'orderItem.productProvider.product.serial': {
-          local: true,
-          name: 'productProvider.product.serial',
           group: 'orderItem',
         },
         'orderItem.no': {

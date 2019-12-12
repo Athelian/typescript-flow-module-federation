@@ -1,6 +1,7 @@
 // @flow
 import ApolloClient from 'apollo-client';
 import normalizeSheetOrderInput from 'modules/sheet/order/normalize';
+import normalizeSheetProductInput from 'modules/sheet/product/normalize';
 import normalizeSheetOrderItemInput from 'modules/sheet/orderItem/normalize';
 import normalizeSheetBatchInput from 'modules/sheet/batch/normalize';
 import normalizeSheetShipmentInput, {
@@ -10,6 +11,7 @@ import normalizeSheetShipmentInput, {
 } from 'modules/sheet/shipment/normalize';
 import normalizeSheetContainerInput from 'modules/sheet/container/normalize';
 import sheetOrderMutation from 'modules/sheet/order/mutation';
+import sheetProductMutation from 'modules/sheet/product/mutation';
 import sheetOrderItemMutation from 'modules/sheet/orderItem/mutation';
 import sheetBatchMutation from 'modules/sheet/batch/mutation';
 import sheetContainerMutation from 'modules/sheet/container/mutation';
@@ -17,6 +19,7 @@ import sheetShipmentMutation from 'modules/sheet/shipment/mutation';
 
 const mutations = {
   Order: sheetOrderMutation,
+  Product: sheetProductMutation,
   OrderItem: sheetOrderItemMutation,
   Batch: sheetBatchMutation,
   Container: sheetContainerMutation,
@@ -147,6 +150,16 @@ function normalizeInput(
         default:
           return normalizeSheetOrderInput(item, field, oldValue, newValue);
       }
+    case 'Product': {
+      const product = item.orderItems
+        .map(oi => oi.productProvider.product)
+        .find(p => p.id === entity.id);
+      if (!product) {
+        return {};
+      }
+
+      return normalizeSheetProductInput(product, field, oldValue, newValue);
+    }
     case 'OrderItem': {
       const orderItem = item.orderItems.find(oi => oi.id === entity.id);
       if (!orderItem) {

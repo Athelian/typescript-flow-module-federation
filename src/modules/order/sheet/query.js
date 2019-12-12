@@ -20,6 +20,7 @@ import {
   sheetWarehouseFragment,
 } from 'modules/sheet/common/fragment';
 import { sheetOrderFragment } from 'modules/sheet/order/fragment';
+import { sheetProductFragment } from 'modules/sheet/product/fragment';
 import { sheetOrderItemFragment } from 'modules/sheet/orderItem/fragment';
 import { sheetBatchFragment } from 'modules/sheet/batch/fragment';
 import { sheetShipmentFragment, sheetTimelineDateFragment } from 'modules/sheet/shipment/fragment';
@@ -51,6 +52,17 @@ export const ordersQuery = gql`
             ...sheetOwnedFragment
             ...sheetCustomizableFragment
             ... on OrderItem {
+              productProvider {
+                ... on ProductProvider {
+                  id
+                  product {
+                    ...sheetProductFragment
+                    ...sheetModelFragment
+                    ...sheetOwnedFragment
+                    ...sheetCustomizableFragment
+                  }
+                }
+              }
               batches {
                 ...sheetBatchFragment
                 ...sheetModelFragment
@@ -82,6 +94,7 @@ export const ordersQuery = gql`
   }
 
   ${sheetOrderFragment}
+  ${sheetProductFragment}
   ${sheetOrderItemFragment}
   ${sheetBatchFragment}
   ${sheetShipmentFragment}
@@ -119,6 +132,17 @@ export const orderItemByIDQuery = gql`
             id
           }
         }
+        productProvider {
+          ... on ProductProvider {
+            id
+            product {
+              ...sheetProductFragment
+              ...sheetModelFragment
+              ...sheetOwnedFragment
+              ...sheetCustomizableFragment
+            }
+          }
+        }
         batches {
           ...sheetBatchFragment
           ...sheetModelFragment
@@ -144,6 +168,7 @@ export const orderItemByIDQuery = gql`
   }
 
   ${sheetOrderItemFragment}
+  ${sheetProductFragment}
   ${sheetBatchFragment}
   ${sheetShipmentFragment}
   ${sheetShipmentExtraFragment}

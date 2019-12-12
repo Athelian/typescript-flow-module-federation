@@ -12,6 +12,7 @@ import type {
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
 import { handleFieldValueEvent } from 'modules/sheet/common/handler';
 import { handleOrderChanges } from 'modules/sheet/order/handler';
+import { handleProductChanges } from 'modules/sheet/product/handler';
 import { handleOrderItemChanges } from 'modules/sheet/orderItem/handler';
 import { handleBatchChanges } from 'modules/sheet/batch/handler';
 import {
@@ -267,6 +268,9 @@ export default function entityEventHandler(
             changes = await handleOrderChanges(client, changes);
             break;
           }
+          case 'Product':
+            changes = await handleProductChanges(client, changes);
+            break;
           case 'OrderItem': {
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               switch (change.field) {
