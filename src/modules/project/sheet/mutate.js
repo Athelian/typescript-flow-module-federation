@@ -60,12 +60,24 @@ function normalizedInput(
           if (date) {
             return {
               startDate: new Date(date),
-              startDateInterval: value?.interval ?? null,
+              startDateInterval: value?.interval
+                ? {
+                    days: value?.interval?.days ?? 0,
+                    weeks: value?.interval?.weeks ?? 0,
+                    months: value?.interval?.months ?? 0,
+                  }
+                : null,
               startDateBinding: value?.binding ?? null,
             };
           }
           return {
-            startDateInterval: value?.interval ?? null,
+            startDateInterval: value?.interval
+              ? {
+                  days: value?.interval?.days ?? 0,
+                  weeks: value?.interval?.weeks ?? 0,
+                  months: value?.interval?.months ?? 0,
+                }
+              : null,
             startDateBinding: value?.binding ?? null,
           };
         }
@@ -74,12 +86,24 @@ function normalizedInput(
           if (date) {
             return {
               dueDate: new Date(date),
-              dueDateInterval: value?.interval ?? null,
+              dueDateInterval: value?.interval
+                ? {
+                    days: value?.interval?.days ?? 0,
+                    weeks: value?.interval?.weeks ?? 0,
+                    months: value?.interval?.months ?? 0,
+                  }
+                : null,
               dueDateBinding: value?.binding ?? null,
             };
           }
           return {
-            dueDateInterval: value?.interval ?? null,
+            dueDateInterval: value?.interval
+              ? {
+                  days: value?.interval?.days ?? 0,
+                  weeks: value?.interval?.weeks ?? 0,
+                  months: value?.interval?.months ?? 0,
+                }
+              : null,
             dueDateBinding: value?.binding ?? null,
           };
         }

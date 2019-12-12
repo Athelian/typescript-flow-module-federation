@@ -86,7 +86,7 @@ const mappingOptions = {
   ],
 };
 
-const bindingmappingOptionsByEntity = (entity: string, isStartDate: boolean) => {
+const mappingOptionsByEntity = (entity: string, isStartDate: boolean) => {
   return [
     isStartDate ? BINDING_FIELDS.TaskDueDate : BINDING_FIELDS.TaskStartDate,
     BINDING_FIELDS.ProjectDueDate,
@@ -283,12 +283,10 @@ function BaseTaskBindingInput({
         className={InputStyle}
         itemToString={itemToString}
         itemToValue={itemToValue}
-        items={bindingmappingOptionsByEntity(entity || 'Order', type === 'startDate').map(
-          field => ({
-            value: field,
-            label: intl.formatMessage(messages[field]),
-          })
-        )}
+        items={mappingOptionsByEntity(entity || 'Order', type === 'startDate').map(field => ({
+          value: field,
+          label: intl.formatMessage(messages[field]),
+        }))}
         value={binding}
         onChange={(bindingField: string) => handleChange({ binding: bindingField, date, interval })}
         readonly={!!readOnly}

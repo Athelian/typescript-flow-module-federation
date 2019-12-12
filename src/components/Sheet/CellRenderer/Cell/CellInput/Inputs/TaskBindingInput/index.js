@@ -5,19 +5,27 @@ import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/ty
 import { CellInputWrapperStyle } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
 import BaseTaskBindingInput from './components/BaseTaskBindingInput';
 
+type ExtraProps = {
+  parentEntity: 'Order' | 'Batch' | 'Shipment' | 'Project' | 'Milestone',
+  type: 'startDate' | 'dueDate',
+};
+
 const TaskBindingInput = ({
   value,
   readonly,
   onChange,
   extra,
-}: InputProps<{
-  binding: ?TaskDateBinding,
-  interval: ?IntervalInput,
-  date: ?(string | Date),
-}>) => {
-  const parentEntity: 'Order' | 'Batch' | 'Shipment' | 'Project' | 'Milestone' =
-    extra?.parentEntity ?? 'Order';
-  const type: 'startDate' | 'dueDate' = extra?.parentEntity ?? 'startDate';
+}: InputProps<
+  {
+    binding: ?TaskDateBinding,
+    interval: ?IntervalInput,
+    date: ?(string | Date),
+  },
+  any,
+  ExtraProps
+>) => {
+  const parentEntity = extra?.parentEntity ?? 'Order';
+  const type = extra?.type ?? 'startDate';
 
   return (
     <div className={CellInputWrapperStyle}>
