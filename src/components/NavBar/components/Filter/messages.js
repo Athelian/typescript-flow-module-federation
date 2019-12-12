@@ -122,6 +122,10 @@ export default defineMessages({
     id: 'components.NavBar.Filter.productProviders',
     defaultMessage: 'End Products',
   },
+  containers: {
+    id: 'components.NavBar.Filter.containers',
+    defaultMessage: 'Containers',
+  },
   users: {
     id: 'components.NavBar.Filter.users',
     defaultMessage: 'Users',

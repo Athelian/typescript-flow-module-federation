@@ -23,6 +23,7 @@ import ShipmentIds from './Inputs/ShipmentIds';
 import WarehouseIds from './Inputs/WarehouseIds';
 import ProductIds from './Inputs/ProductIds';
 import ProductProviderIds from './Inputs/ProductProviderIds';
+import ContainerIds from './Inputs/ContainerIds';
 import { CompletelyBatched, CompletelyShipped, HasShipment, FreeTimeOverdue } from './Inputs/Bool';
 import OrganizationIds, {
   ImporterIds,
@@ -83,6 +84,7 @@ const inputs = {
   warehouse_ids: WarehouseIds,
   product_ids: ProductIds,
   product_provider_ids: ProductProviderIds,
+  container_ids: ContainerIds,
   organization_ids: OrganizationIds,
   importer_ids: ImporterIds,
   exporter_ids: ExporterIds,
