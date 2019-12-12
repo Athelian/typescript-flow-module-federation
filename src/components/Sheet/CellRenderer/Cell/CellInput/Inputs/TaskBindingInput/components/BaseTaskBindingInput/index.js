@@ -9,7 +9,7 @@ import DateInput from 'components/Form/Inputs/DateInput';
 import SelectInput from 'components/Sheet/CellRenderer/Cell/CellInput/Common/SelectInput';
 import { InputStyle } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
 import Icon from 'components/Icon';
-import messages from './messages';
+import messages from 'modules/task/messages';
 import {
   WrapperStyle,
   DateWrapperStyle,
@@ -62,36 +62,36 @@ const BINDING_FIELDS = {
   TaskDueDate: 'TaskDueDate',
 };
 
-const bindingOptionsByEntity = (entity: string, isStartDate: boolean) => {
-  const options = {
-    Order: [BINDING_FIELDS.OrderDeliveryDate, BINDING_FIELDS.OrderIssuedAt],
-    Batch: [
-      BINDING_FIELDS.BatchDeliveredAt,
-      BINDING_FIELDS.BatchDesiredAt,
-      BINDING_FIELDS.BatchProducedAt,
-      BINDING_FIELDS.BatchExpiredAt,
-    ],
-    Shipment: [
-      BINDING_FIELDS.ShipmentBlDate,
-      BINDING_FIELDS.ShipmentBookingDate,
-      BINDING_FIELDS.ShipmentCargoReady,
-      BINDING_FIELDS.ShipmentLoadPortDeparture,
-      BINDING_FIELDS.ShipmentFirstTransitPortArrival,
-      BINDING_FIELDS.ShipmentFirstTransitPortDeparture,
-      BINDING_FIELDS.ShipmentSecondTransitPortArrival,
-      BINDING_FIELDS.ShipmentSecondTransitPortDeparture,
-      BINDING_FIELDS.ShipmentDischargePortArrival,
-      BINDING_FIELDS.ShipmentCustomClearance,
-      BINDING_FIELDS.ShipmentWarehouseArrival,
-      BINDING_FIELDS.ShipmentDeliveryReady,
-    ],
-  };
+const mappingOptions = {
+  Order: [BINDING_FIELDS.OrderDeliveryDate, BINDING_FIELDS.OrderIssuedAt],
+  Batch: [
+    BINDING_FIELDS.BatchDeliveredAt,
+    BINDING_FIELDS.BatchDesiredAt,
+    BINDING_FIELDS.BatchProducedAt,
+    BINDING_FIELDS.BatchExpiredAt,
+  ],
+  Shipment: [
+    BINDING_FIELDS.ShipmentBlDate,
+    BINDING_FIELDS.ShipmentBookingDate,
+    BINDING_FIELDS.ShipmentCargoReady,
+    BINDING_FIELDS.ShipmentLoadPortDeparture,
+    BINDING_FIELDS.ShipmentFirstTransitPortArrival,
+    BINDING_FIELDS.ShipmentFirstTransitPortDeparture,
+    BINDING_FIELDS.ShipmentSecondTransitPortArrival,
+    BINDING_FIELDS.ShipmentSecondTransitPortDeparture,
+    BINDING_FIELDS.ShipmentDischargePortArrival,
+    BINDING_FIELDS.ShipmentCustomClearance,
+    BINDING_FIELDS.ShipmentWarehouseArrival,
+    BINDING_FIELDS.ShipmentDeliveryReady,
+  ],
+};
 
+const bindingmappingOptionsByEntity = (entity: string, isStartDate: boolean) => {
   return [
     isStartDate ? BINDING_FIELDS.TaskDueDate : BINDING_FIELDS.TaskStartDate,
     BINDING_FIELDS.ProjectDueDate,
     BINDING_FIELDS.MilestoneDueDate,
-    ...(options?.[entity] ?? []),
+    ...(mappingOptions?.[entity] ?? []),
   ];
 };
 
@@ -172,6 +172,27 @@ function BaseTaskBindingInput({
   const itemToString = item => (item ? item.label : '');
   const itemToValue = item => (item ? item.value : '');
 
+  const durationOptions = [
+    {
+      label: 'Days',
+      value: 'days',
+    },
+    {
+      label: 'Weeks',
+      value: 'weeks',
+    },
+    {
+      label: 'Months',
+      value: 'months',
+    },
+  ];
+  const offsetOptions = [
+    {
+      label: 'Before',
+      value: 'before',
+    },
+    { label: 'After', value: 'after' },
+  ];
   return (
     <div className={WrapperStyle(!!readOnly)}>
       <div className={DateWrapperStyle(true)}>
@@ -226,20 +247,7 @@ function BaseTaskBindingInput({
         className={InputStyle}
         itemToString={itemToString}
         itemToValue={itemToValue}
-        items={[
-          {
-            label: 'Days',
-            value: 'days',
-          },
-          {
-            label: 'Weeks',
-            value: 'weeks',
-          },
-          {
-            label: 'Months',
-            value: 'months',
-          },
-        ]}
+        items={durationOptions}
         value={duration}
         onChange={changeDuration =>
           handleChange({
@@ -257,13 +265,7 @@ function BaseTaskBindingInput({
         className={InputStyle}
         itemToString={itemToString}
         itemToValue={itemToValue}
-        items={[
-          {
-            label: 'Before',
-            value: 'before',
-          },
-          { label: 'After', value: 'after' },
-        ]}
+        items={offsetOptions}
         value={offset}
         onChange={newOffset => {
           const newInterval = {};
@@ -281,10 +283,12 @@ function BaseTaskBindingInput({
         className={InputStyle}
         itemToString={itemToString}
         itemToValue={itemToValue}
-        items={bindingOptionsByEntity(entity || 'Order', type === 'startDate').map(field => ({
-          value: field,
-          label: intl.formatMessage(messages[field]),
-        }))}
+        items={bindingmappingOptionsByEntity(entity || 'Order', type === 'startDate').map(
+          field => ({
+            value: field,
+            label: intl.formatMessage(messages[field]),
+          })
+        )}
         value={binding}
         onChange={(bindingField: string) => handleChange({ binding: bindingField, date, interval })}
         readonly={!!readOnly}

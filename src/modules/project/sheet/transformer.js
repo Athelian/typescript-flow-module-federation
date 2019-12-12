@@ -289,10 +289,13 @@ function transformTask(
     },
     {
       columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.startDate`,
-      type: 'task_binding',
-      extra: {
-        parentEntity: task?.entity?.__typename,
-        type: 'startDate',
+      type: 'date_binding',
+      computed: project => {
+        const currentTask = getCurrentTask(task?.id, project);
+        return {
+          parentEntity: currentTask?.entity?.__typename,
+          type: 'startDate',
+        };
       },
       ...transformValueField(
         basePath,
@@ -303,10 +306,13 @@ function transformTask(
     },
     {
       columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.dueDate`,
-      type: 'task_binding',
-      extra: {
-        parentEntity: task?.entity?.__typename,
-        type: 'dueDate',
+      type: 'date_binding',
+      computed: project => {
+        const currentTask = getCurrentTask(task?.id, project);
+        return {
+          parentEntity: currentTask?.entity?.__typename,
+          type: 'dueDate',
+        };
       },
       ...transformValueField(
         basePath,

@@ -121,7 +121,7 @@ const inputs = {
   order_item_tasks: TasksInput.OrderItem,
   batch_tasks: TasksInput.Batch,
   shipment_tasks: TasksInput.Shipment,
-  task_binding: TaskBindingInput,
+  date_binding: TaskBindingInput,
   // Other
   approval: ApprovalInput,
   date_revisions: DateRevisionsInput,
