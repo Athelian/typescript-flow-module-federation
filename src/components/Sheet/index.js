@@ -11,11 +11,14 @@ import {
 import ColumnsConfig from './ColumnsConfig';
 import Sheet from './Sheet';
 import useSheet from './useSheet';
+import useColumns, { useResizedColumns } from './useColumns';
 
 export type { ColumnConfig, ColumnSort };
 export {
   Sheet,
   useSheet,
+  useColumns,
+  useResizedColumns,
   ColumnsConfig,
   transformField,
   transformValueField,

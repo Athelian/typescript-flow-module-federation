@@ -31,6 +31,7 @@ type BaseProps = {|
   loading: boolean,
   hasMore: boolean,
   onLoadMore: () => Promise<Array<Object>>,
+  onColumnResize: (key: string, width: number) => void,
   handleEntityEvent: ?EntityEventHandlerFactory,
 |};
 
@@ -50,7 +51,14 @@ type Props = {|
   actions: { [string]: ActionConfig },
 |};
 
-const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent, doAction }: ImplProps) => {
+const SheetImpl = ({
+  loading,
+  hasMore,
+  onLoadMore,
+  onColumnResize,
+  handleEntityEvent,
+  doAction,
+}: ImplProps) => {
   const [loadingMore, handleThreshold] = useSheetStateLoadMore(onLoadMore);
   const { state, dispatch, mutate } = useSheetState();
   useSheetKeyNavigation();
@@ -71,11 +79,6 @@ const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent, doAction }
             : undefined,
         };
 
-        const width = state.columnWidths[column.key];
-        if (width) {
-          columnState = { ...columnState, width };
-        }
-
         if (column.sort) {
           const sort = state.columnSorts
             .filter(s => s.group === column.sort?.group)
@@ -90,7 +93,7 @@ const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent, doAction }
 
         return columnState;
       }),
-    [state.columns, state.columnSorts, state.columnWidths]
+    [state.columns, state.columnSorts]
   );
 
   const data = React.useMemo<Array<Array<CellData>>>(
@@ -183,18 +186,6 @@ const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent, doAction }
     },
     [dispatch]
   );
-  const onColumnResize = React.useCallback(
-    (column: string, width: number) => {
-      dispatch({
-        type: Actions.RESIZE_COLUMN,
-        payload: {
-          column,
-          width,
-        },
-      });
-    },
-    [dispatch]
-  );
 
   return (
     <div className={SheetContentWrapperStyle} onMouseLeave={handleMouseLeave}>
@@ -221,6 +212,7 @@ const Sheet = ({
   onMutate,
   onLocalSort,
   onRemoteSort,
+  onColumnResize,
   columns,
   items,
   loading,
@@ -244,6 +236,7 @@ const Sheet = ({
             loading={loading}
             hasMore={hasMore}
             onLoadMore={onLoadMore}
+            onColumnResize={onColumnResize}
             handleEntityEvent={handleEntityEvent}
             doAction={doAction}
           />

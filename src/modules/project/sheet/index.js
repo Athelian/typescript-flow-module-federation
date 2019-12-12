@@ -4,7 +4,7 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ProjectFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig, useSheet } from 'components/Sheet';
+import { Sheet, ColumnsConfig, useSheet, useResizedColumns } from 'components/Sheet';
 import { clone } from 'utils/fp';
 import { projectsExportQuery } from '../query';
 import projectColumns from './columns';
@@ -51,6 +51,8 @@ const ProjectSheetModule = () => {
     cacheKey: 'project_sheet',
   });
 
+  const [resizedColumns, onColumnResize] = useResizedColumns(columns, 'project_sheet');
+
   return (
     <Content>
       <NavBar>
@@ -77,7 +79,7 @@ const ProjectSheetModule = () => {
       </NavBar>
 
       <Sheet
-        columns={columns}
+        columns={resizedColumns}
         loading={loading}
         items={initialItems}
         hasMore={hasMore}
@@ -87,6 +89,7 @@ const ProjectSheetModule = () => {
         onLocalSort={onLocalSort}
         onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
+        onColumnResize={onColumnResize}
         actions={{}}
       />
     </Content>

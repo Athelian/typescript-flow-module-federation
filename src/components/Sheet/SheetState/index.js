@@ -25,7 +25,6 @@ const initialState: State = {
   allRows: [],
   columns: [],
   columnSorts: [],
-  columnWidths: {},
   entities: [],
   hoverAt: null,
   focusAt: null,

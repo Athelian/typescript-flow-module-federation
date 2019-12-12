@@ -1,4 +1,5 @@
 // @flow
+import { equals } from 'ramda';
 import type { SortDirection } from 'types';
 import type { CellValue, ColumnConfig, State, ColumnSort } from 'components/Sheet/SheetState/types';
 import { setForeignFocuses } from './foreign-focus';
@@ -204,6 +205,18 @@ export function rearrangeColumns(
   return (state: State, payload: { columns: Array<ColumnConfig> }): State => {
     const { columns } = payload;
 
+    if (
+      equals(
+        columns.map(col => col.key),
+        state.columns.map(col => col.key)
+      )
+    ) {
+      return {
+        ...state,
+        columns,
+      };
+    }
+
     const columnSorts = state.columnSorts.filter(s => !!columns.find(c => c.key === s.key));
 
     const sortGroups = new Set(columnSorts.map(s => s.group));
@@ -230,18 +243,6 @@ export function rearrangeColumns(
     }
 
     return refresh(transformer, sorter)({ ...state, columns, columnSorts }, { items: state.items });
-  };
-}
-
-export function resizeColumn(state: State, payload: { column: string, width: number }): State {
-  const { column, width } = payload;
-
-  return {
-    ...state,
-    columnWidths: {
-      ...state.columnWidths,
-      [column]: width,
-    },
   };
 }
 
