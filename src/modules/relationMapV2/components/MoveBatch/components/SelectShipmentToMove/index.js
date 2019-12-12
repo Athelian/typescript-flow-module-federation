@@ -50,7 +50,11 @@ function ShipmentRenderer({
     !isMoveToContainer &&
     shipmentIds.length === 1 &&
     shipmentIds.includes(shipment.id) &&
-    batchIds.every(batchId => !!mapping.entities?.batches?.[batchId]?.shipment);
+    batchIds.every(
+      batchId =>
+        !!mapping.entities?.batches?.[batchId]?.shipment &&
+        !mapping.entities?.batches?.[batchId]?.container
+    );
   const hasPermissions = useEntityHasPermissions(shipment);
   const isDifferentImporter = !importerIds.includes(shipment.importer?.id);
   const isDifferentExporter =
