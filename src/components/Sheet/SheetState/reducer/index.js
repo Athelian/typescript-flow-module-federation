@@ -8,7 +8,7 @@ import type {
   ColumnSort,
 } from 'components/Sheet/SheetState/types';
 import { Actions } from '../constants';
-import { append, init, rearrangeColumns, sortColumn } from './sheet';
+import { append, init, rearrangeColumns } from './sheet';
 import {
   appendForeignFocuses,
   foreignBlur,
@@ -61,8 +61,6 @@ export default function cellReducer(
         return append(transformer, sorter)(state, getPayload(action));
       case Actions.REARRANGE_COLUMNS:
         return rearrangeColumns(transformer, sorter)(state, getPayload(action));
-      case Actions.SORT_COLUMN:
-        return sortColumn(transformer, sorter)(state, getPayload(action));
       case Actions.CELL_UPDATE:
         return cellUpdate(state, getPayload(action), getTarget(state, action));
       case Actions.CHANGE_VALUES:

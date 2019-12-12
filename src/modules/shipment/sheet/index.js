@@ -6,7 +6,7 @@ import { equals } from 'ramda';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ShipmentFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig, useSheet, useColumns, useResizedColumns } from 'components/Sheet';
+import { Sheet, ColumnsConfig, useSheet, useColumnStates } from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
@@ -58,20 +58,20 @@ const ShipmentSheetModuleImpl = ({
     filterBy,
     setFilterBy,
     sortBy,
-    localSortBy,
-    onLocalSort,
-    onRemoteSort,
+    setSortBy,
   } = useSheet({
     itemsQuery: shipmentsQuery,
     initialFilterBy: { query: '', archived: false },
     initialSortBy: { updatedAt: 'DESCENDING' },
-    sorter,
     getItems,
     cacheKey: 'shipment_sheet',
   });
-  const [columns, setColumns] = useColumns(columnConfigs, 'shipment_sheet');
-
-  const [resizedColumns, onColumnResize] = useResizedColumns(columns, 'shipment_sheet');
+  const { columns, setColumns, columnStates } = useColumnStates({
+    columns: columnConfigs,
+    sortBy,
+    setSortBy,
+    cacheKey: 'shipment_sheet',
+  });
 
   if (!!shipmentIds && !equals(shipmentIdsRef.current, shipmentIds)) {
     setFilterBy({ query: '', ids: shipmentIds });
@@ -98,24 +98,22 @@ const ShipmentSheetModuleImpl = ({
           variables={{
             filterBy: { query, ...filterBy },
             sortBy,
-            localSortBy,
+            localSortBy: {},
             columns: columns.filter(c => !!c.exportKey).map(c => c.exportKey),
           }}
         />
       </NavBar>
 
       <Sheet
-        columns={resizedColumns}
+        columns={columnStates}
         loading={loading}
         items={initialItems}
         hasMore={hasMore}
         transformItem={transformer}
         onMutate={memoizedMutate}
         handleEntityEvent={memoizedHandler}
-        onLocalSort={onLocalSort}
-        onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
-        onColumnResize={onColumnResize}
+        onItemsSort={sorter}
         actions={actions}
       />
     </Content>

@@ -2,17 +2,14 @@
 import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import { DocumentNode } from 'graphql';
-import type { FilterBy, SortBy, SortDirection } from 'types';
+import type { FilterBy, SortBy } from 'types';
 import useFilterSort from 'hooks/useFilterSort';
-import type { ColumnSort } from './SheetState/types';
-import useLocalSort from './useLocalSort';
 
 type Input = {
   itemsQuery: DocumentNode,
   initialFilterBy: FilterBy,
   initialSortBy: SortBy,
   cacheKey: string,
-  sorter: (items: Array<Object>, sorts: Array<ColumnSort>) => Array<Object>,
   getItems: (data: Object) => { page: number, totalPage: number, nodes: Array<Object> },
 };
 
@@ -26,9 +23,6 @@ type Output = {
   setFilterBy: FilterBy => void,
   sortBy: SortBy,
   setSortBy: SortBy => void,
-  localSortBy: Array<{ field: string, direction: SortDirection }>,
-  onRemoteSort: (sorts: Array<ColumnSort>) => void,
-  onLocalSort: (items: Array<Object>, sorts: Array<ColumnSort>) => Array<Object>,
   onLoadMore: () => Promise<Array<Object>>,
 };
 
@@ -37,7 +31,6 @@ export default function useSheet({
   initialFilterBy,
   initialSortBy,
   cacheKey,
-  sorter,
   getItems,
 }: Input): Output {
   const client = useApolloClient();
@@ -53,32 +46,6 @@ export default function useSheet({
     initialFilterBy,
     initialSortBy,
     cacheKey
-  );
-  const [localSortBy, setLocalSortBy] = useLocalSort(cacheKey);
-  const onLocalSort = React.useCallback(
-    (items: Array<Object>, sorts: Array<ColumnSort>): Array<Object> => {
-      setLocalSortBy(
-        sorts.map(({ group, name, direction }: any) => ({
-          direction,
-          field: `${group}_${name}`,
-        }))
-      );
-
-      return sorter(items, sorts);
-    },
-    [sorter, setLocalSortBy]
-  );
-  const onRemoteSort = React.useCallback(
-    sorts =>
-      setSortBy(
-        sorts.reduce((remote, sort) => {
-          return {
-            ...remote,
-            [sort.name]: sort.direction,
-          };
-        }, {})
-      ),
-    [setSortBy]
   );
 
   const onLoadMore = React.useCallback(
@@ -137,9 +104,6 @@ export default function useSheet({
     setFilterBy,
     sortBy,
     setSortBy,
-    localSortBy,
-    onLocalSort,
-    onRemoteSort,
     onLoadMore,
   };
 }

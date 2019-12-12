@@ -5,7 +5,7 @@ import { equals } from 'ramda';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, BatchFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig, useSheet, useColumns, useResizedColumns } from 'components/Sheet';
+import { Sheet, ColumnsConfig, useSheet, useColumnStates } from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
@@ -51,21 +51,21 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
     setQuery,
     filterBy,
     sortBy,
-    localSortBy,
+    setSortBy,
     setFilterBy,
-    onLocalSort,
-    onRemoteSort,
   } = useSheet({
     itemsQuery: batchesQuery,
     initialFilterBy: { query: '', archived: false },
     initialSortBy: { updatedAt: 'DESCENDING' },
-    sorter,
     getItems,
     cacheKey: 'batch_sheet',
   });
-  const [columns, setColumns] = useColumns(columnConfigs, 'batch_sheet');
-
-  const [resizedColumns, onColumnResize] = useResizedColumns(columns, 'batch_sheet');
+  const { columns, setColumns, columnStates } = useColumnStates({
+    columns: columnConfigs,
+    sortBy,
+    setSortBy,
+    cacheKey: 'batch_sheet',
+  });
 
   if (!!batchIds && !equals(batchIdsRef.current, batchIds)) {
     setFilterBy({ query: '', ids: batchIds });
@@ -92,24 +92,22 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
           variables={{
             filterBy: { query, ...filterBy },
             sortBy,
-            localSortBy,
+            localSortBy: {},
             columns: columns.filter(c => !!c.exportKey).map(c => c.exportKey),
           }}
         />
       </NavBar>
 
       <Sheet
-        columns={resizedColumns}
+        columns={columnStates}
         loading={loading}
         items={initialItems}
         hasMore={hasMore}
         transformItem={transformer}
         onMutate={memorizedMutate}
         handleEntityEvent={memorizedHandler}
-        onLocalSort={onLocalSort}
-        onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
-        onColumnResize={onColumnResize}
+        onItemsSort={sorter}
         actions={{}}
       />
     </Content>

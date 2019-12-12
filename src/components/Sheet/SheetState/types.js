@@ -8,6 +8,7 @@ export type ColumnSortConfig = {|
   group: string,
   name: string,
   default?: boolean,
+  direction?: SortDirection,
 |};
 
 type Column = {|
@@ -18,22 +19,22 @@ type Column = {|
   color: string,
   width: number,
   minWidth?: number,
+  hidden?: boolean,
 |};
 
 export type ColumnConfig = {|
   ...Column,
-  hidden?: boolean,
   sort?: ColumnSortConfig,
 |};
 
 export type ColumnSort = {|
   ...ColumnSortConfig,
-  key: string,
-  direction?: SortDirection,
+  onToggle: () => void,
 |};
 
 export type ColumnState = {|
   ...Column,
+  onResize: (width: number) => void,
   sort?: ColumnSort,
 |};
 
@@ -118,7 +119,7 @@ export type Action = {|
     blur?: mixed,
     foreignFocuses?: Array<mixed>,
     items?: Array<Object>,
-    columns?: Array<ColumnConfig>,
+    columns?: Array<ColumnState>,
     column?: string,
     width?: number,
     direction?: SortDirection,
@@ -161,8 +162,7 @@ export type State = {|
   items: Array<Object>,
   rows: Array<Array<CellValue>>,
   allRows: Array<Array<CellValue>>,
-  columns: Array<ColumnConfig>,
-  columnSorts: Array<ColumnSort>,
+  columns: Array<ColumnState>,
   entities: Array<{ id: string, type: string }>,
   hoverAt: Area | null,
   focusAt: Focus | null,

@@ -2,9 +2,15 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import type { SortBy } from 'types';
 import { getCache, setCache } from 'utils/cache';
 import { colors } from 'styles/common';
-import type { ColumnConfig } from 'components/Sheet';
+import {
+  useResizedColumns,
+  useSortedColumns,
+  type ColumnConfig,
+  type ColumnState,
+} from 'components/Sheet';
 import { getColumnsConfigured, SHEET_COLUMN_KEY_PREFIX } from 'components/Sheet/useColumns';
 import projectMessages from 'modules/project/messages';
 import milestoneMessages from 'modules/milestone/messages';
@@ -379,9 +385,7 @@ function setColumnsCache(key: string, columns: Array<ColumnConfig>) {
   });
 }
 
-export function useProjectColumns(
-  cacheKey: string
-): [Array<ColumnConfig>, (Array<ColumnConfig>) => void] {
+function useProjectColumns(cacheKey: string): [Array<ColumnConfig>, (Array<ColumnConfig>) => void] {
   const [currentColumns, setCurrentColumns] = React.useState<Array<ColumnConfig> | null>(null);
 
   React.useEffect(() => {
@@ -415,4 +419,95 @@ export function useProjectColumns(
   }
 
   return [getColumns(), setCurrentColumns];
+}
+
+type Input = {
+  sortBy: SortBy,
+  setSortBy: SortBy => void,
+  cacheKey: string,
+};
+
+type Output = {
+  columns: Array<ColumnConfig>,
+  columnStates: Array<ColumnState>,
+  setColumns: (Array<ColumnConfig>) => void,
+};
+
+export function useProjectColumnStates({ sortBy, setSortBy, cacheKey }: Input): Output {
+  const [currentColumns, setCurrentColumns] = useProjectColumns(cacheKey);
+  const [currentResizedColumns, onColumnResize] = useResizedColumns(currentColumns, cacheKey);
+  const [currentSortableResizedColumns, onColumnSort] = useSortedColumns({
+    columns: currentResizedColumns,
+    sortBy,
+    setSortBy,
+    cacheKey,
+  });
+
+  /**
+   * Add a prefix to each milestone and task columns title.
+   * For milestone columns: #{milestone index + 1} {title}
+   * For tasks columns: #{milestone index + 1}-{task index + 1} {title}
+   *
+   * @type {Array<ColumnConfig>}
+   */
+  const columnsWithPrefix = React.useMemo<Array<ColumnConfig>>(
+    () =>
+      currentSortableResizedColumns.map(col => {
+        if (col.key.startsWith('milestones')) {
+          let matches = col.key.match(/milestones\.(\d+)/);
+          if (matches) {
+            const milestoneIdx = parseFloat(matches[1]);
+
+            if (col.key.startsWith(`milestones.${milestoneIdx}.tasks`)) {
+              matches = col.key.match(/milestones\.\d+\.tasks.(\d+)/);
+              if (matches) {
+                const taskIdx = parseFloat(matches[1]);
+
+                return {
+                  ...col,
+                  title: (
+                    <>
+                      #{milestoneIdx + 1}-{taskIdx + 1} {col.title}
+                    </>
+                  ),
+                };
+              }
+            }
+
+            return {
+              ...col,
+              title: (
+                <>
+                  #{milestoneIdx + 1} {col.title}
+                </>
+              ),
+            };
+          }
+        }
+
+        return col;
+      }),
+    [currentSortableResizedColumns]
+  );
+
+  const columnStates = React.useMemo(
+    () =>
+      columnsWithPrefix.map(column => ({
+        ...column,
+        onResize: width => onColumnResize(column.key, width),
+        sort: column.sort
+          ? {
+              ...column.sort,
+              onToggle: () => onColumnSort(column.key),
+            }
+          : undefined,
+      })),
+    [columnsWithPrefix, onColumnResize, onColumnSort]
+  );
+
+  return {
+    columns: currentSortableResizedColumns,
+    columnStates,
+    setColumns: setCurrentColumns,
+  };
 }
