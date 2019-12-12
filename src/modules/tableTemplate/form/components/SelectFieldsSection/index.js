@@ -149,6 +149,7 @@ const SelectFieldsSection = () => {
           OrderSheet: convertSheetColumns(
             orderSheetColumns({
               orderFieldDefinitions: orderCustomFields,
+              productFieldDefinitions: productCustomFields,
               orderItemFieldDefinitions: orderItemCustomFields,
               batchFieldDefinitions: batchCustomFields,
               shipmentFieldDefinitions: shipmentCustomFields,
@@ -157,6 +158,7 @@ const SelectFieldsSection = () => {
           BatchSheet: convertSheetColumns(
             batchSheetColumns({
               orderFieldDefinitions: orderCustomFields,
+              productFieldDefinitions: productCustomFields,
               orderItemFieldDefinitions: orderItemCustomFields,
               batchFieldDefinitions: batchCustomFields,
               shipmentFieldDefinitions: shipmentCustomFields,
