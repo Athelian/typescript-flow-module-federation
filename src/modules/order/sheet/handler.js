@@ -20,6 +20,7 @@ import {
   handleVoyageChanges,
   handleShipmentChanges,
 } from 'modules/sheet/shipment/handler';
+import { handleProductChanges } from 'modules/sheet/product/handler';
 import { decorateBatch, decorateContainer, decorateOrderItem, decorateShipment } from './decorator';
 import { batchByIDQuery, containerByIDQuery, orderItemByIDQuery, shipmentByIDQuery } from './query';
 
@@ -408,6 +409,9 @@ export default function entityEventHandler(
             changes = await handleOrderChanges(client, changes);
             break;
           }
+          case 'Product':
+            changes = await handleProductChanges(client, changes);
+            break;
           case 'OrderItem': {
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               if (change.field === 'order') {

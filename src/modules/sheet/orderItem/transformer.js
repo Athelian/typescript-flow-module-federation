@@ -89,26 +89,6 @@ export default function transformSheetOrderItem({
       ...transformReadonlyField(basePath, orderItem, 'updatedAt', orderItem?.updatedAt ?? null),
     },
     {
-      columnKey: 'orderItem.productProvider.product.name',
-      type: 'text',
-      ...transformReadonlyField(
-        `${basePath}.productProvider.product`,
-        orderItem?.productProvider?.product ?? null,
-        'name',
-        orderItem?.productProvider?.product?.name ?? ''
-      ),
-    },
-    {
-      columnKey: 'orderItem.productProvider.product.serial',
-      type: 'text',
-      ...transformReadonlyField(
-        `${basePath}.productProvider.product`,
-        orderItem?.productProvider?.product ?? null,
-        'serial',
-        orderItem?.productProvider?.product?.serial ?? ''
-      ),
-    },
-    {
       columnKey: 'orderItem.archived',
       type: 'status',
       ...transformComputedField(

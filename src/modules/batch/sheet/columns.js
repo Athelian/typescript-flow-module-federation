@@ -2,15 +2,17 @@
 import type { FieldDefinition } from 'types';
 import type { ColumnConfig } from 'components/Sheet';
 import orderColumns from 'modules/sheet/order/columns';
+import productColumns from 'modules/sheet/product/columns';
 import orderItemColumns from 'modules/sheet/orderItem/columns';
 import batchColumns from 'modules/sheet/batch/columns';
 import shipmentColumns from 'modules/sheet/shipment/columns';
 import containerColumns from 'modules/sheet/container/columns';
 
-export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment'];
+export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment', 'Product'];
 
 type Props = {
   orderFieldDefinitions: Array<FieldDefinition>,
+  productFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
@@ -18,6 +20,7 @@ type Props = {
 
 export default function({
   orderFieldDefinitions,
+  productFieldDefinitions,
   orderItemFieldDefinitions,
   batchFieldDefinitions,
   shipmentFieldDefinitions,
@@ -66,6 +69,7 @@ export default function({
           'orderItem.action',
         ].includes(c.key)
     ),
+    ...productColumns({}, {}, productFieldDefinitions),
     ...orderColumns({}, {}, orderFieldDefinitions).filter(
       c =>
         ![

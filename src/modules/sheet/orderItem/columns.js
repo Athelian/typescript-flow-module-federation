@@ -31,20 +31,6 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Status,
   },
   {
-    key: 'orderItem.productProvider.product.name',
-    title: <FormattedMessage {...orderItemMessages.productName} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: ColumnWidths.Default,
-  },
-  {
-    key: 'orderItem.productProvider.product.serial',
-    title: <FormattedMessage {...orderItemMessages.productSerial} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: ColumnWidths.Default,
-  },
-  {
     key: 'orderItem.no',
     title: <FormattedMessage {...orderItemMessages.no} />,
     icon: 'ORDER_ITEM',

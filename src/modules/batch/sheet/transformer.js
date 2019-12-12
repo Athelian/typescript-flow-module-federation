@@ -3,6 +3,7 @@ import type { Batch } from 'generated/graphql';
 import type { FieldDefinition } from 'types';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import transformSheetOrder from 'modules/sheet/order/transformer';
+import transformSheetProduct from 'modules/sheet/product/transformer';
 import transformSheetOrderItem from 'modules/sheet/orderItem/transformer';
 import transformSheetBatch from 'modules/sheet/batch/transformer';
 import transformSheetShipment from 'modules/sheet/shipment/transformer';
@@ -36,6 +37,22 @@ function transformOrderItem(
     getOrderFromRoot: root => root.orderItem.order,
     getOrderItemFromRoot: root => root.orderItem,
     actions: [],
+  }).map(c => ({
+    ...c,
+    duplicable: true,
+  }));
+}
+
+function transformProduct(
+  fieldDefinitions: Array<FieldDefinition>,
+  basePath: string,
+  product: Object
+): Array<CellValue> {
+  return transformSheetProduct({
+    fieldDefinitions,
+    basePath: `${basePath}.orderItem.productProvider.product`,
+    product,
+    getProductFromRoot: root => root.orderItem.productProvider.product,
   }).map(c => ({
     ...c,
     duplicable: true,
@@ -97,6 +114,7 @@ function transformShipment(
 
 type Props = {
   orderFieldDefinitions: Array<FieldDefinition>,
+  productFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
@@ -104,6 +122,7 @@ type Props = {
 
 export default function transformer({
   orderFieldDefinitions,
+  productFieldDefinitions,
   orderItemFieldDefinitions,
   batchFieldDefinitions,
   shipmentFieldDefinitions,
@@ -115,10 +134,24 @@ export default function transformer({
       `${index}`,
       batch?.orderItem
     );
-    const orderCells = transformOrder(orderFieldDefinitions, `${index}`, batch.orderItem.order);
+    const productCells = transformProduct(
+      productFieldDefinitions,
+      `${index}`,
+      batch?.orderItem?.productProvider?.product
+    );
+    const orderCells = transformOrder(orderFieldDefinitions, `${index}`, batch?.orderItem?.order);
     const containerCells = transformContainer(`${index}`, batch);
     const shipmentCells = transformShipment(shipmentFieldDefinitions, `${index}`, batch);
 
-    return [[...batchCells, ...orderItemCells, ...orderCells, ...containerCells, ...shipmentCells]];
+    return [
+      [
+        ...batchCells,
+        ...orderItemCells,
+        ...productCells,
+        ...orderCells,
+        ...containerCells,
+        ...shipmentCells,
+      ],
+    ];
   };
 }
