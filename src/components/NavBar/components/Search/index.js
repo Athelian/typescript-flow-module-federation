@@ -4,13 +4,7 @@ import { useIntl } from 'react-intl';
 import CInput from 'react-composition-input';
 import Icon from 'components/Icon';
 import messages from './messages';
-import {
-  ClearButtonStyle,
-  SearchButtonStyle,
-  InputStyle,
-  SearchStyle,
-  SeparatorStyle,
-} from './style';
+import { ClearButtonStyle, SearchButtonStyle, InputStyle, SearchStyle } from './style';
 
 type Props = {
   query: string,
@@ -58,7 +52,6 @@ const Search = ({ query, onChange }: Props) => {
           <Icon icon="CLEAR" />
         </button>
       )}
-      <hr className={SeparatorStyle} />
       <button className={SearchButtonStyle} type="button" onClick={handleSearch}>
         <Icon icon="SEARCH" />
       </button>
