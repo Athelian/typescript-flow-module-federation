@@ -1,7 +1,9 @@
 // @flow
 import * as React from 'react';
+import { useIntl } from 'react-intl';
 import CInput from 'react-composition-input';
 import Icon from 'components/Icon';
+import messages from './messages';
 import {
   ClearButtonStyle,
   SearchButtonStyle,
@@ -16,7 +18,9 @@ type Props = {
 };
 
 const Search = ({ query, onChange }: Props) => {
+  const intl = useIntl();
   const [value, setValue] = React.useState(query || '');
+  const [focused, setFocused] = React.useState(false);
 
   const handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -28,6 +32,7 @@ const Search = ({ query, onChange }: Props) => {
 
   const handleClear = () => {
     setValue('');
+    onChange('');
   };
 
   const handleKeyDown = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
@@ -38,11 +43,14 @@ const Search = ({ query, onChange }: Props) => {
   };
 
   return (
-    <div className={SearchStyle}>
+    <div className={SearchStyle(focused)}>
       <CInput
         className={InputStyle}
         value={value}
+        placeholder={intl.formatMessage(messages.placeholder)}
         onInputChange={handleChange}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         onKeyDown={handleKeyDown}
       />
       {!!value && (
