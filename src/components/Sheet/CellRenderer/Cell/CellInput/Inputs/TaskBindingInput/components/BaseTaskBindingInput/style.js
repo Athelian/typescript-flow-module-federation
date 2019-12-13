@@ -1,56 +1,47 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout } from 'styles/common';
+import { fontSizes, colors } from 'styles/common';
 
-export const WrapperStyle = (readOnly: boolean) => css`
-  ${layout.HORIZONTAL};
+export const TaskBindingInputWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
   width: 100%;
   height: 30px;
-  box-sizing: border-box;
-  ${readOnly && `background: rgba(0, 0, 0, 0.1);`};
 `;
 
-export const DateWrapperStyle = (editable: boolean) => css`
-  ${layout.HORIZONTAL};
-  width: 132px;
+export const DateInputWrapperStyle = (binding: boolean) => css`
+  display: flex;
+  align-items: center;
+  width: 125px;
   height: 30px;
-  line-height: 30px;
-  ${editable && `background: rgba(0, 0, 0, 0.025);`};
+  flex-shrink: 0;
+  ${binding
+    ? `
+    background: rgba(0, 0, 0, 0.025);
+  `
+    : `
+    padding: 0 0 0 5px;
+  `};
 `;
 
-export const DateInputStyle = css`
-  font-size: 14px;
-  line-height: 30px;
+export const BindingIconStyle = css`
+  display: flex;
   align-items: center;
-`;
-
-export const IconStyle = css`
-  width: 23px;
+  justify-content: center;
+  width: 30px;
   height: 30px;
-  font-weight: 900;
-  font-size: 14px;
-  line-height: 14px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  color: #cccccc;
+  ${fontSizes.MAIN};
+  color: ${colors.GRAY_LIGHT};
+  flex-shrink: 0;
 `;
 
-export const LabelStyle = css`
-  font-size: 12px;
-  line-height: 15px;
-  display: flex;
-  align-items: center;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #aaaaaa;
-  padding: 0px 5px;
+export const BindingToggleWrapperStyle = css`
+  flex-shrink: 0;
 `;
 
-export const ToggleStyle = css`
-  font-size: 20px;
-  line-height: 20px;
-  display: flex;
-  align-items: center;
-  text-align: center;
+export const BindingInputsWrapperStyle = css`
+  flex: 1;
+  display: grid;
+  grid-template-columns: 80px 80px 75px 1fr;
+  padding: 0 0 0 5px;
 `;

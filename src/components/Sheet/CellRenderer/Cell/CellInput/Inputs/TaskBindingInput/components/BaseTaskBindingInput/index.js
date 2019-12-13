@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';
 import type { IntervalInput, TaskDateBinding } from 'generated/graphql';
-import { ToggleInput } from 'components/Form';
+import { ToggleInput, Label } from 'components/Form';
 import NumberInput from 'components/Inputs/NumberInput';
 import DateInput from 'components/Form/Inputs/DateInput';
 import SelectInput from 'components/Sheet/CellRenderer/Cell/CellInput/Common/SelectInput';
@@ -11,12 +11,11 @@ import { InputStyle } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/
 import Icon from 'components/Icon';
 import messages from 'modules/task/messages';
 import {
-  WrapperStyle,
-  DateWrapperStyle,
-  DateInputStyle,
-  IconStyle,
-  LabelStyle,
-  ToggleStyle,
+  TaskBindingInputWrapperStyle,
+  DateInputWrapperStyle,
+  BindingIconStyle,
+  BindingToggleWrapperStyle,
+  BindingInputsWrapperStyle,
 } from './style';
 
 type State = {|
@@ -129,46 +128,6 @@ function BaseTaskBindingInput({
     offset = 'after';
   }
 
-  if (!binding) {
-    return (
-      <div className={WrapperStyle(!!readOnly)}>
-        <div className={DateWrapperStyle(false)}>
-          <DateInput
-            className={InputStyle}
-            value={date}
-            name="date"
-            readOnly={readOnly}
-            readOnlyWidth="100%"
-            readOnlyHeight="30px"
-            onChange={evt => handleChange({ date: evt.target.value })}
-          />
-          <div className={IconStyle}>
-            <Icon icon="UNBINDED" />
-          </div>
-        </div>
-        <div className={ToggleStyle}>
-          <ToggleInput
-            toggled={false}
-            editable={!readOnly}
-            onToggle={() => {
-              handleChange({
-                date,
-                binding:
-                  type !== 'startDate' ? BINDING_FIELDS.TaskStartDate : BINDING_FIELDS.TaskDueDate,
-              });
-            }}
-          />
-        </div>
-        <div className={LabelStyle}>
-          <FormattedMessage
-            id="components.taskBindingInput.bindingOff"
-            defaultMessage="BINDING OFF"
-          />
-        </div>
-      </div>
-    );
-  }
-
   const itemToString = item => (item ? item.label : '');
   const itemToValue = item => (item ? item.value : '');
 
@@ -186,6 +145,7 @@ function BaseTaskBindingInput({
       value: 'months',
     },
   ];
+
   const offsetOptions = [
     {
       label: 'Before',
@@ -193,105 +153,131 @@ function BaseTaskBindingInput({
     },
     { label: 'After', value: 'after' },
   ];
+
   return (
-    <div className={WrapperStyle(!!readOnly)}>
-      <div className={DateWrapperStyle(true)}>
+    <div className={TaskBindingInputWrapperStyle}>
+      <div className={DateInputWrapperStyle(binding)}>
         <DateInput
-          className={DateInputStyle}
+          className={InputStyle}
           value={date}
           name="date"
-          readOnly
+          readOnly={readOnly || binding}
           readOnlyWidth="100%"
           readOnlyHeight="30px"
+          onChange={evt => handleChange({ date: evt.target.value })}
         />
-        <div className={IconStyle}>
-          <Icon icon="BINDED" />
-        </div>
       </div>
-      <div className={ToggleStyle}>
+
+      <div className={BindingIconStyle}>
+        <Icon icon={binding ? 'BINDED' : 'UNBINDED'} />
+      </div>
+
+      <div className={BindingToggleWrapperStyle}>
         <ToggleInput
-          toggled={!!binding}
-          onToggle={() => {
-            handleChange({
-              date,
-              interval,
-              binding: null,
-            });
-          }}
+          toggled={binding}
           editable={!readOnly}
+          onToggle={() => {
+            if (binding) {
+              handleChange({
+                date,
+                interval,
+                binding: null,
+              });
+            } else {
+              handleChange({
+                date,
+                binding:
+                  type !== 'startDate' ? BINDING_FIELDS.TaskStartDate : BINDING_FIELDS.TaskDueDate,
+              });
+            }
+          }}
         />
       </div>
-      <div className={LabelStyle}>
-        <FormattedMessage id="components.taskBindingInput.binding" defaultMessage="BINDING" />
-      </div>
-      <NumberInput
-        name="range"
-        value={range}
-        required
-        readOnly={!!readOnly}
-        disabled={readOnly}
-        onChange={evt => {
-          const newInterval = {};
-          newInterval[duration] =
-            offset === 'after' ? Math.abs(evt.target.value) : -Math.abs(evt.target.value);
-          handleChange({
-            date,
-            binding,
-            interval: newInterval,
-          });
-        }}
-        className={InputStyle}
-      />
-      <SelectInput
-        name="offset"
-        className={InputStyle}
-        itemToString={itemToString}
-        itemToValue={itemToValue}
-        items={durationOptions}
-        value={duration}
-        onChange={changeDuration =>
-          handleChange({
-            date,
-            binding,
-            interval: {
-              [changeDuration]: offset === 'after' ? Math.abs(range) : -Math.abs(range),
-            },
-          })
-        }
-        readonly={!!readOnly}
-        required
-      />
-      <SelectInput
-        className={InputStyle}
-        itemToString={itemToString}
-        itemToValue={itemToValue}
-        items={offsetOptions}
-        value={offset}
-        onChange={newOffset => {
-          const newInterval = {};
-          newInterval[duration] = newOffset === 'after' ? Math.abs(range) : -Math.abs(range);
-          handleChange({
-            date,
-            binding,
-            interval: newInterval,
-          });
-        }}
-        readonly={!!readOnly}
-        required
-      />
-      <SelectInput
-        className={InputStyle}
-        itemToString={itemToString}
-        itemToValue={itemToValue}
-        items={mappingOptionsByEntity(entity || 'Order', type === 'startDate').map(field => ({
-          value: field,
-          label: intl.formatMessage(messages[field]),
-        }))}
-        value={binding}
-        onChange={(bindingField: string) => handleChange({ binding: bindingField, date, interval })}
-        readonly={!!readOnly}
-        required
-      />
+
+      {binding ? (
+        <div className={BindingInputsWrapperStyle}>
+          <NumberInput
+            name="range"
+            className={InputStyle}
+            value={range}
+            required
+            readOnly={!!readOnly}
+            disabled={readOnly}
+            onChange={evt => {
+              const newInterval = {};
+              newInterval[duration] =
+                offset === 'after' ? Math.abs(evt.target.value) : -Math.abs(evt.target.value);
+              handleChange({
+                date,
+                binding,
+                interval: newInterval,
+              });
+            }}
+          />
+
+          <SelectInput
+            name="offset"
+            className={InputStyle}
+            itemToString={itemToString}
+            itemToValue={itemToValue}
+            items={durationOptions}
+            value={duration}
+            onChange={changeDuration =>
+              handleChange({
+                date,
+                binding,
+                interval: {
+                  [changeDuration]: offset === 'after' ? Math.abs(range) : -Math.abs(range),
+                },
+              })
+            }
+            readonly={!!readOnly}
+            required
+          />
+
+          <SelectInput
+            className={InputStyle}
+            itemToString={itemToString}
+            itemToValue={itemToValue}
+            items={offsetOptions}
+            value={offset}
+            onChange={newOffset => {
+              const newInterval = {};
+              newInterval[duration] = newOffset === 'after' ? Math.abs(range) : -Math.abs(range);
+              handleChange({
+                date,
+                binding,
+                interval: newInterval,
+              });
+            }}
+            readonly={!!readOnly}
+            required
+          />
+
+          <SelectInput
+            className={InputStyle}
+            itemToString={itemToString}
+            itemToValue={itemToValue}
+            items={mappingOptionsByEntity(entity || 'Order', type === 'startDate').map(field => ({
+              value: field,
+              label: intl.formatMessage(messages[field]),
+            }))}
+            value={binding}
+            onChange={(bindingField: string) =>
+              handleChange({ binding: bindingField, date, interval })
+            }
+            readonly={!!readOnly}
+            required
+          />
+        </div>
+      ) : (
+        <Label width="min-content">
+          <FormattedMessage
+            id="components.taskBindingInput.bindingOff"
+            defaultMessage="BINDING OFF"
+          />
+        </Label>
+      )}
     </div>
   );
 }
