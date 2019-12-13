@@ -9,14 +9,15 @@ function computeMergedCells(
   rows: Array<Array<CellValue>>,
   offset: number = 0
 ): Array<Array<CellValue>> {
-  const mergedCells = rows.reduce((list, row, x) => {
+  const mergedRows = rows;
+
+  rows.forEach((row, x) => {
     row.forEach((cell, y) => {
-      if (!cell.parent) {
+      if (!cell.parent || cell.empty || cell.disabled) {
         return;
       }
 
       let toX = x;
-      // eslint-disable-next-line no-constant-condition
       while (true) {
         if (rows.length <= toX + 1) {
           break;
@@ -30,33 +31,19 @@ function computeMergedCells(
         toX += 1;
       }
 
-      list.push({
-        from: { x, y },
-        to: { x: toX, y },
-      });
-    });
-
-    return list;
-  }, []);
-
-  return rows.map((row, x) => {
-    return row.map((cell, y) => {
-      const merged = mergedCells.find(
-        m => m.from.x <= x && m.to.x >= x && m.from.y <= y && m.to.y >= y
-      );
-      if (!merged) {
-        return cell;
+      for (let i = x; i <= toX; i += 1) {
+        mergedRows[i][y] = {
+          ...mergedRows[i][y],
+          merged: {
+            from: { x: x + offset, y },
+            to: { x: toX + offset, y },
+          },
+        };
       }
-
-      return {
-        ...cell,
-        merged: {
-          from: { ...merged.from, x: merged.from.x + offset },
-          to: { ...merged.to, x: merged.to.x + offset },
-        },
-      };
     });
   });
+
+  return mergedRows;
 }
 
 function transformItems(transformer: (number, Object) => Array<Array<CellValue>>) {
