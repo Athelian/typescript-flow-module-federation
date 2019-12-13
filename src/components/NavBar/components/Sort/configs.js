@@ -66,6 +66,7 @@ export const BatchSortConfig: Array<SortConfig> = [
   { message: batchMessages.producedAt, field: 'producedAt' },
   { message: batchMessages.deliveredAt, field: 'deliveredAt' },
   { message: batchMessages.expiredAt, field: 'expiredAt' },
+  { message: batchMessages.desiredAt, field: 'desiredAt' },
 ];
 
 export const ShipmentSortConfig: Array<SortConfig> = [
