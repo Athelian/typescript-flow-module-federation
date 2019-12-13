@@ -156,12 +156,12 @@ function BaseTaskBindingInput({
 
   return (
     <div className={TaskBindingInputWrapperStyle}>
-      <div className={DateInputWrapperStyle(binding)}>
+      <div className={DateInputWrapperStyle(!!binding)}>
         <DateInput
           className={InputStyle}
           value={date}
           name="date"
-          readOnly={readOnly || binding}
+          readOnly={readOnly || !!binding}
           readOnlyWidth="100%"
           readOnlyHeight="30px"
           onChange={evt => handleChange({ date: evt.target.value })}
@@ -174,7 +174,7 @@ function BaseTaskBindingInput({
 
       <div className={BindingToggleWrapperStyle}>
         <ToggleInput
-          toggled={binding}
+          toggled={!!binding}
           editable={!readOnly}
           onToggle={() => {
             if (binding) {

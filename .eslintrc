@@ -47,6 +47,14 @@
     "import/no-cycle": 0,
     "no-underscore-dangle": ["error", { "allow": ["__typename"] }]
   },
+  "overrides": [
+    {
+      "files": ["style.js"],
+      "rules": {
+        "import/prefer-default-export": 0
+      }
+    }
+  ],
   "settings": {
     "import/resolver": {
       "node": {

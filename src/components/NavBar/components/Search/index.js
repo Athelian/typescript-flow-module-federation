@@ -1,9 +1,10 @@
 // @flow
 import * as React from 'react';
+import { useIntl } from 'react-intl';
 import CInput from 'react-composition-input';
 import Icon from 'components/Icon';
-import useDebounce from 'hooks/useDebounce';
-import { ClearButtonStyle, IconStyle, InputStyle, SearchStyle } from './style';
+import messages from './messages';
+import { ClearButtonStyle, SearchButtonStyle, InputStyle, SearchStyle } from './style';
 
 type Props = {
   query: string,
@@ -11,16 +12,16 @@ type Props = {
 };
 
 const Search = ({ query, onChange }: Props) => {
+  const intl = useIntl();
   const [value, setValue] = React.useState(query || '');
-  const debouncedValue = useDebounce(value, 500);
-
-  React.useEffect(() => {
-    onChange(debouncedValue);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedValue]);
+  const [focused, setFocused] = React.useState(false);
 
   const handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
     setValue(e.target.value);
+  };
+
+  const handleSearch = () => {
+    onChange(value);
   };
 
   const handleClear = () => {
@@ -28,22 +29,32 @@ const Search = ({ query, onChange }: Props) => {
     onChange('');
   };
 
+  const handleKeyDown = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
-    <div className={SearchStyle}>
-      <i className={IconStyle}>
-        <Icon icon="SEARCH" />
-      </i>
+    <div className={SearchStyle(focused)}>
       <CInput
         className={InputStyle}
         value={value}
+        placeholder={intl.formatMessage(messages.placeholder)}
         onInputChange={handleChange}
-        onKeyDown={e => e.stopPropagation()}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        onKeyDown={handleKeyDown}
       />
       {!!value && (
         <button className={ClearButtonStyle} type="button" onClick={handleClear}>
           <Icon icon="CLEAR" />
         </button>
       )}
+      <button className={SearchButtonStyle} type="button" onClick={handleSearch}>
+        <Icon icon="SEARCH" />
+      </button>
     </div>
   );
 };

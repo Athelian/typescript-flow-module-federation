@@ -19,7 +19,7 @@ import BaseMetricValueInput from 'components/Inputs/MetricValueInput';
 import NumberInput from 'components/Inputs/NumberInput';
 import SelectInput from 'components/Inputs/SelectInput';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import { MetricSelectInput } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/MetricValueInput';
+import MetricSelectInput from 'components/Sheet/CellRenderer/Cell/CellInput/Common/MetricValueInput';
 import {
   CellInputWrapperStyle,
   InputStyle,

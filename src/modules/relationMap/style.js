@@ -9,14 +9,6 @@ export const ResetContentWrapperStyle: string = css`
   height: 100%;
 `;
 
-export const ContentWrapperStyle = css`
-  height: calc(100vh - 50px);
-  padding: 0 0;
-  width: 100%;
-  overflow-y: hidden;
-  z-index: 0;
-`;
-
 export const EmptyMessageStyle = css`
   ${fontSizes.MAIN};
   font-weight: bold;

@@ -25,7 +25,7 @@ import {
   InputStyle,
   AutocalculateInputWrapperStyle,
 } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
-import { MetricSelectInput } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/MetricValueInput';
+import MetricSelectInput from 'components/Sheet/CellRenderer/Cell/CellInput/Common/MetricValueInput';
 import { OverridableMetricValueInputWrapperStyle, CalculatorIconStyle, SelectStyle } from './style';
 
 const OverridableMetricValueInput = (

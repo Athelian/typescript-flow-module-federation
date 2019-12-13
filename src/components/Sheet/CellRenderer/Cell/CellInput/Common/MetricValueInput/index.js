@@ -3,7 +3,7 @@ import * as React from 'react';
 import type { RenderInputProps } from 'components/Inputs/SelectInput';
 import { SelectInputStyle } from './style';
 
-export const MetricSelectInput = ({
+const MetricSelectInput = ({
   isOpen,
   selectedItem,
   getToggleButtonProps,
@@ -23,3 +23,5 @@ export const MetricSelectInput = ({
     {itemToString(selectedItem)}
   </button>
 );
+
+export default MetricSelectInput;

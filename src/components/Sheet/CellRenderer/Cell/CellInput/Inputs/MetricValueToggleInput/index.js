@@ -24,7 +24,7 @@ import {
   AutocalculateInputWrapperStyle,
 } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
 import { SelectStyle } from 'components/Sheet/CellRenderer/Cell/CellInput/Inputs/MetricValueInput/style';
-import { MetricSelectInput } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/MetricValueInput';
+import MetricSelectInput from 'components/Sheet/CellRenderer/Cell/CellInput/Common/MetricValueInput';
 import ComputableInput from 'components/Sheet/CellRenderer/Cell/CellInput/Common/ComputableInput';
 
 const MetricValueToggleInput = (

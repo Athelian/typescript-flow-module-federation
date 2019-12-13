@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { EntityIcon, SortInput, SearchInput, StatusToggleTabs } from 'components/NavBar';
+import { EntityIcon, SortInput, Search, StatusToggleTabs } from 'components/NavBar';
 import { getByPath } from 'utils/fp';
 
 type OptionalProps = {
@@ -91,15 +91,8 @@ export default function FilterToolBar({
       )}
 
       {canSearch && (
-        <SearchInput
-          value={filtersAndSort.filter.query}
-          name="search"
-          onClear={() =>
-            onChange({
-              ...filtersAndSort,
-              filter: { ...filtersAndSort.filter, query: '' },
-            })
-          }
+        <Search
+          query={filtersAndSort.filter.query}
           onChange={newQuery =>
             onChange({
               ...filtersAndSort,
