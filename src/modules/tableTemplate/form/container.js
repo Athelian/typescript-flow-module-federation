@@ -1,63 +1,115 @@
 // @flow
-import { Container } from 'unstated';
+import * as React from 'react';
+import { createContainer } from 'unstated-next';
+import type { ColumnConfig } from 'components/Sheet/SheetState/types';
 import { cleanFalsyAndTypeName, cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
+import { computeColumnConfigsFromState } from 'modules/tableTemplate/form/components/ColumnsConfigSection/helpers';
 
-type FormState = {
-  name: string,
-  memo: string,
-  type: string,
-  fields: Array<string>,
+const defaultState = {
+  name: null,
+  memo: null,
+  type: null,
+  columns: [],
+  updatedAt: null,
+  updatedBy: null,
+  customFields: null,
 };
 
-const initValues = {
-  name: '',
-  memo: '',
-  type: 'Order',
-  fields: [],
-};
+const useTableTemplateFormContainer = (initialState: Object = defaultState) => {
+  const [state, setState] = React.useState(defaultState);
+  const [originalState, setOriginalState] = React.useState(defaultState);
 
-export default class TemplateFormContainer extends Container<FormState> {
-  state = initValues;
+  React.useEffect(() => {
+    const mergedInitialState = {
+      ...defaultState,
+      ...cleanUpData(initialState),
+    };
 
-  originalValues = initValues;
+    setOriginalState({
+      ...mergedInitialState,
+      columns: computeColumnConfigsFromState(mergedInitialState).map(col => ({
+        key: col.key,
+        hidden: col.hidden,
+      })),
+    });
+  }, [initialState]);
 
-  isDirty = () =>
-    !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
+  React.useEffect(() => setState(originalState), [originalState]);
 
-  onSuccess = () => {
-    this.originalValues = { ...this.state };
-    this.setState(this.originalValues);
+  const initializeState = (value: Object) => {
+    const mergedState = {
+      ...defaultState,
+      ...cleanUpData(value),
+    };
+
+    const compiledState = {
+      ...mergedState,
+      columns: computeColumnConfigsFromState(mergedState).map(col => ({
+        key: col.key,
+        hidden: col.hidden,
+      })),
+    };
+
+    if (!isEquals(compiledState, originalState)) {
+      setOriginalState(compiledState);
+    }
   };
 
-  onCleanUp = () => {
-    this.setState(initValues);
+  const isDirty = !isEquals(cleanFalsyAndTypeName(state), cleanFalsyAndTypeName(originalState));
+
+  const resetState = () => {
+    setState(originalState);
   };
 
-  setFieldValue = (name: string, value: mixed) => {
-    this.setState({
+  const setFieldValue = (name: string, value: mixed) => {
+    setState({
+      ...state,
       [name]: value,
     });
   };
 
-  initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
-    this.setState(parsedValues);
-    this.originalValues = { ...parsedValues };
+  const selectAllColumns = () => {
+    setState({ ...state, columns: state.columns.map(col => ({ ...col, hidden: false })) });
   };
 
-  hasSelectField = (selectedField: string) => this.state.fields.includes(selectedField);
-
-  toggleSelectField = (selectedField: string) => {
-    const { fields } = this.state;
-    if (fields.includes(selectedField)) {
-      this.setState({
-        fields: fields.filter(item => item !== selectedField),
-      });
-    } else {
-      this.setState({
-        fields: [...fields, selectedField],
-      });
-    }
+  const unselectAllColumns = () => {
+    setState({ ...state, columns: state.columns.map(col => ({ ...col, hidden: true })) });
   };
-}
+
+  const groupAllColumns = (groupedColumns: Object) =>
+    setState({
+      ...state,
+      columns: Object.values(groupedColumns).flatMap(cols =>
+        ((cols: any): Array<ColumnConfig>)
+          .map(col => ({ key: col.key, hidden: col.hidden }))
+          .sort((a, b) => {
+            if (a.hidden && !b.hidden) {
+              return 1;
+            }
+
+            if (!a.hidden && b.hidden) {
+              return -1;
+            }
+
+            return 0;
+          })
+      ),
+    });
+
+  return {
+    state,
+    originalState,
+    initializeState,
+    isDirty,
+    resetState,
+    setFieldValue,
+    selectAllColumns,
+    unselectAllColumns,
+    groupAllColumns,
+  };
+};
+
+const TableTemplateFormContainer = createContainer(useTableTemplateFormContainer);
+
+export default TableTemplateFormContainer;

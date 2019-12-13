@@ -16,14 +16,6 @@ export const ActionCardWrapperStyle: string = css`
   ${borderRadiuses.MAIN};
 `;
 
-export const DisabledWrapper: string = css`
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  background-color: ${colors.WHITE};
-  opacity: 0.3;
-`;
-
 export const ActionWrapperStyle = (targeted: boolean): string => css`
   flex: 1;
   z-index: 2;
@@ -47,8 +39,4 @@ export const ActionWrapperStyle = (targeted: boolean): string => css`
     background-color: ${targeted ? colors.TEAL_DARK : colors.TEAL};
     opacity: 1;
   }
-`;
-
-export const RotateIcon: string = css`
-  transform: rotate(90deg);
 `;

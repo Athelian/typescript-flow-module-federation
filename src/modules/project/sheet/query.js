@@ -75,16 +75,25 @@ const taskSheetFragment = gql`
   fragment taskSheetFragment on Task {
     id
     name
+    entity {
+      ... on Model {
+        id
+      }
+    }
     description
     startDate
     startDateBinding
     startDateInterval {
       days
+      weeks
+      months
     }
     dueDate
     dueDateBinding
     dueDateInterval {
       days
+      weeks
+      months
     }
     inProgressAt
     inProgressBy {

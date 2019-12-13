@@ -1,16 +1,9 @@
 // @flow
 import * as React from 'react';
 import { SortInput, SearchInput, GenericNavBar } from 'components/NavBar';
-import ToggleTag from './ToggleTag';
 import { SortFilterWrapperStyle, SortWrapperStyle, GroupFilterWrapperStyle } from './style';
 
-type OptionalProps = {
-  renderAdvanceFilter: Function,
-  showTags: boolean,
-  onToggle: Function,
-};
-
-type Props = OptionalProps & {
+type Props = {
   sortInputs: Array<Object>,
   filter: Object,
   sort: {
@@ -20,21 +13,7 @@ type Props = OptionalProps & {
   onChange: Function,
 };
 
-const defaultProps = {
-  renderAdvanceFilter: () => null,
-  onToggle: () => {},
-  showTags: true,
-};
-
-const SortFilter = ({
-  sortInputs,
-  filter,
-  sort,
-  onChange,
-  onToggle,
-  renderAdvanceFilter,
-  showTags,
-}: Props) => (
+const SortFilter = ({ sortInputs, filter, sort, onChange }: Props) => (
   <GenericNavBar>
     <div className={SortFilterWrapperStyle}>
       <div className={SortWrapperStyle}>
@@ -53,7 +32,6 @@ const SortFilter = ({
         />
       </div>
       <div className={GroupFilterWrapperStyle}>
-        {renderAdvanceFilter({ onChange })}
         <SearchInput
           name="filter"
           value={filter.query}
@@ -61,11 +39,8 @@ const SortFilter = ({
           onChange={newQuery => onChange({ filter: { ...filter, query: newQuery } })}
         />
       </div>
-      {showTags && <ToggleTag onToggle={onToggle} />}
     </div>
   </GenericNavBar>
 );
-
-SortFilter.defaultProps = defaultProps;
 
 export default SortFilter;

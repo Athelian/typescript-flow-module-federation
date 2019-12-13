@@ -1,8 +1,8 @@
 // @flow
 import { Container } from 'unstated';
-import { set, unset, cloneDeep } from 'lodash';
+import { cloneDeep, set, unset } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanFalsyAndTypeName, cleanUpData } from 'utils/data';
+import { cleanFalsyAndTypeName, cleanUpData, removeNulls } from 'utils/data';
 
 type FormState = {
   mask: Object,
@@ -21,12 +21,6 @@ export default class CustomFieldsContainer extends Container<FormState> {
 
   originalValues = initValues;
 
-  setFieldValue = (name: string, value: mixed) => {
-    this.setState({
-      [name]: value,
-    });
-  };
-
   isDirty = () =>
     !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
 
@@ -43,8 +37,7 @@ export default class CustomFieldsContainer extends Container<FormState> {
 
   setFieldValue = (path: string, value: any) => {
     this.setState(prevState => {
-      const newState = set(cloneDeep(prevState), path, value);
-      return newState;
+      return set(cloneDeep(prevState), path, value);
     });
   };
 

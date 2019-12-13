@@ -13,6 +13,7 @@ type ChangeValue = {
     | 'SizeValue'
     | 'EntityValue'
     | 'Values'
+    | 'IntervalValue'
     | 'CustomValue',
   string?: string | null,
   int?: number | null,
@@ -27,6 +28,11 @@ type ChangeValue = {
   } | null,
   entity?: { id: string },
   custom?: any,
+  interval?: {
+    days?: number,
+    weeks?: number,
+    months?: number,
+  },
   values?: Array<ChangeValue>,
 };
 

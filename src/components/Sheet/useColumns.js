@@ -4,24 +4,54 @@ import { useAuthenticated } from 'contexts/Viewer';
 import { getCache, invalidateCache, setCache } from 'utils/cache';
 import type { ColumnConfig } from './SheetState/types';
 
-const KEY_PREFIX = 'zenport_sheet_columns';
-const WIDTH_KEY_PREFIX = 'zenport_sheet_column_widths';
+export const SHEET_COLUMN_KEY_PREFIX = 'zenport_sheet_columns';
+
+export function getColumnsConfigured(
+  columns: Array<ColumnConfig>,
+  configuration: { [string]: boolean }
+): Array<ColumnConfig> {
+  const keysOrder = Object.keys(configuration);
+
+  const orderedColumns = columns
+    .map(col => ({ ...col, hidden: !!configuration[col.key] }))
+    .sort((a, b) => {
+      const aIdx = keysOrder.indexOf(a.key);
+      const bIdx = keysOrder.indexOf(b.key);
+      if (aIdx > bIdx) {
+        return 1;
+      }
+      if (bIdx > aIdx) {
+        return -1;
+      }
+      return 0;
+    });
+
+  const groupedColumns = orderedColumns.reduce(
+    (grouped, col) => ({
+      ...grouped,
+      [col.icon]: [...(grouped[col.icon] ?? []), col],
+    }),
+    {}
+  );
+
+  // $FlowFixMe: flat
+  return Object.values(groupedColumns).flat();
+}
 
 function getColumnsCache(key: string, columns: Array<ColumnConfig>): Array<ColumnConfig> | null {
-  const cache = getCache<Array<ColumnConfig>>(KEY_PREFIX, key);
-  if (!cache) {
+  const cache = getCache<{ [string]: boolean }>(SHEET_COLUMN_KEY_PREFIX, key);
+  if (!cache || !typeof cache === 'object') {
     return null;
   }
 
-  // $FlowFixMe
-  return cache.map(columnKey => columns.find(c => c.key === columnKey)).filter(c => !!c);
+  return getColumnsConfigured(columns, cache);
 }
 
 function setColumnsCache(key: string, columns: Array<ColumnConfig>) {
   setCache(
-    KEY_PREFIX,
+    SHEET_COLUMN_KEY_PREFIX,
     key,
-    columns.map(c => c.key)
+    columns.reduce((cache, col) => ({ ...cache, [col.key]: col.hidden }), {})
   );
 }
 
@@ -33,13 +63,13 @@ export function useColumnsInvalidator() {
       return;
     }
 
-    invalidateCache(KEY_PREFIX);
+    invalidateCache(SHEET_COLUMN_KEY_PREFIX);
   }, [authenticated]);
 }
 
 export default function useColumns(
   columns: Array<ColumnConfig>,
-  cacheKey: string
+  cacheKey: ?string
 ): [Array<ColumnConfig>, (Array<ColumnConfig>) => void] {
   const [currentColumns, setCurrentColumns] = React.useState<Array<ColumnConfig> | null>(null);
 
@@ -71,45 +101,4 @@ export default function useColumns(
   }
 
   return [getColumns(), setCurrentColumns];
-}
-
-export function useResizedColumns(
-  columns: Array<ColumnConfig>,
-  cacheKey: string
-): [Array<ColumnConfig>, (key: string, width: number) => void] {
-  const [columnWidths, setColumnWidths] = React.useState<{ [string]: number } | null>(null);
-  const resizedColumns = React.useMemo(() => {
-    if (!columnWidths) {
-      return columns;
-    }
-
-    return columns.map(col => ({ ...col, width: columnWidths[col.key] || col.width }));
-  }, [columns, columnWidths]);
-
-  React.useEffect(() => {
-    if (columnWidths) {
-      setCache(WIDTH_KEY_PREFIX, cacheKey, columnWidths);
-    }
-  }, [cacheKey, columnWidths]);
-
-  const onColumnResize = React.useCallback(
-    (key: string, width: number) =>
-      setColumnWidths({
-        ...(columnWidths || {}),
-        [key]: width,
-      }),
-    [columnWidths]
-  );
-
-  function getResizedColumns() {
-    if (!columnWidths) {
-      setColumnWidths(
-        (cacheKey && getCache<{ [string]: number }>(WIDTH_KEY_PREFIX, cacheKey)) || {}
-      );
-    }
-
-    return resizedColumns;
-  }
-
-  return [getResizedColumns(), onColumnResize];
 }

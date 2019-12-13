@@ -24,6 +24,8 @@ import {
   TASK_SET_DESCRIPTION,
   TASK_SET_NAME,
   TASK_SET_TAGS,
+  TASK_SET_START_DATE,
+  TASK_SET_DUE_DATE,
   TASK_UPDATE,
 } from 'modules/permission/constants/task';
 
@@ -118,13 +120,13 @@ function transformProject(basePath: string, project: Object): Array<CellValue> {
 }
 
 function transformMilestone(
+  milestoneIdx: number,
   basePath: string,
-  milestone: Object,
-  hasMilestones: boolean
+  milestone: Object
 ): Array<CellValue> {
   return [
     {
-      columnKey: 'project.milestone.created',
+      columnKey: `milestones.${milestoneIdx}.created`,
       type: 'date_user',
       ...transformComputedField(basePath, milestone, 'created', item => {
         const currentMilestone = item.milestones.find(m => m.id === milestone?.id);
@@ -137,17 +139,17 @@ function transformMilestone(
       }),
     },
     {
-      columnKey: 'project.milestone.createdBy',
+      columnKey: `milestones.${milestoneIdx}.createdBy`,
       type: 'text',
       ...transformReadonlyField(basePath, milestone, 'createdBy', milestone?.createdBy ?? null),
     },
     {
-      columnKey: 'project.milestone.createdAt',
+      columnKey: `milestones.${milestoneIdx}.createdAt`,
       type: 'text',
       ...transformReadonlyField(basePath, milestone, 'createdAt', milestone?.createdAt ?? null),
     },
     {
-      columnKey: 'project.milestone.updated',
+      columnKey: `milestones.${milestoneIdx}.updated`,
       type: 'date_user',
       ...transformComputedField(basePath, milestone, 'updated', item => {
         const currentMilestone = item.milestones.find(oi => oi.id === milestone?.id);
@@ -160,17 +162,17 @@ function transformMilestone(
       }),
     },
     {
-      columnKey: 'project.milestone.updatedBy',
+      columnKey: `milestones.${milestoneIdx}.updatedBy`,
       type: 'text',
       ...transformReadonlyField(basePath, milestone, 'updatedBy', milestone?.updatedBy ?? null),
     },
     {
-      columnKey: 'project.milestone.updatedAt',
+      columnKey: `milestones.${milestoneIdx}.updatedAt`,
       type: 'text',
       ...transformReadonlyField(basePath, milestone, 'updatedAt', milestone?.updatedAt ?? null),
     },
     {
-      columnKey: 'project.milestone.name',
+      columnKey: `milestones.${milestoneIdx}.name`,
       type: 'text',
       ...transformValueField(
         basePath,
@@ -180,7 +182,7 @@ function transformMilestone(
       ),
     },
     {
-      columnKey: 'project.milestone.description',
+      columnKey: `milestones.${milestoneIdx}.description`,
       type: 'textarea',
       ...transformValueField(
         basePath,
@@ -193,7 +195,7 @@ function transformMilestone(
     // estimatedCompletionDate + binding
     // completed
     {
-      columnKey: 'project.milestone.files',
+      columnKey: `milestones.${milestoneIdx}.files`,
       type: 'milestone_documents',
       ...transformValueField(
         basePath,
@@ -204,9 +206,7 @@ function transformMilestone(
     },
   ].map(c => ({
     ...c,
-    disabled: !hasMilestones && !milestone,
-    empty: hasMilestones && !milestone,
-    parent: true,
+    empty: !milestone,
   }));
 }
 
@@ -214,10 +214,15 @@ function getCurrentTask(taskId, project) {
   return project.milestones.flatMap(milestone => milestone.tasks).find(task => task.id === taskId);
 }
 
-function transformTask(basePath: string, task: Object): Array<CellValue> {
+function transformTask(
+  milestoneIdx: number,
+  taskIdx: number,
+  basePath: string,
+  task: Object
+): Array<CellValue> {
   return [
     {
-      columnKey: 'project.milestone.task.created',
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.created`,
       type: 'date_user',
       ...transformComputedField(basePath, task, 'created', project => {
         const currentTask = getCurrentTask(task?.id, project);
@@ -230,17 +235,17 @@ function transformTask(basePath: string, task: Object): Array<CellValue> {
       }),
     },
     {
-      columnKey: 'project.milestone.task.createdBy',
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.createdBy`,
       type: 'text',
       ...transformReadonlyField(basePath, task, 'createdBy', task?.createdBy ?? null),
     },
     {
-      columnKey: 'project.milestone.task.createdAt',
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.createdAt`,
       type: 'text',
       ...transformReadonlyField(basePath, task, 'createdAt', task?.createdAt ?? null),
     },
     {
-      columnKey: 'project.milestone.task.updated',
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.updated`,
       type: 'date_user',
       ...transformComputedField(basePath, task, 'updated', project => {
         const currentTask = getCurrentTask(task?.id, project);
@@ -253,17 +258,17 @@ function transformTask(basePath: string, task: Object): Array<CellValue> {
       }),
     },
     {
-      columnKey: 'project.milestone.task.updatedBy',
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.updatedBy`,
       type: 'text',
       ...transformReadonlyField(basePath, task, 'updatedBy', task?.updatedBy ?? null),
     },
     {
-      columnKey: 'project.milestone.task.updatedAt',
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.updatedAt`,
       type: 'text',
       ...transformReadonlyField(basePath, task, 'updatedAt', task?.updatedAt ?? null),
     },
     {
-      columnKey: 'project.milestone.task.name',
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.name`,
       type: 'text',
       ...transformValueField(
         basePath,
@@ -273,7 +278,7 @@ function transformTask(basePath: string, task: Object): Array<CellValue> {
       ),
     },
     {
-      columnKey: 'project.milestone.task.description',
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.description`,
       type: 'textarea',
       ...transformValueField(
         basePath,
@@ -282,14 +287,46 @@ function transformTask(basePath: string, task: Object): Array<CellValue> {
         hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_DESCRIPTION)
       ),
     },
-    // start date + binding
-    // due date + binding
+    {
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.startDate`,
+      type: 'date_binding',
+      computed: project => {
+        const currentTask = getCurrentTask(task?.id, project);
+        return {
+          parentEntity: currentTask?.entity?.__typename,
+          type: 'startDate',
+        };
+      },
+      ...transformValueField(
+        basePath,
+        task,
+        'startDateBindingData',
+        hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_START_DATE)
+      ),
+    },
+    {
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.dueDate`,
+      type: 'date_binding',
+      computed: project => {
+        const currentTask = getCurrentTask(task?.id, project);
+        return {
+          parentEntity: currentTask?.entity?.__typename,
+          type: 'dueDate',
+        };
+      },
+      ...transformValueField(
+        basePath,
+        task,
+        'dueDateBindingData',
+        hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_DUE_DATE)
+      ),
+    },
     // in progress
     // completed
     // rejected
     // skipped
     {
-      columnKey: 'project.milestone.task.approvable',
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvable`,
       type: 'toggle',
       ...transformValueField(
         basePath,
@@ -299,7 +336,7 @@ function transformTask(basePath: string, task: Object): Array<CellValue> {
       ),
     },
     {
-      columnKey: 'project.milestone.task.approved',
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.approved`,
       type: 'approval',
       hide: project => {
         const currentTask = getCurrentTask(task?.id, project);
@@ -314,7 +351,7 @@ function transformTask(basePath: string, task: Object): Array<CellValue> {
     },
     // approvers
     {
-      columnKey: 'project.milestone.task.tags',
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.tags`,
       type: 'task_tags',
       ...transformValueField(
         basePath,
@@ -324,7 +361,7 @@ function transformTask(basePath: string, task: Object): Array<CellValue> {
       ),
     },
     {
-      columnKey: 'project.milestone.task.logs',
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.logs`,
       type: 'task_logs',
       ...transformValueField(basePath, task, 'id', () => true),
     },
@@ -335,44 +372,22 @@ function transformTask(basePath: string, task: Object): Array<CellValue> {
 }
 
 export default function transformer(index: number, project: Object): Array<Array<CellValue>> {
-  const rows = [];
+  const row = [...transformProject(`${index}`, project)];
 
-  let projectCells = transformProject(`${index}`, project);
+  (project?.milestones ?? []).forEach((milestone, milestoneIdx) => {
+    row.push(...transformMilestone(milestoneIdx, `${index}.milestones.${milestoneIdx}`, milestone));
 
-  if ((project?.milestones?.length ?? 0) > 0) {
-    (project?.milestones ?? []).forEach((milestone, milestoneIdx) => {
-      let milestoneCells = transformMilestone(
-        `${index}.milestones.${milestoneIdx}`,
-        milestone,
-        true
+    (milestone?.tasks ?? []).forEach((task, taskIdx) => {
+      row.push(
+        ...transformTask(
+          milestoneIdx,
+          taskIdx,
+          `${index}.milestones.${milestoneIdx}.tasks.${taskIdx}`,
+          task
+        )
       );
-
-      if ((milestone?.tasks?.length ?? 0) > 0) {
-        (milestone?.tasks ?? []).forEach((task, taskIdx) => {
-          rows.push([
-            ...projectCells,
-            ...milestoneCells,
-            ...transformTask(`${index}.milestones.${milestoneIdx}.tasks.${taskIdx}`, task),
-          ]);
-          projectCells = transformProject(`${index}`, null);
-          milestoneCells = transformMilestone(`${index}.milestones.${milestoneIdx}`, null, true);
-        });
-      } else {
-        rows.push([
-          ...projectCells,
-          ...transformMilestone(`${index}.milestones.${milestoneIdx}`, milestone, true),
-          ...transformTask(`${index}.milestones.${milestoneIdx}.tasks.-1`, null),
-        ]);
-        projectCells = transformProject(`${index}`, null);
-      }
     });
-  } else {
-    rows.push([
-      ...projectCells,
-      ...transformMilestone(`${index}.milestones.-1`, null, false),
-      ...transformTask(`${index}.milestones.-1.tasks.-1`, null),
-    ]);
-  }
+  });
 
-  return rows;
+  return [row];
 }

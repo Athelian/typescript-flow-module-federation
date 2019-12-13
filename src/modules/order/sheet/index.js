@@ -6,14 +6,14 @@ import { equals } from 'ramda';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, OrderFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig, useSheet, useResizedColumns } from 'components/Sheet';
+import { Sheet, ColumnsConfig, useSheet, useColumnStates } from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
-import orderColumns, { FieldDefinitionEntityTypes } from './columns';
+import orderColumns, { FieldDefinitionEntityTypes, OrderSheetColumnGroups } from './columns';
 import orderTransformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
@@ -49,27 +49,25 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
     loading,
     hasMore,
     onLoadMore,
-    columns,
-    setColumns,
     query,
     setQuery,
     filterBy,
     setFilterBy,
     sortBy,
-    localSortBy,
-    onLocalSort,
-    onRemoteSort,
+    setSortBy,
   } = useSheet({
-    columns: columnConfigs,
     itemsQuery: ordersQuery,
     initialFilterBy: { query: '', archived: false },
     initialSortBy: { updatedAt: 'DESCENDING' },
-    sorter,
     getItems,
     cacheKey: 'order_sheet',
   });
-
-  const [resizedColumns, onColumnResize] = useResizedColumns(columns, 'order_sheet');
+  const { columns, setColumns, columnStates } = useColumnStates({
+    columns: columnConfigs,
+    sortBy,
+    setSortBy,
+    cacheKey: 'order_sheet',
+  });
 
   if (!!orderIds && !equals(orderIdsRef.current, orderIds)) {
     setFilterBy({ query: '', ids: orderIds });
@@ -83,36 +81,35 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
 
         <Filter config={OrderFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <ColumnsConfig
-          config={columnConfigs}
-          columns={columns}
-          onChange={setColumns}
-          templateType="OrderSheet"
-        />
+        <ColumnsConfig columns={columns} templateType="OrderSheet" onChange={setColumns}>
+          {({ getGroupProps }) =>
+            OrderSheetColumnGroups.map(type => (
+              <ColumnsConfig.Group {...getGroupProps(type)} key={type} />
+            ))
+          }
+        </ColumnsConfig>
         <ExportButton
           type="Orders"
           exportQuery={ordersExportQuery}
           variables={{
             filterBy: { query, ...filterBy },
             sortBy,
-            localSortBy,
+            localSortBy: {}, // TODO
             columns: columns.filter(c => !!c.exportKey).map(c => c.exportKey),
           }}
         />
       </NavBar>
 
       <Sheet
-        columns={resizedColumns}
+        columns={columnStates}
         loading={loading}
         items={initialItems}
         hasMore={hasMore}
         transformItem={transformer}
         onMutate={memoizedMutate}
         handleEntityEvent={memoizedHandler}
-        onLocalSort={onLocalSort}
-        onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
-        onColumnResize={onColumnResize}
+        onItemsSort={sorter}
         actions={actions}
       />
     </Content>

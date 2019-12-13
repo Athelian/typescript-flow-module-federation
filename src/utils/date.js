@@ -85,7 +85,13 @@ export const calculateDate = ({
   }
 };
 
-export const findDuration = ({ months, weeks }: { months: number, weeks: number }) => {
+export const findDuration = ({
+  months,
+  weeks,
+}: {
+  months: number,
+  weeks: number,
+}): 'days' | 'weeks' | 'months' => {
   let duration = 'days';
   if (Math.abs(months) > 0) {
     duration = 'months';

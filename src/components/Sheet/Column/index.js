@@ -9,7 +9,7 @@ type Props = {
   color: string,
   sortable: boolean,
   direction?: 'ASCENDING' | 'DESCENDING',
-  onSortToggle: () => void,
+  onSortToggle?: () => void,
   width: number,
   minWidth: number,
   onResize: number => void,

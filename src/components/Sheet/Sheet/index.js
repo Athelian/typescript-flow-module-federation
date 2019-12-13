@@ -1,14 +1,6 @@
 // @flow
 import * as React from 'react';
-import type { SortDirection } from 'types';
-import type {
-  CellData,
-  CellValue,
-  ColumnConfig,
-  ColumnSort,
-  ColumnState,
-  Mutator,
-} from '../SheetState/types';
+import type { CellData, CellValue, ColumnSort, ColumnState, Mutator } from '../SheetState/types';
 import type { EntityEventHandlerFactory } from '../SheetLive/types';
 import type { ActionConfig, DoAction } from '../SheetAction/types';
 import { Actions } from '../SheetState/constants';
@@ -31,7 +23,6 @@ type BaseProps = {|
   loading: boolean,
   hasMore: boolean,
   onLoadMore: () => Promise<Array<Object>>,
-  onColumnResize: (key: string, width: number) => void,
   handleEntityEvent: ?EntityEventHandlerFactory,
 |};
 
@@ -43,58 +34,19 @@ type ImplProps = {|
 type Props = {|
   ...BaseProps,
   items: Array<Object>,
-  columns: Array<ColumnConfig>,
-  onLocalSort: (items: Array<Object>, sorts: Array<ColumnSort>) => Array<Object>,
-  onRemoteSort: (sorts: Array<ColumnSort>) => void,
+  columns: Array<ColumnState>,
+  onItemsSort: (items: Array<Object>, sorts: Array<ColumnSort>) => Array<Object>,
   transformItem: Object => Array<Array<CellValue>>,
   onMutate: Mutator,
   actions: { [string]: ActionConfig },
 |};
 
-const SheetImpl = ({
-  loading,
-  hasMore,
-  onLoadMore,
-  onColumnResize,
-  handleEntityEvent,
-  doAction,
-}: ImplProps) => {
+const SheetImpl = ({ loading, hasMore, onLoadMore, handleEntityEvent, doAction }: ImplProps) => {
   const [loadingMore, handleThreshold] = useSheetStateLoadMore(onLoadMore);
   const { state, dispatch, mutate } = useSheetState();
   useSheetKeyNavigation();
   useSheetLiveFocus();
   useSheetLiveEntity(handleEntityEvent);
-
-  const columnStates = React.useMemo<Array<ColumnState>>(
-    () =>
-      state.columns.map(column => {
-        // $FlowFixMe mendo
-        let columnState: ColumnState = {
-          ...column,
-          sort: column.sort
-            ? {
-                ...column.sort,
-                key: column.key,
-              }
-            : undefined,
-        };
-
-        if (column.sort) {
-          const sort = state.columnSorts
-            .filter(s => s.group === column.sort?.group)
-            .find(s => s.key === column.key);
-          if (sort) {
-            columnState = {
-              ...columnState,
-              sort,
-            };
-          }
-        }
-
-        return columnState;
-      }),
-    [state.columns, state.columnSorts]
-  );
 
   const data = React.useMemo<Array<Array<CellData>>>(
     () =>
@@ -174,32 +126,17 @@ const SheetImpl = ({
     });
   };
 
-  const onColumnSort = React.useCallback(
-    (column: string, direction: SortDirection) => {
-      dispatch({
-        type: Actions.SORT_COLUMN,
-        payload: {
-          column,
-          direction,
-        },
-      });
-    },
-    [dispatch]
-  );
-
   return (
     <div className={SheetContentWrapperStyle} onMouseLeave={handleMouseLeave}>
       <SheetRenderer
-        columns={columnStates}
+        columns={state.columns}
         data={data}
         rowCount={state.rows.length}
         loading={loading}
         loadingMore={loadingMore}
         focusAt={state.focusAt}
         hasMore={hasMore}
-        onColumnSort={onColumnSort}
         onThreshold={handleThreshold}
-        onColumnResize={onColumnResize}
       >
         {CellRenderer}
       </SheetRenderer>
@@ -210,9 +147,7 @@ const SheetImpl = ({
 const Sheet = ({
   transformItem,
   onMutate,
-  onLocalSort,
-  onRemoteSort,
-  onColumnResize,
+  onItemsSort,
   columns,
   items,
   loading,
@@ -226,8 +161,7 @@ const Sheet = ({
     columns={columns}
     transformItem={transformItem}
     onMutate={onMutate}
-    onLocalSort={onLocalSort}
-    onRemoteSort={onRemoteSort}
+    onItemsSort={onItemsSort}
   >
     <SheetLiveID>
       <SheetAction actions={actions}>
@@ -236,7 +170,6 @@ const Sheet = ({
             loading={loading}
             hasMore={hasMore}
             onLoadMore={onLoadMore}
-            onColumnResize={onColumnResize}
             handleEntityEvent={handleEntityEvent}
             doAction={doAction}
           />

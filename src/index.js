@@ -17,6 +17,7 @@ import { isEnableStrictMode, isAppInProduction } from './utils/env';
 import { useFilterSortInvalidator } from './hooks/useFilterSort';
 import { useLocalSortInvalidator } from './components/Sheet/useLocalSort';
 import { useColumnsInvalidator } from './components/Sheet/useColumns';
+import { useResizedColumnsInvalidator } from './components/Sheet/useResizedColumns';
 import DeployNotifier from './components/DeployNotifier';
 import apolloClient from './apollo';
 import Routes from './routes';
@@ -43,6 +44,7 @@ const AppHooks = () => {
   useFilterSortInvalidator();
   useLocalSortInvalidator();
   useColumnsInvalidator();
+  useResizedColumnsInvalidator();
   return null;
 };
 

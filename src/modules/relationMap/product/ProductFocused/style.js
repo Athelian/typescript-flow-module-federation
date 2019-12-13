@@ -2,11 +2,6 @@
 import styled, { css } from 'react-emotion';
 import { colors, layout, borderRadiuses } from 'styles/common';
 
-export const ProductFocusContent = css`
-  background-color: ${colors.WHITE};
-  padding: 20px 10px;
-`;
-
 export const Row = styled('div')`
   display: grid;
   grid-template-columns: min-content 1fr;

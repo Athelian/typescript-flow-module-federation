@@ -64,12 +64,6 @@ const menu: Array<MenuConfig> = [
       hasPermissions(RM_PRODUCT_FOCUS_LIST),
     submenu: [
       {
-        label: <FormattedMessage {...messages.relationMap} />,
-        icon: 'RELATION_MAP',
-        path: 'relation-map',
-        legacy: true,
-      },
-      {
         label: <FormattedMessage {...messages.map} />,
         icon: 'MAP',
         path: 'map',
@@ -244,13 +238,13 @@ const menu: Array<MenuConfig> = [
         permitted: hasPermissions => hasPermissions(CUSTOM_FIELD_DEFINITIONS_LIST),
       },
       {
-        label: <FormattedMessage {...messages.template} />,
+        label: <FormattedMessage {...messages.table} />,
         icon: 'EDIT_TABLE',
         path: 'table-template',
         permitted: hasPermissions => hasPermissions(TEMPLATE_LIST),
       },
       {
-        label: <FormattedMessage {...messages.taskTemplate} />,
+        label: <FormattedMessage {...messages.task} />,
         icon: 'TASK',
         path: 'task-template',
         permitted: hasPermissions => hasPermissions(TASK_TEMPLATE_LIST),

@@ -38,4 +38,8 @@ export default defineMessages({
     id: 'modules.Projects.diffBetweenLastMilestoneAndProjectDueDate',
     defaultMessage: ' days difference between Project Due Date and Last Milestone Due Date',
   },
+  repeat: {
+    id: 'modules.Projects.sheet.repeat',
+    defaultMessage: 'Repeat',
+  },
 });

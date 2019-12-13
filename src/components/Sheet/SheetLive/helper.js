@@ -83,6 +83,8 @@ export const extractChangeNewValue = (change: EntityEventChange): any => {
       return change.new?.size;
     case 'CustomValue':
       return change.new?.custom;
+    case 'IntervalValue':
+      return change.new?.interval;
     default:
       return null;
   }
