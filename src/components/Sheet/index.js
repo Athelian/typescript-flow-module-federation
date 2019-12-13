@@ -15,6 +15,7 @@ import useColumns from './useColumns';
 import useColumnStates from './useColumnStates';
 import useResizedColumns from './useResizedColumns';
 import useSortedColumns from './useSortedColumns';
+import useExportedColumns from './useExportedColumns';
 
 export type { ColumnConfig, ColumnSort, ColumnState };
 export {
@@ -24,6 +25,7 @@ export {
   useColumnStates,
   useResizedColumns,
   useSortedColumns,
+  useExportedColumns,
   ColumnsConfig,
   transformField,
   transformValueField,

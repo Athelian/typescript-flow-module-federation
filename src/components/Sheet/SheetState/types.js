@@ -13,7 +13,7 @@ export type ColumnSortConfig = {|
 
 type Column = {|
   key: string,
-  exportKey?: string,
+  exportKey?: string | Array<string>,
   title: React.Node,
   icon: string,
   color: string,

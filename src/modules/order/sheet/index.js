@@ -6,7 +6,13 @@ import { equals } from 'ramda';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, OrderFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig, useSheet, useColumnStates } from 'components/Sheet';
+import {
+  Sheet,
+  ColumnsConfig,
+  useSheet,
+  useColumnStates,
+  useExportedColumns,
+} from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
@@ -68,6 +74,7 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
     setSortBy,
     cacheKey: 'order_sheet',
   });
+  const exportVariables = useExportedColumns(columnStates);
 
   if (!!orderIds && !equals(orderIdsRef.current, orderIds)) {
     setFilterBy({ query: '', ids: orderIds });
@@ -94,8 +101,7 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
           variables={{
             filterBy: { query, ...filterBy },
             sortBy,
-            localSortBy: {}, // TODO
-            columns: columns.filter(c => !!c.exportKey).map(c => c.exportKey),
+            ...exportVariables,
           }}
         />
       </NavBar>
