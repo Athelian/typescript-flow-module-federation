@@ -54,6 +54,10 @@ export default function({
           name: 'producedAt',
           group: 'batch',
         },
+        'batch.desiredAt': {
+          name: 'desiredAt',
+          group: 'batch',
+        },
       },
       batchFieldDefinitions
     ).filter(c => !['batch.action'].includes(c.key)),
