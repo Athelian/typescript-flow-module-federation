@@ -37,6 +37,7 @@ const defaultProps = {
   width: '150px',
 };
 
+/** @deprecated use <Sort/> instead */
 class SortInput extends React.Component<Props> {
   static defaultProps = defaultProps;
 

@@ -13,7 +13,7 @@ import GridView from 'components/GridView';
 import IncrementInput from 'components/IncrementInput';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { ItemCard } from 'components/Cards';
-import { EntityIcon, SortInput, SearchInput } from 'components/NavBar';
+import { EntityIcon, SortInput, Search } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import messages from 'modules/order/messages';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
@@ -109,15 +109,8 @@ function SelectOrderItems({ intl, cacheKey, onCancel, onSelect, filter }: Props)
                 })
               }
             />
-            <SearchInput
-              value={filtersAndSort.filter.query}
-              name="search"
-              onClear={() =>
-                onChange({
-                  ...filtersAndSort,
-                  filter: { ...filtersAndSort.filter, query: '' },
-                })
-              }
+            <Search
+              query={filtersAndSort.filter.query}
               onChange={newQuery =>
                 onChange({
                   ...filtersAndSort,

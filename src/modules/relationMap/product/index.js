@@ -1,54 +1,45 @@
 // @flow
 import React from 'react';
 import { Query } from 'react-apollo';
-import LoadingIcon from 'components/LoadingIcon';
 import InfiniteScroll from 'react-infinite-scroller';
-import { injectIntl } from 'react-intl';
-import type { IntlShape } from 'react-intl';
-import useFilter from 'hooks/useFilter';
+import LoadingIcon from 'components/LoadingIcon';
+import { GenericNavBar, ProductSortConfig, Search, Sort } from 'components/NavBar';
+import useFilterSort from 'hooks/useFilterSort';
 import DetailFocused from 'modules/relationMap/common/SlideForm';
-import SortFilter from 'modules/relationMap/common/SortFilter';
-import messages from 'modules/relationMap/messages';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault } from 'utils/fp';
-import { ProductListWrapperStyle, WrapperStyle } from './style';
-import ProductFocused from './ProductFocused';
-import query from './query';
 import { hasMoreItems } from '../order/helpers';
+import ProductFocused from './ProductFocused';
+import productQuery from './query';
+import {
+  ProductListWrapperStyle,
+  WrapperStyle,
+  GroupFilterWrapperStyle,
+  SortFilterWrapperStyle,
+  SortWrapperStyle,
+} from './style';
 
-type Props = {
-  intl: IntlShape,
-};
-
-function Product(props: Props) {
-  const { intl } = props;
-  const { queryVariables, filterAndSort, onChangeFilter } = useFilter(
-    {
-      page: 1,
-      perPage: 10,
-      filter: {
-        archived: false,
-      },
-      sort: {
-        field: 'updatedAt',
-        direction: 'DESCENDING',
-      },
-    },
+function Product() {
+  const { query, filterBy, sortBy, setQuery, setSortBy } = useFilterSort(
+    { query: '', archived: false },
+    { updatedAt: 'DESCENDING' },
     'productFocusFilter'
   );
+
+  const queryVariables = {
+    batchPage: 1,
+    batchPerPage: 100,
+    batchSort: {
+      deliveredAt: 'DESCENDING',
+    },
+    page: 1,
+    perPage: 10,
+    filterBy: { query, ...filterBy },
+    sortBy,
+  };
+
   return (
-    <Query
-      query={query}
-      variables={{
-        batchPage: 1,
-        batchPerPage: 100,
-        batchSort: {
-          deliveredAt: 'DESCENDING',
-        },
-        ...queryVariables,
-      }}
-      fetchPolicy="network-only"
-    >
+    <Query query={productQuery} variables={queryVariables} fetchPolicy="no-cache">
       {({ loading, data, fetchMore, error }) => {
         if (error) {
           return error.message;
@@ -60,18 +51,17 @@ function Product(props: Props) {
 
         return (
           <>
-            <SortFilter
-              sort={filterAndSort.sort}
-              sortInputs={[
-                { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-                { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-                { title: intl.formatMessage(messages.name), value: 'name' },
-                { title: intl.formatMessage(messages.serial), value: 'serial' },
-              ]}
-              filter={filterAndSort.filter}
-              onChange={onChangeFilter}
-              showTags={false}
-            />
+            <GenericNavBar>
+              <div className={SortFilterWrapperStyle}>
+                <div className={SortWrapperStyle}>
+                  <Sort config={ProductSortConfig} sortBy={sortBy} onChange={setSortBy} />
+                </div>
+                <div className={GroupFilterWrapperStyle}>
+                  <Search query={query} onChange={setQuery} />
+                </div>
+              </div>
+            </GenericNavBar>
+
             <div className={WrapperStyle}>
               <InfiniteScroll
                 className={ProductListWrapperStyle}
@@ -93,4 +83,4 @@ function Product(props: Props) {
   );
 }
 
-export default injectIntl(Product);
+export default Product;

@@ -4,7 +4,6 @@ import SectionNavBar from './SectionNavBar';
 import GenericNavBar from './GenericNavBar';
 import EntityIcon from './components/EntityIcon';
 import SortInput from './components/SortInput';
-import SearchInput from './components/SearchInput';
 import Filter from './components/Filter';
 import Sort from './components/Sort';
 import Search from './components/Search';
@@ -53,7 +52,6 @@ export {
   GenericNavBar,
   EntityIcon,
   SortInput,
-  SearchInput,
   Filter,
   Sort,
   Search,
