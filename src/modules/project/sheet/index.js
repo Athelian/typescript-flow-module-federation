@@ -4,7 +4,7 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ProjectFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig, useSheet } from 'components/Sheet';
+import { Sheet, ColumnsConfig, useSheet, useExportedColumns } from 'components/Sheet';
 import { clone } from 'utils/fp';
 import { projectsExportQuery } from '../query';
 import MilestoneTaskColumnsConfigGroup from './MilestoneTaskColumnsConfigGroup';
@@ -51,6 +51,7 @@ const ProjectSheetModule = () => {
     setSortBy,
     cacheKey: 'project_sheet',
   });
+  const exportVariables = useExportedColumns(columnStates);
 
   return (
     <Content>
@@ -78,8 +79,7 @@ const ProjectSheetModule = () => {
           variables={{
             filterBy: { query, ...filterBy },
             sortBy,
-            localSortBy: {},
-            columns: columns.filter(c => !!c.exportKey).map(c => c.exportKey),
+            ...exportVariables,
           }}
         />
       </NavBar>

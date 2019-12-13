@@ -6,7 +6,13 @@ import { equals } from 'ramda';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ShipmentFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig, useSheet, useColumnStates } from 'components/Sheet';
+import {
+  Sheet,
+  ColumnsConfig,
+  useSheet,
+  useColumnStates,
+  useExportedColumns,
+} from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
@@ -72,6 +78,7 @@ const ShipmentSheetModuleImpl = ({
     setSortBy,
     cacheKey: 'shipment_sheet',
   });
+  const exportVariables = useExportedColumns(columnStates);
 
   if (!!shipmentIds && !equals(shipmentIdsRef.current, shipmentIds)) {
     setFilterBy({ query: '', ids: shipmentIds });
@@ -98,8 +105,7 @@ const ShipmentSheetModuleImpl = ({
           variables={{
             filterBy: { query, ...filterBy },
             sortBy,
-            localSortBy: {},
-            columns: columns.filter(c => !!c.exportKey).map(c => c.exportKey),
+            ...exportVariables,
           }}
         />
       </NavBar>
