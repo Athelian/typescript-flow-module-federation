@@ -10,6 +10,8 @@ function ConfirmBeforeLeave() {
   const onClose = () => setIsOpen(false);
   const pathRef = React.useRef('');
   const hasErrorRef = React.useRef(false);
+  const dirtySaveRef = React.useRef(false);
+  const dirtyResetRef = React.useRef(false);
 
   React.useEffect(() => {
     emitter.addListener('VALIDATION_ERROR', isValid => {
@@ -18,8 +20,26 @@ function ConfirmBeforeLeave() {
   }, []);
 
   React.useEffect(() => {
+    emitter.addListener('DIRTY_SAVE', isDirty => {
+      dirtySaveRef.current = !isDirty;
+    });
+  }, []);
+
+  React.useEffect(() => {
+    emitter.addListener('DIRTY_RESET', isDirty => {
+      dirtyResetRef.current = isDirty;
+    });
+  }, []);
+
+  React.useEffect(() => {
+    emitter.addListener('DIRTY_SAVE', isDirty => {
+      dirtySaveRef.current = isDirty;
+    });
+  }, []);
+
+  React.useEffect(() => {
     emitter.addListener('NAVIGATE_TO', path => {
-      if (!isOpen && hasErrorRef.current) {
+      if (!isOpen && (hasErrorRef.current || dirtyResetRef.current || dirtySaveRef.current)) {
         setIsOpen(true);
         pathRef.current = path;
       } else {
@@ -40,6 +60,8 @@ function ConfirmBeforeLeave() {
         onClose();
         navigate(String(pathRef.current));
         hasErrorRef.current = false;
+        dirtySaveRef.current = false;
+        dirtyResetRef.current = false;
       }}
       message={
         <FormattedMessage

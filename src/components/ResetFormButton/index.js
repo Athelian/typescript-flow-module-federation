@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 import useBeforeUnload from 'hooks/useBeforeUnload';
+import emitter from 'utils/emitter';
 
 type Props = {|
   disabled: boolean,
@@ -21,6 +22,11 @@ const ResetFormButton = ({ disabled, onClick, label, ...rest }: Props): React.No
     !disabled,
     () => 'Are you sure you want to leave this page? Your changes will not be saved.'
   );
+
+  React.useEffect(() => {
+    emitter.emit('DIRTY_RESET', !disabled);
+  }, [disabled]);
+
   return (
     <BaseButton
       label={label}
