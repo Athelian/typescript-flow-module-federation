@@ -10,14 +10,15 @@ export default function Page({ Component }: Props) {
   const [ready, setReady] = React.useState(false);
 
   React.useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      const msg = 'Are you sure you want to leave this page? Your changes will not be saved.';
+      // eslint-disable-next-line no-param-reassign
+      event.returnValue = msg;
+      return msg;
+    };
+
     emitter.addListener('VALIDATION_ERROR', isValid => {
       const hasError = !isValid;
-      const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-        const msg = 'Are you sure you want to leave this page? Your changes will not be saved.';
-        // eslint-disable-next-line no-param-reassign
-        event.returnValue = msg;
-        return msg;
-      };
 
       if (hasError) {
         window.addEventListener('beforeunload', handleBeforeUnload);
@@ -25,6 +26,10 @@ export default function Page({ Component }: Props) {
         window.removeEventListener('beforeunload', handleBeforeUnload);
       }
     });
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   });
 
   React.useEffect(() => {
