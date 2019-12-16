@@ -13,7 +13,9 @@ import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { removeTypename } from 'utils/data';
 import { FormContainer } from 'modules/form';
 import { initValues as taskInitValues } from 'modules/shipment/form/containers/tasks';
-import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
+import { CancelButton, ExportButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SlideView from 'components/SlideView';
@@ -487,7 +489,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                           ) : (
                             <>
                               {isDirty && (
-                                <ResetButton
+                                <ResetFormButton
                                   onClick={() => {
                                     this.initAllValues(
                                       {
@@ -519,7 +521,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                           )}
 
                           {(isNewOrClone || isDirty) && (
-                            <SaveButton
+                            <SaveFormButton
                               id="shipment_form_save_button"
                               disabled={
                                 !formContainer.isReady(

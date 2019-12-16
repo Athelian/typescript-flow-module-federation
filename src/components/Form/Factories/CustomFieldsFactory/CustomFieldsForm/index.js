@@ -13,10 +13,11 @@ import JumpToSection from 'components/JumpToSection';
 import SlideView from 'components/SlideView';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import GridColumn from 'components/GridColumn';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import { DefaultCustomFieldStyle } from 'components/Form/Inputs/Styles';
 import { SectionHeader, SectionWrapper, Label, DashedPlusButton, FieldItem } from 'components/Form';
 import { EntityIcon } from 'components/NavBar';
-import { SaveButton, ResetButton } from 'components/Buttons';
 import { FormContainer, resetFormState } from 'modules/form';
 import CustomFieldsContainer from 'components/Form/Factories/CustomFieldsFactory/container';
 import CustomFieldsTemplateSelector from 'components/Form/Factories/CustomFieldsFactory/CustomFieldsTemplateSelector';
@@ -88,13 +89,13 @@ class CustomFieldsForm extends React.Component<Props> {
                 </JumpToSection>
                 {customFieldsContainer.isDirty() && (
                   <>
-                    <ResetButton
+                    <ResetFormButton
                       onClick={() => {
                         resetFormState(customFieldsContainer);
                         formContainer.onReset();
                       }}
                     />
-                    <SaveButton onClick={() => onSave(values)} />
+                    <SaveFormButton onClick={() => onSave(values)} />
                   </>
                 )}
               </SlideViewNavBar>

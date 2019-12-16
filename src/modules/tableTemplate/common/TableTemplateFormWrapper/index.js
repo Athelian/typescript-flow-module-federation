@@ -5,7 +5,9 @@ import { useMutation } from '@apollo/react-hooks';
 import { FormattedMessage } from 'react-intl';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
+import { CancelButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer } from 'modules/form';
@@ -93,10 +95,10 @@ const TableTemplateFormWrapper = ({ isNew, onSave, onCancel, onRefetch }: Props)
           </JumpToSection>
           {isNew && <CancelButton onClick={() => onCancel()} />}
 
-          {!isNew && isDirty && <ResetButton onClick={resetState} />}
+          {!isNew && isDirty && <ResetFormButton onClick={resetState} />}
 
           {(isNew || isDirty) && (
-            <SaveButton
+            <SaveFormButton
               id="table_template_form_save_button"
               disabled={!formContainer.isReady(state, validator)}
               isLoading={isProcessing}

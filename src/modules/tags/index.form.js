@@ -9,7 +9,9 @@ import { removeTypename } from 'utils/data';
 import { QueryForm } from 'components/common';
 import { Content } from 'components/Layout';
 import { NavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
+import { CancelButton, ExportButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
@@ -139,7 +141,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
                           {this.isNewOrClone() ? (
                             <CancelButton onClick={() => this.onCancel()} />
                           ) : (
-                            <ResetButton
+                            <ResetFormButton
                               onClick={() => {
                                 this.onReset({
                                   tagContainer,
@@ -149,7 +151,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
                               }}
                             />
                           )}
-                          <SaveButton
+                          <SaveFormButton
                             data-testid="saveButton"
                             disabled={
                               !form.isReady(

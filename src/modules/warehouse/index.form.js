@@ -11,7 +11,9 @@ import { FormContainer } from 'modules/form';
 import QueryFormV2 from 'components/common/QueryFormV2';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
+import { CancelButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import { removeTypename } from 'utils/data';
 import { getByPath } from 'utils/fp';
 import { decodeId, encodeId, uuid } from 'utils/id';
@@ -207,7 +209,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                         ) : (
                           <>
                             {isDirty && (
-                              <ResetButton
+                              <ResetFormButton
                                 onClick={() => {
                                   this.initAllValues(
                                     { warehouseInfoState },
@@ -221,7 +223,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                         )}
 
                         {(isNewOrClone || isDirty) && (
-                          <SaveButton
+                          <SaveFormButton
                             data-testid="saveButton"
                             disabled={!form.isReady({ ...warehouseInfoState.state }, validator)}
                             isLoading={isLoading}

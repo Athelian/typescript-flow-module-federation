@@ -6,7 +6,7 @@ import { Query, Mutation } from 'react-apollo';
 import { Subscribe } from 'unstated';
 import { showToastError } from 'utils/errors';
 import LoadingIcon from 'components/LoadingIcon';
-import { SaveButton } from 'components/Buttons';
+import SaveFormButton from 'components/SaveFormButton';
 import { Label } from 'components/Form';
 import FieldDefinitionsForm from 'modules/metadata/components/FieldDefinitionsForm';
 import { FormContainer } from 'modules/form';
@@ -68,7 +68,7 @@ const FieldDefinitionsFormWrapper = ({ entityType, intl }: Props) => (
                       </Label>
 
                       {isDirty() && (
-                        <SaveButton
+                        <SaveFormButton
                           id="metadata_form_save_button"
                           onClick={async () => {
                             const formData = {

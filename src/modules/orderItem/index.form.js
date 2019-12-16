@@ -13,7 +13,8 @@ import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { QueryForm } from 'components/common';
-import { ResetButton, SaveButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import SlideView from 'components/SlideView';
 import { FormContainer } from 'modules/form';
 import Timeline from 'modules/timeline/components/Timeline';
@@ -235,7 +236,7 @@ class OrderItemFormModule extends React.Component<Props> {
                         orderItemFilesContainer.isDirty() ||
                         orderItemTasksContainer.isDirty()) && (
                         <>
-                          <ResetButton
+                          <ResetFormButton
                             onClick={() => {
                               this.initAllValues(
                                 {
@@ -256,7 +257,7 @@ class OrderItemFormModule extends React.Component<Props> {
                               form.onReset();
                             }}
                           />
-                          <SaveButton
+                          <SaveFormButton
                             id="item_form_save_button"
                             disabled={
                               !formContainer.isReady(

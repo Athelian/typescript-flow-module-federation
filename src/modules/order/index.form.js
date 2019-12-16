@@ -12,7 +12,9 @@ import { FormContainer } from 'modules/form';
 import { UserConsumer } from 'contexts/Viewer';
 import Timeline from 'modules/timeline/components/Timeline';
 import QueryFormV2 from 'components/common/QueryFormV2';
-import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
+import { CancelButton, ExportButton } from 'components/Buttons';
 import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
@@ -401,7 +403,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                         ) : (
                           <>
                             {isDirty && (
-                              <ResetButton
+                              <ResetFormButton
                                 onClick={() => {
                                   this.initAllValues(
                                     {
@@ -427,7 +429,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                         )}
 
                         {(isNewOrClone || isDirty) && (
-                          <SaveButton
+                          <SaveFormButton
                             id="order_form_save_button"
                             data-testid="btnSaveOrder"
                             disabled={

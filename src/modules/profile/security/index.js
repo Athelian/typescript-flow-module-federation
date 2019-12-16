@@ -7,7 +7,8 @@ import { Subscribe } from 'unstated';
 import { SectionWrapper, SectionHeader, PasswordInputFactory } from 'components/Form';
 import { FormField, FormContainer } from 'modules/form';
 import GridColumn from 'components/GridColumn';
-import { BaseButton, SaveButton } from 'components/Buttons';
+import { BaseButton } from 'components/Buttons';
+import SaveFormButton from 'components/SaveFormButton';
 import { FormWrapperStyle, SectionWrapperStyle, ButtonWrapperStyle } from './style';
 import { changePasswordMutation, requestResetPasswordMutation } from './mutation';
 import { ChangePasswordContainer } from './containers';
@@ -115,7 +116,7 @@ export default function Security() {
                       )}
                     </FormField>
                     <div className={ButtonWrapperStyle}>
-                      <SaveButton
+                      <SaveFormButton
                         disabled={!formContainer.isReady(values, validator)}
                         isLoading={loading}
                         onClick={() => {

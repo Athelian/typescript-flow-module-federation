@@ -9,7 +9,8 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon, LogsButton } from 'components/NavBar';
-import { SaveButton, ResetButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import SlideView from 'components/SlideView';
 import Timeline from 'modules/timeline/components/Timeline';
 import validator from 'modules/task/form/validator';
@@ -110,13 +111,13 @@ const TaskFormInSlide = ({
 
                 {taskContainer.isDirty() && (
                   <>
-                    <ResetButton
+                    <ResetFormButton
                       onClick={() => {
                         resetFormState(taskContainer);
                         formContainer.onReset();
                       }}
                     />
-                    <SaveButton
+                    <SaveFormButton
                       id="task_form_save_button"
                       disabled={!formContainer.isReady(taskContainer.state, validator)}
                       onClick={() => onSave(taskContainer.state)}

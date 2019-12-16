@@ -11,7 +11,9 @@ import { UserConsumer } from 'contexts/Viewer';
 import { FormContainer, resetFormState } from 'modules/form';
 import { NavBar, EntityIcon } from 'components/NavBar';
 import { Content } from 'components/Layout';
-import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
+import { CancelButton, ExportButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId, uuid } from 'utils/id';
@@ -334,7 +336,7 @@ class ProductFormModule extends React.Component<Props> {
                         {this.isNewOrClone() ? (
                           <CancelButton onClick={() => this.onCancel()} />
                         ) : (
-                          <ResetButton
+                          <ResetFormButton
                             onClick={() => {
                               this.onReset({
                                 productInfoState,
@@ -348,7 +350,7 @@ class ProductFormModule extends React.Component<Props> {
                           />
                         )}
 
-                        <SaveButton
+                        <SaveFormButton
                           id="product_form_save_button"
                           data-testid="saveButton"
                           disabled={

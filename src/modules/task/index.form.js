@@ -13,7 +13,9 @@ import { removeTypename } from 'utils/data';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import SlideView from 'components/SlideView';
 import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
-import { ExportButton, ResetButton, SaveButton } from 'components/Buttons';
+import { ExportButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { QueryForm } from 'components/common';
@@ -157,7 +159,7 @@ class TaskFormModule extends React.Component<Props> {
 
                       {isDirty() && (
                         <>
-                          <ResetButton
+                          <ResetFormButton
                             onClick={() =>
                               this.onReset(
                                 {
@@ -168,7 +170,7 @@ class TaskFormModule extends React.Component<Props> {
                               )
                             }
                           />
-                          <SaveButton
+                          <SaveFormButton
                             id="task_form_save_button"
                             disabled={!form.isReady(state, validator)}
                             isLoading={isLoading}

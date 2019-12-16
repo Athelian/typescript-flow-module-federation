@@ -7,7 +7,9 @@ import { SlideViewNavBar } from 'components/Layout';
 import { EntityIcon } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import { CancelButton, ResetButton, SaveButton } from 'components/Buttons';
+import { CancelButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import { resetFormState } from 'modules/form';
 import { removeTypename } from 'utils/data';
 import { validator } from 'modules/projectTemplate/form/validator';
@@ -79,7 +81,7 @@ const ProjectTemplateFormHeader = ({
             {isNew && (
               <>
                 <CancelButton onClick={onCancel} />
-                <SaveButton
+                <SaveFormButton
                   id="project_template_form_save_button"
                   disabled={
                     !container.isDirty() || !formContainer.isReady(container.state, validator)
@@ -98,13 +100,13 @@ const ProjectTemplateFormHeader = ({
 
             {!isNew && container.isDirty() && (
               <>
-                <ResetButton
+                <ResetFormButton
                   onClick={() => {
                     resetFormState(container);
                     formContainer.onReset();
                   }}
                 />
-                <SaveButton
+                <SaveFormButton
                   id="project_template_form_save_button"
                   disabled={!formContainer.isReady(container.state, validator)}
                   onClick={() => {

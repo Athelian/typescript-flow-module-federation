@@ -16,7 +16,9 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon, LogsButton } from 'components/NavBar';
-import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
+import { CancelButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import SlideView from 'components/SlideView';
 import { contains, getByPathWithDefault } from 'utils/fp';
 import { productProviderTimelineQuery } from './query';
@@ -186,7 +188,7 @@ const ProductProviderFormWrapper = ({
                 {isNew && (
                   <>
                     <CancelButton onClick={() => onCancel()} />
-                    <SaveButton
+                    <SaveFormButton
                       id="end_product_form_save_button"
                       data-testid="saveProviderButton"
                       disabled={disableSaveButton}
@@ -205,7 +207,7 @@ const ProductProviderFormWrapper = ({
                     productProviderPackagesContainer.isDirty() ||
                     productProviderTasksContainer.isDirty()) && (
                     <>
-                      <ResetButton
+                      <ResetFormButton
                         onClick={() => {
                           resetFormState(productProviderInfoContainer);
                           resetFormState(productProviderPackagesContainer);
@@ -213,7 +215,7 @@ const ProductProviderFormWrapper = ({
                           formContainer.onReset();
                         }}
                       />
-                      <SaveButton
+                      <SaveFormButton
                         id="end_product_form_save_button"
                         data-testid="saveProviderButton"
                         disabled={disableSaveButton}

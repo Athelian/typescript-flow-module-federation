@@ -8,7 +8,8 @@ import BatchForm from 'modules/batch/form';
 import { FormContainer, resetFormState } from 'modules/form';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon } from 'components/NavBar';
-import { SaveButton, ResetButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
 import validator from 'modules/batch/form/validator';
 import { READONLY } from 'modules/batch/constants';
@@ -97,14 +98,14 @@ const BatchFormInSlide = ({ batch, onSave, ...rest }: Props) => {
                 </JumpToSection>
                 {(batchInfoContainer.isDirty() || batchTasksContainer.isDirty()) && (
                   <>
-                    <ResetButton
+                    <ResetFormButton
                       onClick={() => {
                         resetFormState(batchInfoContainer);
                         resetFormState(batchTasksContainer, 'todo');
                         formContainer.onReset();
                       }}
                     />
-                    <SaveButton
+                    <SaveFormButton
                       id="batch_form_save_button"
                       disabled={
                         !formContainer.isReady(

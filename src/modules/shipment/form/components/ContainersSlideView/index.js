@@ -4,7 +4,8 @@ import { Provider, Subscribe } from 'unstated';
 import { earliest, latest } from 'utils/date';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon } from 'components/NavBar';
-import { SaveButton, ResetButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import { resetFormState } from 'modules/form';
 import {
   getAgreedArrivalDates,
@@ -65,12 +66,12 @@ class ContainersSlideView extends React.Component<Props> {
                   <EntityIcon icon="CONTAINER" color="CONTAINER" />
                   {isDirty() && (
                     <>
-                      <ResetButton
+                      <ResetFormButton
                         onClick={() => {
                           resetFormState(containersInSlideViewContainer, 'containers');
                         }}
                       />
-                      <SaveButton disabled={!isDirty()} onClick={() => onSave(containers)} />
+                      <SaveFormButton disabled={!isDirty()} onClick={() => onSave(containers)} />
                     </>
                   )}
                 </SlideViewNavBar>

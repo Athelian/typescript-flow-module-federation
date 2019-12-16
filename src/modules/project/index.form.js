@@ -15,7 +15,9 @@ import { getByPath } from 'utils/fp';
 import { FormContainer } from 'modules/form';
 import Timeline from 'modules/timeline/components/Timeline';
 import QueryForm from 'components/common/QueryForm';
-import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
+import { CancelButton, ExportButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { decodeId, encodeId, uuid } from 'utils/id';
@@ -276,7 +278,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
                         ) : (
                           <>
                             {isDirty && (
-                              <ResetButton
+                              <ResetFormButton
                                 onClick={() => {
                                   this.initAllValues(
                                     {
@@ -298,7 +300,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
                         )}
 
                         {(isNew || isDirty) && (
-                          <SaveButton
+                          <SaveFormButton
                             id="project_form_save_button"
                             disabled={
                               !form.isReady(

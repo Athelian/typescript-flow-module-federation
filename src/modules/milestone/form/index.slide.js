@@ -6,7 +6,8 @@ import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import { ResetButton, SaveButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import { isNullOrUndefined } from 'utils/fp';
 import { FormContainer, resetFormState } from 'modules/form';
 import { FormContext } from './context';
@@ -71,14 +72,14 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
 
                   {(milestoneStateContainer.isDirty() || filesContainer.isDirty()) && (
                     <>
-                      <ResetButton
+                      <ResetFormButton
                         onClick={() => {
                           resetFormState(milestoneStateContainer);
                           resetFormState(filesContainer, 'files');
                           formContainer.onReset();
                         }}
                       />
-                      <SaveButton
+                      <SaveFormButton
                         id="milestone_form_save_button"
                         disabled={!formContainer.isReady(milestoneStateContainer.state, validator)}
                         onClick={() => {

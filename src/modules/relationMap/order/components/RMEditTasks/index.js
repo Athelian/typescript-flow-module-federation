@@ -9,7 +9,8 @@ import { getByPathWithDefault } from 'utils/fp';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import useFilter from 'hooks/useFilter';
 import { FilterToolBar } from 'components/common';
-import { ResetButton, SaveButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import { FormContainer } from 'modules/form';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/task/messages';
@@ -114,13 +115,13 @@ const RMEditTasks = ({ intl, orderIds, orderItemIds, shipmentIds, batchIds }: Pr
                 />
                 {rmEditTasksContainer.isDirty() && (
                   <>
-                    <ResetButton
+                    <ResetFormButton
                       onClick={() => {
                         rmEditTasksContainer.initDetailValues([]);
                         formContainer.onReset();
                       }}
                     />
-                    <SaveButton
+                    <SaveFormButton
                       isLoading={isLoading}
                       onClick={() =>
                         onSave(
