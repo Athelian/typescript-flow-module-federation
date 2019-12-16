@@ -10,7 +10,14 @@ import productColumns from 'modules/sheet/product/columns';
 
 export const FieldDefinitionEntityTypes = ['Order', 'Product', 'OrderItem', 'Batch', 'Shipment'];
 
-export const OrderSheetColumnGroups = ['ORDER', 'ORDER_ITEM', 'BATCH', 'CONTAINER', 'SHIPMENT'];
+export const OrderSheetColumnGroups = [
+  'ORDER',
+  'PRODUCT',
+  'ORDER_ITEM',
+  'BATCH',
+  'CONTAINER',
+  'SHIPMENT',
+];
 
 type Props = {
   orderFieldDefinitions: Array<FieldDefinition>,
