@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
-import { Link } from '@reach/router';
 import Icon from 'components/Icon';
+import NavigateLink from 'components/NavigateLink';
 import { MenuItemStyle, IconStyle, BetaStyle } from './style';
 
 type Props = {
@@ -13,8 +13,7 @@ type Props = {
 };
 
 const MenuItem = ({ path, isActive, isBeta, icon, label }: Props): React.Node => (
-  // $FlowFixMe Flow typed is not updated yet
-  <Link tabIndex={-1} to={path} className={MenuItemStyle(isActive)}>
+  <NavigateLink to={path} className={MenuItemStyle(isActive)}>
     <span />
 
     <div className={IconStyle}>
@@ -24,7 +23,7 @@ const MenuItem = ({ path, isActive, isBeta, icon, label }: Props): React.Node =>
     {label}
 
     {isBeta && <div className={BetaStyle}>BETA</div>}
-  </Link>
+  </NavigateLink>
 );
 
 export default MenuItem;
