@@ -16,7 +16,7 @@ export const ColumnWidths = {
 
 export function populateColumns(
   columns: Array<ColumnConfig>,
-  exportKeys: { [string]: string },
+  exportKeys: { [string]: string | Array<string> },
   sorts: { [string]: ColumnSortConfig }
 ): Array<ColumnConfig> {
   return columns.map(c => ({

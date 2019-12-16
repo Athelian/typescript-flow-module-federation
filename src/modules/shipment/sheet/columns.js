@@ -272,7 +272,7 @@ export default function({
         ![
           'orderItem.remainQuantity',
           'orderItem.totalBatched',
-          'orderItem.remainingBatchQuantity',
+          'orderItem.remainingBatchedQuantity',
           'orderItem.totalShipped',
           'orderItem.remainingShippedQuantity',
           'orderItem.totalPrice',

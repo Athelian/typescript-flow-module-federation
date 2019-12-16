@@ -190,9 +190,9 @@ export default function transformSheetOrderItem({
       }),
     },
     {
-      columnKey: 'orderItem.remainingBatchQuantity',
+      columnKey: 'orderItem.remainingBatchedQuantity',
       type: 'number',
-      ...transformComputedField(basePath, orderItem, 'remainingBatchQuantity', root => {
+      ...transformComputedField(basePath, orderItem, 'remainingBatchedQuantity', root => {
         const currentOrderItem = getOrderItemFromRoot(root);
         const totalBatched =
           currentOrderItem?.batches.reduce(

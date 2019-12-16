@@ -223,7 +223,7 @@ const columns: Array<ColumnConfig> = [
 ];
 
 export default function containerColumns(
-  exportKeys: { [string]: string },
+  exportKeys: { [string]: string | Array<string> },
   sorts: { [string]: ColumnSortConfig }
 ): Array<ColumnConfig> {
   return populateColumns(columns, exportKeys, sorts);

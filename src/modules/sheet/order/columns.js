@@ -181,7 +181,7 @@ const columns: Array<ColumnConfig> = [
 ];
 
 export default function orderColumns(
-  exportKeys: { [string]: string },
+  exportKeys: { [string]: string | Array<string> },
   sorts: { [string]: ColumnSortConfig },
   fieldDefinitions: Array<FieldDefinition>
 ): Array<ColumnConfig> {
@@ -189,9 +189,10 @@ export default function orderColumns(
     ...populateColumns(columns, exportKeys, sorts),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `order.customField.${fieldDefinition.id}`,
-      exportKey: exportKeys['order.customField']
-        ? `${exportKeys['order.customField']}.${fieldDefinition.id}`
-        : undefined,
+      exportKey:
+        exportKeys['order.customField'] && !Array.isArray(exportKeys['order.customField'])
+          ? `${exportKeys['order.customField']}.${fieldDefinition.id}`
+          : undefined,
       title: fieldDefinition.name,
       icon: 'ORDER',
       color: colors.ORDER,
