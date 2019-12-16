@@ -7,8 +7,6 @@ type Props = {
 };
 
 export default function Page({ Component }: Props) {
-  const [ready, setReady] = React.useState(false);
-
   React.useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       const msg = 'Are you sure you want to leave this page? Your changes will not be saved.';
@@ -31,14 +29,6 @@ export default function Page({ Component }: Props) {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   });
-
-  React.useEffect(() => {
-    // check dirty state then show confirm dialog
-    setReady(true);
-    // do after
-  }, []);
-
-  if (!ready) return null;
 
   return <Component />;
 }
