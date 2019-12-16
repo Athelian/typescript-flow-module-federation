@@ -80,8 +80,8 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Default,
   },
   {
-    key: 'orderItem.remainingBatchQuantity',
-    title: <FormattedMessage {...orderItemMessages.remainingBatchQuantity} />,
+    key: 'orderItem.remainingBatchedQuantity',
+    title: <FormattedMessage {...orderItemMessages.remainingBatchedQuantity} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: ColumnWidths.Default,
@@ -138,7 +138,7 @@ const columns: Array<ColumnConfig> = [
 ];
 
 export default function orderItemColumns(
-  exportKeys: { [string]: string },
+  exportKeys: { [string]: string | Array<string> },
   sorts: { [string]: ColumnSortConfig },
   fieldDefinitions: Array<FieldDefinition>
 ): Array<ColumnConfig> {
@@ -146,9 +146,10 @@ export default function orderItemColumns(
     ...populateColumns(columns, exportKeys, sorts),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `orderItem.customField.${fieldDefinition.id}`,
-      exportKey: exportKeys['orderItem.customField']
-        ? `${exportKeys['orderItem.customField']}.${fieldDefinition.id}`
-        : undefined,
+      exportKey:
+        exportKeys['orderItem.customField'] && !Array.isArray(exportKeys['orderItem.customField'])
+          ? `${exportKeys['orderItem.customField']}.${fieldDefinition.id}`
+          : undefined,
       title: fieldDefinition.name,
       icon: 'ORDER_ITEM',
       color: colors.ORDER_ITEM,

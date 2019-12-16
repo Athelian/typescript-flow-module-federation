@@ -38,7 +38,7 @@ function orderItemSorter(sorts: Array<ColumnSort>) {
           break;
         case 'quantity':
         case 'totalBatched':
-        case 'remainingBatchQuantity':
+        case 'remainingBatchedQuantity':
         case 'totalShipped':
         case 'remainingShippedQuantity':
           result = setDirection(numberSort(a[sort.name], b[sort.name]), sort.direction);
