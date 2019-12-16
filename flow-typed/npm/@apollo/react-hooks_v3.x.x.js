@@ -858,7 +858,7 @@ declare module '@apollo/react-hooks' {
     constructor(options: ApolloClientOptions<TCacheShape>): this;
     watchQuery<T>(options: WatchQueryOptions): ObservableQuery<T>;
     query<T>(options: WatchQueryOptions): Promise<ApolloQueryResult<T>>;
-    mutate<T>(options: MutationOptions<T>): Promise<FetchResult<T>>;
+    mutate<T,V>(options: MutationOptions<T,V>): Promise<FetchResult<T>>;
     subscribe<T, D>(options: SubscriptionOptions<T, D>): Observable<any>;
     readQuery<T, D>(options: DataProxyReadQueryOptions<D>): T | null;
     readFragment<TData, TVariables>(

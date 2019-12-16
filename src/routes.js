@@ -7,6 +7,7 @@ import { useAuthenticated } from './contexts/Viewer';
 import { useUI } from './contexts/UI';
 import { Layout } from './components/Layout';
 import LoadingIcon from './components/LoadingIcon';
+import Page from './components/Page';
 import PageNotFound from './components/PageNotFound';
 import DashBoard from './modules/dashboard';
 import SideBar from './components/SideBar';
@@ -47,25 +48,25 @@ const Routes: StatelessFunctionalComponent<{}> = () => {
           <Authorized path="/">
             <Layout {...uiState} path="/">
               <DashBoard path="/" default />
-              <AsyncOrder path="order/*" />
-              <AsyncOrderItem path="order-item/*" />
-              <AsyncBatch path="batch/*" />
-              <AsyncShipment path="shipment/*" />
-              <AsyncContainer path="container/*" />
-              <AsyncProduct path="product/*" />
-              <AsyncWarehouse path="warehouse/*" />
-              <AsyncPartner path="partner/*" />
-              <AsyncStaff path="staff/*" />
-              <AsyncProject path="project/*" />
-              <AsyncTask path="task/*" />
-              <AsyncNotifications path="notifications/*" />
-              <AsyncTags path="tags/*" />
-              <AsyncMetadata path="templates/metadata/*" />
-              <AsyncTableTemplate path="templates/table-template/*" />
-              <AsyncTaskTemplate path="templates/task-template/*" />
-              <AsyncProjectTemplate path="templates/project/*" />
-              <AsyncProfile path="profile/*" />
-              <AsyncDocument path="document/*" />
+              <Page Component={AsyncOrder} path="order/*" />
+              <Page Component={AsyncOrderItem} path="order-item/*" />
+              <Page Component={AsyncBatch} path="batch/*" />
+              <Page Component={AsyncShipment} path="shipment/*" />
+              <Page Component={AsyncContainer} path="container/*" />
+              <Page Component={AsyncProduct} path="product/*" />
+              <Page Component={AsyncWarehouse} path="warehouse/*" />
+              <Page Component={AsyncPartner} path="partner/*" />
+              <Page Component={AsyncStaff} path="staff/*" />
+              <Page Component={AsyncProject} path="project/*" />
+              <Page Component={AsyncTask} path="task/*" />
+              <Page Component={AsyncNotifications} path="notifications/*" />
+              <Page Component={AsyncTags} path="tags/*" />
+              <Page Component={AsyncMetadata} path="templates/metadata/*" />
+              <Page Component={AsyncTableTemplate} path="templates/table-template/*" />
+              <Page Component={AsyncTaskTemplate} path="templates/task-template/*" />
+              <Page Component={AsyncProjectTemplate} path="templates/project/*" />
+              <Page Component={AsyncProfile} path="profile/*" />
+              <Page Component={AsyncDocument} path="document/*" />
             </Layout>
           </Authorized>
           <AsyncLogin path="/login" />

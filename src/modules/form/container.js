@@ -3,6 +3,7 @@ import { Container } from 'unstated';
 import { yupToFormErrors } from 'utils/errors';
 import logger from 'utils/logger';
 import { isEquals, setIn } from 'utils/fp';
+import emitter from 'utils/emitter';
 
 type FormState = {
   hasServerError: boolean,
@@ -97,6 +98,10 @@ export default class FormContainer extends Container<FormState> {
           }
         });
 
+        emitter.emit(
+          'VALIDATION_ERROR',
+          remainErrors.length > 0 || Object.keys(serverErrors).length > 0
+        );
         this.setState({
           errors: remainErrors,
           hasServerError: Object.keys(serverErrors).length > 0,
@@ -104,6 +109,7 @@ export default class FormContainer extends Container<FormState> {
       })
       .catch((yupErrors: Object) => {
         const newErrors = yupToFormErrors(yupErrors);
+        emitter.emit('VALIDATION_ERROR', true);
         if (!isEquals(Object.keys(formData), Object.keys(errors))) {
           const remainErrors: Object = { ...serverErrors };
           Object.keys(errors).forEach(field => {
