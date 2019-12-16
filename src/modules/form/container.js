@@ -85,9 +85,11 @@ export default class FormContainer extends Container<FormState> {
     formData: Object,
     schema: {
       validate: (any, any) => Promise<any>,
+      isValidSync: (any, any) => boolean,
     } = EmptyValidation
-  ) => {
+  ): boolean => {
     const { errors, serverErrors } = this.state;
+    const isValid = schema.isValidSync(formData);
     schema
       .validate(formData, { abortEarly: false })
       .then(() => {
@@ -98,10 +100,6 @@ export default class FormContainer extends Container<FormState> {
           }
         });
 
-        emitter.emit(
-          'VALIDATION_ERROR',
-          remainErrors.length > 0 || Object.keys(serverErrors).length > 0
-        );
         this.setState({
           errors: remainErrors,
           hasServerError: Object.keys(serverErrors).length > 0,
@@ -109,7 +107,6 @@ export default class FormContainer extends Container<FormState> {
       })
       .catch((yupErrors: Object) => {
         const newErrors = yupToFormErrors(yupErrors);
-        emitter.emit('VALIDATION_ERROR', true);
         if (!isEquals(Object.keys(formData), Object.keys(errors))) {
           const remainErrors: Object = { ...serverErrors };
           Object.keys(errors).forEach(field => {
@@ -128,5 +125,8 @@ export default class FormContainer extends Container<FormState> {
           });
         }
       });
+    console.warn({ isValid });
+    emitter.emit('VALIDATION_ERROR', isValid);
+    return isValid;
   };
 }
