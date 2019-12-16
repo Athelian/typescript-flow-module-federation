@@ -1,7 +1,6 @@
 // @flow
 import { Container } from 'unstated';
 import { yupToFormErrors } from 'utils/errors';
-import logger from 'utils/logger';
 import { isEquals, setIn } from 'utils/fp';
 import emitter from 'utils/emitter';
 
@@ -48,7 +47,7 @@ export default class FormContainer extends Container<FormState> {
   };
 
   onReset = () => {
-    logger.warn('onReset');
+    emitter.emit('VALIDATION_ERROR', true);
     this.setState(initState);
   };
 
@@ -125,7 +124,6 @@ export default class FormContainer extends Container<FormState> {
           });
         }
       });
-    console.warn({ isValid });
     emitter.emit('VALIDATION_ERROR', isValid);
     return isValid;
   };
