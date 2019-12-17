@@ -37,6 +37,9 @@ const SaveFormButton = ({
 
   React.useEffect(() => {
     emitter.emit('DIRTY_SAVE', !disabled);
+    return () => {
+      emitter.emit('DIRTY_SAVE', false);
+    };
   }, [disabled]);
 
   return (

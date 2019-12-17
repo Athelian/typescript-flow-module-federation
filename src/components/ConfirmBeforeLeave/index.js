@@ -21,19 +21,13 @@ function ConfirmBeforeLeave() {
 
   React.useEffect(() => {
     emitter.addListener('DIRTY_SAVE', isDirty => {
-      dirtySaveRef.current = !isDirty;
+      dirtySaveRef.current = isDirty;
     });
   }, []);
 
   React.useEffect(() => {
     emitter.addListener('DIRTY_RESET', isDirty => {
       dirtyResetRef.current = isDirty;
-    });
-  }, []);
-
-  React.useEffect(() => {
-    emitter.addListener('DIRTY_SAVE', isDirty => {
-      dirtySaveRef.current = isDirty;
     });
   }, []);
 

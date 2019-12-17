@@ -25,6 +25,9 @@ const ResetFormButton = ({ disabled, onClick, label, ...rest }: Props): React.No
 
   React.useEffect(() => {
     emitter.emit('DIRTY_RESET', !disabled);
+    return () => {
+      emitter.emit('DIRTY_RESET', false);
+    };
   }, [disabled]);
 
   return (
