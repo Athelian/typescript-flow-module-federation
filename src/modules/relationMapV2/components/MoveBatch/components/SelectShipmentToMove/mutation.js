@@ -38,16 +38,13 @@ export const moveBatchesToShipment = ({
 }) => {
   const batches = [];
   batchIds.forEach(batchId => {
-    const batch = entities?.batches?.[batchId];
-    if (batch?.shipment !== shipment.id) {
-      batches.push({
-        id: batchId,
-        input: {
-          shipmentId: shipment.id,
-          containerId: null,
-        },
-      });
-    }
+    batches.push({
+      id: batchId,
+      input: {
+        shipmentId: shipment.id,
+        containerId: null,
+      },
+    });
   });
 
   return apolloClient
