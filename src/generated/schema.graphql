@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Dec 09 2019 10:55:43 GMT+0900 (Japan Standard Time)
+# timestamp: Thu Dec 12 2019 10:28:09 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -87036,6 +87036,7 @@ input ShipmentFilterInput {
   customClearance: DateRangeInput
   warehouseArrival: DateRangeInput
   deliveryReady: DateRangeInput
+  containerIds: [ID!]
   containerContainerType: String
   containerContainerOption: ContainerOption
   containerWarehouseIds: [ID!]

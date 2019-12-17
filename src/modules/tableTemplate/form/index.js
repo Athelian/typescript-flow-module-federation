@@ -1,62 +1,24 @@
 // @flow
-import React, { memo, useEffect } from 'react';
-import { FormattedMessage } from 'react-intl';
-import { SectionHeader, SectionWrapper, LastModified } from 'components/Form';
-import { TemplateSection, SelectFieldsSection } from './components';
+import React, { memo } from 'react';
+import { SectionWrapper } from 'components/Form';
+import TemplateSection from './components/TemplateSection';
+import ColumnsConfigSection from './components/ColumnsConfigSection';
 import { TemplateFormWrapperStyle } from './style';
 
-type OptionalProps = {
+type Props = {
   isNew: boolean,
-  template: Object,
 };
 
-type Props = OptionalProps & {
-  initDetailValues: Object => void,
-};
+const TableTemplateForm = ({ isNew }: Props) => (
+  <div className={TemplateFormWrapperStyle}>
+    <SectionWrapper id="tableTemplate_templateSection">
+      <TemplateSection isNew={isNew} />
+    </SectionWrapper>
 
-const defaultProps = {
-  isNew: false,
-  template: {},
-};
-
-function TableTemplateForm({ template, isNew, initDetailValues }: Props) {
-  useEffect(() => {
-    initDetailValues(template);
-  }, [template, initDetailValues]);
-
-  return (
-    <div className={TemplateFormWrapperStyle}>
-      <SectionWrapper id="tableTemplate_templateSection">
-        <SectionHeader
-          icon="TEMPLATE"
-          title={
-            <FormattedMessage id="modules.TableTemplates.template" defaultMessage="TEMPLATE" />
-          }
-        >
-          {!isNew && (
-            <>
-              <LastModified updatedAt={template.updatedAt} updatedBy={template.updatedBy} />
-            </>
-          )}
-        </SectionHeader>
-        <TemplateSection isNew={isNew} />
-      </SectionWrapper>
-      <SectionWrapper id="tableTemplate_editFieldsSection">
-        <SectionHeader
-          icon="EDIT_TABLE"
-          title={
-            <FormattedMessage
-              id="modules.TableTemplates.relationTable"
-              defaultMessage="RELATION TABLE"
-            />
-          }
-        />
-        <SelectFieldsSection isNew={isNew} />
-      </SectionWrapper>
-    </div>
-  );
-}
-
-TableTemplateForm.defaultProps = defaultProps;
+    <SectionWrapper id="tableTemplate_editFieldsSection">
+      <ColumnsConfigSection />
+    </SectionWrapper>
+  </div>
+);
 
 export default memo<Props>(TableTemplateForm);

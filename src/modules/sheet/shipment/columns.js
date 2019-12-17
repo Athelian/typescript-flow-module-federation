@@ -346,7 +346,6 @@ const columns: Array<ColumnConfig> = [
     color: colors.SHIPMENT,
     width: ColumnWidths.DateUser,
   },
-
   {
     key: 'shipment.voyage.1.firstTransitDeparture.date',
     title: <FormattedMessage {...shipmentMessages.firstTransitPortDeparture} />,
@@ -624,7 +623,7 @@ const columns: Array<ColumnConfig> = [
 ];
 
 export default function shipmentColumns(
-  exportKeys: { [string]: string },
+  exportKeys: { [string]: string | Array<string> },
   sorts: { [string]: ColumnSortConfig },
   fieldDefinitions: Array<FieldDefinition>
 ): Array<ColumnConfig> {
@@ -632,9 +631,10 @@ export default function shipmentColumns(
     ...populateColumns(columns, exportKeys, sorts),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `shipment.customField.${fieldDefinition.id}`,
-      exportKey: exportKeys['shipment.customField']
-        ? `${exportKeys['shipment.customField']}.${fieldDefinition.id}`
-        : undefined,
+      exportKey:
+        exportKeys['shipment.customField'] && !Array.isArray(exportKeys['shipment.customField'])
+          ? `${exportKeys['shipment.customField']}.${fieldDefinition.id}`
+          : undefined,
       title: fieldDefinition.name,
       icon: 'SHIPMENT',
       color: colors.SHIPMENT,

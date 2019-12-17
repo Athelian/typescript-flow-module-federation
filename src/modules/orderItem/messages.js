@@ -94,9 +94,17 @@ export default defineMessages({
     id: 'modules.OrderItems.totalBatched',
     defaultMessage: 'Total batched quantity',
   },
+  remainingBatchedQuantity: {
+    id: 'modules.OrderItems.remainingBatchedQuantity',
+    defaultMessage: 'REMAINING BATCH QUANTITY',
+  },
   totalShipped: {
     id: 'modules.OrderItems.totalShipped',
     defaultMessage: 'Total shipped quantity',
+  },
+  remainingShippedQuantity: {
+    id: 'modules.OrderItems.remainingShippedQuantity',
+    defaultMessage: 'REMAINING SHIPPED QUANTITY',
   },
   totalPrice: {
     id: 'modules.OrderItems.totalPrice',

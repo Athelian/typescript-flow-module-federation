@@ -32,8 +32,9 @@ export const colors = {
 
   TRANSPARENT: 'rgba(0, 0, 0, 0)',
 
-  PROJECT: '#802FD9',
-  MILESTONE: '#C590FF',
+  PROJECT: '#9029B4',
+  MILESTONE: '#9F7C8B',
+  TASK: '#CD9EE2',
   PRODUCT: '#F12C2C',
   PRODUCT_PROVIDER: '#CF0000',
   ORDER: '#ED5724',
@@ -49,7 +50,6 @@ export const colors = {
   CONTAINER_GROUP: '#2489CD',
   CONTAINER: '#30A8E4',
   CONTAINER_ITEM: '#8BDDFF',
-  TASK: '#A34FFF',
   WAREHOUSE: '#9D865A',
   STAFF: '#98A2AC',
   PARTNER: '#474D4D',

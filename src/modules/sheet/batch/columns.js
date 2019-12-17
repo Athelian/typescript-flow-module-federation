@@ -87,6 +87,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Default,
   },
   {
+    key: 'batch.differenceQuantity',
+    title: <FormattedMessage {...batchMessages.differenceQuantity} />,
+    icon: 'BATCH',
+    color: colors.BATCH,
+    width: ColumnWidths.Default,
+  },
+  {
     key: 'batch.quantity',
     title: <FormattedMessage {...batchMessages.initialQuantity} />,
     icon: 'BATCH',
@@ -194,7 +201,7 @@ const columns: Array<ColumnConfig> = [
 ];
 
 export default function batchColumns(
-  exportKeys: { [string]: string },
+  exportKeys: { [string]: string | Array<string> },
   sorts: { [string]: ColumnSortConfig },
   fieldDefinitions: Array<FieldDefinition>
 ): Array<ColumnConfig> {
@@ -202,9 +209,10 @@ export default function batchColumns(
     ...populateColumns(columns, exportKeys, sorts),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `batch.customField.${fieldDefinition.id}`,
-      exportKey: exportKeys['batch.customField']
-        ? `${exportKeys['batch.customField']}.${fieldDefinition.id}`
-        : undefined,
+      exportKey:
+        exportKeys['batch.customField'] && !Array.isArray(exportKeys['batch.customField'])
+          ? `${exportKeys['batch.customField']}.${fieldDefinition.id}`
+          : undefined,
       title: fieldDefinition.name,
       icon: 'BATCH',
       color: colors.BATCH,

@@ -534,7 +534,7 @@ export const BatchFilterConfig: Array<FilterConfig> = [
     field: 'hasShipment',
     type: 'has_shipment',
     message: batchMessages.hasShipment,
-    defaultValue: [],
+    defaultValue: false,
   },
   {
     entity: 'BATCH',
@@ -706,6 +706,13 @@ export const ShipmentFilterConfig: Array<FilterConfig> = [
     field: 'tagIds',
     type: 'shipment_tags',
     message: shipmentMessages.tags,
+    defaultValue: [],
+  },
+  {
+    entity: 'CONTAINER',
+    field: 'containerIds',
+    type: 'container_ids',
+    message: containerMessages.container,
     defaultValue: [],
   },
   {

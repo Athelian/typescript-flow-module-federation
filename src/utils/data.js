@@ -54,16 +54,9 @@ export const removeId: Function = when(
   )
 );
 
-export const cleanUpData: Function = pipe(
-  removeTypename,
-  removeNulls
-);
+export const cleanUpData: Function = pipe(removeTypename, removeNulls);
 
-export const cleanFalsyAndTypeName: Function = pipe(
-  removeTypename,
-  removeNulls,
-  removeEmpty
-);
+export const cleanFalsyAndTypeName: Function = pipe(removeTypename, removeNulls, removeEmpty);
 
 export const isForbidden = (data: Object): boolean => {
   return getByPath('__typename', data) === 'Forbidden';

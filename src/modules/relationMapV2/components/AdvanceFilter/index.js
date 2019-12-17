@@ -6,7 +6,7 @@ import {
   OrderFilterConfig,
   ShipmentFilterConfig,
 } from 'components/NavBar/components/Filter/configs';
-import { SearchInput } from 'components/NavBar';
+import { Search } from 'components/NavBar';
 import { SortAndFilter, FocusedView } from 'modules/relationMapV2/store';
 import Icon from 'components/Icon';
 import MatchesEntities from './components/MatchesEntities';
@@ -37,19 +37,8 @@ export default function AdvanceFilter() {
               });
           }}
         />
-        <SearchInput
-          key={JSON.stringify({ query })}
-          value={query}
-          name="search"
-          onClear={() =>
-            onChangeFilter({
-              ...filterAndSort,
-              filter: {
-                ...filterAndSort.filter,
-                query: '',
-              },
-            })
-          }
+        <Search
+          query={query}
           onChange={newQuery =>
             onChangeFilter({
               ...filterAndSort,

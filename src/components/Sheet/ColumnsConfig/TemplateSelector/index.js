@@ -60,7 +60,10 @@ const TemplateList = ({ variables, selected, setSelected }: ListProps) => {
             id: template.id,
             title: template.name,
             description: template.memo,
-            count: (template.fields || []).length,
+            count: (template?.columns ?? []).reduce(
+              (currentCount, column) => currentCount + (column?.hidden ? 0 : 1),
+              0
+            ),
           }}
           type="EDIT_TABLE"
           selectable

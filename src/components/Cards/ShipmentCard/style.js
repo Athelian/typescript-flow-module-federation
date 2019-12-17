@@ -141,21 +141,6 @@ export const ShipmentDataWrapperStyle: string = css`
   height: 20px;
 `;
 
-export const ShipmentInChargeWrapperStyle: string = css`
-  position: relative;
-  height: 20px;
-  width: 70px;
-`;
-
-export const InChargeStyle = (index: number): string => css`
-  position: absolute;
-  right: ${index > 0 ? index * 12 : 0}px;
-  border: 1px solid ${colors.WHITE};
-  width: 22px;
-  height: 22px;
-  ${borderRadiuses.CIRCLE};
-`;
-
 export const ShipmentBadgeWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
 `;

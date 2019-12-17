@@ -90,14 +90,7 @@ function defaultBindingOptions(intl: IntlShape, isStartDate: boolean) {
   ];
 }
 
-const TaskInfoSection = ({
-  intl,
-  groupIds,
-  task,
-  isInTemplate,
-
-  parentEntity,
-}: Props) => {
+const TaskInfoSection = ({ intl, groupIds, task, isInTemplate, parentEntity }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 

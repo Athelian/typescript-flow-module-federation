@@ -11,7 +11,7 @@ import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { currentSort } from 'components/common/FilterToolBar';
-import { EntityIcon, SortInput, SearchInput } from 'components/NavBar';
+import { EntityIcon, SortInput, Search } from 'components/NavBar';
 import { Display } from 'components/Form';
 import { BaseButton, CancelButton } from 'components/Buttons';
 import BaseCard from 'components/Cards';
@@ -108,15 +108,8 @@ function SelectProjectAndMilestone({
                 })
               }
             />
-            <SearchInput
-              value={filterAndSort.filter.query}
-              name="search"
-              onClear={() =>
-                onChangeFilter({
-                  ...filterAndSort,
-                  filter: { ...filterAndSort.filter, query: '' },
-                })
-              }
+            <Search
+              query={filterAndSort.filter.query}
               onChange={newQuery =>
                 onChangeFilter({
                   ...filterAndSort,

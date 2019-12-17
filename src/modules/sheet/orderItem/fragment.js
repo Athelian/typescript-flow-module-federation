@@ -14,22 +14,6 @@ export const sheetOrderItemFragment = gql`
     tags {
       ...tagFragment
     }
-    productProvider {
-      ...forbiddenFragment
-      ... on ProductProvider {
-        id
-        product {
-          ...forbiddenFragment
-          ... on Product {
-            id
-            name
-            serial
-            ...sheetOwnedFragment
-          }
-        }
-        ...sheetOwnedFragment
-      }
-    }
     files {
       ...documentFragment
       ...forbiddenFragment
@@ -45,3 +29,5 @@ export const sheetOrderItemFragment = gql`
     sort
   }
 `;
+
+export default sheetOrderItemFragment;

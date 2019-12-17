@@ -1,27 +1,24 @@
 // @flow
 import * as React from 'react';
+import { navigate } from '@reach/router';
+import { useQuery } from '@apollo/react-hooks';
 import { Provider } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import type { IntlShape } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { useViewerHasPermissions } from 'contexts/Permissions';
 import { TEMPLATE_CREATE } from 'modules/permission/constants/template';
-import usePermission from 'hooks/usePermission';
-import useUser from 'hooks/useUser';
 import SlideView from 'components/SlideView';
-import TemplateFormWrapper from 'modules/tableTemplate/common/TemplateFormWrapper';
+import TableTemplateFormWrapper from 'modules/tableTemplate/common/TableTemplateFormWrapper';
+import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import { Content } from 'components/Layout';
-import { NavBar, EntityIcon } from 'components/NavBar';
+import { EntityIcon, NavBar } from 'components/NavBar';
 import FilterToolBar from 'components/common/FilterToolBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { NewButton } from 'components/Buttons';
 import useFilter from 'hooks/useFilter';
-import { isEnableBetaFeature } from 'utils/env';
+import { allCustomFieldDefinitionsQuery, tableTemplateQuery } from './list/query';
 import TableTemplateList from './list';
 import messages from './messages';
-
-type Props = {
-  intl: IntlShape,
-};
 
 const getInitFilter = (type: string) => ({
   viewType: 'grid',
@@ -36,41 +33,63 @@ const getInitFilter = (type: string) => ({
   page: 1,
 });
 
-const TableTemplateModule = (props: Props) => {
-  const { isUsingLegacyFeatures } = useUser();
-  const showLegacyMenu = isUsingLegacyFeatures() || isEnableBetaFeature;
+const TableTemplateModule = () => {
+  const intl = useIntl();
+  const isTableTemplate = window.location.href.includes('templates');
+
+  const hasPermissions = useViewerHasPermissions();
+
+  const {
+    data: customFields,
+    loading: customFieldsQueryIsLoading,
+    error: customFieldsQueryError,
+  } = useQuery(allCustomFieldDefinitionsQuery, { fetchPolicy: 'network-only' });
+
   const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter } = useFilter(
-    getInitFilter(showLegacyMenu ? 'Order' : 'OrderSheet'),
+    getInitFilter('OrderSheet'),
     'filterTableTemplate'
   );
-  const { intl } = props;
+
+  const {
+    data: tableTemplatesData,
+    loading: tableTemplatesIsLoading,
+    error: tableTemplatesQueryError,
+    fetchMore,
+    refetch,
+  } = useQuery(tableTemplateQuery, {
+    fetchPolicy: 'network-only',
+    variables: { page: 1, ...queryVariables },
+  });
+
+  if (customFieldsQueryError) {
+    if ((customFieldsQueryError?.message ?? '').includes('403')) {
+      navigate('/403');
+    }
+
+    return customFieldsQueryError.message;
+  }
+
+  if (tableTemplatesQueryError) {
+    if ((tableTemplatesQueryError?.message ?? '').includes('403')) {
+      navigate('/403');
+    }
+
+    return tableTemplatesQueryError.message;
+  }
+
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
-  const { hasPermission } = usePermission();
-  const canCreate = hasPermission(TEMPLATE_CREATE);
+  const canCreate = hasPermissions(TEMPLATE_CREATE);
   const activeType = filtersAndSort.filter?.type;
   const setActiveType = (type: string) => onChangeFilter({ ...filtersAndSort, filter: { type } });
+
   return (
     <Provider>
       <Content>
         <NavBar>
           <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
-          {showLegacyMenu && (
-            <TabItem
-              active={activeType === 'Order'}
-              label={
-                <FormattedMessage id="modules.TableTemplates.order" defaultMessage="Order Edit" />
-              }
-              icon="RELATION_MAP"
-              onClick={() => {
-                if (activeType !== 'Order') {
-                  setActiveType('Order');
-                }
-              }}
-            />
-          )}
           <TabItem
             active={activeType === 'OrderSheet'}
             label={
@@ -143,32 +162,45 @@ const TableTemplateModule = (props: Props) => {
             <BooleanValue>
               {({ value: isOpen, set: toggle }) => (
                 <>
-                  <NewButton onClick={() => toggle(true)} />
+                  <NewButton onClick={() => toggle(true)} isLoading={customFieldsQueryIsLoading} />
+
                   <SlideView
                     isOpen={isOpen}
                     onRequestClose={() => toggle(false)}
-                    shouldConfirm={() => {
-                      const button = document.getElementById('table_template_form_save_button');
-                      return button;
-                    }}
+                    shouldConfirm={() => document.getElementById('table_template_form_save_button')}
                   >
-                    {isOpen && (
-                      <TemplateFormWrapper
-                        template={{ type: activeType }}
+                    <TableTemplateFormContainer.Provider
+                      initialState={{ type: activeType, customFields }}
+                    >
+                      <TableTemplateFormWrapper
                         isNew
+                        onSave={() => toggle(false)}
                         onCancel={() => toggle(false)}
+                        onRefetch={() => {
+                          if (isTableTemplate) {
+                            refetch(tableTemplateQuery);
+                          }
+                        }}
                       />
-                    )}
+                    </TableTemplateFormContainer.Provider>
                   </SlideView>
                 </>
               )}
             </BooleanValue>
           )}
         </NavBar>
-        <TableTemplateList {...queryVariables} />
+        <TableTemplateList
+          isTableTemplate={isTableTemplate}
+          tableTemplatesData={tableTemplatesData}
+          tableTemplatesIsLoading={tableTemplatesIsLoading}
+          fetchMore={fetchMore}
+          customFieldsQueryIsLoading={customFieldsQueryIsLoading}
+          customFields={customFields}
+          {...queryVariables}
+        />
       </Content>
     </Provider>
   );
 };
 
-export default injectIntl(TableTemplateModule);
+export default TableTemplateModule;

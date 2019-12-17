@@ -6,14 +6,20 @@ import { equals } from 'ramda';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ShipmentFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig, useSheet } from 'components/Sheet';
+import {
+  Sheet,
+  ColumnsConfig,
+  useSheet,
+  useColumnStates,
+  useExportedColumns,
+} from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { shipmentsExportQuery } from '../query';
-import shipmentColumns, { FieldDefinitionEntityTypes } from './columns';
+import shipmentColumns, { FieldDefinitionEntityTypes, ShipmentSheetColumnGroups } from './columns';
 import shipmentTransformer from './transformer';
 import entityEventHandler from './handler';
 import actions from './actions';
@@ -53,25 +59,26 @@ const ShipmentSheetModuleImpl = ({
     loading,
     hasMore,
     onLoadMore,
-    columns,
-    setColumns,
     query,
     setQuery,
     filterBy,
     setFilterBy,
     sortBy,
-    localSortBy,
-    onLocalSort,
-    onRemoteSort,
+    setSortBy,
   } = useSheet({
-    columns: columnConfigs,
     itemsQuery: shipmentsQuery,
     initialFilterBy: { query: '', archived: false },
     initialSortBy: { updatedAt: 'DESCENDING' },
-    sorter,
     getItems,
     cacheKey: 'shipment_sheet',
   });
+  const { columns, setColumns, columnStates } = useColumnStates({
+    columns: columnConfigs,
+    sortBy,
+    setSortBy,
+    cacheKey: 'shipment_sheet',
+  });
+  const exportVariables = useExportedColumns(columnStates);
 
   if (!!shipmentIds && !equals(shipmentIdsRef.current, shipmentIds)) {
     setFilterBy({ query: '', ids: shipmentIds });
@@ -85,35 +92,34 @@ const ShipmentSheetModuleImpl = ({
 
         <Filter config={ShipmentFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <ColumnsConfig
-          config={columnConfigs}
-          columns={columns}
-          onChange={setColumns}
-          templateType="ShipmentSheet"
-        />
+        <ColumnsConfig columns={columns} templateType="ShipmentSheet" onChange={setColumns}>
+          {({ getGroupProps }) =>
+            ShipmentSheetColumnGroups.map(type => (
+              <ColumnsConfig.Group {...getGroupProps(type)} key={type} />
+            ))
+          }
+        </ColumnsConfig>
         <ExportButton
           type="Shipments"
           exportQuery={shipmentsExportQuery}
           variables={{
             filterBy: { query, ...filterBy },
             sortBy,
-            localSortBy,
-            columns: columns.filter(c => !!c.exportKey).map(c => c.exportKey),
+            ...exportVariables,
           }}
         />
       </NavBar>
 
       <Sheet
-        columns={columns}
+        columns={columnStates}
         loading={loading}
         items={initialItems}
         hasMore={hasMore}
         transformItem={transformer}
         onMutate={memoizedMutate}
         handleEntityEvent={memoizedHandler}
-        onLocalSort={onLocalSort}
-        onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
+        onItemsSort={sorter}
         actions={actions}
       />
     </Content>

@@ -1,5 +1,6 @@
 // @flow
 import ApolloClient from 'apollo-client';
+import { camelCase, upperFirst } from 'lodash';
 import { filterAsync, mapAsync } from 'utils/async';
 import type { Action } from 'components/Sheet/SheetState/types';
 import { Actions } from 'components/Sheet/SheetState/constants';
@@ -11,6 +12,7 @@ import type {
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
 import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
 import { filesByIDsQuery } from 'modules/sheet/common/query';
+import { decorateMilestone, decorateTask } from './decorator';
 import { milestoneByIDQuery, tagsByIDsQuery, taskByIDQuery, userByIDQuery } from './query';
 
 // $FlowFixMe not compatible with hook implementation
@@ -49,7 +51,7 @@ function onCreateMilestoneFactory(client: ApolloClient, dispatch: Action => void
               }
 
               const milestones = [...projects[projectIdx].milestones];
-              milestones.splice(newMilestone.sort, 0, newMilestone);
+              milestones.splice(newMilestone.sort, 0, decorateMilestone(newMilestone));
 
               return {
                 item: {
@@ -109,7 +111,7 @@ function onCreateTaskFactory(client: ApolloClient, dispatch: Action => void) {
 
               const milestones = [...projects[projectIdx].milestones];
               const tasks = [...milestones[milestoneIdx].tasks];
-              tasks.splice(newTask.sort, 0, newTask);
+              tasks.splice(newTask.sort, 0, decorateTask(newTask));
               milestones[milestoneIdx] = {
                 ...milestones[milestoneIdx],
                 tasks,
@@ -196,6 +198,14 @@ function onDeleteTaskFactory(dispatch: Action => void) {
   };
 }
 
+const cleanUpInterval = (interval: { days: number, weeks: number, months: number }) => {
+  const { days, months, weeks } = interval;
+  if (Math.abs(days)) return { days };
+  if (Math.abs(weeks)) return { weeks };
+  if (Math.abs(months)) return { months };
+  return { days: 0 };
+};
+
 export default function entityEventHandler(
   // $FlowFixMe not compatible with hook implementation
   client: ApolloClient,
@@ -237,6 +247,19 @@ export default function entityEventHandler(
                       field: change.field,
                       new: newCustomValue(data.tagsByIDs),
                     }));
+                case 'updatedBy':
+                  if (change.new) {
+                    return client
+                      .query({
+                        query: userByIDQuery,
+                        variables: { id: change.new?.entity?.id },
+                      })
+                      .then(({ data }) => ({
+                        field: change.field,
+                        new: newCustomValue(data.mask),
+                      }));
+                  }
+                  break;
                 default:
                   break;
               }
@@ -257,6 +280,20 @@ export default function entityEventHandler(
                       field: change.field,
                       new: newCustomValue(data.filesByIDs),
                     }));
+                case 'completedBy':
+                case 'updatedBy':
+                  if (change.new) {
+                    return client
+                      .query({
+                        query: userByIDQuery,
+                        variables: { id: change.new?.entity?.id },
+                      })
+                      .then(({ data }) => ({
+                        field: change.field,
+                        new: newCustomValue(data.mask),
+                      }));
+                  }
+                  break;
                 default:
                   break;
               }
@@ -288,7 +325,12 @@ export default function entityEventHandler(
                       field: change.field,
                       new: newCustomValue(data.tagsByIDs),
                     }));
+                case 'inProgressBy':
+                case 'completedBy':
                 case 'approvedBy':
+                case 'rejectedBy':
+                case 'skippedBy':
+                case 'updatedBy':
                   if (change.new) {
                     return client
                       .query({
@@ -326,6 +368,46 @@ export default function entityEventHandler(
                 },
                 'approved',
                 task.approved
+              );
+
+              changes = mergeChanges(
+                changes,
+                {
+                  startDate: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                  startDateInterval: (i, v) => ({
+                    ...i,
+                    interval: v ? cleanUpInterval(v) : v,
+                  }),
+                  startDateBinding: (i, v) => ({
+                    ...i,
+                    binding: v ? upperFirst(camelCase(v)) : v,
+                  }),
+                },
+                'startDateBindingData',
+                task.startDateBindingData
+              );
+
+              changes = mergeChanges(
+                changes,
+                {
+                  dueDate: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                  dueDateInterval: (i, v) => ({
+                    ...i,
+                    interval: v ? cleanUpInterval(v) : v,
+                  }),
+                  dueDateBinding: (i, v) => ({
+                    ...i,
+                    binding: v ? upperFirst(camelCase(v)) : v,
+                  }),
+                },
+                'dueDateBindingData',
+                task.dueDateBindingData
               );
             }
             break;

@@ -63,7 +63,8 @@ export default function OrderItemValueSpy({ entity, values, task, location, setT
       // We will query the order data if open a task on relation map or from order item detail
       if (!isUnderOrderModule) {
         const entityId =
-          orderItemId && activeType === 'order-item' ? decodeId(orderItemId) : task.entity.id;
+          orderItemId && activeType === 'order-item' ? decodeId(orderItemId) : task.entity?.id;
+        if (!entityId) return;
         logger.warn('query order data for id', client, entityId);
         // TODO: This flag will be used for showing loading on UI
         emitter.emit('LIVE_VALUE_PROCESS', true);

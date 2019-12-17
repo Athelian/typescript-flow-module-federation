@@ -89,26 +89,6 @@ export default function transformSheetOrderItem({
       ...transformReadonlyField(basePath, orderItem, 'updatedAt', orderItem?.updatedAt ?? null),
     },
     {
-      columnKey: 'orderItem.productProvider.product.name',
-      type: 'text',
-      ...transformReadonlyField(
-        `${basePath}.productProvider.product`,
-        orderItem?.productProvider?.product ?? null,
-        'name',
-        orderItem?.productProvider?.product?.name ?? ''
-      ),
-    },
-    {
-      columnKey: 'orderItem.productProvider.product.serial',
-      type: 'text',
-      ...transformReadonlyField(
-        `${basePath}.productProvider.product`,
-        orderItem?.productProvider?.product ?? null,
-        'serial',
-        orderItem?.productProvider?.product?.serial ?? ''
-      ),
-    },
-    {
       columnKey: 'orderItem.archived',
       type: 'status',
       ...transformComputedField(
@@ -202,7 +182,6 @@ export default function transformSheetOrderItem({
       ...transformComputedField(basePath, orderItem, 'totalBatched', root => {
         const currentOrderItem = getOrderItemFromRoot(root);
         return (
-          // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
           currentOrderItem?.batches.reduce(
             (total, batch) => total + getBatchLatestQuantity(batch),
             0
@@ -211,16 +190,40 @@ export default function transformSheetOrderItem({
       }),
     },
     {
+      columnKey: 'orderItem.remainingBatchedQuantity',
+      type: 'number',
+      ...transformComputedField(basePath, orderItem, 'remainingBatchedQuantity', root => {
+        const currentOrderItem = getOrderItemFromRoot(root);
+        const totalBatched =
+          currentOrderItem?.batches.reduce(
+            (total, batch) => total + getBatchLatestQuantity(batch),
+            0
+          ) ?? 0;
+        return (currentOrderItem?.quantity ?? 0) - totalBatched;
+      }),
+    },
+    {
       columnKey: 'orderItem.totalShipped',
       type: 'number',
       ...transformComputedField(basePath, orderItem, 'totalShipped', root => {
         const currentOrderItem = getOrderItemFromRoot(root);
         return (
-          // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
           currentOrderItem?.batches
             .filter(batch => !!batch.shipment)
             .reduce((total, batch) => total + getBatchLatestQuantity(batch), 0) ?? 0
         );
+      }),
+    },
+    {
+      columnKey: 'orderItem.remainingShippedQuantity',
+      type: 'number',
+      ...transformComputedField(basePath, orderItem, 'remainingShippedQuantity', root => {
+        const currentOrderItem = getOrderItemFromRoot(root);
+        const totalShipped =
+          currentOrderItem?.batches
+            .filter(batch => !!batch.shipment)
+            .reduce((total, batch) => total + getBatchLatestQuantity(batch), 0) ?? 0;
+        return (currentOrderItem?.quantity ?? 0) - totalShipped;
       }),
     },
     {

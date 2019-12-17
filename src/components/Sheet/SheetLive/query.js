@@ -140,6 +140,13 @@ export const entityEventSubscription = gql`
               }
             }
           }
+          ... on IntervalValue {
+            interval {
+              days
+              weeks
+              months
+            }
+          }
         }
       }
     }

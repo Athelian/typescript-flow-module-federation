@@ -31,20 +31,6 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Status,
   },
   {
-    key: 'orderItem.productProvider.product.name',
-    title: <FormattedMessage {...orderItemMessages.productName} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: ColumnWidths.Default,
-  },
-  {
-    key: 'orderItem.productProvider.product.serial',
-    title: <FormattedMessage {...orderItemMessages.productSerial} />,
-    icon: 'ORDER_ITEM',
-    color: colors.ORDER_ITEM,
-    width: ColumnWidths.Default,
-  },
-  {
     key: 'orderItem.no',
     title: <FormattedMessage {...orderItemMessages.no} />,
     icon: 'ORDER_ITEM',
@@ -94,8 +80,22 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Default,
   },
   {
+    key: 'orderItem.remainingBatchedQuantity',
+    title: <FormattedMessage {...orderItemMessages.remainingBatchedQuantity} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: ColumnWidths.Default,
+  },
+  {
     key: 'orderItem.totalShipped',
     title: <FormattedMessage {...orderItemMessages.totalShipped} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: ColumnWidths.Default,
+  },
+  {
+    key: 'orderItem.remainingShippedQuantity',
+    title: <FormattedMessage {...orderItemMessages.remainingShippedQuantity} />,
     icon: 'ORDER_ITEM',
     color: colors.ORDER_ITEM,
     width: ColumnWidths.Default,
@@ -138,7 +138,7 @@ const columns: Array<ColumnConfig> = [
 ];
 
 export default function orderItemColumns(
-  exportKeys: { [string]: string },
+  exportKeys: { [string]: string | Array<string> },
   sorts: { [string]: ColumnSortConfig },
   fieldDefinitions: Array<FieldDefinition>
 ): Array<ColumnConfig> {
@@ -146,9 +146,10 @@ export default function orderItemColumns(
     ...populateColumns(columns, exportKeys, sorts),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `orderItem.customField.${fieldDefinition.id}`,
-      exportKey: exportKeys['orderItem.customField']
-        ? `${exportKeys['orderItem.customField']}.${fieldDefinition.id}`
-        : undefined,
+      exportKey:
+        exportKeys['orderItem.customField'] && !Array.isArray(exportKeys['orderItem.customField'])
+          ? `${exportKeys['orderItem.customField']}.${fieldDefinition.id}`
+          : undefined,
       title: fieldDefinition.name,
       icon: 'ORDER_ITEM',
       color: colors.ORDER_ITEM,

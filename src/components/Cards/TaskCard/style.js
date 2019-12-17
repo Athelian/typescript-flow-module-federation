@@ -51,31 +51,6 @@ export const TaskNameWrapperStyle: string = css`
   padding: 0 5px 0 5px;
 `;
 
-export const TaskPositionWrapperStyle: string = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  color: ${colors.GRAY_LIGHT};
-  ${fontSizes.SMALL};
-  font-weight: bold;
-`;
-
-export const DragButtonWrapperStyle: string = css`
-  ${presets.BUTTON};
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  color: ${colors.GRAY_LIGHT};
-  ${fontSizes.SMALL};
-  &:hover,
-  :focus {
-    color: ${colors.BLUE};
-  }
-`;
-
 export const DateInputWrapperStyle = (editable: boolean): string => css`
   display: grid;
   grid-template-columns: ${editable ? '65px 120px' : '65px 100px 20px'};

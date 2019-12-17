@@ -55,6 +55,58 @@ function normalizedInput(
             approvedById: value?.user?.id ?? null,
             approvedAt: value?.date ?? null,
           };
+        case 'startDateBindingData': {
+          const date = value?.date ?? null;
+          if (date) {
+            return {
+              startDate: new Date(date),
+              startDateInterval: value?.interval
+                ? {
+                    days: value?.interval?.days ?? 0,
+                    weeks: value?.interval?.weeks ?? 0,
+                    months: value?.interval?.months ?? 0,
+                  }
+                : null,
+              startDateBinding: value?.binding ?? null,
+            };
+          }
+          return {
+            startDateInterval: value?.interval
+              ? {
+                  days: value?.interval?.days ?? 0,
+                  weeks: value?.interval?.weeks ?? 0,
+                  months: value?.interval?.months ?? 0,
+                }
+              : null,
+            startDateBinding: value?.binding ?? null,
+          };
+        }
+        case 'dueDateBindingData': {
+          const date = value?.date ?? null;
+          if (date) {
+            return {
+              dueDate: new Date(date),
+              dueDateInterval: value?.interval
+                ? {
+                    days: value?.interval?.days ?? 0,
+                    weeks: value?.interval?.weeks ?? 0,
+                    months: value?.interval?.months ?? 0,
+                  }
+                : null,
+              dueDateBinding: value?.binding ?? null,
+            };
+          }
+          return {
+            dueDateInterval: value?.interval
+              ? {
+                  days: value?.interval?.days ?? 0,
+                  weeks: value?.interval?.weeks ?? 0,
+                  months: value?.interval?.months ?? 0,
+                }
+              : null,
+            dueDateBinding: value?.binding ?? null,
+          };
+        }
         default:
           return {
             [field]: value,

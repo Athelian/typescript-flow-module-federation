@@ -4,10 +4,11 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ProjectFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig, useSheet } from 'components/Sheet';
+import { Sheet, ColumnsConfig, useSheet, useExportedColumns } from 'components/Sheet';
 import { clone } from 'utils/fp';
 import { projectsExportQuery } from '../query';
-import projectColumns from './columns';
+import MilestoneTaskColumnsConfigGroup from './MilestoneTaskColumnsConfigGroup';
+import { computeProjectColumnConfigsFromTemplate, useProjectColumnStates } from './columns';
 import transformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
@@ -31,18 +32,13 @@ const ProjectSheetModule = () => {
     loading,
     hasMore,
     onLoadMore,
-    columns,
-    setColumns,
     query,
     setQuery,
     filterBy,
     setFilterBy,
     sortBy,
-    localSortBy,
-    onLocalSort,
-    onRemoteSort,
+    setSortBy,
   } = useSheet({
-    columns: projectColumns,
     itemsQuery: projectsQuery,
     initialFilterBy: { query: '' },
     initialSortBy: { updatedAt: 'DESCENDING' },
@@ -50,6 +46,12 @@ const ProjectSheetModule = () => {
     getItems,
     cacheKey: 'project_sheet',
   });
+  const { columns, setColumns, columnStates } = useProjectColumnStates({
+    sortBy,
+    setSortBy,
+    cacheKey: 'project_sheet',
+  });
+  const exportVariables = useExportedColumns(columnStates);
 
   return (
     <Content>
@@ -59,34 +61,39 @@ const ProjectSheetModule = () => {
         <Filter config={ProjectFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig
-          config={projectColumns}
           columns={columns}
-          onChange={setColumns}
           templateType="ProjectSheet"
-        />
+          onChange={setColumns}
+          onLoadTemplate={computeProjectColumnConfigsFromTemplate}
+        >
+          {({ getGroupProps }) => (
+            <>
+              <ColumnsConfig.Group {...getGroupProps('PROJECT')} />
+              <MilestoneTaskColumnsConfigGroup {...getGroupProps('MILESTONE_TASK')} />
+            </>
+          )}
+        </ColumnsConfig>
         <ExportButton
           type="Projects"
           exportQuery={projectsExportQuery}
           variables={{
             filterBy: { query, ...filterBy },
             sortBy,
-            localSortBy,
-            columns: columns.filter(c => !!c.exportKey).map(c => c.exportKey),
+            ...exportVariables,
           }}
         />
       </NavBar>
 
       <Sheet
-        columns={columns}
+        columns={columnStates}
         loading={loading}
         items={initialItems}
         hasMore={hasMore}
         transformItem={transformer}
         onMutate={memoizedMutate}
         handleEntityEvent={memoizedHandler}
-        onLocalSort={onLocalSort}
-        onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
+        onItemsSort={sorter}
         actions={{}}
       />
     </Content>

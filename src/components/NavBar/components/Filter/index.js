@@ -23,6 +23,7 @@ import ShipmentIds from './Inputs/ShipmentIds';
 import WarehouseIds from './Inputs/WarehouseIds';
 import ProductIds from './Inputs/ProductIds';
 import ProductProviderIds from './Inputs/ProductProviderIds';
+import ContainerIds from './Inputs/ContainerIds';
 import { CompletelyBatched, CompletelyShipped, HasShipment, FreeTimeOverdue } from './Inputs/Bool';
 import OrganizationIds, {
   ImporterIds,
@@ -83,6 +84,7 @@ const inputs = {
   warehouse_ids: WarehouseIds,
   product_ids: ProductIds,
   product_provider_ids: ProductProviderIds,
+  container_ids: ContainerIds,
   organization_ids: OrganizationIds,
   importer_ids: ImporterIds,
   exporter_ids: ExporterIds,
@@ -235,7 +237,6 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
                         value={state.entity}
                         items={[state.entity]}
                         name="entity"
-                        // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
                         itemToString={i => i?.toUpperCase() ?? ''}
                         itemToValue={i => i}
                         readOnly
@@ -256,7 +257,7 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
                             c => c.entity === state.entity && c.field === i
                           )?.message;
                           const value = message ? intl.formatMessage(message) : i;
-                          // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
+
                           return value?.toUpperCase() ?? '';
                         }}
                         itemToValue={i => i}
@@ -369,7 +370,6 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
                         value={state.entity}
                         onChange={onEntityChange}
                         name="entity"
-                        // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
                         itemToString={i => i?.toUpperCase() ?? ''}
                         itemToValue={i => i}
                         items={[...entities]}
@@ -393,7 +393,7 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
                               c => c.entity === state.entity && c.field === i
                             )?.message;
                             const value = message ? intl.formatMessage(message) : i;
-                            // $FlowFixMe: Flow does not yet support method or property calls in optional chains.
+
                             return value?.toUpperCase() ?? '';
                           }}
                           itemToValue={i => i}

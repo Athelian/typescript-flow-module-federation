@@ -10,6 +10,15 @@ import productColumns from 'modules/sheet/product/columns';
 
 export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment', 'Product'];
 
+export const ShipmentSheetColumnGroups = [
+  'SHIPMENT',
+  'CONTAINER',
+  'BATCH',
+  'ORDER_ITEM',
+  'PRODUCT',
+  'ORDER',
+];
+
 type Props = {
   orderFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
@@ -28,16 +37,21 @@ export default function({
   return [
     ...shipmentColumns(
       {
-        'shipment.created': 'createdAt',
-        'shipment.updated': 'updatedAt',
+        'shipment.created': ['createdAt', 'createdBy'],
+        'shipment.updated': ['updatedAt', 'updatedBy'],
+        'shipment.archived': 'archived',
         'shipment.no': 'no',
+        'shipment.importer': 'importer.name',
+        'shipment.exporter': 'exporter.name',
         'shipment.forwarders': 'forwarders',
         'shipment.relatedExporters': 'relatedExporters',
         'shipment.blNo': 'blNo',
         'shipment.blDate': 'blDate',
+        'shipment.booked': 'booked',
         'shipment.bookingNo': 'bookingNo',
         'shipment.bookingDate': 'bookingDate',
         'shipment.invoiceNo': 'invoiceNo',
+        'shipment.contractNo': 'contractNo',
         'shipment.transportType': 'transportType',
         'shipment.loadType': 'loadType',
         'shipment.incoterm': 'incoterm',
@@ -45,21 +59,138 @@ export default function({
         'shipment.tags': 'tags',
         'shipment.memo': 'memo',
         'shipment.inCharges': 'inCharges',
+        'shipment.totalBatchQuantity': 'totalBatchQuantity',
+        'shipment.totalProducts': 'productCount',
+        'shipment.totalOrders': 'orderCount',
+        'shipment.totalBatches': 'batchCount',
+        'shipment.totalContainers': 'containerCount',
+        'shipment.totalPackages': 'totalPackageQuantity',
+        'shipment.totalWeight': ['totalWeight.value', 'totalWeight.metric'],
+        'shipment.totalVolume': ['totalVolume.value', 'totalVolume.metric'],
+        'shipment.numOfVoyages': 'numOfVoyages',
         'shipment.cargoReady.date': 'cargoReady.date',
+        'shipment.cargoReady.timelineDateRevisions': [
+          'cargoReady.latestDate',
+          'cargoReady.dateDifference',
+        ],
+        'shipment.cargoReady.assignedTo': 'cargoReady.assignedTo',
+        'shipment.cargoReady.approved': ['cargoReady.approvedAt', 'cargoReady.approvedBy'],
         'shipment.voyage.0.departurePort': 'voyage_1.departurePort',
         'shipment.voyage.0.departure.date': 'voyage_1.departure.date',
+        'shipment.voyage.0.departure.timelineDateRevisions': [
+          'voyage_1.departure.latestDate',
+          'voyage_1.departure.dateDifference',
+        ],
+        'shipment.voyage.0.departure.assignedTo': 'voyage_1.departure.assignedTo',
+        'shipment.voyage.0.departure.approved': [
+          'voyage_1.departure.approvedAt',
+          'voyage_1.departure.approvedBy',
+        ],
+        'shipment.voyage.0.vesselName': 'voyage_1.vesselName',
+        'shipment.voyage.0.vesselCode': 'voyage_1.vesselCode',
         'shipment.voyage.0.firstTransitPort': 'voyage_1.arrivalPort',
         'shipment.voyage.0.firstTransitArrival.date': 'voyage_1.arrival.date',
+        'shipment.voyage.0.firstTransitArrival.timelineDateRevisions': [
+          'voyage_1.arrival.latestDate',
+          'voyage_1.arrival.dateDifference',
+        ],
+        'shipment.voyage.0.firstTransitArrival.assignedTo': 'voyage_1.arrival.assignedTo',
+        'shipment.voyage.0.firstTransitArrival.approved': [
+          'voyage_1.arrival.approvedAt',
+          'voyage_1.arrival.approvedBy',
+        ],
         'shipment.voyage.1.firstTransitDeparture.date': 'voyage_2.departure.date',
-        'shipment.voyage.1.secondTransitPort': 'voyage_2.arrivalPort',
+        'shipment.voyage.1.firstTransitDeparture.timelineDateRevisions': [
+          'voyage_2.departure.latestDate',
+          'voyage_2.departure.dateDifference',
+        ],
+        'shipment.voyage.1.firstTransitDeparture.assignedTo': 'voyage_2.departure.assignedTo',
+        'shipment.voyage.1.firstTransitDeparture.approved': [
+          'voyage_2.departure.approvedAt',
+          'voyage_2.departure.approvedBy',
+        ],
+        'shipment.voyage.1.vesselName': 'voyage_2.vesselName',
+        'shipment.voyage.1.vesselCode': 'voyage_2.vesselCode',
+        'shipment.voyage.1.secondTransitPort': 'voyage_2.departurePort',
         'shipment.voyage.1.secondTransitArrival.date': 'voyage_2.arrival.date',
+        'shipment.voyage.1.secondTransitArrival.timelineDateRevisions': [
+          'voyage_2.arrival.latestDate',
+          'voyage_2.arrival.dateDifference',
+        ],
+        'shipment.voyage.1.secondTransitArrival.assignedTo': 'voyage_2.arrival.assignedTo',
+        'shipment.voyage.1.secondTransitArrival.approved': [
+          'voyage_2.arrival.approvedAt',
+          'voyage_2.arrival.approvedBy',
+        ],
         'shipment.voyage.2.secondTransitDeparture.date': 'voyage_3.departure.date',
+        'shipment.voyage.2.secondTransitDeparture.timelineDateRevisions': [
+          'voyage_3.departure.latestDate',
+          'voyage_3.departure.dateDifference',
+        ],
+        'shipment.voyage.2.secondTransitDeparture.assignedTo': 'voyage_3.departure.assignedTo',
+        'shipment.voyage.2.secondTransitDeparture.approved': [
+          'voyage_3.departure.approvedAt',
+          'voyage_3.departure.approvedBy',
+        ],
+        'shipment.voyage.2.vesselName': 'voyage_3.vesselName',
+        'shipment.voyage.2.vesselCode': 'voyage_3.vesselCode',
         'shipment.voyage.2.arrivalPort': 'voyage_3.arrivalPort',
         'shipment.voyage.2.arrival.date': 'voyage_3.arrival.date',
+        'shipment.voyage.2.arrival.timelineDateRevisions': [
+          'voyage_3.arrival.latestDate',
+          'voyage_3.arrival.difference',
+        ],
+        'shipment.voyage.2.arrival.assignedTo': 'voyage_3.arrival.assignedTo',
+        'shipment.voyage.2.arrival.approved': [
+          'voyage_3.arrival.approvedAt',
+          'voyage_3.arrival.approvedBy',
+        ],
         'shipment.containerGroup.customClearance.date': 'containerGroup.customClearance.date',
+        'shipment.containerGroup.customClearance.timelineDateRevisions': [
+          'containerGroup.customClearance.latestDate',
+          'containerGroup.customClearance.dateDifference',
+        ],
+        'shipment.containerGroup.customClearance.assignedTo':
+          'containerGroup.customClearance.assignedTo',
+        'shipment.containerGroup.customClearance.approved': [
+          'containerGroup.customClearance.approvedAt',
+          'containerGroup.customClearance.approvedBy',
+        ],
         'shipment.containerGroup.warehouse': 'containerGroup.warehouse.name',
         'shipment.containerGroup.warehouseArrival.date': 'containerGroup.warehouseArrival.date',
+        'shipment.containerGroup.warehouseArrival.timelineDateRevisions': [
+          'containerGroup.warehouseArrival.latestDate',
+          'containerGroup.warehouseArrival.dateDifference',
+        ],
+        'shipment.containerGroup.warehouseArrival.assignedTo':
+          'containerGroup.warehouseArrival.assignedTo',
+        'shipment.containerGroup.warehouseArrival.approved': [
+          'containerGroup.warehouseArrival.approvedAt',
+          'containerGroup.warehouseArrival.approvedBy',
+        ],
         'shipment.containerGroup.deliveryReady.date': 'containerGroup.deliveryReady.date',
+        'shipment.containerGroup.deliveryReady.timelineDateRevisions': [
+          'containerGroup.deliveryReady.latestDate',
+          'containerGroup.deliveryReady.dateDifference',
+        ],
+        'shipment.containerGroup.deliveryReady.assignedTo':
+          'containerGroup.deliveryReady.assignedTo',
+        'shipment.containerGroup.deliveryReady.approved': [
+          'containerGroup.deliveryReady.approvedAt',
+          'containerGroup.deliveryReady.approvedBy',
+        ],
+        'shipment.files': 'files', // TODO
+        'shipment.todo': [
+          'todo.taskCount.count',
+          'todo.taskCount.remain',
+          'todo.taskCount.inProgress',
+          'todo.taskCount.completed',
+          'todo.taskCount.rejected',
+          'todo.taskCount.approved',
+          'todo.taskCount.skipped',
+          'todo.taskCount.delayed',
+        ],
+        'shipment.customField': 'customFields',
       },
       {
         'shipment.created': {
@@ -123,17 +254,46 @@ export default function({
     ),
     ...containerColumns(
       {
-        'container.created': 'containers.createdAt',
-        'container.updated': 'containers.updatedAt',
+        'container.created': ['containers.createdAt', 'containers.createdBy'],
+        'container.updated': ['containers.updatedAt', 'containers.updatedBy'],
+        'container.archived': 'containers.archived',
         'container.no': 'containers.no',
+        'container.containerType': 'containers.containerType',
+        'container.containerOption': 'containers.containerOption',
         'container.warehouseArrivalAgreedDate': 'containers.warehouseArrivalAgreedDate',
+        'container.warehouseArrivalAgreedDateAssignedTo':
+          'containers.warehouseArrivalAgreedDateAssignedTo',
+        'container.warehouseArrivalAgreedDateApproved': [
+          'containers.warehouseArrivalAgreedDateApprovedAt',
+          'containers.warehouseArrivalAgreedDateApprovedBy',
+        ],
         'container.warehouseArrivalActualDate': 'containers.warehouseArrivalActualDate',
+        'container.warehouseArrivalActualDateAssignedTo':
+          'containers.warehouseArrivalActualDateAssignedTo',
+        'container.warehouseArrivalActualDateApproved': [
+          'containers.warehouseArrivalActualDateApprovedAt',
+          'containers.warehouseArrivalActualDateApprovedBy',
+        ],
         'container.warehouse': 'containers.warehouse.name',
+        'container.freeTime': 'containers.freeTime',
         'container.freeTimeStartDate': 'containers.freeTimeStartDate',
         'container.freeTimeDuration': 'containers.freeTimeDuration',
+        'container.dueDate': 'containers.dueDate',
         'container.yardName': 'containers.yardName',
         'container.departureDate': 'containers.departureDate',
+        'container.departureDateAssignedTo': 'containers.departureDateAssignedTo',
+        'container.departureDateApproved': [
+          'containers.departureDateApprovedAt',
+          'containers.departureDateApprovedBy',
+        ],
+        'container.tags': 'containers.tags',
         'container.memo': 'containers.memo',
+        'container.totalPrice': ['containers.totalPrice.amount', 'containers.totalPrice.currency'],
+        'container.totalBatchQuantity': 'containers.totalQuantity',
+        'container.totalItems': 'containers.orderItemCount',
+        'container.totalPackages': 'containers.totalPackageQuantity',
+        'container.totalWeight': ['containers.totalWeight.value', 'containers.totalWeight.metric'],
+        'container.totalVolume': ['containers.totalVolume.value', 'containers.totalVolume.metric'],
       },
       {
         'container.created': {
@@ -186,8 +346,54 @@ export default function({
     ),
     ...batchColumns(
       {
+        'batch.created': ['containers.batches.createdAt', 'containers.batches.createdBy'],
+        'batch.updated': ['containers.batches.updatedAt', 'containers.batches.updatedBy'],
+        'batch.archived': 'containers.batches.archived',
         'batch.no': 'containers.batches.no',
+        'batch.deliveredAt': 'containers.batches.deliveredAt',
+        'batch.desiredAt': 'containers.batches.desiredAt',
+        'batch.expiredAt': 'containers.batches.expiredAt',
+        'batch.producedAt': 'containers.batches.producedAt',
+        'batch.tags': 'containers.batches.tags',
+        'batch.memo': 'containers.batches.memo',
+        'batch.latestQuantity': 'containers.batches.latestQuantity',
+        'batch.differenceQuantity': 'containers.batches.differenceQuantity',
         'batch.quantity': 'containers.batches.quantity',
+        'batch.producedQuantity': 'containers.batches.producedQuantity',
+        'batch.preShippedQuantity': 'containers.batches.preShippedQuantity',
+        'batch.shippedQuantity': 'containers.batches.shippedQuantity',
+        'batch.postShippedQuantity': 'containers.batches.postShippedQuantity',
+        'batch.deliveredQuantity': 'containers.batches.deliveredQuantity',
+        'batch.packageName': 'containers.batches.packageName',
+        'batch.packageCapacity': 'containers.batches.packageCapacity',
+        'batch.packageQuantity': 'containers.batches.packageQuantity',
+        'batch.packageGrossWeight': [
+          'containers.batches.packageGrossWeight.value',
+          'containers.batches.packageGrossWeight.metric',
+        ],
+        'batch.packageVolume': [
+          'containers.batches.packageVolume.value',
+          'containers.batches.packageVolume.metric',
+        ],
+        'batch.packageSize': [
+          'containers.batches.packageSize.length.value',
+          'containers.batches.packageSize.length.metric',
+          'containers.batches.packageSize.width.value',
+          'containers.batches.packageSize.width.metric',
+          'containers.batches.packageSize.height.value',
+          'containers.batches.packageSize.height.metric',
+        ],
+        'batch.todo': [
+          'containers.batches.todo.taskCount.count',
+          'containers.batches.todo.taskCount.remain',
+          'containers.batches.todo.taskCount.inProgress',
+          'containers.batches.todo.taskCount.completed',
+          'containers.batches.todo.taskCount.rejected',
+          'containers.batches.todo.taskCount.approved',
+          'containers.batches.todo.taskCount.skipped',
+          'containers.batches.todo.taskCount.delayed',
+        ],
+        'batch.customField': 'containers.batches.customFields',
       },
       {
         'batch.created': {
@@ -251,10 +457,36 @@ export default function({
     ),
     ...orderItemColumns(
       {
-        'orderItem.productProvider.product.name':
-          'containers.batches.orderItem.productProvider.product.name',
-        'orderItem.productProvider.product.serial':
-          'containers.batches.orderItem.productProvider.product.serial',
+        'orderItem.created': [
+          'containers.batches.orderItem.createdAt',
+          'containers.batches.orderItem.createdBy',
+        ],
+        'orderItem.updated': [
+          'containers.batches.orderItem.updatedAt',
+          'containers.batches.orderItem.updatedBy',
+        ],
+        'orderItem.archived': 'containers.batches.orderItem.archived',
+        'orderItem.no': 'containers.batches.orderItem.no',
+        'orderItem.quantity': 'containers.batches.orderItem.quantity',
+        'orderItem.price': [
+          'containers.batches.orderItem.price.amount',
+          'containers.batches.orderItem.price.currency',
+        ],
+        'orderItem.deliveryDate': 'containers.batches.orderItem.deliveryDate',
+        'orderItem.tags': 'containers.batches.orderItem.tags',
+        'orderItem.memo': 'containers.batches.orderItem.memo',
+        'orderItem.files': 'containers.batches.orderItem.files', // TODO
+        'orderItem.todo': [
+          'containers.batches.orderItem.todo.taskCount.count',
+          'containers.batches.orderItem.todo.taskCount.remain',
+          'containers.batches.orderItem.todo.taskCount.inProgress',
+          'containers.batches.orderItem.todo.taskCount.completed',
+          'containers.batches.orderItem.todo.taskCount.rejected',
+          'containers.batches.orderItem.todo.taskCount.approved',
+          'containers.batches.orderItem.todo.taskCount.skipped',
+          'containers.batches.orderItem.todo.taskCount.delayed',
+        ],
+        'orderItem.customField': 'containers.batches.orderItem.customFields',
       },
       {},
       orderItemFieldDefinitions
@@ -263,15 +495,58 @@ export default function({
         ![
           'orderItem.remainQuantity',
           'orderItem.totalBatched',
+          'orderItem.remainingBatchedQuantity',
           'orderItem.totalShipped',
+          'orderItem.remainingShippedQuantity',
           'orderItem.totalPrice',
           'orderItem.action',
         ].includes(c.key)
     ),
-    ...productColumns({}, {}, productFieldDefinitions),
+    ...productColumns(
+      {
+        'product.name': 'containers.batches.orderItem.productProvider.product.name',
+        'product.serial': 'containers.batches.orderItem.productProvider.product.serial',
+        'product.material': 'containers.batches.orderItem.productProvider.product.material',
+        'product.customField': 'containers.batches.orderItem.productProvider.product.customFields',
+      },
+      {},
+      productFieldDefinitions
+    ),
     ...orderColumns(
       {
+        'order.created': [
+          'containers.batches.orderItem.order.createdAt',
+          'containers.batches.orderItem.order.createdBy',
+        ],
+        'order.updated': [
+          'containers.batches.orderItem.order.updatedAt',
+          'containers.batches.orderItem.order.updatedBy',
+        ],
+        'order.archived': 'containers.batches.orderItem.order.archived',
         'order.poNo': 'containers.batches.orderItem.order.poNo',
+        'order.importer': 'containers.batches.orderItem.order.importer.name',
+        'order.exporter': 'containers.batches.orderItem.order.exporter.name',
+        'order.piNo': 'containers.batches.orderItem.order.piNo',
+        'order.issuedAt': 'containers.batches.orderItem.order.issuedAt',
+        'order.deliveryDate': 'containers.batches.orderItem.order.deliveryDate',
+        'order.currency': 'containers.batches.orderItem.order.currency',
+        'order.incoterm': 'containers.batches.orderItem.order.incoterm',
+        'order.deliveryPlace': 'containers.batches.orderItem.order.deliveryPlace',
+        'order.tags': 'containers.batches.orderItem.order.tags',
+        'order.memo': 'containers.batches.orderItem.order.memo',
+        'order.inCharges': 'containers.batches.orderItem.order.inCharges',
+        'order.files': 'containers.batches.orderItem.order.files', // TODO
+        'order.todo': [
+          'containers.batches.orderItem.order.todo.taskCount.count',
+          'containers.batches.orderItem.order.todo.taskCount.remain',
+          'containers.batches.orderItem.order.todo.taskCount.inProgress',
+          'containers.batches.orderItem.order.todo.taskCount.completed',
+          'containers.batches.orderItem.order.todo.taskCount.rejected',
+          'containers.batches.orderItem.order.todo.taskCount.approved',
+          'containers.batches.orderItem.order.todo.taskCount.skipped',
+          'containers.batches.orderItem.order.todo.taskCount.delayed',
+        ],
+        'order.customField': 'containers.batches.orderItem.order.customFields',
       },
       {},
       orderFieldDefinitions

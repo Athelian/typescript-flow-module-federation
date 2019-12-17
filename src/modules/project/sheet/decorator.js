@@ -1,16 +1,26 @@
 // @flow
 
-function decorateTask(task: Object): Object {
+export function decorateTask(task: Object): Object {
   return {
     ...task,
     approved: {
       user: task.approvedBy,
       date: task.approvedAt,
     },
+    startDateBindingData: {
+      date: task.startDate,
+      interval: task.startDateInterval,
+      binding: task.startDateBinding,
+    },
+    dueDateBindingData: {
+      date: task.dueDate,
+      interval: task.dueDateInterval,
+      binding: task.dueDateBinding,
+    },
   };
 }
 
-function decorateMilestone(milestone: Object): Object {
+export function decorateMilestone(milestone: Object): Object {
   return {
     ...milestone,
     tasks: milestone.tasks.map(task => {

@@ -18,9 +18,9 @@ export default defineMessages({
     id: 'components.Sheet.columnsConfigUnselectAllButton',
     defaultMessage: 'Un select all',
   },
-  columnsConfigSelectTemplate: {
-    id: 'components.Sheet.columnsConfigSelectTemplate',
-    defaultMessage: 'Select template',
+  columnsConfigUseTemplate: {
+    id: 'components.Sheet.columnsConfigUseTemplate',
+    defaultMessage: 'Use template',
   },
   columnsConfigSaveAsNew: {
     id: 'components.Sheet.columnsConfigSaveAsNew',

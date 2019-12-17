@@ -30,6 +30,7 @@ import WarehouseSelectorInput from './Inputs/WarehouseSelectorInput';
 import ToggleInput from './Inputs/ToggleInput';
 import LogsInput from './Inputs/LogsInput';
 import TasksInput from './Inputs/TasksInput';
+import TaskBindingInput from './Inputs/TaskBindingInput';
 import MainExporterInput from './Inputs/MainExporterInput';
 import MaskSelectorInput from './Inputs/MaskSelectorInput';
 
@@ -120,6 +121,7 @@ const inputs = {
   order_item_tasks: TasksInput.OrderItem,
   batch_tasks: TasksInput.Batch,
   shipment_tasks: TasksInput.Shipment,
+  date_binding: TaskBindingInput,
   // Other
   approval: ApprovalInput,
   date_revisions: DateRevisionsInput,

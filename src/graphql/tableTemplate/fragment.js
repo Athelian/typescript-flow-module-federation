@@ -1,13 +1,18 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const tableTemplateCardFragment = gql`
-  fragment tableTemplateCardFragment on MaskEdit {
+export const tableTemplateFragment = gql`
+  fragment tableTemplateFragment on MaskEdit {
     id
     name
     type
     memo
-    fields
+    columns {
+      ... on MaskEditColumn {
+        key
+        hidden
+      }
+    }
     updatedAt
     updatedBy {
       ...userAvatarFragment
@@ -15,4 +20,4 @@ export const tableTemplateCardFragment = gql`
   }
 `;
 
-export default tableTemplateCardFragment;
+export default tableTemplateFragment;

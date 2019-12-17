@@ -1,19 +1,17 @@
 // @flow
 import * as React from 'react';
-import { equals } from 'ramda';
 import { hasInPortal } from 'hooks/usePortalSlot';
 import { DIALOG_PORTAL_NAME } from 'components/Dialog';
 import { SLIDEVIEW_PORTAL_NAME } from 'components/SlideView';
 import cellReducer from './reducer';
 import { Actions } from './constants';
-import type { Action, CellValue, State, Mutator, ColumnConfig, ColumnSort, Mutate } from './types';
+import type { Action, CellValue, State, Mutator, ColumnSort, Mutate, ColumnState } from './types';
 
 type Props = {|
   items: Array<Object>,
-  columns: Array<ColumnConfig>,
+  columns: Array<ColumnState>,
   transformItem: (index: number, item: Object) => Array<Array<CellValue>>,
-  onLocalSort: (Array<Object>, Array<ColumnSort>) => Array<Object>,
-  onRemoteSort: (sorts: Array<ColumnSort>) => void,
+  onItemsSort: (Array<Object>, Array<ColumnSort>) => Array<Object>,
   onMutate: Mutator,
   children: React.Node,
 |};
@@ -24,8 +22,6 @@ const initialState: State = {
   rows: [],
   allRows: [],
   columns: [],
-  columnSorts: [],
-  columnWidths: {},
   entities: [],
   hoverAt: null,
   focusAt: null,
@@ -135,18 +131,16 @@ export const SheetState = ({
   columns,
   transformItem,
   onMutate,
-  onLocalSort,
-  onRemoteSort,
+  onItemsSort,
   children,
 }: Props) => {
-  const memoizedReducer = React.useCallback(cellReducer(transformItem, onLocalSort), [
+  const memoizedReducer = React.useCallback(cellReducer(transformItem, onItemsSort), [
     transformItem,
-    onLocalSort,
+    onItemsSort,
   ]);
   const [state, dispatch] = React.useReducer<State, Action>(memoizedReducer, initialState);
   const addedRowsRef = React.useRef([]);
   const removedRowsRef = React.useRef([]);
-  const remoteSortsRef = React.useRef<Array<ColumnSort>>([]);
   const memoizedMutate = React.useCallback(
     ({ cell, value, item }) => {
       const cellValue = state.rows[cell.x][cell.y];
@@ -209,19 +203,10 @@ export const SheetState = ({
     dispatch({
       type: Actions.REARRANGE_COLUMNS,
       payload: {
-        columns,
+        columns: columns.filter(c => !c.hidden),
       },
     });
   }, [columns]);
-
-  React.useEffect(() => {
-    const remoteSorts = state.columnSorts.filter(s => !s?.local);
-
-    if (!equals(remoteSorts, remoteSortsRef.current)) {
-      remoteSortsRef.current = remoteSorts;
-      onRemoteSort(remoteSorts);
-    }
-  }, [state.columnSorts, onRemoteSort]);
 
   React.useEffect(() => {
     if (!state.errorAt) {

@@ -5,14 +5,20 @@ import { equals } from 'ramda';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, BatchFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
-import { Sheet, ColumnsConfig, useSheet } from 'components/Sheet';
+import {
+  Sheet,
+  ColumnsConfig,
+  useSheet,
+  useColumnStates,
+  useExportedColumns,
+} from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { batchesExportQuery } from '../query';
-import batchColumns, { FieldDefinitionEntityTypes } from './columns';
+import batchColumns, { FieldDefinitionEntityTypes, BatchSheetColumnGroups } from './columns';
 import batchTransformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
@@ -47,25 +53,26 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
     loading,
     hasMore,
     onLoadMore,
-    columns,
-    setColumns,
     query,
     setQuery,
     filterBy,
     sortBy,
-    localSortBy,
+    setSortBy,
     setFilterBy,
-    onLocalSort,
-    onRemoteSort,
   } = useSheet({
-    columns: columnConfigs,
     itemsQuery: batchesQuery,
     initialFilterBy: { query: '', archived: false },
     initialSortBy: { updatedAt: 'DESCENDING' },
-    sorter,
     getItems,
     cacheKey: 'batch_sheet',
   });
+  const { columns, setColumns, columnStates } = useColumnStates({
+    columns: columnConfigs,
+    sortBy,
+    setSortBy,
+    cacheKey: 'batch_sheet',
+  });
+  const exportVariables = useExportedColumns(columnStates);
 
   if (!!batchIds && !equals(batchIdsRef.current, batchIds)) {
     setFilterBy({ query: '', ids: batchIds });
@@ -79,35 +86,34 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
 
         <Filter config={BatchFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <ColumnsConfig
-          config={columnConfigs}
-          columns={columns}
-          onChange={setColumns}
-          templateType="BatchSheet"
-        />
+        <ColumnsConfig columns={columns} templateType="BatchSheet" onChange={setColumns}>
+          {({ getGroupProps }) =>
+            BatchSheetColumnGroups.map(type => (
+              <ColumnsConfig.Group {...getGroupProps(type)} key={type} />
+            ))
+          }
+        </ColumnsConfig>
         <ExportButton
           type="Batches"
           exportQuery={batchesExportQuery}
           variables={{
             filterBy: { query, ...filterBy },
             sortBy,
-            localSortBy,
-            columns: columns.filter(c => !!c.exportKey).map(c => c.exportKey),
+            ...exportVariables,
           }}
         />
       </NavBar>
 
       <Sheet
-        columns={columns}
+        columns={columnStates}
         loading={loading}
         items={initialItems}
         hasMore={hasMore}
         transformItem={transformer}
         onMutate={memorizedMutate}
         handleEntityEvent={memorizedHandler}
-        onLocalSort={onLocalSort}
-        onRemoteSort={onRemoteSort}
         onLoadMore={onLoadMore}
+        onItemsSort={sorter}
         actions={{}}
       />
     </Content>
@@ -123,6 +129,7 @@ const BatchSheetModule = ({ batchIds }: Props) => {
 
   const allFieldDefinitions = {
     orderFieldDefinitions: fieldDefinitions?.Order ?? [],
+    productFieldDefinitions: fieldDefinitions?.Product ?? [],
     orderItemFieldDefinitions: fieldDefinitions?.OrderItem ?? [],
     batchFieldDefinitions: fieldDefinitions?.Batch ?? [],
     shipmentFieldDefinitions: fieldDefinitions?.Shipment ?? [],
