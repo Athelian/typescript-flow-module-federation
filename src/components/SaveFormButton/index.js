@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 import useBeforeUnload from 'hooks/useBeforeUnload';
 import emitter from 'utils/emitter';
@@ -30,9 +30,12 @@ const SaveFormButton = ({
   id,
   ...rest
 }: Props): React.Node => {
-  useBeforeUnload(
-    !disabled,
-    () => 'Are you sure you want to leave this page? Your changes will not be saved.'
+  const intl = useIntl();
+  useBeforeUnload(!disabled, () =>
+    intl.formatMessage({
+      id: 'components.form.confirmBeforeLeavePageMessage',
+      defaultMessage: 'Are you sure you want to leave this page? Your changes will not be saved.',
+    })
   );
 
   React.useEffect(() => {
