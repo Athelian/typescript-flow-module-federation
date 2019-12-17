@@ -57,7 +57,16 @@ export default function({
         'order.totalShipped': 'totalShipped',
         'order.totalPrice': ['totalPrice.amount', 'totalPrice.currency'],
         'order.files': 'files', // TODO
-        'order.todo': 'todo', // TODO
+        'order.todo': [
+          'todo.taskCount.count',
+          'todo.taskCount.remain',
+          'todo.taskCount.inProgress',
+          'todo.taskCount.completed',
+          'todo.taskCount.rejected',
+          'todo.taskCount.approved',
+          'todo.taskCount.skipped',
+          'todo.taskCount.delayed',
+        ],
         'order.customField': 'customFields',
       },
       {
@@ -112,7 +121,16 @@ export default function({
         'orderItem.remainingShippedQuantity': 'orderItems.remainingShippedQuantity',
         'orderItem.totalPrice': ['orderItems.totalPrice.amount', 'orderItems.totalPrice.currency'],
         'orderItem.files': 'orderItems.files', // TODO
-        'orderItem.todo': 'orderItems.todo', // TODO
+        'orderItem.todo': [
+          'orderItems.todo.taskCount.count',
+          'orderItems.todo.taskCount.remain',
+          'orderItems.todo.taskCount.inProgress',
+          'orderItems.todo.taskCount.completed',
+          'orderItems.todo.taskCount.rejected',
+          'orderItems.todo.taskCount.approved',
+          'orderItems.todo.taskCount.skipped',
+          'orderItems.todo.taskCount.delayed',
+        ],
         'orderItem.customField': 'orderItems.customFields',
       },
       {
@@ -209,7 +227,16 @@ export default function({
           'orderItems.batches.packageSize.height.value',
           'orderItems.batches.packageSize.height.metric',
         ],
-        'batch.todo': 'orderItems.batches.todo', // TODO
+        'batch.todo': [
+          'orderItems.batches.todo.taskCount.count',
+          'orderItems.batches.todo.taskCount.remain',
+          'orderItems.batches.todo.taskCount.inProgress',
+          'orderItems.batches.todo.taskCount.completed',
+          'orderItems.batches.todo.taskCount.rejected',
+          'orderItems.batches.todo.taskCount.approved',
+          'orderItems.batches.todo.taskCount.skipped',
+          'orderItems.batches.todo.taskCount.delayed',
+        ],
         'batch.customField': 'orderItems.batches.customFields',
       },
       {
@@ -524,7 +551,16 @@ export default function({
           'orderItems.batches.shipment.containerGroup.deliveryReady.approvedBy',
         ],
         'shipment.files': 'orderItems.batches.shipment.files', // TODO
-        'shipment.todo': 'orderItems.batches.shipment.todo', // TODO
+        'shipment.todo': [
+          'orderItems.batches.shipment.todo.taskCount.count',
+          'orderItems.batches.shipment.todo.taskCount.remain',
+          'orderItems.batches.shipment.todo.taskCount.inProgress',
+          'orderItems.batches.shipment.todo.taskCount.completed',
+          'orderItems.batches.shipment.todo.taskCount.rejected',
+          'orderItems.batches.shipment.todo.taskCount.approved',
+          'orderItems.batches.shipment.todo.taskCount.skipped',
+          'orderItems.batches.shipment.todo.taskCount.delayed',
+        ],
         'shipment.customField': 'orderItems.batches.shipment.customFields',
       },
       {
