@@ -11,8 +11,10 @@ type Props = {|
 
 function NavigateLink({ to, className, children }: Props) {
   const onClick = evt => {
-    evt.preventDefault();
-    emitter.emit('NAVIGATE_TO', to);
+    if (!evt.ctrlKey && !evt.shiftKey) {
+      evt.preventDefault();
+      emitter.emit('NAVIGATE_TO', to);
+    }
   };
   return (
     // $FlowFixMe Flow typed is not updated yet
