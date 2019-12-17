@@ -55,12 +55,38 @@ const getColumnsConfig = (type: string, customFields: ?Object): Array<ColumnConf
   }
 };
 
-export const computeColumnConfigsFromState = (state: Object): Array<ColumnConfig> => {
+export const computeColumnConfigsFromState = (
+  state: Object
+): Array<
+  | {
+      title: React$Node,
+      hidden: boolean,
+      key: string,
+    }
+  | Array<{
+      title: React$Node,
+      hidden: boolean,
+      key: string,
+    }>
+> => {
   if (state.type === 'ProjectSheet') {
-    return computeProjectColumnConfigsFromTemplate(state);
+    return computeProjectColumnConfigsFromTemplate(state).map(column => ({
+      title: column.title,
+      key: column.key,
+      hidden: !!column.hidden,
+    }));
   }
 
-  return getColumnsConfigured(
+  const groupBatchQuantityColumns = [
+    'batch.quantity',
+    'batch.producedQuantity',
+    'batch.preShippedQuantity',
+    'batch.shippedQuantity',
+    'batch.postShippedQuantity',
+    'batch.deliveredQuantity',
+  ];
+
+  const columns = getColumnsConfigured(
     getColumnsConfig(state.type, state.customFields),
     state.columns.reduce(
       (object, item) => ({
@@ -70,4 +96,31 @@ export const computeColumnConfigsFromState = (state: Object): Array<ColumnConfig
       {}
     )
   );
+
+  const mappingColumns = [];
+  let counter = 0;
+  columns.forEach((column, index) => {
+    if (groupBatchQuantityColumns.includes(column.key)) {
+      if (counter < groupBatchQuantityColumns.length) {
+        const quantityColumns = [];
+        while (counter < groupBatchQuantityColumns.length) {
+          quantityColumns.push({
+            title: columns[index + counter].title,
+            key: columns[index + counter].key,
+            hidden: !!columns[index + counter].hidden,
+          });
+          counter += 1;
+        }
+        mappingColumns.push(quantityColumns);
+      }
+    } else {
+      mappingColumns.push({
+        title: column.title,
+        key: column.key,
+        hidden: !!column.hidden,
+      });
+    }
+  });
+
+  return mappingColumns;
 };
