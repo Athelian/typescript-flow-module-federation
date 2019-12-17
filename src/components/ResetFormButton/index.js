@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';
-import { BaseButton } from 'components/Buttons';
+import { ResetButton } from 'components/Buttons';
 import useBeforeUnload from 'hooks/useBeforeUnload';
 import emitter from 'utils/emitter';
 
@@ -33,19 +33,7 @@ const ResetFormButton = ({ disabled, onClick, label, ...rest }: Props): React.No
     };
   }, [disabled]);
 
-  return (
-    <BaseButton
-      label={label}
-      textColor="GRAY_DARK"
-      hoverTextColor="WHITE"
-      backgroundColor="GRAY_SUPER_LIGHT"
-      hoverBackgroundColor="GRAY_LIGHT"
-      disabled={disabled}
-      onClick={onClick}
-      id="resetBtn"
-      {...rest}
-    />
-  );
+  return <ResetButton label={label} disabled={disabled} onClick={onClick} {...rest} />;
 };
 
 ResetFormButton.defaultProps = defaultProps;

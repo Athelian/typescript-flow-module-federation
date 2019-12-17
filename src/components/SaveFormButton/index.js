@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';
-import { BaseButton } from 'components/Buttons';
+import { SaveButton } from 'components/Buttons';
 import useBeforeUnload from 'hooks/useBeforeUnload';
 import emitter from 'utils/emitter';
 
@@ -46,16 +46,12 @@ const SaveFormButton = ({
   }, [disabled]);
 
   return (
-    <BaseButton
-      icon="CHECKED"
+    <SaveButton
       label={label}
-      backgroundColor="TEAL"
-      hoverBackgroundColor="TEAL_DARK"
       disabled={disabled}
       onClick={onClick}
       isLoading={isLoading}
       id={id}
-      data-testid="saveButton"
       {...rest}
     />
   );

@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { useIntl } from 'react-intl';
 import emitter from 'utils/emitter';
 
 type Props = {
@@ -7,9 +8,13 @@ type Props = {
 };
 
 export default function Page({ Component }: Props) {
+  const intl = useIntl();
   React.useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      const msg = 'Are you sure you want to leave this page? Your changes will not be saved.';
+      const msg = intl.formatMessage({
+        id: 'components.form.confirmBeforeLeavePageMessage',
+        defaultMessage: 'Are you sure you want to leave this page? Your changes will not be saved.',
+      });
       // eslint-disable-next-line no-param-reassign
       event.returnValue = msg;
       return msg;
