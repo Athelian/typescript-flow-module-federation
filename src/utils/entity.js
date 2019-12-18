@@ -7,6 +7,7 @@ const mappingRoutes = {
 
 const mappingIcon = {
   OrderItem: 'ORDER_ITEM',
+  orderItem: 'ORDER_ITEM',
 };
 
 export const parseRoute = (entityType: string) => {

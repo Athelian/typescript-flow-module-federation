@@ -1,5 +1,6 @@
 // @flow
 import type { ColumnConfig } from 'components/Sheet/SheetState/types';
+import type { Column } from 'components/DraggableColumn';
 import { getColumnsConfigured } from 'components/Sheet/useColumns';
 import orderColumns, { OrderSheetColumnGroups } from 'modules/order/sheet/columns';
 import shipmentColumns, { ShipmentSheetColumnGroups } from 'modules/shipment/sheet/columns';
@@ -8,6 +9,7 @@ import {
   computeProjectColumnConfigsFromTemplate,
   ProjectSheetColumnGroups,
 } from 'modules/project/sheet/columns';
+import { convertMappingColumns } from 'utils/template';
 
 export const getColumnGroupTypes = (type: string): Array<string> => {
   switch (type) {
@@ -55,20 +57,7 @@ const getColumnsConfig = (type: string, customFields: ?Object): Array<ColumnConf
   }
 };
 
-export const computeColumnConfigsFromState = (
-  state: Object
-): Array<
-  | {
-      title: React$Node,
-      hidden: boolean,
-      key: string,
-    }
-  | Array<{
-      title: React$Node,
-      hidden: boolean,
-      key: string,
-    }>
-> => {
+export const computeColumnConfigsFromState = (state: Object): Array<Column | Array<Column>> => {
   if (state.type === 'ProjectSheet') {
     return computeProjectColumnConfigsFromTemplate(state).map(column => ({
       title: column.title,
@@ -76,16 +65,6 @@ export const computeColumnConfigsFromState = (
       hidden: !!column.hidden,
     }));
   }
-
-  const groupBatchQuantityColumns = [
-    'batch.quantity',
-    'batch.producedQuantity',
-    'batch.preShippedQuantity',
-    'batch.shippedQuantity',
-    'batch.postShippedQuantity',
-    'batch.deliveredQuantity',
-  ];
-
   const columns = getColumnsConfigured(
     getColumnsConfig(state.type, state.customFields),
     state.columns.reduce(
@@ -97,30 +76,5 @@ export const computeColumnConfigsFromState = (
     )
   );
 
-  const mappingColumns = [];
-  let counter = 0;
-  columns.forEach((column, index) => {
-    if (groupBatchQuantityColumns.includes(column.key)) {
-      if (counter < groupBatchQuantityColumns.length) {
-        const quantityColumns = [];
-        while (counter < groupBatchQuantityColumns.length) {
-          quantityColumns.push({
-            title: columns[index + counter].title,
-            key: columns[index + counter].key,
-            hidden: !!columns[index + counter].hidden,
-          });
-          counter += 1;
-        }
-        mappingColumns.push(quantityColumns);
-      }
-    } else {
-      mappingColumns.push({
-        title: column.title,
-        key: column.key,
-        hidden: !!column.hidden,
-      });
-    }
-  });
-
-  return mappingColumns;
+  return convertMappingColumns(columns);
 };

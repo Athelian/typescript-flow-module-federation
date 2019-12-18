@@ -7,6 +7,7 @@ import { SectionHeader } from 'components/Form';
 import ColumnsGroup from 'components/ColumnsGroup';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import MilestoneTaskColumnsConfigGroup from 'modules/project/sheet/MilestoneTaskColumnsConfigGroup';
+import { parseIcon } from 'utils/entity';
 import { getColumnGroupTypes, computeColumnConfigsFromState } from './helpers';
 import { ColumnsConfigSectionWrapperStyle, ColumnsConfigSectionBodyStyle } from './style';
 
@@ -21,17 +22,10 @@ const ColumnsConfigSection = () => {
 
   const parsedColumns = React.useMemo(() => computeColumnConfigsFromState(state), [state]);
 
-  const parseIcon = (icon: string) => {
-    const mappingEntity = {
-      orderItem: 'ORDER_ITEM',
-    };
-    return mappingEntity[icon] || icon.toUpperCase();
-  };
-
   const groupedColumns = React.useMemo(
     () =>
       parsedColumns.reduce((grouped, col) => {
-        const [icon = ''] = Array.isArray(col) ? col?.[0].key.split('.') : col?.key.split('.');
+        const [icon = ''] = Array.isArray(col) ? col?.[0]?.key?.split('.') : col?.key?.split('.');
         return {
           ...grouped,
           [parseIcon(icon)]: [...(grouped[parseIcon(icon)] ?? []), col],

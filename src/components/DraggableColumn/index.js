@@ -7,7 +7,7 @@ import { ColumnStyle } from './style';
 
 export type Column = {
   title: React$Node,
-  hidden: boolean,
+  hidden?: boolean,
   key: string,
 };
 

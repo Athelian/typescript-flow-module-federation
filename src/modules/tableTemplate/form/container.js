@@ -140,7 +140,7 @@ const useTableTemplateFormContainer = (initialState: State = defaultState) => {
               if (column.some(({ hidden }) => !hidden)) {
                 columns.push(...column);
               } else {
-                hiddenColumns.push(column);
+                hiddenColumns.push(...column);
               }
             } else if (column.hidden) {
               hiddenColumns.push(column);
