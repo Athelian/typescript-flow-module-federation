@@ -573,8 +573,8 @@ function BatchesArea({
                             {selectBatchesIsOpen && (
                               <SelectShipmentBatches
                                 filter={{
-                                  importerId,
-                                  ...(exporterId ? { exporterId } : {}),
+                                  orderImporterIds: [importerId],
+                                  orderExporterIds: exporterId ? [exporterId] : null,
                                 }}
                                 selectedBatches={batches}
                                 onSelect={selected => {
