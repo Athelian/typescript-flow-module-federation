@@ -10,7 +10,9 @@ type Props = {
 
 const SingleCardSection = ({ navbarContent, children }: Props) => (
   <div className={SingleCardSectionWrapperStyle}>
-    <SectionNavBar>{navbarContent}</SectionNavBar>
+    <SectionNavBar>
+      <>{navbarContent}</>
+    </SectionNavBar>
 
     <div className={SingleCardSectionBodyStyle}>{children}</div>
   </div>

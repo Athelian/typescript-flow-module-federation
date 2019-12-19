@@ -38,7 +38,7 @@ const DocumentSection = () => {
   const getFormFieldProps = (name: string) => {
     return {
       name,
-      initValue: originalState[name],
+      initValue: state[name],
       validator,
       values: state,
       setFieldValue,
@@ -66,7 +66,7 @@ const DocumentSection = () => {
 
       <Section>
         <GridColumn>
-          <FormField {...getFormFieldProps('type')}>
+          <FormField {...getFormFieldProps('type')} saveOnChange>
             {inputHandlers => (
               <SelectInputFactory
                 {...inputHandlers}
@@ -79,7 +79,7 @@ const DocumentSection = () => {
             )}
           </FormField>
 
-          <FormField {...getFormFieldProps('status')}>
+          <FormField {...getFormFieldProps('status')} saveOnChange>
             {({ ...inputHandlers }) => (
               <EnumSelectInputFactory
                 {...inputHandlers}

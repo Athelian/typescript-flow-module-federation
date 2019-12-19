@@ -10,7 +10,9 @@ type Props = {
 
 const ScrollingSection = ({ navbarContent, children }: Props) => (
   <div className={ScrollingSectionWrapperStyle}>
-    <SectionNavBar>{navbarContent}</SectionNavBar>
+    <SectionNavBar>
+      <>{navbarContent}</>
+    </SectionNavBar>
 
     <div className={ScrollingSectionBodyStyle}>{children}</div>
   </div>
