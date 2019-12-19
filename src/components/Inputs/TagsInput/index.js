@@ -20,7 +20,7 @@ export type RenderInputProps = {
   isOpen: boolean,
   disabled?: boolean,
   selectedItems: Array<Item>,
-  getInputProps: Function,
+  getInputProps: Object => Object,
   remove: Item => void,
 };
 
@@ -44,8 +44,8 @@ type OptionsProps = {
   highlightedIndex: ?number,
   closeMenu: () => any,
   optionWidth: number,
-  getMenuProps: Function,
-  getItemProps: Function,
+  getMenuProps: Object => Object,
+  getItemProps: Object => Object,
 };
 
 type OptionProps = {
@@ -53,7 +53,7 @@ type OptionProps = {
   style: Object,
   data: {
     tags: Array<Item>,
-    getItemProps: Function,
+    getItemProps: Object => Object,
     highlightedIndex: ?number,
     selectedItems: Array<Item>,
   },
@@ -172,6 +172,7 @@ const stateReducer = (state: Object, changes: Object) => {
     case Downshift.stateChangeTypes.clickItem:
       return {
         ...changes,
+        highlightedIndex: state.highlightedIndex,
         isOpen: true,
         inputValue: '',
       };
@@ -231,9 +232,9 @@ const TagsInput = ({
             disabled,
             selectedItems: value,
             remove: handleRemove,
-            getInputProps: props =>
+            getInputProps: inputProps =>
               getInputProps({
-                ...props,
+                ...inputProps,
                 ref: ref => {
                   if (inputRef) {
                     // eslint-disable-next-line no-param-reassign
@@ -249,6 +250,10 @@ const TagsInput = ({
                     if (!inputValue && value.length > 0 && !e.repeat) {
                       handleRemove(value[value.length - 1]);
                     }
+                  }
+
+                  if (inputProps.onKeyDown) {
+                    inputProps.onKeyDown(e);
                   }
                 },
                 onFocus,

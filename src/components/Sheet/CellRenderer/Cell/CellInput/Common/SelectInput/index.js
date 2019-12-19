@@ -39,12 +39,12 @@ const Select = ({
         className={SelectInputStyle(!!selectedItem)}
         {...getToggleButtonProps({
           onKeyDown: e => {
-            if (e.key === 'ArrowDown' || (isOpen && e.key === 'ArrowUp')) {
-              e.stopPropagation();
-            }
-
-            if (e.key === 'Enter' && isOpen) {
-              e.preventDefault();
+            if (e.key === 'Enter') {
+              if (isOpen) {
+                e.stopPropagation();
+              } else {
+                e.preventDefault();
+              }
             }
           },
         })}
