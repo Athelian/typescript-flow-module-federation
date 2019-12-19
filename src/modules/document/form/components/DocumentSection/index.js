@@ -1,8 +1,13 @@
 // @flow
 import * as React from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';
-// import { useViewerHasPermissions } from 'contexts/Permissions';
-// import { TEMPLATE_CREATE, TEMPLATE_UPDATE } from 'modules/permission/constants/template';
+import { useEntityHasPermissions } from 'contexts/Permissions';
+import {
+  DOCUMENT_UPDATE,
+  DOCUMENT_SET_TYPE,
+  DOCUMENT_SET_STATUS,
+  DOCUMENT_SET_MEMO,
+} from 'modules/permission/constants/file';
 import validator from 'modules/tableTemplate/form/validator';
 import { FormField } from 'modules/form';
 import {
@@ -30,10 +35,8 @@ const DocumentSection = () => {
   const { state, originalState, setFieldValue } = DocumentFormContainer.useContainer();
   const intl = useIntl();
 
-  // const hasPermissions = useViewerHasPermissions();
-  // const canUpdate = hasPermissions(blahblah);
-  // TODO: Replace with real permissions
-  const canUpdate = true;
+  const hasPermissions = useEntityHasPermissions(state);
+  const canUpdate = hasPermissions(DOCUMENT_UPDATE);
 
   const getFormFieldProps = (name: string) => {
     return {
@@ -71,7 +74,7 @@ const DocumentSection = () => {
               <SelectInputFactory
                 {...inputHandlers}
                 label={<FormattedMessage id="modules.Documents.type" defaultMessage="Type" />}
-                editable={canUpdate}
+                editable={canUpdate || hasPermissions(DOCUMENT_SET_TYPE)}
                 originalValue={originalState.type}
                 required
                 items={getFileTypesByEntity(state.entity?.__typename, intl)}
@@ -84,7 +87,7 @@ const DocumentSection = () => {
               <EnumSelectInputFactory
                 {...inputHandlers}
                 label={<FormattedMessage id="modules.Documents.status" defaultMessage="Status" />}
-                editable={canUpdate}
+                editable={canUpdate || hasPermissions(DOCUMENT_SET_STATUS)}
                 originalValue={originalState.status}
                 required
                 enumType="FileStatus"
@@ -97,7 +100,7 @@ const DocumentSection = () => {
               <TextAreaInputFactory
                 {...inputHandlers}
                 label={<FormattedMessage id="modules.Documents.memo" defaultMessage="Memo" />}
-                editable={canUpdate}
+                editable={canUpdate || hasPermissions(DOCUMENT_SET_MEMO)}
                 originalValue={originalState.memo}
                 inputWidth="400px"
               />

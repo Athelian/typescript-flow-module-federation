@@ -12,7 +12,7 @@ type State = {
   size: ?number,
   path: ?string,
   memo: ?string,
-  entity: ?Object,
+  entity: ?{ id: string, __typename: string },
   order: ?Object,
   orderItem: ?Object,
   shipment: ?Object,
