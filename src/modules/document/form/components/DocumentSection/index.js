@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';
-import { useViewerHasPermissions } from 'contexts/Permissions';
+// import { useViewerHasPermissions } from 'contexts/Permissions';
 // import { TEMPLATE_CREATE, TEMPLATE_UPDATE } from 'modules/permission/constants/template';
 import validator from 'modules/tableTemplate/form/validator';
 import { FormField } from 'modules/form';
@@ -30,9 +30,10 @@ const DocumentSection = () => {
   const { state, originalState, setFieldValue } = DocumentFormContainer.useContainer();
   const intl = useIntl();
 
-  const hasPermissions = useViewerHasPermissions();
+  // const hasPermissions = useViewerHasPermissions();
+  // const canUpdate = hasPermissions(blahblah);
   // TODO: Replace with real permissions
-  const canUpdate = hasPermissions(null) || true;
+  const canUpdate = true;
 
   const getFormFieldProps = (name: string) => {
     return {

@@ -13,7 +13,7 @@ import DocumentForm from 'modules/document/form';
 import documentQuery from 'modules/document/form/query';
 
 type Props = {
-  documentId: string,
+  documentId?: string,
 };
 
 type ImplProps = {
