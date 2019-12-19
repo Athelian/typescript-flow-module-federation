@@ -8,7 +8,7 @@ type Props = {
   children: React$Node,
 };
 
-const ScrollingSection = ({ navbarContent, children }: Props) => (
+const ScrollingSection = ({ navbarContent = null, children }: Props) => (
   <div className={ScrollingSectionWrapperStyle}>
     <SectionNavBar>{navbarContent}</SectionNavBar>
 

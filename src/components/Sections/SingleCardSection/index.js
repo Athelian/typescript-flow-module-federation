@@ -8,7 +8,7 @@ type Props = {
   children: React$Node,
 };
 
-const SingleCardSection = ({ navbarContent, children }: Props) => (
+const SingleCardSection = ({ navbarContent = null, children }: Props) => (
   <div className={SingleCardSectionWrapperStyle}>
     <SectionNavBar>{navbarContent}</SectionNavBar>
 
