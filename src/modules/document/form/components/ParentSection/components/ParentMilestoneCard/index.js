@@ -4,7 +4,7 @@ import { navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { MilestoneCard } from 'components/Cards';
 import { useEntityHasPermissions } from 'contexts/Permissions';
-import { MILESTONE_FORM } from 'modules/permission/constants/milestone';
+import { PROJECT_FORM } from 'modules/permission/constants/project';
 
 type Props = {
   milestone: Object,
@@ -17,7 +17,7 @@ const ParentMilestoneCard = ({ milestone }: Props) => {
     <MilestoneCard
       milestone={milestone}
       onClick={() => {
-        if (hasPermissions(MILESTONE_FORM) && !!milestone?.id) {
+        if (hasPermissions(PROJECT_FORM) && !!milestone?.project?.id) {
           navigate(`/project/${encodeId(milestone?.project?.id)}`);
         }
       }}

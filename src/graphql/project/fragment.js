@@ -59,6 +59,9 @@ export const milestoneCardFragment = gql`
     project {
       ... on Project {
         id
+        ownedBy {
+          ...ownedByFragment
+        }
       }
     }
   }
