@@ -1,8 +1,10 @@
 // @flow
 import * as React from 'react';
 import type { FilePayload } from 'generated/graphql';
+import { navigate } from '@reach/router';
 import { intersection } from 'lodash';
 import { FormattedMessage } from 'react-intl';
+import { encodeId } from 'utils/id';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import GridView from 'components/GridView';
 import DocumentCard from 'components/Cards/DocumentCard';
@@ -19,6 +21,7 @@ import {
 import { SHIPMENT_FORM, SHIPMENT_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/shipment';
 import { PROJECT_FORM } from 'modules/permission/constants/project';
 import { MILESTONE_DOCUMENTS_DOWNLOAD } from 'modules/permission/constants/milestone';
+import { DOCUMENT_FORM } from 'modules/permission/constants/file';
 import { getParentInfo } from 'utils/task';
 import { getByPathWithDefault } from 'utils/fp';
 
@@ -71,6 +74,11 @@ const defaultRenderItem = (file: FilePayload): React$Node => (
             status: false,
             type: false,
             memo: false,
+          }}
+          onClick={() => {
+            if (hasPermission(DOCUMENT_FORM)) {
+              navigate(`/document/${encodeId(file.id)}`);
+            }
           }}
         />
       );

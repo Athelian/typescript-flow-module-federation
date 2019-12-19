@@ -29,7 +29,7 @@ import {
   FileNameStyle,
   StatusAndButtonsWrapperStyle,
   MemoButtonStyle,
-  FileStatusColoringWrapper,
+  FileStatusColoringWrapperStyle,
   DownloadButtonStyle,
   MemoWrapperStyle,
   MemoTitleStyle,
@@ -58,6 +58,7 @@ type Props = {|
   downloadable?: boolean,
   navigable?: boolean,
   onChange?: (field: string, value: mixed) => void,
+  onClick?: Function,
 |};
 
 export const getFileTypesByEntity = (
@@ -150,7 +151,12 @@ export const getFileTypesByEntity = (
       ];
 
     default:
-      return [];
+      return [
+        {
+          value: 'Document',
+          label: intl.formatMessage(shipmentMessages.document),
+        },
+      ];
   }
 };
 
@@ -165,6 +171,7 @@ const DocumentCard = ({
   navigable,
   intl,
   onChange,
+  onClick,
 }: Props) => {
   cardHeight = hideParentInfo ? '185px' : '210px';
   const memoHeight = hideParentInfo ? '150px' : '175px';
@@ -184,6 +191,7 @@ const DocumentCard = ({
       readOnly={!editable}
       icon="DOCUMENT"
       color="DOCUMENT"
+      onClick={onClick}
     >
       <div className={DocumentCardWrapperStyle(cardHeight)} role="presentation">
         {!hideParentInfo && (
@@ -230,7 +238,10 @@ const DocumentCard = ({
         <div className={StatusAndButtonsWrapperStyle}>
           <button
             className={MemoButtonStyle(!!getByPathWithDefault('', 'memo', file))}
-            onClick={() => setShowMemo(true)}
+            onClick={e => {
+              e.stopPropagation();
+              setShowMemo(true);
+            }}
             type="button"
           >
             <Icon icon="MEMO" />
@@ -244,7 +255,7 @@ const DocumentCard = ({
           >
             {({ ...inputHandlers }) => (
               <span
-                className={FileStatusColoringWrapper(
+                className={FileStatusColoringWrapperStyle(
                   getByPathWithDefault('', 'status', file),
                   editable.status
                 )}
@@ -267,7 +278,8 @@ const DocumentCard = ({
           {downloadable ? (
             <button
               className={DownloadButtonStyle(false)}
-              onClick={() => {
+              onClick={e => {
+                e.stopPropagation();
                 window.open(getByPathWithDefault('', 'path', file), '_blank');
               }}
               type="button"
@@ -296,7 +308,14 @@ const DocumentCard = ({
               <FormattedMessage {...orderMessages.memo} />
             </Label>
 
-            <button className={CloseButtonStyle} onClick={() => setShowMemo(false)} type="button">
+            <button
+              className={CloseButtonStyle}
+              onClick={e => {
+                e.stopPropagation();
+                setShowMemo(false);
+              }}
+              type="button"
+            >
               <Icon icon="CHEVRON_DOWN" />
             </button>
           </div>

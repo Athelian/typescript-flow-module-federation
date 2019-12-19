@@ -30,7 +30,7 @@ const iconExtensionMap = [
   {
     icon: 'IMAGE',
     color: 'PURPLE',
-    extensions: ['tif', 'tiff', 'png', 'gif', 'jpg', 'jpeg', 'jpe', 'bmp', 'raw'],
+    extensions: ['tif', 'tiff', 'png', 'gif', 'jpg', 'jpeg', 'jpe', 'bmp', 'raw', 'webp'],
   },
   {
     icon: 'PDF',
@@ -59,6 +59,6 @@ export const computeIcon = (fileExtension: string) => {
   return { icon: 'DOCUMENT', color: 'GRAY_LIGHT' };
 };
 
-export const getFileExtension = (filePath: string): string => filePath.split('.').pop();
+export const getFileExtension = (filePath: ?string): string => (filePath ?? '').split('.').pop();
 
-export const getFileName = (filePath: string): string => filePath.split('.').shift();
+export const getFileName = (filePath: ?string): string => (filePath ?? '').split('.').shift();

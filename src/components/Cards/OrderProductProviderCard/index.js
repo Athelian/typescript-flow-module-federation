@@ -110,7 +110,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
               <button
                 className={ProductImageChevronButtonStyle('left')}
                 onClick={evt => {
-                  evt.preventDefault();
+                  evt.stopPropagation();
                   this.navigateImages('left');
                 }}
                 type="button"
@@ -122,7 +122,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
               <button
                 className={ProductImageChevronButtonStyle('right')}
                 onClick={evt => {
-                  evt.preventDefault();
+                  evt.stopPropagation();
                   this.navigateImages('right');
                 }}
                 type="button"

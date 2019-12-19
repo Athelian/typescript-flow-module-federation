@@ -56,6 +56,11 @@ export const milestoneCardFragment = gql`
     taskCount {
       ...taskCountFragment
     }
+    project {
+      ... on Project {
+        id
+      }
+    }
   }
   ${taskCountFragment}
 `;

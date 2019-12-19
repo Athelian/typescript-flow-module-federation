@@ -91,7 +91,7 @@ const getFileStatusColor = (status: string): { textColor: string, backgroundColo
   }
 };
 
-export const FileStatusColoringWrapper = (status: string, editable: boolean) => {
+export const FileStatusColoringWrapperStyle = (status: string, editable: boolean) => {
   const coloring = getFileStatusColor(status);
 
   if (editable) {

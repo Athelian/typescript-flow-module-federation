@@ -7,7 +7,6 @@ import FormattedNumber from 'components/FormattedNumber';
 import TaskStatusChart from 'components/TaskStatusChart';
 import Icon from 'components/Icon';
 import withForbiddenCard from 'hoc/withForbiddenCard';
-
 import BaseCard from '../BaseCard';
 import {
   MilestoneCardStyle,
