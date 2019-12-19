@@ -1,5 +1,4 @@
 // @flow
-import * as React from 'react';
 
 type Props = {|
   value: ?number,
@@ -18,11 +17,7 @@ const FormattedBytes = ({ value, decimals = 2 }: Props) => {
 
   const i = Math.floor(Math.log(value) / Math.log(K_CONSTANT));
 
-  return (
-    <>
-      {parseFloat((value / K_CONSTANT ** i).toFixed(dm))} {SIZE_SUFFIXES[i]}
-    </>
-  );
+  return `${parseFloat((value / K_CONSTANT ** i).toFixed(dm))} ${SIZE_SUFFIXES[i]}`;
 };
 
 export default FormattedBytes;
