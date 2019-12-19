@@ -8,7 +8,13 @@ import { isForbidden } from 'utils/data';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import { TagsSelectStyle, RemoveButtonStyle, TagsInputWrapperStyle } from './style';
 
-const TagInputRenderer = ({ disabled, getInputProps, remove, selectedItems }: RenderInputProps) => (
+const TagInputRenderer = ({
+  disabled,
+  getInputProps,
+  remove,
+  isOpen,
+  selectedItems,
+}: RenderInputProps) => (
   <div className={TagsSelectStyle}>
     {(selectedItems || [])
       .filter(item => !isForbidden(item))
@@ -36,6 +42,12 @@ const TagInputRenderer = ({ disabled, getInputProps, remove, selectedItems }: Re
       {...getInputProps({
         spellCheck: false,
         'data-focus-first': true,
+        onKeyDown: e => {
+          if (e.key === 'Enter' && isOpen) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        },
       })}
     />
   </div>

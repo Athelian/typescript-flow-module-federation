@@ -34,13 +34,12 @@ const Select = ({
     spellCheck: false,
     placeholder: intl.formatMessage(messages.defaultSelectPlaceholder),
     onKeyDown: e => {
-      if (
-        e.key === 'ArrowLeft' ||
-        e.key === 'ArrowRight' ||
-        e.key === 'ArrowDown' ||
-        (isOpen && e.key === 'ArrowUp')
-      ) {
-        e.stopPropagation();
+      if (e.key === 'Enter') {
+        if (isOpen) {
+          e.stopPropagation();
+        } else {
+          e.preventDefault();
+        }
       }
     },
   });
