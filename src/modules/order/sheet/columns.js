@@ -423,6 +423,9 @@ export default function({
         'shipment.inCharges': 'orderItems.batches.shipment.inCharges',
         'shipment.numOfVoyages': 'orderItems.batches.shipment.numOfVoyages',
         'shipment.cargoReady.date': 'orderItems.batches.shipment.cargoReady.date',
+        'shipment.cargoReady.currentDate': 'orderItems.batches.shipment.cargoReady.currentDate',
+        'shipment.cargoReady.differenceDate':
+          'orderItems.batches.shipment.cargoReady.differenceDate',
         'shipment.cargoReady.timelineDateRevisions': [
           'orderItems.batches.shipment.cargoReady.latestDate',
           'orderItems.batches.shipment.cargoReady.dateDifference',
@@ -433,6 +436,10 @@ export default function({
           'orderItems.batches.shipment.cargoReady.approvedBy',
         ],
         'shipment.voyage.0.departurePort': 'orderItems.batches.shipment.voyage_1.departurePort',
+        'shipment.voyage.0.departure.currentDate':
+          'orderItems.batches.shipment.voyage_1.departure.currentDate',
+        'shipment.voyage.0.departure.differenceDate':
+          'orderItems.batches.shipment.voyage_1.departure.differenceDate',
         'shipment.voyage.0.departure.date': 'orderItems.batches.shipment.voyage_1.departure.date',
         'shipment.voyage.0.departure.timelineDateRevisions': [
           'orderItems.batches.shipment.voyage_1.departure.latestDate',
@@ -449,6 +456,10 @@ export default function({
         'shipment.voyage.0.firstTransitPort': 'orderItems.batches.shipment.voyage_1.arrivalPort',
         'shipment.voyage.0.firstTransitArrival.date':
           'orderItems.batches.shipment.voyage_1.arrival.date',
+        'shipment.voyage.0.firstTransitArrival.currentDate':
+          'orderItems.batches.shipment.voyage_1.arrival.currentDate',
+        'shipment.voyage.0.firstTransitArrival.differenceDate':
+          'orderItems.batches.shipment.voyage_1.arrival.differenceDate',
         'shipment.voyage.0.firstTransitArrival.timelineDateRevisions': [
           'orderItems.batches.shipment.voyage_1.arrival.latestDate',
           'orderItems.batches.shipment.voyage_1.arrival.dateDifference',
@@ -461,6 +472,10 @@ export default function({
         ],
         'shipment.voyage.1.firstTransitDeparture.date':
           'orderItems.batches.shipment.voyage_2.departure.date',
+        'shipment.voyage.1.firstTransitDeparture.currentDate':
+          'orderItems.batches.shipment.voyage_2.departure.currentDate',
+        'shipment.voyage.1.firstTransitDeparture.differenceDate':
+          'orderItems.batches.shipment.voyage_2.departure.differenceDate',
         'shipment.voyage.1.firstTransitDeparture.timelineDateRevisions': [
           'orderItems.batches.shipment.voyage_2.departure.latestDate',
           'orderItems.batches.shipment.voyage_2.departure.dateDifference',
@@ -476,6 +491,10 @@ export default function({
         'shipment.voyage.1.secondTransitPort': 'orderItems.batches.shipment.voyage_2.departurePort',
         'shipment.voyage.1.secondTransitArrival.date':
           'orderItems.batches.shipment.voyage_2.arrival.date',
+        'shipment.voyage.1.secondTransitArrival.currentDate':
+          'orderItems.batches.shipment.voyage_2.arrival.currentDate',
+        'shipment.voyage.1.secondTransitArrival.differenceDate':
+          'orderItems.batches.shipment.voyage_2.arrival.differenceDate',
         'shipment.voyage.1.secondTransitArrival.timelineDateRevisions': [
           'orderItems.batches.shipment.voyage_2.arrival.latestDate',
           'orderItems.batches.shipment.voyage_2.arrival.dateDifference',
@@ -488,6 +507,10 @@ export default function({
         ],
         'shipment.voyage.2.secondTransitDeparture.date':
           'orderItems.batches.shipment.voyage_3.departure.date',
+        'shipment.voyage.2.secondTransitDeparture.currentDate':
+          'orderItems.batches.shipment.voyage_3.departure.currentDate',
+        'shipment.voyage.2.secondTransitDeparture.differenceDate':
+          'orderItems.batches.shipment.voyage_3.departure.differenceDate',
         'shipment.voyage.2.secondTransitDeparture.timelineDateRevisions': [
           'orderItems.batches.shipment.voyage_3.departure.latestDate',
           'orderItems.batches.shipment.voyage_3.departure.dateDifference',
@@ -514,6 +537,10 @@ export default function({
         ],
         'shipment.containerGroup.customClearance.date':
           'orderItems.batches.shipment.containerGroup.customClearance.date',
+        'shipment.containerGroup.customClearance.currentDate':
+          'orderItems.batches.shipment.containerGroup.customClearance.currentDate',
+        'shipment.containerGroup.customClearance.differenceDate':
+          'orderItems.batches.shipment.containerGroup.customClearance.differenceDate',
         'shipment.containerGroup.customClearance.timelineDateRevisions': [
           'orderItems.batches.shipment.containerGroup.customClearance.latestDate',
           'orderItems.batches.shipment.containerGroup.customClearance.dateDifference',
@@ -528,6 +555,10 @@ export default function({
           'orderItems.batches.shipment.containerGroup.warehouse.name',
         'shipment.containerGroup.warehouseArrival.date':
           'orderItems.batches.shipment.containerGroup.warehouseArrival.date',
+        'shipment.containerGroup.warehouseArrival.currentDate':
+          'orderItems.batches.shipment.containerGroup.warehouseArrival.currentDate',
+        'shipment.containerGroup.warehouseArrival.differenceDate':
+          'orderItems.batches.shipment.containerGroup.warehouseArrival.differenceDate',
         'shipment.containerGroup.warehouseArrival.timelineDateRevisions': [
           'orderItems.batches.shipment.containerGroup.warehouseArrival.latestDate',
           'orderItems.batches.shipment.containerGroup.warehouseArrival.dateDifference',
@@ -540,6 +571,10 @@ export default function({
         ],
         'shipment.containerGroup.deliveryReady.date':
           'orderItems.batches.shipment.containerGroup.deliveryReady.date',
+        'shipment.containerGroup.deliveryReady.currentDate':
+          'orderItems.batches.shipment.containerGroup.deliveryReady.currentDate',
+        'shipment.containerGroup.deliveryReady.differenceDate':
+          'orderItems.batches.shipment.containerGroup.deliveryReady.differenceDate',
         'shipment.containerGroup.deliveryReady.timelineDateRevisions': [
           'orderItems.batches.shipment.containerGroup.deliveryReady.latestDate',
           'orderItems.batches.shipment.containerGroup.deliveryReady.dateDifference',

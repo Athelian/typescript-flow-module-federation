@@ -69,6 +69,8 @@ export default function({
         'shipment.totalVolume': ['totalVolume.value', 'totalVolume.metric'],
         'shipment.numOfVoyages': 'numOfVoyages',
         'shipment.cargoReady.date': 'cargoReady.date',
+        'shipment.cargoReady.currentDate': 'cargoReady.currentDate',
+        'shipment.cargoReady.differenceDate': 'cargoReady.differenceDate',
         'shipment.cargoReady.timelineDateRevisions': [
           'cargoReady.latestDate',
           'cargoReady.dateDifference',
@@ -77,6 +79,8 @@ export default function({
         'shipment.cargoReady.approved': ['cargoReady.approvedAt', 'cargoReady.approvedBy'],
         'shipment.voyage.0.departurePort': 'voyage_1.departurePort',
         'shipment.voyage.0.departure.date': 'voyage_1.departure.date',
+        'shipment.voyage.0.departure.currentDate': 'voyage_1.departure.currentDate',
+        'shipment.voyage.0.departure.differenceDate': 'voyage_1.departure.differenceDate',
         'shipment.voyage.0.departure.timelineDateRevisions': [
           'voyage_1.departure.latestDate',
           'voyage_1.departure.dateDifference',
@@ -90,6 +94,8 @@ export default function({
         'shipment.voyage.0.vesselCode': 'voyage_1.vesselCode',
         'shipment.voyage.0.firstTransitPort': 'voyage_1.arrivalPort',
         'shipment.voyage.0.firstTransitArrival.date': 'voyage_1.arrival.date',
+        'shipment.voyage.0.firstTransitArrival.currentDate': 'voyage_1.arrival.currentDate',
+        'shipment.voyage.0.firstTransitArrival.differenceDate': 'voyage_1.arrival.differenceDate',
         'shipment.voyage.0.firstTransitArrival.timelineDateRevisions': [
           'voyage_1.arrival.latestDate',
           'voyage_1.arrival.dateDifference',
@@ -100,6 +106,9 @@ export default function({
           'voyage_1.arrival.approvedBy',
         ],
         'shipment.voyage.1.firstTransitDeparture.date': 'voyage_2.departure.date',
+        'shipment.voyage.1.firstTransitDeparture.currentDate': 'voyage_2.departure.currentDate',
+        'shipment.voyage.1.firstTransitDeparture.differenceDate':
+          'voyage_2.departure.differenceDate',
         'shipment.voyage.1.firstTransitDeparture.timelineDateRevisions': [
           'voyage_2.departure.latestDate',
           'voyage_2.departure.dateDifference',
@@ -113,6 +122,8 @@ export default function({
         'shipment.voyage.1.vesselCode': 'voyage_2.vesselCode',
         'shipment.voyage.1.secondTransitPort': 'voyage_2.departurePort',
         'shipment.voyage.1.secondTransitArrival.date': 'voyage_2.arrival.date',
+        'shipment.voyage.1.secondTransitArrival.currentDate': 'voyage_2.arrival.currentDate',
+        'shipment.voyage.1.secondTransitArrival.differenceDate': 'voyage_2.arrival.differenceDate',
         'shipment.voyage.1.secondTransitArrival.timelineDateRevisions': [
           'voyage_2.arrival.latestDate',
           'voyage_2.arrival.dateDifference',
@@ -123,6 +134,9 @@ export default function({
           'voyage_2.arrival.approvedBy',
         ],
         'shipment.voyage.2.secondTransitDeparture.date': 'voyage_3.departure.date',
+        'shipment.voyage.2.secondTransitDeparture.currentDate': 'voyage_3.departure.currentDate',
+        'shipment.voyage.2.secondTransitDeparture.differenceDate':
+          'voyage_3.departure.differenceDate',
         'shipment.voyage.2.secondTransitDeparture.timelineDateRevisions': [
           'voyage_3.departure.latestDate',
           'voyage_3.departure.dateDifference',
@@ -136,6 +150,8 @@ export default function({
         'shipment.voyage.2.vesselCode': 'voyage_3.vesselCode',
         'shipment.voyage.2.arrivalPort': 'voyage_3.arrivalPort',
         'shipment.voyage.2.arrival.date': 'voyage_3.arrival.date',
+        'shipment.voyage.2.arrival.currentDate': 'voyage_3.arrival.currentDate',
+        'shipment.voyage.2.arrival.differenceDate': 'voyage_3.arrival.differenceDate',
         'shipment.voyage.2.arrival.timelineDateRevisions': [
           'voyage_3.arrival.latestDate',
           'voyage_3.arrival.difference',
@@ -146,6 +162,10 @@ export default function({
           'voyage_3.arrival.approvedBy',
         ],
         'shipment.containerGroup.customClearance.date': 'containerGroup.customClearance.date',
+        'shipment.containerGroup.customClearance.currentDate':
+          'containerGroup.customClearance.currentDate',
+        'shipment.containerGroup.customClearance.differenceDate':
+          'containerGroup.customClearance.differenceDate',
         'shipment.containerGroup.customClearance.timelineDateRevisions': [
           'containerGroup.customClearance.latestDate',
           'containerGroup.customClearance.dateDifference',
@@ -158,6 +178,10 @@ export default function({
         ],
         'shipment.containerGroup.warehouse': 'containerGroup.warehouse.name',
         'shipment.containerGroup.warehouseArrival.date': 'containerGroup.warehouseArrival.date',
+        'shipment.containerGroup.warehouseArrival.currentDate':
+          'containerGroup.warehouseArrival.currentDate',
+        'shipment.containerGroup.warehouseArrival.differenceDate':
+          'containerGroup.warehouseArrival.differenceDate',
         'shipment.containerGroup.warehouseArrival.timelineDateRevisions': [
           'containerGroup.warehouseArrival.latestDate',
           'containerGroup.warehouseArrival.dateDifference',
@@ -169,6 +193,10 @@ export default function({
           'containerGroup.warehouseArrival.approvedBy',
         ],
         'shipment.containerGroup.deliveryReady.date': 'containerGroup.deliveryReady.date',
+        'shipment.containerGroup.deliveryReady.currentDate':
+          'containerGroup.deliveryReady.currentDate',
+        'shipment.containerGroup.deliveryReady.differenceDate':
+          'containerGroup.deliveryReady.differenceDate',
         'shipment.containerGroup.deliveryReady.timelineDateRevisions': [
           'containerGroup.deliveryReady.latestDate',
           'containerGroup.deliveryReady.dateDifference',
