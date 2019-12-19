@@ -3,6 +3,24 @@ import * as React from 'react';
 import { createContainer } from 'unstated-next';
 import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
+import type { UserPayload } from 'generated/graphql';
+
+type State = {
+  name: ?string,
+  type: string,
+  status: string,
+  size: ?number,
+  path: ?string,
+  memo: ?string,
+  entity: ?Object,
+  order: ?Object,
+  orderItem: ?Object,
+  shipment: ?Object,
+  productProvider: ?Object,
+  milestone: ?Object,
+  updatedAt: ?string,
+  updatedBy: ?UserPayload,
+};
 
 const defaultState = {
   name: null,
@@ -10,15 +28,20 @@ const defaultState = {
   status: 'Draft',
   size: null,
   path: null,
-  entity: null,
   memo: null,
+  entity: null,
+  order: null,
+  orderItem: null,
+  shipment: null,
+  productProvider: null,
+  milestone: null,
   updatedAt: null,
   updatedBy: null,
 };
 
-const useDocumentFormContainer = (initialState: Object = defaultState) => {
-  const [state, setState] = React.useState(defaultState);
-  const [originalState, setOriginalState] = React.useState(defaultState);
+const useDocumentFormContainer = (initialState: State = defaultState) => {
+  const [state: State, setState] = React.useState(defaultState);
+  const [originalState: State, setOriginalState] = React.useState(defaultState);
 
   React.useEffect(() => {
     const mergedInitialState = {
