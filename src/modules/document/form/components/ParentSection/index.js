@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { SectionHeader, Display } from 'components/Form';
+import { SectionHeader, Display, Blackout } from 'components/Form';
 import DocumentFormContainer from 'modules/document/form/container';
 import { SingleCardSection } from 'components/Sections';
 import {
@@ -32,7 +32,7 @@ const DocumentSection = () => {
 
       <SingleCardSection>
         {state.entity ? (
-          mapping[state.entity?.__typename]
+          mapping[state.entity?.__typename] || <Blackout width="195px" height="230px" />
         ) : (
           <Display align="center">
             <FormattedMessage
