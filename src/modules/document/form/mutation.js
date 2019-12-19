@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import { badRequestFragment, documentFormFragment, userAvatarFragment } from 'graphql';
 import { parseParentIdField, parseEnumField, parseMemoField } from 'utils/data';
 
+// TODO: Match API
 export const documentUpdateMutation: Object = gql`
   mutation documentUpdate($id: ID!, $input: DocumentUpdateInput!) {
     documentUpdate(id: $id, input: $input) {

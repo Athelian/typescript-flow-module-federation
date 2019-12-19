@@ -21,7 +21,6 @@ import {
   forbiddenFragment,
 } from 'graphql';
 
-// TODO: Match API
 const documentQuery = gql`
   query documentQuery($id: ID!) {
     file(id: $id) {
