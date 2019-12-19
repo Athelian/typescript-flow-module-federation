@@ -4,15 +4,13 @@ import { SectionNavBar } from 'components/NavBar';
 import { SingleCardSectionWrapperStyle, SingleCardSectionBodyStyle } from './style';
 
 type Props = {
-  navbarContent?: React.Node,
-  children: React.Node,
+  navbarContent?: React$Node,
+  children: React$Node,
 };
 
 const SingleCardSection = ({ navbarContent, children }: Props) => (
   <div className={SingleCardSectionWrapperStyle}>
-    <SectionNavBar>
-      <>{navbarContent}</>
-    </SectionNavBar>
+    <SectionNavBar>{navbarContent}</SectionNavBar>
 
     <div className={SingleCardSectionBodyStyle}>{children}</div>
   </div>

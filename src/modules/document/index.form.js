@@ -71,7 +71,7 @@ const DocumentFormModuleImpl = ({ isLoading }: ImplProps) => {
 
 const DocumentFormModule = ({ documentId }: Props) => {
   const { data, loading: isLoading } = useQuery(documentQuery, {
-    variables: { id: decodeId(documentId) },
+    variables: { id: decodeId(documentId ?? '') },
     fetchPolicy: 'network-only',
     onError: error => {
       if ((error?.message ?? '').includes('403')) {

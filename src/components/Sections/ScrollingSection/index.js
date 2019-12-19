@@ -4,15 +4,13 @@ import { SectionNavBar } from 'components/NavBar';
 import { ScrollingSectionWrapperStyle, ScrollingSectionBodyStyle } from './style';
 
 type Props = {
-  navbarContent?: React.Node,
-  children: React.Node,
+  navbarContent?: React$Node,
+  children: React$Node,
 };
 
 const ScrollingSection = ({ navbarContent, children }: Props) => (
   <div className={ScrollingSectionWrapperStyle}>
-    <SectionNavBar>
-      <>{navbarContent}</>
-    </SectionNavBar>
+    <SectionNavBar>{navbarContent}</SectionNavBar>
 
     <div className={ScrollingSectionBodyStyle}>{children}</div>
   </div>
