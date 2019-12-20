@@ -229,7 +229,8 @@ const DocumentsUpload = ({
                                   <CardAction
                                     icon="REMOVE"
                                     hoverColor="RED"
-                                    onClick={() => {
+                                    onClick={evt => {
+                                      evt.stopPropagation();
                                       onSave(
                                         files.filter(
                                           item => getByPath('id', item) !== getByPath('id', file)
