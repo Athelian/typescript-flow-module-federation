@@ -1,19 +1,57 @@
 // @flow
 import gql from 'graphql-tag';
-import { badRequestFragment, documentFormFragment, userAvatarFragment } from 'graphql';
+import {
+  documentFormFragment,
+  userAvatarFragment,
+  ownedByFragment,
+  orderCardFragment,
+  itemCardFragment,
+  shipmentCardFragment,
+  productProviderCardFragment,
+  milestoneCardFragment,
+  partnerNameFragment,
+  priceFragment,
+  tagFragment,
+  metricFragment,
+  portFragment,
+  timelineDateMinimalFragment,
+  imageFragment,
+  productProviderPackagingFragment,
+  sizeFragment,
+  badRequestFragment,
+  forbiddenFragment,
+} from 'graphql';
 import { parseParentIdField, parseEnumField, parseMemoField } from 'utils/data';
 
 // TODO: Match API
 export const documentUpdateMutation: Object = gql`
-  mutation documentUpdate($id: ID!, $input: DocumentUpdateInput!) {
-    documentUpdate(id: $id, input: $input) {
+  mutation documentUpdate($id: ID!, $input: FileInput!) {
+    fileUpdate(id: $id, input: $input) {
       ...documentFormFragment
+      ...forbiddenFragment
       ...badRequestFragment
     }
   }
-  ${badRequestFragment}
-  ${userAvatarFragment}
+
   ${documentFormFragment}
+  ${userAvatarFragment}
+  ${ownedByFragment}
+  ${orderCardFragment}
+  ${itemCardFragment}
+  ${shipmentCardFragment}
+  ${productProviderCardFragment}
+  ${milestoneCardFragment}
+  ${partnerNameFragment}
+  ${priceFragment}
+  ${tagFragment}
+  ${metricFragment}
+  ${portFragment}
+  ${timelineDateMinimalFragment}
+  ${imageFragment}
+  ${productProviderPackagingFragment}
+  ${sizeFragment}
+  ${forbiddenFragment}
+  ${badRequestFragment}
 `;
 
 export const prepareParsedDocumentInput = (originalValues: ?Object, newValues: Object): Object => {

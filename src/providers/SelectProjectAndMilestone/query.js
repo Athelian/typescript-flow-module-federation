@@ -8,6 +8,7 @@ import {
   notFoundFragment,
   badRequestFragment,
   forbiddenFragment,
+  ownedByFragment,
 } from 'graphql';
 
 export const selectProjectQuery = gql`
@@ -44,6 +45,7 @@ export const selectProjectQuery = gql`
   ${notFoundFragment}
   ${badRequestFragment}
   ${forbiddenFragment}
+  ${ownedByFragment}
 `;
 
 export default selectProjectQuery;

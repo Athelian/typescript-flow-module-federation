@@ -11,6 +11,7 @@ import {
   metricFragment,
   sizeFragment,
   forbiddenFragment,
+  ownedByFragment,
 } from 'graphql';
 
 export const syncPackagingProductProviderQuery = gql`
@@ -31,6 +32,7 @@ export const syncPackagingProductProviderQuery = gql`
   ${metricFragment}
   ${sizeFragment}
   ${forbiddenFragment}
+  ${ownedByFragment}
 `;
 
 export default syncPackagingProductProviderQuery;
