@@ -295,6 +295,9 @@ export const shipmentCardFragment = gql`
         }
       }
     }
+    ownedBy {
+      ...ownedByFragment
+    }
   }
 `;
 

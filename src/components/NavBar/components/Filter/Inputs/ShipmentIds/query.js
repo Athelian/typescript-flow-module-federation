@@ -10,6 +10,7 @@ import {
   timelineDateMinimalFragment,
   portFragment,
   metricFragment,
+  ownedByFragment,
 } from 'graphql';
 
 export const shipmentsQuery = gql`
@@ -38,6 +39,7 @@ export const shipmentsQuery = gql`
   ${userAvatarFragment}
   ${taskCountFragment}
   ${forbiddenFragment}
+  ${ownedByFragment}
 `;
 
 export const shipmentsByIDsQuery = gql`

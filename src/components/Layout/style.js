@@ -53,3 +53,9 @@ export const SlideViewNavBarStyle: string = css`
   align-items: center;
   width: 100%;
 `;
+
+export const FormLayoutWrapperStyle: string = css`
+  ${layout.GRID_VERTICAL};
+  grid-gap: 40px;
+  padding: 50px 0;
+`;

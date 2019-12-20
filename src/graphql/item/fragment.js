@@ -28,6 +28,9 @@ export const itemCardFragment = gql`
         exporter {
           ...partnerNameFragment
         }
+        ownedBy {
+          ...ownedByFragment
+        }
       }
     }
     totalBatched
@@ -49,9 +52,15 @@ export const itemCardFragment = gql`
             files {
               ...imageFragment
             }
+            ownedBy {
+              ...ownedByFragment
+            }
           }
         }
       }
+    }
+    ownedBy {
+      ...ownedByFragment
     }
   }
 `;

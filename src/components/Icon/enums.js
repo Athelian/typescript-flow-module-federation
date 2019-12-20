@@ -46,6 +46,7 @@ import {
   faTh as SHEET,
   faThLarge as CARDS,
   faThList as PROJECT,
+  faThumbtack as PARENT,
   // Common UI
   faFolderOpen as ACTIVE,
   faArchive as ARCHIVE,
@@ -218,6 +219,7 @@ export default {
   BRING_FORWARD,
   CARDS,
   PROJECT,
+  PARENT,
 
   BRANCH,
   ACTIVE,

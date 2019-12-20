@@ -24,6 +24,7 @@ import {
   containerCardFragment,
   containerCardWithOwnedFragment,
 } from './container/fragment';
+import { documentFormFragment } from './document/fragment';
 import {
   productProviderFormFragment,
   productProviderPackagingFragment,
@@ -75,6 +76,7 @@ export {
   containerFormFragment,
   containerCardFragment,
   containerCardWithOwnedFragment,
+  documentFormFragment,
   itemFormFragment,
   itemCardFragment,
   itemCardWithOwnedFragment,

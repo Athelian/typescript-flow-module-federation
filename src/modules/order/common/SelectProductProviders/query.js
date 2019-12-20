@@ -10,6 +10,7 @@ import {
   productProviderPackagingFragment,
   priceFragment,
   productProviderCardFragment,
+  ownedByFragment,
 } from 'graphql';
 
 export const productProvidersListQuery = gql`
@@ -53,6 +54,7 @@ export const productProvidersListQuery = gql`
   ${sizeFragment}
   ${tagFragment}
   ${taskCountFragment}
+  ${ownedByFragment}
 `;
 
 export default productProvidersListQuery;
