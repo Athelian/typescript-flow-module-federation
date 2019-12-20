@@ -25,6 +25,7 @@ export const DragHandleStyle = (isDragging: boolean): string => css`
   ${fontSizes.MAIN};
   width: 30px;
   min-height: 30px;
+  flex-shrink: 0;
   ${transitions.MAIN};
   ${isDragging
     ? `
