@@ -2,6 +2,7 @@
 import * as React from 'react';
 import DateUserDisplay from './Displays/DateUserDisplay';
 import NumberDisplay from './Displays/NumberDisplay';
+import DifferenceDateDisplay from './Displays/DifferenceDateDisplay';
 import TextDisplay from './Displays/TextDisplay';
 import DateDisplay from './Displays/DateDisplay';
 import MetricValueDisplay from './Displays/MetricValueDisplay';
@@ -25,6 +26,7 @@ const displays = {
   text: TextDisplay,
   date: DateDisplay,
   date_user: DateUserDisplay,
+  date_difference: DifferenceDateDisplay,
   metric_value: MetricValueDisplay,
   maskable_metric_value: MaskableMetricValueDisplay,
   status: StatusDisplay,

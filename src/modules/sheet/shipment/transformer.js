@@ -530,7 +530,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.cargoReady.differenceDate',
-      type: 'number',
+      type: 'date_difference',
       ...transformComputedField(
         `${basePath}.shipment`,
         shipment,
@@ -621,7 +621,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.0.departure.differenceDate',
-      type: 'number',
+      type: 'date_difference',
       ...transformComputedField(
         `${basePath}.voyages.0.departure`,
         shipment?.voyages?.[0]?.departure ?? null,
@@ -732,7 +732,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.0.firstTransitArrival.differenceDate',
-      type: 'number',
+      type: 'date_difference',
       ...transformComputedField(
         `${basePath}.voyages.0.arrival`,
         shipment?.voyages?.[0]?.arrival ?? null,
@@ -809,7 +809,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.1.firstTransitDeparture.differenceDate',
-      type: 'number',
+      type: 'date_difference',
       ...transformComputedField(
         `${basePath}.voyages.1.departure`,
         shipment?.voyages?.[1]?.departure ?? null,
@@ -920,7 +920,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.1.secondTransitArrival.differenceDate',
-      type: 'number',
+      type: 'date_difference',
       ...transformComputedField(
         `${basePath}.voyages.1.arrival`,
         nbOfVoyages > 2 ? shipment?.voyages?.[1]?.arrival ?? null : null,
@@ -997,7 +997,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.2.secondTransitDeparture.differenceDate',
-      type: 'number',
+      type: 'date_difference',
       ...transformComputedField(
         `${basePath}.voyages.2.departure`,
         nbOfVoyages > 2 ? shipment?.voyages?.[2]?.departure ?? null : null,
@@ -1110,7 +1110,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.2.arrival.differenceDate',
-      type: 'number',
+      type: 'date_difference',
       ...transformComputedField(
         `${basePath}.voyages.${(shipment?.voyages?.length ?? 0) - 1}.arrival`,
         shipment?.voyages?.[(shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
@@ -1190,7 +1190,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.customClearance.differenceDate',
-      type: 'number',
+      type: 'date_difference',
       ...transformComputedField(
         `${basePath}.containerGroups.0.customClearance`,
         shipment?.containerGroups?.[0]?.customClearance ?? null,
@@ -1294,7 +1294,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.warehouseArrival.differenceDate',
-      type: 'number',
+      type: 'date_difference',
       hide: root => {
         const currentShipment = getShipmentFromRoot(root);
         if (currentShipment?.containers) {
@@ -1422,7 +1422,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.deliveryReady.differenceDate',
-      type: 'number',
+      type: 'date_difference',
       hide: root => {
         const currentShipment = getShipmentFromRoot(root);
         if (currentShipment?.containers) {
