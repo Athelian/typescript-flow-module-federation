@@ -37,11 +37,19 @@ export const shipmentExportQuery = gql`
 
 export const shipmentsExportQuery = gql`
   query shipmentsExport(
+    $templateId: ID!
     $filterBy: ShipmentFilterInput
     $sortBy: ShipmentSortInput
-    $templateId: ID!
+    $localSortBy: [GenericSortInput!]
+    $columns: [String!]
   ) {
-    shipmentsExport(filterBy: $filterBy, sortBy: $sortBy, templateId: $templateId) {
+    shipmentsExport(
+      templateId: $templateId
+      columns: $columns
+      filterBy: $filterBy
+      sortBy: $sortBy
+      localSortBy: $localSortBy
+    ) {
       ... on Export {
         id
       }
