@@ -1,13 +1,14 @@
 // @flow
 import * as React from 'react';
+import { useMutation } from '@apollo/react-hooks';
 import Dropzone from 'react-dropzone';
 import type { FilePayload } from 'generated/graphql';
 import { pick } from 'lodash/fp';
 import Icon from 'components/Icon';
-import { uuid } from 'utils/id';
-import { upload } from 'utils/fs';
 import { isEquals } from 'utils/fp';
 import logger from 'utils/logger';
+import { uuid } from 'utils/id';
+import fileUploadMutation from './mutation';
 import { AddImageStyle, ProgressStyle, UploadWrapperStyle } from './style';
 
 type UploadFileState = {
@@ -22,49 +23,38 @@ type Props = {
   onSave: (Array<FilePayload>) => void,
 };
 
-type State = {
-  filesState: Array<{
-    ...UploadFileState,
-    uploading: boolean,
-    progress: number,
-  }>,
-  prevFiles: Array<UploadFileState>,
-};
-
 const SELECTED_FIELDS = ['id', 'name', 'path', 'pathMedium', '__typename'];
-class ImagesUploadInput extends React.Component<Props, State> {
-  state = {
-    filesState: [],
-    prevFiles: [],
-  };
+const editableFields = ['id', 'name', 'path', 'pathMedium'];
 
-  static getDerivedStateFromProps(props: Props, state: State) {
-    const editableFields = ['id', 'name', 'path', 'pathMedium'];
-    if (
-      !isEquals(props.files.map(pick(editableFields)), state.prevFiles.map(pick(editableFields)))
-    ) {
-      return {
-        prevFiles: (props.files.map(pick(SELECTED_FIELDS)): Array<UploadFileState>),
-        filesState: (props.files.map(pick(SELECTED_FIELDS)).map(item => ({
-          ...item,
-          progress: 100,
-          uploading: false,
-        })): Array<{
-          ...UploadFileState,
-          uploading: boolean,
-          progress: number,
-        }>),
-      };
-    }
-    return null;
+const ImagesUploadInput = ({ files, width, height, onSave }: Props) => {
+  const [upload] = useMutation(fileUploadMutation);
+  const [filesState, setFileState] = React.useState<
+    Array<{
+      ...UploadFileState,
+      uploading: boolean,
+      progress: number,
+    }>
+  >([]);
+  const previousFilesRef = React.useRef<Array<UploadFileState>>([]);
+
+  if (
+    !isEquals(files.map(pick(editableFields)), previousFilesRef.current.map(pick(editableFields)))
+  ) {
+    previousFilesRef.current = files.map(pick(SELECTED_FIELDS));
+    setFileState(
+      files.map(pick(SELECTED_FIELDS)).map(item => ({
+        ...item,
+        progress: 100,
+        uploading: false,
+      }))
+    );
   }
 
-  handleUpload = (newFiles: Array<Object>) => {
-    const { files, onSave } = this.props;
+  const handleUpload = (newFiles: Array<Object>) => {
     onSave([...files, ...newFiles]);
   };
 
-  handleChange = (event: SyntheticInputEvent<HTMLInputElement> | Array<File>) => {
+  const handleChange = (event: SyntheticInputEvent<HTMLInputElement> | Array<File>) => {
     let newFiles = [];
     if (Array.isArray(event)) {
       newFiles = event;
@@ -72,97 +62,92 @@ class ImagesUploadInput extends React.Component<Props, State> {
       event.preventDefault();
       newFiles = Array.from(event.target.files);
     }
-    const { filesState } = this.state;
 
-    const basePosition = filesState.length;
-    this.setState(
-      prevState => ({
-        filesState: [
-          ...prevState.filesState,
-          ...newFiles.map(({ name }) => ({
-            name,
-            id: uuid(),
-            path: '',
-            pathMedium: '',
-            uploading: true,
-            progress: 0,
-          })),
-        ],
-      }),
-      () => {
-        Promise.all(
-          newFiles.map((file, index) =>
-            upload(file, (progressStatus: ProgressEvent) => {
-              const { lengthComputable, loaded, total } = progressStatus;
-              if (lengthComputable) {
-                const { filesState: newFilesState } = this.state;
-                newFilesState[index + basePosition].progress = Math.round((loaded / total) * 100);
-                this.setState({ filesState: newFilesState });
-              }
-            })
-          )
-        )
-          .then(uploadResult => {
-            this.handleUpload(
-              uploadResult.map(({ id, name, path }) => ({
-                id,
-                name,
-                path,
-                pathMedium: path,
-                uploading: false,
-                progress: 100,
-              }))
-            );
-          })
-          .catch(error => {
-            logger.error(error);
-            const { files } = this.props;
-            this.setState({
-              prevFiles: files.map(pick(SELECTED_FIELDS)),
-              filesState: files.map(pick(SELECTED_FIELDS)).map(item => ({
-                ...item,
-                progress: 100,
-                uploading: false,
-              })),
-            });
-          });
-      }
-    );
+    // const basePosition = filesState.length;
+    setFileState([
+      ...filesState,
+      ...newFiles.map(({ name }) => ({
+        name,
+        id: uuid(),
+        path: '',
+        pathMedium: '',
+        uploading: true,
+        progress: 0,
+      })),
+    ]);
+
+    Promise.all<any>(
+      newFiles.map(file =>
+        upload({
+          variables: {
+            file,
+            input: {},
+          },
+          /*
+          context: {
+            fetchOptions: {
+              onProgress: (progressEvent: ProgressEvent) => {
+                const { lengthComputable, loaded, total } = progressEvent;
+                if (lengthComputable) {
+                  filesState[index + basePosition].progress = Math.round((loaded / total) * 100);
+                  setFileState(
+                    filesState.map((fileState, idx) => ({
+                      ...fileState,
+                      progress:
+                        idx === index + basePosition
+                          ? Math.round((loaded / total) * 100)
+                          : fileState.progress,
+                    }))
+                  );
+                }
+              },
+            },
+          },
+          */
+        })
+      )
+    )
+      .then(uploadResults => {
+        handleUpload(
+          uploadResults.map(({ data }) => ({
+            ...data.fileUpload,
+            uploading: false,
+            progress: 100,
+          }))
+        );
+      })
+      .catch(error => {
+        logger.error(error);
+        setFileState(
+          files.map(pick(SELECTED_FIELDS)).map(item => ({
+            ...item,
+            progress: 100,
+            uploading: false,
+          }))
+        );
+      });
   };
 
-  render() {
-    const { width, height } = this.props;
-    const { filesState } = this.state;
-    return (
-      <>
-        <Dropzone onDrop={this.handleChange}>
-          {({ getRootProps, isDragActive }) => (
-            <div {...getRootProps()} className={UploadWrapperStyle}>
-              {filesState &&
-                filesState
-                  .filter(file => file.uploading)
-                  .map(file => (
-                    <div key={file.id} className={ProgressStyle}>{`${file.progress}%`}</div>
-                  ))}
+  return (
+    <Dropzone onDrop={handleChange}>
+      {({ getRootProps, isDragActive }) => (
+        <div {...getRootProps()} className={UploadWrapperStyle}>
+          {filesState &&
+            filesState
+              .filter(file => file.uploading)
+              .map(file => (
+                <div key={file.id} className={ProgressStyle}>{`${file.progress}%`}</div>
+              ))}
 
-              <label className={AddImageStyle({ width, height, isDragActive })}>
-                <Icon icon="PHOTO" />
-                <Icon icon="ADD" />
-                <input
-                  value=""
-                  type="file"
-                  accept="*"
-                  hidden
-                  multiple
-                  onChange={this.handleChange}
-                />
-              </label>
-            </div>
-          )}
-        </Dropzone>
-      </>
-    );
-  }
-}
+          <label className={AddImageStyle({ width, height, isDragActive })}>
+            <Icon icon="PHOTO" />
+            <Icon icon="ADD" />
+            <input value="" type="file" accept="*" hidden multiple onChange={handleChange} />
+          </label>
+        </div>
+      )}
+    </Dropzone>
+  );
+};
 
 export default ImagesUploadInput;
