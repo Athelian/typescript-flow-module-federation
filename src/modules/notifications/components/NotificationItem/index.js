@@ -2,10 +2,10 @@
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
 import FormattedDate from 'components/FormattedDate';
-import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { parseRoute, parseIcon } from 'utils/entity';
 import Icon from 'components/Icon';
+import NavigateLink from 'components/NavigateLink';
 import LoadingIcon from 'components/LoadingIcon';
 import mutation from 'modules/notifications/mutation';
 import { WrapperStyle, AvatarStyle, IconWrapperStyle, InfoWrapper } from './style';
@@ -30,24 +30,6 @@ function handleReadNotification(readNotification: Function, notificationId: numb
 }
 
 const NotificationItem = ({ notification }: Props) => {
-  React.useEffect(() => {
-    const anchors = document.querySelectorAll('a[aria-current="page"]');
-    const clickHandler = (evt: MouseEvent) => {
-      evt.preventDefault();
-    };
-    if (anchors) {
-      anchors.forEach(anchor => {
-        anchor.addEventListener('click', clickHandler);
-      });
-    }
-    return () => {
-      if (anchors) {
-        anchors.forEach(anchor => {
-          anchor.removeEventListener('click', clickHandler);
-        });
-      }
-    };
-  }, []);
   return (
     <Mutation mutation={mutation}>
       {(readNotification, { loading, error }) => (
@@ -55,7 +37,7 @@ const NotificationItem = ({ notification }: Props) => {
           {loading && <LoadingIcon />}
           {error && error.message}
           {/* $FlowFixMe Flow typed is not updated yet */}
-          <Link
+          <NavigateLink
             className={WrapperStyle(notification.read)}
             to={parseUrl(notification)}
             href={parseUrl(notification)}
@@ -74,7 +56,7 @@ const NotificationItem = ({ notification }: Props) => {
                 <FormattedDate mode="relative" value={notification.createdAt} />
               </div>
             </div>
-          </Link>
+          </NavigateLink>
         </>
       )}
     </Mutation>

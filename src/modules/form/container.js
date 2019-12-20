@@ -88,7 +88,7 @@ export default class FormContainer extends Container<FormState> {
     } = EmptyValidation
   ): boolean => {
     const { errors, serverErrors } = this.state;
-    const isValid = schema.isValidSync(formData);
+    const isValid = schema?.isValidSync?.(formData);
     schema
       .validate(formData, { abortEarly: false })
       .then(() => {

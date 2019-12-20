@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
-import { Link } from '@reach/router';
 import Icon from 'components/Icon';
+import NavigateLink from 'components/NavigateLink';
 import { Display } from 'components/Form';
 import { WrapperStyle, IconColorStyle } from './style';
 
@@ -27,8 +27,7 @@ export default function RelateEntity({ entity, value, blackout, link, width }: P
   return (
     <div className={WrapperStyle(width)}>
       {link && !isNotAvailable ? (
-        // $FlowFixMe Flow typed is not updated yet
-        <Link
+        <NavigateLink
           className={IconColorStyle(entityColor, isNotAvailable)}
           to={link}
           onClick={evt => {
@@ -36,7 +35,7 @@ export default function RelateEntity({ entity, value, blackout, link, width }: P
           }}
         >
           <Icon icon={entity} />
-        </Link>
+        </NavigateLink>
       ) : (
         <div className={IconColorStyle(entityColor, isNotAvailable)}>
           <Icon icon={entity} />

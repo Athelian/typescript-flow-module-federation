@@ -5,12 +5,14 @@ import emitter from 'utils/emitter';
 
 type Props = {|
   to: string,
+  href?: string,
   className: string,
   children: React$Node,
+  onClick?: Event => void,
 |};
 
-function NavigateLink({ to, className, children }: Props) {
-  const onClick = evt => {
+function NavigateLink({ to, className, children, href, onClick }: Props) {
+  const handleClick = evt => {
     if (!evt.ctrlKey && !evt.shiftKey) {
       evt.preventDefault();
       emitter.emit('NAVIGATE_TO', to);
@@ -18,7 +20,15 @@ function NavigateLink({ to, className, children }: Props) {
   };
   return (
     // $FlowFixMe Flow typed is not updated yet
-    <Link to={to} className={className} onClick={onClick}>
+    <Link
+      to={to}
+      href={href}
+      className={className}
+      onClick={evt => {
+        handleClick(evt);
+        if (onClick) onClick(evt);
+      }}
+    >
       {children}
     </Link>
   );

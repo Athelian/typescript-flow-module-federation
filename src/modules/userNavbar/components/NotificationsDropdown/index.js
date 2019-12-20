@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react';
 import { Query, Mutation } from 'react-apollo';
-import { Link } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { getByPathWithDefault } from 'utils/fp';
 import LoadingIcon from 'components/LoadingIcon';
+import NavigateLink from 'components/NavigateLink';
 import { BaseButton } from 'components/Buttons';
 import { Label } from 'components/Form';
 import NotificationItem from 'modules/notifications/components/NotificationItem';
@@ -119,7 +119,7 @@ class NotificationsDropdown extends React.Component<Props> {
                 </div>
                 <div className={NotificationsFooterStyle}>
                   {/* $FlowFixMe Flow typed is not updated yet */}
-                  <Link to="/notifications">
+                  <NavigateLink to="/notifications">
                     <BaseButton
                       label={
                         <FormattedMessage
@@ -132,7 +132,7 @@ class NotificationsDropdown extends React.Component<Props> {
                       backgroundColor="WHITE"
                       hoverBackgroundColor="TEAL"
                     />
-                  </Link>
+                  </NavigateLink>
                 </div>
               </div>
             </div>
