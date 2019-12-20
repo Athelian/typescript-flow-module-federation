@@ -18,6 +18,7 @@ import {
   DOCUMENT_SET_STATUS,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
+  DOCUMENT_FORM,
 } from 'modules/permission/constants/file';
 import { OrderItemFilesContainer } from 'modules/orderItem/form/containers';
 import DocumentsSection from 'sections/DocumentsSection';
@@ -42,6 +43,7 @@ function ItemDocumentsSection() {
     canSetDocuments ||
     hasPermission([DOCUMENT_SET_MEMO, ORDER_ITEMS_DOCUMENT_SET_MEMO, DOCUMENT_UPDATE]);
   const canDownload = hasPermission(ORDER_ITEMS_DOWNLOAD_DOCUMENTS);
+  const canViewForm = hasPermission(DOCUMENT_FORM);
 
   return (
     <DocumentsSection
@@ -54,6 +56,7 @@ function ItemDocumentsSection() {
       canUpdateStatus={canUpdateStatus}
       canUpdateType={canUpdateType}
       canUpdateMemo={canUpdateMemo}
+      canViewForm={canViewForm}
     />
   );
 }

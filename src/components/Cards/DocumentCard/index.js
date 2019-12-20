@@ -8,7 +8,11 @@ import { getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
-import { computeIcon, getFileExtension, getFileName } from 'components/Form/DocumentsInput/helpers';
+import {
+  computeIcon,
+  getFileExtension,
+  getFileName,
+} from 'components/Form/DocumentsUpload/helpers';
 import {
   SelectInputFactory,
   TextAreaInputFactory,

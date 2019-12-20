@@ -2,9 +2,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import SlideView from 'components/SlideView';
-import DocumentFormSideView from 'modules/document/index.formSlideView';
-import { DocumentsInput, SectionWrapper, SectionHeader } from 'components/Form';
+import { DocumentsUpload, SectionWrapper, SectionHeader } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 
 type Props = {|
@@ -17,6 +15,7 @@ type Props = {|
   canUpdateType: boolean,
   canUpdateStatus: boolean,
   canUpdateMemo: boolean,
+  canViewForm: boolean,
 |};
 
 export default function DocumentsSection({
@@ -29,8 +28,8 @@ export default function DocumentsSection({
   canUpdateType,
   canUpdateStatus,
   canUpdateMemo,
+  canViewForm,
 }: Props) {
-  const [selectedFile, setSelectedFile] = React.useState(null);
   return (
     <Subscribe to={[container]}>
       {({ state: { files = [] }, setFieldValue }) => {
@@ -47,7 +46,7 @@ export default function DocumentsSection({
                   </>
                 }
               />
-              <DocumentsInput
+              <DocumentsUpload
                 entity={entityType}
                 files={files}
                 removable={canRemove}
@@ -58,31 +57,10 @@ export default function DocumentsSection({
                   memo: canUpdateMemo,
                 }}
                 downloadable={canDownload}
+                viewForm={canViewForm}
                 onSave={updateFiles => setFieldValue('files', updateFiles)}
-                onSelect={setSelectedFile}
               />
             </SectionWrapper>
-            <SlideView
-              isOpen={!!selectedFile}
-              onRequestClose={() => setSelectedFile(null)}
-              shouldConfirm={() => {
-                const button = document.getElementById('document_form_save_button');
-                return button;
-              }}
-            >
-              {selectedFile && (
-                <DocumentFormSideView
-                  file={selectedFile}
-                  onSave={updatedFile => {
-                    setFieldValue(
-                      'files',
-                      files.map(file => (file.id === updatedFile.id ? updatedFile : file))
-                    );
-                    setSelectedFile(null);
-                  }}
-                />
-              )}
-            </SlideView>
           </div>
         );
       }}

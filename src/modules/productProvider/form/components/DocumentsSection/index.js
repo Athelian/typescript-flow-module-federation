@@ -19,6 +19,7 @@ import {
   DOCUMENT_SET_STATUS,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
+  DOCUMENT_FORM,
 } from 'modules/permission/constants/file';
 import DocumentsSection from 'sections/DocumentsSection';
 
@@ -40,6 +41,7 @@ export default function EndProductDocumentsSection() {
   const canUpdateMemo =
     canSetDocuments ||
     hasPermission([DOCUMENT_SET_MEMO, PRODUCT_PROVIDER_DOCUMENT_SET_MEMO, DOCUMENT_UPDATE]);
+  const canViewForm = hasPermission(DOCUMENT_FORM);
 
   return (
     <DocumentsSection
@@ -52,6 +54,7 @@ export default function EndProductDocumentsSection() {
       canUpdateStatus={canUpdateStatus}
       canUpdateMemo={canUpdateMemo}
       canUpdateType={canUpdateType}
+      canViewForm={canViewForm}
     />
   );
 }

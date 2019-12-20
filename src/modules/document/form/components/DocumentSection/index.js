@@ -27,7 +27,11 @@ import GridColumn from 'components/GridColumn';
 import Icon from 'components/Icon';
 import DocumentFormContainer from 'modules/document/form/container';
 import { getFileTypesByEntity } from 'components/Cards/DocumentCard';
-import { computeIcon, getFileExtension, getFileName } from 'components/Form/DocumentsInput/helpers';
+import {
+  computeIcon,
+  getFileExtension,
+  getFileName,
+} from 'components/Form/DocumentsUpload/helpers';
 import { Section } from 'components/Sections';
 import { FileInfoWrapperStyle, FileIconStyle, FileNameWrapperStyle, FileNameStyle } from './style';
 

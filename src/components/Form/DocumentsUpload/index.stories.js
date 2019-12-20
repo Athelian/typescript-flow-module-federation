@@ -3,7 +3,7 @@ import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { ObjectValue } from 'react-values';
 import { set, cloneDeep } from 'lodash';
-import { ToggleInput, Label, DocumentsInput } from 'components/Form';
+import { ToggleInput, Label, DocumentsUpload } from 'components/Form';
 
 storiesOf('Form/Inputs/Documents Input', module).add('Documents Input', () => (
   <ObjectValue
@@ -32,7 +32,7 @@ storiesOf('Form/Inputs/Documents Input', module).add('Documents Input', () => (
   >
     {({ value: { readOnly, downloadDisabled, files }, set: setField }) => (
       <>
-        <DocumentsInput
+        <DocumentsUpload
           id="files"
           name="files"
           values={files}

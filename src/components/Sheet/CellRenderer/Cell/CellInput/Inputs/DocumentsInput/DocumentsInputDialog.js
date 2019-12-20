@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Provider } from 'unstated';
 import Dialog from 'components/Dialog';
 import { FormContainer } from 'modules/form';
-import { DocumentsInput as DocumentsSection } from 'components/Form';
+import { DocumentsUpload as DocumentsSection } from 'components/Form';
 import type { FilePayload } from 'generated/graphql';
 
 const formContainer = new FormContainer();

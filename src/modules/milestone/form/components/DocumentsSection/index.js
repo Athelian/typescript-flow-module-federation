@@ -19,6 +19,7 @@ import {
   DOCUMENT_SET_STATUS,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
+  DOCUMENT_FORM,
 } from 'modules/permission/constants/file';
 import DocumentsSection from 'sections/DocumentsSection';
 
@@ -39,6 +40,7 @@ export default function MilestoneDocumentsSection() {
     canSetDocuments ||
     hasPermission([DOCUMENT_SET_MEMO, MILESTONE_DOCUMENT_SET_MEMO, DOCUMENT_UPDATE]);
   const canDownload = hasPermission(MILESTONE_DOCUMENTS_DOWNLOAD);
+  const canViewForm = hasPermission(DOCUMENT_FORM);
 
   return (
     <DocumentsSection
@@ -51,6 +53,7 @@ export default function MilestoneDocumentsSection() {
       canUpdateStatus={canUpdateStatus}
       canUpdateType={canUpdateType}
       canUpdateMemo={canUpdateMemo}
+      canViewForm={canViewForm}
     />
   );
 }

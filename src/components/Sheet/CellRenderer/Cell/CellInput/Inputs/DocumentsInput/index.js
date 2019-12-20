@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import type { FilePayload } from 'generated/graphql';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
-import { computeIcon, getFileExtension } from 'components/Form/DocumentsInput/helpers';
+import { computeIcon, getFileExtension } from 'components/Form/DocumentsUpload/helpers';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import {
   CellDisplayWrapperStyle,
@@ -94,13 +94,13 @@ const DocumentsInputImpl = ({
   );
 };
 
-const DocumentsInput = (entityType: string) => (props: InputProps<Array<FilePayload>>) => (
+const DocumentsUpload = (entityType: string) => (props: InputProps<Array<FilePayload>>) => (
   <DocumentsInputImpl {...props} entityType={entityType} />
 );
 
 export default {
-  Order: DocumentsInput('Order'),
-  OrderItem: DocumentsInput('OrderItem'),
-  Shipment: DocumentsInput('Shipment'),
-  Milestone: DocumentsInput('Milestone'),
+  Order: DocumentsUpload('Order'),
+  OrderItem: DocumentsUpload('OrderItem'),
+  Shipment: DocumentsUpload('Shipment'),
+  Milestone: DocumentsUpload('Milestone'),
 };

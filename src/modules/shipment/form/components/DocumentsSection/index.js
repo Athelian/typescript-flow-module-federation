@@ -3,8 +3,6 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import { getByPathWithDefault } from 'utils/fp';
-import SlideView from 'components/SlideView';
-import DocumentFormSideView from 'modules/document/index.formSlideView';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import {
@@ -23,10 +21,11 @@ import {
   DOCUMENT_SET_STATUS,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
+  DOCUMENT_FORM,
 } from 'modules/permission/constants/file';
 import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
 import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
-import { DocumentsInput, SectionHeader } from 'components/Form';
+import { DocumentsUpload, SectionHeader } from 'components/Form';
 import { ShipmentFilesContainer } from 'modules/shipment/form/containers';
 import { shipmentFormFilesQuery } from './query';
 
@@ -38,7 +37,6 @@ type Props = {|
 function DocumentsSection({ entityId, isLoading }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const [selectedFile, setSelectedFile] = React.useState(null);
   const canSetDocuments = hasPermission(SHIPMENT_SET_DOCUMENTS);
 
   return (
@@ -65,7 +63,7 @@ function DocumentsSection({ entityId, isLoading }: Props) {
                     </>
                   }
                 />
-                <DocumentsInput
+                <DocumentsUpload
                   entity="Shipment"
                   uploadable={
                     canSetDocuments || hasPermission([SHIPMENT_DOCUMENT_CREATE, DOCUMENT_CREATE])
@@ -97,31 +95,10 @@ function DocumentsSection({ entityId, isLoading }: Props) {
                       ]),
                   }}
                   downloadable={hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS)}
+                  viewForm={hasPermission(DOCUMENT_FORM)}
                   files={files}
                   onSave={updateFiles => setFieldValue('files', updateFiles)}
-                  onSelect={setSelectedFile}
                 />
-                <SlideView
-                  isOpen={!!selectedFile}
-                  onRequestClose={() => setSelectedFile(null)}
-                  shouldConfirm={() => {
-                    const button = document.getElementById('document_form_save_button');
-                    return button;
-                  }}
-                >
-                  {selectedFile && (
-                    <DocumentFormSideView
-                      file={selectedFile}
-                      onSave={updatedFile => {
-                        setFieldValue(
-                          'files',
-                          files.map(file => (file.id === updatedFile.id ? updatedFile : file))
-                        );
-                        setSelectedFile(null);
-                      }}
-                    />
-                  )}
-                </SlideView>
               </>
             );
           }}
