@@ -1,54 +1,46 @@
 // @flow
 import { css } from 'react-emotion';
-import {
-  borderRadiuses,
-  colors,
-  fontSizes,
-  layout,
-  presets,
-  shadows,
-  transitions,
-} from 'styles/common';
+import { borderRadiuses, colors, fontSizes, shadows, transitions } from 'styles/common';
 
-export const ColumnStyle = (dragging: boolean) => css`
-  ${layout.HORIZONTAL};
-  ${layout.CENTER};
+export const ColumnWrapperStyle = (isDragging: boolean): string => css`
+  display: flex;
+  align-items: stretch;
   ${borderRadiuses.MAIN};
   background-color: ${colors.WHITE};
-  color: ${colors.GRAY_DARK};
-  ${fontSizes.SMALL};
-  line-height: 12px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
   margin-bottom: 10px;
   user-select: none;
-  & > i {
-    ${layout.LAYOUT};
-    ${layout.CENTER_CENTER};
-    opacity: 0;
-    color: ${colors.GRAY_LIGHT};
-    ${fontSizes.MAIN};
-    width: 30px;
-    height: 30px;
-    ${transitions.MAIN};
-  }
-  & > span {
-    ${presets.ELLIPSIS};
-    margin-left: 10px;
-    flex: 1;
-  }
-  ${dragging &&
-    `
-    ${shadows.INPUT};
-    & > i {
-      color: ${colors.BLUE};
-      opacity: 1;
-    }
-  `}
+  ${isDragging && shadows.INPUT};
   &:hover {
     ${shadows.INPUT};
     & > i {
       opacity: 1;
     }
   }
+`;
+
+export const DragHandleStyle = (isDragging: boolean): string => css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  ${fontSizes.MAIN};
+  width: 30px;
+  min-height: 30px;
+  ${transitions.MAIN};
+  ${isDragging
+    ? `
+    color: ${colors.BLUE};
+    opacity: 1;
+  `
+    : `
+    color: ${colors.GRAY_LIGHT};
+    opacity: 0;
+  `};
+  &:hover {
+    color: ${colors.BLUE};
+    opacity: 1;
+  }
+`;
+
+export const CheckboxWrapperStyle: string = css`
+  padding: 5px 5px 5px 0;
 `;
