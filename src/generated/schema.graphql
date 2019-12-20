@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Dec 16 2019 10:54:45 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Dec 20 2019 12:17:30 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26721,17 +26721,23 @@ input BatchFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
-  orderItemId: ID
-  productId: ID
-  exporterId: ID
-  supplierId: ID
-  importerId: ID
   producedAt: DateRangeInput
   deliveredAt: DateRangeInput
   expiredAt: DateRangeInput
+  desiredAt: DateRangeInput
   hasShipment: Boolean
   hasShipmentExcludeId: ID
   tagIds: [ID!]
+  orderIds: [ID!]
+  orderExporterIds: [ID!]
+  orderImporterIds: [ID!]
+  orderItemId: ID
+  orderItemIds: [ID!]
+  productIds: [ID!]
+  productProviderIds: [ID!]
+  productProviderSupplierIds: [ID!]
+  containerIds: [ID!]
+  shipmentIds: [ID!]
 }
 
 union BatchPayload = Batch | BadRequest | Forbidden | NotFound
