@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { colors, layout } from 'styles/common';
 
-export const WrapperStyle: string = css`
+export const ColumnsGroupWrapperStyle: string = css`
   ${layout.HORIZONTAL};
 `;
 
@@ -11,7 +11,7 @@ export const LeftWrapperStyle: string = css`
   width: 150px;
 `;
 
-export const IconStyle = (color: string): string => css`
+export const GroupIconStyle = (color: string): string => css`
   position: sticky;
   top: 0px;
   display: flex;

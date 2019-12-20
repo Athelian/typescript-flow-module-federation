@@ -5,7 +5,12 @@ import Icon from 'components/Icon';
 import DraggableColumn from '../DraggableColumn';
 import type { Column } from '../DraggableColumn';
 import DraggableColumns from '../DraggableColumns';
-import { ColumnsWrapperStyle, IconStyle, LeftWrapperStyle, WrapperStyle } from './style';
+import {
+  ColumnsGroupWrapperStyle,
+  LeftWrapperStyle,
+  GroupIconStyle,
+  ColumnsWrapperStyle,
+} from './style';
 
 type Props = {
   icon: string,
@@ -40,9 +45,9 @@ const ColumnsGroup = ({ icon, columns, onChange }: Props) => {
   };
 
   return (
-    <div className={WrapperStyle}>
+    <div className={ColumnsGroupWrapperStyle}>
       <div className={LeftWrapperStyle}>
-        <div className={IconStyle(icon)}>
+        <div className={GroupIconStyle(icon)}>
           <Icon icon={icon} />
         </div>
       </div>
