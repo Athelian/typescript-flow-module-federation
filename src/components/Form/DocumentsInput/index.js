@@ -57,7 +57,17 @@ type UploadFileState = {
 };
 
 const editableFields = ['id', 'type', 'name', 'path', 'status', 'memo'];
-const SELECTED_FIELDS = ['id', 'type', 'name', 'path', 'status', 'memo', 'entity', '__typename'];
+const SELECTED_FIELDS = [
+  'id',
+  'type',
+  'name',
+  'path',
+  'status',
+  'memo',
+  'entity',
+  'ownedBy',
+  '__typename',
+];
 
 const DocumentsInput = ({
   files,

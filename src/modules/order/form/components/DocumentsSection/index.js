@@ -4,7 +4,6 @@ import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
 import DocumentFormSideView from 'modules/document/index.formSlideView';
-import { useAuthorizedViewer } from 'contexts/Viewer';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import { getByPathWithDefault } from 'utils/fp';
@@ -39,13 +38,12 @@ type Props = {
 function DocumentsSection({ isLoading, entityId }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const { organization } = useAuthorizedViewer();
   const [selectedFile, setSelectedFile] = React.useState(null);
   const canSetDocuments = hasPermission(ORDER_SET_DOCUMENTS);
 
   return (
     <Subscribe to={[OrderFilesContainer]}>
-      {({ state: { files, ownedBy: entityOwnedBy }, initDetailValues, setFieldValue }) => (
+      {({ state: { files }, initDetailValues, setFieldValue }) => (
         <QueryPlaceHolder
           PlaceHolder={() => <ListCardPlaceHolder height={540} />}
           query={orderFormFilesQuery}
@@ -92,13 +90,7 @@ function DocumentsSection({ isLoading, entityId }: Props) {
                   downloadable={hasPermission(ORDER_DOWNLOAD_DOCUMENTS)}
                   files={files}
                   onSave={updateFiles => setFieldValue('files', updateFiles)}
-                  onSelect={file =>
-                    setSelectedFile({
-                      ...file,
-                      ownedBy: file.ownedBy || organization,
-                      entity: { ...file.entity, ownedBy: file.entity?.ownedBy ?? entityOwnedBy },
-                    })
-                  }
+                  onSelect={setSelectedFile}
                   entity="Order"
                 />
                 <SlideView

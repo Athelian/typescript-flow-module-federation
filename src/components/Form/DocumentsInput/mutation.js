@@ -1,6 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-import { documentFragment, badRequestFragment, forbiddenFragment } from 'graphql';
+import { documentFragment, badRequestFragment, forbiddenFragment, ownedByFragment } from 'graphql';
 
 const fileUploadMutation = gql`
   mutation fileUpload($file: Upload!, $input: FileInput!) {
@@ -12,6 +12,7 @@ const fileUploadMutation = gql`
   }
 
   ${documentFragment}
+  ${ownedByFragment}
   ${badRequestFragment}
   ${forbiddenFragment}
 `;

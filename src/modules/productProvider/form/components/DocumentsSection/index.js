@@ -22,11 +22,7 @@ import {
 } from 'modules/permission/constants/file';
 import DocumentsSection from 'sections/DocumentsSection';
 
-type Props = {|
-  entityOwnedBy: Object,
-|};
-
-export default function EndProductDocumentsSection({ entityOwnedBy }: Props) {
+export default function EndProductDocumentsSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const canSetDocuments = hasPermission(PRODUCT_PROVIDER_SET_DOCUMENTS);
@@ -49,7 +45,6 @@ export default function EndProductDocumentsSection({ entityOwnedBy }: Props) {
     <DocumentsSection
       sectionId="productProvider_documentsSection"
       entityType="ProductProvider"
-      entityOwnedBy={entityOwnedBy}
       container={ProductProviderInfoContainer}
       canUpload={canUpload}
       canRemove={canRemove}

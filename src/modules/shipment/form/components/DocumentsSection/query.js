@@ -11,9 +11,6 @@ export const shipmentFormFilesQuery = gql`
           ...documentFragment
           ...forbiddenFragment
         }
-        ownedBy {
-          ...ownedByFragment
-        }
       }
     }
   }
