@@ -37,20 +37,38 @@ const DocumentForm = ({
       <CurrentNavBar>
         <EntityIcon icon="DOCUMENT" color="DOCUMENT" />
         <JumpToSection>
-          <SectionTabs
-            link="document_documentSection"
-            label={
-              <FormattedMessage id="modules.Documents.documentSection" defaultMessage="Document" />
-            }
-            icon="DOCUMENT"
-          />
-          <SectionTabs
-            link="document_parentSection"
-            label={
-              <FormattedMessage id="modules.Documents.parentSection" defaultMessage="Parent" />
-            }
-            icon="PARENT"
-          />
+          {isSlideView ? (
+            <SectionTabs
+              link="document_documentSection"
+              label={
+                <FormattedMessage
+                  id="modules.Documents.documentSection"
+                  defaultMessage="Document"
+                />
+              }
+              icon="DOCUMENT"
+            />
+          ) : (
+            <>
+              <SectionTabs
+                link="document_documentSection"
+                label={
+                  <FormattedMessage
+                    id="modules.Documents.documentSection"
+                    defaultMessage="Document"
+                  />
+                }
+                icon="DOCUMENT"
+              />
+              <SectionTabs
+                link="document_parentSection"
+                label={
+                  <FormattedMessage id="modules.Documents.parentSection" defaultMessage="Parent" />
+                }
+                icon="PARENT"
+              />
+            </>
+          )}
         </JumpToSection>
 
         {/* TODO: Logs Button */}
@@ -76,9 +94,11 @@ const DocumentForm = ({
               <DocumentSection />
             </SectionWrapper>
 
-            <SectionWrapper id="document_parentSection">
-              <ParentSection />
-            </SectionWrapper>
+            {!isSlideView && (
+              <SectionWrapper id="document_parentSection">
+                <ParentSection />
+              </SectionWrapper>
+            )}
           </FormLayout>
         )}
       </Content>

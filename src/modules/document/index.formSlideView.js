@@ -15,9 +15,20 @@ type Props = {
 
 const formContainer = new FormContainer();
 
-const DocumentFormSlideView = ({ onSave, file }: Props) => {
+const DocumentFormImpl = ({ onSave }: { onSave: Object => void }) => {
   const { state, isDirty, resetState } = DocumentFormContainer.useContainer();
+  return (
+    <DocumentForm
+      isDirty={isDirty}
+      isValidated={formContainer.isReady(state, validator)}
+      resetState={resetState}
+      isSlideView
+      handleSave={() => onSave(state)}
+    />
+  );
+};
 
+const DocumentFormSlideView = ({ onSave, file }: Props) => {
   React.useEffect(() => {
     return () => {
       formContainer.onReset();
@@ -28,13 +39,7 @@ const DocumentFormSlideView = ({ onSave, file }: Props) => {
     <Provider inject={[formContainer]}>
       <DocumentFormContainer.Provider initialState={file}>
         <SlideViewLayout>
-          <DocumentForm
-            isDirty={isDirty}
-            isValidated={formContainer.isReady(state, validator)}
-            resetState={resetState}
-            isSlideView
-            handleSave={() => onSave(state)}
-          />
+          <DocumentFormImpl onSave={onSave} />
         </SlideViewLayout>
       </DocumentFormContainer.Provider>
     </Provider>

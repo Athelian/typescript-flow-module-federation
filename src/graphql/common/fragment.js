@@ -56,10 +56,18 @@ export const documentFragment = gql`
     type
     status
     memo
+    ownedBy {
+      ...ownedByFragment
+    }
     # TODO: move to common fragment for entity
     entity {
       ... on Model {
         id
+      }
+      ... on Owned {
+        ownedBy {
+          ...ownedByFragment
+        }
       }
       ... on Order {
         poNo

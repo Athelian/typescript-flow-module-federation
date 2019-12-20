@@ -96,7 +96,7 @@ export default class ItemForm extends React.Component<Props> {
             )}
           </Subscribe>
 
-          <AsyncDocumentsSection />
+          <AsyncDocumentsSection entityOwnedBy={orderItem.ownedBy} />
 
           <AsyncTaskSection
             groupIds={[

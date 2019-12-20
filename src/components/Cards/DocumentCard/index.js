@@ -200,7 +200,13 @@ const DocumentCard = ({
           </div>
         )}
 
-        <div className={DocumentTypeStyle}>
+        <div
+          className={DocumentTypeStyle}
+          onClick={evt => {
+            evt.stopPropagation();
+          }}
+          role="presentation"
+        >
           <FormField
             name={`${id}.type`}
             setFieldValue={(field, value) => onChange && onChange('type', value)}
@@ -235,7 +241,13 @@ const DocumentCard = ({
           </div>
         </Tooltip>
 
-        <div className={StatusAndButtonsWrapperStyle}>
+        <div
+          className={StatusAndButtonsWrapperStyle}
+          onClick={evt => {
+            evt.stopPropagation();
+          }}
+          role="presentation"
+        >
           <button
             className={MemoButtonStyle(!!getByPathWithDefault('', 'memo', file))}
             onClick={e => {
@@ -320,7 +332,13 @@ const DocumentCard = ({
             </button>
           </div>
 
-          <div className={MemoInputWrapperStyle}>
+          <div
+            className={MemoInputWrapperStyle}
+            onClick={evt => {
+              evt.stopPropagation();
+            }}
+            role="presentation"
+          >
             <FormField
               name={`${id}.memo`}
               setFieldValue={(field, value) => onChange && onChange('memo', value)}

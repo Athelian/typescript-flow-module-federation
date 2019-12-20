@@ -34,6 +34,7 @@ import messages from './messages';
 type Props = {|
   files: Array<FilePayload>,
   onSave: (Array<FilePayload>) => void,
+  onSelect: FilePayload => void,
   entity: 'Order' | 'OrderItem' | 'Shipment' | 'ProductProvider' | 'Milestone',
   editable: {
     status: boolean,
@@ -66,6 +67,7 @@ const DocumentsInput = ({
   removable,
   downloadable,
   onSave,
+  onSelect,
 }: Props) => {
   const intl = useIntl();
   const [upload] = useMutation(fileUploadMutation);
@@ -106,7 +108,6 @@ const DocumentsInput = ({
 
     const types = getFileTypesByEntity(entity, intl);
 
-    // const basePosition = filesState.length;
     setFileState([
       ...filesState,
       ...newFiles.map(({ name }) => ({
@@ -131,27 +132,6 @@ const DocumentsInput = ({
               type: types[0].value,
             },
           },
-          /*
-          context: {
-            fetchOptions: {
-              onProgress: (progressEvent: ProgressEvent) => {
-                const { lengthComputable, loaded, total } = progressEvent;
-                if (lengthComputable) {
-                  filesState[index + basePosition].progress = Math.round((loaded / total) * 100);
-                  setFileState(
-                    filesState.map((fileState, idx) => ({
-                      ...fileState,
-                      progress:
-                        idx === index + basePosition
-                          ? Math.round((loaded / total) * 100)
-                          : fileState.progress,
-                    }))
-                  );
-                }
-              },
-            },
-          },
-          */
         })
       )
     )
@@ -215,6 +195,10 @@ const DocumentsInput = ({
                           <DocumentCard
                             hideParentInfo
                             file={pick(SELECTED_FIELDS, file)}
+                            onClick={evt => {
+                              evt.stopPropagation();
+                              if (onSelect) onSelect(file);
+                            }}
                             onChange={(field, value) => {
                               onSave(
                                 update(files, {

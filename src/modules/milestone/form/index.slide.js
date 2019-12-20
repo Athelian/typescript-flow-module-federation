@@ -100,7 +100,7 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
             <div className={FormWrapperStyle}>
               <MilestoneSection />
 
-              {!inTemplate && <DocumentsSection sectionId="milestone_documentsSection" />}
+              {!inTemplate && <DocumentsSection entityOwnedBy={milestone.ownedBy} />}
             </div>
           </Content>
         </SlideViewLayout>

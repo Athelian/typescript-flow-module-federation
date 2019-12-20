@@ -81,7 +81,7 @@ class ProductProviderForm extends React.Component<Props> {
 
           <PackagingSection />
 
-          <AsyncDocumentsSection />
+          <AsyncDocumentsSection entityOwnedBy={productProvider.ownedBy} />
 
           <Subscribe to={[ProductInfoContainer]}>
             {({ state }) => (

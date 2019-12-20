@@ -22,7 +22,11 @@ import {
 import { OrderItemFilesContainer } from 'modules/orderItem/form/containers';
 import DocumentsSection from 'sections/DocumentsSection';
 
-function ItemDocumentsSection() {
+type Props = {|
+  entityOwnedBy: Object,
+|};
+
+function ItemDocumentsSection({ entityOwnedBy }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const canSetDocuments = hasPermission(ORDER_ITEMS_SET_DOCUMENTS);
@@ -47,6 +51,7 @@ function ItemDocumentsSection() {
     <DocumentsSection
       sectionId="orderItem_documentsSection"
       entityType="OrderItem"
+      entityOwnedBy={entityOwnedBy}
       container={OrderItemFilesContainer}
       canUpload={canUpload}
       canDownload={canDownload}

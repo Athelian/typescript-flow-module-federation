@@ -22,7 +22,11 @@ import {
 } from 'modules/permission/constants/file';
 import DocumentsSection from 'sections/DocumentsSection';
 
-export default function MilestoneDocumentsSection() {
+type Props = {|
+  entityOwnedBy: Object,
+|};
+
+export default function MilestoneDocumentsSection({ entityOwnedBy }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const canSetDocuments = hasPermission(MILESTONE_SET_DOCUMENTS);
@@ -43,6 +47,7 @@ export default function MilestoneDocumentsSection() {
   return (
     <DocumentsSection
       sectionId="milestone_documentsSection"
+      entityOwnedBy={entityOwnedBy}
       entityType="Milestone"
       container={MilestoneFilesContainer}
       canUpload={canUpload}
