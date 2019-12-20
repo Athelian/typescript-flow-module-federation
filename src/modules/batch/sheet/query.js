@@ -187,7 +187,7 @@ export const containerByIDQuery = gql`
   ${sheetModelFragment}
   ${sheetOwnedFragment}
   ${sheetWarehouseFragment}
-
+  ${ownedByFragment}
   ${userAvatarFragment}
   ${documentFragment}
   ${tagFragment}

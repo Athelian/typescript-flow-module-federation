@@ -24,6 +24,7 @@ const DocumentsInputDialog = ({ value, onChange, onClose, open, entityType }: Pr
   const canUpdateType = true;
   const canUpdateMemo = true;
   const canDownload = true;
+  const canViewForm = false;
 
   return (
     <Provider inject={[formContainer]}>
@@ -37,6 +38,7 @@ const DocumentsInputDialog = ({ value, onChange, onClose, open, entityType }: Pr
             memo: canUpdateMemo,
           }}
           downloadable={canDownload}
+          canViewForm={canViewForm}
           files={value}
           onSave={onChange}
           entity={entityType}
