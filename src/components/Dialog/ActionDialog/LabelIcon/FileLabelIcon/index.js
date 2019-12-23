@@ -7,7 +7,7 @@ import LabelIcon from '..';
 export default function FileLabelIcon() {
   return (
     <LabelIcon color="DOCUMENT">
-      <FormattedMessage id="modules.RelationMap.label.file" defaultMessage="FILE" />{' '}
+      <FormattedMessage id="modules.RelationMap.label.file" defaultMessage="Document" />{' '}
       <Icon icon="DOCUMENT" />
     </LabelIcon>
   );
