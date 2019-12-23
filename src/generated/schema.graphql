@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Dec 20 2019 14:16:43 GMT+0900 (Japan Standard Time)
+# timestamp: Mon Dec 23 2019 14:37:19 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28665,6 +28665,8 @@ input FileFilterInput {
   type: FileType
   status: FileStatus
   mimetype: String
+  hasEntity: Boolean
+  hasEntityExcludeId: ID
 }
 
 input FileInput {

@@ -19490,6 +19490,8 @@ export type FileFilterInput = {|
   type?: ?FileType,
   status?: ?FileStatus,
   mimetype?: ?$ElementType<Scalars, 'String'>,
+  hasEntity?: ?$ElementType<Scalars, 'Boolean'>,
+  hasEntityExcludeId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
 export type FileInput = {|
