@@ -22,10 +22,6 @@ export default defineMessages({
     id: 'modules.SideBar.product',
     defaultMessage: 'PRODUCTS',
   },
-  relationMap: {
-    id: 'modules.SideBar.relationMap',
-    defaultMessage: 'RELATIONAL MAP',
-  },
   network: {
     id: 'modules.SideBar.network',
     defaultMessage: 'NETWORK',
