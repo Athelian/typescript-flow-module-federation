@@ -2,10 +2,6 @@
 import React from 'react';
 import { Location } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
-import {
-  RM_ORDER_FOCUS_LIST,
-  RM_PRODUCT_FOCUS_LIST,
-} from 'modules/permission/constants/relationMap';
 import { ORDER_LIST } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_LIST } from 'modules/permission/constants/orderItem';
 import { BATCH_LIST } from 'modules/permission/constants/batch';
@@ -58,10 +54,7 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.order} />,
     icon: 'ORDER',
     path: 'order',
-    permitted: hasPermissions =>
-      hasPermissions(ORDER_LIST) ||
-      hasPermissions(RM_ORDER_FOCUS_LIST) ||
-      hasPermissions(RM_PRODUCT_FOCUS_LIST),
+    permitted: hasPermissions => hasPermissions(ORDER_LIST),
     submenu: [
       {
         label: <FormattedMessage {...messages.map} />,
@@ -142,21 +135,7 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.product} />,
     icon: 'PRODUCT',
     path: 'product',
-    permitted: hasPermissions => hasPermissions([PRODUCT_LIST, RM_PRODUCT_FOCUS_LIST]),
-    submenu: [
-      {
-        label: <FormattedMessage {...messages.relationMap} />,
-        icon: 'RELATION_MAP',
-        path: 'relation-map',
-        permitted: hasPermissions => hasPermissions(RM_PRODUCT_FOCUS_LIST),
-      },
-      {
-        label: <FormattedMessage {...messages.cards} />,
-        icon: 'CARDS',
-        path: 'cards',
-        permitted: hasPermissions => hasPermissions(PRODUCT_LIST),
-      },
-    ],
+    permitted: hasPermissions => hasPermissions(PRODUCT_LIST),
   },
   {
     label: <FormattedMessage {...messages.project} />,
