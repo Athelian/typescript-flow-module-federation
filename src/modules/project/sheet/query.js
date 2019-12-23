@@ -6,6 +6,7 @@ import {
   userAvatarFragment,
   documentFragment,
   tagFragment,
+  ownedByFragment,
 } from 'graphql';
 
 const projectSheetFragment = gql`
@@ -174,6 +175,7 @@ export const projectsQuery = gql`
   ${userAvatarFragment}
   ${documentFragment}
   ${tagFragment}
+  ${ownedByFragment}
   ${forbiddenFragment}
 `;
 
@@ -198,6 +200,7 @@ export const milestoneByIDQuery = gql`
   ${taskSheetFragment}
   ${userAvatarFragment}
   ${documentFragment}
+  ${ownedByFragment}
   ${tagFragment}
   ${forbiddenFragment}
 `;
@@ -224,6 +227,7 @@ export const taskByIDQuery = gql`
   ${taskSheetFragment}
   ${userAvatarFragment}
   ${documentFragment}
+  ${ownedByFragment}
   ${tagFragment}
   ${forbiddenFragment}
 `;

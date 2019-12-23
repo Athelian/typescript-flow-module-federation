@@ -5,6 +5,8 @@ import type { FieldDefinition } from 'types';
 import { calculatePackageQuantity, calculateVolume, getBatchLatestQuantity } from 'utils/batch';
 import { convertVolume, convertWeight } from 'utils/metric';
 import type { CellValue } from 'components/Sheet/SheetState/types';
+import { getLatestDate } from 'utils/shipment';
+import { differenceInCalendarDays } from 'utils/date';
 import {
   transformComputedField,
   transformCustomField,
@@ -514,6 +516,31 @@ export default function transformSheetShipment({
       }),
     },
     {
+      columnKey: 'shipment.cargoReady.latestDate',
+      type: 'date',
+      ...transformComputedField(`${basePath}.shipment`, shipment, 'cargoReady.latestDate', root => {
+        const currentShipment = getShipmentFromRoot(root);
+        return getLatestDate(currentShipment?.cargoReady);
+      }),
+    },
+    {
+      columnKey: 'shipment.cargoReady.dateDifference',
+      type: 'date_difference',
+      ...transformComputedField(
+        `${basePath}.shipment`,
+        shipment,
+        'cargoReady.dateDifference',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          const currentDate = getLatestDate(currentShipment?.cargoReady);
+          const initDate = currentShipment?.cargoReady?.date;
+          if (!initDate || !currentDate) return 0;
+
+          return differenceInCalendarDays(new Date(currentDate), new Date(initDate));
+        }
+      ),
+    },
+    {
       columnKey: 'shipment.cargoReady.date',
       type: 'date',
       ...transformValueField(
@@ -572,6 +599,36 @@ export default function transformSheetShipment({
         shipment?.voyages?.[0] ?? null,
         'departurePort',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_PORT)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.departure.latestDate',
+      type: 'date',
+      ...transformComputedField(
+        `${basePath}.voyages.0.departure`,
+        shipment?.voyages?.[0]?.departure ?? null,
+        'currentDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          return getLatestDate(currentShipment?.voyages?.[0]?.departure);
+        }
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.departure.dateDifference',
+      type: 'date_difference',
+      ...transformComputedField(
+        `${basePath}.voyages.0.departure`,
+        shipment?.voyages?.[0]?.departure ?? null,
+        'differenceDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          const currentDate = getLatestDate(currentShipment?.voyages?.[0]?.departure);
+          const initDate = currentShipment?.voyages?.[0]?.departure?.date;
+          if (!initDate || !currentDate) return 0;
+
+          return differenceInCalendarDays(new Date(currentDate), new Date(initDate));
+        }
       ),
     },
     {
@@ -656,6 +713,36 @@ export default function transformSheetShipment({
       ),
     },
     {
+      columnKey: 'shipment.voyage.0.firstTransitArrival.latestDate',
+      type: 'date',
+      ...transformComputedField(
+        `${basePath}.voyages.0.arrival`,
+        shipment?.voyages?.[0]?.arrival ?? null,
+        'currentDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          return getLatestDate(currentShipment?.voyages?.[0]?.arrival);
+        }
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.firstTransitArrival.dateDifference',
+      type: 'date_difference',
+      ...transformComputedField(
+        `${basePath}.voyages.0.arrival`,
+        shipment?.voyages?.[0]?.arrival ?? null,
+        'differenceDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          const currentDate = getLatestDate(currentShipment?.voyages?.[0]?.arrival);
+          const initDate = currentShipment?.voyages?.[0]?.arrival?.date;
+          if (!initDate || !currentDate) return 0;
+
+          return differenceInCalendarDays(new Date(currentDate), new Date(initDate));
+        }
+      ),
+    },
+    {
       columnKey: 'shipment.voyage.0.firstTransitArrival.date',
       type: 'date',
       ...transformValueField(
@@ -700,6 +787,36 @@ export default function transformSheetShipment({
         'approved',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.1.firstTransitDeparture.latestDate',
+      type: 'date',
+      ...transformComputedField(
+        `${basePath}.voyages.1.departure`,
+        shipment?.voyages?.[1]?.departure ?? null,
+        'currentDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          return getLatestDate(currentShipment?.voyages?.[1]?.departure);
+        }
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.1.firstTransitDeparture.dateDifference',
+      type: 'date_difference',
+      ...transformComputedField(
+        `${basePath}.voyages.1.departure`,
+        shipment?.voyages?.[1]?.departure ?? null,
+        'differenceDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          const currentDate = getLatestDate(currentShipment?.voyages?.[1]?.departure);
+          const initDate = currentShipment?.voyages?.[1]?.departure?.date;
+          if (!initDate || !currentDate) return 0;
+
+          return differenceInCalendarDays(new Date(currentDate), new Date(initDate));
+        }
       ),
     },
     {
@@ -784,6 +901,36 @@ export default function transformSheetShipment({
       ),
     },
     {
+      columnKey: 'shipment.voyage.1.secondTransitArrival.latestDate',
+      type: 'date',
+      ...transformComputedField(
+        `${basePath}.voyages.1.arrival`,
+        nbOfVoyages > 2 ? shipment?.voyages?.[1]?.arrival ?? null : null,
+        'currentDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          return getLatestDate(currentShipment?.voyages?.[1]?.arrival);
+        }
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.1.secondTransitArrival.dateDifference',
+      type: 'date_difference',
+      ...transformComputedField(
+        `${basePath}.voyages.1.arrival`,
+        nbOfVoyages > 2 ? shipment?.voyages?.[1]?.arrival ?? null : null,
+        'differenceDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          const currentDate = getLatestDate(currentShipment?.voyages?.[1]?.arrival);
+          const initDate = currentShipment?.voyages?.[1]?.arrival?.date;
+          if (!initDate || !currentDate) return 0;
+
+          return differenceInCalendarDays(new Date(currentDate), new Date(initDate));
+        }
+      ),
+    },
+    {
       columnKey: 'shipment.voyage.1.secondTransitArrival.date',
       type: 'date',
       ...transformValueField(
@@ -828,6 +975,36 @@ export default function transformSheetShipment({
         'approved',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.2.secondTransitDeparture.latestDate',
+      type: 'date',
+      ...transformComputedField(
+        `${basePath}.voyages.2.departure`,
+        nbOfVoyages > 2 ? shipment?.voyages?.[2]?.departure ?? null : null,
+        'currentDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          return getLatestDate(currentShipment?.voyages?.[2]?.departure);
+        }
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.2.secondTransitDeparture.dateDifference',
+      type: 'date_difference',
+      ...transformComputedField(
+        `${basePath}.voyages.2.departure`,
+        nbOfVoyages > 2 ? shipment?.voyages?.[2]?.departure ?? null : null,
+        'differenceDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          const currentDate = getLatestDate(currentShipment?.voyages?.[2]?.departure);
+          const initDate = currentShipment?.voyages?.[2]?.departure?.date;
+          if (!initDate || !currentDate) return 0;
+
+          return differenceInCalendarDays(new Date(currentDate), new Date(initDate));
+        }
       ),
     },
     {
@@ -912,6 +1089,41 @@ export default function transformSheetShipment({
       ),
     },
     {
+      columnKey: 'shipment.voyage.2.arrival.latestDate',
+      type: 'date',
+      ...transformComputedField(
+        `${basePath}.voyages.${(shipment?.voyages?.length ?? 0) - 1}.arrival`,
+        shipment?.voyages?.[(shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
+        'currentDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          return getLatestDate(
+            currentShipment?.voyages?.[(currentShipment?.voyages?.length ?? 0) - 1]?.arrival
+          );
+        }
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.2.arrival.dateDifference',
+      type: 'date_difference',
+      ...transformComputedField(
+        `${basePath}.voyages.${(shipment?.voyages?.length ?? 0) - 1}.arrival`,
+        shipment?.voyages?.[(shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
+        'differenceDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          const currentDate = getLatestDate(
+            currentShipment?.voyages?.[(currentShipment?.voyages?.length ?? 0) - 1]?.arrival
+          );
+          const initDate =
+            currentShipment?.voyages?.[(currentShipment?.voyages?.length ?? 0) - 1]?.arrival?.date;
+          if (!initDate || !currentDate) return 0;
+
+          return differenceInCalendarDays(new Date(currentDate), new Date(initDate));
+        }
+      ),
+    },
+    {
       columnKey: 'shipment.voyage.2.arrival.date',
       type: 'date',
       ...transformValueField(
@@ -956,6 +1168,37 @@ export default function transformSheetShipment({
         'approved',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.customClearance.latestDate',
+      type: 'date',
+      ...transformComputedField(
+        `${basePath}.containerGroups.0.customClearance`,
+        shipment?.containerGroups?.[0]?.customClearance ?? null,
+        'currentDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          return getLatestDate(currentShipment?.containerGroups?.[0]?.customClearance);
+        }
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.customClearance.dateDifference',
+      type: 'date_difference',
+      ...transformComputedField(
+        `${basePath}.containerGroups.0.customClearance`,
+        shipment?.containerGroups?.[0]?.customClearance ?? null,
+        'differenceDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          const currentDate = getLatestDate(currentShipment?.containerGroups?.[0]?.customClearance);
+          const initDate =
+            currentShipment?.currentShipment?.containerGroups?.[0]?.customClearance?.date;
+          if (!initDate || !currentDate) return 0;
+
+          return differenceInCalendarDays(new Date(currentDate), new Date(initDate));
+        }
       ),
     },
     {
@@ -1021,6 +1264,55 @@ export default function transformSheetShipment({
         shipment?.containerGroups?.[0] ?? null,
         'warehouse',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_WAREHOUSE)
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.warehouseArrival.latestDate',
+      type: 'date',
+      hide: root => {
+        const currentShipment = getShipmentFromRoot(root);
+        if (currentShipment?.containers) {
+          return (currentShipment?.containers ?? []).length > 0;
+        }
+
+        return (currentShipment?.containerCount ?? 0) > 0;
+      },
+      ...transformComputedField(
+        `${basePath}.containerGroups.0.warehouseArrival`,
+        shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+        'currentDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          return getLatestDate(currentShipment?.containerGroups?.[0]?.warehouseArrival);
+        }
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.warehouseArrival.dateDifference',
+      type: 'date_difference',
+      hide: root => {
+        const currentShipment = getShipmentFromRoot(root);
+        if (currentShipment?.containers) {
+          return (currentShipment?.containers ?? []).length > 0;
+        }
+
+        return (currentShipment?.containerCount ?? 0) > 0;
+      },
+      ...transformComputedField(
+        `${basePath}.containerGroups.0.warehouseArrival`,
+        shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+        'differenceDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          const currentDate = getLatestDate(
+            currentShipment?.containerGroups?.[0]?.warehouseArrival
+          );
+          const initDate =
+            currentShipment?.currentShipment?.containerGroups?.[0]?.warehouseArrival?.date;
+          if (!initDate || !currentDate) return 0;
+
+          return differenceInCalendarDays(new Date(currentDate), new Date(initDate));
+        }
       ),
     },
     {
@@ -1100,6 +1392,53 @@ export default function transformSheetShipment({
         'approved',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.deliveryReady.latestDate',
+      type: 'date',
+      hide: root => {
+        const currentShipment = getShipmentFromRoot(root);
+        if (currentShipment?.containers) {
+          return (currentShipment?.containers ?? []).length > 0;
+        }
+
+        return (currentShipment?.containerCount ?? 0) > 0;
+      },
+      ...transformComputedField(
+        `${basePath}.containerGroups.0.deliveryReady`,
+        shipment?.containerGroups?.[0]?.deliveryReady ?? null,
+        'currentDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          return getLatestDate(currentShipment?.containerGroups?.[0]?.deliveryReady);
+        }
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.deliveryReady.dateDifference',
+      type: 'date_difference',
+      hide: root => {
+        const currentShipment = getShipmentFromRoot(root);
+        if (currentShipment?.containers) {
+          return (currentShipment?.containers ?? []).length > 0;
+        }
+
+        return (currentShipment?.containerCount ?? 0) > 0;
+      },
+      ...transformComputedField(
+        `${basePath}.containerGroups.0.deliveryReady`,
+        shipment?.containerGroups?.[0]?.deliveryReady ?? null,
+        'differenceDate',
+        root => {
+          const currentShipment = getShipmentFromRoot(root);
+          const currentDate = getLatestDate(currentShipment?.containerGroups?.[0]?.deliveryReady);
+          const initDate =
+            currentShipment?.currentShipment?.containerGroups?.[0]?.deliveryReady?.date;
+          if (!initDate || !currentDate) return 0;
+
+          return differenceInCalendarDays(new Date(currentDate), new Date(initDate));
+        }
       ),
     },
     {

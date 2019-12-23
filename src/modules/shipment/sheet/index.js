@@ -16,6 +16,7 @@ import {
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
+import ColumnsGroup from 'components/ColumnsGroup';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { shipmentsExportQuery } from '../query';
@@ -95,7 +96,7 @@ const ShipmentSheetModuleImpl = ({
         <ColumnsConfig columns={columns} templateType="ShipmentSheet" onChange={setColumns}>
           {({ getGroupProps }) =>
             ShipmentSheetColumnGroups.map(type => (
-              <ColumnsConfig.Group {...getGroupProps(type)} key={type} />
+              <ColumnsGroup {...getGroupProps(type)} key={type} />
             ))
           }
         </ColumnsConfig>

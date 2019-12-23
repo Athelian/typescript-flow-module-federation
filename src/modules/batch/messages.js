@@ -63,6 +63,10 @@ export default defineMessages({
     id: 'components.BatchItem.product',
     defaultMessage: 'PRODUCT',
   },
+  productProvider: {
+    id: 'components.BatchItem.productProvider',
+    defaultMessage: 'END PRODUCT',
+  },
   batchItem: {
     id: 'components.BatchItem.batchItem',
     defaultMessage: 'BATCH ITEM',
@@ -78,6 +82,10 @@ export default defineMessages({
   shipment: {
     id: 'components.BatchItem.shipment',
     defaultMessage: 'SHIPMENT',
+  },
+  container: {
+    id: 'components.BatchItem.container',
+    defaultMessage: 'CONTAINER',
   },
   batchGroup: {
     id: 'components.BatchItem.batchGroup',

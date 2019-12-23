@@ -19,6 +19,7 @@ import ShipmentLabelIcon from './LabelIcon/ShipmentLabelIcon';
 import ShipmentsLabelIcon from './LabelIcon/ShipmentsLabelIcon';
 import TagLabelIcon from './LabelIcon/TagLabelIcon';
 import TagsLabelIcon from './LabelIcon/TagsLabelIcon';
+import FileLabelIcon from './LabelIcon/FileLabelIcon';
 import {
   ActionDialogWrapperStyle,
   DialogMessageStyle,
@@ -98,4 +99,5 @@ export {
   ShipmentsLabelIcon,
   TagLabelIcon,
   TagsLabelIcon,
+  FileLabelIcon,
 };

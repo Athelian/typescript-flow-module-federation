@@ -7,7 +7,9 @@ import { BooleanValue } from 'react-values';
 import { showToastError } from 'utils/errors';
 import { getByPath } from 'utils/fp';
 import { decodeId } from 'utils/id';
-import { SaveButton, ResetButton, ExportButton } from 'components/Buttons';
+import { ExportButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import { FormContainer, resetFormState } from 'modules/form';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
@@ -245,7 +247,7 @@ class ContainerFormModule extends React.Component<Props> {
                       {(containerInfoContainer.isDirty() ||
                         containerBatchesContainer.isDirty()) && (
                         <>
-                          <ResetButton
+                          <ResetFormButton
                             onClick={() =>
                               this.onReset(
                                 { containerInfoContainer, containerBatchesContainer },
@@ -253,7 +255,7 @@ class ContainerFormModule extends React.Component<Props> {
                               )
                             }
                           />
-                          <SaveButton
+                          <SaveFormButton
                             id="container_form_save_button"
                             disabled={
                               !formContainer.isReady(

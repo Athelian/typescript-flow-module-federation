@@ -167,7 +167,7 @@ export const OrderWrapperStyle: string = css`
 
 export const ImporterWrapperStyle: string = css`
   width: 100%;
-  padding: 0 5px;
+  padding: 0 10px;
   ${fontSizesWithHeights.SMALL};
   color: ${colors.BLACK};
   ${presets.ELLIPSIS};

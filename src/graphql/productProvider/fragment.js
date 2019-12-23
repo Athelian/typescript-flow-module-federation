@@ -103,6 +103,9 @@ export const productProviderCardFragment = gql`
         files {
           ...imageFragment
         }
+        ownedBy {
+          ...ownedByFragment
+        }
       }
     }
     defaultPackage {

@@ -17885,17 +17885,23 @@ export type BatchFilterInput = {|
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
-  orderItemId?: ?$ElementType<Scalars, 'ID'>,
-  productId?: ?$ElementType<Scalars, 'ID'>,
-  exporterId?: ?$ElementType<Scalars, 'ID'>,
-  supplierId?: ?$ElementType<Scalars, 'ID'>,
-  importerId?: ?$ElementType<Scalars, 'ID'>,
   producedAt?: ?DateRangeInput,
   deliveredAt?: ?DateRangeInput,
   expiredAt?: ?DateRangeInput,
+  desiredAt?: ?DateRangeInput,
   hasShipment?: ?$ElementType<Scalars, 'Boolean'>,
   hasShipmentExcludeId?: ?$ElementType<Scalars, 'ID'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  orderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  orderExporterIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  orderImporterIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  orderItemId?: ?$ElementType<Scalars, 'ID'>,
+  orderItemIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  productIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  productProviderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  productProviderSupplierIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  containerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  shipmentIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type BatchPayload = Batch | BadRequest | Forbidden | NotFound;
@@ -17984,6 +17990,7 @@ export type BatchSortInput = {|
   producedAt?: ?SortOrder,
   deliveredAt?: ?SortOrder,
   expiredAt?: ?SortOrder,
+  desiredAt?: ?SortOrder,
 |};
 
 export type BatchUpdateInput = {|
@@ -19237,6 +19244,15 @@ export type EntityEvent = {|
   changes?: ?Array<ChangeType>,
 |};
 
+export type EntityFileInput = {|
+  id: $ElementType<Scalars, 'ID'>,
+  name?: ?$ElementType<Scalars, 'String'>,
+  type?: ?FileType,
+  status?: ?FileStatus,
+  memo?: ?$ElementType<Scalars, 'String'>,
+  orphan?: ?$ElementType<Scalars, 'Boolean'>,
+|};
+
 export type EntityHit = {|
    __typename?: 'EntityHit',
   field?: ?$ElementType<Scalars, 'String'>,
@@ -19446,6 +19462,7 @@ export type File = {|
     path: $ElementType<Scalars, 'String'>,
     pathExpiredAt: $ElementType<Scalars, 'DateTime'>,
     entity?: ?EntityPayload,
+    orphan: $ElementType<Scalars, 'Boolean'>,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
     updatedAt: $ElementType<Scalars, 'DateTime'>,
@@ -19473,14 +19490,16 @@ export type FileFilterInput = {|
   type?: ?FileType,
   status?: ?FileStatus,
   mimetype?: ?$ElementType<Scalars, 'String'>,
+  hasEntity?: ?$ElementType<Scalars, 'Boolean'>,
+  hasEntityExcludeId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
 export type FileInput = {|
-  id: $ElementType<Scalars, 'ID'>,
   name?: ?$ElementType<Scalars, 'String'>,
   type?: ?FileType,
   status?: ?FileStatus,
   memo?: ?$ElementType<Scalars, 'String'>,
+  orphan?: ?$ElementType<Scalars, 'Boolean'>,
 |};
 
 export type FilePayload = File | BadRequest | Forbidden | NotFound;
@@ -20515,7 +20534,7 @@ export type MilestoneCreateInput = {|
   estimatedCompletionDateInterval?: ?IntervalInput,
   estimatedCompletionDateBinding?: ?MilestoneDateBinding,
   tasks?: ?Array<MilestoneTaskInput>,
-  files?: ?Array<FileInput>,
+  files?: ?Array<EntityFileInput>,
   projectId: $ElementType<Scalars, 'ID'>,
 |};
 
@@ -20596,7 +20615,7 @@ export type MilestoneUpdateInput = {|
   estimatedCompletionDateInterval?: ?IntervalInput,
   estimatedCompletionDateBinding?: ?MilestoneDateBinding,
   tasks?: ?Array<MilestoneTaskInput>,
-  files?: ?Array<FileInput>,
+  files?: ?Array<EntityFileInput>,
   id?: ?$ElementType<Scalars, 'ID'>,
   projectId?: ?$ElementType<Scalars, 'ID'>,
 |};
@@ -20667,6 +20686,9 @@ export type Mutation = {|
   tagCreate: TagPayload,
   tagUpdate: TagPayload,
   tagDelete?: ?EmptyPayload,
+  fileUpload: FilePayload,
+  fileUpdate: FilePayload,
+  fileDelete?: ?EmptyPayload,
   fieldDefinitionsUpdate: FieldDefinitionsPayload,
   maskCreate: MaskPayload,
   maskUpdate: MaskPayload,
@@ -21008,6 +21030,23 @@ export type MutationTagUpdateArgs = {|
 
 
 export type MutationTagDeleteArgs = {|
+  id: $ElementType<Scalars, 'ID'>
+|};
+
+
+export type MutationFileUploadArgs = {|
+  file: $ElementType<Scalars, 'Upload'>,
+  input: FileInput
+|};
+
+
+export type MutationFileUpdateArgs = {|
+  id: $ElementType<Scalars, 'ID'>,
+  input: FileInput
+|};
+
+
+export type MutationFileDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
 |};
 
@@ -21494,7 +21533,7 @@ export type OrderCreateInput = {|
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   orderItems?: ?Array<OrderOrderItemInput>,
-  files?: ?Array<FileInput>,
+  files?: ?Array<EntityFileInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
 |};
@@ -21639,7 +21678,7 @@ export type OrderItemCreateInput = {|
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   batches?: ?Array<OrderItemBatchInput>,
-  files?: ?Array<FileInput>,
+  files?: ?Array<EntityFileInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   orderId: $ElementType<Scalars, 'ID'>,
@@ -21695,7 +21734,7 @@ export type OrderItemUpdateInput = {|
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   batches?: ?Array<OrderItemBatchInput>,
-  files?: ?Array<FileInput>,
+  files?: ?Array<EntityFileInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   orderId?: ?$ElementType<Scalars, 'ID'>,
@@ -21715,7 +21754,7 @@ export type OrderOrderItemInput = {|
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   batches?: ?Array<OrderItemBatchInput>,
-  files?: ?Array<FileInput>,
+  files?: ?Array<EntityFileInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   id?: ?$ElementType<Scalars, 'ID'>,
@@ -21764,7 +21803,7 @@ export type OrderUpdateInput = {|
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   orderItems?: ?Array<OrderOrderItemInput>,
-  files?: ?Array<FileInput>,
+  files?: ?Array<EntityFileInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
 |};
@@ -22078,7 +22117,7 @@ export type ProductCreateInput = {|
   hsCode?: ?$ElementType<Scalars, 'String'>,
   material?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  files?: ?Array<FileInput>,
+  files?: ?Array<EntityFileInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   productProviders: Array<ProductProviderCreateInput>,
   customFields?: ?CustomFieldsInput,
@@ -22184,7 +22223,7 @@ export type ProductProviderCreateInput = {|
   inspectionFee?: ?PriceInput,
   origin?: ?Country,
   productionLeadTime?: ?$ElementType<Scalars, 'Int'>,
-  files?: ?Array<FileInput>,
+  files?: ?Array<EntityFileInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   defaultPackageId?: ?$ElementType<Scalars, 'ID'>,
   defaultPackageIndex?: ?$ElementType<Scalars, 'Int'>,
@@ -22294,7 +22333,7 @@ export type ProductProviderUpdateInput = {|
   inspectionFee?: ?PriceInput,
   origin?: ?Country,
   productionLeadTime?: ?$ElementType<Scalars, 'Int'>,
-  files?: ?Array<FileInput>,
+  files?: ?Array<EntityFileInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   defaultPackageId?: ?$ElementType<Scalars, 'ID'>,
   defaultPackageIndex?: ?$ElementType<Scalars, 'Int'>,
@@ -22319,7 +22358,7 @@ export type ProductUpdateInput = {|
   hsCode?: ?$ElementType<Scalars, 'String'>,
   material?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  files?: ?Array<FileInput>,
+  files?: ?Array<EntityFileInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   productProviders?: ?Array<ProductProviderUpdateInput>,
   customFields?: ?CustomFieldsInput,
@@ -22383,7 +22422,7 @@ export type ProjectMilestoneCreateInput = {|
   estimatedCompletionDateInterval?: ?IntervalInput,
   estimatedCompletionDateBinding?: ?MilestoneDateBinding,
   tasks?: ?Array<MilestoneTaskInput>,
-  files?: ?Array<FileInput>,
+  files?: ?Array<EntityFileInput>,
 |};
 
 export type ProjectMilestoneUpdateInput = {|
@@ -22398,7 +22437,7 @@ export type ProjectMilestoneUpdateInput = {|
   estimatedCompletionDateInterval?: ?IntervalInput,
   estimatedCompletionDateBinding?: ?MilestoneDateBinding,
   tasks?: ?Array<MilestoneTaskInput>,
-  files?: ?Array<FileInput>,
+  files?: ?Array<EntityFileInput>,
   id?: ?$ElementType<Scalars, 'ID'>,
 |};
 
@@ -60541,7 +60580,7 @@ export type ShipmentCreateInput = {|
   voyages?: ?Array<VoyageNestedInput>,
   containerGroups?: ?Array<ContainerGroupNestedInput>,
   containers?: ?Array<ShipmentContainerCreateInput>,
-  files?: ?Array<FileInput>,
+  files?: ?Array<EntityFileInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   totalVolumeOverride?: ?MetricValueInput,
   totalVolumeOverriding?: ?$ElementType<Scalars, 'Boolean'>,
@@ -60671,7 +60710,7 @@ export type ShipmentUpdateInput = {|
   voyages?: ?Array<VoyageNestedInput>,
   containerGroups?: ?Array<ContainerGroupNestedInput>,
   containers?: ?Array<ShipmentContainerUpdateInput>,
-  files?: ?Array<FileInput>,
+  files?: ?Array<EntityFileInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   totalVolumeOverride?: ?MetricValueInput,
   totalVolumeOverriding?: ?$ElementType<Scalars, 'Boolean'>,
@@ -61422,7 +61461,7 @@ export type UserUpdateInput = {|
   disabled?: ?$ElementType<Scalars, 'Boolean'>,
   language?: ?Language,
   timezone?: ?$ElementType<Scalars, 'String'>,
-  avatar?: ?FileInput,
+  avatar?: ?EntityFileInput,
   organizationId?: ?$ElementType<Scalars, 'ID'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -61819,55 +61858,117 @@ export type ImageFragmentFragment = ({
 export type DocumentFragmentFragment = ({
     ...{ __typename?: 'File' },
   ...$Pick<File, {| id: *, name: *, path: *, type: *, status: *, memo: * |}>,
-  ...{| entity: ?({
+  ...{| ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, entity: ?({
       ...{ __typename?: 'Product' },
-    ...$Pick<Product, {| id: *, name: * |}>
+    ...$Pick<Product, {| id: *, name: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'ProductProvider' },
     ...$Pick<ProductProvider, {| id: *, name: * |}>,
-    ...{| product: ({
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, product: ({
         ...{ __typename?: 'Product' },
       ...$Pick<Product, {| id: *, name: * |}>
     }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'ProductProviderPackage' },
-    ...$Pick<ProductProviderPackage, {| id: * |}>
+    ...$Pick<ProductProviderPackage, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'Order' },
-    ...$Pick<Order, {| id: *, poNo: * |}>
+    ...$Pick<Order, {| id: *, poNo: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'OrderItem' },
-    ...$Pick<OrderItem, {| id: *, no: * |}>
+    ...$Pick<OrderItem, {| id: *, no: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'Batch' },
-    ...$Pick<Batch, {| id: *, no: * |}>
+    ...$Pick<Batch, {| id: *, no: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>
+    ...$Pick<BatchQuantityRevision, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'Shipment' },
-    ...$Pick<Shipment, {| id: *, no: * |}>
+    ...$Pick<Shipment, {| id: *, no: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'Voyage' },
-    ...$Pick<Voyage, {| id: * |}>
+    ...$Pick<Voyage, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'Container' },
-    ...$Pick<Container, {| id: * |}>
+    ...$Pick<Container, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'ContainerGroup' },
-    ...$Pick<ContainerGroup, {| id: * |}>
+    ...$Pick<ContainerGroup, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'TimelineDate' },
-    ...$Pick<TimelineDate, {| id: * |}>
+    ...$Pick<TimelineDate, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'TimelineDateRevision' },
-    ...$Pick<TimelineDateRevision, {| id: * |}>
+    ...$Pick<TimelineDateRevision, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'Warehouse' },
-    ...$Pick<Warehouse, {| id: * |}>
+    ...$Pick<Warehouse, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'Tag' },
-    ...$Pick<Tag, {| id: * |}>
+    ...$Pick<Tag, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'User' },
     ...$Pick<User, {| id: * |}>
@@ -61882,38 +61983,77 @@ export type DocumentFragmentFragment = ({
     ...$Pick<Role, {| id: * |}>
   }) | ({
       ...{ __typename?: 'File' },
-    ...$Pick<File, {| id: * |}>
+    ...$Pick<File, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'Task' },
-    ...$Pick<Task, {| id: * |}>
+    ...$Pick<Task, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'TaskTemplate' },
-    ...$Pick<TaskTemplate, {| id: * |}>
+    ...$Pick<TaskTemplate, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'Project' },
-    ...$Pick<Project, {| id: * |}>
+    ...$Pick<Project, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'ProjectTemplate' },
-    ...$Pick<ProjectTemplate, {| id: * |}>
+    ...$Pick<ProjectTemplate, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'Milestone' },
     ...$Pick<Milestone, {| id: *, name: * |}>,
-    ...{| project: ({
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, project: ({
         ...{ __typename?: 'Project' },
       ...$Pick<Project, {| id: * |}>
     }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'MilestoneTemplate' },
-    ...$Pick<MilestoneTemplate, {| id: * |}>
+    ...$Pick<MilestoneTemplate, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'Mask' },
-    ...$Pick<Mask, {| id: * |}>
+    ...$Pick<Mask, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'MaskEdit' },
-    ...$Pick<MaskEdit, {| id: * |}>
+    ...$Pick<MaskEdit, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
       ...{ __typename?: 'FieldDefinition' },
-    ...$Pick<FieldDefinition, {| id: * |}>
+    ...$Pick<FieldDefinition, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
 });
 
@@ -62122,6 +62262,545 @@ export type ContainerCardWithOwnedFragmentFragment = ({
   ...ContainerCardFragmentFragment
 });
 
+export type DocumentFormFragmentFragment = ({
+    ...{ __typename?: 'File' },
+  ...$Pick<File, {| id: *, updatedAt: *, name: *, type: *, status: *, size: *, path: *, memo: * |}>,
+  ...{| updatedBy: ?({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, entity: ?({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...$Pick<ProductProviderPackage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDate' },
+    ...$Pick<TimelineDate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Tag' },
+    ...$Pick<Tag, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Partnership' },
+    ...$Pick<Partnership, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'File' },
+    ...$Pick<File, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProjectTemplate' },
+    ...$Pick<ProjectTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Mask' },
+    ...$Pick<Mask, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MaskEdit' },
+    ...$Pick<MaskEdit, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...$Pick<FieldDefinition, {| id: * |}>
+  }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, order: ?({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...$Pick<ProductProviderPackage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: * |}>,
+    ...OrderCardFragmentFragment
+  }) | ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDate' },
+    ...$Pick<TimelineDate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Tag' },
+    ...$Pick<Tag, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Partnership' },
+    ...$Pick<Partnership, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'File' },
+    ...$Pick<File, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProjectTemplate' },
+    ...$Pick<ProjectTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Mask' },
+    ...$Pick<Mask, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MaskEdit' },
+    ...$Pick<MaskEdit, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...$Pick<FieldDefinition, {| id: * |}>
+  }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, orderItem: ?({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...$Pick<ProductProviderPackage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: * |}>,
+    ...ItemCardFragmentFragment
+  }) | ({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDate' },
+    ...$Pick<TimelineDate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Tag' },
+    ...$Pick<Tag, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Partnership' },
+    ...$Pick<Partnership, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'File' },
+    ...$Pick<File, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProjectTemplate' },
+    ...$Pick<ProjectTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Mask' },
+    ...$Pick<Mask, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MaskEdit' },
+    ...$Pick<MaskEdit, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...$Pick<FieldDefinition, {| id: * |}>
+  }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, shipment: ?({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...$Pick<ProductProviderPackage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: * |}>,
+    ...ShipmentCardFragmentFragment
+  }) | ({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDate' },
+    ...$Pick<TimelineDate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Tag' },
+    ...$Pick<Tag, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Partnership' },
+    ...$Pick<Partnership, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'File' },
+    ...$Pick<File, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProjectTemplate' },
+    ...$Pick<ProjectTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Mask' },
+    ...$Pick<Mask, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MaskEdit' },
+    ...$Pick<MaskEdit, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...$Pick<FieldDefinition, {| id: * |}>
+  }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, productProvider: ?({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: * |}>,
+    ...ProductProviderCardFragmentFragment
+  }) | ({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...$Pick<ProductProviderPackage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDate' },
+    ...$Pick<TimelineDate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Tag' },
+    ...$Pick<Tag, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Partnership' },
+    ...$Pick<Partnership, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'File' },
+    ...$Pick<File, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProjectTemplate' },
+    ...$Pick<ProjectTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Mask' },
+    ...$Pick<Mask, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MaskEdit' },
+    ...$Pick<MaskEdit, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...$Pick<FieldDefinition, {| id: * |}>
+  }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, milestone: ?({
+      ...{ __typename?: 'Product' },
+    ...$Pick<Product, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProvider' },
+    ...$Pick<ProductProvider, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProductProviderPackage' },
+    ...$Pick<ProductProviderPackage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Order' },
+    ...$Pick<Order, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'OrderItem' },
+    ...$Pick<OrderItem, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Batch' },
+    ...$Pick<Batch, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'BatchQuantityRevision' },
+    ...$Pick<BatchQuantityRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Shipment' },
+    ...$Pick<Shipment, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Voyage' },
+    ...$Pick<Voyage, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Container' },
+    ...$Pick<Container, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ContainerGroup' },
+    ...$Pick<ContainerGroup, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDate' },
+    ...$Pick<TimelineDate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TimelineDateRevision' },
+    ...$Pick<TimelineDateRevision, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Warehouse' },
+    ...$Pick<Warehouse, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Tag' },
+    ...$Pick<Tag, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'User' },
+    ...$Pick<User, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Partnership' },
+    ...$Pick<Partnership, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Role' },
+    ...$Pick<Role, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'File' },
+    ...$Pick<File, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Task' },
+    ...$Pick<Task, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'TaskTemplate' },
+    ...$Pick<TaskTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'ProjectTemplate' },
+    ...$Pick<ProjectTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Milestone' },
+    ...$Pick<Milestone, {| id: * |}>,
+    ...MilestoneCardFragmentFragment
+  }) | ({
+      ...{ __typename?: 'MilestoneTemplate' },
+    ...$Pick<MilestoneTemplate, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'Mask' },
+    ...$Pick<Mask, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'MaskEdit' },
+    ...$Pick<MaskEdit, {| id: * |}>
+  }) | ({
+      ...{ __typename?: 'FieldDefinition' },
+    ...$Pick<FieldDefinition, {| id: * |}>
+  }) | { __typename?: 'FieldValue' } | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+});
+
 export type BadRequestFragmentFragment = ({
     ...{ __typename?: 'BadRequest' },
   ...{| violations: Array<({
@@ -62175,6 +62854,9 @@ export type ItemCardFragmentFragment = ({
     }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, exporter: ({
         ...{ __typename?: 'Organization' },
       ...PartnerNameFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
     }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, productProvider: ({
       ...{ __typename?: 'ProductProvider' },
@@ -62188,8 +62870,14 @@ export type ItemCardFragmentFragment = ({
       }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, files: Array<({
           ...{ __typename?: 'File' },
         ...ImageFragmentFragment
-      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, ownedBy: ({
+          ...{ __typename?: 'Organization' },
+        ...OwnedByFragmentFragment
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
     }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
 });
 
@@ -62758,7 +63446,10 @@ export type ProductProviderCardFragmentFragment = ({
     }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, files: Array<({
         ...{ __typename?: 'File' },
       ...ImageFragmentFragment
-    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, defaultPackage: ?({
       ...{ __typename?: 'ProductProviderPackage' },
     ...ProductProviderPackagingFragmentFragment
@@ -62804,7 +63495,14 @@ export type MilestoneCardFragmentFragment = ({
   ...{| taskCount: ({
       ...{ __typename?: 'TaskCount' },
     ...TaskCountFragmentFragment
-  }) |}
+  }), project: ({
+      ...{ __typename?: 'Project' },
+    ...$Pick<Project, {| id: * |}>,
+    ...{| ownedBy: ({
+        ...{ __typename?: 'Organization' },
+      ...OwnedByFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
 });
 
 export type ProjectFormQueryFragmentFragment = ({
@@ -63112,7 +63810,10 @@ export type ShipmentCardFragmentFragment = ({
         }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
       }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
     }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, ownedBy: ({
+      ...{ __typename?: 'Organization' },
+    ...OwnedByFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
 });
 
 export type ShipmentCardWithOwnedFragmentFragment = ({
@@ -63164,10 +63865,13 @@ export type UsersQueryQuery = ({
   }) |}
 });
 
-export type TableTemplateCardFragmentFragment = ({
+export type TableTemplateFragmentFragment = ({
     ...{ __typename?: 'MaskEdit' },
-  ...$Pick<MaskEdit, {| id: *, name: *, type: *, memo: *, fields: *, updatedAt: * |}>,
-  ...{| updatedBy: ?({
+  ...$Pick<MaskEdit, {| id: *, name: *, type: *, memo: *, updatedAt: * |}>,
+  ...{| columns: Array<({
+      ...{ __typename?: 'MaskEditColumn' },
+    ...$Pick<MaskEditColumn, {| key: *, hidden: * |}>
+  })>, updatedBy: ?({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}

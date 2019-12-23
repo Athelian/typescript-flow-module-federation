@@ -15,6 +15,7 @@ import {
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
+import ColumnsGroup from 'components/ColumnsGroup';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { batchesExportQuery } from '../query';
@@ -88,9 +89,7 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig columns={columns} templateType="BatchSheet" onChange={setColumns}>
           {({ getGroupProps }) =>
-            BatchSheetColumnGroups.map(type => (
-              <ColumnsConfig.Group {...getGroupProps(type)} key={type} />
-            ))
+            BatchSheetColumnGroups.map(type => <ColumnsGroup {...getGroupProps(type)} key={type} />)
           }
         </ColumnsConfig>
         <ExportButton

@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Dec 12 2019 10:28:09 GMT+0900 (Japan Standard Time)
+# timestamp: Mon Dec 23 2019 14:37:19 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26721,17 +26721,23 @@ input BatchFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
-  orderItemId: ID
-  productId: ID
-  exporterId: ID
-  supplierId: ID
-  importerId: ID
   producedAt: DateRangeInput
   deliveredAt: DateRangeInput
   expiredAt: DateRangeInput
+  desiredAt: DateRangeInput
   hasShipment: Boolean
   hasShipmentExcludeId: ID
   tagIds: [ID!]
+  orderIds: [ID!]
+  orderExporterIds: [ID!]
+  orderImporterIds: [ID!]
+  orderItemId: ID
+  orderItemIds: [ID!]
+  productIds: [ID!]
+  productProviderIds: [ID!]
+  productProviderSupplierIds: [ID!]
+  containerIds: [ID!]
+  shipmentIds: [ID!]
 }
 
 union BatchPayload = Batch | BadRequest | Forbidden | NotFound
@@ -26811,6 +26817,7 @@ input BatchSortInput {
   producedAt: SortOrder
   deliveredAt: SortOrder
   expiredAt: SortOrder
+  desiredAt: SortOrder
 }
 
 input BatchUpdateInput {
@@ -28438,6 +28445,15 @@ type EntityEvent {
   changes: [ChangeType!]
 }
 
+input EntityFileInput {
+  id: ID!
+  name: String
+  type: FileType
+  status: FileStatus
+  memo: String
+  orphan: Boolean
+}
+
 type EntityHit {
   field: String
   entity: EntityPayload!
@@ -28629,6 +28645,7 @@ type File implements Model & Owned & Memorizable {
   path(preset: ResizePreset, width: Int, height: Int): String!
   pathExpiredAt: DateTime!
   entity: EntityPayload
+  orphan: Boolean!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -28648,14 +28665,16 @@ input FileFilterInput {
   type: FileType
   status: FileStatus
   mimetype: String
+  hasEntity: Boolean
+  hasEntityExcludeId: ID
 }
 
 input FileInput {
-  id: ID!
   name: String
   type: FileType
   status: FileStatus
   memo: String
+  orphan: Boolean
 }
 
 union FilePayload = File | BadRequest | Forbidden | NotFound
@@ -29811,7 +29830,7 @@ input MilestoneCreateInput {
   estimatedCompletionDateInterval: IntervalInput
   estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
-  files: [FileInput!]
+  files: [EntityFileInput!]
   projectId: ID!
 }
 
@@ -29883,7 +29902,7 @@ input MilestoneUpdateInput {
   estimatedCompletionDateInterval: IntervalInput
   estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
-  files: [FileInput!]
+  files: [EntityFileInput!]
   id: ID
   projectId: ID
 }
@@ -29953,6 +29972,9 @@ type Mutation {
   tagCreate(input: TagCreateInput!): TagPayload!
   tagUpdate(id: ID!, input: TagUpdateInput!): TagPayload!
   tagDelete(id: ID!): EmptyPayload
+  fileUpload(file: Upload!, input: FileInput!): FilePayload!
+  fileUpdate(id: ID!, input: FileInput!): FilePayload!
+  fileDelete(id: ID!): EmptyPayload
   fieldDefinitionsUpdate(input: FieldDefinitionsInput!): FieldDefinitionsPayload!
   maskCreate(input: MaskCreateInput!): MaskPayload!
   maskUpdate(id: ID!, input: MaskUpdateInput!): MaskPayload!
@@ -30254,7 +30276,7 @@ input OrderCreateInput {
   tagIds: [ID!]
   inChargeIds: [ID!]
   orderItems: [OrderOrderItemInput!]
-  files: [FileInput!]
+  files: [EntityFileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
 }
@@ -30389,7 +30411,7 @@ input OrderItemCreateInput {
   memo: String
   tagIds: [ID!]
   batches: [OrderItemBatchInput!]
-  files: [FileInput!]
+  files: [EntityFileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
   orderId: ID!
@@ -30441,7 +30463,7 @@ input OrderItemUpdateInput {
   memo: String
   tagIds: [ID!]
   batches: [OrderItemBatchInput!]
-  files: [FileInput!]
+  files: [EntityFileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
   orderId: ID
@@ -30461,7 +30483,7 @@ input OrderOrderItemInput {
   memo: String
   tagIds: [ID!]
   batches: [OrderItemBatchInput!]
-  files: [FileInput!]
+  files: [EntityFileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
   id: ID
@@ -30506,7 +30528,7 @@ input OrderUpdateInput {
   tagIds: [ID!]
   inChargeIds: [ID!]
   orderItems: [OrderOrderItemInput!]
-  files: [FileInput!]
+  files: [EntityFileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
 }
@@ -30736,7 +30758,7 @@ input ProductCreateInput {
   hsCode: String
   material: String
   tagIds: [ID!]
-  files: [FileInput!]
+  files: [EntityFileInput!]
   memo: String
   productProviders: [ProductProviderCreateInput!]!
   customFields: CustomFieldsInput
@@ -30824,7 +30846,7 @@ input ProductProviderCreateInput {
   inspectionFee: PriceInput
   origin: Country
   productionLeadTime: Int
-  files: [FileInput!]
+  files: [EntityFileInput!]
   memo: String
   defaultPackageId: ID
   defaultPackageIndex: Int
@@ -30924,7 +30946,7 @@ input ProductProviderUpdateInput {
   inspectionFee: PriceInput
   origin: Country
   productionLeadTime: Int
-  files: [FileInput!]
+  files: [EntityFileInput!]
   memo: String
   defaultPackageId: ID
   defaultPackageIndex: Int
@@ -30949,7 +30971,7 @@ input ProductUpdateInput {
   hsCode: String
   material: String
   tagIds: [ID!]
-  files: [FileInput!]
+  files: [EntityFileInput!]
   memo: String
   productProviders: [ProductProviderUpdateInput!]
   customFields: CustomFieldsInput
@@ -31007,7 +31029,7 @@ input ProjectMilestoneCreateInput {
   estimatedCompletionDateInterval: IntervalInput
   estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
-  files: [FileInput!]
+  files: [EntityFileInput!]
 }
 
 input ProjectMilestoneUpdateInput {
@@ -31022,7 +31044,7 @@ input ProjectMilestoneUpdateInput {
   estimatedCompletionDateInterval: IntervalInput
   estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
-  files: [FileInput!]
+  files: [EntityFileInput!]
   id: ID
 }
 
@@ -86996,7 +87018,7 @@ input ShipmentCreateInput {
   voyages: [VoyageNestedInput!]
   containerGroups: [ContainerGroupNestedInput!]
   containers: [ShipmentContainerCreateInput!]
-  files: [FileInput!]
+  files: [EntityFileInput!]
   memo: String
   totalVolumeOverride: MetricValueInput
   totalVolumeOverriding: Boolean
@@ -87122,7 +87144,7 @@ input ShipmentUpdateInput {
   voyages: [VoyageNestedInput!]
   containerGroups: [ContainerGroupNestedInput!]
   containers: [ShipmentContainerUpdateInput!]
-  files: [FileInput!]
+  files: [EntityFileInput!]
   memo: String
   totalVolumeOverride: MetricValueInput
   totalVolumeOverriding: Boolean
@@ -87789,7 +87811,7 @@ input UserUpdateInput {
   disabled: Boolean
   language: Language
   timezone: String
-  avatar: FileInput
+  avatar: EntityFileInput
   organizationId: ID
   memo: String
   tagIds: [ID!]

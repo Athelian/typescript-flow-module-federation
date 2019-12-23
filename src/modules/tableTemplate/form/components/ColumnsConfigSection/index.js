@@ -4,53 +4,43 @@ import { FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader } from 'components/Form';
-import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
+import ColumnsGroup from 'components/ColumnsGroup';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import MilestoneTaskColumnsConfigGroup from 'modules/project/sheet/MilestoneTaskColumnsConfigGroup';
+import { parseIcon } from 'utils/entity';
 import { getColumnGroupTypes, computeColumnConfigsFromState } from './helpers';
 import { ColumnsConfigSectionWrapperStyle, ColumnsConfigSectionBodyStyle } from './style';
 
 const ColumnsConfigSection = () => {
   const {
     state,
-    setFieldValue,
+    selectColumns,
     selectAllColumns,
     unselectAllColumns,
     groupAllColumns,
   } = TableTemplateFormContainer.useContainer();
 
-  // COMPUTED STATES
   const parsedColumns = React.useMemo(() => computeColumnConfigsFromState(state), [state]);
 
   const groupedColumns = React.useMemo(
     () =>
-      parsedColumns.reduce(
-        (grouped, col) => ({
+      parsedColumns.reduce((grouped, col) => {
+        const [icon = ''] = Array.isArray(col) ? col?.[0]?.key?.split('.') : col?.key?.split('.');
+        return {
           ...grouped,
-          [col.icon]: [...(grouped[col.icon] ?? []), col],
-        }),
-        {}
-      ),
+          [parseIcon(icon)]: [...(grouped[parseIcon(icon)] ?? []), col],
+        };
+      }, {}),
     [parsedColumns]
   );
 
-  // CALLBACKS
   const getGroupProps = React.useCallback(
     (group: string) => ({
       icon: group,
       columns: groupedColumns[group] ?? [],
-      onChange: newCols => {
-        setFieldValue(
-          'columns',
-          Object.entries(groupedColumns).flatMap(([g, cols]) =>
-            g === group
-              ? newCols.map(newCol => ({ key: newCol.key, hidden: newCol.hidden }))
-              : (cols: any).map(col => ({ key: col.key, hidden: col.hidden }))
-          )
-        );
-      },
+      onChange: selectColumns,
     }),
-    [groupedColumns, setFieldValue]
+    [groupedColumns, selectColumns]
   );
 
   return (

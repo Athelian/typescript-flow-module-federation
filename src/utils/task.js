@@ -647,10 +647,9 @@ export const setToComplete = (
 };
 
 export const getParentInfo = (
-  parent: Object
+  parent: ?Object
 ): {
   parentType: string,
-
   // prettier-ignore
   parentIcon: | 'ORDER'
     | 'BATCH'
@@ -660,69 +659,69 @@ export const getParentInfo = (
     | 'PRODUCT'
     | 'PRODUCT_PROVIDER'
     | 'PROJECT'
-    | 'MILESTONE',
+    | 'MILESTONE'
+    | 'CLEAR',
   parentData: React$Node,
   link: string,
 } => {
-  const { __typename } = parent;
-
-  if (__typename === 'Order') {
-    return {
-      parentType: 'order',
-      parentIcon: 'ORDER',
-      parentData: parent.poNo,
-      link: `/order/${encodeId(parent.id)}`,
-    };
+  switch (parent?.__typename) {
+    case 'Order':
+      return {
+        parentType: 'order',
+        parentIcon: 'ORDER',
+        parentData: parent.poNo,
+        link: `/order/${encodeId(parent.id)}`,
+      };
+    case 'OrderItem':
+      return {
+        parentType: 'orderItem',
+        parentIcon: 'ORDER_ITEM',
+        parentData: parent.no,
+        link: `/order-item/${encodeId(parent.id)}`,
+      };
+    case 'Batch':
+      return {
+        parentType: 'batch',
+        parentIcon: 'BATCH',
+        parentData: parent.no,
+        link: `/batch/${encodeId(parent.id)}`,
+      };
+    case 'Shipment':
+      return {
+        parentType: 'shipment',
+        parentIcon: 'SHIPMENT',
+        parentData: parent.no,
+        link: `/shipment/${encodeId(parent.id)}`,
+      };
+    case 'Product':
+      return {
+        parentType: 'product',
+        parentIcon: 'PRODUCT',
+        parentData: parent.name,
+        link: `/product/${encodeId(parent.id)}`,
+      };
+    case 'ProductProvider':
+      return {
+        parentType: 'product',
+        parentIcon: 'PRODUCT_PROVIDER',
+        parentData: parent.name,
+        link: `/product/${encodeId(getByPath('product.id', parent))}`,
+      };
+    case 'Milestone':
+      return {
+        parentType: 'project',
+        parentIcon: 'MILESTONE',
+        parentData: parent.name,
+        link: `/project/${encodeId(getByPath('project.id', parent))}`,
+      };
+    default:
+      return {
+        parentType: '',
+        parentIcon: 'CLEAR',
+        parentData: null,
+        link: '',
+      };
   }
-  if (__typename === 'OrderItem') {
-    return {
-      parentType: 'orderItem',
-      parentIcon: 'ORDER_ITEM',
-      parentData: parent.no,
-      link: `/order-item/${encodeId(parent.id)}`,
-    };
-  }
-  if (__typename === 'Batch') {
-    return {
-      parentType: 'batch',
-      parentIcon: 'BATCH',
-      parentData: parent.no,
-      link: `/batch/${encodeId(parent.id)}`,
-    };
-  }
-  if (__typename === 'Shipment') {
-    return {
-      parentType: 'shipment',
-      parentIcon: 'SHIPMENT',
-      parentData: parent.no,
-      link: `/shipment/${encodeId(parent.id)}`,
-    };
-  }
-  if (__typename === 'Product') {
-    return {
-      parentType: 'product',
-      parentIcon: 'PRODUCT',
-      parentData: parent.name,
-      link: `/product/${encodeId(parent.id)}`,
-    };
-  }
-  if (__typename === 'ProductProvider') {
-    return {
-      parentType: 'product',
-      parentIcon: 'PRODUCT_PROVIDER',
-      parentData: parent.name,
-      link: `/product/${encodeId(getByPath('product.id', parent))}`,
-    };
-  }
-  if (__typename === 'Milestone') {
-    return {
-      parentType: 'project',
-      parentIcon: 'MILESTONE',
-      parentData: parent.name,
-      link: `/project/${encodeId(getByPath('project.id', parent))}`,
-    };
-  }
-  return {};
 };
 
 export function triggerAutoBinding({

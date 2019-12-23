@@ -2,6 +2,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  newDocument: {
+    id: 'components.Documents.newDocument',
+    defaultMessage: 'UPLOAD DOCUMENT',
+  },
   createdAt: {
     id: 'modules.Documents.createdAt',
     defaultMessage: 'Date Created',
@@ -25,5 +29,9 @@ export default defineMessages({
   status: {
     id: 'modules.Documents.status',
     defaultMessage: 'Status',
+  },
+  hasEntity: {
+    id: 'modules.Documents.hasEntity',
+    defaultMessage: 'Has Parent',
   },
 });

@@ -10,6 +10,7 @@ import {
   userAvatarFragment,
   tagFragment,
   forbiddenFragment,
+  ownedByFragment,
 } from 'graphql';
 
 export const orderFormTasksQuery = gql`
@@ -43,6 +44,7 @@ export const orderFormTasksQuery = gql`
   ${userAvatarFragment}
   ${tagFragment}
   ${forbiddenFragment}
+  ${ownedByFragment}
 `;
 
 export default orderFormTasksQuery;

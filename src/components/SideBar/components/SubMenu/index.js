@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
-import { navigate } from '@reach/router';
+import emitter from 'utils/emitter';
 import Icon from 'components/Icon';
 import {
   SubMenuWrapperStyle,
@@ -37,7 +37,7 @@ const SubMenu = ({ hasActiveChild, icon, label, children }: Props) => {
             className={SubMenuItemWrapperStyle(isExpanded || hasActiveChild, hasActiveChild)}
             onClick={() => {
               changeExpand(true);
-              navigate(firstChildPath);
+              emitter.emit('NAVIGATE_TO', firstChildPath);
             }}
             role="presentation"
           >

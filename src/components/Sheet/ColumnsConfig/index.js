@@ -1,13 +1,16 @@
 // @flow
 import * as React from 'react';
+import type { MaskEdit, MaskEditColumn } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import Dialog from 'components/Dialog';
 import { ApplyButton, ResetButton, BaseButton, SaveButton, IconButton } from 'components/Buttons';
 import { Tooltip } from 'components/Tooltip';
+import type { Column } from 'components/DraggableColumn';
+import { parseIcon } from 'utils/entity';
+import { convertMappingColumns, flattenColumns } from 'utils/template';
 import type { ColumnConfig } from '../SheetState/types';
 import { getColumnsConfigured } from '../useColumns';
 import messages from '../messages';
-import ColumnsGroup from './ColumnsGroup';
 import TemplateSelector from './TemplateSelector';
 import TemplateNew from './TemplateNew';
 import {
@@ -30,80 +33,128 @@ type Props = {
       group: string
     ) => {
       icon: string,
-      columns: Array<ColumnConfig>,
-      onChange: (Array<ColumnConfig>) => void,
+      columns: Array<Column | Array<Column>>,
+      onChange: (Array<Column | Array<Column>>) => void,
     },
   }) => React.Node,
 };
 
 const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, children }: Props) => {
-  // STATES
   const [isOpen, setOpen] = React.useState(false);
-  const [dirtyColumns, setDirtyColumns] = React.useState(columns);
+  const [dirtyColumns, setDirtyColumns] = React.useState<Array<Column | Array<Column>>>([]);
 
-  // EFFECTS
   React.useEffect(() => {
-    setDirtyColumns(columns);
+    setDirtyColumns(convertMappingColumns(columns));
   }, [columns]);
 
-  // COMPUTED STATES
-  const isDirty = React.useMemo(
-    () =>
+  const isDirty = React.useMemo(() => {
+    const currentColumns = flattenColumns(dirtyColumns);
+    return (
       !columns.every(
         (col, idx) =>
-          col.key === dirtyColumns[idx]?.key && !!col.hidden === !!dirtyColumns[idx]?.hidden
-      ) || dirtyColumns.length !== columns.length,
-    [columns, dirtyColumns]
-  );
+          col.key === currentColumns[idx]?.key && !!col.hidden === !!currentColumns[idx]?.hidden
+      ) || currentColumns.length !== columns.length
+    );
+  }, [columns, dirtyColumns]);
+
   const groupedColumns = React.useMemo(
     () =>
-      dirtyColumns.reduce(
-        (grouped, col) => ({
+      dirtyColumns.reduce((grouped, col) => {
+        const [icon = ''] = Array.isArray(col) ? col?.[0]?.key?.split('.') : col?.key?.split('.');
+        return {
           ...grouped,
-          [col.icon]: [...(grouped[col.icon] ?? []), col],
-        }),
-        {}
-      ),
+          [parseIcon(icon)]: [...(grouped[parseIcon(icon)] ?? []), col],
+        };
+      }, {}),
     [dirtyColumns]
   );
 
-  // ACTIONS
   const handleApply = () => {
-    onChange(dirtyColumns);
+    const selectedColumns = flattenColumns(dirtyColumns);
+    const applyColumns: Array<ColumnConfig> = [];
+    selectedColumns.forEach(col => {
+      applyColumns.push({
+        ...columns.find(({ key }) => key === col.key),
+        hidden: col.hidden,
+      });
+    });
+    onChange(applyColumns);
     setOpen(false);
   };
-  const handleReset = () => setDirtyColumns(columns);
+
+  const handleReset = () => setDirtyColumns(convertMappingColumns(columns));
   const handleSelectAll = () =>
-    setDirtyColumns(dirtyColumns.map(col => ({ ...col, hidden: false })));
+    setDirtyColumns(
+      dirtyColumns.map(col =>
+        Array.isArray(col)
+          ? [
+              ...col.map(({ key, title }) => ({
+                key,
+                title,
+                hidden: false,
+              })),
+            ]
+          : {
+              key: col.key,
+              title: col.title,
+              hidden: false,
+            }
+      )
+    );
   const handleUnselectAll = () =>
-    setDirtyColumns(dirtyColumns.map(col => ({ ...col, hidden: true })));
+    setDirtyColumns(
+      dirtyColumns.map(col =>
+        Array.isArray(col)
+          ? [
+              ...col.map(({ key, title }) => ({
+                key,
+                title,
+                hidden: true,
+              })),
+            ]
+          : {
+              key: col.key,
+              title: col.title,
+              hidden: true,
+            }
+      )
+    );
   const handleGroup = () =>
     setDirtyColumns(
-      Object.values(groupedColumns).flatMap(cols =>
-        ((cols: any): Array<ColumnConfig>).sort((a, b) => {
-          if (a.hidden && !b.hidden) {
-            return 1;
-          }
-
-          if (!a.hidden && b.hidden) {
-            return -1;
-          }
-
-          return 0;
+      convertMappingColumns(
+        Object.values(groupedColumns).flatMap((cols: any) => {
+          const selectedColumns = [];
+          const hiddenColumns = [];
+          (cols: Array<MaskEditColumn | Array<MaskEditColumn>>).forEach(column => {
+            if (Array.isArray(column)) {
+              if (column.some(({ hidden }) => !hidden)) {
+                selectedColumns.push(...column);
+              } else {
+                hiddenColumns.push(...column);
+              }
+            } else if (column.hidden) {
+              hiddenColumns.push(column);
+            } else {
+              selectedColumns.push(column);
+            }
+          });
+          return [...selectedColumns, ...hiddenColumns];
         })
       )
     );
-  const handleTemplateChange = template => {
+  const handleTemplateChange = (template: MaskEdit) => {
     if (template) {
       if (onLoadTemplate) {
-        setDirtyColumns(onLoadTemplate(template));
+        setDirtyColumns(convertMappingColumns(onLoadTemplate(template)));
       } else {
         setDirtyColumns(
-          getColumnsConfigured(
-            columns,
-            (template?.columns ?? []).reduce(
-              (cache, col) => ({ ...cache, [col.key]: col.hidden }),
-              {}
+          convertMappingColumns(
+            getColumnsConfigured(
+              (columns: any),
+              (template?.columns ?? []).reduce(
+                (cache, col) => ({ ...cache, [col.key]: col.hidden }),
+                {}
+              )
             )
           )
         );
@@ -119,7 +170,7 @@ const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, childr
       onChange: newCols =>
         setDirtyColumns(
           Object.entries(groupedColumns).flatMap(([g, cols]) =>
-            g === group ? newCols : ((cols: any): Array<ColumnConfig>)
+            g === group ? newCols : ((cols: any): Array<Column>)
           )
         ),
     }),
@@ -199,7 +250,7 @@ const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, childr
               </div>
 
               <TemplateNew
-                columns={dirtyColumns}
+                columns={dirtyColumns.flatMap(cols => (Array.isArray(cols) ? [...cols] : cols))}
                 templateType={templateType}
                 onSave={handleTemplateChange}
               >
@@ -219,7 +270,5 @@ const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, childr
     </>
   );
 };
-
-ColumnsConfig.Group = ColumnsGroup;
 
 export default ColumnsConfig;

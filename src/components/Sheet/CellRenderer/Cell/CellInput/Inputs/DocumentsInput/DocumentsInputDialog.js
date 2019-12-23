@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Provider } from 'unstated';
 import Dialog from 'components/Dialog';
 import { FormContainer } from 'modules/form';
-import { DocumentsInput as DocumentsSection } from 'components/Form';
+import { DocumentsUpload as DocumentsSection } from 'components/Form';
 import type { FilePayload } from 'generated/graphql';
 
 const formContainer = new FormContainer();
@@ -24,6 +24,7 @@ const DocumentsInputDialog = ({ value, onChange, onClose, open, entityType }: Pr
   const canUpdateType = true;
   const canUpdateMemo = true;
   const canDownload = true;
+  const canViewForm = false;
 
   return (
     <Provider inject={[formContainer]}>
@@ -37,6 +38,7 @@ const DocumentsInputDialog = ({ value, onChange, onClose, open, entityType }: Pr
             memo: canUpdateMemo,
           }}
           downloadable={canDownload}
+          canViewForm={canViewForm}
           files={value}
           onSave={onChange}
           entity={entityType}

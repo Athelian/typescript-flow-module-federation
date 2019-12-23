@@ -11,6 +11,7 @@ import { AuthenticatedConsumer } from 'contexts/Viewer';
 import { logOutMutation } from 'modules/userNavbar/mutation';
 import messages from 'modules/userNavbar/messages';
 import Import from 'modules/import';
+import emitter from 'utils/emitter';
 import { isEnableBetaFeature } from 'utils/env';
 import {
   UserMenuDropDownWrapperStyle,
@@ -34,8 +35,13 @@ const UserMenuDropdown = ({ isOpen, toggleUserMenu }: Props) => {
           <>
             <button
               className={UserMenuItemWrapperStyle}
-              onClick={() => {
-                navigate('/profile');
+              onClick={evt => {
+                if (!evt.ctrlKey && !evt.shiftKey) {
+                  evt.preventDefault();
+                  emitter.emit('NAVIGATE_TO', '/profile');
+                } else {
+                  navigate('/profile');
+                }
                 toggleUserMenu();
               }}
               type="button"

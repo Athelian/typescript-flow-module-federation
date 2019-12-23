@@ -5,6 +5,7 @@ import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ProjectFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
 import { Sheet, ColumnsConfig, useSheet, useExportedColumns } from 'components/Sheet';
+import ColumnsGroup from 'components/ColumnsGroup';
 import { clone } from 'utils/fp';
 import { projectsExportQuery } from '../query';
 import MilestoneTaskColumnsConfigGroup from './MilestoneTaskColumnsConfigGroup';
@@ -68,8 +69,20 @@ const ProjectSheetModule = () => {
         >
           {({ getGroupProps }) => (
             <>
-              <ColumnsConfig.Group {...getGroupProps('PROJECT')} />
-              <MilestoneTaskColumnsConfigGroup {...getGroupProps('MILESTONE_TASK')} />
+              <ColumnsGroup {...getGroupProps('PROJECT')} />
+              {(() => {
+                // TODO: bypass the flow error from custom group
+                const { columns: milestoneColumns, icon, onChange } = (getGroupProps(
+                  'MILESTONE_TASK'
+                ): any);
+                return (
+                  <MilestoneTaskColumnsConfigGroup
+                    columns={milestoneColumns}
+                    icon={icon}
+                    onChange={onChange}
+                  />
+                );
+              })()}
             </>
           )}
         </ColumnsConfig>

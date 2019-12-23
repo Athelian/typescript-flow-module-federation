@@ -36,6 +36,7 @@ export const SelectableCardStyle = (selected: boolean, flattenCornerIcon: boolea
   ${borderRadiuses.MAIN};
   opacity: 0.5;
   ${flattenCornerIcon && 'pointer-events: none'};
+  cursor: pointer;
 `;
 
 export const BadgeStyle = css`

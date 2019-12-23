@@ -222,7 +222,7 @@ const TaskCard = ({
         {!(hideParentInfo || isInTemplate) && (
           <div className={TaskParentWrapperStyle}>
             <RelateEntity
-              link={viewPermissions[parentType] ? link : ''}
+              link={viewPermissions?.[parentType] ? link : ''}
               entity={parentIcon}
               value={parentData}
             />

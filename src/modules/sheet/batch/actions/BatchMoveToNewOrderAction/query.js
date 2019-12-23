@@ -15,6 +15,7 @@ import {
   imageFragment,
   documentFragment,
   forbiddenFragment,
+  ownedByFragment,
 } from 'graphql';
 
 const orderItemFormFragment = gql`
@@ -99,6 +100,7 @@ export const orderItemFormQuery = gql`
   ${imageFragment}
   ${customFieldsFragment}
   ${documentFragment}
+  ${ownedByFragment}
   ${productProviderPackagingFragment}
   ${forbiddenFragment}
 `;

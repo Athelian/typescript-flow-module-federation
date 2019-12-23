@@ -4,6 +4,7 @@ import * as Sentry from '@sentry/browser';
 import { isDevEnvironment } from 'utils/env';
 import logger from 'utils/logger';
 import InternalError from 'components/InternalError';
+import ConfirmBeforeLeave from 'components/ConfirmBeforeLeave';
 import UserNavbar from 'modules/userNavbar';
 import { DesktopWrapperStyle } from 'styles/main';
 import { LayoutWrapperStyle, NavBarWrapperStyle, NavBarStyle } from './style';
@@ -64,6 +65,7 @@ export default class Layout extends React.Component<Props, State> {
 
           <div>{children}</div>
         </div>
+        <ConfirmBeforeLeave />
       </div>
     );
   }

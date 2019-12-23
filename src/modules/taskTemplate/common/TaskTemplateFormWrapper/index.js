@@ -18,7 +18,9 @@ import {
 import { FormContainer, resetFormState } from 'modules/form';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
+import { CancelButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import { removeTypename } from 'utils/data';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 
@@ -149,7 +151,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
                     {isNew && <CancelButton onClick={() => onCancel()} />}
 
                     {!isNew && taskTemplateContainer.isDirty() && (
-                      <ResetButton
+                      <ResetFormButton
                         onClick={() => {
                           resetFormState(taskTemplateContainer);
                           formContainer.onReset();
@@ -157,7 +159,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
                       />
                     )}
                     {(isNew || taskTemplateContainer.isDirty()) && (
-                      <SaveButton
+                      <SaveFormButton
                         id="task_template_form_save_button"
                         disabled={!formContainer.isReady(taskTemplateContainer.state, validator)}
                         isLoading={isLoading}

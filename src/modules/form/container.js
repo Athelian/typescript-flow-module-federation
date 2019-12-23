@@ -1,8 +1,8 @@
 // @flow
 import { Container } from 'unstated';
 import { yupToFormErrors } from 'utils/errors';
-import logger from 'utils/logger';
 import { isEquals, setIn } from 'utils/fp';
+import emitter from 'utils/emitter';
 
 type FormState = {
   hasServerError: boolean,
@@ -47,7 +47,7 @@ export default class FormContainer extends Container<FormState> {
   };
 
   onReset = () => {
-    logger.warn('onReset');
+    emitter.emit('VALIDATION_ERROR', true);
     this.setState(initState);
   };
 
@@ -84,9 +84,11 @@ export default class FormContainer extends Container<FormState> {
     formData: Object,
     schema: {
       validate: (any, any) => Promise<any>,
+      isValidSync: (any, any) => boolean,
     } = EmptyValidation
-  ) => {
+  ): boolean => {
     const { errors, serverErrors } = this.state;
+    const isValid = schema?.isValidSync?.(formData);
     schema
       .validate(formData, { abortEarly: false })
       .then(() => {
@@ -122,5 +124,7 @@ export default class FormContainer extends Container<FormState> {
           });
         }
       });
+    emitter.emit('VALIDATION_ERROR', isValid);
+    return isValid;
   };
 }

@@ -16,7 +16,8 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import ItemForm from 'modules/orderItem/form';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon } from 'components/NavBar';
-import { SaveButton, ResetButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 
 type Props = {
   orderItem: Object,
@@ -99,7 +100,7 @@ const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
                   orderItemFilesContainer.isDirty() ||
                   orderItemTasksContainer.isDirty()) && (
                   <>
-                    <ResetButton
+                    <ResetFormButton
                       onClick={() => {
                         resetFormState(orderItemInfoContainer);
                         resetFormState(orderItemBatchesContainer);
@@ -108,7 +109,7 @@ const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
                         formContainer.onReset();
                       }}
                     />
-                    <SaveButton
+                    <SaveFormButton
                       id="item_form_save_button"
                       disabled={
                         !formContainer.isReady(

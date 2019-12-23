@@ -16,6 +16,7 @@ import {
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
+import ColumnsGroup from 'components/ColumnsGroup';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
@@ -90,9 +91,7 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig columns={columns} templateType="OrderSheet" onChange={setColumns}>
           {({ getGroupProps }) =>
-            OrderSheetColumnGroups.map(type => (
-              <ColumnsConfig.Group {...getGroupProps(type)} key={type} />
-            ))
+            OrderSheetColumnGroups.map(type => <ColumnsGroup {...getGroupProps(type)} key={type} />)
           }
         </ColumnsConfig>
         <ExportButton

@@ -296,6 +296,6 @@ export const presets = {
   BOX: `
     ${shadows.WATERFALL};
     ${borderRadiuses.MAIN};
-    background-color: #fff;
+    background-color: ${colors.WHITE};
   `,
 };

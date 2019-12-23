@@ -398,6 +398,14 @@ export default defineMessages({
     id: 'modules.Shipments.cargoReady',
     defaultMessage: 'CARGO READY',
   },
+  cargoReadyCurrentDate: {
+    id: 'modules.Shipments.cargoReadyCurrentDate',
+    defaultMessage: 'CARGO READY CURRENT DATE',
+  },
+  cargoReadyDifferenceDate: {
+    id: 'modules.Shipments.cargoReadyDifferenceDate',
+    defaultMessage: 'CARGO READY DATE DIFFERENCE',
+  },
   cargoReadyRevisions: {
     id: 'modules.Shipments.cargoReadyRevisions',
     defaultMessage: 'CARGO READY REVISIONS',
@@ -430,6 +438,14 @@ export default defineMessages({
     id: 'modules.Shipments.customClearance',
     defaultMessage: 'CUSTOMS CLEARANCE',
   },
+  customClearanceCurrentDate: {
+    id: 'modules.Shipments.customClearanceCurrentDate',
+    defaultMessage: 'CUSTOMS CLEARANCE CURRENT DATE',
+  },
+  customClearanceDifferenceDate: {
+    id: 'modules.Shipments.customClearanceDifferenceDate',
+    defaultMessage: 'CUSTOMS CLEARANCE DATE DIFFERENCE',
+  },
   customClearanceRevisions: {
     id: 'modules.Shipments.customClearanceRevisions',
     defaultMessage: 'CUSTOMS CLEARANCE REVISIONS',
@@ -446,6 +462,14 @@ export default defineMessages({
     id: 'modules.Shipments.warehouseArrival',
     defaultMessage: 'WAREHOUSE ARRIVAL',
   },
+  warehouseArrivalCurrentDate: {
+    id: 'modules.Shipments.warehouseArrivalCurrentDate',
+    defaultMessage: 'WAREHOUSE ARRIVAL CURRENT DATE',
+  },
+  warehouseArrivalDifferenceDate: {
+    id: 'modules.Shipments.warehouseArrivalDifferenceDate',
+    defaultMessage: 'WAREHOUSE ARRIVAL DIFFERENT DATE',
+  },
   warehouseArrivalRevisions: {
     id: 'modules.Shipments.warehouseArrivalRevisions',
     defaultMessage: 'WAREHOUSE ARRIVAL REVISIONS',
@@ -461,6 +485,14 @@ export default defineMessages({
   deliveryReady: {
     id: 'modules.Shipments.deliveryReady',
     defaultMessage: 'DELIVERY READY',
+  },
+  deliveryReadyCurrentDate: {
+    id: 'modules.Shipments.deliveryReadyCurrentDate',
+    defaultMessage: 'DELIVERY READY CURRENT DATE',
+  },
+  deliveryReadyDifferenceDate: {
+    id: 'modules.Shipments.deliveryReadyDifferenceDate',
+    defaultMessage: 'DELIVERY READY DATE DIFFERENCE',
   },
   deliveryReadyRevisions: {
     id: 'modules.Shipments.deliveryReadyRevisions',
@@ -734,6 +766,14 @@ export default defineMessages({
     id: 'modules.Shipments.dischargePortArrival',
     defaultMessage: 'DISCHARGE PORT ARRIVAL',
   },
+  dischargePortArrivalCurrentDate: {
+    id: 'modules.Shipments.sort.dischargePortArrivalCurrentDate',
+    defaultMessage: 'DISCHARGE PORT ARRIVAL CURRENT DATE',
+  },
+  dischargePortArrivalDifferenceDate: {
+    id: 'modules.Shipments.sort.dischargePortArrivalDifferenceDate',
+    defaultMessage: 'DISCHARGE PORT ARRIVAL DATE DIFFERENCE',
+  },
   dischargePortArrivalRevisions: {
     id: 'modules.Shipments.dischargePortArrivalRevisions',
     defaultMessage: 'DISCHARGE PORT ARRIVAL REVISIONS',
@@ -742,9 +782,25 @@ export default defineMessages({
     id: 'modules.Shipments.firstTransitPortArrival',
     defaultMessage: 'FIRST TRANSIT ARRIVAL',
   },
+  firstTransitPortArrivalCurrentDate: {
+    id: 'modules.Shipments.firstTransitPortArrivalCurrentDate',
+    defaultMessage: 'FIRST TRANSIT ARRIVAL CURRENT DATE',
+  },
+  firstTransitPortArrivalDifferenceDate: {
+    id: 'modules.Shipments.firstTransitPortArrivalDifferenceDate',
+    defaultMessage: 'FIRST TRANSIT ARRIVAL DATE DIFFERENCE',
+  },
   firstTransitPortArrivalRevisions: {
     id: 'modules.Shipments.firstTransitPortArrivalRevisions',
     defaultMessage: 'FIRST TRANSIT ARRIVAL REVISIONS',
+  },
+  firstTransitPortDepartureCurrentDate: {
+    id: 'modules.Shipments.firstTransitPortDepartureCurrentDate',
+    defaultMessage: 'FIRST TRANSIT DEPARTURE CURRENT DATE',
+  },
+  firstTransitPortDepartureDifferenceDate: {
+    id: 'modules.Shipments.firstTransitPortDepartureDifferenceDate',
+    defaultMessage: 'FIRST TRANSIT DEPARTURE DATE DIFFERENCE',
   },
   firstTransitPortDeparture: {
     id: 'modules.Shipments.firstTransitPortDeparture',
@@ -758,6 +814,14 @@ export default defineMessages({
     id: 'modules.Shipments.secondTransitPortArrival',
     defaultMessage: 'SECOND TRANSIT ARRIVAL',
   },
+  secondTransitPortArrivalCurrentDate: {
+    id: 'modules.Shipments.secondTransitPortArrivalCurrentDate',
+    defaultMessage: 'SECOND TRANSIT ARRIVAL CURRENT DATE',
+  },
+  secondTransitPortArrivalDifferenceDate: {
+    id: 'modules.Shipments.secondTransitPortArrivalDifferenceDate',
+    defaultMessage: 'SECOND TRANSIT ARRIVAL DATE DIFFERENCE',
+  },
   secondTransitPortArrivalRevisions: {
     id: 'modules.Shipments.secondTransitPortArrivalRevisions',
     defaultMessage: 'SECOND TRANSIT ARRIVAL REVISIONS',
@@ -766,6 +830,14 @@ export default defineMessages({
     id: 'modules.Shipments.secondTransitPortDeparture',
     defaultMessage: 'SECOND TRANSIT DEPARTURE',
   },
+  secondTransitPortDepartureCurrentDate: {
+    id: 'modules.Shipments.secondTransitPortDepartureCurrentDate',
+    defaultMessage: 'SECOND TRANSIT DEPARTURE CURRENT DATE',
+  },
+  secondTransitPortDepartureDifferenceDate: {
+    id: 'modules.Shipments.secondTransitPortDepartureDifferenceDate',
+    defaultMessage: 'SECOND TRANSIT DEPARTURE DATE DIFFERENCE',
+  },
   secondTransitPortDepartureRevisions: {
     id: 'modules.Shipments.secondTransitPortDepartureRevisions',
     defaultMessage: 'SECOND TRANSIT DEPARTURE REVISIONS',
@@ -773,6 +845,14 @@ export default defineMessages({
   loadPortDeparture: {
     id: 'modules.Shipments.loadPortDeparture',
     defaultMessage: 'LOAD PORT DEPARTURE',
+  },
+  loadPortDepartureCurrentDate: {
+    id: 'modules.Shipments.loadPortDepartureCurrentDate',
+    defaultMessage: 'LOAD PORT DEPARTURE CURRENT DATE',
+  },
+  loadPortDepartureDifferenceDate: {
+    id: 'modules.Shipments.loadPortDepartureDifferenceDate',
+    defaultMessage: 'LOAD PORT DEPARTURE DATE DIFFERENCE',
   },
   loadPortDepartureRevisions: {
     id: 'modules.Shipments.loadPortDepartureRevisions',
@@ -866,15 +946,15 @@ export default defineMessages({
 export const shipmentSortMessages = defineMessages({
   updatedAt: {
     id: 'modules.Shipments.sort.updatedAt',
-    defaultMessage: 'Last Modified',
+    defaultMessage: 'LAST MODIFIED',
   },
   createdAt: {
     id: 'modules.Shipments.sort.createdAt',
-    defaultMessage: 'Date Created',
+    defaultMessage: 'DATE CREATED',
   },
   shipmentId: {
     id: 'modules.Shipments.sort.no',
-    defaultMessage: 'Shipment ID',
+    defaultMessage: 'SHIPMENT ID',
   },
   blNo: {
     id: 'modules.Shipments.sort.blNo',
@@ -882,46 +962,46 @@ export const shipmentSortMessages = defineMessages({
   },
   vesselName: {
     id: 'modules.Shipments.sort.vesselName',
-    defaultMessage: 'Vessel Name',
+    defaultMessage: 'VESSEL NAME',
   },
   cargoReady: {
     id: 'modules.Shipments.sort.cargoReady',
-    defaultMessage: 'Cargo Ready',
+    defaultMessage: 'CARGO READY',
   },
   loadPortDeparture: {
     id: 'modules.Shipments.sort.loadPortDeparture',
-    defaultMessage: 'Load Port Departure',
+    defaultMessage: 'LOAD PORT DEPARTURE',
   },
   firstTransitPortArrival: {
     id: 'modules.Shipments.sort.firstTransitPortArrival',
-    defaultMessage: '1st Transit Arrival',
+    defaultMessage: '1ST TRANSIT ARRIVAL',
   },
   firstTransitPortDeparture: {
     id: 'modules.Shipments.sort.firstTransitPortDeparture',
-    defaultMessage: '1st Transit Departure',
+    defaultMessage: '1ST TRANSIT DEPARTURE',
   },
   secondTransitPortArrival: {
     id: 'modules.Shipments.sort.secondTransitPortArrival',
-    defaultMessage: '2nd Transit Arrival',
+    defaultMessage: '2ND TRANSIT ARRIVAL',
   },
   secondTransitPortDeparture: {
     id: 'modules.Shipments.sort.secondTransitPortDeparture',
-    defaultMessage: '2nd Transit Departure',
+    defaultMessage: '2ND TRANSIT DEPARTURE',
   },
   dischargePortArrival: {
     id: 'modules.Shipments.sort.dischargePortArrival',
-    defaultMessage: 'Discharge Port Arrival',
+    defaultMessage: 'DISCHARGE PORT ARRIVAL',
   },
   customClearance: {
     id: 'modules.Shipments.sort.customClearance',
-    defaultMessage: 'Customs Clearance',
+    defaultMessage: 'CUSTOMS CLEARANCE',
   },
   warehouseArrival: {
     id: 'modules.Shipments.sort.warehouseArrival',
-    defaultMessage: 'Warehouse Arrival',
+    defaultMessage: 'WAREHOUSE ARRIVAL',
   },
   deliveryReady: {
     id: 'modules.Shipments.sort.deliveryReady',
-    defaultMessage: 'Delivery Ready',
+    defaultMessage: 'DELIVERY READY',
   },
 });

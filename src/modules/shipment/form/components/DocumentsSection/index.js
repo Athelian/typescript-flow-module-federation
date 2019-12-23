@@ -5,7 +5,9 @@ import { FormattedMessage } from 'react-intl';
 import { getByPathWithDefault } from 'utils/fp';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
+import FormattedNumber from 'components/FormattedNumber';
 import {
+  SHIPMENT_UPDATE,
   SHIPMENT_SET_DOCUMENTS,
   SHIPMENT_DOWNLOAD_DOCUMENTS,
   SHIPMENT_DOCUMENT_DELETE,
@@ -21,10 +23,11 @@ import {
   DOCUMENT_SET_STATUS,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
+  DOCUMENT_FORM,
 } from 'modules/permission/constants/file';
 import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
 import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
-import { DocumentsInput, SectionHeader } from 'components/Form';
+import { DocumentsUpload, SectionHeader } from 'components/Form';
 import { ShipmentFilesContainer } from 'modules/shipment/form/containers';
 import { shipmentFormFilesQuery } from './query';
 
@@ -36,7 +39,6 @@ type Props = {|
 function DocumentsSection({ entityId, isLoading }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-
   const canSetDocuments = hasPermission(SHIPMENT_SET_DOCUMENTS);
 
   return (
@@ -59,11 +61,11 @@ function DocumentsSection({ entityId, isLoading }: Props) {
                   title={
                     <>
                       <FormattedMessage id="modules.Orders.documents" defaultMessage="DOCUMENTS" />{' '}
-                      ({files.length})
+                      (<FormattedNumber value={files.length} />)
                     </>
                   }
                 />
-                <DocumentsInput
+                <DocumentsUpload
                   entity="Shipment"
                   uploadable={
                     canSetDocuments || hasPermission([SHIPMENT_DOCUMENT_CREATE, DOCUMENT_CREATE])
@@ -71,6 +73,7 @@ function DocumentsSection({ entityId, isLoading }: Props) {
                   removable={
                     canSetDocuments || hasPermission([SHIPMENT_DOCUMENT_DELETE, DOCUMENT_DELETE])
                   }
+                  addable={canSetDocuments || hasPermission([SHIPMENT_UPDATE])}
                   editable={{
                     status:
                       canSetDocuments ||
@@ -95,6 +98,7 @@ function DocumentsSection({ entityId, isLoading }: Props) {
                       ]),
                   }}
                   downloadable={hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS)}
+                  viewForm={hasPermission(DOCUMENT_FORM)}
                   files={files}
                   onSave={updateFiles => setFieldValue('files', updateFiles)}
                 />

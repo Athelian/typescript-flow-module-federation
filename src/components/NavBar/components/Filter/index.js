@@ -24,7 +24,13 @@ import WarehouseIds from './Inputs/WarehouseIds';
 import ProductIds from './Inputs/ProductIds';
 import ProductProviderIds from './Inputs/ProductProviderIds';
 import ContainerIds from './Inputs/ContainerIds';
-import { CompletelyBatched, CompletelyShipped, HasShipment, FreeTimeOverdue } from './Inputs/Bool';
+import {
+  CompletelyBatched,
+  CompletelyShipped,
+  HasShipment,
+  HasEntity,
+  FreeTimeOverdue,
+} from './Inputs/Bool';
 import OrganizationIds, {
   ImporterIds,
   ExporterIds,
@@ -116,6 +122,7 @@ const inputs = {
   completely_batched: CompletelyBatched,
   completely_shipped: CompletelyShipped,
   has_shipment: HasShipment,
+  has_entity: HasEntity,
   free_time_overdue: FreeTimeOverdue,
   ports: Ports,
 };

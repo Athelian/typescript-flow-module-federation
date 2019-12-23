@@ -10,7 +10,8 @@ import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import Timeline from 'modules/timeline/components/Timeline';
 import SlideView from 'components/SlideView';
 import { SlideViewLayout, SlideViewNavBar, Content } from 'components/Layout';
-import { SaveButton, ResetButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import { FormContainer } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -192,7 +193,7 @@ class BatchFormModule extends React.Component<Props> {
                     <>
                       {(batchInfoContainer.isDirty() || batchTasksContainer.isDirty()) && (
                         <>
-                          <ResetButton
+                          <ResetFormButton
                             onClick={() => {
                               this.initAllValues(
                                 {
@@ -207,7 +208,7 @@ class BatchFormModule extends React.Component<Props> {
                               formContainer.onReset();
                             }}
                           />
-                          <SaveButton
+                          <SaveFormButton
                             id="batch_form_save_button"
                             disabled={
                               !formContainer.isReady(

@@ -9,7 +9,9 @@ import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
+import { CancelButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import LoadingIcon from 'components/LoadingIcon';
 import { FormContainer, resetFormState } from 'modules/form';
 import MaskForm from 'modules/metadata/components/MaskForm';
@@ -154,13 +156,13 @@ class MaskFormWrapper extends React.Component<Props> {
                             {isNew && <CancelButton onClick={() => onCancel()} />}
 
                             {!isNew && maskContainer.isDirty() && (
-                              <ResetButton
+                              <ResetFormButton
                                 onClick={() => this.onReset(maskContainer, formContainer)}
                               />
                             )}
 
                             {(isNew || maskContainer.isDirty()) && (
-                              <SaveButton
+                              <SaveFormButton
                                 id="custom_fields_template_form_save_button"
                                 disabled={!formContainer.isReady(maskContainer.state, validator)}
                                 onClick={() => {

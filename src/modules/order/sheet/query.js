@@ -11,6 +11,7 @@ import {
   milestoneCardFragment,
   projectCardFragment,
   taskFormInTemplateFragment,
+  ownedByFragment,
 } from 'graphql';
 import {
   sheetCustomizableFragment,
@@ -117,6 +118,7 @@ export const ordersQuery = gql`
   ${projectCardFragment}
   ${taskFormInTemplateFragment}
   ${forbiddenFragment}
+  ${ownedByFragment}
 `;
 
 export const orderItemByIDQuery = gql`
@@ -190,6 +192,7 @@ export const orderItemByIDQuery = gql`
   ${projectCardFragment}
   ${taskFormInTemplateFragment}
   ${forbiddenFragment}
+  ${ownedByFragment}
 `;
 
 export const batchByIDQuery = gql`
@@ -247,6 +250,7 @@ export const batchByIDQuery = gql`
   ${projectCardFragment}
   ${taskFormInTemplateFragment}
   ${forbiddenFragment}
+  ${ownedByFragment}
 `;
 
 export const containerByIDQuery = gql`
@@ -297,4 +301,5 @@ export const shipmentByIDQuery = gql`
   ${projectCardFragment}
   ${taskFormInTemplateFragment}
   ${forbiddenFragment}
+  ${ownedByFragment}
 `;

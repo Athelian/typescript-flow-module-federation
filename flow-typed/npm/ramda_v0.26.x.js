@@ -1,5 +1,5 @@
-// flow-typed signature: 4c9d0c331e2b054e81d322cfb6edc981
-// flow-typed version: b38de1436c/ramda_v0.26.x/flow_>=v0.104.x
+// flow-typed signature: 2a4a2629fefa3310c85cf4101bfe06c6
+// flow-typed version: 973b9c31b9/ramda_v0.26.x/flow_>=v0.104.x
 
 /* eslint-disable no-unused-vars, no-redeclare */
 
@@ -1175,7 +1175,7 @@ declare module ramda {
 
   declare function transpose<T>(xs: Array<Array<T>>): Array<Array<T>>;
 
-  declare function uniq<T>(xs: Array<T>): Array<T>;
+  declare function uniq<T>(xs: $ReadOnlyArray<T>): Array<T>;
 
   declare function unnest<T>(xs: NestedArray<T>): NestedArray<T>;
 

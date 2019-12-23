@@ -1,19 +1,19 @@
 // @flow
 import * as React from 'react';
 import { useQuery } from '@apollo/react-hooks';
+import type { Column } from 'components/DraggableColumn';
 import SlideView from 'components/SlideView';
 import LoadingIcon from 'components/LoadingIcon';
 import TableTemplateFormWrapper from 'modules/tableTemplate/common/TableTemplateFormWrapper';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import { allCustomFieldDefinitionsQuery } from 'modules/tableTemplate/list/query';
-import type { ColumnConfig } from '../../SheetState/types';
 
 type RenderProps = {
   onClick: () => void,
 };
 
 type Props = {
-  columns: Array<ColumnConfig>,
+  columns: Array<Column>,
   templateType: string,
   onSave: Object => void,
   children: RenderProps => React.Node,

@@ -33,7 +33,7 @@ import ColorInput from './ColorInput';
 import RadioInput from './RadioInput';
 import RadioInputFilterForm from './RadioInputFilterForm';
 import TagsInput from './TagsInput';
-import DocumentsInput from './DocumentsInput';
+import DocumentsUpload from './DocumentsUpload';
 import ImagesUploadInput from './ImagesUploadInput';
 import FieldItem from './FieldItem';
 import Label from './Label';
@@ -105,7 +105,7 @@ export {
   RadioInput,
   RadioInputFilterForm,
   TagsInput,
-  DocumentsInput,
+  DocumentsUpload,
   SectionHeader,
   LastModified,
   StatusToggle,

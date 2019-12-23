@@ -46,6 +46,7 @@ import {
   faTh as SHEET,
   faThLarge as CARDS,
   faThList as PROJECT,
+  faThumbtack as PARENT,
   // Common UI
   faFolderOpen as ACTIVE,
   faArchive as ARCHIVE,
@@ -85,6 +86,7 @@ import {
   faCommentAltLines as MEMO,
   faCommentAltPlus as MEMO_ADD,
   faDownload as DOWNLOAD,
+  faUpload as UPLOAD,
   faCircle as CIRCLE,
   faEllipsisH as HORIZONTAL_ELLIPSIS,
   faLanguage as LANGUAGE,
@@ -218,6 +220,7 @@ export default {
   BRING_FORWARD,
   CARDS,
   PROJECT,
+  PARENT,
 
   BRANCH,
   ACTIVE,
@@ -261,6 +264,7 @@ export default {
   MEMO,
   MEMO_ADD,
   DOWNLOAD,
+  UPLOAD,
   CIRCLE,
   SYNC,
   EXPAND,

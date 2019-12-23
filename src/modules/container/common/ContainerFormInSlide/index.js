@@ -9,7 +9,8 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon } from 'components/NavBar';
-import { SaveButton, ResetButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import {
   ContainerInfoContainer,
   ContainerBatchesContainer,
@@ -73,14 +74,14 @@ class ContainerFormInSlide extends React.Component<Props> {
               {(containerInfoContainer, containerBatchesContainer) =>
                 (containerInfoContainer.isDirty() || containerBatchesContainer.isDirty()) && (
                   <>
-                    <ResetButton
+                    <ResetFormButton
                       onClick={() => {
                         resetFormState(containerInfoContainer);
                         resetFormState(containerBatchesContainer);
                         formContainer.onReset();
                       }}
                     />
-                    <SaveButton
+                    <SaveFormButton
                       id="container_form_save_button"
                       disabled={
                         !formContainer.isReady(

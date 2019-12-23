@@ -7,7 +7,8 @@ import { showToastError } from 'utils/errors';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { getByPath } from 'utils/fp';
 import { FormContainer } from 'modules/form';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { CancelButton } from 'components/Buttons';
+import SaveFormButton from 'components/SaveFormButton';
 import { EntityIcon } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -214,7 +215,7 @@ class NewOrderForm extends React.PureComponent<Props> {
                         <CancelButton onClick={onCancel} />
 
                         {isDirty && (
-                          <SaveButton
+                          <SaveFormButton
                             id="order_form_save_button"
                             data-testid="btnSaveOrder"
                             disabled={
