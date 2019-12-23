@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import type { FilePayload } from 'generated/graphql';
+import { useMutation } from '@apollo/react-hooks';
 import { navigate } from '@reach/router';
 import { intersection } from 'lodash';
 import { FormattedMessage } from 'react-intl';
@@ -9,22 +10,40 @@ import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import UploadPlaceholder from 'components/UploadPlaceholder';
 import GridView from 'components/GridView';
 import DocumentCard from 'components/Cards/DocumentCard';
-import { ORDER_FORM, ORDER_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/order';
+import ActionDialog from 'components/Dialog/ActionDialog';
+import { CardAction } from 'components/Cards';
+import { BaseButton } from 'components/Buttons';
+import {
+  ORDER_FORM,
+  ORDER_DOWNLOAD_DOCUMENTS,
+  ORDER_DOCUMENT_DELETE,
+} from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_FORM,
   ORDER_ITEMS_DOWNLOAD_DOCUMENTS,
+  ORDER_ITEMS_DOCUMENT_DELETE,
 } from 'modules/permission/constants/orderItem';
 import {
   PRODUCT_FORM,
   PRODUCT_DOWNLOAD_DOCUMENTS,
+  PRODUCT_DOCUMENT_DELETE,
   PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS,
+  PRODUCT_PROVIDER_DOCUMENT_DELETE,
 } from 'modules/permission/constants/product';
-import { SHIPMENT_FORM, SHIPMENT_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/shipment';
+import {
+  SHIPMENT_FORM,
+  SHIPMENT_DOWNLOAD_DOCUMENTS,
+  SHIPMENT_DOCUMENT_DELETE,
+} from 'modules/permission/constants/shipment';
 import { PROJECT_FORM } from 'modules/permission/constants/project';
-import { MILESTONE_DOCUMENTS_DOWNLOAD } from 'modules/permission/constants/milestone';
-import { DOCUMENT_FORM } from 'modules/permission/constants/file';
+import {
+  MILESTONE_DOCUMENTS_DOWNLOAD,
+  MILESTONE_DOCUMENT_DELETE,
+} from 'modules/permission/constants/milestone';
+import { DOCUMENT_FORM, DOCUMENT_DELETE } from 'modules/permission/constants/file';
 import { getParentInfo } from 'utils/task';
 import { getByPathWithDefault } from 'utils/fp';
+import { deleteFileMutation } from './mutation';
 
 type Props = {
   files: Array<FilePayload>,
@@ -56,7 +75,7 @@ const defaultRenderItem = (file: FilePayload): React$Node =>
     <PartnerPermissionsWrapper key={getByPathWithDefault('', 'id', file)} data={file}>
       {permissions => {
         const { parentType } = getParentInfo(getByPathWithDefault({}, 'entity', file));
-
+        const [isOpen, setIsOpen] = React.useState(false);
         const hasPermission = React.useCallback(
           (checkPermission: string | Array<string>) => {
             if (Array.isArray(checkPermission)) {
@@ -83,23 +102,86 @@ const defaultRenderItem = (file: FilePayload): React$Node =>
           productProvider: hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS),
           project: hasPermission(MILESTONE_DOCUMENTS_DOWNLOAD),
         };
+        const deletePermissions = {
+          order: hasPermission(ORDER_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
+          orderItem: hasPermission(ORDER_ITEMS_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
+          shipment: hasPermission(SHIPMENT_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
+          product: hasPermission(PRODUCT_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
+          productProvider:
+            hasPermission(PRODUCT_PROVIDER_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
+          project: hasPermission(MILESTONE_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
+        };
+        const onCancel = () => setIsOpen(false);
+        const [deleteFile, { loading: isProcessing }] = useMutation(deleteFileMutation);
+        const onConfirm = () => {
+          deleteFile({
+            variables: {
+              id: file.id,
+            },
+          }).then(() => setIsOpen(false));
+        };
 
         return (
-          <DocumentCard
-            file={file}
-            navigable={viewPermissions[parentType] || !parentType}
-            downloadable={downloadPermissions[parentType] || !parentType}
-            editable={{
-              status: false,
-              type: false,
-              memo: false,
-            }}
-            onClick={() => {
-              if (hasPermission(DOCUMENT_FORM) || !parentType) {
-                navigate(`/document/${encodeId(file.id)}`);
+          <>
+            <ActionDialog
+              isOpen={isOpen}
+              isProcessing={isProcessing}
+              onCancel={onCancel}
+              title={
+                <FormattedMessage id="modules.RelationMap.label.delete" defaultMessage="DELETE" />
               }
-            }}
-          />
+              dialogMessage={
+                <FormattedMessage
+                  id="modules.documents.deleteFile.deleting"
+                  defaultMessage="Deleting file ..."
+                />
+              }
+              buttons={
+                <BaseButton
+                  label={
+                    <FormattedMessage
+                      id="modules.RelationMap.label.delete"
+                      defaultMessage="DELETE"
+                    />
+                  }
+                  icon="REMOVE"
+                  onClick={onConfirm}
+                  backgroundColor="RED"
+                  hoverBackgroundColor="RED_DARK"
+                />
+              }
+            />
+            <DocumentCard
+              file={file}
+              navigable={viewPermissions[parentType] || !parentType}
+              downloadable={downloadPermissions[parentType] || !parentType}
+              editable={{
+                status: false,
+                type: false,
+                memo: false,
+              }}
+              onClick={evt => {
+                evt.stopPropagation();
+                if (hasPermission(DOCUMENT_FORM) || !parentType) {
+                  navigate(`/document/${encodeId(file.id)}`);
+                }
+              }}
+              showActionsOnHover
+              actions={[
+                ...(deletePermissions[parentType] || !parentType
+                  ? [
+                      <CardAction
+                        icon="REMOVE"
+                        onClick={evt => {
+                          evt.stopPropagation();
+                          setIsOpen(true);
+                        }}
+                      />,
+                    ]
+                  : []),
+              ]}
+            />
+          </>
         );
       }}
     </PartnerPermissionsWrapper>

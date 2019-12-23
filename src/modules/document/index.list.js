@@ -22,7 +22,7 @@ import { DOCUMENT_CREATE } from 'modules/permission/constants/file';
 import { uuid } from 'utils/id';
 import { isEquals } from 'utils/fp';
 import DocumentList from './list';
-import fileUploadMutation from './list/mutation';
+import { fileUploadMutation } from './list/mutation';
 import messages from './messages';
 import {
   AddDocumentButtonWrapperStyle,
