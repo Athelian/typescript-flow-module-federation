@@ -1,9 +1,14 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
+import { Subscribe } from 'unstated';
+import { DocumentsUpload, SectionWrapper, SectionHeader } from 'components/Form';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import { ProductProviderInfoContainer } from 'modules/productProvider/form/containers';
 import usePermission from 'hooks/usePermission';
+import FormattedNumber from 'components/FormattedNumber';
 import {
+  PRODUCT_PROVIDER_UPDATE,
   PRODUCT_PROVIDER_SET_DOCUMENTS,
   PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS,
   PRODUCT_PROVIDER_DOCUMENT_DELETE,
@@ -21,40 +26,73 @@ import {
   DOCUMENT_UPDATE,
   DOCUMENT_FORM,
 } from 'modules/permission/constants/file';
-import DocumentsSection from 'sections/DocumentsSection';
 
 export default function EndProductDocumentsSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const canSetDocuments = hasPermission(PRODUCT_PROVIDER_SET_DOCUMENTS);
+
   const canUpload =
     canSetDocuments || hasPermission([PRODUCT_PROVIDER_DOCUMENT_CREATE, DOCUMENT_CREATE]);
+
+  const canAdd = canSetDocuments || hasPermission([PRODUCT_PROVIDER_UPDATE]);
+
   const canDownload = hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS);
+
   const canRemove =
     canSetDocuments || hasPermission([PRODUCT_PROVIDER_DOCUMENT_DELETE, DOCUMENT_DELETE]);
+
   const canUpdateStatus =
     canSetDocuments ||
     hasPermission([DOCUMENT_SET_STATUS, PRODUCT_PROVIDER_DOCUMENT_SET_STATUS, DOCUMENT_UPDATE]);
+
   const canUpdateType =
     canSetDocuments ||
     hasPermission([DOCUMENT_SET_TYPE, PRODUCT_PROVIDER_DOCUMENT_SET_TYPE, DOCUMENT_UPDATE]);
+
   const canUpdateMemo =
     canSetDocuments ||
     hasPermission([DOCUMENT_SET_MEMO, PRODUCT_PROVIDER_DOCUMENT_SET_MEMO, DOCUMENT_UPDATE]);
+
   const canViewForm = hasPermission(DOCUMENT_FORM);
 
   return (
-    <DocumentsSection
-      sectionId="productProvider_documentsSection"
-      entityType="ProductProvider"
-      container={ProductProviderInfoContainer}
-      canUpload={canUpload}
-      canRemove={canRemove}
-      canDownload={canDownload}
-      canUpdateStatus={canUpdateStatus}
-      canUpdateMemo={canUpdateMemo}
-      canUpdateType={canUpdateType}
-      canViewForm={canViewForm}
-    />
+    <Subscribe to={[ProductProviderInfoContainer]}>
+      {({ state: { files = [] }, setFieldValue }) => {
+        return (
+          <div>
+            <SectionWrapper id="productProvider_documentsSection">
+              <SectionHeader
+                icon="DOCUMENT"
+                title={
+                  <>
+                    <FormattedMessage
+                      id="modules.ProductProviders.documents"
+                      defaultMessage="Documents"
+                    />{' '}
+                    (<FormattedNumber value={files.length} />)
+                  </>
+                }
+              />
+              <DocumentsUpload
+                entity="ProductProvider"
+                files={files}
+                removable={canRemove}
+                uploadable={canUpload}
+                addable={canAdd}
+                editable={{
+                  status: canUpdateStatus,
+                  type: canUpdateType,
+                  memo: canUpdateMemo,
+                }}
+                downloadable={canDownload}
+                viewForm={canViewForm}
+                onSave={updateFiles => setFieldValue('files', updateFiles)}
+              />
+            </SectionWrapper>
+          </div>
+        );
+      }}
+    </Subscribe>
   );
 }

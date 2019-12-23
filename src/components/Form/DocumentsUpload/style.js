@@ -117,6 +117,7 @@ export const AddDocumentButtonLabelStyle: string = css`
   ${presets.ELLIPSIS};
   letter-spacing: 2px;
   ${fontSizes.SMALL};
+  text-transform: uppercase;
 `;
 
 export const AddDocumentButtonIconStyle: string = css`

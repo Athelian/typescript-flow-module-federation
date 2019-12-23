@@ -1103,6 +1103,13 @@ export const FileFilterConfig: Array<FilterConfig> = [
     message: fileMessages.updatedAt,
     defaultValue: { after: null, before: null },
   },
+  {
+    entity: 'DOCUMENT',
+    field: 'hasEntity',
+    type: 'has_entity',
+    message: fileMessages.hasEntity,
+    defaultValue: false,
+  },
 ];
 
 export const ProjectFilterConfig: Array<FilterConfig> = [

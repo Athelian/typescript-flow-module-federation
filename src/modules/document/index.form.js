@@ -46,13 +46,12 @@ const DocumentFormModuleImpl = ({ isLoading }: ImplProps) => {
       variables: { id: state.id, input },
     });
 
-    // TODO: Match API
-    const violations = data?.documentUpdate?.violations;
+    const violations = data?.fileUpdate?.violations;
 
     if (violations && violations.length) {
       formContainer.onErrors(violations);
     } else {
-      initializeState(data?.documentUpdate);
+      initializeState(data?.fileUpdate);
       formContainer.onReset();
     }
   };

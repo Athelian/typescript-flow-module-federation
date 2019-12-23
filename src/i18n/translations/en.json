@@ -110,7 +110,7 @@
   "components.RemoveDialog.cancel": "CANCEL",
   "components.inputs.approve": "APPROVE",
   "components.inputs.reject": "REJECT",
-  "components.Form.DocumentsUpload.newDocument": "UPLOAD DOCUMENT",
+  "components.Form.DocumentsUpload.newDocument": "Upload Documents",
   "components.Form.DocumentsUpload.dragAndDrop": "You can also upload files by dragging and dropping them inside",
   "components.Form.DocumentsUpload.noDocuments": "No documents found",
   "components.inputs.assignedTo": "ASSIGNED TO",

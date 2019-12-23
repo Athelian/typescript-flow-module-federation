@@ -26,4 +26,8 @@ export default defineMessages({
     id: 'modules.Documents.status',
     defaultMessage: 'Status',
   },
+  hasEntity: {
+    id: 'modules.Documents.hasEntity',
+    defaultMessage: 'Has Parent',
+  },
 });
