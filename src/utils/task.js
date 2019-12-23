@@ -649,7 +649,7 @@ export const setToComplete = (
 export const getParentInfo = (
   parent: ?Object
 ): {
-  parentType: string,
+  parentType: ?string,
   // prettier-ignore
   parentIcon: | 'ORDER'
     | 'BATCH'
@@ -659,7 +659,8 @@ export const getParentInfo = (
     | 'PRODUCT'
     | 'PRODUCT_PROVIDER'
     | 'PROJECT'
-    | 'MILESTONE',
+    | 'MILESTONE'
+    | 'CLEAR',
   parentData: React$Node,
   link: string,
 } => {
