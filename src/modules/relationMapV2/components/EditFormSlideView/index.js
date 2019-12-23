@@ -10,7 +10,7 @@ import ItemForm from 'modules/orderItem/index.form';
 import BatchForm from 'modules/batch/index.form';
 import ContainerForm from 'modules/container/index.form';
 // FIXME: binding date is not working yet
-import RMEditTasks from 'modules/relationMap/order/components/RMEditTasks';
+import RMEditTasks from 'modules/relationMapV2/components/RMEditTasks';
 import ShipmentForm from 'modules/shipment/index.form';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
