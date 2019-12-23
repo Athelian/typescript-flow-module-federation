@@ -5,7 +5,9 @@ import { FormattedMessage } from 'react-intl';
 import { getByPathWithDefault } from 'utils/fp';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
+import FormattedNumber from 'components/FormattedNumber';
 import {
+  SHIPMENT_UPDATE,
   SHIPMENT_SET_DOCUMENTS,
   SHIPMENT_DOWNLOAD_DOCUMENTS,
   SHIPMENT_DOCUMENT_DELETE,
@@ -59,7 +61,7 @@ function DocumentsSection({ entityId, isLoading }: Props) {
                   title={
                     <>
                       <FormattedMessage id="modules.Orders.documents" defaultMessage="DOCUMENTS" />{' '}
-                      ({files.length})
+                      (<FormattedNumber value={files.length} />)
                     </>
                   }
                 />
@@ -71,6 +73,7 @@ function DocumentsSection({ entityId, isLoading }: Props) {
                   removable={
                     canSetDocuments || hasPermission([SHIPMENT_DOCUMENT_DELETE, DOCUMENT_DELETE])
                   }
+                  addable={canSetDocuments || hasPermission([SHIPMENT_UPDATE])}
                   editable={{
                     status:
                       canSetDocuments ||

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import type { FilePayload } from 'generated/graphql';
+import { BooleanValue } from 'react-values';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { pick } from 'lodash/fp';
 import Dropzone from 'react-dropzone';
@@ -11,12 +12,14 @@ import { uuid } from 'utils/id';
 import { isEquals, getByPath } from 'utils/fp';
 import logger from 'utils/logger';
 import SlideView from 'components/SlideView';
+import { NewButton } from 'components/Buttons';
 import DocumentFormSideView from 'modules/document/index.formSlideView';
 import SectionNavBar from 'components/NavBar/SectionNavBar';
 import UploadPlaceholder from 'components/UploadPlaceholder';
 import { CardAction } from 'components/Cards';
 import DocumentCard, { getFileTypesByEntity } from 'components/Cards/DocumentCard';
 import { Tooltip } from 'components/Tooltip';
+import DocumentsSelector from './DocumentsSelector';
 import fileUploadMutation from './mutation';
 import {
   DocumentsSectionWrapperStyle,
@@ -45,6 +48,7 @@ type Props = {|
   downloadable: boolean,
   viewForm: boolean,
   uploadable: boolean,
+  addable: boolean,
   removable: boolean,
 |};
 
@@ -76,6 +80,7 @@ const DocumentsUpload = ({
   entity,
   editable,
   uploadable,
+  addable,
   removable,
   downloadable,
   viewForm,
@@ -83,6 +88,7 @@ const DocumentsUpload = ({
 }: Props) => {
   const intl = useIntl();
   const [selectedFile, setSelectedFile] = React.useState(null);
+  const [addedDocuments, setAddedDocuments] = React.useState([]);
   const [upload] = useMutation(fileUploadMutation);
   const [filesState, setFileState] = React.useState<
     Array<{
@@ -173,22 +179,64 @@ const DocumentsUpload = ({
   };
 
   const isEditable = Object.keys(editable).some(key => editable[key]);
+
   return (
     <>
       <div className={DocumentsSectionWrapperStyle}>
         <SectionNavBar>
           {uploadable && (
-            <>
-              <label className={AddDocumentButtonWrapperStyle}>
-                <div className={AddDocumentButtonLabelStyle}>
-                  <FormattedMessage {...messages.newDocument} />
-                </div>
-                <div className={AddDocumentButtonIconStyle}>
-                  <Icon icon="ADD" />
-                </div>
-                <input type="file" accept="*" hidden multiple value="" onChange={handleChange} />
-              </label>
-            </>
+            <label className={AddDocumentButtonWrapperStyle}>
+              <div className={AddDocumentButtonLabelStyle}>
+                <FormattedMessage {...messages.newDocument} />
+              </div>
+              <div className={AddDocumentButtonIconStyle}>
+                <Icon icon="UPLOAD" />
+              </div>
+              <input type="file" accept="*" hidden multiple value="" onChange={handleChange} />
+            </label>
+          )}
+
+          {addable && (
+            <BooleanValue>
+              {({ value: documentsSelectorIsOpen, set: setDocumentsSelectorIsOpen }) => (
+                <>
+                  <NewButton
+                    label={
+                      <FormattedMessage
+                        id="modules.Documents.selectDocument"
+                        defaultMessage="Select Documents"
+                      />
+                    }
+                    onClick={() => setDocumentsSelectorIsOpen(true)}
+                  />
+
+                  <SlideView
+                    isOpen={documentsSelectorIsOpen}
+                    onRequestClose={() => setDocumentsSelectorIsOpen(false)}
+                    shouldConfirm={() => {
+                      const button = document.getElementById('saveButtonOnSelectDocuments');
+                      return button;
+                    }}
+                  >
+                    <DocumentsSelector
+                      onCancel={() => setDocumentsSelectorIsOpen(false)}
+                      onSelect={selectedFiles => {
+                        setAddedDocuments([...addedDocuments, ...selectedFiles]);
+                        onSave([
+                          ...files,
+                          ...selectedFiles.map(file => ({
+                            ...file,
+                            entity: { __typename: entity },
+                          })),
+                        ]);
+                        setDocumentsSelectorIsOpen(false);
+                      }}
+                      alreadyAddedDocuments={addedDocuments}
+                    />
+                  </SlideView>
+                </>
+              )}
+            </BooleanValue>
           )}
         </SectionNavBar>
 
@@ -231,11 +279,10 @@ const DocumentsUpload = ({
                                     hoverColor="RED"
                                     onClick={evt => {
                                       evt.stopPropagation();
-                                      onSave(
-                                        files.filter(
-                                          item => getByPath('id', item) !== getByPath('id', file)
-                                        )
+                                      setAddedDocuments(
+                                        addedDocuments.filter(item => item?.id !== file?.id)
                                       );
+                                      onSave(files.filter(item => item?.id !== file?.id));
                                     }}
                                   />
                                 ),

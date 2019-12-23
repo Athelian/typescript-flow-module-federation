@@ -176,6 +176,7 @@ const DocumentCard = ({
   intl,
   onChange,
   onClick,
+  ...rest
 }: Props) => {
   cardHeight = hideParentInfo ? '185px' : '210px';
   const memoHeight = hideParentInfo ? '150px' : '175px';
@@ -196,8 +197,9 @@ const DocumentCard = ({
       icon="DOCUMENT"
       color="DOCUMENT"
       onClick={onClick}
+      {...rest}
     >
-      <div className={DocumentCardWrapperStyle(cardHeight)} role="presentation">
+      <div className={DocumentCardWrapperStyle(cardHeight)}>
         {!hideParentInfo && (
           <div className={DocumentParentWrapperStyle}>
             <RelateEntity link={navigable ? link : ''} entity={parentIcon} value={parentData} />
@@ -224,7 +226,7 @@ const DocumentCard = ({
                   getByPathWithDefault('', 'entity.__typename', file),
                   intl
                 )}
-                editable={editable.type}
+                editable={editable?.type}
                 inputWidth={hideParentInfo ? '165px' : '185px'}
                 inputHeight="30px"
                 hideTooltip
@@ -273,13 +275,13 @@ const DocumentCard = ({
               <span
                 className={FileStatusColoringWrapperStyle(
                   getByPathWithDefault('', 'status', file),
-                  editable.status
+                  editable?.status
                 )}
               >
                 <EnumSelectInputFactory
                   {...inputHandlers}
                   enumType="FileStatus"
-                  editable={editable.status}
+                  editable={editable?.status}
                   inputWidth="105px"
                   inputHeight="30px"
                   hideTooltip
@@ -352,7 +354,7 @@ const DocumentCard = ({
                 <TextAreaInputFactory
                   {...inputHandlers}
                   isNew
-                  editable={editable.memo}
+                  editable={editable?.memo}
                   inputWidth="185px"
                   inputHeight={memoHeight}
                 />

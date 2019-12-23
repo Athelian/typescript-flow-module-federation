@@ -1,7 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 
-// TODO: Match API
 export const documentFormFragment = gql`
   fragment documentFormFragment on File {
     id

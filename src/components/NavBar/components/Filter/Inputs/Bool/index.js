@@ -65,6 +65,7 @@ export const HasShipment = Bool(
   messages.hasShipment,
   messages.hasNotShipment
 );
+export const HasEntity = Bool(messages.hasEntity, messages.hasEntity, messages.hasNotEntity);
 export const FreeTimeOverdue = Bool(
   messages.freeTimeOverdue,
   messages.freeTimeOverdue,

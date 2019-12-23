@@ -200,7 +200,15 @@ export default defineMessages({
   },
   hasNotShipment: {
     id: 'components.NavBar.Filter.hasNotShipment',
-    defaultMessage: 'Has Not Shipment',
+    defaultMessage: `Doesn't Have Shipment`,
+  },
+  hasEntity: {
+    id: 'components.NavBar.Filter.hasEntity',
+    defaultMessage: 'Has Parent',
+  },
+  hasNotEntity: {
+    id: 'components.NavBar.Filter.hasNotEntity',
+    defaultMessage: `Doesn't Have Parent`,
   },
   freeTimeOverdue: {
     id: 'components.NavBar.Filter.freeTimeOverdue',

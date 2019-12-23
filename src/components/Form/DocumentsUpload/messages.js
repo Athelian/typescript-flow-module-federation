@@ -4,7 +4,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   newDocument: {
     id: 'components.Form.DocumentsUpload.newDocument',
-    defaultMessage: 'UPLOAD DOCUMENT',
+    defaultMessage: 'Upload Documents',
   },
   dragAndDrop: {
     id: 'components.Form.DocumentsUpload.dragAndDrop',
