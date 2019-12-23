@@ -16,9 +16,13 @@ type Props = {|
 |};
 
 const DocumentList = ({ uploadFiles, ...filtersAndSort }: Props) => {
+  const [deleteIds, setDeleteIds] = React.useState([]);
   const mergeFiles = (allFiles: Array<FilePayload>) => {
     const fileIds = uploadFiles.map(file => file.id);
-    return [...uploadFiles, ...allFiles.filter(file => !fileIds.includes(file.id))];
+    return [
+      ...uploadFiles,
+      ...allFiles.filter(file => !fileIds.includes(file.id) && !deleteIds.includes(file.id)),
+    ];
   };
 
   return (
@@ -38,6 +42,7 @@ const DocumentList = ({ uploadFiles, ...filtersAndSort }: Props) => {
             onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'files')}
             hasMore={hasMore}
             isLoading={loading}
+            afterDelete={fileId => setDeleteIds([...deleteIds, fileId])}
           />
         );
       }}

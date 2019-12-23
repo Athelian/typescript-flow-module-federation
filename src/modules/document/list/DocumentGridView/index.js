@@ -48,12 +48,13 @@ import { deleteFileMutation } from './mutation';
 type Props = {
   files: Array<FilePayload>,
   onLoadMore: Function,
+  afterDelete: (fileId: string) => void,
   hasMore: boolean,
   isLoading: boolean,
-  renderItem?: (item: FilePayload) => React$Node,
+  renderItem?: (item: FilePayload, afterDelete: (fileId: string) => void) => React$Node,
 };
 
-const defaultRenderItem = (file: FilePayload): React$Node =>
+const defaultRenderItem = (file: FilePayload, afterDelete: (fileId: string) => void): React$Node =>
   file?.uploading ? (
     <UploadPlaceholder
       uploading={file?.uploading ?? false}
@@ -118,7 +119,10 @@ const defaultRenderItem = (file: FilePayload): React$Node =>
             variables: {
               id: file.id,
             },
-          }).then(() => setIsOpen(false));
+          }).then(() => {
+            afterDelete(file.id);
+            setIsOpen(false);
+          });
         };
 
         return (
@@ -192,6 +196,7 @@ const DocumentGridView = ({
   onLoadMore,
   hasMore,
   isLoading,
+  afterDelete,
   renderItem = defaultRenderItem,
 }: Props): React$Node => {
   return (
@@ -205,7 +210,7 @@ const DocumentGridView = ({
         <FormattedMessage id="modules.Documents.noDocumentFound" defaultMessage="No files found" />
       }
     >
-      {files.map(renderItem)}
+      {files.map(file => renderItem(file, afterDelete))}
     </GridView>
   );
 };
