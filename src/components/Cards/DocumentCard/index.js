@@ -202,7 +202,9 @@ const DocumentCard = ({
       <div className={DocumentCardWrapperStyle(cardHeight)}>
         {!hideParentInfo && (
           <div className={DocumentParentWrapperStyle}>
-            <RelateEntity link={navigable ? link : ''} entity={parentIcon} value={parentData} />
+            {parentIcon && (
+              <RelateEntity link={navigable ? link : ''} entity={parentIcon} value={parentData} />
+            )}
           </div>
         )}
 

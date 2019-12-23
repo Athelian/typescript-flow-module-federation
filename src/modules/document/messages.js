@@ -2,6 +2,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  newDocument: {
+    id: 'components.Documents.newDocument',
+    defaultMessage: 'UPLOAD DOCUMENT',
+  },
   createdAt: {
     id: 'modules.Documents.createdAt',
     defaultMessage: 'Date Created',
