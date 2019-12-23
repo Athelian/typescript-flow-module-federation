@@ -4,7 +4,6 @@ import type { FileType, FileStatus, EntityPayload } from 'generated/graphql';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import withForbiddenCard from 'hoc/withForbiddenCard';
-import { getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
@@ -180,14 +179,15 @@ const DocumentCard = ({
 }: Props) => {
   cardHeight = hideParentInfo ? '185px' : '210px';
   const memoHeight = hideParentInfo ? '150px' : '175px';
-  const { parentIcon, parentData, link } = getParentInfo(getByPathWithDefault({}, 'entity', file));
 
-  const name = getByPathWithDefault('', 'name', file);
-  const id = getByPathWithDefault(Date.now(), 'id', file);
+  const name = file?.name ?? '';
+  const id = file?.id ?? Date.now();
   const fileExtension = getFileExtension(name);
   const fileName = getFileName(name);
   const fileIcon = computeIcon(fileExtension);
   const [showMemo, setShowMemo] = React.useState(false);
+
+  const { parentIcon, parentData, link } = getParentInfo(file?.entity ?? {});
 
   return (
     <BaseCard
@@ -202,9 +202,7 @@ const DocumentCard = ({
       <div className={DocumentCardWrapperStyle(cardHeight)}>
         {!hideParentInfo && (
           <div className={DocumentParentWrapperStyle}>
-            {parentIcon && (
-              <RelateEntity link={navigable ? link : ''} entity={parentIcon} value={parentData} />
-            )}
+            <RelateEntity link={navigable ? link : ''} entity={parentIcon} value={parentData} />
           </div>
         )}
 
@@ -218,16 +216,13 @@ const DocumentCard = ({
           <FormField
             name={`${id}.type`}
             setFieldValue={(field, value) => onChange && onChange('type', value)}
-            initValue={getByPathWithDefault('', 'type', file)}
+            initValue={file?.type ?? ''}
             saveOnChange
           >
             {({ ...inputHandlers }) => (
               <SelectInputFactory
                 {...inputHandlers}
-                items={getFileTypesByEntity(
-                  getByPathWithDefault('', 'entity.__typename', file),
-                  intl
-                )}
+                items={getFileTypesByEntity(file?.entity?.__typename, intl)}
                 editable={editable?.type}
                 inputWidth={hideParentInfo ? '165px' : '185px'}
                 inputHeight="30px"
@@ -257,7 +252,7 @@ const DocumentCard = ({
           role="presentation"
         >
           <button
-            className={MemoButtonStyle(!!getByPathWithDefault('', 'memo', file))}
+            className={MemoButtonStyle(!!file?.memo)}
             onClick={e => {
               e.stopPropagation();
               setShowMemo(true);
@@ -270,16 +265,11 @@ const DocumentCard = ({
           <FormField
             name={`${id}.status`}
             setFieldValue={(field, value) => onChange && onChange('status', value)}
-            initValue={getByPathWithDefault('', 'status', file)}
+            initValue={file?.status ?? ''}
             saveOnChange
           >
             {({ ...inputHandlers }) => (
-              <span
-                className={FileStatusColoringWrapperStyle(
-                  getByPathWithDefault('', 'status', file),
-                  editable?.status
-                )}
-              >
+              <span className={FileStatusColoringWrapperStyle(file?.status, editable?.status)}>
                 <EnumSelectInputFactory
                   {...inputHandlers}
                   enumType="FileStatus"
@@ -300,7 +290,7 @@ const DocumentCard = ({
               className={DownloadButtonStyle(false)}
               onClick={e => {
                 e.stopPropagation();
-                window.open(getByPathWithDefault('', 'path', file), '_blank');
+                window.open(file?.path ?? '', '_blank');
               }}
               type="button"
             >
@@ -350,7 +340,7 @@ const DocumentCard = ({
             <FormField
               name={`${id}.memo`}
               setFieldValue={(field, value) => onChange && onChange('memo', value)}
-              initValue={getByPathWithDefault('', 'memo', file)}
+              initValue={file?.memo ?? ''}
             >
               {({ ...inputHandlers }) => (
                 <TextAreaInputFactory

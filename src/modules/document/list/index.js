@@ -32,7 +32,7 @@ const DocumentList = ({ uploadFiles, ...filtersAndSort }: Props) => {
           return error.message;
         }
 
-        const nextPage = data?.files?.page ?? 1 + 1;
+        const nextPage = (data?.files?.page ?? 1) + 1;
         const totalPage = data?.files?.totalPage ?? 1;
         const hasMore = nextPage <= totalPage;
 
