@@ -1,17 +1,23 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Content, FormLayout, SlideViewNavBar } from 'components/Layout';
-import { NavBar, EntityIcon } from 'components/NavBar';
+import { BooleanValue } from 'react-values';
+import { Content, FormLayout, SlideViewNavBar, SlideViewLayout } from 'components/Layout';
+import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
+import Timeline from 'modules/timeline/components/Timeline';
+import SlideView from 'components/SlideView';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import LoadingIcon from 'components/LoadingIcon';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
+import { decodeId } from 'utils/id';
 import { SectionWrapper } from 'components/Form';
 import DocumentSection from './components/DocumentSection';
 import ParentSection from './components/ParentSection';
+import { documentTimelineQuery } from './query';
 
 type Props = {
+  documentId?: string,
   isDirty: boolean,
   isValidated: boolean,
   resetState: () => void,
@@ -22,6 +28,7 @@ type Props = {
 };
 
 const DocumentForm = ({
+  documentId,
   isDirty,
   isValidated,
   resetState,
@@ -56,7 +63,39 @@ const DocumentForm = ({
           )}
         </JumpToSection>
 
-        {/* TODO: Logs Button */}
+        {!isSlideView && documentId && (
+          <BooleanValue>
+            {({ value: isOpen, set: toggleLogs }) => (
+              <>
+                <LogsButton
+                  entityType="file"
+                  entityId={documentId}
+                  onClick={() => toggleLogs(true)}
+                />
+                <SlideView isOpen={isOpen} onRequestClose={() => toggleLogs(false)}>
+                  <SlideViewLayout>
+                    <SlideViewNavBar>
+                      <EntityIcon icon="LOGS" color="LOGS" />
+                    </SlideViewNavBar>
+
+                    <Content>
+                      <Timeline
+                        query={documentTimelineQuery}
+                        queryField="file"
+                        variables={{
+                          id: decodeId(documentId),
+                        }}
+                        entity={{
+                          fileId: decodeId(documentId),
+                        }}
+                      />
+                    </Content>
+                  </SlideViewLayout>
+                </SlideView>
+              </>
+            )}
+          </BooleanValue>
+        )}
 
         {isDirty && <ResetButton onClick={resetState} />}
 

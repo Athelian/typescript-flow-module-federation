@@ -20,8 +20,9 @@ import {
   badRequestFragment,
   forbiddenFragment,
 } from 'graphql';
+import { commentFragment, eventFragment } from 'modules/timeline/query';
 
-const documentQuery = gql`
+export const documentQuery = gql`
   query documentQuery($id: ID!) {
     file(id: $id) {
       ...documentFormFragment
@@ -51,4 +52,25 @@ const documentQuery = gql`
   ${badRequestFragment}
 `;
 
-export default documentQuery;
+export const documentTimelineQuery = gql`
+  query documentTimeline($id: ID!, $page: Int!, $perPage: Int!) {
+    file(id: $id) {
+      ... on File {
+        id
+        timeline {
+          entries(page: $page, perPage: $perPage) {
+            nodes {
+              ...commentFragment
+              ...eventFragment
+            }
+            page
+            totalPage
+          }
+        }
+      }
+    }
+  }
+
+  ${eventFragment}
+  ${commentFragment}
+`;
