@@ -166,8 +166,8 @@ const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => 
             />
             <DocumentCard
               file={file}
-              navigable={viewPermissions[parentType] || !parentType}
-              downloadable={downloadPermissions[parentType] || !parentType}
+              navigable={viewPermissions?.[parentType] || !parentType}
+              downloadable={downloadPermissions?.[parentType] || !parentType}
               editable={{
                 status: false,
                 type: false,
@@ -181,7 +181,7 @@ const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => 
               }}
               showActionsOnHover
               actions={[
-                ...(deletePermissions[parentType] || !parentType
+                ...(deletePermissions?.[parentType] || !parentType
                   ? [
                       <CardAction
                         icon="REMOVE"

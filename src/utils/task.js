@@ -659,7 +659,8 @@ export const getParentInfo = (
     | 'PRODUCT'
     | 'PRODUCT_PROVIDER'
     | 'PROJECT'
-    | 'MILESTONE',
+    | 'MILESTONE'
+    | 'CLEAR',
   parentData: React$Node,
   link: string,
 } => {
@@ -715,7 +716,7 @@ export const getParentInfo = (
       };
     default:
       return {
-        parentType: null,
+        parentType: '',
         parentIcon: 'CLEAR',
         parentData: null,
         link: '',
