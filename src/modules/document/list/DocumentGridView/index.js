@@ -144,7 +144,7 @@ const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => 
                 ) : (
                   <FormattedMessage
                     id="modules.documents.deleteBatch.message1"
-                    defaultMessage="Are you sure you want to delete this {fileLabel}"
+                    defaultMessage="Are you sure you want to delete this {fileLabel} ?"
                     values={{ fileLabel: <FileLabelIcon /> }}
                   />
                 )
