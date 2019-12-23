@@ -51,7 +51,7 @@ type Props = {
   hasMore: boolean,
   isLoading: boolean,
   afterDelete?: (fileId: string) => void,
-  renderItem?: (item: FilePayload, afterDelete: (fileId: string) => void) => React$Node,
+  renderItem?: (item: FilePayload, afterDelete?: (fileId: string) => void) => React$Node,
 };
 
 const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => void): React$Node =>
