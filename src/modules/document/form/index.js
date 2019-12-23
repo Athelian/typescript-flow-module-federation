@@ -37,37 +37,22 @@ const DocumentForm = ({
       <CurrentNavBar>
         <EntityIcon icon="DOCUMENT" color="DOCUMENT" />
         <JumpToSection>
-          {isSlideView ? (
+          <SectionTabs
+            link="document_documentSection"
+            label={
+              <FormattedMessage id="modules.Documents.documentSection" defaultMessage="Document" />
+            }
+            icon="DOCUMENT"
+          />
+
+          {!isSlideView && (
             <SectionTabs
-              link="document_documentSection"
+              link="document_parentSection"
               label={
-                <FormattedMessage
-                  id="modules.Documents.documentSection"
-                  defaultMessage="Document"
-                />
+                <FormattedMessage id="modules.Documents.parentSection" defaultMessage="Parent" />
               }
-              icon="DOCUMENT"
+              icon="PARENT"
             />
-          ) : (
-            <>
-              <SectionTabs
-                link="document_documentSection"
-                label={
-                  <FormattedMessage
-                    id="modules.Documents.documentSection"
-                    defaultMessage="Document"
-                  />
-                }
-                icon="DOCUMENT"
-              />
-              <SectionTabs
-                link="document_parentSection"
-                label={
-                  <FormattedMessage id="modules.Documents.parentSection" defaultMessage="Parent" />
-                }
-                icon="PARENT"
-              />
-            </>
           )}
         </JumpToSection>
 
