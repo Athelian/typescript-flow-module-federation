@@ -649,7 +649,7 @@ export const setToComplete = (
 export const getParentInfo = (
   parent: ?Object
 ): {
-  parentType: ?string,
+  parentType: string,
   // prettier-ignore
   parentIcon: | 'ORDER'
     | 'BATCH'
@@ -716,7 +716,7 @@ export const getParentInfo = (
       };
     default:
       return {
-        parentType: null,
+        parentType: '',
         parentIcon: 'CLEAR',
         parentData: null,
         link: '',
