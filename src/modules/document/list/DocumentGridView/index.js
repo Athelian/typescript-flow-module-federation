@@ -10,7 +10,7 @@ import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import UploadPlaceholder from 'components/UploadPlaceholder';
 import GridView from 'components/GridView';
 import DocumentCard from 'components/Cards/DocumentCard';
-import ActionDialog from 'components/Dialog/ActionDialog';
+import ActionDialog, { FileLabelIcon } from 'components/Dialog/ActionDialog';
 import { CardAction } from 'components/Cards';
 import { BaseButton } from 'components/Buttons';
 import {
@@ -135,10 +135,19 @@ const defaultRenderItem = (file: FilePayload, afterDelete: (fileId: string) => v
                 <FormattedMessage id="modules.RelationMap.label.delete" defaultMessage="DELETE" />
               }
               dialogMessage={
-                <FormattedMessage
-                  id="modules.documents.deleteFile.deleting"
-                  defaultMessage="Deleting file ..."
-                />
+                isProcessing ? (
+                  <FormattedMessage
+                    id="modules.documents.deleteFile.deleting"
+                    defaultMessage="Deleting {fileLabel} ..."
+                    values={{ fileLabel: <FileLabelIcon /> }}
+                  />
+                ) : (
+                  <FormattedMessage
+                    id="modules.documents.deleteBatch.message1"
+                    defaultMessage="Are you sure you want to delete this {fileLabel}"
+                    values={{ fileLabel: <FileLabelIcon /> }}
+                  />
+                )
               }
               buttons={
                 <BaseButton
