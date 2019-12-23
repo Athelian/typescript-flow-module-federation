@@ -48,13 +48,13 @@ import { deleteFileMutation } from './mutation';
 type Props = {
   files: Array<FilePayload>,
   onLoadMore: Function,
-  afterDelete: (fileId: string) => void,
   hasMore: boolean,
   isLoading: boolean,
+  afterDelete?: (fileId: string) => void,
   renderItem?: (item: FilePayload, afterDelete: (fileId: string) => void) => React$Node,
 };
 
-const defaultRenderItem = (file: FilePayload, afterDelete: (fileId: string) => void): React$Node =>
+const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => void): React$Node =>
   file?.uploading ? (
     <UploadPlaceholder
       uploading={file?.uploading ?? false}
@@ -120,7 +120,7 @@ const defaultRenderItem = (file: FilePayload, afterDelete: (fileId: string) => v
               id: file.id,
             },
           }).then(() => {
-            afterDelete(file.id);
+            if (afterDelete) afterDelete(file.id);
             setIsOpen(false);
           });
         };
