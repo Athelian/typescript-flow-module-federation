@@ -8,9 +8,10 @@ import type { FilterInputProps } from '../../types';
 import { RadiosWrapperStyle } from './style';
 
 const Types = {
-  Order: tableTemplateMessage.order,
   OrderSheet: tableTemplateMessage.orderSheet,
+  BatchSheet: tableTemplateMessage.batchSheet,
   ShipmentSheet: tableTemplateMessage.shipmentSheet,
+  ProjectSheet: tableTemplateMessage.projectSheet,
 };
 
 const MaskEditType = ({ value, onChange, readonly }: FilterInputProps<string>) => (
