@@ -1,6 +1,6 @@
 // @flow
-import React from 'react';
-import { type Partner } from 'modules/partner/type.js.flow';
+import * as React from 'react';
+import type { Partner } from 'generated/graphql';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import withForbiddenCard from 'hoc/withForbiddenCard';
@@ -31,9 +31,11 @@ const defaultProps = {
 };
 
 const PartnerCard = ({ partner, onClick, size, selectable, ...rest }: Props) => {
-  const { name, types, partner: partnerInfo } = partner;
+  const { name, types: organizationTypes, partner: partnerInfo } = partner;
 
   const actions = selectable ? [] : [];
+
+  const types = partnerInfo?.types ?? organizationTypes;
 
   return (
     <BaseCard actions={actions} icon="PARTNER" color="PARTNER" selectable={selectable} {...rest}>
