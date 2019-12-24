@@ -23,7 +23,7 @@ type ImplProps = {
 
 const formContainer = new FormContainer();
 
-const DocumentFormModuleImpl = ({ isLoading, documentId = '' }: ImplProps) => {
+const DocumentFormModuleImpl = ({ isLoading, documentId }: ImplProps) => {
   const {
     state,
     originalState,
@@ -59,7 +59,7 @@ const DocumentFormModuleImpl = ({ isLoading, documentId = '' }: ImplProps) => {
 
   return (
     <DocumentForm
-      documentId={documentId}
+      {...(documentId ? { documentId } : {})}
       isDirty={isDirty}
       isValidated={formContainer.isReady(state, validator)}
       resetState={resetState}
