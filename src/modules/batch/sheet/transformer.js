@@ -20,6 +20,7 @@ function transformBatch(
     batch,
     getOrderFromRoot: root => root.order,
     getShipmentFromRoot: root => root.shipment,
+    getContainerFromRoot: root => root.container,
     getBatchFromRoot: root => root,
     actions: [],
   });

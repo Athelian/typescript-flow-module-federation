@@ -134,6 +134,7 @@ function transformBatch(
     batch,
     getOrderFromRoot: root => root,
     getShipmentFromRoot: root => getCurrentBatch(batch?.id, root)?.shipment,
+    getContainerFromRoot: root => getCurrentBatch(batch?.id, root)?.container,
     getBatchFromRoot: root => getCurrentBatch(batch?.id, root),
     actions: [
       {

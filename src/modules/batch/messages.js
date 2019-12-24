@@ -147,9 +147,17 @@ export default defineMessages({
     id: 'components.BatchItem.deliveredAt',
     defaultMessage: 'Delivery Date',
   },
+  deliveredAtDifference: {
+    id: 'components.BatchItem.deliveredAtDifference',
+    defaultMessage: 'Delivery Date Difference',
+  },
   desiredAt: {
     id: 'components.BatchItem.desiredAt',
-    defaultMessage: 'DESIRED DATE',
+    defaultMessage: 'Desired Date',
+  },
+  desiredAtDifference: {
+    id: 'components.BatchItem.desiredAtDifference',
+    defaultMessage: 'Desired Date Difference',
   },
   shortDeliveryAt: {
     id: 'components.BatchItem.shortDeliveryAt',

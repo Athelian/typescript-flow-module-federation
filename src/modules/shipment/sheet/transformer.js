@@ -76,6 +76,8 @@ function transformBatch(
     batch,
     getOrderFromRoot: root => getCurrentBatch(batch?.id, root)?.order,
     getShipmentFromRoot: root => root,
+    getContainerFromRoot: root =>
+      root.containers.find(c => (c?.batches ?? []).some(b => b.id === batch.id)),
     getBatchFromRoot: root => getCurrentBatch(batch?.id, root),
     actions: [
       {

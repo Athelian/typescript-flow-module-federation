@@ -31,6 +31,8 @@ import {
   BATCH_SET_TASKS,
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
+import { differenceInCalendarDays } from 'date-fns';
+import { getLatestDate } from 'utils/shipment';
 
 type Props = {|
   fieldDefinitions: Array<FieldDefinition>,
@@ -38,6 +40,7 @@ type Props = {|
   batch: ?Object,
   getOrderFromRoot: Object => ?Object,
   getShipmentFromRoot: Object => ?Object,
+  getContainerFromRoot: Object => ?Object,
   getBatchFromRoot: Object => ?Object,
   actions: Array<CellAction>,
 |};
@@ -48,6 +51,7 @@ export default function transformSheetBatch({
   batch,
   getOrderFromRoot,
   getShipmentFromRoot,
+  getContainerFromRoot,
   getBatchFromRoot,
   actions,
 }: Props): Array<CellValue> {
@@ -131,6 +135,20 @@ export default function transformSheetBatch({
       ),
     },
     {
+      columnKey: 'batch.deliveredAtDifference',
+      type: 'date_difference',
+      ...transformComputedField(basePath, batch, 'deliveredAtDifference', root => {
+        const currentBatch = getBatchFromRoot(root);
+        const currentShipment = getShipmentFromRoot(root);
+
+        const deliveredAt = currentBatch?.deliveredAt;
+        const latestDeparture = getLatestDate(currentShipment?.voyages?.[0]?.departure);
+        if (!deliveredAt || !latestDeparture) return null;
+
+        return differenceInCalendarDays(new Date(deliveredAt), new Date(latestDeparture));
+      }),
+    },
+    {
       columnKey: 'batch.desiredAt',
       type: 'date',
       ...transformValueField(
@@ -139,6 +157,30 @@ export default function transformSheetBatch({
         'desiredAt',
         hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_DESIRED_DATE)
       ),
+    },
+    {
+      columnKey: 'batch.desiredAtDifference',
+      type: 'date_difference',
+      ...transformComputedField(basePath, batch, 'desiredAtDifference', root => {
+        const currentBatch = getBatchFromRoot(root);
+        const currentShipment = getShipmentFromRoot(root);
+        const currentContainer = getContainerFromRoot(root);
+
+        const desiredAt = currentBatch?.desiredAt;
+        let latestArrival = null;
+        if (currentContainer) {
+          latestArrival = currentContainer?.warehouseArrivalActualDate;
+        } else if (
+          currentShipment &&
+          !((currentShipment?.containers ?? []).length > 0 || currentShipment?.containerCount > 0)
+        ) {
+          latestArrival = getLatestDate(currentShipment?.containerGroups?.[0]?.warehouseArrival);
+        }
+
+        if (!desiredAt || !latestArrival) return null;
+
+        return differenceInCalendarDays(new Date(desiredAt), new Date(latestArrival));
+      }),
     },
     {
       columnKey: 'batch.expiredAt',
