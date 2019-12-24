@@ -21,7 +21,8 @@ type Props = {|
     | 'project'
     | 'shipment'
     | 'container'
-    | 'task',
+    | 'task'
+    | 'file',
   entityId: string,
 |};
 
