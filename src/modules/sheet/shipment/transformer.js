@@ -510,7 +510,7 @@ export default function transformSheetShipment({
     {
       columnKey: 'shipment.numOfVoyages',
       type: 'number',
-      ...transformComputedField(`${basePath}.shipment`, shipment, 'voyages', root => {
+      ...transformComputedField(basePath, shipment, 'voyages', root => {
         const currentShipment = getShipmentFromRoot(root);
         return currentShipment?.voyages?.length ?? 0;
       }),
@@ -518,7 +518,7 @@ export default function transformSheetShipment({
     {
       columnKey: 'shipment.cargoReady.latestDate',
       type: 'date',
-      ...transformComputedField(`${basePath}.shipment`, shipment, 'cargoReady.latestDate', root => {
+      ...transformComputedField(basePath, shipment, 'cargoReady.latestDate', root => {
         const currentShipment = getShipmentFromRoot(root);
         return getLatestDate(currentShipment?.cargoReady);
       }),
@@ -526,19 +526,14 @@ export default function transformSheetShipment({
     {
       columnKey: 'shipment.cargoReady.dateDifference',
       type: 'date_difference',
-      ...transformComputedField(
-        `${basePath}.shipment`,
-        shipment,
-        'cargoReady.dateDifference',
-        root => {
-          const currentShipment = getShipmentFromRoot(root);
-          const currentDate = getLatestDate(currentShipment?.cargoReady);
-          const initDate = currentShipment?.cargoReady?.date;
-          if (!initDate || !currentDate) return 0;
+      ...transformComputedField(basePath, shipment, 'cargoReady.dateDifference', root => {
+        const currentShipment = getShipmentFromRoot(root);
+        const currentDate = getLatestDate(currentShipment?.cargoReady);
+        const initDate = currentShipment?.cargoReady?.date;
+        if (!initDate || !currentDate) return 0;
 
-          return differenceInCalendarDays(new Date(currentDate), new Date(initDate));
-        }
-      ),
+        return differenceInCalendarDays(new Date(currentDate), new Date(initDate));
+      }),
     },
     {
       columnKey: 'shipment.cargoReady.date',
