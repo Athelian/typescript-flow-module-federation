@@ -158,7 +158,14 @@ export const itemInSelectorFragment = gql`
         id
         name
         exporter {
-          ...partnerCardFragment
+          ... on Organization {
+            id
+            name
+            types
+            partner {
+              ...partnerCardFragment
+            }
+          }
         }
         defaultPackage {
           ...productProviderPackagingFragment
@@ -284,10 +291,24 @@ export const itemInBatchFormFragment = gql`
         id
         name
         exporter {
-          ...partnerCardFragment
+          ... on Organization {
+            id
+            name
+            types
+            partner {
+              ...partnerCardFragment
+            }
+          }
         }
         supplier {
-          ...partnerCardFragment
+          ... on Organization {
+            id
+            name
+            types
+            partner {
+              ...partnerCardFragment
+            }
+          }
         }
         defaultPackage {
           ...productProviderPackagingFragment

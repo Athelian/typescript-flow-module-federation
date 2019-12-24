@@ -61,8 +61,8 @@ const SelectPartner = ({
   const partners = React.useMemo(
     () =>
       nodes.map(item => ({
+        ...item,
         ...item.organization,
-        code: item.code,
       })),
     [nodes]
   );

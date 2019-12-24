@@ -8,20 +8,14 @@ export const partnerFormFragment = gql`
 `;
 
 export const partnerCardFragment = gql`
-  fragment partnerCardFragment on Organization {
+  fragment partnerCardFragment on Partner {
     id
-    name
+    code
     types
-    partner {
-      ... on Partner {
+    organization {
+      ... on Organization {
         id
-        code
-        organization {
-          ... on Organization {
-            id
-            name
-          }
-        }
+        name
       }
     }
   }

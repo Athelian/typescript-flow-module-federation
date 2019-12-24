@@ -1,5 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
+import { partnerCardFragment } from 'graphql';
 
 export const partnersQuery = gql`
   query partnersQuery(
@@ -15,28 +16,13 @@ export const partnersQuery = gql`
           organization {
             ... on Organization {
               id
+              types
               partners(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
+                nodes {
+                  ...partnerCardFragment
+                }
                 page
                 totalPage
-                nodes {
-                  ... on Partner {
-                    id
-                    code
-                    organization {
-                      ... on Organization {
-                        id
-                        name
-                        types
-                        partner {
-                          ... on Partner {
-                            id
-                            code
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
               }
             }
           }
@@ -44,4 +30,8 @@ export const partnersQuery = gql`
       }
     }
   }
+
+  ${partnerCardFragment}
 `;
+
+export default partnersQuery;

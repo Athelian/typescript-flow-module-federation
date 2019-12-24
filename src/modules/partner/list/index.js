@@ -11,6 +11,7 @@ type Props = {
   filterBy: FilterBy,
   sortBy: SortBy,
   perPage: number,
+  page: number,
 };
 
 const partnerPath = 'viewer.user.organization.partners';
@@ -21,9 +22,6 @@ export default function PartnerList({ ...filtersAndSort }: Props) {
       query={partnerListQuery}
       variables={{
         page: 1,
-        /* $FlowFixMe This comment suppresses an error found when upgrading
-         * Flow to v0.111.0. To view the error, delete this comment and run
-         * Flow. */
         ...filtersAndSort,
       }}
       fetchPolicy="network-only"
@@ -33,8 +31,8 @@ export default function PartnerList({ ...filtersAndSort }: Props) {
           return error.message;
         }
         const parsedData = getByPathWithDefault([], `${partnerPath}.nodes`, data).map(item => ({
+          ...item,
           ...item.organization,
-          code: item.code,
         }));
         const nextPage = getByPathWithDefault(1, `${partnerPath}.page`, data) + 1;
         const totalPage = getByPathWithDefault(1, `${partnerPath}.totalPage`, data);

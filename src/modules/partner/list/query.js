@@ -16,15 +16,10 @@ export const partnerListQuery = gql`
           organization {
             ... on Organization {
               id
+              types
               partners(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
                 nodes {
-                  ... on Partner {
-                    id
-                    code
-                    organization {
-                      ...partnerCardFragment
-                    }
-                  }
+                  ...partnerCardFragment
                 }
                 page
                 totalPage
