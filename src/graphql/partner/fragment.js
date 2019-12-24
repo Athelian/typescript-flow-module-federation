@@ -10,6 +10,7 @@ export const partnerFormFragment = gql`
 export const partnerCardFragment = gql`
   fragment partnerCardFragment on Partner {
     id
+    name
     code
     types
     organization {

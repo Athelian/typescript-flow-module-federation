@@ -16,7 +16,6 @@ export const partnersQuery = gql`
           organization {
             ... on Organization {
               id
-              types
               partners(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
                 nodes {
                   ...partnerCardFragment
