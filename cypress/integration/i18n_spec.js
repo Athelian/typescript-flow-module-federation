@@ -19,8 +19,8 @@ describe('I18n', () => {
               viewer: { user },
             },
           }) => {
-            cy.visit('/').contains(
-              user.language === 'en' ? 'RELATIONAL MAP' : 'リレーションマップ'
+            cy.visit('/order/cards').contains(
+              user.language === 'en' ? 'CARDS' : 'リレーションマップ'
             );
           }
         );
@@ -45,12 +45,12 @@ describe('I18n', () => {
               token,
               variables: { id: user.id, input: { language: 'ja' } },
             }).then(() => {
-              cy.visit('/').contains('リレーションマップ');
+              cy.visit('/order/cards').contains('リレーションマップ');
               cy.task('language', {
                 token,
                 variables: { id: user.id, input: { language: 'en' } },
               }).then(() => {
-                cy.visit('/').contains('RELATIONAL MAP');
+                cy.visit('/order/cards').contains('CARDS');
               });
             });
           }
