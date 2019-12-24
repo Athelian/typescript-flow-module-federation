@@ -9,7 +9,6 @@ import type { Column } from 'components/DraggableColumn';
 import { parseIcon } from 'utils/entity';
 import { convertMappingColumns, flattenColumns } from 'utils/template';
 import type { ColumnConfig } from '../SheetState/types';
-import { getColumnsConfigured } from '../useColumns';
 import messages from '../messages';
 import TemplateSelector from './TemplateSelector';
 import TemplateNew from './TemplateNew';
@@ -147,17 +146,13 @@ const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, childr
       if (onLoadTemplate) {
         setDirtyColumns(convertMappingColumns(onLoadTemplate(template)));
       } else {
-        setDirtyColumns(
-          convertMappingColumns(
-            getColumnsConfigured(
-              (columns: any),
-              (template?.columns ?? []).reduce(
-                (cache, col) => ({ ...cache, [col.key]: col.hidden }),
-                {}
-              )
-            )
-          )
-        );
+        const currentColumns = flattenColumns(dirtyColumns);
+        const templateColumns = currentColumns.map(col => ({
+          ...col,
+          ...(template?.columns ?? []).find(({ key }) => key === col.key),
+        }));
+
+        setDirtyColumns(convertMappingColumns(templateColumns));
       }
     }
   };
