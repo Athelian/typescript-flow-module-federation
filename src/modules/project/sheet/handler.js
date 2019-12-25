@@ -306,6 +306,46 @@ export default function entityEventHandler(
               .flatMap(p => p.milestones)
               .find(m => m.id === event.entity.id);
             if (milestone) {
+              changes = mergeChanges(
+                changes,
+                {
+                  dueDate: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                  dueDateInterval: (i, v) => ({
+                    ...i,
+                    interval: v ? cleanUpInterval(v) : v,
+                  }),
+                  dueDateBinding: (i, v) => ({
+                    ...i,
+                    binding: v ? upperFirst(camelCase(v)) : v,
+                  }),
+                },
+                'dueDateBindingData',
+                milestone.dueDateBindingData
+              );
+
+              changes = mergeChanges(
+                changes,
+                {
+                  estimatedCompletionDate: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                  estimatedCompletionDateInterval: (i, v) => ({
+                    ...i,
+                    interval: v ? cleanUpInterval(v) : v,
+                  }),
+                  estimatedCompletionDateBinding: (i, v) => ({
+                    ...i,
+                    binding: v ? upperFirst(camelCase(v)) : v,
+                  }),
+                },
+                'estimatedCompletionDateBindingData',
+                milestone.estimatedCompletionDateBindingData
+              );
+
               changes = extraChange(
                 changes,
                 ['completedAt', 'completedBy'],

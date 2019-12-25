@@ -53,6 +53,16 @@ export function decorateMilestone(milestone: Object): Object {
         by: milestone.completedBy,
       },
     },
+    dueDateBindingData: {
+      date: milestone.dueDate,
+      interval: milestone.dueDateInterval,
+      binding: milestone.dueDateBinding,
+    },
+    estimatedCompletionDateBindingData: {
+      date: milestone.estimatedCompletionDate,
+      interval: milestone.estimatedCompletionDateInterval,
+      binding: milestone.estimatedCompletionDateBinding,
+    },
     tasks: milestone.tasks.map(task => {
       if (task.__typename === 'Task') {
         return decorateTask(task);

@@ -43,11 +43,15 @@ const milestoneSheetFragment = gql`
     dueDateBinding
     dueDateInterval {
       days
+      weeks
+      months
     }
     estimatedCompletionDate
     estimatedCompletionDateBinding
     estimatedCompletionDateInterval {
       days
+      weeks
+      months
     }
     completedAt
     completedBy {

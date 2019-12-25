@@ -118,8 +118,20 @@ export const milestoneColumns = (milestoneIdx: number | '#'): Array<ColumnConfig
     color: colors.MILESTONE,
     width: ColumnWidths.Default,
   },
-  // dueDate + binding
-  // estimatedCompletionDate + binding
+  {
+    key: `milestones.${milestoneIdx}.dueDate`,
+    title: <FormattedMessage {...milestoneMessages.dueDate} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.MILESTONE,
+    width: 630,
+  },
+  {
+    key: `milestones.${milestoneIdx}.estimatedCompletionDate`,
+    title: <FormattedMessage {...milestoneMessages.estimatedCompletionDate} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.MILESTONE,
+    width: 630,
+  },
   {
     key: `milestones.${milestoneIdx}.status`,
     title: <FormattedMessage {...milestoneMessages.status} />,

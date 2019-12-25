@@ -53,6 +53,18 @@ function normalizedInput(
           return {
             completedAt: value.completed.at ? new Date(value.completed.at) : null,
           };
+        case 'dueDateBindingData':
+          return {
+            dueDate: value?.date ? new Date(value?.date) : null,
+            dueDateInterval: value?.interval ?? null,
+            dueDateBinding: value?.binding ?? null,
+          };
+        case 'estimatedCompletionDateBindingData':
+          return {
+            estimatedCompletionDate: value?.date ? new Date(value?.date) : null,
+            estimatedCompletionDateInterval: value?.interval ?? null,
+            estimatedCompletionDateBinding: value?.binding ?? null,
+          };
         case 'files':
           return {
             files: value.map(
@@ -149,58 +161,18 @@ function normalizedInput(
             approvedAt: value.approved.at ? new Date(value.approved.at) : null,
             rejectedAt: value.rejected.at ? new Date(value.rejected.at) : null,
           };
-        case 'startDateBindingData': {
-          const date = value?.date ?? null;
-          if (date) {
-            return {
-              startDate: new Date(date),
-              startDateInterval: value?.interval
-                ? {
-                    days: value?.interval?.days ?? 0,
-                    weeks: value?.interval?.weeks ?? 0,
-                    months: value?.interval?.months ?? 0,
-                  }
-                : null,
-              startDateBinding: value?.binding ?? null,
-            };
-          }
+        case 'startDateBindingData':
           return {
-            startDateInterval: value?.interval
-              ? {
-                  days: value?.interval?.days ?? 0,
-                  weeks: value?.interval?.weeks ?? 0,
-                  months: value?.interval?.months ?? 0,
-                }
-              : null,
+            startDate: value?.date ? new Date(value?.date) : null,
+            startDateInterval: value?.interval ?? null,
             startDateBinding: value?.binding ?? null,
           };
-        }
-        case 'dueDateBindingData': {
-          const date = value?.date ?? null;
-          if (date) {
-            return {
-              dueDate: new Date(date),
-              dueDateInterval: value?.interval
-                ? {
-                    days: value?.interval?.days ?? 0,
-                    weeks: value?.interval?.weeks ?? 0,
-                    months: value?.interval?.months ?? 0,
-                  }
-                : null,
-              dueDateBinding: value?.binding ?? null,
-            };
-          }
+        case 'dueDateBindingData':
           return {
-            dueDateInterval: value?.interval
-              ? {
-                  days: value?.interval?.days ?? 0,
-                  weeks: value?.interval?.weeks ?? 0,
-                  months: value?.interval?.months ?? 0,
-                }
-              : null,
+            dueDate: value?.date ? new Date(value?.date) : null,
+            dueDateInterval: value?.interval ?? null,
             dueDateBinding: value?.binding ?? null,
           };
-        }
         case 'assignedTo':
           return {
             assignedToIds: value.map(user => user.id),
