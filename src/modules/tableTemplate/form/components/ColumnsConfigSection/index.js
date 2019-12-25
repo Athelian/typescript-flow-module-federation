@@ -98,9 +98,12 @@ const ColumnsConfigSection = () => {
         <div className={ColumnsConfigSectionBodyStyle}>
           {getColumnGroupTypes(state.type).map(groupType => {
             switch (groupType) {
-              case 'MILESTONES':
+              case 'MILESTONE_TASKS':
                 return (
-                  <MilestoneTaskColumnsConfigGroup {...getGroupProps(groupType)} key={groupType} />
+                  <MilestoneTaskColumnsConfigGroup
+                    {...getGroupProps('MILESTONES')}
+                    key={groupType}
+                  />
                 );
               default:
                 return <ColumnsGroup {...getGroupProps(groupType)} key={groupType} />;
