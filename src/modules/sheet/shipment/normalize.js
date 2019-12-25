@@ -28,7 +28,7 @@ export default function normalizeSheetShipmentInput(
     case 'blDate':
     case 'bookingDate':
       return {
-        [(field: string)]: new Date(newValue),
+        [(field: string)]: newValue ? new Date(newValue) : null,
       };
     case 'tags':
       return {
@@ -161,7 +161,7 @@ export function normalizeSheetTimelineDateInput(
     switch (field) {
       case 'date':
         return {
-          date: new Date(value),
+          date: value ? new Date(value) : null,
         };
       case 'assignedTo':
         return { assignedToIds: value.map(user => user?.id) };
@@ -171,7 +171,7 @@ export function normalizeSheetTimelineDateInput(
         return {
           timelineDateRevisions: value.map(({ sort, date, ...revision }) => ({
             ...removeTypename(revision),
-            date: new Date(date),
+            date: value ? new Date(value) : null,
           })),
         };
       default:

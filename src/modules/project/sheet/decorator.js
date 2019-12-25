@@ -5,7 +5,31 @@ export function decorateTask(task: Object): Object {
   return {
     ...task,
     status: computeTaskStatus(task),
+    statusDate: {
+      in_progress: {
+        at: task.inProgressAt,
+        by: task.inProgressBy,
+      },
+      completed: {
+        at: task.completedAt,
+        by: task.completedBy,
+      },
+      skipped: {
+        at: task.skippedAt,
+        by: task.skippedBy,
+      },
+    },
     approvalStatus: computeTaskApprovalStatus(task),
+    approvalStatusDate: {
+      approved: {
+        at: task.approvedAt,
+        by: task.approvedBy,
+      },
+      rejected: {
+        at: task.rejectedAt,
+        by: task.rejectedBy,
+      },
+    },
     startDateBindingData: {
       date: task.startDate,
       interval: task.startDateInterval,
@@ -23,6 +47,12 @@ export function decorateMilestone(milestone: Object): Object {
   return {
     ...milestone,
     status: computeMilestoneStatus(milestone),
+    statusDate: {
+      completed: {
+        at: milestone.completedAt,
+        by: milestone.completedBy,
+      },
+    },
     tasks: milestone.tasks.map(task => {
       if (task.__typename === 'Task') {
         return decorateTask(task);

@@ -35,6 +35,14 @@ import {
   TASK_SET_REJECTED,
 } from 'modules/permission/constants/task';
 
+function getCurrentMilestone(milestoneId, project) {
+  return project.milestones.find(m => m.id === milestoneId);
+}
+
+function getCurrentTask(taskId, project) {
+  return project.milestones.flatMap(milestone => milestone.tasks).find(task => task.id === taskId);
+}
+
 function transformProject(basePath: string, project: Object): Array<CellValue> {
   return [
     {
@@ -224,6 +232,24 @@ function transformMilestone(
       ),
     },
     {
+      columnKey: `milestones.${milestoneIdx}.statusDate`,
+      type: 'status_date',
+      hide: project => {
+        const currentMilestone = getCurrentMilestone(milestone.id, project);
+        return currentMilestone.status === 'uncompleted';
+      },
+      computed: project => {
+        const currentMilestone = getCurrentMilestone(milestone.id, project);
+        return currentMilestone.status;
+      },
+      ...transformValueField(
+        basePath,
+        milestone,
+        'statusDate',
+        hasPermission => hasPermission(MILESTONE_UPDATE) || hasPermission(MILESTONE_SET_COMPLETED)
+      ),
+    },
+    {
       columnKey: `milestones.${milestoneIdx}.files`,
       type: 'milestone_documents',
       ...transformValueField(
@@ -237,10 +263,6 @@ function transformMilestone(
     ...c,
     empty: !milestone,
   }));
-}
-
-function getCurrentTask(taskId, project) {
-  return project.milestones.flatMap(milestone => milestone.tasks).find(task => task.id === taskId);
 }
 
 function transformTask(
@@ -391,6 +413,28 @@ function transformTask(
       ),
     },
     {
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.statusDate`,
+      type: 'status_date',
+      hide: project => {
+        const currentTask = getCurrentTask(task.id, project);
+        return currentTask.status === 'uncompleted';
+      },
+      computed: project => {
+        const currentTask = getCurrentTask(task.id, project);
+        return currentTask.status;
+      },
+      ...transformValueField(
+        basePath,
+        task,
+        'statusDate',
+        hasPermission =>
+          hasPermission(TASK_UPDATE) ||
+          (hasPermission(TASK_SET_IN_PROGRESS) &&
+            hasPermission(TASK_SET_COMPLETED) &&
+            hasPermission(TASK_SET_SKIPPED))
+      ),
+    },
+    {
       columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvable`,
       type: 'toggle',
       ...transformValueField(
@@ -431,6 +475,26 @@ function transformTask(
         basePath,
         task,
         'approvalStatus',
+        hasPermission =>
+          hasPermission(TASK_UPDATE) ||
+          (hasPermission(TASK_SET_APPROVED) && hasPermission(TASK_SET_REJECTED))
+      ),
+    },
+    {
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvalStatusDate`,
+      type: 'status_date',
+      hide: project => {
+        const currentTask = getCurrentTask(task.id, project);
+        return !(currentTask?.approvable ?? false) || currentTask.approvalStatus === 'unapproved';
+      },
+      computed: project => {
+        const currentTask = getCurrentTask(task.id, project);
+        return currentTask.approvalStatus;
+      },
+      ...transformValueField(
+        basePath,
+        task,
+        'approvalStatusDate',
         hasPermission =>
           hasPermission(TASK_UPDATE) ||
           (hasPermission(TASK_SET_APPROVED) && hasPermission(TASK_SET_REJECTED))

@@ -128,6 +128,13 @@ export const milestoneColumns = (milestoneIdx: number | '#'): Array<ColumnConfig
     width: ColumnWidths.Select,
   },
   {
+    key: `milestones.${milestoneIdx}.statusDate`,
+    title: <FormattedMessage {...milestoneMessages.statusDate} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.MILESTONE,
+    width: ColumnWidths.Default,
+  },
+  {
     key: `milestones.${milestoneIdx}.files`,
     title: <FormattedMessage {...milestoneMessages.files} />,
     icon: 'MILESTONE_TASK',
@@ -191,6 +198,13 @@ export const taskColumns = (
     width: ColumnWidths.Select,
   },
   {
+    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.statusDate`,
+    title: <FormattedMessage {...taskMessages.statusDate} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.TASK,
+    width: ColumnWidths.Default,
+  },
+  {
     key: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvable`,
     title: <FormattedMessage {...taskMessages.approvable} />,
     icon: 'MILESTONE_TASK',
@@ -203,6 +217,13 @@ export const taskColumns = (
     icon: 'MILESTONE_TASK',
     color: colors.TASK,
     width: ColumnWidths.Select,
+  },
+  {
+    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvalStatusDate`,
+    title: <FormattedMessage {...taskMessages.approvalStatusDate} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.TASK,
+    width: ColumnWidths.Default,
   },
   // approvers
   {

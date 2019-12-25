@@ -26,4 +26,8 @@ export default defineMessages({
     id: 'modules.Milestones.status',
     defaultMessage: 'Status',
   },
+  statusDate: {
+    id: 'modules.Milestones.statusDate',
+    defaultMessage: 'Status date',
+  },
 });

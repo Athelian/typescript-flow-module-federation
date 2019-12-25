@@ -11,7 +11,7 @@ export default function normalizeSheetContainerInput(
     case 'warehouseArrivalActualDate':
     case 'departureDate':
       return {
-        [(field: string)]: new Date(value),
+        [(field: string)]: value ? new Date(value) : null,
       };
     case 'tags':
       return {

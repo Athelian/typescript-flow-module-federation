@@ -316,6 +316,28 @@ export default function entityEventHandler(
                   }),
                 'status'
               );
+
+              changes = mergeChanges(
+                changes,
+                {
+                  completedAt: (i, v) => ({
+                    ...i,
+                    completed: {
+                      ...i.completed,
+                      at: v,
+                    },
+                  }),
+                  completedBy: (i, v) => ({
+                    ...i,
+                    completed: {
+                      ...i.completed,
+                      by: v,
+                    },
+                  }),
+                },
+                'statusDate',
+                milestone.statusDate
+              );
             }
             break;
           }
@@ -439,6 +461,92 @@ export default function entityEventHandler(
                     ...newValues,
                   }),
                 'approvalStatus'
+              );
+
+              changes = mergeChanges(
+                changes,
+                {
+                  inProgressAt: (i, v) => ({
+                    ...i,
+                    in_progress: {
+                      ...i.in_progress,
+                      at: v,
+                    },
+                  }),
+                  inProgressBy: (i, v) => ({
+                    ...i,
+                    in_progress: {
+                      ...i.in_progress,
+                      by: v,
+                    },
+                  }),
+                  completedAt: (i, v) => ({
+                    ...i,
+                    completed: {
+                      ...i.completed,
+                      at: v,
+                    },
+                  }),
+                  completedBy: (i, v) => ({
+                    ...i,
+                    completed: {
+                      ...i.completed,
+                      by: v,
+                    },
+                  }),
+                  skippedAt: (i, v) => ({
+                    ...i,
+                    skipped: {
+                      ...i.skipped,
+                      at: v,
+                    },
+                  }),
+                  skippedBy: (i, v) => ({
+                    ...i,
+                    skipped: {
+                      ...i.skipped,
+                      by: v,
+                    },
+                  }),
+                },
+                'statusDate',
+                task.statusDate
+              );
+
+              changes = mergeChanges(
+                changes,
+                {
+                  approvedAt: (i, v) => ({
+                    ...i,
+                    approved: {
+                      ...i.approved,
+                      at: v,
+                    },
+                  }),
+                  approvedBy: (i, v) => ({
+                    ...i,
+                    approved: {
+                      ...i.approved,
+                      by: v,
+                    },
+                  }),
+                  rejectedAt: (i, v) => ({
+                    ...i,
+                    rejected: {
+                      ...i.rejected,
+                      at: v,
+                    },
+                  }),
+                  rejectedBy: (i, v) => ({
+                    ...i,
+                    rejected: {
+                      ...i.rejected,
+                      by: v,
+                    },
+                  }),
+                },
+                'approvalStatusDate',
+                task.approvalStatusDate
               );
             }
             break;
