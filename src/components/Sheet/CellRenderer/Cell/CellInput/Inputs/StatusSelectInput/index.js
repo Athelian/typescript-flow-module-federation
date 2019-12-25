@@ -71,7 +71,7 @@ const StatusSelectInput = ({
   <SelectInput
     value={value}
     onChange={onChange}
-    items={extra}
+    items={extra || []}
     itemToValue={i => i?.value ?? null}
     itemToString={i => i?.label ?? ''}
     renderInput={StatusSelect}

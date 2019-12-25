@@ -11,7 +11,7 @@ export const SelectInputWrapperStyle = (color: string): string => css`
   padding: 0 5px;
 `;
 
-export const SelectInputStyle: string = (textColor: string): string => css`
+export const SelectInputStyle = (textColor: string): string => css`
   ${fontSizes.MAIN};
   ${presets.ELLIPSIS};
   color: ${textColor || colors.BLACK};
@@ -21,7 +21,7 @@ export const SelectInputStyle: string = (textColor: string): string => css`
   cursor: pointer;
 `;
 
-export const ArrowDownStyle = css`
+export const ArrowDownStyle: string = css`
   ${presets.BUTTON};
   ${transitions.EXPAND};
   ${fontSizes.SMALL};

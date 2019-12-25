@@ -21,7 +21,7 @@ import { projectsQuery } from './query';
 const ProjectSheetModule = () => {
   const client = useApolloClient();
   const { user } = useViewer();
-  const memoizedMutate = React.useCallback(mutate(client, user.id), [client, user]);
+  const memoizedMutate = React.useCallback(mutate(client, user?.id), [client, user]);
   const memoizedHandler = React.useCallback(dispatch => entityEventHandler(client, dispatch), [
     client,
   ]);
