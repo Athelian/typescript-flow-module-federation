@@ -23,11 +23,12 @@ type RenderProps = {
   onClick: () => void,
 };
 
-type Props = {
+type Props = {|
   onChange: (?Object) => void,
   children: RenderProps => React.Node,
   templateType: string,
-};
+  selectedItem: Object,
+|};
 
 type ListProps = {
   variables: Object,
@@ -74,8 +75,8 @@ const TemplateList = ({ variables, selected, setSelected }: ListProps) => {
   );
 };
 
-const TemplateSelector = ({ onChange, children, templateType }: Props) => {
-  const [selected, setSelected] = React.useState(null);
+const TemplateSelector = ({ onChange, selectedItem, children, templateType }: Props) => {
+  const [selected, setSelected] = React.useState(selectedItem);
   const [open, setOpen] = React.useState(false);
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', type: templateType },
@@ -85,11 +86,10 @@ const TemplateSelector = ({ onChange, children, templateType }: Props) => {
   const handleSave = () => {
     onChange(selected);
     setOpen(false);
-    setSelected(null);
   };
   const handleCancel = () => {
     setOpen(false);
-    setSelected(null);
+    setSelected(selectedItem);
   };
 
   return (
@@ -111,7 +111,10 @@ const TemplateSelector = ({ onChange, children, templateType }: Props) => {
             <Sort config={MaskEditSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
             <CancelButton onClick={handleCancel} />
-            <SaveButton disabled={!selected} onClick={handleSave} />
+            <SaveButton
+              disabled={!selected || selected?.id === selectedItem?.id}
+              onClick={handleSave}
+            />
           </SlideViewNavBar>
 
           <Content>

@@ -2,6 +2,9 @@
 import * as React from 'react';
 import type { MaskEdit, MaskEditColumn } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
+import useLocalStorage from 'hooks/useLocalStorage';
+import CornerIcon from 'components/CornerIcon';
+import { colors } from 'styles/common';
 import Dialog from 'components/Dialog';
 import { ApplyButton, ResetButton, BaseButton, SaveButton, IconButton } from 'components/Buttons';
 import { Tooltip } from 'components/Tooltip';
@@ -20,6 +23,7 @@ import {
   TemplateWrapperStyle,
   TemplateSelectWrapperStyle,
   HeaderStyle,
+  TemplateStyle,
 } from './style';
 
 type Props = {
@@ -48,11 +52,22 @@ const ColumnsConfig = ({
   children,
 }: Props) => {
   const [isOpen, setOpen] = React.useState(false);
+  const [persistTemplate, setPersistTemplate] = useLocalStorage(
+    `${templateType}SelectedTemplate`,
+    null
+  );
   const [dirtyColumns, setDirtyColumns] = React.useState<Array<Column | Array<Column>>>([]);
+  const currentTemplate = React.useRef(persistTemplate);
 
   React.useEffect(() => {
     setDirtyColumns(convertMappingColumns(columns));
   }, [columns]);
+
+  // React.useEffect(() => {
+  //   if (persistTemplate && currentTemplate.current) {
+  //     currentTemplate.current = null;
+  //   }
+  // }, [persistTemplate]);
 
   const isDirty = React.useMemo(() => {
     const currentColumns = flattenColumns(dirtyColumns);
@@ -77,6 +92,7 @@ const ColumnsConfig = ({
   );
 
   const handleApply = () => {
+    setPersistTemplate(currentTemplate.current);
     if (onApply) {
       onChange(onApply(dirtyColumns));
     } else {
@@ -96,8 +112,13 @@ const ColumnsConfig = ({
     setOpen(false);
   };
 
-  const handleReset = () => setDirtyColumns(convertMappingColumns(columns));
-  const handleSelectAll = () =>
+  const handleReset = () => {
+    setDirtyColumns(convertMappingColumns(columns));
+    currentTemplate.current = persistTemplate;
+  };
+
+  const handleSelectAll = () => {
+    currentTemplate.current = null;
     setDirtyColumns(
       dirtyColumns.map(col =>
         Array.isArray(col)
@@ -113,7 +134,10 @@ const ColumnsConfig = ({
             }
       )
     );
-  const handleUnselectAll = () =>
+  };
+
+  const handleUnselectAll = () => {
+    currentTemplate.current = null;
     setDirtyColumns(
       dirtyColumns.map(col =>
         Array.isArray(col)
@@ -129,7 +153,9 @@ const ColumnsConfig = ({
             }
       )
     );
-  const handleGroup = () =>
+  };
+  const handleGroup = () => {
+    currentTemplate.current = null;
     setDirtyColumns(
       convertMappingColumns(
         Object.values(groupedColumns).flatMap((cols: any) => {
@@ -152,8 +178,11 @@ const ColumnsConfig = ({
         })
       )
     );
+  };
+
   const handleTemplateChange = (template: MaskEdit) => {
     if (template) {
+      currentTemplate.current = template;
       if (onLoadTemplate) {
         setDirtyColumns(convertMappingColumns(onLoadTemplate(template)));
       } else {
@@ -174,12 +203,14 @@ const ColumnsConfig = ({
     (group: string) => ({
       icon: group,
       columns: groupedColumns[group] ?? [],
-      onChange: newCols =>
+      onChange: newCols => {
+        currentTemplate.current = null;
         setDirtyColumns(
           Object.entries(groupedColumns).flatMap(([g, cols]) =>
             g === group ? newCols : ((cols: any): Array<Column>)
           )
-        ),
+        );
+      },
     }),
     [groupedColumns]
   );
@@ -188,7 +219,12 @@ const ColumnsConfig = ({
     <>
       <BaseButton
         className={ButtonStyle}
-        label={<FormattedMessage {...messages.columnsConfigButton} />}
+        label={
+          <>
+            <FormattedMessage {...messages.columnsConfigButton} />{' '}
+            {persistTemplate?.name && `[${persistTemplate?.name}]`}
+          </>
+        }
         icon="SETTINGS"
         textColor="GRAY_DARK"
         hoverTextColor="WHITE"
@@ -243,16 +279,29 @@ const ColumnsConfig = ({
 
             <div className={TemplateWrapperStyle}>
               <div className={TemplateSelectWrapperStyle}>
-                <TemplateSelector onChange={handleTemplateChange} templateType={templateType}>
-                  {({ onClick }) => (
-                    <BaseButton
-                      onClick={onClick}
-                      label={<FormattedMessage {...messages.columnsConfigUseTemplate} />}
-                      icon="TEMPLATE"
-                      backgroundColor="BLUE"
-                      hoverBackgroundColor="BLUE_DARK"
-                    />
-                  )}
+                <TemplateSelector
+                  selectedItem={currentTemplate.current}
+                  onChange={handleTemplateChange}
+                  templateType={templateType}
+                >
+                  {({ onClick }) =>
+                    !currentTemplate.current ? (
+                      <BaseButton
+                        onClick={onClick}
+                        label={<FormattedMessage {...messages.columnsConfigUseTemplate} />}
+                        icon="TEMPLATE"
+                        backgroundColor="BLUE"
+                        hoverBackgroundColor="BLUE_DARK"
+                      />
+                    ) : (
+                      <button type="button" onClick={onClick} className={TemplateStyle}>
+                        {currentTemplate.current.name}
+                        <div>
+                          <CornerIcon icon="TEMPLATE" color={colors.TEMPLATE} />
+                        </div>
+                      </button>
+                    )
+                  }
                 </TemplateSelector>
               </div>
 
