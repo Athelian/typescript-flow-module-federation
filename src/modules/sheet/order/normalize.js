@@ -12,7 +12,7 @@ export default function normalizeSheetOrderInput(
     case 'deliveryDate':
     case 'issuedAt':
       return {
-        [(field: string)]: new Date(newValue),
+        [(field: string)]: newValue ? new Date(newValue) : null,
       };
     case 'files':
       return {

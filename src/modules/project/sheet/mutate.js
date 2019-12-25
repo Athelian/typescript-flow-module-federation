@@ -21,7 +21,7 @@ function normalizedInput(
       switch (field) {
         case 'dueDate':
           return {
-            [(field: string)]: new Date(value),
+            [(field: string)]: value ? new Date(value) : null,
           };
         case 'tags':
           return {
@@ -34,7 +34,7 @@ function normalizedInput(
       }
     case 'Milestone':
       switch (field) {
-        case 'status': {
+        case 'status':
           switch (value) {
             case 'completed':
               return {
@@ -49,7 +49,10 @@ function normalizedInput(
             default:
               return {};
           }
-        }
+        case 'statusDate':
+          return {
+            completedAt: value.completed.at ? new Date(value.completed.at) : null,
+          };
         case 'files':
           return {
             files: value.map(
@@ -109,7 +112,13 @@ function normalizedInput(
               return {};
           }
         }
-        case 'approvalStatus': {
+        case 'statusDate':
+          return {
+            inProgressAt: value.in_progress.at ? new Date(value.in_progress.at) : null,
+            completedAt: value.completed.at ? new Date(value.completed.at) : null,
+            skippedAt: value.skipped.at ? new Date(value.skipped.at) : null,
+          };
+        case 'approvalStatus':
           switch (value) {
             case 'approved':
               return {
@@ -135,7 +144,11 @@ function normalizedInput(
             default:
               return {};
           }
-        }
+        case 'approvalStatusDate':
+          return {
+            approvedAt: value.approved.at ? new Date(value.approved.at) : null,
+            rejectedAt: value.rejected.at ? new Date(value.rejected.at) : null,
+          };
         case 'startDateBindingData': {
           const date = value?.date ?? null;
           if (date) {

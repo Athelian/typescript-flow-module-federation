@@ -26,9 +26,17 @@ export default defineMessages({
     id: 'modules.Tasks.status',
     defaultMessage: 'Status',
   },
+  statusDate: {
+    id: 'modules.Tasks.statusDate',
+    defaultMessage: 'Status date',
+  },
   approvalStatus: {
     id: 'modules.Tasks.approvalStatus',
     defaultMessage: 'Approval status',
+  },
+  approvalStatusDate: {
+    id: 'modules.Tasks.approvalStatusDate',
+    defaultMessage: 'Approval status date',
   },
   name: {
     id: 'modules.Tasks.name',

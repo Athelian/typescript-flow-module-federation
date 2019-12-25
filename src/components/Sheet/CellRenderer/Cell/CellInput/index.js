@@ -34,6 +34,7 @@ import TaskBindingInput from './Inputs/TaskBindingInput';
 import MainExporterInput from './Inputs/MainExporterInput';
 import MaskSelectorInput from './Inputs/MaskSelectorInput';
 import StatusSelectInput from './Inputs/StatusSelectInput';
+import StatusDateInput from './Inputs/StatusDateInput';
 
 type Props = {
   value: any,
@@ -127,6 +128,7 @@ const inputs = {
   approval: ApprovalInput,
   date_revisions: DateRevisionsInput,
   date_binding: TaskBindingInput,
+  status_date: StatusDateInput,
 };
 
 const CellInput = ({
