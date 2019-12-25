@@ -12,10 +12,10 @@ import {
   type ColumnState,
 } from 'components/Sheet';
 import { getColumnsConfigured, SHEET_COLUMN_KEY_PREFIX } from 'components/Sheet/useColumns';
+import { ColumnWidths } from 'modules/sheet/common/columns';
 import projectMessages from 'modules/project/messages';
 import milestoneMessages from 'modules/milestone/messages';
 import taskMessages from 'modules/task/messages';
-import { ColumnWidths } from 'modules/sheet/common/columns';
 
 export const ProjectSheetColumnGroups = ['PROJECT', 'MILESTONE_TASKS'];
 
@@ -205,6 +205,13 @@ export const taskColumns = (
     width: ColumnWidths.Default,
   },
   {
+    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.assignedTo`,
+    title: <FormattedMessage {...taskMessages.assignedTo} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.TASK,
+    width: ColumnWidths.Users,
+  },
+  {
     key: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvable`,
     title: <FormattedMessage {...taskMessages.approvable} />,
     icon: 'MILESTONE_TASK',
@@ -225,7 +232,13 @@ export const taskColumns = (
     color: colors.TASK,
     width: ColumnWidths.Default,
   },
-  // approvers
+  {
+    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvers`,
+    title: <FormattedMessage {...taskMessages.approvers} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.TASK,
+    width: ColumnWidths.Users,
+  },
   {
     key: `milestones.${milestoneIdx}.tasks.${taskIdx}.tags`,
     title: <FormattedMessage {...taskMessages.tags} />,

@@ -201,6 +201,14 @@ function normalizedInput(
             dueDateBinding: value?.binding ?? null,
           };
         }
+        case 'assignedTo':
+          return {
+            assignedToIds: value.map(user => user.id),
+          };
+        case 'approvers':
+          return {
+            approverIds: value.map(user => user.id),
+          };
         default:
           return {
             [field]: value,

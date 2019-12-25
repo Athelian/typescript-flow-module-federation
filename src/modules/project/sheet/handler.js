@@ -11,7 +11,7 @@ import type {
 } from 'components/Sheet/SheetLive/types';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
 import { extraChange, mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
-import { filesByIDsQuery } from 'modules/sheet/common/query';
+import { filesByIDsQuery, usersByIDsQuery } from 'modules/sheet/common/query';
 import { decorateMilestone, decorateTask } from './decorator';
 import { computeMilestoneStatus, computeTaskApprovalStatus, computeTaskStatus } from './helper';
 import { milestoneByIDQuery, tagsByIDsQuery, taskByIDQuery, userByIDQuery } from './query';
@@ -383,6 +383,17 @@ export default function entityEventHandler(
                       }));
                   }
                   break;
+                case 'assignedTo':
+                case 'approvers':
+                  return client
+                    .query({
+                      query: usersByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.usersByIDs),
+                    }));
                 default:
                   break;
               }

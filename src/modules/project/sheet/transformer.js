@@ -6,6 +6,7 @@ import {
   transformValueField,
 } from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
+import { parseGroupIds } from 'utils/task';
 import {
   PROJECT_SET_DESCRIPTION,
   PROJECT_SET_DUE_DATE,
@@ -33,6 +34,8 @@ import {
   TASK_SET_COMPLETED,
   TASK_SET_SKIPPED,
   TASK_SET_REJECTED,
+  TASK_SET_ASSIGNEES,
+  TASK_SET_APPROVERS,
 } from 'modules/permission/constants/task';
 
 function getCurrentMilestone(milestoneId, project) {
@@ -435,6 +438,20 @@ function transformTask(
       ),
     },
     {
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.assignedTo`,
+      type: 'user_assignment',
+      computed: root => {
+        const currentTask = getCurrentTask(task.id, root);
+        return parseGroupIds(currentTask);
+      },
+      ...transformValueField(
+        basePath,
+        task,
+        'assignedTo',
+        hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_ASSIGNEES)
+      ),
+    },
+    {
       columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvable`,
       type: 'toggle',
       ...transformValueField(
@@ -500,7 +517,20 @@ function transformTask(
           (hasPermission(TASK_SET_APPROVED) && hasPermission(TASK_SET_REJECTED))
       ),
     },
-    // approvers
+    {
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvers`,
+      type: 'user_assignment',
+      computed: root => {
+        const currentTask = getCurrentTask(task.id, root);
+        return parseGroupIds(currentTask);
+      },
+      ...transformValueField(
+        basePath,
+        task,
+        'approvers',
+        hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_APPROVERS)
+      ),
+    },
     {
       columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.tags`,
       type: 'task_tags',
