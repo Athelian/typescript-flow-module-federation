@@ -27,6 +27,7 @@ type Props = {
   templateType: string,
   onChange: (Array<ColumnConfig>) => void,
   onLoadTemplate?: (template: Object) => Array<ColumnConfig>,
+  onApply?: (columns: Array<Column | Array<Column>>) => Array<ColumnConfig>,
   children: ({
     getGroupProps: (
       group: string
@@ -38,7 +39,14 @@ type Props = {
   }) => React.Node,
 };
 
-const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, children }: Props) => {
+const ColumnsConfig = ({
+  columns,
+  templateType,
+  onChange,
+  onLoadTemplate,
+  onApply,
+  children,
+}: Props) => {
   const [isOpen, setOpen] = React.useState(false);
   const [dirtyColumns, setDirtyColumns] = React.useState<Array<Column | Array<Column>>>([]);
 
@@ -69,15 +77,22 @@ const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, childr
   );
 
   const handleApply = () => {
-    const selectedColumns = flattenColumns(dirtyColumns);
-    const applyColumns: Array<ColumnConfig> = [];
-    selectedColumns.forEach(col => {
-      applyColumns.push({
-        ...columns.find(({ key }) => key === col.key),
-        hidden: col.hidden,
+    if (onApply) {
+      onChange(onApply(dirtyColumns));
+    } else {
+      const selectedColumns = flattenColumns(dirtyColumns);
+      const applyColumns: Array<ColumnConfig> = [];
+      selectedColumns.forEach(col => {
+        const existColumn = columns.find(({ key }) => key === col.key);
+        if (existColumn) {
+          applyColumns.push({
+            ...existColumn,
+            hidden: col.hidden,
+          });
+        }
       });
-    });
-    onChange(applyColumns);
+      onChange(applyColumns);
+    }
     setOpen(false);
   };
 
@@ -87,15 +102,13 @@ const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, childr
       dirtyColumns.map(col =>
         Array.isArray(col)
           ? [
-              ...col.map(({ key, title }) => ({
-                key,
-                title,
+              ...col.map(currentCol => ({
+                ...currentCol,
                 hidden: false,
               })),
             ]
           : {
-              key: col.key,
-              title: col.title,
+              ...col,
               hidden: false,
             }
       )
@@ -105,15 +118,13 @@ const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, childr
       dirtyColumns.map(col =>
         Array.isArray(col)
           ? [
-              ...col.map(({ key, title }) => ({
-                key,
-                title,
+              ...col.map(currentCol => ({
+                ...currentCol,
                 hidden: true,
               })),
             ]
           : {
-              key: col.key,
-              title: col.title,
+              ...col,
               hidden: true,
             }
       )
@@ -149,6 +160,7 @@ const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, childr
         const currentColumns = flattenColumns(dirtyColumns);
         const templateColumns = currentColumns.map(col => ({
           ...col,
+          hidden: false,
           ...(template?.columns ?? []).find(({ key }) => key === col.key),
         }));
 

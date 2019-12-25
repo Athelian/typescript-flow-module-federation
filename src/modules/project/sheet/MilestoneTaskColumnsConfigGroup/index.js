@@ -66,47 +66,53 @@ const MilestoneTaskColumnsConfigGroup = ({ columns, onChange }: Props) => {
       )
     );
 
-  const handleToggleMilestone = index =>
+  const handleToggleMilestone = (columnKey: string) => {
     onChange(
       generateMilestoneTaskColumns(
-        milestoneColumnsTemplate.map((column, idx) =>
-          idx === index ? { ...column, hidden: !column.hidden } : column
+        milestoneColumnsTemplate.map(column =>
+          columnKey === column.key ? { ...column, hidden: !column.hidden } : column
         ),
         milestoneCount,
         taskColumnsTemplate,
         taskCount
       )
     );
-  const handleToggleTask = index =>
-    onChange(
-      generateMilestoneTaskColumns(
-        milestoneColumnsTemplate,
-        milestoneCount,
-        taskColumnsTemplate.map((column, idx) =>
-          idx === index ? { ...column, hidden: !column.hidden } : column
-        ),
-        taskCount
-      )
-    );
+  };
 
-  const handleChangeMilestoneCount = (e: SyntheticInputEvent<HTMLInputElement>) =>
+  const handleToggleTask = (columnKey: string) => {
     onChange(
       generateMilestoneTaskColumns(
         milestoneColumnsTemplate,
-        Math.max(1, parseFloat(e.target.value || 0)),
+        milestoneCount,
+        taskColumnsTemplate.map(column =>
+          columnKey === column.key ? { ...column, hidden: !column.hidden } : column
+        ),
+        taskCount
+      )
+    );
+  };
+
+  const handleChangeMilestoneCount = (evt: SyntheticInputEvent<HTMLInputElement>) => {
+    onChange(
+      generateMilestoneTaskColumns(
+        milestoneColumnsTemplate,
+        Math.max(1, parseFloat(evt.target.value || 0)),
         taskColumnsTemplate,
         taskCount
       )
     );
-  const handleChangeTaskCount = (e: SyntheticInputEvent<HTMLInputElement>) =>
+  };
+
+  const handleChangeTaskCount = (evt: SyntheticInputEvent<HTMLInputElement>) => {
     onChange(
       generateMilestoneTaskColumns(
         milestoneColumnsTemplate,
         milestoneCount,
         taskColumnsTemplate,
-        Math.max(1, parseFloat(e.target.value || 0))
+        Math.max(1, parseFloat(evt.target.value || 0))
       )
     );
+  };
 
   return (
     <div className={WrapperStyle}>

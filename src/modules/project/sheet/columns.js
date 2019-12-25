@@ -16,7 +16,7 @@ import projectMessages from 'modules/project/messages';
 import milestoneMessages from 'modules/milestone/messages';
 import taskMessages from 'modules/task/messages';
 
-export const ProjectSheetColumnGroups = ['PROJECT', 'MILESTONE_TASK'];
+export const ProjectSheetColumnGroups = ['PROJECT', 'MILESTONES'];
 
 export const projectColumns: Array<ColumnConfig> = [
   {
