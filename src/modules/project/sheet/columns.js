@@ -15,6 +15,7 @@ import { getColumnsConfigured, SHEET_COLUMN_KEY_PREFIX } from 'components/Sheet/
 import projectMessages from 'modules/project/messages';
 import milestoneMessages from 'modules/milestone/messages';
 import taskMessages from 'modules/task/messages';
+import { ColumnWidths } from 'modules/sheet/common/columns';
 
 export const ProjectSheetColumnGroups = ['PROJECT', 'MILESTONE_TASKS'];
 
@@ -94,38 +95,44 @@ export const milestoneColumns = (milestoneIdx: number | '#'): Array<ColumnConfig
     title: <FormattedMessage {...milestoneMessages.createdAt} />,
     icon: 'MILESTONE_TASK',
     color: colors.MILESTONE,
-    width: 110,
+    width: ColumnWidths.DateUser,
   },
   {
     key: `milestones.${milestoneIdx}.updated`,
     title: <FormattedMessage {...milestoneMessages.updatedAt} />,
     icon: 'MILESTONE_TASK',
     color: colors.MILESTONE,
-    width: 110,
+    width: ColumnWidths.DateUser,
   },
   {
     key: `milestones.${milestoneIdx}.name`,
     title: <FormattedMessage {...milestoneMessages.name} />,
     icon: 'MILESTONE_TASK',
     color: colors.MILESTONE,
-    width: 200,
+    width: ColumnWidths.Default,
   },
   {
     key: `milestones.${milestoneIdx}.description`,
     title: <FormattedMessage {...milestoneMessages.description} />,
     icon: 'MILESTONE_TASK',
     color: colors.MILESTONE,
-    width: 200,
+    width: ColumnWidths.Default,
   },
   // dueDate + binding
   // estimatedCompletionDate + binding
-  // completed
+  {
+    key: `milestones.${milestoneIdx}.status`,
+    title: <FormattedMessage {...milestoneMessages.status} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.MILESTONE,
+    width: ColumnWidths.Select,
+  },
   {
     key: `milestones.${milestoneIdx}.files`,
     title: <FormattedMessage {...milestoneMessages.files} />,
     icon: 'MILESTONE_TASK',
     color: colors.MILESTONE,
-    width: 200,
+    width: ColumnWidths.Default,
   },
   // actions
 ];
@@ -176,10 +183,13 @@ export const taskColumns = (
     color: colors.TASK,
     width: 630,
   },
-  // in progress
-  // completed
-  // rejected
-  // skipped
+  {
+    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.status`,
+    title: <FormattedMessage {...taskMessages.status} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.TASK,
+    width: ColumnWidths.Select,
+  },
   {
     key: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvable`,
     title: <FormattedMessage {...taskMessages.approvable} />,
@@ -188,11 +198,11 @@ export const taskColumns = (
     width: 200,
   },
   {
-    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.approved`,
-    title: <FormattedMessage {...taskMessages.approved} />,
+    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvalStatus`,
+    title: <FormattedMessage {...taskMessages.approvalStatus} />,
     icon: 'MILESTONE_TASK',
     color: colors.TASK,
-    width: 110,
+    width: ColumnWidths.Select,
   },
   // approvers
   {

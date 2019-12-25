@@ -33,7 +33,7 @@ export async function handleProductChanges(
             })
             .then(({ data }) => ({
               field: change.field,
-              new: newCustomValue(data.mask),
+              new: newCustomValue(data.user),
             }));
         }
         break;

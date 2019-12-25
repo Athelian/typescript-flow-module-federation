@@ -1,12 +1,11 @@
 // @flow
+import { computeTaskApprovalStatus, computeMilestoneStatus, computeTaskStatus } from './helper';
 
 export function decorateTask(task: Object): Object {
   return {
     ...task,
-    approved: {
-      user: task.approvedBy,
-      date: task.approvedAt,
-    },
+    status: computeTaskStatus(task),
+    approvalStatus: computeTaskApprovalStatus(task),
     startDateBindingData: {
       date: task.startDate,
       interval: task.startDateInterval,
@@ -23,6 +22,7 @@ export function decorateTask(task: Object): Object {
 export function decorateMilestone(milestone: Object): Object {
   return {
     ...milestone,
+    status: computeMilestoneStatus(milestone),
     tasks: milestone.tasks.map(task => {
       if (task.__typename === 'Task') {
         return decorateTask(task);

@@ -116,4 +116,34 @@ export const mergeChanges = <T>(
   return [...restChanges, mergedChange];
 };
 
+export const extraChange = <T>(
+  changes: Array<EntityEventChange>,
+  fields: Array<string>,
+  compute: (newValues: Object) => T,
+  intoField: string
+): Array<EntityEventChange> => {
+  const changesForExtra = changes.filter(c => fields.includes(c.field));
+  if (changesForExtra.length === 0) {
+    return changes;
+  }
+
+  return [
+    ...changes,
+    {
+      field: intoField,
+      new: newCustomValue(
+        compute(
+          changesForExtra.reduce(
+            (values, change) => ({
+              ...values,
+              [change.field]: extractChangeNewValue(change),
+            }),
+            {}
+          )
+        )
+      ),
+    },
+  ];
+};
+
 export default convertEntityToInput;

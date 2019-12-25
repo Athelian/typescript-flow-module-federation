@@ -22,4 +22,8 @@ export default defineMessages({
     id: 'modules.Milestones.files',
     defaultMessage: 'Documents',
   },
+  status: {
+    id: 'modules.Milestones.status',
+    defaultMessage: 'Status',
+  },
 });

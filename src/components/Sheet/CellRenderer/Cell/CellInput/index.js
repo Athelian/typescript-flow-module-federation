@@ -33,6 +33,7 @@ import TasksInput from './Inputs/TasksInput';
 import TaskBindingInput from './Inputs/TaskBindingInput';
 import MainExporterInput from './Inputs/MainExporterInput';
 import MaskSelectorInput from './Inputs/MaskSelectorInput';
+import StatusSelectInput from './Inputs/StatusSelectInput';
 
 type Props = {
   value: any,
@@ -86,6 +87,7 @@ const inputs = {
   container_type: SelectCustomInput.ContainerType,
   container_option: SelectEnumInput.ContainerOption,
   port: PortInput,
+  status_select: StatusSelectInput,
   // Files
   order_documents: DocumentsInput.Order,
   order_item_documents: DocumentsInput.OrderItem,
@@ -121,10 +123,10 @@ const inputs = {
   order_item_tasks: TasksInput.OrderItem,
   batch_tasks: TasksInput.Batch,
   shipment_tasks: TasksInput.Shipment,
-  date_binding: TaskBindingInput,
   // Other
   approval: ApprovalInput,
   date_revisions: DateRevisionsInput,
+  date_binding: TaskBindingInput,
 };
 
 const CellInput = ({
