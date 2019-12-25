@@ -13,7 +13,8 @@ function normalizedInput(
   field: string,
   value: any,
   // eslint-disable-next-line no-unused-vars
-  project: Object
+  project: Object,
+  userId: string
 ): Object {
   switch (entity.type) {
     case 'Project':
@@ -33,6 +34,22 @@ function normalizedInput(
       }
     case 'Milestone':
       switch (field) {
+        case 'status': {
+          switch (value) {
+            case 'completed':
+              return {
+                completedAt: new Date(),
+                completedById: userId,
+              };
+            case 'uncompleted':
+              return {
+                completedAt: null,
+                completedById: null,
+              };
+            default:
+              return {};
+          }
+        }
         case 'files':
           return {
             files: value.map(
@@ -50,11 +67,75 @@ function normalizedInput(
           return {
             tagIds: value.map(tag => tag.id),
           };
-        case 'approved':
-          return {
-            approvedById: value?.user?.id ?? null,
-            approvedAt: value?.date ?? null,
-          };
+        case 'status': {
+          switch (value) {
+            case 'in_progress':
+              return {
+                inProgressAt: new Date(),
+                inProgressById: userId,
+                completedAt: null,
+                completedById: null,
+                skippedAt: null,
+                skippedById: null,
+              };
+            case 'completed':
+              return {
+                inProgressAt: null,
+                inProgressById: null,
+                completedAt: new Date(),
+                completedById: userId,
+                skippedAt: null,
+                skippedById: null,
+              };
+            case 'skipped':
+              return {
+                inProgressAt: null,
+                inProgressById: null,
+                completedAt: null,
+                completedById: null,
+                skippedAt: new Date(),
+                skippedById: userId,
+              };
+            case 'uncompleted':
+              return {
+                inProgressAt: null,
+                inProgressById: null,
+                completedAt: null,
+                completedById: null,
+                skippedAt: null,
+                skippedById: null,
+              };
+            default:
+              return {};
+          }
+        }
+        case 'approvalStatus': {
+          switch (value) {
+            case 'approved':
+              return {
+                approvedAt: new Date(),
+                approvedById: userId,
+                rejectedAt: null,
+                rejectedById: null,
+              };
+            case 'rejected':
+              return {
+                approvedAt: null,
+                approvedById: null,
+                rejectedAt: new Date(),
+                rejectedById: userId,
+              };
+            case 'unapproved':
+              return {
+                approvedAt: null,
+                approvedById: null,
+                rejectedAt: null,
+                rejectedById: null,
+              };
+            default:
+              return {};
+          }
+        }
         case 'startDateBindingData': {
           const date = value?.date ?? null;
           if (date) {
@@ -120,7 +201,7 @@ function normalizedInput(
 }
 
 // $FlowFixMe not compatible with hook implementation
-export default function(client: ApolloClient) {
+export default function(client: ApolloClient, userId: string) {
   return function mutate({
     entity,
     field,
@@ -138,7 +219,7 @@ export default function(client: ApolloClient) {
         mutation: mutations[entity.type],
         variables: {
           id: entity.id,
-          input: normalizedInput(entity, field, newValue, item),
+          input: normalizedInput(entity, field, newValue, item, userId),
         },
       })
       .then(({ data }) => {

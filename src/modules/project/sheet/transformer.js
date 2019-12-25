@@ -1,4 +1,5 @@
 // @flow
+import { colors } from 'styles/common';
 import {
   transformComputedField,
   transformReadonlyField,
@@ -13,6 +14,7 @@ import {
   PROJECT_UPDATE,
 } from 'modules/permission/constants/project';
 import {
+  MILESTONE_SET_COMPLETED,
   MILESTONE_SET_DESCRIPTION,
   MILESTONE_SET_DOCUMENTS,
   MILESTONE_SET_NAME,
@@ -27,6 +29,10 @@ import {
   TASK_SET_START_DATE,
   TASK_SET_DUE_DATE,
   TASK_UPDATE,
+  TASK_SET_IN_PROGRESS,
+  TASK_SET_COMPLETED,
+  TASK_SET_SKIPPED,
+  TASK_SET_REJECTED,
 } from 'modules/permission/constants/task';
 
 function transformProject(basePath: string, project: Object): Array<CellValue> {
@@ -193,7 +199,30 @@ function transformMilestone(
     },
     // dueDate + binding
     // estimatedCompletionDate + binding
-    // completed
+    {
+      columnKey: `milestones.${milestoneIdx}.status`,
+      type: 'status_select',
+      extra: [
+        {
+          value: 'completed',
+          label: 'Completed',
+          color: colors.TEAL_HALF,
+          textColor: colors.WHITE,
+        },
+        {
+          value: 'uncompleted',
+          label: 'Uncompleted',
+          color: colors.GRAY_SUPER_LIGHT,
+          textColor: colors.GRAY_DARK,
+        },
+      ],
+      ...transformValueField(
+        basePath,
+        milestone,
+        'status',
+        hasPermission => hasPermission(MILESTONE_UPDATE) || hasPermission(MILESTONE_SET_COMPLETED)
+      ),
+    },
     {
       columnKey: `milestones.${milestoneIdx}.files`,
       type: 'milestone_documents',
@@ -321,10 +350,46 @@ function transformTask(
         hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_DUE_DATE)
       ),
     },
-    // in progress
-    // completed
-    // rejected
-    // skipped
+    {
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.status`,
+      type: 'status_select',
+      extra: [
+        {
+          value: 'in_progress',
+          label: 'In Progress',
+          color: colors.WHITE,
+          textColor: colors.TEAL,
+        },
+        {
+          value: 'completed',
+          label: 'Completed',
+          color: colors.TEAL_HALF,
+          textColor: colors.WHITE,
+        },
+        {
+          value: 'skipped',
+          label: 'Skipped',
+          color: colors.GRAY_LIGHT_HALF,
+          textColor: colors.BLACK,
+        },
+        {
+          value: 'uncompleted',
+          label: 'Uncompleted',
+          color: colors.GRAY_SUPER_LIGHT,
+          textColor: colors.GRAY_DARK,
+        },
+      ],
+      ...transformValueField(
+        basePath,
+        task,
+        'status',
+        hasPermission =>
+          hasPermission(TASK_UPDATE) ||
+          (hasPermission(TASK_SET_IN_PROGRESS) &&
+            hasPermission(TASK_SET_COMPLETED) &&
+            hasPermission(TASK_SET_SKIPPED))
+      ),
+    },
     {
       columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvable`,
       type: 'toggle',
@@ -336,17 +401,39 @@ function transformTask(
       ),
     },
     {
-      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.approved`,
-      type: 'approval',
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvalStatus`,
+      type: 'status_select',
+      extra: [
+        {
+          value: 'approved',
+          label: 'Approved',
+          color: colors.BLUE_HALF,
+          textColor: colors.WHITE,
+        },
+        {
+          value: 'rejected',
+          label: 'Rejected',
+          color: colors.RED_HALF,
+          textColor: colors.WHITE,
+        },
+        {
+          value: 'unapproved',
+          label: 'Unapproved',
+          color: colors.GRAY_SUPER_LIGHT,
+          textColor: colors.GRAY_DARK,
+        },
+      ],
       hide: project => {
         const currentTask = getCurrentTask(task?.id, project);
-        return !(currentTask?.approvable ?? true);
+        return !(currentTask?.approvable ?? false);
       },
       ...transformValueField(
         basePath,
         task,
-        'approved',
-        hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_APPROVED)
+        'approvalStatus',
+        hasPermission =>
+          hasPermission(TASK_UPDATE) ||
+          (hasPermission(TASK_SET_APPROVED) && hasPermission(TASK_SET_REJECTED))
       ),
     },
     // approvers

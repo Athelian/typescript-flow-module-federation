@@ -6,6 +6,7 @@ import { EntityIcon, NavBar, Search, Filter, ProjectFilterConfig } from 'compone
 import { ExportButton } from 'components/Buttons';
 import { Sheet, ColumnsConfig, useSheet, useExportedColumns } from 'components/Sheet';
 import ColumnsGroup from 'components/ColumnsGroup';
+import { useViewer } from 'contexts/Viewer';
 import { clone } from 'utils/fp';
 import { projectsExportQuery } from '../query';
 import MilestoneTaskColumnsConfigGroup from './MilestoneTaskColumnsConfigGroup';
@@ -19,7 +20,8 @@ import { projectsQuery } from './query';
 
 const ProjectSheetModule = () => {
   const client = useApolloClient();
-  const memoizedMutate = React.useCallback(mutate(client), [client]);
+  const { user } = useViewer();
+  const memoizedMutate = React.useCallback(mutate(client, user.id), [client, user]);
   const memoizedHandler = React.useCallback(dispatch => entityEventHandler(client, dispatch), [
     client,
   ]);

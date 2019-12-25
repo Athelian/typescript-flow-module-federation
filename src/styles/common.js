@@ -18,10 +18,12 @@ export const colors = {
   GRAY_DARK: '#aaa',
   GRAY_DARK_1: '#555555',
   GRAY_LIGHT: '#ccc',
+  GRAY_LIGHT_HALF: 'rgba(204, 204, 204, 0.5)',
   GRAY_VERY_LIGHT: '#ddd',
   GRAY_SUPER_LIGHT: '#eeeeee',
 
   RED: '#ef4848',
+  RED_HALF: 'rgba(239, 72, 72, 0.5)',
   RED_DARK: '#b11717',
   YELLOW: '#ffd400',
   YELLOW_DARK: '#e9c200',

@@ -10,9 +10,10 @@ import type {
   EntityEventHandler,
 } from 'components/Sheet/SheetLive/types';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
-import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
+import { extraChange, mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
 import { filesByIDsQuery } from 'modules/sheet/common/query';
 import { decorateMilestone, decorateTask } from './decorator';
+import { computeMilestoneStatus, computeTaskApprovalStatus, computeTaskStatus } from './helper';
 import { milestoneByIDQuery, tagsByIDsQuery, taskByIDQuery, userByIDQuery } from './query';
 
 // $FlowFixMe not compatible with hook implementation
@@ -256,7 +257,7 @@ export default function entityEventHandler(
                       })
                       .then(({ data }) => ({
                         field: change.field,
-                        new: newCustomValue(data.mask),
+                        new: newCustomValue(data.user),
                       }));
                   }
                   break;
@@ -267,7 +268,7 @@ export default function entityEventHandler(
               return change;
             });
             break;
-          case 'Milestone':
+          case 'Milestone': {
             changes = await mapAsync(changes, change => {
               switch (change.field) {
                 case 'files':
@@ -290,7 +291,7 @@ export default function entityEventHandler(
                       })
                       .then(({ data }) => ({
                         field: change.field,
-                        new: newCustomValue(data.mask),
+                        new: newCustomValue(data.user),
                       }));
                   }
                   break;
@@ -300,7 +301,24 @@ export default function entityEventHandler(
 
               return change;
             });
+
+            const milestone = projects
+              .flatMap(p => p.milestones)
+              .find(m => m.id === event.entity.id);
+            if (milestone) {
+              changes = extraChange(
+                changes,
+                ['completedAt', 'completedBy'],
+                newValues =>
+                  computeMilestoneStatus({
+                    ...milestone,
+                    ...newValues,
+                  }),
+                'status'
+              );
+            }
             break;
+          }
           case 'Task': {
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               switch (change.field) {
@@ -357,22 +375,6 @@ export default function entityEventHandler(
               changes = mergeChanges(
                 changes,
                 {
-                  approvedBy: (i, v) => ({
-                    ...i,
-                    user: v,
-                  }),
-                  approvedAt: (i, v) => ({
-                    ...i,
-                    date: v,
-                  }),
-                },
-                'approved',
-                task.approved
-              );
-
-              changes = mergeChanges(
-                changes,
-                {
                   startDate: (i, v) => ({
                     ...i,
                     date: v,
@@ -408,6 +410,35 @@ export default function entityEventHandler(
                 },
                 'dueDateBindingData',
                 task.dueDateBindingData
+              );
+
+              changes = extraChange(
+                changes,
+                [
+                  'completedAt',
+                  'completedBy',
+                  'inProgressAt',
+                  'inProgressBy',
+                  'skippedAt',
+                  'skippedBy',
+                ],
+                newValues =>
+                  computeTaskStatus({
+                    ...task,
+                    ...newValues,
+                  }),
+                'status'
+              );
+
+              changes = extraChange(
+                changes,
+                ['rejectedAt', 'rejectedBy', 'approvedAt', 'approvedBy'],
+                newValues =>
+                  computeTaskApprovalStatus({
+                    ...task,
+                    ...newValues,
+                  }),
+                'approvalStatus'
               );
             }
             break;
