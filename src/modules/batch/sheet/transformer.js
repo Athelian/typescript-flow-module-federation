@@ -106,6 +106,7 @@ function transformShipment(
     shipment: batch?.shipment ?? null,
     getShipmentFromRoot: root => root?.shipment ?? null,
     readonlyExporter: true,
+    staticComputedFields: true,
   }).map(c => ({
     ...c,
     duplicable: true,

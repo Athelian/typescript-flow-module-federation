@@ -50,6 +50,7 @@ import {
   SHIPMENT_SET_WAREHOUSE,
   SHIPMENT_UPDATE,
 } from 'modules/permission/constants/shipment';
+import messages from 'modules/sheet/common/messages';
 
 type Props = {|
   fieldDefinitions: Array<FieldDefinition>,
@@ -57,6 +58,7 @@ type Props = {|
   shipment: ?Object,
   getShipmentFromRoot: Object => ?Object,
   readonlyExporter: boolean,
+  staticComputedFields?: boolean,
 |};
 
 export default function transformSheetShipment({
@@ -65,6 +67,7 @@ export default function transformSheetShipment({
   shipment,
   getShipmentFromRoot,
   readonlyExporter,
+  staticComputedFields,
 }: Props): Array<CellValue> {
   const nbOfVoyages = (shipment?.voyages ?? []).length;
   const getBatchesFromRoot = root => {
@@ -477,36 +480,54 @@ export default function transformSheetShipment({
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TOTAL_WEIGHT)
       ),
     },
-    {
-      columnKey: 'shipment.totalVolume',
-      type: 'volume_overridable_toggle',
-      computed: root => ({
-        value: getBatchesFromRoot(root).reduce((total, batch) => {
-          const packageVolume = batch.packageVolume.auto
-            ? calculateVolume({ value: 0, metric: 'm³' }, batch.packageSize)
-            : batch.packageVolume.value;
+    staticComputedFields
+      ? {
+          columnKey: 'shipment.totalVolume',
+          type: 'metric_value',
+          extra: {
+            tooltip: {
+              message: messages.notLiveUpdated,
+              type: 'info',
+            },
+          },
+          ...transformReadonlyField(
+            basePath,
+            shipment,
+            'totalVolume',
+            shipment?.totalVolume ?? { value: 0, metric: 'm³' }
+          ),
+        }
+      : {
+          columnKey: 'shipment.totalVolume',
+          type: 'volume_overridable_toggle',
+          computed: root => ({
+            value: getBatchesFromRoot(root).reduce((total, batch) => {
+              const packageVolume = batch.packageVolume.auto
+                ? calculateVolume({ value: 0, metric: 'm³' }, batch.packageSize)
+                : batch.packageVolume.value;
 
-          if (!packageVolume) {
-            return total;
-          }
+              if (!packageVolume) {
+                return total;
+              }
 
-          return (
-            total +
-            (batch.packageQuantity.auto
-              ? calculatePackageQuantity(batch)
-              : batch.packageQuantity.value || 0) *
-              convertVolume(packageVolume.value, packageVolume.metric, 'm³')
-          );
-        }, 0),
-        metric: 'm³',
-      }),
-      ...transformValueField(
-        basePath,
-        shipment,
-        'totalVolume',
-        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TOTAL_VOLUME)
-      ),
-    },
+              return (
+                total +
+                (batch.packageQuantity.auto
+                  ? calculatePackageQuantity(batch)
+                  : batch.packageQuantity.value || 0) *
+                  convertVolume(packageVolume.value, packageVolume.metric, 'm³')
+              );
+            }, 0),
+            metric: 'm³',
+          }),
+          ...transformValueField(
+            basePath,
+            shipment,
+            'totalVolume',
+            hasPermission =>
+              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_TOTAL_VOLUME)
+          ),
+        },
     {
       columnKey: 'shipment.numOfVoyages',
       type: 'number',
