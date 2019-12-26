@@ -63,12 +63,6 @@ const ColumnsConfig = ({
     setDirtyColumns(convertMappingColumns(columns));
   }, [columns]);
 
-  // React.useEffect(() => {
-  //   if (persistTemplate && currentTemplate.current) {
-  //     currentTemplate.current = null;
-  //   }
-  // }, [persistTemplate]);
-
   const isDirty = React.useMemo(() => {
     const currentColumns = flattenColumns(dirtyColumns);
     return (
@@ -198,7 +192,6 @@ const ColumnsConfig = ({
     }
   };
 
-  // CALLBACKS
   const getGroupProps = React.useCallback(
     (group: string) => ({
       icon: group,
@@ -219,18 +212,14 @@ const ColumnsConfig = ({
     <>
       <BaseButton
         className={ButtonStyle}
-        label={
-          <>
-            <FormattedMessage {...messages.columnsConfigButton} />{' '}
-            {persistTemplate?.name && `[${persistTemplate?.name}]`}
-          </>
-        }
+        label={<FormattedMessage {...messages.columnsConfigButton} />}
         icon="SETTINGS"
         textColor="GRAY_DARK"
         hoverTextColor="WHITE"
         backgroundColor="GRAY_SUPER_LIGHT"
         hoverBackgroundColor="GRAY_DARK"
         onClick={() => setOpen(true)}
+        suffix={persistTemplate?.name}
       />
 
       <Dialog isOpen={isOpen} onRequestClose={() => setOpen(false)}>
