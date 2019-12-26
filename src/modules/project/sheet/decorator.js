@@ -43,6 +43,36 @@ export function decorateTask(task: Object): Object {
   };
 }
 
+export function unDecorateTask({
+  status,
+  statusDate,
+  approvalStatus,
+  approvalStatusDate,
+  startDateBindingData,
+  dueDateBindingData,
+  ...task
+}: Object): Object {
+  return {
+    ...task,
+    inProgressAt: statusDate.in_progress.at,
+    inProgressBy: statusDate.in_progress.by,
+    completedAt: statusDate.completed.at,
+    completedBy: statusDate.completed.by,
+    skippedAt: statusDate.skipped.at,
+    skippedBy: statusDate.skipped.by,
+    approvedAt: approvalStatusDate.approved.at,
+    approvedBy: approvalStatusDate.approved.by,
+    rejectedAt: approvalStatusDate.rejected.at,
+    rejectedBy: approvalStatusDate.rejected.by,
+    startDate: startDateBindingData.date,
+    startDateInterval: startDateBindingData.interval,
+    startDateBinding: startDateBindingData.binding,
+    dueDate: dueDateBindingData.date,
+    dueDateInterval: dueDateBindingData.interval,
+    dueDateBinding: dueDateBindingData.binding,
+  };
+}
+
 export function decorateMilestone(milestone: Object): Object {
   return {
     ...milestone,
@@ -70,6 +100,26 @@ export function decorateMilestone(milestone: Object): Object {
 
       return task;
     }),
+  };
+}
+
+export function unDecorateMilestone({
+  status,
+  statusDate,
+  dueDateBindingData,
+  estimatedCompletionDateBindingData,
+  ...milestone
+}: Object): Object {
+  return {
+    ...milestone,
+    completedAt: statusDate.completed.at,
+    completedBy: statusDate.completed.by,
+    dueDate: dueDateBindingData.date,
+    dueDateInterval: dueDateBindingData.interval,
+    dueDateBinding: dueDateBindingData.binding,
+    estimatedCompletionDate: estimatedCompletionDateBindingData.date,
+    estimatedCompletionDateInterval: estimatedCompletionDateBindingData.interval,
+    estimatedCompletionDateBinding: estimatedCompletionDateBindingData.binding,
   };
 }
 
