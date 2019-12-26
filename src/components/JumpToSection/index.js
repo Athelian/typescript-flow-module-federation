@@ -79,24 +79,26 @@ class JumpToSection extends React.Component<Props, State> {
       React.Children.forEach(
         children,
         child => {
-          const { link } = child.props;
-          const element = document.querySelector(`#${link}`);
-          if (element) {
-            this.elements.push(link);
-            this.io.observe(element);
-          } else {
-            // wait for the element is rendering on DOM
-            const retryFindElement = () => {
-              const retryElement = document.querySelector(`#${link}`);
-              if (!retryElement) {
-                requestAnimationFrame(retryFindElement);
-              } else {
-                this.io.observe(retryElement);
-                this.elements.push(link);
-              }
-            };
+          const link = child?.props.link;
+          if (link) {
+            const element = document.querySelector(`#${link}`);
+            if (element) {
+              this.elements.push(link);
+              this.io.observe(element);
+            } else {
+              // wait for the element is rendering on DOM
+              const retryFindElement = () => {
+                const retryElement = document.querySelector(`#${link}`);
+                if (!retryElement) {
+                  requestAnimationFrame(retryFindElement);
+                } else {
+                  this.io.observe(retryElement);
+                  this.elements.push(link);
+                }
+              };
 
-            requestAnimationFrame(retryFindElement);
+              requestAnimationFrame(retryFindElement);
+            }
           }
         },
         TIMEOUT
@@ -132,21 +134,24 @@ class JumpToSection extends React.Component<Props, State> {
     const { activeNode } = this.state;
 
     return !activeNode
-      ? React.Children.map(children, child =>
-          React.cloneElement(child, {
-            active: child.props.link === activeNode,
-            onClick: () => this.handleClick(child.props.link),
-          })
-        )
-      : React.Children.map(
-          children,
-          child =>
-            document.querySelector(`#${child.props.link}`) &&
+      ? (React.Children.toArray(children)
+          .filter(Boolean)
+          .map(child =>
             React.cloneElement(child, {
-              active: child.props.link === activeNode,
-              onClick: () => this.handleClick(child.props.link),
+              active: child?.props?.link === activeNode,
+              onClick: () => this.handleClick(child?.props?.link),
             })
-        );
+          ): Array<React$Node>)
+      : (React.Children.toArray(children)
+          .filter(Boolean)
+          .map(
+            child =>
+              document.querySelector(`#${child.props.link}`) &&
+              React.cloneElement(child, {
+                active: child?.props?.link === activeNode,
+                onClick: () => this.handleClick(child?.props?.link),
+              })
+          ): Array<React$Node>);
   }
 }
 
