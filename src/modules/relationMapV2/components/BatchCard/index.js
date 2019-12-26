@@ -41,10 +41,16 @@ export default function BatchCard({ batch, onViewForm, onDeleteBatch, organizati
   const canViewDesired = true;
   const canViewTasks = true;
 
+  // TODO: calculate the diff
+  const desiredAtDiff = 10;
+  const deliveredAtDiff = -2;
+
   return (
     <div className={BatchCardWrapperStyle}>
       <div className={TopRowWrapperStyle}>
-        <Display blackout={!canViewNo}>{no}</Display>
+        <Display blackout={!canViewNo} width="100px">
+          {no}
+        </Display>
 
         <div className={TagsAndDeliveryWrapperStyle}>
           {canViewTags ? (
@@ -57,36 +63,56 @@ export default function BatchCard({ batch, onViewForm, onDeleteBatch, organizati
             <Blackout />
           )}
 
-          <Label width="75px">
-            <FormattedMessage id="components.cards.delivery" />
+          <Label width="45px">
+            <FormattedMessage id="components.cards.abbreviateForDelivery" defaultMessage="DLV" />
           </Label>
-          <Display blackout={!canViewDelivery} width="80px">
+          <Display blackout={!canViewDelivery} width="85px">
             <FormattedDate value={deliveredAt} />
+          </Display>
+
+          <Label width="80px">
+            <FormattedMessage
+              id="components.cards.abbreviateForDeliveryDifference"
+              defaultMessage="DLV Diff"
+            />
+          </Label>
+          <Display blackout={!canViewDelivery} width="35px">
+            <FormattedNumber value={deliveredAtDiff} />
           </Display>
         </div>
       </div>
 
       <div className={BottomRowWrapperStyle}>
         <div className={QuantityVolumeDesiredWrapperStyle}>
-          <Label width="40px">
-            <FormattedMessage id="components.cards.qty" />
+          <Label width="45px">
+            <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
           </Label>
-          <Display blackout={!canViewQuantity} width="85px">
+          <Display blackout={!canViewQuantity} width="35px">
             <FormattedNumber value={latestQuantity} />
           </Display>
 
-          <Label width="40px">
-            <FormattedMessage id="components.cards.vol" />
+          <Label width="45px">
+            <FormattedMessage id="components.cards.vol" defaultMessage="VOL" />
           </Label>
-          <Display blackout={!canViewVolume} width="95px">
+          <Display blackout={!canViewVolume} width="50px">
             <FormattedNumber value={totalVolume?.value} suffix={totalVolume?.metric} />
           </Display>
 
-          <Label width="75px">
-            <FormattedMessage id="components.cards.desired" />
+          <Label width="45px">
+            <FormattedMessage id="components.cards.abbreviateForDesiredAt" defaultMessage="DES" />
           </Label>
-          <Display blackout={!canViewDesired} width="80px">
+          <Display blackout={!canViewDesired} width="85px">
             <FormattedDate value={desiredAt} />
+          </Display>
+
+          <Label width="80px">
+            <FormattedMessage
+              id="components.cards.abbreviateForDesiredDifference"
+              defaultMessage="DES Diff"
+            />
+          </Label>
+          <Display blackout={!canViewDesired} width="35px">
+            <FormattedNumber value={desiredAtDiff} />
           </Display>
         </div>
 

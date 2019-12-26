@@ -18,7 +18,7 @@ export const BatchCardWrapperStyle: string = css`
 
 export const TopRowWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 125px 285px;
+  grid-template-columns: 100px 310px;
   grid-template-rows: 20px;
   grid-gap: 5px;
   padding: 5px;
