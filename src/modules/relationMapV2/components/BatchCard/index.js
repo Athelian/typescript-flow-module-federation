@@ -61,17 +61,14 @@ export default function BatchCard({
   const canViewDesired = true;
   const canViewTasks = true;
 
-  // TODO: calculate the diff
   let desiredAtDiff = 0;
   let deliveredAtDiff = 0;
   let desiredAtDiffMsg = null;
   let deliveredAtDiffMsg = null;
 
   if (shipment) {
-    const lastPortDepartureDate = latestDate(
-      shipment?.voyages?.[shipment?.voyages?.length - 1]?.departure
-    );
-    if (lastPortDepartureDate && deliveredAt) {
+    const latestLoadPortDepartureDate = latestDate(shipment.voyages?.[0]?.departure);
+    if (latestLoadPortDepartureDate && deliveredAt) {
       deliveredAtDiffMsg = (
         <div>
           <FormattedMessage
@@ -79,7 +76,7 @@ export default function BatchCard({
             defaultMessage="Shipment's Latest Load Port Departure"
           />
           <p>
-            <FormattedDate value={lastPortDepartureDate} />
+            <FormattedDate value={latestLoadPortDepartureDate} />
           </p>
           <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
           <p>
@@ -89,7 +86,7 @@ export default function BatchCard({
       );
       deliveredAtDiff = differenceInCalendarDays(
         new Date(deliveredAt),
-        new Date(lastPortDepartureDate)
+        new Date(latestLoadPortDepartureDate)
       );
     }
 
@@ -116,9 +113,9 @@ export default function BatchCard({
           new Date(warehouseArrivalActualDate)
         );
       }
-    } else if (shipment.containers.length === 0) {
+    } else if (shipment.containers?.length === 0) {
       const warehouseLatestArrivalDate = latestDate(
-        shipment?.containerGroups?.[0]?.warehouseArrival
+        shipment.containerGroups?.[0]?.warehouseArrival
       );
 
       if (warehouseLatestArrivalDate && deliveredAt) {
