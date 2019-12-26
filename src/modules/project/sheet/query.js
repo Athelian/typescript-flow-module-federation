@@ -43,11 +43,15 @@ const milestoneSheetFragment = gql`
     dueDateBinding
     dueDateInterval {
       days
+      weeks
+      months
     }
     estimatedCompletionDate
     estimatedCompletionDateBinding
     estimatedCompletionDateInterval {
       days
+      weeks
+      months
     }
     completedAt
     completedBy {
@@ -77,8 +81,92 @@ const taskSheetFragment = gql`
     id
     name
     entity {
-      ... on Model {
-        id
+      __typename
+    }
+    order: entity {
+      ... on Order {
+        importer {
+          ... on Organization {
+            id
+          }
+        }
+        exporter {
+          ... on Organization {
+            id
+          }
+        }
+      }
+    }
+    orderItem: entity {
+      ... on OrderItem {
+        order {
+          ... on Order {
+            importer {
+              ... on Organization {
+                id
+              }
+            }
+            exporter {
+              ... on Organization {
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+    batch: entity {
+      ... on Batch {
+        orderItem {
+          ... on OrderItem {
+            order {
+              ... on Order {
+                importer {
+                  ... on Organization {
+                    id
+                  }
+                }
+                exporter {
+                  ... on Organization {
+                    id
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    shipment: entity {
+      ... on Shipment {
+        importer {
+          ... on Organization {
+            id
+          }
+        }
+        exporter {
+          ... on Organization {
+            id
+          }
+        }
+      }
+    }
+    productProvider: entity {
+      ... on ProductProvider {
+        exporter {
+          ... on Organization {
+            id
+          }
+        }
+        product {
+          ... on Product {
+            importer {
+              ... on Organization {
+                id
+              }
+            }
+          }
+        }
       }
     }
     description

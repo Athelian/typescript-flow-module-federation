@@ -18,6 +18,14 @@ export default defineMessages({
     id: 'modules.Milestones.description',
     defaultMessage: 'Description',
   },
+  dueDate: {
+    id: 'modules.Milestones.dueDate',
+    defaultMessage: 'Due date',
+  },
+  estimatedCompletionDate: {
+    id: 'modules.Milestones.estimatedCompletionDate',
+    defaultMessage: 'Estimated completion date',
+  },
   files: {
     id: 'modules.Milestones.files',
     defaultMessage: 'Documents',
@@ -29,5 +37,13 @@ export default defineMessages({
   statusDate: {
     id: 'modules.Milestones.statusDate',
     defaultMessage: 'Status date',
+  },
+  projectDueDate: {
+    id: 'modules.Milestones.projectDueDate',
+    defaultMessage: 'Project Due date',
+  },
+  milestoneCompleteDate: {
+    id: 'modules.Milestones.milestoneCompleteDate',
+    defaultMessage: "Prev. Milestone's Est. / Compl.",
   },
 });

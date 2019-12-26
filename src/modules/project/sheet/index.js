@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { useIntl } from 'react-intl';
 import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ProjectFilterConfig } from 'components/NavBar';
@@ -20,8 +21,10 @@ import { projectsQuery } from './query';
 
 const ProjectSheetModule = () => {
   const client = useApolloClient();
+  const intl = useIntl();
   const { user } = useViewer();
   const memoizedMutate = React.useCallback(mutate(client, user?.id), [client, user]);
+  const memoizedTransformer = React.useCallback(transformer(intl), [intl]);
   const memoizedHandler = React.useCallback(dispatch => entityEventHandler(client, dispatch), [
     client,
   ]);
@@ -105,7 +108,7 @@ const ProjectSheetModule = () => {
         loading={loading}
         items={initialItems}
         hasMore={hasMore}
-        transformItem={transformer}
+        transformItem={memoizedTransformer}
         onMutate={memoizedMutate}
         handleEntityEvent={memoizedHandler}
         onLoadMore={onLoadMore}

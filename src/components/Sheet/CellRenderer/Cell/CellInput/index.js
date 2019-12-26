@@ -30,7 +30,7 @@ import WarehouseSelectorInput from './Inputs/WarehouseSelectorInput';
 import ToggleInput from './Inputs/ToggleInput';
 import LogsInput from './Inputs/LogsInput';
 import TasksInput from './Inputs/TasksInput';
-import TaskBindingInput from './Inputs/TaskBindingInput';
+import DateBindingInput from './Inputs/DateBindingInput';
 import MainExporterInput from './Inputs/MainExporterInput';
 import MaskSelectorInput from './Inputs/MaskSelectorInput';
 import StatusSelectInput from './Inputs/StatusSelectInput';
@@ -127,7 +127,7 @@ const inputs = {
   // Other
   approval: ApprovalInput,
   date_revisions: DateRevisionsInput,
-  date_binding: TaskBindingInput,
+  date_binding: DateBindingInput,
   status_date: StatusDateInput,
 };
 

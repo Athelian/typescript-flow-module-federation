@@ -1,4 +1,6 @@
 // @flow
+import { IntlShape } from 'react-intl';
+import { MilestoneDateBindingValues, TaskDateBindingValues } from 'generated/graphql';
 import { colors } from 'styles/common';
 import {
   transformComputedField,
@@ -6,6 +8,7 @@ import {
   transformValueField,
 } from 'components/Sheet';
 import type { CellValue } from 'components/Sheet/SheetState/types';
+import { parseGroupIds } from 'utils/task';
 import {
   PROJECT_SET_DESCRIPTION,
   PROJECT_SET_DUE_DATE,
@@ -17,23 +20,33 @@ import {
   MILESTONE_SET_COMPLETED,
   MILESTONE_SET_DESCRIPTION,
   MILESTONE_SET_DOCUMENTS,
+  MILESTONE_SET_DUE_DATE,
+  MILESTONE_SET_DUE_DATE_BINDING,
+  MILESTONE_SET_ESTIMATED_COMPLETION_DATE,
+  MILESTONE_SET_ESTIMATED_COMPLETION_DATE_BINDING,
   MILESTONE_SET_NAME,
   MILESTONE_UPDATE,
 } from 'modules/permission/constants/milestone';
 import {
   TASK_SET_APPROVABLE,
   TASK_SET_APPROVED,
-  TASK_SET_DESCRIPTION,
-  TASK_SET_NAME,
-  TASK_SET_TAGS,
-  TASK_SET_START_DATE,
-  TASK_SET_DUE_DATE,
-  TASK_UPDATE,
-  TASK_SET_IN_PROGRESS,
+  TASK_SET_APPROVERS,
+  TASK_SET_ASSIGNEES,
   TASK_SET_COMPLETED,
-  TASK_SET_SKIPPED,
+  TASK_SET_DESCRIPTION,
+  TASK_SET_DUE_DATE,
+  TASK_SET_DUE_DATE_BINDING,
+  TASK_SET_IN_PROGRESS,
+  TASK_SET_NAME,
   TASK_SET_REJECTED,
+  TASK_SET_SKIPPED,
+  TASK_SET_START_DATE,
+  TASK_SET_START_DATE_BINDING,
+  TASK_SET_TAGS,
+  TASK_UPDATE,
 } from 'modules/permission/constants/task';
+import milestoneMessages from 'modules/milestone/messages';
+import taskMessages from 'modules/task/messages';
 
 function getCurrentMilestone(milestoneId, project) {
   return project.milestones.find(m => m.id === milestoneId);
@@ -41,6 +54,109 @@ function getCurrentMilestone(milestoneId, project) {
 
 function getCurrentTask(taskId, project) {
   return project.milestones.flatMap(milestone => milestone.tasks).find(task => task.id === taskId);
+}
+
+function getTaskBindings(
+  task: ?Object,
+  defaultBindings: Array<Object>,
+  intl: IntlShape
+): Array<Object> {
+  switch (task?.entity?.__typename) {
+    case 'Order':
+      return [
+        ...defaultBindings,
+        {
+          value: TaskDateBindingValues.OrderIssuedAt,
+          label: intl.formatMessage(taskMessages.OrderIssuedAt),
+        },
+        {
+          value: TaskDateBindingValues.OrderDeliveryDate,
+          label: intl.formatMessage(taskMessages.OrderDeliveryDate),
+        },
+      ];
+    case 'OrderItem':
+      return [
+        ...defaultBindings,
+        {
+          value: TaskDateBindingValues.OrderItemOrderIssuedAt,
+          label: intl.formatMessage(taskMessages.OrderItemOrderIssuedAt),
+        },
+        {
+          value: TaskDateBindingValues.OrderItemOrderDeliveryDate,
+          label: intl.formatMessage(taskMessages.OrderItemOrderDeliveryDate),
+        },
+      ];
+    case 'Batch':
+      return [
+        ...defaultBindings,
+        {
+          value: TaskDateBindingValues.BatchDesiredAt,
+          label: intl.formatMessage(taskMessages.BatchDesiredAt),
+        },
+        {
+          value: TaskDateBindingValues.BatchProducedAt,
+          label: intl.formatMessage(taskMessages.BatchProducedAt),
+        },
+        {
+          value: TaskDateBindingValues.BatchExpiredAt,
+          label: intl.formatMessage(taskMessages.BatchExpiredAt),
+        },
+      ];
+    case 'Shipment':
+      return [
+        ...defaultBindings,
+        {
+          value: TaskDateBindingValues.ShipmentBlDate,
+          label: intl.formatMessage(taskMessages.ShipmentBlDate),
+        },
+        {
+          value: TaskDateBindingValues.ShipmentBookingDate,
+          label: intl.formatMessage(taskMessages.ShipmentBookingDate),
+        },
+        {
+          value: TaskDateBindingValues.ShipmentCargoReady,
+          label: intl.formatMessage(taskMessages.ShipmentCargoReady),
+        },
+        {
+          value: TaskDateBindingValues.ShipmentLoadPortDeparture,
+          label: intl.formatMessage(taskMessages.ShipmentLoadPortDeparture),
+        },
+        {
+          value: TaskDateBindingValues.ShipmentFirstTransitPortArrival,
+          label: intl.formatMessage(taskMessages.ShipmentFirstTransitPortArrival),
+        },
+        {
+          value: TaskDateBindingValues.ShipmentFirstTransitPortDeparture,
+          label: intl.formatMessage(taskMessages.ShipmentFirstTransitPortDeparture),
+        },
+        {
+          value: TaskDateBindingValues.ShipmentSecondTransitPortArrival,
+          label: intl.formatMessage(taskMessages.ShipmentSecondTransitPortArrival),
+        },
+        {
+          value: TaskDateBindingValues.ShipmentSecondTransitPortDeparture,
+          label: intl.formatMessage(taskMessages.ShipmentSecondTransitPortDeparture),
+        },
+        {
+          value: TaskDateBindingValues.ShipmentDischargePortArrival,
+          label: intl.formatMessage(taskMessages.ShipmentDischargePortArrival),
+        },
+        {
+          value: TaskDateBindingValues.ShipmentCustomClearance,
+          label: intl.formatMessage(taskMessages.ShipmentCustomClearance),
+        },
+        {
+          value: TaskDateBindingValues.ShipmentWarehouseArrival,
+          label: intl.formatMessage(taskMessages.ShipmentWarehouseArrival),
+        },
+        {
+          value: TaskDateBindingValues.ShipmentDeliveryReady,
+          label: intl.formatMessage(taskMessages.ShipmentDeliveryReady),
+        },
+      ];
+    default:
+      return defaultBindings;
+  }
 }
 
 function transformProject(basePath: string, project: Object): Array<CellValue> {
@@ -136,7 +252,8 @@ function transformProject(basePath: string, project: Object): Array<CellValue> {
 function transformMilestone(
   milestoneIdx: number,
   basePath: string,
-  milestone: Object
+  milestone: Object,
+  intl: IntlShape
 ): Array<CellValue> {
   return [
     {
@@ -205,8 +322,43 @@ function transformMilestone(
         hasPermission => hasPermission(MILESTONE_UPDATE) || hasPermission(MILESTONE_SET_DESCRIPTION)
       ),
     },
-    // dueDate + binding
-    // estimatedCompletionDate + binding
+    {
+      columnKey: `milestones.${milestoneIdx}.dueDate`,
+      type: 'date_binding',
+      computed: () => [
+        {
+          value: MilestoneDateBindingValues.ProjectDueDate,
+          label: intl.formatMessage(milestoneMessages.projectDueDate),
+        },
+      ],
+      ...transformValueField(
+        basePath,
+        milestone,
+        'dueDateBindingData',
+        hasPermission =>
+          hasPermission(MILESTONE_UPDATE) ||
+          (hasPermission(MILESTONE_SET_DUE_DATE) && hasPermission(MILESTONE_SET_DUE_DATE_BINDING))
+      ),
+    },
+    {
+      columnKey: `milestones.${milestoneIdx}.estimatedCompletionDate`,
+      type: 'date_binding',
+      computed: () => [
+        {
+          value: MilestoneDateBindingValues.MilestoneCompleteDate,
+          label: intl.formatMessage(milestoneMessages.milestoneCompleteDate),
+        },
+      ],
+      ...transformValueField(
+        basePath,
+        milestone,
+        'estimatedCompletionDateBindingData',
+        hasPermission =>
+          hasPermission(MILESTONE_UPDATE) ||
+          (hasPermission(MILESTONE_SET_ESTIMATED_COMPLETION_DATE) &&
+            hasPermission(MILESTONE_SET_ESTIMATED_COMPLETION_DATE_BINDING))
+      ),
+    },
     {
       columnKey: `milestones.${milestoneIdx}.status`,
       type: 'status_select',
@@ -269,7 +421,8 @@ function transformTask(
   milestoneIdx: number,
   taskIdx: number,
   basePath: string,
-  task: Object
+  task: Object,
+  intl: IntlShape
 ): Array<CellValue> {
   return [
     {
@@ -342,34 +495,62 @@ function transformTask(
       columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.startDate`,
       type: 'date_binding',
       computed: project => {
+        const defaultBindings = [
+          {
+            value: TaskDateBindingValues.TaskDueDate,
+            label: intl.formatMessage(taskMessages.TaskDueDate),
+          },
+          {
+            value: TaskDateBindingValues.ProjectDueDate,
+            label: intl.formatMessage(taskMessages.ProjectDueDate),
+          },
+          {
+            value: TaskDateBindingValues.MilestoneDueDate,
+            label: intl.formatMessage(taskMessages.MilestoneDueDate),
+          },
+        ];
+
         const currentTask = getCurrentTask(task?.id, project);
-        return {
-          parentEntity: currentTask?.entity?.__typename,
-          type: 'startDate',
-        };
+        return getTaskBindings(currentTask, defaultBindings, intl);
       },
       ...transformValueField(
         basePath,
         task,
         'startDateBindingData',
-        hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_START_DATE)
+        hasPermission =>
+          hasPermission(TASK_UPDATE) ||
+          (hasPermission(TASK_SET_START_DATE) && hasPermission(TASK_SET_START_DATE_BINDING))
       ),
     },
     {
       columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.dueDate`,
       type: 'date_binding',
       computed: project => {
+        const defaultBindings = [
+          {
+            value: TaskDateBindingValues.TaskStartDate,
+            label: intl.formatMessage(taskMessages.TaskStartDate),
+          },
+          {
+            value: TaskDateBindingValues.ProjectDueDate,
+            label: intl.formatMessage(taskMessages.ProjectDueDate),
+          },
+          {
+            value: TaskDateBindingValues.MilestoneDueDate,
+            label: intl.formatMessage(taskMessages.MilestoneDueDate),
+          },
+        ];
+
         const currentTask = getCurrentTask(task?.id, project);
-        return {
-          parentEntity: currentTask?.entity?.__typename,
-          type: 'dueDate',
-        };
+        return getTaskBindings(currentTask, defaultBindings, intl);
       },
       ...transformValueField(
         basePath,
         task,
         'dueDateBindingData',
-        hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_DUE_DATE)
+        hasPermission =>
+          hasPermission(TASK_UPDATE) ||
+          (hasPermission(TASK_SET_DUE_DATE) && hasPermission(TASK_SET_DUE_DATE_BINDING))
       ),
     },
     {
@@ -432,6 +613,20 @@ function transformTask(
           (hasPermission(TASK_SET_IN_PROGRESS) &&
             hasPermission(TASK_SET_COMPLETED) &&
             hasPermission(TASK_SET_SKIPPED))
+      ),
+    },
+    {
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.assignedTo`,
+      type: 'user_assignment',
+      computed: root => {
+        const currentTask = getCurrentTask(task.id, root);
+        return parseGroupIds(currentTask);
+      },
+      ...transformValueField(
+        basePath,
+        task,
+        'assignedTo',
+        hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_ASSIGNEES)
       ),
     },
     {
@@ -500,7 +695,20 @@ function transformTask(
           (hasPermission(TASK_SET_APPROVED) && hasPermission(TASK_SET_REJECTED))
       ),
     },
-    // approvers
+    {
+      columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvers`,
+      type: 'user_assignment',
+      computed: root => {
+        const currentTask = getCurrentTask(task.id, root);
+        return parseGroupIds(currentTask);
+      },
+      ...transformValueField(
+        basePath,
+        task,
+        'approvers',
+        hasPermission => hasPermission(TASK_UPDATE) || hasPermission(TASK_SET_APPROVERS)
+      ),
+    },
     {
       columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.tags`,
       type: 'task_tags',
@@ -522,23 +730,28 @@ function transformTask(
   }));
 }
 
-export default function transformer(index: number, project: Object): Array<Array<CellValue>> {
-  const row = [...transformProject(`${index}`, project)];
+export default function transformer(intl: IntlShape) {
+  return (index: number, project: Object): Array<Array<CellValue>> => {
+    const row = [...transformProject(`${index}`, project)];
 
-  (project?.milestones ?? []).forEach((milestone, milestoneIdx) => {
-    row.push(...transformMilestone(milestoneIdx, `${index}.milestones.${milestoneIdx}`, milestone));
-
-    (milestone?.tasks ?? []).forEach((task, taskIdx) => {
+    (project?.milestones ?? []).forEach((milestone, milestoneIdx) => {
       row.push(
-        ...transformTask(
-          milestoneIdx,
-          taskIdx,
-          `${index}.milestones.${milestoneIdx}.tasks.${taskIdx}`,
-          task
-        )
+        ...transformMilestone(milestoneIdx, `${index}.milestones.${milestoneIdx}`, milestone, intl)
       );
-    });
-  });
 
-  return [row];
+      (milestone?.tasks ?? []).forEach((task, taskIdx) => {
+        row.push(
+          ...transformTask(
+            milestoneIdx,
+            taskIdx,
+            `${index}.milestones.${milestoneIdx}.tasks.${taskIdx}`,
+            task,
+            intl
+          )
+        );
+      });
+    });
+
+    return [row];
+  };
 }
