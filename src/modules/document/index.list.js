@@ -44,6 +44,11 @@ const DocumentModule = () => {
       ...FileInput,
     |}>
   >([]);
+  const filesStateRef = React.useRef(filesState);
+
+  React.useEffect(() => {
+    filesStateRef.current = filesState;
+  }, [filesState]);
 
   const lastFilter = usePrevious({ query, filterBy, sortBy });
 
@@ -65,6 +70,8 @@ const DocumentModule = () => {
       newFiles = Array.from(event.target.files);
     }
 
+    const currentNumberOfFiles = filesState.length;
+
     setFileState([
       ...newFiles.map(({ name }) => ({
         name,
@@ -80,7 +87,7 @@ const DocumentModule = () => {
     ]);
 
     Promise.all<any>(
-      newFiles.map(file =>
+      newFiles.map((file, index) =>
         upload({
           variables: {
             file,
@@ -90,6 +97,24 @@ const DocumentModule = () => {
               orphan: false,
             },
           },
+          context: ({
+            fetchOptions: {
+              onProgress: (progressEvent: ProgressEvent) => {
+                const { lengthComputable, loaded, total } = progressEvent;
+                if (lengthComputable) {
+                  setFileState(
+                    filesStateRef.current.map((fileState, idx) => ({
+                      ...fileState,
+                      progress:
+                        idx === index + currentNumberOfFiles
+                          ? Math.round((loaded / total) * 100)
+                          : fileState.progress,
+                    }))
+                  );
+                }
+              },
+            },
+          }: any),
         })
       )
     )

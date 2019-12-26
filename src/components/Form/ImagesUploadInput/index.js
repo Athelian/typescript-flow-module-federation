@@ -35,7 +35,12 @@ const ImagesUploadInput = ({ files, width, height, onSave }: Props) => {
       progress: number,
     }>
   >([]);
+  const filesStateRef = React.useRef(filesState);
   const previousFilesRef = React.useRef<Array<UploadFileState>>([]);
+
+  React.useEffect(() => {
+    filesStateRef.current = filesState;
+  }, [filesState]);
 
   if (
     !isEquals(files.map(pick(editableFields)), previousFilesRef.current.map(pick(editableFields)))
@@ -63,7 +68,8 @@ const ImagesUploadInput = ({ files, width, height, onSave }: Props) => {
       newFiles = Array.from(event.target.files);
     }
 
-    // const basePosition = filesState.length;
+    const currentNumberOfFiles = filesState.length;
+
     setFileState([
       ...filesState,
       ...newFiles.map(({ name }) => ({
@@ -77,24 +83,22 @@ const ImagesUploadInput = ({ files, width, height, onSave }: Props) => {
     ]);
 
     Promise.all<any>(
-      newFiles.map(file =>
+      newFiles.map((file, index) =>
         upload({
           variables: {
             file,
             input: {},
           },
-          /*
-          context: {
+          context: ({
             fetchOptions: {
               onProgress: (progressEvent: ProgressEvent) => {
                 const { lengthComputable, loaded, total } = progressEvent;
                 if (lengthComputable) {
-                  filesState[index + basePosition].progress = Math.round((loaded / total) * 100);
                   setFileState(
-                    filesState.map((fileState, idx) => ({
+                    filesStateRef.current.map((fileState, idx) => ({
                       ...fileState,
                       progress:
-                        idx === index + basePosition
+                        idx === index + currentNumberOfFiles
                           ? Math.round((loaded / total) * 100)
                           : fileState.progress,
                     }))
@@ -102,8 +106,7 @@ const ImagesUploadInput = ({ files, width, height, onSave }: Props) => {
                 }
               },
             },
-          },
-          */
+          }: any),
         })
       )
     )
