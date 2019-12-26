@@ -403,7 +403,6 @@ export default function({
           'shipment.relatedExporters',
           'shipment.totalBatchQuantity',
           'shipment.totalPrice',
-          'shipment.totalVolume',
           'shipment.totalWeight',
           'shipment.totalPackages',
           'shipment.totalProducts',

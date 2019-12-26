@@ -1,5 +1,5 @@
 // @flow
-type TooltipType = 'info' | 'changed' | 'warning' | 'error';
+export type TooltipType = 'info' | 'changed' | 'warning' | 'error';
 
 export type TooltipIconProps = {
   type: TooltipType,
