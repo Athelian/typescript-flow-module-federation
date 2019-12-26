@@ -1,7 +1,11 @@
 // @flow
 import * as React from 'react';
+import type { BatchPayload, ContainerPayload, ShipmentPayload } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
+import { differenceInCalendarDays } from 'utils/date';
+import { getLatestDate } from 'utils/shipment';
 import Tag from 'components/Tag';
+import { Tooltip } from 'components/Tooltip';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import TaskRing from 'components/TaskRing';
@@ -16,16 +20,32 @@ import {
   TagsWrapperStyle,
   BottomRowWrapperStyle,
   QuantityVolumeDesiredWrapperStyle,
+  DelayStyle,
 } from './style';
 
 type Props = {|
-  batch: Object,
+  batch: BatchPayload,
+  container: ContainerPayload,
+  shipment: ShipmentPayload,
   onViewForm: Event => void,
   onDeleteBatch: Event => void,
   organizationId: string,
 |};
 
-export default function BatchCard({ batch, onViewForm, onDeleteBatch, organizationId }: Props) {
+const latestDate = (timelineDate: ?Object) => {
+  if (timelineDate?.latestDate) return timelineDate?.latestDate;
+
+  return getLatestDate(timelineDate);
+};
+
+export default function BatchCard({
+  batch,
+  container,
+  shipment,
+  onViewForm,
+  onDeleteBatch,
+  organizationId,
+}: Props) {
   const hasPermissions = useHasPermissions(organizationId);
   const allowToViewForm = hasPermissions(BATCH_FORM);
   const allowToDeleteBatch = hasPermissions(BATCH_DELETE);
@@ -42,8 +62,88 @@ export default function BatchCard({ batch, onViewForm, onDeleteBatch, organizati
   const canViewTasks = true;
 
   // TODO: calculate the diff
-  const desiredAtDiff = 10;
-  const deliveredAtDiff = -2;
+  let desiredAtDiff = 0;
+  let deliveredAtDiff = 0;
+  let desiredAtDiffMsg = null;
+  let deliveredAtDiffMsg = null;
+
+  if (shipment) {
+    const lastPortDepartureDate = latestDate(
+      shipment?.voyages?.[shipment?.voyages?.length - 1]?.departure
+    );
+    if (lastPortDepartureDate && deliveredAt) {
+      deliveredAtDiffMsg = (
+        <div>
+          <FormattedMessage
+            id="components.cards.shipmentLatestLoadPortDeparture"
+            defaultMessage="Shipment's Latest Load Port Departure"
+          />
+          <p>
+            <FormattedDate value={lastPortDepartureDate} />
+          </p>
+          <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
+          <p>
+            <FormattedDate value={deliveredAt} />
+          </p>
+        </div>
+      );
+      deliveredAtDiff = differenceInCalendarDays(
+        new Date(deliveredAt),
+        new Date(lastPortDepartureDate)
+      );
+    }
+
+    if (container) {
+      const { warehouseArrivalActualDate } = container;
+      if (warehouseArrivalActualDate && desiredAt) {
+        desiredAtDiffMsg = (
+          <div>
+            <FormattedMessage
+              id="components.cards.containerWarehouseActualArrivalDate"
+              defaultMessage="Container's Warehouse Actual Arrival Date"
+            />
+            <p>
+              <FormattedDate value={warehouseArrivalActualDate} />
+            </p>
+            <FormattedMessage id="components.cards.desired" defaultMessage="DESIRED" />
+            <p>
+              <FormattedDate value={desiredAt} />
+            </p>
+          </div>
+        );
+        desiredAtDiff = differenceInCalendarDays(
+          new Date(desiredAt),
+          new Date(warehouseArrivalActualDate)
+        );
+      }
+    } else if (shipment.containers.length === 0) {
+      const warehouseLatestArrivalDate = latestDate(
+        shipment?.containerGroups?.[0]?.warehouseArrival
+      );
+
+      if (warehouseLatestArrivalDate && deliveredAt) {
+        desiredAtDiffMsg = (
+          <div>
+            <FormattedMessage
+              id="components.cards.shipmentLatestWarehouseArrivalDate"
+              defaultMessage="Shipment's Latest Warehouse Arrival Date"
+            />
+            <p>
+              <FormattedDate value={warehouseLatestArrivalDate} />
+            </p>
+            <FormattedMessage id="components.cards.desired" defaultMessage="DESIRED" />
+            <p>
+              <FormattedDate value={desiredAt} />
+            </p>
+          </div>
+        );
+        desiredAtDiff = differenceInCalendarDays(
+          new Date(desiredAt),
+          new Date(warehouseLatestArrivalDate)
+        );
+      }
+    }
+  }
 
   return (
     <div className={BatchCardWrapperStyle}>
@@ -63,56 +163,52 @@ export default function BatchCard({ batch, onViewForm, onDeleteBatch, organizati
             <Blackout />
           )}
 
-          <Label width="45px">
-            <FormattedMessage id="components.cards.abbreviateForDelivery" defaultMessage="DLV" />
+          <Label width="75px">
+            <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
           </Label>
           <Display blackout={!canViewDelivery} width="85px">
             <FormattedDate value={deliveredAt} />
-          </Display>
-
-          <Label width="80px">
-            <FormattedMessage
-              id="components.cards.abbreviateForDeliveryDifference"
-              defaultMessage="DLV Diff"
-            />
-          </Label>
-          <Display blackout={!canViewDelivery} width="35px">
-            <FormattedNumber value={deliveredAtDiff} />
+            {deliveredAtDiff !== 0 && deliveredAt && (
+              <Tooltip message={deliveredAtDiffMsg}>
+                <div className={DelayStyle(deliveredAtDiff, 1)}>
+                  {deliveredAtDiff > 0 ? '+' : ' '}
+                  <FormattedNumber value={deliveredAtDiff} />
+                </div>
+              </Tooltip>
+            )}
           </Display>
         </div>
       </div>
 
       <div className={BottomRowWrapperStyle}>
         <div className={QuantityVolumeDesiredWrapperStyle}>
-          <Label width="45px">
+          <Label width="40px">
             <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
           </Label>
-          <Display blackout={!canViewQuantity} width="35px">
+          <Display blackout={!canViewQuantity} width="85px">
             <FormattedNumber value={latestQuantity} />
           </Display>
 
-          <Label width="45px">
+          <Label width="49px">
             <FormattedMessage id="components.cards.vol" defaultMessage="VOL" />
           </Label>
-          <Display blackout={!canViewVolume} width="50px">
+          <Display blackout={!canViewVolume} width="95px">
             <FormattedNumber value={totalVolume?.value} suffix={totalVolume?.metric} />
           </Display>
 
-          <Label width="45px">
-            <FormattedMessage id="components.cards.abbreviateForDesiredAt" defaultMessage="DES" />
+          <Label width="75px">
+            <FormattedMessage id="components.cards.desired" defaultMessage="DESIRED" />
           </Label>
           <Display blackout={!canViewDesired} width="85px">
             <FormattedDate value={desiredAt} />
-          </Display>
-
-          <Label width="80px">
-            <FormattedMessage
-              id="components.cards.abbreviateForDesiredDifference"
-              defaultMessage="DES Diff"
-            />
-          </Label>
-          <Display blackout={!canViewDesired} width="35px">
-            <FormattedNumber value={desiredAtDiff} />
+            {desiredAtDiff !== 0 && desiredAt && (
+              <Tooltip message={desiredAtDiffMsg}>
+                <div className={DelayStyle(desiredAtDiff, 2)}>
+                  {desiredAtDiff > 0 ? '+' : ' '}
+                  <FormattedNumber value={desiredAtDiff} />
+                </div>
+              </Tooltip>
+            )}
           </Display>
         </div>
 
