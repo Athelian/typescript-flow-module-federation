@@ -1,5 +1,5 @@
-// flow-typed signature: 2a4a2629fefa3310c85cf4101bfe06c6
-// flow-typed version: 973b9c31b9/ramda_v0.26.x/flow_>=v0.104.x
+// flow-typed signature: 5d554eceaaa48f0426a86dee8f3f6b18
+// flow-typed version: 37b38f3680/ramda_v0.26.x/flow_>=v0.104.x
 
 /* eslint-disable no-unused-vars, no-redeclare */
 
@@ -1304,8 +1304,8 @@ declare module ramda {
     b: Array<B>
   ): Array<A>;
 
-  declare function intersection<T>(x: Array<T>, y: Array<T>): Array<T>;
-  declare function intersection<T>(x: Array<T>): (y: Array<T>) => Array<T>;
+  declare function intersection<T>(xs: $ReadOnlyArray<T>, ys: $ReadOnlyArray<T>): Array<T>;
+  declare function intersection<T>(xs: $ReadOnlyArray<T>): (ys: $ReadOnlyArray<T>) => Array<T>;
 
   declare function max<T>(x: T): (y: T) => T;
   declare function max<T>(x: T, y: T): T;
