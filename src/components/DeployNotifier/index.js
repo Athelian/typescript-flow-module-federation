@@ -28,42 +28,45 @@ const DeployNotifier = ({ revision, revisionKey, intl }: Props) => {
       if (!snapshot.exists()) {
         return;
       }
-
       const currentRevision = snapshot.val();
+
       if (revision !== currentRevision) {
         serviceWorker.unregister();
         toast.dismiss();
-        toast(
-          <button
-            className={ToastButtonWrapperStyle}
-            onClick={() => {
-              // refer apollo client doc https://www.apollographql.com/docs/react/recipes/authentication#login-logouts
-              apolloClient.resetStore();
-              // clear all cache before refresh
-              if (window.localStorage) {
-                window.localStorage.clear();
-              }
-              window.location.reload();
-            }}
-            type="button"
-          >
-            {intl.formatMessage(messages.newVersionMessage)}
-            <div className={ToastButtonIconStyle}>
-              <Icon icon="RELOAD" />
-            </div>
-          </button>,
-          {
-            position: 'bottom-left',
-            autoClose: false,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: false,
-            draggable: false,
-            closeButton: false,
-            className: ToastWrapperStyle,
-            bodyClassName: ToastBodyStyle,
-          }
-        );
+        // let close all toast then show new one
+        setTimeout(() => {
+          toast(
+            <button
+              className={ToastButtonWrapperStyle}
+              onClick={() => {
+                // refer apollo client doc https://www.apollographql.com/docs/react/recipes/authentication#login-logouts
+                apolloClient.resetStore();
+                // clear all cache before refresh
+                if (window.localStorage) {
+                  window.localStorage.clear();
+                }
+                window.location.reload();
+              }}
+              type="button"
+            >
+              {intl.formatMessage(messages.newVersionMessage)}
+              <div className={ToastButtonIconStyle}>
+                <Icon icon="RELOAD" />
+              </div>
+            </button>,
+            {
+              position: 'bottom-left',
+              autoClose: false,
+              hideProgressBar: true,
+              closeOnClick: false,
+              pauseOnHover: false,
+              draggable: false,
+              closeButton: false,
+              className: ToastWrapperStyle,
+              bodyClassName: ToastBodyStyle,
+            }
+          );
+        }, 0);
       }
     });
   }, [intl, intl.locale, revision, revisionKey]);
