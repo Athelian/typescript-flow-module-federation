@@ -18,12 +18,7 @@ export const partnersQuery = gql`
               id
               partners(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
                 nodes {
-                  ... on Partner {
-                    id
-                    organization {
-                      ...partnerCardFragment
-                    }
-                  }
+                  ...partnerCardFragment
                 }
                 page
                 totalPage

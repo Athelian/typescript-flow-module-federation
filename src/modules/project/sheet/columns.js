@@ -12,11 +12,12 @@ import {
   type ColumnState,
 } from 'components/Sheet';
 import { getColumnsConfigured, SHEET_COLUMN_KEY_PREFIX } from 'components/Sheet/useColumns';
+import { ColumnWidths } from 'modules/sheet/common/columns';
 import projectMessages from 'modules/project/messages';
 import milestoneMessages from 'modules/milestone/messages';
 import taskMessages from 'modules/task/messages';
 
-export const ProjectSheetColumnGroups = ['PROJECT', 'MILESTONE_TASK'];
+export const ProjectSheetColumnGroups = ['PROJECT', 'MILESTONE_TASKS'];
 
 export const projectColumns: Array<ColumnConfig> = [
   {
@@ -94,38 +95,63 @@ export const milestoneColumns = (milestoneIdx: number | '#'): Array<ColumnConfig
     title: <FormattedMessage {...milestoneMessages.createdAt} />,
     icon: 'MILESTONE_TASK',
     color: colors.MILESTONE,
-    width: 110,
+    width: ColumnWidths.DateUser,
   },
   {
     key: `milestones.${milestoneIdx}.updated`,
     title: <FormattedMessage {...milestoneMessages.updatedAt} />,
     icon: 'MILESTONE_TASK',
     color: colors.MILESTONE,
-    width: 110,
+    width: ColumnWidths.DateUser,
   },
   {
     key: `milestones.${milestoneIdx}.name`,
     title: <FormattedMessage {...milestoneMessages.name} />,
     icon: 'MILESTONE_TASK',
     color: colors.MILESTONE,
-    width: 200,
+    width: ColumnWidths.Default,
   },
   {
     key: `milestones.${milestoneIdx}.description`,
     title: <FormattedMessage {...milestoneMessages.description} />,
     icon: 'MILESTONE_TASK',
     color: colors.MILESTONE,
-    width: 200,
+    width: ColumnWidths.Default,
   },
-  // dueDate + binding
-  // estimatedCompletionDate + binding
-  // completed
+  {
+    key: `milestones.${milestoneIdx}.dueDate`,
+    title: <FormattedMessage {...milestoneMessages.dueDate} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.MILESTONE,
+    width: 630,
+  },
+  {
+    key: `milestones.${milestoneIdx}.estimatedCompletionDate`,
+    title: <FormattedMessage {...milestoneMessages.estimatedCompletionDate} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.MILESTONE,
+    width: 630,
+  },
+  {
+    key: `milestones.${milestoneIdx}.status`,
+    title: <FormattedMessage {...milestoneMessages.status} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.MILESTONE,
+    width: ColumnWidths.Select,
+  },
+  {
+    key: `milestones.${milestoneIdx}.statusDate`,
+    title: <FormattedMessage {...milestoneMessages.statusDate} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.MILESTONE,
+    width: ColumnWidths.Default,
+  },
   {
     key: `milestones.${milestoneIdx}.files`,
     title: <FormattedMessage {...milestoneMessages.files} />,
     icon: 'MILESTONE_TASK',
     color: colors.MILESTONE,
-    width: 200,
+    width: ColumnWidths.Default,
   },
   // actions
 ];
@@ -176,10 +202,27 @@ export const taskColumns = (
     color: colors.TASK,
     width: 630,
   },
-  // in progress
-  // completed
-  // rejected
-  // skipped
+  {
+    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.status`,
+    title: <FormattedMessage {...taskMessages.status} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.TASK,
+    width: ColumnWidths.Select,
+  },
+  {
+    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.statusDate`,
+    title: <FormattedMessage {...taskMessages.statusDate} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.TASK,
+    width: ColumnWidths.Default,
+  },
+  {
+    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.assignedTo`,
+    title: <FormattedMessage {...taskMessages.assignedTo} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.TASK,
+    width: ColumnWidths.Users,
+  },
   {
     key: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvable`,
     title: <FormattedMessage {...taskMessages.approvable} />,
@@ -188,13 +231,26 @@ export const taskColumns = (
     width: 200,
   },
   {
-    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.approved`,
-    title: <FormattedMessage {...taskMessages.approved} />,
+    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvalStatus`,
+    title: <FormattedMessage {...taskMessages.approvalStatus} />,
     icon: 'MILESTONE_TASK',
     color: colors.TASK,
-    width: 110,
+    width: ColumnWidths.Select,
   },
-  // approvers
+  {
+    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvalStatusDate`,
+    title: <FormattedMessage {...taskMessages.approvalStatusDate} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.TASK,
+    width: ColumnWidths.Default,
+  },
+  {
+    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvers`,
+    title: <FormattedMessage {...taskMessages.approvers} />,
+    icon: 'MILESTONE_TASK',
+    color: colors.TASK,
+    width: ColumnWidths.Users,
+  },
   {
     key: `milestones.${milestoneIdx}.tasks.${taskIdx}.tags`,
     title: <FormattedMessage {...taskMessages.tags} />,

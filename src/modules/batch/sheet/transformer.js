@@ -20,6 +20,7 @@ function transformBatch(
     batch,
     getOrderFromRoot: root => root.order,
     getShipmentFromRoot: root => root.shipment,
+    getContainerFromRoot: root => root.container,
     getBatchFromRoot: root => root,
     actions: [],
   });
@@ -105,6 +106,7 @@ function transformShipment(
     shipment: batch?.shipment ?? null,
     getShipmentFromRoot: root => root?.shipment ?? null,
     readonlyExporter: true,
+    staticComputedFields: true,
   }).map(c => ({
     ...c,
     duplicable: true,

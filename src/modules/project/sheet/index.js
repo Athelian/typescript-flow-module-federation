@@ -1,11 +1,13 @@
 // @flow
 import * as React from 'react';
+import { useIntl } from 'react-intl';
 import { useApolloClient } from '@apollo/react-hooks';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ProjectFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
 import { Sheet, ColumnsConfig, useSheet, useExportedColumns } from 'components/Sheet';
 import ColumnsGroup from 'components/ColumnsGroup';
+import { useViewer } from 'contexts/Viewer';
 import { clone } from 'utils/fp';
 import { projectsExportQuery } from '../query';
 import MilestoneTaskColumnsConfigGroup from './MilestoneTaskColumnsConfigGroup';
@@ -19,7 +21,10 @@ import { projectsQuery } from './query';
 
 const ProjectSheetModule = () => {
   const client = useApolloClient();
-  const memoizedMutate = React.useCallback(mutate(client), [client]);
+  const intl = useIntl();
+  const { user } = useViewer();
+  const memoizedMutate = React.useCallback(mutate(client, user?.id), [client, user]);
+  const memoizedTransformer = React.useCallback(transformer(intl), [intl]);
   const memoizedHandler = React.useCallback(dispatch => entityEventHandler(client, dispatch), [
     client,
   ]);
@@ -66,6 +71,7 @@ const ProjectSheetModule = () => {
           templateType="ProjectSheet"
           onChange={setColumns}
           onLoadTemplate={computeProjectColumnConfigsFromTemplate}
+          onApply={(selectedColumns: any) => selectedColumns}
         >
           {({ getGroupProps }) => (
             <>
@@ -73,7 +79,7 @@ const ProjectSheetModule = () => {
               {(() => {
                 // TODO: bypass the flow error from custom group
                 const { columns: milestoneColumns, icon, onChange } = (getGroupProps(
-                  'MILESTONE_TASK'
+                  'MILESTONES'
                 ): any);
                 return (
                   <MilestoneTaskColumnsConfigGroup
@@ -102,7 +108,7 @@ const ProjectSheetModule = () => {
         loading={loading}
         items={initialItems}
         hasMore={hasMore}
-        transformItem={transformer}
+        transformItem={memoizedTransformer}
         onMutate={memoizedMutate}
         handleEntityEvent={memoizedHandler}
         onLoadMore={onLoadMore}

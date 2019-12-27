@@ -10,7 +10,7 @@ import { documentUpdateMutation, prepareParsedDocumentInput } from 'modules/docu
 import validator from 'modules/document/form/validator';
 import DocumentFormContainer from 'modules/document/form/container';
 import DocumentForm from 'modules/document/form';
-import documentQuery from 'modules/document/form/query';
+import { documentQuery } from 'modules/document/form/query';
 
 type Props = {
   documentId?: string,
@@ -18,11 +18,12 @@ type Props = {
 
 type ImplProps = {
   isLoading: boolean,
+  documentId: ?string,
 };
 
 const formContainer = new FormContainer();
 
-const DocumentFormModuleImpl = ({ isLoading }: ImplProps) => {
+const DocumentFormModuleImpl = ({ isLoading, documentId }: ImplProps) => {
   const {
     state,
     originalState,
@@ -58,6 +59,7 @@ const DocumentFormModuleImpl = ({ isLoading }: ImplProps) => {
 
   return (
     <DocumentForm
+      {...(documentId ? { documentId } : {})}
       isDirty={isDirty}
       isValidated={formContainer.isReady(state, validator)}
       resetState={resetState}
@@ -83,7 +85,7 @@ const DocumentFormModule = ({ documentId }: Props) => {
   return (
     <Provider inject={[formContainer]}>
       <DocumentFormContainer.Provider initialState={data?.file}>
-        <DocumentFormModuleImpl isLoading={isLoading} />
+        <DocumentFormModuleImpl isLoading={isLoading} documentId={documentId} />
       </DocumentFormContainer.Provider>
     </Provider>
   );

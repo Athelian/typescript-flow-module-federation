@@ -34,8 +34,16 @@ export default defineMessages({
     id: 'modules.TableTemplates.orderSheet',
     defaultMessage: 'Order Table',
   },
+  batchSheet: {
+    id: 'modules.TableTemplates.batchSheet',
+    defaultMessage: 'Batch Table',
+  },
   shipmentSheet: {
     id: 'modules.TableTemplates.shipmentSheet',
     defaultMessage: 'Shipment Table',
+  },
+  projectSheet: {
+    id: 'modules.TableTemplates.projectSheet',
+    defaultMessage: 'Project Table',
   },
 });

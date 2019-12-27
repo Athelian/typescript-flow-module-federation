@@ -31,10 +31,24 @@ export const productProviderFormFragment = gql`
     referenced
     origin
     exporter {
-      ...partnerCardFragment
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
     }
     supplier {
-      ...partnerCardFragment
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
     }
     unitType
     unitPrice {

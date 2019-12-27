@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import logger from 'utils/logger';
 
 // base on https://usehooks.com/useLocalStorage/
-export default function useLocalStorage(key: string, initialValue: mixed) {
+export default function useLocalStorage(key: string, initialValue: any) {
   const [storedValue, setStoredValue] = useState(() => {
     try {
       const item = window.localStorage.getItem(key);

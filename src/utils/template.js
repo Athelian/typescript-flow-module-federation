@@ -87,8 +87,7 @@ const groupColumns = ({
   const groupedColumns = [];
   for (let i = 0; i < groupedColumnsLength; i += 1) {
     groupedColumns.push({
-      title: columns[index + i].title,
-      key: columns[index + i].key,
+      ...columns[index + i],
       hidden: !!columns[index + i].hidden,
     });
   }
@@ -116,8 +115,7 @@ export const convertMappingColumns = (
 
     if (!isGrouped) {
       mappingColumns.push({
-        title: column.title,
-        key: column.key,
+        ...column,
         hidden: !!column.hidden,
       });
     }

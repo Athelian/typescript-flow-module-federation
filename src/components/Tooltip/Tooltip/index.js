@@ -3,7 +3,7 @@ import * as React from 'react';
 import Tippy from '@tippy.js/react';
 
 type OptionalProps = {
-  delay: number,
+  delay?: number,
   maxWidth?: number,
 };
 
@@ -12,17 +12,13 @@ type Props = OptionalProps & {
   children: React.Node,
 };
 
-const defaultProps = {
-  delay: 200,
-};
-
 export default function Tooltip({ message, children, delay, maxWidth, ...rest }: Props) {
   return (
     <Tippy
       content={message}
       arrow
       arrowType="round"
-      delay={delay}
+      delay={delay || 200}
       distance={10}
       interactive
       ignoreAttributes
@@ -33,5 +29,3 @@ export default function Tooltip({ message, children, delay, maxWidth, ...rest }:
     </Tippy>
   );
 }
-
-Tooltip.defaultProps = defaultProps;

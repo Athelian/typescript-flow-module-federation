@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Dec 23 2019 14:37:19 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Dec 24 2019 15:31:44 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28473,6 +28473,7 @@ input EntityInput {
   projectId: ID
   milestoneId: ID
   taskId: ID
+  fileId: ID
 }
 
 union EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | BatchQuantityRevision | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | BadRequest | Forbidden | NotFound
@@ -28646,6 +28647,7 @@ type File implements Model & Owned & Memorizable {
   pathExpiredAt: DateTime!
   entity: EntityPayload
   orphan: Boolean!
+  timeline: Timeline!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!

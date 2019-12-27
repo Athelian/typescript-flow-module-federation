@@ -2,6 +2,9 @@
 import * as React from 'react';
 import type { MaskEdit, MaskEditColumn } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
+import useLocalStorage from 'hooks/useLocalStorage';
+import CornerIcon from 'components/CornerIcon';
+import { colors } from 'styles/common';
 import Dialog from 'components/Dialog';
 import { ApplyButton, ResetButton, BaseButton, SaveButton, IconButton } from 'components/Buttons';
 import { Tooltip } from 'components/Tooltip';
@@ -9,7 +12,6 @@ import type { Column } from 'components/DraggableColumn';
 import { parseIcon } from 'utils/entity';
 import { convertMappingColumns, flattenColumns } from 'utils/template';
 import type { ColumnConfig } from '../SheetState/types';
-import { getColumnsConfigured } from '../useColumns';
 import messages from '../messages';
 import TemplateSelector from './TemplateSelector';
 import TemplateNew from './TemplateNew';
@@ -21,6 +23,7 @@ import {
   TemplateWrapperStyle,
   TemplateSelectWrapperStyle,
   HeaderStyle,
+  TemplateStyle,
 } from './style';
 
 type Props = {
@@ -28,6 +31,7 @@ type Props = {
   templateType: string,
   onChange: (Array<ColumnConfig>) => void,
   onLoadTemplate?: (template: Object) => Array<ColumnConfig>,
+  onApply?: (columns: Array<Column | Array<Column>>) => Array<ColumnConfig>,
   children: ({
     getGroupProps: (
       group: string
@@ -39,9 +43,21 @@ type Props = {
   }) => React.Node,
 };
 
-const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, children }: Props) => {
+const ColumnsConfig = ({
+  columns,
+  templateType,
+  onChange,
+  onLoadTemplate,
+  onApply,
+  children,
+}: Props) => {
   const [isOpen, setOpen] = React.useState(false);
+  const [persistTemplate, setPersistTemplate] = useLocalStorage(
+    `${templateType}SelectedTemplate`,
+    null
+  );
   const [dirtyColumns, setDirtyColumns] = React.useState<Array<Column | Array<Column>>>([]);
+  const currentTemplate = React.useRef(persistTemplate);
 
   React.useEffect(() => {
     setDirtyColumns(convertMappingColumns(columns));
@@ -70,56 +86,70 @@ const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, childr
   );
 
   const handleApply = () => {
-    const selectedColumns = flattenColumns(dirtyColumns);
-    const applyColumns: Array<ColumnConfig> = [];
-    selectedColumns.forEach(col => {
-      applyColumns.push({
-        ...columns.find(({ key }) => key === col.key),
-        hidden: col.hidden,
+    setPersistTemplate(currentTemplate.current);
+    if (onApply) {
+      onChange(onApply(dirtyColumns));
+    } else {
+      const selectedColumns = flattenColumns(dirtyColumns);
+      const applyColumns: Array<ColumnConfig> = [];
+      selectedColumns.forEach(col => {
+        const existColumn = columns.find(({ key }) => key === col.key);
+        if (existColumn) {
+          applyColumns.push({
+            ...existColumn,
+            hidden: col.hidden,
+          });
+        }
       });
-    });
-    onChange(applyColumns);
+      onChange(applyColumns);
+    }
     setOpen(false);
   };
 
-  const handleReset = () => setDirtyColumns(convertMappingColumns(columns));
-  const handleSelectAll = () =>
+  const handleReset = () => {
+    setDirtyColumns(convertMappingColumns(columns));
+    currentTemplate.current = persistTemplate;
+  };
+
+  const handleSelectAll = () => {
+    currentTemplate.current = null;
     setDirtyColumns(
       dirtyColumns.map(col =>
         Array.isArray(col)
           ? [
-              ...col.map(({ key, title }) => ({
-                key,
-                title,
+              ...col.map(currentCol => ({
+                ...currentCol,
                 hidden: false,
               })),
             ]
           : {
-              key: col.key,
-              title: col.title,
+              ...col,
               hidden: false,
             }
       )
     );
-  const handleUnselectAll = () =>
+  };
+
+  const handleUnselectAll = () => {
+    currentTemplate.current = null;
     setDirtyColumns(
       dirtyColumns.map(col =>
         Array.isArray(col)
           ? [
-              ...col.map(({ key, title }) => ({
-                key,
-                title,
+              ...col.map(currentCol => ({
+                ...currentCol,
                 hidden: true,
               })),
             ]
           : {
-              key: col.key,
-              title: col.title,
+              ...col,
               hidden: true,
             }
       )
     );
-  const handleGroup = () =>
+  };
+  const handleGroup = () => {
+    currentTemplate.current = null;
     setDirtyColumns(
       convertMappingColumns(
         Object.values(groupedColumns).flatMap((cols: any) => {
@@ -142,37 +172,38 @@ const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, childr
         })
       )
     );
+  };
+
   const handleTemplateChange = (template: MaskEdit) => {
     if (template) {
+      currentTemplate.current = template;
       if (onLoadTemplate) {
         setDirtyColumns(convertMappingColumns(onLoadTemplate(template)));
       } else {
-        setDirtyColumns(
-          convertMappingColumns(
-            getColumnsConfigured(
-              (columns: any),
-              (template?.columns ?? []).reduce(
-                (cache, col) => ({ ...cache, [col.key]: col.hidden }),
-                {}
-              )
-            )
-          )
-        );
+        const currentColumns = flattenColumns(dirtyColumns);
+        const templateColumns = currentColumns.map(col => ({
+          ...col,
+          hidden: false,
+          ...(template?.columns ?? []).find(({ key }) => key === col.key),
+        }));
+
+        setDirtyColumns(convertMappingColumns(templateColumns));
       }
     }
   };
 
-  // CALLBACKS
   const getGroupProps = React.useCallback(
     (group: string) => ({
       icon: group,
       columns: groupedColumns[group] ?? [],
-      onChange: newCols =>
+      onChange: newCols => {
+        currentTemplate.current = null;
         setDirtyColumns(
           Object.entries(groupedColumns).flatMap(([g, cols]) =>
             g === group ? newCols : ((cols: any): Array<Column>)
           )
-        ),
+        );
+      },
     }),
     [groupedColumns]
   );
@@ -188,6 +219,7 @@ const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, childr
         backgroundColor="GRAY_SUPER_LIGHT"
         hoverBackgroundColor="GRAY_DARK"
         onClick={() => setOpen(true)}
+        suffix={persistTemplate?.name}
       />
 
       <Dialog isOpen={isOpen} onRequestClose={() => setOpen(false)}>
@@ -236,16 +268,29 @@ const ColumnsConfig = ({ columns, templateType, onChange, onLoadTemplate, childr
 
             <div className={TemplateWrapperStyle}>
               <div className={TemplateSelectWrapperStyle}>
-                <TemplateSelector onChange={handleTemplateChange} templateType={templateType}>
-                  {({ onClick }) => (
-                    <BaseButton
-                      onClick={onClick}
-                      label={<FormattedMessage {...messages.columnsConfigUseTemplate} />}
-                      icon="TEMPLATE"
-                      backgroundColor="BLUE"
-                      hoverBackgroundColor="BLUE_DARK"
-                    />
-                  )}
+                <TemplateSelector
+                  selectedItem={currentTemplate.current}
+                  onChange={handleTemplateChange}
+                  templateType={templateType}
+                >
+                  {({ onClick }) =>
+                    !currentTemplate.current ? (
+                      <BaseButton
+                        onClick={onClick}
+                        label={<FormattedMessage {...messages.columnsConfigUseTemplate} />}
+                        icon="TEMPLATE"
+                        backgroundColor="BLUE"
+                        hoverBackgroundColor="BLUE_DARK"
+                      />
+                    ) : (
+                      <button type="button" onClick={onClick} className={TemplateStyle}>
+                        {currentTemplate.current.name}
+                        <div>
+                          <CornerIcon icon="TEMPLATE" color={colors.TEMPLATE} />
+                        </div>
+                      </button>
+                    )
+                  }
                 </TemplateSelector>
               </div>
 

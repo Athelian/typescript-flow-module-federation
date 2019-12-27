@@ -19,6 +19,7 @@ type Props = {|
   // @deprecated
   buttonRef?: any,
   label: React.Node,
+  suffix?: React$Node,
   id?: string,
   type?: string,
   'data-testid'?: string,
@@ -44,6 +45,7 @@ const LabelledButton = React.forwardRef<Props, HTMLButtonElement>((props: Props,
     hoverBackgroundColor,
     onClick,
     buttonRef,
+    suffix,
     ...rest
   } = { ...defaultProps, ...props };
 
@@ -70,6 +72,7 @@ const LabelledButton = React.forwardRef<Props, HTMLButtonElement>((props: Props,
           <Icon icon={icon} />
         </div>
       )}
+      {suffix && <span>{suffix}</span>}
     </Button>
   );
 });

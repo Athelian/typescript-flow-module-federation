@@ -168,4 +168,8 @@ export default defineMessages({
     id: 'modules.timeline.container',
     defaultMessage: 'container',
   },
+  file: {
+    id: 'modules.timeline.file',
+    defaultMessage: 'file',
+  },
 });

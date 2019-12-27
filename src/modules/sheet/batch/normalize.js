@@ -14,7 +14,7 @@ export default function normalizeSheetBatchInput(
     case 'deliveredAt':
     case 'producedAt':
       return {
-        [(field: string)]: new Date(newValue),
+        [(field: string)]: newValue ? new Date(newValue) : null,
       };
     case 'packageQuantity': {
       const { auto: autoCalculatePackageQuantity = false, value: packageQuantity = 0 } =

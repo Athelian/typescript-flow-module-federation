@@ -10,9 +10,10 @@ import type {
   EntityEventHandler,
 } from 'components/Sheet/SheetLive/types';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
-import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
-import { filesByIDsQuery } from 'modules/sheet/common/query';
-import { decorateMilestone, decorateTask } from './decorator';
+import { extraChange, mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
+import { filesByIDsQuery, usersByIDsQuery } from 'modules/sheet/common/query';
+import { decorateMilestone, decorateTask, unDecorateMilestone, unDecorateTask } from './decorator';
+import { computeMilestoneStatus, computeTaskApprovalStatus, computeTaskStatus } from './helper';
 import { milestoneByIDQuery, tagsByIDsQuery, taskByIDQuery, userByIDQuery } from './query';
 
 // $FlowFixMe not compatible with hook implementation
@@ -256,7 +257,7 @@ export default function entityEventHandler(
                       })
                       .then(({ data }) => ({
                         field: change.field,
-                        new: newCustomValue(data.mask),
+                        new: newCustomValue(data.user),
                       }));
                   }
                   break;
@@ -267,7 +268,7 @@ export default function entityEventHandler(
               return change;
             });
             break;
-          case 'Milestone':
+          case 'Milestone': {
             changes = await mapAsync(changes, change => {
               switch (change.field) {
                 case 'files':
@@ -290,7 +291,7 @@ export default function entityEventHandler(
                       })
                       .then(({ data }) => ({
                         field: change.field,
-                        new: newCustomValue(data.mask),
+                        new: newCustomValue(data.user),
                       }));
                   }
                   break;
@@ -300,7 +301,86 @@ export default function entityEventHandler(
 
               return change;
             });
+
+            const milestone = projects
+              .flatMap(p => p.milestones)
+              .find(m => m.id === event.entity.id);
+            if (milestone) {
+              changes = mergeChanges(
+                changes,
+                {
+                  dueDate: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                  dueDateInterval: (i, v) => ({
+                    ...i,
+                    interval: v ? cleanUpInterval(v) : v,
+                  }),
+                  dueDateBinding: (i, v) => ({
+                    ...i,
+                    binding: v ? upperFirst(camelCase(v)) : v,
+                  }),
+                },
+                'dueDateBindingData',
+                milestone.dueDateBindingData
+              );
+
+              changes = mergeChanges(
+                changes,
+                {
+                  estimatedCompletionDate: (i, v) => ({
+                    ...i,
+                    date: v,
+                  }),
+                  estimatedCompletionDateInterval: (i, v) => ({
+                    ...i,
+                    interval: v ? cleanUpInterval(v) : v,
+                  }),
+                  estimatedCompletionDateBinding: (i, v) => ({
+                    ...i,
+                    binding: v ? upperFirst(camelCase(v)) : v,
+                  }),
+                },
+                'estimatedCompletionDateBindingData',
+                milestone.estimatedCompletionDateBindingData
+              );
+
+              changes = extraChange(
+                changes,
+                ['completedAt', 'completedBy'],
+                newValues =>
+                  computeMilestoneStatus({
+                    ...unDecorateMilestone(milestone),
+                    ...newValues,
+                  }),
+                'status'
+              );
+
+              changes = mergeChanges(
+                changes,
+                {
+                  completedAt: (i, v) => ({
+                    ...i,
+                    completed: {
+                      ...i.completed,
+                      at: v,
+                    },
+                  }),
+                  completedBy: (i, v) => ({
+                    ...i,
+                    completed: {
+                      ...i.completed,
+                      by: v,
+                    },
+                  }),
+                },
+                'statusDate',
+                milestone.statusDate
+              );
+            }
             break;
+          }
           case 'Task': {
             changes = await filterAsync(changes, async (change: EntityEventChange) => {
               switch (change.field) {
@@ -343,6 +423,17 @@ export default function entityEventHandler(
                       }));
                   }
                   break;
+                case 'assignedTo':
+                case 'approvers':
+                  return client
+                    .query({
+                      query: usersByIDsQuery,
+                      variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                    })
+                    .then(({ data }) => ({
+                      field: change.field,
+                      new: newCustomValue(data.usersByIDs),
+                    }));
                 default:
                   break;
               }
@@ -354,22 +445,6 @@ export default function entityEventHandler(
               .flatMap(project => project.milestones.flatMap(milestone => milestone.tasks))
               .find(t => t.id === event.entity?.id);
             if (task) {
-              changes = mergeChanges(
-                changes,
-                {
-                  approvedBy: (i, v) => ({
-                    ...i,
-                    user: v,
-                  }),
-                  approvedAt: (i, v) => ({
-                    ...i,
-                    date: v,
-                  }),
-                },
-                'approved',
-                task.approved
-              );
-
               changes = mergeChanges(
                 changes,
                 {
@@ -408,6 +483,121 @@ export default function entityEventHandler(
                 },
                 'dueDateBindingData',
                 task.dueDateBindingData
+              );
+
+              changes = extraChange(
+                changes,
+                [
+                  'completedAt',
+                  'completedBy',
+                  'inProgressAt',
+                  'inProgressBy',
+                  'skippedAt',
+                  'skippedBy',
+                ],
+                newValues =>
+                  computeTaskStatus({
+                    ...unDecorateTask(task),
+                    ...newValues,
+                  }),
+                'status'
+              );
+
+              changes = extraChange(
+                changes,
+                ['rejectedAt', 'rejectedBy', 'approvedAt', 'approvedBy'],
+                newValues =>
+                  computeTaskApprovalStatus({
+                    ...unDecorateTask(task),
+                    ...newValues,
+                  }),
+                'approvalStatus'
+              );
+
+              changes = mergeChanges(
+                changes,
+                {
+                  inProgressAt: (i, v) => ({
+                    ...i,
+                    in_progress: {
+                      ...i.in_progress,
+                      at: v,
+                    },
+                  }),
+                  inProgressBy: (i, v) => ({
+                    ...i,
+                    in_progress: {
+                      ...i.in_progress,
+                      by: v,
+                    },
+                  }),
+                  completedAt: (i, v) => ({
+                    ...i,
+                    completed: {
+                      ...i.completed,
+                      at: v,
+                    },
+                  }),
+                  completedBy: (i, v) => ({
+                    ...i,
+                    completed: {
+                      ...i.completed,
+                      by: v,
+                    },
+                  }),
+                  skippedAt: (i, v) => ({
+                    ...i,
+                    skipped: {
+                      ...i.skipped,
+                      at: v,
+                    },
+                  }),
+                  skippedBy: (i, v) => ({
+                    ...i,
+                    skipped: {
+                      ...i.skipped,
+                      by: v,
+                    },
+                  }),
+                },
+                'statusDate',
+                task.statusDate
+              );
+
+              changes = mergeChanges(
+                changes,
+                {
+                  approvedAt: (i, v) => ({
+                    ...i,
+                    approved: {
+                      ...i.approved,
+                      at: v,
+                    },
+                  }),
+                  approvedBy: (i, v) => ({
+                    ...i,
+                    approved: {
+                      ...i.approved,
+                      by: v,
+                    },
+                  }),
+                  rejectedAt: (i, v) => ({
+                    ...i,
+                    rejected: {
+                      ...i.rejected,
+                      at: v,
+                    },
+                  }),
+                  rejectedBy: (i, v) => ({
+                    ...i,
+                    rejected: {
+                      ...i.rejected,
+                      by: v,
+                    },
+                  }),
+                },
+                'approvalStatusDate',
+                task.approvalStatusDate
               );
             }
             break;

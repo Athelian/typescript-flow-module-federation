@@ -39,13 +39,34 @@ export const shipmentFormQueryFragment = gql`
       ...customFieldsFragment
     }
     forwarders {
-      ...partnerCardFragment
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
     }
     importer {
-      ...partnerCardFragment
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
     }
     exporter {
-      ...partnerCardFragment
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
     }
     inCharges {
       ...userAvatarFragment
@@ -95,13 +116,34 @@ export const shipmentFormFragment = gql`
       ...customFieldsFragment
     }
     forwarders {
-      ...partnerCardFragment
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
     }
     importer {
-      ...partnerCardFragment
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
     }
     exporter {
-      ...partnerCardFragment
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
     }
     inCharges {
       ...userAvatarFragment

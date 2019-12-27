@@ -13,14 +13,15 @@ function normalizedInput(
   field: string,
   value: any,
   // eslint-disable-next-line no-unused-vars
-  project: Object
+  project: Object,
+  userId: string
 ): Object {
   switch (entity.type) {
     case 'Project':
       switch (field) {
         case 'dueDate':
           return {
-            [(field: string)]: new Date(value),
+            [(field: string)]: value ? new Date(value) : null,
           };
         case 'tags':
           return {
@@ -33,6 +34,37 @@ function normalizedInput(
       }
     case 'Milestone':
       switch (field) {
+        case 'status':
+          switch (value) {
+            case 'completed':
+              return {
+                completedAt: new Date(),
+                completedById: userId,
+              };
+            case 'uncompleted':
+              return {
+                completedAt: null,
+                completedById: null,
+              };
+            default:
+              return {};
+          }
+        case 'statusDate':
+          return {
+            completedAt: value.completed.at ? new Date(value.completed.at) : null,
+          };
+        case 'dueDateBindingData':
+          return {
+            dueDate: value?.date ? new Date(value?.date) : null,
+            dueDateInterval: value?.interval ?? null,
+            dueDateBinding: value?.binding ?? null,
+          };
+        case 'estimatedCompletionDateBindingData':
+          return {
+            estimatedCompletionDate: value?.date ? new Date(value?.date) : null,
+            estimatedCompletionDateInterval: value?.interval ?? null,
+            estimatedCompletionDateBinding: value?.binding ?? null,
+          };
         case 'files':
           return {
             files: value.map(
@@ -50,63 +82,105 @@ function normalizedInput(
           return {
             tagIds: value.map(tag => tag.id),
           };
-        case 'approved':
-          return {
-            approvedById: value?.user?.id ?? null,
-            approvedAt: value?.date ?? null,
-          };
-        case 'startDateBindingData': {
-          const date = value?.date ?? null;
-          if (date) {
-            return {
-              startDate: new Date(date),
-              startDateInterval: value?.interval
-                ? {
-                    days: value?.interval?.days ?? 0,
-                    weeks: value?.interval?.weeks ?? 0,
-                    months: value?.interval?.months ?? 0,
-                  }
-                : null,
-              startDateBinding: value?.binding ?? null,
-            };
+        case 'status': {
+          switch (value) {
+            case 'in_progress':
+              return {
+                inProgressAt: new Date(),
+                inProgressById: userId,
+                completedAt: null,
+                completedById: null,
+                skippedAt: null,
+                skippedById: null,
+              };
+            case 'completed':
+              return {
+                inProgressAt: null,
+                inProgressById: null,
+                completedAt: new Date(),
+                completedById: userId,
+                skippedAt: null,
+                skippedById: null,
+              };
+            case 'skipped':
+              return {
+                inProgressAt: null,
+                inProgressById: null,
+                completedAt: null,
+                completedById: null,
+                skippedAt: new Date(),
+                skippedById: userId,
+              };
+            case 'uncompleted':
+              return {
+                inProgressAt: null,
+                inProgressById: null,
+                completedAt: null,
+                completedById: null,
+                skippedAt: null,
+                skippedById: null,
+              };
+            default:
+              return {};
           }
+        }
+        case 'statusDate':
           return {
-            startDateInterval: value?.interval
-              ? {
-                  days: value?.interval?.days ?? 0,
-                  weeks: value?.interval?.weeks ?? 0,
-                  months: value?.interval?.months ?? 0,
-                }
-              : null,
+            inProgressAt: value.in_progress.at ? new Date(value.in_progress.at) : null,
+            completedAt: value.completed.at ? new Date(value.completed.at) : null,
+            skippedAt: value.skipped.at ? new Date(value.skipped.at) : null,
+          };
+        case 'approvalStatus':
+          switch (value) {
+            case 'approved':
+              return {
+                approvedAt: new Date(),
+                approvedById: userId,
+                rejectedAt: null,
+                rejectedById: null,
+              };
+            case 'rejected':
+              return {
+                approvedAt: null,
+                approvedById: null,
+                rejectedAt: new Date(),
+                rejectedById: userId,
+              };
+            case 'unapproved':
+              return {
+                approvedAt: null,
+                approvedById: null,
+                rejectedAt: null,
+                rejectedById: null,
+              };
+            default:
+              return {};
+          }
+        case 'approvalStatusDate':
+          return {
+            approvedAt: value.approved.at ? new Date(value.approved.at) : null,
+            rejectedAt: value.rejected.at ? new Date(value.rejected.at) : null,
+          };
+        case 'startDateBindingData':
+          return {
+            startDate: value?.date ? new Date(value?.date) : null,
+            startDateInterval: value?.interval ?? null,
             startDateBinding: value?.binding ?? null,
           };
-        }
-        case 'dueDateBindingData': {
-          const date = value?.date ?? null;
-          if (date) {
-            return {
-              dueDate: new Date(date),
-              dueDateInterval: value?.interval
-                ? {
-                    days: value?.interval?.days ?? 0,
-                    weeks: value?.interval?.weeks ?? 0,
-                    months: value?.interval?.months ?? 0,
-                  }
-                : null,
-              dueDateBinding: value?.binding ?? null,
-            };
-          }
+        case 'dueDateBindingData':
           return {
-            dueDateInterval: value?.interval
-              ? {
-                  days: value?.interval?.days ?? 0,
-                  weeks: value?.interval?.weeks ?? 0,
-                  months: value?.interval?.months ?? 0,
-                }
-              : null,
+            dueDate: value?.date ? new Date(value?.date) : null,
+            dueDateInterval: value?.interval ?? null,
             dueDateBinding: value?.binding ?? null,
           };
-        }
+        case 'assignedTo':
+          return {
+            assignedToIds: value.map(user => user.id),
+          };
+        case 'approvers':
+          return {
+            approverIds: value.map(user => user.id),
+          };
         default:
           return {
             [field]: value,
@@ -120,7 +194,7 @@ function normalizedInput(
 }
 
 // $FlowFixMe not compatible with hook implementation
-export default function(client: ApolloClient) {
+export default function(client: ApolloClient, userId: string) {
   return function mutate({
     entity,
     field,
@@ -138,7 +212,7 @@ export default function(client: ApolloClient) {
         mutation: mutations[entity.type],
         variables: {
           id: entity.id,
-          input: normalizedInput(entity, field, newValue, item),
+          input: normalizedInput(entity, field, newValue, item, userId),
         },
       })
       .then(({ data }) => {

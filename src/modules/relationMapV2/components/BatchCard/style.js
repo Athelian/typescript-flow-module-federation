@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 import { BATCH_WIDTH } from 'modules/relationMapV2/constants';
-import { layout, borderRadiuses } from 'styles/common';
+import { layout, borderRadiuses, colors, fontSizes, presets } from 'styles/common';
 
 export const BatchCardWrapperStyle: string = css`
   display: flex;
@@ -18,7 +18,7 @@ export const BatchCardWrapperStyle: string = css`
 
 export const TopRowWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 125px 285px;
+  grid-template-columns: 100px 310px;
   grid-template-rows: 20px;
   grid-gap: 5px;
   padding: 5px;
@@ -46,4 +46,15 @@ export const BottomRowWrapperStyle: string = css`
 
 export const QuantityVolumeDesiredWrapperStyle: string = css`
   display: flex;
+`;
+
+export const DelayStyle = (delayAmount: number, lineNumber: number): string => css`
+  ${fontSizes.SMALL};
+  ${presets.ELLIPSIS};
+  position: absolute;
+  right: 20px;
+  top: ${(lineNumber - 1) * 25 + 5}px;
+  color: ${delayAmount > 0 ? colors.RED : colors.TEAL};
+  font-weight: bold;
+  text-align: center;
 `;

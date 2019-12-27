@@ -21,7 +21,7 @@ export default function normalizeSheetOrderItemInput(
       };
     case 'deliveryDate':
       return {
-        deliveryDate: new Date(newValue),
+        deliveryDate: newValue ? new Date(newValue) : null,
       };
     case 'tags':
       return {

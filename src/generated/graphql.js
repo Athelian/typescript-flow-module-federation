@@ -19273,6 +19273,7 @@ export type EntityInput = {|
   projectId?: ?$ElementType<Scalars, 'ID'>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
   taskId?: ?$ElementType<Scalars, 'ID'>,
+  fileId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
 export type EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | BatchQuantityRevision | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | BadRequest | Forbidden | NotFound;
@@ -19463,6 +19464,7 @@ export type File = {|
     pathExpiredAt: $ElementType<Scalars, 'DateTime'>,
     entity?: ?EntityPayload,
     orphan: $ElementType<Scalars, 'Boolean'>,
+    timeline: Timeline,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
     updatedAt: $ElementType<Scalars, 'DateTime'>,
@@ -62964,7 +62966,11 @@ export type ItemInSelectorFragmentFragment = ({
     ...$Pick<ProductProvider, {| id: *, name: * |}>,
     ...{| exporter: ({
         ...{ __typename?: 'Organization' },
-      ...PartnerCardFragmentFragment
+      ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+      ...{| partner: ?({
+          ...{ __typename?: 'Partner' },
+        ...PartnerCardFragmentFragment
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
     }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, defaultPackage: ?({
         ...{ __typename?: 'ProductProviderPackage' },
       ...ProductProviderPackagingFragmentFragment
@@ -63070,10 +63076,18 @@ export type ItemInBatchFormFragmentFragment = ({
     ...$Pick<ProductProvider, {| id: *, name: * |}>,
     ...{| exporter: ({
         ...{ __typename?: 'Organization' },
-      ...PartnerCardFragmentFragment
+      ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+      ...{| partner: ?({
+          ...{ __typename?: 'Partner' },
+        ...PartnerCardFragmentFragment
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
     }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, supplier: ?({
         ...{ __typename?: 'Organization' },
-      ...PartnerCardFragmentFragment
+      ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+      ...{| partner: ?({
+          ...{ __typename?: 'Partner' },
+        ...PartnerCardFragmentFragment
+      }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
     }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, defaultPackage: ?({
         ...{ __typename?: 'ProductProviderPackage' },
       ...ProductProviderPackagingFragmentFragment
@@ -63111,10 +63125,18 @@ export type OrderFormQueryFragmentFragment = ({
     ...CustomFieldsFragmentFragment
   }), importer: ({
       ...{ __typename?: 'Organization' },
-    ...PartnerCardFragmentFragment
+    ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+    ...{| partner: ?({
+        ...{ __typename?: 'Partner' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, exporter: ({
       ...{ __typename?: 'Organization' },
-    ...PartnerCardFragmentFragment
+    ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+    ...{| partner: ?({
+        ...{ __typename?: 'Partner' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, inCharges: Array<({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
@@ -63138,10 +63160,18 @@ export type OrderFormFragmentFragment = ({
     ...CustomFieldsFragmentFragment
   }), importer: ({
       ...{ __typename?: 'Organization' },
-    ...PartnerCardFragmentFragment
+    ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+    ...{| partner: ?({
+        ...{ __typename?: 'Partner' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, exporter: ({
       ...{ __typename?: 'Organization' },
-    ...PartnerCardFragmentFragment
+    ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+    ...{| partner: ?({
+        ...{ __typename?: 'Partner' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, inCharges: Array<({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
@@ -63220,15 +63250,11 @@ export type PartnerFormFragmentFragment = ({
 });
 
 export type PartnerCardFragmentFragment = ({
-    ...{ __typename?: 'Organization' },
-  ...$Pick<Organization, {| id: *, name: *, types: * |}>,
-  ...{| partner: ?({
-      ...{ __typename?: 'Partner' },
-    ...$Pick<Partner, {| id: *, code: * |}>,
-    ...{| organization: ({
-        ...{ __typename?: 'Organization' },
-      ...$Pick<Organization, {| id: *, name: * |}>
-    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+    ...{ __typename?: 'Partner' },
+  ...$Pick<Partner, {| id: *, name: *, code: *, types: * |}>,
+  ...{| organization: ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: *, name: * |}>
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
 });
 
@@ -63255,15 +63281,7 @@ export type PartnersQueryQuery = ({
           ...$Pick<PartnerPayloadPaginatedSearch, {| page: *, totalPage: * |}>,
           ...{| nodes: Array<({
               ...{ __typename?: 'Partner' },
-            ...$Pick<Partner, {| id: *, code: * |}>,
-            ...{| organization: ({
-                ...{ __typename?: 'Organization' },
-              ...$Pick<Organization, {| id: *, name: *, types: * |}>,
-              ...{| partner: ?({
-                  ...{ __typename?: 'Partner' },
-                ...$Pick<Partner, {| id: *, code: * |}>
-              }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
-            }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
+            ...PartnerCardFragmentFragment
           }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }> |}
         }) |}
       }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
@@ -63276,7 +63294,11 @@ export type ProductFormFragmentFragment = ({
   ...$Pick<Product, {| id: *, archived: *, updatedAt: *, name: *, serial: *, hsCode: *, janCode: *, material: *, memo: * |}>,
   ...{| importer: ({
       ...{ __typename?: 'Organization' },
-    ...PartnerCardFragmentFragment
+    ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+    ...{| partner: ?({
+        ...{ __typename?: 'Partner' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, updatedBy: ?({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
@@ -63379,10 +63401,18 @@ export type ProductProviderFormFragmentFragment = ({
     ...UserAvatarFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, exporter: ({
       ...{ __typename?: 'Organization' },
-    ...PartnerCardFragmentFragment
+    ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+    ...{| partner: ?({
+        ...{ __typename?: 'Partner' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, supplier: ?({
       ...{ __typename?: 'Organization' },
-    ...PartnerCardFragmentFragment
+    ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+    ...{| partner: ?({
+        ...{ __typename?: 'Partner' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, unitPrice: ?({
       ...{ __typename?: 'Price' },
     ...PriceFragmentFragment
@@ -63614,13 +63644,25 @@ export type ShipmentFormQueryFragmentFragment = ({
     ...CustomFieldsFragmentFragment
   }), forwarders: Array<({
       ...{ __typename?: 'Organization' },
-    ...PartnerCardFragmentFragment
+    ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+    ...{| partner: ?({
+        ...{ __typename?: 'Partner' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, importer: ({
       ...{ __typename?: 'Organization' },
-    ...PartnerCardFragmentFragment
+    ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+    ...{| partner: ?({
+        ...{ __typename?: 'Partner' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, exporter: ?({
       ...{ __typename?: 'Organization' },
-    ...PartnerCardFragmentFragment
+    ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+    ...{| partner: ?({
+        ...{ __typename?: 'Partner' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, inCharges: Array<({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
@@ -63656,13 +63698,25 @@ export type ShipmentFormFragmentFragment = ({
     ...CustomFieldsFragmentFragment
   }), forwarders: Array<({
       ...{ __typename?: 'Organization' },
-    ...PartnerCardFragmentFragment
+    ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+    ...{| partner: ?({
+        ...{ __typename?: 'Partner' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, importer: ({
       ...{ __typename?: 'Organization' },
-    ...PartnerCardFragmentFragment
+    ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+    ...{| partner: ?({
+        ...{ __typename?: 'Partner' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, exporter: ?({
       ...{ __typename?: 'Organization' },
-    ...PartnerCardFragmentFragment
+    ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+    ...{| partner: ?({
+        ...{ __typename?: 'Partner' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, inCharges: Array<({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
@@ -64784,14 +64838,22 @@ export type WarehouseFormFragmentFragment = ({
     ...UserAvatarFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
       ...{ __typename?: 'Organization' },
-    ...PartnerCardFragmentFragment,
+    ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+    ...{| partner: ?({
+        ...{ __typename?: 'Partner' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |},
     ...OwnedByFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, inCharges: Array<({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, organizations: Array<({
       ...{ __typename?: 'Organization' },
-    ...PartnerCardFragmentFragment
+    ...$Pick<Organization, {| id: *, name: *, types: * |}>,
+    ...{| partner: ?({
+        ...{ __typename?: 'Partner' },
+      ...PartnerCardFragmentFragment
+    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, surface: ?({
       ...{ __typename?: 'MetricValue' },
     ...MetricFragmentFragment

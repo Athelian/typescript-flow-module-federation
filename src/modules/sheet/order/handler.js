@@ -81,7 +81,7 @@ export function handleOrderChanges(
             })
             .then(({ data }) => ({
               field: change.field,
-              new: newCustomValue(data.mask),
+              new: newCustomValue(data.user),
             }));
         }
         break;

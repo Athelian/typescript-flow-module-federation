@@ -30,6 +30,10 @@ import { sheetContainerFragment } from 'modules/sheet/container/fragment';
 const sheetShipmentExtraFragment = gql`
   fragment sheetShipmentExtraFragment on Shipment {
     containerCount
+    totalVolume {
+      value
+      metric
+    }
   }
 `;
 

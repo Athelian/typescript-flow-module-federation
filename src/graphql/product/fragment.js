@@ -7,7 +7,14 @@ export const productFormFragment = gql`
     archived
     updatedAt
     importer {
-      ...partnerCardFragment
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
     }
     updatedBy {
       ...userAvatarFragment

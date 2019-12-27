@@ -34,10 +34,24 @@ export const orderFormQueryFragment = gql`
       ...customFieldsFragment
     }
     importer {
-      ...partnerCardFragment
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
     }
     exporter {
-      ...partnerCardFragment
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
     }
     inCharges {
       ...userAvatarFragment
@@ -78,10 +92,24 @@ export const orderFormFragment = gql`
       ...customFieldsFragment
     }
     importer {
-      ...partnerCardFragment
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
     }
     exporter {
-      ...partnerCardFragment
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
     }
     inCharges {
       ...userAvatarFragment

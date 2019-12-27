@@ -764,6 +764,8 @@ function BatchCell({
             <BatchCard
               organizationId={data?.ownedBy?.id}
               batch={data}
+              container={entities.containers?.[data?.container?.id]}
+              shipment={entities.shipments?.[data?.shipment?.id]}
               onViewForm={evt => {
                 evt.stopPropagation();
                 dispatch({

@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, layout, shadows, colors } from 'styles/common';
+import { presets, borderRadiuses, layout, shadows, colors, fontSizes } from 'styles/common';
 
 export const ButtonStyle = css`
   ${borderRadiuses.MAIN};
@@ -50,4 +50,38 @@ export const TemplateWrapperStyle: string = css`
 export const TemplateSelectWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 15px;
+`;
+
+export const SelectTemplateStyle: string = css`
+  ${presets.BUTTON};
+  ${borderRadiuses.MAIN};
+  ${fontSizes.HUGE};
+  color: rgba(0, 0, 0, 0.2);
+  border: 3px dashed rgba(0, 0, 0, 0.2);
+  background: none;
+  width: 120px;
+  height: 30px;
+  &:hover,
+  :focus {
+    color: ${colors.TEAL};
+    border-color: ${colors.TEAL};
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+`;
+
+export const TemplateStyle: string = css`
+  ${presets.BUTTON};
+  ${presets.BOX};
+  ${presets.ELLIPSIS};
+  ${fontSizes.MAIN};
+  position: relative;
+  width: 120px;
+  height: 30px;
+  padding: 5px 20px 5px 5px;
+
+  & > div {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
 `;
