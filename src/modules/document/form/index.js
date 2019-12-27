@@ -6,7 +6,8 @@ import { Content, FormLayout, SlideViewNavBar, SlideViewLayout } from 'component
 import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import Timeline from 'modules/timeline/components/Timeline';
 import SlideView from 'components/SlideView';
-import { SaveButton, ResetButton } from 'components/Buttons';
+import ResetFormButton from 'components/ResetFormButton';
+import SaveFormButton from 'components/SaveFormButton';
 import LoadingIcon from 'components/LoadingIcon';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -97,10 +98,10 @@ const DocumentForm = ({
           </BooleanValue>
         )}
 
-        {isDirty && <ResetButton onClick={resetState} />}
+        {isDirty && <ResetFormButton onClick={resetState} />}
 
         {isDirty && (
-          <SaveButton
+          <SaveFormButton
             id="document_form_save_button"
             disabled={!isValidated}
             isLoading={isProcessing}
