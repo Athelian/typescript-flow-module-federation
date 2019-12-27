@@ -70,21 +70,18 @@ const DocumentModule = () => {
       newFiles = Array.from(event.target.files);
     }
 
-    const currentNumberOfFiles = filesState.length;
+    const newUploadFiles = newFiles.map(({ name }) => ({
+      name,
+      type: 'Document',
+      id: uuid(),
+      path: '',
+      status: 'Draft',
+      memo: '',
+      uploading: true,
+      progress: 0,
+    }));
 
-    setFileState([
-      ...newFiles.map(({ name }) => ({
-        name,
-        type: 'Document',
-        id: uuid(),
-        path: '',
-        status: 'Draft',
-        memo: '',
-        uploading: true,
-        progress: 0,
-      })),
-      ...filesState,
-    ]);
+    setFileState([...newUploadFiles, ...filesState]);
 
     Promise.all<any>(
       newFiles.map((file, index) =>
@@ -103,10 +100,10 @@ const DocumentModule = () => {
                 const { lengthComputable, loaded, total } = progressEvent;
                 if (lengthComputable) {
                   setFileState(
-                    filesStateRef.current.map((fileState, idx) => ({
+                    filesStateRef.current.map(fileState => ({
                       ...fileState,
                       progress:
-                        idx === index + currentNumberOfFiles
+                        fileState.id === newUploadFiles[index].id
                           ? Math.round((loaded / total) * 100)
                           : fileState.progress,
                     }))
