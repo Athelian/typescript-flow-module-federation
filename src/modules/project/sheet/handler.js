@@ -12,7 +12,7 @@ import type {
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
 import { extraChange, mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
 import { filesByIDsQuery, usersByIDsQuery } from 'modules/sheet/common/query';
-import { decorateMilestone, decorateTask } from './decorator';
+import { decorateMilestone, decorateTask, unDecorateMilestone, unDecorateTask } from './decorator';
 import { computeMilestoneStatus, computeTaskApprovalStatus, computeTaskStatus } from './helper';
 import { milestoneByIDQuery, tagsByIDsQuery, taskByIDQuery, userByIDQuery } from './query';
 
@@ -351,7 +351,7 @@ export default function entityEventHandler(
                 ['completedAt', 'completedBy'],
                 newValues =>
                   computeMilestoneStatus({
-                    ...milestone,
+                    ...unDecorateMilestone(milestone),
                     ...newValues,
                   }),
                 'status'
@@ -497,7 +497,7 @@ export default function entityEventHandler(
                 ],
                 newValues =>
                   computeTaskStatus({
-                    ...task,
+                    ...unDecorateTask(task),
                     ...newValues,
                   }),
                 'status'
@@ -508,7 +508,7 @@ export default function entityEventHandler(
                 ['rejectedAt', 'rejectedBy', 'approvedAt', 'approvedBy'],
                 newValues =>
                   computeTaskApprovalStatus({
-                    ...task,
+                    ...unDecorateTask(task),
                     ...newValues,
                   }),
                 'approvalStatus'
