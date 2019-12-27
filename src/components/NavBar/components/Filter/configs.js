@@ -617,6 +617,13 @@ export const ShipmentFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'SHIPMENT',
+    field: 'importerIds',
+    type: 'importer_ids',
+    message: shipmentMessages.importer,
+    defaultValue: [],
+  },
+  {
+    entity: 'SHIPMENT',
     field: 'forwarderIds',
     type: 'forwarder_ids',
     message: shipmentMessages.forwarder,
