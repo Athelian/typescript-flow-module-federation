@@ -83,9 +83,83 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   }
 });
 
+const parseHeaders = (rawHeaders: string): Headers => {
+  const headers = new Headers();
+  const preProcessedHeaders = rawHeaders.replace(/\r?\n[\t ]+/g, ' ');
+  preProcessedHeaders.split(/\r?\n/).forEach((line: any) => {
+    const parts = line.split(':');
+    const key = parts.shift().trim();
+    if (key) {
+      const value = parts.join(':').trim();
+      headers.append(key, value);
+    }
+  });
+  return headers;
+};
+
+const customFetch = (url: string, options: any) => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+
+    if (options.signal && options.signal.aborted) {
+      const err = new Error('Aborted');
+      err.name = 'AbortError';
+      reject(err);
+      return;
+    }
+
+    xhr.onload = () =>
+      resolve(
+        new Response('response' in xhr ? xhr.response : xhr.responseText, {
+          url: 'responseURL' in xhr ? xhr.responseURL : options.headers.get('X-Request-URL'),
+          status: xhr.status,
+          statusText: xhr.statusText,
+          headers: parseHeaders(xhr.getAllResponseHeaders() || ''),
+        })
+      );
+    xhr.onerror = () => {
+      reject(new TypeError('Network request failed'));
+    };
+    xhr.ontimeout = () => {
+      reject(new TypeError('Network request failed'));
+    };
+    xhr.onabort = () => {
+      const err = new Error('Aborted');
+      err.name = 'AbortError';
+      reject(err);
+    };
+    xhr.open(options.method || 'get', url, true);
+    Object.keys(options.headers).forEach(key => {
+      xhr.setRequestHeader(key, options.headers[key]);
+    });
+    if (options.credentials === 'include') {
+      xhr.withCredentials = true;
+    } else if (options.credentials === 'omit') {
+      xhr.withCredentials = false;
+    }
+
+    if (xhr.upload && options.onProgress) {
+      xhr.upload.onprogress = options.onProgress;
+    }
+
+    if (options.signal) {
+      const abortXhr = () => xhr.abort();
+      options.signal.addEventListener('abort', abortXhr);
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          options.signal.removeEventListener('abort', abortXhr);
+        }
+      };
+    }
+
+    xhr.send(options.body);
+  });
+};
+
 const httpWithUploadLink = createUploadLink({
   uri: `${process.env.ZENPORT_SERVER_URL || ''}/graphql`,
   credentials: 'include',
+  fetch: customFetch,
 });
 
 const cache = new InMemoryCache({

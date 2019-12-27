@@ -97,7 +97,12 @@ const DocumentsUpload = ({
       progress: number,
     }>
   >([]);
+  const filesStateRef = React.useRef(filesState);
   const previousFilesRef = React.useRef<Array<UploadFileState>>([]);
+
+  React.useEffect(() => {
+    filesStateRef.current = filesState;
+  }, [filesState]);
 
   if (
     !isEquals(files.map(pick(editableFields)), previousFilesRef.current.map(pick(editableFields)))
@@ -126,6 +131,7 @@ const DocumentsUpload = ({
     }
 
     const types = getFileTypesByEntity(entity, intl);
+    const currentNumberOfFiles = filesState.length;
 
     setFileState([
       ...filesState,
@@ -142,7 +148,7 @@ const DocumentsUpload = ({
     ]);
 
     Promise.all<any>(
-      newFiles.map(file =>
+      newFiles.map((file, index) =>
         upload({
           variables: {
             file,
@@ -151,6 +157,24 @@ const DocumentsUpload = ({
               type: types[0].value,
             },
           },
+          context: ({
+            fetchOptions: {
+              onProgress: (progressEvent: ProgressEvent) => {
+                const { lengthComputable, loaded, total } = progressEvent;
+                if (lengthComputable) {
+                  setFileState(
+                    filesStateRef.current.map((fileState, idx) => ({
+                      ...fileState,
+                      progress:
+                        idx === index + currentNumberOfFiles
+                          ? Math.round((loaded / total) * 100)
+                          : fileState.progress,
+                    }))
+                  );
+                }
+              },
+            },
+          }: any),
         })
       )
     )
