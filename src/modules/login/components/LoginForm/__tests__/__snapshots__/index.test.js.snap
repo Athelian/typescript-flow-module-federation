@@ -1,861 +1,160 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<LoginForm /> should allow to click on submit button on valid data 1`] = `
-.emotion-15 {
-  box-shadow: 0 10px 30px 0 rgba(0,0,0,0.1);
-  border-radius: 5px;
-  background-color: #fff;
-  padding: 20px;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  display: grid;
-  grid-auto-rows: min-content;
-  grid-gap: 40px;
-  justify-items: center;
+Object {
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
 }
-
-.emotion-14 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.emotion-13 {
-  font-size: 14px;
-  min-height: 20px;
-  line-height: 20px;
-  color: #11d1a6;
-  margin-top: 20px;
-}
-
-.emotion-11 {
-  margin: 0 0 0 5px;
-}
-
-.emotion-2 {
-  position: relative;
-  height: -webkit-min-content;
-  height: -moz-min-content;
-  height: min-content;
-}
-
-.emotion-0 {
-  position: absolute;
-  left: -20px;
-  height: 100%;
-  width: 20px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-}
-
-.emotion-10 {
-  display: grid;
-  grid-auto-flow: row;
-  grid-auto-rows: min-content;
-  grid-gap: 20px;
-}
-
-.emotion-4 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  display: grid;
-  grid-auto-flow: row;
-  grid-auto-rows: min-content;
-  grid-gap: 5px;
-  width: 100%;
-}
-
-.emotion-1 {
-  width: 100%;
-  height: 20px;
-  max-height: 20px;
-  line-height: 20px;
-  font-size: 12px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #aaa;
-  -webkit-letter-spacing: 2px;
-  -moz-letter-spacing: 2px;
-  -ms-letter-spacing: 2px;
-  letter-spacing: 2px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  padding: 0 5px;
-  text-align: left;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  max-width: 100%;
-  text-transform: uppercase;
-  -webkit-transition: all 0.1s linear;
-  transition: all 0.1s linear;
-}
-
-.emotion-3 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border: 1px solid rgba(0,0,0,0.1);
-  border-radius: 5px;
-  background-color: #ffffff;
-  height: 30px;
-  width: 200px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  max-width: 200px;
-  cursor: text;
-  -webkit-transition: all 0.1s linear;
-  transition: all 0.1s linear;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-}
-
-.emotion-3:focus {
-  border-color: #11d1a6;
-}
-
-.emotion-3 > button {
-  opacity: 1;
-}
-
-.emotion-3 > input {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.emotion-3 > input,
-.emotion-3 > textarea {
-  border: none;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  line-height: 20px;
-  padding: 0 4px;
-  background: none;
-  border-radius: 5px;
-  color: #555555;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.emotion-3 > input:focus,
-.emotion-3 > textarea:focus {
-  outline: none;
-  border-color: #11d1a6;
-}
-
-.emotion-3 > input::-webkit-input-placeholder,
-.emotion-3 > textarea::-webkit-input-placeholder {
-  color: #ccc;
-}
-
-.emotion-3 > input::-moz-placeholder,
-.emotion-3 > textarea::-moz-placeholder {
-  color: #ccc;
-}
-
-.emotion-3 > input:-ms-input-placeholder,
-.emotion-3 > textarea:-ms-input-placeholder {
-  color: #ccc;
-}
-
-.emotion-3 > input::placeholder,
-.emotion-3 > textarea::placeholder {
-  color: #ccc;
-}
-
-.emotion-12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-transition: all 0.1s linear;
-  transition: all 0.1s linear;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  border: 0;
-  border-radius: 999px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 12px;
-  color: #ffffff;
-  background-color: #11d1a6;
-  height: 30px;
-  padding: 0 10px;
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  text-transform: uppercase;
-  -webkit-letter-spacing: 2px;
-  -moz-letter-spacing: 2px;
-  -ms-letter-spacing: 2px;
-  letter-spacing: 2px;
-  min-width: 75px;
-}
-
-.emotion-12:focus {
-  outline: 0;
-}
-
-.emotion-12[disabled] {
-  cursor: default;
-}
-
-.emotion-12:hover,
-.emotion-12:focus {
-  color: #ffffff;
-  background-color: #0bbc94;
-}
-
-.emotion-12[disabled] {
-  color: #aaa;
-  background-color: #ccc;
-  cursor: default;
-}
-
-<div>
-  <form
-    data-testid="loginForm"
-  >
-    <div
-      class="emotion-15"
-    >
-      <div
-        class="emotion-10"
-      >
-        <div
-          class="emotion-4"
-        >
-          <div
-            class="emotion-2"
-          >
-            <div
-              class="emotion-0"
-            />
-            <div
-              class="emotion-1"
-            >
-              EMAIL
-            </div>
-          </div>
-          <div
-            class="emotion-3"
-          >
-            <input
-              data-testid="email"
-              name="email"
-              spellcheck="false"
-              style="text-align: left;"
-              type="email"
-              value=""
-            />
-          </div>
-        </div>
-        <div
-          class="emotion-4"
-        >
-          <div
-            class="emotion-2"
-          >
-            <div
-              class="emotion-0"
-            />
-            <div
-              class="emotion-1"
-            >
-              PASSWORD
-            </div>
-          </div>
-          <div
-            class="emotion-3"
-          >
-            <input
-              data-testid="password"
-              name="password"
-              spellcheck="false"
-              style="text-align: left;"
-              type="password"
-              value=""
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        class="emotion-14"
-      >
-        <button
-          class="emotion-12"
-          data-testid="submitButton"
-          disabled=""
-          type="submit"
-        >
-          <span>
-            LOGIN
-          </span>
-          <div
-            class="emotion-11"
-          >
-            <svg
-              aria-hidden="true"
-              class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw "
-              data-icon="sign-in-alt"
-              data-prefix="fas"
-              focusable="false"
-              role="img"
-              viewBox="0 0 512 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M416 448h-84c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h84c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32h-84c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h84c53 0 96 43 96 96v192c0 53-43 96-96 96zm-47-201L201 79c-15-15-41-4.5-41 17v96H24c-13.3 0-24 10.7-24 24v96c0 13.3 10.7 24 24 24h136v96c0 21.5 26 32 41 17l168-168c9.3-9.4 9.3-24.6 0-34z"
-                fill="currentColor"
-              />
-            </svg>
-          </div>
-        </button>
-        <a
-          class="emotion-13"
-          href="/forgot-password"
-        >
-          forgot password
-        </a>
-      </div>
-    </div>
-  </form>
-</div>
 `;
 
 exports[`<LoginForm /> should allow to click on submit button on valid data 2`] = `
-<div>
-  <form
-    data-testid="loginForm"
-  >
-    <div
-      class="css-13fmzcs"
-    >
-      <div
-        class="css-1xa9w2h"
-      >
-        <div
-          class="css-ldwt5s"
-        >
-          <div
-            class="css-1tsdwfr"
-          >
-            <div
-              class="css-1i7oahi"
-            />
-            <div
-              class="css-cxlada"
-            >
-              EMAIL
-            </div>
-          </div>
-          <div
-            class="css-tos0r5"
-          >
-            <input
-              data-testid="email"
-              name="email"
-              spellcheck="false"
-              style="text-align: left;"
-              type="email"
-              value=""
-            />
-          </div>
-        </div>
-        <div
-          class="css-ldwt5s"
-        >
-          <div
-            class="css-1tsdwfr"
-          >
-            <div
-              class="css-1i7oahi"
-            />
-            <div
-              class="css-cxlada"
-            >
-              PASSWORD
-            </div>
-          </div>
-          <div
-            class="css-tos0r5"
-          >
-            <input
-              data-testid="password"
-              name="password"
-              spellcheck="false"
-              style="text-align: left;"
-              type="password"
-              value=""
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        class="css-1q3ffjc"
-      >
-        <button
-          class="css-sk8owp"
-          data-testid="submitButton"
-          disabled=""
-          type="submit"
-        >
-          <span>
-            LOGIN
-          </span>
-          <div
-            class="css-1d6i4a1"
-          >
-            <svg
-              aria-hidden="true"
-              class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw "
-              data-icon="sign-in-alt"
-              data-prefix="fas"
-              focusable="false"
-              role="img"
-              viewBox="0 0 512 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M416 448h-84c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h84c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32h-84c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h84c53 0 96 43 96 96v192c0 53-43 96-96 96zm-47-201L201 79c-15-15-41-4.5-41 17v96H24c-13.3 0-24 10.7-24 24v96c0 13.3 10.7 24 24 24h136v96c0 21.5 26 32 41 17l168-168c9.3-9.4 9.3-24.6 0-34z"
-                fill="currentColor"
-              />
-            </svg>
-          </div>
-        </button>
-        <a
-          class="css-1055wl4"
-          href="/forgot-password"
-        >
-          forgot password
-        </a>
-      </div>
-    </div>
-  </form>
-</div>
+Object {
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+}
 `;
 
 exports[`<LoginForm /> should render without crash 1`] = `
-.emotion-15 {
-  box-shadow: 0 10px 30px 0 rgba(0,0,0,0.1);
-  border-radius: 5px;
-  background-color: #fff;
-  padding: 20px;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  display: grid;
-  grid-auto-rows: min-content;
-  grid-gap: 40px;
-  justify-items: center;
+Object {
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
 }
-
-.emotion-14 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.emotion-13 {
-  font-size: 14px;
-  min-height: 20px;
-  line-height: 20px;
-  color: #11d1a6;
-  margin-top: 20px;
-}
-
-.emotion-11 {
-  margin: 0 0 0 5px;
-}
-
-.emotion-2 {
-  position: relative;
-  height: -webkit-min-content;
-  height: -moz-min-content;
-  height: min-content;
-}
-
-.emotion-0 {
-  position: absolute;
-  left: -20px;
-  height: 100%;
-  width: 20px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-}
-
-.emotion-10 {
-  display: grid;
-  grid-auto-flow: row;
-  grid-auto-rows: min-content;
-  grid-gap: 20px;
-}
-
-.emotion-4 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  display: grid;
-  grid-auto-flow: row;
-  grid-auto-rows: min-content;
-  grid-gap: 5px;
-  width: 100%;
-}
-
-.emotion-1 {
-  width: 100%;
-  height: 20px;
-  max-height: 20px;
-  line-height: 20px;
-  font-size: 12px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #aaa;
-  -webkit-letter-spacing: 2px;
-  -moz-letter-spacing: 2px;
-  -ms-letter-spacing: 2px;
-  letter-spacing: 2px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  padding: 0 5px;
-  text-align: left;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  max-width: 100%;
-  text-transform: uppercase;
-  -webkit-transition: all 0.1s linear;
-  transition: all 0.1s linear;
-}
-
-.emotion-3 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border: 1px solid rgba(0,0,0,0.1);
-  border-radius: 5px;
-  background-color: #ffffff;
-  height: 30px;
-  width: 200px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  max-width: 200px;
-  cursor: text;
-  -webkit-transition: all 0.1s linear;
-  transition: all 0.1s linear;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-}
-
-.emotion-3:focus {
-  border-color: #11d1a6;
-}
-
-.emotion-3 > button {
-  opacity: 1;
-}
-
-.emotion-3 > input {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.emotion-3 > input,
-.emotion-3 > textarea {
-  border: none;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  line-height: 20px;
-  padding: 0 4px;
-  background: none;
-  border-radius: 5px;
-  color: #555555;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.emotion-3 > input:focus,
-.emotion-3 > textarea:focus {
-  outline: none;
-  border-color: #11d1a6;
-}
-
-.emotion-3 > input::-webkit-input-placeholder,
-.emotion-3 > textarea::-webkit-input-placeholder {
-  color: #ccc;
-}
-
-.emotion-3 > input::-moz-placeholder,
-.emotion-3 > textarea::-moz-placeholder {
-  color: #ccc;
-}
-
-.emotion-3 > input:-ms-input-placeholder,
-.emotion-3 > textarea:-ms-input-placeholder {
-  color: #ccc;
-}
-
-.emotion-3 > input::placeholder,
-.emotion-3 > textarea::placeholder {
-  color: #ccc;
-}
-
-.emotion-12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-transition: all 0.1s linear;
-  transition: all 0.1s linear;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  border: 0;
-  border-radius: 999px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 12px;
-  color: #ffffff;
-  background-color: #11d1a6;
-  height: 30px;
-  padding: 0 10px;
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  text-transform: uppercase;
-  -webkit-letter-spacing: 2px;
-  -moz-letter-spacing: 2px;
-  -ms-letter-spacing: 2px;
-  letter-spacing: 2px;
-  min-width: 75px;
-}
-
-.emotion-12:focus {
-  outline: 0;
-}
-
-.emotion-12[disabled] {
-  cursor: default;
-}
-
-.emotion-12:hover,
-.emotion-12:focus {
-  color: #ffffff;
-  background-color: #0bbc94;
-}
-
-.emotion-12[disabled] {
-  color: #aaa;
-  background-color: #ccc;
-  cursor: default;
-}
-
-<div>
-  <form
-    data-testid="loginForm"
-  >
-    <div
-      class="emotion-15"
-    >
-      <div
-        class="emotion-10"
-      >
-        <div
-          class="emotion-4"
-        >
-          <div
-            class="emotion-2"
-          >
-            <div
-              class="emotion-0"
-            />
-            <div
-              class="emotion-1"
-            >
-              EMAIL
-            </div>
-          </div>
-          <div
-            class="emotion-3"
-          >
-            <input
-              data-testid="email"
-              name="email"
-              spellcheck="false"
-              style="text-align: left;"
-              type="email"
-              value=""
-            />
-          </div>
-        </div>
-        <div
-          class="emotion-4"
-        >
-          <div
-            class="emotion-2"
-          >
-            <div
-              class="emotion-0"
-            />
-            <div
-              class="emotion-1"
-            >
-              PASSWORD
-            </div>
-          </div>
-          <div
-            class="emotion-3"
-          >
-            <input
-              data-testid="password"
-              name="password"
-              spellcheck="false"
-              style="text-align: left;"
-              type="password"
-              value=""
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        class="emotion-14"
-      >
-        <button
-          class="emotion-12"
-          data-testid="submitButton"
-          disabled=""
-          type="submit"
-        >
-          <span>
-            LOGIN
-          </span>
-          <div
-            class="emotion-11"
-          >
-            <svg
-              aria-hidden="true"
-              class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw "
-              data-icon="sign-in-alt"
-              data-prefix="fas"
-              focusable="false"
-              role="img"
-              viewBox="0 0 512 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M416 448h-84c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h84c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32h-84c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h84c53 0 96 43 96 96v192c0 53-43 96-96 96zm-47-201L201 79c-15-15-41-4.5-41 17v96H24c-13.3 0-24 10.7-24 24v96c0 13.3 10.7 24 24 24h136v96c0 21.5 26 32 41 17l168-168c9.3-9.4 9.3-24.6 0-34z"
-                fill="currentColor"
-              />
-            </svg>
-          </div>
-        </button>
-        <a
-          class="emotion-13"
-          href="/forgot-password"
-        >
-          forgot password
-        </a>
-      </div>
-    </div>
-  </form>
-</div>
 `;

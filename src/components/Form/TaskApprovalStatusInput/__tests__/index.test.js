@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { IntlProvider } from 'react-intl';
 import TaskApprovalStatusInput from '../index';
@@ -13,16 +13,16 @@ describe('TaskApprovalStatusInput', () => {
       },
       approvedAt: '2019-04-24',
     };
-    const { container, getByText } = render(
+    render(
       <IntlProvider locale="en">
         <TaskApprovalStatusInput approval={approval} showUser showDate />
       </IntlProvider>
     );
 
-    expect(container.firstChild).toMatchSnapshot();
-    expect(getByText(/APPROVED/)).toBeTruthy();
-    expect(getByText(/T/)).toBeTruthy();
-    expect(getByText('4/24/2019')).toBeTruthy();
+    expect(screen).toMatchSnapshot();
+    expect(screen.getByText(/APPROVED/)).toBeTruthy();
+    expect(screen.getByText(/T/)).toBeTruthy();
+    expect(screen.getByText('4/24/2019')).toBeTruthy();
   });
 
   it('rejected', () => {
@@ -33,13 +33,13 @@ describe('TaskApprovalStatusInput', () => {
       },
       rejectedAt: '2019-4-24',
     };
-    const { container, getByText } = render(
+    render(
       <IntlProvider locale="en">
         <TaskApprovalStatusInput rejection={rejection} />
       </IntlProvider>
     );
 
-    expect(container.firstChild).toMatchSnapshot();
-    expect(getByText(/REJECTED/)).toBeTruthy();
+    expect(screen).toMatchSnapshot();
+    expect(screen.getByText(/REJECTED/)).toBeTruthy();
   });
 });
