@@ -1763,6 +1763,7 @@
   "modules.timeline.task": "task",
   "modules.timeline.project": "project",
   "modules.timeline.container": "container",
+  "modules.timeline.file": "file",
   "components.Header.notification.noNotifications": "No notifications",
   "components.Header.notification.title": "NOTIFICATIONS",
   "components.Header.notification.readAll": "MARK ALL AS READ",

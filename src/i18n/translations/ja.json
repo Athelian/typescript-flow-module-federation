@@ -1763,6 +1763,7 @@
   "modules.timeline.task": "タスク",
   "modules.timeline.project": "プロジェクト",
   "modules.timeline.container": "コンテナ",
+  "modules.timeline.file": "file",
   "components.Header.notification.noNotifications": "お知らせはありません。",
   "components.Header.notification.title": "お知らせ",
   "components.Header.notification.readAll": "全て既読にする",
