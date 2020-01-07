@@ -1,7 +1,6 @@
 // @flow
 import type { OrderItemPayload, BatchPayload } from 'generated/graphql';
 import { uuid } from './id';
-import { getByPathWithDefault } from './fp';
 import { getBatchLatestQuantity } from './batch';
 
 export const getItemQuantityChartData = ({
@@ -11,11 +10,11 @@ export const getItemQuantityChartData = ({
   orderItem: OrderItemPayload,
   batches: Array<BatchPayload>,
 }) => {
-  const orderedQuantity = getByPathWithDefault(0, 'quantity', orderItem);
-  const totalBatched = getByPathWithDefault(0, 'totalBatched', orderItem);
-  const totalShipped = getByPathWithDefault(0, 'totalShipped', orderItem);
-  const batchCount = getByPathWithDefault(0, 'batchCount', orderItem);
-  const batchShippedCount = getByPathWithDefault(0, 'batchShippedCount', orderItem);
+  const orderedQuantity = orderItem?.quantity ?? 0;
+  const totalBatched = orderItem?.totalBatched ?? 0;
+  const totalShipped = orderItem?.totalShipped ?? 0;
+  const batchCount = orderItem?.batchCount ?? 0;
+  const batchShippedCount = orderItem?.batchShippedCount ?? 0;
   let batchedQuantity = 0;
   let shippedQuantity = 0;
   let batched = 0;
@@ -23,7 +22,7 @@ export const getItemQuantityChartData = ({
 
   if (batches && batches.length > 0) {
     batches.forEach(batch => {
-      const shipment = getByPathWithDefault(null, 'shipment', batch);
+      const shipment = batch?.shipment;
       const latestQuantity = getBatchLatestQuantity(batch);
       batchedQuantity += latestQuantity;
       batched += 1;

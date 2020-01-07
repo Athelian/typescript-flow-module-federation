@@ -127,6 +127,10 @@ const Cell = React.memo(
       batch,
     });
 
+    const allBatchesInOrderItem = batches.filter(
+      ({ orderItem }) => orderItem?.id === batch.orderItem?.id
+    );
+
     return (
       <BooleanValue key={batch.id}>
         {({ value: opened, set: slideToggle }) => (
@@ -151,7 +155,11 @@ const Cell = React.memo(
                 <BatchFormInSlide
                   batch={{
                     ...batch,
-                    orderItem: { ...batch.orderItem, ...(orderItems?.[orderItemPosition] ?? {}) },
+                    orderItem: {
+                      ...batch.orderItem,
+                      ...(orderItems?.[orderItemPosition] ?? {}),
+                      batches: allBatchesInOrderItem,
+                    },
                   }}
                   onSave={updatedBatch => {
                     slideToggle(false);

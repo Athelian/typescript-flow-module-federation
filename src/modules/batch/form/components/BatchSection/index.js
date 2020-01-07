@@ -300,6 +300,7 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
                         <FormattedMessage {...messages.orderItem} />
                       </Label>
                       <ItemCard
+                        batches={rawOrderItem?.batches ?? []}
                         orderItem={orderItem}
                         productProvider={productProvider}
                         product={product}
