@@ -52,7 +52,7 @@ export default function transformSheetProductProvider({
     },
     {
       columnKey: 'productProvider.unitPrice',
-      type: 'static_metric_value',
+      type: 'price',
       ...transformValueField(
         basePath,
         productProvider,

@@ -13,6 +13,7 @@ import DayInput from './Inputs/DayInput';
 import SelectCustomInput from './Inputs/SelectCustomInput';
 import SelectEnumInput from './Inputs/SelectEnumInput';
 import SearchSelectEnumInput from './Inputs/SearchSelectEnumInput';
+import PriceInput from './Inputs/PriceInput';
 import MetricValueInput from './Inputs/MetricValueInput';
 import MetricValueToggleInput from './Inputs/MetricValueToggleInput';
 import StaticMetricValueInput from './Inputs/StaticMetricValueInput';
@@ -68,6 +69,7 @@ const inputs = {
   mass: MetricValueInput.Mass,
   static_metric_value: StaticMetricValueInput,
   size: SizeInput,
+  price: PriceInput,
   // Computed with toggle
   number_toggle: NumberToggleInput,
   date_toggle: DateToggleInput,
