@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Dec 24 2019 15:31:44 GMT+0900 (Japan Standard Time)
+# timestamp: Mon Jan 06 2020 10:27:14 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -87042,6 +87042,7 @@ input ShipmentFilterInput {
   archived: Boolean
   ids: [ID!]
   importerId: ID
+  importerIds: [ID!]
   tagIds: [ID!]
   forwarderIds: [ID!]
   inChargeIds: [ID!]

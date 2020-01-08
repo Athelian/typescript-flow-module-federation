@@ -31,8 +31,8 @@ const moveBatchToOrder = ({
     viewer: isOrderFocus ? ORDER : SHIPMENT,
   });
 
-  if (!orderItemId) return Promise.reject(new Error(`Not found order item`));
-  if (!parentOrderId) return Promise.reject(new Error(`Not found order`));
+  if (!orderItemId) return Promise.reject(new Error('Not found order item'));
+  if (!parentOrderId || !order) return Promise.reject(new Error('Not found order'));
 
   const parentItem = getByPathWithDefault(
     {

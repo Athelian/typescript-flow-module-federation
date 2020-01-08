@@ -1763,6 +1763,7 @@
   "modules.timeline.task": "任务",
   "modules.timeline.project": "工程",
   "modules.timeline.container": "container",
+  "modules.timeline.file": "file",
   "components.Header.notification.noNotifications": "未找到通知",
   "components.Header.notification.title": "通知",
   "components.Header.notification.readAll": "标记为已读",

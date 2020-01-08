@@ -249,6 +249,9 @@ export const itemInOrderFormFragment = gql`
             files {
               ...imageFragment
             }
+            importer {
+              ...partnerNameFragment
+            }
           }
         }
       }
