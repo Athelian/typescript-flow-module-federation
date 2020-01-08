@@ -11,6 +11,7 @@ import normalizeSheetShipmentInput, {
 } from 'modules/sheet/shipment/normalize';
 import normalizeSheetContainerInput from 'modules/sheet/container/normalize';
 import normalizeSheetProductInput from 'modules/sheet/product/normalize';
+import normalizeSheetProductProviderInput from 'modules/sheet/productProvider/normalize';
 import sheetOrderMutation from 'modules/sheet/order/mutation';
 import sheetOrderItemMutation from 'modules/sheet/orderItem/mutation';
 import sheetBatchMutation from 'modules/sheet/batch/mutation';
@@ -274,6 +275,19 @@ function normalizedInput(
       }
 
       return normalizeSheetProductInput(product, field, oldValue, newValue);
+    }
+    case 'ProductProvider': {
+      const productProvider = [
+        ...shipment.batchesWithoutContainer,
+        ...shipment.containers.flatMap(c => c.batches),
+      ]
+        .map(b => b.orderItem.productProvider)
+        .find(o => o.id === entity.id);
+      if (!productProvider) {
+        return {};
+      }
+
+      return normalizeSheetProductProviderInput(productProvider, field, oldValue, newValue);
     }
     default:
       return {

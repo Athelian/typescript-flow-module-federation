@@ -26,6 +26,7 @@ import { sheetBatchFragment } from 'modules/sheet/batch/fragment';
 import { sheetShipmentFragment, sheetTimelineDateFragment } from 'modules/sheet/shipment/fragment';
 import { sheetContainerFragment } from 'modules/sheet/container/fragment';
 import { sheetProductFragment } from 'modules/sheet/product/fragment';
+import { sheetProductProviderFragment } from 'modules/sheet/productProvider/fragment';
 
 export const shipmentsQuery = gql`
   query shipmentsQuery(
@@ -60,8 +61,11 @@ export const shipmentsQuery = gql`
                     ...sheetCustomizableFragment
                   }
                   productProvider {
+                    ...sheetProductProviderFragment
+                    ...sheetModelFragment
+                    ...sheetOwnedFragment
+                    ...sheetCustomizableFragment
                     ... on ProductProvider {
-                      id
                       product {
                         ...sheetProductFragment
                         ...sheetModelFragment
@@ -98,8 +102,11 @@ export const shipmentsQuery = gql`
                         ...sheetCustomizableFragment
                       }
                       productProvider {
+                        ...sheetProductProviderFragment
+                        ...sheetModelFragment
+                        ...sheetOwnedFragment
+                        ...sheetCustomizableFragment
                         ... on ProductProvider {
-                          id
                           product {
                             ...sheetProductFragment
                             ...sheetModelFragment
@@ -126,6 +133,7 @@ export const shipmentsQuery = gql`
   ${sheetOrderItemFragment}
   ${sheetBatchFragment}
   ${sheetProductFragment}
+  ${sheetProductProviderFragment}
   ${sheetShipmentFragment}
   ${sheetContainerFragment}
   ${sheetTimelineDateFragment}
@@ -200,6 +208,7 @@ export const containerByIDQuery = gql`
   ${sheetOrderFragment}
   ${sheetOrderItemFragment}
   ${sheetProductFragment}
+  ${sheetProductProviderFragment}
   ${sheetBatchFragment}
   ${sheetContainerFragment}
   ${sheetModelFragment}
