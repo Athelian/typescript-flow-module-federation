@@ -3,6 +3,7 @@ import ApolloClient from 'apollo-client';
 import type { Batch, Shipment } from 'generated/graphql';
 import normalizeSheetOrderInput from 'modules/sheet/order/normalize';
 import normalizeSheetProductInput from 'modules/sheet/product/normalize';
+import normalizeSheetProductProviderInput from 'modules/sheet/productProvider/normalize';
 import normalizeSheetOrderItemInput from 'modules/sheet/orderItem/normalize';
 import normalizeSheetBatchInput from 'modules/sheet/batch/normalize';
 import normalizeSheetShipmentInput, {
@@ -83,6 +84,13 @@ function normalizedInput(
     case 'Product':
       return normalizeSheetProductInput(
         batch.orderItem.productProvider.product,
+        field,
+        oldValue,
+        newValue
+      );
+    case 'ProductProvider':
+      return normalizeSheetProductProviderInput(
+        batch.orderItem.productProvider,
         field,
         oldValue,
         newValue

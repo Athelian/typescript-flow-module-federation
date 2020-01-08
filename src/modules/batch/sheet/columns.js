@@ -3,33 +3,44 @@ import type { FieldDefinition } from 'types';
 import type { ColumnConfig } from 'components/Sheet';
 import orderColumns from 'modules/sheet/order/columns';
 import productColumns from 'modules/sheet/product/columns';
+import productProviderColumns from 'modules/sheet/productProvider/columns';
 import orderItemColumns from 'modules/sheet/orderItem/columns';
 import batchColumns from 'modules/sheet/batch/columns';
 import shipmentColumns from 'modules/sheet/shipment/columns';
 import containerColumns from 'modules/sheet/container/columns';
 
-export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment', 'Product'];
+export const FieldDefinitionEntityTypes = [
+  'Order',
+  'OrderItem',
+  'Batch',
+  'Shipment',
+  'Product',
+  'ProductProvider',
+];
 
 export const BatchSheetColumnGroups = [
   'BATCH',
   'ORDER_ITEM',
   'PRODUCT',
+  'PRODUCT_PROVIDER',
   'ORDER',
   'CONTAINER',
   'SHIPMENT',
 ];
 
-type Props = {
+type Props = {|
   orderFieldDefinitions: Array<FieldDefinition>,
   productFieldDefinitions: Array<FieldDefinition>,
+  productProviderFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
-};
+|};
 
 export default function({
   orderFieldDefinitions,
   productFieldDefinitions,
+  productProviderFieldDefinitions,
   orderItemFieldDefinitions,
   batchFieldDefinitions,
   shipmentFieldDefinitions,
@@ -160,6 +171,19 @@ export default function({
       },
       {},
       productFieldDefinitions
+    ),
+    ...productProviderColumns(
+      {
+        'productProvider.supplier': 'orderItems.productProvider.supplier.name',
+        'productProvider.name': 'orderItems.productProvider.name',
+        'productProvider.unitPrice': [
+          'orderItems.productProvider.unitPrice.amount',
+          'orderItems.productProvider.unitPrice.currency',
+        ],
+        'productProvider.customField': 'orderItems.productProvider.customFields',
+      },
+      {},
+      productProviderFieldDefinitions
     ),
     ...orderColumns(
       {
