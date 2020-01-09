@@ -7,8 +7,16 @@ import shipmentColumns from 'modules/sheet/shipment/columns';
 import containerColumns from 'modules/sheet/container/columns';
 import batchColumns from 'modules/sheet/batch/columns';
 import productColumns from 'modules/sheet/product/columns';
+import productProviderColumns from 'modules/sheet/productProvider/columns';
 
-export const FieldDefinitionEntityTypes = ['Order', 'OrderItem', 'Batch', 'Shipment', 'Product'];
+export const FieldDefinitionEntityTypes = [
+  'Order',
+  'OrderItem',
+  'Batch',
+  'Shipment',
+  'Product',
+  'ProductProvider',
+];
 
 export const ShipmentSheetColumnGroups = [
   'SHIPMENT',
@@ -16,16 +24,17 @@ export const ShipmentSheetColumnGroups = [
   'BATCH',
   'ORDER_ITEM',
   'PRODUCT',
+  'PRODUCT_PROVIDER',
   'ORDER',
 ];
 
-type Props = {
+type Props = {|
   orderFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
   productFieldDefinitions: Array<FieldDefinition>,
-};
+|};
 
 export default function({
   orderFieldDefinitions,
@@ -499,6 +508,19 @@ export default function({
       },
       {},
       productFieldDefinitions
+    ),
+    ...productProviderColumns(
+      {
+        'productProvider.supplier': 'containers.batches.orderItem.productProvider.supplier.name',
+        'productProvider.name': 'containers.batches.orderItem.productProvider.name',
+        'productProvider.unitPrice': [
+          'containers.batches.orderItem.productProvider.unitPrice.amount',
+          'containers.batches.orderItem.productProvider.unitPrice.currency',
+        ],
+        'productProvider.customField': 'containers.batches.orderItem.productProvider.customFields',
+      },
+      {},
+      []
     ),
     ...orderColumns(
       {

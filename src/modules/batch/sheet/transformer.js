@@ -4,6 +4,7 @@ import type { FieldDefinition } from 'types';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import transformSheetOrder from 'modules/sheet/order/transformer';
 import transformSheetProduct from 'modules/sheet/product/transformer';
+import transformSheetProductProvider from 'modules/sheet/productProvider/transformer';
 import transformSheetOrderItem from 'modules/sheet/orderItem/transformer';
 import transformSheetBatch from 'modules/sheet/batch/transformer';
 import transformSheetShipment from 'modules/sheet/shipment/transformer';
@@ -54,6 +55,16 @@ function transformProduct(
     basePath: `${basePath}.orderItem.productProvider.product`,
     product,
     getProductFromRoot: root => root.orderItem.productProvider.product,
+  }).map(c => ({
+    ...c,
+    duplicable: true,
+  }));
+}
+
+function transformProductProvider(basePath: string, productProvider: Object): Array<CellValue> {
+  return transformSheetProductProvider({
+    basePath: `${basePath}.orderItem.productProvider`,
+    productProvider,
   }).map(c => ({
     ...c,
     duplicable: true,
@@ -114,13 +125,13 @@ function transformShipment(
   }));
 }
 
-type Props = {
+type Props = {|
   orderFieldDefinitions: Array<FieldDefinition>,
   productFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
-};
+|};
 
 export default function transformer({
   orderFieldDefinitions,
@@ -141,6 +152,10 @@ export default function transformer({
       `${index}`,
       batch?.orderItem?.productProvider?.product
     );
+    const productProviderCells = transformProductProvider(
+      `${index}`,
+      batch?.orderItem?.productProvider
+    );
     const orderCells = transformOrder(orderFieldDefinitions, `${index}`, batch?.orderItem?.order);
     const containerCells = transformContainer(`${index}`, batch);
     const shipmentCells = transformShipment(shipmentFieldDefinitions, `${index}`, batch);
@@ -150,6 +165,7 @@ export default function transformer({
         ...batchCells,
         ...orderItemCells,
         ...productCells,
+        ...productProviderCells,
         ...orderCells,
         ...containerCells,
         ...shipmentCells,

@@ -4,6 +4,7 @@ import type { FieldDefinition } from 'types';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import transformSheetOrder from 'modules/sheet/order/transformer';
 import transformSheetProduct from 'modules/sheet/product/transformer';
+import transformSheetProductProvider from 'modules/sheet/productProvider/transformer';
 import transformSheetOrderItem from 'modules/sheet/orderItem/transformer';
 import transformSheetBatch from 'modules/sheet/batch/transformer';
 import transformSheetShipment from 'modules/sheet/shipment/transformer';
@@ -73,6 +74,23 @@ function transformProduct(
     duplicable: true,
     disabled: !hasItems && !product,
     empty: hasItems && !product,
+    parent: true,
+  }));
+}
+
+function transformProductProvider(
+  basePath: string,
+  productProvider: Object,
+  hasItems: boolean
+): Array<CellValue> {
+  return transformSheetProductProvider({
+    basePath,
+    productProvider,
+  }).map(c => ({
+    ...c,
+    duplicable: true,
+    disabled: !hasItems && !productProvider,
+    empty: hasItems && !productProvider,
     parent: true,
   }));
 }
@@ -238,14 +256,14 @@ function transformFullBatch(
   ];
 }
 
-type Props = {
+type Props = {|
   orderFieldDefinitions: Array<FieldDefinition>,
   productFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
   intl: IntlShape,
-};
+|};
 
 export default function transformer({
   orderFieldDefinitions,
@@ -275,12 +293,18 @@ export default function transformer({
           orderItem?.productProvider?.product,
           true
         );
+        let productProviderCells = transformProductProvider(
+          `${index}.orderItems.${orderItemIdx}.productProvider`,
+          orderItem?.productProvider,
+          true
+        );
 
         if ((orderItem?.batches?.length ?? 0) > 0) {
           (orderItem?.batches ?? []).forEach((batch, batchIdx) => {
             rows.push([
               ...orderCells,
               ...productCells,
+              ...productProviderCells,
               ...orderItemCells,
               ...transformFullBatch(
                 batchFieldDefinitions,
@@ -304,6 +328,11 @@ export default function transformer({
               null,
               true
             );
+            productProviderCells = transformProductProvider(
+              `${index}.orderItems.${orderItemIdx}.productProvider`,
+              null,
+              true
+            );
           });
         } else {
           rows.push([
@@ -312,6 +341,11 @@ export default function transformer({
               productFieldDefinitions,
               `${index}.orderItems.${orderItemIdx}.productProvider.product`,
               orderItem?.productProvider?.product,
+              true
+            ),
+            ...transformProductProvider(
+              `${index}.orderItems.${orderItemIdx}.productProvider`,
+              orderItem?.productProvider,
               true
             ),
             ...transformOrderItem(
@@ -341,6 +375,7 @@ export default function transformer({
           null,
           false
         ),
+        ...transformProductProvider(`${index}.orderItems.0.productProvider`, null, false),
         ...transformOrderItem(
           orderItemFieldDefinitions,
           `${index}.orderItems.0`,

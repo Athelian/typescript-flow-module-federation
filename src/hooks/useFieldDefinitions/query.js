@@ -13,3 +13,5 @@ export const fieldDefinitionsQuery = gql`
     }
   }
 `;
+
+export default fieldDefinitionsQuery;

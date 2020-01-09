@@ -8,6 +8,7 @@ import transformSheetBatch from 'modules/sheet/batch/transformer';
 import transformSheetShipment from 'modules/sheet/shipment/transformer';
 import transformSheetContainer from 'modules/sheet/container/transformer';
 import transformSheetProduct from 'modules/sheet/product/transformer';
+import transformSheetProductProvider from 'modules/sheet/productProvider/transformer';
 import batchMessages from 'modules/sheet/batch/actions/messages';
 
 function getCurrentBatch(batchId: string, shipment: Object): ?Object {
@@ -167,14 +168,25 @@ function transformBatchOrderItemProductProviderProduct(
   }));
 }
 
-type Props = {
+function transformBatchOrderItemProductProvider(basePath: string, batch: Object): Array<CellValue> {
+  return transformSheetProductProvider({
+    basePath: `${basePath}.orderItem.productProvider`,
+    productProvider: batch?.orderItem?.productProvider ?? null,
+  }).map(c => ({
+    ...c,
+    duplicable: true,
+    disabled: !(batch?.orderItem?.productProvider ?? null),
+  }));
+}
+
+type Props = {|
   orderFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
   productFieldDefinitions: Array<FieldDefinition>,
   intl: IntlShape,
-};
+|};
 
 export default function transformer({
   orderFieldDefinitions,
@@ -211,6 +223,10 @@ export default function transformer({
         ),
         ...transformBatchOrderItemProductProviderProduct(
           productFieldDefinitions,
+          `${index}.batchesWithoutContainer.${batchIdx}`,
+          batch
+        ),
+        ...transformBatchOrderItemProductProvider(
           `${index}.batchesWithoutContainer.${batchIdx}`,
           batch
         ),
@@ -253,6 +269,10 @@ export default function transformer({
                 `${index}.containers.${containerIdx}.batches.${batchIdx}`,
                 batch
               ),
+              ...transformBatchOrderItemProductProvider(
+                `${index}.containers.${containerIdx}.batches.${batchIdx}`,
+                batch
+              ),
             ]);
 
             containerCells = transformContainer(`${index}.containers.${containerIdx}`, null, true);
@@ -283,6 +303,10 @@ export default function transformer({
               `${index}.containers.${containerIdx}.batches.-1`,
               null
             ),
+            ...transformBatchOrderItemProductProvider(
+              `${index}.containers.${containerIdx}.batches.-1`,
+              null
+            ),
           ]);
 
           shipmentCells = transformShipment(shipmentFieldDefinitions, `${index}`, null);
@@ -308,6 +332,7 @@ export default function transformer({
           `${index}.containers.-1.batches.-1`,
           null
         ),
+        ...transformBatchOrderItemProductProvider(`${index}.containers.-1.batches.-1`, null),
       ]);
     }
 
