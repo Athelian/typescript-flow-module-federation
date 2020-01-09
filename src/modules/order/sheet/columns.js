@@ -31,7 +31,6 @@ export const OrderSheetColumnGroups = [
 type Props = {|
   orderFieldDefinitions: Array<FieldDefinition>,
   productFieldDefinitions: Array<FieldDefinition>,
-  productProviderFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
@@ -40,7 +39,6 @@ type Props = {|
 export default function({
   orderFieldDefinitions,
   productFieldDefinitions,
-  productProviderFieldDefinitions,
   orderItemFieldDefinitions,
   batchFieldDefinitions,
   shipmentFieldDefinitions,
@@ -126,7 +124,7 @@ export default function({
         'productProvider.customField': 'orderItems.productProvider.customFields',
       },
       {},
-      productProviderFieldDefinitions
+      []
     ),
     ...orderItemColumns(
       {

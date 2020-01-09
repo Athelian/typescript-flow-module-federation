@@ -129,7 +129,6 @@ const BatchSheetModule = ({ batchIds }: Props) => {
   const allFieldDefinitions = {
     orderFieldDefinitions: fieldDefinitions?.Order ?? [],
     productFieldDefinitions: fieldDefinitions?.Product ?? [],
-    productProviderFieldDefinitions: fieldDefinitions?.ProductProvider ?? [],
     orderItemFieldDefinitions: fieldDefinitions?.OrderItem ?? [],
     batchFieldDefinitions: fieldDefinitions?.Batch ?? [],
     shipmentFieldDefinitions: fieldDefinitions?.Shipment ?? [],

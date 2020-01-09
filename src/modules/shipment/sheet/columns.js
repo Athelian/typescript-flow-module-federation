@@ -34,7 +34,6 @@ type Props = {|
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
   productFieldDefinitions: Array<FieldDefinition>,
-  productProviderFieldDefinitions: Array<FieldDefinition>,
 |};
 
 export default function({
@@ -43,7 +42,6 @@ export default function({
   batchFieldDefinitions,
   shipmentFieldDefinitions,
   productFieldDefinitions,
-  productProviderFieldDefinitions,
 }: Props): Array<ColumnConfig> {
   return [
     ...shipmentColumns(
@@ -522,7 +520,7 @@ export default function({
         'productProvider.customField': 'containers.batches.orderItem.productProvider.customFields',
       },
       {},
-      productProviderFieldDefinitions
+      []
     ),
     ...orderColumns(
       {

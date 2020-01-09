@@ -32,7 +32,6 @@ const getColumnsConfig = (type: string, customFields: ?Object): Array<ColumnConf
       return orderColumns({
         orderFieldDefinitions: customFields?.orderCustomFields ?? [],
         productFieldDefinitions: customFields?.productCustomFields ?? [],
-        productProviderFieldDefinitions: customFields?.productProviderCustomFields ?? [],
         orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
         batchFieldDefinitions: customFields?.batchCustomFields ?? [],
         shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
@@ -41,7 +40,6 @@ const getColumnsConfig = (type: string, customFields: ?Object): Array<ColumnConf
       return shipmentColumns({
         orderFieldDefinitions: customFields?.orderCustomFields ?? [],
         productFieldDefinitions: customFields?.productCustomFields ?? [],
-        productProviderFieldDefinitions: customFields?.productProviderCustomFields ?? [],
         orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
         batchFieldDefinitions: customFields?.batchCustomFields ?? [],
         shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
@@ -50,7 +48,6 @@ const getColumnsConfig = (type: string, customFields: ?Object): Array<ColumnConf
       return batchColumns({
         orderFieldDefinitions: customFields?.orderCustomFields ?? [],
         productFieldDefinitions: customFields?.productCustomFields ?? [],
-        productProviderFieldDefinitions: customFields?.productProviderCustomFields ?? [],
         orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
         batchFieldDefinitions: customFields?.batchCustomFields ?? [],
         shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],

@@ -29,12 +29,6 @@ function getCurrentProduct(productId: string, shipment: Object): ?Object {
     .find(o => o.id === productId);
 }
 
-function getCurrentProductProvider(productProviderId: string, shipment: Object): ?Object {
-  return [...shipment.batchesWithoutContainer, ...shipment.containers.flatMap(c => c.batches)]
-    .map(b => b.orderItem.productProvider)
-    .find(o => o.id === productProviderId);
-}
-
 function transformShipment(
   fieldDefinitions: Array<FieldDefinition>,
   basePath: string,
@@ -174,17 +168,10 @@ function transformBatchOrderItemProductProviderProduct(
   }));
 }
 
-function transformBatchOrderItemProductProvider(
-  fieldDefinitions: Array<FieldDefinition>,
-  basePath: string,
-  batch: Object
-): Array<CellValue> {
+function transformBatchOrderItemProductProvider(basePath: string, batch: Object): Array<CellValue> {
   return transformSheetProductProvider({
-    fieldDefinitions,
     basePath: `${basePath}.orderItem.productProvider`,
     productProvider: batch?.orderItem?.productProvider ?? null,
-    getProductProviderFromRoot: root =>
-      getCurrentProductProvider(batch?.orderItem?.productProvider?.product?.id, root),
   }).map(c => ({
     ...c,
     duplicable: true,
@@ -198,7 +185,6 @@ type Props = {|
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
   productFieldDefinitions: Array<FieldDefinition>,
-  productProviderFieldDefinitions: Array<FieldDefinition>,
   intl: IntlShape,
 |};
 
@@ -241,7 +227,6 @@ export default function transformer({
           batch
         ),
         ...transformBatchOrderItemProductProvider(
-          productFieldDefinitions,
           `${index}.batchesWithoutContainer.${batchIdx}`,
           batch
         ),
@@ -285,7 +270,6 @@ export default function transformer({
                 batch
               ),
               ...transformBatchOrderItemProductProvider(
-                productFieldDefinitions,
                 `${index}.containers.${containerIdx}.batches.${batchIdx}`,
                 batch
               ),
@@ -320,7 +304,6 @@ export default function transformer({
               null
             ),
             ...transformBatchOrderItemProductProvider(
-              productFieldDefinitions,
               `${index}.containers.${containerIdx}.batches.-1`,
               null
             ),
@@ -349,11 +332,7 @@ export default function transformer({
           `${index}.containers.-1.batches.-1`,
           null
         ),
-        ...transformBatchOrderItemProductProvider(
-          productFieldDefinitions,
-          `${index}.containers.-1.batches.-1`,
-          null
-        ),
+        ...transformBatchOrderItemProductProvider(`${index}.containers.-1.batches.-1`, null),
       ]);
     }
 

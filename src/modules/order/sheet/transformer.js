@@ -21,10 +21,6 @@ function getCurrentProduct(productId: string, order: Object): ?Object {
   return order.orderItems.map(oi => oi.productProvider.product).find(p => p.id === productId);
 }
 
-function getCurrentProductProvider(productProviderId: string, order: Object): ?Object {
-  return order.orderItems.map(oi => oi.productProvider).find(p => p.id === productProviderId);
-}
-
 function transformOrder(
   fieldDefinitions: Array<FieldDefinition>,
   basePath: string,
@@ -83,16 +79,13 @@ function transformProduct(
 }
 
 function transformProductProvider(
-  fieldDefinitions: Array<FieldDefinition>,
   basePath: string,
   productProvider: Object,
   hasItems: boolean
 ): Array<CellValue> {
   return transformSheetProductProvider({
-    fieldDefinitions,
     basePath,
     productProvider,
-    getProductProviderFromRoot: root => getCurrentProductProvider(productProvider?.id, root),
   }).map(c => ({
     ...c,
     duplicable: true,
@@ -266,7 +259,6 @@ function transformFullBatch(
 type Props = {|
   orderFieldDefinitions: Array<FieldDefinition>,
   productFieldDefinitions: Array<FieldDefinition>,
-  productProviderFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
@@ -276,7 +268,6 @@ type Props = {|
 export default function transformer({
   orderFieldDefinitions,
   productFieldDefinitions,
-  productProviderFieldDefinitions,
   orderItemFieldDefinitions,
   batchFieldDefinitions,
   shipmentFieldDefinitions,
@@ -303,7 +294,6 @@ export default function transformer({
           true
         );
         let productProviderCells = transformProductProvider(
-          productProviderFieldDefinitions,
           `${index}.orderItems.${orderItemIdx}.productProvider`,
           orderItem?.productProvider,
           true
@@ -339,7 +329,6 @@ export default function transformer({
               true
             );
             productProviderCells = transformProductProvider(
-              productFieldDefinitions,
               `${index}.orderItems.${orderItemIdx}.productProvider`,
               null,
               true
@@ -355,7 +344,6 @@ export default function transformer({
               true
             ),
             ...transformProductProvider(
-              productProviderFieldDefinitions,
               `${index}.orderItems.${orderItemIdx}.productProvider`,
               orderItem?.productProvider,
               true
@@ -387,12 +375,7 @@ export default function transformer({
           null,
           false
         ),
-        ...transformProductProvider(
-          productProviderFieldDefinitions,
-          `${index}.orderItems.0.productProvider`,
-          null,
-          false
-        ),
+        ...transformProductProvider(`${index}.orderItems.0.productProvider`, null, false),
         ...transformOrderItem(
           orderItemFieldDefinitions,
           `${index}.orderItems.0`,

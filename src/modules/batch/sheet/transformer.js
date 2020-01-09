@@ -61,16 +61,10 @@ function transformProduct(
   }));
 }
 
-function transformProductProvider(
-  fieldDefinitions: Array<FieldDefinition>,
-  basePath: string,
-  productProvider: Object
-): Array<CellValue> {
+function transformProductProvider(basePath: string, productProvider: Object): Array<CellValue> {
   return transformSheetProductProvider({
-    fieldDefinitions,
     basePath: `${basePath}.orderItem.productProvider`,
     productProvider,
-    getProductProviderFromRoot: root => root.orderItem.productProvider,
   }).map(c => ({
     ...c,
     duplicable: true,
@@ -134,7 +128,6 @@ function transformShipment(
 type Props = {|
   orderFieldDefinitions: Array<FieldDefinition>,
   productFieldDefinitions: Array<FieldDefinition>,
-  productProviderFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
@@ -143,7 +136,6 @@ type Props = {|
 export default function transformer({
   orderFieldDefinitions,
   productFieldDefinitions,
-  productProviderFieldDefinitions,
   orderItemFieldDefinitions,
   batchFieldDefinitions,
   shipmentFieldDefinitions,
@@ -161,7 +153,6 @@ export default function transformer({
       batch?.orderItem?.productProvider?.product
     );
     const productProviderCells = transformProductProvider(
-      productProviderFieldDefinitions,
       `${index}`,
       batch?.orderItem?.productProvider
     );
