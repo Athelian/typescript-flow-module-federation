@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Jan 06 2020 10:27:14 GMT+0900 (Japan Standard Time)
+# timestamp: Thu Jan 09 2020 16:26:44 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -29932,6 +29932,9 @@ type Mutation {
   productUpdate(id: ID!, input: ProductUpdateInput!): ProductPayload!
   productUpdateMany(products: [ProductUpdateWrapperInput!]!): [ProductPayload]!
   productDelete(id: ID!): EmptyPayload
+  productProviderCreate(input: ProductProviderCreateInput!): ProductProviderPayload!
+  productProviderUpdate(id: ID!, input: ProductProviderUpdateInput!): ProductProviderPayload!
+  productProviderDelete(id: ID!): EmptyPayload
   orderCreate(input: OrderCreateInput!): OrderPayload!
   orderUpdate(id: ID!, input: OrderUpdateInput!): OrderPayload!
   orderUpdateMany(orders: [OrderUpdateWrapperInput!]!): [OrderPayload]!
@@ -30762,7 +30765,7 @@ input ProductCreateInput {
   tagIds: [ID!]
   files: [EntityFileInput!]
   memo: String
-  productProviders: [ProductProviderCreateInput!]!
+  productProviders: [ProductProductProviderCreateInput!]!
   customFields: CustomFieldsInput
   todo: TodoInput
 }
@@ -30788,6 +30791,52 @@ type ProductPayloadPaginatedSearch implements Paginated {
   totalPage: Int!
   count: Int!
   totalCount: Int!
+}
+
+input ProductProductProviderCreateInput {
+  name: String!
+  exporterId: ID!
+  supplierId: ID
+  unitType: String
+  unitVolume: MetricValueInput
+  autoCalculateUnitVolume: Boolean
+  unitWeight: MetricValueInput
+  unitPrice: PriceInput
+  unitSize: SizeInput
+  inspectionFee: PriceInput
+  origin: Country
+  productionLeadTime: Int
+  files: [EntityFileInput!]
+  memo: String
+  defaultPackageId: ID
+  defaultPackageIndex: Int
+  packages: [ProductProviderPackageCreateInput!]!
+  customFields: CustomFieldsInput
+  todo: TodoInput
+}
+
+input ProductProductProviderUpdateInput {
+  archived: Boolean
+  name: String
+  exporterId: ID
+  supplierId: ID
+  unitType: String
+  unitVolume: MetricValueInput
+  autoCalculateUnitVolume: Boolean
+  unitWeight: MetricValueInput
+  unitPrice: PriceInput
+  unitSize: SizeInput
+  inspectionFee: PriceInput
+  origin: Country
+  productionLeadTime: Int
+  files: [EntityFileInput!]
+  memo: String
+  defaultPackageId: ID
+  defaultPackageIndex: Int
+  packages: [ProductProviderPackageUpdateInput!]
+  customFields: CustomFieldsInput
+  todo: TodoInput
+  id: ID
 }
 
 type ProductProvider implements Model & Owned & Sortable & Documented & Customizable & Memorizable {
@@ -30855,6 +30904,7 @@ input ProductProviderCreateInput {
   packages: [ProductProviderPackageCreateInput!]!
   customFields: CustomFieldsInput
   todo: TodoInput
+  productId: ID!
 }
 
 input ProductProviderFilterInput {
@@ -30934,7 +30984,6 @@ input ProductProviderSortInput {
 }
 
 input ProductProviderUpdateInput {
-  id: ID
   archived: Boolean
   name: String
   exporterId: ID
@@ -30955,6 +31004,8 @@ input ProductProviderUpdateInput {
   packages: [ProductProviderPackageUpdateInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
+  id: ID
+  productId: ID
 }
 
 input ProductSortInput {
@@ -30975,7 +31026,7 @@ input ProductUpdateInput {
   tagIds: [ID!]
   files: [EntityFileInput!]
   memo: String
-  productProviders: [ProductProviderUpdateInput!]
+  productProviders: [ProductProductProviderUpdateInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
 }

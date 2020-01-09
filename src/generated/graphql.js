@@ -11093,6 +11093,9 @@ export type Mutation = {|
   productUpdate: ProductPayload,
   productUpdateMany: Array<?ProductPayload>,
   productDelete?: ?EmptyPayload,
+  productProviderCreate: ProductProviderPayload,
+  productProviderUpdate: ProductProviderPayload,
+  productProviderDelete?: ?EmptyPayload,
   orderCreate: OrderPayload,
   orderUpdate: OrderPayload,
   orderUpdateMany: Array<?OrderPayload>,
@@ -11249,6 +11252,22 @@ export type MutationProductUpdateManyArgs = {|
 
 
 export type MutationProductDeleteArgs = {|
+  id: $ElementType<Scalars, 'ID'>
+|};
+
+
+export type MutationProductProviderCreateArgs = {|
+  input: ProductProviderCreateInput
+|};
+
+
+export type MutationProductProviderUpdateArgs = {|
+  id: $ElementType<Scalars, 'ID'>,
+  input: ProductProviderUpdateInput
+|};
+
+
+export type MutationProductProviderDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
 |};
 
@@ -12508,7 +12527,7 @@ export type ProductCreateInput = {|
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   files?: ?Array<EntityFileInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
-  productProviders: Array<ProductProviderCreateInput>,
+  productProviders: Array<ProductProductProviderCreateInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
 |};
@@ -12538,6 +12557,52 @@ export type ProductPayloadPaginatedSearch = {|
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
   |}
+|};
+
+export type ProductProductProviderCreateInput = {|
+  name: $ElementType<Scalars, 'String'>,
+  exporterId: $ElementType<Scalars, 'ID'>,
+  supplierId?: ?$ElementType<Scalars, 'ID'>,
+  unitType?: ?$ElementType<Scalars, 'String'>,
+  unitVolume?: ?MetricValueInput,
+  autoCalculateUnitVolume?: ?$ElementType<Scalars, 'Boolean'>,
+  unitWeight?: ?MetricValueInput,
+  unitPrice?: ?PriceInput,
+  unitSize?: ?SizeInput,
+  inspectionFee?: ?PriceInput,
+  origin?: ?Country,
+  productionLeadTime?: ?$ElementType<Scalars, 'Int'>,
+  files?: ?Array<EntityFileInput>,
+  memo?: ?$ElementType<Scalars, 'String'>,
+  defaultPackageId?: ?$ElementType<Scalars, 'ID'>,
+  defaultPackageIndex?: ?$ElementType<Scalars, 'Int'>,
+  packages: Array<ProductProviderPackageCreateInput>,
+  customFields?: ?CustomFieldsInput,
+  todo?: ?TodoInput,
+|};
+
+export type ProductProductProviderUpdateInput = {|
+  archived?: ?$ElementType<Scalars, 'Boolean'>,
+  name?: ?$ElementType<Scalars, 'String'>,
+  exporterId?: ?$ElementType<Scalars, 'ID'>,
+  supplierId?: ?$ElementType<Scalars, 'ID'>,
+  unitType?: ?$ElementType<Scalars, 'String'>,
+  unitVolume?: ?MetricValueInput,
+  autoCalculateUnitVolume?: ?$ElementType<Scalars, 'Boolean'>,
+  unitWeight?: ?MetricValueInput,
+  unitPrice?: ?PriceInput,
+  unitSize?: ?SizeInput,
+  inspectionFee?: ?PriceInput,
+  origin?: ?Country,
+  productionLeadTime?: ?$ElementType<Scalars, 'Int'>,
+  files?: ?Array<EntityFileInput>,
+  memo?: ?$ElementType<Scalars, 'String'>,
+  defaultPackageId?: ?$ElementType<Scalars, 'ID'>,
+  defaultPackageIndex?: ?$ElementType<Scalars, 'Int'>,
+  packages?: ?Array<ProductProviderPackageUpdateInput>,
+  customFields?: ?CustomFieldsInput,
+  todo?: ?TodoInput,
+  id?: ?$ElementType<Scalars, 'ID'>,
 |};
 
 export type ProductProvider = {|
@@ -12618,6 +12683,7 @@ export type ProductProviderCreateInput = {|
   packages: Array<ProductProviderPackageCreateInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
+  productId: $ElementType<Scalars, 'ID'>,
 |};
 
 export type ProductProviderFilterInput = {|
@@ -12707,7 +12773,6 @@ export type ProductProviderSortInput = {|
 |};
 
 export type ProductProviderUpdateInput = {|
-  id?: ?$ElementType<Scalars, 'ID'>,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   name?: ?$ElementType<Scalars, 'String'>,
   exporterId?: ?$ElementType<Scalars, 'ID'>,
@@ -12728,6 +12793,8 @@ export type ProductProviderUpdateInput = {|
   packages?: ?Array<ProductProviderPackageUpdateInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
+  id?: ?$ElementType<Scalars, 'ID'>,
+  productId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
 export type ProductSortInput = {|
@@ -12748,7 +12815,7 @@ export type ProductUpdateInput = {|
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   files?: ?Array<EntityFileInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
-  productProviders?: ?Array<ProductProviderUpdateInput>,
+  productProviders?: ?Array<ProductProductProviderUpdateInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
 |};

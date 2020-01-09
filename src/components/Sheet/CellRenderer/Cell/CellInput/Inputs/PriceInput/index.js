@@ -10,22 +10,22 @@ import {
 import SearchSelectEnumInput from '../SearchSelectEnumInput';
 
 type PriceValue = {
-  amount: number,
-  currency: string,
+  value: number,
+  metric: string,
 };
 
 const PriceInput = ({ value: priceValue, onChange, readonly }: InputProps<PriceValue>) => {
-  const { amount = 0, currency = 'USD' } = priceValue || {};
+  const { value = 0, metric = 'USD' } = priceValue || {};
   return (
     <div className={CellInputWrapperStyle}>
       <BaseNumberInput
         className={InputStyle}
-        value={amount === null ? '' : amount}
+        value={value === null ? '' : value}
         required
         onChange={e =>
           onChange({
-            amount: e.target.value,
-            currency,
+            value: e.target.value,
+            metric,
           })
         }
         disabled={readonly}
@@ -33,11 +33,11 @@ const PriceInput = ({ value: priceValue, onChange, readonly }: InputProps<PriceV
       <div className={CellDisplayWrapperStyle}>
         <SearchSelectEnumInput.Currency
           readonly={readonly}
-          value={currency}
+          value={metric}
           onChange={newCurrency =>
             onChange({
-              amount,
-              currency: newCurrency || 'USD',
+              value,
+              metric: newCurrency || 'USD',
             })
           }
           extra={{}}
