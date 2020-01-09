@@ -18,9 +18,11 @@ import sheetBatchMutation from 'modules/sheet/batch/mutation';
 import sheetContainerMutation from 'modules/sheet/container/mutation';
 import sheetShipmentMutation from 'modules/sheet/shipment/mutation';
 import sheetProductMutation from 'modules/sheet/product/mutation';
+import sheetProductProviderMutation from 'modules/sheet/productProvider/mutation';
 
 const mutations = {
   Product: sheetProductMutation,
+  ProductProvider: sheetProductProviderMutation,
   Order: sheetOrderMutation,
   OrderItem: sheetOrderItemMutation,
   Batch: sheetBatchMutation,
