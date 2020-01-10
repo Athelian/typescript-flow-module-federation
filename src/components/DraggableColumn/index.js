@@ -1,13 +1,15 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Draggable } from 'react-beautiful-dnd';
 import Icon from 'components/Icon';
 import { CheckboxInput, Label } from 'components/Form';
-import { ColumnWrapperStyle, DragHandleStyle, CheckboxWrapperStyle } from './style';
+import { ColumnWrapperStyle, DragHandleStyle, CheckboxWrapperStyle, NewLabelStyle } from './style';
 
 export type Column = {
   title: React$Node,
   hidden?: boolean,
+  isNew?: boolean,
   key: string,
 };
 
@@ -42,6 +44,11 @@ const DraggableColumn = ({ column, onToggle, index }: Props) => (
         </div>
 
         <Label height="30px">{column.title}</Label>
+        {column.isNew && (
+          <div className={NewLabelStyle}>
+            <FormattedMessage id="components.new" defaultMessage="New" />
+          </div>
+        )}
       </div>
     )}
   </Draggable>

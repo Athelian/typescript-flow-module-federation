@@ -45,3 +45,18 @@ export const DragHandleStyle = (isDragging: boolean): string => css`
 export const CheckboxWrapperStyle: string = css`
   padding: 5px 5px 5px 0;
 `;
+
+export const NewLabelStyle: string = css`
+  height: 18px;
+  margin: 6px 0;
+  font-size: 12px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: ${colors.WHITE};
+  background: rgba(17, 209, 166, 0.5);
+  border-radius: 5px;
+`;

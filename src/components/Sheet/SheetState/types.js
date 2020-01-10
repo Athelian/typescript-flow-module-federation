@@ -20,6 +20,7 @@ type Column = {|
   width: number,
   minWidth?: number,
   hidden?: boolean,
+  isNew?: boolean,
 |};
 
 export type ColumnConfig = {|
