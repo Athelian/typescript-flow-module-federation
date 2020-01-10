@@ -7,7 +7,7 @@ import { isEquals } from 'utils/fp';
 import { computeColumnConfigsFromState } from 'modules/tableTemplate/form/components/ColumnsConfigSection/helpers';
 
 type State = {|
-  columns: Array<MaskEditColumn>,
+  columns: Array<{ ...MaskEditColumn, isNew?: boolean }>,
   name: ?string,
   memo: ?string,
   type: ?string,
@@ -29,6 +29,7 @@ const defaultState: State = {
 const useTableTemplateFormContainer = (initialState: State = defaultState) => {
   const [state, setState] = React.useState(defaultState);
   const [originalState, setOriginalState] = React.useState(defaultState);
+  const columnKeys = React.useRef([]);
 
   React.useEffect(() => {
     const mergedInitialState = {
@@ -36,19 +37,23 @@ const useTableTemplateFormContainer = (initialState: State = defaultState) => {
       ...cleanUpData(initialState),
     };
 
+    columnKeys.current = mergedInitialState.columns.map(column => column.key);
+
     setOriginalState({
       ...mergedInitialState,
       columns: computeColumnConfigsFromState(mergedInitialState).flatMap(col =>
         Array.isArray(col)
           ? [
-              ...col.map(({ key, hidden }) => ({
+              ...col.map(({ key, hidden, isNew }) => ({
                 key,
                 hidden,
+                isNew,
               })),
             ]
           : {
               key: col.key,
               hidden: col.hidden,
+              isNew: col.isNew,
             }
       ),
     });
@@ -61,20 +66,23 @@ const useTableTemplateFormContainer = (initialState: State = defaultState) => {
       ...defaultState,
       ...cleanUpData(value),
     };
+    columnKeys.current = mergedState.columns.map(column => column.key);
 
     const compiledState = {
       ...mergedState,
       columns: computeColumnConfigsFromState(mergedState).flatMap(col =>
         Array.isArray(col)
           ? [
-              ...col.map(({ key, hidden }) => ({
+              ...col.map(({ key, hidden, isNew }) => ({
                 key,
                 hidden,
+                isNew,
               })),
             ]
           : {
               key: col.key,
               hidden: col.hidden,
+              isNew: col.isNew,
             }
       ),
     };
@@ -98,7 +106,10 @@ const useTableTemplateFormContainer = (initialState: State = defaultState) => {
   };
 
   const selectAllColumns = () => {
-    setState({ ...state, columns: state.columns.map(({ key }) => ({ key, hidden: false })) });
+    setState({
+      ...state,
+      columns: state.columns.map(({ key, isNew }) => ({ key, hidden: false, isNew: !!isNew })),
+    });
   };
 
   const selectColumns = (selectedColumns: Array<MaskEditColumn | Array<MaskEditColumn>>) => {
@@ -121,11 +132,17 @@ const useTableTemplateFormContainer = (initialState: State = defaultState) => {
       }
     });
 
-    setState({ ...state, columns: newColumns.map(({ key, hidden }) => ({ key, hidden })) });
+    setState({
+      ...state,
+      columns: newColumns.map(({ key, hidden, isNew }) => ({ key, hidden, isNew: !!isNew })),
+    });
   };
 
   const unselectAllColumns = () => {
-    setState({ ...state, columns: state.columns.map(({ key }) => ({ key, hidden: true })) });
+    setState({
+      ...state,
+      columns: state.columns.map(({ key, isNew }) => ({ key, hidden: true, isNew: !!isNew })),
+    });
   };
 
   const groupAllColumns = (groupedColumns: Object) => {
@@ -150,7 +167,7 @@ const useTableTemplateFormContainer = (initialState: State = defaultState) => {
           });
           return [...columns, ...hiddenColumns];
         })
-        .map(({ key, hidden }) => ({ key, hidden })),
+        .map(({ key, hidden, isNew }) => ({ key, hidden, isNew: !!isNew })),
     });
   };
 
@@ -165,6 +182,10 @@ const useTableTemplateFormContainer = (initialState: State = defaultState) => {
     selectAllColumns,
     unselectAllColumns,
     groupAllColumns,
+    getColumnKeys: () => {
+      if (columnKeys.current.length === 0) return state.columns.map(column => column.key);
+      return columnKeys.current;
+    },
   };
 };
 

@@ -68,15 +68,18 @@ const getColumnsConfig = ({
   }
 };
 
-export const computeColumnConfigsFromState = ({
-  type,
-  customFields,
-  columns,
-}: {
-  type: string,
-  customFields: Object,
-  columns: Array<Object>,
-}): Array<Column | Array<Column>> => {
+export const computeColumnConfigsFromState = (
+  {
+    type,
+    customFields,
+    columns,
+  }: {
+    type: string,
+    customFields: Object,
+    columns: Array<Object>,
+  },
+  getColumnKeys?: () => Array<string> = () => []
+): Array<Column | Array<Column>> => {
   if (type === 'ProjectSheet') {
     return computeProjectColumnConfigsFromTemplate({ columns }).map(column => ({
       title: column.title,
@@ -84,9 +87,8 @@ export const computeColumnConfigsFromState = ({
       hidden: !!column.hidden,
     }));
   }
-  console.warn({ type, customFields, columns });
   const templateColumns = getColumnsConfigured(
-    getColumnsConfig({ type, customFields, columnsKeys: columns.map(column => column.key) }),
+    getColumnsConfig({ type, customFields, columnsKeys: getColumnKeys() }),
     columns.reduce(
       (object, item) => ({
         ...object,
@@ -96,6 +98,5 @@ export const computeColumnConfigsFromState = ({
     )
   );
 
-  console.warn({ templateColumns });
   return convertMappingColumns(templateColumns);
 };
