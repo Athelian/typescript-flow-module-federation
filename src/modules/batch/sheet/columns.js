@@ -29,6 +29,7 @@ export const BatchSheetColumnGroups = [
 ];
 
 type Props = {|
+  columnsKeys: Array<string>,
   orderFieldDefinitions: Array<FieldDefinition>,
   productFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
@@ -37,6 +38,7 @@ type Props = {|
 |};
 
 export default function({
+  columnsKeys,
   orderFieldDefinitions,
   productFieldDefinitions,
   orderItemFieldDefinitions,
@@ -45,7 +47,7 @@ export default function({
 }: Props): Array<ColumnConfig> {
   return [
     ...batchColumns({
-      columnsKeys: [],
+      columnsKeys,
       exportKeys: {
         'batch.created': ['createdAt', 'createdBy'],
         'batch.updated': ['updatedAt', 'updatedBy'],
@@ -124,7 +126,7 @@ export default function({
       fieldDefinitions: batchFieldDefinitions,
     }).filter(c => !['batch.action'].includes(c.key)),
     ...orderItemColumns({
-      columnsKeys: [],
+      columnsKeys,
       exportKeys: {
         'orderItem.created': ['orderItem.createdAt', 'orderItem.createdBy'],
         'orderItem.updated': ['orderItem.updatedAt', 'orderItem.updatedBy'],
@@ -162,7 +164,7 @@ export default function({
         ].includes(c.key)
     ),
     ...productColumns({
-      columnsKeys: [],
+      columnsKeys,
       exportKeys: {
         'product.name': 'orderItem.productProvider.product.name',
         'product.serial': 'orderItem.productProvider.product.serial',
@@ -172,7 +174,7 @@ export default function({
       fieldDefinitions: productFieldDefinitions,
     }),
     ...productProviderColumns({
-      columnsKeys: [],
+      columnsKeys,
       exportKeys: {
         'productProvider.supplier': 'orderItems.productProvider.supplier.name',
         'productProvider.name': 'orderItems.productProvider.name',
@@ -185,7 +187,7 @@ export default function({
     }),
     ...orderColumns({
       // TODO: send all current column
-      columnsKeys: [],
+      columnsKeys,
       exportKeys: {
         'order.created': ['orderItem.order.createdAt', 'orderItem.order.createdBy'],
         'order.updated': ['orderItem.order.updatedAt', 'orderItem.order.updatedBy'],
@@ -227,7 +229,7 @@ export default function({
         ].includes(c.key)
     ),
     ...containerColumns({
-      columnsKeys: [],
+      columnsKeys,
       exportKeys: {
         'container.created': ['container.createdAt', 'container.createdBy'],
         'container.updated': ['container.updatedAt', 'container.updatedBy'],
@@ -275,8 +277,9 @@ export default function({
           'container.totalVolume',
         ].includes(c.key)
     ),
-    ...shipmentColumns(
-      {
+    ...shipmentColumns({
+      columnsKeys,
+      exportKeys: {
         'shipment.created': ['shipment.createdAt', 'shipment.createdBy'],
         'shipment.updated': ['shipment.updatedAt', 'shipment.updatedBy'],
         'shipment.archived': 'shipment.archived',
@@ -418,9 +421,8 @@ export default function({
         ],
         'shipment.customField': 'shipment.customFields',
       },
-      {},
-      shipmentFieldDefinitions
-    ).filter(
+      fieldDefinitions: shipmentFieldDefinitions,
+    }).filter(
       c =>
         ![
           'shipment.relatedExporters',

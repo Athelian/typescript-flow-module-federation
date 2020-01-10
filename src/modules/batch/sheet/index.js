@@ -136,7 +136,8 @@ const BatchSheetModule = ({ batchIds }: Props) => {
 
   return (
     <BatchSheetModuleImpl
-      columns={batchColumns(allFieldDefinitions)}
+      // TODO: add column keys
+      columns={batchColumns({ ...allFieldDefinitions, columnsKeys: [] })}
       transformer={batchTransformer(allFieldDefinitions)}
       batchIds={batchIds}
     />

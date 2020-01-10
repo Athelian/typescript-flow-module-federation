@@ -26,10 +26,19 @@ export const getColumnGroupTypes = (type: string): Array<string> => {
   }
 };
 
-const getColumnsConfig = (type: string, customFields: ?Object): Array<ColumnConfig> => {
+const getColumnsConfig = ({
+  type,
+  columnsKeys,
+  customFields,
+}: {
+  type: string,
+  columnsKeys: Array<string>,
+  customFields: ?Object,
+}): Array<ColumnConfig> => {
   switch (type) {
     case 'OrderSheet':
       return orderColumns({
+        columnsKeys,
         orderFieldDefinitions: customFields?.orderCustomFields ?? [],
         productFieldDefinitions: customFields?.productCustomFields ?? [],
         orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
@@ -38,6 +47,7 @@ const getColumnsConfig = (type: string, customFields: ?Object): Array<ColumnConf
       });
     case 'ShipmentSheet':
       return shipmentColumns({
+        columnsKeys,
         orderFieldDefinitions: customFields?.orderCustomFields ?? [],
         productFieldDefinitions: customFields?.productCustomFields ?? [],
         orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
@@ -46,6 +56,7 @@ const getColumnsConfig = (type: string, customFields: ?Object): Array<ColumnConf
       });
     case 'BatchSheet':
       return batchColumns({
+        columnsKeys,
         orderFieldDefinitions: customFields?.orderCustomFields ?? [],
         productFieldDefinitions: customFields?.productCustomFields ?? [],
         orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
@@ -57,17 +68,26 @@ const getColumnsConfig = (type: string, customFields: ?Object): Array<ColumnConf
   }
 };
 
-export const computeColumnConfigsFromState = (state: Object): Array<Column | Array<Column>> => {
-  if (state.type === 'ProjectSheet') {
-    return computeProjectColumnConfigsFromTemplate(state).map(column => ({
+export const computeColumnConfigsFromState = ({
+  type,
+  customFields,
+  columns,
+}: {
+  type: string,
+  customFields: Object,
+  columns: Array<Object>,
+}): Array<Column | Array<Column>> => {
+  if (type === 'ProjectSheet') {
+    return computeProjectColumnConfigsFromTemplate({ columns }).map(column => ({
       title: column.title,
       key: column.key,
       hidden: !!column.hidden,
     }));
   }
-  const columns = getColumnsConfigured(
-    getColumnsConfig(state.type, state.customFields),
-    state.columns.reduce(
+  console.warn({ type, customFields, columns });
+  const templateColumns = getColumnsConfigured(
+    getColumnsConfig({ type, customFields, columnsKeys: columns.map(column => column.key) }),
+    columns.reduce(
       (object, item) => ({
         ...object,
         [item.key]: item.hidden,
@@ -76,5 +96,6 @@ export const computeColumnConfigsFromState = (state: Object): Array<Column | Arr
     )
   );
 
-  return convertMappingColumns(columns);
+  console.warn({ templateColumns });
+  return convertMappingColumns(templateColumns);
 };
