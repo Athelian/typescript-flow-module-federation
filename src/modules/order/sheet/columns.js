@@ -44,8 +44,10 @@ export default function({
   shipmentFieldDefinitions,
 }: Props): Array<ColumnConfig> {
   return [
-    ...orderColumns(
-      {
+    ...orderColumns({
+      // TODO: send all current column
+      columnsKeys: [],
+      exportKeys: {
         'order.created': ['createdAt', 'createdBy'],
         'order.updated': ['updatedAt', 'updatedBy'],
         'order.archived': 'archived',
@@ -78,7 +80,7 @@ export default function({
         ],
         'order.customField': 'customFields',
       },
-      {
+      sort: {
         'order.created': {
           name: 'createdAt',
           group: 'order',
@@ -101,20 +103,21 @@ export default function({
           group: 'order',
         },
       },
-      orderFieldDefinitions
-    ),
-    ...productColumns(
-      {
+      fieldDefinition: orderFieldDefinitions,
+    }),
+    ...productColumns({
+      columnsKeys: [],
+      exportKeys: {
         'product.name': 'orderItems.productProvider.product.name',
         'product.serial': 'orderItems.productProvider.product.serial',
         'product.material': 'orderItems.productProvider.product.material',
         'product.customField': 'orderItems.productProvider.product.customFields',
       },
-      {},
-      productFieldDefinitions
-    ),
-    ...productProviderColumns(
-      {
+      fieldDefinitions: productFieldDefinitions,
+    }),
+    ...productProviderColumns({
+      columnsKeys: [],
+      exportKeys: {
         'productProvider.supplier': 'orderItems.productProvider.supplier.name',
         'productProvider.name': 'orderItems.productProvider.name',
         'productProvider.unitPrice': [
@@ -122,11 +125,10 @@ export default function({
           'orderItems.productProvider.unitPrice.currency',
         ],
       },
-      {},
-      []
-    ),
-    ...orderItemColumns(
-      {
+    }),
+    ...orderItemColumns({
+      columnsKeys: [],
+      exportKeys: {
         'orderItem.created': ['orderItems.createdAt', 'orderItems.createdBy'],
         'orderItem.updated': ['orderItems.updatedAt', 'orderItems.updatedBy'],
         'orderItem.archived': 'orderItems.archived',
@@ -154,7 +156,7 @@ export default function({
         ],
         'orderItem.customField': 'orderItems.customFields',
       },
-      {
+      sorts: {
         'orderItem.created': {
           local: true,
           default: true,
@@ -207,10 +209,11 @@ export default function({
           group: 'orderItem',
         },
       },
-      orderItemFieldDefinitions
-    ),
-    ...batchColumns(
-      {
+      fieldDefinitions: orderItemFieldDefinitions,
+    }),
+    ...batchColumns({
+      columnsKeys: [],
+      exportKeys: {
         'batch.created': ['orderItems.batches.createdAt', 'orderItems.batches.createdBy'],
         'batch.updated': ['orderItems.batches.updatedAt', 'orderItems.batches.updatedBy'],
         'batch.archived': 'orderItems.batches.archived',
@@ -260,7 +263,7 @@ export default function({
         ],
         'batch.customField': 'orderItems.batches.customFields',
       },
-      {
+      sorts: {
         'batch.created': {
           local: true,
           default: true,
@@ -318,10 +321,11 @@ export default function({
           group: 'batch',
         },
       },
-      batchFieldDefinitions
-    ),
-    ...containerColumns(
-      {
+      fieldDefinitions: batchFieldDefinitions,
+    }),
+    ...containerColumns({
+      columnsKeys: [],
+      exportKeys: {
         'container.created': [
           'orderItems.batches.container.createdAt',
           'orderItems.batches.container.createdBy',
@@ -365,7 +369,7 @@ export default function({
         'container.tags': 'orderItems.batches.container.tags',
         'container.memo': 'orderItems.batches.container.memo',
       },
-      {
+      sorts: {
         'container.created': {
           local: true,
           name: 'containerCreateAt',
@@ -401,8 +405,8 @@ export default function({
           name: 'containerDepartureDate',
           group: 'batch',
         },
-      }
-    ).filter(
+      },
+    }).filter(
       c =>
         ![
           'container.totalPrice',

@@ -44,8 +44,9 @@ export default function({
   shipmentFieldDefinitions,
 }: Props): Array<ColumnConfig> {
   return [
-    ...batchColumns(
-      {
+    ...batchColumns({
+      columnsKeys: [],
+      exportKeys: {
         'batch.created': ['createdAt', 'createdBy'],
         'batch.updated': ['updatedAt', 'updatedBy'],
         'batch.archived': 'archived',
@@ -89,7 +90,7 @@ export default function({
         ],
         'batch.customField': 'customFields',
       },
-      {
+      sorts: {
         'batch.created': {
           name: 'createdAt',
           group: 'batch',
@@ -120,10 +121,11 @@ export default function({
           group: 'batch',
         },
       },
-      batchFieldDefinitions
-    ).filter(c => !['batch.action'].includes(c.key)),
-    ...orderItemColumns(
-      {
+      fieldDefinitions: batchFieldDefinitions,
+    }).filter(c => !['batch.action'].includes(c.key)),
+    ...orderItemColumns({
+      columnsKeys: [],
+      exportKeys: {
         'orderItem.created': ['orderItem.createdAt', 'orderItem.createdBy'],
         'orderItem.updated': ['orderItem.updatedAt', 'orderItem.updatedBy'],
         'orderItem.archived': 'orderItem.archived',
@@ -146,9 +148,8 @@ export default function({
         ],
         'orderItem.customField': 'orderItem.customFields',
       },
-      {},
-      orderItemFieldDefinitions
-    ).filter(
+      fieldDefinitions: orderItemFieldDefinitions,
+    }).filter(
       c =>
         ![
           'orderItem.remainQuantity',
@@ -160,30 +161,32 @@ export default function({
           'orderItem.action',
         ].includes(c.key)
     ),
-    ...productColumns(
-      {
+    ...productColumns({
+      columnsKeys: [],
+      exportKeys: {
         'product.name': 'orderItem.productProvider.product.name',
         'product.serial': 'orderItem.productProvider.product.serial',
         'product.material': 'orderItem.productProvider.product.material',
         'product.customField': 'orderItem.productProvider.product.customFields',
       },
-      {},
-      productFieldDefinitions
-    ),
-    ...productProviderColumns(
-      {
-        'productProvider.supplier': 'orderItem.productProvider.supplier.name',
-        'productProvider.name': 'orderItem.productProvider.name',
+      fieldDefinitions: productFieldDefinitions,
+    }),
+    ...productProviderColumns({
+      columnsKeys: [],
+      exportKeys: {
+        'productProvider.supplier': 'orderItems.productProvider.supplier.name',
+        'productProvider.name': 'orderItems.productProvider.name',
         'productProvider.unitPrice': [
-          'orderItem.productProvider.unitPrice.amount',
-          'orderItem.productProvider.unitPrice.currency',
+          'orderItems.productProvider.unitPrice.amount',
+          'orderItems.productProvider.unitPrice.currency',
         ],
+        'productProvider.customField': 'orderItems.productProvider.customFields',
       },
-      {},
-      []
-    ),
-    ...orderColumns(
-      {
+    }),
+    ...orderColumns({
+      // TODO: send all current column
+      columnsKeys: [],
+      exportKeys: {
         'order.created': ['orderItem.order.createdAt', 'orderItem.order.createdBy'],
         'order.updated': ['orderItem.order.updatedAt', 'orderItem.order.updatedBy'],
         'order.archived': 'orderItem.order.archived',
@@ -212,9 +215,8 @@ export default function({
         ],
         'order.customField': 'orderItem.order.customFields',
       },
-      {},
-      orderFieldDefinitions
-    ).filter(
+      fieldDefinitions: orderFieldDefinitions,
+    }).filter(
       c =>
         ![
           'order.totalOrdered',
@@ -224,8 +226,9 @@ export default function({
           'order.action',
         ].includes(c.key)
     ),
-    ...containerColumns(
-      {
+    ...containerColumns({
+      columnsKeys: [],
+      exportKeys: {
         'container.created': ['container.createdAt', 'container.createdBy'],
         'container.updated': ['container.updatedAt', 'container.updatedBy'],
         'container.archived': 'container.archived',
@@ -261,8 +264,7 @@ export default function({
         'container.tags': 'container.tags',
         'container.memo': 'container.memo',
       },
-      {}
-    ).filter(
+    }).filter(
       c =>
         ![
           'container.totalPrice',

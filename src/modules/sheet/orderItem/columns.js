@@ -137,13 +137,21 @@ const columns: Array<ColumnConfig> = [
   },
 ];
 
-export default function orderItemColumns(
+export default function orderItemColumns({
+  columnsKeys,
+  exportKeys,
+  sorts = {},
+  fieldDefinitions = [],
+}: {
+  columnsKeys: Array<string>,
   exportKeys: { [string]: string | Array<string> },
-  sorts: { [string]: ColumnSortConfig },
-  fieldDefinitions: Array<FieldDefinition>
-): Array<ColumnConfig> {
+  sorts?: { [string]: ColumnSortConfig },
+  fieldDefinitions?: Array<FieldDefinition>,
+}): Array<ColumnConfig> {
   return [
-    ...populateColumns(columns, exportKeys, sorts),
+    ...populateColumns(columns, exportKeys, sorts).map(column =>
+      columnsKeys.includes(column.key) ? { ...column, isNew: false } : { ...column, isNew: true }
+    ),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `orderItem.customField.${fieldDefinition.id}`,
       exportKey:

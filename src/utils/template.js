@@ -89,6 +89,8 @@ const groupColumns = ({
     groupedColumns.push({
       ...columns[index + i],
       hidden: !!columns[index + i].hidden,
+      // TODO: detect new column
+      isNew: false,
     });
   }
   return groupedColumns;
@@ -117,6 +119,8 @@ export const convertMappingColumns = (
       mappingColumns.push({
         ...column,
         hidden: !!column.hidden,
+        // TODO: detect the new column
+        isNew: false,
       });
     }
   });
