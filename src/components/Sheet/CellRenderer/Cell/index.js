@@ -119,10 +119,13 @@ const Cell = ({
     if (!focus) {
       dispatch({
         type: Actions.FOCUS,
-        cell: { x: rowIndex, y: columnIndex },
+        cell: {
+          x: cell.merged?.from?.x ?? rowIndex,
+          y: cell.merged?.from?.y ?? columnIndex,
+        },
       });
     }
-  }, [focus, dispatch, rowIndex, columnIndex]);
+  }, [focus, dispatch, rowIndex, columnIndex, cell.merged]);
   const handleMouseDown = React.useCallback(
     (e: SyntheticEvent<HTMLDivElement>) => {
       if (!isTop) {
