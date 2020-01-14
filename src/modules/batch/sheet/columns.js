@@ -176,17 +176,15 @@ export default function({
     ...productProviderColumns({
       columnsKeys,
       exportKeys: {
-        'productProvider.supplier': 'orderItems.productProvider.supplier.name',
-        'productProvider.name': 'orderItems.productProvider.name',
+        'productProvider.supplier': 'orderItem.productProvider.supplier.name',
+        'productProvider.name': 'orderItem.productProvider.name',
         'productProvider.unitPrice': [
-          'orderItems.productProvider.unitPrice.amount',
-          'orderItems.productProvider.unitPrice.currency',
+          'orderItem.productProvider.unitPrice.amount',
+          'orderItem.productProvider.unitPrice.currency',
         ],
-        'productProvider.customField': 'orderItems.productProvider.customFields',
       },
     }),
     ...orderColumns({
-      // TODO: send all current column
       columnsKeys,
       exportKeys: {
         'order.created': ['orderItem.order.createdAt', 'orderItem.order.createdBy'],
