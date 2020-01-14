@@ -517,7 +517,6 @@ export default function({
           'containers.batches.orderItem.productProvider.unitPrice.amount',
           'containers.batches.orderItem.productProvider.unitPrice.currency',
         ],
-        'productProvider.customField': 'containers.batches.orderItem.productProvider.customFields',
       },
       {},
       []
