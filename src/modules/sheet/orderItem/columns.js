@@ -149,9 +149,10 @@ export default function orderItemColumns({
   fieldDefinitions?: Array<FieldDefinition>,
 }): Array<ColumnConfig> {
   return [
-    ...populateColumns(columns, exportKeys, sorts).map(column =>
-      columnsKeys.includes(column.key) ? { ...column, isNew: false } : { ...column, isNew: true }
-    ),
+    ...populateColumns(columns, exportKeys, sorts).map(column => ({
+      ...column,
+      isNew: !columnsKeys.includes(column.key),
+    })),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `orderItem.customField.${fieldDefinition.id}`,
       exportKey:
@@ -162,6 +163,7 @@ export default function orderItemColumns({
       icon: 'ORDER_ITEM',
       color: colors.ORDER_ITEM,
       width: ColumnWidths.Default,
+      isNew: !columnsKeys.includes(`orderItem.customField.${fieldDefinition.id}`),
     })),
     {
       key: 'orderItem.action',
@@ -169,6 +171,7 @@ export default function orderItemColumns({
       icon: 'ORDER_ITEM',
       color: colors.ORDER_ITEM,
       width: 200,
+      isNew: false,
     },
   ];
 }

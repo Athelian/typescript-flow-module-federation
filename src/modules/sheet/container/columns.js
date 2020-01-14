@@ -231,7 +231,8 @@ export default function containerColumns({
   exportKeys: { [string]: string | Array<string> },
   sorts?: { [string]: ColumnSortConfig },
 }): Array<ColumnConfig> {
-  return populateColumns(columns, exportKeys, sorts).map(column =>
-    columnsKeys.includes(column.key) ? { ...column, isNew: false } : { ...column, isNew: true }
-  );
+  return populateColumns(columns, exportKeys, sorts).map(column => ({
+    ...column,
+    isNew: !columnsKeys.includes(column.key),
+  }));
 }

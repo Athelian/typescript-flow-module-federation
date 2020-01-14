@@ -774,9 +774,10 @@ export default function shipmentColumns({
   fieldDefinitions?: Array<FieldDefinition>,
 }): Array<ColumnConfig> {
   return [
-    ...populateColumns(columns, exportKeys, sorts).map(column =>
-      columnsKeys.includes(column.key) ? { ...column, isNew: false } : { ...column, isNew: true }
-    ),
+    ...populateColumns(columns, exportKeys, sorts).map(column => ({
+      ...column,
+      isNew: !columnsKeys.includes(column.key),
+    })),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `shipment.customField.${fieldDefinition.id}`,
       exportKey:
@@ -787,6 +788,7 @@ export default function shipmentColumns({
       icon: 'SHIPMENT',
       color: colors.SHIPMENT,
       width: ColumnWidths.Default,
+      isNew: !columnsKeys.includes(`shipment.customField.${fieldDefinition.id}`),
     })),
   ];
 }

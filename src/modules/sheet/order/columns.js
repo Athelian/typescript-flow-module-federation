@@ -192,9 +192,10 @@ export default function orderColumns({
   fieldDefinitions?: Array<FieldDefinition>,
 }): Array<ColumnConfig> {
   return [
-    ...populateColumns(columns, exportKeys, sorts).map(column =>
-      columnsKeys.includes(column.key) ? { ...column, isNew: false } : { ...column, isNew: true }
-    ),
+    ...populateColumns(columns, exportKeys, sorts).map(column => ({
+      ...column,
+      isNew: !columnsKeys.includes(column.key),
+    })),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `order.customField.${fieldDefinition.id}`,
       exportKey:
@@ -205,6 +206,7 @@ export default function orderColumns({
       icon: 'ORDER',
       color: colors.ORDER,
       width: ColumnWidths.Default,
+      isNew: !columnsKeys.includes(`order.customField.${fieldDefinition.id}`),
     })),
     {
       key: 'order.action',
@@ -212,6 +214,7 @@ export default function orderColumns({
       icon: 'ORDER',
       color: colors.ORDER,
       width: 200,
+      isNew: false,
     },
   ];
 }

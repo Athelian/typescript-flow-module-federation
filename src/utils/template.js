@@ -95,6 +95,13 @@ const groupColumns = ({
   return groupedColumns;
 };
 
+export const moveNewColumnToBottom = (columns: Array<Object>): Array<Object> => {
+  return [
+    ...columns.filter(column => !column.isNew),
+    ...columns.filter(column => column.isNew).map(column => ({ ...column, hidden: true })),
+  ];
+};
+
 export const convertMappingColumns = (
   columns: Array<ColumnConfig>
 ): Array<Column | Array<Column>> => {
