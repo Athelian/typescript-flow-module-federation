@@ -104,7 +104,7 @@ export default function({
           group: 'order',
         },
       },
-      fieldDefinition: orderFieldDefinitions,
+      fieldDefinitions: orderFieldDefinitions,
     }),
     ...productColumns({
       columnsKeys,

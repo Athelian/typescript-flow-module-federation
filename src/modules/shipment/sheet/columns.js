@@ -526,7 +526,6 @@ export default function({
       },
     }),
     ...orderColumns({
-      // TODO: send all current column
       columnsKeys,
       exportKeys: {
         'order.created': [
