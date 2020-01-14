@@ -121,7 +121,6 @@ export default function({
           'orderItems.productProvider.unitPrice.amount',
           'orderItems.productProvider.unitPrice.currency',
         ],
-        'productProvider.customField': 'orderItems.productProvider.customFields',
       },
       {},
       []
