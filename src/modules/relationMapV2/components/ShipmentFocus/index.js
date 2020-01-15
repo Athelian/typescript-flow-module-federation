@@ -238,13 +238,17 @@ export default function ShipmentFocus() {
                           },
                         },
                         queryVariables
-                      );
+                      ).then((res: any) => {
+                        const moreShipments = res?.data?.shipments?.nodes ?? [];
+                        if (expandAll) {
+                          setExpandRows([
+                            ...expandRows,
+                            ...moreShipments.map(shipment => shipment?.id),
+                          ]);
+                        }
+                      });
                     };
               const entities = normalize({ shipments });
-              const expandAllRows = shipments.map(shipment => shipment?.id);
-              if (expandAll && !isEquals(expandAllRows, expandRows)) {
-                setExpandRows(expandAllRows);
-              }
               initMapping({
                 shipments,
                 entities,
