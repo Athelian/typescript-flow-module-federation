@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import type { MaskEdit, MaskEditColumn } from 'generated/graphql';
+import { diff } from 'deep-object-diff';
 import { FormattedMessage } from 'react-intl';
 import useLocalStorage from 'hooks/useLocalStorage';
 import CornerIcon from 'components/CornerIcon';
@@ -10,6 +11,7 @@ import { ApplyButton, ResetButton, BaseButton, SaveButton, IconButton } from 'co
 import { Tooltip } from 'components/Tooltip';
 import type { Column } from 'components/DraggableColumn';
 import { parseIcon } from 'utils/entity';
+import { getColumnsConfig } from 'modules/tableTemplate/form/components/ColumnsConfigSection/helpers';
 import { convertMappingColumns, flattenColumns } from 'utils/template';
 import type { ColumnConfig } from '../SheetState/types';
 import messages from '../messages';
@@ -183,7 +185,7 @@ const ColumnsConfig = ({
         const currentColumns = flattenColumns(dirtyColumns);
         const templateColumns = currentColumns.map(col => ({
           ...col,
-          hidden: false,
+          hidden: !col.isNew,
           ...(template?.columns ?? []).find(({ key }) => key === col.key),
         }));
 
@@ -207,6 +209,42 @@ const ColumnsConfig = ({
     }),
     [groupedColumns]
   );
+
+  const parseCustomFieldsFromColumn = (type: string) => {
+    const fields = columns
+      .filter(col => col.key.includes(`${type}.customField`))
+      .reduce((customFields, field) => {
+        const [, , id] = field.key.split('.');
+        return [...customFields, { id, name: field.title }];
+      }, []);
+    return fields;
+  };
+
+  const defaultColumns = () => {
+    const currentCols = flattenColumns(dirtyColumns);
+    const defaultDirtyColumns = convertMappingColumns(
+      getColumnsConfig({
+        type: templateType,
+        customFields: {
+          orderCustomFields: parseCustomFieldsFromColumn('order'),
+          productCustomFields: parseCustomFieldsFromColumn('product'),
+          orderItemCustomFields: parseCustomFieldsFromColumn('orderItem'),
+          batchCustomFields: parseCustomFieldsFromColumn('batch'),
+          shipmentCustomFields: parseCustomFieldsFromColumn('shipment'),
+        },
+        columnsKeys: columns.map(col => col.key),
+      }).map(col => ({
+        ...col,
+        hidden: currentCols.find(({ key }) => col.key === key)?.hidden ?? false,
+        isNew: false,
+      }))
+    );
+
+    if (Object.keys(diff(dirtyColumns, defaultDirtyColumns)).length > 0) {
+      currentTemplate.current = null;
+    }
+    setDirtyColumns(defaultDirtyColumns);
+  };
 
   return (
     <>
@@ -253,6 +291,16 @@ const ColumnsConfig = ({
                   <IconButton
                     onClick={handleGroup}
                     icon="BRING_FORWARD"
+                    textColor="GRAY_DARK"
+                    hoverTextColor="WHITE"
+                    backgroundColor="GRAY_SUPER_LIGHT"
+                    hoverBackgroundColor="GRAY_LIGHT"
+                  />
+                </Tooltip>
+                <Tooltip message={<FormattedMessage {...messages.columnsConfigDefaultButton} />}>
+                  <IconButton
+                    onClick={defaultColumns}
+                    icon="TABLE"
                     textColor="GRAY_DARK"
                     hoverTextColor="WHITE"
                     backgroundColor="GRAY_SUPER_LIGHT"

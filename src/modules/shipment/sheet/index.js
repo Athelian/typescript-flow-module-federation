@@ -145,8 +145,10 @@ const ShipmentSheetModule = ({ shipmentIds }: Props) => {
 
   return (
     <ShipmentSheetModuleImpl
-      // TODO: add column keys
-      columns={shipmentColumns({ ...allFieldDefinitions, columnsKeys: [] })}
+      columns={shipmentColumns({ ...allFieldDefinitions, columnsKeys: [] }).map(col => ({
+        ...col,
+        isNew: false,
+      }))}
       transformer={shipmentTransformer({ ...allFieldDefinitions, intl })}
       shipmentIds={shipmentIds}
     />

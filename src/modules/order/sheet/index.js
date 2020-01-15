@@ -139,8 +139,10 @@ const OrderSheetModule = ({ orderIds }: Props) => {
 
   return (
     <OrderSheetModuleImpl
-      // TODO: add column keys
-      columns={orderColumns({ ...allFieldDefinitions, columnsKeys: [] })}
+      columns={orderColumns({ ...allFieldDefinitions, columnsKeys: [] }).map(col => ({
+        ...col,
+        isNew: false,
+      }))}
       transformer={orderTransformer({ ...allFieldDefinitions, intl })}
       orderIds={orderIds}
     />

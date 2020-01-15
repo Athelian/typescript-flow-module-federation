@@ -181,7 +181,7 @@ const useTableTemplateFormContainer = (initialState: State = defaultState) => {
 
   const defaultColumns = () => {
     const columns = getColumnsConfig({
-      type: state.type || 'Order',
+      type: state.type || 'OrderSheet',
       customFields: state.customFields,
       columnsKeys: getColumnKeys(),
     });
