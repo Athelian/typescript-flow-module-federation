@@ -34,6 +34,17 @@ export function getColumnsConfigured(
     {}
   );
 
+  // only move columns to bottom if that is new and not exist in configuration
+  Object.entries(groupedColumns).forEach(([group]) => {
+    const sortedColumns = groupedColumns[group].filter(
+      column => !column.isNew || keysOrder.includes(column.key)
+    );
+    const newColumns = groupedColumns[group].filter(
+      column => column.isNew && !keysOrder.includes(column.key)
+    );
+    groupedColumns[group] = [...sortedColumns, ...newColumns];
+  });
+
   // $FlowFixMe: flat
   return Object.values(groupedColumns).flat();
 }

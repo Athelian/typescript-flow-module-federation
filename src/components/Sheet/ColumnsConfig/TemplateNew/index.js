@@ -42,7 +42,7 @@ const TemplateNew = ({ columns, templateType, onSave, children }: Props) => {
           <TableTemplateFormContainer.Provider
             initialState={{
               type: templateType,
-              columns: columns.map(({ key, hidden }) => ({ key, hidden })),
+              columns: columns.map(({ key, hidden }) => ({ key, hidden, isNew: false })),
               customFields,
             }}
           >
