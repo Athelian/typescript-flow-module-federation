@@ -4,7 +4,10 @@ import type { CustomFields, MaskEditColumn } from 'generated/graphql';
 import { createContainer } from 'unstated-next';
 import { cleanFalsyAndTypeName, cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
-import { computeColumnConfigsFromState } from 'modules/tableTemplate/form/components/ColumnsConfigSection/helpers';
+import {
+  getColumnsConfig,
+  computeColumnConfigsFromState,
+} from 'modules/tableTemplate/form/components/ColumnsConfigSection/helpers';
 
 type State = {|
   columns: Array<{ ...MaskEditColumn, isNew?: boolean }>,
@@ -171,6 +174,27 @@ const useTableTemplateFormContainer = (initialState: State = defaultState) => {
     });
   };
 
+  const getColumnKeys = () => {
+    if (columnKeys.current.length === 0) return state.columns.map(column => column.key);
+    return columnKeys.current;
+  };
+
+  const defaultColumns = () => {
+    const columns = getColumnsConfig({
+      type: state.type || 'Order',
+      customFields: state.customFields,
+      columnsKeys: getColumnKeys(),
+    });
+    setState({
+      ...state,
+      columns: columns.map(({ key, isNew }) => ({
+        key,
+        isNew,
+        hidden: state.columns.find(col => col.key === key)?.hidden ?? false,
+      })),
+    });
+  };
+
   return {
     state,
     originalState,
@@ -182,10 +206,8 @@ const useTableTemplateFormContainer = (initialState: State = defaultState) => {
     selectAllColumns,
     unselectAllColumns,
     groupAllColumns,
-    getColumnKeys: () => {
-      if (columnKeys.current.length === 0) return state.columns.map(column => column.key);
-      return columnKeys.current;
-    },
+    defaultColumns,
+    getColumnKeys,
   };
 };
 

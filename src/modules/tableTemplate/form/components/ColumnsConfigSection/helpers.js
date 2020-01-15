@@ -26,7 +26,7 @@ export const getColumnGroupTypes = (type: string): Array<string> => {
   }
 };
 
-const getColumnsConfig = ({
+export const getColumnsConfig = ({
   type,
   columnsKeys,
   customFields,

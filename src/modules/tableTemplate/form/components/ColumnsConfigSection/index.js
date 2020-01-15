@@ -19,6 +19,7 @@ const ColumnsConfigSection = () => {
     unselectAllColumns,
     groupAllColumns,
     getColumnKeys,
+    defaultColumns,
   } = TableTemplateFormContainer.useContainer();
 
   const parsedColumns = React.useMemo(() => computeColumnConfigsFromState(state, getColumnKeys), [
@@ -92,6 +93,18 @@ const ColumnsConfigSection = () => {
             onClick={() => groupAllColumns(groupedColumns)}
             icon="BRING_FORWARD"
             label={<FormattedMessage id="modules.TableTemplates.group" defaultMessage="GROUP" />}
+            textColor="GRAY_DARK"
+            hoverTextColor="WHITE"
+            backgroundColor="GRAY_SUPER_LIGHT"
+            hoverBackgroundColor="GRAY_LIGHT"
+          />
+
+          <BaseButton
+            onClick={defaultColumns}
+            icon="TABLE"
+            label={
+              <FormattedMessage id="modules.TableTemplates.default" defaultMessage="DEFAULT" />
+            }
             textColor="GRAY_DARK"
             hoverTextColor="WHITE"
             backgroundColor="GRAY_SUPER_LIGHT"
