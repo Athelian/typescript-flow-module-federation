@@ -13,7 +13,10 @@ export function getColumnsConfigured(
   const keysOrder = Object.keys(configuration);
 
   const orderedColumns = columns
-    .map(col => ({ ...col, hidden: !!configuration[col.key] }))
+    .map(col => ({
+      ...col,
+      hidden: !!configuration[col.key] || (col.isNew && !keysOrder.includes(col.key)),
+    }))
     .sort((a, b) => {
       const aIdx = keysOrder.indexOf(a.key);
       const bIdx = keysOrder.indexOf(b.key);

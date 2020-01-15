@@ -70,23 +70,21 @@ const TableTemplateList = ({
                 }}
                 type="EDIT_TABLE"
               />
-              {isOpen && (
-                <SlideView
-                  isOpen={isOpen}
-                  onRequestClose={() => toggle(false)}
-                  shouldConfirm={() => document.getElementById('table_template_form_save_button')}
+              <SlideView
+                isOpen={isOpen}
+                onRequestClose={() => toggle(false)}
+                shouldConfirm={() => document.getElementById('table_template_form_save_button')}
+              >
+                <TableTemplateFormContainer.Provider
+                  initialState={{ ...tableTemplate, customFields }}
                 >
-                  <TableTemplateFormContainer.Provider
-                    initialState={{ ...tableTemplate, customFields }}
-                  >
-                    <TableTemplateFormWrapper
-                      isNew={false}
-                      onSave={() => toggle(false)}
-                      onCancel={() => toggle(false)}
-                    />
-                  </TableTemplateFormContainer.Provider>
-                </SlideView>
-              )}
+                  <TableTemplateFormWrapper
+                    isNew={false}
+                    onSave={() => toggle(false)}
+                    onCancel={() => toggle(false)}
+                  />
+                </TableTemplateFormContainer.Provider>
+              </SlideView>
             </>
           )}
         </BooleanValue>

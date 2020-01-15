@@ -163,30 +163,26 @@ const TableTemplateModule = () => {
               {({ value: isOpen, set: toggle }) => (
                 <>
                   <NewButton onClick={() => toggle(true)} isLoading={customFieldsQueryIsLoading} />
-                  {isOpen && (
-                    <SlideView
-                      isOpen={isOpen}
-                      onRequestClose={() => toggle(false)}
-                      shouldConfirm={() =>
-                        document.getElementById('table_template_form_save_button')
-                      }
+                  <SlideView
+                    isOpen={isOpen}
+                    onRequestClose={() => toggle(false)}
+                    shouldConfirm={() => document.getElementById('table_template_form_save_button')}
+                  >
+                    <TableTemplateFormContainer.Provider
+                      initialState={{ type: activeType, customFields }}
                     >
-                      <TableTemplateFormContainer.Provider
-                        initialState={{ type: activeType, customFields }}
-                      >
-                        <TableTemplateFormWrapper
-                          isNew
-                          onSave={() => toggle(false)}
-                          onCancel={() => toggle(false)}
-                          onRefetch={() => {
-                            if (isTableTemplate) {
-                              refetch(tableTemplateQuery);
-                            }
-                          }}
-                        />
-                      </TableTemplateFormContainer.Provider>
-                    </SlideView>
-                  )}
+                      <TableTemplateFormWrapper
+                        isNew
+                        onSave={() => toggle(false)}
+                        onCancel={() => toggle(false)}
+                        onRefetch={() => {
+                          if (isTableTemplate) {
+                            refetch(tableTemplateQuery);
+                          }
+                        }}
+                      />
+                    </TableTemplateFormContainer.Provider>
+                  </SlideView>
                 </>
               )}
             </BooleanValue>
