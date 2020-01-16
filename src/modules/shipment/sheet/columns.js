@@ -29,7 +29,6 @@ export const ShipmentSheetColumnGroups = [
 ];
 
 type Props = {|
-  columnsKeys: Array<string>,
   orderFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
@@ -38,7 +37,6 @@ type Props = {|
 |};
 
 export default function({
-  columnsKeys,
   orderFieldDefinitions,
   orderItemFieldDefinitions,
   batchFieldDefinitions,
@@ -47,7 +45,6 @@ export default function({
 }: Props): Array<ColumnConfig> {
   return [
     ...shipmentColumns({
-      columnsKeys,
       exportKeys: {
         'shipment.created': ['createdAt', 'createdBy'],
         'shipment.updated': ['updatedAt', 'updatedBy'],
@@ -253,7 +250,6 @@ export default function({
       fieldDefinitions: shipmentFieldDefinitions,
     }),
     ...containerColumns({
-      columnsKeys,
       exportKeys: {
         'container.created': ['containers.createdAt', 'containers.createdBy'],
         'container.updated': ['containers.updatedAt', 'containers.updatedBy'],
@@ -346,7 +342,6 @@ export default function({
       },
     }),
     ...batchColumns({
-      columnsKeys,
       exportKeys: {
         'batch.created': ['containers.batches.createdAt', 'containers.batches.createdBy'],
         'batch.updated': ['containers.batches.updatedAt', 'containers.batches.updatedBy'],
@@ -458,7 +453,6 @@ export default function({
       fieldDefinitions: batchFieldDefinitions,
     }),
     ...orderItemColumns({
-      columnsKeys,
       exportKeys: {
         'orderItem.created': [
           'containers.batches.orderItem.createdAt',
@@ -505,7 +499,6 @@ export default function({
         ].includes(c.key)
     ),
     ...productColumns({
-      columnsKeys,
       exportKeys: {
         'product.name': 'containers.batches.orderItem.productProvider.product.name',
         'product.serial': 'containers.batches.orderItem.productProvider.product.serial',
@@ -515,7 +508,6 @@ export default function({
       fieldDefinitions: productFieldDefinitions,
     }),
     ...productProviderColumns({
-      columnsKeys,
       exportKeys: {
         'productProvider.supplier': 'containers.batches.orderItem.productProvider.supplier.name',
         'productProvider.name': 'containers.batches.orderItem.productProvider.name',
@@ -526,7 +518,6 @@ export default function({
       },
     }),
     ...orderColumns({
-      columnsKeys,
       exportKeys: {
         'order.created': [
           'containers.batches.orderItem.order.createdAt',

@@ -33,21 +33,16 @@ const columns: Array<ColumnConfig> = [
 ];
 
 export default function productProviderColumns({
-  columnsKeys,
   exportKeys,
   sorts = {},
   fieldDefinitions = [],
 }: {
-  columnsKeys: Array<string>,
   exportKeys: { [string]: string | Array<string> },
   sorts?: { [string]: ColumnSortConfig },
   fieldDefinitions?: Array<FieldDefinition>,
 }): Array<ColumnConfig> {
   return [
-    ...populateColumns(columns, exportKeys, sorts).map(column => ({
-      ...column,
-      isNew: !columnsKeys.includes(column.key),
-    })),
+    ...populateColumns(columns, exportKeys, sorts),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `productProvider.customField.${fieldDefinition.id}`,
       exportKey:
@@ -59,7 +54,6 @@ export default function productProviderColumns({
       icon: 'PRODUCT_PROVIDER',
       color: colors.PRODUCT_PROVIDER,
       width: ColumnWidths.Default,
-      isNew: !columnsKeys.includes(`productProvider.customField.${fieldDefinition.id}`),
     })),
   ];
 }

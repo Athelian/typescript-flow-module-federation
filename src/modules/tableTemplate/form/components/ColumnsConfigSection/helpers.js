@@ -28,17 +28,14 @@ export const getColumnGroupTypes = (type: string): Array<string> => {
 
 export const getColumnsConfig = ({
   type,
-  columnsKeys,
   customFields,
 }: {
   type: string,
-  columnsKeys: Array<string>,
   customFields: ?Object,
 }): Array<ColumnConfig> => {
   switch (type) {
     case 'OrderSheet':
       return orderColumns({
-        columnsKeys,
         orderFieldDefinitions: customFields?.orderCustomFields ?? [],
         productFieldDefinitions: customFields?.productCustomFields ?? [],
         orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
@@ -47,7 +44,6 @@ export const getColumnsConfig = ({
       });
     case 'ShipmentSheet':
       return shipmentColumns({
-        columnsKeys,
         orderFieldDefinitions: customFields?.orderCustomFields ?? [],
         productFieldDefinitions: customFields?.productCustomFields ?? [],
         orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
@@ -56,7 +52,6 @@ export const getColumnsConfig = ({
       });
     case 'BatchSheet':
       return batchColumns({
-        columnsKeys,
         orderFieldDefinitions: customFields?.orderCustomFields ?? [],
         productFieldDefinitions: customFields?.productCustomFields ?? [],
         orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
@@ -68,18 +63,15 @@ export const getColumnsConfig = ({
   }
 };
 
-export const computeColumnConfigsFromState = (
-  {
-    type,
-    customFields,
-    columns,
-  }: {
-    type: string,
-    customFields: Object,
-    columns: Array<Object>,
-  },
-  getColumnKeys?: () => Array<string> = () => []
-): Array<Column | Array<Column>> => {
+export const computeColumnConfigsFromState = ({
+  type,
+  customFields,
+  columns,
+}: {
+  type: string,
+  customFields: Object,
+  columns: Array<Object>,
+}): Array<Column | Array<Column>> => {
   if (type === 'ProjectSheet') {
     return computeProjectColumnConfigsFromTemplate({ columns }).map(column => ({
       title: column.title,
@@ -88,7 +80,7 @@ export const computeColumnConfigsFromState = (
     }));
   }
   const templateColumns = getColumnsConfigured(
-    getColumnsConfig({ type, customFields, columnsKeys: getColumnKeys() }),
+    getColumnsConfig({ type, customFields }),
     columns.reduce(
       (object, item) => ({
         ...object,

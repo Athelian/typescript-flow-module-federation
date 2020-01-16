@@ -87,7 +87,12 @@ const BatchSheetModuleImpl = ({ batchIds, columns: columnConfigs, transformer }:
 
         <Filter config={BatchFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <ColumnsConfig columns={columns} templateType="BatchSheet" onChange={setColumns}>
+        <ColumnsConfig
+          defaultColumns={columnConfigs}
+          columns={columns}
+          templateType="BatchSheet"
+          onChange={setColumns}
+        >
           {({ getGroupProps }) =>
             BatchSheetColumnGroups.map(type => <ColumnsGroup {...getGroupProps(type)} key={type} />)
           }
@@ -136,10 +141,7 @@ const BatchSheetModule = ({ batchIds }: Props) => {
 
   return (
     <BatchSheetModuleImpl
-      columns={batchColumns({ ...allFieldDefinitions, columnsKeys: [] }).map(col => ({
-        ...col,
-        isNew: false,
-      }))}
+      columns={batchColumns({ ...allFieldDefinitions })}
       transformer={batchTransformer(allFieldDefinitions)}
       batchIds={batchIds}
     />

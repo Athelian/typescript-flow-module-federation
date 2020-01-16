@@ -29,7 +29,6 @@ export const BatchSheetColumnGroups = [
 ];
 
 type Props = {|
-  columnsKeys: Array<string>,
   orderFieldDefinitions: Array<FieldDefinition>,
   productFieldDefinitions: Array<FieldDefinition>,
   orderItemFieldDefinitions: Array<FieldDefinition>,
@@ -38,7 +37,6 @@ type Props = {|
 |};
 
 export default function({
-  columnsKeys,
   orderFieldDefinitions,
   productFieldDefinitions,
   orderItemFieldDefinitions,
@@ -47,7 +45,6 @@ export default function({
 }: Props): Array<ColumnConfig> {
   return [
     ...batchColumns({
-      columnsKeys,
       exportKeys: {
         'batch.created': ['createdAt', 'createdBy'],
         'batch.updated': ['updatedAt', 'updatedBy'],
@@ -126,7 +123,6 @@ export default function({
       fieldDefinitions: batchFieldDefinitions,
     }).filter(c => !['batch.action'].includes(c.key)),
     ...orderItemColumns({
-      columnsKeys,
       exportKeys: {
         'orderItem.created': ['orderItem.createdAt', 'orderItem.createdBy'],
         'orderItem.updated': ['orderItem.updatedAt', 'orderItem.updatedBy'],
@@ -164,7 +160,6 @@ export default function({
         ].includes(c.key)
     ),
     ...productColumns({
-      columnsKeys,
       exportKeys: {
         'product.name': 'orderItem.productProvider.product.name',
         'product.serial': 'orderItem.productProvider.product.serial',
@@ -174,7 +169,6 @@ export default function({
       fieldDefinitions: productFieldDefinitions,
     }),
     ...productProviderColumns({
-      columnsKeys,
       exportKeys: {
         'productProvider.supplier': 'orderItem.productProvider.supplier.name',
         'productProvider.name': 'orderItem.productProvider.name',
@@ -185,7 +179,6 @@ export default function({
       },
     }),
     ...orderColumns({
-      columnsKeys,
       exportKeys: {
         'order.created': ['orderItem.order.createdAt', 'orderItem.order.createdBy'],
         'order.updated': ['orderItem.order.updatedAt', 'orderItem.order.updatedBy'],
@@ -227,7 +220,6 @@ export default function({
         ].includes(c.key)
     ),
     ...containerColumns({
-      columnsKeys,
       exportKeys: {
         'container.created': ['container.createdAt', 'container.createdBy'],
         'container.updated': ['container.updatedAt', 'container.updatedBy'],
@@ -276,7 +268,6 @@ export default function({
         ].includes(c.key)
     ),
     ...shipmentColumns({
-      columnsKeys,
       exportKeys: {
         'shipment.created': ['shipment.createdAt', 'shipment.createdBy'],
         'shipment.updated': ['shipment.updatedAt', 'shipment.updatedBy'],

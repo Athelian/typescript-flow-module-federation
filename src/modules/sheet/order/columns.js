@@ -181,21 +181,16 @@ const columns: Array<ColumnConfig> = [
 ];
 
 export default function orderColumns({
-  columnsKeys,
   exportKeys,
   sorts = {},
   fieldDefinitions = [],
 }: {
-  columnsKeys: Array<string>,
   exportKeys: { [string]: string | Array<string> },
   sorts?: { [string]: ColumnSortConfig },
   fieldDefinitions?: Array<FieldDefinition>,
 }): Array<ColumnConfig> {
   return [
-    ...populateColumns(columns, exportKeys, sorts).map(column => ({
-      ...column,
-      isNew: !columnsKeys.includes(column.key),
-    })),
+    ...populateColumns(columns, exportKeys, sorts),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `order.customField.${fieldDefinition.id}`,
       exportKey:
@@ -206,7 +201,6 @@ export default function orderColumns({
       icon: 'ORDER',
       color: colors.ORDER,
       width: ColumnWidths.Default,
-      isNew: !columnsKeys.includes(`order.customField.${fieldDefinition.id}`),
     })),
     {
       key: 'order.action',

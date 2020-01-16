@@ -174,16 +174,10 @@ const useTableTemplateFormContainer = (initialState: State = defaultState) => {
     });
   };
 
-  const getColumnKeys = () => {
-    if (columnKeys.current.length === 0) return state.columns.map(column => column.key);
-    return columnKeys.current;
-  };
-
   const defaultColumns = () => {
     const columns = getColumnsConfig({
       type: state.type || 'OrderSheet',
       customFields: state.customFields,
-      columnsKeys: getColumnKeys(),
     });
     setState({
       ...state,
@@ -207,7 +201,6 @@ const useTableTemplateFormContainer = (initialState: State = defaultState) => {
     unselectAllColumns,
     groupAllColumns,
     defaultColumns,
-    getColumnKeys,
   };
 };
 

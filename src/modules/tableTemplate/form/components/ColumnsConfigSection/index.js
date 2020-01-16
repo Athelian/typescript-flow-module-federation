@@ -18,14 +18,10 @@ const ColumnsConfigSection = () => {
     selectAllColumns,
     unselectAllColumns,
     groupAllColumns,
-    getColumnKeys,
     defaultColumns,
   } = TableTemplateFormContainer.useContainer();
 
-  const parsedColumns = React.useMemo(() => computeColumnConfigsFromState(state, getColumnKeys), [
-    getColumnKeys,
-    state,
-  ]);
+  const parsedColumns = React.useMemo(() => computeColumnConfigsFromState(state), [state]);
 
   const groupedColumns = React.useMemo(
     () =>

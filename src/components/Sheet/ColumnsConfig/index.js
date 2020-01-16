@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import type { MaskEdit, MaskEditColumn } from 'generated/graphql';
-import { diff } from 'deep-object-diff';
 import { FormattedMessage } from 'react-intl';
 import useLocalStorage from 'hooks/useLocalStorage';
 import CornerIcon from 'components/CornerIcon';
@@ -11,9 +10,9 @@ import { ApplyButton, ResetButton, BaseButton, SaveButton, IconButton } from 'co
 import { Tooltip } from 'components/Tooltip';
 import type { Column } from 'components/DraggableColumn';
 import { parseIcon } from 'utils/entity';
-import { getColumnsConfig } from 'modules/tableTemplate/form/components/ColumnsConfigSection/helpers';
 import { convertMappingColumns, flattenColumns } from 'utils/template';
 import type { ColumnConfig } from '../SheetState/types';
+import { getColumnsConfigured } from '../useColumns';
 import messages from '../messages';
 import TemplateSelector from './TemplateSelector';
 import TemplateNew from './TemplateNew';
@@ -29,6 +28,7 @@ import {
 } from './style';
 
 type Props = {
+  defaultColumns: Array<ColumnConfig>,
   columns: Array<ColumnConfig>,
   templateType: string,
   onChange: (Array<ColumnConfig>) => void,
@@ -46,6 +46,7 @@ type Props = {
 };
 
 const ColumnsConfig = ({
+  defaultColumns,
   columns,
   templateType,
   onChange,
@@ -95,7 +96,7 @@ const ColumnsConfig = ({
       const selectedColumns = flattenColumns(dirtyColumns);
       const applyColumns: Array<ColumnConfig> = [];
       selectedColumns.forEach(col => {
-        const existColumn = columns.find(({ key }) => key === col.key);
+        const existColumn = defaultColumns.find(({ key }) => key === col.key);
         if (existColumn) {
           applyColumns.push({
             ...existColumn,
@@ -150,6 +151,7 @@ const ColumnsConfig = ({
       )
     );
   };
+
   const handleGroup = () => {
     currentTemplate.current = null;
     setDirtyColumns(
@@ -182,16 +184,33 @@ const ColumnsConfig = ({
       if (onLoadTemplate) {
         setDirtyColumns(convertMappingColumns(onLoadTemplate(template)));
       } else {
-        const currentColumns = flattenColumns(dirtyColumns);
-        const templateColumns = currentColumns.map(col => ({
-          ...col,
-          hidden: !col.isNew,
-          ...(template?.columns ?? []).find(({ key }) => key === col.key),
-        }));
+        const templateColumns = getColumnsConfigured(
+          defaultColumns,
+          template.columns.reduce(
+            (config, col) => ({
+              ...config,
+              [col.key]: col.hidden,
+            }),
+            {}
+          )
+        );
 
         setDirtyColumns(convertMappingColumns(templateColumns));
       }
     }
+  };
+
+  const handleDefault = () => {
+    currentTemplate.current = null;
+    const currentColumns = flattenColumns(dirtyColumns);
+    setDirtyColumns(
+      convertMappingColumns(
+        defaultColumns.map(col => ({
+          ...col,
+          hidden: currentColumns.find(({ key }) => col.key === key)?.hidden ?? false,
+        }))
+      )
+    );
   };
 
   const getGroupProps = React.useCallback(
@@ -209,42 +228,6 @@ const ColumnsConfig = ({
     }),
     [groupedColumns]
   );
-
-  const parseCustomFieldsFromColumn = (type: string) => {
-    const fields = columns
-      .filter(col => col.key.includes(`${type}.customField`))
-      .reduce((customFields, field) => {
-        const [, , id] = field.key.split('.');
-        return [...customFields, { id, name: field.title }];
-      }, []);
-    return fields;
-  };
-
-  const defaultColumns = () => {
-    const currentCols = flattenColumns(dirtyColumns);
-    const defaultDirtyColumns = convertMappingColumns(
-      getColumnsConfig({
-        type: templateType,
-        customFields: {
-          orderCustomFields: parseCustomFieldsFromColumn('order'),
-          productCustomFields: parseCustomFieldsFromColumn('product'),
-          orderItemCustomFields: parseCustomFieldsFromColumn('orderItem'),
-          batchCustomFields: parseCustomFieldsFromColumn('batch'),
-          shipmentCustomFields: parseCustomFieldsFromColumn('shipment'),
-        },
-        columnsKeys: columns.map(col => col.key),
-      }).map(col => ({
-        ...col,
-        hidden: currentCols.find(({ key }) => col.key === key)?.hidden ?? false,
-        isNew: false,
-      }))
-    );
-
-    if (Object.keys(diff(dirtyColumns, defaultDirtyColumns)).length > 0) {
-      currentTemplate.current = null;
-    }
-    setDirtyColumns(defaultDirtyColumns);
-  };
 
   return (
     <>
@@ -299,7 +282,7 @@ const ColumnsConfig = ({
                 </Tooltip>
                 <Tooltip message={<FormattedMessage {...messages.columnsConfigDefaultButton} />}>
                   <IconButton
-                    onClick={defaultColumns}
+                    onClick={handleDefault}
                     icon="TABLE"
                     textColor="GRAY_DARK"
                     hoverTextColor="WHITE"

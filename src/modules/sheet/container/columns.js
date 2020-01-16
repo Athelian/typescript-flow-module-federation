@@ -223,16 +223,11 @@ const columns: Array<ColumnConfig> = [
 ];
 
 export default function containerColumns({
-  columnsKeys,
   exportKeys,
   sorts = {},
 }: {
-  columnsKeys: Array<string>,
   exportKeys: { [string]: string | Array<string> },
   sorts?: { [string]: ColumnSortConfig },
 }): Array<ColumnConfig> {
-  return populateColumns(columns, exportKeys, sorts).map(column => ({
-    ...column,
-    isNew: !columnsKeys.includes(column.key),
-  }));
+  return populateColumns(columns, exportKeys, sorts);
 }

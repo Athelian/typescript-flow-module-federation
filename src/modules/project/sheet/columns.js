@@ -356,6 +356,11 @@ export function generateMilestoneTaskColumns(
   return columns;
 }
 
+export const defaultColumns = [
+  ...projectColumns,
+  ...generateMilestoneTaskColumns(milestoneColumns('#'), 4, taskColumns('#', '#'), 5),
+];
+
 export function computeProjectColumnConfigsFromTemplate(template: Object): Array<ColumnConfig> {
   const {
     milestoneColumnsTemplate,
@@ -454,10 +459,7 @@ function useProjectColumns(cacheKey: string): [Array<ColumnConfig>, (Array<Colum
 
   function getColumns() {
     if (!currentColumns) {
-      let value = [
-        ...projectColumns,
-        ...generateMilestoneTaskColumns(milestoneColumns('#'), 4, taskColumns('#', '#'), 5),
-      ];
+      let value = defaultColumns;
 
       if (cacheKey) {
         const cache = getColumnsCache(cacheKey);

@@ -89,7 +89,12 @@ const OrderSheetModuleImpl = ({ orderIds, columns: columnConfigs, transformer }:
 
         <Filter config={OrderFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <ColumnsConfig columns={columns} templateType="OrderSheet" onChange={setColumns}>
+        <ColumnsConfig
+          defaultColumns={columnConfigs}
+          columns={columns}
+          templateType="OrderSheet"
+          onChange={setColumns}
+        >
           {({ getGroupProps }) =>
             OrderSheetColumnGroups.map(type => <ColumnsGroup {...getGroupProps(type)} key={type} />)
           }
@@ -139,10 +144,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
 
   return (
     <OrderSheetModuleImpl
-      columns={orderColumns({ ...allFieldDefinitions, columnsKeys: [] }).map(col => ({
-        ...col,
-        isNew: false,
-      }))}
+      columns={orderColumns({ ...allFieldDefinitions })}
       transformer={orderTransformer({ ...allFieldDefinitions, intl })}
       orderIds={orderIds}
     />

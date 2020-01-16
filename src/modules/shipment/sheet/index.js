@@ -93,7 +93,12 @@ const ShipmentSheetModuleImpl = ({
 
         <Filter config={ShipmentFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <ColumnsConfig columns={columns} templateType="ShipmentSheet" onChange={setColumns}>
+        <ColumnsConfig
+          defaultColumns={columnConfigs}
+          columns={columns}
+          templateType="ShipmentSheet"
+          onChange={setColumns}
+        >
           {({ getGroupProps }) =>
             ShipmentSheetColumnGroups.map(type => (
               <ColumnsGroup {...getGroupProps(type)} key={type} />
@@ -145,10 +150,7 @@ const ShipmentSheetModule = ({ shipmentIds }: Props) => {
 
   return (
     <ShipmentSheetModuleImpl
-      columns={shipmentColumns({ ...allFieldDefinitions, columnsKeys: [] }).map(col => ({
-        ...col,
-        isNew: false,
-      }))}
+      columns={shipmentColumns({ ...allFieldDefinitions })}
       transformer={shipmentTransformer({ ...allFieldDefinitions, intl })}
       shipmentIds={shipmentIds}
     />

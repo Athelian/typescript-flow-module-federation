@@ -15,9 +15,18 @@ export function getColumnsConfigured(
   const orderedColumns = columns
     .map(col => ({
       ...col,
-      hidden: !!configuration[col.key] || (col.isNew && !keysOrder.includes(col.key)),
+      isNew: !keysOrder.includes(col.key),
+      hidden: !!configuration[col.key] || !keysOrder.includes(col.key),
     }))
     .sort((a, b) => {
+      if (a.isNew && !b.isNew) {
+        return 1;
+      }
+
+      if (!a.isNew && b.isNew) {
+        return -1;
+      }
+
       const aIdx = keysOrder.indexOf(a.key);
       const bIdx = keysOrder.indexOf(b.key);
       if (aIdx > bIdx) {
@@ -36,17 +45,6 @@ export function getColumnsConfigured(
     }),
     {}
   );
-
-  // only move columns to bottom if that is new and not exist in configuration
-  Object.entries(groupedColumns).forEach(([group]) => {
-    const sortedColumns = groupedColumns[group].filter(
-      column => !column.isNew || keysOrder.includes(column.key)
-    );
-    const newColumns = groupedColumns[group].filter(
-      column => column.isNew && !keysOrder.includes(column.key)
-    );
-    groupedColumns[group] = [...sortedColumns, ...newColumns];
-  });
 
   // $FlowFixMe: flat
   return Object.values(groupedColumns).flat();
