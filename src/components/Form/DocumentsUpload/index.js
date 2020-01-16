@@ -72,6 +72,7 @@ const SELECTED_FIELDS = [
   'memo',
   'entity',
   'ownedBy',
+  'orphan',
   '__typename',
 ];
 
@@ -371,8 +372,10 @@ const DocumentsUpload = ({
       >
         {selectedFile && (
           <DocumentFormSideView
-            // new uploaded file or orphan file won't have the parent entity then it consider as new
-            isNew={!selectedFile.entity?.id}
+            isNew={
+              !selectedFile.entity?.id &&
+              !Object.prototype.hasOwnProperty.call(selectedFile, 'orphan')
+            }
             file={selectedFile}
             onSave={updatedFile => {
               onSave(files.map(file => (file.id === updatedFile.id ? updatedFile : file)));
