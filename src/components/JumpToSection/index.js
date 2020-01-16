@@ -17,11 +17,6 @@ type State = {
 class JumpToSection extends React.Component<Props, State> {
   isMountedOnDOM = false;
 
-  static defaultProps = {
-    rootViewPort: null,
-    threshold: [0, 1],
-  };
-
   state = {
     activeNode: null,
     ratio: 0,
@@ -30,6 +25,11 @@ class JumpToSection extends React.Component<Props, State> {
   io: IntersectionObserver;
 
   elements: Array<string> = [];
+
+  static defaultProps = {
+    rootViewPort: null,
+    threshold: [0, 1],
+  };
 
   componentDidMount() {
     this.isMountedOnDOM = true;
