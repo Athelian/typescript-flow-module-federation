@@ -371,6 +371,8 @@ const DocumentsUpload = ({
       >
         {selectedFile && (
           <DocumentFormSideView
+            // new uploaded file or orphan file won't have the parent entity then it consider as new
+            isNew={!selectedFile.entity?.id}
             file={selectedFile}
             onSave={updatedFile => {
               onSave(files.map(file => (file.id === updatedFile.id ? updatedFile : file)));

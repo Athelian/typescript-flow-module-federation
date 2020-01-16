@@ -9,10 +9,11 @@ import validator from 'modules/document/form/validator';
 import DocumentFormContainer from 'modules/document/form/container';
 import DocumentForm from 'modules/document/form';
 
-type Props = {
+type Props = {|
+  isNew: boolean,
   onSave: Object => void,
   file: FilePayload,
-};
+|};
 
 const formContainer = new FormContainer();
 
@@ -31,12 +32,12 @@ const DocumentFormImpl = ({
       resetState={resetState}
       isSlideView
       handleSave={() => onSave(state)}
-      documentId={encodeId(documentId)}
+      documentId={documentId}
     />
   );
 };
 
-const DocumentFormSlideView = ({ onSave, file }: Props) => {
+const DocumentFormSlideView = ({ onSave, file, isNew }: Props) => {
   React.useEffect(() => {
     return () => {
       formContainer.onReset();
@@ -47,7 +48,7 @@ const DocumentFormSlideView = ({ onSave, file }: Props) => {
     <Provider inject={[formContainer]}>
       <DocumentFormContainer.Provider initialState={file}>
         <SlideViewLayout>
-          <DocumentFormImpl onSave={onSave} documentId={file.id} />
+          <DocumentFormImpl onSave={onSave} documentId={!isNew ? encodeId(file.id) : ''} />
         </SlideViewLayout>
       </DocumentFormContainer.Provider>
     </Provider>
