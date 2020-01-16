@@ -88,7 +88,6 @@ const DocumentsUpload = ({
 }: Props) => {
   const intl = useIntl();
   const [selectedFile, setSelectedFile] = React.useState(null);
-  const [addedDocuments, setAddedDocuments] = React.useState([]);
   const [upload] = useMutation(fileUploadMutation);
   const [filesState, setFileState] = React.useState<
     Array<{
@@ -245,7 +244,6 @@ const DocumentsUpload = ({
                     <DocumentsSelector
                       onCancel={() => setDocumentsSelectorIsOpen(false)}
                       onSelect={selectedFiles => {
-                        setAddedDocuments([...addedDocuments, ...selectedFiles]);
                         onSave([
                           ...files,
                           ...selectedFiles.map(file => ({
@@ -255,7 +253,7 @@ const DocumentsUpload = ({
                         ]);
                         setDocumentsSelectorIsOpen(false);
                       }}
-                      alreadyAddedDocuments={addedDocuments}
+                      alreadyAddedDocuments={files}
                     />
                   </SlideView>
                 </>
@@ -303,9 +301,6 @@ const DocumentsUpload = ({
                                     hoverColor="RED"
                                     onClick={evt => {
                                       evt.stopPropagation();
-                                      setAddedDocuments(
-                                        addedDocuments.filter(item => item?.id !== file?.id)
-                                      );
                                       onSave(files.filter(item => item?.id !== file?.id));
                                     }}
                                   />
