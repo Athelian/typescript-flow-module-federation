@@ -226,13 +226,14 @@ export default function OrderFocus() {
                           },
                         },
                         queryVariables
-                      );
+                      ).then((res: any) => {
+                        const moreOrders = res?.data?.orders?.nodes ?? [];
+                        if (expandAll) {
+                          setExpandRows([...expandRows, ...moreOrders.map(order => order?.id)]);
+                        }
+                      });
                     };
               const entities = normalize({ orders });
-              const expandAllRows = orders.map(order => order?.id);
-              if (expandAll && !isEquals(expandAllRows, expandRows)) {
-                setExpandRows(expandAllRows);
-              }
               initMapping({
                 orders,
                 entities,
