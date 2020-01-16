@@ -335,7 +335,7 @@ function ItemsArea({
                         >
                           {opened && (
                             <ItemFormInSlide
-                              isNew={item.id.includes('-')}
+                              isNew={!item.updatedAt}
                               orderItem={{ ...item, order }}
                               onSave={updateItem => {
                                 itemSlideToggle(false);

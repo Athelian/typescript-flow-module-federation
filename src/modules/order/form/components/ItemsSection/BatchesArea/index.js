@@ -153,7 +153,7 @@ const Cell = React.memo(
             >
               {opened && (
                 <BatchFormInSlide
-                  isNew={batch.id.includes('-')}
+                  isNew={!batch.updatedAt}
                   batch={{
                     ...batch,
                     orderItem: {

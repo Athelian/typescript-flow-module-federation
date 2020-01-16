@@ -142,7 +142,7 @@ function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
                             >
                               {opened && (
                                 <BatchFormInSlide
-                                  isNew={batch.id.includes('-')}
+                                  isNew={!batch.updatedAt}
                                   batch={batch}
                                   onSave={value => {
                                     batchSlideToggle(false);
