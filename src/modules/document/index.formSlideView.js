@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { Provider } from 'unstated';
 import type { FilePayload } from 'generated/graphql';
+import { encodeId } from 'utils/id';
 import { FormContainer } from 'modules/form';
 import { SlideViewLayout } from 'components/Layout';
 import validator from 'modules/document/form/validator';
@@ -15,7 +16,13 @@ type Props = {
 
 const formContainer = new FormContainer();
 
-const DocumentFormImpl = ({ onSave }: { onSave: Object => void }) => {
+const DocumentFormImpl = ({
+  onSave,
+  documentId,
+}: {
+  onSave: Object => void,
+  documentId: string,
+}) => {
   const { state, isDirty, resetState } = DocumentFormContainer.useContainer();
   return (
     <DocumentForm
@@ -24,6 +31,7 @@ const DocumentFormImpl = ({ onSave }: { onSave: Object => void }) => {
       resetState={resetState}
       isSlideView
       handleSave={() => onSave(state)}
+      documentId={encodeId(documentId)}
     />
   );
 };
@@ -39,7 +47,7 @@ const DocumentFormSlideView = ({ onSave, file }: Props) => {
     <Provider inject={[formContainer]}>
       <DocumentFormContainer.Provider initialState={file}>
         <SlideViewLayout>
-          <DocumentFormImpl onSave={onSave} />
+          <DocumentFormImpl onSave={onSave} documentId={file.id} />
         </SlideViewLayout>
       </DocumentFormContainer.Provider>
     </Provider>

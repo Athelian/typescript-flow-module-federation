@@ -2,25 +2,30 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
+import { BooleanValue } from 'react-values';
 import { isEquals } from 'utils/fp';
 import ContainerForm from 'modules/container/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
-import { EntityIcon } from 'components/NavBar';
+import { EntityIcon, LogsButton } from 'components/NavBar';
+import SlideView from 'components/SlideView';
+import Timeline from 'modules/timeline/components/Timeline';
 import ResetFormButton from 'components/ResetFormButton';
 import SaveFormButton from 'components/SaveFormButton';
 import {
   ContainerInfoContainer,
   ContainerBatchesContainer,
 } from 'modules/container/form/containers';
+import { containerTimelineQuery } from 'modules/container/query';
 import validator from 'modules/container/form/validator';
 
-type Props = {
+type Props = {|
   container: Object,
   onSave: Function,
-};
+  isNew: boolean,
+|};
 
 const formContainer = new FormContainer();
 const infoContainer = new ContainerInfoContainer();
@@ -45,7 +50,7 @@ class ContainerFormInSlide extends React.Component<Props> {
   }
 
   render() {
-    const { container, onSave } = this.props;
+    const { container, onSave, isNew } = this.props;
     return (
       <Provider inject={[formContainer, infoContainer, batchesContainer]}>
         <SlideViewLayout>
@@ -70,6 +75,43 @@ class ContainerFormInSlide extends React.Component<Props> {
                 icon="ORDER"
               />
             </JumpToSection>
+            <BooleanValue>
+              {({ value: opened, set: slideToggle }) =>
+                !isNew && (
+                  <>
+                    <LogsButton
+                      entityType="container"
+                      entityId={container.id}
+                      onClick={() => slideToggle(true)}
+                    />
+                    <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                      <SlideViewLayout>
+                        {opened && (
+                          <>
+                            <SlideViewNavBar>
+                              <EntityIcon icon="LOGS" color="LOGS" />
+                            </SlideViewNavBar>
+
+                            <Content>
+                              <Timeline
+                                query={containerTimelineQuery}
+                                queryField="container"
+                                variables={{
+                                  id: container.id,
+                                }}
+                                entity={{
+                                  containerId: container.id,
+                                }}
+                              />
+                            </Content>
+                          </>
+                        )}
+                      </SlideViewLayout>
+                    </SlideView>
+                  </>
+                )
+              }
+            </BooleanValue>
             <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
               {(containerInfoContainer, containerBatchesContainer) =>
                 (containerInfoContainer.isDirty() || containerBatchesContainer.isDirty()) && (

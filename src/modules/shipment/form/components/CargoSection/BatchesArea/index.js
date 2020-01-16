@@ -357,6 +357,7 @@ function BatchesArea({
                                   >
                                     {opened && (
                                       <BatchFormInSlide
+                                        isNew={batch.id.includes('-')}
                                         batch={batch}
                                         onSave={value => {
                                           batchSlideToggle(false);

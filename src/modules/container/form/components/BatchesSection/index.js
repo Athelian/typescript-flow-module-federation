@@ -287,6 +287,7 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId, exporter
                               >
                                 {opened && (
                                   <BatchFormInSlide
+                                    isNew={batch.id.includes('-')}
                                     batch={batch}
                                     onSave={value => {
                                       batchSlideToggle(false);

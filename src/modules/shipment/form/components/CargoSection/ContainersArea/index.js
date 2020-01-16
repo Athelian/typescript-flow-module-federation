@@ -540,6 +540,7 @@ function ContainersArea({
                                     >
                                       {isOpenContainerForm && (
                                         <ContainerFormInSlide
+                                          isNew={container.id.includes('-')}
                                           container={{
                                             ...container,
                                             shipment: container.shipment
