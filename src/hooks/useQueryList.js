@@ -72,14 +72,8 @@ export default function useQueryList<TNode, TData, TVariable>(
       },
     }).catch(err => {
       trackingError(err);
-      toast.error(
-        intl.formatMessage({
-          id: 'global.apiErrorMessage',
-          defaultMessage: 'There was an error. Please try again later.',
-        })
-      );
     });
-  }, [intl, fetchMore, options, resultPath, page]);
+  }, [fetchMore, options, resultPath, page]);
 
   return { nodes, loading, hasMore: page < totalPage, loadMore };
 }
