@@ -68,6 +68,7 @@ const SELECTED_FIELDS = [
   'type',
   'name',
   'path',
+  'size',
   'status',
   'memo',
   'entity',
