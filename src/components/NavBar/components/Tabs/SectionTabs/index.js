@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
+import { Tooltip } from 'components/Tooltip';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
+import { WrapperStyle } from './style';
 
 type Props = {|
   label: React.Node,
@@ -19,14 +21,17 @@ const SectionTabs = ({
   active = false,
   onClick = () => {},
 }: Props) => {
-  return (
-    <TabItem
-      icon={icon}
-      label={link && active ? label : ''}
-      disabled={disabled}
-      active={active}
-      onClick={onClick}
-    />
+  const showLabel = link && active;
+  return showLabel ? (
+    <div className={WrapperStyle(true)}>
+      <TabItem icon={icon} label={label} disabled={disabled} active={active} onClick={onClick} />
+    </div>
+  ) : (
+    <Tooltip message={label}>
+      <div className={WrapperStyle(false)}>
+        <TabItem icon={icon} label="" disabled={disabled} active={active} onClick={onClick} />
+      </div>
+    </Tooltip>
   );
 };
 

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import logger from 'utils/logger';
+// import { WrapperStyle } from './style';
 
 type Props = {
   children: React.Node,
@@ -115,17 +116,10 @@ class JumpToSection extends React.Component<Props, State> {
   handleClick = (id: string) => {
     const node = document.querySelector(`#${id}`);
     if (node) {
-      this.setState(
-        {
-          activeNode: id,
-        },
-        () => {
-          scrollIntoView(node, {
-            behavior: 'smooth',
-            scrollMode: 'if-needed',
-          });
-        }
-      );
+      scrollIntoView(node, {
+        behavior: 'smooth',
+        scrollMode: 'if-needed',
+      });
     }
   };
 
