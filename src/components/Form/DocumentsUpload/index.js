@@ -372,6 +372,8 @@ const DocumentsUpload = ({
       >
         {selectedFile && (
           <DocumentFormSideView
+            // NOTE: orphan is only queried from selector
+            // that is using for checking the exist file from selector, consider refactor if that finds a simpler way
             isNew={
               !selectedFile.entity?.id &&
               !Object.prototype.hasOwnProperty.call(selectedFile, 'orphan')
