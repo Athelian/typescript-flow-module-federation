@@ -4,12 +4,12 @@ import { FormattedMessage } from 'react-intl';
 import { Draggable } from 'react-beautiful-dnd';
 import Icon from 'components/Icon';
 import { CheckboxInput, Label } from 'components/Form';
+import type { ColumnConfig } from 'components/Sheet';
 import { ColumnWrapperStyle, DragHandleStyle } from '../DraggableColumn/style';
-import type { Column } from '../DraggableColumn';
 import { InnerColumnsWrapperStyle, InnerColumnStyle, NewLabelStyle } from './style';
 
 type Props = {|
-  columns: Array<Column>,
+  columns: Array<ColumnConfig>,
   onToggle: (key: string) => void,
   index: number,
 |};

@@ -1,31 +1,24 @@
 // @flow
 import * as React from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import type { Column } from 'components/DraggableColumn';
 import SlideView from 'components/SlideView';
-import LoadingIcon from 'components/LoadingIcon';
-import TableTemplateFormWrapper from 'modules/tableTemplate/common/TableTemplateFormWrapper';
+import type { ColumnConfig } from 'components/Sheet';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
-import { allCustomFieldDefinitionsQuery } from 'modules/tableTemplate/list/query';
+import { TableTemplateForm } from 'modules/tableTemplate/form';
 
 type RenderProps = {
   onClick: () => void,
 };
 
 type Props = {
-  columns: Array<Column>,
+  columns: Array<ColumnConfig>,
+  defaultColumns: Array<ColumnConfig>,
   templateType: string,
   onSave: Object => void,
   children: RenderProps => React.Node,
 };
 
-const TemplateNew = ({ columns, templateType, onSave, children }: Props) => {
+const TemplateNew = ({ columns, defaultColumns, templateType, onSave, children }: Props) => {
   const [open, setOpen] = React.useState(false);
-
-  const {
-    data: customFields,
-    loading: customFieldsQueryIsLoading,
-  } = useQuery(allCustomFieldDefinitionsQuery, { fetchPolicy: 'network-only' });
 
   return (
     <>
@@ -36,26 +29,23 @@ const TemplateNew = ({ columns, templateType, onSave, children }: Props) => {
         onRequestClose={() => setOpen(false)}
         shouldConfirm={() => document.getElementById('table_template_form_save_button')}
       >
-        {customFieldsQueryIsLoading ? (
-          <LoadingIcon />
-        ) : (
-          <TableTemplateFormContainer.Provider
-            initialState={{
-              type: templateType,
-              columns: columns.map(({ key, hidden }) => ({ key, hidden, isNew: false })),
-              customFields,
+        <TableTemplateFormContainer.Provider
+          initialState={{
+            type: templateType,
+            defaultColumns,
+            tableTemplate: {
+              columns: columns.map(({ key, hidden }) => ({ key, hidden })),
+            },
+          }}
+        >
+          <TableTemplateForm
+            onSave={template => {
+              onSave(template);
+              setOpen(false);
             }}
-          >
-            <TableTemplateFormWrapper
-              isNew
-              onSave={template => {
-                onSave(template);
-                setOpen(false);
-              }}
-              onCancel={() => setOpen(false)}
-            />
-          </TableTemplateFormContainer.Provider>
-        )}
+            onCancel={() => setOpen(false)}
+          />
+        </TableTemplateFormContainer.Provider>
       </SlideView>
     </>
   );

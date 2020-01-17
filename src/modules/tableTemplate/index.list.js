@@ -8,14 +8,13 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useViewerHasPermissions } from 'contexts/Permissions';
 import { TEMPLATE_CREATE } from 'modules/permission/constants/template';
 import SlideView from 'components/SlideView';
-import TableTemplateFormWrapper from 'modules/tableTemplate/common/TableTemplateFormWrapper';
-import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import { Content } from 'components/Layout';
 import { EntityIcon, NavBar } from 'components/NavBar';
 import FilterToolBar from 'components/common/FilterToolBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { NewButton } from 'components/Buttons';
 import useFilter from 'hooks/useFilter';
+import { TableTemplateFormWrapper } from 'modules/tableTemplate/form';
 import { allCustomFieldDefinitionsQuery, tableTemplateQuery } from './list/query';
 import TableTemplateList from './list';
 import messages from './messages';
@@ -168,20 +167,18 @@ const TableTemplateModule = () => {
                     onRequestClose={() => toggle(false)}
                     shouldConfirm={() => document.getElementById('table_template_form_save_button')}
                   >
-                    <TableTemplateFormContainer.Provider
-                      initialState={{ type: activeType, customFields }}
-                    >
-                      <TableTemplateFormWrapper
-                        isNew
-                        onSave={() => toggle(false)}
-                        onCancel={() => toggle(false)}
-                        onRefetch={() => {
-                          if (isTableTemplate) {
-                            refetch(tableTemplateQuery);
-                          }
-                        }}
-                      />
-                    </TableTemplateFormContainer.Provider>
+                    <TableTemplateFormWrapper
+                      type={activeType}
+                      customFields={customFields}
+                      tableTemplate={null}
+                      onSave={() => toggle(false)}
+                      onCancel={() => toggle(false)}
+                      onRefetch={() => {
+                        if (isTableTemplate) {
+                          refetch(tableTemplateQuery);
+                        }
+                      }}
+                    />
                   </SlideView>
                 </>
               )}

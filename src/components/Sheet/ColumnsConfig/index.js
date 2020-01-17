@@ -193,7 +193,7 @@ const ColumnsConfig = ({
             }),
             {}
           )
-        );
+        ).map(col => ({ ...col, isNew: false }));
 
         setDirtyColumns(convertMappingColumns(templateColumns));
       }
@@ -327,6 +327,7 @@ const ColumnsConfig = ({
 
               <TemplateNew
                 columns={dirtyColumns.flatMap(cols => (Array.isArray(cols) ? [...cols] : cols))}
+                defaultColumns={defaultColumns}
                 templateType={templateType}
                 onSave={handleTemplateChange}
               >

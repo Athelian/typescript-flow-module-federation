@@ -1,130 +1,132 @@
 // @flow
 import * as React from 'react';
-import type { CustomFields, MaskEditColumn } from 'generated/graphql';
+import type { MaskEdit, MaskEditType } from 'generated/graphql';
+import { MaskEditTypeValues } from 'generated/graphql';
 import { createContainer } from 'unstated-next';
-import { cleanFalsyAndTypeName, cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
-import {
-  getColumnsConfig,
-  computeColumnConfigsFromState,
-} from 'modules/tableTemplate/form/components/ColumnsConfigSection/helpers';
+import type { ColumnConfig } from 'components/Sheet';
+import { getColumnsConfigured } from 'components/Sheet/useColumns';
+
+type InitialState = {|
+  type: MaskEditType,
+  tableTemplate: ?MaskEdit,
+  defaultColumns: Array<ColumnConfig>,
+|};
 
 type State = {|
-  columns: Array<{ ...MaskEditColumn, isNew?: boolean }>,
-  name: ?string,
-  memo: ?string,
-  type: ?string,
-  updatedAt: ?Date,
-  updatedBy: ?Date,
-  customFields: ?CustomFields,
+  tableTemplate: ?MaskEdit,
+  defaultColumns: Array<ColumnConfig>,
+  isNew: boolean,
+  values: {
+    name: ?string,
+    memo: ?string,
+    type: MaskEditType,
+    columns: Array<ColumnConfig>,
+  },
 |};
 
 const defaultState: State = {
-  name: null,
-  memo: null,
-  type: null,
-  columns: [],
-  updatedAt: null,
-  updatedBy: null,
-  customFields: null,
+  tableTemplate: null,
+  defaultColumns: [],
+  isNew: false,
+  values: {
+    name: null,
+    memo: null,
+    type: MaskEditTypeValues.OrderSheet,
+    columns: [],
+  },
 };
 
-const useTableTemplateFormContainer = (initialState: State = defaultState) => {
+const useTableTemplateFormContainer = (initialState: InitialState) => {
   const [state, setState] = React.useState(defaultState);
-  const [originalState, setOriginalState] = React.useState(defaultState);
-  const columnKeys = React.useRef([]);
+  const [originalValues, setOriginalValues] = React.useState(defaultState.values);
+
+  const initializeState = React.useCallback(
+    (newTableTemplate: ?MaskEdit) => {
+      const columns = newTableTemplate
+        ? getColumnsConfigured(
+            initialState.defaultColumns,
+            newTableTemplate.columns.reduce(
+              (object, item) => ({
+                ...object,
+                [item.key]: item.hidden,
+              }),
+              {}
+            )
+          )
+        : initialState.defaultColumns;
+
+      const newState = {
+        tableTemplate: newTableTemplate,
+        defaultColumns: initialState.defaultColumns,
+        isNew: !newTableTemplate?.id,
+        values: {
+          name: newTableTemplate?.name ?? null,
+          memo: newTableTemplate?.memo ?? null,
+          type: initialState.type,
+          columns,
+        },
+      };
+
+      setState(newState);
+      setOriginalValues(newState.values);
+    },
+    [initialState.type, initialState.defaultColumns]
+  );
 
   React.useEffect(() => {
-    const mergedInitialState = {
-      ...defaultState,
-      ...cleanUpData(initialState),
-    };
+    initializeState(initialState.tableTemplate);
+  }, [initializeState, initialState.tableTemplate]);
 
-    columnKeys.current = mergedInitialState.columns.map(column => column.key);
+  const isDirty = React.useMemo(() => !isEquals(state.values, originalValues), [
+    state.values,
+    originalValues,
+  ]);
 
-    setOriginalState({
-      ...mergedInitialState,
-      columns: computeColumnConfigsFromState(mergedInitialState).flatMap(col =>
-        Array.isArray(col)
-          ? [
-              ...col.map(({ key, hidden, isNew }) => ({
-                key,
-                hidden,
-                isNew,
-              })),
-            ]
-          : {
-              key: col.key,
-              hidden: col.hidden,
-              isNew: col.isNew,
-            }
-      ),
-    });
-  }, [initialState]);
-
-  React.useEffect(() => setState(originalState), [originalState]);
-
-  const initializeState = (value: Object) => {
-    const mergedState = {
-      ...defaultState,
-      ...cleanUpData(value),
-    };
-    columnKeys.current = mergedState.columns.map(column => column.key);
-
-    const compiledState = {
-      ...mergedState,
-      columns: computeColumnConfigsFromState(mergedState).flatMap(col =>
-        Array.isArray(col)
-          ? [
-              ...col.map(({ key, hidden, isNew }) => ({
-                key,
-                hidden,
-                isNew,
-              })),
-            ]
-          : {
-              key: col.key,
-              hidden: col.hidden,
-              isNew: col.isNew,
-            }
-      ),
-    };
-
-    if (!isEquals(compiledState, originalState)) {
-      setOriginalState(compiledState);
-    }
-  };
-
-  const isDirty = !isEquals(cleanFalsyAndTypeName(state), cleanFalsyAndTypeName(originalState));
-
-  const resetState = () => {
-    setState(originalState);
-  };
-
-  const setFieldValue = (name: string, value: mixed) => {
+  const resetState = React.useCallback(() => {
     setState({
       ...state,
-      [name]: value,
+      values: { ...originalValues },
     });
-  };
+  }, [state, originalValues]);
+
+  const setFieldValue = React.useCallback(
+    (name: string, value: mixed) => {
+      setState({
+        ...state,
+        values: {
+          ...state.values,
+          [name]: value,
+        },
+      });
+    },
+    [state]
+  );
 
   const selectAllColumns = () => {
-    setState({
-      ...state,
-      columns: state.columns.map(({ key, isNew }) => ({ key, hidden: false, isNew: !!isNew })),
-    });
+    setFieldValue(
+      'columns',
+      state.values.columns.map(col => ({ ...col, hidden: false }))
+    );
   };
 
-  const selectColumns = (selectedColumns: Array<MaskEditColumn | Array<MaskEditColumn>>) => {
-    const { columns } = state;
+  const unselectAllColumns = () => {
+    setFieldValue(
+      'columns',
+      state.values.columns.map(col => ({ ...col, hidden: true }))
+    );
+  };
 
-    const newColumns: Array<MaskEditColumn> = [];
+  const selectColumns = (selectedColumns: Array<ColumnConfig | Array<ColumnConfig>>) => {
+    const { columns } = state.values;
+
+    const newColumns: Array<ColumnConfig> = [];
     const flattenColumns = selectedColumns.flatMap(col => (Array.isArray(col) ? [...col] : col));
     const flattenColumnKeys = selectedColumns.flatMap(col =>
       Array.isArray(col) ? [...col.map(({ key }) => key)] : col.key
     );
     let found = false;
-    columns.forEach((column: MaskEditColumn) => {
+    columns.forEach((column: ColumnConfig) => {
       if (flattenColumnKeys.includes(column.key)) {
         if (!found) {
           newColumns.push(...flattenColumns);
@@ -135,72 +137,54 @@ const useTableTemplateFormContainer = (initialState: State = defaultState) => {
       }
     });
 
-    setState({
-      ...state,
-      columns: newColumns.map(({ key, hidden, isNew }) => ({ key, hidden, isNew: !!isNew })),
-    });
-  };
-
-  const unselectAllColumns = () => {
-    setState({
-      ...state,
-      columns: state.columns.map(({ key, isNew }) => ({ key, hidden: true, isNew: !!isNew })),
-    });
+    setFieldValue('columns', newColumns);
   };
 
   const groupAllColumns = (groupedColumns: Object) => {
-    setState({
-      ...state,
-      columns: Object.values(groupedColumns)
-        .flatMap((cols: any) => {
-          const columns = [];
-          const hiddenColumns = [];
-          (cols: Array<MaskEditColumn | Array<MaskEditColumn>>).forEach(column => {
-            if (Array.isArray(column)) {
-              if (column.some(({ hidden }) => !hidden)) {
-                columns.push(...column);
-              } else {
-                hiddenColumns.push(...column);
-              }
-            } else if (column.hidden) {
-              hiddenColumns.push(column);
-            } else {
-              columns.push(column);
-            }
-          });
-          return [...columns, ...hiddenColumns];
-        })
-        .map(({ key, hidden, isNew }) => ({ key, hidden, isNew: !!isNew })),
+    const newColumns = Object.values(groupedColumns).flatMap((cols: any) => {
+      const columns = [];
+      const hiddenColumns = [];
+      (cols: Array<ColumnConfig | Array<ColumnConfig>>).forEach(column => {
+        if (Array.isArray(column)) {
+          if (column.some(({ hidden }) => !hidden)) {
+            columns.push(...column);
+          } else {
+            hiddenColumns.push(...column);
+          }
+        } else if (column.hidden) {
+          hiddenColumns.push(column);
+        } else {
+          columns.push(column);
+        }
+      });
+      return [...columns, ...hiddenColumns];
     });
+
+    setFieldValue('columns', newColumns);
   };
 
-  const defaultColumns = () => {
-    const columns = getColumnsConfig({
-      type: state.type || 'OrderSheet',
-      customFields: state.customFields,
-    });
-    setState({
-      ...state,
-      columns: columns.map(({ key, isNew }) => ({
-        key,
-        isNew,
-        hidden: state.columns.find(col => col.key === key)?.hidden ?? false,
-      })),
-    });
+  const reorderToDefault = () => {
+    setFieldValue(
+      'columns',
+      state.defaultColumns.map(defaultColumn => ({
+        ...defaultColumn,
+        hidden: state.values.columns.find(col => col.key === defaultColumn.key)?.hidden ?? false,
+      }))
+    );
   };
 
   return {
     state,
-    originalState,
-    initializeState,
+    originalValues,
     isDirty,
+    initializeState,
     resetState,
     setFieldValue,
     selectColumns,
     selectAllColumns,
     unselectAllColumns,
     groupAllColumns,
-    defaultColumns,
+    reorderToDefault,
   };
 };
 

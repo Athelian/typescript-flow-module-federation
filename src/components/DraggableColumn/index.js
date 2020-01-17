@@ -4,17 +4,11 @@ import { FormattedMessage } from 'react-intl';
 import { Draggable } from 'react-beautiful-dnd';
 import Icon from 'components/Icon';
 import { CheckboxInput, Label } from 'components/Form';
+import type { ColumnConfig } from 'components/Sheet';
 import { ColumnWrapperStyle, DragHandleStyle, CheckboxWrapperStyle, NewLabelStyle } from './style';
 
-export type Column = {
-  title: React$Node,
-  hidden?: boolean,
-  isNew?: boolean,
-  key: string,
-};
-
 type Props = {|
-  column: Column,
+  column: ColumnConfig,
   onToggle: (selectedKey: string) => void,
   index: number,
 |};

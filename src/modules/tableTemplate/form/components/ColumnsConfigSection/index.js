@@ -8,7 +8,7 @@ import ColumnsGroup from 'components/ColumnsGroup';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import MilestoneTaskColumnsConfigGroup from 'modules/project/sheet/MilestoneTaskColumnsConfigGroup';
 import { parseIcon } from 'utils/entity';
-import { getColumnGroupTypes, computeColumnConfigsFromState } from './helpers';
+import { getColumnGroupTypes, stickiedColumns } from './helpers';
 import { ColumnsConfigSectionWrapperStyle, ColumnsConfigSectionBodyStyle } from './style';
 
 const ColumnsConfigSection = () => {
@@ -18,10 +18,13 @@ const ColumnsConfigSection = () => {
     selectAllColumns,
     unselectAllColumns,
     groupAllColumns,
-    defaultColumns,
+    reorderToDefault,
   } = TableTemplateFormContainer.useContainer();
 
-  const parsedColumns = React.useMemo(() => computeColumnConfigsFromState(state), [state]);
+  const parsedColumns = React.useMemo(() => {
+    console.log(state);
+    return stickiedColumns(state.values.type, state.values.columns);
+  }, [state]);
 
   const groupedColumns = React.useMemo(
     () =>
@@ -96,7 +99,7 @@ const ColumnsConfigSection = () => {
           />
 
           <BaseButton
-            onClick={defaultColumns}
+            onClick={reorderToDefault}
             icon="TABLE"
             label={
               <FormattedMessage id="modules.TableTemplates.default" defaultMessage="DEFAULT" />
@@ -109,7 +112,7 @@ const ColumnsConfigSection = () => {
         </SectionNavBar>
 
         <div className={ColumnsConfigSectionBodyStyle}>
-          {getColumnGroupTypes(state.type).map(groupType => {
+          {getColumnGroupTypes(state.values.type).map(groupType => {
             switch (groupType) {
               case 'MILESTONE_TASKS':
                 return (
