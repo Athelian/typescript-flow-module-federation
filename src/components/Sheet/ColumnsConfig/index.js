@@ -8,7 +8,6 @@ import { colors } from 'styles/common';
 import Dialog from 'components/Dialog';
 import { ApplyButton, ResetButton, BaseButton, SaveButton, IconButton } from 'components/Buttons';
 import { Tooltip } from 'components/Tooltip';
-import type { Column } from 'components/DraggableColumn';
 import { parseIcon } from 'utils/entity';
 import { convertMappingColumns, flattenColumns } from 'utils/template';
 import type { ColumnConfig } from '../SheetState/types';
@@ -33,14 +32,14 @@ type Props = {
   templateType: string,
   onChange: (Array<ColumnConfig>) => void,
   onLoadTemplate?: (template: Object) => Array<ColumnConfig>,
-  onApply?: (columns: Array<Column | Array<Column>>) => Array<ColumnConfig>,
+  onApply?: (columns: Array<ColumnConfig | Array<ColumnConfig>>) => Array<ColumnConfig>,
   children: ({
     getGroupProps: (
       group: string
     ) => {
       icon: string,
-      columns: Array<Column | Array<Column>>,
-      onChange: (Array<Column | Array<Column>>) => void,
+      columns: Array<ColumnConfig | Array<ColumnConfig>>,
+      onChange: (Array<ColumnConfig | Array<ColumnConfig>>) => void,
     },
   }) => React.Node,
 };
@@ -59,7 +58,9 @@ const ColumnsConfig = ({
     `${templateType}SelectedTemplate`,
     null
   );
-  const [dirtyColumns, setDirtyColumns] = React.useState<Array<Column | Array<Column>>>([]);
+  const [dirtyColumns, setDirtyColumns] = React.useState<Array<ColumnConfig | Array<ColumnConfig>>>(
+    []
+  );
   const currentTemplate = React.useRef(persistTemplate);
 
   React.useEffect(() => {
@@ -221,7 +222,7 @@ const ColumnsConfig = ({
         currentTemplate.current = null;
         setDirtyColumns(
           Object.entries(groupedColumns).flatMap(([g, cols]) =>
-            g === group ? newCols : ((cols: any): Array<Column>)
+            g === group ? newCols : ((cols: any): Array<ColumnConfig>)
           )
         );
       },

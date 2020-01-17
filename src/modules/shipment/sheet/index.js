@@ -16,7 +16,7 @@ import {
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
-import ColumnsGroup from 'components/ColumnsGroup';
+import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { shipmentsExportQuery } from '../query';
@@ -150,7 +150,7 @@ const ShipmentSheetModule = ({ shipmentIds }: Props) => {
 
   return (
     <ShipmentSheetModuleImpl
-      columns={shipmentColumns({ ...allFieldDefinitions })}
+      columns={shipmentColumns(allFieldDefinitions)}
       transformer={shipmentTransformer({ ...allFieldDefinitions, intl })}
       shipmentIds={shipmentIds}
     />

@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import Icon from 'components/Icon';
+import type { ColumnConfig } from 'components/Sheet';
 import DraggableColumn from '../DraggableColumn';
-import type { Column } from '../DraggableColumn';
 import DraggableColumns from '../DraggableColumns';
 import {
   ColumnsGroupWrapperStyle,
@@ -14,8 +14,8 @@ import {
 
 type Props = {
   icon: string,
-  columns: Array<Column | Array<Column>>,
-  onChange: (Array<Column | Array<Column>>) => void,
+  columns: Array<ColumnConfig | Array<ColumnConfig>>,
+  onChange: (Array<ColumnConfig | Array<ColumnConfig>>) => void,
 };
 
 const ColumnsGroup = ({ icon, columns, onChange }: Props) => {

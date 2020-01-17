@@ -16,7 +16,7 @@ import {
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import LoadingIcon from 'components/LoadingIcon';
 import type { ColumnConfig } from 'components/Sheet';
-import ColumnsGroup from 'components/ColumnsGroup';
+import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
 import useFieldDefinitions from 'hooks/useFieldDefinitions';
 import { clone } from 'utils/fp';
 import { ordersExportQuery } from '../query';
@@ -144,7 +144,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
 
   return (
     <OrderSheetModuleImpl
-      columns={orderColumns({ ...allFieldDefinitions })}
+      columns={orderColumns(allFieldDefinitions)}
       transformer={orderTransformer({ ...allFieldDefinitions, intl })}
       orderIds={orderIds}
     />

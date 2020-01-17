@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader } from 'components/Form';
-import ColumnsGroup from 'components/ColumnsGroup';
+import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import MilestoneTaskColumnsConfigGroup from 'modules/project/sheet/MilestoneTaskColumnsConfigGroup';
 import { parseIcon } from 'utils/entity';
@@ -21,10 +21,10 @@ const ColumnsConfigSection = () => {
     reorderToDefault,
   } = TableTemplateFormContainer.useContainer();
 
-  const parsedColumns = React.useMemo(() => {
-    console.log(state);
-    return stickiedColumns(state.values.type, state.values.columns);
-  }, [state]);
+  const parsedColumns = React.useMemo(
+    () => stickiedColumns(state.values.type, state.values.columns),
+    [state]
+  );
 
   const groupedColumns = React.useMemo(
     () =>

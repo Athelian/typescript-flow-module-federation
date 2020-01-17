@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { DefaultStyle, Label } from 'components/Form';
 import Icon from 'components/Icon';
 import NumberInput from 'components/Inputs/NumberInput';
-import DraggableColumn from 'components/DraggableColumn';
+import DraggableColumn from 'components/Sheet/ColumnsConfig/DraggableColumn';
 import type { ColumnConfig } from 'components/Sheet';
 import messages from 'modules/project/messages';
 import { generateMilestoneTaskColumns, computeMilestoneTaskColumnsTemplate } from '../columns';

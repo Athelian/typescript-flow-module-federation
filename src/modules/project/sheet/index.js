@@ -6,7 +6,7 @@ import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ProjectFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
 import { Sheet, ColumnsConfig, useSheet, useExportedColumns } from 'components/Sheet';
-import ColumnsGroup from 'components/ColumnsGroup';
+import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
 import { useViewer } from 'contexts/Viewer';
 import { clone } from 'utils/fp';
 import { projectsExportQuery } from '../query';

@@ -23,9 +23,12 @@ export const getColumnGroupTypes = (type: string): Array<string> => {
   }
 };
 
-export const stickiedColumns = (type: MaskEditType, columns: Array<ColumnConfig>) => {
+export const stickiedColumns = (
+  type: MaskEditType,
+  columns: Array<ColumnConfig>
+): Array<ColumnConfig | Array<ColumnConfig>> => {
   if (type === MaskEditTypeValues.ProjectSheet) {
-    return columns;
+    return (columns: any);
   }
 
   return convertMappingColumns(columns);
