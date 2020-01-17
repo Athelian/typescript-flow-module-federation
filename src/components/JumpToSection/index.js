@@ -128,6 +128,9 @@ class JumpToSection extends React.Component<Props, State> {
     const { children } = this.props;
     const { activeNode } = this.state;
 
+    const activeElement =
+      activeNode || React.Children.toArray(children).filter(Boolean)?.[0]?.props?.link;
+
     return (
       <div className={WrapperStyle(React.Children.count(children))}>
         {!activeNode
@@ -135,7 +138,7 @@ class JumpToSection extends React.Component<Props, State> {
               .filter(Boolean)
               .map(child =>
                 React.cloneElement(child, {
-                  active: child?.props?.link === activeNode,
+                  active: child?.props?.link === activeElement,
                   onClick: () => this.handleClick(child?.props?.link),
                 })
               ): Array<React$Node>)
@@ -145,7 +148,7 @@ class JumpToSection extends React.Component<Props, State> {
                 child =>
                   document.querySelector(`#${child.props.link}`) &&
                   React.cloneElement(child, {
-                    active: child?.props?.link === activeNode,
+                    active: child?.props?.link === activeElement,
                     onClick: () => this.handleClick(child?.props?.link),
                   })
               ): Array<React$Node>)}
