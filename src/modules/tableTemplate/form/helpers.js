@@ -1,7 +1,7 @@
 // @flow
 import type { ColumnConfig } from 'components/Sheet';
 import { MaskEditTypeValues } from 'generated/graphql';
-import type { MaskEditType } from 'generated/graphql';
+import type { MaskEdit, MaskEditType } from 'generated/graphql';
 import orderColumns from 'modules/order/sheet/columns';
 import shipmentColumns from 'modules/shipment/sheet/columns';
 import batchColumns from 'modules/batch/sheet/columns';
@@ -49,7 +49,7 @@ export const getDefaultColumns = (
 export const getComputeColumns = (type: MaskEditType) => {
   switch (type) {
     case MaskEditTypeValues.ProjectSheet:
-      return template => computeProjectColumnConfigsFromTemplate(template);
+      return (template: MaskEdit) => computeProjectColumnConfigsFromTemplate(template);
     default:
       return null;
   }

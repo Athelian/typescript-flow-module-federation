@@ -207,7 +207,7 @@ const ColumnsConfig = ({
     setDirtyColumns(
       convertMappingColumns(
         defaultColumns.map(defaultColumn => {
-          const column = currentColumns.columns.find(col => col.key === defaultColumn.key);
+          const column = currentColumns.find(col => col.key === defaultColumn.key);
 
           return {
             ...defaultColumn,

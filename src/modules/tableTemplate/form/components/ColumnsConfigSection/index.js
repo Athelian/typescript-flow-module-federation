@@ -43,7 +43,7 @@ const ColumnsConfigSection = () => {
     (group: string) => ({
       icon: group,
       columns: groupedColumns[group] ?? [],
-      onChange: (newCols: Array<ColumnConfig>) =>
+      onChange: newCols =>
         onColumnsChange(
           Object.entries(groupedColumns).flatMap(([g, cols]) =>
             g === group ? newCols : ((cols: any): Array<ColumnConfig>)
