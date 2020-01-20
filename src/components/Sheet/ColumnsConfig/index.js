@@ -206,12 +206,22 @@ const ColumnsConfig = ({
     const currentColumns = flattenColumns(dirtyColumns);
     setDirtyColumns(
       convertMappingColumns(
-        defaultColumns.map(col => ({
-          ...col,
-          hidden: currentColumns.find(({ key }) => col.key === key)?.hidden ?? false,
-        }))
+        defaultColumns.map(defaultColumn => {
+          const column = currentColumns.columns.find(col => col.key === defaultColumn.key);
+
+          return {
+            ...defaultColumn,
+            isNew: column?.isNew ?? false,
+            hidden: column?.hidden ?? false,
+          };
+        })
       )
     );
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    handleReset();
   };
 
   const getGroupProps = React.useCallback(
@@ -244,7 +254,7 @@ const ColumnsConfig = ({
         suffix={persistTemplate?.name}
       />
 
-      <Dialog isOpen={isOpen} onRequestClose={() => setOpen(false)}>
+      <Dialog isOpen={isOpen} onRequestClose={handleClose}>
         <div className={ModalWrapperStyle}>
           <div className={HeaderStyle}>
             <div className={ActionsWrapperStyle}>
