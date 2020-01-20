@@ -165,7 +165,6 @@ export default function orderItemColumns({
       icon: 'ORDER_ITEM',
       color: colors.ORDER_ITEM,
       width: 200,
-      isNew: false,
     },
   ];
 }

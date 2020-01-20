@@ -242,7 +242,6 @@ export default function batchColumns({
       icon: 'BATCH',
       color: colors.BATCH,
       width: 200,
-      isNew: false,
     },
   ];
 }

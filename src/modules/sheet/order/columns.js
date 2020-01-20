@@ -208,7 +208,6 @@ export default function orderColumns({
       icon: 'ORDER',
       color: colors.ORDER,
       width: 200,
-      isNew: false,
     },
   ];
 }

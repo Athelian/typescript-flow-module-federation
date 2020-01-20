@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
 import { Provider } from 'unstated';
@@ -22,7 +22,7 @@ import {
 } from './mutation';
 import TableTemplateFormContainer from './container';
 import validator from './validator';
-import { getDefaultColumns } from './helpers';
+import { getComputeColumns, getDefaultColumns } from './helpers';
 import { TemplateFormWrapperStyle } from './style';
 
 type FormProps = {
@@ -154,6 +154,7 @@ export const TableTemplateFormWrapper = ({
         type,
         defaultColumns,
         tableTemplate,
+        computeColumns: getComputeColumns(type),
       }}
     >
       <TableTemplateForm onSave={onSave} onCancel={onCancel} onRefetch={onRefetch} />

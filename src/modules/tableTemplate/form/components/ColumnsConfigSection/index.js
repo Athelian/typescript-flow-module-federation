@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader } from 'components/Form';
+import type { ColumnConfig } from 'components/Sheet';
 import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import MilestoneTaskColumnsConfigGroup from 'modules/project/sheet/MilestoneTaskColumnsConfigGroup';
@@ -14,10 +15,10 @@ import { ColumnsConfigSectionWrapperStyle, ColumnsConfigSectionBodyStyle } from 
 const ColumnsConfigSection = () => {
   const {
     state,
-    selectColumns,
-    selectAllColumns,
-    unselectAllColumns,
-    groupAllColumns,
+    onColumnsChange,
+    selectAll,
+    unselectAll,
+    groupAll,
     reorderToDefault,
   } = TableTemplateFormContainer.useContainer();
 
@@ -42,9 +43,14 @@ const ColumnsConfigSection = () => {
     (group: string) => ({
       icon: group,
       columns: groupedColumns[group] ?? [],
-      onChange: selectColumns,
+      onChange: (newCols: Array<ColumnConfig>) =>
+        onColumnsChange(
+          Object.entries(groupedColumns).flatMap(([g, cols]) =>
+            g === group ? newCols : ((cols: any): Array<ColumnConfig>)
+          )
+        ),
     }),
-    [groupedColumns, selectColumns]
+    [groupedColumns, onColumnsChange]
   );
 
   return (
@@ -62,7 +68,7 @@ const ColumnsConfigSection = () => {
       <div className={ColumnsConfigSectionWrapperStyle}>
         <SectionNavBar>
           <BaseButton
-            onClick={unselectAllColumns}
+            onClick={unselectAll}
             icon="UNCHECKED"
             label={
               <FormattedMessage
@@ -77,7 +83,7 @@ const ColumnsConfigSection = () => {
           />
 
           <BaseButton
-            onClick={selectAllColumns}
+            onClick={selectAll}
             icon="CHECKED"
             label={
               <FormattedMessage id="modules.TableTemplates.selectAll" defaultMessage="SELECT ALL" />
@@ -89,7 +95,7 @@ const ColumnsConfigSection = () => {
           />
 
           <BaseButton
-            onClick={() => groupAllColumns(groupedColumns)}
+            onClick={() => groupAll(groupedColumns)}
             icon="BRING_FORWARD"
             label={<FormattedMessage id="modules.TableTemplates.group" defaultMessage="GROUP" />}
             textColor="GRAY_DARK"

@@ -11,6 +11,7 @@ type InitialState = {|
   type: MaskEditType,
   tableTemplate: ?MaskEdit,
   defaultColumns: Array<ColumnConfig>,
+  computeColumns?: MaskEdit => Array<ColumnConfig>,
 |};
 
 type State = {|
@@ -43,17 +44,22 @@ const useTableTemplateFormContainer = (initialState: InitialState) => {
 
   const initializeState = React.useCallback(
     (newTableTemplate: ?MaskEdit) => {
-      const columns = newTableTemplate
-        ? getColumnsConfigured(
+      const computeColumns: MaskEdit => Array<ColumnConfig> =
+        initialState.computeColumns ||
+        ((template: MaskEdit) =>
+          getColumnsConfigured(
             initialState.defaultColumns,
-            newTableTemplate.columns.reduce(
+            template.columns.reduce(
               (object, item) => ({
                 ...object,
                 [item.key]: item.hidden,
               }),
               {}
             )
-          )
+          ));
+
+      const columns = newTableTemplate
+        ? computeColumns(newTableTemplate)
         : initialState.defaultColumns;
 
       const newState = {
@@ -71,7 +77,7 @@ const useTableTemplateFormContainer = (initialState: InitialState) => {
       setState(newState);
       setOriginalValues(newState.values);
     },
-    [initialState.type, initialState.defaultColumns]
+    [initialState.type, initialState.defaultColumns, initialState.computeColumns]
   );
 
   React.useEffect(() => {
@@ -103,44 +109,21 @@ const useTableTemplateFormContainer = (initialState: InitialState) => {
     [state]
   );
 
-  const selectAllColumns = () => {
+  const selectAll = () => {
     setFieldValue(
       'columns',
       state.values.columns.map(col => ({ ...col, hidden: false }))
     );
   };
 
-  const unselectAllColumns = () => {
+  const unselectAll = () => {
     setFieldValue(
       'columns',
       state.values.columns.map(col => ({ ...col, hidden: true }))
     );
   };
 
-  const selectColumns = (selectedColumns: Array<ColumnConfig | Array<ColumnConfig>>) => {
-    const { columns } = state.values;
-
-    const newColumns: Array<ColumnConfig> = [];
-    const flattenColumns = selectedColumns.flatMap(col => (Array.isArray(col) ? [...col] : col));
-    const flattenColumnKeys = selectedColumns.flatMap(col =>
-      Array.isArray(col) ? [...col.map(({ key }) => key)] : col.key
-    );
-    let found = false;
-    columns.forEach((column: ColumnConfig) => {
-      if (flattenColumnKeys.includes(column.key)) {
-        if (!found) {
-          newColumns.push(...flattenColumns);
-          found = true;
-        }
-      } else {
-        newColumns.push(column);
-      }
-    });
-
-    setFieldValue('columns', newColumns);
-  };
-
-  const groupAllColumns = (groupedColumns: Object) => {
+  const groupAll = (groupedColumns: Object) => {
     const newColumns = Object.values(groupedColumns).flatMap((cols: any) => {
       const columns = [];
       const hiddenColumns = [];
@@ -163,13 +146,22 @@ const useTableTemplateFormContainer = (initialState: InitialState) => {
     setFieldValue('columns', newColumns);
   };
 
+  const onColumnsChange = (columns: Array<ColumnConfig | Array<ColumnConfig>>) => {
+    setFieldValue('columns', columns);
+  };
+
   const reorderToDefault = () => {
     setFieldValue(
       'columns',
-      state.defaultColumns.map(defaultColumn => ({
-        ...defaultColumn,
-        hidden: state.values.columns.find(col => col.key === defaultColumn.key)?.hidden ?? false,
-      }))
+      state.defaultColumns.map(defaultColumn => {
+        const column = state.values.columns.find(col => col.key === defaultColumn.key);
+
+        return {
+          ...defaultColumn,
+          isNew: column?.isNew ?? false,
+          hidden: column?.hidden ?? false,
+        };
+      })
     );
   };
 
@@ -180,10 +172,10 @@ const useTableTemplateFormContainer = (initialState: InitialState) => {
     initializeState,
     resetState,
     setFieldValue,
-    selectColumns,
-    selectAllColumns,
-    unselectAllColumns,
-    groupAllColumns,
+    onColumnsChange,
+    selectAll,
+    unselectAll,
+    groupAll,
     reorderToDefault,
   };
 };
