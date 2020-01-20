@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, NumberValue } from 'react-values';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import SelectProductProviders from 'modules/order/common/SelectProductProviders';
@@ -10,6 +10,7 @@ import SlideView from 'components/SlideView';
 import { NewButton, BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import Icon from 'components/Icon';
+import { ItemLabelIcon, FileLabelIcon } from 'components/Dialog/ActionDialog';
 import { ItemCard, CardAction } from 'components/Cards';
 import RemoveDialog from 'components/Dialog/RemoveDialog';
 import { injectUid } from 'utils/id';
@@ -149,6 +150,7 @@ function ItemsArea({
                 productProvider,
                 batches,
                 todo,
+                files,
               } = item;
               const compiledOrderItem = {
                 id,
@@ -171,13 +173,19 @@ function ItemsArea({
                 unitPrice,
               };
 
-              const { id: productId, name, serial, tags: productTags, files } = product;
+              const {
+                id: productId,
+                name,
+                serial,
+                tags: productTags,
+                files: productFiles,
+              } = product;
               const compiledProduct = {
                 id: productId,
                 name,
                 serial,
                 tags: productTags,
-                files,
+                files: productFiles,
               };
 
               const compiledOrder = {
@@ -224,8 +232,8 @@ function ItemsArea({
                   />
                 ),
                 hasPermission([ORDER_ITEMS_DELETE]) && (
-                  <BooleanValue>
-                    {({ value: isOpen, set: dialogToggle }) => {
+                  <NumberValue defaultValue={0}>
+                    {({ value: step, set: setStep }) => {
                       const onRemove = () => {
                         setFieldValue(
                           'orderItems',
@@ -236,16 +244,15 @@ function ItemsArea({
                           onFocusItem(index);
                         }
                       };
-
                       return batches.length > 0 ? (
                         <>
                           <RemoveDialog
-                            isOpen={isOpen}
-                            onRequestClose={() => dialogToggle(false)}
-                            onCancel={() => dialogToggle(false)}
+                            isOpen={step === 1}
+                            onRequestClose={() => setStep(0)}
+                            onCancel={() => setStep(0)}
                             onRemove={() => {
-                              onRemove();
-                              dialogToggle(false);
+                              // onRemove();
+                              setStep(2);
                             }}
                             message={
                               <div>
@@ -277,11 +284,44 @@ function ItemsArea({
                               </div>
                             }
                           />
+                          <RemoveDialog
+                            isOpen={step === 2}
+                            onRequestClose={() => setStep(0)}
+                            onCancel={() => setStep(0)}
+                            onRemove={() => {
+                              setStep(0);
+                            }}
+                            message={
+                              <div>
+                                <div>
+                                  <FormattedMessage
+                                    id="components.cards.deleteOrderItemFiles1"
+                                    defaultMessage="This {itemIcon} has {fileCount} {fileIcon}."
+                                    values={{
+                                      itemIcon: <ItemLabelIcon />,
+                                      fileCount: files.length,
+                                      fileIcon: <FileLabelIcon />,
+                                    }}
+                                  />
+                                </div>
+                                <div>
+                                  <FormattedMessage
+                                    id="components.cards.deleteOrderItemFiles2"
+                                    defaultMessage="Would you also like to delete these {fileIcon} or keep them, making them parentless?"
+                                    values={{
+                                      fileIcon: <FileLabelIcon />,
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            }
+                          />
+
                           <CardAction
                             icon="REMOVE"
                             hoverColor="RED"
                             onClick={() => {
-                              dialogToggle(true);
+                              setStep(step === 0 ? 1 : 2);
                             }}
                           />
                         </>
@@ -289,7 +329,7 @@ function ItemsArea({
                         <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />
                       );
                     }}
-                  </BooleanValue>
+                  </NumberValue>
                 ),
               ].filter(Boolean);
 

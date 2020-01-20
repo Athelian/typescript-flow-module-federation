@@ -580,6 +580,8 @@
   "components.cards.deleteOrderItem": "Are you sure you want to delete this Item?",
   "components.cards.deleteOrderItemBatches": "This will delete all {batches} of its Batches as well.",
   "components.cards.deleteOrderItemShipments": "Warning: {shipment} of the Batches are in a Shipment.",
+  "components.cards.deleteOrderItemFiles1": "This {itemIcon} has {fileCount} {fileIcon}.",
+  "components.cards.deleteOrderItemFiles2": "Would you also like to delete these {fileIcon} or keep them, making them parentless?",
   "modules.Orders.noItemsFound": "No items found",
   "modules.Orders.newItems": "NEW ITEMS",
   "modules.Orders.chooseExporterFirst": "Please choose an Exporter first",
