@@ -580,6 +580,8 @@
   "components.cards.deleteOrderItem": "本当にこの商品を削除しますか？",
   "components.cards.deleteOrderItemBatches": "この発注に付属するバッチを全て削除します.",
   "components.cards.deleteOrderItemShipments": "警告: {shipment} のバッチが現在シップメントされています。",
+  "components.cards.deleteOrderItemFiles1": "This {itemIcon} has {fileCount} {fileIcon}.",
+  "components.cards.deleteOrderItemFiles2": "Would you also like to delete these {fileIcon} or keep them, making them parentless?",
   "modules.Orders.noItemsFound": "発注商品がありません",
   "modules.Orders.newItems": "新規",
   "modules.Orders.chooseExporterFirst": "輸出者を先に選んでください",
