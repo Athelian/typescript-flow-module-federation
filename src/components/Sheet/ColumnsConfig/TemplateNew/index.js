@@ -2,6 +2,10 @@
 import * as React from 'react';
 import SlideView from 'components/SlideView';
 import type { ColumnConfig } from 'components/Sheet';
+import {
+  getOverrideConfiguredColumnsGeneration,
+  getPreComputeDefaultColumnsOnReorder,
+} from 'modules/tableTemplate/form/helpers';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import { TableTemplateForm } from 'modules/tableTemplate/form';
 
@@ -36,6 +40,10 @@ const TemplateNew = ({ columns, defaultColumns, templateType, onSave, children }
             tableTemplate: {
               columns: columns.map(({ key, hidden }) => ({ key, hidden })),
             },
+            overrideConfiguredColumnsGeneration: getOverrideConfiguredColumnsGeneration(
+              templateType
+            ),
+            preComputeDefaultColumnsOnReorder: getPreComputeDefaultColumnsOnReorder(templateType),
           }}
         >
           <TableTemplateForm

@@ -9,6 +9,7 @@ import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import MilestoneTaskColumnsConfigGroup from 'modules/project/sheet/MilestoneTaskColumnsConfigGroup';
 import { parseIcon } from 'utils/entity';
+import { flattenColumns } from 'utils/template';
 import { getColumnGroupTypes, stickiedColumns } from './helpers';
 import { ColumnsConfigSectionWrapperStyle, ColumnsConfigSectionBodyStyle } from './style';
 
@@ -45,8 +46,10 @@ const ColumnsConfigSection = () => {
       columns: groupedColumns[group] ?? [],
       onChange: newCols =>
         onColumnsChange(
-          Object.entries(groupedColumns).flatMap(([g, cols]) =>
-            g === group ? newCols : ((cols: any): Array<ColumnConfig>)
+          flattenColumns(
+            Object.entries(groupedColumns).flatMap(([g, cols]) =>
+              g === group ? newCols : ((cols: any): Array<ColumnConfig>)
+            )
           )
         ),
     }),

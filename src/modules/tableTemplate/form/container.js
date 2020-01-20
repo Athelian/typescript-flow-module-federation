@@ -11,7 +11,11 @@ type InitialState = {|
   type: MaskEditType,
   tableTemplate: ?MaskEdit,
   defaultColumns: Array<ColumnConfig>,
-  computeColumns?: MaskEdit => Array<ColumnConfig>,
+  overrideConfiguredColumnsGeneration?: MaskEdit => Array<ColumnConfig>,
+  preComputeDefaultColumnsOnReorder?: (
+    defaultColumns: Array<ColumnConfig>,
+    columns: Array<ColumnConfig>
+  ) => Array<ColumnConfig>,
 |};
 
 type State = {|
@@ -45,7 +49,7 @@ const useTableTemplateFormContainer = (initialState: InitialState) => {
   const initializeState = React.useCallback(
     (newTableTemplate: ?MaskEdit) => {
       const computeColumns: MaskEdit => Array<ColumnConfig> =
-        initialState.computeColumns ||
+        initialState.overrideConfiguredColumnsGeneration ||
         ((template: MaskEdit) =>
           getColumnsConfigured(
             initialState.defaultColumns,
@@ -77,7 +81,11 @@ const useTableTemplateFormContainer = (initialState: InitialState) => {
       setState(newState);
       setOriginalValues(newState.values);
     },
-    [initialState.type, initialState.defaultColumns, initialState.computeColumns]
+    [
+      initialState.type,
+      initialState.defaultColumns,
+      initialState.overrideConfiguredColumnsGeneration,
+    ]
   );
 
   React.useEffect(() => {
@@ -153,7 +161,10 @@ const useTableTemplateFormContainer = (initialState: InitialState) => {
   const reorderToDefault = () => {
     setFieldValue(
       'columns',
-      state.defaultColumns.map(defaultColumn => {
+      (initialState.preComputeDefaultColumnsOnReorder
+        ? initialState.preComputeDefaultColumnsOnReorder(state.defaultColumns, state.values.columns)
+        : state.defaultColumns
+      ).map(defaultColumn => {
         const column = state.values.columns.find(col => col.key === defaultColumn.key);
 
         return {

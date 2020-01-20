@@ -22,7 +22,11 @@ import {
 } from './mutation';
 import TableTemplateFormContainer from './container';
 import validator from './validator';
-import { getComputeColumns, getDefaultColumns } from './helpers';
+import {
+  getOverrideConfiguredColumnsGeneration,
+  getDefaultColumns,
+  getPreComputeDefaultColumnsOnReorder,
+} from './helpers';
 import { TemplateFormWrapperStyle } from './style';
 
 type FormProps = {
@@ -154,7 +158,8 @@ export const TableTemplateFormWrapper = ({
         type,
         defaultColumns,
         tableTemplate,
-        computeColumns: getComputeColumns(type),
+        overrideConfiguredColumnsGeneration: getOverrideConfiguredColumnsGeneration(type),
+        preComputeDefaultColumnsOnReorder: getPreComputeDefaultColumnsOnReorder(type),
       }}
     >
       <TableTemplateForm onSave={onSave} onCancel={onCancel} onRefetch={onRefetch} />

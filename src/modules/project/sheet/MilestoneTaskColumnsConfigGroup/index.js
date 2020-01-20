@@ -96,7 +96,7 @@ const MilestoneTaskColumnsConfigGroup = ({ columns, onChange }: Props) => {
     onChange(
       generateMilestoneTaskColumns(
         milestoneColumnsTemplate,
-        Math.max(1, parseFloat(evt.target.value || 0)),
+        Math.min(10, Math.max(1, parseFloat(evt.target.value || 0))),
         taskColumnsTemplate,
         taskCount
       )
@@ -109,7 +109,7 @@ const MilestoneTaskColumnsConfigGroup = ({ columns, onChange }: Props) => {
         milestoneColumnsTemplate,
         milestoneCount,
         taskColumnsTemplate,
-        Math.max(1, parseFloat(evt.target.value || 0))
+        Math.min(20, Math.max(1, parseFloat(evt.target.value || 0)))
       )
     );
   };
