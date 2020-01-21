@@ -249,7 +249,6 @@ const SelectInput = (props: Props) => {
         getItemProps,
         getMenuProps,
         highlightedIndex,
-        // $FlowFixMe: downshift types is broken
         inputValue,
         openMenu,
         closeMenu,
