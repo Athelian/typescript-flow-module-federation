@@ -10,9 +10,9 @@ import SlideView from 'components/SlideView';
 import { NewButton, BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import Icon from 'components/Icon';
-import { ItemLabelIcon, FileLabelIcon } from 'components/Dialog/ActionDialog';
 import { ItemCard, CardAction } from 'components/Cards';
 import RemoveDialog from 'components/Dialog/RemoveDialog';
+import DocumentsDeleteDialog from 'components/Dialog/DocumentsDeleteDialog';
 import { injectUid } from 'utils/id';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { Display } from 'components/Form';
@@ -234,6 +234,7 @@ function ItemsArea({
                 hasPermission([ORDER_ITEMS_DELETE]) && (
                   <NumberValue defaultValue={0}>
                     {({ value: step, set: setStep }) => {
+                      console.log(`step: ${step}`);
                       const onRemove = () => {
                         setFieldValue(
                           'orderItems',
@@ -244,90 +245,98 @@ function ItemsArea({
                           onFocusItem(index);
                         }
                       };
-                      return batches.length > 0 ? (
-                        <>
-                          <RemoveDialog
-                            isOpen={step === 1}
-                            onRequestClose={() => setStep(0)}
-                            onCancel={() => setStep(0)}
-                            onRemove={() => {
-                              // onRemove();
-                              setStep(2);
-                            }}
-                            message={
-                              <div>
-                                <div>
-                                  <FormattedMessage
-                                    id="components.cards.deleteOrderItem"
-                                    defaultMessage="Are you sure you want to delete this Item?"
-                                  />
-                                </div>
-                                <div>
-                                  <FormattedMessage
-                                    id="components.cards.deleteOrderItemBatches"
-                                    defaultMessage="This will delete all {batches} of its Batches as well."
-                                    values={{ batches: item.batches.length }}
-                                  />
-                                </div>
-                                {item.batches.filter(batch => batch.shipment).length > 0 && (
-                                  <div>
-                                    <FormattedMessage
-                                      id="components.cards.deleteOrderItemShipments"
-                                      defaultMessage="Warning: {shipment} of the Batches are in a Shipment."
-                                      values={{
-                                        shipment: item.batches.filter(batch => batch.shipment)
-                                          .length,
-                                      }}
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                            }
-                          />
-                          <RemoveDialog
-                            isOpen={step === 2}
-                            onRequestClose={() => setStep(0)}
-                            onCancel={() => setStep(0)}
-                            onRemove={() => {
-                              setStep(0);
-                            }}
-                            message={
-                              <div>
-                                <div>
-                                  <FormattedMessage
-                                    id="components.cards.deleteOrderItemFiles1"
-                                    defaultMessage="This {itemIcon} has {fileCount} {fileIcon}."
-                                    values={{
-                                      itemIcon: <ItemLabelIcon />,
-                                      fileCount: files.length,
-                                      fileIcon: <FileLabelIcon />,
-                                    }}
-                                  />
-                                </div>
-                                <div>
-                                  <FormattedMessage
-                                    id="components.cards.deleteOrderItemFiles2"
-                                    defaultMessage="Would you also like to delete these {fileIcon} or keep them, making them parentless?"
-                                    values={{
-                                      fileIcon: <FileLabelIcon />,
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                            }
-                          />
 
+                      if (step === 0 && batches.length > 0) {
+                        return (
                           <CardAction
                             icon="REMOVE"
                             hoverColor="RED"
                             onClick={() => {
-                              setStep(step === 0 ? 1 : 2);
+                              setStep(1);
                             }}
                           />
-                        </>
-                      ) : (
-                        <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />
-                      );
+                        );
+                      }
+
+                      if (step === 1 && batches.length > 0) {
+                        console.log('batches dialog');
+                        return (
+                          <>
+                            <RemoveDialog
+                              isOpen={step === 1}
+                              onRequestClose={() => setStep(0)}
+                              onCancel={() => setStep(0)}
+                              onRemove={() => {
+                                // onRemove();
+                                setStep(2);
+                              }}
+                              message={
+                                <div>
+                                  <div>
+                                    <FormattedMessage
+                                      id="components.cards.deleteOrderItem"
+                                      defaultMessage="Are you sure you want to delete this Item?"
+                                    />
+                                  </div>
+                                  <div>
+                                    <FormattedMessage
+                                      id="components.cards.deleteOrderItemBatches"
+                                      defaultMessage="This will delete all {batches} of its Batches as well."
+                                      values={{ batches: item.batches.length }}
+                                    />
+                                  </div>
+                                  {item.batches.filter(batch => batch.shipment).length > 0 && (
+                                    <div>
+                                      <FormattedMessage
+                                        id="components.cards.deleteOrderItemShipments"
+                                        defaultMessage="Warning: {shipment} of the Batches are in a Shipment."
+                                        values={{
+                                          shipment: item.batches.filter(batch => batch.shipment)
+                                            .length,
+                                        }}
+                                      />
+                                    </div>
+                                  )}
+                                </div>
+                              }
+                            />
+                            <CardAction
+                              icon="REMOVE"
+                              hoverColor="RED"
+                              onClick={() => {
+                                setStep(2);
+                              }}
+                            />
+                          </>
+                        );
+                      }
+
+                      if (step === 2 && files.length > 0) {
+                        console.log('files dialog');
+                        return (
+                          <>
+                            <DocumentsDeleteDialog
+                              isOpen={step === 2}
+                              onCancel={() => setStep(0)}
+                              onRemove={() => {
+                                setStep(0);
+                              }}
+                              files={files}
+                            />
+
+                            <CardAction
+                              icon="REMOVE"
+                              hoverColor="RED"
+                              onClick={() => {
+                                setStep(2);
+                              }}
+                            />
+                          </>
+                        );
+                      }
+
+                      console.log('default');
+                      return <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />;
                     }}
                   </NumberValue>
                 ),
