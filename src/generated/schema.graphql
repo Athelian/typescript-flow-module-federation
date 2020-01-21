@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Jan 14 2020 11:06:58 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Jan 21 2020 16:44:31 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26715,6 +26715,7 @@ union BatchesPayload = Batches | BadRequest | Forbidden | NotFound
 
 input BatchFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -26949,6 +26950,7 @@ input ContainerCreateInput {
 
 input ContainerFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -28606,6 +28608,7 @@ type File implements Model & Owned & Memorizable {
 
 input FileFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -28837,6 +28840,7 @@ input IntegrationConfigurationCreateInput {
 
 input IntegrationConfigurationFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -28870,6 +28874,7 @@ input IntegrationConfigurationUpdateInput {
 
 input IntegrationFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -29633,6 +29638,7 @@ input MaskEditCreateInput {
 
 input MaskEditFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -29684,6 +29690,7 @@ input MaskEditUpdateInput {
 
 input MaskFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -29925,6 +29932,7 @@ type Mutation {
   fileUpload(file: Upload!, input: FileInput!): FilePayload!
   fileUpdate(id: ID!, input: FileInput!): FilePayload!
   fileDelete(id: ID!): EmptyPayload
+  fileDeleteMany(ids: [ID!]!): [EmptyPayload]!
   fieldDefinitionsUpdate(input: FieldDefinitionsInput!): FieldDefinitionsPayload!
   maskCreate(input: MaskCreateInput!): MaskPayload!
   maskUpdate(id: ID!, input: MaskUpdateInput!): MaskPayload!
@@ -30233,6 +30241,7 @@ input OrderCreateInput {
 
 input OrderFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -30368,6 +30377,7 @@ input OrderItemCreateInput {
 
 input OrderItemFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -30498,6 +30508,7 @@ type Organization implements Model {
   postalCode: String
   country: String
   avatar: FilePayload
+  paid: Boolean!
   disabled: Boolean!
   dummy: Boolean!
   users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPaginatedSearch!
@@ -30580,6 +30591,7 @@ type Partner implements Model {
 
 input PartnerFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -30716,6 +30728,7 @@ input ProductCreateInput {
 
 input ProductFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -30853,6 +30866,7 @@ input ProductProviderCreateInput {
 
 input ProductProviderFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -31008,10 +31022,12 @@ input ProjectCreateInput {
 
 input ProjectFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   dueDate: DateRangeInput
+  tagIds: [ID!]
 }
 
 input ProjectMilestoneCreateInput {
@@ -31088,6 +31104,7 @@ input ProjectTemplateCreateInput {
 
 input ProjectTemplateFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -87028,6 +87045,7 @@ input ShipmentCreateInput {
 
 input ShipmentFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -87038,6 +87056,7 @@ input ShipmentFilterInput {
   tagIds: [ID!]
   forwarderIds: [ID!]
   inChargeIds: [ID!]
+  booked: Boolean
   loadPorts: [PortInput!]
   firstTransitPorts: [PortInput!]
   secondTransitPorts: [PortInput!]
@@ -87256,6 +87275,7 @@ enum TagEntityType {
 
 input TagFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -87400,6 +87420,7 @@ enum TaskDateBinding {
 
 input TaskFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -87479,6 +87500,7 @@ enum TaskTemplateEntityType {
 
 input TaskTemplateFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -87757,6 +87779,7 @@ type User implements Model & Tagged & Memorizable {
 
 input UserFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -87921,6 +87944,7 @@ input WarehouseCreateInput {
 
 input WarehouseFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput

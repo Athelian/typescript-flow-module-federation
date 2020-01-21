@@ -8996,6 +8996,7 @@ export type BatchesPayload = Batches | BadRequest | Forbidden | NotFound;
 
 export type BatchFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -9250,6 +9251,7 @@ export type ContainerCreateInput = {|
 
 export type ContainerFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -10106,6 +10108,7 @@ export type FilePathArgs = {|
 
 export type FileFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -10322,6 +10325,7 @@ export type IntegrationConfigurationCreateInput = {|
 
 export type IntegrationConfigurationFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -10359,6 +10363,7 @@ export type IntegrationConfigurationUpdateInput = {|
 
 export type IntegrationFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -10774,6 +10779,7 @@ export type MaskEditCreateInput = {|
 
 export type MaskEditFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -10823,6 +10829,7 @@ export type MaskEditUpdateInput = {|
 
 export type MaskFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -11087,6 +11094,7 @@ export type Mutation = {|
   fileUpload: FilePayload,
   fileUpdate: FilePayload,
   fileDelete?: ?EmptyPayload,
+  fileDeleteMany: Array<?EmptyPayload>,
   fieldDefinitionsUpdate: FieldDefinitionsPayload,
   maskCreate: MaskPayload,
   maskUpdate: MaskPayload,
@@ -11462,6 +11470,11 @@ export type MutationFileUpdateArgs = {|
 
 export type MutationFileDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
+|};
+
+
+export type MutationFileDeleteManyArgs = {|
+  ids: Array<$ElementType<Scalars, 'ID'>>
 |};
 
 
@@ -11900,6 +11913,7 @@ export type OrderCreateInput = {|
 
 export type OrderFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -12045,6 +12059,7 @@ export type OrderItemCreateInput = {|
 
 export type OrderItemFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -12186,6 +12201,7 @@ export type Organization = {|
     postalCode?: ?$ElementType<Scalars, 'String'>,
     country?: ?$ElementType<Scalars, 'String'>,
     avatar?: ?FilePayload,
+    paid: $ElementType<Scalars, 'Boolean'>,
     disabled: $ElementType<Scalars, 'Boolean'>,
     dummy: $ElementType<Scalars, 'Boolean'>,
     users: UserPayloadPaginatedSearch,
@@ -12280,6 +12296,7 @@ export type Partner = {|
 
 export type PartnerFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -12479,6 +12496,7 @@ export type ProductCreateInput = {|
 
 export type ProductFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -12633,6 +12651,7 @@ export type ProductProviderCreateInput = {|
 
 export type ProductProviderFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -12804,10 +12823,12 @@ export type ProjectCreateInput = {|
 
 export type ProjectFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   dueDate?: ?DateRangeInput,
+  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type ProjectMilestoneCreateInput = {|
@@ -12894,6 +12915,7 @@ export type ProjectTemplateCreateInput = {|
 
 export type ProjectTemplateFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -32470,6 +32492,7 @@ export type ShipmentCreateInput = {|
 
 export type ShipmentFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -32480,6 +32503,7 @@ export type ShipmentFilterInput = {|
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   forwarderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  booked?: ?$ElementType<Scalars, 'Boolean'>,
   loadPorts?: ?Array<PortInput>,
   firstTransitPorts?: ?Array<PortInput>,
   secondTransitPorts?: ?Array<PortInput>,
@@ -32720,6 +32744,7 @@ export type TagEntityType = $Values<typeof TagEntityTypeValues>;
 
 export type TagFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -32880,6 +32905,7 @@ export type TaskDateBinding = $Values<typeof TaskDateBindingValues>;
 
 export type TaskFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -32958,6 +32984,7 @@ export type TaskTemplateEntityType = $Values<typeof TaskTemplateEntityTypeValues
 
 export type TaskTemplateFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -33261,6 +33288,7 @@ export type User = {|
 
 export type UserFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -33456,6 +33484,7 @@ export type WarehouseCreateInput = {|
 
 export type WarehouseFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
@@ -33711,7 +33740,7 @@ export type ImageFragmentFragment = ({
 
 export type DocumentFragmentFragment = ({
     ...{ __typename?: 'File' },
-  ...$Pick<File, {| id: *, name: *, path: *, type: *, status: *, memo: * |}>,
+  ...$Pick<File, {| id: *, name: *, path: *, type: *, status: *, size: *, memo: * |}>,
   ...{| ownedBy: ({
       ...{ __typename?: 'Organization' },
     ...OwnedByFragmentFragment
@@ -34820,7 +34849,7 @@ export type ItemInSelectorFragmentFragment = ({
 
 export type ItemInOrderFormFragmentFragment = ({
     ...{ __typename?: 'OrderItem' },
-  ...$Pick<OrderItem, {| id: *, archived: *, no: *, quantity: *, deliveryDate: *, memo: * |}>,
+  ...$Pick<OrderItem, {| id: *, updatedAt: *, archived: *, no: *, quantity: *, deliveryDate: *, memo: * |}>,
   ...{| price: ({
       ...{ __typename?: 'Price' },
     ...PriceFragmentFragment
