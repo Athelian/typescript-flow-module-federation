@@ -222,9 +222,12 @@ const columns: Array<ColumnConfig> = [
   // actions
 ];
 
-export default function containerColumns(
+export default function containerColumns({
+  exportKeys,
+  sorts = {},
+}: {
   exportKeys: { [string]: string | Array<string> },
-  sorts: { [string]: ColumnSortConfig }
-): Array<ColumnConfig> {
+  sorts?: { [string]: ColumnSortConfig },
+}): Array<ColumnConfig> {
   return populateColumns(columns, exportKeys, sorts);
 }

@@ -44,8 +44,8 @@ export default function({
   shipmentFieldDefinitions,
 }: Props): Array<ColumnConfig> {
   return [
-    ...batchColumns(
-      {
+    ...batchColumns({
+      exportKeys: {
         'batch.created': ['createdAt', 'createdBy'],
         'batch.updated': ['updatedAt', 'updatedBy'],
         'batch.archived': 'archived',
@@ -89,7 +89,7 @@ export default function({
         ],
         'batch.customField': 'customFields',
       },
-      {
+      sorts: {
         'batch.created': {
           name: 'createdAt',
           group: 'batch',
@@ -120,10 +120,10 @@ export default function({
           group: 'batch',
         },
       },
-      batchFieldDefinitions
-    ).filter(c => !['batch.action'].includes(c.key)),
-    ...orderItemColumns(
-      {
+      fieldDefinitions: batchFieldDefinitions,
+    }).filter(c => !['batch.action'].includes(c.key)),
+    ...orderItemColumns({
+      exportKeys: {
         'orderItem.created': ['orderItem.createdAt', 'orderItem.createdBy'],
         'orderItem.updated': ['orderItem.updatedAt', 'orderItem.updatedBy'],
         'orderItem.archived': 'orderItem.archived',
@@ -146,9 +146,8 @@ export default function({
         ],
         'orderItem.customField': 'orderItem.customFields',
       },
-      {},
-      orderItemFieldDefinitions
-    ).filter(
+      fieldDefinitions: orderItemFieldDefinitions,
+    }).filter(
       c =>
         ![
           'orderItem.remainQuantity',
@@ -160,18 +159,17 @@ export default function({
           'orderItem.action',
         ].includes(c.key)
     ),
-    ...productColumns(
-      {
+    ...productColumns({
+      exportKeys: {
         'product.name': 'orderItem.productProvider.product.name',
         'product.serial': 'orderItem.productProvider.product.serial',
         'product.material': 'orderItem.productProvider.product.material',
         'product.customField': 'orderItem.productProvider.product.customFields',
       },
-      {},
-      productFieldDefinitions
-    ),
-    ...productProviderColumns(
-      {
+      fieldDefinitions: productFieldDefinitions,
+    }),
+    ...productProviderColumns({
+      exportKeys: {
         'productProvider.supplier': 'orderItem.productProvider.supplier.name',
         'productProvider.name': 'orderItem.productProvider.name',
         'productProvider.unitPrice': [
@@ -179,11 +177,9 @@ export default function({
           'orderItem.productProvider.unitPrice.currency',
         ],
       },
-      {},
-      []
-    ),
-    ...orderColumns(
-      {
+    }),
+    ...orderColumns({
+      exportKeys: {
         'order.created': ['orderItem.order.createdAt', 'orderItem.order.createdBy'],
         'order.updated': ['orderItem.order.updatedAt', 'orderItem.order.updatedBy'],
         'order.archived': 'orderItem.order.archived',
@@ -212,9 +208,8 @@ export default function({
         ],
         'order.customField': 'orderItem.order.customFields',
       },
-      {},
-      orderFieldDefinitions
-    ).filter(
+      fieldDefinitions: orderFieldDefinitions,
+    }).filter(
       c =>
         ![
           'order.totalOrdered',
@@ -224,8 +219,8 @@ export default function({
           'order.action',
         ].includes(c.key)
     ),
-    ...containerColumns(
-      {
+    ...containerColumns({
+      exportKeys: {
         'container.created': ['container.createdAt', 'container.createdBy'],
         'container.updated': ['container.updatedAt', 'container.updatedBy'],
         'container.archived': 'container.archived',
@@ -261,8 +256,7 @@ export default function({
         'container.tags': 'container.tags',
         'container.memo': 'container.memo',
       },
-      {}
-    ).filter(
+    }).filter(
       c =>
         ![
           'container.totalPrice',
@@ -273,8 +267,8 @@ export default function({
           'container.totalVolume',
         ].includes(c.key)
     ),
-    ...shipmentColumns(
-      {
+    ...shipmentColumns({
+      exportKeys: {
         'shipment.created': ['shipment.createdAt', 'shipment.createdBy'],
         'shipment.updated': ['shipment.updatedAt', 'shipment.updatedBy'],
         'shipment.archived': 'shipment.archived',
@@ -416,9 +410,8 @@ export default function({
         ],
         'shipment.customField': 'shipment.customFields',
       },
-      {},
-      shipmentFieldDefinitions
-    ).filter(
+      fieldDefinitions: shipmentFieldDefinitions,
+    }).filter(
       c =>
         ![
           'shipment.relatedExporters',

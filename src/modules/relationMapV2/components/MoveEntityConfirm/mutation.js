@@ -137,7 +137,6 @@ const moveOrderItemsToOrder = ({
         isOrderFocus,
       })
     )
-    // $FlowIgnore: flow doesn't support flat yet
   ).then(ids => (ids ?? []).flat());
 };
 
@@ -295,7 +294,6 @@ const moveBatchesToShipment = ({
         isOrderFocus,
       })
     )
-    // $FlowIgnore: flow doesn't support flat yet
   ).then(ids => (ids ?? []).flat());
 };
 
@@ -319,7 +317,6 @@ const moveBatchesToContainer = ({
         isOrderFocus,
       })
     )
-    // $FlowIgnore: flow doesn't support flat yet
   ).then(ids => (ids ?? []).flat());
 };
 

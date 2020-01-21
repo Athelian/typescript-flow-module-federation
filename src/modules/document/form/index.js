@@ -64,7 +64,7 @@ const DocumentForm = ({
           )}
         </JumpToSection>
 
-        {!isSlideView && documentId && (
+        {documentId && (
           <BooleanValue>
             {({ value: isOpen, set: toggleLogs }) => (
               <>

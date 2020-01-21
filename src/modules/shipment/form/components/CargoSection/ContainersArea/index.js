@@ -540,6 +540,7 @@ function ContainersArea({
                                     >
                                       {isOpenContainerForm && (
                                         <ContainerFormInSlide
+                                          isNew={!container.updatedAt}
                                           container={{
                                             ...container,
                                             shipment: container.shipment

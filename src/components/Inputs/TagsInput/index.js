@@ -220,7 +220,6 @@ const TagsInput = ({
         getItemProps,
         getMenuProps,
         highlightedIndex,
-        // $FlowFixMe: downshift types is broken
         inputValue,
         openMenu,
         closeMenu,
@@ -231,7 +230,15 @@ const TagsInput = ({
             isOpen,
             disabled,
             selectedItems: value,
-            remove: handleRemove,
+            remove: tag => {
+              handleRemove(tag);
+              if (internalInputRef.current) {
+                // $FlowFixMe refer prevent scroll on https://developer.mozilla.org/en-US/docs/Web/API/HTMLOrForeignElement/focus
+                internalInputRef.current.focus({
+                  preventScroll: true,
+                });
+              }
+            },
             getInputProps: inputProps =>
               getInputProps({
                 ...inputProps,

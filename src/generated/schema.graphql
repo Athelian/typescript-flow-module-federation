@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Jan 09 2020 16:26:44 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Jan 21 2020 16:44:31 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26651,7 +26651,6 @@ type Batch implements Model & Owned & Package & Tagged & Customizable & Memoriza
   expiredAt: DateTime
   desiredAt: DateTime
   totalVolume: MetricValue!
-  batchQuantityRevisions: [BatchQuantityRevisionPayload!]!
   timeline: Timeline!
   todo: Todo!
   id: ID!
@@ -26697,7 +26696,6 @@ input BatchCreateInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchQuantityRevisions: [BatchQuantityRevisionCreateInput!]
   todo: TodoInput
   orderItemId: ID!
   shipmentId: ID
@@ -26717,6 +26715,7 @@ union BatchesPayload = Batches | BadRequest | Forbidden | NotFound
 
 input BatchFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -26750,57 +26749,6 @@ type BatchPayloadPaginatedSearch implements Paginated {
   totalPage: Int!
   count: Int!
   totalCount: Int!
-}
-
-type BatchQuantityRevision implements Model & Owned & Sortable & Memorizable {
-  batch: BatchPayload!
-  type: BatchQuantityRevisionType!
-  quantity: Float!
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  createdBy: UserPayload
-  updatedBy: UserPayload
-  deletedBy: UserPayload
-  ownedBy: OrganizationPayload!
-  sort: Int!
-  memo: String
-}
-
-input BatchQuantityRevisionCreateInput {
-  type: BatchQuantityRevisionType!
-  quantity: Float!
-  memo: String
-}
-
-union BatchQuantityRevisionPayload = BatchQuantityRevision | BadRequest | Forbidden | NotFound
-
-enum BatchQuantityRevisionType {
-  """Produced"""
-  Produced
-
-  """Dispatched"""
-  Dispatched
-
-  """Shipped"""
-  Shipped
-
-  """Inspected"""
-  Inspected
-
-  """WarehouseArrival"""
-  WarehouseArrival
-
-  """Other"""
-  Other
-}
-
-input BatchQuantityRevisionUpdateInput {
-  id: ID
-  type: BatchQuantityRevisionType
-  quantity: Float
-  memo: String
 }
 
 input BatchSimpleSplitInput {
@@ -26843,7 +26791,6 @@ input BatchUpdateInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   orderItemId: ID
   shipmentId: ID
@@ -26969,7 +26916,6 @@ input ContainerBatchInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   id: ID
   orderItemId: ID
@@ -27004,6 +26950,7 @@ input ContainerCreateInput {
 
 input ContainerFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -28476,7 +28423,7 @@ input EntityInput {
   fileId: ID
 }
 
-union EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | BatchQuantityRevision | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | BadRequest | Forbidden | NotFound
+union EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | BadRequest | Forbidden | NotFound
 
 type EntityValue {
   entity: EntityPayload
@@ -28661,6 +28608,7 @@ type File implements Model & Owned & Memorizable {
 
 input FileFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -28892,6 +28840,7 @@ input IntegrationConfigurationCreateInput {
 
 input IntegrationConfigurationFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -28925,6 +28874,7 @@ input IntegrationConfigurationUpdateInput {
 
 input IntegrationFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -29688,6 +29638,7 @@ input MaskEditCreateInput {
 
 input MaskEditFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -29739,6 +29690,7 @@ input MaskEditUpdateInput {
 
 input MaskFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -29980,6 +29932,7 @@ type Mutation {
   fileUpload(file: Upload!, input: FileInput!): FilePayload!
   fileUpdate(id: ID!, input: FileInput!): FilePayload!
   fileDelete(id: ID!): EmptyPayload
+  fileDeleteMany(ids: [ID!]!): [EmptyPayload]!
   fieldDefinitionsUpdate(input: FieldDefinitionsInput!): FieldDefinitionsPayload!
   maskCreate(input: MaskCreateInput!): MaskPayload!
   maskUpdate(id: ID!, input: MaskUpdateInput!): MaskPayload!
@@ -30288,6 +30241,7 @@ input OrderCreateInput {
 
 input OrderFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -30400,7 +30354,6 @@ input OrderItemBatchInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   id: ID
   shipmentId: ID
@@ -30424,6 +30377,7 @@ input OrderItemCreateInput {
 
 input OrderItemFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -30554,6 +30508,7 @@ type Organization implements Model {
   postalCode: String
   country: String
   avatar: FilePayload
+  paid: Boolean!
   disabled: Boolean!
   dummy: Boolean!
   users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPaginatedSearch!
@@ -30636,6 +30591,7 @@ type Partner implements Model {
 
 input PartnerFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -30772,6 +30728,7 @@ input ProductCreateInput {
 
 input ProductFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -30909,6 +30866,7 @@ input ProductProviderCreateInput {
 
 input ProductProviderFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -31064,10 +31022,12 @@ input ProjectCreateInput {
 
 input ProjectFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   dueDate: DateRangeInput
+  tagIds: [ID!]
 }
 
 input ProjectMilestoneCreateInput {
@@ -31144,6 +31104,7 @@ input ProjectTemplateCreateInput {
 
 input ProjectTemplateFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -31236,8 +31197,6 @@ type Query {
   batchesExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: BatchFilterInput, sortBy: BatchSortInput): ExportPayload!
   batchesByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   batchesTable(entities: [EntityInput!]!): [BatchPayload!]!
-  batchQuantityRevision(id: ID!): BatchQuantityRevisionPayload!
-  batchQuantityRevisionsByIDs(ids: [ID!]!): [BatchQuantityRevisionPayload!]!
   shipment(id: ID!): ShipmentPayload!
   shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPaginatedSearch!
   shipmentsByIDs(ids: [ID!]!): [ShipmentPayload!]!
@@ -86989,7 +86948,6 @@ input ShipmentBatchInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   id: ID
   orderItemId: ID
@@ -87087,6 +87045,7 @@ input ShipmentCreateInput {
 
 input ShipmentFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -87097,6 +87056,7 @@ input ShipmentFilterInput {
   tagIds: [ID!]
   forwarderIds: [ID!]
   inChargeIds: [ID!]
+  booked: Boolean
   loadPorts: [PortInput!]
   firstTransitPorts: [PortInput!]
   secondTransitPorts: [PortInput!]
@@ -87315,6 +87275,7 @@ enum TagEntityType {
 
 input TagFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -87459,6 +87420,7 @@ enum TaskDateBinding {
 
 input TaskFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -87538,6 +87500,7 @@ enum TaskTemplateEntityType {
 
 input TaskTemplateFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -87816,6 +87779,7 @@ type User implements Model & Tagged & Memorizable {
 
 input UserFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
@@ -87980,6 +87944,7 @@ input WarehouseCreateInput {
 
 input WarehouseFilterInput {
   query: String
+  ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput

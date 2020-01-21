@@ -2,15 +2,19 @@
 import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
+import { BooleanValue } from 'react-values';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import BatchForm from 'modules/batch/form';
 import { FormContainer, resetFormState } from 'modules/form';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
-import { EntityIcon } from 'components/NavBar';
+import { EntityIcon, LogsButton } from 'components/NavBar';
+import SlideView from 'components/SlideView';
+import Timeline from 'modules/timeline/components/Timeline';
 import ResetFormButton from 'components/ResetFormButton';
 import SaveFormButton from 'components/SaveFormButton';
 import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
+import { batchTimelineQuery } from 'modules/batch/form/query';
 import validator from 'modules/batch/form/validator';
 import { READONLY } from 'modules/batch/constants';
 import type {
@@ -27,6 +31,7 @@ type Props = {|
   orderConfig: OrderConfigType,
   batch: Object,
   onSave: Function,
+  isNew: boolean,
 |};
 
 const defaultProps = {
@@ -38,7 +43,7 @@ const defaultProps = {
 
 const formContainer = new FormContainer();
 
-const BatchFormInSlide = ({ batch, onSave, ...rest }: Props) => {
+const BatchFormInSlide = ({ batch, isNew, onSave, ...rest }: Props) => {
   useEffect(() => {
     return () => formContainer.onReset();
   });
@@ -96,6 +101,43 @@ const BatchFormInSlide = ({ batch, onSave, ...rest }: Props) => {
                     icon="ORDER"
                   />
                 </JumpToSection>
+                <BooleanValue>
+                  {({ value: opened, set: slideToggle }) =>
+                    !isNew && (
+                      <>
+                        <LogsButton
+                          entityType="batch"
+                          entityId={batch.id}
+                          onClick={() => slideToggle(true)}
+                        />
+                        <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                          <SlideViewLayout>
+                            {opened && (
+                              <>
+                                <SlideViewNavBar>
+                                  <EntityIcon icon="LOGS" color="LOGS" />
+                                </SlideViewNavBar>
+
+                                <Content>
+                                  <Timeline
+                                    query={batchTimelineQuery}
+                                    queryField="batch"
+                                    variables={{
+                                      id: batch.id,
+                                    }}
+                                    entity={{
+                                      batchId: batch.id,
+                                    }}
+                                  />
+                                </Content>
+                              </>
+                            )}
+                          </SlideViewLayout>
+                        </SlideView>
+                      </>
+                    )
+                  }
+                </BooleanValue>
                 {(batchInfoContainer.isDirty() || batchTasksContainer.isDirty()) && (
                   <>
                     <ResetFormButton

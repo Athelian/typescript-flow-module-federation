@@ -30,6 +30,7 @@ import {
   HasShipment,
   HasEntity,
   FreeTimeOverdue,
+  Booked,
 } from './Inputs/Bool';
 import OrganizationIds, {
   ImporterIds,
@@ -124,6 +125,7 @@ const inputs = {
   has_shipment: HasShipment,
   has_entity: HasEntity,
   free_time_overdue: FreeTimeOverdue,
+  booked: Booked,
   ports: Ports,
 };
 

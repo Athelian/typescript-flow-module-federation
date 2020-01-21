@@ -8,10 +8,10 @@ import { colors } from 'styles/common';
 import Dialog from 'components/Dialog';
 import { ApplyButton, ResetButton, BaseButton, SaveButton, IconButton } from 'components/Buttons';
 import { Tooltip } from 'components/Tooltip';
-import type { Column } from 'components/DraggableColumn';
 import { parseIcon } from 'utils/entity';
 import { convertMappingColumns, flattenColumns } from 'utils/template';
 import type { ColumnConfig } from '../SheetState/types';
+import { getColumnsConfigured } from '../useColumns';
 import messages from '../messages';
 import TemplateSelector from './TemplateSelector';
 import TemplateNew from './TemplateNew';
@@ -27,23 +27,25 @@ import {
 } from './style';
 
 type Props = {
+  defaultColumns: Array<ColumnConfig>,
   columns: Array<ColumnConfig>,
   templateType: string,
   onChange: (Array<ColumnConfig>) => void,
   onLoadTemplate?: (template: Object) => Array<ColumnConfig>,
-  onApply?: (columns: Array<Column | Array<Column>>) => Array<ColumnConfig>,
+  onApply?: (columns: Array<ColumnConfig | Array<ColumnConfig>>) => Array<ColumnConfig>,
   children: ({
     getGroupProps: (
       group: string
     ) => {
       icon: string,
-      columns: Array<Column | Array<Column>>,
-      onChange: (Array<Column | Array<Column>>) => void,
+      columns: Array<ColumnConfig | Array<ColumnConfig>>,
+      onChange: (Array<ColumnConfig | Array<ColumnConfig>>) => void,
     },
   }) => React.Node,
 };
 
 const ColumnsConfig = ({
+  defaultColumns,
   columns,
   templateType,
   onChange,
@@ -56,7 +58,9 @@ const ColumnsConfig = ({
     `${templateType}SelectedTemplate`,
     null
   );
-  const [dirtyColumns, setDirtyColumns] = React.useState<Array<Column | Array<Column>>>([]);
+  const [dirtyColumns, setDirtyColumns] = React.useState<Array<ColumnConfig | Array<ColumnConfig>>>(
+    []
+  );
   const currentTemplate = React.useRef(persistTemplate);
 
   React.useEffect(() => {
@@ -93,7 +97,7 @@ const ColumnsConfig = ({
       const selectedColumns = flattenColumns(dirtyColumns);
       const applyColumns: Array<ColumnConfig> = [];
       selectedColumns.forEach(col => {
-        const existColumn = columns.find(({ key }) => key === col.key);
+        const existColumn = defaultColumns.find(({ key }) => key === col.key);
         if (existColumn) {
           applyColumns.push({
             ...existColumn,
@@ -148,6 +152,7 @@ const ColumnsConfig = ({
       )
     );
   };
+
   const handleGroup = () => {
     currentTemplate.current = null;
     setDirtyColumns(
@@ -180,16 +185,43 @@ const ColumnsConfig = ({
       if (onLoadTemplate) {
         setDirtyColumns(convertMappingColumns(onLoadTemplate(template)));
       } else {
-        const currentColumns = flattenColumns(dirtyColumns);
-        const templateColumns = currentColumns.map(col => ({
-          ...col,
-          hidden: false,
-          ...(template?.columns ?? []).find(({ key }) => key === col.key),
-        }));
+        const templateColumns = getColumnsConfigured(
+          defaultColumns,
+          template.columns.reduce(
+            (config, col) => ({
+              ...config,
+              [col.key]: col.hidden,
+            }),
+            {}
+          )
+        ).map(col => ({ ...col, isNew: false }));
 
         setDirtyColumns(convertMappingColumns(templateColumns));
       }
     }
+  };
+
+  const handleDefault = () => {
+    currentTemplate.current = null;
+    const currentColumns = flattenColumns(dirtyColumns);
+    setDirtyColumns(
+      convertMappingColumns(
+        defaultColumns.map(defaultColumn => {
+          const column = currentColumns.find(col => col.key === defaultColumn.key);
+
+          return {
+            ...defaultColumn,
+            isNew: column?.isNew ?? false,
+            hidden: column?.hidden ?? false,
+          };
+        })
+      )
+    );
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    handleReset();
   };
 
   const getGroupProps = React.useCallback(
@@ -200,7 +232,7 @@ const ColumnsConfig = ({
         currentTemplate.current = null;
         setDirtyColumns(
           Object.entries(groupedColumns).flatMap(([g, cols]) =>
-            g === group ? newCols : ((cols: any): Array<Column>)
+            g === group ? newCols : ((cols: any): Array<ColumnConfig>)
           )
         );
       },
@@ -222,7 +254,7 @@ const ColumnsConfig = ({
         suffix={persistTemplate?.name}
       />
 
-      <Dialog isOpen={isOpen} onRequestClose={() => setOpen(false)}>
+      <Dialog isOpen={isOpen} onRequestClose={handleClose}>
         <div className={ModalWrapperStyle}>
           <div className={HeaderStyle}>
             <div className={ActionsWrapperStyle}>
@@ -253,6 +285,16 @@ const ColumnsConfig = ({
                   <IconButton
                     onClick={handleGroup}
                     icon="BRING_FORWARD"
+                    textColor="GRAY_DARK"
+                    hoverTextColor="WHITE"
+                    backgroundColor="GRAY_SUPER_LIGHT"
+                    hoverBackgroundColor="GRAY_LIGHT"
+                  />
+                </Tooltip>
+                <Tooltip message={<FormattedMessage {...messages.columnsConfigDefaultButton} />}>
+                  <IconButton
+                    onClick={handleDefault}
+                    icon="TABLE"
                     textColor="GRAY_DARK"
                     hoverTextColor="WHITE"
                     backgroundColor="GRAY_SUPER_LIGHT"
@@ -296,6 +338,7 @@ const ColumnsConfig = ({
 
               <TemplateNew
                 columns={dirtyColumns.flatMap(cols => (Array.isArray(cols) ? [...cols] : cols))}
+                defaultColumns={defaultColumns}
                 templateType={templateType}
                 onSave={handleTemplateChange}
               >

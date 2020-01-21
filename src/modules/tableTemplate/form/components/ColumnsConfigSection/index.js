@@ -4,23 +4,29 @@ import { FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader } from 'components/Form';
-import ColumnsGroup from 'components/ColumnsGroup';
+import type { ColumnConfig } from 'components/Sheet';
+import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import MilestoneTaskColumnsConfigGroup from 'modules/project/sheet/MilestoneTaskColumnsConfigGroup';
 import { parseIcon } from 'utils/entity';
-import { getColumnGroupTypes, computeColumnConfigsFromState } from './helpers';
+import { flattenColumns } from 'utils/template';
+import { getColumnGroupTypes, stickiedColumns } from './helpers';
 import { ColumnsConfigSectionWrapperStyle, ColumnsConfigSectionBodyStyle } from './style';
 
 const ColumnsConfigSection = () => {
   const {
     state,
-    selectColumns,
-    selectAllColumns,
-    unselectAllColumns,
-    groupAllColumns,
+    onColumnsChange,
+    selectAll,
+    unselectAll,
+    groupAll,
+    reorderToDefault,
   } = TableTemplateFormContainer.useContainer();
 
-  const parsedColumns = React.useMemo(() => computeColumnConfigsFromState(state), [state]);
+  const parsedColumns = React.useMemo(
+    () => stickiedColumns(state.values.type, state.values.columns),
+    [state]
+  );
 
   const groupedColumns = React.useMemo(
     () =>
@@ -38,9 +44,16 @@ const ColumnsConfigSection = () => {
     (group: string) => ({
       icon: group,
       columns: groupedColumns[group] ?? [],
-      onChange: selectColumns,
+      onChange: newCols =>
+        onColumnsChange(
+          flattenColumns(
+            Object.entries(groupedColumns).flatMap(([g, cols]) =>
+              g === group ? newCols : ((cols: any): Array<ColumnConfig>)
+            )
+          )
+        ),
     }),
-    [groupedColumns, selectColumns]
+    [groupedColumns, onColumnsChange]
   );
 
   return (
@@ -58,7 +71,7 @@ const ColumnsConfigSection = () => {
       <div className={ColumnsConfigSectionWrapperStyle}>
         <SectionNavBar>
           <BaseButton
-            onClick={unselectAllColumns}
+            onClick={unselectAll}
             icon="UNCHECKED"
             label={
               <FormattedMessage
@@ -73,7 +86,7 @@ const ColumnsConfigSection = () => {
           />
 
           <BaseButton
-            onClick={selectAllColumns}
+            onClick={selectAll}
             icon="CHECKED"
             label={
               <FormattedMessage id="modules.TableTemplates.selectAll" defaultMessage="SELECT ALL" />
@@ -85,9 +98,21 @@ const ColumnsConfigSection = () => {
           />
 
           <BaseButton
-            onClick={() => groupAllColumns(groupedColumns)}
+            onClick={() => groupAll(groupedColumns)}
             icon="BRING_FORWARD"
             label={<FormattedMessage id="modules.TableTemplates.group" defaultMessage="GROUP" />}
+            textColor="GRAY_DARK"
+            hoverTextColor="WHITE"
+            backgroundColor="GRAY_SUPER_LIGHT"
+            hoverBackgroundColor="GRAY_LIGHT"
+          />
+
+          <BaseButton
+            onClick={reorderToDefault}
+            icon="TABLE"
+            label={
+              <FormattedMessage id="modules.TableTemplates.default" defaultMessage="DEFAULT" />
+            }
             textColor="GRAY_DARK"
             hoverTextColor="WHITE"
             backgroundColor="GRAY_SUPER_LIGHT"
@@ -96,7 +121,7 @@ const ColumnsConfigSection = () => {
         </SectionNavBar>
 
         <div className={ColumnsConfigSectionBodyStyle}>
-          {getColumnGroupTypes(state.type).map(groupType => {
+          {getColumnGroupTypes(state.values.type).map(groupType => {
             switch (groupType) {
               case 'MILESTONE_TASKS':
                 return (

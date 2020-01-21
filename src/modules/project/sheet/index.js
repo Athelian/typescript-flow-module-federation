@@ -6,12 +6,16 @@ import { Content } from 'components/Layout';
 import { EntityIcon, NavBar, Search, Filter, ProjectFilterConfig } from 'components/NavBar';
 import { ExportButton } from 'components/Buttons';
 import { Sheet, ColumnsConfig, useSheet, useExportedColumns } from 'components/Sheet';
-import ColumnsGroup from 'components/ColumnsGroup';
+import ColumnsGroup from 'components/Sheet/ColumnsConfig/ColumnsGroup';
 import { useViewer } from 'contexts/Viewer';
 import { clone } from 'utils/fp';
 import { projectsExportQuery } from '../query';
 import MilestoneTaskColumnsConfigGroup from './MilestoneTaskColumnsConfigGroup';
-import { computeProjectColumnConfigsFromTemplate, useProjectColumnStates } from './columns';
+import {
+  computeProjectColumnConfigsFromTemplate,
+  defaultColumns,
+  useProjectColumnStates,
+} from './columns';
 import transformer from './transformer';
 import entityEventHandler from './handler';
 import sorter from './sorter';
@@ -67,6 +71,7 @@ const ProjectSheetModule = () => {
         <Filter config={ProjectFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
         <ColumnsConfig
+          defaultColumns={defaultColumns}
           columns={columns}
           templateType="ProjectSheet"
           onChange={setColumns}

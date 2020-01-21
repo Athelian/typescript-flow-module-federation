@@ -1,6 +1,7 @@
 // @flow
 import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import { Provider, Subscribe } from 'unstated';
 import { FormContainer, resetFormState } from 'modules/form';
 import {
@@ -10,24 +11,26 @@ import {
   OrderItemFilesContainer,
   OrderItemShipmentsContainer,
 } from 'modules/orderItem/form/containers';
+import { orderItemTimelineQuery } from 'modules/orderItem/form/query';
 import JumpToSection from 'components/JumpToSection';
 import validator from 'modules/orderItem/form/validator';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import ItemForm from 'modules/orderItem/form';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
-import { EntityIcon } from 'components/NavBar';
+import { EntityIcon, LogsButton } from 'components/NavBar';
+import SlideView from 'components/SlideView';
+import Timeline from 'modules/timeline/components/Timeline';
 import ResetFormButton from 'components/ResetFormButton';
 import SaveFormButton from 'components/SaveFormButton';
 
-type Props = {
+type Props = {|
   orderItem: Object,
   onSave: Function,
-};
+  isNew: boolean,
+|};
 
-// FIXME: re confirm concept.
 const formContainer = new FormContainer();
-// FIXME: move into /form folder
-const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
+const ItemFormInSlide = ({ orderItem, onSave, isNew }: Props) => {
   useEffect(() => {
     return () => formContainer.onReset();
   });
@@ -95,6 +98,43 @@ const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
                     icon="SHIPMENT"
                   />
                 </JumpToSection>
+                <BooleanValue>
+                  {({ value: opened, set: slideToggle }) =>
+                    !isNew && (
+                      <>
+                        <LogsButton
+                          entityType="orderItem"
+                          entityId={orderItem.id}
+                          onClick={() => slideToggle(true)}
+                        />
+                        <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                          <SlideViewLayout>
+                            {opened && (
+                              <>
+                                <SlideViewNavBar>
+                                  <EntityIcon icon="LOGS" color="LOGS" />
+                                </SlideViewNavBar>
+
+                                <Content>
+                                  <Timeline
+                                    query={orderItemTimelineQuery}
+                                    queryField="orderItem"
+                                    variables={{
+                                      id: orderItem.id,
+                                    }}
+                                    entity={{
+                                      orderItemId: orderItem.id,
+                                    }}
+                                  />
+                                </Content>
+                              </>
+                            )}
+                          </SlideViewLayout>
+                        </SlideView>
+                      </>
+                    )
+                  }
+                </BooleanValue>
                 {(orderItemInfoContainer.isDirty() ||
                   orderItemBatchesContainer.isDirty() ||
                   orderItemFilesContainer.isDirty() ||

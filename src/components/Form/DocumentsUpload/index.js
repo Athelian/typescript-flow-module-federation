@@ -68,10 +68,12 @@ const SELECTED_FIELDS = [
   'type',
   'name',
   'path',
+  'size',
   'status',
   'memo',
   'entity',
   'ownedBy',
+  'orphan',
   '__typename',
 ];
 
@@ -371,6 +373,12 @@ const DocumentsUpload = ({
       >
         {selectedFile && (
           <DocumentFormSideView
+            // NOTE: orphan is only queried from selector
+            // that is using for checking the exist file from selector, consider refactor if that finds a simpler way
+            isNew={
+              !selectedFile.entity?.id &&
+              !Object.prototype.hasOwnProperty.call(selectedFile, 'orphan')
+            }
             file={selectedFile}
             onSave={updatedFile => {
               onSave(files.map(file => (file.id === updatedFile.id ? updatedFile : file)));

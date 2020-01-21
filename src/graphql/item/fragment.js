@@ -194,6 +194,7 @@ export const itemInSelectorFragment = gql`
 export const itemInOrderFormFragment = gql`
   fragment itemInOrderFormFragment on OrderItem {
     id
+    updatedAt
     archived
     no
     quantity

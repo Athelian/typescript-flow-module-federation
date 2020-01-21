@@ -12,6 +12,7 @@ export const documentListQuery = gql`
       nodes {
         ...documentFragment
         ... on File {
+          orphan
           ownedBy {
             ...ownedByFragment
           }

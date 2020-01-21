@@ -33,7 +33,11 @@ export const prepareParsedMaskEditInput = (originalValues: ?Object, newValues: O
     ...parseGenericField('name', originalValues?.name, newValues.name),
     ...parseEnumField('type', originalValues?.type, newValues.type),
     ...parseMemoField('memo', originalValues?.memo, newValues.memo),
-    ...parseGenericField('columns', originalValues?.columns, newValues.columns),
+    ...parseGenericField(
+      'columns',
+      (originalValues?.columns ?? []).map(({ key, hidden }) => ({ key, hidden: !!hidden })),
+      newValues.columns.map(({ key, hidden }) => ({ key, hidden: !!hidden }))
+    ),
     fields: [],
   };
 };
