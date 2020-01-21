@@ -71,12 +71,15 @@ export const getPreComputeDefaultColumnsOnReorder = (type: MaskEditType) => {
           taskColumnsTemplate,
         } = computeMilestoneTaskColumnsTemplate(defaultColumns);
 
-        return generateMilestoneTaskColumns(
-          milestoneColumnsTemplate,
-          milestoneCount,
-          taskColumnsTemplate,
-          taskCount
-        );
+        return [
+          ...defaultColumns.filter(col => col.key.startsWith('project')),
+          ...generateMilestoneTaskColumns(
+            milestoneColumnsTemplate,
+            milestoneCount,
+            taskColumnsTemplate,
+            taskCount
+          ),
+        ];
       };
     default:
       return null;
