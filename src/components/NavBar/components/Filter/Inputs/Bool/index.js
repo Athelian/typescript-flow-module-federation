@@ -71,5 +71,6 @@ export const FreeTimeOverdue = Bool(
   messages.freeTimeOverdue,
   messages.freeTimeNotOverdue
 );
+export const Booked = Bool(messages.booked, messages.booked, messages.notBooked);
 
 export default Bool;

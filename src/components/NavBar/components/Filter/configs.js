@@ -638,6 +638,13 @@ export const ShipmentFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'SHIPMENT',
+    field: 'booked',
+    type: 'booked',
+    message: shipmentMessages.booked,
+    defaultValue: true,
+  },
+  {
+    entity: 'SHIPMENT',
     field: 'warehouseIds',
     type: 'warehouse_ids',
     message: shipmentMessages.warehouse,
@@ -1140,6 +1147,13 @@ export const ProjectFilterConfig: Array<FilterConfig> = [
     type: 'date_range',
     message: projectMessages.dueDate,
     defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'PROJECT',
+    field: 'tagIds',
+    type: 'project_tags',
+    message: projectMessages.tags,
+    defaultValue: [],
   },
 ];
 

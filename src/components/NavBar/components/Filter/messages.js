@@ -50,6 +50,14 @@ export default defineMessages({
     id: 'components.NavBar.Filter.archived',
     defaultMessage: 'Archived',
   },
+  booked: {
+    id: 'components.NavBar.Filter.booked',
+    defaultMessage: 'Booked',
+  },
+  notBooked: {
+    id: 'components.NavBar.Filter.notBooked',
+    defaultMessage: 'Not booked',
+  },
   tags: {
     id: 'components.NavBar.Filter.tags',
     defaultMessage: 'Tags',
