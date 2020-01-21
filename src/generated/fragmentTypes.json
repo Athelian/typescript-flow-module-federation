@@ -108,9 +108,6 @@
             "name": "Container"
           },
           {
-            "name": "BatchQuantityRevision"
-          },
-          {
             "name": "Partnership"
           },
           {
@@ -270,9 +267,6 @@
             "name": "Container"
           },
           {
-            "name": "BatchQuantityRevision"
-          },
-          {
             "name": "ProjectTemplate"
           },
           {
@@ -363,9 +357,6 @@
             "name": "Container"
           },
           {
-            "name": "BatchQuantityRevision"
-          },
-          {
             "name": "Role"
           },
           {
@@ -394,9 +385,6 @@
           },
           {
             "name": "Batch"
-          },
-          {
-            "name": "BatchQuantityRevision"
           },
           {
             "name": "Shipment"
@@ -601,9 +589,6 @@
           },
           {
             "name": "Container"
-          },
-          {
-            "name": "BatchQuantityRevision"
           },
           {
             "name": "MilestoneTemplate"
@@ -1141,24 +1126,6 @@
         "possibleTypes": [
           {
             "name": "Container"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "BatchQuantityRevisionPayload",
-        "possibleTypes": [
-          {
-            "name": "BatchQuantityRevision"
           },
           {
             "name": "BadRequest"

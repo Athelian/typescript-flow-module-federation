@@ -8930,7 +8930,6 @@ export type Batch = {|
     expiredAt?: ?$ElementType<Scalars, 'DateTime'>,
     desiredAt?: ?$ElementType<Scalars, 'DateTime'>,
     totalVolume: MetricValue,
-    batchQuantityRevisions: Array<BatchQuantityRevisionPayload>,
     timeline: Timeline,
     todo: Todo,
     id: $ElementType<Scalars, 'ID'>,
@@ -8977,7 +8976,6 @@ export type BatchCreateInput = {|
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
-  batchQuantityRevisions?: ?Array<BatchQuantityRevisionCreateInput>,
   todo?: ?TodoInput,
   orderItemId: $ElementType<Scalars, 'ID'>,
   shipmentId?: ?$ElementType<Scalars, 'ID'>,
@@ -9037,56 +9035,6 @@ export type BatchPayloadPaginatedSearch = {|
   |}
 |};
 
-export type BatchQuantityRevision = {|
-  ...Model,
-  ...Owned,
-  ...Sortable,
-  ...Memorizable,
-  ...{|
-     __typename?: 'BatchQuantityRevision',
-    batch: BatchPayload,
-    type: BatchQuantityRevisionType,
-    quantity: $ElementType<Scalars, 'Float'>,
-    id: $ElementType<Scalars, 'ID'>,
-    createdAt: $ElementType<Scalars, 'DateTime'>,
-    updatedAt: $ElementType<Scalars, 'DateTime'>,
-    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
-    createdBy?: ?UserPayload,
-    updatedBy?: ?UserPayload,
-    deletedBy?: ?UserPayload,
-    ownedBy: OrganizationPayload,
-    sort: $ElementType<Scalars, 'Int'>,
-    memo?: ?$ElementType<Scalars, 'String'>,
-  |}
-|};
-
-export type BatchQuantityRevisionCreateInput = {|
-  type: BatchQuantityRevisionType,
-  quantity: $ElementType<Scalars, 'Float'>,
-  memo?: ?$ElementType<Scalars, 'String'>,
-|};
-
-export type BatchQuantityRevisionPayload = BatchQuantityRevision | BadRequest | Forbidden | NotFound;
-
-export const BatchQuantityRevisionTypeValues = Object.freeze({
-  Produced: 'Produced', 
-  Dispatched: 'Dispatched', 
-  Shipped: 'Shipped', 
-  Inspected: 'Inspected', 
-  WarehouseArrival: 'WarehouseArrival', 
-  Other: 'Other'
-});
-
-
-export type BatchQuantityRevisionType = $Values<typeof BatchQuantityRevisionTypeValues>;
-
-export type BatchQuantityRevisionUpdateInput = {|
-  id?: ?$ElementType<Scalars, 'ID'>,
-  type?: ?BatchQuantityRevisionType,
-  quantity?: ?$ElementType<Scalars, 'Float'>,
-  memo?: ?$ElementType<Scalars, 'String'>,
-|};
-
 export type BatchSimpleSplitInput = {|
   quantity: $ElementType<Scalars, 'Float'>,
 |};
@@ -9127,7 +9075,6 @@ export type BatchUpdateInput = {|
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
-  batchQuantityRevisions?: ?Array<BatchQuantityRevisionUpdateInput>,
   todo?: ?TodoInput,
   orderItemId?: ?$ElementType<Scalars, 'ID'>,
   shipmentId?: ?$ElementType<Scalars, 'ID'>,
@@ -9269,7 +9216,6 @@ export type ContainerBatchInput = {|
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
-  batchQuantityRevisions?: ?Array<BatchQuantityRevisionUpdateInput>,
   todo?: ?TodoInput,
   id?: ?$ElementType<Scalars, 'ID'>,
   orderItemId?: ?$ElementType<Scalars, 'ID'>,
@@ -9966,7 +9912,7 @@ export type EntityInput = {|
   fileId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
-export type EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | BatchQuantityRevision | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | BadRequest | Forbidden | NotFound;
+export type EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | BadRequest | Forbidden | NotFound;
 
 export type EntityValue = {|
    __typename?: 'EntityValue',
@@ -12076,7 +12022,6 @@ export type OrderItemBatchInput = {|
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
-  batchQuantityRevisions?: ?Array<BatchQuantityRevisionUpdateInput>,
   todo?: ?TodoInput,
   id?: ?$ElementType<Scalars, 'ID'>,
   shipmentId?: ?$ElementType<Scalars, 'ID'>,
@@ -13046,8 +12991,6 @@ export type Query = {|
   batchesExport: ExportPayload,
   batchesByIDsExport: ExportPayload,
   batchesTable: Array<BatchPayload>,
-  batchQuantityRevision: BatchQuantityRevisionPayload,
-  batchQuantityRevisionsByIDs: Array<BatchQuantityRevisionPayload>,
   shipment: ShipmentPayload,
   shipments: ShipmentPayloadPaginatedSearch,
   shipmentsByIDs: Array<ShipmentPayload>,
@@ -13326,16 +13269,6 @@ export type QueryBatchesByIDsExportArgs = {|
 
 export type QueryBatchesTableArgs = {|
   entities: Array<EntityInput>
-|};
-
-
-export type QueryBatchQuantityRevisionArgs = {|
-  id: $ElementType<Scalars, 'ID'>
-|};
-
-
-export type QueryBatchQuantityRevisionsByIDsArgs = {|
-  ids: Array<$ElementType<Scalars, 'ID'>>
 |};
 
 
@@ -32440,7 +32373,6 @@ export type ShipmentBatchInput = {|
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
-  batchQuantityRevisions?: ?Array<BatchQuantityRevisionUpdateInput>,
   todo?: ?TodoInput,
   id?: ?$ElementType<Scalars, 'ID'>,
   orderItemId?: ?$ElementType<Scalars, 'ID'>,
@@ -33829,13 +33761,6 @@ export type DocumentFragmentFragment = ({
       ...OwnedByFragmentFragment
     }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
   }) | ({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>,
-    ...{| ownedBy: ({
-        ...{ __typename?: 'Organization' },
-      ...OwnedByFragmentFragment
-    }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
-  }) | ({
       ...{ __typename?: 'Shipment' },
     ...$Pick<Shipment, {| id: *, no: * |}>,
     ...{| ownedBy: ({
@@ -34060,7 +33985,7 @@ export type FieldValuesFragmentFragment = ({
   }) | { __typename?: 'IntValue' } | { __typename?: 'FloatValue' } | { __typename?: 'BooleanValue' } | { __typename?: 'DateTimeValue' } | { __typename?: 'IntervalValue' } | { __typename?: 'DurationValue' } | { __typename?: 'MetricValueValue' } | { __typename?: 'SizeValue' } | { __typename?: 'EntityValue' } | { __typename?: 'Values' }, fieldDefinition: ({
       ...{ __typename?: 'FieldDefinition' },
     ...FieldDefinitionFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, entity: { __typename: 'Product' } | { __typename: 'ProductProvider' } | { __typename: 'ProductProviderPackage' } | { __typename: 'Order' } | { __typename: 'OrderItem' } | { __typename: 'Batch' } | { __typename: 'BatchQuantityRevision' } | { __typename: 'Shipment' } | { __typename: 'Voyage' } | { __typename: 'Container' } | { __typename: 'ContainerGroup' } | { __typename: 'TimelineDate' } | { __typename: 'TimelineDateRevision' } | { __typename: 'Warehouse' } | { __typename: 'Tag' } | { __typename: 'User' } | { __typename: 'Organization' } | { __typename: 'Partnership' } | { __typename: 'Role' } | { __typename: 'File' } | { __typename: 'Task' } | { __typename: 'TaskTemplate' } | { __typename: 'Project' } | { __typename: 'ProjectTemplate' } | { __typename: 'Milestone' } | { __typename: 'MilestoneTemplate' } | { __typename: 'Mask' } | { __typename: 'MaskEdit' } | { __typename: 'FieldDefinition' } | { __typename: 'FieldValue' } | { __typename: 'BadRequest' } | { __typename: 'Forbidden' } | { __typename: 'NotFound' } |}
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, entity: { __typename: 'Product' } | { __typename: 'ProductProvider' } | { __typename: 'ProductProviderPackage' } | { __typename: 'Order' } | { __typename: 'OrderItem' } | { __typename: 'Batch' } | { __typename: 'Shipment' } | { __typename: 'Voyage' } | { __typename: 'Container' } | { __typename: 'ContainerGroup' } | { __typename: 'TimelineDate' } | { __typename: 'TimelineDateRevision' } | { __typename: 'Warehouse' } | { __typename: 'Tag' } | { __typename: 'User' } | { __typename: 'Organization' } | { __typename: 'Partnership' } | { __typename: 'Role' } | { __typename: 'File' } | { __typename: 'Task' } | { __typename: 'TaskTemplate' } | { __typename: 'Project' } | { __typename: 'ProjectTemplate' } | { __typename: 'Milestone' } | { __typename: 'MilestoneTemplate' } | { __typename: 'Mask' } | { __typename: 'MaskEdit' } | { __typename: 'FieldDefinition' } | { __typename: 'FieldValue' } | { __typename: 'BadRequest' } | { __typename: 'Forbidden' } | { __typename: 'NotFound' } |}
 });
 
 export type FieldDefinitionFragmentFragment = ({
@@ -34212,9 +34137,6 @@ export type DocumentFormFragmentFragment = ({
       ...{ __typename?: 'Batch' },
     ...$Pick<Batch, {| id: * |}>
   }) | ({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>
-  }) | ({
       ...{ __typename?: 'Shipment' },
     ...$Pick<Shipment, {| id: * |}>
   }) | ({
@@ -34299,9 +34221,6 @@ export type DocumentFormFragmentFragment = ({
   }) | ({
       ...{ __typename?: 'Batch' },
     ...$Pick<Batch, {| id: * |}>
-  }) | ({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>
   }) | ({
       ...{ __typename?: 'Shipment' },
     ...$Pick<Shipment, {| id: * |}>
@@ -34388,9 +34307,6 @@ export type DocumentFormFragmentFragment = ({
       ...{ __typename?: 'Batch' },
     ...$Pick<Batch, {| id: * |}>
   }) | ({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>
-  }) | ({
       ...{ __typename?: 'Shipment' },
     ...$Pick<Shipment, {| id: * |}>
   }) | ({
@@ -34474,9 +34390,6 @@ export type DocumentFormFragmentFragment = ({
   }) | ({
       ...{ __typename?: 'Batch' },
     ...$Pick<Batch, {| id: * |}>
-  }) | ({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>
   }) | ({
       ...{ __typename?: 'Shipment' },
     ...$Pick<Shipment, {| id: * |}>,
@@ -34564,9 +34477,6 @@ export type DocumentFormFragmentFragment = ({
       ...{ __typename?: 'Batch' },
     ...$Pick<Batch, {| id: * |}>
   }) | ({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>
-  }) | ({
       ...{ __typename?: 'Shipment' },
     ...$Pick<Shipment, {| id: * |}>
   }) | ({
@@ -34650,9 +34560,6 @@ export type DocumentFormFragmentFragment = ({
   }) | ({
       ...{ __typename?: 'Batch' },
     ...$Pick<Batch, {| id: * |}>
-  }) | ({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>
   }) | ({
       ...{ __typename?: 'Shipment' },
     ...$Pick<Shipment, {| id: * |}>
@@ -35934,9 +35841,6 @@ export type TaskEntityCardFragmentFragment = ({
       ...{ __typename?: 'Batch' },
     ...$Pick<Batch, {| id: * |}>
   }) | ({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>
-  }) | ({
       ...{ __typename?: 'Shipment' },
     ...$Pick<Shipment, {| id: * |}>
   }) | ({
@@ -36021,9 +35925,6 @@ export type TaskEntityCardFragmentFragment = ({
   }) | ({
       ...{ __typename?: 'Batch' },
     ...$Pick<Batch, {| id: * |}>
-  }) | ({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>
   }) | ({
       ...{ __typename?: 'Shipment' },
     ...$Pick<Shipment, {| id: * |}>
@@ -36110,9 +36011,6 @@ export type TaskEntityCardFragmentFragment = ({
       ...{ __typename?: 'Batch' },
     ...$Pick<Batch, {| id: * |}>
   }) | ({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>
-  }) | ({
       ...{ __typename?: 'Shipment' },
     ...$Pick<Shipment, {| id: * |}>
   }) | ({
@@ -36197,9 +36095,6 @@ export type TaskEntityCardFragmentFragment = ({
       ...{ __typename?: 'Batch' },
     ...$Pick<Batch, {| id: * |}>,
     ...BatchCardFragmentFragment
-  }) | ({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>
   }) | ({
       ...{ __typename?: 'Shipment' },
     ...$Pick<Shipment, {| id: * |}>
@@ -36286,9 +36181,6 @@ export type TaskEntityCardFragmentFragment = ({
       ...{ __typename?: 'Batch' },
     ...$Pick<Batch, {| id: * |}>
   }) | ({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>
-  }) | ({
       ...{ __typename?: 'Shipment' },
     ...$Pick<Shipment, {| id: * |}>
   }) | ({
@@ -36374,9 +36266,6 @@ export type TaskEntityCardFragmentFragment = ({
       ...{ __typename?: 'Batch' },
     ...$Pick<Batch, {| id: * |}>
   }) | ({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>
-  }) | ({
       ...{ __typename?: 'Shipment' },
     ...$Pick<Shipment, {| id: * |}>
   }) | ({
@@ -36460,9 +36349,6 @@ export type TaskEntityCardFragmentFragment = ({
   }) | ({
       ...{ __typename?: 'Batch' },
     ...$Pick<Batch, {| id: * |}>
-  }) | ({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>
   }) | ({
       ...{ __typename?: 'Shipment' },
     ...$Pick<Shipment, {| id: * |}>,
@@ -36558,9 +36444,6 @@ export type TaskCardFragmentFragment = ({
   }) | ({
       ...{ __typename?: 'Batch' },
     ...$Pick<Batch, {| id: *, no: * |}>
-  }) | ({
-      ...{ __typename?: 'BatchQuantityRevision' },
-    ...$Pick<BatchQuantityRevision, {| id: * |}>
   }) | ({
       ...{ __typename?: 'Shipment' },
     ...$Pick<Shipment, {| id: *, no: * |}>
@@ -36906,9 +36789,6 @@ export type WarehouseCardFragmentFragment = ({
             "name": "Container"
           },
           {
-            "name": "BatchQuantityRevision"
-          },
-          {
             "name": "Partnership"
           },
           {
@@ -37068,9 +36948,6 @@ export type WarehouseCardFragmentFragment = ({
             "name": "Container"
           },
           {
-            "name": "BatchQuantityRevision"
-          },
-          {
             "name": "ProjectTemplate"
           },
           {
@@ -37161,9 +37038,6 @@ export type WarehouseCardFragmentFragment = ({
             "name": "Container"
           },
           {
-            "name": "BatchQuantityRevision"
-          },
-          {
             "name": "Role"
           },
           {
@@ -37192,9 +37066,6 @@ export type WarehouseCardFragmentFragment = ({
           },
           {
             "name": "Batch"
-          },
-          {
-            "name": "BatchQuantityRevision"
           },
           {
             "name": "Shipment"
@@ -37399,9 +37270,6 @@ export type WarehouseCardFragmentFragment = ({
           },
           {
             "name": "Container"
-          },
-          {
-            "name": "BatchQuantityRevision"
           },
           {
             "name": "MilestoneTemplate"
@@ -37939,24 +37807,6 @@ export type WarehouseCardFragmentFragment = ({
         "possibleTypes": [
           {
             "name": "Container"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "BatchQuantityRevisionPayload",
-        "possibleTypes": [
-          {
-            "name": "BatchQuantityRevision"
           },
           {
             "name": "BadRequest"

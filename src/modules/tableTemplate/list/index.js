@@ -5,9 +5,8 @@ import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { TemplateCard } from 'components/Cards';
-import TableTemplateFormWrapper from 'modules/tableTemplate/common/TableTemplateFormWrapper';
-import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import loadMore from 'utils/loadMore';
+import { TableTemplateFormWrapper } from 'modules/tableTemplate/form';
 
 type Props = {
   tableTemplatesData: Object,
@@ -75,15 +74,13 @@ const TableTemplateList = ({
                 onRequestClose={() => toggle(false)}
                 shouldConfirm={() => document.getElementById('table_template_form_save_button')}
               >
-                <TableTemplateFormContainer.Provider
-                  initialState={{ ...tableTemplate, customFields }}
-                >
-                  <TableTemplateFormWrapper
-                    isNew={false}
-                    onSave={() => toggle(false)}
-                    onCancel={() => toggle(false)}
-                  />
-                </TableTemplateFormContainer.Provider>
+                <TableTemplateFormWrapper
+                  type={tableTemplate.type}
+                  customFields={customFields}
+                  tableTemplate={tableTemplate}
+                  onSave={() => toggle(false)}
+                  onCancel={() => toggle(false)}
+                />
               </SlideView>
             </>
           )}

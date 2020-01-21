@@ -762,11 +762,15 @@ const columns: Array<ColumnConfig> = [
   // actions
 ];
 
-export default function shipmentColumns(
+export default function shipmentColumns({
+  exportKeys,
+  sorts = {},
+  fieldDefinitions = [],
+}: {
   exportKeys: { [string]: string | Array<string> },
-  sorts: { [string]: ColumnSortConfig },
-  fieldDefinitions: Array<FieldDefinition>
-): Array<ColumnConfig> {
+  sorts?: { [string]: ColumnSortConfig },
+  fieldDefinitions?: Array<FieldDefinition>,
+}): Array<ColumnConfig> {
   return [
     ...populateColumns(columns, exportKeys, sorts),
     ...fieldDefinitions.map(fieldDefinition => ({

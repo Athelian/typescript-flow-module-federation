@@ -10,6 +10,10 @@ export default defineMessages({
     id: 'components.Sheet.columnsConfigGroupButton',
     defaultMessage: 'Group',
   },
+  columnsConfigDefaultButton: {
+    id: 'components.Sheet.columnsConfigDefaultButton',
+    defaultMessage: 'Default',
+  },
   columnsConfigSelectAllButton: {
     id: 'components.Sheet.columnsConfigSelectAllButton',
     defaultMessage: 'Select all',

@@ -15,12 +15,8 @@ import GridColumn from 'components/GridColumn';
 import TableTemplateFormContainer from 'modules/tableTemplate/form/container';
 import { TableTemplateSectionWrapperStyle, DescriptionLabelWrapperStyle } from './style';
 
-type Props = {
-  isNew: boolean,
-};
-
-const TableTemplateSection = ({ isNew }: Props) => {
-  const { state, originalState, setFieldValue } = TableTemplateFormContainer.useContainer();
+const TableTemplateSection = () => {
+  const { state, originalValues, setFieldValue } = TableTemplateFormContainer.useContainer();
 
   const hasPermissions = useViewerHasPermissions();
   const canCreateOrUpdate = hasPermissions(TEMPLATE_CREATE) || hasPermissions(TEMPLATE_UPDATE);
@@ -31,9 +27,12 @@ const TableTemplateSection = ({ isNew }: Props) => {
         icon="TEMPLATE"
         title={<FormattedMessage id="modules.TableTemplates.template" defaultMessage="TEMPLATE" />}
       >
-        {!isNew && (
+        {!state.isNew && (
           <>
-            <LastModified updatedAt={state.updatedAt} updatedBy={state.updatedBy} />
+            <LastModified
+              updatedAt={state.tableTemplate?.updatedAt}
+              updatedBy={state.tableTemplate?.updatedBy}
+            />
           </>
         )}
       </SectionHeader>
@@ -42,16 +41,16 @@ const TableTemplateSection = ({ isNew }: Props) => {
         <GridColumn>
           <FormField
             name="name"
-            initValue={originalState.name}
+            initValue={originalValues.name}
             validator={validator}
-            values={state}
+            values={state.values}
             setFieldValue={setFieldValue}
           >
             {inputHandlers => (
               <TextInputFactory
                 {...inputHandlers}
-                isNew={isNew}
-                originalValue={originalState.name}
+                isNew={state.isNew}
+                originalValue={originalValues.name}
                 label={<FormattedMessage id="modules.TableTemplates.name" defaultMessage="NAME" />}
                 required
                 editable={canCreateOrUpdate}
@@ -61,16 +60,16 @@ const TableTemplateSection = ({ isNew }: Props) => {
 
           <FormField
             name="memo"
-            initValue={originalState.memo}
+            initValue={originalValues.memo}
             validator={validator}
-            values={state}
+            values={state.values}
             setFieldValue={setFieldValue}
           >
             {inputHandlers => (
               <TextAreaInputFactory
                 {...inputHandlers}
-                isNew={isNew}
-                originalValue={originalState.memo}
+                isNew={state.isNew}
+                originalValue={originalValues.memo}
                 label={
                   <div className={DescriptionLabelWrapperStyle}>
                     <FormattedMessage

@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Jan 09 2020 16:26:44 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Jan 14 2020 11:06:58 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26651,7 +26651,6 @@ type Batch implements Model & Owned & Package & Tagged & Customizable & Memoriza
   expiredAt: DateTime
   desiredAt: DateTime
   totalVolume: MetricValue!
-  batchQuantityRevisions: [BatchQuantityRevisionPayload!]!
   timeline: Timeline!
   todo: Todo!
   id: ID!
@@ -26697,7 +26696,6 @@ input BatchCreateInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchQuantityRevisions: [BatchQuantityRevisionCreateInput!]
   todo: TodoInput
   orderItemId: ID!
   shipmentId: ID
@@ -26752,57 +26750,6 @@ type BatchPayloadPaginatedSearch implements Paginated {
   totalCount: Int!
 }
 
-type BatchQuantityRevision implements Model & Owned & Sortable & Memorizable {
-  batch: BatchPayload!
-  type: BatchQuantityRevisionType!
-  quantity: Float!
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  createdBy: UserPayload
-  updatedBy: UserPayload
-  deletedBy: UserPayload
-  ownedBy: OrganizationPayload!
-  sort: Int!
-  memo: String
-}
-
-input BatchQuantityRevisionCreateInput {
-  type: BatchQuantityRevisionType!
-  quantity: Float!
-  memo: String
-}
-
-union BatchQuantityRevisionPayload = BatchQuantityRevision | BadRequest | Forbidden | NotFound
-
-enum BatchQuantityRevisionType {
-  """Produced"""
-  Produced
-
-  """Dispatched"""
-  Dispatched
-
-  """Shipped"""
-  Shipped
-
-  """Inspected"""
-  Inspected
-
-  """WarehouseArrival"""
-  WarehouseArrival
-
-  """Other"""
-  Other
-}
-
-input BatchQuantityRevisionUpdateInput {
-  id: ID
-  type: BatchQuantityRevisionType
-  quantity: Float
-  memo: String
-}
-
 input BatchSimpleSplitInput {
   quantity: Float!
 }
@@ -26843,7 +26790,6 @@ input BatchUpdateInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   orderItemId: ID
   shipmentId: ID
@@ -26969,7 +26915,6 @@ input ContainerBatchInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   id: ID
   orderItemId: ID
@@ -28476,7 +28421,7 @@ input EntityInput {
   fileId: ID
 }
 
-union EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | BatchQuantityRevision | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | BadRequest | Forbidden | NotFound
+union EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | BadRequest | Forbidden | NotFound
 
 type EntityValue {
   entity: EntityPayload
@@ -30400,7 +30345,6 @@ input OrderItemBatchInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   id: ID
   shipmentId: ID
@@ -31236,8 +31180,6 @@ type Query {
   batchesExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: BatchFilterInput, sortBy: BatchSortInput): ExportPayload!
   batchesByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   batchesTable(entities: [EntityInput!]!): [BatchPayload!]!
-  batchQuantityRevision(id: ID!): BatchQuantityRevisionPayload!
-  batchQuantityRevisionsByIDs(ids: [ID!]!): [BatchQuantityRevisionPayload!]!
   shipment(id: ID!): ShipmentPayload!
   shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPaginatedSearch!
   shipmentsByIDs(ids: [ID!]!): [ShipmentPayload!]!
@@ -86989,7 +86931,6 @@ input ShipmentBatchInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   id: ID
   orderItemId: ID

@@ -44,8 +44,8 @@ export default function({
   productFieldDefinitions,
 }: Props): Array<ColumnConfig> {
   return [
-    ...shipmentColumns(
-      {
+    ...shipmentColumns({
+      exportKeys: {
         'shipment.created': ['createdAt', 'createdBy'],
         'shipment.updated': ['updatedAt', 'updatedBy'],
         'shipment.archived': 'archived',
@@ -189,7 +189,7 @@ export default function({
         ],
         'shipment.customField': 'customFields',
       },
-      {
+      sorts: {
         'shipment.created': {
           name: 'createdAt',
           group: 'shipment',
@@ -247,10 +247,10 @@ export default function({
           group: 'shipment',
         },
       },
-      shipmentFieldDefinitions
-    ),
-    ...containerColumns(
-      {
+      fieldDefinitions: shipmentFieldDefinitions,
+    }),
+    ...containerColumns({
+      exportKeys: {
         'container.created': ['containers.createdAt', 'containers.createdBy'],
         'container.updated': ['containers.updatedAt', 'containers.updatedBy'],
         'container.archived': 'containers.archived',
@@ -292,7 +292,7 @@ export default function({
         'container.totalWeight': ['containers.totalWeight.value', 'containers.totalWeight.metric'],
         'container.totalVolume': ['containers.totalVolume.value', 'containers.totalVolume.metric'],
       },
-      {
+      sorts: {
         'container.created': {
           local: true,
           default: true,
@@ -339,10 +339,10 @@ export default function({
           name: 'departureDate',
           group: 'container',
         },
-      }
-    ),
-    ...batchColumns(
-      {
+      },
+    }),
+    ...batchColumns({
+      exportKeys: {
         'batch.created': ['containers.batches.createdAt', 'containers.batches.createdBy'],
         'batch.updated': ['containers.batches.updatedAt', 'containers.batches.updatedBy'],
         'batch.archived': 'containers.batches.archived',
@@ -392,7 +392,7 @@ export default function({
         ],
         'batch.customField': 'containers.batches.customFields',
       },
-      {
+      sorts: {
         'batch.created': {
           local: true,
           default: true,
@@ -450,10 +450,10 @@ export default function({
           group: 'batch',
         },
       },
-      batchFieldDefinitions
-    ),
-    ...orderItemColumns(
-      {
+      fieldDefinitions: batchFieldDefinitions,
+    }),
+    ...orderItemColumns({
+      exportKeys: {
         'orderItem.created': [
           'containers.batches.orderItem.createdAt',
           'containers.batches.orderItem.createdBy',
@@ -485,9 +485,8 @@ export default function({
         ],
         'orderItem.customField': 'containers.batches.orderItem.customFields',
       },
-      {},
-      orderItemFieldDefinitions
-    ).filter(
+      fieldDefinitions: orderItemFieldDefinitions,
+    }).filter(
       c =>
         ![
           'orderItem.remainQuantity',
@@ -499,18 +498,17 @@ export default function({
           'orderItem.action',
         ].includes(c.key)
     ),
-    ...productColumns(
-      {
+    ...productColumns({
+      exportKeys: {
         'product.name': 'containers.batches.orderItem.productProvider.product.name',
         'product.serial': 'containers.batches.orderItem.productProvider.product.serial',
         'product.material': 'containers.batches.orderItem.productProvider.product.material',
         'product.customField': 'containers.batches.orderItem.productProvider.product.customFields',
       },
-      {},
-      productFieldDefinitions
-    ),
-    ...productProviderColumns(
-      {
+      fieldDefinitions: productFieldDefinitions,
+    }),
+    ...productProviderColumns({
+      exportKeys: {
         'productProvider.supplier': 'containers.batches.orderItem.productProvider.supplier.name',
         'productProvider.name': 'containers.batches.orderItem.productProvider.name',
         'productProvider.unitPrice': [
@@ -518,11 +516,9 @@ export default function({
           'containers.batches.orderItem.productProvider.unitPrice.currency',
         ],
       },
-      {},
-      []
-    ),
-    ...orderColumns(
-      {
+    }),
+    ...orderColumns({
+      exportKeys: {
         'order.created': [
           'containers.batches.orderItem.order.createdAt',
           'containers.batches.orderItem.order.createdBy',
@@ -557,9 +553,8 @@ export default function({
         ],
         'order.customField': 'containers.batches.orderItem.order.customFields',
       },
-      {},
-      orderFieldDefinitions
-    ).filter(
+      fieldDefinition: orderFieldDefinitions,
+    }).filter(
       c =>
         ![
           'order.totalOrdered',

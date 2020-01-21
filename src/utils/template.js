@@ -1,5 +1,4 @@
 // @flow
-import type { Column } from 'components/DraggableColumn';
 import type { ColumnConfig } from 'components/Sheet/SheetState/types';
 
 const groupedBatchQuantityColumns = [
@@ -83,12 +82,13 @@ const groupColumns = ({
   columns: Array<ColumnConfig>,
   index: number,
   groupedColumnsLength: number,
-}): Array<Column> => {
+}): Array<ColumnConfig> => {
   const groupedColumns = [];
   for (let i = 0; i < groupedColumnsLength; i += 1) {
     groupedColumns.push({
       ...columns[index + i],
       hidden: !!columns[index + i].hidden,
+      isNew: !!columns[index + i].isNew,
     });
   }
   return groupedColumns;
@@ -96,8 +96,8 @@ const groupColumns = ({
 
 export const convertMappingColumns = (
   columns: Array<ColumnConfig>
-): Array<Column | Array<Column>> => {
-  const mappingColumns: Array<Column | Array<Column>> = [];
+): Array<ColumnConfig | Array<ColumnConfig>> => {
+  const mappingColumns: Array<ColumnConfig | Array<ColumnConfig>> = [];
 
   columns.forEach((column, index) => {
     let isGrouped = false;
@@ -117,12 +117,13 @@ export const convertMappingColumns = (
       mappingColumns.push({
         ...column,
         hidden: !!column.hidden,
+        isNew: !!column.isNew,
       });
     }
   });
   return mappingColumns;
 };
 
-export const flattenColumns = (columns: Array<Column | Array<Column>>) => {
-  return (columns.flatMap(cols => (Array.isArray(cols) ? [...cols] : cols)): Array<Column>);
+export const flattenColumns = (columns: Array<ColumnConfig | Array<ColumnConfig>>) => {
+  return (columns.flatMap(cols => (Array.isArray(cols) ? [...cols] : cols)): Array<ColumnConfig>);
 };

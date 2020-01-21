@@ -1,15 +1,12 @@
 // @flow
-import type { ColumnConfig } from 'components/Sheet/SheetState/types';
-import type { Column } from 'components/DraggableColumn';
-import { getColumnsConfigured } from 'components/Sheet/useColumns';
-import orderColumns, { OrderSheetColumnGroups } from 'modules/order/sheet/columns';
-import shipmentColumns, { ShipmentSheetColumnGroups } from 'modules/shipment/sheet/columns';
-import batchColumns, { BatchSheetColumnGroups } from 'modules/batch/sheet/columns';
-import {
-  computeProjectColumnConfigsFromTemplate,
-  ProjectSheetColumnGroups,
-} from 'modules/project/sheet/columns';
+import type { MaskEditType } from 'generated/graphql';
+import type { ColumnConfig } from 'components/Sheet';
 import { convertMappingColumns } from 'utils/template';
+import { OrderSheetColumnGroups } from 'modules/order/sheet/columns';
+import { ShipmentSheetColumnGroups } from 'modules/shipment/sheet/columns';
+import { BatchSheetColumnGroups } from 'modules/batch/sheet/columns';
+import { ProjectSheetColumnGroups } from 'modules/project/sheet/columns';
+import { MaskEditTypeValues } from 'generated/graphql';
 
 export const getColumnGroupTypes = (type: string): Array<string> => {
   switch (type) {
@@ -26,55 +23,13 @@ export const getColumnGroupTypes = (type: string): Array<string> => {
   }
 };
 
-const getColumnsConfig = (type: string, customFields: ?Object): Array<ColumnConfig> => {
-  switch (type) {
-    case 'OrderSheet':
-      return orderColumns({
-        orderFieldDefinitions: customFields?.orderCustomFields ?? [],
-        productFieldDefinitions: customFields?.productCustomFields ?? [],
-        orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
-        batchFieldDefinitions: customFields?.batchCustomFields ?? [],
-        shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
-      });
-    case 'ShipmentSheet':
-      return shipmentColumns({
-        orderFieldDefinitions: customFields?.orderCustomFields ?? [],
-        productFieldDefinitions: customFields?.productCustomFields ?? [],
-        orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
-        batchFieldDefinitions: customFields?.batchCustomFields ?? [],
-        shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
-      });
-    case 'BatchSheet':
-      return batchColumns({
-        orderFieldDefinitions: customFields?.orderCustomFields ?? [],
-        productFieldDefinitions: customFields?.productCustomFields ?? [],
-        orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
-        batchFieldDefinitions: customFields?.batchCustomFields ?? [],
-        shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
-      });
-    default:
-      return [];
+export const stickiedColumns = (
+  type: MaskEditType,
+  columns: Array<ColumnConfig>
+): Array<ColumnConfig | Array<ColumnConfig>> => {
+  if (type === MaskEditTypeValues.ProjectSheet) {
+    return (columns: any);
   }
-};
-
-export const computeColumnConfigsFromState = (state: Object): Array<Column | Array<Column>> => {
-  if (state.type === 'ProjectSheet') {
-    return computeProjectColumnConfigsFromTemplate(state).map(column => ({
-      title: column.title,
-      key: column.key,
-      hidden: !!column.hidden,
-    }));
-  }
-  const columns = getColumnsConfigured(
-    getColumnsConfig(state.type, state.customFields),
-    state.columns.reduce(
-      (object, item) => ({
-        ...object,
-        [item.key]: item.hidden,
-      }),
-      {}
-    )
-  );
 
   return convertMappingColumns(columns);
 };
