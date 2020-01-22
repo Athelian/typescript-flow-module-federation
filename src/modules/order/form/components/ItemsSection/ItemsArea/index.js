@@ -63,6 +63,7 @@ type Props = {
   },
   setFieldValue: (string, any) => void,
   setFieldTouched: Function,
+  setNeedDeletedFiles: Function,
   focusedItemIndex: number,
   onFocusItem: number => void,
   orderIsArchived: boolean,
@@ -74,6 +75,7 @@ function ItemsArea({
   orderItems,
   order,
   setFieldValue,
+  setNeedDeletedFiles,
   setFieldTouched,
   focusedItemIndex,
   onFocusItem,
@@ -317,11 +319,15 @@ function ItemsArea({
                           <>
                             <DocumentsDeleteDialog
                               isOpen={step === 2}
-                              onCancel={() => setStep(0)}
-                              onRemove={() => {
-                                setStep(0);
-                              }}
                               files={files}
+                              onCancel={() => setStep(0)}
+                              onKeep={() => {
+                                // onRemove();
+                              }}
+                              onDelete={needDeletedFiles => {
+                                setNeedDeletedFiles(needDeletedFiles);
+                                // onRemove();
+                              }}
                             />
 
                             <CardAction

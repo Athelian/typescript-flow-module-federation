@@ -8,10 +8,19 @@ type Props = {
   files: any,
   isOpen: boolean,
   isProcessing?: boolean,
+  onDelete: Function,
+  onKeep?: Function,
   onCancel?: Function,
 };
 
-export default function DocumentsDeleteDialog({ files, isOpen, isProcessing, onCancel }: Props) {
+export default function DocumentsDeleteDialog({
+  files,
+  isOpen,
+  isProcessing,
+  onDelete,
+  onKeep,
+  onCancel,
+}: Props) {
   return (
     <ActionDialog
       isOpen={isOpen}
@@ -45,14 +54,19 @@ export default function DocumentsDeleteDialog({ files, isOpen, isProcessing, onC
       }
       buttons={[
         <BaseButton
+          key="btn-keep"
           label={
             <FormattedMessage id="components.DocumentsDeleteDialog.keep" defaultMessage="KEEP" />
           }
           onClick={() => {
+            if (onKeep) {
+              onKeep();
+            }
             console.log('KEEP files');
           }}
         />,
         <BaseButton
+          key="btn-delete"
           label={
             <FormattedMessage
               id="components.DocumentsDeleteDialog.delete"
@@ -60,6 +74,7 @@ export default function DocumentsDeleteDialog({ files, isOpen, isProcessing, onC
             />
           }
           onClick={() => {
+            onDelete(files);
             console.log('DELETE files');
           }}
         />,

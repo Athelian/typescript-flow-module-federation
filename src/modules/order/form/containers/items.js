@@ -1,5 +1,10 @@
 // @flow
-import type { OrderItemPayload, ShipmentPayload, ContainerPayload } from 'generated/graphql';
+import type {
+  OrderItemPayload,
+  FilePayload,
+  ShipmentPayload,
+  ContainerPayload,
+} from 'generated/graphql';
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import update from 'immutability-helper';
@@ -7,11 +12,13 @@ import { isEquals, getByPathWithDefault, getByPath } from 'utils/fp';
 
 type FormState = {|
   orderItems: Array<OrderItemPayload>,
+  needDeletedFiles: Array<FilePayload>,
   hasCalledItemsApiYet: boolean,
 |};
 
 export const initValues: FormState = {
   orderItems: [],
+  needDeletedFiles: [],
   hasCalledItemsApiYet: false,
 };
 
@@ -46,6 +53,13 @@ export default class OrderItemsContainer extends Container<FormState> {
     this.setState(this.originalValues);
   };
 
+  setNeedDeletedFiles = (needDeletedFiles: Array<FilePayload>) => {
+    console.log(`setNeedDeletedFiles: ${needDeletedFiles}`);
+    this.setState({
+      needDeletedFiles,
+    });
+  };
+
   setFieldValue = (path: string, value: any) => {
     this.setState(prevState => {
       const newState = set(cloneDeep(prevState), path, value);
@@ -77,12 +91,14 @@ export default class OrderItemsContainer extends Container<FormState> {
     if (this.state.hasCalledItemsApiYet) {
       this.setState({
         orderItems: [],
+        needDeletedFiles: [],
       });
     } else {
       const waitForApiReady = () => {
         if (this.state.hasCalledItemsApiYet) {
           this.setState({
             orderItems: [],
+            needDeletedFiles: [],
           });
           cancelAnimationFrame(retry);
         } else {

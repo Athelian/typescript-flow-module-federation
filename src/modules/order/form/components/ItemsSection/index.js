@@ -30,7 +30,12 @@ const ItemsSection = ({ isNew, orderIsArchived, isLoading, entityId }: Props) =>
     <BooleanValue value={storedValue} onChange={setValue}>
       {({ value: itemsIsExpanded, set: setItemsUI }) => (
         <Subscribe to={[OrderItemsContainer]}>
-          {({ state: { orderItems, hasCalledItemsApiYet }, initDetailValues, setFieldValue }) => (
+          {({
+            state: { orderItems, hasCalledItemsApiYet },
+            initDetailValues,
+            setFieldValue,
+            setNeedDeletedFiles,
+          }) => (
             <QueryPlaceHolder
               PlaceHolder={ListCardPlaceHolder}
               query={orderFormItemsQuery}
@@ -92,6 +97,7 @@ const ItemsSection = ({ isNew, orderIsArchived, isLoading, entityId }: Props) =>
                                   orderItems={orderItems}
                                   setFieldValue={setFieldValue}
                                   setFieldTouched={setFieldTouched}
+                                  setNeedDeletedFiles={setNeedDeletedFiles}
                                   focusedItemIndex={focusedItemIndex}
                                   onFocusItem={(index: number) => {
                                     if (focusedItemIndex === index) {
