@@ -24,6 +24,7 @@ const StatusDateInput = ({
         className={InputStyle}
         value={statusDate.at}
         name="value"
+        required
         readOnly={readonly}
         readOnlyWidth="100%"
         readOnlyHeight="30px"
