@@ -35,6 +35,7 @@ const ItemsSection = ({ isNew, orderIsArchived, isLoading, entityId }: Props) =>
             initDetailValues,
             setFieldValue,
             setNeedDeletedFiles,
+            unsetNeedDeletedFiles,
           }) => (
             <QueryPlaceHolder
               PlaceHolder={ListCardPlaceHolder}
@@ -98,6 +99,7 @@ const ItemsSection = ({ isNew, orderIsArchived, isLoading, entityId }: Props) =>
                                   setFieldValue={setFieldValue}
                                   setFieldTouched={setFieldTouched}
                                   setNeedDeletedFiles={setNeedDeletedFiles}
+                                  unsetNeedDeletedFiles={unsetNeedDeletedFiles}
                                   focusedItemIndex={focusedItemIndex}
                                   onFocusItem={(index: number) => {
                                     if (focusedItemIndex === index) {

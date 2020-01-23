@@ -53,9 +53,31 @@ export default class OrderItemsContainer extends Container<FormState> {
     this.setState(this.originalValues);
   };
 
-  setNeedDeletedFiles = (needDeletedFiles: Array<FilePayload>) => {
+  setNeedDeletedFiles = (noNeedDeletedFiles: Array<FilePayload>) => {
+    const noNeedDeletedFileIDs = new Set(noNeedDeletedFiles.map(({ id }) => id));
+
+    this.setState(prevState => ({
+      needDeletedFiles: prevState.needDeletedFiles.filter(
+        ({ id }) => !noNeedDeletedFileIDs.has(id)
+      ),
+    }));
+  };
+
+  unsetNeedDeletedFiles = (needDeletedFiles: Array<FilePayload>) => {
+    const prevNeedDeletedFiles = this.state.needDeletedFiles;
+    const prevNeedDeletedFileIDs = new Set(prevNeedDeletedFiles.map(({ id }) => id));
+
     this.setState({
-      needDeletedFiles,
+      needDeletedFiles: [
+        ...prevNeedDeletedFiles,
+        ...needDeletedFiles.filter(({ id }) => !prevNeedDeletedFileIDs.has(id)),
+      ],
+    });
+  };
+
+  resetNeedDeletedFiles = () => {
+    this.setState({
+      needDeletedFiles: [],
     });
   };
 

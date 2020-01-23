@@ -60,9 +60,8 @@ export default function DocumentsDeleteDialog({
           }
           onClick={() => {
             if (onKeep) {
-              onKeep();
+              onKeep(files);
             }
-            console.log('KEEP files');
           }}
         />,
         <BaseButton
@@ -75,7 +74,6 @@ export default function DocumentsDeleteDialog({
           }
           onClick={() => {
             onDelete(files);
-            console.log('DELETE files');
           }}
         />,
       ]}

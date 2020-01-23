@@ -64,6 +64,7 @@ type Props = {
   setFieldValue: (string, any) => void,
   setFieldTouched: Function,
   setNeedDeletedFiles: Function,
+  unsetNeedDeletedFiles: Function,
   focusedItemIndex: number,
   onFocusItem: number => void,
   orderIsArchived: boolean,
@@ -76,6 +77,7 @@ function ItemsArea({
   order,
   setFieldValue,
   setNeedDeletedFiles,
+  unsetNeedDeletedFiles,
   setFieldTouched,
   focusedItemIndex,
   onFocusItem,
@@ -334,7 +336,8 @@ function ItemsArea({
                               isOpen={step === 2}
                               files={files}
                               onCancel={() => setStep(0)}
-                              onKeep={() => {
+                              onKeep={needKeepFiles => {
+                                unsetNeedDeletedFiles(needKeepFiles);
                                 onRemove();
                                 setStep(0);
                               }}
