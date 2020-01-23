@@ -70,18 +70,43 @@ export const SelectTemplateStyle: string = css`
 `;
 
 export const TemplateStyle: string = css`
-  ${presets.BUTTON};
-  ${presets.BOX};
-  ${presets.ELLIPSIS};
-  ${fontSizes.MAIN};
   position: relative;
-  width: 120px;
+  width: 195px;
   height: 30px;
-  padding: 5px 20px 5px 5px;
+  padding: 0 0 0 5px;
+`;
 
-  & > div {
-    position: absolute;
-    top: 0;
-    right: 0;
+export const ColumnsConfigButtonStyle: string = css`
+  ${presets.BUTTON};
+  ${borderRadiuses.MAIN};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  color: ${colors.GRAY_DARK};
+  height: 30px;
+  padding: 0 5px 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  ${fontSizes.SMALL};
+  &:hover,
+  :focus {
+    background-color: ${colors.GRAY_LIGHT};
+    color: ${colors.WHITE};
   }
+`;
+
+export const ColumnsConfigButtonIconStyle: string = css`
+  padding: 0 5px;
+`;
+
+export const ColumnsConfigButtonTemplateStyle: string = css`
+  ${presets.ELLIPSIS};
+  max-width: 100px;
+  ${fontSizes.MAIN};
+  color: ${colors.BLACK};
+  font-weight: bold;
+  background-color: ${colors.GRAY_VERY_LIGHT};
+  border-radius: 2.5px;
+  height: 20px;
+  padding: 0 5px;
+  text-transform: none;
+  letter-spacing: 0px;
 `;

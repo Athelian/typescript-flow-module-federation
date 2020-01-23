@@ -88,7 +88,7 @@ const TableTemplateModule = () => {
     <Provider>
       <Content>
         <NavBar>
-          <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+          <EntityIcon icon="TEMPLATE" color="TEMPLATE" subIcon="TABLE" />
           <TabItem
             active={activeType === 'OrderSheet'}
             label={

@@ -130,7 +130,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
               {(saveTaskTemplate, { loading: isLoading, error: apiError }) => (
                 <SlideViewLayout>
                   <SlideViewNavBar>
-                    <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+                    <EntityIcon icon="TEMPLATE" color="TEMPLATE" subIcon="TASK" />
                     <JumpToSection>
                       <SectionTabs
                         link="taskTemplate_templateSection"

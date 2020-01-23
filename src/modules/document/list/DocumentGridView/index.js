@@ -56,22 +56,7 @@ type Props = {
 
 const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => void): React$Node =>
   file?.uploading ? (
-    <UploadPlaceholder
-      uploading={file?.uploading ?? false}
-      progress={file?.progress ?? 0}
-      key={file?.id}
-    >
-      <DocumentCard
-        file={file}
-        navigable
-        downloadable
-        editable={{
-          status: true,
-          type: true,
-          memo: true,
-        }}
-      />
-    </UploadPlaceholder>
+    <UploadPlaceholder progress={file?.progress ?? 0} height="210px" key={file?.id} />
   ) : (
     <PartnerPermissionsWrapper key={getByPathWithDefault('', 'id', file)} data={file}>
       {permissions => {
@@ -185,6 +170,7 @@ const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => 
                   ? [
                       <CardAction
                         icon="REMOVE"
+                        hoverColor="RED"
                         onClick={evt => {
                           evt.stopPropagation();
                           setIsOpen(true);

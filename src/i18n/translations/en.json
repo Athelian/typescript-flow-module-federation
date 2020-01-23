@@ -1583,7 +1583,7 @@
   "modules.Users.list.sort.lastName": "Last Name",
   "modules.Users.list.sort.fullName": "Full Name",
   "modules.Users.organizations": "Organizations",
-  "modules.TableTemplates.columnsConfigSection": "Columns Configuration",
+  "modules.TableTemplates.columnsConfigSection": "Columns",
   "modules.TableTemplates.unselectAll": "UNSELECT ALL",
   "modules.TableTemplates.selectAll": "SELECT ALL",
   "modules.TableTemplates.group": "GROUP",

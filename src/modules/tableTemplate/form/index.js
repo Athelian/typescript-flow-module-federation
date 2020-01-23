@@ -89,7 +89,7 @@ export const TableTemplateForm = ({ onSave, onCancel, onRefetch }: FormProps) =>
     <Provider inject={[formContainer]}>
       <SlideViewLayout>
         <SlideViewNavBar>
-          <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+          <EntityIcon icon="TEMPLATE" color="TEMPLATE" subIcon="TABLE" />
           <JumpToSection>
             <SectionTabs
               link="tableTemplate_templateSection"
@@ -103,7 +103,7 @@ export const TableTemplateForm = ({ onSave, onCancel, onRefetch }: FormProps) =>
               label={
                 <FormattedMessage
                   id="modules.TableTemplates.columnsConfigSection"
-                  defaultMessage="Columns Configuration"
+                  defaultMessage="Columns"
                 />
               }
               icon="EDIT_TABLE"

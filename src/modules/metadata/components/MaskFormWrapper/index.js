@@ -129,7 +129,7 @@ class MaskFormWrapper extends React.Component<Props> {
                         {apiError && <p>Error: Please try again.</p>}
                         <SlideViewLayout>
                           <SlideViewNavBar>
-                            <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+                            <EntityIcon icon="TEMPLATE" color="TEMPLATE" subIcon="METADATA" />
                             <JumpToSection>
                               <SectionTabs
                                 link="metadata_templateSection"

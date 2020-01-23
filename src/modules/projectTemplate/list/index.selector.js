@@ -42,7 +42,7 @@ const ProjectTemplateSelector = ({ onCancel, onSave }: Props) => {
       {({ value, set }) => (
         <SlideViewLayout>
           <SlideViewNavBar>
-            <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+            <EntityIcon icon="TEMPLATE" color="TEMPLATE" subIcon="PROJECT" />
             <CancelButton onClick={onCancel} />
             <SaveButton disabled={!value?.id} onClick={() => onSave(value)} />
           </SlideViewNavBar>

@@ -3,10 +3,11 @@ import * as React from 'react';
 import type { MaskEdit, MaskEditColumn } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import useLocalStorage from 'hooks/useLocalStorage';
-import CornerIcon from 'components/CornerIcon';
-import { colors } from 'styles/common';
+import BaseCard from 'components/Cards';
 import Dialog from 'components/Dialog';
 import { ApplyButton, ResetButton, BaseButton, SaveButton, IconButton } from 'components/Buttons';
+import Icon from 'components/Icon';
+import { Display } from 'components/Form';
 import { Tooltip } from 'components/Tooltip';
 import { parseIcon } from 'utils/entity';
 import { convertMappingColumns, flattenColumns } from 'utils/template';
@@ -16,7 +17,6 @@ import messages from '../messages';
 import TemplateSelector from './TemplateSelector';
 import TemplateNew from './TemplateNew';
 import {
-  ButtonStyle,
   ModalWrapperStyle,
   ActionsWrapperStyle,
   ButtonsWrapperStyle,
@@ -24,6 +24,9 @@ import {
   TemplateSelectWrapperStyle,
   HeaderStyle,
   TemplateStyle,
+  ColumnsConfigButtonStyle,
+  ColumnsConfigButtonIconStyle,
+  ColumnsConfigButtonTemplateStyle,
 } from './style';
 
 type Props = {
@@ -242,17 +245,15 @@ const ColumnsConfig = ({
 
   return (
     <>
-      <BaseButton
-        className={ButtonStyle}
-        label={<FormattedMessage {...messages.columnsConfigButton} />}
-        icon="SETTINGS"
-        textColor="GRAY_DARK"
-        hoverTextColor="WHITE"
-        backgroundColor="GRAY_SUPER_LIGHT"
-        hoverBackgroundColor="GRAY_DARK"
-        onClick={() => setOpen(true)}
-        suffix={persistTemplate?.name}
-      />
+      <button className={ColumnsConfigButtonStyle} onClick={() => setOpen(true)} type="button">
+        <FormattedMessage {...messages.columnsConfigButton} />
+        <div className={ColumnsConfigButtonIconStyle}>
+          <Icon icon="SETTINGS" />
+        </div>
+        {persistTemplate?.name && (
+          <div className={ColumnsConfigButtonTemplateStyle}>{persistTemplate.name}</div>
+        )}
+      </button>
 
       <Dialog isOpen={isOpen} onRequestClose={handleClose}>
         <div className={ModalWrapperStyle}>
@@ -325,12 +326,13 @@ const ColumnsConfig = ({
                         hoverBackgroundColor="BLUE_DARK"
                       />
                     ) : (
-                      <button type="button" onClick={onClick} className={TemplateStyle}>
-                        {currentTemplate.current.name}
-                        <div>
-                          <CornerIcon icon="TEMPLATE" color={colors.TEMPLATE} />
+                      <BaseCard icon="TEMPLATE" color="TEMPLATE">
+                        <div className={TemplateStyle} onClick={onClick} role="presentation">
+                          <Display height="30px" width="175px">
+                            {currentTemplate.current.name}
+                          </Display>
                         </div>
-                      </button>
+                      </BaseCard>
                     )
                   }
                 </TemplateSelector>

@@ -63,7 +63,7 @@ function setColumnsCache(key: string, columns: Array<ColumnConfig>) {
   setCache(
     SHEET_COLUMN_KEY_PREFIX,
     key,
-    columns.reduce((cache, col) => ({ ...cache, [col.key]: col.hidden }), {})
+    columns.reduce((cache, col) => ({ ...cache, [col.key]: !!col.hidden }), {})
   );
 }
 

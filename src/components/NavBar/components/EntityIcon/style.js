@@ -13,12 +13,12 @@ export const IconStyle = (color: string, invert: boolean): string => css`
   ${fontSizes.HUGE};
 `;
 
-export const SubIconStyle = (color: string): string => css`
+export const SubIconStyle = (color: string, invert: boolean): string => css`
   position: absolute;
   bottom: 5px;
   right: -10px;
-  color: rgba(255, 255, 255, 0.75);
-  background-color: ${colors[color]};
+  color: ${invert ? colors[color] : 'rgba(255, 255, 255, 0.75)'};
+  background-color: ${invert ? colors.WHITE : colors[color]};
   ${fontSizes.SMALL};
   width: 22px;
   height: 20px;

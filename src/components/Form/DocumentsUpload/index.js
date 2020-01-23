@@ -9,7 +9,7 @@ import Dropzone from 'react-dropzone';
 import update from 'immutability-helper';
 import Icon from 'components/Icon';
 import { uuid } from 'utils/id';
-import { isEquals, getByPath } from 'utils/fp';
+import { isEquals } from 'utils/fp';
 import logger from 'utils/logger';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
@@ -272,46 +272,49 @@ const DocumentsUpload = ({
                   {filesState && filesState.length > 0 ? (
                     <div className={DocumentsListStyle}>
                       {filesState.map((file, index) => {
-                        return (
-                          <UploadPlaceholder
-                            uploading={filesState.length > 0 ? filesState[index].uploading : false}
-                            progress={filesState.length > 0 ? filesState[index].progress : 0}
-                            key={getByPath('id', file)}
-                          >
-                            <DocumentCard
-                              hideParentInfo
-                              file={pick(SELECTED_FIELDS, file)}
-                              onClick={evt => {
-                                evt.stopPropagation();
-                                if (viewForm) setSelectedFile(file);
-                              }}
-                              onChange={(field, value) => {
-                                onSave(
-                                  update(files, {
-                                    [index]: {
-                                      [field]: {
-                                        $set: value,
-                                      },
-                                    },
-                                  })
-                                );
-                              }}
-                              actions={[
-                                removable && (
-                                  <CardAction
-                                    icon="REMOVE"
-                                    hoverColor="RED"
-                                    onClick={evt => {
-                                      evt.stopPropagation();
-                                      onSave(files.filter(item => item?.id !== file?.id));
-                                    }}
-                                  />
-                                ),
-                              ].filter(Boolean)}
-                              editable={editable}
-                              downloadable={downloadable}
+                        if (filesState.length > 0 && filesState[index].uploading) {
+                          return (
+                            <UploadPlaceholder
+                              progress={filesState.length > 0 ? filesState[index].progress : 0}
+                              key={file?.id}
                             />
-                          </UploadPlaceholder>
+                          );
+                        }
+                        return (
+                          <DocumentCard
+                            hideParentInfo
+                            file={pick(SELECTED_FIELDS, file)}
+                            onClick={evt => {
+                              evt.stopPropagation();
+                              if (viewForm) setSelectedFile(file);
+                            }}
+                            onChange={(field, value) => {
+                              onSave(
+                                update(files, {
+                                  [index]: {
+                                    [field]: {
+                                      $set: value,
+                                    },
+                                  },
+                                })
+                              );
+                            }}
+                            actions={[
+                              removable && (
+                                <CardAction
+                                  icon="REMOVE"
+                                  hoverColor="RED"
+                                  onClick={evt => {
+                                    evt.stopPropagation();
+                                    onSave(files.filter(item => item?.id !== file?.id));
+                                  }}
+                                />
+                              ),
+                            ].filter(Boolean)}
+                            editable={editable}
+                            downloadable={downloadable}
+                            key={file?.id}
+                          />
                         );
                       })}
                     </div>
@@ -348,7 +351,7 @@ const DocumentsUpload = ({
                       evt.stopPropagation();
                       if (viewForm) setSelectedFile(file);
                     }}
-                    key={getByPath('id', file)}
+                    key={file?.id}
                     file={pick(SELECTED_FIELDS, file)}
                     editable={editable}
                     downloadable={downloadable}
