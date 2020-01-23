@@ -2,7 +2,6 @@
 import * as React from 'react';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import logger from 'utils/logger';
-import { WrapperStyle } from './style';
 
 type Props = {
   children: React.Node,
@@ -131,29 +130,25 @@ class JumpToSection extends React.Component<Props, State> {
     const activeElement =
       activeNode || React.Children.toArray(children).filter(Boolean)?.[0]?.props?.link;
 
-    return (
-      <div className={WrapperStyle(React.Children.count(children))}>
-        {!activeNode
-          ? (React.Children.toArray(children)
-              .filter(Boolean)
-              .map(child =>
-                React.cloneElement(child, {
-                  active: child?.props?.link === activeElement,
-                  onClick: () => this.handleClick(child?.props?.link),
-                })
-              ): Array<React$Node>)
-          : (React.Children.toArray(children)
-              .filter(Boolean)
-              .map(
-                child =>
-                  document.querySelector(`#${child.props.link}`) &&
-                  React.cloneElement(child, {
-                    active: child?.props?.link === activeElement,
-                    onClick: () => this.handleClick(child?.props?.link),
-                  })
-              ): Array<React$Node>)}
-      </div>
-    );
+    return !activeNode
+      ? (React.Children.toArray(children)
+          .filter(Boolean)
+          .map(child =>
+            React.cloneElement(child, {
+              active: child?.props?.link === activeElement,
+              onClick: () => this.handleClick(child?.props?.link),
+            })
+          ): Array<React$Node>)
+      : (React.Children.toArray(children)
+          .filter(Boolean)
+          .map(
+            child =>
+              document.querySelector(`#${child.props.link}`) &&
+              React.cloneElement(child, {
+                active: child?.props?.link === activeElement,
+                onClick: () => this.handleClick(child?.props?.link),
+              })
+          ): Array<React$Node>);
   }
 }
 

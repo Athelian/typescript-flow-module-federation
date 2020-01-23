@@ -103,7 +103,7 @@ export const TableTemplateForm = ({ onSave, onCancel, onRefetch }: FormProps) =>
               label={
                 <FormattedMessage
                   id="modules.TableTemplates.columnsConfigSection"
-                  defaultMessage="Columns Configuration"
+                  defaultMessage="Columns"
                 />
               }
               icon="EDIT_TABLE"
