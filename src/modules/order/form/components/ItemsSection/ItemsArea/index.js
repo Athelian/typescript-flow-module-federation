@@ -236,7 +236,6 @@ function ItemsArea({
                 hasPermission([ORDER_ITEMS_DELETE]) && (
                   <NumberValue defaultValue={0}>
                     {({ value: step, set: setStep }) => {
-                      console.log(`step: ${step}`);
                       const onRemove = () => {
                         setFieldValue(
                           'orderItems',
@@ -260,8 +259,19 @@ function ItemsArea({
                         );
                       }
 
+                      if (step === 0 && files.length > 0) {
+                        return (
+                          <CardAction
+                            icon="REMOVE"
+                            hoverColor="RED"
+                            onClick={() => {
+                              setStep(2);
+                            }}
+                          />
+                        );
+                      }
+
                       if (step === 1 && batches.length > 0) {
-                        console.log('batches dialog');
                         return (
                           <>
                             <RemoveDialog
@@ -269,8 +279,12 @@ function ItemsArea({
                               onRequestClose={() => setStep(0)}
                               onCancel={() => setStep(0)}
                               onRemove={() => {
-                                // onRemove();
-                                setStep(2);
+                                if (files.length > 0) {
+                                  setStep(2);
+                                } else {
+                                  onRemove();
+                                  setStep(0);
+                                }
                               }}
                               message={
                                 <div>
@@ -314,7 +328,6 @@ function ItemsArea({
                       }
 
                       if (step === 2 && files.length > 0) {
-                        console.log('files dialog');
                         return (
                           <>
                             <DocumentsDeleteDialog
@@ -322,11 +335,13 @@ function ItemsArea({
                               files={files}
                               onCancel={() => setStep(0)}
                               onKeep={() => {
-                                // onRemove();
+                                onRemove();
+                                setStep(0);
                               }}
                               onDelete={needDeletedFiles => {
                                 setNeedDeletedFiles(needDeletedFiles);
-                                // onRemove();
+                                onRemove();
+                                setStep(0);
                               }}
                             />
 
@@ -341,7 +356,6 @@ function ItemsArea({
                         );
                       }
 
-                      console.log('default');
                       return <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />;
                     }}
                   </NumberValue>

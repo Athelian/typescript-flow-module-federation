@@ -54,7 +54,6 @@ export default class OrderItemsContainer extends Container<FormState> {
   };
 
   setNeedDeletedFiles = (needDeletedFiles: Array<FilePayload>) => {
-    console.log(`setNeedDeletedFiles: ${needDeletedFiles}`);
     this.setState({
       needDeletedFiles,
     });
