@@ -6,6 +6,8 @@ import Tag from 'components/Tag';
 import Icon from 'components/Icon';
 import FormattedName from 'components/FormattedName';
 import UserAvatar from 'components/UserAvatar';
+import RelateEntity from 'components/RelateEntity';
+import { Display } from 'components/Form';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
 import {
@@ -13,8 +15,8 @@ import {
   StaffNameStyle,
   StaffEmailStyle,
   StaffRoleStyle,
+  StaffRoleIconStyle,
   StaffTagsWrapperStyle,
-  CompanyStyle,
 } from './style';
 
 type OptionalProps = {
@@ -50,22 +52,28 @@ const StaffCard = ({ staff, onClick, actions, ...rest }: Props) => {
           showBothInitials
           hideTooltip
         />
+
         <div className={StaffNameStyle}>
           <FormattedName firstName={firstName} lastName={lastName} />
         </div>
+
         <div className={StaffEmailStyle}>{email}</div>
+
         <div className={StaffRoleStyle}>
-          <Icon icon={userRoleIcon} />
-          {userRoleIcon === 'MANAGER' ? (
-            <FormattedMessage id="components.cards.managerUser" defaultMessage="Manager" />
-          ) : (
-            <FormattedMessage id="components.cards.defaultUser" defaultMessage="User" />
-          )}
+          <div className={StaffRoleIconStyle}>
+            <Icon icon={userRoleIcon} />
+          </div>
+          <Display>
+            {userRoleIcon === 'MANAGER' ? (
+              <FormattedMessage id="components.cards.managerUser" defaultMessage="Manager" />
+            ) : (
+              <FormattedMessage id="components.cards.defaultUser" defaultMessage="User" />
+            )}
+          </Display>
         </div>
-        <div className={CompanyStyle}>
-          <Icon icon="STAFF" />
-          {organization && organization.name}
-        </div>
+
+        <RelateEntity link="" entity="PARTNER" value={organization?.name ?? ''} width="150px" />
+
         <div className={StaffTagsWrapperStyle}>
           {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
         </div>

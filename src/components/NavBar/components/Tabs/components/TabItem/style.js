@@ -13,9 +13,7 @@ export const TabItemStyle = (isActive: boolean): string => css`
   white-space: nowrap;
   width: 100%;
   height: 50px;
-  text-transform: uppercase;
   ${fontSizes.SMALL};
-  letter-spacing: 2px;
   background-color: ${colors.TRANSPARENT};
   & > span {
     position: absolute;
@@ -44,5 +42,16 @@ export const DisabledStyle: string = css`
 `;
 
 export const IconStyle: string = css`
-  margin: 0 5px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+`;
+
+export const LabelStyle: string = css`
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  flex: 1;
+  text-align: center;
 `;

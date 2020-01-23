@@ -326,7 +326,7 @@ const ColumnsConfig = ({
                         hoverBackgroundColor="BLUE_DARK"
                       />
                     ) : (
-                      <BaseCard icon="TEMPLATE" color="TEMPLATE" invertCornerIcon>
+                      <BaseCard icon="TEMPLATE" color="TEMPLATE">
                         <div className={TemplateStyle} onClick={onClick} role="presentation">
                           <Display height="30px" width="175px">
                             {currentTemplate.current.name}

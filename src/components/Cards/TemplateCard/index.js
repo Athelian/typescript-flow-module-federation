@@ -38,7 +38,7 @@ const TemplateCard = ({ template, type, onClick, actions, ...rest }: Props) => {
   const { title, description, count } = template;
 
   return (
-    <BaseCard icon="TEMPLATE" color="TEMPLATE" actions={actions} {...rest} invertCornerIcon>
+    <BaseCard icon="TEMPLATE" color="TEMPLATE" actions={actions} {...rest}>
       <div className={TemplateCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={TemplateNameStyle}>{title}</div>
         <div className={TemplateDescriptionStyle}>

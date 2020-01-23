@@ -41,7 +41,7 @@ const TaskTemplateListModule = () => {
     <Provider>
       <Content>
         <NavBar>
-          <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+          <EntityIcon icon="TEMPLATE" color="TEMPLATE" subIcon="TASK" />
           <TabItem
             active={activeType === 'Order'}
             icon="ORDER"

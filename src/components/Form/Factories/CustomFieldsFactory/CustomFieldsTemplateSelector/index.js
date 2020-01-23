@@ -54,7 +54,7 @@ const CustomFieldsTemplateSelector = ({
       {({ value, dirty, getItemProps }) => (
         <SlideViewLayout>
           <SlideViewNavBar>
-            <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+            <EntityIcon icon="TEMPLATE" color="TEMPLATE" subIcon="METADATA" />
             <CancelButton onClick={onCancel} />
             <SaveButton
               id={saveButtonId}

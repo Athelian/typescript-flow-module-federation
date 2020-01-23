@@ -1,13 +1,20 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, layout, borderRadiuses, fontSizesWithHeights, presets } from 'styles/common';
+import {
+  colors,
+  layout,
+  borderRadiuses,
+  fontSizesWithHeights,
+  fontSizes,
+  presets,
+} from 'styles/common';
 
 export const StaffCardWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
   grid-template-columns: 195px;
   width: 195px;
-  height: 239px;
+  height: 247px;
   justify-items: center;
   padding: 10px 0 5px 0;
 `;
@@ -23,22 +30,25 @@ export const StaffNameStyle: string = css`
 
 export const StaffEmailStyle: string = css`
   ${fontSizesWithHeights.MEDIUM};
-  color: ${colors.BLACK};
   ${presets.ELLIPSIS};
   padding: 0 10px;
   width: 100%;
+  color: ${colors.GRAY_DARK};
 `;
 
 export const StaffRoleStyle: string = css`
-  ${fontSizesWithHeights.SMALL};
-  color: ${colors.BLACK};
-  ${presets.ELLIPSIS};
-  padding: 0 10px;
+  display: flex;
+  padding: 0 5px 0 10px;
   width: 100%;
-  & > svg {
-    margin: 0 5px 0 0;
-    color: ${colors.GRAY_DARK};
-  }
+`;
+
+export const StaffRoleIconStyle: string = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${colors.GRAY_DARK};
+  ${fontSizes.MAIN};
+  margin: 0 5px 0 0;
 `;
 
 export const StaffTagsWrapperStyle: string = css`
@@ -49,16 +59,4 @@ export const StaffTagsWrapperStyle: string = css`
   margin: 0 10px;
   overflow: hidden;
   height: 18px;
-`;
-
-export const CompanyStyle: string = css`
-  ${fontSizesWithHeights.MEDIUM};
-  ${presets.ELLIPSIS};
-  color: ${colors.BLACK};
-  padding: 0 10px;
-  width: 100%;
-  & > svg {
-    margin: 0 5px 0 0;
-    color: ${colors.GRAY_DARK};
-  }
 `;

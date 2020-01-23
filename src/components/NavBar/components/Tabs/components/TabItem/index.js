@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Icon from 'components/Icon';
 import { cx } from 'react-emotion';
-import { TabItemStyle, DisabledStyle, IconStyle } from './style';
+import { TabItemStyle, DisabledStyle, IconStyle, LabelStyle } from './style';
 
 type OptionalProps = {
   className: string,
@@ -44,7 +44,7 @@ const TabItem = ({
         <Icon icon={icon} />
       </div>
     )}
-    {label}
+    {label && <div className={LabelStyle}>{label}</div>}
     <span />
   </button>
 );

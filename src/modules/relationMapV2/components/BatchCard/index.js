@@ -20,6 +20,7 @@ import {
   TagsWrapperStyle,
   BottomRowWrapperStyle,
   QuantityVolumeDesiredWrapperStyle,
+  DateWrapperStyle,
   DelayStyle,
 } from './style';
 
@@ -163,17 +164,25 @@ export default function BatchCard({
           <Label width="75px">
             <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
           </Label>
-          <Display blackout={!canViewDelivery} width="85px">
-            <FormattedDate value={deliveredAt} />
-            {deliveredAtDiff !== 0 && deliveredAt && (
-              <Tooltip message={deliveredAtDiffMsg}>
-                <div className={DelayStyle(deliveredAtDiff, 1)}>
-                  {deliveredAtDiff > 0 ? '+' : ' '}
-                  <FormattedNumber value={deliveredAtDiff} />
-                </div>
-              </Tooltip>
+          <div className={DateWrapperStyle}>
+            {canViewDelivery ? (
+              <>
+                <Display width="80px">
+                  <FormattedDate value={deliveredAt} />
+                </Display>
+                {deliveredAtDiff !== 0 && deliveredAt && (
+                  <Tooltip message={deliveredAtDiffMsg}>
+                    <div className={DelayStyle(deliveredAtDiff)}>
+                      {deliveredAtDiff > 0 && '+'}
+                      <FormattedNumber value={deliveredAtDiff} />
+                    </div>
+                  </Tooltip>
+                )}
+              </>
+            ) : (
+              <Blackout />
             )}
-          </Display>
+          </div>
         </div>
       </div>
 
@@ -182,31 +191,39 @@ export default function BatchCard({
           <Label width="40px">
             <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
           </Label>
-          <Display blackout={!canViewQuantity} width="85px">
+          <Display blackout={!canViewQuantity} width="75px">
             <FormattedNumber value={latestQuantity} />
           </Display>
 
-          <Label width="49px">
+          <Label width="40px">
             <FormattedMessage id="components.cards.vol" defaultMessage="VOL" />
           </Label>
-          <Display blackout={!canViewVolume} width="95px">
+          <Display blackout={!canViewVolume} width="85px">
             <FormattedNumber value={totalVolume?.value} suffix={totalVolume?.metric} />
           </Display>
 
           <Label width="75px">
             <FormattedMessage id="components.cards.desired" defaultMessage="DESIRED" />
           </Label>
-          <Display blackout={!canViewDesired} width="85px">
-            <FormattedDate value={desiredAt} />
-            {desiredAtDiff !== 0 && desiredAt && (
-              <Tooltip message={desiredAtDiffMsg}>
-                <div className={DelayStyle(desiredAtDiff, 2)}>
-                  {desiredAtDiff > 0 ? '+' : ' '}
-                  <FormattedNumber value={desiredAtDiff} />
-                </div>
-              </Tooltip>
+          <div className={DateWrapperStyle}>
+            {canViewDesired ? (
+              <>
+                <Display width="80px">
+                  <FormattedDate value={deliveredAt} />
+                </Display>
+                {desiredAtDiff !== 0 && desiredAt && (
+                  <Tooltip message={desiredAtDiffMsg}>
+                    <div className={DelayStyle(desiredAtDiff)}>
+                      {desiredAtDiff > 0 && '+'}
+                      <FormattedNumber value={desiredAtDiff} />
+                    </div>
+                  </Tooltip>
+                )}
+              </>
+            ) : (
+              <Blackout />
             )}
-          </Display>
+          </div>
         </div>
 
         <TaskRing blackout={!canViewTasks} {...todo} />
