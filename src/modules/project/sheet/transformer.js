@@ -372,7 +372,7 @@ function transformMilestone(
         {
           value: 'uncompleted',
           label: 'Uncompleted',
-          color: colors.GRAY_SUPER_LIGHT,
+          color: 'rgba(0, 0, 0, 0.025)',
           textColor: colors.GRAY_DARK,
         },
       ],
@@ -560,7 +560,7 @@ function transformTask(
         {
           value: 'in_progress',
           label: 'In Progress',
-          color: colors.WHITE,
+          color: 'rgba(0, 0, 0, 0.025)',
           textColor: colors.TEAL,
         },
         {
@@ -572,13 +572,13 @@ function transformTask(
         {
           value: 'skipped',
           label: 'Skipped',
-          color: colors.GRAY_LIGHT_HALF,
+          color: 'rgba(204, 204, 204, 0.5)',
           textColor: colors.BLACK,
         },
         {
           value: 'uncompleted',
           label: 'Uncompleted',
-          color: colors.GRAY_SUPER_LIGHT,
+          color: 'rgba(0, 0, 0, 0.025)',
           textColor: colors.GRAY_DARK,
         },
       ],
@@ -658,7 +658,7 @@ function transformTask(
         {
           value: 'unapproved',
           label: 'Unapproved',
-          color: colors.GRAY_SUPER_LIGHT,
+          color: 'rgba(0, 0, 0, 0.025)',
           textColor: colors.GRAY_DARK,
         },
       ],

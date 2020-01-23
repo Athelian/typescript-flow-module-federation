@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react';
-import SelectInput from 'components/Inputs/SelectInput';
+import BaseSelectInput from 'components/Inputs/SelectInput';
 import Icon from 'components/Icon';
-import type { RenderInputProps, RenderOptionProps } from 'components/Inputs/SelectInput';
+import type { RenderInputProps } from 'components/Inputs/SelectInput';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import { ArrowDownStyle, SelectInputStyle, SelectInputWrapperStyle, OptionStyle } from './style';
+import { ArrowDownStyle, SelectInputStyle, SelectInputWrapperStyle } from './style';
 
 type Status = {
   value: string,
@@ -56,26 +56,20 @@ const StatusSelect = ({
   );
 };
 
-const StatusOption = ({ item, itemToString }: RenderOptionProps) => (
-  <div className={OptionStyle(item.color, item.textColor)}>
-    <span>{itemToString(item)}</span>
-  </div>
-);
-
 const StatusSelectInput = ({
   value,
   readonly,
   onChange,
   extra,
 }: InputProps<string, any, Array<Status>>) => (
-  <SelectInput
+  <BaseSelectInput
     value={value}
     onChange={onChange}
     items={extra || []}
     itemToValue={i => i?.value ?? null}
     itemToString={i => i?.label ?? ''}
     renderInput={StatusSelect}
-    renderOption={StatusOption}
+    renderOption={BaseSelectInput.DefaultRenderSelectOption}
     disabled={readonly}
     optionHeight={30}
     optionWidth={200}
