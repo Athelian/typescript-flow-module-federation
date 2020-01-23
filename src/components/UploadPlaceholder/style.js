@@ -1,15 +1,23 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, presets, colors } from 'styles/common';
+import { presets, colors } from 'styles/common';
 
-export const ProgressStyle: string = css`
+export const UploadPlaceholderStyle = (height: string): string => css`
   ${presets.BOX};
-  ${layout.LAYOUT};
-  ${layout.CENTER_CENTER};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 195px;
-  height: 185px;
+  height: ${height};
   color: ${colors.TEAL};
   font-size: 24px;
 `;
 
-export default ProgressStyle;
+export const ProgressStyle: string = css`
+  font-weight: bold;
+  color: ${colors.TEAL};
+  font-size: 24px;
+  text-align: center;
+  padding: 40px 0 20px 0;
+`;

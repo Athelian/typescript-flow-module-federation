@@ -1,13 +1,25 @@
 // @flow
 import * as React from 'react';
-import { ProgressStyle } from './style';
+import { FormattedMessage } from 'react-intl';
+import { Label } from 'components/Form';
+import { UploadPlaceholderStyle, ProgressStyle } from './style';
 
 type Props = {
-  children: React$Node,
-  uploading: boolean,
   progress: number,
+  height?: string,
 };
 
-export default function UploadPlaceholder({ children, uploading, progress }: Props) {
-  return uploading ? <div className={ProgressStyle}>{`${progress}%`}</div> : children;
+export default function UploadPlaceholder({ progress, height = '185px' }: Props) {
+  return (
+    <div className={UploadPlaceholderStyle(height)}>
+      <div className={ProgressStyle}>{`${progress}%`}</div>
+
+      <Label align="center">
+        <FormattedMessage
+          id="components.UploadPlaceholder.uploading"
+          defaultMessage="Uploading..."
+        />
+      </Label>
+    </div>
+  );
 }
