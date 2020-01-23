@@ -170,6 +170,7 @@ const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => 
                   ? [
                       <CardAction
                         icon="REMOVE"
+                        hoverColor="RED"
                         onClick={evt => {
                           evt.stopPropagation();
                           setIsOpen(true);
