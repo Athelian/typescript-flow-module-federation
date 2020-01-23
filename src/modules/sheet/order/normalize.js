@@ -22,7 +22,7 @@ export default function normalizeSheetOrderInput(
       };
     case 'tags':
       return {
-        tagIds: newValue.map(tag => tag.id),
+        tagIds: newValue.map(tag => tag.id).filter(Boolean),
       };
     case 'inCharges':
       return {

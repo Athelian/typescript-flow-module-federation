@@ -32,7 +32,7 @@ export default function normalizeSheetShipmentInput(
       };
     case 'tags':
       return {
-        tagIds: newValue.map(tag => tag.id),
+        tagIds: newValue.map(tag => tag.id).filter(Boolean),
       };
     case 'files':
       return {

@@ -8,6 +8,7 @@ import useUser from 'hooks/useUser';
 import { decodeId } from 'utils/id';
 import logger from 'utils/logger';
 import { parseRoute } from 'utils/entity';
+import { cleanTagsData } from 'utils/tags';
 import QueryFormPermissionContext from '../QueryForm/context';
 
 type OptionalProps = {
@@ -66,7 +67,7 @@ export default function QueryFormV2({ query, entityId, entityType, render, onCom
             permissions: permissions.permissions,
           }}
         >
-          {render(data?.[entityType] ?? {}, permissions.loading || loading)}
+          {render(cleanTagsData(data?.[entityType] ?? {}), permissions.loading || loading)}
         </QueryFormPermissionContext.Provider>
       );
   }

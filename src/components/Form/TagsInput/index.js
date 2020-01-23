@@ -9,7 +9,7 @@ import Tag from 'components/Tag';
 import { DefaultStyle } from 'components/Form';
 import type { Tag as TagType } from 'components/Tag/type.js.flow';
 import TagSelectOptions from 'components/Form/Inputs/Styles/TagSelectOptions';
-import { isForbidden } from 'utils/data';
+import { isForbidden, isNotFound } from 'utils/data';
 import { WrapperStyle, SelectionWrapperStyle, InputStyle, RemoveStyle } from './style';
 
 type OptionalProps = {
@@ -47,11 +47,11 @@ const defaultProps = {
 };
 
 export default class TagsInput extends React.Component<Props, State> {
-  static defaultProps = defaultProps;
-
   inputWrapperRef = React.createRef<HTMLDivElement>();
 
   inputRef = React.createRef<HTMLInputElement>();
+
+  static defaultProps = defaultProps;
 
   state = {
     focused: false,
@@ -184,7 +184,7 @@ export default class TagsInput extends React.Component<Props, State> {
                 >
                   {values &&
                     (values || [])
-                      .filter(item => !isForbidden(item))
+                      .filter(item => !isForbidden(item) && !isNotFound(item))
                       .map(tag => (
                         <Tag
                           key={tag.id}
@@ -241,7 +241,10 @@ export default class TagsInput extends React.Component<Props, State> {
                     {({ data: tags }) => (
                       <TagSelectOptions
                         getItemProps={getItemProps}
-                        items={this.computeFilteredTags(tags, inputValue)}
+                        items={this.computeFilteredTags(
+                          (tags ?? []).filter(tag => !isNotFound(tag)),
+                          inputValue
+                        )}
                         selectedItems={values}
                         highlightedIndex={highlightedIndex}
                         itemToString={item => (item ? item.description || item.name : '')}

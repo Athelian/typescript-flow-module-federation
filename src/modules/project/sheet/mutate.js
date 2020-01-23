@@ -25,7 +25,7 @@ function normalizedInput(
           };
         case 'tags':
           return {
-            tagIds: value.map(tag => tag.id),
+            tagIds: value.map(tag => tag.id).filter(Boolean),
           };
         default:
           return {
@@ -80,7 +80,7 @@ function normalizedInput(
       switch (field) {
         case 'tags':
           return {
-            tagIds: value.map(tag => tag.id),
+            tagIds: value.map(tag => tag.id).filter(Boolean),
           };
         case 'status': {
           switch (value) {
