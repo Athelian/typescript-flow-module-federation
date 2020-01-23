@@ -35,7 +35,7 @@ const MetadataForm = () => {
     <Provider>
       <>
         <NavBar>
-          <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+          <EntityIcon icon="TEMPLATE" color="TEMPLATE" subIcon="METADATA" />
           <TabItem
             active={activeType === 'Order'}
             label={<FormattedMessage id="modules.metadata.orders" defaultMessage="ORDERS" />}

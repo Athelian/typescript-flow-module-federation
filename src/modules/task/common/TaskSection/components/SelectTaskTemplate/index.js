@@ -43,7 +43,7 @@ const SelectTaskTemplate = ({ entityType, onCancel, onSelect }: Props) => {
       {({ value, dirty, getItemProps }) => (
         <SlideViewLayout>
           <SlideViewNavBar>
-            <EntityIcon icon="TEMPLATE" color="TEMPLATE" />
+            <EntityIcon icon="TEMPLATE" color="TEMPLATE" subIcon="TASK" />
 
             <Filter
               config={TaskTemplateFilterConfig}

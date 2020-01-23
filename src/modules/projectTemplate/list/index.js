@@ -36,7 +36,7 @@ const ProjectTemplateListPage = () => {
   return (
     <Content>
       <NavBar>
-        <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+        <EntityIcon icon="TEMPLATE" color="TEMPLATE" subIcon="PROJECT" />
         <BooleanValue>
           {({ value: isOpen, set: toggleSlide }) => (
             <>

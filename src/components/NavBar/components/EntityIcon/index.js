@@ -22,7 +22,7 @@ function EntityIcon({ icon, color, invert, subIcon }: Props) {
     <div className={IconStyle(color, invert)}>
       <Icon icon={icon} />
       {subIcon && (
-        <div className={SubIconStyle(color)}>
+        <div className={SubIconStyle(color, invert)}>
           <Icon icon={subIcon} />
         </div>
       )}

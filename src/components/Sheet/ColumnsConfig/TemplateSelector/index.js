@@ -99,7 +99,7 @@ const TemplateSelector = ({ onChange, selectedItem, children, templateType }: Pr
       <SlideView isOpen={open} onRequestClose={() => setOpen(false)}>
         <SlideViewLayout>
           <SlideViewNavBar>
-            <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+            <EntityIcon icon="TEMPLATE" color="TEMPLATE" subIcon="TABLE" />
 
             <Filter
               config={MaskEditFilterConfig}

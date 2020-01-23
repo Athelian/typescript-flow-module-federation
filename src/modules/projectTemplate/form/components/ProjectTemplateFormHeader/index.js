@@ -57,7 +57,7 @@ const ProjectTemplateFormHeader = ({
       {container => {
         return (
           <SlideViewNavBar>
-            <EntityIcon icon="TEMPLATE" color="TEMPLATE" />
+            <EntityIcon icon="TEMPLATE" color="TEMPLATE" subIcon="PROJECT" />
             <JumpToSection>
               <SectionTabs
                 link="template_info_section"

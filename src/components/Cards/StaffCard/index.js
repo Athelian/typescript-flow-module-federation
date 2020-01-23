@@ -72,7 +72,7 @@ const StaffCard = ({ staff, onClick, actions, ...rest }: Props) => {
           </Display>
         </div>
 
-        <RelateEntity link="" entity="PARTNER" value={organization?.name} width="150px" />
+        <RelateEntity link="" entity="PARTNER" value={organization?.name ?? ''} width="150px" />
 
         <div className={StaffTagsWrapperStyle}>
           {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}

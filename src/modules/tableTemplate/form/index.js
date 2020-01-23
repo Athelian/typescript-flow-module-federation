@@ -89,7 +89,7 @@ export const TableTemplateForm = ({ onSave, onCancel, onRefetch }: FormProps) =>
     <Provider inject={[formContainer]}>
       <SlideViewLayout>
         <SlideViewNavBar>
-          <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+          <EntityIcon icon="TEMPLATE" color="TEMPLATE" subIcon="TABLE" />
           <JumpToSection>
             <SectionTabs
               link="tableTemplate_templateSection"
