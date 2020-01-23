@@ -242,7 +242,7 @@ export default class TagsInput extends React.Component<Props, State> {
                       <TagSelectOptions
                         getItemProps={getItemProps}
                         items={this.computeFilteredTags(
-                          (tags ?? []).filter(tag => !isNotFound(tag)),
+                          (tags ?? []).filter(tag => !isForbidden(tag) && !isNotFound(tag)),
                           inputValue
                         )}
                         selectedItems={values}
