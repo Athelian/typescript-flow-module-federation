@@ -4,6 +4,7 @@ import * as ReactDOM from 'react-dom';
 import { FixedSizeList } from 'react-window';
 import Downshift from 'downshift';
 import { useQuery } from '@apollo/react-hooks';
+import { isForbidden, isNotFound } from 'utils/data';
 import Tag from 'components/Tag';
 import Icon from 'components/Icon';
 import usePortalSlot from 'hooks/usePortalSlot';
@@ -129,7 +130,9 @@ const TagOptions = ({
     return () => document.removeEventListener('wheel', listener, opts);
   }, [closeMenu]);
 
-  const tags = loading ? [] : data?.tags?.nodes ?? [];
+  const tags = (loading ? [] : data?.tags?.nodes ?? []).filter(
+    tag => !isForbidden(tag) && !isNotFound(tag)
+  );
   const height = Math.min(tags.length * 30, 200);
 
   return (
@@ -153,7 +156,7 @@ const TagOptions = ({
               tags,
               getItemProps,
               highlightedIndex,
-              selectedItems,
+              selectedItems: selectedItems.filter(item => !isForbidden(item) && !isNotFound(item)),
             }}
           >
             {TagOption}
