@@ -37,7 +37,7 @@ export default function normalizeSheetShipmentInput(
     case 'files':
       return {
         files: newValue.map(
-          ({ __typename, entity: e, ownedBy, path, uploading, progress, ...rest }) => rest
+          ({ __typename, entity: e, ownedBy, path, uploading, progress, size, ...rest }) => rest
         ),
       };
     case 'inCharges':

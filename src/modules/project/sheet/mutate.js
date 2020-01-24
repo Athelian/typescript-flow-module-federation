@@ -68,7 +68,7 @@ function normalizedInput(
         case 'files':
           return {
             files: value.map(
-              ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
+              ({ __typename, entity: e, path, uploading, progress, size, ...rest }) => rest
             ),
           };
         default:
