@@ -100,10 +100,14 @@ export default class OrderItemsContainer extends Container<FormState> {
     );
   };
 
-  initDetailValues = (orderItems: Array<Object>, hasCalledItemsApiYet: boolean = false) => {
-    this.setState({ orderItems, hasCalledItemsApiYet });
+  initDetailValues = (
+    orderItems: Array<Object>,
+    needDeletedFiles: Array<FilePayload>,
+    hasCalledItemsApiYet: boolean = false
+  ) => {
+    this.setState({ orderItems, needDeletedFiles: [], hasCalledItemsApiYet });
     if (hasCalledItemsApiYet) {
-      this.originalValues = { orderItems, hasCalledItemsApiYet };
+      this.originalValues = { orderItems, needDeletedFiles: [], hasCalledItemsApiYet };
     }
   };
 
