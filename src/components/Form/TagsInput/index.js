@@ -265,7 +265,7 @@ export default class TagsInput extends React.Component<Props, State> {
         <div className={InputStyle(width)}>
           {values &&
             (values || [])
-              .filter(item => !isForbidden(item))
+              .filter(item => !isForbidden(item) && !isNotFound(item))
               .map(tag => (
                 <Tag
                   key={tag.id}
