@@ -1,5 +1,5 @@
 // @flow
-import { clone, getByPathWithDefault, setIn } from 'utils/fp';
+import { getByPathWithDefault, setIn } from 'utils/fp';
 import type { CellValue, State, ColumnSort } from 'components/Sheet/SheetState/types';
 import { refresh } from './sheet';
 
@@ -39,7 +39,7 @@ export function changeValues(
     })
     .filter(change => change.cells.length > 0);
 
-  let items = clone(state.items);
+  let { items } = state;
   cellsToUpdate.forEach(({ cells, value }) => {
     cells.forEach(cell => {
       // $FlowFixMe cell.data cannot be null since we filter cells before
