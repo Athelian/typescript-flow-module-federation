@@ -60,7 +60,13 @@ const defaultWeight = {
 };
 
 const CustomPlaceHolder = () => (
-  <ContentLoader height={460} width={680} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
+  <ContentLoader
+    height={460}
+    width={680}
+    speed={2}
+    backgroundColor="#f3f3f3"
+    foregroundColor="#ecebeb"
+  >
     <rect x="25" y="16" rx="5" ry="5" width="290" height="20" />
     <rect x="25" y="59" rx="5" ry="5" width="290" height="20" />
     <rect x="25" y="101" rx="5" ry="5" width="290" height="20" />
