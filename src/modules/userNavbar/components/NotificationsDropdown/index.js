@@ -26,9 +26,14 @@ const defaultRenderItem = (item: Object) => <NotificationItem key={item.id} noti
 type Props = {|
   isOpen: boolean,
   renderItem?: Object => React$Node,
+  totalMoreItems?: number,
 |};
 
-const NotificationsDropdown = ({ renderItem = defaultRenderItem, isOpen }: Props) => {
+const NotificationsDropdown = ({
+  renderItem = defaultRenderItem,
+  isOpen,
+  totalMoreItems = 0,
+}: Props) => {
   return (
     <Query
       query={notificationListQuery}
@@ -44,7 +49,6 @@ const NotificationsDropdown = ({ renderItem = defaultRenderItem, isOpen }: Props
         }
 
         const items = data?.viewer?.notifications?.nodes ?? [];
-        const totalMoreItems = 5;
 
         return (
           <div className={NotificationsDropDownWrapperStyle(isOpen)}>
@@ -59,14 +63,33 @@ const NotificationsDropdown = ({ renderItem = defaultRenderItem, isOpen }: Props
                   </div>
                 )}
                 {loading ? <LoadingIcon /> : items.map(renderItem)}
-                <div className={ViewMoreStyle}>
-                  <FormattedMessage
-                    id="components.Header.notification.viewMoreNotifications"
-                    defaultMessage="{totalMoreItems} more..."
-                    values={{
-                      totalMoreItems,
-                    }}
-                  />
+                {totalMoreItems > 0 && (
+                  <div className={ViewMoreStyle}>
+                    <FormattedMessage
+                      id="components.Header.notification.viewMoreNotifications"
+                      defaultMessage="{totalMoreItems} more..."
+                      values={{
+                        totalMoreItems,
+                      }}
+                    />
+                  </div>
+                )}
+                <div className={NotificationsFooterStyle}>
+                  <NavigateLink to="/notifications">
+                    <BaseButton
+                      label={
+                        <FormattedMessage
+                          id="components.Header.notification.viewAllNotification"
+                          defaultMessage="VIEW ALL NOTIFICATIONS"
+                        />
+                      }
+                      textColor="TEAL"
+                      hoverTextColor="TEAL"
+                      backgroundColor="GRAY_SUPER_LIGHT"
+                      hoverBackgroundColor="GRAY_VERY_LIGHT"
+                      suffix={<Icon icon="NOTIFICATION" />}
+                    />
+                  </NavigateLink>
                 </div>
               </div>
               <div className={NotificationsHeaderStyle}>
@@ -111,23 +134,6 @@ const NotificationsDropdown = ({ renderItem = defaultRenderItem, isOpen }: Props
                     />
                   </div>
                 </Tooltip>
-              </div>
-              <div className={NotificationsFooterStyle}>
-                <NavigateLink to="/notifications">
-                  <BaseButton
-                    label={
-                      <FormattedMessage
-                        id="components.Header.notification.viewAllNotification"
-                        defaultMessage="VIEW ALL NOTIFICATIONS"
-                      />
-                    }
-                    textColor="TEAL"
-                    hoverTextColor="TEAL"
-                    backgroundColor="WHITE"
-                    hoverBackgroundColor="GRAY_SUPER_LIGHT"
-                    suffix={<Icon icon="NOTIFICATION" />}
-                  />
-                </NavigateLink>
               </div>
             </div>
           </div>

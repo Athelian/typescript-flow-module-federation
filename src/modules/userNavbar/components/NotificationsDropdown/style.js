@@ -28,7 +28,7 @@ export const NotificationsListWrapperStyle: string = css`
   ${layout.VERTICAL};
   top: 40px;
   left: 0;
-  height: calc(100% - 80px);
+  height: calc(100% - 40px);
   width: 100%;
   overflow: hidden;
   background-color: ${colors.GRAY_SUPER_LIGHT};
@@ -76,11 +76,9 @@ export const NotificationsFooterStyle: boolean = css`
   justify-content: center;
   height: 40px;
   flex-shrink: 0;
-  ${shadows.HEADER_REVERSE};
   ${borderRadiuses.MAIN};
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
-  background-color: ${colors.WHITE};
   padding: 0 10px;
   width: 100%;
 `;
@@ -112,11 +110,10 @@ export const ArchiveAllButtonStyle = css`
 `;
 
 export const ViewMoreStyle = css`
-  font-style: normal;
-  font-weight: normal;
+  padding: 5px 0;
   font-size: 12px;
   line-height: 15px;
-  display: flex;
+  display: block;
   align-items: center;
   text-align: center;
   letter-spacing: 2px;
