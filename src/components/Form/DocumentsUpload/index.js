@@ -106,7 +106,10 @@ const DocumentsUpload = ({
   }, [filesState]);
 
   if (
-    !isEquals(files.map(pick(editableFields)), previousFilesRef.current.map(pick(editableFields)))
+    !isEquals(
+      (files ?? []).map(pick(editableFields)),
+      (previousFilesRef.current ?? []).map(pick(editableFields))
+    )
   ) {
     previousFilesRef.current = files.map(pick(SELECTED_FIELDS));
     setFileState(
@@ -203,7 +206,7 @@ const DocumentsUpload = ({
       });
   };
 
-  const isEditable = Object.keys(editable).some(key => editable[key]);
+  const isEditable = Object.keys(editable || {}).some(key => editable[key]);
 
   return (
     <>

@@ -10,6 +10,7 @@ import { BaseButton } from 'components/Buttons';
 import { Label } from 'components/Form';
 import NotificationItem from 'modules/notifications/components/NotificationItem';
 import { notificationListQuery } from 'modules/notifications/query';
+import { isNotFound, isForbidden, isBadRequest } from 'utils/data';
 import {
   NotificationsDropDownWrapperStyle,
   NotificationsBodyWrapperStyle,
@@ -48,17 +49,62 @@ const NotificationsDropdown = ({
           return error.message;
         }
 
-        const items = data?.viewer?.notifications?.nodes ?? [];
+        const items = (data?.viewer?.notifications?.nodes ?? []).filter(
+          notification =>
+            !isNotFound(notification) && !isForbidden(notification) && !isBadRequest(notification)
+        );
 
         return (
           <div className={NotificationsDropDownWrapperStyle(isOpen)}>
+            <div className={NotificationsHeaderStyle}>
+              <Label>
+                <Icon icon="ACTIVE" />
+                <FormattedMessage
+                  id="components.Header.notification.title"
+                  defaultMessage="NOTIFICATIONS"
+                />
+              </Label>
+              <NavigateLink to="/notifications">
+                <BaseButton
+                  label={
+                    <FormattedMessage
+                      id="components.Header.notification.viewAll"
+                      defaultMessage="VIEW ALL"
+                    />
+                  }
+                  textColor="TEAL"
+                  hoverTextColor="TEAL"
+                  backgroundColor="GRAY_SUPER_LIGHT"
+                  hoverBackgroundColor="GRAY_VERY_LIGHT"
+                  suffix={<Icon icon="NOTIFICATION" />}
+                />
+              </NavigateLink>
+              <Tooltip
+                message={
+                  <FormattedMessage
+                    id="components.Header.notification.archiveAllNotifications"
+                    defaultMessage="Archive all notifications"
+                  />
+                }
+              >
+                <div className={ArchiveAllButtonStyle}>
+                  <BaseButton
+                    label={<Icon icon="ARCHIVE" />}
+                    textColor="GRAY_LIGHT"
+                    hoverTextColor="GRAY_DARK"
+                    backgroundColor="WHITE"
+                    hoverBackgroundColor="GRAY_SUPER_LIGHT"
+                  />
+                </div>
+              </Tooltip>
+            </div>
             <div className={NotificationsBodyWrapperStyle}>
               <div className={NotificationsListWrapperStyle}>
                 {!loading && items.length === 0 && (
                   <div className={NoNotificationStyle}>
                     <FormattedMessage
-                      id="components.Header.notification.noNotifications"
-                      defaultMessage="No notifications"
+                      id="components.Header.notification.noActiveNotifications"
+                      defaultMessage="No active notifications found"
                     />
                   </div>
                 )}
@@ -91,49 +137,6 @@ const NotificationsDropdown = ({
                     />
                   </NavigateLink>
                 </div>
-              </div>
-              <div className={NotificationsHeaderStyle}>
-                <Label>
-                  <Icon icon="ACTIVE" />
-                  {` `}
-                  <FormattedMessage
-                    id="components.Header.notification.title"
-                    defaultMessage="NOTIFICATIONS"
-                  />
-                </Label>
-                <NavigateLink to="/notifications">
-                  <BaseButton
-                    label={
-                      <FormattedMessage
-                        id="components.Header.notification.viewAll"
-                        defaultMessage="VIEW ALL"
-                      />
-                    }
-                    textColor="TEAL"
-                    hoverTextColor="TEAL"
-                    backgroundColor="GRAY_SUPER_LIGHT"
-                    hoverBackgroundColor="GRAY_VERY_LIGHT"
-                    suffix={<Icon icon="NOTIFICATION" />}
-                  />
-                </NavigateLink>
-                <Tooltip
-                  message={
-                    <FormattedMessage
-                      id="components.Header.notification.archiveAllNotifications"
-                      defaultMessage="Archive all notifications"
-                    />
-                  }
-                >
-                  <div className={ArchiveAllButtonStyle}>
-                    <BaseButton
-                      label={<Icon icon="ARCHIVE" />}
-                      textColor="GRAY_LIGHT"
-                      hoverTextColor="GRAY_DARK"
-                      backgroundColor="WHITE"
-                      hoverBackgroundColor="GRAY_SUPER_LIGHT"
-                    />
-                  </div>
-                </Tooltip>
               </div>
             </div>
           </div>

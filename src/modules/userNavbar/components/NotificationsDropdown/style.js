@@ -86,11 +86,11 @@ export const NotificationsFooterStyle: boolean = css`
 export const NoNotificationStyle = css`
   display: flex;
   background-color: ${colors.GRAY_SUPER_LIGHT};
-  color: ${colors.GRAY_DARK};
+  color: ${colors.BLACK};
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 50px;
+  height: 100%;
   font-size: 15px;
 `;
 
