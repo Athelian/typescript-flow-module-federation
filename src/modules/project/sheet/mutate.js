@@ -25,7 +25,7 @@ function normalizedInput(
           };
         case 'tags':
           return {
-            tagIds: value.map(tag => tag.id),
+            tagIds: value.map(tag => tag.id).filter(Boolean),
           };
         default:
           return {
@@ -68,7 +68,7 @@ function normalizedInput(
         case 'files':
           return {
             files: value.map(
-              ({ __typename, entity: e, path, uploading, progress, ...rest }) => rest
+              ({ __typename, entity: e, path, uploading, progress, size, ...rest }) => rest
             ),
           };
         default:
@@ -80,7 +80,7 @@ function normalizedInput(
       switch (field) {
         case 'tags':
           return {
-            tagIds: value.map(tag => tag.id),
+            tagIds: value.map(tag => tag.id).filter(Boolean),
           };
         case 'status': {
           switch (value) {

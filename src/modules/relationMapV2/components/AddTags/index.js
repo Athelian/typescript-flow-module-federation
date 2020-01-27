@@ -166,7 +166,9 @@ export default function AddTags({ onSuccess }: Props) {
               return {
                 id: order.id,
                 input: {
-                  tagIds: [...new Set([...order.tags.map(tag => tag.id), ...tagIds])],
+                  tagIds: [...new Set([...order.tags.map(tag => tag.id), ...tagIds])].filter(
+                    Boolean
+                  ),
                 },
               };
             })
@@ -178,7 +180,9 @@ export default function AddTags({ onSuccess }: Props) {
               return {
                 id: item.id,
                 input: {
-                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])],
+                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])].filter(
+                    Boolean
+                  ),
                 },
               };
             })
@@ -190,7 +194,9 @@ export default function AddTags({ onSuccess }: Props) {
               return {
                 id: item.id,
                 input: {
-                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])],
+                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])].filter(
+                    Boolean
+                  ),
                 },
               };
             })
@@ -201,7 +207,9 @@ export default function AddTags({ onSuccess }: Props) {
               return {
                 id: item.id,
                 input: {
-                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])],
+                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])].filter(
+                    Boolean
+                  ),
                 },
               };
             })
@@ -212,7 +220,9 @@ export default function AddTags({ onSuccess }: Props) {
               return {
                 id: item.id,
                 input: {
-                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])],
+                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])].filter(
+                    Boolean
+                  ),
                 },
               };
             })

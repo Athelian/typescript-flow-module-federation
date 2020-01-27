@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { isEquals } from 'utils/fp';
 import Dialog from 'components/Dialog';
 import Icon from 'components/Icon';
 import { Tooltip } from 'components/Tooltip';
@@ -160,12 +161,9 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
   const intl = useIntl();
   const buttonRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
-
-  const [filterStates, setFilterStates] = React.useState<Array<FilterState>>([]);
-
-  React.useEffect(() => {
-    setFilterStates(computeFilterStates(config, filterBy));
-  }, [config, filterBy, open]);
+  const [filterStates, setFilterStates] = React.useState<Array<FilterState>>(
+    computeFilterStates(config, filterBy)
+  );
 
   const onSave = () => {
     const states = cleanFilterStates(filterStates);
@@ -187,9 +185,17 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
     setFilterStates(states);
   };
 
-  const onReset = () => {
+  const onReset = React.useCallback(() => {
     setFilterStates(computeFilterStates(config, filterBy));
-  };
+  }, [config, filterBy]);
+
+  React.useEffect(() => {
+    return () => {
+      if (!open) {
+        onReset();
+      }
+    };
+  }, [onReset, open]);
 
   const onClearAll = () => {
     setFilterStates(filterStates.filter(fs => (staticFilters || []).includes(fs.field)));
@@ -203,6 +209,7 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
   );
   const readonlyFilters = filterStates.filter(fs => (staticFilters || []).includes(fs.field));
   const canAddFilter = availableConfig.length > 0 && !hasWeakFilter;
+  const isDirty = !isEquals(filterStates, computeFilterStates(config, filterBy));
 
   return (
     <>
@@ -226,8 +233,12 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
             {/* $FlowFixMe This comment suppresses an error found when
              * upgrading Flow to v0.112.0. To view the error, delete this
              * comment and run Flow. */}
-            <ResetButton className={ResetActionStyle} onClick={onReset} />
-            <SaveButton onClick={onSave} id="saveFilterButton" />
+            {isDirty && (
+              <>
+                <ResetButton className={ResetActionStyle} onClick={onReset} />
+                <SaveButton onClick={onSave} id="saveFilterButton" />
+              </>
+            )}
           </div>
 
           <div className={FiltersListStyle}>

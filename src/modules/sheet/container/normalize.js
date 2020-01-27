@@ -15,7 +15,7 @@ export default function normalizeSheetContainerInput(
       };
     case 'tags':
       return {
-        tagIds: value.map(tag => tag.id),
+        tagIds: value.map(tag => tag.id).filter(Boolean),
       };
     case 'warehouseArrivalAgreedDateApproved':
       return {

@@ -17,12 +17,12 @@ export default function normalizeSheetOrderInput(
     case 'files':
       return {
         files: newValue.map(
-          ({ __typename, entity: e, ownedBy, path, uploading, progress, ...rest }) => rest
+          ({ __typename, entity: e, ownedBy, path, uploading, progress, size, ...rest }) => rest
         ),
       };
     case 'tags':
       return {
-        tagIds: newValue.map(tag => tag.id),
+        tagIds: newValue.map(tag => tag.id).filter(Boolean),
       };
     case 'inCharges':
       return {

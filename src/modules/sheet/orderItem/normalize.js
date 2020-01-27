@@ -25,12 +25,12 @@ export default function normalizeSheetOrderItemInput(
       };
     case 'tags':
       return {
-        tagIds: newValue.map(tag => tag.id),
+        tagIds: newValue.map(tag => tag.id).filter(Boolean),
       };
     case 'files':
       return {
         files: newValue.map(
-          ({ __typename, entity: e, ownedBy, path, uploading, progress, ...rest }) => rest
+          ({ __typename, entity: e, ownedBy, path, uploading, progress, size, ...rest }) => rest
         ),
       };
     case 'todo':

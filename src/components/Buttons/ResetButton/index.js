@@ -7,6 +7,7 @@ type Props = {|
   disabled: boolean,
   onClick: Function,
   label: React.Node,
+  className?: string,
 |};
 
 const defaultProps = {

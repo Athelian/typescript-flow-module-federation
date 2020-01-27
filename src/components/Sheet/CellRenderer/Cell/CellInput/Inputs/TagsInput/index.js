@@ -4,7 +4,7 @@ import BaseTagsInput from 'components/Inputs/TagsInput';
 import type { RenderInputProps } from 'components/Inputs/TagsInput';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
-import { isForbidden } from 'utils/data';
+import { isForbidden, isNotFound } from 'utils/data';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import { TagsSelectStyle, RemoveButtonStyle, TagsInputWrapperStyle } from './style';
 
@@ -17,7 +17,7 @@ const TagInputRenderer = ({
 }: RenderInputProps) => (
   <div className={TagsSelectStyle}>
     {(selectedItems || [])
-      .filter(item => !isForbidden(item))
+      .filter(item => !isForbidden(item) && !isNotFound(item))
       .map(tag => (
         <Tag
           key={tag.id}
