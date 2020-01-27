@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Jan 21 2020 16:44:31 GMT+0900 (Japan Standard Time)
+# timestamp: Mon Jan 27 2020 17:38:10 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28798,6 +28798,10 @@ enum Incoterm {
   DAT
   DAP
   DDP
+}
+
+interface Integrated {
+  integrationLinks: [IntegrationLinkPayload!]!
 }
 
 type Integration implements Model & Owned {
@@ -86868,7 +86872,7 @@ enum Seaport {
   ZWZMZ
 }
 
-type Shipment implements Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable {
+type Shipment implements Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable & Integrated {
   archived: Boolean!
   importer: OrganizationPayload!
   exporter: OrganizationPayload
@@ -86906,7 +86910,6 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   containerTypeCounts: [ContainerTypeCount!]!
   batches: [BatchPayload!]!
   batchesWithoutContainer: [BatchPayload!]!
-  integrationLinks: [IntegrationLinkPayload!]!
   containers: [ContainerPayload!]!
   timeline: Timeline!
   todo: Todo!
@@ -86923,6 +86926,7 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   files: [FilePayload!]!
   customFields: CustomFields!
   memo: String
+  integrationLinks: [IntegrationLinkPayload!]!
 }
 
 input ShipmentBatchInput {

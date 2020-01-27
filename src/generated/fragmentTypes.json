@@ -81,6 +81,15 @@
             "name": "Shipment"
           },
           {
+            "name": "IntegrationLink"
+          },
+          {
+            "name": "IntegrationConfiguration"
+          },
+          {
+            "name": "Integration"
+          },
+          {
             "name": "TimelineDate"
           },
           {
@@ -94,15 +103,6 @@
           },
           {
             "name": "Warehouse"
-          },
-          {
-            "name": "IntegrationLink"
-          },
-          {
-            "name": "IntegrationConfiguration"
-          },
-          {
-            "name": "Integration"
           },
           {
             "name": "Container"
@@ -240,6 +240,15 @@
             "name": "Shipment"
           },
           {
+            "name": "IntegrationLink"
+          },
+          {
+            "name": "IntegrationConfiguration"
+          },
+          {
+            "name": "Integration"
+          },
+          {
             "name": "TimelineDate"
           },
           {
@@ -253,15 +262,6 @@
           },
           {
             "name": "Warehouse"
-          },
-          {
-            "name": "IntegrationLink"
-          },
-          {
-            "name": "IntegrationConfiguration"
-          },
-          {
-            "name": "Integration"
           },
           {
             "name": "Container"
@@ -977,6 +977,69 @@
         ]
       },
       {
+        "kind": "INTERFACE",
+        "name": "Integrated",
+        "possibleTypes": [
+          {
+            "name": "Shipment"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "IntegrationLinkPayload",
+        "possibleTypes": [
+          {
+            "name": "IntegrationLink"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "IntegrationConfigurationPayload",
+        "possibleTypes": [
+          {
+            "name": "IntegrationConfiguration"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "IntegrationPayload",
+        "possibleTypes": [
+          {
+            "name": "Integration"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
         "kind": "UNION",
         "name": "TimelineDatePayload",
         "possibleTypes": [
@@ -1054,60 +1117,6 @@
         "possibleTypes": [
           {
             "name": "Warehouse"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "IntegrationLinkPayload",
-        "possibleTypes": [
-          {
-            "name": "IntegrationLink"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "IntegrationConfigurationPayload",
-        "possibleTypes": [
-          {
-            "name": "IntegrationConfiguration"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "IntegrationPayload",
-        "possibleTypes": [
-          {
-            "name": "Integration"
           },
           {
             "name": "BadRequest"

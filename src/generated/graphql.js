@@ -10269,6 +10269,10 @@ export const IncotermValues = Object.freeze({
 
 export type Incoterm = $Values<typeof IncotermValues>;
 
+export type Integrated = {|
+  integrationLinks: Array<IntegrationLinkPayload>,
+|};
+
 export type Integration = {|
   ...Model,
   ...Owned,
@@ -32313,6 +32317,7 @@ export type Shipment = {|
   ...Documented,
   ...Customizable,
   ...Memorizable,
+  ...Integrated,
   ...{|
      __typename?: 'Shipment',
     archived: $ElementType<Scalars, 'Boolean'>,
@@ -32352,7 +32357,6 @@ export type Shipment = {|
     containerTypeCounts: Array<ContainerTypeCount>,
     batches: Array<BatchPayload>,
     batchesWithoutContainer: Array<BatchPayload>,
-    integrationLinks: Array<IntegrationLinkPayload>,
     containers: Array<ContainerPayload>,
     timeline: Timeline,
     todo: Todo,
@@ -32369,6 +32373,7 @@ export type Shipment = {|
     files: Array<FilePayload>,
     customFields: CustomFields,
     memo?: ?$ElementType<Scalars, 'String'>,
+    integrationLinks: Array<IntegrationLinkPayload>,
   |}
 |};
 
@@ -36791,6 +36796,15 @@ export type WarehouseCardFragmentFragment = ({
             "name": "Shipment"
           },
           {
+            "name": "IntegrationLink"
+          },
+          {
+            "name": "IntegrationConfiguration"
+          },
+          {
+            "name": "Integration"
+          },
+          {
             "name": "TimelineDate"
           },
           {
@@ -36804,15 +36818,6 @@ export type WarehouseCardFragmentFragment = ({
           },
           {
             "name": "Warehouse"
-          },
-          {
-            "name": "IntegrationLink"
-          },
-          {
-            "name": "IntegrationConfiguration"
-          },
-          {
-            "name": "Integration"
           },
           {
             "name": "Container"
@@ -36950,6 +36955,15 @@ export type WarehouseCardFragmentFragment = ({
             "name": "Shipment"
           },
           {
+            "name": "IntegrationLink"
+          },
+          {
+            "name": "IntegrationConfiguration"
+          },
+          {
+            "name": "Integration"
+          },
+          {
             "name": "TimelineDate"
           },
           {
@@ -36963,15 +36977,6 @@ export type WarehouseCardFragmentFragment = ({
           },
           {
             "name": "Warehouse"
-          },
-          {
-            "name": "IntegrationLink"
-          },
-          {
-            "name": "IntegrationConfiguration"
-          },
-          {
-            "name": "Integration"
           },
           {
             "name": "Container"
@@ -37687,6 +37692,69 @@ export type WarehouseCardFragmentFragment = ({
         ]
       },
       {
+        "kind": "INTERFACE",
+        "name": "Integrated",
+        "possibleTypes": [
+          {
+            "name": "Shipment"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "IntegrationLinkPayload",
+        "possibleTypes": [
+          {
+            "name": "IntegrationLink"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "IntegrationConfigurationPayload",
+        "possibleTypes": [
+          {
+            "name": "IntegrationConfiguration"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "IntegrationPayload",
+        "possibleTypes": [
+          {
+            "name": "Integration"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
         "kind": "UNION",
         "name": "TimelineDatePayload",
         "possibleTypes": [
@@ -37764,60 +37832,6 @@ export type WarehouseCardFragmentFragment = ({
         "possibleTypes": [
           {
             "name": "Warehouse"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "IntegrationLinkPayload",
-        "possibleTypes": [
-          {
-            "name": "IntegrationLink"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "IntegrationConfigurationPayload",
-        "possibleTypes": [
-          {
-            "name": "IntegrationConfiguration"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "IntegrationPayload",
-        "possibleTypes": [
-          {
-            "name": "Integration"
           },
           {
             "name": "BadRequest"
