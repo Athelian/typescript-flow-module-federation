@@ -1,14 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import {
-  layout,
-  shadows,
-  colors,
-  transitions,
-  borderRadiuses,
-  presets,
-  fontSizes,
-} from 'styles/common';
+import { layout, shadows, colors, transitions, borderRadiuses, fontSizes } from 'styles/common';
 
 export const MilestoneHeaderWrapperStyle = (isDragging: boolean) => css`
   ${layout.GRID_VERTICAL};
@@ -26,23 +18,6 @@ export const MilestoneHeaderWrapperStyle = (isDragging: boolean) => css`
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   `}
-`;
-
-export const DeleteButtonStyle = (isHovered: boolean) => css`
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  ${presets.BUTTON};
-  opacity: ${isHovered ? 1 : 0};
-  height: 20px;
-  width: 20px;
-  ${borderRadiuses.CIRCLE};
-  color: ${colors.GRAY_LIGHT};
-  ${fontSizes.MAIN};
-  &:hover,
-  :focus {
-    color: ${colors.RED};
-  }
 `;
 
 export const TaskRingWrapperStyle = css`

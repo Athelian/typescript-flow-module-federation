@@ -43,9 +43,9 @@ import { EstimatedCompletionDateContext } from 'modules/project/form/helpers';
 import validator from './validator';
 import messages from './messages';
 import CompleteButton from '../CompleteButton';
+import DeleteButton from './components/DeleteButton';
 import {
   MilestoneHeaderWrapperStyle,
-  DeleteButtonStyle,
   TaskRingWrapperStyle,
   AutoDateSyncIconStyle,
   DateInputWrapperStyle,
@@ -190,31 +190,23 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
 
                         if (step === 0 && tasks.length > 0) {
                           return (
-                            <button
-                              className={DeleteButtonStyle(isHovered)}
-                              type="button"
-                              onClick={event => {
-                                event.stopPropagation();
+                            <DeleteButton
+                              isHovered={isHovered}
+                              onClick={() => {
                                 setStep(1);
                               }}
-                            >
-                              <Icon icon="REMOVE" />
-                            </button>
+                            />
                           );
                         }
 
                         if (step === 0 && files.length > 0) {
                           return (
-                            <button
-                              className={DeleteButtonStyle(isHovered)}
-                              type="button"
-                              onClick={event => {
-                                event.stopPropagation();
+                            <DeleteButton
+                              isHovered={isHovered}
+                              onClick={() => {
                                 setStep(2);
                               }}
-                            >
-                              <Icon icon="REMOVE" />
-                            </button>
+                            />
                           );
                         }
 
@@ -258,16 +250,12 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                                 }
                               />
 
-                              <button
-                                className={DeleteButtonStyle(isHovered)}
-                                type="button"
-                                onClick={event => {
-                                  event.stopPropagation();
+                              <DeleteButton
+                                isHovered={isHovered}
+                                onClick={() => {
                                   setStep(2);
                                 }}
-                              >
-                                <Icon icon="REMOVE" />
-                              </button>
+                              />
                             </>
                           );
                         }
@@ -291,31 +279,23 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                                 }}
                               />
 
-                              <button
-                                className={DeleteButtonStyle(isHovered)}
-                                type="button"
-                                onClick={event => {
-                                  event.stopPropagation();
+                              <DeleteButton
+                                isHovered={isHovered}
+                                onClick={() => {
                                   setStep(2);
                                 }}
-                              >
-                                <Icon icon="REMOVE" />
-                              </button>
+                              />
                             </>
                           );
                         }
 
                         return (
-                          <button
-                            className={DeleteButtonStyle(isHovered)}
-                            type="button"
-                            onClick={event => {
-                              event.stopPropagation();
+                          <DeleteButton
+                            isHovered={isHovered}
+                            onClick={() => {
                               setStep(2);
                             }}
-                          >
-                            <Icon icon="REMOVE" />
-                          </button>
+                          />
                         );
                       }}
                     </NumberValue>
