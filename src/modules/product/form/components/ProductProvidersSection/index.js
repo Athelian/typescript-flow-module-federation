@@ -35,7 +35,13 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
   return (
     hasPermission(PRODUCT_PROVIDER_FORM) && (
       <Subscribe to={[ProductProvidersContainer]}>
-        {({ state: { productProviders }, setFieldValue, removeArrayItem }) => (
+        {({
+          state: { productProviders },
+          setFieldValue,
+          setNeedDeletedFiles,
+          unsetNeedDeletedFiles,
+          removeArrayItem,
+        }) => (
           <div className={ProductProviderSectionWrapperStyle}>
             <SectionNavBar>
               {hasPermission(PRODUCT_PROVIDER_CREATE) && (
@@ -170,6 +176,8 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                             <ProductProviderCard
                               showActionsOnHover
                               productProvider={productProvider}
+                              setNeedDeletedFiles={setNeedDeletedFiles}
+                              unsetNeedDeletedFiles={unsetNeedDeletedFiles}
                               onRemove={() => removeArrayItem(index)}
                               onClick={() => slideToggle('updateFormOpened', true)}
                               onClone={() => slideToggle('cloneFormOpened', true)}

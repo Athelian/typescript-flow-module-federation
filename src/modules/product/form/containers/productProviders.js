@@ -1,4 +1,5 @@
 // @flow
+import type { FilePayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import update from 'immutability-helper';
@@ -29,6 +30,7 @@ type FormState = {
 };
 
 const initValues = {
+  needDeletedFiles: [],
   productProviders: [],
 };
 
@@ -65,6 +67,34 @@ export default class ProductProvidersContainer extends Container<FormState> {
     });
   };
 
+  setNeedDeletedFiles = (noNeedDeletedFiles: Array<FilePayload>) => {
+    const noNeedDeletedFileIDs = new Set(noNeedDeletedFiles.map(({ id }) => id));
+
+    this.setState(prevState => ({
+      needDeletedFiles: prevState.needDeletedFiles.filter(
+        ({ id }) => !noNeedDeletedFileIDs.has(id)
+      ),
+    }));
+  };
+
+  unsetNeedDeletedFiles = (needDeletedFiles: Array<FilePayload>) => {
+    const prevNeedDeletedFiles = this.state.needDeletedFiles;
+    const prevNeedDeletedFileIDs = new Set(prevNeedDeletedFiles.map(({ id }) => id));
+
+    this.setState({
+      needDeletedFiles: [
+        ...prevNeedDeletedFiles,
+        ...needDeletedFiles.filter(({ id }) => !prevNeedDeletedFileIDs.has(id)),
+      ],
+    });
+  };
+
+  resetNeedDeletedFiles = () => {
+    this.setState({
+      needDeletedFiles: [],
+    });
+  };
+
   isDirty = () => !isEquals(this.state, this.originalValues);
 
   onSuccess = () => {
@@ -77,7 +107,7 @@ export default class ProductProvidersContainer extends Container<FormState> {
       ...productProviders.map(productProvider => extractForbiddenId(productProvider)),
     ];
 
-    this.setState({ productProviders: parsedValues });
-    this.originalValues = { productProviders: parsedValues };
+    this.setState({ productProviders: parsedValues, needDeletedFiles: [] });
+    this.originalValues = { productProviders: parsedValues, needDeletedFiles: [] };
   };
 }

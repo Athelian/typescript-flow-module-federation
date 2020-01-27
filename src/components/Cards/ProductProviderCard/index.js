@@ -1,9 +1,11 @@
 // @flow
 import React from 'react';
+import { BooleanValue } from 'react-values';
 import Icon from 'components/Icon';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import TaskRing from 'components/TaskRing';
 import { Display } from 'components/Form';
+import DocumentsDeleteDialog from 'components/Dialog/DocumentsDeleteDialog';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   ProductProviderCardWrapperStyle,
@@ -18,6 +20,8 @@ type Props = {|
   onClick: Function,
   onSelect: Function,
   onClone: Function,
+  setNeedDeletedFiles: Function,
+  unsetNeedDeletedFiles: Function,
   onRemove: Function,
   saveOnBlur: Function,
   selectable: boolean,
@@ -27,6 +31,8 @@ type Props = {|
 const defaultProps = {
   onClick: () => {},
   onSelect: () => {},
+  setNeedDeletedFiles: () => {},
+  unsetNeedDeletedFiles: () => {},
   onRemove: () => {},
   onClone: () => {},
   saveOnBlur: () => {},
@@ -36,29 +42,63 @@ const defaultProps = {
 const ProductProviderCard = ({
   productProvider,
   onClick,
+  setNeedDeletedFiles,
+  unsetNeedDeletedFiles,
   onRemove,
   onClone,
   saveOnBlur,
   selectable,
   ...rest
 }: Props) => {
-  const { archived, name, exporter, supplier, referenced, todo } = productProvider;
+  const { archived, name, exporter, supplier, referenced, todo, files } = productProvider;
+  const actions = [];
 
-  const actions = selectable
-    ? []
-    : [
-        <CardAction icon="CLONE" onClick={() => onClone(productProvider)} />,
-        referenced ? null : (
-          <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove()} />
-        ),
-      ].filter(Boolean);
+  if (!selectable) {
+    actions.push(
+      <CardAction key="btn-clone" icon="CLONE" onClick={() => onClone(productProvider)} />
+    );
+  }
+
+  if (!referenced) {
+    if (files.length > 0) {
+      actions.push(
+        <BooleanValue>
+          {({ value: opened, set: dialogToggle }) => (
+            <>
+              <DocumentsDeleteDialog
+                isOpen={opened}
+                files={files}
+                onCancel={() => dialogToggle(false)}
+                onKeep={needKeepFiles => {
+                  unsetNeedDeletedFiles(needKeepFiles);
+                  onRemove();
+                  dialogToggle(false);
+                }}
+                onDelete={needDeletedFiles => {
+                  setNeedDeletedFiles(needDeletedFiles);
+                  onRemove();
+                  dialogToggle(false);
+                }}
+              />
+
+              <CardAction icon="REMOVE" hoverColor="RED" onClick={() => dialogToggle(true)} />
+            </>
+          )}
+        </BooleanValue>
+      );
+    } else {
+      actions.push(
+        <CardAction key="btn-remove" icon="REMOVE" hoverColor="RED" onClick={() => onRemove()} />
+      );
+    }
+  }
 
   return (
     <BaseCard
       icon="PRODUCT_PROVIDER"
       color="PRODUCT_PROVIDER"
       selectable={selectable}
-      actions={actions}
+      actions={actions.filter(Boolean)}
       isArchived={archived}
       {...rest}
     >
