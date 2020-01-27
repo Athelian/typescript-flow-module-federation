@@ -2,9 +2,9 @@
 import { css } from 'react-emotion';
 import { colors, layout, transitions, fontSizes, borderRadiuses } from 'styles/common';
 
-export const WrapperStyle = (read: boolean) => css`
+export const WrapperStyle = css`
   ${layout.HORIZONTAL};
-  background-color: ${read ? '#fff' : colors.GRAY_SUPER_LIGHT};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
   padding: 10px;
   cursor: pointer;
   width: 100%;
@@ -12,7 +12,7 @@ export const WrapperStyle = (read: boolean) => css`
   flex-shrink: 0;
   ${transitions.MAIN};
   &:hover {
-    background-color: ${colors.GRAY_VERY_LIGHT};
+    background-color: ${colors.WHITE};
   }
   &:focus {
     outline: none;
@@ -49,4 +49,11 @@ export const InfoWrapper = css`
     color: ${colors.GRAY_DARK};
     ${fontSizes.SMALL};
   }
+`;
+
+export const DividerStyle = css`
+  width: 90%;
+  margin: 0 10px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.05);
 `;

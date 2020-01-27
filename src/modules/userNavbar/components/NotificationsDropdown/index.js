@@ -1,15 +1,15 @@
 // @flow
 import * as React from 'react';
-import { Query, Mutation } from 'react-apollo';
+import { Query } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
-import { getByPathWithDefault } from 'utils/fp';
+import { Tooltip } from 'components/Tooltip';
+import Icon from 'components/Icon';
 import LoadingIcon from 'components/LoadingIcon';
 import NavigateLink from 'components/NavigateLink';
 import { BaseButton } from 'components/Buttons';
 import { Label } from 'components/Form';
 import NotificationItem from 'modules/notifications/components/NotificationItem';
-import query from 'modules/notifications/query';
-import { notificationReadAllMutation } from './mutation';
+import { notificationListQuery } from 'modules/notifications/query';
 import {
   NotificationsDropDownWrapperStyle,
   NotificationsBodyWrapperStyle,
@@ -17,130 +17,124 @@ import {
   NotificationsHeaderStyle,
   NotificationsFooterStyle,
   NoNotificationStyle,
+  ArchiveAllButtonStyle,
+  ViewMoreStyle,
 } from './style';
 
 const defaultRenderItem = (item: Object) => <NotificationItem key={item.id} notification={item} />;
 
-type OptionalProps = {
-  renderItem: Function,
-};
-
-type Props = OptionalProps & {
+type Props = {|
   isOpen: boolean,
-  toggleNotification: Function,
-};
+  renderItem?: Object => React$Node,
+|};
 
-const defaultProps = {
-  renderItem: defaultRenderItem,
-};
+const NotificationsDropdown = ({ renderItem = defaultRenderItem, isOpen }: Props) => {
+  return (
+    <Query
+      query={notificationListQuery}
+      variables={{
+        page: 1,
+        perPage: 10,
+      }}
+      fetchPolicy="network-only"
+    >
+      {({ loading, data, error }) => {
+        if (error) {
+          return error.message;
+        }
 
-class NotificationsDropdown extends React.Component<Props> {
-  static defaultProps = defaultProps;
+        const items = data?.viewer?.notifications?.nodes ?? [];
+        const totalMoreItems = 5;
 
-  handleSeeAll = (seeAllNotification: Function) => {
-    const { toggleNotification } = this.props;
-    seeAllNotification();
-    toggleNotification();
-  };
-
-  render() {
-    const { renderItem, isOpen } = this.props;
-
-    return (
-      <Query
-        query={query}
-        variables={{
-          page: 1,
-          perPage: 10,
-        }}
-        fetchPolicy="network-only"
-      >
-        {({ loading, data, error, refetch }) => {
-          if (error) {
-            return error.message;
-          }
-
-          const items = getByPathWithDefault([], 'viewer.notifications.nodes', data);
-          const unRead = getByPathWithDefault(0, 'viewer.notificationUnread', data);
-
-          return (
-            <div className={NotificationsDropDownWrapperStyle(isOpen)}>
-              <div className={NotificationsBodyWrapperStyle}>
-                <div className={NotificationsListWrapperStyle}>
-                  {!loading && items.length === 0 && (
-                    <div className={NoNotificationStyle}>
-                      <FormattedMessage
-                        id="components.Header.notification.noNotifications"
-                        defaultMessage="No notifications"
-                      />
-                    </div>
-                  )}
-                  {items.map((item: Object) =>
-                    renderItem ? renderItem(item) : defaultRenderItem(item)
-                  )}
-                  {loading && <LoadingIcon />}
-                </div>
-                <div className={NotificationsHeaderStyle}>
-                  <Label>
+        return (
+          <div className={NotificationsDropDownWrapperStyle(isOpen)}>
+            <div className={NotificationsBodyWrapperStyle}>
+              <div className={NotificationsListWrapperStyle}>
+                {!loading && items.length === 0 && (
+                  <div className={NoNotificationStyle}>
                     <FormattedMessage
-                      id="components.Header.notification.title"
-                      defaultMessage="NOTIFICATIONS"
+                      id="components.Header.notification.noNotifications"
+                      defaultMessage="No notifications"
                     />
-                  </Label>
-                  {unRead > 0 && (
-                    <Mutation mutation={notificationReadAllMutation}>
-                      {(readAllNotification, { loading: isLoading, error: apiError }) => (
-                        <>
-                          {apiError && apiError.message}
-                          <BaseButton
-                            onClick={async () => {
-                              await readAllNotification();
-                              refetch({
-                                page: 1,
-                                perPage: 10,
-                              });
-                            }}
-                            isLoading={isLoading}
-                            label={
-                              <FormattedMessage
-                                id="components.Header.notification.readAll"
-                                defaultMessage="MARK ALL AS READ"
-                              />
-                            }
-                            textColor="BLUE"
-                            hoverTextColor="WHITE"
-                            backgroundColor="WHITE"
-                            hoverBackgroundColor="BLUE"
-                          />
-                        </>
-                      )}
-                    </Mutation>
-                  )}
-                </div>
-                <div className={NotificationsFooterStyle}>
-                  {/* $FlowFixMe Flow typed is not updated yet */}
-                  <NavigateLink to="/notifications">
-                    <BaseButton
-                      label={
-                        <FormattedMessage
-                          id="components.Header.notification.viewAll"
-                          defaultMessage="VIEW ALL"
-                        />
-                      }
-                      textColor="TEAL"
-                      hoverTextColor="WHITE"
-                      backgroundColor="WHITE"
-                      hoverBackgroundColor="TEAL"
-                    />
-                  </NavigateLink>
+                  </div>
+                )}
+                {loading ? <LoadingIcon /> : items.map(renderItem)}
+                <div className={ViewMoreStyle}>
+                  <FormattedMessage
+                    id="components.Header.notification.viewMoreNotifications"
+                    defaultMessage="{totalMoreItems} more..."
+                    values={{
+                      totalMoreItems,
+                    }}
+                  />
                 </div>
               </div>
+              <div className={NotificationsHeaderStyle}>
+                <Label>
+                  <Icon icon="ACTIVE" />
+                  {` `}
+                  <FormattedMessage
+                    id="components.Header.notification.title"
+                    defaultMessage="NOTIFICATIONS"
+                  />
+                </Label>
+                <NavigateLink to="/notifications">
+                  <BaseButton
+                    label={
+                      <FormattedMessage
+                        id="components.Header.notification.viewAll"
+                        defaultMessage="VIEW ALL"
+                      />
+                    }
+                    textColor="TEAL"
+                    hoverTextColor="TEAL"
+                    backgroundColor="GRAY_SUPER_LIGHT"
+                    hoverBackgroundColor="GRAY_VERY_LIGHT"
+                    suffix={<Icon icon="NOTIFICATION" />}
+                  />
+                </NavigateLink>
+                <Tooltip
+                  message={
+                    <FormattedMessage
+                      id="components.Header.notification.archiveAllNotifications"
+                      defaultMessage="Archive all notifications"
+                    />
+                  }
+                >
+                  <div className={ArchiveAllButtonStyle}>
+                    <BaseButton
+                      label={<Icon icon="ARCHIVE" />}
+                      textColor="GRAY_LIGHT"
+                      hoverTextColor="GRAY_DARK"
+                      backgroundColor="WHITE"
+                      hoverBackgroundColor="GRAY_SUPER_LIGHT"
+                    />
+                  </div>
+                </Tooltip>
+              </div>
+              <div className={NotificationsFooterStyle}>
+                <NavigateLink to="/notifications">
+                  <BaseButton
+                    label={
+                      <FormattedMessage
+                        id="components.Header.notification.viewAllNotification"
+                        defaultMessage="VIEW ALL NOTIFICATIONS"
+                      />
+                    }
+                    textColor="TEAL"
+                    hoverTextColor="TEAL"
+                    backgroundColor="WHITE"
+                    hoverBackgroundColor="GRAY_SUPER_LIGHT"
+                    suffix={<Icon icon="NOTIFICATION" />}
+                  />
+                </NavigateLink>
+              </div>
             </div>
-          );
-        }}
-      </Query>
-    );
-  }
-}
+          </div>
+        );
+      }}
+    </Query>
+  );
+};
 
 export default NotificationsDropdown;

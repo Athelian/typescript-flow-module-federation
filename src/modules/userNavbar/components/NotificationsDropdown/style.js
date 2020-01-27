@@ -31,6 +31,7 @@ export const NotificationsListWrapperStyle: string = css`
   height: calc(100% - 80px);
   width: 100%;
   overflow: hidden;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
   ${scrollbars.SMALL};
   &:hover {
     overflow-x: hidden;
@@ -53,6 +54,17 @@ export const NotificationsHeaderStyle: boolean = css`
   background-color: ${colors.WHITE};
   padding: 0 10px;
   width: 100%;
+  & > div,
+  a {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 15px;
+    display: flex;
+    align-items: center;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
 `;
 
 export const NotificationsFooterStyle: boolean = css`
@@ -82,4 +94,32 @@ export const NoNotificationStyle = css`
   width: 100%;
   height: 50px;
   font-size: 15px;
+`;
+
+export const ArchiveAllButtonStyle = css`
+  & > button {
+    font-weight: 900;
+    font-size: 14px;
+    line-height: 14px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    min-width: 30px;
+    padding: 0;
+  }
+`;
+
+export const ViewMoreStyle = css`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #aaaaaa;
 `;
