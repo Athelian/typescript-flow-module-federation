@@ -97,6 +97,8 @@
   "modules.RelationMap.label.shipments": "装运",
   "modules.RelationMap.label.tag": "标签",
   "modules.RelationMap.label.tags": "标签",
+  "modules.RelationMap.label.milestone": "里程碑",
+  "modules.RelationMap.label.milestones": "里程碑",
   "components.CompleteDialog.skip": "跳过设定",
   "components.CompleteDialog.complete": "完成设定",
   "components.CompleteDialog.unChange": "保持不变",

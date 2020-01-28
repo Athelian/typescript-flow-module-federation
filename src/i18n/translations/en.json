@@ -97,6 +97,8 @@
   "modules.RelationMap.label.shipments": "Shipments",
   "modules.RelationMap.label.tag": "Tag",
   "modules.RelationMap.label.tags": "TAGS",
+  "modules.RelationMap.label.milestone": "Milestone",
+  "modules.RelationMap.label.milestones": "Milestones",
   "components.CompleteDialog.skip": "SET TO SKIPPED",
   "components.CompleteDialog.complete": "SET TO COMPLETED",
   "components.CompleteDialog.unChange": "LEAVE UNCHANGED",

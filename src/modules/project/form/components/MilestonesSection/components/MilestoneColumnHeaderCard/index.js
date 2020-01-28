@@ -264,6 +264,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                           return (
                             <>
                               <DocumentsDeleteDialog
+                                entityType="MILESTONE"
                                 isOpen={step === 2}
                                 files={files}
                                 onCancel={() => setStep(0)}

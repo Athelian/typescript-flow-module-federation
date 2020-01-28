@@ -66,6 +66,7 @@ const ProductProviderCard = ({
           {({ value: opened, set: dialogToggle }) => (
             <>
               <DocumentsDeleteDialog
+                entityType="END_PRODUCT"
                 isOpen={opened}
                 files={files}
                 onCancel={() => dialogToggle(false)}

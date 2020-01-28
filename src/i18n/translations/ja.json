@@ -97,6 +97,8 @@
   "modules.RelationMap.label.shipments": "シップメント",
   "modules.RelationMap.label.tag": "タグ",
   "modules.RelationMap.label.tags": "タグ",
+  "modules.RelationMap.label.milestone": "マイルストーン",
+  "modules.RelationMap.label.milestones": "マイルストーン",
   "components.CompleteDialog.skip": "スキップに変更",
   "components.CompleteDialog.complete": "完了に変更",
   "components.CompleteDialog.unChange": "そのままにする",

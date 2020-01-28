@@ -2,9 +2,15 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
-import ActionDialog, { ItemLabelIcon, FileLabelIcon } from 'components/Dialog/ActionDialog';
+import ActionDialog, {
+  ItemLabelIcon,
+  MilestoneLabelIcon,
+  EndProductLabelIcon,
+  FileLabelIcon,
+} from 'components/Dialog/ActionDialog';
 
 type Props = {
+  entityType: string,
   files: any,
   isOpen: boolean,
   isProcessing?: boolean,
@@ -13,7 +19,24 @@ type Props = {
   onCancel?: Function,
 };
 
+const generateEntityIcon = (type: string) => {
+  switch (type) {
+    case 'ITEM':
+      return <ItemLabelIcon />;
+
+    case 'END_PRODUCT':
+      return <EndProductLabelIcon />;
+
+    case 'MILESTONE':
+      return <MilestoneLabelIcon />;
+
+    default:
+      return '';
+  }
+};
+
 export default function DocumentsDeleteDialog({
+  entityType,
   files,
   isOpen,
   isProcessing,
@@ -37,7 +60,7 @@ export default function DocumentsDeleteDialog({
           id="components.DocumentsDeleteDialog.message"
           defaultMessage="This {entityIcon} has {fileCount} {fileIcon}."
           values={{
-            entityIcon: <ItemLabelIcon />,
+            entityIcon: generateEntityIcon(entityType),
             fileCount: files.length,
             fileIcon: <FileLabelIcon />,
           }}

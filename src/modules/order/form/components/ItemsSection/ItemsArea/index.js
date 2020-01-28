@@ -333,6 +333,7 @@ function ItemsArea({
                         return (
                           <>
                             <DocumentsDeleteDialog
+                              entityType="ITEM"
                               isOpen={step === 2}
                               files={files}
                               onCancel={() => setStep(0)}
