@@ -56,6 +56,47 @@ const NotificationsDropdown = ({
 
         return (
           <div className={NotificationsDropDownWrapperStyle(isOpen)}>
+            <div className={NotificationsBodyWrapperStyle}>
+              <div className={NotificationsListWrapperStyle}>
+                {!loading && items.length === 0 && (
+                  <div className={NoNotificationStyle}>
+                    <FormattedMessage
+                      id="components.Header.notification.noActiveNotifications"
+                      defaultMessage="No active notifications found"
+                    />
+                  </div>
+                )}
+                {loading ? <LoadingIcon /> : items.map(renderItem)}
+                {totalMoreItems > 0 && (
+                  <div className={ViewMoreStyle}>
+                    <FormattedMessage
+                      id="components.Header.notification.viewMoreNotifications"
+                      defaultMessage="{totalMoreItems} more..."
+                      values={{
+                        totalMoreItems,
+                      }}
+                    />
+                  </div>
+                )}
+                <div className={NotificationsFooterStyle}>
+                  <NavigateLink to="/notifications">
+                    <BaseButton
+                      label={
+                        <FormattedMessage
+                          id="components.Header.notification.viewAllNotification"
+                          defaultMessage="VIEW ALL NOTIFICATIONS"
+                        />
+                      }
+                      textColor="TEAL"
+                      hoverTextColor="TEAL"
+                      backgroundColor="GRAY_SUPER_LIGHT"
+                      hoverBackgroundColor="GRAY_VERY_LIGHT"
+                      suffix={<Icon icon="NOTIFICATION" />}
+                    />
+                  </NavigateLink>
+                </div>
+              </div>
+            </div>
             <div className={NotificationsHeaderStyle}>
               <Label>
                 <Icon icon="ACTIVE" />
@@ -97,47 +138,6 @@ const NotificationsDropdown = ({
                   />
                 </div>
               </Tooltip>
-            </div>
-            <div className={NotificationsBodyWrapperStyle}>
-              <div className={NotificationsListWrapperStyle}>
-                {!loading && items.length === 0 && (
-                  <div className={NoNotificationStyle}>
-                    <FormattedMessage
-                      id="components.Header.notification.noActiveNotifications"
-                      defaultMessage="No active notifications found"
-                    />
-                  </div>
-                )}
-                {loading ? <LoadingIcon /> : items.map(renderItem)}
-                {totalMoreItems > 0 && (
-                  <div className={ViewMoreStyle}>
-                    <FormattedMessage
-                      id="components.Header.notification.viewMoreNotifications"
-                      defaultMessage="{totalMoreItems} more..."
-                      values={{
-                        totalMoreItems,
-                      }}
-                    />
-                  </div>
-                )}
-                <div className={NotificationsFooterStyle}>
-                  <NavigateLink to="/notifications">
-                    <BaseButton
-                      label={
-                        <FormattedMessage
-                          id="components.Header.notification.viewAllNotification"
-                          defaultMessage="VIEW ALL NOTIFICATIONS"
-                        />
-                      }
-                      textColor="TEAL"
-                      hoverTextColor="TEAL"
-                      backgroundColor="GRAY_SUPER_LIGHT"
-                      hoverBackgroundColor="GRAY_VERY_LIGHT"
-                      suffix={<Icon icon="NOTIFICATION" />}
-                    />
-                  </NavigateLink>
-                </div>
-              </div>
             </div>
           </div>
         );

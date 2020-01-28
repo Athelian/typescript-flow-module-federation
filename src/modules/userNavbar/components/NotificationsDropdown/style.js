@@ -28,9 +28,8 @@ export const NotificationsListWrapperStyle: string = css`
   ${layout.VERTICAL};
   top: 40px;
   left: 0;
-  height: calc(100% - 40px);
+  height: 360px;
   width: 100%;
-  overflow: hidden;
   background-color: ${colors.GRAY_SUPER_LIGHT};
   ${scrollbars.SMALL};
   &:hover {
@@ -68,9 +67,6 @@ export const NotificationsHeaderStyle: boolean = css`
 `;
 
 export const NotificationsFooterStyle: boolean = css`
-  position: absolute;
-  bottom: 0;
-  left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
