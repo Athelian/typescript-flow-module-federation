@@ -96,7 +96,6 @@ function EnumSearchSelectInputFactory(props: Props): React$Node {
   return (
     <EnumProvider enumType={enumType}>
       {({ loading, error, data }) => {
-        console.warn({ data });
         const selectedItem = data.find(item => item.name === value);
 
         const itemToString = parseEnumDescriptionOrValue;

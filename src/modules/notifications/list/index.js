@@ -6,18 +6,12 @@ import loadMore from 'utils/loadMore';
 import NotificationListView from './NotificationListView';
 import { notificationListQuery } from '../query';
 
-type Props = {
-  perPage: number,
-};
-
-const NotificationList = ({ ...filtersAndSort }: Props) => (
+const NotificationList = () => (
   <Query
     query={notificationListQuery}
     variables={{
       page: 1,
-      /* $FlowFixMe This comment suppresses an error found when upgrading Flow
-       * to v0.111.0. To view the error, delete this comment and run Flow. */
-      ...filtersAndSort,
+      perPage: 10,
     }}
     fetchPolicy="network-only"
   >
@@ -33,7 +27,16 @@ const NotificationList = ({ ...filtersAndSort }: Props) => (
       return (
         <NotificationListView
           items={getByPathWithDefault([], 'viewer.notifications.nodes', data)}
-          onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'viewer.notifications')}
+          onLoadMore={() =>
+            loadMore(
+              { fetchMore, data },
+              {
+                page: 1,
+                perPage: 10,
+              },
+              'viewer.notifications'
+            )
+          }
           hasMore={hasMore}
           isLoading={loading}
         />
