@@ -24,7 +24,7 @@ function parseUrl(notification) {
 
 const NotificationItem = ({ notification }: Props) => {
   return (
-    <>
+    <div>
       <NavigateLink
         className={WrapperStyle}
         to={parseUrl(notification)}
@@ -43,7 +43,7 @@ const NotificationItem = ({ notification }: Props) => {
         </div>
       </NavigateLink>
       <div className={DividerStyle} />
-    </>
+    </div>
   );
 };
 

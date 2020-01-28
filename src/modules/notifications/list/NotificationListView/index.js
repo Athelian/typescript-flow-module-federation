@@ -12,7 +12,11 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => <NotificationItem key={item.id} notification={item} />;
+const defaultRenderItem = (item: Object) => (
+  <div>
+    <NotificationItem key={item.id} notification={item} />
+  </div>
+);
 
 const defaultProps = {
   renderItem: defaultRenderItem,
@@ -26,7 +30,9 @@ const NotificationListView = (props: Props) => {
       onLoadMore={onLoadMore}
       hasMore={hasMore}
       isLoading={isLoading}
-      itemWidth="860px"
+      itemWidth="97%"
+      padding="0px"
+      rowGap="0px"
       isEmpty={items.length === 0}
       emptyMessage={
         <FormattedMessage

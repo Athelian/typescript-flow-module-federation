@@ -38,7 +38,7 @@ const NotificationsDropdown = ({
 }: Props) => {
   const { data, loading, error } = useQuery(notificationListQuery, {
     variables: { page: 1, perPage: 10 },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'no-cache',
   });
 
   if (error) {

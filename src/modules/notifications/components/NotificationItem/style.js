@@ -52,7 +52,7 @@ export const InfoWrapper = css`
 `;
 
 export const DividerStyle = css`
-  width: 90%;
+  width: 96%;
   margin: 0 10px;
   height: 2px;
   background: rgba(0, 0, 0, 0.05);
