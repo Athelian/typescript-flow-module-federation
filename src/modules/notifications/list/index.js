@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import NotificationListView from './NotificationListView';
 import { notificationListQuery } from '../query';
@@ -26,13 +25,13 @@ const NotificationList = ({ filterBy }: Props) => (
         return error.message;
       }
 
-      const nextPage = getByPathWithDefault(1, 'viewer.notifications.page', data) + 1;
-      const totalPage = getByPathWithDefault(1, 'viewer.notifications.totalPage', data);
+      const nextPage = (data?.viewer?.notifications?.page ?? 1) + 1;
+      const totalPage = data?.viewer?.notifications?.totalPage ?? 1;
       const hasMore = nextPage <= totalPage;
 
       return (
         <NotificationListView
-          items={getByPathWithDefault([], 'viewer.notifications.nodes', data)}
+          items={data?.viewer?.notifications?.nodes ?? []}
           onLoadMore={() =>
             loadMore(
               { fetchMore, data },
