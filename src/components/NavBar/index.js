@@ -27,6 +27,7 @@ import {
   TaskTemplateFilterConfig,
   TagFilterConfig,
   MaskEditFilterConfig,
+  NotificationFilterConfig,
 } from './components/Filter/configs';
 import {
   ProductSortConfig,
@@ -76,6 +77,7 @@ export {
   TaskTemplateFilterConfig,
   TagFilterConfig,
   MaskEditFilterConfig,
+  NotificationFilterConfig,
   // Sort configs
   ProductSortConfig,
   ProductProviderSortConfig,

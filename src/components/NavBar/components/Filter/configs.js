@@ -1252,3 +1252,6 @@ export const MaskEditFilterConfig: Array<FilterConfig> = [
     defaultValue: [],
   },
 ];
+
+// TODO: filter for notification
+export const NotificationFilterConfig: Array<FilterConfig> = [];

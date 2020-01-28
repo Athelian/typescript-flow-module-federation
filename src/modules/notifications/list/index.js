@@ -6,12 +6,18 @@ import loadMore from 'utils/loadMore';
 import NotificationListView from './NotificationListView';
 import { notificationListQuery } from '../query';
 
-const NotificationList = () => (
+type Props = {
+  filterBy: Object,
+};
+
+const NotificationList = ({ filterBy }: Props) => (
   <Query
     query={notificationListQuery}
     variables={{
       page: 1,
       perPage: 10,
+      // TODO: need API, send notification to API
+      filterBy,
     }}
     fetchPolicy="network-only"
   >

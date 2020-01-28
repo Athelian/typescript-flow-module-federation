@@ -27,6 +27,7 @@ const defaultRenderItem = (item: Object) => <NotificationItem key={item.id} noti
 type Props = {|
   isOpen: boolean,
   renderItem?: Object => React$Node,
+  // TODO: integrate the api for more items
   totalMoreItems?: number,
 |};
 
