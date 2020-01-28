@@ -113,7 +113,7 @@
   "components.DocumentsDeleteDialog.delete": "DELETE",
   "components.DocumentsDeleteDialog.cancel": "CANCEL",
   "components.DocumentsDeleteDialog.keep": "KEEP",
-  "components.DocumentsDeleteDialog.message": "This {itemIcon} has {fileCount} {fileIcon}.",
+  "components.DocumentsDeleteDialog.message": "This {entityIcon} has {fileCount} {fileIcon}.",
   "components.DocumentsDeleteDialog.subMessage": "Would you also like to delete these {fileIcon} or keep them, making them parentless?",
   "components.inputs.approve": "APPROVE",
   "components.inputs.reject": "REJECT",

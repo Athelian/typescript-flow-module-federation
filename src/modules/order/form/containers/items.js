@@ -53,17 +53,7 @@ export default class OrderItemsContainer extends Container<FormState> {
     this.setState(this.originalValues);
   };
 
-  setNeedDeletedFiles = (noNeedDeletedFiles: Array<FilePayload>) => {
-    const noNeedDeletedFileIDs = new Set(noNeedDeletedFiles.map(({ id }) => id));
-
-    this.setState(prevState => ({
-      needDeletedFiles: prevState.needDeletedFiles.filter(
-        ({ id }) => !noNeedDeletedFileIDs.has(id)
-      ),
-    }));
-  };
-
-  unsetNeedDeletedFiles = (needDeletedFiles: Array<FilePayload>) => {
+  setNeedDeletedFiles = (needDeletedFiles: Array<FilePayload>) => {
     const prevNeedDeletedFiles = this.state.needDeletedFiles;
     const prevNeedDeletedFileIDs = new Set(prevNeedDeletedFiles.map(({ id }) => id));
 
@@ -73,6 +63,16 @@ export default class OrderItemsContainer extends Container<FormState> {
         ...needDeletedFiles.filter(({ id }) => !prevNeedDeletedFileIDs.has(id)),
       ],
     });
+  };
+
+  unsetNeedDeletedFiles = (noNeedDeletedFiles: Array<FilePayload>) => {
+    const noNeedDeletedFileIDs = new Set(noNeedDeletedFiles.map(({ id }) => id));
+
+    this.setState(prevState => ({
+      needDeletedFiles: prevState.needDeletedFiles.filter(
+        ({ id }) => !noNeedDeletedFileIDs.has(id)
+      ),
+    }));
   };
 
   resetNeedDeletedFiles = () => {
@@ -100,11 +100,7 @@ export default class OrderItemsContainer extends Container<FormState> {
     );
   };
 
-  initDetailValues = (
-    orderItems: Array<Object>,
-    needDeletedFiles: Array<FilePayload>,
-    hasCalledItemsApiYet: boolean = false
-  ) => {
+  initDetailValues = (orderItems: Array<Object>, hasCalledItemsApiYet: boolean = false) => {
     this.setState({ orderItems, needDeletedFiles: [], hasCalledItemsApiYet });
     if (hasCalledItemsApiYet) {
       this.originalValues = { orderItems, needDeletedFiles: [], hasCalledItemsApiYet };

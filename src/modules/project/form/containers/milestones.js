@@ -125,17 +125,7 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     this.originalValues = { ...this.state };
   };
 
-  setNeedDeletedFiles = (noNeedDeletedFiles: Array<FilePayload>) => {
-    const noNeedDeletedFileIDs = new Set(noNeedDeletedFiles.map(({ id }) => id));
-
-    this.setState(prevState => ({
-      needDeletedFiles: prevState.needDeletedFiles.filter(
-        ({ id }) => !noNeedDeletedFileIDs.has(id)
-      ),
-    }));
-  };
-
-  unsetNeedDeletedFiles = (needDeletedFiles: Array<FilePayload>) => {
+  setNeedDeletedFiles = (needDeletedFiles: Array<FilePayload>) => {
     const prevNeedDeletedFiles = this.state.needDeletedFiles;
     const prevNeedDeletedFileIDs = new Set(prevNeedDeletedFiles.map(({ id }) => id));
 
@@ -145,6 +135,16 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
         ...needDeletedFiles.filter(({ id }) => !prevNeedDeletedFileIDs.has(id)),
       ],
     });
+  };
+
+  unsetNeedDeletedFiles = (noNeedDeletedFiles: Array<FilePayload>) => {
+    const noNeedDeletedFileIDs = new Set(noNeedDeletedFiles.map(({ id }) => id));
+
+    this.setState(prevState => ({
+      needDeletedFiles: prevState.needDeletedFiles.filter(
+        ({ id }) => !noNeedDeletedFileIDs.has(id)
+      ),
+    }));
   };
 
   resetNeedDeletedFiles = () => {
@@ -166,11 +166,7 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     });
   };
 
-  initDetailValues = (
-    milestones: Array<Milestone>,
-    needDeletedFiles: Array<FilePayload>,
-    ignoreTaskIds: Array<string> = []
-  ) => {
+  initDetailValues = (milestones: Array<Milestone>, ignoreTaskIds: Array<string> = []) => {
     this.setState({ milestones, needDeletedFiles: [], ignoreTaskIds });
     this.originalValues = { milestones, needDeletedFiles: [], ignoreTaskIds };
     this.originalTasks = (flatten(

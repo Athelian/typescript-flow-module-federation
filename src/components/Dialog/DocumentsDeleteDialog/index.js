@@ -35,9 +35,9 @@ export default function DocumentsDeleteDialog({
       dialogMessage={
         <FormattedMessage
           id="components.DocumentsDeleteDialog.message"
-          defaultMessage="This {itemIcon} has {fileCount} {fileIcon}."
+          defaultMessage="This {entityIcon} has {fileCount} {fileIcon}."
           values={{
-            itemIcon: <ItemLabelIcon />,
+            entityIcon: <ItemLabelIcon />,
             fileCount: files.length,
             fileIcon: <FileLabelIcon />,
           }}

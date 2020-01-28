@@ -67,17 +67,7 @@ export default class ProductProvidersContainer extends Container<FormState> {
     });
   };
 
-  setNeedDeletedFiles = (noNeedDeletedFiles: Array<FilePayload>) => {
-    const noNeedDeletedFileIDs = new Set(noNeedDeletedFiles.map(({ id }) => id));
-
-    this.setState(prevState => ({
-      needDeletedFiles: prevState.needDeletedFiles.filter(
-        ({ id }) => !noNeedDeletedFileIDs.has(id)
-      ),
-    }));
-  };
-
-  unsetNeedDeletedFiles = (needDeletedFiles: Array<FilePayload>) => {
+  setNeedDeletedFiles = (needDeletedFiles: Array<FilePayload>) => {
     const prevNeedDeletedFiles = this.state.needDeletedFiles;
     const prevNeedDeletedFileIDs = new Set(prevNeedDeletedFiles.map(({ id }) => id));
 
@@ -87,6 +77,16 @@ export default class ProductProvidersContainer extends Container<FormState> {
         ...needDeletedFiles.filter(({ id }) => !prevNeedDeletedFileIDs.has(id)),
       ],
     });
+  };
+
+  unsetNeedDeletedFiles = (noNeedDeletedFiles: Array<FilePayload>) => {
+    const noNeedDeletedFileIDs = new Set(noNeedDeletedFiles.map(({ id }) => id));
+
+    this.setState(prevState => ({
+      needDeletedFiles: prevState.needDeletedFiles.filter(
+        ({ id }) => !noNeedDeletedFileIDs.has(id)
+      ),
+    }));
   };
 
   resetNeedDeletedFiles = () => {
