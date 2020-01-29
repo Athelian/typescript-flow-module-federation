@@ -14,6 +14,11 @@ export const notificationListQuery = gql`
                 id
                 firstName
                 lastName
+                avatar {
+                  ... on File {
+                    path(preset: Small)
+                  }
+                }
               }
             }
             receiver {
@@ -24,8 +29,8 @@ export const notificationListQuery = gql`
               }
             }
             body
-            read
             seen
+            archived
             entity {
               __typename
               ... on Model {
@@ -37,8 +42,8 @@ export const notificationListQuery = gql`
         page
         totalPage
       }
-      notificationUnread
-      notificationUnseen
+      notificationCount
+      notificationUnseenCount
     }
   }
 `;

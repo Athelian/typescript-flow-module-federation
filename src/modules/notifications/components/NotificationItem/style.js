@@ -51,9 +51,12 @@ export const InfoWrapper = css`
   }
 `;
 
-export const DividerStyle = css`
-  width: 96%;
-  margin: 0 10px;
-  height: 2px;
-  background: rgba(0, 0, 0, 0.05);
+export const RowStyle = css`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  &:hover {
+    background-color: ${colors.WHITE};
+  }
 `;

@@ -1,16 +1,19 @@
 // @flow
 import * as React from 'react';
+import type { Notification } from 'generated/graphql';
 import FormattedDate from 'components/FormattedDate';
+import { BaseButton } from 'components/Buttons';
 import { encodeId } from 'utils/id';
 import { parseRoute, parseIcon } from 'utils/entity';
 import Icon from 'components/Icon';
 import NavigateLink from 'components/NavigateLink';
-import { WrapperStyle, AvatarStyle, IconWrapperStyle, InfoWrapper, DividerStyle } from './style';
+import { WrapperStyle, AvatarStyle, IconWrapperStyle, InfoWrapper, RowStyle } from './style';
 import avatar from './media/default_avatar.png';
 
-type Props = {
-  notification: any,
-};
+type Props = {|
+  notification: Notification,
+  showActionButton?: boolean,
+|};
 
 function parseUrl(notification) {
   const id = notification?.entity?.id;
@@ -22,15 +25,17 @@ function parseUrl(notification) {
   return `/${parseRoute(typeName).toLowerCase()}/${encodeId(id)}`;
 }
 
-const NotificationItem = ({ notification }: Props) => {
+const NotificationItem = ({ notification, showActionButton = false }: Props) => {
+  // TODO: show user avatar
+  // TODO: show the archive/active button
   return (
-    <div>
+    <div className={RowStyle}>
       <NavigateLink
         className={WrapperStyle}
         to={parseUrl(notification)}
         href={parseUrl(notification)}
       >
-        <div className={AvatarStyle(avatar)}>
+        <div className={AvatarStyle(notification?.sender?.avatar?.path ?? avatar)}>
           <div className={IconWrapperStyle}>
             <Icon icon={parseIcon(notification?.entity?.__typename)} />
           </div>
@@ -42,7 +47,18 @@ const NotificationItem = ({ notification }: Props) => {
           </div>
         </div>
       </NavigateLink>
-      <div className={DividerStyle} />
+      {showActionButton && (
+        <BaseButton
+          icon={notification.archived ? 'ACTIVE' : 'ARCHIVE'}
+          label=""
+          textColor="GRAY_DARK"
+          backgroundColor="GRAY_SUPER_LIGHT"
+          hoverBackgroundColor="GRAY_DARK"
+          onClick={evt => {
+            evt.stopPropagation();
+          }}
+        />
+      )}
     </div>
   );
 };

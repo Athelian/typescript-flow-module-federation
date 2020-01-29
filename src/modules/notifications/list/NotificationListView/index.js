@@ -14,7 +14,7 @@ type Props = {
 
 const defaultRenderItem = (item: Object) => (
   <div>
-    <NotificationItem key={item.id} notification={item} />
+    <NotificationItem key={item.id} notification={item} showActionButton />
   </div>
 );
 
@@ -30,7 +30,7 @@ const NotificationListView = (props: Props) => {
       onLoadMore={onLoadMore}
       hasMore={hasMore}
       isLoading={isLoading}
-      itemWidth="97%"
+      itemWidth="100%"
       padding="0px"
       rowGap="0px"
       isEmpty={items.length === 0}
