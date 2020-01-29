@@ -7,7 +7,15 @@ import { encodeId } from 'utils/id';
 import { parseRoute, parseIcon } from 'utils/entity';
 import Icon from 'components/Icon';
 import NavigateLink from 'components/NavigateLink';
-import { WrapperStyle, AvatarStyle, IconWrapperStyle, InfoWrapper, RowStyle } from './style';
+import {
+  WrapperStyle,
+  AvatarStyle,
+  IconWrapperStyle,
+  InfoWrapper,
+  RowStyle,
+  DateTimeStyle,
+  ActionButtonStyle,
+} from './style';
 import avatar from './media/default_avatar.png';
 
 type Props = {|
@@ -26,8 +34,6 @@ function parseUrl(notification) {
 }
 
 const NotificationItem = ({ notification, showActionButton = false }: Props) => {
-  // TODO: show user avatar
-  // TODO: show the archive/active button
   return (
     <div className={RowStyle}>
       <NavigateLink
@@ -42,22 +48,25 @@ const NotificationItem = ({ notification, showActionButton = false }: Props) => 
         </div>
         <div className={InfoWrapper}>
           {notification.body}
-          <div>
+          <div className={DateTimeStyle}>
             <FormattedDate mode="relative" value={notification.createdAt} />
           </div>
         </div>
       </NavigateLink>
       {showActionButton && (
-        <BaseButton
-          icon={notification.archived ? 'ACTIVE' : 'ARCHIVE'}
-          label=""
-          textColor="GRAY_DARK"
-          backgroundColor="GRAY_SUPER_LIGHT"
-          hoverBackgroundColor="GRAY_DARK"
-          onClick={evt => {
-            evt.stopPropagation();
-          }}
-        />
+        <div className={ActionButtonStyle}>
+          <BaseButton
+            icon={notification.archived ? 'ACTIVE' : 'ARCHIVE'}
+            label=""
+            textColor="GRAY_DARK"
+            backgroundColor="GRAY_SUPER_LIGHT"
+            hoverBackgroundColor="GRAY_DARK"
+            onClick={evt => {
+              // TODO: trigger mutation
+              evt.stopPropagation();
+            }}
+          />
+        </div>
       )}
     </div>
   );

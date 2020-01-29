@@ -2,16 +2,26 @@
 import { css } from 'react-emotion';
 import { colors, layout, transitions, fontSizes, borderRadiuses } from 'styles/common';
 
+export const RowStyle = css`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  &:hover {
+    background-color: ${colors.WHITE};
+  }
+`;
+
 export const WrapperStyle = css`
   ${layout.HORIZONTAL};
-  background-color: ${colors.GRAY_SUPER_LIGHT};
   padding: 10px;
   cursor: pointer;
   width: 100%;
   min-width: min-content;
   flex-shrink: 0;
   ${transitions.MAIN};
-  &:hover {
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  & :hover {
     background-color: ${colors.WHITE};
   }
   &:focus {
@@ -51,12 +61,35 @@ export const InfoWrapper = css`
   }
 `;
 
-export const RowStyle = css`
-  display: grid;
-  grid-template-columns: 1fr auto;
+export const DateTimeStyle = css`
+  font-size: 12px;
+  line-height: 15px;
+  color: ${colors.GRAY_DARK};
+`;
+
+export const ActionButtonStyle = css`
+  height: 100%;
+  justify-content: center;
   align-items: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  &:hover {
-    background-color: ${colors.WHITE};
+  display: flex;
+  & :hover {
+    background-color: ${colors.GRAY_SUPER_LIGHT};
+  }
+  & > button {
+    font-style: normal;
+    font-weight: 900;
+    font-size: 14px;
+    line-height: 14px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    min-width: 40px;
+    height: 40px;
+    padding: 0;
+    & > :last-child {
+      margin: 0;
+    }
   }
 `;

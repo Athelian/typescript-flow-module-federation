@@ -2,9 +2,9 @@
 import gql from 'graphql-tag';
 
 export const notificationListQuery = gql`
-  query notificationListQuery($page: Int!, $perPage: Int!) {
+  query notificationListQuery($page: Int!, $perPage: Int!, $filterBy: NotificationFilterInput) {
     viewer {
-      notifications(page: $page, perPage: $perPage) {
+      notifications(page: $page, perPage: $perPage, filterBy: $filterBy) {
         nodes {
           ... on Notification {
             id
