@@ -8,7 +8,7 @@ type Props = {|
   onClick: Function,
 |};
 
-export default function MilestoneColumnHeaderCard({ isHovered, onClick }: Props) {
+export default function DeleteButton({ isHovered, onClick }: Props) {
   return (
     <button
       className={DeleteButtonStyle(isHovered)}

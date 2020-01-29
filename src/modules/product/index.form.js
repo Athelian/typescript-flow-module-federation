@@ -162,7 +162,7 @@ class ProductFormModule extends React.Component<Props> {
             ids,
           },
         });
-        showToastError({ intl, deleteFilesResult, entity: 'order' });
+        showToastError({ intl, result: deleteFilesResult, entity: 'product' });
       }
     }
   };
