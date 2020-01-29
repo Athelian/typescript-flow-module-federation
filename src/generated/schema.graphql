@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Jan 27 2020 17:38:10 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Jan 29 2020 16:39:35 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26629,7 +26629,7 @@ type BadRequest {
   violations: [Violation!]!
 }
 
-type Batch implements Model & Owned & Package & Tagged & Customizable & Memorizable & Sortable {
+type Batch implements Model & Owned & Package & Tagged & Followed & Customizable & Memorizable & Sortable {
   archived: Boolean!
   no: String!
   orderItem: OrderItemPayload!
@@ -26668,6 +26668,8 @@ type Batch implements Model & Owned & Package & Tagged & Customizable & Memoriza
   packageSize: Size
   packageCapacity: Float
   tags: [TagPayload!]!
+  followers: [UserPayload!]!
+  notificationUnseenCount: Int!
   customFields: CustomFields!
   memo: String
   sort: Int!
@@ -26695,6 +26697,7 @@ input BatchCreateInput {
   packageCapacity: Float
   memo: String
   tagIds: [ID!]
+  followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
   orderItemId: ID!
@@ -26790,6 +26793,7 @@ input BatchUpdateInput {
   packageCapacity: Float
   memo: String
   tagIds: [ID!]
+  followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
   orderItemId: ID
@@ -26846,7 +26850,7 @@ input CommentUpdateInput {
   content: String
 }
 
-type Container implements Model & Owned & Tagged & Sortable & Memorizable {
+type Container implements Model & Owned & Tagged & Followed & Sortable & Memorizable {
   archived: Boolean!
   no: String!
   representativeBatch: BatchPayload
@@ -26889,6 +26893,8 @@ type Container implements Model & Owned & Tagged & Sortable & Memorizable {
   deletedBy: UserPayload
   ownedBy: OrganizationPayload!
   tags: [TagPayload!]!
+  followers: [UserPayload!]!
+  notificationUnseenCount: Int!
   sort: Int!
   memo: String
 }
@@ -26915,6 +26921,7 @@ input ContainerBatchInput {
   packageCapacity: Float
   memo: String
   tagIds: [ID!]
+  followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
   id: ID
@@ -28729,6 +28736,11 @@ input FocusingInput {
 
 union FocusPayload = Focus | BadRequest | Forbidden | NotFound
 
+interface Followed {
+  followers: [UserPayload!]!
+  notificationUnseenCount: Int!
+}
+
 type Forbidden {
   reference: Reference
   reason: String
@@ -29948,9 +29960,11 @@ type Mutation {
   commentUpdate(id: ID!, input: CommentUpdateInput!): CommentPayload!
   commentDelete(id: ID!): EmptyPayload
   timelineRead(entity: EntityInput!): EmptyPayload
-  notificationRead(id: ID!): Boolean!
-  notificationReadAll: Boolean!
+  notificationArchive(id: ID!): Boolean!
+  notificationArchiveAll: Boolean!
   notificationSeeAll: Boolean!
+  notificationSeeByEntities(entities: [EntityInput!]!): Boolean!
+  notificationPreferencesUpdate(input: NotificationPreferencesInput!): NotificationPreferencesPayload!
   roleCreate(input: RoleCreateInput!): RolePayload!
   roleUpdate(id: ID!, input: RoleUpdateInput!): RolePayload!
   roleDelete(id: ID!): EmptyPayload
@@ -30003,9 +30017,15 @@ type Notification {
   type: NotificationType!
   body: String!
   entity: EntityPayload!
-  read: Boolean!
+  archived: Boolean!
   seen: Boolean!
   createdAt: DateTime!
+}
+
+input NotificationFilterInput {
+  archived: Boolean
+  organizationIds: [ID!]
+  userIds: [ID!]
 }
 
 union NotificationPayload = Notification | BadRequest | Forbidden | NotFound
@@ -30019,171 +30039,195 @@ type NotificationPayloadPaginatedList implements Paginated {
   totalCount: Int!
 }
 
-enum NotificationType {
-  """ShipmentCreate"""
-  ShipmentCreate
-
-  """ShipmentUpdate"""
-  ShipmentUpdate
-
-  """ShipmentArchived"""
-  ShipmentArchived
-
-  """ShipmentUnarchived"""
-  ShipmentUnarchived
-
-  """ShipmentSetDate"""
-  ShipmentSetDate
-
-  """ShipmentUpdateDate"""
-  ShipmentUpdateDate
-
-  """ShipmentAddBatch"""
-  ShipmentAddBatch
-
-  """ShipmentRemoveBatch"""
-  ShipmentRemoveBatch
-
-  """ShipmentSetDateRevision"""
-  ShipmentSetDateRevision
-
-  """ShipmentUpdateDateRevision"""
-  ShipmentUpdateDateRevision
-
-  """ShipmentApprovedDate"""
-  ShipmentApprovedDate
-
-  """ShipmentUpdateDateForForwarderWarehouser"""
-  ShipmentUpdateDateForForwarderWarehouser
-
-  """ShipmentUpdateDateForImporterInCharge"""
-  ShipmentUpdateDateForImporterInCharge
-
-  """ShipmentAddPartnerWarehouse"""
-  ShipmentAddPartnerWarehouse
-
-  """ShipmentAddForwarder"""
-  ShipmentAddForwarder
-
-  """ShipmentUpdateBookingNo"""
-  ShipmentUpdateBookingNo
-
-  """ShipmentUpdateImporterBookingNo"""
-  ShipmentUpdateImporterBookingNo
-
-  """ShipmentUnapprovedDate"""
-  ShipmentUnapprovedDate
-
-  """ProductCreate"""
-  ProductCreate
-
-  """ProductUpdate"""
-  ProductUpdate
-
-  """ProductArchived"""
-  ProductArchived
-
-  """ProductUnarchived"""
-  ProductUnarchived
-
-  """ProductCreateProvider"""
-  ProductCreateProvider
-
-  """OrderCreate"""
-  OrderCreate
-
-  """OrderUpdate"""
-  OrderUpdate
-
-  """OrderArchived"""
-  OrderArchived
-
-  """OrderUnarchived"""
-  OrderUnarchived
-
-  """OrderCreateItem"""
-  OrderCreateItem
-
-  """OrderUpdateItemQuantity"""
-  OrderUpdateItemQuantity
-
-  """BatchCreate"""
-  BatchCreate
-
-  """BatchUpdate"""
-  BatchUpdate
-
-  """BatchArchived"""
-  BatchArchived
-
-  """BatchUnarchived"""
-  BatchUnarchived
-
-  """BatchCreateAssignment"""
-  BatchCreateAssignment
-
-  """BatchUpdateAssignmentQuantity"""
-  BatchUpdateAssignmentQuantity
-
-  """BatchDeleteAssignment"""
-  BatchDeleteAssignment
-
-  """BatchUpdateQuantity"""
-  BatchUpdateQuantity
-
-  """BatchUpdateQuantityInShipment"""
-  BatchUpdateQuantityInShipment
-
-  """BatchCreateAdjustment"""
-  BatchCreateAdjustment
-
-  """BatchCreateAdjustmentInShipment"""
-  BatchCreateAdjustmentInShipment
-
-  """BatchUpdateAdjustment"""
-  BatchUpdateAdjustment
-
-  """BatchUpdateAdjustmentInShipment"""
-  BatchUpdateAdjustmentInShipment
-
-  """BatchDeleteAdjustment"""
-  BatchDeleteAdjustment
-
-  """BatchDeleteAdjustmentInShipment"""
-  BatchDeleteAdjustmentInShipment
-
-  """WarehouseCreate"""
-  WarehouseCreate
-
-  """WarehouseUpdate"""
-  WarehouseUpdate
-
-  """WarehouseArchived"""
-  WarehouseArchived
-
-  """WarehouseUnarchived"""
-  WarehouseUnarchived
-
-  """CommentCreate"""
-  CommentCreate
-
-  """ContainerCreate"""
-  ContainerCreate
-
-  """ContainerUpdateAgreedDate"""
-  ContainerUpdateAgreedDate
-
-  """ContainerApproveAgreedDate"""
-  ContainerApproveAgreedDate
-
-  """ContainerUpdateActualDate"""
-  ContainerUpdateActualDate
-
-  """ContainerApproveActualDate"""
-  ContainerApproveActualDate
+type NotificationPreference {
+  type: NotificationType!
+  enabled: Boolean!
 }
 
-type Order implements Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable {
+input NotificationPreferenceInput {
+  type: NotificationType!
+  enabled: Boolean!
+}
+
+type NotificationPreferences {
+  allowedEmail: Boolean!
+  emailInterval: Interval
+  notifications: [NotificationPreference!]!
+}
+
+input NotificationPreferencesInput {
+  allowedEmail: Boolean
+  emailInterval: IntervalInput
+  notifications: [NotificationPreferenceInput!]
+}
+
+union NotificationPreferencesPayload = NotificationPreferences | BadRequest | Forbidden | NotFound
+
+enum NotificationType {
+  """shipment_create"""
+  shipment_create
+
+  """shipment_update"""
+  shipment_update
+
+  """shipment_archived"""
+  shipment_archived
+
+  """shipment_unarchived"""
+  shipment_unarchived
+
+  """shipment_set_date"""
+  shipment_set_date
+
+  """shipment_update_date"""
+  shipment_update_date
+
+  """shipment_add_batch"""
+  shipment_add_batch
+
+  """shipment_remove_batch"""
+  shipment_remove_batch
+
+  """shipment_set_date_revision"""
+  shipment_set_date_revision
+
+  """shipment_update_date_revision"""
+  shipment_update_date_revision
+
+  """shipment_approved_date"""
+  shipment_approved_date
+
+  """shipment_update_date_for_forwarder_warehouser"""
+  shipment_update_date_for_forwarder_warehouser
+
+  """shipment_update_date_for_importer_in_charge"""
+  shipment_update_date_for_importer_in_charge
+
+  """shipment_add_partner_warehouse"""
+  shipment_add_partner_warehouse
+
+  """shipment_add_forwarder"""
+  shipment_add_forwarder
+
+  """shipment_update_booking_no"""
+  shipment_update_booking_no
+
+  """shipment_update_importer_booking_no"""
+  shipment_update_importer_booking_no
+
+  """shipment_unapproved_date"""
+  shipment_unapproved_date
+
+  """product_create"""
+  product_create
+
+  """product_update"""
+  product_update
+
+  """product_archived"""
+  product_archived
+
+  """product_unarchived"""
+  product_unarchived
+
+  """product_create_provider"""
+  product_create_provider
+
+  """order_create"""
+  order_create
+
+  """order_update"""
+  order_update
+
+  """order_archived"""
+  order_archived
+
+  """order_unarchived"""
+  order_unarchived
+
+  """order_create_item"""
+  order_create_item
+
+  """order_update_item_quantity"""
+  order_update_item_quantity
+
+  """batch_create"""
+  batch_create
+
+  """batch_update"""
+  batch_update
+
+  """batch_archived"""
+  batch_archived
+
+  """batch_unarchived"""
+  batch_unarchived
+
+  """batch_create_assignment"""
+  batch_create_assignment
+
+  """batch_update_assignment_quantity"""
+  batch_update_assignment_quantity
+
+  """batch_delete_assignment"""
+  batch_delete_assignment
+
+  """batch_update_quantity"""
+  batch_update_quantity
+
+  """batch_update_quantity_in_shipment"""
+  batch_update_quantity_in_shipment
+
+  """batch_create_adjustment"""
+  batch_create_adjustment
+
+  """batch_create_adjustment_in_shipment"""
+  batch_create_adjustment_in_shipment
+
+  """batch_update_adjustment"""
+  batch_update_adjustment
+
+  """batch_update_adjustment_in_shipment"""
+  batch_update_adjustment_in_shipment
+
+  """batch_delete_adjustment"""
+  batch_delete_adjustment
+
+  """batch_delete_adjustment_in_shipment"""
+  batch_delete_adjustment_in_shipment
+
+  """warehouse_create"""
+  warehouse_create
+
+  """warehouse_update"""
+  warehouse_update
+
+  """warehouse_archived"""
+  warehouse_archived
+
+  """warehouse_unarchived"""
+  warehouse_unarchived
+
+  """comment_create"""
+  comment_create
+
+  """container_create"""
+  container_create
+
+  """container_update_agreed_date"""
+  container_update_agreed_date
+
+  """container_approve_agreed_date"""
+  container_approve_agreed_date
+
+  """container_update_actual_date"""
+  container_update_actual_date
+
+  """container_approve_actual_date"""
+  container_approve_actual_date
+}
+
+type Order implements Model & Owned & Tagged & Followed & Supervised & Documented & Customizable & Memorizable {
   archived: Boolean!
   importer: OrganizationPayload!
   exporter: OrganizationPayload!
@@ -30218,6 +30262,8 @@ type Order implements Model & Owned & Tagged & Supervised & Documented & Customi
   deletedBy: UserPayload
   ownedBy: OrganizationPayload!
   tags: [TagPayload!]!
+  followers: [UserPayload!]!
+  notificationUnseenCount: Int!
   inCharges: [UserPayload!]!
   files: [FilePayload!]!
   customFields: CustomFields!
@@ -30236,7 +30282,7 @@ input OrderCreateInput {
   deliveryDate: DateTime
   memo: String
   tagIds: [ID!]
-  inChargeIds: [ID!]
+  followerIds: [ID!]
   orderItems: [OrderOrderItemInput!]
   files: [EntityFileInput!]
   customFields: CustomFieldsInput
@@ -30252,7 +30298,7 @@ input OrderFilterInput {
   archived: Boolean
   ids: [ID!]
   poNos: [String!]
-  inChargeIds: [ID!]
+  followerIds: [ID!]
   exporterIds: [ID!]
   supplierIds: [ID!]
   tagIds: [ID!]
@@ -30270,7 +30316,7 @@ input OrderFilterInput {
   productProviderIds: [ID!]
   productProviderSupplierIds: [ID!]
   shipmentForwarderIds: [ID!]
-  shipmentInChargeIds: [ID!]
+  shipmentFollowerIds: [ID!]
   shipmentTagIds: [ID!]
   shipmentLoadPorts: [PortInput!]
   shipmentFirstTransitPorts: [PortInput!]
@@ -30302,7 +30348,7 @@ input OrderFilterInput {
   containerFreeTimeOverdue: Boolean
 }
 
-type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Customizable & Memorizable {
+type OrderItem implements Model & Owned & Sortable & Tagged & Followed & Documented & Customizable & Memorizable {
   order: OrderPayload!
   productProvider: ProductProviderPayload!
   archived: Boolean!
@@ -30330,6 +30376,8 @@ type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Custo
   ownedBy: OrganizationPayload!
   sort: Int!
   tags: [TagPayload!]!
+  followers: [UserPayload!]!
+  notificationUnseenCount: Int!
   files: [FilePayload!]!
   customFields: CustomFields!
   memo: String
@@ -30357,6 +30405,7 @@ input OrderItemBatchInput {
   packageCapacity: Float
   memo: String
   tagIds: [ID!]
+  followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
   id: ID
@@ -30374,6 +30423,7 @@ input OrderItemCreateInput {
   tagIds: [ID!]
   batches: [OrderItemBatchInput!]
   files: [EntityFileInput!]
+  followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
   orderId: ID!
@@ -30427,6 +30477,7 @@ input OrderItemUpdateInput {
   tagIds: [ID!]
   batches: [OrderItemBatchInput!]
   files: [EntityFileInput!]
+  followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
   orderId: ID
@@ -30447,6 +30498,7 @@ input OrderOrderItemInput {
   tagIds: [ID!]
   batches: [OrderItemBatchInput!]
   files: [EntityFileInput!]
+  followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
   id: ID
@@ -30489,7 +30541,7 @@ input OrderUpdateInput {
   deliveryDate: DateTime
   memo: String
   tagIds: [ID!]
-  inChargeIds: [ID!]
+  followerIds: [ID!]
   orderItems: [OrderOrderItemInput!]
   files: [EntityFileInput!]
   customFields: CustomFieldsInput
@@ -30685,7 +30737,7 @@ input PriceRangeInput {
   currency: Currency
 }
 
-type Product implements Model & Owned & Tagged & Documented & Memorizable & Customizable {
+type Product implements Model & Owned & Tagged & Followed & Documented & Memorizable & Customizable {
   archived: Boolean!
   importer: OrganizationPayload!
   name: String!
@@ -30710,6 +30762,8 @@ type Product implements Model & Owned & Tagged & Documented & Memorizable & Cust
   deletedBy: UserPayload
   ownedBy: OrganizationPayload!
   tags: [TagPayload!]!
+  followers: [UserPayload!]!
+  notificationUnseenCount: Int!
   files: [FilePayload!]!
   memo: String
   customFields: CustomFields!
@@ -30723,6 +30777,7 @@ input ProductCreateInput {
   hsCode: String
   material: String
   tagIds: [ID!]
+  followerIds: [ID!]
   files: [EntityFileInput!]
   memo: String
   productProviders: [ProductProductProviderCreateInput!]!
@@ -30986,6 +31041,7 @@ input ProductUpdateInput {
   hsCode: String
   material: String
   tagIds: [ID!]
+  followerIds: [ID!]
   files: [EntityFileInput!]
   memo: String
   productProviders: [ProductProductProviderUpdateInput!]
@@ -31266,7 +31322,6 @@ type Query {
   role(id: ID!): RolePayload!
   roles(page: Int! = 1, perPage: Int! = 10): RolePayloadPaginatedList!
   permissions: [String!]!
-  orderShipmentTable(entities: [EntityInput!]!): [EntityPayload!]!
   focuses(id: ID!, entities: [EntityInput!]!): [FocusPayload!]!
 }
 
@@ -86872,7 +86927,7 @@ enum Seaport {
   ZWZMZ
 }
 
-type Shipment implements Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable & Integrated {
+type Shipment implements Model & Owned & Tagged & Followed & Supervised & Documented & Customizable & Memorizable & Integrated {
   archived: Boolean!
   importer: OrganizationPayload!
   exporter: OrganizationPayload
@@ -86922,6 +86977,8 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   deletedBy: UserPayload
   ownedBy: OrganizationPayload!
   tags: [TagPayload!]!
+  followers: [UserPayload!]!
+  notificationUnseenCount: Int!
   inCharges: [UserPayload!]!
   files: [FilePayload!]!
   customFields: CustomFields!
@@ -86951,6 +87008,7 @@ input ShipmentBatchInput {
   packageCapacity: Float
   memo: String
   tagIds: [ID!]
+  followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
   id: ID
@@ -87027,7 +87085,7 @@ input ShipmentCreateInput {
   carrier: String
   cargoReady: TimelineDateNestedInput
   tagIds: [ID!]
-  inChargeIds: [ID!]
+  followerIds: [ID!]
   forwarderIds: [ID!]
   batches: [ShipmentBatchInput!]
   voyages: [VoyageNestedInput!]
@@ -87059,7 +87117,7 @@ input ShipmentFilterInput {
   importerIds: [ID!]
   tagIds: [ID!]
   forwarderIds: [ID!]
-  inChargeIds: [ID!]
+  followerIds: [ID!]
   booked: Boolean
   loadPorts: [PortInput!]
   firstTransitPorts: [PortInput!]
@@ -87090,7 +87148,7 @@ input ShipmentFilterInput {
   orderIds: [ID!]
   orderArchived: Boolean
   orderExporterIds: [ID!]
-  orderInChargeIds: [ID!]
+  orderFollowerIds: [ID!]
   orderTagIds: [ID!]
   orderCompletelyBatched: Boolean
   orderCompletelyShipped: Boolean
@@ -87156,7 +87214,7 @@ input ShipmentUpdateInput {
   carrier: String
   cargoReady: TimelineDateNestedInput
   tagIds: [ID!]
-  inChargeIds: [ID!]
+  followerIds: [ID!]
   forwarderIds: [ID!]
   batches: [ShipmentBatchInput!]
   voyages: [VoyageNestedInput!]
@@ -87856,10 +87914,10 @@ type Viewer {
   user: UserPayload!
   permissions: [String!]!
   permissionsForOrganization(organizationId: ID!): [String!]!
-  notifications(page: Int! = 1, perPage: Int! = 10): NotificationPayloadPaginatedList!
-  notificationUnread: Int!
-  notificationUnseen: Int!
-  token: String
+  notifications(page: Int! = 1, perPage: Int! = 10, filterBy: NotificationFilterInput): NotificationPayloadPaginatedList!
+  notificationCount: Int!
+  notificationUnseenCount: Int!
+  notificationPreferences: NotificationPreferences!
 }
 
 type Violation {
@@ -87909,7 +87967,7 @@ input VoyageNestedInput {
 
 union VoyagePayload = Voyage | BadRequest | Forbidden | NotFound
 
-type Warehouse implements Model & Owned & Supervised & Customizable {
+type Warehouse implements Model & Owned & Supervised & Followed & Customizable {
   archived: Boolean!
   name: String!
   no: String
@@ -87929,6 +87987,8 @@ type Warehouse implements Model & Owned & Supervised & Customizable {
   deletedBy: UserPayload
   ownedBy: OrganizationPayload!
   inCharges: [UserPayload!]!
+  followers: [UserPayload!]!
+  notificationUnseenCount: Int!
   customFields: CustomFields!
 }
 
@@ -87942,7 +88002,7 @@ input WarehouseCreateInput {
   postalCode: String
   country: Country
   customFields: CustomFieldsInput
-  inChargeIds: [ID!]
+  followerIds: [ID!]
   organizationIds: [ID!]
 }
 
@@ -87983,7 +88043,7 @@ input WarehouseUpdateInput {
   postalCode: String
   country: Country
   customFields: CustomFieldsInput
-  inChargeIds: [ID!]
+  followerIds: [ID!]
   organizationIds: [ID!]
 }
 

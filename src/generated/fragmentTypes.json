@@ -468,6 +468,33 @@
       },
       {
         "kind": "INTERFACE",
+        "name": "Followed",
+        "possibleTypes": [
+          {
+            "name": "Product"
+          },
+          {
+            "name": "Batch"
+          },
+          {
+            "name": "OrderItem"
+          },
+          {
+            "name": "Order"
+          },
+          {
+            "name": "Shipment"
+          },
+          {
+            "name": "Warehouse"
+          },
+          {
+            "name": "Container"
+          }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
         "name": "Documented",
         "possibleTypes": [
           {
@@ -1438,6 +1465,24 @@
         "possibleTypes": [
           {
             "name": "Comment"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "NotificationPreferencesPayload",
+        "possibleTypes": [
+          {
+            "name": "NotificationPreferences"
           },
           {
             "name": "BadRequest"
