@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { DraggableProvided } from 'react-beautiful-dnd';
 import { Subscribe } from 'unstated';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, NumberValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
 import { formatToGraphql, startOfToday, differenceInCalendarDays } from 'utils/date';
@@ -13,6 +13,7 @@ import usePermission from 'hooks/usePermission';
 import useHover from 'hooks/useHover';
 import useUser from 'hooks/useUser';
 import DeleteDialog from 'components/Dialog/DeleteDialog';
+import DocumentsDeleteDialog from 'components/Dialog/DocumentsDeleteDialog';
 import CompleteDialog from 'components/Dialog/CompleteDialog';
 import SelectTasks from 'providers/SelectTasks';
 import SlideView from 'components/SlideView';
@@ -42,9 +43,9 @@ import { EstimatedCompletionDateContext } from 'modules/project/form/helpers';
 import validator from './validator';
 import messages from './messages';
 import CompleteButton from '../CompleteButton';
+import DeleteButton from './components/DeleteButton';
 import {
   MilestoneHeaderWrapperStyle,
-  DeleteButtonStyle,
   TaskRingWrapperStyle,
   AutoDateSyncIconStyle,
   DateInputWrapperStyle,
@@ -79,6 +80,8 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
           excludeTaskIds,
           excludeIds,
           removeMilestone,
+          setNeedDeletedFiles,
+          unsetNeedDeletedFiles,
           taskCountByMilestone,
           completedMilestone,
         }
@@ -108,6 +111,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
           completedBy,
           estimatedCompletionDateBinding,
           tasks = [],
+          files = [],
         } = currentMilestone;
 
         const dueDate = dueDateBinding
@@ -176,51 +180,127 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                     setTimeout(() => toggleMilestoneForm(true), 200);
                   }}
                 >
-                  <BooleanValue>
-                    {({ value: deleteDialogIsOpen, set: dialogToggle }) => (
-                      <>
-                        {hasPermission([MILESTONE_DELETE]) && milestones.length > 1 && (
-                          <button
-                            className={DeleteButtonStyle(isHovered)}
-                            type="button"
-                            onClick={event => {
-                              event.stopPropagation();
-                              if (tasks.length > 0) {
-                                dialogToggle(true);
-                              } else {
-                                removeMilestone(milestoneId);
-                              }
-                            }}
-                          >
-                            <Icon icon="REMOVE" />
-                          </button>
-                        )}
-                        <DeleteDialog
-                          isOpen={deleteDialogIsOpen}
-                          onRequestClose={() => dialogToggle(false)}
-                          onRemove={() => {
-                            removeMilestone(milestoneId);
-                            dialogToggle(false);
-                          }}
-                          onRemoveAll={() => {
-                            removeMilestone(milestoneId, true);
-                            dialogToggle(false);
-                          }}
-                          onCancel={() => dialogToggle(false)}
-                          onConfirm={() => {
-                            dialogToggle(false);
-                          }}
-                          message={
-                            <FormattedMessage
-                              id="modules.Projects.removeMilestoneWarningMessage"
-                              defaultMessage="There are some Tasks in this Milestone. Would you like to remove them from the Project (and not delete them) or completely delete them along with this Milestone?"
-                            />
-                          }
-                        />
-                      </>
-                    )}
-                  </BooleanValue>
+                  {hasPermission([MILESTONE_DELETE]) && milestones.length > 1 && (
+                    <NumberValue defaultValue={0}>
+                      {({ value: step, set: setStep }) => {
+                        let removeOnTasks = false;
+                        const onRemove = (id, withTasks) => {
+                          removeMilestone(id, withTasks);
+                        };
 
+                        if (step === 0 && tasks.length > 0) {
+                          return (
+                            <DeleteButton
+                              isHovered={isHovered}
+                              onClick={() => {
+                                setStep(1);
+                              }}
+                            />
+                          );
+                        }
+
+                        if (step === 0 && files.length > 0) {
+                          return (
+                            <DeleteButton
+                              isHovered={isHovered}
+                              onClick={() => {
+                                setStep(2);
+                              }}
+                            />
+                          );
+                        }
+
+                        if (step === 1 && tasks.length > 0) {
+                          return (
+                            <>
+                              <DeleteDialog
+                                isOpen={step === 1}
+                                onRequestClose={() => setStep(0)}
+                                onCancel={() => setStep(0)}
+                                onRemove={() => {
+                                  removeOnTasks = false;
+                                  if (files.length > 0) {
+                                    setStep(2);
+                                  } else {
+                                    onRemove(milestoneId, removeOnTasks);
+                                    setStep(0);
+                                  }
+                                }}
+                                onRemoveAll={() => {
+                                  removeOnTasks = true;
+                                  if (files.length > 0) {
+                                    setStep(2);
+                                  } else {
+                                    onRemove(milestoneId, removeOnTasks);
+                                    setStep(0);
+                                  }
+                                }}
+                                onConfirm={() => {
+                                  if (files.length > 0) {
+                                    setStep(2);
+                                  } else {
+                                    setStep(0);
+                                  }
+                                }}
+                                message={
+                                  <FormattedMessage
+                                    id="modules.Projects.removeMilestoneWarningMessage"
+                                    defaultMessage="There are some Tasks in this Milestone. Would you like to remove them from the Project (and not delete them) or completely delete them along with this Milestone?"
+                                  />
+                                }
+                              />
+
+                              <DeleteButton
+                                isHovered={isHovered}
+                                onClick={() => {
+                                  setStep(2);
+                                }}
+                              />
+                            </>
+                          );
+                        }
+
+                        if (step === 2 && files.length > 0) {
+                          return (
+                            <>
+                              <DocumentsDeleteDialog
+                                entityType="MILESTONE"
+                                isOpen={step === 2}
+                                files={files}
+                                onCancel={() => setStep(0)}
+                                onKeep={needKeepFiles => {
+                                  unsetNeedDeletedFiles(needKeepFiles);
+                                  onRemove(milestoneId, removeOnTasks);
+                                  setStep(0);
+                                }}
+                                onDelete={needDeletedFiles => {
+                                  setNeedDeletedFiles(needDeletedFiles);
+                                  onRemove(milestoneId, removeOnTasks);
+                                  setStep(0);
+                                }}
+                              />
+
+                              <DeleteButton
+                                isHovered={isHovered}
+                                onClick={() => {
+                                  setStep(2);
+                                }}
+                              />
+                            </>
+                          );
+                        }
+
+                        return (
+                          <DeleteButton
+                            isHovered={isHovered}
+                            onClick={() => {
+                              setStep(2);
+                            }}
+                          />
+                        );
+                      }}
+                    </NumberValue>
+                  )}
                   <div role="presentation" onClick={e => e.stopPropagation()}>
                     <FormField
                       name={`${milestoneId}.name`}

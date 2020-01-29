@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { Provider, Subscribe } from 'unstated';
 import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
+import type { FilePayload } from 'generated/graphql';
 import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
@@ -22,6 +23,7 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId, uuid } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import { initValues as taskInitValues } from 'modules/order/form/containers/tasks';
+import { deleteManyFileMutation } from 'modules/document/mutation';
 import { orderExportQuery, orderTimelineQuery } from './query';
 import OrderForm from './form';
 import validator from './form/validator';
@@ -109,10 +111,12 @@ class OrderFormModule extends React.PureComponent<Props> {
     originalValues: Object,
     formData: Object,
     saveOrder: Function,
+    needDeletedFiles: Array<FilePayload>,
+    deleteFiles: Function,
     onSuccess: Object => void,
     onErrors: Function = () => {}
   ) => {
-    const { orderId, onSuccessCallback, originalDataForSlideView } = this.props;
+    const { intl, orderId, onSuccessCallback, originalDataForSlideView } = this.props;
 
     const isNewOrClone = this.isNewOrClone();
     const input = prepareParsedOrderInput(
@@ -138,6 +142,16 @@ class OrderFormModule extends React.PureComponent<Props> {
     } else if (orderId) {
       const { data } = await saveOrder({ variables: { input, id: decodeId(orderId) } });
       if (!data) return;
+
+      if (needDeletedFiles.length > 0) {
+        const ids = needDeletedFiles.map(f => f.id);
+        const result: any = await deleteFiles({
+          variables: {
+            ids,
+          },
+        });
+        showToastError({ intl, result, entity: 'order' });
+      }
 
       const {
         orderUpdate: { violations },
@@ -429,60 +443,66 @@ class OrderFormModule extends React.PureComponent<Props> {
                         )}
 
                         {(isNewOrClone || isDirty) && (
-                          <SaveFormButton
-                            id="order_form_save_button"
-                            data-testid="btnSaveOrder"
-                            disabled={
-                              !form.isReady(
-                                {
-                                  ...orderItemState.state,
-                                  ...orderInfoState.state,
-                                  ...orderTagsState.state,
-                                  ...orderFilesState.state,
-                                  ...orderTasksState.state,
-                                },
-                                validator
-                              )
-                            }
-                            isLoading={isLoading}
-                            onClick={() =>
-                              this.onSave(
-                                {
-                                  ...orderItemState.originalValues,
-                                  ...orderInfoState.originalValues,
-                                  ...orderTagsState.originalValues,
-                                  ...orderFilesState.originalValues,
-                                  ...orderTasksState.originalValues,
-                                },
-                                {
-                                  ...orderItemState.state,
-                                  ...orderInfoState.state,
-                                  ...orderTagsState.state,
-                                  ...orderFilesState.state,
-                                  ...orderTasksState.state,
-                                },
-                                saveOrder,
-                                updateOrder => {
-                                  this.initAllValues(
+                          <Mutation mutation={deleteManyFileMutation} {...mutationKey}>
+                            {deleteFiles => (
+                              <SaveFormButton
+                                id="order_form_save_button"
+                                data-testid="btnSaveOrder"
+                                disabled={
+                                  !form.isReady(
                                     {
-                                      orderItemState,
-                                      orderInfoState,
-                                      orderTagsState,
-                                      orderFilesState,
-                                      orderTasksState,
+                                      ...orderItemState.state,
+                                      ...orderInfoState.state,
+                                      ...orderTagsState.state,
+                                      ...orderFilesState.state,
+                                      ...orderTasksState.state,
+                                    },
+                                    validator
+                                  )
+                                }
+                                isLoading={isLoading}
+                                onClick={() =>
+                                  this.onSave(
+                                    {
+                                      ...orderItemState.originalValues,
+                                      ...orderInfoState.originalValues,
+                                      ...orderTagsState.originalValues,
+                                      ...orderFilesState.originalValues,
+                                      ...orderTasksState.originalValues,
                                     },
                                     {
-                                      ...updateOrder,
-                                      hasCalledItemsApiYet: true,
-                                      hasCalledTasksApiYet: true,
-                                    }
-                                  );
-                                  form.onReset();
-                                },
-                                form.onErrors
-                              )
-                            }
-                          />
+                                      ...orderItemState.state,
+                                      ...orderInfoState.state,
+                                      ...orderTagsState.state,
+                                      ...orderFilesState.state,
+                                      ...orderTasksState.state,
+                                    },
+                                    saveOrder,
+                                    orderItemState.state.needDeletedFiles,
+                                    deleteFiles,
+                                    updateOrder => {
+                                      this.initAllValues(
+                                        {
+                                          orderItemState,
+                                          orderInfoState,
+                                          orderTagsState,
+                                          orderFilesState,
+                                          orderTasksState,
+                                        },
+                                        {
+                                          ...updateOrder,
+                                          hasCalledItemsApiYet: true,
+                                          hasCalledTasksApiYet: true,
+                                        }
+                                      );
+                                      form.onReset();
+                                    },
+                                    form.onErrors
+                                  )
+                                }
+                              />
+                            )}
+                          </Mutation>
                         )}
                         {orderId && !isDirty && !isNewOrClone && (
                           <ExportButton

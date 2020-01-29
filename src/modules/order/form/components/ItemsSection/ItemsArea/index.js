@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, NumberValue } from 'react-values';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import SelectProductProviders from 'modules/order/common/SelectProductProviders';
@@ -12,6 +12,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import Icon from 'components/Icon';
 import { ItemCard, CardAction } from 'components/Cards';
 import RemoveDialog from 'components/Dialog/RemoveDialog';
+import DocumentsDeleteDialog from 'components/Dialog/DocumentsDeleteDialog';
 import { injectUid } from 'utils/id';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { Display } from 'components/Form';
@@ -62,6 +63,8 @@ type Props = {
   },
   setFieldValue: (string, any) => void,
   setFieldTouched: Function,
+  setNeedDeletedFiles: Function,
+  unsetNeedDeletedFiles: Function,
   focusedItemIndex: number,
   onFocusItem: number => void,
   orderIsArchived: boolean,
@@ -73,6 +76,8 @@ function ItemsArea({
   orderItems,
   order,
   setFieldValue,
+  setNeedDeletedFiles,
+  unsetNeedDeletedFiles,
   setFieldTouched,
   focusedItemIndex,
   onFocusItem,
@@ -149,6 +154,7 @@ function ItemsArea({
                 productProvider,
                 batches,
                 todo,
+                files,
               } = item;
               const compiledOrderItem = {
                 id,
@@ -171,13 +177,19 @@ function ItemsArea({
                 unitPrice,
               };
 
-              const { id: productId, name, serial, tags: productTags, files } = product;
+              const {
+                id: productId,
+                name,
+                serial,
+                tags: productTags,
+                files: productFiles,
+              } = product;
               const compiledProduct = {
                 id: productId,
                 name,
                 serial,
                 tags: productTags,
-                files,
+                files: productFiles,
               };
 
               const compiledOrder = {
@@ -224,8 +236,8 @@ function ItemsArea({
                   />
                 ),
                 hasPermission([ORDER_ITEMS_DELETE]) && (
-                  <BooleanValue>
-                    {({ value: isOpen, set: dialogToggle }) => {
+                  <NumberValue defaultValue={0}>
+                    {({ value: step, set: setStep }) => {
                       const onRemove = () => {
                         setFieldValue(
                           'orderItems',
@@ -237,59 +249,120 @@ function ItemsArea({
                         }
                       };
 
-                      return batches.length > 0 ? (
-                        <>
-                          <RemoveDialog
-                            isOpen={isOpen}
-                            onRequestClose={() => dialogToggle(false)}
-                            onCancel={() => dialogToggle(false)}
-                            onRemove={() => {
-                              onRemove();
-                              dialogToggle(false);
-                            }}
-                            message={
-                              <div>
-                                <div>
-                                  <FormattedMessage
-                                    id="components.cards.deleteOrderItem"
-                                    defaultMessage="Are you sure you want to delete this Item?"
-                                  />
-                                </div>
-                                <div>
-                                  <FormattedMessage
-                                    id="components.cards.deleteOrderItemBatches"
-                                    defaultMessage="This will delete all {batches} of its Batches as well."
-                                    values={{ batches: item.batches.length }}
-                                  />
-                                </div>
-                                {item.batches.filter(batch => batch.shipment).length > 0 && (
-                                  <div>
-                                    <FormattedMessage
-                                      id="components.cards.deleteOrderItemShipments"
-                                      defaultMessage="Warning: {shipment} of the Batches are in a Shipment."
-                                      values={{
-                                        shipment: item.batches.filter(batch => batch.shipment)
-                                          .length,
-                                      }}
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                            }
-                          />
+                      if (step === 0 && batches.length > 0) {
+                        return (
                           <CardAction
                             icon="REMOVE"
                             hoverColor="RED"
                             onClick={() => {
-                              dialogToggle(true);
+                              setStep(1);
                             }}
                           />
-                        </>
-                      ) : (
-                        <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />
-                      );
+                        );
+                      }
+
+                      if (step === 0 && files.length > 0) {
+                        return (
+                          <CardAction
+                            icon="REMOVE"
+                            hoverColor="RED"
+                            onClick={() => {
+                              setStep(2);
+                            }}
+                          />
+                        );
+                      }
+
+                      if (step === 1 && batches.length > 0) {
+                        return (
+                          <>
+                            <RemoveDialog
+                              isOpen={step === 1}
+                              onRequestClose={() => setStep(0)}
+                              onCancel={() => setStep(0)}
+                              onRemove={() => {
+                                if (files.length > 0) {
+                                  setStep(2);
+                                } else {
+                                  onRemove();
+                                  setStep(0);
+                                }
+                              }}
+                              message={
+                                <div>
+                                  <div>
+                                    <FormattedMessage
+                                      id="components.cards.deleteOrderItem"
+                                      defaultMessage="Are you sure you want to delete this Item?"
+                                    />
+                                  </div>
+                                  <div>
+                                    <FormattedMessage
+                                      id="components.cards.deleteOrderItemBatches"
+                                      defaultMessage="This will delete all {batches} of its Batches as well."
+                                      values={{ batches: item.batches.length }}
+                                    />
+                                  </div>
+                                  {item.batches.filter(batch => batch.shipment).length > 0 && (
+                                    <div>
+                                      <FormattedMessage
+                                        id="components.cards.deleteOrderItemShipments"
+                                        defaultMessage="Warning: {shipment} of the Batches are in a Shipment."
+                                        values={{
+                                          shipment: item.batches.filter(batch => batch.shipment)
+                                            .length,
+                                        }}
+                                      />
+                                    </div>
+                                  )}
+                                </div>
+                              }
+                            />
+                            <CardAction
+                              icon="REMOVE"
+                              hoverColor="RED"
+                              onClick={() => {
+                                setStep(2);
+                              }}
+                            />
+                          </>
+                        );
+                      }
+
+                      if (step === 2 && files.length > 0) {
+                        return (
+                          <>
+                            <DocumentsDeleteDialog
+                              entityType="ITEM"
+                              isOpen={step === 2}
+                              files={files}
+                              onCancel={() => setStep(0)}
+                              onKeep={needKeepFiles => {
+                                unsetNeedDeletedFiles(needKeepFiles);
+                                onRemove();
+                                setStep(0);
+                              }}
+                              onDelete={needDeletedFiles => {
+                                setNeedDeletedFiles(needDeletedFiles);
+                                onRemove();
+                                setStep(0);
+                              }}
+                            />
+
+                            <CardAction
+                              icon="REMOVE"
+                              hoverColor="RED"
+                              onClick={() => {
+                                setStep(2);
+                              }}
+                            />
+                          </>
+                        );
+                      }
+
+                      return <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />;
                     }}
-                  </BooleanValue>
+                  </NumberValue>
                 ),
               ].filter(Boolean);
 

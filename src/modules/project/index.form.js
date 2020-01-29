@@ -8,12 +8,13 @@ import apolloClient from 'apollo';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { showToastError } from 'utils/errors';
-import type { ProjectPayload, Project, Tag, Milestone } from 'generated/graphql';
+import type { ProjectPayload, FilePayload, Project, Tag, Milestone } from 'generated/graphql';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import logger from 'utils/logger';
 import { getByPath } from 'utils/fp';
 import { FormContainer } from 'modules/form';
 import Timeline from 'modules/timeline/components/Timeline';
+import { deleteManyFileMutation } from 'modules/document/mutation';
 import QueryForm from 'components/common/QueryForm';
 import { CancelButton, ExportButton } from 'components/Buttons';
 import ResetFormButton from 'components/ResetFormButton';
@@ -93,10 +94,12 @@ class ProjectFormModule extends React.PureComponent<Props> {
     originalValues: Object,
     formData: Object,
     saveProject: Function,
+    needDeletedFiles: Array<FilePayload>,
+    deleteFiles: Function,
     onSuccess: Object => void,
     onErrors: Function = () => {}
   ) => {
-    const { projectId, onSuccessCallback } = this.props;
+    const { projectId, intl, onSuccessCallback } = this.props;
     const isNew = this.isNew();
 
     const input = prepareParsedProjectInput(
@@ -133,6 +136,16 @@ class ProjectFormModule extends React.PureComponent<Props> {
         if (onSuccessCallback) {
           onSuccessCallback(data);
         }
+      }
+
+      if (needDeletedFiles.length > 0) {
+        const ids = needDeletedFiles.map(f => f.id);
+        const deleteFilesResult: any = await deleteFiles({
+          variables: {
+            ids,
+          },
+        });
+        showToastError({ intl, result: deleteFilesResult, entity: 'project' });
       }
     }
   };
@@ -300,49 +313,55 @@ class ProjectFormModule extends React.PureComponent<Props> {
                         )}
 
                         {(isNew || isDirty) && (
-                          <SaveFormButton
-                            id="project_form_save_button"
-                            disabled={
-                              !form.isReady(
-                                {
-                                  ...projectInfoState.state,
-                                  ...projectTagsState.state,
-                                  ...projectMilestonesState.state,
-                                },
-                                validator
-                              )
-                            }
-                            isLoading={isLoading}
-                            onClick={() => {
-                              this.onSave(
-                                {
-                                  ...projectInfoState.originalValues,
-                                  ...projectTagsState.originalValues,
-                                  ...projectMilestonesState.originalValues,
-                                  originalTasks: projectMilestonesState.originalTasks,
-                                },
-                                {
-                                  ...projectInfoState.state,
-                                  ...projectTagsState.state,
-                                  ...projectMilestonesState.state,
-                                },
-                                saveProject,
-                                updateProject => {
-                                  this.initAllValues(
+                          <Mutation mutation={deleteManyFileMutation} {...mutationKey}>
+                            {deleteFiles => (
+                              <SaveFormButton
+                                id="project_form_save_button"
+                                disabled={
+                                  !form.isReady(
                                     {
-                                      projectInfoState,
-                                      projectTagsState,
-                                      projectMilestonesState,
+                                      ...projectInfoState.state,
+                                      ...projectTagsState.state,
+                                      ...projectMilestonesState.state,
                                     },
-                                    updateProject
+                                    validator
+                                  )
+                                }
+                                isLoading={isLoading}
+                                onClick={() => {
+                                  this.onSave(
+                                    {
+                                      ...projectInfoState.originalValues,
+                                      ...projectTagsState.originalValues,
+                                      ...projectMilestonesState.originalValues,
+                                      originalTasks: projectMilestonesState.originalTasks,
+                                    },
+                                    {
+                                      ...projectInfoState.state,
+                                      ...projectTagsState.state,
+                                      ...projectMilestonesState.state,
+                                    },
+                                    saveProject,
+                                    projectMilestonesState.state.needDeletedFiles,
+                                    deleteFiles,
+                                    updateProject => {
+                                      this.initAllValues(
+                                        {
+                                          projectInfoState,
+                                          projectTagsState,
+                                          projectMilestonesState,
+                                        },
+                                        updateProject
+                                      );
+                                      form.onReset();
+                                    },
+                                    form.onErrors
                                   );
-                                  form.onReset();
-                                },
-                                form.onErrors
-                              );
-                              this.onDeleteTask(projectMilestonesState.deleteTasks);
-                            }}
-                          />
+                                  this.onDeleteTask(projectMilestonesState.deleteTasks);
+                                }}
+                              />
+                            )}
+                          </Mutation>
                         )}
                         {projectId && !isDirty && !isNew && (
                           <ExportButton
