@@ -3,6 +3,7 @@ import { css } from 'react-emotion';
 import { borderRadiuses, colors, fontSizes, shadows, transitions } from 'styles/common';
 
 export const ColumnWrapperStyle = (isDragging: boolean): string => css`
+  position: relative;
   display: flex;
   align-items: stretch;
   ${borderRadiuses.MAIN};
@@ -47,16 +48,16 @@ export const CheckboxWrapperStyle: string = css`
 `;
 
 export const NewLabelStyle: string = css`
+  position: absolute;
+  right: 5px;
+  top: 6px;
   height: 18px;
-  margin: 6px 0;
-  font-size: 12px;
-  line-height: 15px;
-  display: flex;
-  align-items: center;
-  text-align: center;
+  ${fontSizes.SMALL};
+  line-height: 18px;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: ${colors.WHITE};
-  background: rgba(17, 209, 166, 0.5);
-  border-radius: 5px;
+  background: ${colors.TEAL_HALF};
+  ${borderRadiuses.MAIN};
+  padding: 0 5px;
 `;
