@@ -40,9 +40,9 @@ export default function DocumentsDeleteDialog({
   files,
   isOpen,
   isProcessing,
-  onDelete,
-  onKeep,
-  onCancel,
+  onDelete = () => {},
+  onKeep = () => {},
+  onCancel = () => {},
 }: Props) {
   return (
     <ActionDialog
@@ -82,11 +82,10 @@ export default function DocumentsDeleteDialog({
             <FormattedMessage id="components.DocumentsDeleteDialog.keep" defaultMessage="KEEP" />
           }
           onClick={() => {
-            if (onKeep) {
-              onKeep(files);
-            }
+            onKeep(files);
           }}
         />,
+
         <BaseButton
           key="btn-delete"
           label={
