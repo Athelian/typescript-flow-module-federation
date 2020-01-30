@@ -8,6 +8,7 @@ import { BaseButton } from 'components/Buttons';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import useFilterSort from 'hooks/useFilterSort';
 import NotificationList from './list';
+import NotificationPreferences from './components/NotificationPreferences';
 
 type Props = {
   activeTab?: string,
@@ -88,7 +89,7 @@ const NotificationListModule = ({ activeTab = 'active' }: Props) => {
         />
       </NavBar>
       <NotificationList key={activeTab} filterBy={filterBy} />
-      {/* TODO: Preference UI */}
+      {isOpenSetting && <NotificationPreferences />}
     </Content>
   );
 };
