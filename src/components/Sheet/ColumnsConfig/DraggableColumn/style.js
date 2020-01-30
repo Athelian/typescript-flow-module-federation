@@ -48,9 +48,6 @@ export const CheckboxWrapperStyle: string = css`
 `;
 
 export const NewLabelStyle: string = css`
-  position: absolute;
-  right: 5px;
-  top: 6px;
   height: 18px;
   ${fontSizes.SMALL};
   line-height: 18px;
@@ -60,4 +57,5 @@ export const NewLabelStyle: string = css`
   background: ${colors.TEAL_HALF};
   ${borderRadiuses.MAIN};
   padding: 0 5px;
+  margin: 6px 5px;
 `;
