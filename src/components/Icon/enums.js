@@ -132,6 +132,7 @@ import {
   faCodeBranch as BRANCH,
   faStar as STAR,
   faStopwatch as STOPWATCH,
+  faEnvelope as EMAIL,
 } from '@fortawesome/pro-solid-svg-icons';
 
 import {
@@ -302,6 +303,7 @@ export default {
   PDF,
   POWER_POINT,
   WORD,
+  EMAIL,
   SQUARE,
   TARGET,
   ENTITY,

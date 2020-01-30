@@ -89,7 +89,7 @@ const NotificationListModule = ({ activeTab = 'active' }: Props) => {
         />
       </NavBar>
       <NotificationList key={activeTab} filterBy={filterBy} />
-      {isOpenSetting && <NotificationPreferences />}
+      <NotificationPreferences isOpen={isOpenSetting} onClose={() => setIsOpenSetting(false)} />
     </Content>
   );
 };
