@@ -66,7 +66,7 @@ const NotificationsDropdown = ({
         {loading ? <LoadingIcon /> : items.map(renderItem)}
 
         <div className={NotificationsFooterStyle}>
-          {totalMoreItems === 0 && (
+          {totalMoreItems > 0 && (
             <Label align="center">
               <FormattedMessage
                 id="components.Header.notification.viewMoreNotifications"
