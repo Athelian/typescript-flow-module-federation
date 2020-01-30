@@ -60,3 +60,11 @@ export const DelayStyle = (delayAmount: number): string => css`
   line-height: 20px;
   width: 20px;
 `;
+
+export const TooltipLabelStyle: string = css`
+  border-bottom: 1px solid ${colors.WHITE};
+  padding: 5px 0 0 0;
+  &:first-child {
+    padding: 0;
+  }
+`;
