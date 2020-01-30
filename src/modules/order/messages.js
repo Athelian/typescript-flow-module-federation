@@ -554,10 +554,6 @@ export default defineMessages({
     id: 'modules.Orders.form.newItems',
     defaultMessage: 'NEW ITEMS',
   },
-  inCharge: {
-    id: 'modules.Orders.inCharge',
-    defaultMessage: 'IN CHARGE',
-  },
   autoFillBatch: {
     id: 'modules.Orders.autoFillBatch',
     defaultMessage: 'AUTOFILL BATCH',

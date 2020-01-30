@@ -24,7 +24,6 @@ export const ORDER_SET_DELIVERY_DATE = 'order.orders.setDeliveryDate';
 export const ORDER_SET_DOCUMENTS = 'order.orders.setDocuments';
 export const ORDER_SET_EXPORTER = 'order.orders.setExporter';
 export const ORDER_SET_IMPORTER = 'order.orders.setImporter';
-export const ORDER_SET_IN_CHARGES = 'order.orders.setInCharges';
 export const ORDER_SET_INCOTERM = 'order.orders.setIncoterm';
 export const ORDER_SET_ISSUE_AT = 'order.orders.setIssuedAt';
 export const ORDER_SET_PI_NO = 'order.orders.setPiNo';
