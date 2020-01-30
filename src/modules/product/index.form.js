@@ -18,6 +18,8 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId, uuid } from 'utils/id';
 import { removeTypename } from 'utils/data';
+import { deleteManyFileMutation } from 'modules/document/mutation';
+import type { FilePayload } from 'generated/graphql';
 import {
   ProductInfoContainer,
   ProductProvidersContainer,
@@ -107,10 +109,12 @@ class ProductFormModule extends React.Component<Props> {
     originalValues: Object,
     formData: Object,
     saveProduct: any => Promise<?{ data?: CreateProductResponse | UpdateProductResponse }>,
+    needDeletedFiles: Array<FilePayload>,
+    deleteFiles: Function,
     onSuccess: Object => void,
     onErrors: (Array<Object>) => void
   ) => {
-    const { productId } = this.props;
+    const { productId, intl } = this.props;
 
     const isNewOrClone = this.isNewOrClone();
     const input = prepareParsedProductInput(
@@ -149,6 +153,16 @@ class ProductFormModule extends React.Component<Props> {
             onSuccess(getByPath('productUpdate', data));
           }
         }
+      }
+
+      if (needDeletedFiles.length > 0) {
+        const ids = needDeletedFiles.map(f => f.id);
+        const deleteFilesResult: any = await deleteFiles({
+          variables: {
+            ids,
+          },
+        });
+        showToastError({ intl, result: deleteFilesResult, entity: 'product' });
       }
     }
   };
@@ -324,100 +338,103 @@ class ProductFormModule extends React.Component<Props> {
                   productFilesState,
                   productTasksState,
                   form
-                ) => (
-                  <>
-                    {(isNewOrClone ||
-                      productInfoState.isDirty() ||
-                      productProvidersState.isDirty() ||
-                      productTagsState.isDirty() ||
-                      productTasksState.isDirty() ||
-                      productFilesState.isDirty()) && (
-                      <>
-                        {this.isNewOrClone() ? (
-                          <CancelButton onClick={() => this.onCancel()} />
-                        ) : (
-                          <ResetFormButton
-                            onClick={() => {
-                              this.onReset({
-                                productInfoState,
-                                productProvidersState,
-                                productTagsState,
-                                productFilesState,
-                                productTasksState,
-                                form,
-                              });
-                            }}
-                          />
-                        )}
+                ) => {
+                  const isDirty =
+                    productInfoState.isDirty() ||
+                    productProvidersState.isDirty() ||
+                    productTagsState.isDirty() ||
+                    productTasksState.isDirty() ||
+                    productFilesState.isDirty();
+                  return (
+                    <>
+                      {(isNewOrClone || isDirty) && (
+                        <>
+                          {this.isNewOrClone() ? (
+                            <CancelButton onClick={() => this.onCancel()} />
+                          ) : (
+                            <ResetFormButton
+                              onClick={() => {
+                                this.onReset({
+                                  productInfoState,
+                                  productProvidersState,
+                                  productTagsState,
+                                  productFilesState,
+                                  productTasksState,
+                                  form,
+                                });
+                              }}
+                            />
+                          )}
 
-                        <SaveFormButton
-                          id="product_form_save_button"
-                          data-testid="saveButton"
-                          disabled={
-                            !form.isReady(
-                              {
-                                ...productInfoState.state,
-                                ...productProvidersState.state,
-                                ...productTagsState.state,
-                                ...productFilesState.state,
-                                ...productTasksState.state,
-                              },
-                              validator
-                            )
-                          }
-                          isLoading={isLoading}
-                          onClick={() =>
-                            this.onSave(
-                              {
-                                ...productInfoState.originalValues,
-                                ...productProvidersState.originalValues,
-                                ...productTagsState.originalValues,
-                                ...productFilesState.originalValues,
-                                ...productTasksState.originalValues,
-                              },
-                              {
-                                ...productInfoState.state,
-                                ...productProvidersState.state,
-                                ...productTagsState.state,
-                                ...productFilesState.state,
-                                ...productTasksState.state,
-                              },
-                              saveProduct,
-                              updateProduct => {
-                                this.initAllValues(
-                                  {
-                                    productInfoState,
-                                    productTagsState,
-                                    productFilesState,
-                                    productTasksState,
-                                    productProvidersState,
-                                  },
-                                  updateProduct
-                                );
-                                form.onReset();
-                              },
-                              form.onErrors
-                            )
-                          }
-                        />
-                      </>
-                    )}
+                          <Mutation mutation={deleteManyFileMutation} {...mutationKey}>
+                            {deleteFiles => (
+                              <SaveFormButton
+                                id="product_form_save_button"
+                                data-testid="saveButton"
+                                disabled={
+                                  !form.isReady(
+                                    {
+                                      ...productInfoState.state,
+                                      ...productProvidersState.state,
+                                      ...productTagsState.state,
+                                      ...productFilesState.state,
+                                      ...productTasksState.state,
+                                    },
+                                    validator
+                                  )
+                                }
+                                isLoading={isLoading}
+                                onClick={() =>
+                                  this.onSave(
+                                    {
+                                      ...productInfoState.originalValues,
+                                      ...productProvidersState.originalValues,
+                                      ...productTagsState.originalValues,
+                                      ...productFilesState.originalValues,
+                                      ...productTasksState.originalValues,
+                                    },
+                                    {
+                                      ...productInfoState.state,
+                                      ...productProvidersState.state,
+                                      ...productTagsState.state,
+                                      ...productFilesState.state,
+                                      ...productTasksState.state,
+                                    },
+                                    saveProduct,
+                                    productProvidersState.state.needDeletedFiles,
+                                    deleteFiles,
+                                    updateProduct => {
+                                      this.initAllValues(
+                                        {
+                                          productInfoState,
+                                          productTagsState,
+                                          productFilesState,
+                                          productTasksState,
+                                          productProvidersState,
+                                        },
+                                        updateProduct
+                                      );
+                                      form.onReset();
+                                    },
+                                    form.onErrors
+                                  )
+                                }
+                              />
+                            )}
+                          </Mutation>
+                        </>
+                      )}
 
-                    {productId &&
-                      !productInfoState.isDirty() &&
-                      !productProvidersState.isDirty() &&
-                      !productTagsState.isDirty() &&
-                      !productTasksState.isDirty() &&
-                      !productFilesState.isDirty() &&
-                      !isNewOrClone && (
+                      {productId && !isDirty && !isNewOrClone && (
                         <ExportButton
                           type="Product"
                           exportQuery={productExportQuery}
                           variables={{ id: decodeId(productId) }}
                         />
                       )}
-                  </>
-                )}
+                    </>
+                  );
+                }}
               </Subscribe>
             </NavBar>
 

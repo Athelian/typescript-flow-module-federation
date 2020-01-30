@@ -2,7 +2,7 @@
 import { omit, flatten, set, cloneDeep } from 'lodash';
 import { Container } from 'unstated';
 import update from 'immutability-helper';
-import type { User, Milestone, Task } from 'generated/graphql';
+import type { User, Milestone, Task, FilePayload } from 'generated/graphql';
 import { isEquals, getByPathWithDefault, getByPath } from 'utils/fp';
 import { uuid } from 'utils/id';
 import { calculateTasks, setToSkipTask, setToComplete, START_DATE, DUE_DATE } from 'utils/task';
@@ -10,11 +10,13 @@ import { calculateNewDate } from 'utils/date';
 
 type FormState = {
   milestones: Array<Milestone>,
+  needDeletedFiles: Array<FilePayload>,
   ignoreTaskIds: [],
 };
 
 export const initValues: FormState = {
   milestones: [],
+  needDeletedFiles: [],
   ignoreTaskIds: [],
 };
 
@@ -123,6 +125,34 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     this.originalValues = { ...this.state };
   };
 
+  setNeedDeletedFiles = (needDeletedFiles: Array<FilePayload>) => {
+    const prevNeedDeletedFiles = this.state.needDeletedFiles;
+    const prevNeedDeletedFileIDs = new Set(prevNeedDeletedFiles.map(({ id }) => id));
+
+    this.setState({
+      needDeletedFiles: [
+        ...prevNeedDeletedFiles,
+        ...needDeletedFiles.filter(({ id }) => !prevNeedDeletedFileIDs.has(id)),
+      ],
+    });
+  };
+
+  unsetNeedDeletedFiles = (noNeedDeletedFiles: Array<FilePayload>) => {
+    const noNeedDeletedFileIDs = new Set(noNeedDeletedFiles.map(({ id }) => id));
+
+    this.setState(prevState => ({
+      needDeletedFiles: prevState.needDeletedFiles.filter(
+        ({ id }) => !noNeedDeletedFileIDs.has(id)
+      ),
+    }));
+  };
+
+  resetNeedDeletedFiles = () => {
+    this.setState({
+      needDeletedFiles: [],
+    });
+  };
+
   setFieldValue = (name: string, value: mixed) => {
     this.setState({
       [name]: value,
@@ -137,8 +167,8 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
   };
 
   initDetailValues = (milestones: Array<Milestone>, ignoreTaskIds: Array<string> = []) => {
-    this.setState({ milestones, ignoreTaskIds });
-    this.originalValues = { milestones, ignoreTaskIds };
+    this.setState({ milestones, needDeletedFiles: [], ignoreTaskIds });
+    this.originalValues = { milestones, needDeletedFiles: [], ignoreTaskIds };
     this.originalTasks = (flatten(
       milestones.map(item => getByPathWithDefault([], 'tasks', item))
     ): Array<Task>);

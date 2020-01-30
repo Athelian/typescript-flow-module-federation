@@ -1,5 +1,10 @@
 // @flow
-import type { OrderItemPayload, ShipmentPayload, ContainerPayload } from 'generated/graphql';
+import type {
+  OrderItemPayload,
+  FilePayload,
+  ShipmentPayload,
+  ContainerPayload,
+} from 'generated/graphql';
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import update from 'immutability-helper';
@@ -7,11 +12,13 @@ import { isEquals, getByPathWithDefault, getByPath } from 'utils/fp';
 
 type FormState = {|
   orderItems: Array<OrderItemPayload>,
+  needDeletedFiles: Array<FilePayload>,
   hasCalledItemsApiYet: boolean,
 |};
 
 export const initValues: FormState = {
   orderItems: [],
+  needDeletedFiles: [],
   hasCalledItemsApiYet: false,
 };
 
@@ -46,6 +53,34 @@ export default class OrderItemsContainer extends Container<FormState> {
     this.setState(this.originalValues);
   };
 
+  setNeedDeletedFiles = (needDeletedFiles: Array<FilePayload>) => {
+    const prevNeedDeletedFiles = this.state.needDeletedFiles;
+    const prevNeedDeletedFileIDs = new Set(prevNeedDeletedFiles.map(({ id }) => id));
+
+    this.setState({
+      needDeletedFiles: [
+        ...prevNeedDeletedFiles,
+        ...needDeletedFiles.filter(({ id }) => !prevNeedDeletedFileIDs.has(id)),
+      ],
+    });
+  };
+
+  unsetNeedDeletedFiles = (noNeedDeletedFiles: Array<FilePayload>) => {
+    const noNeedDeletedFileIDs = new Set(noNeedDeletedFiles.map(({ id }) => id));
+
+    this.setState(prevState => ({
+      needDeletedFiles: prevState.needDeletedFiles.filter(
+        ({ id }) => !noNeedDeletedFileIDs.has(id)
+      ),
+    }));
+  };
+
+  resetNeedDeletedFiles = () => {
+    this.setState({
+      needDeletedFiles: [],
+    });
+  };
+
   setFieldValue = (path: string, value: any) => {
     this.setState(prevState => {
       const newState = set(cloneDeep(prevState), path, value);
@@ -66,9 +101,9 @@ export default class OrderItemsContainer extends Container<FormState> {
   };
 
   initDetailValues = (orderItems: Array<Object>, hasCalledItemsApiYet: boolean = false) => {
-    this.setState({ orderItems, hasCalledItemsApiYet });
+    this.setState({ orderItems, needDeletedFiles: [], hasCalledItemsApiYet });
     if (hasCalledItemsApiYet) {
-      this.originalValues = { orderItems, hasCalledItemsApiYet };
+      this.originalValues = { orderItems, needDeletedFiles: [], hasCalledItemsApiYet };
     }
   };
 
@@ -77,12 +112,14 @@ export default class OrderItemsContainer extends Container<FormState> {
     if (this.state.hasCalledItemsApiYet) {
       this.setState({
         orderItems: [],
+        needDeletedFiles: [],
       });
     } else {
       const waitForApiReady = () => {
         if (this.state.hasCalledItemsApiYet) {
           this.setState({
             orderItems: [],
+            needDeletedFiles: [],
           });
           cancelAnimationFrame(retry);
         } else {

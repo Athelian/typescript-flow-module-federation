@@ -40,6 +40,8 @@ const handleReorder = (array: Array<any>, result): Array<any> => {
 };
 
 const MilestoneTaskColumnsConfigGroup = ({ columns, onChange }: Props) => {
+  const [isFocused, setIsFocused] = React.useState(null);
+
   const {
     milestoneColumnsTemplate,
     taskColumnsTemplate,
@@ -124,12 +126,14 @@ const MilestoneTaskColumnsConfigGroup = ({ columns, onChange }: Props) => {
               <Label>
                 <FormattedMessage {...messages.repeat} />
               </Label>
-              <DefaultStyle width="100px" height="30px">
+              <DefaultStyle width="110px" height="30px" isFocused={isFocused === 'milestoneCount'}>
                 <NumberInput
                   value={milestoneCount}
                   onChange={handleChangeMilestoneCount}
                   min={1}
                   required
+                  onFocus={() => setIsFocused('milestoneCount')}
+                  onBlur={() => setIsFocused(null)}
                 />
               </DefaultStyle>
             </div>
@@ -167,8 +171,15 @@ const MilestoneTaskColumnsConfigGroup = ({ columns, onChange }: Props) => {
               <Label>
                 <FormattedMessage {...messages.repeat} />
               </Label>
-              <DefaultStyle width="100px" height="30px">
-                <NumberInput value={taskCount} onChange={handleChangeTaskCount} min={1} required />
+              <DefaultStyle width="110px" height="30px" isFocused={isFocused === 'taskCount'}>
+                <NumberInput
+                  value={taskCount}
+                  onChange={handleChangeTaskCount}
+                  min={1}
+                  required
+                  onFocus={() => setIsFocused('taskCount')}
+                  onBlur={() => setIsFocused(null)}
+                />
               </DefaultStyle>
             </div>
           </div>

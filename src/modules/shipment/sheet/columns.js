@@ -69,7 +69,7 @@ export default function({
         'shipment.memo': 'memo',
         'shipment.inCharges': 'inCharges',
         'shipment.totalBatchQuantity': 'totalBatchQuantity',
-        'shipment.totalPrice': 'totalPrice',
+        'shipment.totalPrice': ['totalPrice.amount', 'totalPrice.currency'],
         'shipment.totalProducts': 'productCount',
         'shipment.totalOrders': 'orderCount',
         'shipment.totalBatches': 'batchCount',

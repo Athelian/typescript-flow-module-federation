@@ -8,7 +8,7 @@ import BaseOrderItemCreateAction from 'modules/sheet/order/actions/OrderItemCrea
 import OrderItemCloneAction from 'modules/sheet/orderItem/actions/OrderItemCloneAction';
 import BaseOrderItemSyncPriceAction from 'modules/sheet/orderItem/actions/OrderItemSyncPriceAction';
 import BaseOrderItemAutofillAction from 'modules/sheet/orderItem/actions/OrderItemAutofillAction';
-import OrderItemDeleteAction from 'modules/sheet/orderItem/actions/OrderItemDeleteAction';
+import BaseOrderItemDeleteAction from 'modules/sheet/orderItem/actions/OrderItemDeleteAction';
 import BaseBatchCreateAction from 'modules/sheet/orderItem/actions/BatchCreateAction';
 import BatchCloneAction from 'modules/sheet/batch/actions/BatchCloneAction';
 import BaseBatchSyncPackagingAction from 'modules/sheet/batch/actions/BatchSyncPackagingAction';
@@ -245,6 +245,14 @@ const OrderItemAutofillAction = BaseOrderItemAutofillAction({
     }, 0);
 
     return (orderItem?.quantity ?? 0) > totalBatchQuantity;
+  },
+});
+
+const OrderItemDeleteAction = BaseOrderItemDeleteAction({
+  getOrderItemFiles: (orderItemId: string, item: Object) => {
+    const orderItem = item.orderItems.find(oi => oi.id === orderItemId);
+
+    return orderItem?.files ?? [];
   },
 });
 
