@@ -50,10 +50,6 @@ export default defineMessages({
     id: 'modules.Shipments.incoterms',
     defaultMessage: 'INCOTERMS',
   },
-  inCharge: {
-    id: 'modules.Shipments.inCharge',
-    defaultMessage: 'IN CHARGE',
-  },
   forwarder: {
     id: 'modules.Shipments.forwarder',
     defaultMessage: 'FORWARDER',

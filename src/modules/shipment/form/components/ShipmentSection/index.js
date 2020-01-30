@@ -7,12 +7,11 @@ import { FormattedMessage } from 'react-intl';
 import apolloClient from 'apollo';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
-import { getByPath, getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
+import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import { getUniqueExporters } from 'utils/shipment';
 import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
-import { STAFF_LIST } from 'modules/permission/constants/staff';
 import {
   SHIPMENT_CREATE,
   SHIPMENT_UPDATE,
@@ -20,7 +19,6 @@ import {
   SHIPMENT_SET_ARCHIVED,
   SHIPMENT_SET_IMPORTER,
   SHIPMENT_SET_EXPORTER,
-  SHIPMENT_SET_IN_CHARGE,
   SHIPMENT_SET_TAGS,
   SHIPMENT_SET_CUSTOM_FIELDS,
   SHIPMENT_SET_CUSTOM_FIELDS_MASK,
@@ -74,7 +72,6 @@ import {
   EnumSearchSelectInputFactory,
   TextAreaInputFactory,
   CustomFieldsFactory,
-  UserAssignmentInputFactory,
   DashedPlusButton,
   ToggleInput,
 } from 'components/Form';
@@ -546,39 +543,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                 </GridColumn>
 
                 <GridColumn>
-                  <UserAssignmentInputFactory
-                    cacheKey="ShipmentUserSelect"
-                    name="inCharges"
-                    groupIds={[
-                      getByPath('importer.id', values),
-                      getByPath('exporter.id', values),
-                    ].filter(Boolean)}
-                    values={values.inCharges}
-                    onChange={(name: string, assignments: Array<Object>) =>
-                      setFieldValue(name, assignments)
-                    }
-                    label={
-                      <>
-                        <FormattedMessage
-                          id="modules.Shipments.inCharge"
-                          defaultMessage="IN CHARGE"
-                        />
-                        {' ('}
-                        <FormattedNumber value={values.inCharges.length} />)
-                      </>
-                    }
-                    infoMessage={
-                      <FormattedMessage
-                        id="modules.Shipments.tooltipInCharge"
-                        defaultMessage="You can choose up to 5 people in charge."
-                      />
-                    }
-                    editable={
-                      hasPermission(STAFF_LIST) &&
-                      hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IN_CHARGE])
-                    }
-                  />
-
                   <FieldItem
                     vertical
                     label={
@@ -681,16 +645,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                                           importerDialogToggle(false);
                                                           importerSelectorToggle(false);
                                                           setFieldValue(
-                                                            'inCharges',
-                                                            values.inCharges.filter(
-                                                              user =>
-                                                                getByPath(
-                                                                  'organization.id',
-                                                                  user
-                                                                ) !== getByPath('id', importer)
-                                                            )
-                                                          );
-                                                          setFieldValue(
                                                             'importer',
                                                             selectedImporter
                                                           );
@@ -721,7 +675,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                                         message={
                                                           <FormattedMessage
                                                             id="modules.Shipment.importerDialogMessage"
-                                                            defaultMessage="Changing the Importer will remove all Batches. It will also remove all assigned Staff of the current Importer from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Importer?"
+                                                            defaultMessage="Changing the Importer will remove all Batches. It will also remove all assigned Staff of the current Importer from all Tasks, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Importer?"
                                                           />
                                                         }
                                                       />
@@ -828,24 +782,16 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                           changeMessage={
                                             <FormattedMessage
                                               id="modules.Shipment.mainExporterChangeMessage"
-                                              defaultMessage="Changing the Main Exporter will remove all Batches of the current Main Exporter and all assigned Staff of the current Main Exporter from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
+                                              defaultMessage="Changing the Main Exporter will remove all Batches of the current Main Exporter and all assigned Staff of the current Main Exporter from all Tasks, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
                                             />
                                           }
                                           warningMessage={
                                             <FormattedMessage
                                               id="modules.Shipment.mainExporterDeselectMessage"
-                                              defaultMessage="Changing the Main Exporter will remove all assigned Staff of the current Main Exporter from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
+                                              defaultMessage="Changing the Main Exporter will remove all assigned Staff of the current Main Exporter from all Tasks, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
                                             />
                                           }
                                           onSelect={selectedExporter => {
-                                            setFieldValue(
-                                              'inCharges',
-                                              values.inCharges.filter(
-                                                user =>
-                                                  getByPath('organization.id', user) !==
-                                                  getByPath('id', exporter)
-                                              )
-                                            );
                                             setFieldValue('exporter', selectedExporter);
                                             if (isNewOrClone) {
                                               batchesContainer.changeMainExporter(selectedExporter);

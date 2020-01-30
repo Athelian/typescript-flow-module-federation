@@ -76,9 +76,6 @@ function normalizedInput(
       switch (field) {
         case 'exporter': {
           const exporterId = newValue?.id ?? null;
-          const inChargeIds = (shipment?.inCharges ?? [])
-            .filter(user => user?.organization?.id !== exporterId || !isExporter(user))
-            .map(user => user?.id);
 
           if (exporterId) {
             const batches = [];
@@ -197,7 +194,6 @@ function normalizedInput(
             }));
             return {
               exporterId,
-              inChargeIds,
               batches,
               containers,
               cargoReady,
@@ -208,7 +204,6 @@ function normalizedInput(
           }
           return {
             exporterId,
-            inChargeIds,
           };
         }
         default:

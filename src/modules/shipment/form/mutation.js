@@ -323,11 +323,6 @@ export const prepareParsedShipmentInput = ({
       newValues.tags
     ),
     ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
-    ...parseArrayOfIdsField(
-      'inChargeIds',
-      getByPathWithDefault([], 'inCharges', originalValues),
-      newValues.inCharges
-    ),
     ...parseGenericField(
       'totalPackageQuantityOverride',
       originalValues?.totalPackageQuantityOverride,

@@ -67,7 +67,6 @@ export default function({
         'shipment.carrier': 'carrier',
         'shipment.tags': 'tags',
         'shipment.memo': 'memo',
-        'shipment.inCharges': 'inCharges',
         'shipment.totalBatchQuantity': 'totalBatchQuantity',
         'shipment.totalPrice': ['totalPrice.amount', 'totalPrice.currency'],
         'shipment.totalProducts': 'productCount',
@@ -540,7 +539,6 @@ export default function({
         'order.deliveryPlace': 'containers.batches.orderItem.order.deliveryPlace',
         'order.tags': 'containers.batches.orderItem.order.tags',
         'order.memo': 'containers.batches.orderItem.order.memo',
-        'order.inCharges': 'containers.batches.orderItem.order.inCharges',
         'order.files': 'containers.batches.orderItem.order.files', // TODO
         'order.todo': [
           'containers.batches.orderItem.order.todo.taskCount.count',
