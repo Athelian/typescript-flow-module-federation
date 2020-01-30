@@ -21,10 +21,12 @@ export const IconStyle = (color: string): string => css`
   position: sticky;
   top: 0px;
   width: 100%;
-  height: 150px;
+  height: 200px;
   color: ${colors[color]};
   font-size: 64px;
-  opacity: 0.5;
+  & > svg {
+    opacity: 0.5;
+  }
 `;
 
 export const ColumnsWrapperStyle: string = css`
@@ -36,5 +38,5 @@ export const ColumnsWrapperStyle: string = css`
 
 export const InputWrapperStyle: string = css`
   ${layout.VERTICAL};
-  margin-top: 20px;
+  padding: 20px 0 0 0;
 `;
