@@ -25,6 +25,7 @@ const defaultRenderItem = (item: Object) => <NotificationItem key={item.id} noti
 
 type Props = {|
   isOpen: boolean,
+  closeDropdown: () => void,
   renderItem?: Object => React$Node,
   // TODO: integrate the api for more items
   totalMoreItems?: number,
@@ -33,6 +34,7 @@ type Props = {|
 const NotificationsDropdown = ({
   renderItem = defaultRenderItem,
   isOpen,
+  closeDropdown,
   totalMoreItems = 0,
 }: Props) => {
   const { data, loading, error } = useQuery(notificationListQuery, {
@@ -91,6 +93,7 @@ const NotificationsDropdown = ({
               hoverTextColor="TEAL"
               backgroundColor="GRAY_SUPER_LIGHT"
               hoverBackgroundColor="GRAY_VERY_LIGHT"
+              onClick={closeDropdown}
             />
           </NavigateLink>
         </div>
@@ -120,6 +123,7 @@ const NotificationsDropdown = ({
             hoverTextColor="TEAL_DARK"
             backgroundColor="GRAY_SUPER_LIGHT"
             hoverBackgroundColor="GRAY_VERY_LIGHT"
+            onClick={closeDropdown}
           />
         </NavigateLink>
 

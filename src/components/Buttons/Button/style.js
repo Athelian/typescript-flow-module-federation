@@ -2,14 +2,23 @@
 import { css } from 'react-emotion';
 import { presets, colors, borderRadiuses, fontSizes } from 'styles/common';
 
-export const ButtonStyle = (
+type ButtonStyleProps = {
   textColor: string,
   hoverTextColor: string,
   backgroundColor: string,
-  hoverBackgroundColor: string
-): string => css`
+  hoverBackgroundColor: string,
+  borderRadius: ?string,
+};
+
+export const ButtonStyle = ({
+  textColor,
+  hoverTextColor,
+  backgroundColor,
+  hoverBackgroundColor,
+  borderRadius,
+}: ButtonStyleProps): string => css`
   ${presets.BUTTON};
-  ${borderRadiuses.BUTTON};
+  ${borderRadius ? `border-radius: ${borderRadius}` : borderRadiuses.BUTTON};
   ${presets.ELLIPSIS};
   ${fontSizes.SMALL};
   color: ${colors[textColor]};

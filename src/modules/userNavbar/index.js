@@ -134,6 +134,7 @@ class UserNavBar extends React.Component<Props, State> {
                   {isNotificationOpen && (
                     <NotificationsDropdown
                       isOpen={isNotificationOpen}
+                      closeDropdown={() => this.setState({ isNotificationOpen: false })}
                       toggleNotification={this.toggleNotification}
                     />
                   )}
